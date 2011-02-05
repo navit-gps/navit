@@ -7,3 +7,7 @@ void linguistics_init(void);
 #ifdef __cplusplus
 }
 #endif
+
+/* Prototypes */
+int linguistics_search(char *str);
+
