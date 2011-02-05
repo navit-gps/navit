@@ -30,7 +30,7 @@
 void
 profile_timer(int level, const char *module, const char *function, const char *fmt, ...)
 {
-	#ifndef _MSC_VER
+#ifndef _MSC_VER
 	va_list ap;
 	static struct timeval last[10];
 	struct timeval curr;
@@ -62,5 +62,5 @@ profile_timer(int level, const char *module, const char *function, const char *f
 			last[level++]=curr;
 	}
 	va_end(ap);
-	#endif _MSC_VER
+#endif /*_MSC_VER*/
 }
