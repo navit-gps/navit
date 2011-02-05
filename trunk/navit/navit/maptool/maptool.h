@@ -141,6 +141,7 @@ GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg);
 int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir);
 GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type);
 struct geom_poly_segment *item_bin_to_poly_segment(struct item_bin *ib, int type);
+int geom_poly_segments_point_inside(GList *in, struct coord *c);
 void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
 void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
 
