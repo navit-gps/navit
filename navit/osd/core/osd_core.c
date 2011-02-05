@@ -1675,7 +1675,7 @@ osd_speed_warner_init(struct osd_speed_warner *this, struct navit *nav)
 	osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, this));
 
-        if(!strncmp("images:",this->label_str,7)) {
+        if(this->label_str && !strncmp("images:",this->label_str,7)) {
           char *tok1=NULL, *tok2=NULL, *tok3=NULL;
           strtok(this->label_str,":");
           tok1 = strtok(NULL,":");
