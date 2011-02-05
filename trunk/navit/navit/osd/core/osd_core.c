@@ -1424,8 +1424,10 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
     dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
     ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
     if(0==ret_attr) {
+      graphics_overlay_disable(this_->item.gr,1);
       return;
     }
+    graphics_overlay_disable(this_->item.gr,0);
     speed = *speed_attr.u.numd;
     if(dCurrDist <= speed*750.0/130.0) {  //at speed 130 distance limit is 750m
       if(this_->announce_state==eNoWarn && this_->announce_on) {
@@ -1481,6 +1483,9 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
       graphics_draw_mode(this_->item.gr, draw_mode_end);
     }
+  }
+  else {
+    graphics_overlay_disable(this_->item.gr,1);
   }
 }
 
