@@ -93,6 +93,9 @@ SHP_CVSID("$Id: shptree.c,v 1.12 2008/11/12 15:39:50 fwarmerdam Exp $")
 
 static int bBigEndian = 0;
 
+void SHPAPI_CALL SHPTreeSplitBounds( double *padfBoundsMinIn, double *padfBoundsMaxIn, double *padfBoundsMin1, double * padfBoundsMax1, double *padfBoundsMin2, double * padfBoundsMax2 );
+void SHPAPI_CALL SHPTreeCollectShapeIds( SHPTree *hTree, SHPTreeNode * psTreeNode, double * padfBoundsMin, double * padfBoundsMax, int * pnShapeCount, int * pnMaxShapes, int ** ppanShapeList );
+
 
 /* -------------------------------------------------------------------- */
 /*      If the following is 0.5, nodes will be split in half.  If it    */
