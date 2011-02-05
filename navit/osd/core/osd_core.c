@@ -70,6 +70,8 @@ struct odometer;
 static void osd_odometer_reset(struct odometer *this);
 static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid);
 static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct vehicle *v);
+static struct osd_text_item * oti_new(struct osd_text_item * parent);
+
 
 struct compass {
 	struct osd_item osd_item;
@@ -2227,7 +2229,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
  * @param parent Pointer to the preceding osd_text_item structure in the list. If NULL, the new osd_text_item becomes the root element of a new list.
  * @returns A pointer to the new osd_text_item element.
  */
-struct osd_text_item *
+static struct osd_text_item *
 oti_new(struct osd_text_item * parent)
 {
     struct osd_text_item *this;
