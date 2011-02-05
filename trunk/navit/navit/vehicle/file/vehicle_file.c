@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "config.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
@@ -32,7 +33,6 @@
 #include <termios.h>
 #endif
 #include <math.h>
-#include "config.h"
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
