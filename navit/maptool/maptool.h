@@ -242,9 +242,11 @@ int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *
 
 /* osm_protobuf.c */
 int map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int osm_protobufdb_load(FILE *in, char *dir);
 
 /* osm_xml.c */
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
+void osm_xml_decode_entities(char *buffer);
 int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
 
