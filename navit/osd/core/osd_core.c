@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "config.h"
 #ifdef _MSC_VER
 #define _USE_MATH_DEFINES 1
 #endif /* _MSC_VER */
@@ -26,7 +27,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
-#include "config.h"
 #include "item.h"
 #include "point.h"
 #include "coord.h"
