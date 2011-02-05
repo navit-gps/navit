@@ -1047,7 +1047,7 @@ graphics_gtk_drawing_area_disable_suspend(struct window *w)
 
 
 static void *
-get_data(struct graphics_priv *this, char *type)
+get_data(struct graphics_priv *this, char const *type)
 {
 	FILE *f;
 	if (!strcmp(type,"gtk_widget"))
