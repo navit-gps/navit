@@ -40,6 +40,7 @@
 #include "item.h"
 #include "event.h"
 #include "vehicle.h"
+#include "file.h"
 #ifdef HAVE_SOCKET
 #include <stdlib.h>
 #include <sys/socket.h>
