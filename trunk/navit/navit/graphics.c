@@ -383,6 +383,17 @@ struct graphics_font * graphics_named_font_new(struct graphics *gra, char *font,
 }
 
 
+/**
+ * Destroy graphics
+ * Called when navit exits
+ * @param gra The graphics instance
+ * @returns nothing
+ * @author David Tegze (02/2011)
+ */
+void graphics_free(struct graphics *gra)
+{
+	gra->meth.graphics_destroy(gra->priv);
+}
 
 /**
  * Free all loaded fonts.
