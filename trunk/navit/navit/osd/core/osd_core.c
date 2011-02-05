@@ -53,6 +53,7 @@
 #include "speech.h"
 #include "event.h"
 #include "mapset.h"
+#include "util.h"
 
 #ifdef _MSC_VER
 static double round(double x)
