@@ -10,6 +10,8 @@
 
 FILE *routefile;
 
+void routech_test(struct navit *navit);
+
 struct ch_edge {
 	int flags;
 	int weight;
