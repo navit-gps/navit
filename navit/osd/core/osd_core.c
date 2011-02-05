@@ -498,8 +498,6 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 static void 
 osd_odometer_destroy(struct navit* nav)
 {
-	GList* list;
-	char* fn;
 	if(!odometers_saved) {
 		odometers_saved = 1;
 		osd_odometer_save(NULL);
