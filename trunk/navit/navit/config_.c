@@ -23,6 +23,7 @@
 #include "debug.h"
 #include "item.h"
 #include "callback.h"
+#include "navit.h"
 #include "config_.h"
 
 struct config {
