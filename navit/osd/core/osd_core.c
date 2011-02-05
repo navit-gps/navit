@@ -1568,6 +1568,8 @@ struct osd_speed_warner {
 	int announce_on;
 	enum osd_speed_warner_eAnnounceState announce_state;
 	int bTextOnly;
+	struct graphics_image *img_active,*img_passive,*img_off;
+	char* label_str;
 };
 
 static void
@@ -1578,6 +1580,7 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
 
     struct tracking *tracking = NULL;
     struct graphics_gc *osd_color=this->grey;
+    struct graphics_image *img = this->img_off;
 
 
     osd_std_draw(&this->item);
@@ -1629,21 +1632,30 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
             if( tracking_speed <= routespeed ) {
                 this->announce_state=eNoWarn; //no warning
                 osd_color = this->green;
+		img = this->img_passive;
             }
             else {
                 osd_color = this->red;
+		img = this->img_active;
             }
         } else {
             osd_color = this->grey;
+            img = this->img_off;
         }
     } else {
         //when tracking is not available display grey
         osd_color = this->grey;
+        img = this->img_off;
     }
-    if(0==this->bTextOnly) {
+    if(this->img_active && this->img_passive && this->img_off) {
+      struct point p;
+      p.x=(this->item.w-img->width)/2;
+      p.y=(this->item.h-img->height)/2;
+      graphics_draw_image(this->item.gr, this->item.graphic_bg, &p, img);
+    }
+    else if(0==this->bTextOnly) {
       graphics_draw_circle(this->item.gr, osd_color, &p, this->d-this->width*2 );
     }
-
 	graphics_get_text_bbox(this->item.gr, this->item.font, text, 0x10000, 0, bbox, 0);
 	p.x=(this->item.w-bbox[2].x)/2;
 	p.y=(this->item.h+bbox[2].y)/2-bbox[2].y;
@@ -1663,7 +1675,28 @@ osd_speed_warner_init(struct osd_speed_warner *this, struct navit *nav)
 	osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, this));
 
-
+        if(!strncmp("images:",this->label_str,7)) {
+          char *tok1=NULL, *tok2=NULL, *tok3=NULL;
+          strtok(this->label_str,":");
+          tok1 = strtok(NULL,":");
+          if(tok1) {
+            tok2 = strtok(NULL,":");
+          }
+          if(tok1 && tok2) {
+            tok3 = strtok(NULL,":");
+          }
+          if(tok1 && tok2 && tok3) {
+	    tok1 = graphics_icon_path(tok1);
+	    tok2 = graphics_icon_path(tok2);
+	    tok3 = graphics_icon_path(tok3);
+            this->img_active  = graphics_image_new(this->item.gr, tok1);
+            this->img_passive = graphics_image_new(this->item.gr, tok2);
+            this->img_off     = graphics_image_new(this->item.gr, tok3);
+            g_free(tok1);    
+            g_free(tok2);    
+            g_free(tok3);    
+          }
+        }
 
 	this->white=graphics_gc_new(this->item.gr);
 	graphics_gc_set_foreground(this->white, &white_color);
@@ -1717,10 +1750,11 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
         this->bTextOnly = 0;	//by default display graphics also
 	attr = attr_search(attrs, NULL, attr_label);
 	if (attr) {
+	  this->label_str = g_strdup(attr->u.str);
           if (!strcmp("text_only",attr->u.str)) {
             this->bTextOnly = 1;
           }
-        }
+       }
 
 	attr = attr_search(attrs, NULL, attr_announce_on);
 	if (attr)
