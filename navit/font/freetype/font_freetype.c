@@ -12,10 +12,7 @@
 #include FT_CACHE_H
 #endif
 #if USE_FRIBIDI
-#include <fribidi/fribidi.h>
-#if FRIBIDI_INTERFACE_VERSION == 3
-#include <fribidi/fribidi-deprecated.h>
-#endif 
+#include <fribidi.h>
 #endif
 #include <freetype/ftglyph.h>
 #include "point.h"
@@ -203,13 +200,28 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
     // Need to use fribidi to handle the string properly
     char visual_text[len*4+1];
     {
-        FriBidiChar unicode_text[len+1];
-        FriBidiChar visual_unicode_text[len+1];
-        int unicode_len = fribidi_utf8_to_unicode(text, strlen(text), unicode_text);
+        FriBidiChar unicode_text[len+2];
+        FriBidiChar visual_unicode_text[len+2];
+        FriBidiStrIndex textlen =  strlen(text);
+#ifdef FRIBIDIOLD
         FriBidiCharType base = FRIBIDI_TYPE_LTR;
+#else
+        FriBidiParType base = FRIBIDI_PAR_LTR;
+#endif
+
+        FriBidiStrIndex unicode_len =
+#ifdef FRIBIDIOLD
+			fribidi_utf8_to_unicode(text, textlen, unicode_text);
+#else
+			fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8, text, textlen, unicode_text);
+#endif
         fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
         // TODO: check return value
+#ifdef FRIBIDIOLD
         fribidi_unicode_to_utf8(visual_unicode_text, unicode_len, visual_text);
+#else
+        fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, visual_unicode_text, unicode_len, visual_text);
+#endif
         p = visual_text;
     }
 #endif /* USE_FRIBIDI */
