@@ -450,7 +450,7 @@ AC_SUBST(FREETYPE2_LIBS)
 AM_CONDITIONAL(FONT_FREETYPE, test "x${font_freetype}" = "xyes")
 AC_ARG_WITH(freetype-fonts, [ --with-freetype-fonts   specify what fonts to use], AC_DEFINE_UNQUOTED(FREETYPE_FONTS,[${withval}],[Freetype fonts to use]))
 
-AC_ARG_ENABLE(fontconfig, [  --disable-fontconfig             don't add fontconfig support], fontconfig=$enableval;fontconfig_reason="configure parameter")
+AC_ARG_ENABLE(fontconfig, [  --disable-fontconfig             don't' add fontconfig support], fontconfig=$enableval;fontconfig_reason="configure parameter")
 if test "x${fontconfig}" = "xyes"; then
 	PKG_CHECK_MODULES(FONTCONFIG, [fontconfig], [fontconfig=yes], [fontconfig=no])
 fi
@@ -465,11 +465,20 @@ AM_CONDITIONAL(FONTS, test "x${font_freetype}" = "xyes" -a "x$fontconfig" != "xy
 # fribidi 
 AC_ARG_ENABLE(fribidi, [  --disable-fribidi      dont build with fribidi], fribidi=$enableval;fribidi_reason="configure parameter", fribidi=yes)
 if test x"${fribidi}" = "xyes"; then
-	PKG_CHECK_MODULES(FRIBIDI, [fribidi], [fribidi=yes], [fribidi=no;fribidi_reason="FriBidi library not found"])
+	PKG_CHECK_MODULES(FRIBIDI2,  [fribidi >= 0.19.0], [fribidi=yes;oldfribidi=no],
+                        [ PKG_CHECK_MODULES([FRIBIDI], [fribidi],
+                          [fribidi=yes;oldfribidi=yes;fribid_reason="using old version"], [fribidi=no;fribidi_reason="FriBidi library not found"])
+                        ])
 fi
 if test x"${fribidi}" = "xyes"; then
 	AC_DEFINE(USE_FRIBIDI, 1, [Build with fribidi support])
 fi
+if test x"${oldfribidi}" = "xyes"; then
+	AC_DEFINE(FRIBIDIOLD, 1, [Build with fribidi support for older versions of fribidi])
+fi
+
+AC_SUBST(FRIBIDI2_CFLAGS)
+AC_SUBST(FRIBIDI2_LIBS)
 AC_SUBST(FRIBIDI_CFLAGS)
 AC_SUBST(FRIBIDI_LIBS)
 
