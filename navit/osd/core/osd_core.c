@@ -1700,6 +1700,9 @@ osd_speed_warner_init(struct osd_speed_warner *this, struct navit *nav)
             g_free(tok3);    
           }
         }
+	
+	g_free(this->label_str);
+	this->label_str = NULL;
 
 	this->white=graphics_gc_new(this->item.gr);
 	graphics_gc_set_foreground(this->white, &white_color);
