@@ -43,6 +43,7 @@
 #cmakedefine DBUS_USE_SYSTEM_BUS 1
 
 #cmakedefine HAVE_SOCKET 1
+#cmakedefine HAVE_SNPRINTF 1
 
 #cmakedefine HAVE_WINSOCK 1
 
