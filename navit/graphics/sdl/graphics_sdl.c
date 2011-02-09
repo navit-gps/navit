@@ -208,11 +208,12 @@ static struct graphics_priv* the_graphics = NULL;
 static int quit_event_loop			= 0; // quit the main event loop
 static int the_graphics_count		= 0; // count how many graphics objects are created
 static GPtrArray *idle_tasks		= NULL;
-static pthread_t sdl_watch_thread	= NULL;
+static pthread_t sdl_watch_thread	= 0;
 static GPtrArray *sdl_watch_list	= NULL;
 
 static void event_sdl_watch_thread (GPtrArray *);
-static void event_sdl_watch_stopthread();
+static void event_sdl_watch_startthread(GPtrArray *watch_list);
+static void event_sdl_watch_stopthread(void);
 static struct event_watch *event_sdl_add_watch(void *, enum event_watch_cond, struct callback *);
 static void event_sdl_remove_watch(struct event_watch *);
 static struct event_timeout *event_sdl_add_timeout(int, int, struct callback *);
@@ -220,6 +221,7 @@ static void event_sdl_remove_timeout(struct event_timeout *);
 static struct event_idle *event_sdl_add_idle(int, struct callback *);
 static void event_sdl_remove_idle(struct event_idle *);
 static void event_sdl_call_callback(struct callback_list *);
+
 #endif
 
 struct graphics_font_priv {
@@ -928,36 +930,17 @@ static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Ui
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
 	return;
     }
-    switch(surface->format->BytesPerPixel) {
-	case 2:
-	    {
-		Uint16 *target_pixel = (Uint16 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
-		Uint8 r1,g1,b1,a1;
-		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
+    void *target_pixel = ((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
-		*target_pixel = (Uint16) SDL_MapRGBA(surface->format,
-			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
-			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
-			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
-			a2 + a1*(0xff-a2)/0xff );
-		break;
-	    }
-	case 4:
-	    {
-		Uint32 *target_pixel = (Uint32 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
+    Uint8 r1,g1,b1,a1;
+    SDL_GetRGBA(*(Uint32 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
 
-		Uint8 r1,g1,b1,a1;
-		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
-
-		*target_pixel = (Uint32) SDL_MapRGBA(surface->format,
-			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
-			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
-			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
-			a2 + a1*(0xff-a2)/0xff );
-		break;
-	    }
-    }
+    *(Uint32 *)target_pixel = SDL_MapRGBA(surface->format,
+	    (r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+	    (g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+	    (b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+	    a2 + a1*(0xff-a2)/0xff );
 }
 
 static void
@@ -1276,7 +1259,7 @@ static int window_fullscreen(struct window *win, int on)
 }
 
 static void *
-get_data(struct graphics_priv *this, char *type)
+get_data(struct graphics_priv *this, const char *type)
 {
 	if(strcmp(type, "window") == 0) {
 		struct window *win;
@@ -1316,13 +1299,9 @@ static struct graphics_methods graphics_methods = {
 	overlay_new,
 	image_new,
 	get_data,
-//	register_resize_callback,
-//	register_button_callback,
-//	register_motion_callback,
 	image_free,
 	get_text_bbox,
 	overlay_disable,
-//	register_keypress_callback
 };
 
 static struct graphics_priv *
@@ -1416,7 +1395,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     (struct graphics_font_priv *
      (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
 	 int)) ov->freetype_methods.font_new;
-  meth->get_text_bbox = ov->freetype_methods.get_text_bbox;
+  meth->get_text_bbox = (void *)ov->freetype_methods.get_text_bbox;
 
 
 
@@ -2205,7 +2184,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
        (struct graphics_font_priv *
        (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
         int)) this->freetype_methods.font_new;
-    meth->get_text_bbox = this->freetype_methods.get_text_bbox;
+    meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
 
 
 
@@ -2319,18 +2298,6 @@ event_sdl_watch_thread (GPtrArray *watch_list)
 }
 
 static void
-event_sdl_watch_stopthread()
-{
-    dbg(1,"enter\n");
-    if (sdl_watch_thread) {
-	/* Notify the watch thread that the list of FDs will change */
-	pthread_kill(sdl_watch_thread, SIGUSR1);
-	pthread_join(sdl_watch_thread, NULL);
-	sdl_watch_thread = NULL;
-    }
-}
-
-static void
 event_sdl_watch_startthread(GPtrArray *watch_list)
 {
     dbg(1,"enter\n");
@@ -2338,9 +2305,21 @@ event_sdl_watch_startthread(GPtrArray *watch_list)
 	event_sdl_watch_stopthread();
 
     int ret;
-    ret = pthread_create (&sdl_watch_thread, NULL, event_sdl_watch_thread, (void *)watch_list);
+    ret = pthread_create (&sdl_watch_thread, NULL, (void *)event_sdl_watch_thread, (void *)watch_list);
 
     dbg_assert (ret == 0);
+}
+
+static void
+event_sdl_watch_stopthread()
+{
+    dbg(1,"enter\n");
+    if (sdl_watch_thread) {
+	/* Notify the watch thread that the list of FDs will change */
+	pthread_kill(sdl_watch_thread, SIGUSR1);
+	pthread_join(sdl_watch_thread, NULL);
+	sdl_watch_thread = 0;
+    }
 }
 
 static struct event_watch *
@@ -2356,7 +2335,7 @@ event_sdl_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
     struct event_watch *new_ew = g_new0 (struct event_watch, 1);
     struct pollfd *pfd = g_new0 (struct pollfd, 1);
 
-    pfd->fd = fd;
+    pfd->fd = (int) fd;
 
     /* Modify watchlist here */
     switch (cond) {
@@ -2371,7 +2350,7 @@ event_sdl_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 	    break;
     }
 
-    new_ew->pfd = pfd;
+    new_ew->pfd = (struct pollfd*) pfd;
     new_ew->cb = cb;
 
     g_ptr_array_add (sdl_watch_list, (gpointer)new_ew);
