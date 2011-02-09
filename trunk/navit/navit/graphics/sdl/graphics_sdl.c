@@ -287,21 +287,6 @@ graphics_destroy(struct graphics_priv *gr)
     g_free(gr);
 }
 
-/* graphics_font */
-
-static void font_destroy(struct graphics_font_priv *gf)
-{
-#ifdef SDL_TTF
-#else
-    FT_Done_Face(gf->face);
-#endif
-    g_free(gf);
-}
-
-static struct graphics_font_methods font_methods = {
-	font_destroy
-};
-
 /* graphics_gc */
 
 static void
