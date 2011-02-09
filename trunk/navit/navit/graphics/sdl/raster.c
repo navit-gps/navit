@@ -794,7 +794,7 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
     int dx, dy;
     int sx, sy;
     int swaptmp;
-    Uint8 *pixel;
+    void *pixel;
 
     /*
      * Clip line and test if we have to draw 
@@ -886,50 +886,50 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	y = 0;
 	switch (dst->format->BytesPerPixel) {
 	case 1:
-	    for (; x < dx; x++, pixel += pixx) {
-		*pixel = color;
+	    for (; x < dx; x++, pixel=(Uint8 *)+pixx) {
+		*(Uint8 *)pixel = color;
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel += pixy;
+		    pixel = (Uint8 *)pixel + pixy;
 		}
 	    }
 	    break;
 	case 2:
-	    for (; x < dx; x++, pixel += pixx) {
+	    for (; x < dx; x++, pixel=(Uint16 *)pixel+pixx) {
 		*(Uint16 *) pixel = color;
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel += pixy;
+		    pixel = (Uint16 *)pixel + pixy;
 		}
 	    }
 	    break;
 	case 3:
-	    for (; x < dx; x++, pixel += pixx) {
+	    for (; x < dx; x++, pixel=(Uint32 *)pixel+pixx) {
 		if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-		    pixel[0] = (color >> 16) & 0xff;
-		    pixel[1] = (color >> 8) & 0xff;
-		    pixel[2] = color & 0xff;
+		    *(Uint8 *)pixel = (color >> 16) & 0xff;
+		    *((Uint8 *)pixel+1) = (color >> 8) & 0xff;
+		    *((Uint8 *)pixel+2) = color & 0xff;
 		} else {
-		    pixel[0] = color & 0xff;
-		    pixel[1] = (color >> 8) & 0xff;
-		    pixel[2] = (color >> 16) & 0xff;
+		    *(Uint8 *)pixel = color & 0xff;
+		    *((Uint8 *)pixel+1) = (color >> 8) & 0xff;
+		    *((Uint8 *)pixel+2) = (color >> 16) & 0xff;
 		}
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel += pixy;
+		    pixel = (Uint32 *)pixel + pixy;
 		}
 	    }
 	    break;
 	default:		/* case 4 */
-	    for (; x < dx; x++, pixel += pixx) {
+	    for (; x < dx; x++, pixel=(Uint32 *)pixel+pixx) {
 		*(Uint32 *) pixel = color;
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel += pixy;
+		    pixel = (Uint32 *)pixel + pixy;
 		}
 	    }
 	    break;
