@@ -923,7 +923,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 #endif
 }
 
-static void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
 {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
 	return;
@@ -934,9 +934,7 @@ static void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 		Uint16 *target_pixel = (Uint16 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
 		Uint8 r1,g1,b1,a1;
-		Uint8 r2,g2,b2,a2;
 		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
-		SDL_GetRGBA(pixel, surface->format, &r2, &g2, &b2, &a2);
 
 		*target_pixel = (Uint16) SDL_MapRGBA(surface->format,
 			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
@@ -950,9 +948,7 @@ static void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 		Uint32 *target_pixel = (Uint32 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
 		Uint8 r1,g1,b1,a1;
-		Uint8 r2,g2,b2,a2;
 		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
-		SDL_GetRGBA(pixel, surface->format, &r2, &g2, &b2, &a2);
 
 		*target_pixel = (Uint32) SDL_MapRGBA(surface->format,
 			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
@@ -1091,12 +1087,11 @@ display_text_draw(struct font_freetype_text *text,
 
 			if(*(pGlyph+0)>10 || *(pGlyph+1)>10 || *(pGlyph+2)>10 || *(pGlyph+3)>10) {
                             set_pixel(gr->screen, ii+sx, jj+sy,
-                                 SDL_MapRGBA(gr->screen->format,
                                       *(pGlyph+2),			// Pixels are in BGRA format
                                       *(pGlyph+1),
                                       *(pGlyph+0),
                                       *(pGlyph+3)
-                                      ));
+                                     );
                         }
                         pGlyph += 4;
 		    }
