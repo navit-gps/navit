@@ -1042,10 +1042,10 @@ display_text_draw(struct font_freetype_text *text,
 	y += g->dy;
     }
 
-    x = p->x << 6;
-    y = p->y << 6;
     gp = text->glyph;
     i = text->glyph_count;
+    x = p->x << 6;
+    y = p->y << 6;
     while (i-- > 0) {
 	g = *gp++;
 	if (g->w && g->h) {
@@ -1080,13 +1080,10 @@ display_text_draw(struct font_freetype_text *text,
 		unsigned char* pGlyph = glyph;
 		for (jj = 0; jj < g->h; ++jj) {
 		    for (ii = 0; ii < g->w; ++ii) {
-			int sx = (x + g->x) >> 6;
-			int sy = (y + g->y) >> 6;
-			sx = sx < 0 ? 0 : sx;
-			sy = sy < 0 ? 0 : sy;
-
-			if(*(pGlyph+0)>10 || *(pGlyph+1)>10 || *(pGlyph+2)>10 || *(pGlyph+3)>10) {
-                            set_pixel(gr->screen, ii+sx, jj+sy,
+			if(*(pGlyph+3) > 0) {
+                            set_pixel(gr->screen,
+				      ii+((x + g->x) >> 6),
+				      jj+((y + g->y) >> 6),
                                       *(pGlyph+2),			// Pixels are in BGRA format
                                       *(pGlyph+1),
                                       *(pGlyph+0),
