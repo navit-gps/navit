@@ -1022,7 +1022,7 @@ display_text_draw(struct font_freetype_text *text,
 	if (g->w && g->h && bg) {
 	    stride = (g->w + 2) * 4;
 	    if (color) {
-		shadow = g_malloc(stride * (g->h + 2));
+		shadow = g_alloca(stride * (g->h + 2));
 		gr->freetype_methods.get_shadow(g, shadow, 32, stride, &white, &transparent);
 
 		SDL_Surface *glyph_surface =
@@ -1040,7 +1040,6 @@ display_text_draw(struct font_freetype_text *text,
 		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
 		    SDL_FreeSurface(glyph_surface);
 		}
-		g_free(shadow);
 	    }
 	}
 	x += g->dx;
@@ -1057,7 +1056,7 @@ display_text_draw(struct font_freetype_text *text,
 	    if (color) {
 		stride = g->w;
 		if (bg) {
-		    glyph = g_malloc(stride * g->h * 4);
+		    glyph = g_alloca(stride * g->h * 4);
 		    gr->freetype_methods.get_glyph(g, glyph, 32,
 						   stride * 4, &black,
 						   &white, &transparent);
@@ -1075,10 +1074,9 @@ display_text_draw(struct font_freetype_text *text,
 			SDL_BlitSurface(glyph_surface, NULL, gr->screen,&r);
 		        SDL_FreeSurface(glyph_surface);
 		    }
-		    g_free(glyph);
 		}
 		stride *= 4;
-		glyph = g_malloc(stride * g->h);
+		glyph = g_alloca(stride * g->h);
 		gr->freetype_methods.get_glyph(g, glyph, 32, stride,
 					       &black, &white,
 					       &transparent);
@@ -1103,7 +1101,6 @@ display_text_draw(struct font_freetype_text *text,
                         pGlyph += 4;
 		    }
 		}
-		g_free(glyph);
 	    }
 	}
 	x += g->dx;
