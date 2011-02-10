@@ -26,9 +26,11 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +38,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.net.Uri;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +59,7 @@ public class Navit extends Activity implements Handler.Callback
 	private static Intent				startup_intent							= null;
 	private static long					startup_intent_timestamp			= 0L;
 	public static String					my_display_density					= "mdpi";
+	private boolean parseErrorShown = false;
 
 	private boolean extractRes(String resname, String result)
 	{
@@ -312,6 +316,7 @@ public class Navit extends Activity implements Handler.Callback
 			String temp1 = null;
 			String temp2 = null;
 			String temp3 = null;
+			boolean parsable = true;
 
 			// if b: then remodel the input string to look like a:
 			if (intent_data.substring(0, 20).equals("google.navigation:q="))
@@ -324,43 +329,70 @@ public class Navit extends Activity implements Handler.Callback
 			{
 				intent_data = intent_data + "&q=Target";
 			}
-
-
-			// now string should be in form --> a:
-			// now split the parts off
-			temp1 = intent_data.split("&q=", -1)[0];
-			try
+			else
 			{
-				temp3 = temp1.split("ll=", -1)[1];
-				temp2 = intent_data.split("&q=", -1)[1];
+				
+				// string not parsable, display alert and continue w/o string
+				AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+				alertbox.setMessage("Navit recieved the query "+intent_data+"\nThis is not yet parsable.");
+				alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface arg0, int arg1) {
+						Log.e("Navit","Accepted non-parsable string");
+                			}
+                		});
+                		alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface arg0, int arg1) {				
+		                		String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(url));
+						startActivity(i);
+                			}
+                		});
+				if (!parseErrorShown)
+				{
+					alertbox.show();
+					parseErrorShown = true;
+				}
+				parsable = false;
 			}
-			catch (Exception e)
+
+			if (parsable)
 			{
-				// java.lang.ArrayIndexOutOfBoundsException most likely
-				// so let's assume we dont have '&q=xxxx'
-				temp3 = temp1;
+				// now string should be in form --> a:
+				// now split the parts off
+				temp1 = intent_data.split("&q=", -1)[0];
+				try
+				{
+					temp3 = temp1.split("ll=", -1)[1];
+					temp2 = intent_data.split("&q=", -1)[1];
+				}
+				catch (Exception e)
+				{
+					// java.lang.ArrayIndexOutOfBoundsException most likely
+					// so let's assume we dont have '&q=xxxx'
+					temp3 = temp1;
+				}
+
+				if (temp2 == null)
+				{
+					// use some default name
+					temp2 = "Target";
+				}	
+
+				lat = temp3.split(",", -1)[0];	
+				lon = temp3.split(",", -1)[1];
+				q = temp2;
+
+				Message msg = new Message();
+				Bundle b = new Bundle();
+				b.putInt("Callback", 3);
+				b.putString("lat", lat);
+				b.putString("lon", lon);
+				b.putString("q", q);
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
 			}
-
-			if (temp2 == null)
-			{
-				// use some default name
-				temp2 = "Target";
-			}
-
-			lat = temp3.split(",", -1)[0];
-			lon = temp3.split(",", -1)[1];
-			q = temp2;
-
-			Message msg = new Message();
-			Bundle b = new Bundle();
-			b.putInt("Callback", 3);
-			b.putString("lat", lat);
-			b.putString("lon", lon);
-			b.putString("q", q);
-			msg.setData(b);
-			N_NavitGraphics.callback_handler.sendMessage(msg);
 		}
-
 	}
 	@Override
 	public void onPause()
