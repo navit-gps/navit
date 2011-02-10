@@ -128,20 +128,29 @@ handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
  * * @returns a pointer to a string containing the formatted distance
  * */
 static char *
-format_distance(double distance, char *sep)
+format_distance(double distance, char *sep, int imperial)
 {
-	if (distance >= 100000)
-		return g_strdup_printf("%.0f%skm", distance / 1000, sep);
-	else if (distance >= 10000)
-		return g_strdup_printf("%.1f%skm", distance / 1000, sep);
-	else if (distance >= 300)
-		return g_strdup_printf("%.0f%sm", round(distance / 25) * 25, sep);
-	else if (distance >= 50)
-		return g_strdup_printf("%.0f%sm", round(distance / 10) * 10, sep);
-	else if (distance >= 10)
-		return g_strdup_printf("%.0f%sm", distance, sep);
-	else
-		return g_strdup_printf("%.1f%sm", distance, sep);
+	if (imperial){
+		distance *= FEET_PER_METER;
+		if(distance <= 1500){
+			return g_strdup_printf("%.0f%sft", round(distance / 10) * 10, sep);
+		} else {
+			return g_strdup_printf("%.1f%smi", distance / FEET_PER_MILE, sep);
+		}
+	} else {
+		if (distance >= 100000)
+			return g_strdup_printf("%.0f%skm", distance / 1000, sep);
+		else if (distance >= 10000)
+			return g_strdup_printf("%.1f%skm", distance / 1000, sep);
+		else if (distance >= 300)
+			return g_strdup_printf("%.0f%sm", round(distance / 25) * 25, sep);
+		else if (distance >= 50)
+			return g_strdup_printf("%.0f%sm", round(distance / 10) * 10, sep);
+		else if (distance >= 10)
+			return g_strdup_printf("%.0f%sm", distance, sep);
+		else
+			return g_strdup_printf("%.1f%sm", distance, sep);
+	}
 }
 
 /**
@@ -168,17 +177,22 @@ format_time(struct tm *tm, int days)
  * * @returns a pointer to a string containing the formatted speed
  * */
 static char * 
-format_speed(double speed, char *sep, char *format)
+format_speed(double speed, char *sep, char *format, int imperial)
 {
+	char *unit="km/h";
+	if (imperial) {
+		speed = speed*1000*FEET_PER_METER/FEET_PER_MILE;
+		unit="mph";
+	}
 	if (!format || !strcmp(format,"named"))
-		return g_strdup_printf("%.0f%skm/h", speed, sep);
+		return g_strdup_printf("%.0f%s%s", speed, sep, unit);
 	else if (!strcmp(format,"value") || !strcmp(format,"unit")) {
 		if (!strcmp(format,"value"))
 			return g_strdup_printf("%.0f", speed);
 		else 
-			return g_strdup_printf("km/h");
+			return g_strdup(unit);
 	} 
-	return g_strdup_printf("");
+	return g_strdup("");
 }
 
 /*static char *
@@ -318,7 +332,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   char *spd_buffer=0;
   char *time_buffer = 0;
   struct point p, bbox[4];
-  struct attr position_attr,vehicle_attr;
+  struct attr position_attr,vehicle_attr,imperial_attr;
   enum projection pro;
   struct vehicle* curr_vehicle = v;
   double spd = 0;
@@ -328,12 +342,15 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   int hours;
   int mins;
   int secs;
+  int imperial=0;
 
   char buffer [256+1]="";
   char buffer2[256+1]="";
 
   if(nav) {
     navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
+	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
+		imperial=imperial_attr.u.num;
   }
   if (vehicle_attr.u.vehicle) {
     curr_vehicle = vehicle_attr.u.vehicle;
@@ -361,8 +378,8 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
     this->last_coord = curr_coord;
   }
 
-  dist_buffer = format_distance(this->sum_dist,"");
-  spd_buffer = format_speed(spd,"","");
+  dist_buffer = format_distance(this->sum_dist,"",imperial);
+  spd_buffer = format_speed(spd,"","",imperial);
   remainder = this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
@@ -768,11 +785,15 @@ osd_compass_draw(struct compass *this, struct navit *nav,
 		 struct vehicle *v)
 {
 	struct point p,bbox[4];
-	struct attr attr_dir, destination_attr, position_attr;
+	struct attr attr_dir, destination_attr, position_attr, imperial_attr;
 	double dir, vdir = 0;
 	char *buffer;
 	struct coord c1, c2;
 	enum projection pro;
+	int imperial=0;
+
+	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
+		imperial=imperial_attr.u.num;
 
 	osd_std_draw(&this->osd_item);
 	p.x = this->osd_item.w/2;
@@ -794,7 +815,7 @@ osd_compass_draw(struct compass *this, struct navit *nav,
 			dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
 			dir -= vdir;
 			handle(this->osd_item.gr, this->green, &p, this->osd_item.w/3, dir);
-			buffer=format_distance(transform_distance(pro, &c1, &c2),"");
+			buffer=format_distance(transform_distance(pro, &c1, &c2),"",imperial);
 			graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
 			p.x=(this->osd_item.w-bbox[2].x)/2;
 			p.y = this->osd_item.h-this->osd_item.h/10;
@@ -1311,7 +1332,7 @@ struct osd_speed_cam {
 };
 
 static double 
-angle_diff(firstAngle,secondAngle)
+angle_diff(int firstAngle,int secondAngle)
 {
         double difference = secondAngle - firstAngle;
         while (difference < -180) difference += 360;
@@ -1322,7 +1343,7 @@ angle_diff(firstAngle,secondAngle)
 static void
 osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehicle *v)
 {
-  struct attr position_attr,vehicle_attr;
+  struct attr position_attr,vehicle_attr,imperial_attr;
   struct point p, bbox[4];
   struct attr speed_attr;
   struct vehicle* curr_vehicle = v;
@@ -1349,6 +1370,11 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   struct attr attr_dir;
   struct graphics_gc *curr_color;
   int ret_attr = 0;
+	int imperial=0;
+
+	if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
+		imperial=imperial_attr.u.num;
+
 
   if(navit) {
     navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
@@ -1450,7 +1476,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   
       osd_std_draw(&this_->item);
 
-      str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
+      str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,"",imperial));
       str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
       str_replace(buffer,buffer2,"${camera_dir}",(0<=dir_idx && dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
       sprintf(dir_str,"%d",dir);
@@ -1808,7 +1834,7 @@ struct osd_text {
  * @returns Pointer to a string containing the formatted value
  */
 static char *
-osd_text_format_attr(struct attr *attr, char *format)
+osd_text_format_attr(struct attr *attr, char *format, int imperial)
 {
 	struct tm tm, text_tm, text_tm0;
 	time_t textt;
@@ -1817,7 +1843,7 @@ osd_text_format_attr(struct attr *attr, char *format)
 
 	switch (attr->type) {
 	case attr_position_speed:
-		return format_speed(*attr->u.numd,"",format);
+		return format_speed(*attr->u.numd,"",format,imperial);
 	case attr_position_height:
 	case attr_position_direction:
 		return format_float_0(*attr->u.numd);
@@ -1901,9 +1927,9 @@ osd_text_format_attr(struct attr *attr, char *format)
 		if (!format)
 			break;
 		if (!strcmp(format,"named"))
-			return format_distance(attr->u.num,"");
+			return format_distance(attr->u.num,"",imperial);
 		if (!strcmp(format,"value") || !strcmp(format,"unit")) {
-			char *ret,*tmp=format_distance(attr->u.num," ");
+			char *ret,*tmp=format_distance(attr->u.num," ",imperial);
 			char *pos=strchr(tmp,' ');
 			if (! pos)
 				return tmp;
@@ -2003,7 +2029,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	struct point p, p2[4];
 	char *str,*last,*next,*value,*absbegin;
 	int do_draw = 0;
-	struct attr attr, vehicle_attr, maxspeed_attr;
+	struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
 	struct navigation *nav = NULL;
 	struct tracking *tracking = NULL;
 	struct route *route = NULL;
@@ -2015,6 +2041,10 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	int height=this->osd_item.font_size*13/256;
 	int yspacing=height/2;
 	int xspacing=height/4;
+	int imperial=0;
+
+	if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
+		imperial=imperial_attr.u.num;
 
 	vehicle_attr.u.vehicle=NULL;
 	oti=this->items;
@@ -2053,7 +2083,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 				dbg(1,"name %s\n", item_to_name(item->type));
 				dbg(1,"type %s\n", attr_to_name(oti->attr_typ));
 				if (item_attr_get(item, oti->attr_typ, &attr))
-					value=osd_text_format_attr(&attr, oti->format);
+					value=osd_text_format_attr(&attr, oti->format, imperial);
 			}
 			if (nav_mr)
 				map_rect_destroy(nav_mr);
@@ -2063,7 +2093,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 			}
 			if (vehicle_attr.u.vehicle) {
 				if (vehicle_get_attr(vehicle_attr.u.vehicle, oti->attr_typ, &attr, NULL)) {
-					value=osd_text_format_attr(&attr, oti->format);
+					value=osd_text_format_attr(&attr, oti->format, imperial);
 				}
 			}
 		} else if (oti->section == attr_tracking) {
@@ -2079,7 +2109,6 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
 						routespeed = maxspeed_attr.u.num;
 					}
-
 					if (routespeed == -1) {
 						struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
 						struct roadprofile *rprof=NULL;
@@ -2090,10 +2119,10 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 						}
 					}
 
-					value = format_speed(routespeed,"", oti->format);
+					value = format_speed(routespeed,"", oti->format, imperial);
 				} else if (item) {
 					if (tracking_get_attr(tracking, oti->attr_typ, &attr, NULL))
-						value=osd_text_format_attr(&attr, oti->format);
+						value=osd_text_format_attr(&attr, oti->format, imperial);
 				}
 			}
 
@@ -2620,12 +2649,16 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	struct point bp,bp1,bp2;
 	struct point p[10],bbox[4];
 	struct coord c[2];
-	struct attr transformation;
+	struct attr transformation, imperial_attr;
 	int len;
 	double dist,exp,base,man;
 	char *text;
 	int w=this->item.w*9/10;
 	int o=(this->item.w-w)/2;
+	int imperial=0;
+
+	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
+		imperial=imperial_attr.u.num;
 
 	if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
 		return;
@@ -2682,7 +2715,7 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	graphics_draw_lines(this->item.gr, this->black, p, 2);
 	graphics_draw_lines(this->item.gr, this->black, p+2, 2);
 	graphics_draw_lines(this->item.gr, this->black, p+4, 2);
-	text=format_distance(man*base, "");
+	text=format_distance(man*base, "", imperial);
 	graphics_get_text_bbox(this->item.gr, this->item.font, text, 0x10000, 0, bbox, 0);
 	p[0].x=(this->item.w-bbox[2].x)/2+bp.x;
 	p[0].y=bp.y+this->item.h-this->item.h/10;
