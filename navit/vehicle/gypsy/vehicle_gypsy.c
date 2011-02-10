@@ -28,6 +28,15 @@
 #include <gypsy/gypsy-course.h>
 #include <gypsy/gypsy-position.h>
 #include <gypsy/gypsy-satellite.h>
+#ifdef USE_BINDING_DBUS
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 #include <string.h>
 #include <glib.h>
 #include <math.h>
@@ -429,6 +438,29 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 	struct vehicle_priv *ret;
 	struct attr *source, *retry_int;
 
+#if defined(USE_BINDING_DBUS) && defined(HAVE_UNISTD_H)
+	DBusConnection *conn;
+	DBusMessage *message;
+	dbus_uint32_t serial,pid=getpid();
+	struct attr *destination,*path,*interface,*method;
+
+	destination=attr_search(attrs, NULL, attr_dbus_destination);
+	path=attr_search(attrs, NULL, attr_dbus_path);
+	interface=attr_search(attrs, NULL, attr_dbus_interface);
+	method=attr_search(attrs, NULL, attr_dbus_method);
+	if (destination && path && interface && method) {
+		conn=dbus_bus_get(DBUS_BUS_SESSION, NULL);
+		if (conn) {
+			message=dbus_message_new_method_call(destination->u.str,path->u.str,interface->u.str,method->u.str);
+			dbus_message_append_args(message, DBUS_TYPE_INT32, &pid, DBUS_TYPE_INVALID);
+			dbus_connection_send(conn, message, &serial);
+			dbus_message_unref(message);
+			dbus_connection_unref(conn);
+		} else {
+			dbg(0,"failed to connect to session bus\n");
+		}
+	}
+#endif
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
