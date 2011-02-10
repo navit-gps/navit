@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2011 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -591,7 +591,7 @@ file_data_read_encrypted(struct file *file, long long offset, int size, int size
 		g_free(ret);
 		ret=NULL;
 	} else {
-		unsigned char key[34], salt[8], verify[2], counter[16], xor[16], mac[10], mactmp[20], *datap;
+		unsigned char key[34], salt[8], verify[2], counter[16], xor[16], mac[10], *datap;
 		int overhead=sizeof(salt)+sizeof(verify)+sizeof(mac);
 		int esize=size-overhead;
 		PKCS5_PBKDF2_HMAC_SHA1(passwd, strlen(passwd), (unsigned char *)buffer, 8, 1000, 34, key);
