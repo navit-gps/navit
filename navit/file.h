@@ -59,6 +59,8 @@ struct file {
 	GHashTable *headers;
 };
 
+struct attr *attr;
+
 /* prototypes */
 int file_request(struct file *f, struct attr **options);
 char *file_http_header(struct file *f, char *header);
