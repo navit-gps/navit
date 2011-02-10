@@ -177,7 +177,7 @@ file_request_do(struct file *file, struct attr **options, int connect)
 }
 #endif
 
-static char *
+static unsigned char *
 file_http_header_end(unsigned char *str, int len)
 {
 	int i;
