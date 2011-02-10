@@ -20,6 +20,9 @@
 #ifndef NAVIT_NAVIGATION_H
 #define NAVIT_NAVIGATION_H
 
+#define FEET_PER_METER 3.2808399
+#define FEET_PER_MILE  5280
+
 #ifdef __cplusplus
 extern "C" {
 #endif

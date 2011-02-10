@@ -398,38 +398,67 @@ vocabulary_last(int vocabulary)
 static char *
 get_distance(struct navigation *nav, int dist, enum attr_type type, int is_length)
 {
-	int vocabulary=65535;
+	int imperial=0,vocabulary=65535;
 	struct attr attr;
-
+	
 	if (type == attr_navigation_long) {
 		if (is_length)
 			return g_strdup_printf(_("%d m"), dist);
 		else
 			return g_strdup_printf(_("in %d m"), dist);
 	}
+	if (navit_get_attr(nav->navit, attr_imperial, &attr, NULL))
+		imperial=attr.u.num;
 	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_distances, &attr, NULL))
 		vocabulary=attr.u.num;
-	if (dist < vocabulary_last(vocabulary)) {
-		dist=round_for_vocabulary(vocabulary, dist, 1);
-		if (is_length)
-			return g_strdup_printf(_("%d meters"), dist);
-		else
-			return g_strdup_printf(_("in %d meters"), dist);
+	if (imperial) {
+		if (dist*FEET_PER_METER < vocabulary_last(vocabulary)) {
+			dist=round_for_vocabulary(vocabulary, dist*FEET_PER_METER, 1);
+			if (is_length)
+				return g_strdup_printf(_("%d feet"), dist);
+			else
+				return g_strdup_printf(_("in %d feet"), dist);
+		}
+	} else {
+		if (dist < vocabulary_last(vocabulary)) {
+			dist=round_for_vocabulary(vocabulary, dist, 1);
+			if (is_length)
+				return g_strdup_printf(_("%d meters"), dist);
+			else
+				return g_strdup_printf(_("in %d meters"), dist);
+		}
 	}
-	dist=round_for_vocabulary(vocabulary, dist, 1000);
+	if (imperial)
+		dist=round_for_vocabulary(vocabulary, dist*FEET_PER_METER*1000/FEET_PER_MILE, 1000);
+	else
+		dist=round_for_vocabulary(vocabulary, dist, 1000);
 	if (dist < 5000) {
 		int rem=(dist/100)%10;
 		if (rem) {
-			if (is_length)
-				return g_strdup_printf(_("%d.%d kilometers"), dist/1000, rem);
-			else
-				return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
+			if (imperial) {
+				if (is_length)
+					return g_strdup_printf(_("%d.%d miles"), dist/1000, rem);
+				else
+					return g_strdup_printf(_("in %d.%d miles"), dist/1000, rem);
+			} else {
+				if (is_length)
+					return g_strdup_printf(_("%d.%d kilometers"), dist/1000, rem);
+				else
+					return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
+			}
 		}
 	}
-	if (is_length) 
-		return g_strdup_printf(ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
-	else
-		return g_strdup_printf(ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
+	if (imperial) {
+		if (is_length) 
+			return g_strdup_printf(ngettext("one mile","%d miles", dist/1000), dist/1000);
+		else
+			return g_strdup_printf(ngettext("in one mile","in %d miles", dist/1000), dist/1000);
+	} else {
+		if (is_length) 
+			return g_strdup_printf(ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
+		else
+			return g_strdup_printf(ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
+	}
 }
 
 

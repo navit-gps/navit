@@ -147,6 +147,7 @@ struct navit {
 		 /* 1=No graphics ok */
 		 /* 2=No gui ok */
 	int border;
+	int imperial;
 };
 
 struct gui *main_loop_gui;
@@ -2029,6 +2030,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		attr_updated=(this_->follow_cursor != !!attr->u.num);
 		this_->follow_cursor=!!attr->u.num;
 		break;
+        case attr_imperial: 
+                attr_updated=(this_->imperial != attr->u.num); 
+                this_->imperial=attr->u.num; 
+                break; 
 	default:
 		return 0;
 	}
@@ -2081,6 +2086,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 
 		attr->u.str[len] = '\0';
 		break;
+        case attr_imperial: 
+                attr->u.num=this_->imperial; 
+                break; 
 	case attr_bookmark_map:
 		attr->u.map=bookmarks_get_map(this_->bookmarks);
 		break;
