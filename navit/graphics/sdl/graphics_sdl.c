@@ -2135,6 +2135,10 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     /* Use screen size instead of requested */
     w = this->screen->w;
     h = this->screen->h;
+
+    dbg(0, "using screen %ix%i@%i\n", 
+	    this->screen->w, this->screen->h, 
+	    this->screen->format->BytesPerPixel * 8);
 #ifdef USE_WEBOS_ACCELEROMETER
     this->real_w = w;
     this->real_h = h;
