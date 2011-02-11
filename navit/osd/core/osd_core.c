@@ -1617,20 +1617,25 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
     p.y=this->item.h/2-this->d/4;
     p.x=this->item.w/2;
     p.y=this->item.h/2;
-	//graphics_draw_circle(this->item.gr, this->white, &p, this->d/2);
 
     if (navit) {
         tracking = navit_get_tracking(navit);
     }
     if (tracking) {
 
-        struct attr maxspeed_attr,speed_attr;
+        struct attr maxspeed_attr,speed_attr,imperial_attr;
         int *flags;
         double routespeed = -1;
         double tracking_speed = -1;
 	int osm_data = 0;
         struct item *item;
         item=tracking_get_current_item(tracking);
+	int imperial=0;
+
+	if(navit) {
+		if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
+			imperial=imperial_attr.u.num;
+	}
 
         flags=tracking_get_current_flags(tracking);
         if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
@@ -1650,7 +1655,9 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
         tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
         tracking_speed = *speed_attr.u.numd;
         if( -1 != tracking_speed && -1 != routespeed ) {
-            g_snprintf(text,16,"%s%.0lf",osm_data ? "" : "~",routespeed);
+            char*routespeed_str = format_speed(routespeed,"","value",imperial);
+            g_snprintf(text,16,"%s%s",osm_data ? "" : "~",routespeed_str);
+	    g_free(routespeed_str);
             if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
