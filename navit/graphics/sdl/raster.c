@@ -896,17 +896,17 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	    }
 	    break;
 	case 2:
-	    for (; x < dx; x++, pixel=(Uint16 *)pixel+pixx) {
+	    for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
 		*(Uint16 *) pixel = color;
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel = (Uint16 *)pixel + pixy;
+		    pixel = (Uint8 *)pixel + pixy;
 		}
 	    }
 	    break;
 	case 3:
-	    for (; x < dx; x++, pixel=(Uint32 *)pixel+pixx) {
+	    for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
 		if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
 		    *(Uint8 *)pixel = (color >> 16) & 0xff;
 		    *((Uint8 *)pixel+1) = (color >> 8) & 0xff;
@@ -919,17 +919,17 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel = (Uint32 *)pixel + pixy;
+		    pixel = (Uint8 *)pixel + pixy;
 		}
 	    }
 	    break;
 	default:		/* case 4 */
-	    for (; x < dx; x++, pixel=(Uint32 *)pixel+pixx) {
+	    for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
 		*(Uint32 *) pixel = color;
 		y += dy;
 		if (y >= dx) {
 		    y -= dx;
-		    pixel = (Uint32 *)pixel + pixy;
+		    pixel = (Uint8 *)pixel + pixy;
 		}
 	    }
 	    break;
