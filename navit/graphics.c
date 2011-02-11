@@ -2486,7 +2486,8 @@ graphics_remove_selection(struct graphics *gra, struct item *item, enum item_typ
 			if (item_is_equal(*item,*sitem)) {
 				if (dl) {
 					struct displayitem di;
-					GHashTable *h;
+					/* Unused Variable
+					GHashTable *h; */
 					di.item=*sitem;
 					di.label=NULL;
 					di.count=0;
