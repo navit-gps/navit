@@ -232,8 +232,6 @@
 #include <stdio.h>
 #include <glib.h>
 
-SHP_CVSID("$Id: shpopen.c,v 1.59 2008/03/14 05:25:31 fwarmerdam Exp $")
-
 typedef unsigned char uchar;
 
 #if UINT_MAX == 65535
