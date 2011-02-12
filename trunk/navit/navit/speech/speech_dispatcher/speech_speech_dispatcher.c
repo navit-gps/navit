@@ -57,7 +57,7 @@ static struct speech_methods speechd_meth = {
 };
 
 static struct speech_priv *
-speechd_new(struct speech_methods *meth, struct attr **attrs) {
+speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr) {
 	struct speech_priv *this;
 	SPDConnection *conn;
 
