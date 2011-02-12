@@ -269,14 +269,17 @@ public class NavitGraphics
 
 				public void do_longpress_action(float x, float y)
 				{
-					Log.e("NavitGraphics", "do_longpress_action enter");
-					NavitAndroidOverlayBubble b = new NavitAndroidOverlayBubble();
-					b.x = (int) x;
-					b.y = (int) y;
-					NavitAOverlay.set_bubble(b);
-					NavitAOverlay.show_bubble();
-					this.postInvalidate();
-					NavitAOverlay.invalidate();
+					if (!NavitAndroidOverlay.confirmed_bubble)
+					{
+						Log.e("NavitGraphics", "do_longpress_action enter");
+						NavitAndroidOverlayBubble b = new NavitAndroidOverlayBubble();
+						b.x = (int) x;
+						b.y = (int) y;
+						NavitAOverlay.set_bubble(b);
+						NavitAOverlay.show_bubble();
+						this.postInvalidate();
+						NavitAOverlay.invalidate();
+					}
 				}
 
 				@Override
@@ -1100,6 +1103,8 @@ public class NavitGraphics
 	{
 		//	Log.e("NavitGraphics","draw_polyline");
 		paint.setStyle(Paint.Style.STROKE);
+		//paint.setAntiAlias(true);
+		//paint.setStrokeWidth(0);
 		Path path = new Path();
 		path.moveTo(c[0], c[1]);
 		for (int i = 2; i < c.length; i += 2)
@@ -1114,6 +1119,8 @@ public class NavitGraphics
 	{
 		//Log.e("NavitGraphics","draw_polygon");
 		paint.setStyle(Paint.Style.FILL);
+		//paint.setAntiAlias(true);
+		//paint.setStrokeWidth(0);
 		Path path = new Path();
 		path.moveTo(c[0], c[1]);
 		for (int i = 2; i < c.length; i += 2)
@@ -1128,6 +1135,8 @@ public class NavitGraphics
 		//Log.e("NavitGraphics","draw_rectangle");
 		Rect r = new Rect(x, y, x + w, y + h);
 		paint.setStyle(Paint.Style.FILL);
+		paint.setAntiAlias(true);
+		//paint.setStrokeWidth(0);
 		draw_canvas.drawRect(r, paint);
 	}
 	protected void draw_circle(Paint paint, int x, int y, int r)

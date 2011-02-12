@@ -33,6 +33,7 @@ import android.widget.ImageView;
 public class NavitAndroidOverlay extends ImageView
 {
 	public Boolean					draw_bubble							= false;
+	public static Boolean		confirmed_bubble					= false;
 	public long						bubble_showing_since				= 0L;
 	public static long			bubble_max_showing_timespan	= 8000L; // 8 secs.
 
@@ -105,19 +106,22 @@ public class NavitAndroidOverlay extends ImageView
 		//Log.e("Navit", "NavitAndroidOverlay -> show_bubble");
 		if (!this.draw_bubble)
 		{
+			this.confirmed_bubble = false;
 			this.draw_bubble = true;
 			this.bubble_showing_since = System.currentTimeMillis();
 			bubble_thread = new BubbleThread(this);
 			bubble_thread.start();
 
 			// test test DEBUG
-			Message msg = new Message();
-			Bundle b = new Bundle();
-			b.putInt("Callback", 4);
-			b.putInt("x", this.bubble_001.x);
-			b.putInt("y", this.bubble_001.y);
-			msg.setData(b);
-			Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
+			/*
+			 * Message msg = new Message();
+			 * Bundle b = new Bundle();
+			 * b.putInt("Callback", 4);
+			 * b.putInt("x", this.bubble_001.x);
+			 * b.putInt("y", this.bubble_001.y);
+			 * msg.setData(b);
+			 * Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
+			 */
 		}
 	}
 
@@ -128,6 +132,7 @@ public class NavitAndroidOverlay extends ImageView
 
 	public void hide_bubble()
 	{
+		this.confirmed_bubble = false;
 		this.draw_bubble = false;
 		this.bubble_showing_since = 0L;
 		try
@@ -156,6 +161,48 @@ public class NavitAndroidOverlay extends ImageView
 		int action = event.getAction();
 		int x = (int) event.getX();
 		int y = (int) event.getY();
+
+		if ((this.draw_bubble) && (!this.confirmed_bubble))
+		{
+			// bubble is showing, test if we touch it to confirm destination
+			float draw_factor = 1.0f;
+			if (Navit.my_display_density.compareTo("mdpi") == 0)
+			{
+				draw_factor = 1.0f;
+			}
+			else if (Navit.my_display_density.compareTo("ldpi") == 0)
+			{
+				draw_factor = 0.7f;
+			}
+			else if (Navit.my_display_density.compareTo("hdpi") == 0)
+			{
+				draw_factor = 1.5f;
+			}
+			int dx = (int) ((20 / 1.5f) * draw_factor);
+			int dy = (int) ((-100 / 1.5f) * draw_factor);
+			int bubble_size_x = (int) ((150 / 1.5f) * draw_factor);
+			int bubble_size_y = (int) ((60 / 1.5f) * draw_factor);
+			RectF box_rect = new RectF(this.bubble_001.x + dx, this.bubble_001.y + dy,
+					this.bubble_001.x + bubble_size_x + dx, this.bubble_001.y + bubble_size_y + dy);
+			if (box_rect.contains(x, y))
+			{
+				// bubble touched to confirm destination
+				this.confirmed_bubble = true;
+				// draw confirmed bubble
+				this.postInvalidate();
+
+				// set destination
+				Message msg = new Message();
+				Bundle b = new Bundle();
+				b.putInt("Callback", 4);
+				b.putInt("x", this.bubble_001.x);
+				b.putInt("y", this.bubble_001.y);
+				msg.setData(b);
+				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
+				// consume the event
+				return true;
+			}
+		}
 
 		// test if we touched the grey rectangle
 		//
@@ -286,6 +333,16 @@ public class NavitAndroidOverlay extends ImageView
 			int ry = (int) (20 / 1.5f * draw_factor);
 			c.drawRoundRect(box_rect, rx, ry, bubble_paint);
 
+			if (this.confirmed_bubble)
+			{
+				// filled red rect (for confirmed bubble)
+				//bubble_paint.setStyle(Style.FILL);
+				//bubble_paint.setStrokeWidth(0);
+				//bubble_paint.setAntiAlias(false);
+				bubble_paint.setColor(Color.parseColor("#EC294D"));
+				c.drawRoundRect(box_rect, rx, ry, bubble_paint);
+			}
+
 			// black outlined rect
 			bubble_paint.setStyle(Style.STROKE);
 			bubble_paint.setStrokeWidth(3);
@@ -302,6 +359,7 @@ public class NavitAndroidOverlay extends ImageView
 			bubble_paint.setColor(Color.parseColor("#3b3131"));
 			c.drawText("drive here", this.bubble_001.x + dx + inner_dx, this.bubble_001.y + dy
 					+ inner_dy, bubble_paint);
+
 		}
 
 		//		// test, draw rectangles on top layer!
