@@ -2089,7 +2089,7 @@ index_country_add(struct zip_info *info, int country_id, int zipnum)
 	struct item_bin *item_bin=init_item(type_countryindex);
 	item_bin_add_attr_int(item_bin, attr_country_id, country_id);
 	item_bin_add_attr_int(item_bin, attr_zipfile_ref, zipnum);
-	item_bin_write(item_bin, info->index);
+	item_bin_write(item_bin, zip_get_index(info));
 }
 
 void

@@ -468,7 +468,7 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 	int nodeid=0;
 
         info.write=1;
-        info.maxlen=zip_info->maxnamelen;
+        info.maxlen=zip_get_maxnamelen(zip_info);
         info.suffix=suffix;
         info.tiles_list=NULL;
         info.tilesdir_out=NULL;
@@ -521,9 +521,9 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 				fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
 				exit(1);
 			}
-			write_zipmember(zip_info, th->name, zip_info->maxnamelen, th->zip_data, th->total_size);
+			write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
 		} else {
-			fwrite(th->zip_data, th->total_size, 1, zip_info->index);
+			fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info));
 		}
 		g_free(th->zip_data);
                 th=th->next;

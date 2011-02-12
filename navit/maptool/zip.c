@@ -29,7 +29,39 @@
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <openssl/md5.h>
 #endif
+
+struct zip_info {
+	int zipnum;
+	int dir_size;
+	long long offset;
+	int compression_level;
+	int maxnamelen;
+	int zip64;
+	short date;
+	short time;
+	char *passwd;
+	FILE *res2;
+	FILE *index;
+	FILE *dir;
+#ifdef HAVE_LIBCRYPTO
+	MD5_CTX md5_ctx;
+#endif
+	int md5;
+};
+
+static int
+zip_write(struct zip_info *info, void *data, int len)
+{
+	if (fwrite(data, len, 1, info->res2) != 1)
+		return 0;
+#ifdef HAVE_LIBCRYPTO
+	if (info->md5) 
+		MD5_Update(&info->md5_ctx, data, len);
+#endif
+	return 1;
+}
 
 #ifdef HAVE_ZLIB
 static int
@@ -187,17 +219,17 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		filename[len++]='_';
 	}
 	filename[filelen]='\0';
-	fwrite(&lfh, sizeof(lfh), 1, zip_info->res);
-	fwrite(filename, filelen, 1, zip_info->res);
+	zip_write(zip_info, &lfh, sizeof(lfh));
+	zip_write(zip_info, filename, filelen);
 	zip_info->offset+=sizeof(lfh)+filelen;
 #ifdef HAVE_LIBCRYPTO
 	if (zip_info->passwd) {
 		unsigned char counter[16], xor[16], *datap=(unsigned char *)data;
 		int size=comp_size;
 		AES_KEY aeskey;
-		fwrite(&enc, sizeof(enc), 1, zip_info->res);
-		fwrite(salt, sizeof(salt), 1, zip_info->res);
-		fwrite(verify, sizeof(verify), 1, zip_info->res);
+		zip_write(zip_info, &enc, sizeof(enc));
+		zip_write(zip_info, salt, sizeof(salt));
+		zip_write(zip_info, verify, sizeof(verify));
 		zip_info->offset+=sizeof(enc)+sizeof(salt)+sizeof(verify);
 		AES_set_encrypt_key(key, 128, &aeskey);
 		memset(counter, 0, sizeof(counter));
@@ -216,14 +248,14 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		}
 	}
 #endif
-	fwrite(data, comp_size, 1, zip_info->res);
+	zip_write(zip_info, data, comp_size);
 	zip_info->offset+=comp_size;
 #ifdef HAVE_LIBCRYPTO
 	if (zip_info->passwd) {
 		unsigned int maclen=sizeof(mac);
 		unsigned char mactmp[maclen*2];
 		HMAC(EVP_sha1(), key+16, 16, (unsigned char *)data, comp_size, mactmp, &maclen);
-		fwrite(mactmp, sizeof(mac), 1, zip_info->res);
+		zip_write(zip_info, mactmp, sizeof(mac));
 		zip_info->offset+=sizeof(mac);
 	}
 #endif
@@ -254,6 +286,15 @@ zip_write_index(struct zip_info *info)
 	fread(buffer, size, 1, info->index);
 	write_zipmember(info, "index", strlen("index"), buffer, size);
 	info->zipnum++;
+}
+
+static void
+zip_write_file_data(struct zip_info *info, FILE *in)
+{
+	size_t size;
+	char buffer[4096];
+	while ((size=fread(buffer, 1, 4096, in)))
+		zip_write(info, buffer, size);
 }
 
 int
@@ -289,25 +330,137 @@ zip_write_directory(struct zip_info *info)
 	};
 
 	fseek(info->dir, 0, SEEK_SET);
-	cat(info->dir, info->res);
+	zip_write_file_data(info, info->dir);
 	if (info->zip64) {
 		eoc64.zip64esize=sizeof(eoc64)-12;
 		eoc64.zip64enum=info->zipnum;
 		eoc64.zip64ecenn=info->zipnum;
 		eoc64.zip64ecsz=info->dir_size;
 		eoc64.zip64eofst=info->offset;
-		fwrite(&eoc64, sizeof(eoc64), 1, info->res);
+		zip_write(info, &eoc64, sizeof(eoc64));
 		eocl.zip64lofst=info->offset+info->dir_size;
-		fwrite(&eocl, sizeof(eocl), 1, info->res);
+		zip_write(info, &eocl, sizeof(eocl));
 	}
 	eoc.zipenum=info->zipnum;
 	eoc.zipecenn=info->zipnum;
 	eoc.zipecsz=info->dir_size;
 	eoc.zipeofst=info->offset;
-	fwrite(&eoc, sizeof(eoc), 1, info->res);
+	zip_write(info, &eoc, sizeof(eoc));
 	sig_alrm(0);
 #ifndef _WIN32
 	alarm(0);
 #endif
 	return 0;
+}
+
+struct zip_info *
+zip_new(void)
+{
+	return g_new0(struct zip_info, 1);
+}
+
+void
+zip_set_md5(struct zip_info *info, int on)
+{
+#ifdef HAVE_LIBCRYPTO
+	info->md5=on;
+	if (on) 
+		MD5_Init(&info->md5_ctx);
+#endif
+}
+
+int
+zip_get_md5(struct zip_info *info, unsigned char *out)
+{
+	if (!info->md5)
+		return 0;
+#ifdef HAVE_LIBCRYPTO
+	MD5_Final(out, &info->md5_ctx);
+	return 1;
+#endif
+	return 0;
+}
+
+void
+zip_set_zip64(struct zip_info *info, int on)
+{
+	info->zip64=on;
+}
+
+void
+zip_set_compression_level(struct zip_info *info, int level)
+{
+	info->compression_level=level;
+}
+
+void
+zip_set_maxnamelen(struct zip_info *info, int max)
+{
+	info->maxnamelen=max;
+}
+
+int
+zip_get_maxnamelen(struct zip_info *info)
+{
+	return info->maxnamelen;
+}
+
+int
+zip_add_member(struct zip_info *info)
+{
+	return info->zipnum++;
+}
+
+
+int
+zip_set_timestamp(struct zip_info *info, char *timestamp)
+{
+	int year,month,day,hour,min,sec;
+
+	if (sscanf(timestamp,"%d-%d-%dT%d:%d:%d",&year,&month,&day,&hour,&min,&sec) == 6) {
+		info->date=day | (month << 5) | ((year-1980) << 9);
+		info->time=(sec >> 1) | (min << 5) | (hour << 11);
+		return 1;
+	}
+	return 0;
+}
+
+void
+zip_open(struct zip_info *info, char *out, char *dir, char *index)
+{
+	info->res2=fopen(out,"wb+");
+	info->dir=fopen(dir,"wb+");
+	info->index=fopen(index,"wb+");
+}
+
+FILE *
+zip_get_index(struct zip_info *info)
+{
+	return info->index;
+}
+
+int
+zip_get_zipnum(struct zip_info *info)
+{
+	return info->zipnum;
+}
+
+void
+zip_set_zipnum(struct zip_info *info, int num)
+{
+	info->zipnum=num;
+}
+
+void
+zip_close(struct zip_info *info)
+{
+	fclose(info->index);
+	fclose(info->dir);
+	fclose(info->res2);
+}
+
+void
+zip_destroy(struct zip_info *info)
+{
+	g_free(info);
 }
