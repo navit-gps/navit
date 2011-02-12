@@ -145,8 +145,6 @@
 #include <ctype.h>
 #include <string.h>
 
-SHP_CVSID("$Id: dbfopen.c,v 1.83 2008/11/12 14:28:15 fwarmerdam Exp $")
-
 #ifndef FALSE
 #  define FALSE		0
 #  define TRUE		1
