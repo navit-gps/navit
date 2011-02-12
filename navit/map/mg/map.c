@@ -98,7 +98,7 @@ static struct country_isonum {
   {336,774},
 };
 
-struct map_priv * map_new_mg(struct map_methods *meth, struct attr **attrs);
+struct map_priv * map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
 static int map_id;
 
@@ -566,7 +566,7 @@ static struct map_methods map_methods_mg = {
 
 
 struct map_priv *
-map_new_mg(struct map_methods *meth, struct attr **attrs)
+map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m;
 	int i,maybe_missing;
