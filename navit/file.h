@@ -59,7 +59,7 @@ struct file {
 	GHashTable *headers;
 };
 
-struct attr *attr;
+struct attr;
 
 /* prototypes */
 int file_request(struct file *f, struct attr **options);
