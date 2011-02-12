@@ -6311,7 +6311,7 @@ gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct at
 		return;
 	if (mode) {
 		FILE *fm=fopen("map.bin","wb");
-		char *data;
+		unsigned char *data;
 		long long downloaded=0;
 		for (;;) {
 			data=file_data_read_special(f, 8192, &size);
@@ -6329,7 +6329,7 @@ gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct at
 		}
 		fclose(fm);
 	} else {
-		html=file_data_read_special(f, 8192, &size);
+		html=(char *)file_data_read_special(f, 8192, &size);
 		if (size < 8192) {
 			html[size]='\0';
 			printf("%s\n",html);
