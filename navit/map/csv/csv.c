@@ -188,7 +188,7 @@ static struct map_methods map_methods_csv = {
 };
 
 static struct map_priv *
-map_new_csv(struct map_methods *meth, struct attr **attrs)
+map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m = NULL;
 	struct attr *item_type;

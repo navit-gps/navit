@@ -641,7 +641,7 @@ static struct map_methods map_methods_shapefile = {
 };
 
 static struct map_priv *
-map_new_shapefile(struct map_methods *meth, struct attr **attrs)
+map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);

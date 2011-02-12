@@ -1083,7 +1083,7 @@ static struct map_methods tracking_map_meth = {
 };
 
 static struct map_priv *
-tracking_map_new(struct map_methods *meth, struct attr **attrs)
+tracking_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *ret;
 	struct attr *tracking_attr;
