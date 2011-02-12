@@ -220,7 +220,6 @@ static int
 vehicle_file_open(struct vehicle_priv *priv)
 {
 	char *name;
-/*	struct stat st; */
 #ifndef _WIN32
 	struct termios tio;
 #else

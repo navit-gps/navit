@@ -75,7 +75,7 @@ csv_coord_get(void *priv_data, struct coord *c, int count)
 static void
 csv_attr_rewind(void *priv_data)
 {
-	struct map_rect_priv *mr=priv_data;
+//	struct map_rect_priv *mr=priv_data;
 	//TODO implement if needed
 }
 
