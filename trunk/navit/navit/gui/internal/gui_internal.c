@@ -6187,7 +6187,7 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 	menu->spx=this->spacing*10;
 	wb=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(menu, wb);
-	text=g_strdup_printf("LANG=%s (1=%3$s 2=%2$s)",getenv("LANG"),"2","1");
+	text=g_strdup_printf("LANG=%1$s (1=%3$s 2=%2$s)",getenv("LANG"),"2","1");
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 	w->flags=gravity_left_center|orientation_horizontal|flags_fill;
 	g_free(text);
