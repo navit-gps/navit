@@ -849,7 +849,7 @@ tracking_get_map(struct tracking *this_)
 	attrs[3]=&description;
 	attrs[4]=NULL;
 	if (! this_->map)
-		this_->map=map_new(NULL, &attrs);
+		this_->map=map_new(NULL, attrs);
 	return this_->map;
 }
 
