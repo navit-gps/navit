@@ -913,24 +913,44 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 #endif
 }
 
-static void 
-set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
+
+static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
 {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
 	return;
     }
+    switch(surface->format->BytesPerPixel) {
+	case 2:
+	    {
+		Uint16 *target_pixel = (Uint16 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
-    void *target_pixel = ((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
+		Uint8 r1,g1,b1,a1;
+		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
 
-    Uint8 r1,g1,b1,a1;
-    SDL_GetRGBA(*(Uint32 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
+		*target_pixel = (Uint16) SDL_MapRGBA(surface->format,
+			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+			a2 + a1*(0xff-a2)/0xff );
+		break;
+	    }
+	case 4:
+	    {
+		Uint32 *target_pixel = (Uint32 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
-    *(Uint32 *)target_pixel = SDL_MapRGBA(surface->format,
-	    (r1*(0xff-a2)/0xff) + (r2*a2/0xff),
-	    (g1*(0xff-a2)/0xff) + (g2*a2/0xff),
-	    (b1*(0xff-a2)/0xff) + (b2*a2/0xff),
-	    a2 + a1*(0xff-a2)/0xff );
+		Uint8 r1,g1,b1,a1;
+		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
+
+		*target_pixel = (Uint32) SDL_MapRGBA(surface->format,
+			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+			a2 + a1*(0xff-a2)/0xff );
+		break;
+	    }
+    }
 }
+
 
 static void
 resize_ft_buffer (unsigned int new_size)
