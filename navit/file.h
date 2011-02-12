@@ -78,7 +78,7 @@ int file_get_contents(char *name, unsigned char **buffer, int *size);
 unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
 unsigned char *file_data_read_encrypted(struct file *file, long long offset, int size, int size_uncomp, int compressed, char *passwd);
 void file_data_free(struct file *file, unsigned char *data);
-int file_exists(char *name);
+int file_exists(char const *name);
 void file_remap_readonly(struct file *f);
 void file_unmap(struct file *f);
 void *file_opendir(char *dir);

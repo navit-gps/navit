@@ -121,7 +121,7 @@ bbox_contains_bbox(struct rect *out, struct rect *in)
 }
 
 long long
-bbox_area(struct rect *r)
+bbox_area(struct rect const *r)
 {
 	return ((long long)r->h.x-r->l.x)*(r->h.y-r->l.y);
 }

@@ -1247,7 +1247,7 @@ static int window_fullscreen(struct window *win, int on)
 }
 
 static void *
-get_data(struct graphics_priv *this, const char *type)
+get_data(struct graphics_priv *this, char const *type)
 {
 	if(strcmp(type, "window") == 0) {
 		struct window *win;
