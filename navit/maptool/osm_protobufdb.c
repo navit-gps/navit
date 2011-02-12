@@ -619,11 +619,10 @@ osm_protobufdb_parse_node(struct osm_protobufdb_context *ctx, char *str)
 static int
 osm_protobufdb_end_node(struct osm_protobufdb_context *ctx)
 {
-	OSMPBF__Node *n=&ctx->n,offset;
-	OSMPBF__Info *i=&ctx->i,offseti;
-	
 	int p;
 #if 0
+	OSMPBF__Node *n=&ctx->n,offset;
+	OSMPBF__Info *i=&ctx->i,offseti;
 	osm_protobufdb_start_densenode(ctx);
 	p=osm_protobufdb_insert_densenode(n->id, &offset, &offseti, context.dn);
 	osm_protobufdb_modify_densenode(n, i, &offset, &offseti, p, context.dn);
