@@ -110,6 +110,7 @@ usage(FILE *f)
 	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)              : this screen\n");
+	fprintf(f,"-5 (--md5)               : set file where to write md5 sum\n");
 	fprintf(f,"-6 (--64bit)             : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
@@ -155,7 +156,7 @@ int main(int argc, char **argv)
 	int protobuf=0;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
-	char *protobufdb=NULL,*protobufdb_operation=NULL;
+	char *protobufdb=NULL,*protobufdb_operation=NULL,*md5file=NULL;
 #ifdef HAVE_POSTGRESQL
 	char *dbstr=NULL;
 #endif
@@ -178,7 +179,7 @@ int main(int argc, char **argv)
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
 	int i;
 	main_init(argv[0]);
-	struct zip_info zip_info;
+	struct zip_info *zip_info=NULL;
 	int suffix_start=0;
 	char *timestamp=current_to_iso8601();
 #ifndef HAVE_GLIB
@@ -191,6 +192,7 @@ int main(int argc, char **argv)
 #endif
 		int option_index = 0;
 		static struct option long_options[] = {
+			{"md5", 1, 0, '5'},
 			{"64bit", 0, 0, '6'},
 			{"attr-debug-level", 1, 0, 'a'},
 			{"binfile", 0, 0, 'b'},
@@ -216,7 +218,7 @@ int main(int argc, char **argv)
 			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "6B:DNO:PWS:a:bc"
+		c = getopt_long (argc, argv, "5:6B:DNO:PWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -224,6 +226,9 @@ int main(int argc, char **argv)
 		if (c == -1)
 			break;
 		switch (c) {
+		case '5':
+			md5file=optarg;
+			break;
 		case '6':
 			zip64=1;
 			break;
@@ -534,19 +539,15 @@ int main(int argc, char **argv)
 		if (start <= 4) {
 			phase=3;
 			if (i == suffix_start) {
-				int year,month,day,hour,min,sec;
-				memset(&zip_info, 0, sizeof(zip_info));
-				zip_info.zip64=zip64;
-				if (sscanf(timestamp,"%d-%d-%dT%d:%d:%d",&year,&month,&day,&hour,&min,&sec) == 6) {
-					zip_info.date=day | (month << 5) | ((year-1980) << 9);
-					zip_info.time=(sec >> 1) | (min << 5) | (hour << 11);
-				}
+				zip_info=zip_new();
+				zip_set_zip64(zip_info, zip64);
+				zip_set_timestamp(zip_info, timestamp);
 			}
-			zipnum=zip_info.zipnum;
+			zipnum=zip_get_zipnum(zip_info);
 			fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
 			tilesdir=tempfile(suffix,"tilesdir",1);
 			if (!strcmp(suffix,"r")) {
-				ch_generate_tiles(suffixes[0],suffix,tilesdir,&zip_info);
+				ch_generate_tiles(suffixes[0],suffix,tilesdir,zip_info);
 			} else {
 				for (f = 0 ; f < 3 ; f++)
 					files[f]=NULL;
@@ -556,33 +557,37 @@ int main(int argc, char **argv)
 					files[1]=tempfile(suffix,"ways_split",0);
 				if (process_nodes)
 					files[2]=tempfile(suffix,"nodes",0);
-				phase4(files,3,0,suffix,tilesdir,&zip_info);
+				phase4(files,3,0,suffix,tilesdir,zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
 						fclose(files[f]);
 				}
 			}
 			fclose(tilesdir);
-			zip_info.zipnum=zipnum;
+			zip_set_zipnum(zip_info,zipnum);
 		}
 		if (end == 4)
 			exit(0);
+		if (zip_info) {
+			zip_destroy(zip_info);
+			zip_info=NULL;
+		}
 		if (start <= 5) {
 			phase=4;
 			fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
 			if (i == suffix_start) {
-				zip_info.dir_size=0;
-				zip_info.offset=0;
-				zip_info.maxnamelen=14+strlen(suffixes[0]);
-				zip_info.compression_level=compression_level;
-				zip_info.zipnum=0;
-				zip_info.dir=tempfile("zipdir","",1);
-				zip_info.index=tempfile("index","",1);
-				zip_info.res=fopen(result,"wb+");
-				index_init(&zip_info, 1);
+				char *zipdir=tempfile_name("zipdir","");
+				char *zipindex=tempfile_name("index","");
+				zip_info=zip_new();
+				zip_set_maxnamelen(zip_info, 14+strlen(suffixes[0]));
+				zip_set_compression_level(zip_info, compression_level);
+				if (md5file) 
+					zip_set_md5(zip_info, 1);
+				zip_open(zip_info, result, zipdir, zipindex);	
+				index_init(zip_info, 1);
 			}
 			if (!strcmp(suffix,"r")) {
-				ch_assemble_map(suffixes[0],suffix,&zip_info);
+				ch_assemble_map(suffixes[0],suffix,zip_info);
 			} else {
 				for (f = 0 ; f < 3 ; f++) {
 					files[f]=NULL;
@@ -598,7 +603,7 @@ int main(int argc, char **argv)
 					files[2]=tempfile(suffix,"nodes",0);
 				fprintf(stderr,"Slice %d\n",i);
 
-				phase5(files,references,3,0,suffix,&zip_info);
+				phase5(files,references,3,0,suffix,zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
 						fclose(files[f]);
@@ -619,16 +624,23 @@ int main(int argc, char **argv)
 				unlink("coords.tmp");
 			}
 			if (i == suffix_count-1) {
-				zipnum=zip_info.zipnum;
-				add_aux_tiles("auxtiles.txt", &zip_info);
-				write_countrydir(&zip_info);
-				zip_info.zipnum=zipnum;
-				write_aux_tiles(&zip_info);
-				zip_write_index(&zip_info);
-				zip_write_directory(&zip_info);
-				fclose(zip_info.index);
-				fclose(zip_info.dir);
-				fclose(zip_info.res);
+				unsigned char md5_data[16];
+				zipnum=zip_get_zipnum(zip_info);
+				add_aux_tiles("auxtiles.txt", zip_info);
+				write_countrydir(zip_info);
+				zip_set_zipnum(zip_info, zipnum);
+				write_aux_tiles(zip_info);
+				zip_write_index(zip_info);
+				zip_write_directory(zip_info);
+				zip_close(zip_info);
+				if (md5file && zip_get_md5(zip_info, md5_data)) {
+					FILE *md5=fopen(md5file,"w");
+					int i;
+					for (i = 0 ; i < 16 ; i++)
+						fprintf(md5,"%02x",md5_data[i]);
+					fprintf(md5,"\n");
+					fclose(md5);
+				}
 				if (!keep_tmpfiles) {
 					remove_countryfiles();
 					tempfile_unlink("index","");
