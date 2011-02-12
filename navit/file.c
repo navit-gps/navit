@@ -659,7 +659,7 @@ file_data_free(struct file *file, unsigned char *data)
 }
 
 int
-file_exists(char *name)
+file_exists(char const *name)
 {
 	struct stat buf;
 	if (! stat(name, &buf))
