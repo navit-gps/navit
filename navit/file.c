@@ -375,14 +375,14 @@ file_data_read(struct file *file, long long offset, int size)
 }
 
 static void
-file_process_headers(struct file *file, char *headers)
+file_process_headers(struct file *file, unsigned char *headers)
 {
 	char *tok;
 	char *cl;
 	if (file->headers)
 		g_hash_table_destroy(file->headers);
 	file->headers=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	while ((tok=strtok(headers, "\r\n"))) {
+	while ((tok=strtok((char*)headers, "\r\n"))) {
 		char *sep;
 		tok=g_strdup(tok);
 		sep=strchr(tok,':');
