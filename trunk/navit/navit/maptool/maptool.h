@@ -206,7 +206,7 @@ void bbox(struct coord *c, int count, struct rect *r);
 int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r);
 int bbox_contains_coord(struct rect *r, struct coord *c);
 int bbox_contains_bbox(struct rect *out, struct rect *in);
-long long bbox_area(struct rect *r);
+long long bbox_area(struct rect const *r);
 void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes);
 void dump(FILE *in);
 int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
