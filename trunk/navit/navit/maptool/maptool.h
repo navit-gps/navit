@@ -3,6 +3,10 @@
 #include "coord.h"
 #include "item.h"
 #include "attr.h"
+#ifdef HAVE_LIBCRYPTO
+#include <openssl/md5.h>
+#endif
+
 
 #ifdef HAVE_API_WIN32_BASE
 #define LONGLONG_FMT "%I64d"
@@ -76,20 +80,7 @@ struct item_bin_sink {
 	GList *sink_funcs;
 };
 
-struct zip_info {
-	int zipnum;
-	int dir_size;
-	long long offset;
-	int compression_level;
-	int maxnamelen;
-	int zip64;
-	short date;
-	short time;
-	char *passwd;
-	FILE *res;
-	FILE *index;
-	FILE *dir;
-};
+struct zip_info;
 
 /* boundaries.c */
 
@@ -300,7 +291,21 @@ void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
-
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
 void zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
+struct zip_info *zip_new(void);
+void zip_set_md5(struct zip_info *info, int on);
+int zip_get_md5(struct zip_info *info, unsigned char *out);
+void zip_set_zip64(struct zip_info *info, int on);
+void zip_set_compression_level(struct zip_info *info, int level);
+void zip_set_maxnamelen(struct zip_info *info, int max);
+int zip_get_maxnamelen(struct zip_info *info);
+int zip_add_member(struct zip_info *info);
+int zip_set_timestamp(struct zip_info *info, char *timestamp);
+void zip_open(struct zip_info *info, char *out, char *dir, char *index);
+FILE *zip_get_index(struct zip_info *info);
+int zip_get_zipnum(struct zip_info *info);
+void zip_set_zipnum(struct zip_info *info, int num);
+void zip_close(struct zip_info *info);
+void zip_destroy(struct zip_info *info);

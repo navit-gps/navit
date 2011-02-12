@@ -359,7 +359,7 @@ add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size)
 	at->filename=g_strdup(filename);
 	at->size=size;
 	aux_tile_list=g_list_append(aux_tile_list, at);
-	return zip_info->zipnum++;
+	return zip_add_member(zip_info);
 }
 
 int
@@ -379,11 +379,11 @@ write_aux_tiles(struct zip_info *zip_info)
 		assert(f != NULL);
 		fread(buffer, at->size, 1, f);
 		fclose(f);
-		write_zipmember(zip_info, at->name, zip_info->maxnamelen, buffer, at->size);
+		write_zipmember(zip_info, at->name, zip_get_maxnamelen(zip_info), buffer, at->size);
 		free(buffer);
 		count++;
 		l=g_list_next(l);
-		zip_info->zipnum++;
+		zip_add_member(zip_info);
 	}
 	return count;
 }
@@ -488,7 +488,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 					*last=th;
 					last=&th->next;
 					th->next=NULL;
-					th->zipnum=zip_info->zipnum;
+					th->zipnum=zip_get_zipnum(zip_info);
 					fprintf(out,"%s:%d",(char *)next->data,th->total_size);
 
 					for ( idx = 0; idx< th->num_subtiles; idx++ ){
@@ -500,7 +500,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 				}
 				if (th->name[strlen(info->suffix)])
 					index_submap_add(info, th);
-				zip_info->zipnum++;
+				zip_add_member(zip_info);
 				processed_tiles++;
 			}
 			next=g_list_next(next);
@@ -511,8 +511,8 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 		struct item_bin *item_bin=init_item(type_submap);
 		item_bin_add_coord_rect(item_bin, &world_bbox);
 		item_bin_add_attr_range(item_bin, attr_order, 0, 255);
-		item_bin_add_attr_int(item_bin, attr_zipfile_ref, zip_info->zipnum-1);
-		item_bin_write(item_bin, zip_info->index);
+		item_bin_add_attr_int(item_bin, attr_zipfile_ref, zip_get_zipnum(zip_info)-1);
+		item_bin_write(item_bin, zip_get_index(zip_info));
 	}
 }
 
@@ -602,7 +602,7 @@ index_init(struct zip_info *info, int version)
 			break;
 		item_bin_add_attr(item_bin, &map_information_attrs[i]);
 	}
-	item_bin_write(item_bin, info->index);
+	item_bin_write(item_bin, zip_get_index(info));
 }
 
 void

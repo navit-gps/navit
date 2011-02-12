@@ -317,7 +317,7 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 		}
 	}
 	info.write=1;
-	info.maxlen=zip_info->maxnamelen;
+	info.maxlen=zip_get_maxnamelen(zip_info);
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=NULL;
@@ -331,10 +331,10 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 					fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
 					exit(1);
 				}
-				write_zipmember(zip_info, th->name, zip_info->maxnamelen, th->zip_data, th->total_size);
+				write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
 				zipfiles++;
 			} else 
-				fwrite(th->zip_data, th->total_size, 1, zip_info->index);
+				fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info));
 		}
 		th=th->next;
 	}
@@ -383,9 +383,9 @@ phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix,
 			th=th->next;
 		}
 		/* process_slice() modifies zip_info, but need to retain old info */
-		zipnum=zip_info->zipnum;
+		zipnum=zip_get_zipnum(zip_info);
 		written_tiles=process_slice(in, references, in_count, with_range, size, suffix, zip_info);
-		zip_info->zipnum=zipnum+written_tiles;
+		zip_set_zipnum(zip_info, zipnum+written_tiles);
 		slices++;
 	}
 	return 0;
@@ -425,13 +425,3 @@ add_aux_tiles(char *name, struct zip_info *info)
 	}
 	fclose(in);
 }
-
-void
-cat(FILE *in, FILE *out)
-{
-	size_t size;
-	char buffer[4096];
-	while ((size=fread(buffer, 1, 4096, in)))
-		fwrite(buffer, 1, size, out);
-}
-
