@@ -1408,7 +1408,7 @@ osm_add_member(int type, osmid ref, char *role)
 	char member_buffer[BUFFER_SIZE*3+3];
 	struct attr memberattr = { attr_osm_member };
 
-	sprintf(member_buffer,"%d:%Ld:%s", type, (long long) ref, role);
+	sprintf(member_buffer,"%d:"LONGLONG_FMT":%s", type, (long long) ref, role);
 	memberattr.u.str=member_buffer;
 	item_bin_add_attr(item_bin, &memberattr);
 }

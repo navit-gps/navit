@@ -7,7 +7,7 @@
 #ifdef HAVE_API_WIN32_BASE
 #define LONGLONG_FMT "%I64d"
 #else
-#define LONGLONG_FMT "%Ld"
+#define LONGLONG_FMT "%lld"
 #endif
 
 #define BUFFER_SIZE 1280
