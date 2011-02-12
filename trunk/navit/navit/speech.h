@@ -21,6 +21,7 @@
 #define NAVIT_SPEECH_H
 
 struct speech_priv;
+struct attr_iter;
 
 struct speech_methods {
 	void (*destroy)(struct speech_priv *this_);
