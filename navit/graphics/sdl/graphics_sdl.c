@@ -221,8 +221,9 @@ static void event_sdl_remove_timeout(struct event_timeout *);
 static struct event_idle *event_sdl_add_idle(int, struct callback *);
 static void event_sdl_remove_idle(struct event_idle *);
 static void event_sdl_call_callback(struct callback_list *);
-
 #endif
+static unsigned char * ft_buffer = NULL;
+static unsigned int    ft_buffer_size = 0;
 
 struct graphics_font_priv {
 #ifdef SDL_TTF
@@ -258,6 +259,8 @@ static void
 graphics_destroy(struct graphics_priv *gr)
 {
     dbg(0, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
+
+    g_free (ft_buffer);
 
     if(gr->overlay_mode)
     {
@@ -910,7 +913,8 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 #endif
 }
 
-static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
+static void 
+set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
 {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
 	return;
@@ -929,13 +933,23 @@ static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Ui
 }
 
 static void
+resize_ft_buffer (unsigned int new_size)
+{
+    if (new_size > ft_buffer_size) {
+	g_free (ft_buffer);
+	ft_buffer = g_malloc (new_size);
+	dbg(1, "old_size(%i) new_size(%i) ft_buffer(%i)\n", ft_buffer_size, new_size, ft_buffer);
+	ft_buffer_size = new_size;
+    }
+}
+
+static void
 display_text_draw(struct font_freetype_text *text,
 		  struct graphics_priv *gr, struct graphics_gc_priv *fg,
 		  struct graphics_gc_priv *bg, int color, struct point *p)
 {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
-    unsigned char *shadow, *glyph;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
     struct color black =
 	{ fg->fore_r * 255, fg->fore_g * 255, fg->fore_b * 255, fg->fore_a * 255
@@ -986,11 +1000,11 @@ display_text_draw(struct font_freetype_text *text,
 	if (g->w && g->h && bg) {
 	    stride = (g->w + 2) * 4;
 	    if (color) {
-		shadow = g_malloc(stride * (g->h + 2));
-		gr->freetype_methods.get_shadow(g, shadow, 32, stride, &white, &transparent);
+		resize_ft_buffer(stride * (g->h + 2));
+		gr->freetype_methods.get_shadow(g, ft_buffer, 32, stride, &white, &transparent);
 
 		SDL_Surface *glyph_surface =
-		    SDL_CreateRGBSurfaceFrom(shadow, g->w + 2, g->h + 2,
+		    SDL_CreateRGBSurfaceFrom(ft_buffer, g->w + 2, g->h + 2,
 					     32,
 					     stride,
 					     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
@@ -1004,7 +1018,6 @@ display_text_draw(struct font_freetype_text *text,
 		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
 		    SDL_FreeSurface(glyph_surface);
 		}
-		g_free(shadow);
 	    }
 	}
 	x += g->dx;
@@ -1021,12 +1034,12 @@ display_text_draw(struct font_freetype_text *text,
 	    if (color) {
 		stride = g->w;
 		if (bg) {
-		    glyph = g_malloc(stride * g->h * 4);
-		    gr->freetype_methods.get_glyph(g, glyph, 32,
+		    resize_ft_buffer(stride * g->h * 4);
+		    gr->freetype_methods.get_glyph(g, ft_buffer, 32,
 						   stride * 4, &black,
 						   &white, &transparent);
 		    SDL_Surface *glyph_surface =
-			SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32,
+			SDL_CreateRGBSurfaceFrom(ft_buffer, g->w, g->h, 32,
 						 stride * 4,
 						 0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
 		    if (glyph_surface) {
@@ -1039,15 +1052,14 @@ display_text_draw(struct font_freetype_text *text,
 			SDL_BlitSurface(glyph_surface, NULL, gr->screen,&r);
 		        SDL_FreeSurface(glyph_surface);
 		    }
-		    g_free(glyph);
 		}
 		stride *= 4;
-		glyph = g_malloc(stride * g->h);
-		gr->freetype_methods.get_glyph(g, glyph, 32, stride,
+		resize_ft_buffer(stride * g->h);
+		gr->freetype_methods.get_glyph(g, ft_buffer, 32, stride,
 					       &black, &white,
 					       &transparent);
 		int ii, jj;
-		unsigned char* pGlyph = glyph;
+		unsigned char* pGlyph = ft_buffer;
 		for (jj = 0; jj < g->h; ++jj) {
 		    for (ii = 0; ii < g->w; ++ii) {
 			if(*(pGlyph+3) > 0) {
@@ -1063,7 +1075,6 @@ display_text_draw(struct font_freetype_text *text,
                         pGlyph += 4;
 		    }
 		}
-		g_free(glyph);
 	    }
 	}
 	x += g->dx;
