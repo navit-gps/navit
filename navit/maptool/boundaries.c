@@ -101,7 +101,7 @@ test(GList *boundaries_list)
 	struct item_bin *ib;
 	FILE *f=fopen("country_276.bin.unsorted","r");
 	printf("start\n");
-	while (ib=read_item(f)) {
+	while ((ib=read_item(f))) {
 		struct coord *c=(struct coord *)(ib+1);
 		char *name=item_bin_get_attr(ib, attr_town_name, NULL);
 		printf("%s:",name);
@@ -148,7 +148,7 @@ process_boundaries(FILE *boundaries, FILE *ways)
 
 	member_hash=g_hash_table_new_full(boundary_member_hash, boundary_member_equal, NULL, NULL);
 	boundaries_list=build_boundaries(boundaries);
-	while (ib=read_item(ways)) {
+	while ((ib=read_item(ways))) {
 		long long *wayid=item_bin_get_attr(ib, attr_osm_wayid, NULL);
 		if (wayid) {
 			GList *l=g_hash_table_lookup(member_hash, wayid);

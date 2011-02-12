@@ -1081,7 +1081,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	xmlfile=getenv("XMLFILE");
 	newxmlfile=g_strdup(document->href);
 	newxmldir=g_strdup(document->href);
-	if (sep=strrchr(newxmldir,'/')) 
+	if ((sep=strrchr(newxmldir,'/'))) 
 		*sep='\0';
 	else {
 		g_free(newxmldir);
