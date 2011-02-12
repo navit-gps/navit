@@ -47,7 +47,6 @@ quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax
       int i;
       for( i=0;i<4;++i) {
         if(nodes[i] ) {
-            struct quadtree_item*res_tmp = NULL;
           //limit flooding
 	  if(nodes[i]->xmax<dXMin || dXMax<nodes[i]->xmin ||
 	     nodes[i]->ymax<dYMin || dYMax<nodes[i]->ymin
