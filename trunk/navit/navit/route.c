@@ -2855,7 +2855,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 0;
 		case attr_maxspeed:
 			mr->attr_next = attr_street_item;
-			if (seg && seg->data->flags && AF_SPEED_LIMIT) {
+			if (seg && seg->data->flags & AF_SPEED_LIMIT) {
 				attr->u.num=RSD_MAXSPEED(seg->data);
 
 			} else {
