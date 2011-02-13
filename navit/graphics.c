@@ -1119,9 +1119,11 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 			while (i < count && c[i].fowler <= start)
 				i+=step;
 			while (i < count && c[i].fowler < end) {
-				res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-				res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
-				(*pos)+=dir;
+				if (1< *pos || 0<dir) {
+					res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
+					res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+					(*pos)+=dir;
+				}
 				i+=step;
 			}
 			end-=1024;
@@ -1137,9 +1139,11 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 			while (i >= 0 && c[i].fowler >= start)
 				i-=step;
 			while (i >= 0 && c[i].fowler > end) {
-				res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-				res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
-				(*pos)+=dir;
+				if (1< *pos || 0<dir) {
+					res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
+					res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+					(*pos)+=dir;
+				}
 				i-=step;
 			}
 			start+=1024;
