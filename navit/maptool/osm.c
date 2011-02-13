@@ -100,7 +100,7 @@ struct country_table {
 	{ 50,"Bangladesh"},
 	{ 51,"Armenia"},
 	{ 52,"Barbados"},
-	{ 56,"Belgium"},
+	{ 56,"Belgium,Belgique,Belgie,België,Belgien"},
 	{ 60,"Bermuda"},
 	{ 64,"Bhutan"},
 	{ 68,"Bolivia, Plurinational State of"},
