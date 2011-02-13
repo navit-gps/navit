@@ -579,6 +579,7 @@ int main(int argc, char **argv)
 				char *zipdir=tempfile_name("zipdir","");
 				char *zipindex=tempfile_name("index","");
 				zip_info=zip_new();
+				zip_set_zip64(zip_info, zip64);
 				zip_set_maxnamelen(zip_info, 14+strlen(suffixes[0]));
 				zip_set_compression_level(zip_info, compression_level);
 				if (md5file) 
