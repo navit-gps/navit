@@ -3,8 +3,10 @@ SET(CMAKE_SYSTEM_NAME Windows)
 FIND_PROGRAM(CMAKE_C_COMPILER NAMES i686-mingw32-gcc i586-mingw32-gcc mingw32-gcc)
 FIND_PROGRAM(CMAKE_CXX_COMPILER NAMES i686-mingw32-g++ i586-mingw32-gcc mingw32-g++)
 
-FIND_PROGRAM(CMAKE_RC_COMPILER_INIT NAMES i686-mingw32-windres i586-mingw32-windres mingw32-windres)
+FIND_PROGRAM(CMAKE_RC_COMPILER_INIT NAMES i686-mingw32-windres i586-mingw32-windres mingw32-windres windres.exe)
 SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+
+FIND_PROGRAM(CMAKE_AR i686-mingw32-ar i586-mingw32-ar mingw32-ar ar.exe)
 
 EXECUTE_PROCESS( 
    COMMAND ${CMAKE_C_COMPILER} -print-sysroot
