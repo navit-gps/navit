@@ -45,8 +45,8 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 GPrivate
 g_private_new_navit ()
 {
-	int dwTlsIndex;
 #if HAVE_API_WIN32_BASE
+	int dwTlsIndex;
 
 	if ((dwTlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
       printf(0, "TlsAlloc failed");
