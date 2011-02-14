@@ -34,6 +34,7 @@
 #include "bookmarks.h"
 #include "navit.h"
 #include "navit_nls.h"
+#include "util.h"
 
 /* FIXME: Move this to support directory */
 #ifdef _MSC_VER
@@ -70,7 +71,7 @@ struct bookmarks {
 struct bookmark_item_priv {
 	char *label;
 	enum item_type type;
-	struct coord c;
+	struct pcoord c;
 	GList *children;
 	GList *iter;
 	struct bookmark_item_priv *parent;
@@ -437,7 +438,7 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
 }
 
 static void
-bookmarks_emit_dbus_signal(struct bookmarks *this_, struct coord *c, const char *description,int create)
+bookmarks_emit_dbus_signal(struct bookmarks *this_, struct pcoord *c, const char *description,int create)
 {
     struct attr attr1,attr2,attr3,attr4,cb,*attr_list[5];
 	int valid=0;
@@ -583,7 +584,7 @@ bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 			bookmarks_clear_hash(this_);
 			bookmarks_load_hash(this_);
 
-            bookmarks_emit_dbus_signal(this_,&(data->c),label,FALSE);
+			bookmarks_emit_dbus_signal(this_,&(data->c),label,FALSE);
 
 			return result;
 		}
