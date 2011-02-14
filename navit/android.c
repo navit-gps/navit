@@ -130,8 +130,8 @@ JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string)
 {
 	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
-	char *langstr;
-	char *displaydensitystr;
+	const char *langstr;
+	const char *displaydensitystr;
 	android_version=version;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	android_activity_cbl=callback_list_new();
@@ -186,7 +186,7 @@ Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject t
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz, int id, jobject str)
 {
-	char *s;
+	const char *s;
 	dbg(0,"enter %p %p\n",(struct callback *)id,str);
 	s=(*env)->GetStringUTFChars(env, str, NULL);
 	dbg(0,"key=%s\n",s);
@@ -258,7 +258,7 @@ Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject th
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz, int i, jobject str)
 {
-	char *s;
+	const char *s;
 	dbg(0,"enter %p %p\n",(struct callback *)i,str);
 
 	config_get_attr(config, attr_navit, &attr, NULL);
@@ -284,27 +284,26 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			s=(*env)->GetStringUTFChars(env, str, NULL);
 			dbg(0,"*****string=%s\n",s);
 
-			command_evaluate(global_navit,s);
+			command_evaluate(&global_navit->self,s);
 
 			(*env)->ReleaseStringUTFChars(env, str, s);
 		}
 		else if (i == 4)
 		{
-			s=(*env)->GetStringUTFChars(env, str, NULL);
-			dbg(0,"*****string=%s\n",s);
-
-			// set destination to (pixel-x#pixel-y)
-			char name[strlen(s)];
-			*name = "Target";
 			char *pstr;
-			// char *stopstring;
-
-		        struct point p;
+			struct point p;
 			struct coord c;
 			struct pcoord pc;
 
+			s=(*env)->GetStringUTFChars(env, str, NULL);
+			char parse_str[strlen(s) + 1];
+			strcpy(parse_str, s);
+			(*env)->ReleaseStringUTFChars(env, str, s);
+			dbg(0,"*****string=%s\n",parse_str);
+
+			// set destination to (pixel-x#pixel-y)
 			// pixel-x
-			pstr = strtok (s,"#");
+			pstr = strtok (parse_str,"#");
 			p.x = atoi(pstr);
 			// pixel-y
 			pstr = strtok (NULL, "#");
@@ -313,40 +312,41 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			dbg(0,"11x=%d\n",p.x);
 			dbg(0,"11y=%d\n",p.y);
 
-		        transform_reverse(global_navit->trans, &p, &c);
+			transform_reverse(global_navit->trans, &p, &c);
 
 
-		        pc.x = c.x;
-		        pc.y = c.y;
-		        pc.pro = transform_get_projection(global_navit->trans);
+			pc.x = c.x;
+			pc.y = c.y;
+			pc.pro = transform_get_projection(global_navit->trans);
 
 			dbg(0,"22x=%d\n",pc.x);
 			dbg(0,"22y=%d\n",pc.y);
 
 			// start navigation asynchronous
-			navit_set_destination(global_navit, &pc, &name, 1);
-
-			(*env)->ReleaseStringUTFChars(env, str, s);
+			navit_set_destination(global_navit, &pc, parse_str, 1);
 		}
 		else if (i == 3)
 		{
+			char *name;
 			s=(*env)->GetStringUTFChars(env, str, NULL);
+			char parse_str[strlen(s) + 1];
+			strcpy(parse_str, s);
+			(*env)->ReleaseStringUTFChars(env, str, s);
 			dbg(0,"*****string=%s\n",s);
 
 			// set destination to (lat#lon#title)
 			struct coord_geo g;
 			char *p;
-			char name[strlen(s)];
 			char *stopstring;
 
 			// lat
-			p = strtok (s,"#");
+			p = strtok (parse_str,"#");
 			g.lat = strtof(p, &stopstring);
 			// lon
 			p = strtok (NULL, "#");
 			g.lng = strtof(p, &stopstring);
 			// description
-			*name = strtok (NULL, "#");
+			name = strtok (NULL, "#");
 
 			dbg(0,"lat=%f\n",g.lat);
 			dbg(0,"lng=%f\n",g.lng);
@@ -361,9 +361,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			pc.pro=projection_mg;
 
 			// start navigation asynchronous
-			navit_set_destination(global_navit, &pc, &name, 1);
+			navit_set_destination(global_navit, &pc, name, 1);
 
-			(*env)->ReleaseStringUTFChars(env, str, s);
 		}
 	}
 }
