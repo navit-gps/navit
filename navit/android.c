@@ -4,12 +4,15 @@
 #include <stdlib.h>
 #include "android.h"
 #include <android/log.h>
+#include "navit.h"
+#include "config_.h"
+#include "command.h"
 #include "debug.h"
 #include "event.h"
 #include "callback.h"
 #include "projection.h"
 #include "map.h"
-
+#include "transform.h"
 
 JNIEnv *jnienv;
 jobject *android_activity;
