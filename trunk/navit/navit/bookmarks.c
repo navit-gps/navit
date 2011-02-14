@@ -396,7 +396,6 @@ bookmarks_get_center_file(gboolean create)
 void
 bookmarks_set_center_from_file(struct bookmarks *this_, char *file)
 {
-#ifndef HAVE_API_ANDROID
 	FILE *f;
 	char *line = NULL;
 
@@ -416,7 +415,6 @@ bookmarks_set_center_from_file(struct bookmarks *this_, char *file)
 		free(line);
 	}
 	return;
-#endif
 }
 
 void

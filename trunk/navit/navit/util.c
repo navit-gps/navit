@@ -105,7 +105,7 @@ g_utf8_strlen_force_link(gchar *buffer, int max)
 #include <sys/types.h>
 #endif
 
-#if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__)
+#if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__) || defined(ANDROID)
 #include <stdio.h>
 char *stristr(const char *String, const char *Pattern)
 {
