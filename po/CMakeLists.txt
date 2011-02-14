@@ -33,7 +33,10 @@ ADD_CUSTOM_COMMAND(
 ADD_CUSTOM_COMMAND(
    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit.po
    DEPENDS ${POTFILES}
-   COMMAND ${XGETTEXT} --no-location --default-domain=navit --add-comments --keyword=_ --keyword=_n ${POTFILES}
+   COMMAND ${XGETTEXT} --no-location --default-domain=navit_tmp --add-comments --keyword=_ --keyword=_n ${POTFILES}
+   COMMAND ${CMAKE_COMMAND} -DMATCHES="CHARSET" -DREPLACE="utf-8"
+                            -DSRC=${CMAKE_CURRENT_BINARY_DIR}/navit_tmp.po -DDST=${CMAKE_CURRENT_BINARY_DIR}/navit.po
+                            -P ${PROJECT_SOURCE_DIR}/cmake/replace.cmake 
 )
 
 FILE(GLOB POIN_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.po.in")
