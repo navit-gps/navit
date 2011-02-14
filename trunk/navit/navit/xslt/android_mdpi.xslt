@@ -28,6 +28,21 @@
 		<xsl:text>&#x0A;        </xsl:text>
 		<xsl:next-match/>
         </xsl:template>
+        <xsl:template match="/config/navit/graphics">
+                <graphics type="android" />
+        </xsl:template>
+	<!-- make gui fonts bigger -->
+	<!--
+        <xsl:template match="/config/navit/gui[2]">
+                <xsl:copy><xsl:copy-of select="@*[not(name()='font_size')]"/>
+			<xsl:attribute name="font_size">470</xsl:attribute>
+			<xsl:attribute name="icon_xs">32</xsl:attribute>
+			<xsl:attribute name="icon_s">64</xsl:attribute>
+			<xsl:attribute name="icon_l">64</xsl:attribute>
+		<xsl:apply-templates/></xsl:copy>
+	</xsl:template>
+	-->
+	<!-- make gui fonts bigger -->
 	<!-- after map drag jump to position, initial zoom -->
         <xsl:template match="/config/navit">
                 <xsl:copy><xsl:copy-of select="@*"/>
@@ -36,9 +51,12 @@
 		<xsl:apply-templates/></xsl:copy>
 	</xsl:template>
 	<!-- after map drag jump to position, initial zoom -->
-        <xsl:template match="/config/navit/graphics">
-                <graphics type="android" />
-        </xsl:template>
+        <xsl:template match="/config/navit/vehicle[1]">
+                <xsl:copy><xsl:copy-of select="@*[not(name()='gpsd_query')]"/>
+			<xsl:attribute name="source">android:</xsl:attribute>
+			<xsl:attribute name="follow">1</xsl:attribute>
+		<xsl:apply-templates/></xsl:copy>
+	</xsl:template>
 	<!-- make arrow bigger -->
         <xsl:template match="/config/navit/layout/cursor">
         <cursor w="{round(30*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" h="{round(32*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
@@ -91,12 +109,7 @@
                 </itemgra>
         </cursor>
 	</xsl:template>
-	<!-- make arrow bigger -->        <xsl:template match="/config/navit/vehicle[1]">
-                <xsl:copy><xsl:copy-of select="@*[not(name()='gpsd_query')]"/>
-			<xsl:attribute name="source">android:</xsl:attribute>
-			<xsl:attribute name="follow">1</xsl:attribute>
-		<xsl:apply-templates/></xsl:copy>
-	</xsl:template>
+	<!-- make arrow bigger -->
         <xsl:template match="/config/navit/speech">
                 <xsl:copy><xsl:copy-of select="@*[not(name()='data')]"/><xsl:attribute name="type">android</xsl:attribute><xsl:apply-templates/></xsl:copy>
 	</xsl:template>
