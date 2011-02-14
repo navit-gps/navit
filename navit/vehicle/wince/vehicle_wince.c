@@ -319,24 +319,28 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 static int
 vehicle_wince_available_ports(void)
 {
-	DWORD regkey_length = 20;
-	DWORD regdevtype_length = 100;
+	static const int max_name_length = 20;
+	static const int max_type_length = 100;
+	
 	HKEY hkResult;
 	HKEY hkSubResult;
-	wchar_t keyname[regkey_length];
-	wchar_t devicename[regkey_length];
-	wchar_t devicetype[regdevtype_length];
+	wchar_t keyname[max_name_length];
+	wchar_t devicename[max_name_length];
+	wchar_t devicetype[max_type_length];
 	int index = 0;
-
+	DWORD regkey_length = sizeof(keyname);
+	DWORD regdevtype_length = sizeof(devicetype);
+	
 	RegOpenKeyEx( HKEY_LOCAL_MACHINE, TEXT("Drivers\\Active"), 0, 0, &hkResult);
 	while (RegEnumKeyEx( hkResult, index++, keyname, &regkey_length, NULL, NULL, NULL, NULL) == ERROR_SUCCESS )
 	{
 		if (RegOpenKeyEx( hkResult, keyname, 0, 0, &hkSubResult) == ERROR_SUCCESS )
 		{
-			regkey_length = 20;
-			if ( RegQueryValueEx( hkSubResult,  L"Name", NULL, NULL, devicename, &regkey_length) == ERROR_SUCCESS )
+			regkey_length = sizeof(keyname);
+			if ( RegQueryValueEx( hkSubResult,  L"Name", NULL, NULL, (LPBYTE)devicename, &regkey_length) == ERROR_SUCCESS )
 			{
-				if ( RegQueryValueEx( hkSubResult, L"Key", NULL, NULL, devicetype, &regdevtype_length) == ERROR_SUCCESS )
+				regdevtype_length = sizeof(devicetype);
+				if ( RegQueryValueEx( hkSubResult, L"Key", NULL, NULL, (LPBYTE)devicetype, &regdevtype_length) == ERROR_SUCCESS )
 				{
 					dbg(0, "Found device '%s' (%s)\n", W2A(devicename), W2A(devicetype));
 				}
@@ -347,7 +351,7 @@ vehicle_wince_available_ports(void)
 			}
 			RegCloseKey(hkSubResult);
 		}
-		regkey_length = 20;
+		regkey_length = sizeof(keyname);
 	}
 
 	RegCloseKey(hkResult);
