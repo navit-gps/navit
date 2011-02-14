@@ -339,7 +339,6 @@ void
 main_init(const char *program)
 {
 	char *s;
-	int l;
 
 #ifndef _WIN32
 	signal(SIGCHLD, sigchld);
@@ -360,7 +359,8 @@ main_init(const char *program)
 		main_setup_environment(0);
 	} else {
 		if (!getenv("NAVIT_PREFIX")) {
-		int progpath_len;
+			int l;
+			int progpath_len;
 			char *progpath="/bin/navit";
 			l=strlen(program);
 			progpath_len=strlen(progpath);

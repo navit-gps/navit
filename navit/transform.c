@@ -992,7 +992,7 @@ static int tab_int_scale[]={10000,10002,10008,10019,10033,10052,10076,10103,1013
 
 int transform_int_scale(int y)
 {
-	int a=tab_int_step,i,size = sizeof(tab_int_scale)/sizeof(int);
+	int i,size = sizeof(tab_int_scale)/sizeof(int);
 	if (y < 0)
 		y=-y;
 	i=y/tab_int_step;
@@ -1276,7 +1276,7 @@ atan2_int_lookup(int val)
 static int
 atan2_int(int dx, int dy)
 {
-	int f,mul=1,add=0,ret;
+	int mul=1,add=0,ret;
 	if (! dx) {
 		return dy < 0 ? 180 : 0;
 	}
