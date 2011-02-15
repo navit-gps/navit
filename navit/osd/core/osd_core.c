@@ -1629,8 +1629,9 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
         double tracking_speed = -1;
 	int osm_data = 0;
         struct item *item;
+        int imperial=0;
+
         item=tracking_get_current_item(tracking);
-	int imperial=0;
 
 	if(navit) {
 		if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
