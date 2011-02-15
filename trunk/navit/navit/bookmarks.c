@@ -395,6 +395,8 @@ bookmarks_get_center_file(gboolean create)
 	return g_strjoin(NULL, navit_get_user_data_directory(create), "/center.txt", NULL);
 }
 
+
+
 void
 bookmarks_set_center_from_file(struct bookmarks *this_, char *file)
 {
@@ -418,6 +420,88 @@ bookmarks_set_center_from_file(struct bookmarks *this_, char *file)
 	}
 	return;
 }
+
+int
+getline (char **lineptr, size_t *n, FILE *stream)
+{
+  return getdelim (lineptr, n, '\n', stream);
+}
+
+int
+getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
+{
+  int result;
+  size_t cur_len = 0;
+
+  if (lineptr == NULL || n == NULL || fp == NULL)
+    {
+      return -1;
+    }
+
+  flockfile (fp);
+
+  if (*lineptr == NULL || *n == 0)
+    {
+      *n = 120;
+      *lineptr = (char *) realloc (*lineptr, *n);
+      if (*lineptr == NULL)
+	{
+	  result = -1;
+	  goto unlock_return;
+	}
+    }
+
+  for (;;)
+    {
+      int i;
+
+      i = getc (fp);
+      if (i == EOF)
+	{
+	  result = -1;
+	  break;
+	}
+
+      /* Make enough space for len+1 (for final NUL) bytes.  */
+      if (cur_len + 1 >= *n)
+	{
+	  size_t needed_max=SIZE_MAX;
+	  size_t needed = 2 * *n + 1;   /* Be generous. */
+	  char *new_lineptr;
+	  if (needed_max < needed)
+	    needed = needed_max;
+	  if (cur_len + 1 >= needed)
+	    {
+	      result = -1;
+	      goto unlock_return;
+	    }
+
+	  new_lineptr = (char *) realloc (*lineptr, needed);
+	  if (new_lineptr == NULL)
+	    {
+	      result = -1;
+	      goto unlock_return;
+	    }
+
+	  *lineptr = new_lineptr;
+	  *n = needed;
+	}
+
+      (*lineptr)[cur_len] = i;
+      cur_len++;
+
+      if (i == delimiter)
+	break;
+    }
+  (*lineptr)[cur_len] = '\0';
+  result = cur_len ? cur_len : result;
+
+ unlock_return:
+  funlockfile (fp); /* doesn't set errno */
+
+  return result;
+}
+
 
 void
 bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
