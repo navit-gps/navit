@@ -347,6 +347,12 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
         image = image2;
     }
 
+    if(rotation) {
+      FIBITMAP *image2; 
+      image2 = FreeImage_Rotate(image, rotation, NULL);
+      image = image2;
+    }
+
   gi = g_new0 (struct graphics_image_priv, 1);
 
   width = FreeImage_GetWidth (image);
