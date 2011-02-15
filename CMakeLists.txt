@@ -92,6 +92,7 @@ CHECK_INCLUDE_FILES(locale.h HAVE_LC_MESSAGES)
 CHECK_INCLUDE_FILES(libintl.h HAVE_LIBINTL)
 CHECK_INCLUDE_FILES(sys/time.h HAVE_SYS_TIME_H)
 CHECK_INCLUDE_FILES(getopt.h HAVE_GETOPT_H)
+CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
 
 ### Configure build
 #Required libraries, supplied with navit
@@ -349,6 +350,9 @@ if(WIN32 OR WINCE)
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
+   set(HAVE_STDINT_H 1)
+   set(BUILD_MAPTOOL FALSE)
+   set(SAMPLE_MAP FALSE)
    list(APPEND NAVIT_LIBS winmm)
 endif()
 if(WINCE)
