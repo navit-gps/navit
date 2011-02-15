@@ -59,7 +59,7 @@
 # include <byteswap.h>
 # define SWAP(i) bswap_32 (i)
 #else
-static inline nls_uint32
+static nls_uint32
 SWAP (i)
      nls_uint32 i;
 {

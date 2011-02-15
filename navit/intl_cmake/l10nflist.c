@@ -152,7 +152,7 @@ argz_next__ (char *argz, size_t argz_len, const char *entry)
 
 
 /* Return number of bits set in X.  */
-static inline int
+static int
 pop (int x)
 {
   /* We assume that no more than 16 bits are used.  */
