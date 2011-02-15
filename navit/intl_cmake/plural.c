@@ -109,13 +109,13 @@ new_exp (int nargs, enum operator op, struct expression * const *args)
   return NULL;
 }
 
-static inline struct expression *
+static struct expression *
 new_exp_0 (enum operator op)
 {
   return new_exp (0, op, NULL);
 }
 
-static inline struct expression *
+static struct expression *
 new_exp_1 (enum operator op, struct expression *right)
 {
   struct expression *args[1];
@@ -134,7 +134,7 @@ new_exp_2 (enum operator op, struct expression *left, struct expression *right)
   return new_exp (2, op, args);
 }
 
-static inline struct expression *
+static struct expression *
 new_exp_3 (enum operator op, struct expression *bexp,
 	   struct expression *tbranch, struct expression *fbranch)
 {

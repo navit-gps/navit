@@ -50,7 +50,7 @@
   ((N) <= SIZE_MAX ? (size_t) (N) : SIZE_MAX)
 
 /* Sum of two sizes, with overflow check.  */
-static inline size_t
+static size_t
 #if __GNUC__ >= 3
 __attribute__ ((__pure__))
 #endif
@@ -61,7 +61,7 @@ xsum (size_t size1, size_t size2)
 }
 
 /* Sum of three sizes, with overflow check.  */
-static inline size_t
+static size_t
 #if __GNUC__ >= 3
 __attribute__ ((__pure__))
 #endif
@@ -71,7 +71,7 @@ xsum3 (size_t size1, size_t size2, size_t size3)
 }
 
 /* Sum of four sizes, with overflow check.  */
-static inline size_t
+static size_t
 #if __GNUC__ >= 3
 __attribute__ ((__pure__))
 #endif
@@ -81,7 +81,7 @@ xsum4 (size_t size1, size_t size2, size_t size3, size_t size4)
 }
 
 /* Maximum of two sizes, with overflow check.  */
-static inline size_t
+static size_t
 #if __GNUC__ >= 3
 __attribute__ ((__pure__))
 #endif
