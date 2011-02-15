@@ -4653,7 +4653,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	struct widget *w;
 	int depth=this->html_depth-1;
 	struct html *html=&this->html[depth];
-	char *text_stripped;
+	gchar *text_stripped;
 
 	if (this->html_skip)
 		return;
@@ -4663,9 +4663,8 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	}
 	while (len > 0 && isspace(text[len-1]))
 		len--;
-	text_stripped=g_malloc(len+1);
-	strncpy(text_stripped, text, len);
-	text_stripped[len]='\0';
+
+	text_stripped = g_strndup(text, len);
 	if (html->tag == html_tag_html && depth > 2) {
 		if (this->html[depth-1].tag == html_tag_script) {
 			html=&this->html[depth-2];
@@ -4708,6 +4707,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	default:
 		break;
 	}
+	g_free(text_stripped);
 }
 
 static void
