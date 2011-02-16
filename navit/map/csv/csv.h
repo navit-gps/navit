@@ -31,6 +31,7 @@ struct map_priv {
 	struct quadtree_node* tree_root;
 	int flags;
 	GHashTable*item_hash;
+	char* filename;
 };
 
 #define SIZE 512
