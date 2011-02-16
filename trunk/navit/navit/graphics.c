@@ -394,7 +394,7 @@ void graphics_free(struct graphics *gra)
 {
 	gra->meth.graphics_destroy(gra->priv);
 	g_free(gra->default_font);
-	graphics_font_destroy_all(gra->font);
+	graphics_font_destroy_all(gra);
 	g_free(gra);
 }
 
