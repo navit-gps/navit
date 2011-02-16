@@ -52,6 +52,7 @@ map_destroy_csv(struct map_priv *m)
 	g_free(m);
 	g_hash_table_destroy(m->item_hash);
 	quadtree_destroy(m->tree_root);
+	g_free(m->filename);
 }
 
 static void
@@ -177,6 +178,22 @@ map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)
 	return g_hash_table_lookup(mr->m->item_hash,&id_lo);
 }
 
+static int
+csv_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)
+{
+	attr->type=type;
+	switch (type) {
+	case attr_map_release:
+		attr->u.str = g_strdup_printf("csv:%s",m->filename?m->filename:"");
+		return 1;
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+
 static struct map_methods map_methods_csv = {
 	projection_mg,
 	"iso8859-1",
@@ -185,6 +202,11 @@ static struct map_methods map_methods_csv = {
 	map_rect_destroy_csv,
 	map_rect_get_item_csv,
 	map_rect_get_item_byid_csv,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	csv_get_attr,
 };
 
 static struct map_priv *
@@ -333,6 +355,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 			}
 		}
 	  	fclose(fp);
+		m->filename = g_strdup(data->u.str);
 	  }
 	  else {
 	  	return NULL;
