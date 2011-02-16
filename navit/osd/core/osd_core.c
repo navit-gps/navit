@@ -1614,7 +1614,7 @@ static void
 osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct vehicle *v)
 {
     struct point p,bbox[4];
-    char text[16]="0";
+    char text[16]="";
 
     struct tracking *tracking = NULL;
     struct graphics_gc *osd_color=this->grey;
