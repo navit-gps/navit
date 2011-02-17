@@ -47,6 +47,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 
 public class Navit extends Activity implements Handler.Callback
@@ -68,6 +69,8 @@ public class Navit extends Activity implements Handler.Callback
 	public static final int					MAPDOWNLOAD_DIALOG					= 1;
 	public ProgressDialog					mapdownloader_dialog					= null;
 	public static NavitMapDownloader		mapdownloader							= null;
+	public static final int					NavitDownloaderSelectMap_id		= 967;
+	public static int							download_map_it						= 0;
 
 	private boolean extractRes(String resname, String result)
 	{
@@ -429,11 +432,7 @@ public class Navit extends Activity implements Handler.Callback
 		NavitActivity(-3);
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		//Log.e("Navit", "onActivityResult " + requestCode + " " + resultCode);
-		ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
-	}
+
 	public void setActivityResult(int requestCode, NavitActivityResult ActivityResult)
 	{
 		//Log.e("Navit", "setActivityResult " + requestCode);
@@ -524,8 +523,10 @@ public class Navit extends Activity implements Handler.Callback
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
 				break;
 			case 3 :
-				// show the map download progressbar
-				showDialog(Navit.MAPDOWNLOAD_DIALOG);
+				Intent foo2 = new Intent(this, NavitDownloadSelectMapActivity.class);
+				foo2.putExtra("title", "bla bla");
+				foo2.putExtra("some stuff", "bla bla");
+				this.startActivityForResult(foo2, Navit.NavitDownloaderSelectMap_id);
 				break;
 			case 99 :
 				this.exit();
@@ -539,6 +540,39 @@ public class Navit extends Activity implements Handler.Callback
 		}
 		return true;
 	}
+
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		switch (requestCode)
+		{
+			case Navit.NavitDownloaderSelectMap_id :
+				try
+				{
+					if (resultCode == Activity.RESULT_OK)
+					{
+						// set map id to download
+						Navit.download_map_it = Integer.getInteger(data.getStringExtra("selected_id"), 0);
+						// show the map download progressbar, and download the map
+						showDialog(Navit.MAPDOWNLOAD_DIALOG);
+					}
+					else
+					{
+						// user pressed back key
+					}
+				}
+				catch (Exception e)
+				{
+					Log.d("Navit", "error on onActivityResult");
+				}
+				break;
+			default :
+				//Log.e("Navit", "onActivityResult " + requestCode + " " + resultCode);
+				ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
+				break;
+		}
+	}
+
 
 	public Handler	progress_handler	= new Handler()
 												{
@@ -562,6 +596,11 @@ public class Navit extends Activity implements Handler.Callback
 																mapdownloader_dialog.setMessage(msg.getData()
 																		.getString("text"));
 																break;
+															case 2 :
+																Toast.makeText(getApplicationContext(),
+																		msg.getData().getString("text"),
+																		Toast.LENGTH_SHORT).show();
+																break;
 														}
 													}
 												};
@@ -579,10 +618,10 @@ public class Navit extends Activity implements Handler.Callback
 				mapdownloader_dialog.setCancelable(true);
 				mapdownloader_dialog.setProgress(0);
 				mapdownloader_dialog.setMax(200);
-				mapdownloader = new NavitMapDownloader();
+				mapdownloader = new NavitMapDownloader(this);
 				//map_download.download_osm_map(NavitMapDownloader.austria);
 				ProgressThread progressThread = mapdownloader.new ProgressThread(progress_handler,
-						NavitMapDownloader.austria);
+						NavitMapDownloader.OSM_MAPS[Navit.download_map_it]);
 				progressThread.start();
 				return mapdownloader_dialog;
 		}
