@@ -235,6 +235,7 @@ struct odometer {
 	time_t last_click_time;     //time of last click (for double click handling)
 	time_t last_start_time;     //time of last start of counting
 	struct coord last_coord;
+	double last_speed; 
 };
 
 static void
@@ -331,11 +332,14 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   char *dist_buffer=0;
   char *spd_buffer=0;
   char *time_buffer = 0;
+  char *acc_buffer = 0;
   struct point p, bbox[4];
-  struct attr position_attr,vehicle_attr,imperial_attr;
+  struct attr position_attr,vehicle_attr,imperial_attr,speed_attr;
   enum projection pro;
   struct vehicle* curr_vehicle = v;
   double spd = 0;
+  double curr_spd = 0;
+  double acceleration = 0;
 
   int remainder;
   int days;
@@ -362,10 +366,15 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   osd_std_draw(&this->osd_item);
   if(this->bActive) {
     vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
+    if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
+      curr_spd = *speed_attr.u.numd; 
+    }
     pro = projection_mg;//position_attr.u.pcoord->pro;
     transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
 
     if (this->last_coord.x != -1 ) {
+        double dt = time(0)-this->last_click_time;
+        double dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
         //we have valid previous position
         double dCurrDist = 0;
         dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
@@ -374,12 +383,19 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 	}
         this->time_all = time(0)-this->last_click_time+this->sum_time;
         spd = 3.6*(double)this->sum_dist/(double)this->time_all;
+        if(dt != 0) {
+          //suppose that gps data comes with the periodicity that is a multiple of 1 second 
+	  //maybe finer time resolution will be needed, for more correct operation
+          acceleration = dv/dt;  
+        }
+	this->last_speed = curr_spd;
     }
     this->last_coord = curr_coord;
   }
 
   dist_buffer = format_distance(this->sum_dist,"",imperial);
   spd_buffer = format_speed(spd,"","value",imperial);
+  acc_buffer = g_strdup_printf("%.3f m/s2",acceleration);
   remainder = this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
@@ -398,9 +414,10 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   buffer [0] = 0;
   buffer2[0] = 0;
   if(this->text) {
-    str_replace(buffer,this->text,"${avg_spd}",spd_buffer);
-    str_replace(buffer2,buffer,"${distance}",dist_buffer);
-    str_replace(buffer,buffer2,"${time}",time_buffer);
+    str_replace(buffer2,this->text,"${avg_spd}",spd_buffer);
+    str_replace(buffer,buffer2,"${distance}",dist_buffer);
+    str_replace(buffer2,buffer,"${time}",time_buffer);
+    str_replace(buffer,buffer2,"${acceleration}",acc_buffer);
   }
   g_free(time_buffer);
 
@@ -411,6 +428,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
   g_free(dist_buffer);
   g_free(spd_buffer);
+  g_free(acc_buffer);
   graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 }
 
