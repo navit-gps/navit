@@ -334,7 +334,7 @@ public class Navit extends Activity implements Handler.Callback
 			{
 				intent_data = "ll=" + intent_data.split("q=", -1)[1] + "&q=Target";
 			}
-			// if b: then remodel the input string to look like a:
+			// if c: then remodel the input string to look like a:
 			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
 					&& (intent_data.split("&q=").length == 0))
 			{
