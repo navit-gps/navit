@@ -1412,8 +1412,8 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   msh=mapset_open(ms);
   while ((map=mapset_next(msh, 1))) {
     struct attr attr;
-    if(map_get_attr(map, attr_map_release, &attr, NULL)) {
-      if(strncmp("csv", attr.u.str, 3)) {
+    if(map_get_attr(map, attr_type, &attr, NULL)) {
+      if( strcmp("csv", attr.u.str) && strcmp("binfile", attr.u.str)) {
         continue;
       }
     }
