@@ -379,7 +379,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   }
 
   dist_buffer = format_distance(this->sum_dist,"",imperial);
-  spd_buffer = format_speed(spd,"","",imperial);
+  spd_buffer = format_speed(spd,"","value",imperial);
   remainder = this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
