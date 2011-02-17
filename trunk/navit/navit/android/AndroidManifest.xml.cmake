@@ -27,5 +27,6 @@
 				<data android:scheme="google.navigation" /> 
             </intent-filter>
         </activity>
+        <activity android:name=".NavitDownloadSelectMapActivity"></activity>
     </application>
 </manifest> 
