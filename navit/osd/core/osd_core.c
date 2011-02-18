@@ -55,6 +55,10 @@
 #include "mapset.h"
 #include "util.h"
 
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
+
 #ifdef _MSC_VER
 static double round(double x)
 {
