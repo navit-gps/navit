@@ -35,7 +35,7 @@ is_valid_variable_char(char c, int pos)
 static char *
 expand_variables(const char *in)
 {
-	char *var,*pos,*ret=strdup(in);
+	char *var,*pos,*ret=g_strdup(in);
 	char *val,*str;
 	pos=ret;
 	while ((var=strchr(pos, '$'))) {
@@ -54,7 +54,7 @@ expand_variables(const char *in)
 				npos++;	
 			bpos=npos;
 		}
-		name=strdup(begin);
+		name=g_strdup(begin);
 		name[bpos]='\0';		
 		val=getenv(name);
 		free(name);
@@ -107,7 +107,7 @@ wordexp(const char *words, wordexp_t *we, int flags)
 		we->we_wordv = malloc(we->we_wordc * sizeof(char*));
 		for (i=0; i<we->we_wordc; i++)
 		{
-			we->we_wordv[i] = strdup(pglob.gl_pathv[i]);
+			we->we_wordv[i] = g_strdup(pglob.gl_pathv[i]);
 		}		
 		globfree(&pglob);
 		free(words_expanded);
