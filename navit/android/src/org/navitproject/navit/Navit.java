@@ -500,6 +500,7 @@ public class Navit extends Activity implements Handler.Callback
 		switch (item.getItemId())
 		{
 			case 1 :
+				// zoom in
 				Message msg = new Message();
 				Bundle b = new Bundle();
 				b.putInt("Callback", 1);
@@ -513,6 +514,7 @@ public class Navit extends Activity implements Handler.Callback
 				Log.e("Navit", "onOptionsItemSelected -> zoom in");
 				break;
 			case 2 :
+				// zoom out
 				msg = new Message();
 				b = new Bundle();
 				b.putInt("Callback", 2);
@@ -526,12 +528,14 @@ public class Navit extends Activity implements Handler.Callback
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
 				break;
 			case 3 :
-				Intent foo2 = new Intent(this, NavitDownloadSelectMapActivity.class);
-				foo2.putExtra("title", "bla bla");
-				foo2.putExtra("some stuff", "bla bla");
-				this.startActivityForResult(foo2, Navit.NavitDownloaderSelectMap_id);
+				// map download menu
+				Intent map_download_list_activity = new Intent(this,
+						NavitDownloadSelectMapActivity.class);
+				this.startActivityForResult(map_download_list_activity,
+						Navit.NavitDownloaderSelectMap_id);
 				break;
 			case 99 :
+				// exit
 				this.exit();
 				//				msg = new Message();
 				//				b = new Bundle();
@@ -595,14 +599,26 @@ public class Navit extends Activity implements Handler.Callback
 																// dismiss dialog, remove dialog
 																dismissDialog(msg.getData().getInt("dialog_num"));
 																removeDialog(msg.getData().getInt("dialog_num"));
-																// try to use the new downloaded map (works only when there is now map yet!)
-																// please fix me in the C-source !!
-																// please fix me in the C-source !!
-																Message msg2 = new Message();
-																Bundle b2 = new Bundle();
-																b2.putInt("Callback", 6);
-																msg2.setData(b2);
-																N_NavitGraphics.callback_handler.sendMessage(msg2);
+
+																// exit_code=0 -> OK, map was downloaded fine
+																if (msg.getData().getInt("exit_code") == 0)
+																{
+																	// try to use the new downloaded map (works fine now!)
+																	Log.d("Navit", "instance count="
+																			+ Navit.getInstanceCount());
+																	onStop();
+																	onCreate(getIntent().getExtras());
+
+																	//Intent intent = this.getIntent();
+																	//startActivity(intent);
+																	//finish();
+
+																	//Message msg2 = new Message();
+																	//Bundle b2 = new Bundle();
+																	//b2.putInt("Callback", 6);
+																	//msg2.setData(b2);
+																	//N_NavitGraphics.callback_handler.sendMessage(msg2);
+																}
 																break;
 															case 1 :
 																// change progressbar values
