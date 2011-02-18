@@ -20,6 +20,10 @@
 #include "profile.h"
 #include "keys.h"
 
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
+
 //#define FAST_TRANSPARENCY 1
 
 typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
@@ -558,6 +562,7 @@ static int fullscreen(struct window *win, int on)
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
     HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+    RECT taskbar_rect;
     fullscr = on;
 	if (on) {
         ShowWindow(hwndTaskbar, SW_HIDE);
@@ -568,7 +573,6 @@ static int fullscreen(struct window *win, int on)
 	
 	} else {
         ShowWindow(hwndTaskbar, SW_SHOW);
-        RECT taskbar_rect;
         GetWindowRect(  hwndTaskbar, &taskbar_rect);
         MoveWindow(g_hwnd, 0, taskbar_rect.bottom, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) - taskbar_rect.bottom, FALSE);
     
@@ -1577,11 +1581,16 @@ event_win32_main_loop_run(void)
 
 static void event_win32_main_loop_quit(void)
 {
-    dbg(0,"enter\n");
 #ifdef HAVE_API_WIN32_CE
-    HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
-    HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+    HWND hwndTaskbar;
+    HWND hwndSip;
+#endif
 
+    dbg(0,"enter\n");
+
+#ifdef HAVE_API_WIN32_CE
+    hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+    hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
     // activate the SIP button
     ShowWindow(hwndSip, SW_SHOW);
     ShowWindow(hwndTaskbar, SW_SHOW);
