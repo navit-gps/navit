@@ -180,7 +180,8 @@ public class NavitMapDownloader
 			File file = new File(PATH);
 			File outputFile = new File(file, fileName);
 			File final_outputFile = new File(file, final_fileName);
-			//outputFile.delete();
+			// tests have shown that deleting the file first is sometimes faster -> so we delete it (who cares)
+			outputFile.delete();
 			// seems this command overwrites the output file anyway
 			FileOutputStream fos = new FileOutputStream(outputFile);
 			BufferedOutputStream buf = new BufferedOutputStream(fos, MAP_WRITE_FILE_BUFFER); // buffer
@@ -194,9 +195,9 @@ public class NavitMapDownloader
 			int alt = UPDATE_PROGRESS_EVERY_CYCLE; // show progress about every xx cylces
 			int alt_cur = 0;
 			String kbytes_per_second = "";
-			long last_timestamp = 0;
+			//long last_timestamp = 0;
 			long start_timestamp = System.currentTimeMillis();
-			int last_bytes = 0;
+			//int last_bytes = 0;
 			NumberFormat formatter = new DecimalFormat("00000.0");
 			String eta_string = "";
 			float per_second_overall = 0f;
@@ -241,8 +242,8 @@ public class NavitMapDownloader
 					//						//		.currentTimeMillis() - last_timestamp) / 1000f));
 					//						//kbytes_per_second = formatter.format(temp);
 					//					}
-					last_timestamp = System.currentTimeMillis();
-					last_bytes = already_read;
+					//last_timestamp = System.currentTimeMillis();
+					//last_bytes = already_read;
 					per_second_overall = (float) already_read
 							/ (float) ((System.currentTimeMillis() - start_timestamp) / 1000);
 					kbytes_per_second = formatter.format((per_second_overall / 1024f));
