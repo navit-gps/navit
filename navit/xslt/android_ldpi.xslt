@@ -9,9 +9,11 @@
 	<!-- icons_xs = selection icons (the green ones) -->
 	<!-- icons_s = topmenu and POI-selection-items -->
 	<!-- icons_l = menu items -->
+	<!-- spacing = spacing between menu items in pixels -->
 	<xsl:variable name="MENU_VALUE_ICONS_XS">32</xsl:variable>
 	<xsl:variable name="MENU_VALUE_ICONS_S">48</xsl:variable>
 	<xsl:variable name="MENU_VALUE_ICONS_L">64</xsl:variable>
+	<xsl:variable name="MENU_VALUE_SPACING">2</xsl:variable>
 
 	<xsl:variable name="LAYOUT_001_ORDER_DELTA_1">-1</xsl:variable>
 
