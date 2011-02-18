@@ -142,7 +142,7 @@ ezxml_t ezxml_set_attr(ezxml_t xml, const char *name, const char *value);
 
 // Wrapper for ezxml_set_attr() that strdup()s name/value. Value cannot be NULL
 #define ezxml_set_attr_d(xml, name, value) \
-    ezxml_set_attr(ezxml_set_flag(xml, EZXML_DUP), strdup(name), strdup(value))
+    ezxml_set_attr(ezxml_set_flag(xml, EZXML_DUP), g_strdup(name), strdup(value))
 
 // sets a flag for the given tag and returns the tag
 ezxml_t ezxml_set_flag(ezxml_t xml, short flag);
