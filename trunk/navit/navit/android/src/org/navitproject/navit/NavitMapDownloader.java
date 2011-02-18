@@ -19,6 +19,7 @@
 
 package org.navitproject.navit;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,17 +68,28 @@ public class NavitMapDownloader
 	//
 	// define the maps here
 	//                                                          name     , lon1 , lat1   , lon2   , lat2, est. size in bytes
-	public static osm_map_values		austria				= new osm_map_values("Austria", "9.4",
-																				"46.32", "17.21", "49.1", 219152384);
-	public static osm_map_values		benelux				= new osm_map_values("BeNeLux", "2.08",
-																				"48.87", "7.78", "54.52", 219152384);
-	public static osm_map_values		germany				= new osm_map_values("Germany", "5.18",
-																				"46.84", "15.47", "55.64", 500000000);
-	public static osm_map_values[]	OSM_MAPS				= new osm_map_values[]{
+	public static osm_map_values		austria								= new osm_map_values("Austria",
+																								"9.4", "46.32", "17.21",
+																								"49.1", 222000000);
+	public static osm_map_values		benelux								= new osm_map_values("BeNeLux",
+																								"2.08", "48.87", "7.78",
+																								"54.52", 530000000);
+	public static osm_map_values		germany								= new osm_map_values("Germany",
+																								"5.18", "46.84", "15.47",
+																								"55.64", 943000000);
+	public static osm_map_values[]	OSM_MAPS								= new osm_map_values[]{
 			NavitMapDownloader.austria, NavitMapDownloader.germany, NavitMapDownloader.benelux};
-	public static String[]				OSM_MAP_NAME_LIST	= new String[]{
+	public static String[]				OSM_MAP_NAME_LIST					= new String[]{
 			NavitMapDownloader.OSM_MAPS[0].map_name, NavitMapDownloader.OSM_MAPS[1].map_name,
-			NavitMapDownloader.OSM_MAPS[2].map_name		};
+			NavitMapDownloader.OSM_MAPS[2].map_name						};
+
+	public Boolean							stop_me								= false;
+	static final int						SOCKET_CONNECT_TIMEOUT			= 6000;
+	static final int						SOCKET_READ_TIMEOUT				= 6000;
+	static final int						MAP_WRITE_FILE_BUFFER			= 1024 * 64;
+	static final int						MAP_WRITE_MEM_BUFFER				= 1024 * 64;
+	static final int						MAP_READ_FILE_BUFFER				= 1024 * 64;
+	static final int						UPDATE_PROGRESS_EVERY_CYCLE	= 2;
 
 
 	public class ProgressThread extends Thread
@@ -93,9 +105,8 @@ public class NavitMapDownloader
 
 		public void run()
 		{
-			Log.d("NavitMapDownloader", "run 1");
+			stop_me = false;
 			download_osm_map(mHandler, map_values);
-			Log.d("NavitMapDownloader", "run 2");
 
 			// ok, remove dialog
 			Message msg = mHandler.obtainMessage();
@@ -103,10 +114,13 @@ public class NavitMapDownloader
 			msg.what = 0;
 			b.putInt("dialog_num", Navit.MAPDOWNLOAD_DIALOG);
 			msg.setData(b);
-			Log.d("NavitMapDownloader", "run 3");
 			mHandler.sendMessage(msg);
-			Log.d("NavitMapDownloader", "run 4");
+		}
 
+		public void stop_thread()
+		{
+			stop_me = true;
+			Log.d("NavitMapDownloader", "stop_me -> true");
 		}
 	}
 
@@ -152,9 +166,16 @@ public class NavitMapDownloader
 			HttpURLConnection c = (HttpURLConnection) url.openConnection();
 			c.setRequestMethod("GET");
 			c.setDoOutput(true);
-			c.setReadTimeout(5000);
-			c.setConnectTimeout(5000);
+			c.setReadTimeout(SOCKET_READ_TIMEOUT);
+			c.setConnectTimeout(SOCKET_CONNECT_TIMEOUT);
+			int real_size_bytes = c.getContentLength();
 			c.connect();
+
+			if (real_size_bytes > 0)
+			{
+				// change the estimated filesize to reported filesize
+				map_values.est_size_bytes = real_size_bytes;
+			}
 
 			File file = new File(PATH);
 			File outputFile = new File(file, fileName);
@@ -162,14 +183,15 @@ public class NavitMapDownloader
 			//outputFile.delete();
 			// seems this command overwrites the output file anyway
 			FileOutputStream fos = new FileOutputStream(outputFile);
-			BufferedOutputStream buf = new BufferedOutputStream(fos, 1024 * 16); // buffer
+			BufferedOutputStream buf = new BufferedOutputStream(fos, MAP_WRITE_FILE_BUFFER); // buffer
 
 			InputStream is = c.getInputStream();
+			BufferedInputStream bif = new BufferedInputStream(is, MAP_READ_FILE_BUFFER); // buffer
 
-			byte[] buffer = new byte[1024 * 4]; // buffer
+			byte[] buffer = new byte[MAP_WRITE_MEM_BUFFER]; // buffer
 			int len1 = 0;
 			int already_read = 0;
-			int alt = 5; // show progress about every xx cylces
+			int alt = UPDATE_PROGRESS_EVERY_CYCLE; // show progress about every xx cylces
 			int alt_cur = 0;
 			String kbytes_per_second = "";
 			long last_timestamp = 0;
@@ -180,8 +202,23 @@ public class NavitMapDownloader
 			float per_second_overall = 0f;
 			int bytes_remaining = 0;
 			int eta_seconds = 0;
-			while ((len1 = is.read(buffer)) != -1)
+			//while ((len1 = is.read(buffer)) != -1)
+			while ((len1 = bif.read(buffer)) != -1)
 			{
+				if (stop_me)
+				{
+					// ok we need to be stopped! close all files and end
+					Log.d("NavitMapDownloader", "stop_me 1");
+					buf.flush();
+					buf.close();
+					fos.close();
+					bif.close();
+					is.close();
+					Log.d("NavitMapDownloader", "stop_me 2");
+					c.disconnect();
+					Log.d("NavitMapDownloader", "stop_me 3");
+					return;
+				}
 				already_read = already_read + len1;
 				alt_cur++;
 				if (alt_cur > alt)
@@ -226,13 +263,27 @@ public class NavitMapDownloader
 							+ kbytes_per_second + "kb/s" + " ETA: " + eta_string);
 					msg.setData(b);
 					handler.sendMessage(msg);
+					//					try
+					//					{
+					//						// little pause here
+					//						Thread.sleep(50);
+					//					}
+					//					catch (InterruptedException e1)
+					//					{
+					//					}
 				}
 				//fos.write(buffer, 0, len1);
 				buf.write(buffer, 0, len1);
 			}
+			buf.flush();
+
 			buf.close();
 			fos.close();
+
+			bif.close();
 			is.close();
+
+			c.disconnect();
 
 			// delete an already final filename, first
 			final_outputFile.delete();
