@@ -28,7 +28,7 @@
 #include "plugin.h"
 #include "event.h"
 #include "debug.h"
-#if defined(WINDOWS) || defined(WIN32)
+#if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
 #include <windows.h>
 # define sleep(i) Sleep(i * 1000)
 #endif
