@@ -38,6 +38,9 @@
 #endif // EZXML_NOMMAP
 #include <sys/stat.h>
 #include "ezxml.h"
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 #define EZXML_WS   "\t\r\n "  // whitespace
 #define EZXML_ERRL 128        // maximum error string length
@@ -147,7 +150,7 @@ ezxml_t ezxml_err(ezxml_root_t root, char *s, const char *err, ...)
     g_snprintf(fmt, EZXML_ERRL, "[error near line %d]: %s", line, err);
 
     va_start(ap, err);
-    vsnprintf(root->err, EZXML_ERRL, fmt, ap);
+    g_vsnprintf(root->err, EZXML_ERRL, fmt, ap);
     va_end(ap);
 
     return &root->xml;
@@ -308,7 +311,7 @@ void ezxml_proc_inst(ezxml_root_t root, char *s, size_t len)
         root->pi[i] = malloc(sizeof(char *) * 3);
         root->pi[i][0] = target;
         root->pi[i][1] = (char *)(root->pi[i + 1] = NULL); // terminate pi list
-        root->pi[i][2] = strdup(""); // empty document position list
+        root->pi[i][2] = g_strdup(""); // empty document position list
     }
 
     while (root->pi[i][j]) j++; // find end of instruction list for this target
@@ -929,7 +932,7 @@ ezxml_t ezxml_set_attr(ezxml_t xml, const char *name, const char *value)
         if (! value) return xml; // nothing to do
         if (xml->attr == EZXML_NIL) { // first attribute
             xml->attr = malloc(4 * sizeof(char *));
-            xml->attr[1] = strdup(""); // empty list of malloced names/vals
+            xml->attr[1] = g_strdup(""); // empty list of malloced names/vals
         }
         else xml->attr = realloc(xml->attr, (l + 4) * sizeof(char *));
 
