@@ -338,7 +338,7 @@ log_printf(struct log *this_, char *fmt, ...)
 	va_start(ap, fmt);
 
 	// Format the string and write it to the log
-	size = vsnprintf(buffer, LOG_BUFFER_SIZE, fmt, ap);
+	size = g_vsnprintf(buffer, LOG_BUFFER_SIZE, fmt, ap);
 	log_write(this_, buffer, size, 0);
 
 	va_end(ap);
