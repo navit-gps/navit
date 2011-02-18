@@ -29,6 +29,9 @@
 #ifdef HAVE_API_WIN32_BASE
 #include <glibintl.h>
 #endif
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 #ifdef HAVE_GOOD_PRINTF
 
