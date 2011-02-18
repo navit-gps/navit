@@ -339,6 +339,9 @@ void
 main_init(const char *program)
 {
 	char *s;
+#ifdef _UNICODE		/* currently for wince */
+		wchar_t wfilename[MAX_PATH + 1];
+#endif
 
 #ifndef _WIN32
 	signal(SIGCHLD, sigchld);
@@ -389,7 +392,6 @@ main_init(const char *program)
 
 		*filename = '\0';
 #ifdef _UNICODE		/* currently for wince */
-		wchar_t wfilename[MAX_PATH + 1];
 		if (GetModuleFileNameW(NULL, wfilename, MAX_PATH))
 		{
 			wcstombs(filename, wfilename, MAX_PATH);
