@@ -26,7 +26,6 @@ static void cleanup_libc(void)
 	}
 }
 
-#if 0
 char *
 getenv(const char *name)
 {
@@ -37,7 +36,6 @@ getenv(const char *name)
 	}
 	return NULL;
 }
-#endif
 
 int
 setenv(const char *name, const char *value, int overwrite)
