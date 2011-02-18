@@ -278,6 +278,28 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			navit_zoom_out_cursor(global_navit, 2);
 			// navit_zoom_out_cursor(attr.u.navit, 2);
 		}
+		else if (i==6)
+		{
+			struct mapset *ms;
+			struct map *map;
+
+			// hopefully use a newly downloaded map, we just hope its set in navit.xml (make nicer soon)
+			// remove all curents maps
+			// ******global_navit->mapsets=NULL; // is this the correct way to clear the list?
+			// now add the default /sdcard/navitmap.bin entry to the list
+			// ******navit_add_mapset(global_navit,ms); // but how? please write me!!
+			// now reload some stuff to make the change stick
+			dbg(0,"trying to apply newly downloaded map to mapset %p\n",global_navit->mapsets);
+			if (global_navit->mapsets)
+			{
+				struct mapset_handle *msh;
+				ms=global_navit->mapsets->data;
+				msh=mapset_open(ms);
+				while (msh && (map=mapset_next(msh, 0))) {
+				}
+				mapset_close(msh);
+			}
+		}
 		else if (i==5)
 		{
 			// call a command (like in gui)
