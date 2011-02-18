@@ -52,7 +52,9 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 		// Object o = this.getListAdapter().getItem(position);
 		// String keyword = o.toString();
 		this.selected_id = position;
-		// Toast.makeText(this, "You selected: " + position + " " + keyword, Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "You selected: " + position + " " + keyword, Toast.LENGTH_LONG).show();
+		Log.e("Navit", "p:" + position);
+		Log.e("Navit", "i:" + id);
 
 		// close this activity
 		executeDone();
@@ -68,8 +70,7 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 	private void executeDone()
 	{
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("selected_id", String
-				.valueOf(NavitDownloadSelectMapActivity.this.selected_id));
+		resultIntent.putExtra("selected_id", String.valueOf(this.selected_id));
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
