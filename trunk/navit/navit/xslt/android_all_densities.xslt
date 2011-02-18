@@ -35,6 +35,7 @@
 			<xsl:attribute name="icon_xs"><xsl:value-of select="$MENU_VALUE_ICONS_XS"/></xsl:attribute>
 			<xsl:attribute name="icon_s"><xsl:value-of select="$MENU_VALUE_ICONS_S"/></xsl:attribute>
 			<xsl:attribute name="icon_l"><xsl:value-of select="$MENU_VALUE_ICONS_L"/></xsl:attribute>
+			<xsl:attribute name="spacing"><xsl:value-of select="$MENU_VALUE_SPACING"/></xsl:attribute>
 		<xsl:apply-templates/></xsl:copy>
 	</xsl:template>
 	<!-- make gui fonts bigger -->
