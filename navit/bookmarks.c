@@ -181,7 +181,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		b_item=g_new0(struct bookmark_item_priv,1);
 		b_item->c.x=c.x;
 		b_item->c.y=c.y;
-		b_item->label=strdup(attr.u.str);
+		b_item->label=g_strdup(attr.u.str);
 		b_item->type=item->type;
 		b_item->item=*item;
 
@@ -196,7 +196,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 				path_item->type=type_bookmark_folder;
 				path_item->parent=this_->current;
 				path_item->children=NULL;
-				path_item->label=strdup(finder);
+				path_item->label=g_strdup(finder);
 
 				this_->current->children=g_list_append(this_->current->children,path_item);
 				this_->current=path_item;
@@ -205,7 +205,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 			}
 			finder+=strlen(finder)+1;
 		}
-		copy_helper=strdup(finder);
+		copy_helper=g_strdup(finder);
 		free(b_item->label);
 		b_item->label=copy_helper;
 		b_item->parent=this_->current;
@@ -481,7 +481,7 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	} else {
 		b_item->type=type_bookmark_folder;
 	}
-	b_item->label=strdup(description);
+	b_item->label=g_strdup(description);
 	b_item->parent=this_->current;
 	b_item->children=NULL;
 
@@ -544,7 +544,7 @@ bookmarks_paste_bookmark(struct bookmarks *this_) {
 	b_item=g_new0(struct bookmark_item_priv,1);
 	b_item->c.x=this_->clipboard->c.x;
 	b_item->c.y=this_->clipboard->c.y;
-	b_item->label=strdup(this_->clipboard->label);
+	b_item->label=g_strdup(this_->clipboard->label);
 	b_item->type=this_->clipboard->type;
 	b_item->item=this_->clipboard->item;
 	b_item->parent=this_->current;
