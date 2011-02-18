@@ -1,14 +1,20 @@
 #include "locale.h"
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 int errno;
 
 #define MAXENV 32
 static char *envnames[MAXENV];
 static char *envvars[MAXENV];
 
-static void cleanup_libc(void) __attribute__((destructor));
+static void cleanup_libc(void) 
+#ifndef _MSC_VER
+__attribute__((destructor))
+#endif
+;
 static void cleanup_libc(void)
 {
 	int i;
@@ -20,6 +26,7 @@ static void cleanup_libc(void)
 	}
 }
 
+#if 0
 char *
 getenv(const char *name)
 {
@@ -30,6 +37,7 @@ getenv(const char *name)
 	}
 	return NULL;
 }
+#endif
 
 int
 setenv(const char *name, const char *value, int overwrite)
@@ -39,7 +47,7 @@ setenv(const char *name, const char *value, int overwrite)
 	for (i=0; i < MAXENV; i++) {
 		if (envnames[i] && !strcmp(envnames[i], name)) {
 			if (overwrite) {
-				val = strdup(value);
+				val = g_strdup(value);
 				if (!val)
 					return -1;
 				if (envvars[i])
@@ -51,8 +59,8 @@ setenv(const char *name, const char *value, int overwrite)
 	}
 	for (i=0; i < MAXENV; i++) {
 		if (!envnames[i]) {
-			envnames[i] = strdup(name);
-			envvars[i] = strdup(value);
+			envnames[i] = g_strdup(name);
+			envvars[i] = g_strdup(value);
 			if (!envnames[i] || !envvars[i]) {
 				if (envnames[i])
 					free(envnames[i]);
@@ -156,3 +164,22 @@ unsigned int
 alarm(unsigned int seconds)
 {
 }
+
+#ifdef _MSC_VER
+
+size_t strftime (char *s, size_t maxsize, const char *format, const struct tm *tp)
+{
+    return 0;
+}
+
+__int64 _lseeki64(int FileHandle, __int64 Offset, int Origin)
+{
+    return 0;
+}
+
+intptr_t _get_osfhandle(int FileHandle)
+{
+    return 0;
+}
+
+#endif
