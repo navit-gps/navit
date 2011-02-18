@@ -19,10 +19,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <string.h>
 #include <glib.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <math.h>
 #include "config.h"
@@ -169,6 +172,7 @@ static void initBth(struct vehicle_priv *priv)
 static int initDevice(struct vehicle_priv *priv)
 {
 	COMMTIMEOUTS commTiming;
+    HANDLE hGPS;
     if ( priv->m_hGPSDevice )
         CloseHandle(priv->m_hGPSDevice);
     
@@ -176,7 +180,7 @@ static int initDevice(struct vehicle_priv *priv)
 	{
 	    dbg(0, "Init Device\n");
         /* GPD0 is the control port for the GPS driver */
-        HANDLE hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+        hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
         if (hGPS != INVALID_HANDLE_VALUE) {
 #ifndef IOCTL_SERVICE_REFRESH
 #define IOCTL_SERVICE_REFRESH 0x4100000C
@@ -239,8 +243,10 @@ static int initDevice(struct vehicle_priv *priv)
 
 static int read_win32(struct vehicle_priv *priv, char *buffer, size_t size)
 {
+    int ret_size;
+
     g_mutex_lock(&priv->lock);
-    int ret_size = MIN(size,priv->read_buffer_pos);
+    ret_size = MIN(size,priv->read_buffer_pos);
     priv->has_data = 0;
     memcpy(buffer, priv->read_buffer, ret_size);
     
@@ -253,8 +259,7 @@ static int read_win32(struct vehicle_priv *priv, char *buffer, size_t size)
 static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 {
 	struct vehicle_priv *priv = lParam;
-	const int chunk_size = 3*82;
-	char chunk_buffer[chunk_size];
+	char chunk_buffer[3*82];
 	BOOL status;
 	DWORD bytes_read;
 	int waitcounter;
@@ -270,7 +275,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 		dbg(1,"readfile\n");
 		waitcounter = 0;
 		status = ReadFile(priv->m_hGPSDevice,
-			chunk_buffer, chunk_size,
+			chunk_buffer, sizeof(chunk_buffer),
 			&bytes_read, NULL);
 	    
 	    if ( !status )
@@ -312,21 +317,17 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
         g_mutex_unlock(&priv->lock);
 	    
 	}
-    
     return TRUE;
 }
 
 static int
 vehicle_wince_available_ports(void)
 {
-	static const int max_name_length = 20;
-	static const int max_type_length = 100;
-	
 	HKEY hkResult;
 	HKEY hkSubResult;
-	wchar_t keyname[max_name_length];
-	wchar_t devicename[max_name_length];
-	wchar_t devicetype[max_type_length];
+	wchar_t keyname[20];
+	wchar_t devicename[100];
+	wchar_t devicetype[100];
 	int index = 0;
 	DWORD regkey_length = sizeof(keyname);
 	DWORD regdevtype_length = sizeof(devicetype);
@@ -362,6 +363,10 @@ vehicle_wince_available_ports(void)
 static int
 vehicle_wince_open(struct vehicle_priv *priv)
 {
+    char* raw_setting_str;
+    char* strport;
+    char* strsettings;
+
 	dbg(1, "enter vehicle_wince_open, priv->source='%s'\n", priv->source);
 
 	if (priv->source ) {
@@ -372,9 +377,9 @@ vehicle_wince_open(struct vehicle_priv *priv)
 			return 0;
 		}
 
-		char* raw_setting_str = g_strdup( priv->source );
-		char* strport = strchr(raw_setting_str, ':' );
-		char* strsettings = strchr(raw_setting_str, ' ' );
+		raw_setting_str = g_strdup( priv->source );
+		strport = strchr(raw_setting_str, ':' );
+		strsettings = strchr(raw_setting_str, ' ' );
 
 		if (raw_setting_str && strport&&strsettings ) {
 			strport++;
@@ -470,7 +475,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			lat -= priv->geo.lat * 100;
 			priv->geo.lat += lat / 60;
 
-			if (!strcasecmp(item[3],"S"))
+			if (!g_strcasecmp(item[3],"S"))
 				priv->geo.lat=-priv->geo.lat;
 
 			lng = g_ascii_strtod(item[4], NULL);
@@ -478,7 +483,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			lng -= priv->geo.lng * 100;
 			priv->geo.lng += lng / 60;
 
-			if (!strcasecmp(item[5],"W"))
+			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
 			priv->valid=attr_position_valid_valid;
             dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
@@ -612,9 +617,10 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 static void
 vehicle_wince_io(struct vehicle_priv *priv)
 {
-	dbg(1, "vehicle_file_io : enter\n");
 	int size, rc = 0;
 	char *str, *tok;
+
+	dbg(1, "vehicle_file_io : enter\n");
 
 	size = read_win32(priv, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
 	
@@ -684,8 +690,10 @@ vehicle_wince_enable_watch(struct vehicle_priv *priv)
 static void
 vehicle_wince_disable_watch(struct vehicle_priv *priv)
 {
-    dbg(1, "enter");
 	int wait = 5000;
+
+    dbg(1, "enter");
+
 	priv->is_running = 0;
 	while (wait-- > 0 && priv->thread_up) {
 		SwitchToThread();
@@ -789,11 +797,13 @@ static int
 vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)
 {
 	struct vehicle_priv *priv=priv_data;
+    struct gps_sat *sat;
+
 	if (priv->sat_item.id_lo < 1)
 		return 0;
 	if (priv->sat_item.id_lo > priv->current_count)
 		return 0;
-	struct gps_sat *sat=&priv->current[priv->sat_item.id_lo-1];
+	sat=&priv->current[priv->sat_item.id_lo-1];
 	switch (type) {
 	case attr_sat_prn:
 		attr->u.num=sat->prn;
@@ -878,9 +888,9 @@ vehicle_wince_new(struct vehicle_methods
 		ret->checksum_ignore=checksum_ignore->u.num;
 	ret->attrs = attrs;
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
-	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
+	if (on_eof && !g_strcasecmp(on_eof->u.str, "stop"))
 		ret->on_eof=1;
-	if (on_eof && !strcasecmp(on_eof->u.str, "exit"))
+	if (on_eof && !g_strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
 	dbg(0,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_wince_methods;
