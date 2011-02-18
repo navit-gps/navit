@@ -106,13 +106,14 @@ public class NavitMapDownloader
 		public void run()
 		{
 			stop_me = false;
-			download_osm_map(mHandler, map_values);
+			int exit_code = download_osm_map(mHandler, map_values);
 
 			// ok, remove dialog
 			Message msg = mHandler.obtainMessage();
 			Bundle b = new Bundle();
 			msg.what = 0;
 			b.putInt("dialog_num", Navit.MAPDOWNLOAD_DIALOG);
+			b.putInt("exit_code", exit_code);
 			msg.setData(b);
 			mHandler.sendMessage(msg);
 		}
@@ -131,8 +132,10 @@ public class NavitMapDownloader
 		this.navit_jmain = main;
 	}
 
-	public void download_osm_map(Handler handler, osm_map_values map_values)
+	public int download_osm_map(Handler handler, osm_map_values map_values)
 	{
+		int exit_code = 1;
+
 		Message msg = handler.obtainMessage();
 		Bundle b = new Bundle();
 		msg.what = 1;
@@ -218,7 +221,7 @@ public class NavitMapDownloader
 					Log.d("NavitMapDownloader", "stop_me 2");
 					c.disconnect();
 					Log.d("NavitMapDownloader", "stop_me 3");
-					return;
+					return 2;
 				}
 				already_read = already_read + len1;
 				alt_cur++;
@@ -301,6 +304,7 @@ public class NavitMapDownloader
 			handler.sendMessage(msg);
 
 			Log.d("NavitMapDownloader", "Error: " + e);
+			exit_code = 3;
 		}
 		catch (Exception e)
 		{
@@ -312,6 +316,7 @@ public class NavitMapDownloader
 			handler.sendMessage(msg);
 
 			Log.d("NavitMapDownloader", "gerneral Error: " + e);
+			exit_code = 4;
 		}
 
 		msg = handler.obtainMessage();
@@ -326,5 +331,7 @@ public class NavitMapDownloader
 
 
 		Log.d("NavitMapDownloader", "success");
+		exit_code = 0;
+		return exit_code;
 	}
 }
