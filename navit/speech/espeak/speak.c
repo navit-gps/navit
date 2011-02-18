@@ -29,6 +29,7 @@
 #include <unistd.h>
 #endif
 
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <glib.h>
 #include "item.h"
