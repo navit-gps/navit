@@ -595,6 +595,14 @@ public class Navit extends Activity implements Handler.Callback
 																// dismiss dialog, remove dialog
 																dismissDialog(msg.getData().getInt("dialog_num"));
 																removeDialog(msg.getData().getInt("dialog_num"));
+																// try to use the new downloaded map (works only when there is now map yet!)
+																// please fix me in the C-source !!
+																// please fix me in the C-source !!
+																Message msg2 = new Message();
+																Bundle b2 = new Bundle();
+																b2.putInt("Callback", 6);
+																msg2.setData(b2);
+																N_NavitGraphics.callback_handler.sendMessage(msg2);
 																break;
 															case 1 :
 																// change progressbar values
