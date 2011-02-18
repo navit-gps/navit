@@ -238,8 +238,10 @@ struct odometer {
 	int time_all;
 	time_t last_click_time;     //time of last click (for double click handling)
 	time_t last_start_time;     //time of last start of counting
+	time_t last_update_time;     //time of last  position update
 	struct coord last_coord;
 	double last_speed; 
+	double acceleration; 
 };
 
 static void
@@ -343,7 +345,6 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   struct vehicle* curr_vehicle = v;
   double spd = 0;
   double curr_spd = 0;
-  double acceleration = 0;
 
   int remainder;
   int days;
@@ -370,16 +371,12 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   osd_std_draw(&this->osd_item);
   if(this->bActive) {
     vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
-    if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
-      curr_spd = *speed_attr.u.numd; 
-    }
     pro = projection_mg;//position_attr.u.pcoord->pro;
     transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
 
     if (this->last_coord.x != -1 ) {
-        double dt = time(0)-this->last_click_time;
-        double dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
         //we have valid previous position
+        double dt = time(0)-this->last_update_time;
         double dCurrDist = 0;
         dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
 	if(0<curr_coord.x && 0<this->last_coord.x) {
@@ -390,16 +387,24 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
         if(dt != 0) {
           //suppose that gps data comes with the periodicity that is a multiple of 1 second 
 	  //maybe finer time resolution will be needed, for more correct operation
-          acceleration = dv/dt;  
+          if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
+            curr_spd = *speed_attr.u.numd; 
+            double dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
+            this->acceleration = dv/dt;  
+
+            if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
+              this->last_speed = curr_spd;
+              this->last_update_time = time(0);
+            }
+          }
         }
-	this->last_speed = curr_spd;
     }
     this->last_coord = curr_coord;
   }
 
   dist_buffer = format_distance(this->sum_dist,"",imperial);
   spd_buffer = format_speed(spd,"","value",imperial);
-  acc_buffer = g_strdup_printf("%.3f m/s2",acceleration);
+  acc_buffer = g_strdup_printf("%.3f m/s2",this->acceleration);
   remainder = this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
