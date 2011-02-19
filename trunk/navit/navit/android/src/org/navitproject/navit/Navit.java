@@ -52,33 +52,34 @@ import android.widget.Toast;
 
 public class Navit extends Activity implements Handler.Callback
 {
-	public Handler								handler;
-	private PowerManager.WakeLock			wl;
-	private NavitActivityResult			ActivityResults[];
-	public static InputMethodManager		mgr										= null;
-	public static DisplayMetrics			metrics									= null;
-	public static Boolean					show_soft_keyboard					= false;
-	public static Boolean					show_soft_keyboard_now_showing	= false;
-	public static long						last_pressed_menu_key				= 0L;
-	public static long						time_pressed_menu_key				= 0L;
-	private static Intent					startup_intent							= null;
-	private static long						startup_intent_timestamp			= 0L;
-	public static String						my_display_density					= "mdpi";
-	private boolean							parseErrorShown						= false;
-	private static NavitMapDownloader	map_download							= null;
-	public static final int					MAPDOWNLOAD_PRI_DIALOG				= 1;
-	public static final int					MAPDOWNLOAD_SEC_DIALOG				= 2;
-	public ProgressDialog					mapdownloader_dialog_pri			= null;
-	public ProgressDialog					mapdownloader_dialog_sec			= null;
-	public static NavitMapDownloader		mapdownloader_pri						= null;
-	public static NavitMapDownloader		mapdownloader_sec						= null;
-	public static final int					NavitDownloaderPriSelectMap_id	= 967;
-	public static final int					NavitDownloaderSecSelectMap_id	= 968;
-	public static int							download_map_id						= 0;
-	ProgressThread								progressThread_pri					= null;
-	ProgressThread								progressThread_sec					= null;
-	public static final int					MAP_NUM_PRIMARY						= 1;
-	public static final int					MAP_NUM_SECONDARY						= 1;
+	public Handler							handler;
+	private PowerManager.WakeLock		wl;
+	private NavitActivityResult		ActivityResults[];
+	public static InputMethodManager	mgr										= null;
+	public static DisplayMetrics		metrics									= null;
+	public static Boolean				show_soft_keyboard					= false;
+	public static Boolean				show_soft_keyboard_now_showing	= false;
+	public static long					last_pressed_menu_key				= 0L;
+	public static long					time_pressed_menu_key				= 0L;
+	private static Intent				startup_intent							= null;
+	private static long					startup_intent_timestamp			= 0L;
+	public static String					my_display_density					= "mdpi";
+	private boolean						parseErrorShown						= false;
+	//private static NavitMapDownloader	map_download							= null;
+	public static final int				MAPDOWNLOAD_PRI_DIALOG				= 1;
+	public static final int				MAPDOWNLOAD_SEC_DIALOG				= 2;
+	public ProgressDialog				mapdownloader_dialog_pri			= null;
+	public ProgressDialog				mapdownloader_dialog_sec			= null;
+	public static NavitMapDownloader	mapdownloader_pri						= null;
+	public static NavitMapDownloader	mapdownloader_sec						= null;
+	public static final int				NavitDownloaderPriSelectMap_id	= 967;
+	public static final int				NavitDownloaderSecSelectMap_id	= 968;
+	public static int						download_map_id						= 0;
+	ProgressThread							progressThread_pri					= null;
+	ProgressThread							progressThread_sec					= null;
+	public static final int				MAP_NUM_PRIMARY						= 11;
+	public static final int				MAP_NUM_SECONDARY						= 12;
+	static final String					MAP_FILENAME_PATH						= "/sdcard/navit/";
 
 	private boolean extractRes(String resname, String result)
 	{
@@ -184,6 +185,11 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "**1**A " + startup_intent.getAction());
 		Log.e("Navit", "**1**D " + startup_intent.getDataString());
 
+		// make sure the new path for the navitmap.bin file(s) exist!!
+		File navit_maps_dir = new File(this.MAP_FILENAME_PATH);
+		navit_maps_dir.mkdirs();
+
+
 		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
 		int height_ = display_.getHeight();
@@ -281,7 +287,7 @@ public class Navit extends Activity implements Handler.Callback
 
 		NavitActivity(3);
 
-		this.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	@Override
 	public void onStart()
@@ -580,11 +586,12 @@ public class Navit extends Activity implements Handler.Callback
 					{
 						try
 						{
-							Log.d("Navit", "id=" + Integer.parseInt(data.getStringExtra("selected_id")));
+							Log.d("Navit", "PRI id="
+									+ Integer.parseInt(data.getStringExtra("selected_id")));
 							// set map id to download
 							Navit.download_map_id = Integer.parseInt(data.getStringExtra("selected_id"));
 							// show the map download progressbar, and download the map
-							showDialog(Navit.MAP_NUM_PRIMARY);
+							showDialog(Navit.MAPDOWNLOAD_PRI_DIALOG);
 						}
 						catch (NumberFormatException e)
 						{
@@ -608,11 +615,12 @@ public class Navit extends Activity implements Handler.Callback
 					{
 						try
 						{
-							Log.d("Navit", "id=" + Integer.parseInt(data.getStringExtra("selected_id")));
+							Log.d("Navit", "SEC id="
+									+ Integer.parseInt(data.getStringExtra("selected_id")));
 							// set map id to download
 							Navit.download_map_id = Integer.parseInt(data.getStringExtra("selected_id"));
 							// show the map download progressbar, and download the map
-							showDialog(Navit.MAP_NUM_SECONDARY);
+							showDialog(Navit.MAPDOWNLOAD_SEC_DIALOG);
 						}
 						catch (NumberFormatException e)
 						{
@@ -716,7 +724,7 @@ public class Navit extends Activity implements Handler.Callback
 				mapdownloader_dialog_pri.setCancelable(true);
 				mapdownloader_dialog_pri.setProgress(0);
 				mapdownloader_dialog_pri.setMax(200);
-				DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener()
+				DialogInterface.OnDismissListener mOnDismissListener1 = new DialogInterface.OnDismissListener()
 				{
 					public void onDismiss(DialogInterface dialog)
 					{
@@ -726,9 +734,8 @@ public class Navit extends Activity implements Handler.Callback
 						progressThread_pri.stop_thread();
 					}
 				};
-				mapdownloader_dialog_pri.setOnDismissListener(mOnDismissListener);
+				mapdownloader_dialog_pri.setOnDismissListener(mOnDismissListener1);
 				mapdownloader_pri = new NavitMapDownloader(this);
-				//map_download.download_osm_map(NavitMapDownloader.austria);
 				progressThread_pri = mapdownloader_pri.new ProgressThread(progress_handler,
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_PRIMARY);
 				progressThread_pri.start();
@@ -753,7 +760,6 @@ public class Navit extends Activity implements Handler.Callback
 				};
 				mapdownloader_dialog_sec.setOnDismissListener(mOnDismissListener2);
 				mapdownloader_sec = new NavitMapDownloader(this);
-				//map_download.download_osm_map(NavitMapDownloader.austria);
 				progressThread_sec = mapdownloader_sec.new ProgressThread(progress_handler,
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_SECONDARY);
 				progressThread_sec.start();
