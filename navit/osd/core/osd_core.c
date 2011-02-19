@@ -234,10 +234,10 @@ struct odometer {
 	int bActive;                //counting or not
 	int autosave_period;        //autosave period in seconds
 	double sum_dist;            //sum of distance ofprevious intervals in meters
-	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
-	int time_all;
-	time_t last_click_time;     //time of last click (for double click handling)
-	time_t last_start_time;     //time of last start of counting
+	double sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
+	double time_all;
+	double last_click_time;     //time of last click (for double click handling)
+	double last_start_time;     //time of last start of counting
 	double last_update_time;     //time of last  position update
 	struct coord last_coord;
 	double last_speed; 
@@ -288,7 +288,7 @@ str_replace(char*output, char*input, char*pattern, char*replacement)
  */
 static char *osd_odometer_to_string(struct odometer* this_)
 {
-  return g_strdup_printf("odometer %s %lf %d %d\n",this_->name,this_->sum_dist,this_->time_all,this_->bActive);
+  return g_strdup_printf("odometer %s %lf %lf %d\n",this_->name,this_->sum_dist,this_->time_all,this_->bActive);
 }
 
 /*
@@ -323,7 +323,7 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
   }
   this_->name = name_str;
   this_->sum_dist = atof(sum_dist_str); 
-  this_->sum_time = atoi(sum_time_str); 
+  this_->sum_time = atof(sum_time_str); 
   this_->bActive = atoi(active_str); 
   this_->last_coord.x = -1;
 }
@@ -389,7 +389,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 	if(dCurrDist<=cStepDistLimit) {
 	        this->sum_dist += dCurrDist;
 	}
-        this->time_all = time(0)-this->last_click_time+this->sum_time;
+        this->time_all = curr_time-this->last_click_time+this->sum_time;
         spd = 3.6*(double)this->sum_dist/(double)this->time_all;
         if(dt != 0) {
           if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
@@ -410,7 +410,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   dist_buffer = format_distance(this->sum_dist,"",imperial);
   spd_buffer = format_speed(spd,"","value",imperial);
   acc_buffer = g_strdup_printf("%.3f m/s2",this->acceleration);
-  remainder = this->time_all;
+  remainder = (int)this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
   hours = remainder  / (60*60);
@@ -464,6 +464,9 @@ static void
 osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int button, struct point *p)
 {
   struct point bp = this->osd_item.p;
+  struct timeval tv;
+  double curr_time;
+  const double double_click_timewin = .5;
   osd_wrap_point(&bp, nav);
   if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h || !this->osd_item.configured ) && !this->osd_item.pressed)
     return;
@@ -473,20 +476,24 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
     return;
   if (!!pressed == !!this->osd_item.pressed)
     return;
+
+  gettimeofday(&tv,NULL);
+  curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
+
   if (pressed) { //single click handling
     if(this->bActive) { //being stopped
       this->last_coord.x = -1;
       this->last_coord.y = -1;
-      this->sum_time += time(0)-this->last_click_time;
+      this->sum_time += curr_time-this->last_click_time;
     }
 
   this->bActive ^= 1;  //toggle active flag
 
-  if (this->last_click_time == time(0)) { //double click handling
+  if (curr_time-double_click_timewin <= this->last_click_time) { //double click handling
     osd_odometer_reset(this);
   }
 
-  this->last_click_time = time(0);
+  this->last_click_time = curr_time;
 
   osd_odometer_draw(this, nav,NULL);
   }
