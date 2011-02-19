@@ -341,6 +341,12 @@ public class Navit extends Activity implements Handler.Callback
 			{
 				intent_data = intent_data + "&q=Target";
 			}
+			// already looks like a: just set flag
+			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
+					&& (intent_data.split("&q=").length > 0))
+			{
+				parsable = true;
+			}
 			else
 			{
 				// string not parsable, display alert and continue w/o string
@@ -410,7 +416,6 @@ public class Navit extends Activity implements Handler.Callback
 			}
 		}
 	}
-
 	@Override
 	public void onPause()
 	{
