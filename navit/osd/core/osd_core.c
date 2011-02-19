@@ -370,11 +370,14 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 
   osd_std_draw(&this->osd_item);
   if(this->bActive) {
-    vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
+    if(!vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL)) {
+      return;
+    }
     pro = projection_mg;//position_attr.u.pcoord->pro;
     transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
 
     if (this->last_coord.x != -1 ) {
+	const double cStepDistLimit = 10000;
         struct timeval tv;
         double curr_time;
 	gettimeofday(&tv,NULL);
@@ -383,7 +386,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
         double dt = curr_time-this->last_update_time;
         double dCurrDist = 0;
         dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
-	if(0<curr_coord.x && 0<this->last_coord.x) {
+	if(dCurrDist<=cStepDistLimit) {
 	        this->sum_dist += dCurrDist;
 	}
         this->time_all = time(0)-this->last_click_time+this->sum_time;
