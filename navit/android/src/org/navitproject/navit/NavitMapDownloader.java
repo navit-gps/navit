@@ -585,7 +585,7 @@ public class NavitMapDownloader
 	static final String					DOWNLOAD_FILENAME								= "navitmap.tmp";
 	static final String					MAP_FILENAME_PRI								= "navitmap.bin";
 	static final String					MAP_FILENAME_SEC								= "navitmap_002.bin";
-	static final String					MAP_FILENAME_PATH								= "/sdcard/";
+	static final String					MAP_FILENAME_PATH								= Navit.MAP_FILENAME_PATH;
 
 
 	public class ProgressThread extends Thread
@@ -595,11 +595,11 @@ public class NavitMapDownloader
 		int				map_num;
 		int				my_dialog_num;
 
-		ProgressThread(Handler h, osm_map_values map_values, int map_num)
+		ProgressThread(Handler h, osm_map_values map_values, int map_num2)
 		{
 			this.mHandler = h;
 			this.map_values = map_values;
-			this.map_num = map_num;
+			this.map_num = map_num2;
 			if (this.map_num == Navit.MAP_NUM_PRIMARY)
 			{
 				this.my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
@@ -639,19 +639,23 @@ public class NavitMapDownloader
 		this.navit_jmain = main;
 	}
 
-	public int download_osm_map(Handler handler, osm_map_values map_values, int map_num)
+	public int download_osm_map(Handler handler, osm_map_values map_values, int map_num3)
 	{
 		int exit_code = 1;
 
+		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
 		int my_dialog_num = 0;
-		if (map_num == Navit.MAP_NUM_PRIMARY)
+		if (map_num3 == Navit.MAP_NUM_PRIMARY)
 		{
 			my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
+			//Log.v("NavitMapDownloader", "PRI");
 		}
-		else if (map_num == Navit.MAP_NUM_SECONDARY)
+		else if (map_num3 == Navit.MAP_NUM_SECONDARY)
 		{
 			my_dialog_num = Navit.MAPDOWNLOAD_SEC_DIALOG;
+			//Log.v("NavitMapDownloader", "SEC");
 		}
+		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
 
 		Message msg = handler.obtainMessage();
 		Bundle b = new Bundle();
@@ -673,16 +677,20 @@ public class NavitMapDownloader
 		}
 
 		// output filename
+		String PATH = MAP_FILENAME_PATH;
 		String fileName = DOWNLOAD_FILENAME;
-		String final_fileName = MAP_FILENAME_PRI;
-		if (map_num == Navit.MAP_NUM_SECONDARY)
+		String final_fileName = "xxx";
+		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
+		if (map_num3 == Navit.MAP_NUM_SECONDARY)
 		{
 			final_fileName = this.MAP_FILENAME_SEC;
 		}
+		else if (map_num3 == Navit.MAP_NUM_PRIMARY)
+		{
+			final_fileName = this.MAP_FILENAME_PRI;
+		}
 		// output path for output filename
 		// String PATH = Environment.getExternalStorageDirectory() + "/download/";
-		String PATH = MAP_FILENAME_PATH;
-		Log.v("log_tag", "mapfilename tmp: " + PATH + fileName);
 
 		try
 		{
