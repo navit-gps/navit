@@ -238,7 +238,7 @@ struct odometer {
 	int time_all;
 	time_t last_click_time;     //time of last click (for double click handling)
 	time_t last_start_time;     //time of last start of counting
-	time_t last_update_time;     //time of last  position update
+	double last_update_time;     //time of last  position update
 	struct coord last_coord;
 	double last_speed; 
 	double acceleration; 
@@ -375,8 +375,12 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
     transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
 
     if (this->last_coord.x != -1 ) {
+        struct timeval tv;
+        double curr_time;
+	gettimeofday(&tv,NULL);
+	curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
         //we have valid previous position
-        double dt = time(0)-this->last_update_time;
+        double dt = curr_time-this->last_update_time;
         double dCurrDist = 0;
         dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
 	if(0<curr_coord.x && 0<this->last_coord.x) {
@@ -385,8 +389,6 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
         this->time_all = time(0)-this->last_click_time+this->sum_time;
         spd = 3.6*(double)this->sum_dist/(double)this->time_all;
         if(dt != 0) {
-          //suppose that gps data comes with the periodicity that is a multiple of 1 second 
-	  //maybe finer time resolution will be needed, for more correct operation
           if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
             curr_spd = *speed_attr.u.numd; 
             double dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
@@ -394,7 +396,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 
             if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
               this->last_speed = curr_spd;
-              this->last_update_time = time(0);
+              this->last_update_time = curr_time;
             }
           }
         }
