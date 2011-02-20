@@ -686,6 +686,7 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 			case 99 :
 				// exit
+				this.onStop();
 				this.exit();
 				//msg = new Message();
 				//b = new Bundle();
