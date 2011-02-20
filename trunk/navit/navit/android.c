@@ -14,6 +14,7 @@
 #include "map.h"
 #include "transform.h"
 
+
 JNIEnv *jnienv;
 jobject *android_activity;
 struct callback_list *android_activity_cbl;
@@ -81,9 +82,7 @@ struct navit {
         int border;
 };
 
-
 struct navit *global_navit;
-
 
 struct attr attr;
 struct config {
@@ -305,9 +304,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			// call a command (like in gui)
 			s=(*env)->GetStringUTFChars(env, str, NULL);
 			dbg(0,"*****string=%s\n",s);
-
-			command_evaluate(&global_navit->self,s);
-
+			command_evaluate(&attr.u.navit->self,s);
 			(*env)->ReleaseStringUTFChars(env, str, s);
 		}
 		else if (i == 4)
@@ -388,3 +385,4 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		}
 	}
 }
+
