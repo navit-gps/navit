@@ -85,6 +85,11 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {	
 	struct map_rect_priv *mr=priv_data;
 
+	if(!mr || !mr->curr_item || !mr->curr_item->data) {
+		attr = NULL;
+		return 0;
+	}
+
 	GList* attr_list = ((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list;
 	if (attr_type == attr_any) {
 	}
@@ -129,9 +134,11 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
 	mr->item.priv_data=mr;
 
 	//convert selection to geo
-	transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
-	transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
-	quadtree_find_rect_items(map->tree_root, lu.lng, rl.lng, rl.lat, lu.lat, &res);
+	if(sel) {   	
+		transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
+		transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
+		quadtree_find_rect_items(map->tree_root, lu.lng, rl.lng, rl.lat, lu.lat, &res);
+	}
 	mr->query_result = res;
 	mr->curr_item = res;
 	return mr;
@@ -148,7 +155,9 @@ static struct item *
 map_rect_get_item_csv(struct map_rect_priv *mr)
 {
 	if(mr->bStarted) {
-		mr->curr_item = g_list_next(mr->curr_item);	
+		if(mr->curr_item) {
+			mr->curr_item = g_list_next(mr->curr_item);	
+		}
 	}
 	else {
 		mr->bStarted = 1;
