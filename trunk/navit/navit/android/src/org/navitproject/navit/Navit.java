@@ -194,7 +194,7 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "**1**D " + startup_intent.getDataString());
 
 		// make sure the new path for the navitmap.bin file(s) exist!!
-		File navit_maps_dir = new File(this.MAP_FILENAME_PATH);
+		File navit_maps_dir = new File(MAP_FILENAME_PATH);
 		navit_maps_dir.mkdirs();
 
 
@@ -250,7 +250,7 @@ public class Navit extends Activity implements Handler.Callback
 			}
 		});
 
-		File navit_first_startup = new File(this.FIRST_STARTUP_FILE);
+		File navit_first_startup = new File(FIRST_STARTUP_FILE);
 		// if file does NOT exist, show the info box
 		if (!navit_first_startup.exists())
 		{
@@ -371,6 +371,11 @@ public class Navit extends Activity implements Handler.Callback
 		NavitActivity(3);
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		// unpack some localized Strings
+		// a test now, later we will unpack all needed string for java, here at this point!!
+		String x = NavitGraphics.getLocalizedString("Austria");
+		Log.e("Navit", "x=" + x);
 	}
 
 	@Override

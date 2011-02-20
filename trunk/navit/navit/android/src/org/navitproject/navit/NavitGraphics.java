@@ -1211,10 +1211,21 @@ public class NavitGraphics
 		pos_y = y;
 	}
 
+	public static String getLocalizedString(String text)
+	{
+		String ret = CallbackLocalizedString(text);
+		Log.e("NavitGraphics", "callback_handler -> lozalized string=" + ret);
+		return ret;
+	}
+
 	/**
 	 * generic message channel to C-code
 	 */
 	public native int CallbackMessageChannel(int i, String s);
 
+	/**
+	 * get localized string
+	 */
+	public static native String CallbackLocalizedString(String s);
 
 }
