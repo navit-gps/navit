@@ -1517,8 +1517,8 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
     if(this_->text && 0<=idx ) {
       char buffer [256]="";
       char buffer2[256]="";
-	  char dir_str[16];
-	  char spd_str[16];
+      char dir_str[16];
+      char spd_str[16];
       buffer [0] = 0;
       buffer2[0] = 0; 
   
@@ -1726,11 +1726,13 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
         } else {
             osd_color = this->grey;
             img = this->img_off;
+            this->announce_state = eNoWarn;
         }
     } else {
         //when tracking is not available display grey
         osd_color = this->grey;
         img = this->img_off;
+        this->announce_state = eNoWarn;
     }
     if(this->img_active && this->img_passive && this->img_off) {
       struct point p;
