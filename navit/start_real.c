@@ -152,6 +152,9 @@ int main_real(int argc, char **argv)
 		list = g_list_append(list,g_strdup("navit.xml.local"));
 		list = g_list_append(list,g_strdup("navit.xml"));
 #ifdef HAVE_API_ANDROID
+		// new preferred location (the new one should have priority over the legacy!)
+		list = g_list_append(list,g_strdup("/sdcard/navit/navit.xml"));
+		// legacy location, still supported
 		list = g_list_append(list,g_strdup("/sdcard/navit.xml"));
 #endif
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
@@ -170,7 +173,9 @@ int main_real(int argc, char **argv)
         // Try the next config file possibility from the list
 		config_file = li->data;
 		if (file_exists(config_file))
+		{
 			break;
+		}
 		else
 			g_free(config_file);
 		li = g_list_next(li);
