@@ -254,6 +254,27 @@ Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject th
 	callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
+
+JNIEXPORT jstring JNICALL
+Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, jobject thiz, jobject str)
+{
+	const char *s;
+	const char *localized_str;
+
+	s=(*env)->GetStringUTFChars(env, str, NULL);
+	dbg(0,"*****string=%s\n",s);
+
+	localized_str=gettext(s);
+	dbg(0,"localized string=%s",localized_str);
+
+	// jstring dataStringValue = (jstring) localized_str;
+	jstring js = (*env)->NewStringUTF(env,localized_str);
+
+	(*env)->ReleaseStringUTFChars(env, str, s);
+
+	return js;
+}
+
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz, int i, jobject str)
 {
