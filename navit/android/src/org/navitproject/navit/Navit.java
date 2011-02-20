@@ -483,7 +483,8 @@ public class Navit extends Activity implements Handler.Callback
 		menu.add(1, 3, 22, "download 1st map");
 		menu.add(1, 4, 23, "download 2nd map");
 
-		menu.add(1, 99, 30, "Exit Navit");
+		menu.add(1, 5, 40, "toggle POI");
+		menu.add(1, 99, 45, "Exit Navit");
 		return true;
 	}
 
@@ -560,15 +561,47 @@ public class Navit extends Activity implements Handler.Callback
 				this.startActivityForResult(map_download_list_activity2,
 						Navit.NavitDownloaderSecSelectMap_id);
 				break;
+			case 5 :
+				// toggle the normal POI layers (to avoid double POIs)
+				msg = new Message();
+				b = new Bundle();
+				b.putInt("Callback", 5);
+				b.putString("cmd", "toggle_layer(\"POI Symbols\");");
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+				// toggle the normal POI layers (to avoid double POIs)
+				msg = new Message();
+				b = new Bundle();
+				b.putInt("Callback", 5);
+				b.putString("cmd", "toggle_layer(\"POI Labels\");");
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+
+				
+				// toggle full POI icons on/off
+				msg = new Message();
+				b = new Bundle();
+				b.putInt("Callback", 5);
+				b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+				// toggle full POI labels on/off
+				msg = new Message();
+				b = new Bundle();
+				b.putInt("Callback", 5);
+				b.putString("cmd", "toggle_layer(\"Android-POI-Labels-full\");");
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+				break;
 			case 99 :
 				// exit
 				this.exit();
-				//				msg = new Message();
-				//				b = new Bundle();
-				//				b.putInt("Callback", 5);
-				//				b.putString("cmd", "quit()");
-				//				msg.setData(b);
-				//				N_NavitGraphics.callback_handler.sendMessage(msg);
+				//msg = new Message();
+				//b = new Bundle();
+				//b.putInt("Callback", 5);
+				//b.putString("cmd", "quit();");
+				//msg.setData(b);
+				//N_NavitGraphics.callback_handler.sendMessage(msg);
 				break;
 		}
 		return true;
