@@ -41,12 +41,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -55,31 +60,34 @@ public class Navit extends Activity implements Handler.Callback
 	public Handler							handler;
 	private PowerManager.WakeLock		wl;
 	private NavitActivityResult		ActivityResults[];
-	public static InputMethodManager	mgr										= null;
-	public static DisplayMetrics		metrics									= null;
-	public static Boolean				show_soft_keyboard					= false;
-	public static Boolean				show_soft_keyboard_now_showing	= false;
-	public static long					last_pressed_menu_key				= 0L;
-	public static long					time_pressed_menu_key				= 0L;
-	private static Intent				startup_intent							= null;
-	private static long					startup_intent_timestamp			= 0L;
-	public static String					my_display_density					= "mdpi";
-	private boolean						parseErrorShown						= false;
+	public static InputMethodManager	mgr											= null;
+	public static DisplayMetrics		metrics										= null;
+	public static Boolean				show_soft_keyboard						= false;
+	public static Boolean				show_soft_keyboard_now_showing		= false;
+	public static long					last_pressed_menu_key					= 0L;
+	public static long					time_pressed_menu_key					= 0L;
+	private static Intent				startup_intent								= null;
+	private static long					startup_intent_timestamp				= 0L;
+	public static String					my_display_density						= "mdpi";
+	private boolean						parseErrorShown							= false;
 	//private static NavitMapDownloader	map_download							= null;
-	public static final int				MAPDOWNLOAD_PRI_DIALOG				= 1;
-	public static final int				MAPDOWNLOAD_SEC_DIALOG				= 2;
-	public ProgressDialog				mapdownloader_dialog_pri			= null;
-	public ProgressDialog				mapdownloader_dialog_sec			= null;
-	public static NavitMapDownloader	mapdownloader_pri						= null;
-	public static NavitMapDownloader	mapdownloader_sec						= null;
-	public static final int				NavitDownloaderPriSelectMap_id	= 967;
-	public static final int				NavitDownloaderSecSelectMap_id	= 968;
-	public static int						download_map_id						= 0;
-	ProgressThread							progressThread_pri					= null;
-	ProgressThread							progressThread_sec					= null;
-	public static final int				MAP_NUM_PRIMARY						= 11;
-	public static final int				MAP_NUM_SECONDARY						= 12;
-	static final String					MAP_FILENAME_PATH						= "/sdcard/navit/";
+	public static final int				MAPDOWNLOAD_PRI_DIALOG					= 1;
+	public static final int				MAPDOWNLOAD_SEC_DIALOG					= 2;
+	public ProgressDialog				mapdownloader_dialog_pri				= null;
+	public ProgressDialog				mapdownloader_dialog_sec				= null;
+	public static NavitMapDownloader	mapdownloader_pri							= null;
+	public static NavitMapDownloader	mapdownloader_sec							= null;
+	public static final int				NavitDownloaderPriSelectMap_id		= 967;
+	public static final int				NavitDownloaderSecSelectMap_id		= 968;
+	public static int						download_map_id							= 0;
+	ProgressThread							progressThread_pri						= null;
+	ProgressThread							progressThread_sec						= null;
+	public static final int				MAP_NUM_PRIMARY							= 11;
+	public static final int				MAP_NUM_SECONDARY							= 12;
+	static final String					MAP_FILENAME_PATH							= "/sdcard/navit/";
+	static final String					FIRST_STARTUP_FILE						= "/data/data/org.navitproject.navit/share/has_run_once.txt";
+
+	static final String					NAVIT_JAVA_MENU_download_first_map	= "download first map";
 
 	private boolean extractRes(String resname, String result)
 	{
@@ -178,7 +186,7 @@ public class Navit extends Activity implements Handler.Callback
 	{
 		super.onCreate(savedInstanceState);
 
-		// only take arguments here, in onResume gets called all the time (e.g. when screenblanks, etc.)
+		// only take arguments here, onResume gets called all the time (e.g. when screenblanks, etc.)
 		Navit.startup_intent = this.getIntent();
 		// hack! remeber timstamp, and only allow 4 secs. later in onResume to set target!
 		Navit.startup_intent_timestamp = System.currentTimeMillis();
@@ -188,6 +196,81 @@ public class Navit extends Activity implements Handler.Callback
 		// make sure the new path for the navitmap.bin file(s) exist!!
 		File navit_maps_dir = new File(this.MAP_FILENAME_PATH);
 		navit_maps_dir.mkdirs();
+
+
+		/*
+		 * show info box for first time users
+		 */
+		AlertDialog.Builder infobox = new AlertDialog.Builder(this);
+		infobox.setTitle("Welcome to Navit");
+		infobox.setCancelable(false);
+		final TextView message = new TextView(this);
+		message.setFadingEdgeLength(20);
+		message.setVerticalFadingEdgeEnabled(true);
+		//message.setVerticalScrollBarEnabled(true);
+		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+
+		// margins seem not to work, hmm strange
+		// so add a " " at start of every line. well whadda you gonna do ...
+		//rlp.leftMargin = 8;
+		final String m = " ";
+
+
+		message.setLayoutParams(rlp);
+		final SpannableString s = new SpannableString(m
+				+ "You are running Navit for the first time!\n\n" + m + "To start select \""
+				+ NAVIT_JAVA_MENU_download_first_map + "\"\n" + m
+				+ "from the menu, and download a map\n" + m + "for your current Area.\n" + m
+				+ "This will download a large file, so please\n" + m
+				+ "make sure you have a flatrate or similar!\n\n" + m
+				+ "For more information on Navit\n" + m + "visit our Website\n" + m
+				+ "http://wiki.navit-project.org/\n" + "\n" + m + "      Have fun using Navit.");
+		Linkify.addLinks(s, Linkify.WEB_URLS);
+		message.setText(s);
+		message.setMovementMethod(LinkMovementMethod.getInstance());
+		infobox.setView(message);
+
+		infobox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface arg0, int arg1)
+			{
+				Log.e("Navit", "Ok, user saw the infobox");
+			}
+		});
+		infobox.setNeutralButton("More info", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface arg0, int arg1)
+			{
+				Log.e("Navit", "user wants more info, show the website");
+				String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		});
+
+		File navit_first_startup = new File(this.FIRST_STARTUP_FILE);
+		// if file does NOT exist, show the info box
+		if (!navit_first_startup.exists())
+		{
+			FileOutputStream fos_temp;
+			try
+			{
+				fos_temp = new FileOutputStream(navit_first_startup);
+				fos_temp.write((int) 65); // just write an "A" to the file, but really doesnt matter
+				fos_temp.flush();
+				fos_temp.close();
+				infobox.show();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		/*
+		 * show info box for first time users
+		 */
 
 
 		Display display_ = getWindowManager().getDefaultDisplay();
@@ -289,6 +372,7 @@ public class Navit extends Activity implements Handler.Callback
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
+
 	@Override
 	public void onStart()
 	{
@@ -296,6 +380,7 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "OnStart");
 		NavitActivity(2);
 	}
+
 	@Override
 	public void onRestart()
 	{
@@ -303,6 +388,7 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "OnRestart");
 		NavitActivity(0);
 	}
+
 	@Override
 	public void onResume()
 	{
@@ -341,55 +427,29 @@ public class Navit extends Activity implements Handler.Callback
 			String temp1 = null;
 			String temp2 = null;
 			String temp3 = null;
-			boolean parsable = true;
+			boolean parsable = false;
 
 			// if b: then remodel the input string to look like a:
 			if (intent_data.substring(0, 20).equals("google.navigation:q="))
 			{
 				intent_data = "ll=" + intent_data.split("q=", -1)[1] + "&q=Target";
+				parsable = true;
 			}
 			// if c: then remodel the input string to look like a:
 			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
 					&& (intent_data.split("&q=").length == 0))
 			{
 				intent_data = intent_data + "&q=Target";
+				parsable = true;
 			}
 			// already looks like a: just set flag
 			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
 					&& (intent_data.split("&q=").length > 0))
 			{
+				// dummy, just set the flag
 				parsable = true;
 			}
-			else
-			{
-				// string not parsable, display alert and continue w/o string
-				AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-				alertbox.setMessage("Navit recieved the query " + intent_data
-						+ "\nThis is not yet parsable.");
-				alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-						Log.e("Navit", "Accepted non-parsable string");
-					}
-				});
-				alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-						String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(url));
-						startActivity(i);
-					}
-				});
-				if (!parseErrorShown)
-				{
-					alertbox.show();
-					parseErrorShown = true;
-				}
-				parsable = false;
-			}
+
 
 			if (parsable)
 			{
@@ -426,6 +486,35 @@ public class Navit extends Activity implements Handler.Callback
 				b.putString("q", q);
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
+			}
+			else
+			{
+				// string not parsable, display alert and continue w/o string
+				AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+				alertbox.setMessage("Navit recieved the query " + intent_data
+						+ "\nThis is not yet parsable.");
+				alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1)
+					{
+						Log.e("Navit", "Accepted non-parsable string");
+					}
+				});
+				alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1)
+					{
+						String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(url));
+						startActivity(i);
+					}
+				});
+				if (!parseErrorShown)
+				{
+					alertbox.show();
+					parseErrorShown = true;
+				}
 			}
 		}
 	}
@@ -480,7 +569,7 @@ public class Navit extends Activity implements Handler.Callback
 		menu.add(1, 1, 10, "Zoom in");
 		menu.add(1, 2, 20, "Zoom out");
 
-		menu.add(1, 3, 22, "download 1st map");
+		menu.add(1, 3, 22, NAVIT_JAVA_MENU_download_first_map);
 		menu.add(1, 4, 23, "download 2nd map");
 
 		menu.add(1, 5, 40, "toggle POI");
@@ -503,6 +592,7 @@ public class Navit extends Activity implements Handler.Callback
 		//N_KeypressCallbackID = kp_cb_id;
 		N_NavitGraphics = ng;
 	}
+
 	public static void setMotionCallback(int mo_cb_id, NavitGraphics ng)
 	{
 		//Log.e("Navit", "setKeypressCallback -> id2=" + mo_cb_id);
@@ -512,6 +602,7 @@ public class Navit extends Activity implements Handler.Callback
 	}
 
 	//public native void KeypressCallback(int id, String s);
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -577,7 +668,7 @@ public class Navit extends Activity implements Handler.Callback
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
 
-				
+
 				// toggle full POI icons on/off
 				msg = new Message();
 				b = new Bundle();
