@@ -1514,7 +1514,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       this_->announce_state=eNoWarn;
     }
   
-    if(this_->text && 0<=idx ) {
+    if(this_->text) {
       char buffer [256]="";
       char buffer2[256]="";
       char dir_str[16];
@@ -1525,7 +1525,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       osd_std_draw(&this_->item);
 
       str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,"",imperial));
-      str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
+      str_replace(buffer2,buffer,"${camera_type}",(0<=idx && idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
       str_replace(buffer,buffer2,"${camera_dir}",(0<=dir_idx && dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
       sprintf(dir_str,"%d",dir);
       sprintf(spd_str,"%d",spd);
