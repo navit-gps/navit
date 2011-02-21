@@ -392,12 +392,12 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
         this->time_all = curr_time-this->last_click_time+this->sum_time;
         spd = 3.6*(double)this->sum_dist/(double)this->time_all;
         if(dt != 0) {
-          if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
-            curr_spd = *speed_attr.u.numd; 
-            double dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
-            this->acceleration = dv/dt;  
-
-            if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
+          if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
+            if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
+	      double dv;
+              curr_spd = *speed_attr.u.numd; 
+              dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
+              this->acceleration = dv/dt;  
               this->last_speed = curr_spd;
               this->last_update_time = curr_time;
             }
