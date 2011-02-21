@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.navitproject.navit"
       android:sharedUserId="org.navitproject.navit"
-      android:versionCode="1" android:versionName="1.0.0">
+      android:versionCode="@ANDROID_VERSION_INT@" android:versionName="@ANDROID_VERSION_NAME@">
     <uses-sdk android:minSdkVersion="@ANDROID_API_VERSION@" android:targetSdkVersion="7"/>
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
     @ANDROID_PERMISSIONS@
