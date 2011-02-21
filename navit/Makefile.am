@@ -92,11 +92,18 @@ if SUPPORT_ANDROID
   navit_SOURCES =
   navit_LDADD =
 
+v_int = $$(LANG=C svnversion $(top_srcdir) 2> /dev/null|tr -d ":A-Z" 2> /dev/null)
+v_name = "0.5.0-"$$(LANG=C svnversion $(top_srcdir) 2> /dev/null|tr -d ":A-Z" 2> /dev/null)
+
 android/AndroidManifest.xml: android/AndroidManifest.xml.in
 	mkdir -p $(builddir)/android
 	sed '0,/<uses-sdk/!d' <$< >$@
 	for i in $(subst $(comma), ,@ANDROID_PERMISSIONS@); do echo "    <uses-permission android:name=\"android.permission.$$i\" />" >>$@; done
 	sed '0,/<uses-sdk/d' <$< >>$@
+	sed -e "s/@ANDROID_VERSION_INT@/$(v_int)/" <$@ >android/AndroidManifest.xml.tmp
+	mv android/AndroidManifest.xml.tmp $@
+	sed -e "s/@ANDROID_VERSION_NAME@/$(v_name)/" <$@ >android/AndroidManifest.xml.tmp
+	mv android/AndroidManifest.xml.tmp $@
 	
 
 android/build.xml: android/AndroidManifest.xml
@@ -138,6 +145,11 @@ apkg-all: all android/build.xml navit.xml
 	cp navit_android_mdpi.xml android/res/raw/navitmdpi.xml
 	cp navit_android_ldpi.xml android/res/raw/navitldpi.xml
 	cp navit_android_hdpi.xml android/res/raw/navithdpi.xml
+
+#	put icon in the correct dirs also (market upload does complain otherwise)
+	cp android/res/drawable/icon.png android/res/drawable-ldpi/icon.png
+	cp android/res/drawable/icon.png android/res/drawable-mdpi/icon.png
+	cp android/res/drawable/icon.png android/res/drawable-hdpi/icon.png
 
 apkg: apkg-all
 	cd android && ant debug
