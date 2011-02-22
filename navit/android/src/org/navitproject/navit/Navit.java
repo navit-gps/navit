@@ -154,7 +154,29 @@ public class Navit extends Activity implements Handler.Callback
 																											+ m
 																											+ "      Amusez vous avec Navit.";
 
-	static final String					INFO_BOX_TEXT_de								= "";
+	static final String					INFO_BOX_TEXT_de								= m
+																											+ "Sie starten Navit zum ersten Mal!\n\n"
+																											+ m
+																											+ "Zum loslegen im Menu \""
+																											+ NAVIT_JAVA_MENU_download_first_map_en
+																											+ "\"\n"
+																											+ m
+																											+ "auswählen und Karte für die\n"
+																											+ m
+																											+ "gewünschte Region downloaden.\n"
+																											+ m
+																											+ "Die Kartendatei ist sehr gross,\n"
+																											+ m
+																											+ "bitte flatrate oder ähnliches aktivieren!\n\n"
+																											+ m
+																											+ "Für mehr Infos zu Navit\n"
+																											+ m
+																											+ "bitte die Website besuchen\n"
+																											+ m
+																											+ "http://wiki.navit-project.org/\n"
+																											+ "\n"
+																											+ m
+																											+ "      Viel Spaß mit Navit.";
 	static final String					INFO_BOX_TEXT_nl								= m
 
 																											+ "U voert Navit voor de eerste keer uit.\n\n"
