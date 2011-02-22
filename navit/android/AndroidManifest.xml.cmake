@@ -3,18 +3,10 @@
       package="org.navitproject.navit"
       android:sharedUserId="org.navitproject.navit"
       android:versionCode="@ANDROID_VERSION_INT@" android:versionName="@ANDROID_VERSION_NAME@">
-    <uses-sdk android:minSdkVersion="@ANDROID_API_VERSION@" android:targetSdkVersion="7"/>
-    <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
-    @ANDROID_PERMISSIONS@
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:label="@string/app_name">
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/icon">
         <activity android:name="Navit"
                   android:label="@string/app_name"
-                  android:icon="@drawable/icon"
                   android:theme="@android:style/Theme.NoTitleBar"
 		  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale">
             <intent-filter>
@@ -29,4 +21,12 @@
         </activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
     </application>
+    <uses-sdk android:minSdkVersion="@ANDROID_API_VERSION@" android:targetSdkVersion="7"/>
+    <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
+    @ANDROID_PERMISSIONS@
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest> 
