@@ -92,7 +92,7 @@ if SUPPORT_ANDROID
   navit_SOURCES =
   navit_LDADD =
 
-v_int = $$(LANG=C svnversion $(top_srcdir) 2> /dev/null|tr -d ":A-Z" 2> /dev/null)
+v_int = $$(cat $(srcdir)/android/Android_Market_Version_int.txt|grep v_int|cut -d ":" -f 2)
 v_name = "0.5.0-"$$(LANG=C svnversion $(top_srcdir) 2> /dev/null|tr -d ":A-Z" 2> /dev/null)
 
 android/AndroidManifest.xml: android/AndroidManifest.xml.in
@@ -145,11 +145,6 @@ apkg-all: all android/build.xml navit.xml
 	cp navit_android_mdpi.xml android/res/raw/navitmdpi.xml
 	cp navit_android_ldpi.xml android/res/raw/navitldpi.xml
 	cp navit_android_hdpi.xml android/res/raw/navithdpi.xml
-
-#	put icon in the correct dirs also (market upload does complain otherwise)
-	cp android/res/drawable/icon.png android/res/drawable-ldpi/icon.png
-	cp android/res/drawable/icon.png android/res/drawable-mdpi/icon.png
-	cp android/res/drawable/icon.png android/res/drawable-hdpi/icon.png
 
 apkg: apkg-all
 	cd android && ant debug
