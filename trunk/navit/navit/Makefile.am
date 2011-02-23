@@ -67,16 +67,19 @@ navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(ad
 	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; @SAXON@ -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv navit.xml.tmp navit.xml.new || exit ; fi ; done
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
-	
+
 navit_android_xml: navit_shipped.xml
 if SUPPORT_ANDROID
 #	new android xml files for (mdpi,ldpi,hdpi)
 	cp $(srcdir)/navit_shipped.xml navit_android.xml.new
 	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
+#	now apply any other xslt files
+	for i in $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt)))); do if [ "$${i%.xslt}" != "$$i" ]; then j=`basename $$i` ; if [ "$$j" != "android.xslt" ] ; then echo "Android: Applying $$i" ; @SAXON@ -snone navit_android.xml.new $(srcdir)/"$$i" >navit_android.xml.new.tmp || exit ; mv navit_android.xml.new.tmp navit_android.xml.new || exit ; fi ; fi ; done
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_mdpi.xslt >navit_android_mdpi.xml.tmp
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_ldpi.xslt >navit_android_ldpi.xml.tmp
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
 	rm -f navit_android.xml.new
+	rm -f navit_android.xml.new.tmp
 	mv navit_android_mdpi.xml.tmp navit_android_mdpi.xml
 	mv navit_android_ldpi.xml.tmp navit_android_ldpi.xml
 	mv navit_android_hdpi.xml.tmp navit_android_hdpi.xml
