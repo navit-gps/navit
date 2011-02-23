@@ -7,6 +7,8 @@
 		<xsl:text>&#x0A;        </xsl:text>
 		<plugin path="$NAVIT_PREFIX/lib/libmap_binfile.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
+		<plugin path="$NAVIT_PREFIX/lib/libmap_csv.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
 		<plugin path="$NAVIT_PREFIX/lib/libosd_core.so" ondemand="no"/>
         </xsl:template>
         <xsl:template match="/config/plugins/plugin"/>
