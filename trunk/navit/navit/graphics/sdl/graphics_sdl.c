@@ -64,7 +64,7 @@
 #undef DEBUG
 #undef PROFILE
 
-#define OVERLAY_MAX 16
+#define OVERLAY_MAX 32
 
 #ifdef RASTER
 #include "raster.h"
@@ -2004,7 +2004,7 @@ static gboolean graphics_sdl_idle(void *data)
             case SDL_USEREVENT:
             {
 		SDL_UserEvent userevent = ev.user;
-                if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_TIMER) 
+                if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_TIMER)
 		{
 		    struct callback *cb = (struct callback *)userevent.data1;
 		    dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
@@ -2016,7 +2016,7 @@ static gboolean graphics_sdl_idle(void *data)
 		    dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
 		    callback_call_0(cb);
                 }
-		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_CALL_CALLBACK) 
+		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_CALL_CALLBACK)
 		{
 		    struct callback_list *cbl = (struct callback_list *)userevent.data1;
                     dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
