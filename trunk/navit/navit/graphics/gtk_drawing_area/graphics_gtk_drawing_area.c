@@ -106,9 +106,19 @@ struct graphics_image_priv {
 	int h;
 };
 
+static GHashTable *hImageData;   /*hastable for uncompressed image data*/
+static struct graphics_image_priv image_error;
+
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
+	GHashTableIter iter;
+	gpointer key, value;
+	g_hash_table_iter_init(&iter, hImageData);
+	while(g_hash_table_iter_next(&iter, &key, &value)) {
+		g_object_unref(((struct graphics_image_priv*)(value))->pixbuf);
+	}
+	g_hash_table_destroy(hImageData);
 }
 
 static void
@@ -188,6 +198,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	return gc;
 }
 
+
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
@@ -195,59 +206,92 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	struct graphics_image_priv *ret;
 	const char *option;
 
-	if (*w == -1 && *h == -1)
-		pixbuf=gdk_pixbuf_new_from_file(name, NULL);
-	else
-		pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
-	if (! pixbuf)
+	char* hash_key = g_strdup_printf("%s_%d_%d_%d",name,*w,*h,rotation);
+
+	//check if image already exists in hashmap
+	struct graphics_image_priv*curr_elem = g_hash_table_lookup(hImageData,hash_key);
+	if(curr_elem == &image_error) {
+		//found but couldn't be loaded
+		g_free(hash_key);
 		return NULL;
-	if (rotation) {
-		GdkPixbuf *tmp;
-		switch (rotation) {
-			case 90:
-				rotation=270;
-				break;
-			case 180:
-				break;
-			case 270:
-				rotation=90;
-				break;
-			default:
-				return NULL;
-		}
-		tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
-		g_object_unref(pixbuf);
-		if (! tmp) {
+	}
+	else if(curr_elem) {
+		//found and OK -> use hastable entry
+		*w = curr_elem->w;
+		*h = curr_elem->h;
+		hot->x = curr_elem->w / 2 - 1;
+		hot->y = curr_elem->h / 2 - 1;
+		g_free(hash_key);
+		g_object_ref(curr_elem->pixbuf);
+		ret=g_new0(struct graphics_image_priv, 1);
+		*ret = *curr_elem;
+		return ret;
+	}
+	else {
+		if (*w == -1 && *h == -1)
+			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
+		else
+			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
+		if (! pixbuf) {
+			g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+			g_free(hash_key);
 			return NULL;
 		}
-		pixbuf=tmp;
+		if (rotation) {
+			GdkPixbuf *tmp;
+			switch (rotation) {
+				case 90:
+					rotation=270;
+					break;
+				case 180:
+					break;
+				case 270:
+					rotation=90;
+					break;
+				default:
+					g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+					g_free(hash_key);
+					return NULL;
+			}
+			tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
+			g_object_unref(pixbuf);
+			if (! tmp) {
+				g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+				g_free(hash_key);
+				return NULL;
+			}
+			pixbuf=tmp;
+		}
+		ret=g_new0(struct graphics_image_priv, 1);
+		ret->pixbuf=pixbuf;
+		ret->w=gdk_pixbuf_get_width(pixbuf);
+		ret->h=gdk_pixbuf_get_height(pixbuf);
+		*w=ret->w;
+		*h=ret->h;
+		if (hot) {
+			option=gdk_pixbuf_get_option(pixbuf, "x_hot");
+			if (option)
+				hot->x=atoi(option);
+			else
+				hot->x=ret->w/2-1;
+			option=gdk_pixbuf_get_option(pixbuf, "y_hot");
+			if (option)
+				hot->y=atoi(option);
+			else
+				hot->y=ret->h/2-1;
+		}
+		struct graphics_image_priv *cached = g_new0(struct graphics_image_priv, 1);
+		*cached = *ret;
+		g_hash_table_insert(hImageData,g_strdup(hash_key),cached);
+		g_object_ref(pixbuf);
+		g_free(hash_key);
+		return ret;
 	}
-	ret=g_new0(struct graphics_image_priv, 1);
-	ret->pixbuf=pixbuf;
-	ret->w=gdk_pixbuf_get_width(pixbuf);
-	ret->h=gdk_pixbuf_get_height(pixbuf);
-	*w=ret->w;
-	*h=ret->h;
-	if (hot) {
-		option=gdk_pixbuf_get_option(pixbuf, "x_hot");
-		if (option)
-			hot->x=atoi(option);
-		else
-			hot->x=ret->w/2-1;
-		option=gdk_pixbuf_get_option(pixbuf, "y_hot");
-		if (option)
-			hot->y=atoi(option);
-		else
-			hot->y=ret->h/2-1;
-	}
-	return ret;
 }
 
 static void 
 image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-	if (priv->pixbuf)
-		g_object_unref(priv->pixbuf);
 	g_free(priv);
 }
 
@@ -1167,6 +1211,9 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 		this->button_release[i].tv_sec = 0;
 		this->button_release[i].tv_usec = 0;
 	}
+
+	//create hash table for uncompressed image data
+	hImageData = g_hash_table_new(g_str_hash, g_str_equal);
 
 	return this;
 }
