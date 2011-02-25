@@ -19,6 +19,7 @@
 				<data android:scheme="google.navigation" /> 
             </intent-filter>
         </activity>
+		<activity android:name=".NavitAddressSearchActivity"></activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
     </application>
     <uses-sdk android:minSdkVersion="@ANDROID_API_VERSION@" android:targetSdkVersion="7"/>

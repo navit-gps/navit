@@ -83,6 +83,7 @@ public class Navit extends Activity implements Handler.Callback
 	ProgressThread							progressThread_pri							= null;
 	ProgressThread							progressThread_sec							= null;
 	public static final int				MAP_NUM_PRIMARY								= 11;
+	public static final int				NavitAddressSearch_id						= 70;
 	public static final int				MAP_NUM_SECONDARY								= 12;
 	static final String					MAP_FILENAME_PATH								= "/sdcard/navit/";
 	static final String					NAVIT_DATA_DIR									= "/data/data/org.navitproject.navit";
@@ -120,6 +121,10 @@ public class Navit extends Activity implements Handler.Callback
 																											+ m
 																											+ "make sure you have a flatrate or similar!\n\n"
 																											+ m
+																											+ "Mapdata:\n"
+																											+ m
+																											+ "CC-BY-SA OpenStreetMap Project\n\n"
+																											+ m
 																											+ "For more information on Navit\n"
 																											+ m
 																											+ "visit our Website\n"
@@ -143,7 +148,10 @@ public class Navit extends Activity implements Handler.Callback
 
 																											+ "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n"
 																											+ m
-
+																											+ "Mapdata:\n"
+																											+ m
+																											+ "CC-BY-SA OpenStreetMap Project\n\n"
+																											+ m
 																											+ "Pour plus d'infos sur Navit\n"
 																											+ m
 																											+ "visitez notre site internet\n"
@@ -153,7 +161,6 @@ public class Navit extends Activity implements Handler.Callback
 																											+ "\n"
 																											+ m
 																											+ "      Amusez vous avec Navit.";
-
 	static final String					INFO_BOX_TEXT_de								= m
 																											+ "Sie starten Navit zum ersten Mal!\n\n"
 																											+ m
@@ -168,6 +175,10 @@ public class Navit extends Activity implements Handler.Callback
 																											+ "Die Kartendatei ist sehr gross,\n"
 																											+ m
 																											+ "bitte flatrate oder ähnliches aktivieren!\n\n"
+																											+ m
+																											+ "Kartendaten:\n"
+																											+ m
+																											+ "CC-BY-SA OpenStreetMap Project\n\n"
 																											+ m
 																											+ "Für mehr Infos zu Navit\n"
 																											+ m
@@ -191,6 +202,10 @@ public class Navit extends Activity implements Handler.Callback
 																											+ m
 
 																											+ "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n"
+																											+ m
+																											+ "Mapdata:\n"
+																											+ m
+																											+ "CC-BY-SA OpenStreetMap Project\n\n"
 																											+ m
 
 																											+ "Voor meer info over Navit\n"
@@ -238,6 +253,7 @@ public class Navit extends Activity implements Handler.Callback
 	static final String					NAVIT_JAVA_MENU_download_second_map_nl	= "download 2de kaart";
 	static final String					NAVIT_JAVA_MENU_download_second_map_de	= "2te karte runterladen";
 
+	// default values
 	static String							NAVIT_JAVA_MENU_download_first_map		= NAVIT_JAVA_MENU_download_first_map_en;
 	static String							NAVIT_JAVA_MENU_download_second_map		= NAVIT_JAVA_MENU_download_second_map_en;
 	static String							INFO_BOX_TITLE									= INFO_BOX_TITLE_en;
@@ -775,23 +791,23 @@ public class Navit extends Activity implements Handler.Callback
 		// this gets called every time the menu is opened!!
 		// change menu items here!
 		menu.clear();
+
 		// group-id,item-id,sort order number
-		menu.add(1, 1, 10, NAVIT_JAVA_MENU_ZOOMIN);
-		menu.add(1, 2, 20, NAVIT_JAVA_MENU_ZOOMOUT);
+		menu.add(1, 1, 100, NAVIT_JAVA_MENU_ZOOMIN);
+		menu.add(1, 2, 200, NAVIT_JAVA_MENU_ZOOMOUT);
 
-		menu.add(1, 3, 22, NAVIT_JAVA_MENU_download_first_map);
-		menu.add(1, 4, 23, NAVIT_JAVA_MENU_download_second_map);
+		menu.add(1, 3, 300, NAVIT_JAVA_MENU_download_first_map);
+		menu.add(1, 5, 400, NAVIT_JAVA_MENU_TOGGLE_POI);
 
-		menu.add(1, 5, 40, NAVIT_JAVA_MENU_TOGGLE_POI);
-		menu.add(1, 99, 45, NAVIT_JAVA_MENU_EXIT);
+		menu.add(1, 6, 500, "search address");
+
+		menu.add(1, 4, 600, NAVIT_JAVA_MENU_download_second_map);
+		menu.add(1, 88, 800, "--");
+		menu.add(1, 99, 900, NAVIT_JAVA_MENU_EXIT);
 		return true;
 	}
 
-	//public native void KeypressCallback(int id, String s);
-
 	// define callback id here
-	//static int				N_KeypressCallbackID;
-	//static int				N_MotionCallbackID;
 	public static NavitGraphics	N_NavitGraphics	= null;
 
 	// callback id gets set here when called from NavitGraphics
@@ -894,6 +910,16 @@ public class Navit extends Activity implements Handler.Callback
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
 				break;
+			case 6 :
+				// ok startup the user/pass activity
+				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
+				search_intent.putExtra("title", "Search on the map");
+				search_intent.putExtra("address_string", "Burggasse");
+				this.startActivityForResult(search_intent, NavitAddressSearch_id);
+				break;
+			case 88 :
+				// dummy entry, just to make "breaks" in the menu
+				break;
 			case 99 :
 				// exit
 				this.onStop();
@@ -956,6 +982,31 @@ public class Navit extends Activity implements Handler.Callback
 							Navit.download_map_id = Integer.parseInt(data.getStringExtra("selected_id"));
 							// show the map download progressbar, and download the map
 							showDialog(Navit.MAPDOWNLOAD_SEC_DIALOG);
+						}
+						catch (NumberFormatException e)
+						{
+							Log.d("Navit", "NumberFormatException selected_id");
+						}
+					}
+					else
+					{
+						// user pressed back key
+					}
+				}
+				catch (Exception e)
+				{
+					Log.d("Navit", "error on onActivityResult");
+				}
+				break;
+			case NavitAddressSearch_id :
+				try
+				{
+					if (resultCode == Activity.RESULT_OK)
+					{
+						try
+						{
+							String addr = data.getStringExtra("address_string");
+							Log.d("Navit", "search result=" + addr);
 						}
 						catch (NumberFormatException e)
 						{
