@@ -303,6 +303,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			struct mapset *ms;
 			struct map *map;
 
+			// this procedure is not used at the moment!!
+
 			// hopefully use a newly downloaded map, we just hope its set in navit.xml (make nicer soon)
 			// remove all curents maps
 			// ******global_navit->mapsets=NULL; // is this the correct way to clear the list?

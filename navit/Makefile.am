@@ -73,8 +73,11 @@ if SUPPORT_ANDROID
 #	new android xml files for (mdpi,ldpi,hdpi)
 	cp $(srcdir)/navit_shipped.xml navit_android.xml.new
 	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
-#	now apply any other xslt files
-	for i in $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt)))); do if [ "$${i%.xslt}" != "$$i" ]; then j=`basename $$i` ; if [ "$$j" != "android.xslt" ] ; then echo "Android: Applying $$i" ; @SAXON@ -snone navit_android.xml.new $(srcdir)/"$$i" >navit_android.xml.new.tmp || exit ; mv navit_android.xml.new.tmp navit_android.xml.new || exit ; fi ; fi ; done
+
+#	# now apply any other xslt files (this would allow for pedestrian plugin)
+#	for i in $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt)))); do if [ "$${i%.xslt}" != "$$i" ]; then j=`basename $$i` ; if [ "$$j" != "android.xslt" ] ; then echo "Android: Applying $$i" ; @SAXON@ -snone navit_android.xml.new $(srcdir)/"$$i" >navit_android.xml.new.tmp || exit ; mv navit_android.xml.new.tmp navit_android.xml.new || exit ; fi ; fi ; done
+#	# for now disable pedestrian plugin (zoff99)
+
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_mdpi.xslt >navit_android_mdpi.xml.tmp
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_ldpi.xslt >navit_android_ldpi.xml.tmp
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
@@ -155,7 +158,7 @@ apkg: apkg-all
 apkg-release: apkg-all
 	cd android && ant release
 	jarsigner $$(cat ~/.keystore_args) android/bin/Navit-unsigned.apk mykey
-#	zipalign -f 4  android/bin/Navit-unsigned.apk android/bin/Navit-signed.apk
+#	zipalign -f 4  android/bin/Navit-unsigned.apk android/bin/Navit-unsigned-aligned.apk
 else
 navit_SOURCES = start.c
 navit_LDADD = lib@LIBNAVIT@.la
