@@ -867,26 +867,29 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 	GList *tmp=phrases;
 	int count=0;
 	struct attr attr;
+	struct coord_geo g;
+	struct coord c;
 	attr.type=attr_street_name;
 	while (slr=search_list_get_result(sl))
 	{
 		//dbg(0,"%p %p\n",slr->country,slr->town);
 		//dbg(0,"%p\n",slr->street);
 		dbg(0,"###### Result without housenumber: country=%s country_name=%s town=%s street=%s\n",slr->country->iso2,slr->country->name,slr->town->common.town_name,slr->street->name);
-		result_list=g_list_prepend(result_list,slr);
 
 		// coords of result
-		/*
-		struct pcoord *pc=slr->street->common.c;
-		struct coord_geo g;
-		struct coord c;
-		c.x=pc->x;
-		c.y=pc->y;
-		dbg(0,"1 pc=%d %d\n",pc->x,pc->y);
-		transform_to_geo(pc->pro, &c, &g);
-		dbg(0,"2  c=%d %d\n",c.x,c.y);
-		dbg(0,"3 pc=%d %d\n",pc->x,pc->y);
-		*/
+		c.x=slr->street->common.c->x;
+		c.y=slr->street->common.c->y;
+		transform_to_geo(slr->street->common.c->pro, &c, &g);
+		//dbg(0,"g=%f %f\n",g.lat,g.lng);
+
+		//dbg(0,"xx1");
+		// return a string like: "16.766:-48.76:full address name is at the end"
+		char buffer[400];
+		// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 chars -> this sould be max. about 320 chars long
+		sprintf(&buffer,"%f:%f:%.101s, %.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
+		dbg(0,"sprintf ok");
+		result_list=g_list_prepend(result_list,g_strdup(buffer));
+		//dbg(0,"xx3");
 
 		count++;
 	}
@@ -904,8 +907,18 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 			search_list_search(sl, &attr, partial);
 			while (slr=search_list_get_result(sl))
 			{
+				// coords of result
+				c.x=slr->street->common.c->x;
+				c.y=slr->street->common.c->y;
+				transform_to_geo(slr->street->common.c->pro, &c, &g);
+				//dbg(0,"g=%f %f\n",g.lat,g.lng);
+
 				dbg(0,"###### Result with housenumber: %s %s(%s) %s %s\n",slr->house_number->common.postal,slr->house_number->common.town_name, slr->house_number->common.district_name,slr->street->name,slr->house_number->house_number);
-				result_list=g_list_prepend(result_list,slr);
+				// return a string like: "16.766:48.76:full address name is at the end"
+				char buffer[400];
+				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
+				sprintf(&buffer,"%f:%f:%.101s, %.101s, %.101s %.15s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+				result_list=g_list_prepend(result_list,g_strdup(buffer));
 			}
 			
 		}
