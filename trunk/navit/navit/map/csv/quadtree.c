@@ -107,7 +107,64 @@ quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* i
 }
 
 /*
- * tries to find closest item, first it descend into the quadtree as much as possible, then if no point is found
+ * tries to find an item exactly
+ */
+struct quadtree_item*
+quadtree_find_item(struct quadtree_node* this_, struct quadtree_item* item) {
+    struct quadtree_item*res = NULL;
+    if( ! this_ ) {
+      return NULL;
+    }
+    if( this_->is_leaf ) { 
+        int i;
+        for(i=0;i<this_->node_num;++i) {
+            //TODO equality check may not be correct on float values! maybe it can be replaced by range check with some tolerance
+            if(item->longitude==this_->items[i].longitude && item->latitude==this_->items[i].latitude) {
+                res = &this_->items[i];
+                return res;
+            }
+        }
+        return NULL;	
+    }
+    else {
+        if(
+	   this_->aa && 
+           this_->aa->xmin<=item->longitude && item->longitude<this_->aa->xmax &&
+           this_->aa->ymin<=item->latitude && item->latitude<this_->aa->ymax
+           ) {
+          res = quadtree_find_item(this_->aa,item);
+        }
+        else if(
+	   this_->ab && 
+           this_->ab->xmin<=item->longitude && item->longitude<this_->ab->xmax &&
+           this_->ab->ymin<=item->latitude && item->latitude<this_->ab->ymax
+           ) {
+          res = quadtree_find_item(this_->ab,item);
+        }
+        else if(
+	   this_->ba && 
+           this_->ba->xmin<=item->longitude && item->longitude<this_->ba->xmax &&
+           this_->ba->ymin<=item->latitude && item->latitude<this_->ba->ymax
+           ) {
+          res = quadtree_find_item(this_->ba,item);
+        }
+        else if(
+	   this_->bb && 
+           this_->bb->xmin<=item->longitude && item->longitude<this_->bb->xmax &&
+           this_->bb->ymin<=item->latitude && item->latitude<this_->bb->ymax
+           ) {
+          res = quadtree_find_item(this_->bb,item);
+        }
+	else {
+          return NULL;
+        }
+    }
+  return res;
+}
+
+
+/*
+ * tries to find closest item, first it descend into the quadtree as much as possible, then if no point is found go up n levels and flood
  */
 struct quadtree_item*
 quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
