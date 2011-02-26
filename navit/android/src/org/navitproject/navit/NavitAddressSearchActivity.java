@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout.LayoutParams;
 public class NavitAddressSearchActivity extends Activity
 {
 	private EditText			address_string;
+	private CheckBox			pm_checkbox;
 
 	public RelativeLayout	NavitAddressSearchActivity_layout;
 
@@ -41,6 +43,15 @@ public class NavitAddressSearchActivity extends Activity
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
 		addr_view.setPadding(4, 4, 4, 4);
+
+		// partial match checkbox
+		pm_checkbox = new CheckBox(this);
+		pm_checkbox.setText("partial match");
+		pm_checkbox.setChecked(false);
+		pm_checkbox.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.WRAP_CONTENT));
+		pm_checkbox.setGravity(Gravity.CENTER);
+
 
 		// search button
 		final Button btnSearch = new Button(this);
@@ -69,6 +80,26 @@ public class NavitAddressSearchActivity extends Activity
 		catch (Exception e)
 		{
 		}
+		
+		// partial match
+		try
+		{
+			String s = getIntent().getExtras().getString("partial_match");
+			if (s.length() > 0)
+			{
+				if (s.equals("1"))
+				{
+					pm_checkbox.setChecked(true);
+				}
+				else
+				{
+					pm_checkbox.setChecked(false);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+		}
 
 		// address string
 		try
@@ -84,6 +115,7 @@ public class NavitAddressSearchActivity extends Activity
 		// actually adding the views (that have layout set on them) to the panel
 		panel.addView(addr_view);
 		panel.addView(address_string);
+		panel.addView(pm_checkbox);
 		panel.addView(btnSearch);
 
 		setContentView(panel);
@@ -95,9 +127,15 @@ public class NavitAddressSearchActivity extends Activity
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("address_string", NavitAddressSearchActivity.this.address_string
 				.getText().toString());
+		if (NavitAddressSearchActivity.this.pm_checkbox.isChecked())
+		{
+			resultIntent.putExtra("partial_match", "1");
+		}
+		else
+		{
+			resultIntent.putExtra("partial_match", "0");
+		}
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
-
-
 }

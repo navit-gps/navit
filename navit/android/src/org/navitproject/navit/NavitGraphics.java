@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.navitproject.navit.Navit.Navit_Address_Result_Struct;
 import org.navitproject.navit.NavitAndroidOverlay.NavitAndroidOverlayBubble;
 
 import android.app.Activity;
@@ -1222,6 +1223,29 @@ public class NavitGraphics
 	 * generic message channel to C-code
 	 */
 	public native int CallbackMessageChannel(int i, String s);
+
+	/**
+	 * start a search on the map
+	 */
+	public void fillStringArray(String s)
+	{
+		Log.e("NavitGraphics", "**** fillStringArray s=" + s);
+
+		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
+		String[] tmp_s = s.split(":");
+		tmp_addr.lat = Float.parseFloat(tmp_s[0]);
+		tmp_addr.lon = Float.parseFloat(tmp_s[1]);
+		// the rest ist address
+		tmp_addr.addr = s.substring(2 + tmp_s[0].length() + tmp_s[1].length(), s.length());
+		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
+	}
+	public void SearchResultList(int i, int partial_match, String text)
+	{
+		CallbackSearchResultList(i, partial_match, text);
+	}
+
+	public native void CallbackSearchResultList(int i, int partial_match, String s);
+
 
 	/**
 	 * get localized string
