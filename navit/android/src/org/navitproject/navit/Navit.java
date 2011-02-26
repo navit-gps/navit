@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.navitproject.navit.NavitMapDownloader.ProgressThread;
@@ -57,213 +59,226 @@ import android.widget.Toast;
 
 public class Navit extends Activity implements Handler.Callback
 {
-	public Handler							handler;
-	private PowerManager.WakeLock		wl;
-	private NavitActivityResult		ActivityResults[];
-	public static InputMethodManager	mgr												= null;
-	public static DisplayMetrics		metrics											= null;
-	public static Boolean				show_soft_keyboard							= false;
-	public static Boolean				show_soft_keyboard_now_showing			= false;
-	public static long					last_pressed_menu_key						= 0L;
-	public static long					time_pressed_menu_key						= 0L;
-	private static Intent				startup_intent									= null;
-	private static long					startup_intent_timestamp					= 0L;
-	public static String					my_display_density							= "mdpi";
-	private boolean						parseErrorShown								= false;
+	public static final class Navit_Address_Result_Struct
+	{
+		float		lat;
+		float		lon;
+		String	addr;
+	}
+
+	public Handler												handler;
+	private PowerManager.WakeLock							wl;
+	private NavitActivityResult							ActivityResults[];
+	public static InputMethodManager						mgr												= null;
+	public static DisplayMetrics							metrics											= null;
+	public static Boolean									show_soft_keyboard							= false;
+	public static Boolean									show_soft_keyboard_now_showing			= false;
+	public static long										last_pressed_menu_key						= 0L;
+	public static long										time_pressed_menu_key						= 0L;
+	private static Intent									startup_intent									= null;
+	private static long										startup_intent_timestamp					= 0L;
+	public static String										my_display_density							= "mdpi";
+	private boolean											parseErrorShown								= false;
 	//private static NavitMapDownloader	map_download							= null;
-	public static final int				MAPDOWNLOAD_PRI_DIALOG						= 1;
-	public static final int				MAPDOWNLOAD_SEC_DIALOG						= 2;
-	public ProgressDialog				mapdownloader_dialog_pri					= null;
-	public ProgressDialog				mapdownloader_dialog_sec					= null;
-	public static NavitMapDownloader	mapdownloader_pri								= null;
-	public static NavitMapDownloader	mapdownloader_sec								= null;
-	public static final int				NavitDownloaderPriSelectMap_id			= 967;
-	public static final int				NavitDownloaderSecSelectMap_id			= 968;
-	public static int						download_map_id								= 0;
-	ProgressThread							progressThread_pri							= null;
-	ProgressThread							progressThread_sec							= null;
-	public static final int				MAP_NUM_PRIMARY								= 11;
-	public static final int				NavitAddressSearch_id						= 70;
-	public static final int				MAP_NUM_SECONDARY								= 12;
-	static final String					MAP_FILENAME_PATH								= "/sdcard/navit/";
-	static final String					NAVIT_DATA_DIR									= "/data/data/org.navitproject.navit";
-	static final String					NAVIT_DATA_SHARE_DIR							= NAVIT_DATA_DIR
-																											+ "/share";
-	static final String					FIRST_STARTUP_FILE							= NAVIT_DATA_SHARE_DIR
-																											+ "/has_run_once.txt";
+	public static final int									MAPDOWNLOAD_PRI_DIALOG						= 1;
+	public static final int									MAPDOWNLOAD_SEC_DIALOG						= 2;
+	public ProgressDialog									mapdownloader_dialog_pri					= null;
+	public ProgressDialog									mapdownloader_dialog_sec					= null;
+	public static NavitMapDownloader						mapdownloader_pri								= null;
+	public static NavitMapDownloader						mapdownloader_sec								= null;
+	public static final int									NavitDownloaderPriSelectMap_id			= 967;
+	public static final int									NavitDownloaderSecSelectMap_id			= 968;
+	public static int											download_map_id								= 0;
+	ProgressThread												progressThread_pri							= null;
+	ProgressThread												progressThread_sec							= null;
+	public static final int									MAP_NUM_PRIMARY								= 11;
+	public static final int									NavitAddressSearch_id						= 70;
+	public static final int									NavitAddressResultList_id					= 71;
+	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems		= new ArrayList<Navit_Address_Result_Struct>();
+
+	public static String										Navit_last_address_search_string			= "";
+	public static Boolean									Navit_last_address_partial_match			= false;
+
+	public static final int									MAP_NUM_SECONDARY								= 12;
+	static final String										MAP_FILENAME_PATH								= "/sdcard/navit/";
+	static final String										NAVIT_DATA_DIR									= "/data/data/org.navitproject.navit";
+	static final String										NAVIT_DATA_SHARE_DIR							= NAVIT_DATA_DIR
+																																+ "/share";
+	static final String										FIRST_STARTUP_FILE							= NAVIT_DATA_SHARE_DIR
+																																+ "/has_run_once.txt";
 
 
 	// space !!
-	static final String					m													= " ";
+	static final String										m													= " ";
 
-	static final String					NAVIT_JAVA_MENU_download_first_map_en	= "download first map";
-	static final String					NAVIT_JAVA_MENU_download_first_map_fr	= "télécharchez 1ere carte";
-	static final String					NAVIT_JAVA_MENU_download_first_map_nl	= "download eerste kaart";
-	static final String					NAVIT_JAVA_MENU_download_first_map_de	= "1te karte runterladen";
+	static final String										NAVIT_JAVA_MENU_download_first_map_en	= "download first map";
+	static final String										NAVIT_JAVA_MENU_download_first_map_fr	= "télécharchez 1ere carte";
+	static final String										NAVIT_JAVA_MENU_download_first_map_nl	= "download eerste kaart";
+	static final String										NAVIT_JAVA_MENU_download_first_map_de	= "1te karte runterladen";
 
-	static final String					INFO_BOX_TITLE_en								= "Welcome to Navit";
-	static final String					INFO_BOX_TITLE_fr								= "Bienvenue chez Navit";
-	static final String					INFO_BOX_TITLE_nl								= "Welkom bij Navit";
-	static final String					INFO_BOX_TITLE_de								= "Willkommen bei Navit";
+	static final String										INFO_BOX_TITLE_en								= "Welcome to Navit";
+	static final String										INFO_BOX_TITLE_fr								= "Bienvenue chez Navit";
+	static final String										INFO_BOX_TITLE_nl								= "Welkom bij Navit";
+	static final String										INFO_BOX_TITLE_de								= "Willkommen bei Navit";
 
-	static final String					INFO_BOX_TEXT_en								= m
-																											+ "You are running Navit for the first time!\n\n"
-																											+ m
-																											+ "To start select \""
-																											+ NAVIT_JAVA_MENU_download_first_map_en
-																											+ "\"\n"
-																											+ m
-																											+ "from the menu, and download a map\n"
-																											+ m
-																											+ "for your current Area.\n"
-																											+ m
-																											+ "This will download a large file, so please\n"
-																											+ m
-																											+ "make sure you have a flatrate or similar!\n\n"
-																											+ m
-																											+ "Mapdata:\n"
-																											+ m
-																											+ "CC-BY-SA OpenStreetMap Project\n\n"
-																											+ m
-																											+ "For more information on Navit\n"
-																											+ m
-																											+ "visit our Website\n"
-																											+ m
-																											+ "http://wiki.navit-project.org/\n"
-																											+ "\n"
-																											+ m
-																											+ "      Have fun using Navit.";
-	static final String					INFO_BOX_TEXT_fr								= m
+	static final String										INFO_BOX_TEXT_en								= m
+																																+ "You are running Navit for the first time!\n\n"
+																																+ m
+																																+ "To start select \""
+																																+ NAVIT_JAVA_MENU_download_first_map_en
+																																+ "\"\n"
+																																+ m
+																																+ "from the menu, and download a map\n"
+																																+ m
+																																+ "for your current Area.\n"
+																																+ m
+																																+ "This will download a large file, so please\n"
+																																+ m
+																																+ "make sure you have a flatrate or similar!\n\n"
+																																+ m
+																																+ "Mapdata:\n"
+																																+ m
+																																+ "CC-BY-SA OpenStreetMap Project\n\n"
+																																+ m
+																																+ "For more information on Navit\n"
+																																+ m
+																																+ "visit our Website\n"
+																																+ m
+																																+ "http://wiki.navit-project.org/\n"
+																																+ "\n"
+																																+ m
+																																+ "      Have fun using Navit.";
+	static final String										INFO_BOX_TEXT_fr								= m
 
-																											+ "Vous exécutez Navit pour la première fois\n\n"
-																											+ m
-																											+ "Pour commencer, sélectionnez \n \""
+																																+ "Vous exécutez Navit pour la première fois\n\n"
+																																+ m
+																																+ "Pour commencer, sélectionnez \n \""
 
-																											+ NAVIT_JAVA_MENU_download_first_map_fr
-																											+ "\"\n"
-																											+ m
+																																+ NAVIT_JAVA_MENU_download_first_map_fr
+																																+ "\"\n"
+																																+ m
 
-																											+ "du menu et télechargez une carte\n de votre région.\n"
-																											+ m
+																																+ "du menu et télechargez une carte\n de votre région.\n"
+																																+ m
 
-																											+ "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n"
-																											+ m
-																											+ "Mapdata:\n"
-																											+ m
-																											+ "CC-BY-SA OpenStreetMap Project\n\n"
-																											+ m
-																											+ "Pour plus d'infos sur Navit\n"
-																											+ m
-																											+ "visitez notre site internet\n"
-																											+ m
+																																+ "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n"
+																																+ m
+																																+ "Mapdata:\n"
+																																+ m
+																																+ "CC-BY-SA OpenStreetMap Project\n\n"
+																																+ m
+																																+ "Pour plus d'infos sur Navit\n"
+																																+ m
+																																+ "visitez notre site internet\n"
+																																+ m
 
-																											+ "http://wiki.navit-project.org/\n"
-																											+ "\n"
-																											+ m
-																											+ "      Amusez vous avec Navit.";
-	static final String					INFO_BOX_TEXT_de								= m
-																											+ "Sie starten Navit zum ersten Mal!\n\n"
-																											+ m
-																											+ "Zum loslegen im Menu \""
-																											+ NAVIT_JAVA_MENU_download_first_map_en
-																											+ "\"\n"
-																											+ m
-																											+ "auswählen und Karte für die\n"
-																											+ m
-																											+ "gewünschte Region downloaden.\n"
-																											+ m
-																											+ "Die Kartendatei ist sehr gross,\n"
-																											+ m
-																											+ "bitte flatrate oder ähnliches aktivieren!\n\n"
-																											+ m
-																											+ "Kartendaten:\n"
-																											+ m
-																											+ "CC-BY-SA OpenStreetMap Project\n\n"
-																											+ m
-																											+ "Für mehr Infos zu Navit\n"
-																											+ m
-																											+ "bitte die Website besuchen\n"
-																											+ m
-																											+ "http://wiki.navit-project.org/\n"
-																											+ "\n"
-																											+ m
-																											+ "      Viel Spaß mit Navit.";
-	static final String					INFO_BOX_TEXT_nl								= m
+																																+ "http://wiki.navit-project.org/\n"
+																																+ "\n"
+																																+ m
+																																+ "      Amusez vous avec Navit.";
+	static final String										INFO_BOX_TEXT_de								= m
+																																+ "Sie starten Navit zum ersten Mal!\n\n"
+																																+ m
+																																+ "Zum loslegen im Menu \""
+																																+ NAVIT_JAVA_MENU_download_first_map_en
+																																+ "\"\n"
+																																+ m
+																																+ "auswählen und Karte für die\n"
+																																+ m
+																																+ "gewünschte Region downloaden.\n"
+																																+ m
+																																+ "Die Kartendatei ist sehr gross,\n"
+																																+ m
+																																+ "bitte flatrate oder ähnliches aktivieren!\n\n"
+																																+ m
+																																+ "Kartendaten:\n"
+																																+ m
+																																+ "CC-BY-SA OpenStreetMap Project\n\n"
+																																+ m
+																																+ "Für mehr Infos zu Navit\n"
+																																+ m
+																																+ "bitte die Website besuchen\n"
+																																+ m
+																																+ "http://wiki.navit-project.org/\n"
+																																+ "\n"
+																																+ m
+																																+ "      Viel Spaß mit Navit.";
+	static final String										INFO_BOX_TEXT_nl								= m
 
-																											+ "U voert Navit voor de eerste keer uit.\n\n"
-																											+ m
-																											+ "Om te beginnen, selecteer  \n \""
+																																+ "U voert Navit voor de eerste keer uit.\n\n"
+																																+ m
+																																+ "Om te beginnen, selecteer  \n \""
 
-																											+ NAVIT_JAVA_MENU_download_first_map_nl
-																											+ "\"\n"
-																											+ m
+																																+ NAVIT_JAVA_MENU_download_first_map_nl
+																																+ "\"\n"
+																																+ m
 
-																											+ "uit het menu en download een kaart\n van je regio.\n"
-																											+ m
+																																+ "uit het menu en download een kaart\n van je regio.\n"
+																																+ m
 
-																											+ "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n"
-																											+ m
-																											+ "Mapdata:\n"
-																											+ m
-																											+ "CC-BY-SA OpenStreetMap Project\n\n"
-																											+ m
+																																+ "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n"
+																																+ m
+																																+ "Mapdata:\n"
+																																+ m
+																																+ "CC-BY-SA OpenStreetMap Project\n\n"
+																																+ m
 
-																											+ "Voor meer info over Navit\n"
-																											+ m
-																											+ "bezoek onze site\n"
-																											+ m
+																																+ "Voor meer info over Navit\n"
+																																+ m
+																																+ "bezoek onze site\n"
+																																+ m
 
-																											+ "http://wiki.navit-project.org/\n"
-																											+ "\n"
-																											+ m
-																											+ "      Nog veel plezier met Navit.";
+																																+ "http://wiki.navit-project.org/\n"
+																																+ "\n"
+																																+ m
+																																+ "      Nog veel plezier met Navit.";
 
-	static final String					NAVIT_JAVA_MENU_MOREINFO_en				= "More info";
-	static final String					NAVIT_JAVA_MENU_MOREINFO_fr				= "plus d'infos";
-	static final String					NAVIT_JAVA_MENU_MOREINFO_nl				= "meer info";
-	static final String					NAVIT_JAVA_MENU_MOREINFO_de				= "Mehr infos";
+	static final String										NAVIT_JAVA_MENU_MOREINFO_en				= "More info";
+	static final String										NAVIT_JAVA_MENU_MOREINFO_fr				= "plus d'infos";
+	static final String										NAVIT_JAVA_MENU_MOREINFO_nl				= "meer info";
+	static final String										NAVIT_JAVA_MENU_MOREINFO_de				= "Mehr infos";
 
-	static final String					NAVIT_JAVA_MENU_ZOOMIN_en					= "zoom in";
-	static final String					NAVIT_JAVA_MENU_ZOOMIN_fr					= "zoom-avant";
-	static final String					NAVIT_JAVA_MENU_ZOOMIN_nl					= "inzoomen";
-	static final String					NAVIT_JAVA_MENU_ZOOMIN_de					= "zoom in";
+	static final String										NAVIT_JAVA_MENU_ZOOMIN_en					= "zoom in";
+	static final String										NAVIT_JAVA_MENU_ZOOMIN_fr					= "zoom-avant";
+	static final String										NAVIT_JAVA_MENU_ZOOMIN_nl					= "inzoomen";
+	static final String										NAVIT_JAVA_MENU_ZOOMIN_de					= "zoom in";
 
-	static final String					NAVIT_JAVA_MENU_ZOOMOUT_en					= "zoom out";
-	static final String					NAVIT_JAVA_MENU_ZOOMOUT_fr					= "zoom-arrière";
-	static final String					NAVIT_JAVA_MENU_ZOOMOUT_nl					= "uitzoomen";
-	static final String					NAVIT_JAVA_MENU_ZOOMOUT_de					= "zoom out";
+	static final String										NAVIT_JAVA_MENU_ZOOMOUT_en					= "zoom out";
+	static final String										NAVIT_JAVA_MENU_ZOOMOUT_fr					= "zoom-arrière";
+	static final String										NAVIT_JAVA_MENU_ZOOMOUT_nl					= "uitzoomen";
+	static final String										NAVIT_JAVA_MENU_ZOOMOUT_de					= "zoom out";
 
-	static final String					NAVIT_JAVA_MENU_EXIT_en						= "Exit Navit";
-	static final String					NAVIT_JAVA_MENU_EXIT_fr						= "quittez Navit";
-	static final String					NAVIT_JAVA_MENU_EXIT_nl						= "Navit afsluiten";
-	static final String					NAVIT_JAVA_MENU_EXIT_de						= "Navit Beenden";
+	static final String										NAVIT_JAVA_MENU_EXIT_en						= "Exit Navit";
+	static final String										NAVIT_JAVA_MENU_EXIT_fr						= "quittez Navit";
+	static final String										NAVIT_JAVA_MENU_EXIT_nl						= "Navit afsluiten";
+	static final String										NAVIT_JAVA_MENU_EXIT_de						= "Navit Beenden";
 
-	static final String					NAVIT_JAVA_MENU_TOGGLE_POI_en				= "toggle POI";
-	static final String					NAVIT_JAVA_MENU_TOGGLE_POI_fr				= "POI on/off";
-	static final String					NAVIT_JAVA_MENU_TOGGLE_POI_nl				= "POI aan/uit";
-	static final String					NAVIT_JAVA_MENU_TOGGLE_POI_de				= "POI ein/aus";
+	static final String										NAVIT_JAVA_MENU_TOGGLE_POI_en				= "toggle POI";
+	static final String										NAVIT_JAVA_MENU_TOGGLE_POI_fr				= "POI on/off";
+	static final String										NAVIT_JAVA_MENU_TOGGLE_POI_nl				= "POI aan/uit";
+	static final String										NAVIT_JAVA_MENU_TOGGLE_POI_de				= "POI ein/aus";
 
-	static final String					NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_en	= "drive here";
-	static final String					NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_fr	= "conduisez";
-	static final String					NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl	= "Ga naar hier";
-	static final String					NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_de	= "Ziel setzen";
+	static final String										NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_en	= "drive here";
+	static final String										NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_fr	= "conduisez";
+	static final String										NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl	= "Ga naar hier";
+	static final String										NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_de	= "Ziel setzen";
 
-	static final String					NAVIT_JAVA_MENU_download_second_map_en	= "download 2nd map";
-	static final String					NAVIT_JAVA_MENU_download_second_map_fr	= "télécharchez 2ème carte";
-	static final String					NAVIT_JAVA_MENU_download_second_map_nl	= "download 2de kaart";
-	static final String					NAVIT_JAVA_MENU_download_second_map_de	= "2te karte runterladen";
+	static final String										NAVIT_JAVA_MENU_download_second_map_en	= "download 2nd map";
+	static final String										NAVIT_JAVA_MENU_download_second_map_fr	= "télécharchez 2ème carte";
+	static final String										NAVIT_JAVA_MENU_download_second_map_nl	= "download 2de kaart";
+	static final String										NAVIT_JAVA_MENU_download_second_map_de	= "2te karte runterladen";
 
 	// default values
-	static String							NAVIT_JAVA_MENU_download_first_map		= NAVIT_JAVA_MENU_download_first_map_en;
-	static String							NAVIT_JAVA_MENU_download_second_map		= NAVIT_JAVA_MENU_download_second_map_en;
-	static String							INFO_BOX_TITLE									= INFO_BOX_TITLE_en;
-	static String							INFO_BOX_TEXT									= INFO_BOX_TEXT_en;
-	static String							NAVIT_JAVA_MENU_MOREINFO					= NAVIT_JAVA_MENU_MOREINFO_en;
-	static String							NAVIT_JAVA_MENU_ZOOMIN						= NAVIT_JAVA_MENU_ZOOMIN_en;
-	static String							NAVIT_JAVA_MENU_ZOOMOUT						= NAVIT_JAVA_MENU_ZOOMOUT_en;
-	static String							NAVIT_JAVA_MENU_EXIT							= NAVIT_JAVA_MENU_EXIT_en;
-	static String							NAVIT_JAVA_MENU_TOGGLE_POI					= NAVIT_JAVA_MENU_TOGGLE_POI_en;
-	static String							NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE		= NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_en;
+	static String												NAVIT_JAVA_MENU_download_first_map		= NAVIT_JAVA_MENU_download_first_map_en;
+	static String												NAVIT_JAVA_MENU_download_second_map		= NAVIT_JAVA_MENU_download_second_map_en;
+	static String												INFO_BOX_TITLE									= INFO_BOX_TITLE_en;
+	static String												INFO_BOX_TEXT									= INFO_BOX_TEXT_en;
+	static String												NAVIT_JAVA_MENU_MOREINFO					= NAVIT_JAVA_MENU_MOREINFO_en;
+	static String												NAVIT_JAVA_MENU_ZOOMIN						= NAVIT_JAVA_MENU_ZOOMIN_en;
+	static String												NAVIT_JAVA_MENU_ZOOMOUT						= NAVIT_JAVA_MENU_ZOOMOUT_en;
+	static String												NAVIT_JAVA_MENU_EXIT							= NAVIT_JAVA_MENU_EXIT_en;
+	static String												NAVIT_JAVA_MENU_TOGGLE_POI					= NAVIT_JAVA_MENU_TOGGLE_POI_en;
+	static String												NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE		= NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_en;
 
 
 	private boolean extractRes(String resname, String result)
@@ -799,7 +814,7 @@ public class Navit extends Activity implements Handler.Callback
 		menu.add(1, 3, 300, NAVIT_JAVA_MENU_download_first_map);
 		menu.add(1, 5, 400, NAVIT_JAVA_MENU_TOGGLE_POI);
 
-		menu.add(1, 6, 500, "search address");
+		menu.add(1, 6, 500, "Address search");
 
 		menu.add(1, 4, 600, NAVIT_JAVA_MENU_download_second_map);
 		menu.add(1, 88, 800, "--");
@@ -911,10 +926,16 @@ public class Navit extends Activity implements Handler.Callback
 				N_NavitGraphics.callback_handler.sendMessage(msg);
 				break;
 			case 6 :
-				// ok startup the user/pass activity
+				// ok startup address search activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-				search_intent.putExtra("title", "Search on the map");
-				search_intent.putExtra("address_string", "Burggasse");
+				search_intent.putExtra("title", "Enter: City and Street");
+				search_intent.putExtra("address_string", Navit_last_address_search_string);
+				String pm_temp = "0";
+				if (Navit_last_address_partial_match)
+				{
+					pm_temp = "1";
+				}
+				search_intent.putExtra("partial_match", pm_temp);
 				this.startActivityForResult(search_intent, NavitAddressSearch_id);
 				break;
 			case 88 :
@@ -1006,7 +1027,83 @@ public class Navit extends Activity implements Handler.Callback
 						try
 						{
 							String addr = data.getStringExtra("address_string");
-							Log.d("Navit", "search result=" + addr);
+							Boolean partial_match = data.getStringExtra("partial_match").equals("1");
+							int partial_match_i = 0;
+							if (partial_match)
+							{
+								partial_match_i = 1;
+							}
+							Navit_last_address_partial_match = partial_match;
+							Navit_last_address_search_string = addr;
+
+							// clear results
+							Navit.NavitAddressResultList_foundItems.clear();
+
+							// start the search, this could take a long time!!
+							N_NavitGraphics.SearchResultList(2, partial_match_i, addr);
+
+							if (Navit.NavitAddressResultList_foundItems.size() > 0)
+							{
+								// open result list
+								Intent address_result_list_activity = new Intent(this,
+										NavitAddressResultListActivity.class);
+								this.startActivityForResult(address_result_list_activity,
+										Navit.NavitAddressResultList_id);
+							}
+							else
+							{
+								Toast
+								.makeText(
+										getApplicationContext(),
+										"No Results found!", Toast.LENGTH_LONG).show();
+							}
+						}
+						catch (NumberFormatException e)
+						{
+							Log.d("Navit", "NumberFormatException selected_id");
+						}
+					}
+					else
+					{
+						// user pressed back key
+					}
+				}
+				catch (Exception e)
+				{
+					Log.d("Navit", "error on onActivityResult");
+				}
+				break;
+			case Navit.NavitAddressResultList_id :
+				try
+				{
+					if (resultCode == Activity.RESULT_OK)
+					{
+						try
+						{
+							Log.d("Navit", "adress result list id="
+									+ Integer.parseInt(data.getStringExtra("selected_id")));
+							// get the coords for the destination
+							int destination_id = Integer.parseInt(data.getStringExtra("selected_id"));
+
+							// ok now set target
+							Toast
+									.makeText(
+											getApplicationContext(),
+											"setting destination to "
+													+ Navit.NavitAddressResultList_foundItems
+															.get(destination_id).addr, Toast.LENGTH_LONG).show();
+
+							Message msg = new Message();
+							Bundle b = new Bundle();
+							b.putInt("Callback", 3);
+							b.putString("lat", String.valueOf(Navit.NavitAddressResultList_foundItems
+									.get(destination_id).lat));
+							b.putString("lon", String.valueOf(Navit.NavitAddressResultList_foundItems
+									.get(destination_id).lon));
+							b.putString("q",
+									Navit.NavitAddressResultList_foundItems.get(destination_id).addr);
+							msg.setData(b);
+							N_NavitGraphics.callback_handler.sendMessage(msg);
 						}
 						catch (NumberFormatException e)
 						{
@@ -1029,8 +1126,6 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 		}
 	}
-
-
 	public Handler	progress_handler	= new Handler()
 												{
 													public void handleMessage(Message msg)
