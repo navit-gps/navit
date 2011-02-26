@@ -483,7 +483,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 				struct attr attr;
 				while((res=search_list_get_result(gp->sl)))
 				{
-					dbg(0,"**** aaa8");
+					//dbg(0,"**** aaa8");
 					if (item_attr_get(&res->town->itemt, attr_label, &attr))
 					{
 						dbg(0,"***search result C=%s T=%s",res->country->iso2,attr.u.str);
@@ -528,25 +528,13 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 			// set to first element
 			ret=g_list_first(ret);
 			// iterate thru the list
-			dbg(0,"ret=%p\n",ret);
+			//dbg(0,"ret=%p\n",ret);
 			while (ret)
 			{
-				res=ret->data;
-				dbg(0,"result list iterate %s\n",res->street->name);
-
-				// coords of result
-				struct coord_geo g;
-				struct coord c;
-				c.x=res->street->common.c->x;
-				c.y=res->street->common.c->y;
-				transform_to_geo(res->street->common.c->pro, &c, &g);
-				dbg(0,"g=%f %f\n",g.lat,g.lng);
-
+				//dbg(0,"result list iterate %s\n",ret->data);
 				// return all the results to java
-				const char *buffer;
 				// return a string like: "16.766:48.76:full address name is at the end"
-				sprintf(buffer,"%f:%f:%s",g.lat, g.lng, res->street->name);
-				js2 = (*env)->NewStringUTF(env, buffer);
+				js2 = (*env)->NewStringUTF(env, ret->data);
 				(*env)->CallVoidMethod(env, thiz, aMethodID, js2);
 				(*env)->DeleteLocalRef(env, js2);
 
@@ -554,7 +542,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 			}
 			// free the memory
 			g_list_free(ret);
-			dbg(0,"ret=%p\n",ret);
+			//dbg(0,"ret=%p\n",ret);
 
 			if (gp4->sl)
 			{
