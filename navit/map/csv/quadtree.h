@@ -26,6 +26,7 @@ struct quadtree_node {
 struct quadtree_node* quadtree_node_new(struct quadtree_node* parent, double xmin, double xmax, double ymin, double ymax );
 struct quadtree_item* quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* item, double current_max, struct quadtree_node* toSkip);
 struct quadtree_item* quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item);
+struct quadtree_item* quadtree_find_item(struct quadtree_node* this_, struct quadtree_item* item);
 void quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax, double dYMin, double dYMax, GList**out);
 void quadtree_split(struct quadtree_node* this_);
 void quadtree_add(struct quadtree_node* this_, struct quadtree_item* item);

@@ -26,15 +26,17 @@
 
 
 struct map_priv {
-
 	int id;
 	struct quadtree_node* tree_root;
 	int flags;
 	GHashTable*item_hash;
 	char* filename;
+	int dirty;  //need to write map file on exit
+	int attr_cnt;
+	enum attr_type *attr_types;
+	int next_item_idx;
+	enum item_type item_type;
 };
-
-#define SIZE 512
 
 struct map_rect_priv {
 	struct map_selection *sel;
