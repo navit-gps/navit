@@ -79,11 +79,14 @@ public class Navit extends Activity implements Handler.Callback
 	private static long										startup_intent_timestamp					= 0L;
 	public static String										my_display_density							= "mdpi";
 	private boolean											parseErrorShown								= false;
-	//private static NavitMapDownloader	map_download							= null;
 	public static final int									MAPDOWNLOAD_PRI_DIALOG						= 1;
 	public static final int									MAPDOWNLOAD_SEC_DIALOG						= 2;
+	public static final int									SEARCHRESULTS_WAIT_DIALOG					= 3;
+	public static final int									ADDRESS_RESULTS_DIALOG_MAX					= 10;
 	public ProgressDialog									mapdownloader_dialog_pri					= null;
 	public ProgressDialog									mapdownloader_dialog_sec					= null;
+	public ProgressDialog									search_results_wait							= null;
+	public static Handler									Navit_progress_h								= null;
 	public static NavitMapDownloader						mapdownloader_pri								= null;
 	public static NavitMapDownloader						mapdownloader_sec								= null;
 	public static final int									NavitDownloaderPriSelectMap_id			= 967;
@@ -91,6 +94,9 @@ public class Navit extends Activity implements Handler.Callback
 	public static int											download_map_id								= 0;
 	ProgressThread												progressThread_pri							= null;
 	ProgressThread												progressThread_sec							= null;
+	SearchResultsThread										searchresultsThread							= null;
+	SearchResultsThreadSpinnerThread						spinner_thread									= null;
+	public static Boolean									NavitAddressSearchSpinnerActive			= false;
 	public static final int									MAP_NUM_PRIMARY								= 11;
 	public static final int									NavitAddressSearch_id						= 70;
 	public static final int									NavitAddressResultList_id					= 71;
@@ -512,6 +518,8 @@ public class Navit extends Activity implements Handler.Callback
 		 * show info box for first time users
 		 */
 
+		// make handler statically available for use in "msg_to_msg_handler"
+		Navit_progress_h = this.progress_handler;
 
 		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
@@ -658,9 +666,11 @@ public class Navit extends Activity implements Handler.Callback
 			// better use regex later, but for now to test this feature its ok :-)
 			// better use regex later, but for now to test this feature its ok :-)
 
+			// d: google.navigation:q=blabla-strasse # (this happens when you are offline, or from contacts)
 			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
-			// b: google.navigation:q=48.25676,16.643
 			// c: google.navigation:ll=48.25676,16.643
+			// b: google.navigation:q=48.25676,16.643
+
 			String lat;
 			String lon;
 			String q;
@@ -669,25 +679,57 @@ public class Navit extends Activity implements Handler.Callback
 			String temp2 = null;
 			String temp3 = null;
 			boolean parsable = false;
+			boolean unparsable_info_box = true;
 
+			// DEBUG
+			// DEBUG
+			// DEBUG
+			// intent_data = "google.navigation:q=Wien Burggasse 27";
+			// intent_data = "google.navigation:q=48.25676,16.643";
+			// intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
+			// intent_data = "google.navigation:ll=48.25676,16.643";
+			// DEBUG
+			// DEBUG
+			// DEBUG
+
+			Log.e("Navit", "found DEBUG 1: " + intent_data.substring(0, 20));
+			Log.e("Navit", "found DEBUG 2: " + intent_data.substring(20, 22));
+			Log.e("Navit", "found DEBUG 3: " + intent_data.substring(20, 21));
+
+			// if d: then start target search
+			if ((intent_data.substring(0, 20).equals("google.navigation:q="))
+					&& ((!intent_data.substring(20, 21).equals('+'))
+							&& (!intent_data.substring(20, 21).equals('-')) && (!intent_data.substring(20,
+							22).matches("[0-9][0-9]"))))
+			{
+				Log.e("Navit", "target found (d): " + intent_data.split("q=", -1)[1]);
+				start_targetsearch_from_intent(intent_data.split("q=", -1)[1]);
+				// dont use this here, already starting search, so set to "false"
+				parsable = false;
+				unparsable_info_box = false;
+			}
 			// if b: then remodel the input string to look like a:
-			if (intent_data.substring(0, 20).equals("google.navigation:q="))
+			else if (intent_data.substring(0, 20).equals("google.navigation:q="))
 			{
 				intent_data = "ll=" + intent_data.split("q=", -1)[1] + "&q=Target";
+				Log.e("Navit", "target found (b): " + intent_data);
 				parsable = true;
 			}
 			// if c: then remodel the input string to look like a:
 			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
-					&& (intent_data.split("&q=").length == 0))
+					&& (intent_data.split("&q=").length < 2))
 			{
 				intent_data = intent_data + "&q=Target";
+				Log.e("Navit", "target found (c): " + intent_data);
 				parsable = true;
 			}
 			// already looks like a: just set flag
 			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
-					&& (intent_data.split("&q=").length > 0))
+					&& (intent_data.split("&q=").length > 1))
 			{
 				// dummy, just set the flag
+				Log.e("Navit", "target found (a): " + intent_data);
+				Log.e("Navit", "target found (a): " + intent_data.split("&q=").length);
 				parsable = true;
 			}
 
@@ -730,31 +772,34 @@ public class Navit extends Activity implements Handler.Callback
 			}
 			else
 			{
-				// string not parsable, display alert and continue w/o string
-				AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-				alertbox.setMessage("Navit recieved the query " + intent_data
-						+ "\nThis is not yet parsable.");
-				alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+				if (unparsable_info_box)
 				{
-					public void onClick(DialogInterface arg0, int arg1)
+					// string not parsable, display alert and continue w/o string
+					AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+					alertbox.setMessage("Navit recieved the query " + intent_data
+							+ "\nThis is not yet parsable.");
+					alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 					{
-						Log.e("Navit", "Accepted non-parsable string");
-					}
-				});
-				alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
+						public void onClick(DialogInterface arg0, int arg1)
+						{
+							Log.e("Navit", "Accepted non-parsable string");
+						}
+					});
+					alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener()
 					{
-						String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(url));
-						startActivity(i);
+						public void onClick(DialogInterface arg0, int arg1)
+						{
+							String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
+							Intent i = new Intent(Intent.ACTION_VIEW);
+							i.setData(Uri.parse(url));
+							startActivity(i);
+						}
+					});
+					if (!parseErrorShown)
+					{
+						alertbox.show();
+						parseErrorShown = true;
 					}
-				});
-				if (!parseErrorShown)
-				{
-					alertbox.show();
-					parseErrorShown = true;
 				}
 			}
 		}
@@ -844,6 +889,30 @@ public class Navit extends Activity implements Handler.Callback
 
 	//public native void KeypressCallback(int id, String s);
 
+	public void start_targetsearch_from_intent(String target_address)
+	{
+		Navit_last_address_partial_match = false;
+		Navit_last_address_search_string = target_address;
+
+		// clear results
+		Navit.NavitAddressResultList_foundItems.clear();
+
+		if (Navit_last_address_search_string.equals(""))
+		{
+			// empty search string entered
+			Toast.makeText(getApplicationContext(), "No address found", Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			// show dialog
+			Message msg = progress_handler.obtainMessage();
+			Bundle b = new Bundle();
+			msg.what = 11;
+			b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
+			msg.setData(b);
+			progress_handler.sendMessage(msg);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -1028,34 +1097,30 @@ public class Navit extends Activity implements Handler.Callback
 						{
 							String addr = data.getStringExtra("address_string");
 							Boolean partial_match = data.getStringExtra("partial_match").equals("1");
-							int partial_match_i = 0;
-							if (partial_match)
-							{
-								partial_match_i = 1;
-							}
+
 							Navit_last_address_partial_match = partial_match;
 							Navit_last_address_search_string = addr;
 
 							// clear results
 							Navit.NavitAddressResultList_foundItems.clear();
 
-							// start the search, this could take a long time!!
-							N_NavitGraphics.SearchResultList(2, partial_match_i, addr);
-
-							if (Navit.NavitAddressResultList_foundItems.size() > 0)
+							if (addr.equals(""))
 							{
-								// open result list
-								Intent address_result_list_activity = new Intent(this,
-										NavitAddressResultListActivity.class);
-								this.startActivityForResult(address_result_list_activity,
-										Navit.NavitAddressResultList_id);
+								// empty search string entered
+								Toast.makeText(getApplicationContext(), "No search string entered",
+										Toast.LENGTH_LONG).show();
 							}
 							else
 							{
-								Toast
-								.makeText(
-										getApplicationContext(),
-										"No Results found!", Toast.LENGTH_LONG).show();
+								// show dialog, and start search for the results
+								// make it indirect, to give our activity a chance to startup
+								// (remember we come straight from another activity and ours is still paused!)
+								Message msg = progress_handler.obtainMessage();
+								Bundle b = new Bundle();
+								msg.what = 11;
+								b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
+								msg.setData(b);
+								progress_handler.sendMessage(msg);
 							}
 						}
 						catch (NumberFormatException e)
@@ -1126,6 +1191,155 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 		}
 	}
+
+	public class SearchResultsThreadSpinnerThread extends Thread
+	{
+		int					dialog_num;
+		int					spinner_current_value;
+		private Boolean	running;
+		Handler				mHandler;
+		SearchResultsThreadSpinnerThread(Handler h, int dialog_num)
+		{
+			this.dialog_num = dialog_num;
+			this.mHandler = h;
+			this.spinner_current_value = 0;
+			this.running = true;
+			Log.e("Navit", "SearchResultsThreadSpinnerThread created");
+		}
+		public void run()
+		{
+			Log.e("Navit", "SearchResultsThreadSpinnerThread started");
+			while (this.running)
+			{
+				if (Navit.NavitAddressSearchSpinnerActive == false)
+				{
+					this.running = false;
+				}
+				else
+				{
+					Message msg = mHandler.obtainMessage();
+					Bundle b = new Bundle();
+					msg.what = 10;
+					b.putInt("dialog_num", this.dialog_num);
+					b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
+					b.putInt("cur", this.spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
+					b.putString("title", "getting search results");
+					b.putString("text", "searching ...");
+					msg.setData(b);
+					mHandler.sendMessage(msg);
+					try
+					{
+						Thread.sleep(700);
+					}
+					catch (InterruptedException e)
+					{
+						// e.printStackTrace();
+					}
+					this.spinner_current_value++;
+				}
+			}
+			Log.e("Navit", "SearchResultsThreadSpinnerThread ended");
+		}
+	}
+
+
+	public class SearchResultsThread extends Thread
+	{
+		private Boolean	running;
+		Handler				mHandler;
+		int					my_dialog_num;
+
+		SearchResultsThread(Handler h, int dialog_num)
+		{
+			this.running = true;
+			this.mHandler = h;
+			this.my_dialog_num = dialog_num;
+			Log.e("Navit", "SearchResultsThread created");
+		}
+
+		public void stop_me()
+		{
+			this.running = false;
+		}
+
+		public void run()
+		{
+			Log.e("Navit", "SearchResultsThread started");
+
+			// initialize the dialog with sane values
+			Message msg = mHandler.obtainMessage();
+			Bundle b = new Bundle();
+			msg.what = 10;
+			b.putInt("dialog_num", this.my_dialog_num);
+			b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
+			b.putInt("cur", 0);
+			b.putString("title", "getting search results");
+			b.putString("text", "searching ...");
+			msg.setData(b);
+			mHandler.sendMessage(msg);
+
+			int partial_match_i = 0;
+			if (Navit_last_address_partial_match)
+			{
+				partial_match_i = 1;
+			}
+
+			// start the search, this could take a long time!!
+			Log.e("Navit", "SearchResultsThread run1");
+			N_NavitGraphics.SearchResultList(2, partial_match_i, Navit_last_address_search_string);
+			Log.e("Navit", "SearchResultsThread run2");
+
+			Navit.NavitAddressSearchSpinnerActive = false;
+
+			if (Navit.NavitAddressResultList_foundItems.size() > 0)
+			{
+				open_search_result_list();
+			}
+			else
+			{
+				//Toast.makeText(getApplicationContext(), "No Results found!", Toast.LENGTH_LONG).show();
+				// not results found, show toast
+				msg = mHandler.obtainMessage();
+				b = new Bundle();
+				msg.what = 3;
+				b.putString("text", "No Results found!");
+				msg.setData(b);
+				mHandler.sendMessage(msg);
+			}
+
+			// ok, remove dialog
+			msg = mHandler.obtainMessage();
+			b = new Bundle();
+			msg.what = 99;
+			b.putInt("dialog_num", this.my_dialog_num);
+			msg.setData(b);
+			mHandler.sendMessage(msg);
+
+			Log.e("Navit", "SearchResultsThread ended");
+		}
+	}
+
+	public static void msg_to_msg_handler(Bundle b, int id)
+	{
+		Message msg = Navit_progress_h.obtainMessage();
+		msg.what = id;
+		b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
+		b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
+		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
+				% Navit.ADDRESS_RESULTS_DIALOG_MAX);
+		b.putString("title", "getting search results");
+		b.putString("text", "searching ...");
+		msg.setData(b);
+		Navit_progress_h.sendMessage(msg);
+	}
+
+	public void open_search_result_list()
+	{
+		// open result list
+		Intent address_result_list_activity = new Intent(this, NavitAddressResultListActivity.class);
+		this.startActivityForResult(address_result_list_activity, Navit.NavitAddressResultList_id);
+	}
+
 	public Handler	progress_handler	= new Handler()
 												{
 													public void handleMessage(Message msg)
@@ -1189,6 +1403,36 @@ public class Navit extends Activity implements Handler.Callback
 																		msg.getData().getString("text"),
 																		Toast.LENGTH_SHORT).show();
 																break;
+															case 3 :
+																Toast.makeText(getApplicationContext(),
+																		msg.getData().getString("text"),
+																		Toast.LENGTH_LONG).show();
+																break;
+															case 10 :
+																// change values - generic
+																int what_dialog_generic = msg.getData().getInt(
+																		"dialog_num");
+																if (what_dialog_generic == SEARCHRESULTS_WAIT_DIALOG)
+																{
+																	search_results_wait.setMax(msg.getData().getInt(
+																			"max"));
+																	search_results_wait.setProgress(msg.getData()
+																			.getInt("cur"));
+																	search_results_wait.setTitle(msg.getData()
+																			.getString("title"));
+																	search_results_wait.setMessage(msg.getData()
+																			.getString("text"));
+																}
+																break;
+															case 11 :
+																// show dialog - generic
+																showDialog(msg.getData().getInt("dialog_num"));
+																break;
+															case 99 :
+																// dismiss dialog, remove dialog - generic
+																dismissDialog(msg.getData().getInt("dialog_num"));
+																removeDialog(msg.getData().getInt("dialog_num"));
+																break;
 														}
 													}
 												};
@@ -1197,6 +1441,35 @@ public class Navit extends Activity implements Handler.Callback
 	{
 		switch (id)
 		{
+			case Navit.SEARCHRESULTS_WAIT_DIALOG :
+				search_results_wait = new ProgressDialog(this);
+				search_results_wait.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				search_results_wait.setTitle("--");
+				search_results_wait.setMessage("--");
+				search_results_wait.setCancelable(false);
+				search_results_wait.setProgress(0);
+				search_results_wait.setMax(10);
+				DialogInterface.OnDismissListener mOnDismissListener3 = new DialogInterface.OnDismissListener()
+				{
+					public void onDismiss(DialogInterface dialog)
+					{
+						Log.e("Navit", "onDismiss: search_results_wait");
+						dialog.dismiss();
+						dialog.cancel();
+						searchresultsThread.stop_me();
+					}
+				};
+				search_results_wait.setOnDismissListener(mOnDismissListener3);
+				searchresultsThread = new SearchResultsThread(progress_handler,
+						Navit.SEARCHRESULTS_WAIT_DIALOG);
+				searchresultsThread.start();
+
+				NavitAddressSearchSpinnerActive = true;
+				spinner_thread = new SearchResultsThreadSpinnerThread(progress_handler,
+						Navit.SEARCHRESULTS_WAIT_DIALOG);
+				spinner_thread.start();
+
+				return search_results_wait;
 			case Navit.MAPDOWNLOAD_PRI_DIALOG :
 				mapdownloader_dialog_pri = new ProgressDialog(this);
 				mapdownloader_dialog_pri.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -1249,6 +1522,7 @@ public class Navit extends Activity implements Handler.Callback
 		// should never get here!!
 		return null;
 	}
+
 	public void disableSuspend()
 	{
 		wl.acquire();
@@ -1266,18 +1540,13 @@ public class Navit extends Activity implements Handler.Callback
 		return true;
 	}
 
-	/*
-	 * A native method that is implemented by the
-	 * 'hello-jni' native library, which is packaged
-	 * with this application.
-	 */
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string);
+
 	public native void NavitActivity(int activity);
 
 	/*
-	 * this is used to load the 'hello-jni' library on application
-	 * startup. The library has already been unpacked into
-	 * /data/data/com.example.Navit/lib/libhello-jni.so at
+	 * this is used to load the 'navit' native library on
+	 * application startup. The library has already been unpacked at
 	 * installation time by the package manager.
 	 */
 	static

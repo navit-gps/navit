@@ -59,6 +59,7 @@ public class NavitAddressResultListActivity extends ListActivity
 		setListAdapter(adapter);
 		is_empty = true;
 	}
+
 	public void add_item_(String item)
 	{
 		if (item == null)
