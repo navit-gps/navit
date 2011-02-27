@@ -39,8 +39,26 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		Log.e("Navit", "all ok");
 
+		/*
+		 * 
+		 * seems not to work with this kind of view, strange
+		 * 
+		 * // make the nice thumb scroll thingy :-)
+		 * ListView v = this.getListView();
+		 * v.setFastScrollEnabled(false);
+		 * v.setVerticalFadingEdgeEnabled(true);
+		 * v.setFadingEdgeLength(25);
+		 * this.setContentView(v);
+		 * 
+		 * TextView text_v = new TextView(this);
+		 * text_v.setText("Select destination");
+		 * 
+		 * v.addHeaderView(text_v);
+		 */
+
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, NavitMapDownloader.OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE);
+				android.R.layout.simple_list_item_1,
+				NavitMapDownloader.OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE);
 		setListAdapter(adapter);
 	}
 

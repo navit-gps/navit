@@ -33,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.FloatMath;
@@ -1230,6 +1231,8 @@ public class NavitGraphics
 	public void fillStringArray(String s)
 	{
 		Log.e("NavitGraphics", "**** fillStringArray s=" + s);
+		// deactivate the spinner
+		Navit.NavitAddressSearchSpinnerActive = false;
 
 		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
 		String[] tmp_s = s.split(":");
@@ -1238,6 +1241,16 @@ public class NavitGraphics
 		// the rest ist address
 		tmp_addr.addr = s.substring(2 + tmp_s[0].length() + tmp_s[1].length(), s.length());
 		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
+
+		// make the dialog move its bar ...
+		Bundle b = new Bundle();
+		b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
+		b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
+		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
+				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
+		b.putString("title", "loading search results");
+		b.putString("text", "found " + Navit.NavitAddressResultList_foundItems.size());
+		Navit.msg_to_msg_handler(b, 10);
 	}
 	public void SearchResultList(int i, int partial_match, String text)
 	{
