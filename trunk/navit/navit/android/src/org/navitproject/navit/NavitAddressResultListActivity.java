@@ -45,26 +45,26 @@ public class NavitAddressResultListActivity extends ListActivity
 
 		Navit.Navit_Address_Result_Struct tmp = new Navit.Navit_Address_Result_Struct();
 
-		//Log.e("Navit", "###########11111111");
+		Log.e("Navit", "########### full result count: "
+				+ Navit.NavitAddressResultList_foundItems.size());
+
 		// show "town names" as results only when we dont have any street names in resultlist
-		if ((Navit.search_results_streets > 0)||(Navit.search_results_streets_hn > 0))
+		if ((Navit.search_results_streets > 0) || (Navit.search_results_streets_hn > 0))
 		{
-			//Log.e("Navit", "###########22222222");
 			// clear out towns from result list
 			for (Iterator<Navit.Navit_Address_Result_Struct> k = Navit.NavitAddressResultList_foundItems
 					.iterator(); k.hasNext();)
 			{
-				//Log.e("Navit", "###########333333333");
 				tmp = k.next();
 				if (tmp.result_type.equals("TWN"))
 				{
-					//Log.e("Navit", "###########444444444");
 					k.remove();
 				}
 			}
 		}
 
-		Log.e("Navit", "########### "+Navit.NavitAddressResultList_foundItems.size());
+		Log.e("Navit", "########### final result count: "
+				+ Navit.NavitAddressResultList_foundItems.size());
 
 		this.result_list = new String[Navit.NavitAddressResultList_foundItems.size()];
 		int j = 0;
