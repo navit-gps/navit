@@ -61,7 +61,7 @@ public class Navit extends Activity implements Handler.Callback
 {
 	public static final class Navit_Address_Result_Struct
 	{
-		String result_type; // TWN,STR,SHN
+		String	result_type;	// TWN,STR,SHN
 		float		lat;
 		float		lon;
 		String	addr;
@@ -95,9 +95,9 @@ public class Navit extends Activity implements Handler.Callback
 	public static int											download_map_id								= 0;
 	ProgressThread												progressThread_pri							= null;
 	ProgressThread												progressThread_sec							= null;
-	public static int          search_results_towns=0;
-	public static int          search_results_streets=0;
-	public static int          search_results_streets_hn=0;
+	public static int											search_results_towns							= 0;
+	public static int											search_results_streets						= 0;
+	public static int											search_results_streets_hn					= 0;
 	SearchResultsThread										searchresultsThread							= null;
 	SearchResultsThreadSpinnerThread						spinner_thread									= null;
 	public static Boolean									NavitAddressSearchSpinnerActive			= false;
@@ -1108,9 +1108,9 @@ public class Navit extends Activity implements Handler.Callback
 
 							// clear results
 							Navit.NavitAddressResultList_foundItems.clear();
-							Navit.search_results_towns=0;
-							Navit.search_results_streets=0;
-							Navit.search_results_streets_hn=0;
+							Navit.search_results_towns = 0;
+							Navit.search_results_streets = 0;
+							Navit.search_results_streets_hn = 0;
 
 							if (addr.equals(""))
 							{
