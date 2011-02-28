@@ -30,6 +30,8 @@
 #include "transform.h"
 #include "search.h"
 
+#include "android.h"
+
 struct search_list_level {
 	struct mapset *ms;
 	struct search_list_common *parent;
@@ -860,8 +862,14 @@ search_split_phrases(char *str)
 }
 
 static GList *
-search_address_housenumber(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude1, GList *exclude2, GList *exclude3, int partial)
+search_address_housenumber(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude1, GList *exclude2, GList *exclude3, int partial, struct jni_object *jni)
 {
+	// title is wrong
+	// this is actually "street search" and "housenumber search" is at the bottom of this function
+	//
+	// housenumbers are not found as of now (2011-02-28)
+	//
+
 	//dbg(0,"enter\n");
 	struct search_list_result *slr;
 	GList *tmp=phrases;
@@ -874,7 +882,7 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 	{
 		//dbg(0,"%p %p\n",slr->country,slr->town);
 		//dbg(0,"%p\n",slr->street);
-		dbg(0,"###### Result without housenumber: country=%s country_name=%s town=%s street=%s\n",slr->country->iso2,slr->country->name,slr->town->common.town_name,slr->street->name);
+		//dbg(0,"###### Result without housenumber: country=%s country_name=%s town=%s street=%s\n",slr->country->iso2,slr->country->name,slr->town->common.town_name,slr->street->name);
 
 		// coords of result
 		c.x=slr->street->common.c->x;
@@ -883,12 +891,18 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 		//dbg(0,"g=%f %f\n",g.lat,g.lng);
 
 		//dbg(0,"xx1");
-		// return a string like: "16.766:-48.76:full address name is at the end"
+		// STR -> street
+		// return a string like: "STR:16.766:-48.76:full address name is at the end"
 		char buffer[400];
 		// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 chars -> this sould be max. about 320 chars long
-		sprintf(&buffer,"%f:%f:%.101s, %.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
-		dbg(0,"sprintf ok");
+		sprintf(&buffer,"STR:%f:%f:%.101s, %.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
+		//dbg(0,"sprintf ok");
 		result_list=g_list_prepend(result_list,g_strdup(buffer));
+
+#ifdef HAVE_API_ANDROID
+		// return results to android as they come in ...
+		android_return_search_result(jni,buffer);
+#endif
 		//dbg(0,"xx3");
 
 		count++;
@@ -913,12 +927,18 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 				transform_to_geo(slr->street->common.c->pro, &c, &g);
 				//dbg(0,"g=%f %f\n",g.lat,g.lng);
 
-				dbg(0,"###### Result with housenumber: %s %s(%s) %s %s\n",slr->house_number->common.postal,slr->house_number->common.town_name, slr->house_number->common.district_name,slr->street->name,slr->house_number->house_number);
-				// return a string like: "16.766:48.76:full address name is at the end"
+				//dbg(0,"###### Result with housenumber: %s %s(%s) %s %s\n",slr->house_number->common.postal,slr->house_number->common.town_name, slr->house_number->common.district_name,slr->street->name,slr->house_number->house_number);
+				// SHN -> street with house number
+				// return a string like: "SHN:16.766:48.76:full address name is at the end"
 				char buffer[400];
 				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
-				sprintf(&buffer,"%f:%f:%.101s, %.101s, %.101s %.15s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+				sprintf(&buffer,"SHN:%f:%f:%.101s, %.101s, %.101s %.15s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
 				result_list=g_list_prepend(result_list,g_strdup(buffer));
+#ifdef HAVE_API_ANDROID
+				// return results to android as they come in ...
+				android_return_search_result(jni,buffer);
+#endif
+
 			}
 			
 		}
@@ -929,17 +949,39 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 }
 
 static GList *
-search_address_street(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude1, GList *exclude2, int partial)
+search_address_street(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude1, GList *exclude2, int partial, struct jni_object *jni)
 {
+	// title is wrong
+	// this is actually "town search" !!
+
 	//dbg(0,"enter\n");
 	struct search_list_result *slr;
 	GList *tmp=phrases;
 	int count=0;
+	struct coord_geo g;
+	struct coord c;
 	struct attr attr;
 	attr.type=attr_street_name;
 	while ((slr=search_list_get_result(sl)))
 	{
-		//dbg(0,"##### sss1");
+		dbg(0,"##### sss1");
+		dbg(0,"###### Result town: country=%s country_name=%s town=%s",slr->country->iso2,slr->country->name,slr->town->common.town_name);
+
+		// coords of result
+		c.x=slr->town->common.c->x;
+		c.y=slr->town->common.c->y;
+		transform_to_geo(slr->town->common.c->pro, &c, &g);
+
+		char buffer[400];
+		// TWN -> town
+		sprintf(&buffer,"TWN:%f:%f:%.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name);
+		result_list=g_list_prepend(result_list,g_strdup(buffer));
+#ifdef HAVE_API_ANDROID
+		// return results to android as they come in ...
+		android_return_search_result(jni,buffer);
+#endif
+
+
 #if 0
 		dbg(0,"%s %s %s %s",slr->country->car,slr->town->name,slr->town->district,slr->street->name);
 #endif
@@ -960,7 +1002,7 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 		if (tmp != exclude1 && tmp != exclude2) {
 			attr.u.str=tmp->data;
 			search_list_search(sl, &attr, partial);
-			result_list=search_address_housenumber(result_list, sl, phrases, exclude1, exclude2, tmp, partial);
+			result_list=search_address_housenumber(result_list, sl, phrases, exclude1, exclude2, tmp, partial, jni);
 		}
 		tmp=g_list_next(tmp);
 	}
@@ -968,7 +1010,7 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 }
 
 static GList *
-search_address_town(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude, int partial)
+search_address_town(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude, int partial, struct jni_object *jni)
 {
 	GList *tmp=phrases;
 	int count=0;
@@ -996,7 +1038,7 @@ search_address_town(GList *result_list, struct search_list *sl, GList *phrases, 
 		{
 			attr.u.str=tmp->data;
 			search_list_search(sl, &attr, partial);
-			result_list=search_address_street(result_list, sl, phrases, exclude, tmp, partial);
+			result_list=search_address_street(result_list, sl, phrases, exclude, tmp, partial, jni);
 		}
 		tmp=g_list_next(tmp);
 	}
@@ -1004,7 +1046,7 @@ search_address_town(GList *result_list, struct search_list *sl, GList *phrases, 
 }
 
 GList *
-search_by_address(GList *result_list,struct mapset *ms, char *addr, int partial)
+search_by_address(GList *result_list,struct mapset *ms, char *addr, int partial, struct jni_object *jni)
 {
 	char *str=search_fix_spaces(addr);
 	GList *tmp,*phrases=search_split_phrases(str);
@@ -1019,11 +1061,11 @@ search_by_address(GList *result_list,struct mapset *ms, char *addr, int partial)
 	{
 		attr.u.str=tmp->data;
 		search_list_search(sl, &attr, partial);
-		result_list=search_address_town(result_list, sl, phrases, tmp, partial);
+		result_list=search_address_town(result_list, sl, phrases, tmp, partial, jni);
 		tmp=g_list_next(tmp);
 	}
 	search_list_search(sl, country_default(), partial);
-	ret=search_address_town(result_list, sl, phrases, NULL, partial);
+	ret=search_address_town(result_list, sl, phrases, NULL, partial, jni);
 	
 	g_free(str);
 	dbg(0,"leave %p\n",ret);
