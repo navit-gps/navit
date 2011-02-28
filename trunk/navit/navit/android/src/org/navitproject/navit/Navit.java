@@ -1323,12 +1323,6 @@ public class Navit extends Activity implements Handler.Callback
 	{
 		Message msg = Navit_progress_h.obtainMessage();
 		msg.what = id;
-		b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
-		b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
-				% Navit.ADDRESS_RESULTS_DIALOG_MAX);
-		b.putString("title", "getting search results");
-		b.putString("text", "searching ...");
 		msg.setData(b);
 		Navit_progress_h.sendMessage(msg);
 	}
