@@ -433,6 +433,17 @@ Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject th
 	callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
+void
+android_return_search_result(struct jni_object *jni_o, char *str)
+{
+	jstring js2 = NULL;
+	JNIEnv* env2;
+	env2=jni_o->env;
+	js2 = (*env2)->NewStringUTF(jni_o->env,str);
+	(*env2)->CallVoidMethod(jni_o->env, jni_o->jo, jni_o->jm, js2);
+	(*env2)->DeleteLocalRef(jni_o->env, js2);
+}
+
 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env, jobject thiz, int id, int partial, jobject str)
@@ -464,7 +475,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 			struct gui_priv *gp;
 			struct gui_priv gp_2;
 			gp=&gp_2;
-			gp->nav=global_navit;
+			gp->nav=attr.u.navit;
 			struct mapset *ms=navit_get_mapset(gp->nav);
 			gp->sl=search_list_new(ms);
 
@@ -514,32 +525,42 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 			struct attr s_attr4;
 			struct gui_priv *gp4;
 			struct gui_priv gp_24;
+
+
+			struct jni_object my_jni_object;
+			my_jni_object.env=env;
+			my_jni_object.jo=thiz;
+			my_jni_object.jm=aMethodID;
+
 			gp4=&gp_24;
-			gp4->nav=global_navit;
+			gp4->nav=attr.u.navit;
 			struct mapset *ms4=navit_get_mapset(gp4->nav);
 			GList *ret=NULL;
-			ret=search_by_address(ret,ms4,s,partial);
+			ret=search_by_address(ret,ms4,s,partial,&my_jni_object);
 			dbg(0,"ret=%p\n",ret);
 
-			struct search_list_result *res;
+			//struct search_list_result *res;
 
 			// get the list in the right order
-			ret=g_list_reverse(ret);
+			//ret=g_list_reverse(ret);
 			// set to first element
-			ret=g_list_first(ret);
+			//ret=g_list_first(ret);
 			// iterate thru the list
 			//dbg(0,"ret=%p\n",ret);
-			while (ret)
-			{
+			//while (ret)
+			//{
 				//dbg(0,"result list iterate %s\n",ret->data);
 				// return all the results to java
 				// return a string like: "16.766:48.76:full address name is at the end"
-				js2 = (*env)->NewStringUTF(env, ret->data);
-				(*env)->CallVoidMethod(env, thiz, aMethodID, js2);
-				(*env)->DeleteLocalRef(env, js2);
 
-				ret=g_list_next(ret);
-			}
+				// **android_return_search_result(&my_jni_object,ret->data);
+
+				//## js2 = (*env)->NewStringUTF(env, ret->data);
+				//## (*env)->CallVoidMethod(env, thiz, aMethodID, js2);
+				//## (*env)->DeleteLocalRef(env, js2);
+
+			//	ret=g_list_next(ret);
+			//}
 			// free the memory
 			g_list_free(ret);
 			//dbg(0,"ret=%p\n",ret);
