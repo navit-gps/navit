@@ -897,7 +897,7 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 		// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 chars -> this sould be max. about 320 chars long
 		sprintf(&buffer,"STR:%f:%f:%.101s, %.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
 		//dbg(0,"sprintf ok");
-		result_list=g_list_prepend(result_list,g_strdup(buffer));
+		// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 
 #ifdef HAVE_API_ANDROID
 		// return results to android as they come in ...
@@ -933,7 +933,7 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 				char buffer[400];
 				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
 				sprintf(&buffer,"SHN:%f:%f:%.101s, %.101s, %.101s %.15s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
-				result_list=g_list_prepend(result_list,g_strdup(buffer));
+				// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 #ifdef HAVE_API_ANDROID
 				// return results to android as they come in ...
 				android_return_search_result(jni,buffer);
@@ -964,8 +964,8 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 	attr.type=attr_street_name;
 	while ((slr=search_list_get_result(sl)))
 	{
-		dbg(0,"##### sss1");
-		dbg(0,"###### Result town: country=%s country_name=%s town=%s",slr->country->iso2,slr->country->name,slr->town->common.town_name);
+		//dbg(0,"##### sss1");
+		//dbg(0,"###### Result town: country=%s country_name=%s town=%s",slr->country->iso2,slr->country->name,slr->town->common.town_name);
 
 		// coords of result
 		c.x=slr->town->common.c->x;
@@ -975,7 +975,7 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 		char buffer[400];
 		// TWN -> town
 		sprintf(&buffer,"TWN:%f:%f:%.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name);
-		result_list=g_list_prepend(result_list,g_strdup(buffer));
+		// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 #ifdef HAVE_API_ANDROID
 		// return results to android as they come in ...
 		android_return_search_result(jni,buffer);
