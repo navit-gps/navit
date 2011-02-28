@@ -112,7 +112,7 @@ perror(const char *x)
 }
 
 void
-raise(void)
+raise(int signal)
 {
 }
 
@@ -122,9 +122,9 @@ popen(void)
 	return 0;
 }
 
-void
-pclose(void)
+int pclose(FILE *stream)
 {
+	return 0;
 }
 
 void
@@ -138,14 +138,12 @@ GetThreadLocale(void)
 	return 0;
 }
 
-int
-signal(void)
+int signal(int signum, int handler)
 {
 	return 0;
 }
 
-void
-setlocale(void)
+char * setlocale ( int category, const char * locale )
 {
 	return 0;
 }
@@ -161,6 +159,7 @@ localeconv(void)
 unsigned int
 alarm(unsigned int seconds)
 {
+	return 0;
 }
 
 #ifdef _MSC_VER
