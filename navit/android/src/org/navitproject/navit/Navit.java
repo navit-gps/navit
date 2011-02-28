@@ -79,7 +79,7 @@ public class Navit extends Activity implements Handler.Callback
 	private static Intent									startup_intent									= null;
 	private static long										startup_intent_timestamp					= 0L;
 	public static String										my_display_density							= "mdpi";
-	private boolean											parseErrorShown								= false;
+	private boolean											searchBoxShown								= false;
 	public static final int									MAPDOWNLOAD_PRI_DIALOG						= 1;
 	public static final int									MAPDOWNLOAD_SEC_DIALOG						= 2;
 	public static final int									SEARCHRESULTS_WAIT_DIALOG					= 3;
@@ -777,34 +777,20 @@ public class Navit extends Activity implements Handler.Callback
 			}
 			else
 			{
-				if (unparsable_info_box)
+				if (unparsable_info_box && !searchBoxShown )
 				{
-					// string not parsable, display alert and continue w/o string
-					AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-					alertbox.setMessage("Navit recieved the query " + intent_data
-							+ "\nThis is not yet parsable.");
-					alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+					
+					searchBoxShown = true;
+					String searchString = intent_data.split("q=")[1];
+					searchString = searchString.split("&")[0];
+					String[] searchArray = searchString.split("%"); // replace URL codes like %20 for space.
+					searchString = searchArray[0];
+					for(int i = 1; i< searchArray.length; i++)
 					{
-						public void onClick(DialogInterface arg0, int arg1)
-						{
-							Log.e("Navit", "Accepted non-parsable string");
-						}
-					});
-					alertbox.setNeutralButton("More info", new DialogInterface.OnClickListener()
-					{
-						public void onClick(DialogInterface arg0, int arg1)
-						{
-							String url = "http://wiki.navit-project.org/index.php/Navit_on_Android#Parse_error";
-							Intent i = new Intent(Intent.ACTION_VIEW);
-							i.setData(Uri.parse(url));
-							startActivity(i);
-						}
-					});
-					if (!parseErrorShown)
-					{
-						alertbox.show();
-						parseErrorShown = true;
+						searchString += " " + searchArray[i].substring(2);
 					}
+					Log.e("Navit","Search String :" + searchString);
+					executeSearch(searchString);
 				}
 			}
 		}
@@ -1554,5 +1540,22 @@ public class Navit extends Activity implements Handler.Callback
 	static
 	{
 		System.loadLibrary("navit");
+	}
+	
+	/*
+	* Show a search activity with the string "search" filled in
+	*/
+	private void executeSearch(String search)
+	{
+		Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
+		search_intent.putExtra("title", "Enter: City and Street");
+		search_intent.putExtra("address_string", search);
+		String pm_temp = "0";
+		if (Navit_last_address_partial_match)
+		{
+			pm_temp = "1";
+		}
+		search_intent.putExtra("partial_match", pm_temp);
+		this.startActivityForResult(search_intent, NavitAddressSearch_id);
 	}
 }
