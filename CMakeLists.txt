@@ -239,6 +239,8 @@ endif(GETTEXT_FOUND)
 if (NOT HAVE_LIBINTL)
    add_plugin(intl_cmake "native libintl missing" TRUE)
    set(USE_LIBGNUINTL TRUE)
+else()
+   list(APPEND NAVIT_LIBS intl)
 endif(NOT HAVE_LIBINTL)
 
 
