@@ -1236,11 +1236,25 @@ public class NavitGraphics
 
 		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
 		String[] tmp_s = s.split(":");
-		tmp_addr.lat = Float.parseFloat(tmp_s[0]);
-		tmp_addr.lon = Float.parseFloat(tmp_s[1]);
+		tmp_addr.result_type = tmp_s[0];
+		tmp_addr.lat = Float.parseFloat(tmp_s[1]);
+		tmp_addr.lon = Float.parseFloat(tmp_s[2]);
 		// the rest ist address
-		tmp_addr.addr = s.substring(2 + tmp_s[0].length() + tmp_s[1].length(), s.length());
+		tmp_addr.addr = s.substring(3 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length(), s.length());
 		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
+
+		if (tmp_addr.result_type.equals("TWN"))
+		{
+			Navit.search_results_towns++;
+		}
+		else if (tmp_addr.result_type.equals("STR"))
+		{
+			Navit.search_results_streets++;
+		}
+		else if (tmp_addr.result_type.equals("SHN"))
+		{
+			Navit.search_results_streets_hn++;
+		}
 
 		// make the dialog move its bar ...
 		Bundle b = new Bundle();
@@ -1249,7 +1263,7 @@ public class NavitGraphics
 		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
 				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
 		b.putString("title", "loading search results");
-		b.putString("text", "found " + Navit.NavitAddressResultList_foundItems.size());
+		b.putString("text", "towns:"+Navit.search_results_towns+" streets:"+(int)(Navit.search_results_streets+Navit.search_results_streets_hn));
 		Navit.msg_to_msg_handler(b, 10);
 	}
 	public void SearchResultList(int i, int partial_match, String text)
