@@ -664,8 +664,8 @@ public class NavitMapDownloader
 		b.putInt("max", 20); // use a dummy number here
 		b.putInt("cur", 0);
 		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", "Mapdownload");
-		b.putString("text", "downloading: " + map_values.map_name);
+		b.putString("title", "Mapdownload"); //TRANS
+		b.putString("text", "downloading: " + map_values.map_name); //TRANS
 		msg.setData(b);
 		handler.sendMessage(msg);
 		try
@@ -762,7 +762,7 @@ public class NavitMapDownloader
 					b.putInt("max", (int) (map_values.est_size_bytes / 1024));
 					b.putInt("cur", (int) (already_read / 1024));
 					b.putInt("dialog_num", my_dialog_num);
-					b.putString("title", "Map download");
+					b.putString("title", "Map download"); //TRANS
 					per_second_overall = (float) already_read
 							/ (float) ((System.currentTimeMillis() - start_timestamp) / 1000);
 					kbytes_per_second = formatter.format((per_second_overall / 1024f));
@@ -780,7 +780,7 @@ public class NavitMapDownloader
 							+ (int) (already_read / 1024f / 1024f) + "Mb / "
 							+ (int) (map_values.est_size_bytes / 1024f / 1024f) + "Mb" + "\n" + " "
 							+ kbytes_per_second + "kb/s" + " ETA: " + eta_string + "\n" +
-							"Map data CC-BY-SA by OpenStreetMap");
+							"Map data CC-BY-SA by OpenStreetMap"); //TRANS
 					msg.setData(b);
 					handler.sendMessage(msg);
 					//					try
@@ -815,7 +815,7 @@ public class NavitMapDownloader
 			b = new Bundle();
 			msg.what = 2;
 			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", "Error downloading map!");
+			b.putString("text", "Error downloading map!"); //TRANS
 			msg.setData(b);
 			handler.sendMessage(msg);
 
@@ -828,7 +828,7 @@ public class NavitMapDownloader
 			b = new Bundle();
 			msg.what = 2;
 			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", "Error downloading map!");
+			b.putString("text", "Error downloading map!"); //TRANS
 			msg.setData(b);
 			handler.sendMessage(msg);
 
@@ -842,8 +842,8 @@ public class NavitMapDownloader
 		b.putInt("max", (int) (map_values.est_size_bytes / 1024));
 		b.putInt("cur", (int) (map_values.est_size_bytes / 1024));
 		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", "Mapdownload");
-		b.putString("text", map_values.map_name + " ready");
+		b.putString("title", "Mapdownload"); //TRANS
+		b.putString("text", map_values.map_name + " ready"); //TRANS
 		msg.setData(b);
 		handler.sendMessage(msg);
 
