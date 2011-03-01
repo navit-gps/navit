@@ -240,7 +240,10 @@ if (NOT HAVE_LIBINTL)
    add_plugin(intl_cmake "native libintl missing" TRUE)
    set(USE_LIBGNUINTL TRUE)
 else()
-   list(APPEND NAVIT_LIBS intl)
+   CHECK_LIBRARY_EXISTS(intl libintl_fprintf "" NEEDS_LIBINTL)
+   if (NEEDS_LIBINTL)
+      list(APPEND NAVIT_LIBS intl)
+   endif(NEEDS_LIBINTL)
 endif(NOT HAVE_LIBINTL)
 
 
