@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -783,12 +784,7 @@ public class Navit extends Activity implements Handler.Callback
 					searchBoxShown = true;
 					String searchString = intent_data.split("q=")[1];
 					searchString = searchString.split("&")[0];
-					String[] searchArray = searchString.split("%"); // replace URL codes like %20 for space.
-					searchString = searchArray[0];
-					for(int i = 1; i< searchArray.length; i++)
-					{
-						searchString += " " + searchArray[i].substring(2);
-					}
+					searchString = URLDecoder.decode(searchString); // decode the URL: e.g. %20 -> space
 					Log.e("Navit","Search String :" + searchString);
 					executeSearch(searchString);
 				}
