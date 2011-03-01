@@ -71,7 +71,7 @@ public class NavitTextTranslations
 
 																																			+ "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n"
 																																			+ m
-																																			+ "Mapdata:\n"
+																																			+ "Cartes:\n"
 																																			+ m
 																																			+ "CC-BY-SA OpenStreetMap Project\n\n"
 																																			+ m
@@ -126,7 +126,7 @@ public class NavitTextTranslations
 
 																																			+ "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n"
 																																			+ m
-																																			+ "Mapdata:\n"
+																																			+ "Kaartdata:\n"
 																																			+ m
 																																			+ "CC-BY-SA OpenStreetMap Project\n\n"
 																																			+ m
@@ -199,19 +199,19 @@ public class NavitTextTranslations
 		String[] v = null;
 
 		k = "exit";
-		v = new String[]{"en", "Exit Navit", "de", "Navit beenden"};
+		v = new String[]{"en", "Exit Navit", "de", "Navit beenden", "nl", "Navit afsluiten" , "fr" , "Quittez Navit"};
 		p(k, v);
 
 		k = "zoom in";
-		v = new String[]{"en", "Zoom in", "fr", "zzzzzz", "nl", "ddddd"};
+		v = new String[]{"en", "Zoom in", "fr", "Zoom-avant"};
 		p(k, v);
 
 		k = "zoom out";
-		v = new String[]{"en", "Zoom out"};
+		v = new String[]{"en", "Zoom out", "fr", "Zoom-arrière", "nl", "Zoom uit"};
 		p(k, v);
 
 		k = "address search";
-		v = new String[]{"en", "Address search", "de", "Adresse suchen"};
+		v = new String[]{"en", "Address search", "de", "Adresse suchen", "nl" , "Zoek adres", "fr", "Cherchez adresse"};
 		p(k, v);
 
 		Log.e("NavitTextTranslations", "... ready");
