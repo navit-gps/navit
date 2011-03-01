@@ -221,11 +221,19 @@ public class NavitTextTranslations
 	{
 		HashMap<String, String> t = null;
 		t = new HashMap<String, String>();
-		for (int i = 0; i < (int) (values.length / 2); i++)
+		Log.e("NavitTextTranslations", "trying: " + key);
+		try
 		{
-			t.put(values[i * 2], values[(i * 2) + 1]);
+			for (int i = 0; i < (int) (values.length / 2); i++)
+			{
+				t.put(values[i * 2], values[(i * 2) + 1]);
+			}
+			Navit_text_lookup.put(key, t);
 		}
-		Navit_text_lookup.put(key, t);
+		catch (Exception e)
+		{
+			Log.e("NavitTextTranslations", "!!Error in translationkey: " + key);
+		}
 	}
 
 	public static String get_text(String in)
