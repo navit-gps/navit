@@ -804,14 +804,16 @@ public class Navit extends Activity implements Handler.Callback
 				b.putString("cmd", "toggle_layer(\"POI Symbols\");");
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
-				// toggle the normal POI layers (to avoid double POIs)
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 5);
-				b.putString("cmd", "toggle_layer(\"POI Labels\");");
-				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
 
+				/*
+				 * // toggle the normal POI layers (to avoid double POIs)
+				 * msg = new Message();
+				 * b = new Bundle();
+				 * b.putInt("Callback", 5);
+				 * b.putString("cmd", "toggle_layer(\"POI Labels\");");
+				 * msg.setData(b);
+				 * N_NavitGraphics.callback_handler.sendMessage(msg);
+				 */
 
 				// toggle full POI icons on/off --> why is this double ???
 				msg = new Message();
@@ -820,13 +822,16 @@ public class Navit extends Activity implements Handler.Callback
 				b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
-				// toggle full POI labels on/off
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 5);
-				b.putString("cmd", "toggle_layer(\"Android-POI-Labels-full\");");
-				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+
+				/*
+				 * // toggle full POI labels on/off
+				 * msg = new Message();
+				 * b = new Bundle();
+				 * b.putInt("Callback", 5);
+				 * b.putString("cmd", "toggle_layer(\"Android-POI-Labels-full\");");
+				 * msg.setData(b);
+				 * N_NavitGraphics.callback_handler.sendMessage(msg);
+				 */
 				break;
 			case 6 :
 				// ok startup address search activity
