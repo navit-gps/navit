@@ -225,7 +225,10 @@ vehicle_gpsd_try_open(gpointer *data)
 #else
 	gps_query(priv->gps, priv->gpsd_query);
 #endif
+
+#if GPSD_API_MAJOR_VERSION < 5
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
+#endif
 	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
 	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
 	if (!priv->gps->gps_fd) {
@@ -302,7 +305,14 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
 	if (priv->gps) {
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
-                gps_read(priv->gps);
+                if(gps_read(priv->gps)==-1) {
+                  g_warning("gps_poll failed\n");
+                  vehicle_gpsd_close(priv);
+                  vehicle_gpsd_open(priv);
+                }
+                else {
+  	          vehicle_gpsd_callback(priv->gps,priv->gps->buffer,strlen(priv->gps->buffer));
+                }
 #else
                 if (gps_poll(priv->gps)) {
 			g_warning("gps_poll failed\n");
