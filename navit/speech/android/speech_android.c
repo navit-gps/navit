@@ -127,7 +127,7 @@ speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr
 	struct speech_priv *this;
 	struct attr *flags;
 	*meth=speech_android_meth;
-	this=g_new(struct speech_priv,1);
+	this=g_new0(struct speech_priv,1);
 	if (!speech_android_init(this)) {
 		g_free(this);
 		this=NULL;
