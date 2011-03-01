@@ -71,54 +71,57 @@ public class Navit extends Activity implements Handler.Callback
 	public Handler												handler;
 	private PowerManager.WakeLock							wl;
 	private NavitActivityResult							ActivityResults[];
-	public static InputMethodManager						mgr												= null;
-	public static DisplayMetrics							metrics											= null;
-	public static Boolean									show_soft_keyboard							= false;
-	public static Boolean									show_soft_keyboard_now_showing			= false;
-	public static long										last_pressed_menu_key						= 0L;
-	public static long										time_pressed_menu_key						= 0L;
-	private static Intent									startup_intent									= null;
-	private static long										startup_intent_timestamp					= 0L;
-	public static String										my_display_density							= "mdpi";
-	private boolean											searchBoxShown									= false;
-	public static final int									MAPDOWNLOAD_PRI_DIALOG						= 1;
-	public static final int									MAPDOWNLOAD_SEC_DIALOG						= 2;
-	public static final int									SEARCHRESULTS_WAIT_DIALOG					= 3;
-	public static final int									ADDRESS_RESULTS_DIALOG_MAX					= 10;
-	public ProgressDialog									mapdownloader_dialog_pri					= null;
-	public ProgressDialog									mapdownloader_dialog_sec					= null;
-	public ProgressDialog									search_results_wait							= null;
-	public static Handler									Navit_progress_h								= null;
-	public static NavitMapDownloader						mapdownloader_pri								= null;
-	public static NavitMapDownloader						mapdownloader_sec								= null;
-	public static final int									NavitDownloaderPriSelectMap_id			= 967;
-	public static final int									NavitDownloaderSecSelectMap_id			= 968;
-	public static int											download_map_id								= 0;
-	ProgressThread												progressThread_pri							= null;
-	ProgressThread												progressThread_sec							= null;
-	public static int											search_results_towns							= 0;
-	public static int											search_results_streets						= 0;
-	public static int											search_results_streets_hn					= 0;
-	SearchResultsThread										searchresultsThread							= null;
-	SearchResultsThreadSpinnerThread						spinner_thread									= null;
-	public static Boolean									NavitAddressSearchSpinnerActive			= false;
-	public static final int									MAP_NUM_PRIMARY								= 11;
-	public static final int									NavitAddressSearch_id						= 70;
-	public static final int									NavitAddressResultList_id					= 71;
-	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems		= new ArrayList<Navit_Address_Result_Struct>();
+	public static InputMethodManager						mgr											= null;
+	public static DisplayMetrics							metrics										= null;
+	public static Boolean									show_soft_keyboard						= false;
+	public static Boolean									show_soft_keyboard_now_showing		= false;
+	public static long										last_pressed_menu_key					= 0L;
+	public static long										time_pressed_menu_key					= 0L;
+	private static Intent									startup_intent								= null;
+	private static long										startup_intent_timestamp				= 0L;
+	public static String										my_display_density						= "mdpi";
+	private boolean											searchBoxShown								= false;
+	public static final int									MAPDOWNLOAD_PRI_DIALOG					= 1;
+	public static final int									MAPDOWNLOAD_SEC_DIALOG					= 2;
+	public static final int									SEARCHRESULTS_WAIT_DIALOG				= 3;
+	public static final int									ADDRESS_RESULTS_DIALOG_MAX				= 10;
+	public ProgressDialog									mapdownloader_dialog_pri				= null;
+	public ProgressDialog									mapdownloader_dialog_sec				= null;
+	public ProgressDialog									search_results_wait						= null;
+	public static Handler									Navit_progress_h							= null;
+	public static NavitMapDownloader						mapdownloader_pri							= null;
+	public static NavitMapDownloader						mapdownloader_sec							= null;
+	public static final int									NavitDownloaderPriSelectMap_id		= 967;
+	public static final int									NavitDownloaderSecSelectMap_id		= 968;
+	public static int											download_map_id							= 0;
+	ProgressThread												progressThread_pri						= null;
+	ProgressThread												progressThread_sec						= null;
+	public static int											search_results_towns						= 0;
+	public static int											search_results_streets					= 0;
+	public static int											search_results_streets_hn				= 0;
+	SearchResultsThread										searchresultsThread						= null;
+	SearchResultsThreadSpinnerThread						spinner_thread								= null;
+	public static Boolean									NavitAddressSearchSpinnerActive		= false;
+	public static final int									MAP_NUM_PRIMARY							= 11;
+	public static final int									NavitAddressSearch_id					= 70;
+	public static final int									NavitAddressResultList_id				= 71;
+	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems	= new ArrayList<Navit_Address_Result_Struct>();
 
-	public static String										Navit_last_address_search_string			= "";
-	public static Boolean									Navit_last_address_partial_match			= false;
+	public static String										Navit_last_address_search_string		= "";
+	public static Boolean									Navit_last_address_partial_match		= false;
 
-	public static final int									MAP_NUM_SECONDARY								= 12;
-	static final String										MAP_FILENAME_PATH								= "/sdcard/navit/";
-	static final String										NAVIT_DATA_DIR									= "/data/data/org.navitproject.navit";
-	static final String										NAVIT_DATA_SHARE_DIR							= NAVIT_DATA_DIR
-																																+ "/share";
-	static final String										FIRST_STARTUP_FILE							= NAVIT_DATA_SHARE_DIR
-																																+ "/has_run_once.txt";
+	public static final int									MAP_NUM_SECONDARY							= 12;
+	static final String										MAP_FILENAME_PATH							= "/sdcard/navit/";
+	static final String										NAVIT_DATA_DIR								= "/data/data/org.navitproject.navit";
+	static final String										NAVIT_DATA_SHARE_DIR						= NAVIT_DATA_DIR
+																															+ "/share";
+	static final String										FIRST_STARTUP_FILE						= NAVIT_DATA_SHARE_DIR
+																															+ "/has_run_once.txt";
 
-
+	private String get_text(String in)
+	{
+		return NavitTextTranslations.get_text(in);
+	}
 
 	private boolean extractRes(String resname, String result)
 	{
@@ -225,12 +228,38 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "**1**A " + startup_intent.getAction());
 		Log.e("Navit", "**1**D " + startup_intent.getDataString());
 
+		// init translated text
+		NavitTextTranslations.init();
+
+		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
 		String lang = locale.getLanguage();
 		String langu = lang;
 		String langc = lang;
-
 		Log.e("Navit", "lang=" + lang);
+		int pos = langu.indexOf('_');
+		if (pos != -1)
+		{
+			langc = langu.substring(0, pos);
+			langu = langc + langu.substring(pos).toUpperCase(locale);
+			Log.e("Navit", "substring lang " + langu.substring(pos).toUpperCase(locale));
+			// set lang. for translation
+			NavitTextTranslations.main_language = langc;
+			NavitTextTranslations.sub_language = langu.substring(pos).toUpperCase(locale);
+		}
+		else
+		{
+			String country = locale.getCountry();
+			Log.e("Navit", "Country1 " + country);
+			Log.e("Navit", "Country2 " + country.toUpperCase(locale));
+			langu = langc + "_" + country.toUpperCase(locale);
+			// set lang. for translation
+			NavitTextTranslations.main_language = langc;
+			NavitTextTranslations.sub_language = country.toUpperCase(locale);
+		}
+		Log.e("Navit", "Language " + lang);
+		// get the local language -------------
+
 
 		// make sure the new path for the navitmap.bin file(s) exist!!
 		File navit_maps_dir = new File(MAP_FILENAME_PATH);
@@ -291,7 +320,7 @@ public class Navit extends Activity implements Handler.Callback
 		 * show info box for first time users
 		 */
 		AlertDialog.Builder infobox = new AlertDialog.Builder(this);
-		infobox.setTitle(NavitTextTranslations.INFO_BOX_TITLE);
+		infobox.setTitle(NavitTextTranslations.INFO_BOX_TITLE); //TRANS
 		infobox.setCancelable(false);
 		final TextView message = new TextView(this);
 		message.setFadingEdgeLength(20);
@@ -305,13 +334,13 @@ public class Navit extends Activity implements Handler.Callback
 		//rlp.leftMargin = 8; -> we use "m" string
 
 		message.setLayoutParams(rlp);
-		final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT);
+		final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT); //TRANS
 		Linkify.addLinks(s, Linkify.WEB_URLS);
 		message.setText(s);
 		message.setMovementMethod(LinkMovementMethod.getInstance());
 		infobox.setView(message);
 
-		 //TRANS
+		//TRANS
 		infobox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface arg0, int arg1)
@@ -320,17 +349,19 @@ public class Navit extends Activity implements Handler.Callback
 			}
 		});
 
-		infobox.setNeutralButton(NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO, new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface arg0, int arg1)
-			{
-				Log.e("Navit", "user wants more info, show the website");
-				String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-			}
-		});
+		//TRANS
+		infobox.setNeutralButton(NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO,
+				new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1)
+					{
+						Log.e("Navit", "user wants more info, show the website");
+						String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(url));
+						startActivity(i);
+					}
+				});
 
 		File navit_first_startup = new File(FIRST_STARTUP_FILE);
 		// if file does NOT exist, show the info box
@@ -372,20 +403,6 @@ public class Navit extends Activity implements Handler.Callback
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
 				"NavitDoNotDimScreen");
-
-		int pos = langu.indexOf('_');
-		if (pos != -1)
-		{
-			langc = langu.substring(0, pos);
-			langu = langc + langu.substring(pos).toUpperCase(locale);
-		}
-		else
-		{
-			String country = locale.getCountry();
-			Log.e("Navit", "Country " + country);
-			langu = langc + "_" + country.toUpperCase(locale);
-		}
-		Log.e("Navit", "Language " + lang);
 
 		if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo"))
 		{
@@ -670,17 +687,17 @@ public class Navit extends Activity implements Handler.Callback
 		menu.clear();
 
 		// group-id,item-id,sort order number
-		menu.add(1, 1, 100, NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN);
-		menu.add(1, 2, 200, NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT);
+		menu.add(1, 1, 100, get_text("zoom in")); //TRANS
+		menu.add(1, 2, 200, get_text("zoom out")); //TRANS
 
-		menu.add(1, 3, 300, NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map);
-		menu.add(1, 5, 400, NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI);
+		menu.add(1, 3, 300, NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map); //TRANS
+		menu.add(1, 5, 400, NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI); //TRANS
 
-		menu.add(1, 6, 500, "Address search"); //TRANS
+		menu.add(1, 6, 500, get_text("address search")); //TRANS
 
-		menu.add(1, 4, 600, NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map);
+		menu.add(1, 4, 600, NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map); //TRANS
 		menu.add(1, 88, 800, "--");
-		menu.add(1, 99, 900, NavitTextTranslations.NAVIT_JAVA_MENU_EXIT);
+		menu.add(1, 99, 900, get_text("exit")); //TRANS
 		return true;
 	}
 
