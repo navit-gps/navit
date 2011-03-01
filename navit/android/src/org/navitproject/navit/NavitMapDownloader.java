@@ -507,6 +507,7 @@ public class NavitMapDownloader
 			Guyana_Suriname_Guyane_Francaise, Haiti_Republica_Dominicana, Jamaica, Mexico, Paraguay,
 			Peru, Uruguay, Venezuela														};
 	public static String[]				OSM_MAP_NAME_LIST								= new String[]{
+
 			Whole_Planet.map_name, Africa.map_name, Angola.map_name, Burundi.map_name,
 			Democratic_Republic_of_the_Congo.map_name, Kenya.map_name, Lesotho.map_name,
 			Madagascar.map_name, Nambia_Botswana.map_name, Reunion.map_name, Rwanda.map_name,
@@ -778,7 +779,8 @@ public class NavitMapDownloader
 					b.putString("text", "downloading: " + map_values.map_name + "\n" + " "
 							+ (int) (already_read / 1024f / 1024f) + "Mb / "
 							+ (int) (map_values.est_size_bytes / 1024f / 1024f) + "Mb" + "\n" + " "
-							+ kbytes_per_second + "kb/s" + " ETA: " + eta_string);
+							+ kbytes_per_second + "kb/s" + " ETA: " + eta_string + "\n" +
+							"Map data CC-BY-SA by OpenStreetMap");
 					msg.setData(b);
 					handler.sendMessage(msg);
 					//					try
