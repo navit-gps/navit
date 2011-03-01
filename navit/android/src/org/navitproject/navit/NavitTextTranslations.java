@@ -20,7 +20,7 @@ public class NavitTextTranslations
 	static final String													m													= " ";
 
 	static final String													NAVIT_JAVA_MENU_download_first_map_en	= "download first map";
-	static final String													NAVIT_JAVA_MENU_download_first_map_fr	= "télécharchez 1ere carte";
+	static final String													NAVIT_JAVA_MENU_download_first_map_fr	= "tÃ©lÃ©charchez 1ere carte";
 	static final String													NAVIT_JAVA_MENU_download_first_map_nl	= "download eerste kaart";
 	static final String													NAVIT_JAVA_MENU_download_first_map_de	= "1te karte runterladen";
 
@@ -58,18 +58,18 @@ public class NavitTextTranslations
 																																			+ "      Have fun using Navit.";
 	static final String													INFO_BOX_TEXT_fr								= m
 
-																																			+ "Vous exécutez Navit pour la première fois\n\n"
+																																			+ "Vous exÃ©cutez Navit pour la premiÃ¨re fois\n\n"
 																																			+ m
-																																			+ "Pour commencer, sélectionnez \n \""
+																																			+ "Pour commencer, sÃ©lectionnez \n \""
 
 																																			+ NAVIT_JAVA_MENU_download_first_map_fr
 																																			+ "\"\n"
 																																			+ m
 
-																																			+ "du menu et télechargez une carte\n de votre région.\n"
+																																			+ "du menu et tÃ©lechargez une carte\n de votre rÃ©gion.\n"
 																																			+ m
 
-																																			+ "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n"
+																																			+ "Les cartes sont volumineux, donc\n il est prÃ©fÃ©rable d'avoir une connection\n internet illimitÃ©e!\n\n"
 																																			+ m
 																																			+ "Mapdata:\n"
 																																			+ m
@@ -91,26 +91,26 @@ public class NavitTextTranslations
 																																			+ NAVIT_JAVA_MENU_download_first_map_en
 																																			+ "\"\n"
 																																			+ m
-																																			+ "auswählen und Karte für die\n"
+																																			+ "auswÃ¤hlen und Karte fÃ¼r die\n"
 																																			+ m
-																																			+ "gewünschte Region downloaden.\n"
+																																			+ "gewÃ¼nschte Region downloaden.\n"
 																																			+ m
 																																			+ "Die Kartendatei ist sehr gross,\n"
 																																			+ m
-																																			+ "bitte flatrate oder ähnliches aktivieren!\n\n"
+																																			+ "bitte flatrate oder Ã¤hnliches aktivieren!\n\n"
 																																			+ m
 																																			+ "Kartendaten:\n"
 																																			+ m
 																																			+ "CC-BY-SA OpenStreetMap Project\n\n"
 																																			+ m
-																																			+ "Für mehr Infos zu Navit\n"
+																																			+ "FÃ¼r mehr Infos zu Navit\n"
 																																			+ m
 																																			+ "bitte die Website besuchen\n"
 																																			+ m
 																																			+ "http://wiki.navit-project.org/\n"
 																																			+ "\n"
 																																			+ m
-																																			+ "      Viel Spaß mit Navit.";
+																																			+ "      Viel SpaÃŸ mit Navit.";
 	static final String													INFO_BOX_TEXT_nl								= m
 
 																																			+ "U voert Navit voor de eerste keer uit.\n\n"
@@ -152,7 +152,7 @@ public class NavitTextTranslations
 	static final String													NAVIT_JAVA_MENU_ZOOMIN_de					= "zoom in";
 
 	static final String													NAVIT_JAVA_MENU_ZOOMOUT_en					= "zoom out";
-	static final String													NAVIT_JAVA_MENU_ZOOMOUT_fr					= "zoom-arrière";
+	static final String													NAVIT_JAVA_MENU_ZOOMOUT_fr					= "zoom-arriÃ¨re";
 	static final String													NAVIT_JAVA_MENU_ZOOMOUT_nl					= "uitzoomen";
 	static final String													NAVIT_JAVA_MENU_ZOOMOUT_de					= "zoom out";
 
@@ -172,7 +172,7 @@ public class NavitTextTranslations
 	static final String													NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_de	= "Ziel setzen";
 
 	static final String													NAVIT_JAVA_MENU_download_second_map_en	= "download 2nd map";
-	static final String													NAVIT_JAVA_MENU_download_second_map_fr	= "télécharchez 2ème carte";
+	static final String													NAVIT_JAVA_MENU_download_second_map_fr	= "tÃ©lÃ©charchez 2Ã¨me carte";
 	static final String													NAVIT_JAVA_MENU_download_second_map_nl	= "download 2de kaart";
 	static final String													NAVIT_JAVA_MENU_download_second_map_de	= "2te karte runterladen";
 
