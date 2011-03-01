@@ -37,7 +37,7 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		Log.e("Navit", "all ok");
+		//Log.e("Navit", "all ok");
 
 		/*
 		 * 

@@ -38,7 +38,7 @@ public class NavitAddressSearchActivity extends Activity
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
-		addr_view.setText("Type Address");
+		addr_view.setText("Type Address"); //TRANS
 		addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
@@ -46,7 +46,7 @@ public class NavitAddressSearchActivity extends Activity
 
 		// partial match checkbox
 		pm_checkbox = new CheckBox(this);
-		pm_checkbox.setText("partial match");
+		pm_checkbox.setText("partial match"); //TRANS
 		pm_checkbox.setChecked(false);
 		pm_checkbox.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
@@ -55,7 +55,7 @@ public class NavitAddressSearchActivity extends Activity
 
 		// search button
 		final Button btnSearch = new Button(this);
-		btnSearch.setText("Search");
+		btnSearch.setText("Search"); //TRANS
 		btnSearch.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
 		btnSearch.setGravity(Gravity.CENTER);

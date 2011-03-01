@@ -357,7 +357,7 @@ public class NavitAndroidOverlay extends ImageView
 			bubble_paint.setTextSize((int) (20 / 1.5f * draw_factor));
 			bubble_paint.setStrokeWidth(3);
 			bubble_paint.setColor(Color.parseColor("#3b3131"));
-			c.drawText(Navit.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE, this.bubble_001.x + dx + inner_dx,
+			c.drawText(NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE, this.bubble_001.x + dx + inner_dx,
 					this.bubble_001.y + dy + inner_dy, bubble_paint);
 
 		}
