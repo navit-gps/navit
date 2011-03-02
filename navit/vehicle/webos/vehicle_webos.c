@@ -22,8 +22,9 @@
 #include <glib.h>
 #include <math.h>
 #include <errno.h>
-#include <time.h>
+#include <sys/time.h>
 #include <PDL.h>
+#include <SDL.h>
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
@@ -37,25 +38,22 @@ static char *vehicle_webos_prefix="webos:";
 struct vehicle_priv {
 	char *source;
 	char *address;
-	struct callback_list *cbl, *event_cbl;
+	struct callback_list *cbl;
 	struct callback *event_cb;
-	double time, track, speed, altitude, radius;
+	double track, speed, altitude, radius;
 	time_t fix_time;
 	struct coord_geo geo;
 	struct attr ** attrs;
 	char fixiso8601[128];
+	int pdk_version;
 };
-
-static void
-vehicle_webos_callback_event(struct callback_list *cbl, enum attr_type type)
-{
-	callback_list_call_attr_0(cbl, type);
-}
 
 static void
 vehicle_webos_callback(PDL_ServiceParameters *params, void *user)
 {
-	struct vehicle_priv *priv=user;
+	PDL_Location *location;
+	SDL_Event event;
+	SDL_UserEvent userevent;
 	int err;
 
 	err = PDL_GetParamInt(params, "errorCode");
@@ -64,67 +62,104 @@ vehicle_webos_callback(PDL_ServiceParameters *params, void *user)
 		return /*PDL_EOTHER*/;
 	}
 
-	double altitude = PDL_GetParamDouble(params, "altitude");
-	double speed = PDL_GetParamDouble(params, "velocity") * 3.6; /* multiply with 3.6 to get kph */
-	double track = PDL_GetParamDouble(params, "heading");
-	double horizAccuracy = PDL_GetParamDouble(params, "horizAccuracy");
-	priv->geo.lat = PDL_GetParamDouble(params, "latitude");
-	priv->geo.lng = PDL_GetParamDouble(params, "longitude");
-	double time = PDL_GetParamDouble(params, "timestamp") / 1000;
+	location = g_new0 (PDL_Location, 1);
 
-	dbg(2,"Location: %f %f %f %.12g %.12g +-%fm %f\n",
-			altitude,
-			speed,
-			track,
-			priv->geo.lat,
-			priv->geo.lng,
-			horizAccuracy,
-			time);
+	location->altitude = PDL_GetParamDouble(params, "altitude");
+	location->velocity = PDL_GetParamDouble(params, "velocity");
+	location->heading = PDL_GetParamDouble(params, "heading");
+	location->horizontalAccuracy = PDL_GetParamDouble(params, "horizAccuracy");
+	location->latitude = PDL_GetParamDouble(params, "latitude");
+	location->longitude = PDL_GetParamDouble(params, "longitude");
 
-	if (altitude != -1)
-		priv->altitude = altitude;
-	if (speed != -1)
-		priv->speed = speed;
-	if (track != -1)
-		priv->track = track;
-	if (horizAccuracy != -1)
-		priv->radius = horizAccuracy;
-	if (time != priv->time) {
-		dbg(2,"NEW Time: %f\n", time);
-		priv->time = time;
-		priv->fix_time = 0;
-		event_call_callback(priv->event_cbl);
-	}
+	userevent.type = SDL_USEREVENT;
+	userevent.code = PDL_GPS_UPDATE;
+	userevent.data1 = location;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	SDL_PushEvent(&event);
 
 	return /*PDL_NOERROR*/;
 }
 
 static void
+vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
+{
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	priv->fix_time = tv.tv_sec;
+
+	priv->geo.lat = location->latitude;
+	priv->geo.lng = location->longitude;
+
+	dbg(2,"Location: %f %f %f %.12g %.12g +-%fm\n",
+			location->altitude,
+			location->velocity,
+			location->heading,
+			priv->geo.lat,
+			priv->geo.lng,
+			location->horizontalAccuracy);
+
+	if (location->altitude != -1)
+		priv->altitude = location->altitude;
+	if (location->velocity != -1)
+		priv->speed = location->velocity * 3.6;
+	if (location->heading != -1)
+		priv->track = location->heading;
+	if (location->horizontalAccuracy != -1)
+		priv->radius = location->horizontalAccuracy;
+
+	if (priv->pdk_version <= 100)
+		g_free(location);
+
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+
+	return;
+}
+
+static void
 vehicle_webos_close(struct vehicle_priv *priv)
 {
-	PDL_UnregisterServiceCallback((PDL_ServiceCallbackFunc)vehicle_webos_callback);
-	callback_list_destroy(priv->event_cbl);
+	if (priv->pdk_version <= 100)
+		PDL_UnregisterServiceCallback((PDL_ServiceCallbackFunc)vehicle_webos_callback);
+	else
+		PDL_EnableLocationTracking(PDL_FALSE);
 }
 
 static int
 vehicle_webos_open(struct vehicle_priv *priv)
 {
 	PDL_Err err;
+	
+	priv->pdk_version = PDL_GetPDKVersion();	
+	dbg(1,"pdk_version(%d)\n", priv->pdk_version);
 
-	err = PDL_ServiceCallWithCallback("palm://com.palm.location/startTracking",
-			"{subscribe:true}",
-			(PDL_ServiceCallbackFunc)vehicle_webos_callback,
-			priv,
-			PDL_FALSE);
-	if (err != PDL_NOERROR) {
-		dbg(0,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return 0;
+	if (priv->pdk_version <= 100) {
+		err = PDL_ServiceCallWithCallback("palm://com.palm.location/startTracking",
+				"{subscribe:true}",
+				(PDL_ServiceCallbackFunc)vehicle_webos_callback,
+				priv,
+				PDL_FALSE);
+		if (err != PDL_NOERROR) {
+			dbg(0,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
+			vehicle_webos_close(priv);
+			return 0;
+		}
+	}
+	else {
+		dbg(1,"Calling PDL_EnableLocationTracking(PDL_TRUE)\n");
+		err = PDL_EnableLocationTracking(PDL_TRUE);
+		if (err != PDL_NOERROR) {
+			dbg(0,"PDL_EnableLocationTracking failed with (%d): (%s)\n", err, PDL_GetError());
+			vehicle_webos_close(priv);
+			return 0;
+		}
 	}
 
 	return 1;
 }
-
 
 static void
 vehicle_webos_destroy(struct vehicle_priv *priv)
@@ -161,22 +196,43 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 			attr->u.numd = &priv->radius;
 			break;
 		case attr_position_time_iso8601:
-			if (!priv->time)
-				return 0;
-
-			if (!priv->fix_time) {
+			if (priv->fix_time) {
 				struct tm tm;
-				priv->fix_time = priv->time;
-				if (gmtime_r(&priv->fix_time, &tm))
+				if (gmtime_r(&priv->fix_time, &tm)) {
 					strftime(priv->fixiso8601, sizeof(priv->fixiso8601),
 							"%Y-%m-%dT%TZ", &tm);
+					attr->u.str=priv->fixiso8601;
+				}
 				else {
 					priv->fix_time = 0;
 					return 0;
 				}
+				dbg(1,"Fix Time: %d %s\n", priv->fix_time, priv->fixiso8601);
 			}
-			dbg(1,"Fix Time: %d %s\n", priv->fix_time, priv->fixiso8601);
-			attr->u.str=priv->fixiso8601;
+			else {
+				dbg(1,"Fix Time: %d\n", priv->fix_time);
+				return 0;
+			}
+
+			break;
+		case attr_position_fix_type:
+			if (priv->radius == 0.0)
+				return 0;		// strength = -1
+			else if (priv->radius > 20.0)
+				attr->u.num = 0;	// strength = 1
+			else
+				attr->u.num = 1;	// strength = 2
+
+			break;
+		case attr_position_sats_used:
+			if (priv->radius <= 6.0 )
+				attr->u.num = 6;	// strength = 5
+			else if (priv->radius <= 10.0 )
+				attr->u.num = 5;	// strength = 4
+			else if (priv->radius <= 15.0 )
+				attr->u.num = 4;	// strength = 3
+			else
+				return 0;
 
 			break;
 		default:
@@ -206,6 +262,9 @@ vehicle_webos_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init
 			}
 			return 1;
 		case attr_profilename:
+			return 1;
+		case attr_pdl_gps_update:
+			vehicle_webos_gps_update(priv, (PDL_Location *)attr->u.data);
 			return 1;
 		default:
 			return 0;
@@ -240,10 +299,6 @@ vehicle_webos_new(struct vehicle_methods
 		vehicle_webos_set_attr_do(priv, *attrs, 1);
 		attrs++;
 	}
-	priv->event_cbl = callback_list_new();
-	priv->event_cb = callback_new_2(callback_cast(vehicle_webos_callback_event),
-			cbl, attr_position_coord_geo);
-	callback_list_add(priv->event_cbl, priv->event_cb);
 
 	vehicle_webos_open(priv);
 	
