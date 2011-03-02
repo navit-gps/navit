@@ -996,7 +996,7 @@ public class Navit extends Activity implements Handler.Callback
 							Toast
 									.makeText(
 											getApplicationContext(),
-											"setting destination to "
+											"setting destination to\n"
 													+ Navit.NavitAddressResultList_foundItems
 															.get(destination_id).addr, Toast.LENGTH_LONG).show(); //TRANS
 
@@ -1128,6 +1128,7 @@ public class Navit extends Activity implements Handler.Callback
 
 			// start the search, this could take a long time!!
 			Log.e("Navit", "SearchResultsThread run1");
+			Navit_last_address_search_string = filter_bad_chars(Navit_last_address_search_string);
 			N_NavitGraphics.SearchResultList(2, partial_match_i, Navit_last_address_search_string);
 			Log.e("Navit", "SearchResultsThread run2");
 
@@ -1159,6 +1160,15 @@ public class Navit extends Activity implements Handler.Callback
 
 			Log.e("Navit", "SearchResultsThread ended");
 		}
+	}
+
+	public static String filter_bad_chars(String in)
+	{
+		String out = in;
+		out = out.replaceAll("\\n", " "); // newline -> space
+		out = out.replaceAll("\\r", " "); // return -> space
+		out = out.replaceAll("\\t", " "); // tab -> space
+		return out;
 	}
 
 	public static void msg_to_msg_handler(Bundle b, int id)
@@ -1330,7 +1340,8 @@ public class Navit extends Activity implements Handler.Callback
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_PRIMARY);
 				progressThread_pri.start();
 				// show license for OSM maps
-				Toast.makeText(getApplicationContext(), "Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
+				Toast.makeText(getApplicationContext(),
+						"Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_pri;
 			case Navit.MAPDOWNLOAD_SEC_DIALOG :
 				mapdownloader_dialog_sec = new ProgressDialog(this);
@@ -1356,7 +1367,8 @@ public class Navit extends Activity implements Handler.Callback
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_SECONDARY);
 				progressThread_sec.start();
 				// show license for OSM maps
-				Toast.makeText(getApplicationContext(), "Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
+				Toast.makeText(getApplicationContext(),
+						"Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_sec;
 		}
 		// should never get here!!
