@@ -38,7 +38,7 @@ public class NavitAddressSearchActivity extends Activity
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
-		addr_view.setText("Type Address"); //TRANS
+		addr_view.setText(Navit.get_text("Enter Destination")); //TRANS
 		addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));

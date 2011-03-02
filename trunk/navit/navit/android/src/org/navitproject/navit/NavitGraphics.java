@@ -1264,8 +1264,8 @@ public class NavitGraphics
 		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
 				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
 		b.putString("title", "loading search results"); //TRANS
-		b.putString("text", "towns:" + Navit.search_results_towns + " streets:"
-				+ (int) (Navit.search_results_streets + Navit.search_results_streets_hn));
+		b.putString("text", "towns:" + Navit.search_results_towns + " " + Navit.get_text("Streets")
+				+ ":" + (int) (Navit.search_results_streets + Navit.search_results_streets_hn));
 		Navit.msg_to_msg_handler(b, 10); //TRANS
 	}
 	public void SearchResultList(int i, int partial_match, String text)

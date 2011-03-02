@@ -198,8 +198,9 @@ public class NavitTextTranslations
 		String k = null;
 		String[] v = null;
 
-		k = "exit";
-		v = new String[]{"en", "Exit Navit", "de", "Navit beenden", "nl", "Navit afsluiten" , "fr" , "Quittez Navit"};
+		k = "exit navit";
+		v = new String[]{"en", "Exit Navit", "de", "Navit beenden", "nl", "Navit afsluiten", "fr",
+				"Quittez Navit"};
 		p(k, v);
 
 		k = "zoom in";
@@ -211,7 +212,8 @@ public class NavitTextTranslations
 		p(k, v);
 
 		k = "address search";
-		v = new String[]{"en", "Address search", "de", "Adresse suchen", "nl" , "Zoek adres", "fr", "Cherchez adresse"};
+		v = new String[]{"en", "Address search", "de", "Adresse suchen", "nl", "Zoek adres", "fr",
+				"Cherchez adresse"};
 		p(k, v);
 
 		Log.e("NavitTextTranslations", "... ready");
@@ -238,23 +240,41 @@ public class NavitTextTranslations
 
 	public static String get_text(String in)
 	{
-		String out = in;
+		String out = null;
 
 		Log.e("NavitTextTranslations", "lookup L:" + main_language + " T:" + in);
-		out = Navit_text_lookup.get(in).get(main_language);
+		try
+		{
+			out = Navit_text_lookup.get(in).get(main_language);
+		}
+		catch (Exception e)
+		{
+			// most likely there is not translation yet
+			Log.e("NavitTextTranslations", "lookup: exception");
+			out = null;
+		}
 
 		if (out == null)
 		{
 			// always return a string for output (use fallback language)
 			Log.e("NavitTextTranslations", "using default language");
-			out = Navit_text_lookup.get(in).get(fallback_language);
+			try
+			{
+				out = Navit_text_lookup.get(in).get(fallback_language);
+			}
+			catch (Exception e)
+			{
+				Log.e("NavitTextTranslations", "using default language: exception");
+				// most likely there is not translation yet
+				out = null;
+			}
 		}
 
 		if (out == null)
 		{
-			// if we still dont have any text, return ""
-			Log.e("NavitTextTranslations", "return empty");
-			out = "";
+			// if we still dont have any text, use the ".mo" file and call the c-function gettext(in)
+			out = NavitGraphics.getLocalizedString(in);
+			Log.e("NavitTextTranslations", "return the value from gettext() = " + out);
 		}
 		return out;
 	}
