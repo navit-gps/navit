@@ -116,8 +116,9 @@ android/build.xml: android/AndroidManifest.xml android/dummy.txt
 	mkdir -p $(builddir)/android/src/
 	if [ "$(builddir)" != "$(srcdir)" ]; then chmod -R u+w $(builddir)/android/src/; fi
 	if [ "$(builddir)" != "$(srcdir)" ]; then rm -Rf $(builddir)/android/src/; fi
-	touch android/dummy.txt
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rpf $(srcdir)/android/* $(builddir)/android; fi
+	touch $(srcdir)/android/dummy.txt
+	touch $(builddir)/android/dummy.txt
 	android update project -t @ANDROID_PROJECT@ -p android
 
 apkg-all: all android/build.xml navit.xml
@@ -156,9 +157,13 @@ apkg-all: all android/build.xml navit.xml
 	cp navit_android_hdpi.xml android/res/raw/navithdpi.xml
 
 apkg: apkg-all
+	touch $(srcdir)/android/dummy.txt
+	touch $(builddir)/android/dummy.txt
 	cd android && ant debug
 
 apkg-release: apkg-all
+	touch $(srcdir)/android/dummy.txt
+	touch $(builddir)/android/dummy.txt
 	cd android && ant release
 	jarsigner $$(cat ~/.keystore_args) android/bin/Navit-unsigned.apk mykey
 #	zipalign -f 4  android/bin/Navit-unsigned.apk android/bin/Navit-unsigned-aligned.apk
