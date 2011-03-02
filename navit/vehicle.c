@@ -211,7 +211,7 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr)
 		g_free(this_->gpx_desc);
 		this_->gpx_desc = attr->u.str;
 	}
-	if (ret == 1 && attr->type != attr_navit)
+	if (ret == 1 && attr->type != attr_navit && attr->type != attr_pdl_gps_update)
 		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
 	return ret != 0;
 }

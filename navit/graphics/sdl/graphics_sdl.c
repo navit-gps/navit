@@ -39,6 +39,7 @@
 #include <math.h>
 
 #ifdef USE_WEBOS
+# include "vehicle.h"
 # include <PDL.h>
 //# define USE_WEBOS_ACCELEROMETER
 #endif
@@ -2004,29 +2005,46 @@ static gboolean graphics_sdl_idle(void *data)
             case SDL_USEREVENT:
             {
 		SDL_UserEvent userevent = ev.user;
-                if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_TIMER)
+		dbg(9,"received SDL_USEREVENT type(%x) code(%x)\n",userevent.type,userevent.code);
+		if (userevent.type != SDL_USEREVENT)
+		    break;
+
+		if (userevent.code == PDL_GPS_UPDATE)
+		{
+		    struct attr vehicle_attr;
+		    struct vehicle *v;
+		    navit_get_attr(gr->nav, attr_vehicle,  &vehicle_attr, NULL);
+		    v = vehicle_attr.u.vehicle;
+		    if (v) {
+			struct attr attr;
+			attr.type = attr_pdl_gps_update;
+			attr.u.data = userevent.data1;
+			vehicle_set_attr(v, &attr);
+		    }
+		}
+		else if(userevent.code == SDL_USEREVENT_CODE_TIMER)
 		{
 		    struct callback *cb = (struct callback *)userevent.data1;
 		    dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
 		    callback_call_0(cb);
                 }
-                else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_WATCH)
+                else if(userevent.code == SDL_USEREVENT_CODE_WATCH)
 		{
 		    struct callback *cb = (struct callback *)userevent.data1;
 		    dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
 		    callback_call_0(cb);
                 }
-		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_CALL_CALLBACK)
+		else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK)
 		{
 		    struct callback_list *cbl = (struct callback_list *)userevent.data1;
                     dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
 		    callback_list_call_0(cbl);
 		}
-		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_IDLE_EVENT) {
+		else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
                     dbg(1, "SDL_USEREVENT idle_event received\n");
 		}
 #ifdef USE_WEBOS_ACCELEROMETER
-		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_ROTATE)
+		else if(userevent.code == SDL_USEREVENT_CODE_ROTATE)
 		{
 		    dbg(1, "SDL_USEREVENT rotate received\n");
                     switch(gr->orientation)
@@ -2100,6 +2118,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     this->nav = nav;
     this->cbl = cbl;
 
+    dbg(1,"Calling SDL_Init\n");
 #ifdef USE_WEBOS
 # ifdef USE_WEBOS_ACCELEROMETER
     ret = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_JOYSTICK);
@@ -2117,6 +2136,15 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     }
 
 #ifdef USE_WEBOS
+    dbg(1,"Calling PDL_Init(0)\n");
+    ret = PDL_Init(0);
+    if(ret < 0)
+    {
+	dbg(0,"PDL_Init failed %d\n", ret);
+        g_free(this);
+        return NULL;
+    }
+
     if (! event_request_system("sdl","graphics_sdl_new")) {
 #else
     if (! event_request_system("glib","graphics_sdl_new")) {
