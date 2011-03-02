@@ -879,9 +879,13 @@ public class Navit extends Activity implements Handler.Callback
 							Log.d("Navit", "PRI id="
 									+ Integer.parseInt(data.getStringExtra("selected_id")));
 							// set map id to download
-							Navit.download_map_id = Integer.parseInt(data.getStringExtra("selected_id"));
+							Navit.download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[Integer
+									.parseInt(data.getStringExtra("selected_id"))];
 							// show the map download progressbar, and download the map
-							showDialog(Navit.MAPDOWNLOAD_PRI_DIALOG);
+							if (Navit.download_map_id > -1)
+							{
+								showDialog(Navit.MAPDOWNLOAD_PRI_DIALOG);
+							}
 						}
 						catch (NumberFormatException e)
 						{
@@ -908,9 +912,13 @@ public class Navit extends Activity implements Handler.Callback
 							Log.d("Navit", "SEC id="
 									+ Integer.parseInt(data.getStringExtra("selected_id")));
 							// set map id to download
-							Navit.download_map_id = Integer.parseInt(data.getStringExtra("selected_id"));
+							Navit.download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[Integer
+									.parseInt(data.getStringExtra("selected_id"))];
 							// show the map download progressbar, and download the map
-							showDialog(Navit.MAPDOWNLOAD_SEC_DIALOG);
+							if (Navit.download_map_id > -1)
+							{
+								showDialog(Navit.MAPDOWNLOAD_SEC_DIALOG);
+							}
 						}
 						catch (NumberFormatException e)
 						{

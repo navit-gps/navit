@@ -56,6 +56,7 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 		 * v.addHeaderView(text_v);
 		 */
 
+		NavitMapDownloader.init();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1,
 				NavitMapDownloader.OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE);
