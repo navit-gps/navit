@@ -111,9 +111,10 @@ android/AndroidManifest.xml: android/AndroidManifest.xml.in
 	sed -e "s/@ANDROID_VERSION_NAME@/$(v_name)/" <$@ >android/AndroidManifest.xml.tmp
 	mv android/AndroidManifest.xml.tmp $@
 	
-
-android/build.xml: android/AndroidManifest.xml
+android/build.xml: android/AndroidManifest.xml android/dummy.txt
+	if [ "$(builddir)" != "$(srcdir)" ]; then rm -Rf android/; fi
 	mkdir -p android
+	touch android/dummy.txt
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android/* $(builddir)/android; fi
 	android update project -t @ANDROID_PROJECT@ -p android
 
