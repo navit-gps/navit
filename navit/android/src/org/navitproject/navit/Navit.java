@@ -1329,6 +1329,8 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_pri = mapdownloader_pri.new ProgressThread(progress_handler,
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_PRIMARY);
 				progressThread_pri.start();
+				// show license for OSM maps
+				Toast.makeText(getApplicationContext(), "Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_pri;
 			case Navit.MAPDOWNLOAD_SEC_DIALOG :
 				mapdownloader_dialog_sec = new ProgressDialog(this);
@@ -1353,6 +1355,8 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_sec = mapdownloader_sec.new ProgressThread(progress_handler,
 						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_SECONDARY);
 				progressThread_sec.start();
+				// show license for OSM maps
+				Toast.makeText(getApplicationContext(), "Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_sec;
 		}
 		// should never get here!!
