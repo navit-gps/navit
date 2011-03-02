@@ -118,7 +118,7 @@ public class Navit extends Activity implements Handler.Callback
 	static final String										FIRST_STARTUP_FILE						= NAVIT_DATA_SHARE_DIR
 																															+ "/has_run_once.txt";
 
-	private String get_text(String in)
+	public static String get_text(String in)
 	{
 		return NavitTextTranslations.get_text(in);
 	}
@@ -697,7 +697,7 @@ public class Navit extends Activity implements Handler.Callback
 
 		menu.add(1, 4, 600, NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map); //TRANS
 		menu.add(1, 88, 800, "--");
-		menu.add(1, 99, 900, get_text("exit")); //TRANS
+		menu.add(1, 99, 900, get_text("exit navit")); //TRANS
 		return true;
 	}
 
