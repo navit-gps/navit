@@ -314,14 +314,20 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
   }
   sum_dist_str = g_strdup(strtok(NULL, " "));
   if(!sum_dist_str) {
+    g_free(name_str);
     return;
   }
   sum_time_str = g_strdup(strtok(NULL, " "));
   if(!sum_time_str) {
+    g_free(name_str);
+    g_free(sum_dist_str);
     return;
   }
   active_str = g_strdup(strtok(NULL, " "));
   if(!active_str) {
+    g_free(name_str);
+    g_free(sum_dist_str);
+    g_free(sum_time_str);
     return;
   }
   this_->name = name_str;
@@ -329,6 +335,9 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
   this_->sum_time = atof(sum_time_str); 
   this_->bActive = atoi(active_str); 
   this_->last_coord.x = -1;
+  g_free(active_str);
+  g_free(sum_dist_str);
+  g_free(sum_time_str);
 }
 
 static void
@@ -519,6 +528,7 @@ osd_odometer_save(struct navit* nav)
 			if( ((struct odometer*)(list->data))->name) {
 				char*odo_str = osd_odometer_to_string(list->data);
 				fprintf(f,"%s",odo_str);
+                                g_free(odo_str);
 				
 			}
 			list = g_list_next(list);
