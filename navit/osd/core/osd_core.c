@@ -340,9 +340,7 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
   g_free(sum_time_str);
 }
 
-static void
-osd_odometer_draw(struct odometer *this, struct navit *nav,
-		 struct vehicle *v)
+static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct vehicle *v)
 {
   struct coord curr_coord;
   struct graphics_gc *curr_color;
@@ -370,8 +368,8 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 
   if(nav) {
     navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
-	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
-		imperial=imperial_attr.u.num;
+    if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
+      imperial=imperial_attr.u.num;
   }
   if (vehicle_attr.u.vehicle) {
     curr_vehicle = vehicle_attr.u.vehicle;
@@ -389,32 +387,34 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
     transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
 
     if (this->last_coord.x != -1 ) {
-	const double cStepDistLimit = 10000;
-        struct timeval tv;
-        double curr_time;
-	gettimeofday(&tv,NULL);
-	curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
-        //we have valid previous position
-        double dt = curr_time-this->last_update_time;
-        double dCurrDist = 0;
-        dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
-	if(dCurrDist<=cStepDistLimit) {
-	        this->sum_dist += dCurrDist;
-	}
-        this->time_all = curr_time-this->last_click_time+this->sum_time;
-        spd = 3.6*(double)this->sum_dist/(double)this->time_all;
-        if(dt != 0) {
-          if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
-            if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
-	      double dv;
-              curr_spd = *speed_attr.u.numd; 
-              dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
-              this->acceleration = dv/dt;  
-              this->last_speed = curr_spd;
-              this->last_update_time = curr_time;
-            }
+      const double cStepDistLimit = 10000;
+      struct timeval tv;
+      double curr_time;
+      double dt;
+      double dCurrDist = 0;
+
+      gettimeofday(&tv,NULL);
+      curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
+      //we have valid previous position
+      dt = curr_time-this->last_update_time;
+      dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
+      if(dCurrDist<=cStepDistLimit) {
+        this->sum_dist += dCurrDist;
+      }
+      this->time_all = curr_time-this->last_click_time+this->sum_time;
+      spd = 3.6*(double)this->sum_dist/(double)this->time_all;
+      if(dt != 0) {
+        if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
+          if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
+            double dv;
+            curr_spd = *speed_attr.u.numd; 
+            dv = (curr_spd-this->last_speed)/3.6;	//speed difference in m/sec
+            this->acceleration = dv/dt;  
+            this->last_speed = curr_spd;
+            this->last_update_time = curr_time;
           }
         }
+      }
     }
     this->last_coord = curr_coord;
   }
