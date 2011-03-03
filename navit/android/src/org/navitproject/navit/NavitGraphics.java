@@ -1263,8 +1263,8 @@ public class NavitGraphics
 		b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
 		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
 				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-		b.putString("title", "loading search results"); //TRANS
-		b.putString("text", "towns:" + Navit.search_results_towns + " " + Navit.get_text("Streets")
+		b.putString("title", Navit.get_text("loading search results")); //TRANS
+		b.putString("text", Navit.get_text("towns")+":" + Navit.search_results_towns + " " + Navit.get_text("Streets")
 				+ ":" + (int) (Navit.search_results_streets + Navit.search_results_streets_hn));
 		Navit.msg_to_msg_handler(b, 10); //TRANS
 	}
