@@ -69,10 +69,10 @@ save_map_csv(struct map_priv *m)
 
 		item_it = res;
 		while(item_it) {
+			int i;
+			enum attr_type *at = m->attr_types;
 			csv_line = g_strdup_printf("");
 			tmpstr = g_strdup_printf("");
-			enum attr_type *at = m->attr_types;
-			int i;
 			for(i=0;i<m->attr_cnt;++i) {
 				if(at != m->attr_types) {
 					csv_line = g_strdup_printf("%s,",tmpstr);
@@ -180,6 +180,7 @@ csv_attr_rewind(void *priv_data)
 static int
 csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {	
+	GList* attr_list;
 	struct map_rect_priv *mr=priv_data;
 
 	if(!mr || !mr->curr_item || !mr->curr_item->data) {
@@ -187,7 +188,7 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		return 0;
 	}
 
-	GList* attr_list = ((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list;
+	attr_list = ((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list;
 
 	while(attr_list) {
 		if(((struct attr*)attr_list->data)->type == attr_type) {
@@ -276,6 +277,11 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	int i;
 
 	for (i=0;i<count;++i) {
+		struct item *curr_item;
+		struct quadtree_data* qd;
+		struct quadtree_item* qi;
+		int* pID;
+
 		transform_to_geo(projection_mg, &c[i], &cg);
 		query_item.longitude = cg.lng;
 		query_item.latitude  = cg.lat;
@@ -287,7 +293,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 		m->dirty = 1;
 		//add item to the map
 
-		struct item *curr_item = item_new("",zoom_max);
+		curr_item = item_new("",zoom_max);
 		curr_item->type = m->item_type;
 		curr_item->id_lo = m->next_item_idx;
 		if (m->flags & 1)
@@ -296,9 +302,9 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 			curr_item->id_hi=0;
 		curr_item->meth=&methods_csv;
 
-		struct quadtree_data* qd = g_new0(struct quadtree_data,1);
-		struct quadtree_item* qi = g_new (struct quadtree_item,1);
-		int* pID = g_new(int,1);
+		qd = g_new0(struct quadtree_data,1);
+		qi = g_new (struct quadtree_item,1);
+		pID = g_new(int,1);
 		qd->item = curr_item;
 		qd->attr_list = NULL;
 		qi->data = qd;
