@@ -140,10 +140,10 @@ int main_real(int argc, char **argv)
 				exit(1);
 #endif
 			}
-	    }
+	  }
+		// use 1st cmd line option that is left for the config file
+		if (optind < argc) config_file = argv[optind];
 	}
-	// use 1st cmd line option that is left for the config file
-	if (optind < argc) config_file = argv[optind];
 
     // if config file is explicitely given only look for it, otherwise try std paths
 	if (config_file) list = g_list_append(list,g_strdup(config_file));
