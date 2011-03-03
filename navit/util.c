@@ -267,6 +267,17 @@ char * newSysString(const char *toconvert)
 #endif
 #endif
 
+#ifdef _MSC_VER
+int gettimeofday(struct timeval *time, void *local)
+{
+  int milliseconds = GetTickCount();
+
+  time->tv_sec = milliseconds/1000;
+  time->tv_usec = (milliseconds - (time->tv_sec * 1000)) * 1000;
+
+  return 0;
+}
+#endif
 /**
  * Convert an ISO 8601-style time string into epoch time.
  *
