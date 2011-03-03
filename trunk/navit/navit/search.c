@@ -29,6 +29,7 @@
 #include "coord.h"
 #include "transform.h"
 #include "search.h"
+#include "country.h"
 
 #include "android.h"
 
