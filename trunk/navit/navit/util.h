@@ -36,5 +36,14 @@ char * newSysString(const char *toconvert);
 #endif
 unsigned int iso8601_to_secs(char *iso8601);
 char * current_to_iso8601(void);
+
+#ifdef _MSC_VER
+
+#include <winsock.h>
+
+int gettimeofday(struct timeval *time, void *);
+
+#endif
+
 #endif
 
