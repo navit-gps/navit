@@ -57,11 +57,13 @@ save_map_csv(struct map_priv *m)
 		char* filename = g_strdup_printf("%s.tmp",m->filename); 
 		FILE* fp;
 		int ferr = 0;
+		char *csv_line = 0;
+		char *tmpstr = 0;
+
 		if( ! (fp=fopen(filename,"w+"))) {
 			dbg(1, "Error opening csv file to write new entries");
 			return;
 		}
-		char *csv_line = "", *tmpstr=g_strdup_printf("");
 		//query the world
 		quadtree_find_rect_items(m->tree_root, -90, 90, -90, 90, &res);
 
