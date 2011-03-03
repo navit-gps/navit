@@ -341,7 +341,7 @@ public class Navit extends Activity implements Handler.Callback
 		infobox.setView(message);
 
 		//TRANS
-		infobox.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+		infobox.setPositiveButton(Navit.get_text("Ok"), new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface arg0, int arg1)
 			{
@@ -435,6 +435,17 @@ public class Navit extends Activity implements Handler.Callback
 			if (!extractRes("navitldpi", NAVIT_DATA_DIR + "/share/navit.xml"))
 			{
 				Log.e("Navit", "Failed to extract navit.xml for ldpi device(s)");
+			}
+		}
+		// xhdpi display
+		else if (Navit.metrics.densityDpi == 320)
+		{
+			Log.e("Navit", "found xhdpi device, this is not fully supported!!");
+			Log.e("Navit", "using hdpi values");
+			my_display_density = "hdpi";
+			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for xhdpi device(s)");
 			}
 		}
 		else
@@ -734,7 +745,7 @@ public class Navit extends Activity implements Handler.Callback
 		if (Navit_last_address_search_string.equals(""))
 		{
 			// empty search string entered
-			Toast.makeText(getApplicationContext(), "No address found", Toast.LENGTH_LONG).show(); //TRANS
+			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"), Toast.LENGTH_LONG).show(); //TRANS
 		}
 		else
 		{
@@ -836,7 +847,7 @@ public class Navit extends Activity implements Handler.Callback
 			case 6 :
 				// ok startup address search activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-				search_intent.putExtra("title", "Enter: City and Street"); //TRANS
+				search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
 				search_intent.putExtra("address_string", Navit_last_address_search_string);
 				String pm_temp = "0";
 				if (Navit_last_address_partial_match)
@@ -957,7 +968,7 @@ public class Navit extends Activity implements Handler.Callback
 							if (addr.equals(""))
 							{
 								// empty search string entered
-								Toast.makeText(getApplicationContext(), "No search string entered",
+								Toast.makeText(getApplicationContext(), Navit.get_text("No search string entered"),
 										Toast.LENGTH_LONG).show(); //TRANS
 							}
 							else
@@ -1004,7 +1015,7 @@ public class Navit extends Activity implements Handler.Callback
 							Toast
 									.makeText(
 											getApplicationContext(),
-											"setting destination to\n"
+											Navit.get_text("setting destination to")+"\n"
 													+ Navit.NavitAddressResultList_foundItems
 															.get(destination_id).addr, Toast.LENGTH_LONG).show(); //TRANS
 
@@ -1073,8 +1084,8 @@ public class Navit extends Activity implements Handler.Callback
 					b.putInt("dialog_num", this.dialog_num);
 					b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
 					b.putInt("cur", this.spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-					b.putString("title", "getting search results"); //TRANS
-					b.putString("text", "searching ..."); //TRANS
+					b.putString("title", Navit.get_text("getting search results")); //TRANS
+					b.putString("text", Navit.get_text("searching ...")); //TRANS
 					msg.setData(b);
 					mHandler.sendMessage(msg);
 					try
@@ -1123,8 +1134,8 @@ public class Navit extends Activity implements Handler.Callback
 			b.putInt("dialog_num", this.my_dialog_num);
 			b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
 			b.putInt("cur", 0);
-			b.putString("title", "getting search results"); //TRANS
-			b.putString("text", "searching ..."); //TRANS
+			b.putString("title", Navit.get_text("getting search results")); //TRANS
+			b.putString("text", Navit.get_text("searching ...")); //TRANS
 			msg.setData(b);
 			mHandler.sendMessage(msg);
 
@@ -1148,12 +1159,11 @@ public class Navit extends Activity implements Handler.Callback
 			}
 			else
 			{
-				//Toast.makeText(getApplicationContext(), "No Results found!", Toast.LENGTH_LONG).show();
 				// not results found, show toast
 				msg = mHandler.obtainMessage();
 				b = new Bundle();
 				msg.what = 3;
-				b.putString("text", "No Results found!"); //TRANS
+				b.putString("text", Navit.get_text("No Results found!")); //TRANS
 				msg.setData(b);
 				mHandler.sendMessage(msg);
 			}
@@ -1349,7 +1359,7 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_pri.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
-						"Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
+						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"), Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_pri;
 			case Navit.MAPDOWNLOAD_SEC_DIALOG :
 				mapdownloader_dialog_sec = new ProgressDialog(this);
@@ -1376,7 +1386,7 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_sec.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
-						"Map data (c) OpenStreetMap contributors, CC-BY-SA", Toast.LENGTH_LONG).show(); //TRANS
+						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"), Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_sec;
 		}
 		// should never get here!!
@@ -1420,7 +1430,7 @@ public class Navit extends Activity implements Handler.Callback
 	private void executeSearch(String search)
 	{
 		Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-		search_intent.putExtra("title", "Enter: City and Street"); //TRANS
+		search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
 		search_intent.putExtra("address_string", search);
 		String pm_temp = "0";
 		if (Navit_last_address_partial_match)

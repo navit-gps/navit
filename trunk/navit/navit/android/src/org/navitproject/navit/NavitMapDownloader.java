@@ -207,6 +207,11 @@ public class NavitMapDownloader
 																										"22.6", "56.7",
 																										"26.5", 57419510L,
 																										false, 2);
+	static final osm_map_values	Australia2										= new osm_map_values(
+																										"Australia", "110.5",
+																										"-44.2", "154.9",
+																										"-9.2", 128502185L,
+																										true, 3);
 	static final osm_map_values	Australia										= new osm_map_values(
 																										"Australia", "110.5",
 																										"-44.2", "154.9",
@@ -415,17 +420,17 @@ public class NavitMapDownloader
 																										"Nevada", "-120.2",
 																										"35.0", "-113.8",
 																										"42.1", 136754975L,
-																										false, 0);
+																										false, 5);
 	static final osm_map_values	Oregon											= new osm_map_values(
 																										"Oregon", "-124.8",
 																										"41.8", "-116.3",
 																										"46.3", 101627308L,
-																										false, 0);
+																										false, 5);
 	static final osm_map_values	Washington_State								= new osm_map_values(
 																										"Washington State",
 																										"-125.0", "45.5",
 																										"-116.9", "49.0",
-																										98178877L, false, 0);
+																										98178877L, false, 5);
 	static final osm_map_values	South_Middle_America							= new osm_map_values(
 																										"South+Middle America",
 																										"-83.5", "-56.3",
@@ -435,72 +440,72 @@ public class NavitMapDownloader
 																										"Argentina", "-73.9",
 																										"-57.3", "-51.6",
 																										"-21.0", 87516152L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Argentina_Chile								= new osm_map_values(
 																										"Argentina+Chile",
 																										"-77.2", "-56.3",
 																										"-52.7", "-16.1",
-																										91976696L, false, 0);
+																										91976696L, false, 6);
 	static final osm_map_values	Bolivia											= new osm_map_values(
 																										"Bolivia", "-70.5",
 																										"-23.1", "-57.3",
 																										"-9.3", 58242168L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Brazil											= new osm_map_values(
 																										"Brazil", "-71.4",
 																										"-34.7", "-32.8",
 																										"5.4", 105527899L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Cuba												= new osm_map_values(
 																										"Cuba", "-85.3",
 																										"19.6", "-74.0",
 																										"23.6", 56608942L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Colombia											= new osm_map_values(
 																										"Colombia", "-79.1",
 																										"-4.0", "-66.7",
 																										"12.6", 78658454L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Ecuador											= new osm_map_values(
 																										"Ecuador", "-82.6",
 																										"-5.4", "-74.4",
 																										"2.3", 61501914L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Guyana_Suriname_Guyane_Francaise			= new osm_map_values(
 																										"Guyana+Suriname+Guyane Francaise",
 																										"-62.0", "1.0",
 																										"-51.2", "8.9",
-																										57040689L, false, 0);
+																										57040689L, false, 6);
 	static final osm_map_values	Haiti_Republica_Dominicana					= new osm_map_values(
 																										"Haiti+Republica Dominicana",
 																										"-74.8", "17.3",
 																										"-68.2", "20.1",
-																										63528584L, false, 0);
+																										63528584L, false, 6);
 	static final osm_map_values	Jamaica											= new osm_map_values(
 																										"Jamaica", "-78.6",
 																										"17.4", "-75.9",
 																										"18.9", 53958307L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Mexico											= new osm_map_values(
 																										"Mexico", "-117.6",
 																										"14.1", "-86.4",
 																										"32.8", 251108617L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Paraguay											= new osm_map_values(
 																										"Paraguay", "-63.8",
 																										"-28.1", "-53.6",
 																										"-18.8", 57188715L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Peru												= new osm_map_values(
 																										"Peru", "-82.4",
 																										"-18.1", "-67.5",
 																										"0.4", 65421441L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Uruguay											= new osm_map_values(
 																										"Uruguay", "-59.2",
 																										"-36.5", "-51.7",
 																										"-29.7", 63542225L,
-																										false, 0);
+																										false, 6);
 	static final osm_map_values	Venezuela										= new osm_map_values(
 																										"Venezuela", "-73.6",
 																										"0.4", "-59.7",
@@ -511,7 +516,7 @@ public class NavitMapDownloader
 			Whole_Planet, Africa, Angola, Burundi, Democratic_Republic_of_the_Congo, Kenya, Lesotho,
 			Madagascar, Nambia_Botswana, Reunion, Rwanda, South_Africa, Uganda, Asia, China, Cyprus,
 			India_Nepal, Indonesia, Iran, Iraq, Israel, Japan_Korea_Taiwan, Malasia_Singapore,
-			Mongolia, Nambia_Botswana, Thailand, Turkey, UAE_Other, Australia, Tasmania,
+			Mongolia, Nambia_Botswana, Thailand, Turkey, UAE_Other, Australia2, Australia, Tasmania,
 			Victoria_New_South_Wales, New_Zealand, Europe, Western_Europe, Austria, BeNeLux,
 			Faroe_Islands, France, Germany, Bavaria, Saxonia, Germany_Austria_Switzerland, Iceland,
 			Ireland, Italy, Spain_Portugal, Mallorca, Galicia, Scandinavia, Finland, Denmark,
@@ -521,7 +526,6 @@ public class NavitMapDownloader
 			Argentina, Argentina_Chile, Bolivia, Brazil, Cuba, Colombia, Ecuador,
 			Guyana_Suriname_Guyane_Francaise, Haiti_Republica_Dominicana, Jamaica, Mexico, Paraguay,
 			Peru, Uruguay, Venezuela													};
-	//public static String[]			OSM_MAP_NAME_LIST								= null;
 
 	public static String[]			OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE	= null;
 
@@ -530,8 +534,8 @@ public class NavitMapDownloader
 	private static Boolean			already_inited									= false;
 
 	public Boolean						stop_me											= false;
-	static final int					SOCKET_CONNECT_TIMEOUT						= 6000;
-	static final int					SOCKET_READ_TIMEOUT							= 6000;
+	static final int					SOCKET_CONNECT_TIMEOUT						= 25000;							// 25 secs.
+	static final int					SOCKET_READ_TIMEOUT							= 15000;							// 15 secs.
 	static final int					MAP_WRITE_FILE_BUFFER						= 1024 * 64;
 	static final int					MAP_WRITE_MEM_BUFFER							= 1024 * 64;
 	static final int					MAP_READ_FILE_BUFFER							= 1024 * 64;
@@ -724,8 +728,8 @@ public class NavitMapDownloader
 		b.putInt("max", 20); // use a dummy number here
 		b.putInt("cur", 0);
 		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", "Mapdownload"); //TRANS
-		b.putString("text", "downloading: " + map_values.map_name); //TRANS
+		b.putString("title", Navit.get_text("Mapdownload")); //TRANS
+		b.putString("text", Navit.get_text("downloading") + ": " + map_values.map_name); //TRANS
 		msg.setData(b);
 		handler.sendMessage(msg);
 		try
@@ -822,7 +826,7 @@ public class NavitMapDownloader
 					b.putInt("max", (int) (map_values.est_size_bytes / 1024));
 					b.putInt("cur", (int) (already_read / 1024));
 					b.putInt("dialog_num", my_dialog_num);
-					b.putString("title", "Map download"); //TRANS
+					b.putString("title", Navit.get_text("Mapdownload")); //TRANS
 					per_second_overall = (float) already_read
 							/ (float) ((System.currentTimeMillis() - start_timestamp) / 1000);
 					kbytes_per_second = formatter.format((per_second_overall / 1024f));
@@ -836,10 +840,12 @@ public class NavitMapDownloader
 					{
 						eta_string = eta_seconds + " s";
 					}
-					b.putString("text", "downloading: " + map_values.map_name + "\n" + " "
-							+ (int) (already_read / 1024f / 1024f) + "Mb / "
-							+ (int) (map_values.est_size_bytes / 1024f / 1024f) + "Mb" + "\n" + " "
-							+ kbytes_per_second + "kb/s" + " ETA: " + eta_string); //TRANS
+					b
+							.putString("text", Navit.get_text("downloading") + ": " + map_values.map_name
+									+ "\n" + " " + (int) (already_read / 1024f / 1024f) + "Mb / "
+									+ (int) (map_values.est_size_bytes / 1024f / 1024f) + "Mb" + "\n" + " "
+									+ kbytes_per_second + "kb/s" + " " + Navit.get_text("ETA") + ": "
+									+ eta_string); //TRANS
 					msg.setData(b);
 					handler.sendMessage(msg);
 				}
@@ -866,7 +872,7 @@ public class NavitMapDownloader
 			b = new Bundle();
 			msg.what = 2;
 			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", "Error downloading map!"); //TRANS
+			b.putString("text", Navit.get_text("Error downloading map!")); //TRANS
 			msg.setData(b);
 			handler.sendMessage(msg);
 
@@ -879,7 +885,7 @@ public class NavitMapDownloader
 			b = new Bundle();
 			msg.what = 2;
 			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", "Error downloading map!"); //TRANS
+			b.putString("text", Navit.get_text("Error downloading map!")); //TRANS
 			msg.setData(b);
 			handler.sendMessage(msg);
 
@@ -893,8 +899,8 @@ public class NavitMapDownloader
 		b.putInt("max", (int) (map_values.est_size_bytes / 1024));
 		b.putInt("cur", (int) (map_values.est_size_bytes / 1024));
 		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", "Mapdownload"); //TRANS
-		b.putString("text", map_values.map_name + " ready"); //TRANS
+		b.putString("title", Navit.get_text("Mapdownload")); //TRANS
+		b.putString("text", map_values.map_name + " "+Navit.get_text("ready")); //TRANS
 		msg.setData(b);
 		handler.sendMessage(msg);
 
