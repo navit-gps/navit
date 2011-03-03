@@ -39,7 +39,7 @@
 static int map_id;
 
 //prototype
-static int
+static void
 csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode);
 
 struct quadtree_data 
@@ -262,7 +262,7 @@ static struct item_methods methods_csv = {
         csv_coord_set,
 };
 
-static int
+static void
 csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)
 {
 	struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
