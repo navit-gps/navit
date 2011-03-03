@@ -380,7 +380,6 @@ static char *attrmap={
 	"n	amenity=telephone	poi_telephone\n"
 	"n	amenity=theatre		poi_theater\n"
 	"n	amenity=toilets		poi_restroom\n"
-	"n	amenity=toilets		poi_toilets\n"
 	"n	amenity=townhall	poi_townhall\n"
 	"n	amenity=university	poi_school_university\n"
 	"n	amenity=vending_machine	poi_vending_machine\n"
