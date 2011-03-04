@@ -40,7 +40,7 @@
 static int map_id;
 
 //prototype
-static void
+static int
 csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode);
 
 struct quadtree_data 
@@ -266,7 +266,7 @@ static struct item_methods methods_csv = {
         csv_coord_set,
 };
 
-static void
+static int
 csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)
 {
 	struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
@@ -275,6 +275,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	struct quadtree_item *item;
 	struct quadtree_item query_item;
 	int i;
+	int ret = 1;
 
 	for (i=0;i<count;++i) {
 		struct item *curr_item;
@@ -288,6 +289,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 		item = quadtree_find_item(m->tree_root, &query_item);
 
 		if(item) {  //already exists skip 
+			ret = 0;
 			continue;
 		}
 		m->dirty = 1;
@@ -315,6 +317,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 		g_hash_table_insert(m->item_hash, pID,curr_item);
 		++m->next_item_idx;
 	}
+	return ret;
 }
 
 static struct map_rect_priv *
