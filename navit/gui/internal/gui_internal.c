@@ -1362,6 +1362,8 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 		w->data_free(w->data);
 	if (w->cb && w->remove_cb)
 		w->remove_cb(w->instance, w->cb);
+	if (w==this->highlighted)
+	    this->highlighted=NULL;
 	if(w->free)
 		w->free(this,w);
 	else
