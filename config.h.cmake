@@ -64,3 +64,5 @@
 #cmakedefine HAVE__ATOI64 1
 
 #cmakedefine HAVE_STRING_H 1
+
+#cmakedefine EZXML_NOMMAP 0
