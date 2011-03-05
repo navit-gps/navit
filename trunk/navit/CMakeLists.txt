@@ -330,7 +330,7 @@ if(WIN32 OR WINCE)
    
    if(HAVE_GTK2 AND NOT MSVC)
       #GTK requires special compile flags
-      add_definitions("-mms-bitfields")
+      SET(CFLAGS ${CFLAGS} -mms-bitfields)
    endif(HAVE_GTK2 AND NOT MSVC)
    if(MSVC AND support/espeak)
       add_definitions(-DPLATFORM_WINDOWS)
@@ -472,7 +472,7 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-add_definitions("-Wall")
+SET(CFLAGS ${CFLAGS} -Wall)
 
 if (NOT NAVIT_DEPENDENCY_ERROR)
    message("\nSummary:\n")
