@@ -10,6 +10,7 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_action.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_statusbar.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal.c
+      ${PROJECT_SOURCE_DIR}/navit/osd/core/osd_core.c
       ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
 )
 if (XGETTEXT_GLADE)
