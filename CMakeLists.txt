@@ -313,6 +313,7 @@ if(WIN32 OR WINCE)
    set_with_reason(USE_PLUGINS "win32: currently not supported" FALSE)
 
    set(HAVE_API_WIN32_BASE 1)
+   set(EZXML_NOMMAP 1)
 
    # Image stuff
    if(NOT graphics/qt_qpainter)
