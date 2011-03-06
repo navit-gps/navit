@@ -1,7 +1,14 @@
 if (ANDROID)
 
-   CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml)
-
+   add_custom_command ( 
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
+      COMMAND ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
+                               -D DST=${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
+                               -D NAME=ANDROID_VERSION_INT
+                               -D ANDROID_VERSION_NAME=${PACKAGE_STRING}
+                               -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
+   )
 
    add_custom_command ( 
       OUTPUT build.xml
