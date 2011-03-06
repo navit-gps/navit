@@ -1869,12 +1869,29 @@ binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct
 	return map_rect_new_binfile(map, sel);
 }
 
+static struct map_rect_priv *
+binmap_search_housenumber_by_estimate(struct map_priv *map, struct coord *c, struct map_selection *sel)
+{
+	int size = 20;
+	sel->u.c_rect.lu.x = c->x-size;
+	sel->u.c_rect.lu.y = c->y+size;
+	sel->u.c_rect.rl.x = c->x+size;
+	sel->u.c_rect.rl.y = c->y-size;
+
+	sel->range = item_range_all;
+	sel->order = 18;
+	//sel->next = NULL;
+
+	return map_rect_new_binfile(map, sel);
+}
+
 static struct map_search_priv *
 binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
 	struct item *town;
+	struct item *street;
 	
 	msp->search = search;
 	msp->partial = partial;
@@ -1926,17 +1943,28 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			map_rect_destroy_binfile(map_rec);
 			break;
 		case attr_house_number:
-			if (!item->map || !map_priv_is(item->map,map))
+			dbg(1,"case house_number");
+			if (! item->map)
 				break;
-			msp->map=map;
-			msp->mr_item = map_rect_new_binfile(map, NULL);
-			msp->item = map_rect_get_item_byid_binfile(msp->mr_item, item->id_hi, item->id_lo);
-			if (binmap_search_by_index(map, msp->item, &msp->mr) != 3) {
-				map_rect_destroy_binfile(msp->mr_item);
-				msp->mr_item=NULL;
+			if (!map_priv_is(item->map, map))
+				break;
+
+			map_rec = map_rect_new_binfile(map, NULL);
+			street = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
+			if (street)
+			{
+				struct coord c;
+				if (item_coord_get(street, &c, 1))
+				{
+					msp->mr=binmap_search_housenumber_by_estimate(map, &c, &msp->ms);
+					msp->mode = 2;
+				}
 			}
+			map_rect_destroy_binfile(map_rec);
 			if (!msp->mr)
+			{
 				break;
+			}
 			return msp;
 		default:
 			break;
@@ -2067,13 +2095,28 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				}
 				break;
 			case attr_house_number:
-				if (binfile_attr_get(it->priv_data, attr_house_number, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
-						binfile_attr_rewind(it->priv_data);
-						return it;
+				//if (it->type == type_house_number)
+				if ((it->type == type_house_number)||(type_house_number_interpolation_even)
+					||(type_house_number_interpolation_odd)
+					||(type_house_number_interpolation_all)
+					)
+				{
+					// is it a housenumber?
+					if (binfile_attr_get(it->priv_data, attr_house_number, &at))
+					{
+						// match housenumber to our string
+						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial))
+						{
+							//binfile_attr_get(it->priv_data, attr_street_name, &at);
+							//dbg(0,"hnnn B1 street_name=%s",at.u.str);
+							if (!duplicate(map_search, it, attr_house_number))
+							{
+								binfile_attr_rewind(it->priv_data);
+								return it;
+							}
+						}
 					}
-				} else
-					return it;
+				}
 				continue;
 			default:
 				return NULL;
