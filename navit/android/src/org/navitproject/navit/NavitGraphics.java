@@ -1241,8 +1241,8 @@ public class NavitGraphics
 		tmp_addr.lat = Float.parseFloat(tmp_s[2]);
 		tmp_addr.lon = Float.parseFloat(tmp_s[3]);
 		// the rest ist address
-		tmp_addr.addr = s.substring(4 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length() + tmp_s[3].length(), s
-				.length());
+		tmp_addr.addr = s.substring(4 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length()
+				+ tmp_s[3].length(), s.length());
 		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
 
 		if (tmp_addr.result_type.equals("TWN"))
@@ -1265,8 +1265,9 @@ public class NavitGraphics
 		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
 				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
 		b.putString("title", Navit.get_text("loading search results")); //TRANS
-		b.putString("text", Navit.get_text("towns")+":" + Navit.search_results_towns + " " + Navit.get_text("Streets")
-				+ ":" + (int) (Navit.search_results_streets + Navit.search_results_streets_hn));
+		b.putString("text", Navit.get_text("towns") + ":" + Navit.search_results_towns + " "
+				+ Navit.get_text("Streets") + ":" + Navit.search_results_streets + "/"
+				+ Navit.search_results_streets_hn);
 		Navit.msg_to_msg_handler(b, 10); //TRANS
 	}
 	public void SearchResultList(int i, int partial_match, String text)

@@ -63,7 +63,7 @@ public class Navit extends Activity implements Handler.Callback
 	public static final class Navit_Address_Result_Struct
 	{
 		String	result_type;	// TWN,STR,SHN
-		String		item_id; // H<ddddd>L<ddddd> -> item.id_hi item.id_lo
+		String	item_id;		// H<ddddd>L<ddddd> -> item.id_hi item.id_lo
 		float		lat;
 		float		lon;
 		String	addr;
@@ -746,7 +746,8 @@ public class Navit extends Activity implements Handler.Callback
 		if (Navit_last_address_search_string.equals(""))
 		{
 			// empty search string entered
-			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"), Toast.LENGTH_LONG).show(); //TRANS
+			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"),
+					Toast.LENGTH_LONG).show(); //TRANS
 		}
 		else
 		{
@@ -969,8 +970,8 @@ public class Navit extends Activity implements Handler.Callback
 							if (addr.equals(""))
 							{
 								// empty search string entered
-								Toast.makeText(getApplicationContext(), Navit.get_text("No search string entered"),
-										Toast.LENGTH_LONG).show(); //TRANS
+								Toast.makeText(getApplicationContext(),
+										Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
 							}
 							else
 							{
@@ -1016,7 +1017,8 @@ public class Navit extends Activity implements Handler.Callback
 							Toast
 									.makeText(
 											getApplicationContext(),
-											Navit.get_text("setting destination to")+"\n"
+											Navit.get_text("setting destination to")
+													+ "\n"
 													+ Navit.NavitAddressResultList_foundItems
 															.get(destination_id).addr, Toast.LENGTH_LONG).show(); //TRANS
 
@@ -1360,7 +1362,8 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_pri.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
-						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"), Toast.LENGTH_LONG).show(); //TRANS
+						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
+						Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_pri;
 			case Navit.MAPDOWNLOAD_SEC_DIALOG :
 				mapdownloader_dialog_sec = new ProgressDialog(this);
@@ -1387,7 +1390,8 @@ public class Navit extends Activity implements Handler.Callback
 				progressThread_sec.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
-						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"), Toast.LENGTH_LONG).show(); //TRANS
+						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
+						Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog_sec;
 		}
 		// should never get here!!
