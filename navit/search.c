@@ -32,6 +32,7 @@
 #include "country.h"
 
 #include "android.h"
+#include "layout.h"
 
 struct search_list_level {
 	struct mapset *ms;
@@ -138,7 +139,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	int level=search_list_level(search_attr->type);
 	this_->item=NULL;
 	interpolation_clear(&this_->inter);
-	dbg(1,"level=%d\n", level);
+	//dbg(0,"level=%d\n", level);
 	if (level != -1) {
 		this_->result.id=0;
 		this_->level=level;
@@ -150,7 +151,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 			le=&this_->levels[level-1];
 			le->curr=le->list;
 		}
-		dbg(1,"le=%p partial=%d\n", le, partial);
+		//dbg(0,"le=%p partial=%d\n", le, partial);
 	} else if (search_attr->type == attr_postal) {
 		g_free(this_->postal);
 		this_->postal=g_strdup(search_attr->u.str);
@@ -169,7 +170,7 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 	curr=le->list;
 	if (mode > 0 || !id)
 		le->selected=mode;
-	dbg(0,"enter level=%d %d %d %p\n", level, id, mode, curr);
+	//dbg(0,"enter level=%d %d %d %p\n", level, id, mode, curr);
 	while (curr) {
 		num++;
 		if (! id || num == id) {
@@ -177,13 +178,13 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 			slc->selected=mode;
 			if (id) {
 				le->last=curr;
-				dbg(0,"found\n");
+				//dbg(0,"found\n");
 				return slc;
 			}
 		}
 		curr=g_list_next(curr);
 	}
-	dbg(0,"not found\n");
+	//dbg(0,"not found\n");
 	return NULL;
 }
 
@@ -318,7 +319,9 @@ search_list_street_destroy(struct search_list_street *this_)
 	map_convert_free(this_->name);
 	search_list_common_destroy(&this_->common);
 	if (this_->common.c)
+	{
 		g_free(this_->common.c);
+	}
 	g_free(this_);
 }
 
@@ -470,42 +473,49 @@ search_list_house_number_new(struct item *item, struct interpolation *inter, cha
 	char *hn;
 	
 	ret->common.item=ret->common.unique=*item;
+	//if (item_attr_get(item, attr_street_name, &attr))
+	//	dbg(0,"xx1 %s\n",attr.u.str);
 	if (item_attr_get(item, attr_house_number, &attr))
 		ret->house_number=map_convert_string(item->map, attr.u.str);
 	else {
-#if 0
-		if (item_attr_get(item, attr_street_name, &attr))
-			dbg(0,"%s\n",attr.u.str);
-#endif
+		//if (item_attr_get(item, attr_street_name, &attr))
+		//	dbg(0,"xx2 %s\n",attr.u.str);
 		for (;;) {
+			//dbg(0,"interpolate 11");
 			ret->interpolation=1;
 			switch(inter->side) {
 			case 0:
+				//dbg(0,"interpolate 11 0");
 				inter->side=-1;
 				search_setup_interpolation(item, attr_house_number_left, attr_house_number_left_odd, attr_house_number_left_even, inter);
 			case -1:
+				//dbg(0,"interpolate 11 -1");
 				if ((hn=search_interpolate(inter)))
 					break;
 				inter->side=1;
 				search_setup_interpolation(item, attr_house_number_right, attr_house_number_right_odd, attr_house_number_right_even, inter);
 			case 1:
+				//dbg(0,"interpolate 11 1");
 				if ((hn=search_interpolate(inter)))
 					break;
 			default:
+				//dbg(0,"interpolate 11 default");
 				g_free(ret);
 				return NULL;
 			}
-			if (search_match(hn, inter_match, inter_partial)) {
-#if 0
-				dbg(0,"match %s %s-%s\n",hn, inter->first, inter->last);
-#endif
+			if (search_match(hn, inter_match, inter_partial))
+			{
+				//dbg(0,"interpolate 22");
+				//dbg(0,"match %s %s-%s\n",hn, inter->first, inter->last);
 				ret->house_number=map_convert_string(item->map, hn);
 				break;
 			}
 		}
 	}
+	//dbg(0,"interpolate 33");
 	search_list_common_new(item, &ret->common);
 	ret->common.c=search_house_number_coordinate(item, ret->interpolation?inter:NULL);
+	//dbg(0,"interpolate 44");
 	return ret;
 }
 
@@ -543,7 +553,8 @@ search_list_search_free(struct search_list *sl, int level)
 {
 	struct search_list_level *le=&sl->levels[level];
 	GList *next,*curr;
-	if (le->search) {
+	if (le->search)
+	{
 		mapset_search_destroy(le->search);
 		le->search=NULL;
 	}
@@ -554,7 +565,8 @@ search_list_search_free(struct search_list *sl, int level)
 	}
 #endif
 	curr=le->list;
-	while (curr) {
+	while (curr)
+	{
 		search_list_result_destroy(level, curr->data);
 		next=g_list_next(curr);
 		curr=next;
@@ -564,7 +576,6 @@ search_list_search_free(struct search_list *sl, int level)
 	le->list=NULL;
 	le->curr=NULL;
 	le->last=NULL;
-
 }
 
 char *
@@ -649,9 +660,9 @@ search_list_get_result(struct search_list *this_)
 	struct search_list_level *le,*leu;
 	int level=this_->level;
 
-	dbg(1,"enter\n");
+	//dbg(0,"enter\n");
 	le=&this_->levels[level];
-	dbg(1,"le=%p\n", le);
+	//dbg(0,"le=%p\n", le);
 	for (;;)
 	{
 		//dbg(0,"le->search=%p\n", le->search);
@@ -670,7 +681,9 @@ search_list_get_result(struct search_list *this_)
 
 					struct search_list_common *slc;
 					if (! leu->curr)
+					{
 						return NULL;
+					}
 					le->parent=leu->curr->data;
 					leu->last=leu->curr;
 					leu->curr=g_list_next(leu->curr);
@@ -682,8 +695,10 @@ search_list_get_result(struct search_list *this_)
 				}
 			}
 			if (le->parent)
-				dbg(1,"mapset_search_new with item(%d,%d)\n", le->parent->item.id_hi, le->parent->item.id_lo);
-			//dbg(0,"attr=%s\n", attr_to_name(le->attr->type));
+			{
+				//dbg(0,"mapset_search_new with item(%d,%d)\n", le->parent->item.id_hi, le->parent->item.id_lo);
+			}
+			//dbg(0,"############## attr=%s\n", attr_to_name(le->attr->type));
 			le->search=mapset_search_new(this_->ms, &le->parent->item, le->attr, le->partial);
 			le->hash=g_hash_table_new(search_item_hash_hash, search_item_hash_equal);
 		}
@@ -713,15 +728,18 @@ search_list_get_result(struct search_list *this_)
 			this_->result.town=NULL;
 			this_->result.street=NULL;
 			this_->result.c=NULL;
+			//dbg(0,"case x LEVEL start %d\n",level);
 			switch (level)
 			{
 			case 0:
+				//dbg(0,"case 0 COUNTRY");
 				p=search_list_country_new(this_->item);
 				this_->result.country=p;
 				this_->result.country->common.parent=NULL;
 				this_->item=NULL;
 				break;
 			case 1:
+				//dbg(0,"case 1 TOWN");
 				p=search_list_town_new(this_->item);
 				this_->result.town=p;
 				this_->result.town->common.parent=this_->levels[0].last->data;
@@ -730,6 +748,7 @@ search_list_get_result(struct search_list *this_)
 				this_->item=NULL;
 				break;
 			case 2:
+				//dbg(0,"case 2 STREET");
 				p=search_list_street_new(this_->item);
 				this_->result.street=p;
 				this_->result.street->common.parent=this_->levels[1].last->data;
@@ -739,47 +758,60 @@ search_list_get_result(struct search_list *this_)
 				this_->item=NULL;
 				break;
 			case 3:
-				//dbg(0,"case 3 a");
+				dbg(0,"case 3 HOUSENUMBER");
+
+				// if this housenumber has a streetname tag, set the name now
+				struct attr attr2;
+				int has_street_name=0;
+				if (item_attr_get(this_->item, attr_street_name, &attr2))
+				{
+					dbg(0,"streetname: %s\n",attr2.u.str);
+					has_street_name=1;
+				}
+
 				p=search_list_house_number_new(this_->item, &this_->inter, le->attr->u.str, le->partial);
-				//dbg(0,"case 3 b");
 				if (!p)
 				{
-					//dbg(0,"case 3 c");
 					interpolation_clear(&this_->inter);
 					this_->item=NULL;
 					continue;
 				}
 				this_->result.house_number=p;
-				//dbg(0,"case 3 d");
 				if (!this_->result.house_number->interpolation)
 				{
-					dbg(0,"case 3 e");
 					this_->item=NULL;
 				}
+
 				this_->result.house_number->common.parent=this_->levels[2].last->data;
 				this_->result.street=this_->result.house_number->common.parent;
 				this_->result.town=this_->result.street->common.parent;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.house_number->common.c;
-				//dbg(0,"case 3 f");
+
+				if (has_street_name==1)
+				{
+					gchar *tmp_name=g_strdup(attr2.u.str);
+					this_->result.street->name=tmp_name;
+					//dbg(0,"res streetname=%s\n",this_->result.street->name);
+				}
+				else
+				{
+					this_->result.street->name=NULL;
+				}
 			}
 			if (p)
 			{
-				//dbg(0,"case 3 g");
 				if (search_add_result(le, p))
 				{
-					//dbg(0,"case 3 h");
 					this_->result.id++;
 					return &this_->result;
 				}
 				else
 				{
-					//dbg(0,"case 3 i");
 					search_list_result_destroy(level, p);
 				}
 			}
 		} else {
-			//dbg(0,"case 3 j");
 			mapset_search_destroy(le->search);
 			le->search=NULL;
 			g_hash_table_destroy(le->hash);
@@ -863,6 +895,55 @@ search_split_phrases(char *str)
 }
 
 static GList *
+search_address_housenumber_real(GList *result_list, struct search_list *sl, char *street_name, GList *phrases, GList *exclude1, GList *exclude2, GList *exclude3, int partial, struct jni_object *jni)
+{
+	// here we search actually for the housenumber
+	struct search_list_result *slr;
+	struct coord_geo g;
+	struct coord c;
+
+	dbg(1,"street:%s\n",street_name);
+	while (slr=search_list_get_result(sl))
+	{
+		// does the streetname of the housenumber match the street we want?
+		if (slr->street != NULL)
+		if ((street_name != NULL)&&(slr->street->name != NULL))
+		{
+			//dbg(0,"ffffff 1.1 %s %s",street_name,slr->street->name);
+			if (strcmp(slr->street->name, street_name)==0)
+			{
+				char buffer[450];
+				// coords of result
+				c.x=slr->house_number->common.c->x;
+				c.y=slr->house_number->common.c->y;
+				transform_to_geo(slr->house_number->common.c->pro, &c, &g);
+				//dbg(0,"g=%f %f\n",g.lat,g.lng);
+				//dbg(0,"###### Result with housenumber: streetname=%s\n",slr->street->name);
+				//dbg(0,"###### Result with housenumber: %s %s(%s) %s %s\n",slr->house_number->common.postal,slr->house_number->common.town_name, slr->house_number->common.district_name,slr->street->name,slr->house_number->house_number);
+				// SHN -> street with house number
+				// return a string like: "SHN:H111L5555:16.766:48.76:full address name is at the end"
+				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
+				if (slr->town->common.postal == NULL)
+				{
+					sprintf(&buffer,"SHN:H%dL%d:%f:%f:%.101s,%.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+				}
+				else
+				{
+					sprintf(&buffer,"SHN:H%dL%d:%f:%f:%.101s,%.7s %.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+				}
+				// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
+#ifdef HAVE_API_ANDROID
+				// return results to android as they come in ...
+				android_return_search_result(jni,buffer);
+#endif
+			}
+		}
+
+	}
+	return result_list;
+}
+
+static GList *
 search_address_housenumber(GList *result_list, struct search_list *sl, GList *phrases, GList *exclude1, GList *exclude2, GList *exclude3, int partial, struct jni_object *jni)
 {
 	// title is wrong
@@ -881,10 +962,15 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 	attr.type=attr_street_name;
 	while (slr=search_list_get_result(sl))
 	{
-		char buffer[400];
+		char buffer[450];
 		//dbg(0,"%p %p\n",slr->country,slr->town);
 		//dbg(0,"%p\n",slr->street);
-		//dbg(0,"###### Result without housenumber: country=%s country_name=%s town=%s street=%s\n",slr->country->iso2,slr->country->name,slr->town->common.town_name,slr->street->name);
+		// dbg(0,"###### Result without housenumber: country=%s country_name=%s town=%s street=%s\n",slr->country->iso2,slr->country->name,slr->town->common.town_name,slr->street->name);
+		//dbg(0,"###### Result without housenumber: postal:%s\n",slr->town->common.postal);
+		//dbg(0,"###### Result without housenumber: postal_mask:%s\n",slr->town->common.postal_mask);
+		//dbg(0,"###### Result without housenumber: STR postal:%s\n",slr->street->common.postal);
+		//dbg(0,"###### Result without housenumber: STR postal_mask:%s\n",slr->street->common.postal_mask);
+		//dbg(0,"###### Result without housenumber: item id_hi:%d id_lo:%d\n",slr->street->common.item.id_hi,slr->street->common.item.id_lo);
 
 		// coords of result
 		c.x=slr->street->common.c->x;
@@ -894,57 +980,41 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 
 		//dbg(0,"xx1");
 		// STR -> street
-		// return a string like: "STR:16.766:-48.76:full address name is at the end"
+		// return a string like: "STR:H1111L5555:16.766:-48.76:full address name is at the end"
 		// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 chars -> this sould be max. about 320 chars long
-		sprintf(&buffer,"STR:%f:%f:%.101s, %.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
-		//dbg(0,"sprintf ok");
+		if (slr->town->common.postal == NULL)
+		{
+			sprintf(&buffer,"STR:H%dL%d:%f:%f:%.101s,%.101s, %.101s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name);
+		}
+		else
+		{
+			sprintf(&buffer,"STR:H%dL%d:%f:%f:%.101s,%.7s %.101s, %.101s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name,slr->street->name);
+		}
 		// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 
 #ifdef HAVE_API_ANDROID
 		// return results to android as they come in ...
 		android_return_search_result(jni,buffer);
 #endif
-		//dbg(0,"xx3");
-
 		count++;
+
+		struct attr attr2;
+		while (tmp)
+		{
+			if (tmp != exclude1 && tmp != exclude2 && tmp != exclude3)
+			{
+				attr2.type=attr_house_number;
+				attr2.u.str=tmp->data;
+				search_list_search(sl, &attr2, partial);
+				//dbg(0,"hn str=%s\n",attr2.u.str);
+				result_list=search_address_housenumber_real(result_list, sl, slr->street->name, phrases, exclude1, exclude2, exclude3, partial, jni);
+			}
+			tmp=g_list_next(tmp);
+		}
 	}
 	if (!count)
-		return result_list;
-	//dbg(0,"count %d\n",count);
-	while (tmp)
 	{
-		//dbg(0,"hhhhh 111");
-		if (tmp != exclude1 && tmp != exclude2 && tmp != exclude3)
-		{
-			//dbg(0,"hhhhh 222 hn=%s\n",tmp->data);
-			attr.type=attr_house_number;
-			attr.u.str=tmp->data;
-			search_list_search(sl, &attr, partial);
-			while (slr=search_list_get_result(sl))
-			{
-				char buffer[400];
-				// coords of result
-				c.x=slr->street->common.c->x;
-				c.y=slr->street->common.c->y;
-				transform_to_geo(slr->street->common.c->pro, &c, &g);
-				//dbg(0,"g=%f %f\n",g.lat,g.lng);
-
-				//dbg(0,"###### Result with housenumber: %s %s(%s) %s %s\n",slr->house_number->common.postal,slr->house_number->common.town_name, slr->house_number->common.district_name,slr->street->name,slr->house_number->house_number);
-				// SHN -> street with house number
-				// return a string like: "SHN:16.766:48.76:full address name is at the end"
-				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
-				sprintf(&buffer,"SHN:%f:%f:%.101s, %.101s, %.101s %.15s",g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
-				// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
-#ifdef HAVE_API_ANDROID
-				// return results to android as they come in ...
-				android_return_search_result(jni,buffer);
-#endif
-
-			}
-			
-		}
-		//dbg(0,"hhhhh 444");
-		tmp=g_list_next(tmp);
+		return result_list;
 	}
 	return result_list;
 }
@@ -965,9 +1035,10 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 	attr.type=attr_street_name;
 	while ((slr=search_list_get_result(sl)))
 	{
-		char buffer[400];
+		char buffer[450];
 		//dbg(0,"##### sss1");
-		//dbg(0,"###### Result town: country=%s country_name=%s town=%s",slr->country->iso2,slr->country->name,slr->town->common.town_name);
+		// dbg(0,"###### Result town: country=%s country_name=%s town=%s",slr->country->iso2,slr->country->name,slr->town->common.town_name);
+		// dbg(0,"###### Result town: postal=%s postal_mask=%s",slr->town->common.postal,slr->town->common.postal_mask);
 
 		// coords of result
 		c.x=slr->town->common.c->x;
@@ -975,7 +1046,14 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 		transform_to_geo(slr->town->common.c->pro, &c, &g);
 
 		// TWN -> town
-		sprintf(&buffer,"TWN:%f:%f:%.101s, %.101s",g.lat,g.lng,slr->country->name,slr->town->common.town_name);
+		if (slr->town->common.postal == NULL)
+		{
+			sprintf(&buffer,"TWN:H%dL%d:%f:%f:%.101s,%.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name);
+		}
+		else
+		{
+			sprintf(&buffer,"TWN:H%dL%d:%f:%f:%.101s,%.7s %.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name);
+		}
 		// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 #ifdef HAVE_API_ANDROID
 		// return results to android as they come in ...
@@ -999,8 +1077,10 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 	if (!count)
 		return result_list;
 	//dbg(0,"count %d\n",count);
-	while (tmp) {
-		if (tmp != exclude1 && tmp != exclude2) {
+	while (tmp)
+	{
+		if (tmp != exclude1 && tmp != exclude2)
+		{
 			attr.u.str=tmp->data;
 			search_list_search(sl, &attr, partial);
 			result_list=search_address_housenumber(result_list, sl, phrases, exclude1, exclude2, tmp, partial, jni);
@@ -1021,13 +1101,6 @@ search_address_town(GList *result_list, struct search_list *sl, GList *phrases, 
 	attr.type=attr_town_or_district_name;
 	while ((slr=search_list_get_result(sl)))
 	{
-		//dbg(0,"##### 1");
-		//dbg(0,"%s %s %s\n",slr->town->county);
-		struct attr attr77;
-		//if (item_attr_get(&slr->town->itemt, attr_label, &attr77))
-		//{
-		//	dbg(0,"***search result T=%s",attr77.u.str);
-		//}
 		count++;
 	}
 	if (!count)
@@ -1043,6 +1116,7 @@ search_address_town(GList *result_list, struct search_list *sl, GList *phrases, 
 		}
 		tmp=g_list_next(tmp);
 	}
+	//dbg(0,"ret");
 	return result_list;
 }
 

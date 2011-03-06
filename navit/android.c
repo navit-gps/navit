@@ -584,10 +584,10 @@ Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, 
 	const char *localized_str;
 
 	s=(*env)->GetStringUTFChars(env, str, NULL);
-	dbg(0,"*****string=%s\n",s);
+	//dbg(0,"*****string=%s\n",s);
 
 	localized_str=gettext(s);
-	dbg(0,"localized string=%s",localized_str);
+	//dbg(0,"localized string=%s",localized_str);
 
 	// jstring dataStringValue = (jstring) localized_str;
 	jstring js = (*env)->NewStringUTF(env,localized_str);
