@@ -1216,7 +1216,7 @@ public class NavitGraphics
 	public static String getLocalizedString(String text)
 	{
 		String ret = CallbackLocalizedString(text);
-		Log.e("NavitGraphics", "callback_handler -> lozalized string=" + ret);
+		//Log.e("NavitGraphics", "callback_handler -> lozalized string=" + ret);
 		return ret;
 	}
 
@@ -1230,17 +1230,18 @@ public class NavitGraphics
 	 */
 	public void fillStringArray(String s)
 	{
-		Log.e("NavitGraphics", "**** fillStringArray s=" + s);
+		// Log.e("NavitGraphics", "**** fillStringArray s=" + s);
 		// deactivate the spinner
 		Navit.NavitAddressSearchSpinnerActive = false;
 
 		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
 		String[] tmp_s = s.split(":");
 		tmp_addr.result_type = tmp_s[0];
-		tmp_addr.lat = Float.parseFloat(tmp_s[1]);
-		tmp_addr.lon = Float.parseFloat(tmp_s[2]);
+		tmp_addr.item_id = tmp_s[1];
+		tmp_addr.lat = Float.parseFloat(tmp_s[2]);
+		tmp_addr.lon = Float.parseFloat(tmp_s[3]);
 		// the rest ist address
-		tmp_addr.addr = s.substring(3 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length(), s
+		tmp_addr.addr = s.substring(4 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length() + tmp_s[3].length(), s
 				.length());
 		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
 

@@ -63,6 +63,7 @@ public class Navit extends Activity implements Handler.Callback
 	public static final class Navit_Address_Result_Struct
 	{
 		String	result_type;	// TWN,STR,SHN
+		String		item_id; // H<ddddd>L<ddddd> -> item.id_hi item.id_lo
 		float		lat;
 		float		lon;
 		String	addr;
