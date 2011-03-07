@@ -7,6 +7,7 @@ if (ANDROID)
                                -D DST=${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
                                -D NAME=ANDROID_VERSION_INT
                                -D ANDROID_VERSION_NAME=${PACKAGE_STRING}
+                               -D ANDROID_API_VERSION=${ANDROID_API_VERSION}
                                -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
    )
 
