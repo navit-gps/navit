@@ -1,6 +1,8 @@
 if (ANDROID)
 
-   add_custom_command ( 
+   FILE(GLOB SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*/*/*/*")
+
+   add_custom_command (
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
       COMMAND ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
@@ -11,10 +13,10 @@ if (ANDROID)
                                -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
    )
 
-   add_custom_command ( 
+   add_custom_command (
       OUTPUT build.xml
-      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
-      COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} 
+      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml ${SRC_FILES}
+      COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
       COMMAND android update project -t android-${ANDROID_API_VERSION} -p ${CMAKE_CURRENT_BINARY_DIR}
    )
 
