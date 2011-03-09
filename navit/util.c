@@ -267,7 +267,11 @@ char * newSysString(const char *toconvert)
 #endif
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
+/**
+ * Impements a simple incomplete version of gettimeofday. Only usefull for messuring
+ * time spans, not the real time of day.
+ */
 int gettimeofday(struct timeval *time, void *local)
 {
   int milliseconds = GetTickCount();
