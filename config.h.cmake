@@ -60,6 +60,7 @@
 #cmakedefine HAVE_POPEN 1
 
 #cmakedefine HAVE_GETOPT_H 1
+#cmakedefine HAVE_GETTIMEOFDAY 1
 
 #cmakedefine HAVE__ATOI64 1
 
