@@ -21,6 +21,7 @@
 #define NAVIT_types_H
 
 #include <ctype.h>
+#include "config.h"
 
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
@@ -37,7 +38,7 @@ char * newSysString(const char *toconvert);
 unsigned int iso8601_to_secs(char *iso8601);
 char * current_to_iso8601(void);
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
 
 #include <winsock.h>
 
