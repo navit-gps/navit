@@ -342,7 +342,6 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
 
 static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct vehicle *v)
 {
-#ifndef HAVE_API_WIN32_BASE
   struct coord curr_coord;
   struct graphics_gc *curr_color;
 
@@ -457,7 +456,6 @@ static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct v
   g_free(spd_buffer);
   g_free(acc_buffer);
   graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-#endif
 }
 
 
@@ -477,7 +475,6 @@ osd_odometer_reset(struct odometer *this)
 static void
 osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int button, struct point *p)
 {
-#ifndef HAVE_API_WIN32_BASE
   struct point bp = this->osd_item.p;
   struct timeval tv;
   double curr_time;
@@ -512,7 +509,6 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 
   osd_odometer_draw(this, nav,NULL);
   }
-#endif
 }
 
 
