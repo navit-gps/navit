@@ -93,6 +93,7 @@ CHECK_INCLUDE_FILES(libintl.h HAVE_LIBINTL)
 CHECK_INCLUDE_FILES(sys/time.h HAVE_SYS_TIME_H)
 CHECK_INCLUDE_FILES(getopt.h HAVE_GETOPT_H)
 CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
+CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)
 
 ### Configure build
 #Required libraries, supplied with navit
