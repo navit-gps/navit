@@ -110,14 +110,15 @@ static GHashTable *hImageData;   /*hastable for uncompressed image data*/
 static struct graphics_image_priv image_error;
 
 static void
+graphics_destroy_image(gpointer key, gpointer value, gpointer data)
+{
+	g_object_unref(((struct graphics_image_priv*)(value))->pixbuf);
+}
+
+static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	GHashTableIter iter;
-	gpointer key, value;
-	g_hash_table_iter_init(&iter, hImageData);
-	while(g_hash_table_iter_next(&iter, &key, &value)) {
-		g_object_unref(((struct graphics_image_priv*)(value))->pixbuf);
-	}
+	g_hash_table_foreach(hImageData, graphics_destroy_image, NULL);
 	g_hash_table_destroy(hImageData);
 }
 
