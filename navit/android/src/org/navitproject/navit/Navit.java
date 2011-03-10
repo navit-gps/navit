@@ -410,27 +410,7 @@ public class Navit extends Activity implements Handler.Callback
 			Log.e("Navit", "Failed to extract language resource " + langc);
 		}
 
-		my_display_density = "mdpi";
-		// hdpi display
-		if (Navit.metrics.densityDpi == 240)
-		{
-			my_display_density = "hdpi";
-			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
-			{
-				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
-			}
-		}
-		// mdpi display
-		else if (Navit.metrics.densityDpi == 160)
-		{
-			my_display_density = "mdpi";
-			if (!extractRes("navitmdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
-			{
-				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
-			}
-		}
-		// ldpi display
-		else if (Navit.metrics.densityDpi == 120)
+		if (Navit.metrics.densityDpi <= 120)
 		{
 			my_display_density = "ldpi";
 			if (!extractRes("navitldpi", NAVIT_DATA_DIR + "/share/navit.xml"))
@@ -438,25 +418,23 @@ public class Navit extends Activity implements Handler.Callback
 				Log.e("Navit", "Failed to extract navit.xml for ldpi device(s)");
 			}
 		}
-		// xhdpi display
-		else if (Navit.metrics.densityDpi == 320)
+		else if (Navit.metrics.densityDpi <= 160)
 		{
-			Log.e("Navit", "found xhdpi device, this is not fully supported!!");
-			Log.e("Navit", "using hdpi values");
-			my_display_density = "hdpi";
-			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
+			my_display_density = "mdpi";
+			if (!extractRes("navitmdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
 			{
-				Log.e("Navit", "Failed to extract navit.xml for xhdpi device(s)");
+				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
 			}
 		}
 		else
 		{
-			/* default, meaning we just dont know what display this is */
-			if (!extractRes("navit", NAVIT_DATA_DIR + "/share/navit.xml"))
+			my_display_density = "hdpi";
+			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
 			{
-				Log.e("Navit", "Failed to extract navit.xml (default version)");
+				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
 			}
 		}
+
 		// Debug.startMethodTracing("calc");
 
 		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
