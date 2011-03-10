@@ -50,6 +50,7 @@ struct vehicle {
 
 	// cursor
 	struct cursor *cursor;
+	int cursor_fixed;
 	struct callback *animate_callback;
 	struct event_timeout *animate_timer;
 	struct point cursor_pnt;
@@ -235,7 +236,8 @@ vehicle_add_attr(struct vehicle *this_, struct attr *attr)
 		break;
 	// currently supporting oldstyle cursor config.
 	case attr_cursor:
-		vehicle_set_cursor(this_, attr->u.cursor);
+		this_->cursor_fixed=1;
+		vehicle_set_cursor(this_, attr->u.cursor, 1);
 		break;
 	default:
 		break;
@@ -284,9 +286,11 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
  * @author Ralph Sennhauser (10/2009)
  */ 
 void
-vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
+vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite)
 {
 	struct point sc;
+	if (this_->cursor_fixed && !overwrite)
+		return;
 	if (this_->animate_callback) {
 		event_remove_timeout(this_->animate_timer);
 		this_->animate_timer=NULL;		// dangling pointer! prevent double freeing.

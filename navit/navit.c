@@ -1750,7 +1750,7 @@ navit_set_cursors(struct navit *this_)
 				c=layout_get_cursor(this_->layout_current, name.u.str);
 		} else
 			c=layout_get_cursor(this_->layout_current, "default");
-		vehicle_set_cursor(nv->vehicle, c);
+		vehicle_set_cursor(nv->vehicle, c, 0);
 		v=g_list_next(v);
 	}
 	return;
