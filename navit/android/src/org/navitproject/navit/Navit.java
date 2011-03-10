@@ -411,26 +411,8 @@ public class Navit extends Activity implements Handler.Callback
 		}
 
 		my_display_density = "mdpi";
-		// hdpi display
-		if (Navit.metrics.densityDpi == 240)
-		{
-			my_display_density = "hdpi";
-			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
-			{
-				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
-			}
-		}
-		// mdpi display
-		else if (Navit.metrics.densityDpi == 160)
-		{
-			my_display_density = "mdpi";
-			if (!extractRes("navitmdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
-			{
-				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
-			}
-		}
-		// ldpi display
-		else if (Navit.metrics.densityDpi == 120)
+		// ldpi display (120 dpi)
+		if (Navit.metrics.densityDpi <= 120)
 		{
 			my_display_density = "ldpi";
 			if (!extractRes("navitldpi", NAVIT_DATA_DIR + "/share/navit.xml"))
@@ -438,8 +420,27 @@ public class Navit extends Activity implements Handler.Callback
 				Log.e("Navit", "Failed to extract navit.xml for ldpi device(s)");
 			}
 		}
-		// xhdpi display
-		else if (Navit.metrics.densityDpi == 320)
+		// mdpi display (120 dpi)
+		else if ((Navit.metrics.densityDpi > 120) && (Navit.metrics.densityDpi <= 160))
+		{
+			my_display_density = "mdpi";
+			if (!extractRes("navitmdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
+			}
+		}
+		// hdpi display (240 dpi)
+		else if ((Navit.metrics.densityDpi > 160) && (Navit.metrics.densityDpi < 320))
+		//else if (Navit.metrics.densityDpi == 240)
+		{
+			my_display_density = "hdpi";
+			if (!extractRes("navithdpi", NAVIT_DATA_DIR + "/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
+			}
+		}
+		// xhdpi display (320 dpi)
+		else if (Navit.metrics.densityDpi >= 320)
 		{
 			Log.e("Navit", "found xhdpi device, this is not fully supported!!");
 			Log.e("Navit", "using hdpi values");
@@ -486,7 +487,6 @@ public class Navit extends Activity implements Handler.Callback
 		String x = NavitGraphics.getLocalizedString("Austria");
 		Log.e("Navit", "x=" + x);
 	}
-
 	@Override
 	public void onStart()
 	{
