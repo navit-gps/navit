@@ -98,8 +98,8 @@ Navigation</text></img>
 			It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values. -->
 		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/> 
 		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu()" src="menu.xpm"/>
-		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.svg"/>
-		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.svg"/> 
+		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.png"/>
+		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/> 
 
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
