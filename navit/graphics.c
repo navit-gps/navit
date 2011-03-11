@@ -1251,7 +1251,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	struct point *res=g_alloca(sizeof(struct point)*maxpoints);
 	struct point pos, poso, neg, nego;
 	int i, dx=0, dy=0, l=0, dxo=0, dyo=0;
-	struct offset o,oo;
+	struct offset o,oo={};
 	int fow=0, fowo=0, delta;
 	int wi, ppos = maxpoints/2, npos = maxpoints/2;
 	int state,prec=5;
