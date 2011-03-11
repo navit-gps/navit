@@ -4643,7 +4643,7 @@ gui_internal_set_refresh_callback(struct gui_priv *this, char *cond)
 		if (!func || !func->add_attr)
 			return;
 		menu_data->refresh_callback.type=attr_callback;
-		menu_data->refresh_callback.u.callback=callback_new_attr_2(gui_internal_refresh_callback_called,type,this,menu_data);
+		menu_data->refresh_callback.u.callback=callback_new_attr_2(callback_cast(gui_internal_refresh_callback_called),type,this,menu_data);
 		func->add_attr(menu_data->refresh_callback_obj.u.data, &menu_data->refresh_callback);
 	}
 }
