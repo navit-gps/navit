@@ -57,6 +57,7 @@ struct graphics_priv {
 
 	struct callback_list *cbl;
 	struct window win;
+	GHashTable *image_cache_hash;
 };
 
 struct graphics_font_priv {
@@ -64,7 +65,7 @@ struct graphics_font_priv {
 };
 
 struct graphics_gc_priv {
-        struct graphics_priv *gra;
+	struct graphics_priv *gra;
 	int linewidth;
 	enum draw_mode_num mode;
 	int a,r,g,b;
@@ -72,6 +73,9 @@ struct graphics_gc_priv {
 
 struct graphics_image_priv {
 	jobject Bitmap;
+	int width;
+	int height;
+	struct point hot;
 };
 
 static int
@@ -194,48 +198,59 @@ static struct graphics_image_methods image_methods = {
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
-	struct graphics_image_priv *ret=g_new0(struct graphics_image_priv, 1);
-	jstring string;
-	int id;
-
-	dbg(1,"enter %s\n",path);
-	*meth=image_methods;
-	if (!strncmp(path,"res/drawable/",13)) {
-		jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
-		jstring b=(*jnienv)->NewStringUTF(jnienv, "org.navitproject.navit");
-		char *path_noext=g_strdup(path+13);
-		char *pos=strrchr(path_noext, '.');
-		if (pos) 
-			*pos='\0';
-		dbg(1,"path_noext=%s\n",path_noext);
-		string = (*jnienv)->NewStringUTF(jnienv, path_noext);
-		g_free(path_noext);
-		id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, b);
-		dbg(1,"id=%d\n",id);
-		if (id)
-			ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
-		(*jnienv)->DeleteLocalRef(jnienv, b);
-		(*jnienv)->DeleteLocalRef(jnienv, a);
-	} else {
-		string = (*jnienv)->NewStringUTF(jnienv, path);
-		ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
-	}
-	dbg(1,"result=%p\n",ret->Bitmap);
-	if (ret->Bitmap) {
-		(*jnienv)->NewGlobalRef(jnienv, ret->Bitmap);
-		(*jnienv)->DeleteLocalRef(jnienv, ret->Bitmap);
-		*w=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
-		*h=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
-		dbg(1,"w=%d h=%d for %s\n",*w,*h,path);
-		hot->x=*w/2;
-		hot->y=*h/2;
-	} else {
-		g_free(ret);
-		ret=NULL;
-		dbg(0,"Failed to open %s\n",path);
-	}
-	(*jnienv)->DeleteLocalRef(jnienv, string);
+	struct graphics_image_priv* ret;
 	
+	if ( !g_hash_table_lookup_extended( gra->image_cache_hash, path, NULL, (gpointer)&ret) )
+	{
+		ret=g_new0(struct graphics_image_priv, 1);
+		jstring string;
+		int id;
+
+		dbg(1,"enter %s\n",path);
+		if (!strncmp(path,"res/drawable/",13)) {
+			jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
+			jstring b=(*jnienv)->NewStringUTF(jnienv, "org.navitproject.navit");
+			char *path_noext=g_strdup(path+13);
+			char *pos=strrchr(path_noext, '.');
+			if (pos) 
+				*pos='\0';
+			dbg(1,"path_noext=%s\n",path_noext);
+			string = (*jnienv)->NewStringUTF(jnienv, path_noext);
+			g_free(path_noext);
+			id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, b);
+			dbg(1,"id=%d\n",id);
+			if (id)
+				ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
+			(*jnienv)->DeleteLocalRef(jnienv, b);
+			(*jnienv)->DeleteLocalRef(jnienv, a);
+		} else {
+			string = (*jnienv)->NewStringUTF(jnienv, path);
+			ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
+		}
+		dbg(1,"result=%p\n",ret->Bitmap);
+		if (ret->Bitmap) {
+			(*jnienv)->NewGlobalRef(jnienv, ret->Bitmap);
+			(*jnienv)->DeleteLocalRef(jnienv, ret->Bitmap);
+			ret->width=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
+			ret->height=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
+			dbg(1,"w=%d h=%d for %s\n",ret->width,ret->height,path);
+			ret->hot.x=*w/2;
+			ret->hot.y=*h/2;
+		} else {
+			g_free(ret);
+			ret=NULL;
+			dbg(0,"Failed to open %s\n",path);
+		}
+		(*jnienv)->DeleteLocalRef(jnienv, string);
+		g_hash_table_insert(gra->image_cache_hash, g_strdup( path ),  (gpointer)ret );
+	}
+	if (ret) {
+		*w=ret->width;
+		*h=ret->height;
+		if (hot)
+			*hot=ret->hot;
+	}
+
 	return ret;
 }
 
@@ -356,8 +371,6 @@ get_data(struct graphics_priv *this, char *type)
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-    (*jnienv)->DeleteGlobalRef(jnienv, priv->Bitmap);
-    g_free(priv);
 }
 
 static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
@@ -645,6 +658,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
 		use_camera=attr->u.num;
 	}
+	ret->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
 		dbg(0,"returning %p\n",ret);
 		return ret;
