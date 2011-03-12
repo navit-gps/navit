@@ -65,6 +65,7 @@ struct graphics_priv
     HBITMAP hOldPrebuildBitmap;
     FP_AlphaBlend AlphaBlend;
     HANDLE hCoreDll;
+    GHashTable *image_cache_hash;
 };
 
 struct window_priv
@@ -82,9 +83,6 @@ static int fullscr = 0;
 #ifndef GET_WHEEL_DELTA_WPARAM
 #define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
-
-
-static GHashTable *image_cache_hash = NULL;
 
 
 HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
@@ -1062,33 +1060,6 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
     return font;
 }
 
-static void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
-{
-    if ( image_cache_hash == NULL )
-    {
-        image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
-    }
-
-    if ( g_hash_table_lookup(image_cache_hash, key ) == NULL )
-    {
-        g_hash_table_insert(image_cache_hash, g_strdup( key ),  (gpointer)val_ptr );
-    }
-
-}
-
-static struct graphics_image_priv* image_cache_hash_lookup( const char* key )
-{
-    struct graphics_image_priv* val_ptr = NULL;
-
-    if ( image_cache_hash != NULL )
-    {
-        val_ptr = g_hash_table_lookup(image_cache_hash, key );
-    }
-    return val_ptr;
-}
-
-
-
 #include "png.h"
 
 static int
@@ -1354,30 +1325,32 @@ xpmdecode(char *name, struct graphics_image_priv *img)
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
     struct graphics_image_priv* ret;
-    int len=strlen(name);
-    char *ext;
-    int rc=0;
-
-    if (len < 4)
-        return NULL;
-    ext=name+len-4;
-    if ( NULL == ( ret = image_cache_hash_lookup( name ) ) )
+    
+    if ( !g_hash_table_lookup_extended( gr->image_cache_hash, name, NULL, (gpointer)&ret) )
     {
-        ret = g_new0( struct graphics_image_priv, 1 );
-        dbg(2, "loading image '%s'\n", name );
-		if (!strcmp(ext,".xpm")) {
-            rc=xpmdecode(name, ret);
-		} else if (!strcmp(ext,".png")) {
-			rc=pngdecode(gr, name, ret);
+        int len=strlen(name);
+        int rc=0;
+
+        if (len >= 4)
+        {
+            char *ext;
+            dbg(2, "loading image '%s'\n", name );
+            ret = g_new0( struct graphics_image_priv, 1 );
+            ext = name+len-4;
+            if (!strcmp(ext,".xpm")) {
+                rc=xpmdecode(name, ret);
+            } else if (!strcmp(ext,".png")) {
+                rc=pngdecode(gr, name, ret);
+            }
         }
-		if (rc) {
-            image_cache_hash_add( name, ret );
-		} else {
+        if (!rc) {
+            dbg(0, "failed loading '%s'\n", name );
             g_free(ret);
             ret=NULL;
         }
+        g_hash_table_insert(gr->image_cache_hash, g_strdup( name ),  (gpointer)ret );
     }
-	if (ret) {
+    if (ret) {
         *w=ret->width;
         *h=ret->height;
         if (hot)
@@ -1560,6 +1533,7 @@ static struct graphics_priv*
     this_->cbl=cbl;
     this_->parent = NULL;
     this_->window.priv = NULL;
+    this_->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
     set_alphablend(this_);
     return this_;
 }
