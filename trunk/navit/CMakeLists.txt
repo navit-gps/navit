@@ -294,6 +294,15 @@ add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
+find_program(SAXON NAMES saxon saxon8 saxon-xslt)
+if(NOT SAXON)
+   cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
+endif()
+
+if (NOT XSL_PROCESSING)
+   message(WARNING "XSLT processing disabled. You have to configure navit.xml yourself, or enable XSLT processing.")
+endif()
+
 ### Platform specific settings
 if(WIN32 OR WINCE)
    SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
@@ -352,6 +361,8 @@ if(WIN32 OR WINCE)
        set(ENABLE_NLS TRUE)
    endif(MSVC)
    enable_language(RC)
+
+   set(XSLTS "windows;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
@@ -378,11 +389,6 @@ if (SAMPLE_MAP)
       cfg_feature(SAMPLE_MAP "downloading binary map because of missing bzcat" TRUE)
    endif(CMAKE_CROSSCOMPILING)
 endif(SAMPLE_MAP)
-
-find_program(SAXON NAMES saxon saxon8 saxon-xslt)
-if(NOT SAXON)
-   cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
-endif()
 
 if(ANDROID)
    find_program(ANDROID_LOCATION NAMES android android.bat)
