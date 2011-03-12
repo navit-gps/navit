@@ -7,6 +7,7 @@ if (ANDROID)
       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
       COMMAND ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
                                -D DST=${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
+                               -D ANDROID_VERSION_INT="0"
                                -D NAME=ANDROID_VERSION_INT
                                -D ANDROID_VERSION_NAME=${PACKAGE_STRING}
                                -D ANDROID_API_VERSION=${ANDROID_API_VERSION}
