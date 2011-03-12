@@ -10,7 +10,9 @@ EXECUTE_PROCESS(
      OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set( ${NAME} "unknown" )
+if (NOT DEFINED ${NAME})
+   set( ${NAME} "unknown" )
+endif()
 
 if (NOT VERSION)
    FIND_PACKAGE(Subversion)
@@ -25,9 +27,9 @@ if (NOT VERSION)
    )
    endif(Subversion_FOUND)
 
-   if (VERSION)
+   if (VERSION AND (NOT ${VERSION} MATCHES "^exported"))
       set( ${NAME} ${VERSION} )
-   endif(VERSION)
+   endif()
 else()
    string(REGEX REPLACE "Revision: " "" ${NAME} ${VERSION})
 endif(NOT VERSION)
