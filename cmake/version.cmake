@@ -1,4 +1,4 @@
-FIND_PROGRAM(GIT_EXECUTABLE git DOC "git command line client")
+FIND_PROGRAM(GIT_EXECUTABLE NAMES git git.exe DOC "git command line client")
 
 get_filename_component(SOURCE_DIR ${SRC} PATH)
 
