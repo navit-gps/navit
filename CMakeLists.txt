@@ -97,6 +97,18 @@ CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)
 
 ### Configure build
 #Required libraries, supplied with navit
+if (NOT HAVE_LIBINTL)
+   add_plugin(intl_cmake "native libintl missing" TRUE)
+   set(USE_LIBGNUINTL TRUE)
+else()
+   CHECK_LIBRARY_EXISTS(intl libintl_fprintf "" NEEDS_LIBINTL)
+   if (NEEDS_LIBINTL)
+      list(APPEND NAVIT_LIBS intl)
+      set(INTL_LIBS intl)
+   endif(NEEDS_LIBINTL)
+endif(NOT HAVE_LIBINTL)
+
+
 if (CMAKE_USE_PTHREADS_INIT)
    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
@@ -107,7 +119,7 @@ if (Glib_FOUND)
    include_directories(${Glib_INCLUDE_DIRS})
    list(APPEND NAVIT_LIBS ${Glib_LIBRARIES})
 else(Glib_FOUND)
-   set_with_reason(support/glib "Glib not found" TRUE)
+   set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
 endif(Glib_FOUND)
 if (Gmodule_FOUND)
    set(HAVE_GMODULE 1)
@@ -233,17 +245,6 @@ if (GETTEXT_FOUND)
       set(XGETTEXT_GLADE FALSE)
    endif()
 endif(GETTEXT_FOUND)
-
-if (NOT HAVE_LIBINTL)
-   add_plugin(intl_cmake "native libintl missing" TRUE)
-   set(USE_LIBGNUINTL TRUE)
-else()
-   CHECK_LIBRARY_EXISTS(intl libintl_fprintf "" NEEDS_LIBINTL)
-   if (NEEDS_LIBINTL)
-      list(APPEND NAVIT_LIBS intl)
-   endif(NEEDS_LIBINTL)
-endif(NOT HAVE_LIBINTL)
-
 
 #Independent modules
 add_module(graphics/null "Default" TRUE)
