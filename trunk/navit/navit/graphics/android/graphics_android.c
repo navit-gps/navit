@@ -234,8 +234,8 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 			ret->width=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
 			ret->height=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
 			dbg(1,"w=%d h=%d for %s\n",ret->width,ret->height,path);
-			ret->hot.x=*w/2;
-			ret->hot.y=*h/2;
+			ret->hot.x=ret->width/2;
+			ret->hot.y=ret->height/2;
 		} else {
 			g_free(ret);
 			ret=NULL;
