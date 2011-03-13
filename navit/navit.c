@@ -2242,6 +2242,16 @@ navit_add_log(struct navit *this_, struct log *log)
 	return 0;
 }
 
+static int
+navit_add_layout(struct navit *this_, struct layout *layout)
+{
+	struct attr active;
+	this_->layouts = g_list_append(this_->layouts, layout);
+	layout_get_attr(layout, attr_active, &active, NULL);
+	if(active.u.num || !this_->layout_current) 
+		this_->layout_current=layout;
+}
+
 int
 navit_add_attr(struct navit *this_, struct attr *attr)
 {
@@ -2260,9 +2270,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		ret=navit_set_graphics(this_, attr->u.graphics);
 		break;
 	case attr_layout:
-		this_->layouts = g_list_append(this_->layouts, attr->u.layout);
-		if(!this_->layout_current) 
-			this_->layout_current=attr->u.layout;
+		ret=navit_add_layout(this_, attr->u.layout);
 		break;
 	case attr_route:
 		this_->route=attr->u.route;
