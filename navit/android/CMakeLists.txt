@@ -25,10 +25,13 @@ if (ANDROID)
       DEPENDS build.xml ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS}
       COMMAND cmake -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
       COMMAND cmake -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi
-      COMMAND cmake -E copy ${PROJECT_BINARY_DIR}/navit/navit.xml ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
       COMMAND cmake -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi/
-      COMMAND ${CMAKE_COMMAND} 
-                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/xpm/*.png" 
+      COMMAND ${CMAKE_COMMAND}
+                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/navit*.xml" 
+                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
+                     -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+      COMMAND ${CMAKE_COMMAND}
+                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/xpm/*.png"
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/drawable
                      -D LOWER=1
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
