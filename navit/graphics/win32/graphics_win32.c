@@ -1399,7 +1399,8 @@ static struct graphics_priv *
     this->disabled = 0;
     this->hPrebuildDC = 0;
     this->AlphaBlend = gr->AlphaBlend;
-
+    this->image_cache_hash = gr->image_cache_hash;
+    
     this->next = gr->overlays;
     gr->overlays = this;
     this->wnd_handle = gr->wnd_handle;
