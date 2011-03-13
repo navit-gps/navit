@@ -90,6 +90,7 @@
 <!ATTLIST map debug CDATA #IMPLIED>
 <!ELEMENT layout (cursor*,xi:include*,layer*)>
 <!ATTLIST layout name CDATA #REQUIRED>
+<!ATTLIST layout active CDATA #IMPLIED>
 <!ATTLIST layout color CDATA #IMPLIED>
 <!ATTLIST layout font CDATA #IMPLIED>
 <!ATTLIST layout daylayout CDATA #IMPLIED>

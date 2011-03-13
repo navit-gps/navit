@@ -30,7 +30,7 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
 	struct color def_color = {COLOR_BACKGROUND_};
-	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr;
+	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
 
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
 		return NULL;
@@ -51,6 +51,8 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 		l->color = def_color;
 	if ((order_delta_attr=attr_search(attrs, NULL, attr_order_delta)))
 		l->order_delta=order_delta_attr->u.num;
+	if ((active_attr=attr_search(attrs, NULL, attr_active)))
+		l->active = active_attr->u.num;
 	return l;
 }
 
@@ -100,6 +102,9 @@ layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, s
 			}
 			layer=g_list_next(layer);
 		}
+		break;
+	case attr_active:
+		attr->u.num=layout->active;
 		break;
 	default:
 		break;
