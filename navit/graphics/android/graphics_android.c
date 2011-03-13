@@ -57,7 +57,6 @@ struct graphics_priv {
 
 	struct callback_list *cbl;
 	struct window win;
-	GHashTable *image_cache_hash;
 };
 
 struct graphics_font_priv {
@@ -77,6 +76,8 @@ struct graphics_image_priv {
 	int height;
 	struct point hot;
 };
+
+static GHashTable *image_cache_hash = NULL;
 
 static int
 find_class_global(char *name, jclass *ret)
@@ -198,9 +199,9 @@ static struct graphics_image_methods image_methods = {
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
-	struct graphics_image_priv* ret;
+	struct graphics_image_priv* ret = NULL;
 	
-	if ( !g_hash_table_lookup_extended( gra->image_cache_hash, path, NULL, (gpointer)&ret) )
+	if ( !g_hash_table_lookup_extended( image_cache_hash, path, NULL, (gpointer)&ret) )
 	{
 		ret=g_new0(struct graphics_image_priv, 1);
 		jstring string;
@@ -242,7 +243,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 			dbg(0,"Failed to open %s\n",path);
 		}
 		(*jnienv)->DeleteLocalRef(jnienv, string);
-		g_hash_table_insert(gra->image_cache_hash, g_strdup( path ),  (gpointer)ret );
+		g_hash_table_insert(image_cache_hash, g_strdup( path ),  (gpointer)ret );
 	}
 	if (ret) {
 		*w=ret->width;
@@ -658,7 +659,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
 		use_camera=attr->u.num;
 	}
-	ret->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
 		dbg(0,"returning %p\n",ret);
 		return ret;
