@@ -95,27 +95,35 @@ ADD_CUSTOM_TARGET(
                     -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 )
 
+macro(process_xslt SRC_XML DEST_XML XSL_OPTIONS)
+   set(XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${SRC_XML} ${DEST_XML}
+                     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/navit/navit.dtd ${CMAKE_CURRENT_BINARY_DIR}/navit.dtd)
+   if(XSL_PROCESSING AND XSLTS)
+       string(REPLACE "," ";" XSLTS "${XSLTS}")
+       foreach(tmp ${XSLTS})
+          set (XSLT_FILE "${PROJECT_SOURCE_DIR}/navit/xslt/${tmp}.xslt")
+          list(APPEND XSLT_FILES "${XSLT_FILE}")
+          list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E echo  Applying ${tmp}.xslt)
+          list(APPEND XSLT_COMMANDS COMMAND ${SAXON} ${DEST_XML} ${XSLT_FILE} ${XSL_OPTIONS} > ${DEST_XML}.tmp)
+          list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename ${DEST_XML}.tmp ${DEST_XML})
+       endforeach()
+   endif()
+   ADD_CUSTOM_COMMAND(
+      OUTPUT ${DEST_XML}
+      DEPENDS ${SRC_XML} ${XSLT_FILES}
+      ${XSLT_COMMANDS}
+   )
+endmacro()
 
-set(XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navit.xml
-                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/navit.dtd ${CMAKE_CURRENT_BINARY_DIR}/navit.dtd)
-if(XSL_PROCESSING AND XSLTS)
-    string(REPLACE "," ";" XSLTS "${XSLTS}")
-    foreach(tmp ${XSLTS})
-       set (XSLT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/xslt/${tmp}.xslt")
-       list(APPEND XSLT_FILES "${XSLT_FILES}")
-       list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E echo  Applying ${tmp}.xslt)
-       list(APPEND XSLT_COMMANDS COMMAND ${SAXON} ${CMAKE_CURRENT_BINARY_DIR}/navit.xml ${XSLT_FILE} >${CMAKE_CURRENT_BINARY_DIR}/navit.xml.tmp)
-       list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.tmp ${CMAKE_CURRENT_BINARY_DIR}/navit.xml)
-    endforeach()
+if(ANDROID)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navithdpi.xml OSD_SIZE=2)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navitmdpi.xml OSD_SIZE=1.33)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navitldpi.xml OSD_SIZE=1 ICON_MEDIUM=48)
+   add_custom_target( navit_config_xml ALL DEPENDS navithdpi.xml navitmdpi.xml navitldpi.xml)
+else()
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navit.xml "")
+   add_custom_target( navit_config_xml ALL DEPENDS navit.xml)
 endif()
-
-ADD_CUSTOM_COMMAND(
-   OUTPUT navit.xml
-   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${XSLT_FILES}
-   ${XSLT_COMMANDS}
-)
-
-add_custom_target( navit_config_xml ALL DEPENDS navit.xml)
 
 ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
