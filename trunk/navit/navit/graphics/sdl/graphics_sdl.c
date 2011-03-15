@@ -82,7 +82,6 @@
 #ifdef SDL_TTF
 #include <SDL/SDL_ttf.h>
 #else
-#include <fontconfig/fontconfig.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <freetype/ftglyph.h>
@@ -274,7 +273,6 @@ graphics_destroy(struct graphics_priv *gr)
         TTF_Quit();
 #else
         FT_Done_FreeType(gr->library);
-        FcFini();
 #endif
 #ifdef LINUX_TOUCHSCREEN
         input_ts_exit(gr);
@@ -915,13 +913,13 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 }
 
 
-static void 
+static void
 set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
 {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
 	return;
     }
-    
+
     void *target_pixel = ((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
 
     Uint8 r1,g1,b1,a1;
@@ -2193,8 +2191,8 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     w = this->screen->w;
     h = this->screen->h;
 
-    dbg(0, "using screen %ix%i@%i\n", 
-	    this->screen->w, this->screen->h, 
+    dbg(0, "using screen %ix%i@%i\n",
+	    this->screen->w, this->screen->h,
 	    this->screen->format->BytesPerPixel * 8);
 #ifdef USE_WEBOS_ACCELEROMETER
     this->real_w = w;
