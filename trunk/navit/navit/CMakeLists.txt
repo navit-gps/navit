@@ -4,6 +4,29 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/support")
 
+# navit cre
+set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c 
+   event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c 
+   linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c
+   profile.c projection.c roadprofile.c route.c routech.c search.c speech.c start_real.c sunriset.c transform.c track.c 
+   util.c vehicle.c vehicleprofile.c xmlconfig.c )
+
+if(NOT USE_PLUGINS)
+  list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
+endif(NOT USE_PLUGINS)
+
+if (${HAVE_GLIB})
+   list(APPEND NAVIT_SRC event_glib.c)
+endif()
+
+if(ANDROID)
+   list(APPEND NAVIT_SRC android.c)
+   set(NAVIT_LIBNAME navit)
+else()
+   set(NAVIT_LIBNAME navit_core)
+endif()
+
+
 foreach ( PLUGIN_PATH ${ALL_PLUGINS})
    if (${PLUGIN_PATH})
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PATH}")
@@ -42,26 +65,7 @@ endforeach()
 
 add_subdirectory (fib-1.1)
 
-# navit cre
-set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c 
-   event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c 
-   linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c
-   profile.c projection.c roadprofile.c route.c routech.c search.c speech.c start_real.c sunriset.c transform.c track.c 
-   util.c vehicle.c vehicleprofile.c xmlconfig.c )
-
-if(NOT USE_PLUGINS)
-  list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
-endif(NOT USE_PLUGINS)
-
-if (${HAVE_GLIB})
-   list(APPEND NAVIT_SRC event_glib.c)
-endif()
-
-if(ANDROID)
-   list(APPEND NAVIT_SRC android.c)
-   set(NAVIT_LIBNAME navit)
-else()
-   set(NAVIT_LIBNAME navit_core)
+if(NOT ANDROID)
    if(WIN32 OR WINCE)
       add_executable (navit start.c ${CMAKE_CURRENT_SOURCE_DIR}/gui/win32/resources/resource.rc)
    else()
