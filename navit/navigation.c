@@ -1102,7 +1102,7 @@ is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode)
 {
 	if (!nav->vehicleprofile)
 		return 1;
-	return ((way->flags & (way->dir >= 0 ? nav->vehicleprofile->flags_forward_mask : nav->vehicleprofile->flags_reverse_mask)) == nav->vehicleprofile->flags);
+	return !way->flags || ((way->flags & (way->dir >= 0 ? nav->vehicleprofile->flags_forward_mask : nav->vehicleprofile->flags_reverse_mask)) == nav->vehicleprofile->flags);
 }
 
 /**
