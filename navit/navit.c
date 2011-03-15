@@ -2250,6 +2250,7 @@ navit_add_layout(struct navit *this_, struct layout *layout)
 	layout_get_attr(layout, attr_active, &active, NULL);
 	if(active.u.num || !this_->layout_current) 
 		this_->layout_current=layout;
+	return 1;
 }
 
 int
