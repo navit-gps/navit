@@ -1,21 +1,9 @@
-set( NAVIT_FONTS
-      LiberationMono-Bold.ttf
-      LiberationMono-BoldItalic.ttf
-      LiberationMono-Italic.ttf
-      LiberationMono-Regular.ttf
-      LiberationSans-Bold.ttf
-      LiberationSans-BoldItalic.ttf
-      LiberationSans-Italic.ttf
-      LiberationSans-Regular.ttf
-      LiberationSerif-Bold.ttf
-      LiberationSerif-BoldItalic.ttf
-      LiberationSerif-Italic.ttf
-      LiberationSerif-Regular.ttf
+add_custom_target( fonts ALL DEPENDS ${NAVIT_FONTS}
+   COMMAND ${CMAKE_COMMAND}
+                  -D GLOB_EXP="${CMAKE_CURRENT_SOURCE_DIR}/*.ttf" #${NAVIT_FONTS}" 
+                  -D DST=${CMAKE_CURRENT_BINARY_DIR}
+                  -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 )
-
-file(COPY ${NAVIT_FONTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-add_custom_target(fonts ALL DEPENDS ${NAVIT_FONTS})
 
 install(
    FILES ${NAVIT_FONTS}
