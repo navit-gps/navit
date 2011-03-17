@@ -1011,64 +1011,64 @@ public class NavitGraphics
 	}
 
 	public Handler	callback_handler	= new Handler()
-												{
-													public void handleMessage(Message msg)
-													{
-														if (msg.getData().getInt("Callback") == 1)
-														{
-															//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
-															//KeypressCallback(KeypressCallbackID, msg.getData()
-															//		.getString("s"));
-															CallbackMessageChannel(1, "");
-														}
-														else if (msg.getData().getInt("Callback") == 2)
+		{
+			public void handleMessage(Message msg)
+			{
+				if (msg.getData().getInt("Callback") == 1)
+				{
+					//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
+					//KeypressCallback(KeypressCallbackID, msg.getData()
+					//		.getString("s"));
+					CallbackMessageChannel(1, "");
+				}
+				else if (msg.getData().getInt("Callback") == 2)
 
-														{
-															CallbackMessageChannel(2, "");
-														}
-														else if (msg.getData().getInt("Callback") == 3)
+				{
+					CallbackMessageChannel(2, "");
+				}
+				else if (msg.getData().getInt("Callback") == 3)
 
-														{
-															String lat = msg.getData().getString("lat");
-															String lon = msg.getData().getString("lon");
-															String q = msg.getData().getString("q");
-															CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
-														}
-														else if (msg.getData().getInt("Callback") == 4)
+				{
+					String lat = msg.getData().getString("lat");
+					String lon = msg.getData().getString("lon");
+					String q = msg.getData().getString("q");
+					CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
+				}
+				else if (msg.getData().getInt("Callback") == 4)
 
-														{
-															int x = msg.getData().getInt("x");
-															int y = msg.getData().getInt("y");
-															CallbackMessageChannel(4, "" + x + "#" + y);
-														}
-														else if (msg.getData().getInt("Callback") == 5)
-														{
-															String cmd = msg.getData().getString("cmd");
-															CallbackMessageChannel(5, cmd);
-														}
-														else if (msg.getData().getInt("Callback") == 21)
-														{
-															//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
-															int x = msg.getData().getInt("x");
-															int y = msg.getData().getInt("y");
-															ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-														}
-														else if (msg.getData().getInt("Callback") == 22)
-														{
-															//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
-															int x = msg.getData().getInt("x");
-															int y = msg.getData().getInt("y");
-															ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-														}
-														else if (msg.getData().getInt("Callback") == 23)
-														{
-															//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
-															int x = msg.getData().getInt("x");
-															int y = msg.getData().getInt("y");
-															MotionCallback(MotionCallbackID, x, y);
-														}
-													}
-												};
+				{
+					int x = msg.getData().getInt("x");
+					int y = msg.getData().getInt("y");
+					CallbackMessageChannel(4, "" + x + "#" + y);
+				}
+				else if (msg.getData().getInt("Callback") == 5)
+				{
+					String cmd = msg.getData().getString("cmd");
+					CallbackMessageChannel(5, cmd);
+				}
+				else if (msg.getData().getInt("Callback") == 21)
+				{
+					//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
+					int x = msg.getData().getInt("x");
+					int y = msg.getData().getInt("y");
+					ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+				}
+				else if (msg.getData().getInt("Callback") == 22)
+				{
+					//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+					int x = msg.getData().getInt("x");
+					int y = msg.getData().getInt("y");
+					ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+				}
+				else if (msg.getData().getInt("Callback") == 23)
+				{
+					//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+					int x = msg.getData().getInt("x");
+					int y = msg.getData().getInt("y");
+					MotionCallback(MotionCallbackID, x, y);
+				}
+			}
+		};
 
 	public native void SizeChangedCallback(int id, int x, int y);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
@@ -1270,12 +1270,8 @@ public class NavitGraphics
 				+ Navit.search_results_streets_hn);
 		Navit.msg_to_msg_handler(b, 10); //TRANS
 	}
-	public void SearchResultList(int i, int partial_match, String text)
-	{
-		CallbackSearchResultList(i, partial_match, text);
-	}
 
-	public native void CallbackSearchResultList(int i, int partial_match, String s);
+	public native void CallbackSearchResultList(int partial_match, String s);
 
 
 	/**
