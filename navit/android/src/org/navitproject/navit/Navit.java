@@ -33,6 +33,9 @@ import org.navitproject.navit.NavitMapDownloader.ProgressThread;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -231,7 +234,15 @@ public class Navit extends Activity implements Handler.Callback
 
 		// init translated text
 		NavitTextTranslations.init();
-
+		
+		// Setup a notification in the android notification bar, remove it in the exit() function
+		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.icon,"Navit is running",0);
+		notification.flags = Notification.FLAG_NO_CLEAR;
+		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
+		notification.setLatestEventInfo(getApplicationContext(), "Navit running", "Navit still running", appIntent);
+		nm.notify(R.string.app_name, notification);
+		
 		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
 		String lang = locale.getLanguage();
