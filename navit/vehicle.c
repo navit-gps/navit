@@ -379,12 +379,18 @@ vehicle_draw_do(struct vehicle *this_, int lazy)
 	int angle=this_->angle;
 	int sequence=this_->sequence;
 	struct attr **attr;
+	char *label=NULL;
 	int match=0;
 
 	if (!this_->cursor || !this_->cursor->attrs || !this_->gra)
 		return;
 
-
+	attr=this_->attrs;
+	while (attr && *attr) {
+		if ((*attr)->type == attr_name) 
+			label=(*attr)->u.str;
+		attr++;
+	}
 	transform_set_yaw(this_->trans, -this_->angle);
 	graphics_draw_mode(this_->gra, draw_mode_begin);
 	p.x=0;
@@ -398,7 +404,7 @@ vehicle_draw_do(struct vehicle *this_, int lazy)
 			if (speed >= itm->speed_range.min && speed <= itm->speed_range.max &&  
 			    angle >= itm->angle_range.min && angle <= itm->angle_range.max &&  
 			    sequence >= itm->sequence_range.min && sequence <= itm->sequence_range.max) {
-				graphics_draw_itemgra(this_->gra, itm, this_->trans);
+				graphics_draw_itemgra(this_->gra, itm, this_->trans, label);
 			}
 			if (sequence < itm->sequence_range.max)
 				match=1;
