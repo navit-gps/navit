@@ -45,6 +45,9 @@ macro(module_add_library MODULE_NAME )
    TARGET_LINK_LIBRARIES(${MODULE_NAME} ${${MODULE_NAME}_LIBS})
    SET_TARGET_PROPERTIES( ${MODULE_NAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
    
+   if (ANDROID)
+      TARGET_LINK_LIBRARIES(${MODULE_NAME} ${NAVIT_LIBNAME})
+   endif()
    if (USE_PLUGINS)
       # workaround to be compatible with old paths
       set_target_properties( ${MODULE_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.libs")
