@@ -2067,7 +2067,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					}
 					continue;
 				}
-				if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
+				if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city) || (it->type == type_living_street)) {
 					struct attr at;
 					if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
 						int i,match=0;
