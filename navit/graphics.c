@@ -274,6 +274,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 	pr.lu.y=0;
 	pr.rl.x=w;
 	pr.rl.y=h;
+	this_->font_size=20;
 	graphics_set_rect(this_, &pr);
 	if (!this_->priv) {
 		g_free(this_);
@@ -1853,7 +1854,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 }
 
 void
-graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t)
+graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t, char *label)
 {
 	GList *es;
 	struct display_context dc;
@@ -1865,7 +1866,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	di->item.id_hi=0;
 	di->item.id_lo=0;
 	di->item.map=NULL;
-	di->label=NULL;
+	di->label=label;
 	dc.gra=gra;
 	dc.gc=NULL;
 	dc.gc_background=NULL;
