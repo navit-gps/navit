@@ -1136,7 +1136,7 @@ public class Navit extends Activity implements Handler.Callback
 			// start the search, this could take a long time!!
 			Log.e("Navit", "SearchResultsThread run1");
 			Navit_last_address_search_string = filter_bad_chars(Navit_last_address_search_string);
-			N_NavitGraphics.SearchResultList(2, partial_match_i, Navit_last_address_search_string);
+			N_NavitGraphics.CallbackSearchResultList(partial_match_i, Navit_last_address_search_string);
 			Log.e("Navit", "SearchResultsThread run2");
 
 			Navit.NavitAddressSearchSpinnerActive = false;
@@ -1193,101 +1193,74 @@ public class Navit extends Activity implements Handler.Callback
 	}
 
 	public Handler	progress_handler	= new Handler()
-												{
-													public void handleMessage(Message msg)
-													{
-														switch (msg.what)
-														{
-															case 0 :
-																// dismiss dialog, remove dialog
-																dismissDialog(msg.getData().getInt("dialog_num"));
-																removeDialog(msg.getData().getInt("dialog_num"));
+		{
+			public void handleMessage(Message msg)
+			{
+				switch (msg.what)
+				{
+					case 0 :
+						// dismiss dialog, remove dialog
+						dismissDialog(msg.getData().getInt("dialog_num"));
+						removeDialog(msg.getData().getInt("dialog_num"));
 
-																// exit_code=0 -> OK, map was downloaded fine
-																if (msg.getData().getInt("exit_code") == 0)
-																{
-																	// try to use the new downloaded map (works fine now!)
-																	Log.d("Navit", "instance count="
-																			+ Navit.getInstanceCount());
-																	onStop();
-																	onCreate(getIntent().getExtras());
-
-																	//Intent intent = this.getIntent();
-																	//startActivity(intent);
-																	//finish();
-
-																	//Message msg2 = new Message();
-																	//Bundle b2 = new Bundle();
-																	//b2.putInt("Callback", 6);
-																	//msg2.setData(b2);
-																	//N_NavitGraphics.callback_handler.sendMessage(msg2);
-																}
-																break;
-															case 1 :
-																// change progressbar values
-																int what_dialog = msg.getData()
-																		.getInt("dialog_num");
-																if (what_dialog == MAPDOWNLOAD_PRI_DIALOG)
-																{
-																	mapdownloader_dialog_pri.setMax(msg.getData()
-																			.getInt("max"));
-																	mapdownloader_dialog_pri.setProgress(msg
-																			.getData().getInt("cur"));
-																	mapdownloader_dialog_pri.setTitle(msg.getData()
-																			.getString("title"));
-																	mapdownloader_dialog_pri.setMessage(msg
-																			.getData().getString("text"));
-																}
-																else if (what_dialog == MAPDOWNLOAD_SEC_DIALOG)
-																{
-																	mapdownloader_dialog_sec.setMax(msg.getData()
-																			.getInt("max"));
-																	mapdownloader_dialog_sec.setProgress(msg
-																			.getData().getInt("cur"));
-																	mapdownloader_dialog_sec.setTitle(msg.getData()
-																			.getString("title"));
-																	mapdownloader_dialog_sec.setMessage(msg
-																			.getData().getString("text"));
-																}
-																break;
-															case 2 :
-																Toast.makeText(getApplicationContext(),
-																		msg.getData().getString("text"),
-																		Toast.LENGTH_SHORT).show();
-																break;
-															case 3 :
-																Toast.makeText(getApplicationContext(),
-																		msg.getData().getString("text"),
-																		Toast.LENGTH_LONG).show();
-																break;
-															case 10 :
-																// change values - generic
-																int what_dialog_generic = msg.getData().getInt(
-																		"dialog_num");
-																if (what_dialog_generic == SEARCHRESULTS_WAIT_DIALOG)
-																{
-																	search_results_wait.setMax(msg.getData().getInt(
-																			"max"));
-																	search_results_wait.setProgress(msg.getData()
-																			.getInt("cur"));
-																	search_results_wait.setTitle(msg.getData()
-																			.getString("title"));
-																	search_results_wait.setMessage(msg.getData()
-																			.getString("text"));
-																}
-																break;
-															case 11 :
-																// show dialog - generic
-																showDialog(msg.getData().getInt("dialog_num"));
-																break;
-															case 99 :
-																// dismiss dialog, remove dialog - generic
-																dismissDialog(msg.getData().getInt("dialog_num"));
-																removeDialog(msg.getData().getInt("dialog_num"));
-																break;
-														}
-													}
-												};
+						// exit_code=0 -> OK, map was downloaded fine
+						if (msg.getData().getInt("exit_code") == 0)
+						{
+							// try to use the new downloaded map (works fine now!)
+							Log.d("Navit", "instance count=" + Navit.getInstanceCount());
+							onStop();
+							onCreate(getIntent().getExtras());
+						}
+						break;
+					case 1 :
+						// change progressbar values
+						int what_dialog = msg.getData()
+								.getInt("dialog_num");
+						if (what_dialog == MAPDOWNLOAD_PRI_DIALOG)
+						{
+							mapdownloader_dialog_pri.setMax(msg.getData().getInt("max"));
+							mapdownloader_dialog_pri.setProgress(msg.getData().getInt("cur"));
+							mapdownloader_dialog_pri.setTitle(msg.getData().getString("title"));
+							mapdownloader_dialog_pri.setMessage(msg.getData().getString("text"));
+						}
+						else if (what_dialog == MAPDOWNLOAD_SEC_DIALOG)
+						{
+							mapdownloader_dialog_sec.setMax(msg.getData().getInt("max"));
+							mapdownloader_dialog_sec.setProgress(msg.getData().getInt("cur"));
+							mapdownloader_dialog_sec.setTitle(msg.getData().getString("title"));
+							mapdownloader_dialog_sec.setMessage(msg.getData().getString("text"));
+						}
+						break;
+					case 2 :
+						Toast.makeText(getApplicationContext(),
+								msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
+						break;
+					case 3 :
+						Toast.makeText(getApplicationContext(), msg.getData().getString("text"), Toast.LENGTH_LONG).show();
+						break;
+					case 10 :
+						// change values - generic
+						int what_dialog_generic = msg.getData().getInt("dialog_num");
+						if (what_dialog_generic == SEARCHRESULTS_WAIT_DIALOG)
+						{
+							search_results_wait.setMax(msg.getData().getInt("max"));
+							search_results_wait.setProgress(msg.getData().getInt("cur"));
+							search_results_wait.setTitle(msg.getData().getString("title"));
+							search_results_wait.setMessage(msg.getData().getString("text"));
+						}
+						break;
+					case 11 :
+						// show dialog - generic
+						showDialog(msg.getData().getInt("dialog_num"));
+						break;
+					case 99 :
+						// dismiss dialog, remove dialog - generic
+						dismissDialog(msg.getData().getInt("dialog_num"));
+						removeDialog(msg.getData().getInt("dialog_num"));
+						break;
+				}
+			}
+		};
 
 	protected Dialog onCreateDialog(int id)
 	{
@@ -1312,13 +1285,11 @@ public class Navit extends Activity implements Handler.Callback
 					}
 				};
 				search_results_wait.setOnDismissListener(mOnDismissListener3);
-				searchresultsThread = new SearchResultsThread(progress_handler,
-						Navit.SEARCHRESULTS_WAIT_DIALOG);
+				searchresultsThread = new SearchResultsThread(progress_handler, Navit.SEARCHRESULTS_WAIT_DIALOG);
 				searchresultsThread.start();
 
 				NavitAddressSearchSpinnerActive = true;
-				spinner_thread = new SearchResultsThreadSpinnerThread(progress_handler,
-						Navit.SEARCHRESULTS_WAIT_DIALOG);
+				spinner_thread = new SearchResultsThreadSpinnerThread(progress_handler, Navit.SEARCHRESULTS_WAIT_DIALOG);
 				spinner_thread.start();
 
 				return search_results_wait;
@@ -1391,6 +1362,8 @@ public class Navit extends Activity implements Handler.Callback
 
 	public void exit()
 	{
+		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		nm.cancel(R.string.app_name);
 		finish();
 	}
 

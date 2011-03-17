@@ -841,7 +841,7 @@ search_init(void)
 
 
 static char *
-search_fix_spaces(char *str)
+search_fix_spaces(const char *str)
 {
 	int i;
 	int len=strlen(str);
@@ -1129,7 +1129,7 @@ search_address_town(GList *result_list, struct search_list *sl, GList *phrases, 
 }
 
 GList *
-search_by_address(GList *result_list,struct mapset *ms, char *addr, int partial, struct jni_object *jni)
+search_by_address(struct mapset *ms, const char *addr, int partial, struct jni_object *jni)
 {
 	char *str=search_fix_spaces(addr);
 	GList *tmp,*phrases=search_split_phrases(str);
@@ -1144,11 +1144,11 @@ search_by_address(GList *result_list,struct mapset *ms, char *addr, int partial,
 	{
 		attr.u.str=tmp->data;
 		search_list_search(sl, &attr, partial);
-		result_list=search_address_town(result_list, sl, phrases, tmp, partial, jni);
+		ret=search_address_town(ret, sl, phrases, tmp, partial, jni);
 		tmp=g_list_next(tmp);
 	}
 	search_list_search(sl, country_default(), partial);
-	ret=search_address_town(result_list, sl, phrases, NULL, partial, jni);
+	ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
 	
 	g_free(str);
 	dbg(0,"leave %p\n",ret);
