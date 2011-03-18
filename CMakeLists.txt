@@ -294,7 +294,7 @@ add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
-find_program(SAXON NAMES saxon saxon8 saxon-xslt)
+find_program(SAXON NAMES saxon saxon8 saxon-xslt saxonb-xslt)
 if(NOT SAXON)
    cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
 endif()
