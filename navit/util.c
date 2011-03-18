@@ -324,7 +324,6 @@ iso8601_to_secs(char *iso8601)
 char *
 current_to_iso8601(void)
 {
-	char buffer[32];
 	char *timep=NULL;
 #ifdef HAVE_GLIB
 	GTimeVal time; 
@@ -336,6 +335,7 @@ current_to_iso8601(void)
 	GetSystemTime(&ST);
 	timep=g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ",ST.wYear,ST.wMonth,ST.wDay,ST.wHour,ST.wMinute,ST.wSecond);
 #else
+	char buffer[32];
 	time_t tnow;
 	struct tm *tm;
 	tnow = time(0);

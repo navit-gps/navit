@@ -363,7 +363,7 @@ draw_mode(struct graphics_priv *gra, enum draw_mode_num mode)
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
 
 static void *
-get_data(struct graphics_priv *this, char *type)
+get_data(struct graphics_priv *this, const char *type)
 {
 	if (strcmp(type,"window"))
 		return NULL;
