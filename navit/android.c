@@ -27,230 +27,6 @@ jobject *android_activity;
 struct callback_list *android_activity_cbl;
 int android_version;
 
-struct navit {
-	struct attr self;
-	GList *mapsets;
-	GList *layouts;
-	struct gui *gui;
-	struct layout *layout_current;
-	struct graphics *gra;
-	struct action *action;
-	struct transformation *trans, *trans_cursor;
-	struct compass *compass;
-	struct route *route;
-	struct navigation *navigation;
-	struct speech *speech;
-	struct tracking *tracking;
-	int ready;
-	struct window *win;
-	struct displaylist *displaylist;
-	int tracking_flag;
-	int orientation;
-	int recentdest_count;
-	int osd_configuration;
-	GList *vehicles;
-	GList *windows_items;
-	struct navit_vehicle *vehicle;
-	struct callback_list *attr_cbl;
-	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb, *progress_cb;
-	struct datawindow *roadbook_window;
-	struct map *former_destination;
-	struct point pressed, last, current;
-	int button_pressed,moved,popped,zoomed;
-	int center_timeout;
-	int autozoom_secs;
-	int autozoom_min;
-	int autozoom_active;
-	struct event_timeout *button_timeout, *motion_timeout;
-	struct callback *motion_timeout_callback;
-	int ignore_button;
-	int ignore_graphics_events;
-	struct log *textfile_debug_log;
-	struct pcoord destination;
-	int destination_valid;
-	int blocked;
-	int w,h;
-	int drag_bitmap;
-	int use_mousewheel;
-	struct messagelist *messages;
-	struct callback *resize_callback,*button_callback,*motion_callback,*predraw_callback;
-	struct vehicleprofile *vehicleprofile;
-	GList *vehicleprofiles;
-	int pitch;
-	int follow_cursor;
-	int prevTs;
-	int graphics_flags;
-	int zoom_min, zoom_max;
-	int radius;
-	struct bookmarks *bookmarks;
-	int flags;
-			/* 1=No graphics ok */
-			/* 2=No gui ok */
-	int border;
-};
-
-struct attr attr;
-
-struct config {
-	struct attr **attrs;
-	struct callback_list *cbl;
-} *config;
-
-
-struct gui_config_settings {
-	int dummy;
-};
-
-struct gui_internal_data {
-	int dummy;
-};
-
-struct route_data {
-	int dummy;
-};
-
-struct widget {
-	int dummy;
-};
-
-struct gui_priv {
-	struct navit *nav;
-	struct attr self;
-	struct window *win;
-	struct graphics *gra;
-	struct graphics_gc *background;
-	struct graphics_gc *background2;
-	struct graphics_gc *highlight_background;
-	struct graphics_gc *foreground;
-	struct graphics_gc *text_foreground;
-	struct graphics_gc *text_background;
-	struct color background_color, background2_color, text_foreground_color, text_background_color;
-	int spacing;
-	int font_size;
-	int fullscreen;
-	struct graphics_font *fonts[3];
-	/**
-	 * The size (in pixels) that xs style icons should be scaled to.
-	 * This icon size can be too small to click it on some devices.
-	 */
-	int icon_xs;
-	/**
-	 * The size (in pixels) that s style icons (small) should be scaled to
-	 */
-	int icon_s;
-	/**
-	 * The size (in pixels) that l style icons should be scaled to
-	 */
-	int icon_l;
-	int pressed;
-	struct widget *widgets;
-	int widgets_count;
-	int redraw;
-	struct widget root;
-	struct widget *highlighted,*editable;
-	struct widget *highlighted_menu;
-	int clickp_valid, vehicle_valid;
-	struct pcoord clickp, vehiclep;
-	struct attr *click_coord_geo, *position_coord_geo;
-	struct search_list *sl;
-	int ignore_button;
-	int menu_on_map_click;
-	int signal_on_map_click;
-	char *country_iso2;
-	int speech;
-	int keyboard;
-	int keyboard_required;
-	/**
-	 * The setting information read from the configuration file.
-	 * values of -1 indicate no value was specified in the config file.
-	 */
-        struct gui_config_settings config;
-	struct event_idle *idle;
-	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*window_closed_cb,*idle_cb, *motion_timeout_callback;
-	struct event_timeout *motion_timeout_event;
-	struct point current;
-
-	struct callback * vehicle_cb;
-	  /**
-	   * Stores information about the route.
-	   */
-	struct route_data route_data;
-
-	struct gui_internal_data data;
-	struct callback_list *cbl;
-	int flags;
-	int cols;
-	struct attr osd_configuration;
-	int pitch;
-	int flags_town,flags_street,flags_house_number;
-	int radius;
-/* html */
-	char *html_text;
-	int html_depth;
-	struct widget *html_container;
-	int html_skip;
-	char *html_anchor;
-	char *href;
-	int html_anchor_found;
-	struct form *form;
-	struct html {
-		int skip;
-		enum html_tag {
-			html_tag_none,
-			html_tag_a,
-			html_tag_h1,
-			html_tag_html,
-			html_tag_img,
-			html_tag_script,
-			html_tag_form,
-			html_tag_input,
-			html_tag_div,
-		} tag;
-		char *command;
-		char *name;
-		char *href;
-		char *refresh_cond;
-		struct widget *w;
-		struct widget *container;
-	} html[10];
-};
-
-extern struct navit *global_navit;
-
-int
-android_find_class_global(char *name, jclass *ret)
-{
-	*ret=(*jnienv)->FindClass(jnienv, name);
-	if (! *ret) {
-		dbg(0,"Failed to get Class %s\n",name);
-		return 0;
-	}
-	(*jnienv)->NewGlobalRef(jnienv, *ret);
-	return 1;
-}
-
-int
-android_find_method(jclass class, char *name, char *args, jmethodID *ret)
-{
-	*ret = (*jnienv)->GetMethodID(jnienv, class, name, args);
-	if (*ret == NULL) {
-		dbg(0,"Failed to get Method %s with signature %s\n",name,args);
-		return 0;
-	}
-	return 1;
-}
-
-int
-android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
-{
-	*ret = (*jnienv)->GetStaticMethodID(jnienv, class, name, args);
-	if (*ret == NULL) {
-		dbg(0,"Failed to get static Method %s with signature %s\n",name,args);
-		return 0;
-	}
-	return 1;
-}
-
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string)
 {
@@ -394,10 +170,11 @@ android_return_search_result(struct jni_object *jni_o, char *str)
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env, jobject thiz, int partial, jobject str)
 {
+	struct attr attr;
 	const char *search_string =(*env)->GetStringUTFChars(env, str, NULL);
 	dbg(0,"search '%s'\n", search_string);
 
-	config_get_attr(config, attr_navit, &attr, NULL);
+	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
 	jclass cls = (*env)->GetObjectClass(env,thiz);
 	jmethodID aMethodID = (*env)->GetMethodID(env, cls, "fillStringArray", "(Ljava/lang/String;)V");
@@ -446,20 +223,21 @@ Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz, int channel, jobject str)
 {
+	struct attr attr;
 	const char *s;
 	dbg(0,"enter %d %p\n",channel,str);
 
-	config_get_attr(config, attr_navit, &attr, NULL);
+	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
 	switch(channel)
 	{
 	case 1:
 		// zoom in
-		navit_zoom_in_cursor(global_navit, 2);
+		navit_zoom_in_cursor(attr.u.navit, 2);
 		break;
 	case 2:
 		// zoom out
-		navit_zoom_out_cursor(global_navit, 2);
+		navit_zoom_out_cursor(attr.u.navit, 2);
 		break;
 	case 6:
 		// this procedure is not used at the moment!!
@@ -470,25 +248,12 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		// now add the default /sdcard/navitmap.bin entry to the list
 		// ******navit_add_mapset(global_navit,ms); // but how? please write me!!
 		// now reload some stuff to make the change stick
-		dbg(0,"trying to apply newly downloaded map to mapset %p\n",global_navit->mapsets);
-		if (global_navit->mapsets)
-		{
-			struct mapset *ms;
-			struct map *map;
-			struct mapset_handle *msh;
-
-			ms=global_navit->mapsets->data;
-			msh=mapset_open(ms);
-			while (msh && (map=mapset_next(msh, 0))) {
-			}
-			mapset_close(msh);
-		}
 		break;
 	case 5:
 		// call a command (like in gui)
 		s=(*env)->GetStringUTFChars(env, str, NULL);
 		dbg(0,"*****string=%s\n",s);
-		command_evaluate(&attr.u.navit->self,s);
+		command_evaluate(&attr,s);
 		(*env)->ReleaseStringUTFChars(env, str, s);
 		break;
 	case 4:
@@ -497,6 +262,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		struct point p;
 		struct coord c;
 		struct pcoord pc;
+		
+		struct transformation *transform=navit_get_trans(attr.u.navit);
 
 		s=(*env)->GetStringUTFChars(env, str, NULL);
 		char parse_str[strlen(s) + 1];
@@ -515,18 +282,18 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		dbg(0,"11x=%d\n",p.x);
 		dbg(0,"11y=%d\n",p.y);
 
-		transform_reverse(global_navit->trans, &p, &c);
+		transform_reverse(transform, &p, &c);
 
 
 		pc.x = c.x;
 		pc.y = c.y;
-		pc.pro = transform_get_projection(global_navit->trans);
+		pc.pro = transform_get_projection(transform);
 
 		dbg(0,"22x=%d\n",pc.x);
 		dbg(0,"22y=%d\n",pc.y);
 
 		// start navigation asynchronous
-		navit_set_destination(global_navit, &pc, parse_str, 1);
+		navit_set_destination(attr.u.navit, &pc, parse_str, 1);
 	}
 	break;
 	case 3:
@@ -565,7 +332,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		pc.pro=projection_mg;
 
 		// start navigation asynchronous
-		navit_set_destination(global_navit, &pc, name, 1);
+		navit_set_destination(attr.u.navit, &pc, name, 1);
 
 	}
 	break;
