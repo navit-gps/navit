@@ -27,9 +27,11 @@
 # include <config.h>
 #endif
 
+#include <stdlib.h>
 #include <sys/types.h>
 
 #ifdef __GNUC__
+# undef alloca
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
@@ -60,7 +62,6 @@ extern int errno;
 #endif
 
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
