@@ -17,8 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
 #include <unistd.h>
+#include <glib.h>
 #include "config.h"
 #include "window.h"
 #include "point.h"

@@ -21,11 +21,11 @@
  * for details on how the xml file parser works.
  */
 
+#include <stdlib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <string.h>
 #include <ctype.h>
-#include <stdlib.h>
 #include "debug.h"
 #include "config.h"
 #include "file.h"

@@ -1,7 +1,7 @@
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <unistd.h>
 #include "maptool.h"
 #include "debug.h"
 #include "linguistics.h"

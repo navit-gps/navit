@@ -21,7 +21,10 @@
 # include <config.h>
 #endif
 
+#include <stdlib.h>
+
 #ifdef __GNUC__
+# undef alloca
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
@@ -47,7 +50,6 @@ char *alloca ();
 
 #if !HAVE_POSIX_PRINTF
 
-#include <stdlib.h>
 #include <string.h>
 
 /* When building a DLL, we must export some functions.  Note that because

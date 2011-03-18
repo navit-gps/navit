@@ -17,8 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
 #include <stdlib.h>
+#include <glib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
