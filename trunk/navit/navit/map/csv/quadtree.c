@@ -1,7 +1,8 @@
-#include "quadtree.h"
 
 #include <stdlib.h>
 #include <glib.h>
+
+#include "quadtree.h"
 
 #define QUADTREE_NODE_CAPACITY 10
 

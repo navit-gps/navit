@@ -1,7 +1,7 @@
+#include <stdlib.h>
 #include <string.h>
 #include <poll.h>
 #include <glib.h>
-#include <stdlib.h>
 #include "android.h"
 #include <android/log.h>
 #include "navit.h"

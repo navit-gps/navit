@@ -21,11 +21,11 @@
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
+#include <stdlib.h>
 #include <glib.h>
 #include <assert.h>
 #include <string.h>
 #include <signal.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <getopt.h>
