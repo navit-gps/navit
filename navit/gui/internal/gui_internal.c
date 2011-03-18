@@ -279,7 +279,7 @@ struct gui_priv {
 	 * The setting information read from the configuration file.
 	 * values of -1 indicate no value was specified in the config file.
 	 */
-        struct gui_config_settings config;
+	struct gui_config_settings config;
 	struct event_idle *idle;
 	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*window_closed_cb,*idle_cb, *motion_timeout_callback;
 	struct event_timeout *motion_timeout_event;
@@ -5255,7 +5255,10 @@ static void gui_internal_keypress(void *data, char *key)
 		gui_internal_keynav_highlight_next(this,0,1);
 		break;
 	case NAVIT_KEY_BACK:
-		gui_internal_back(this, NULL, NULL);
+		if (g_list_length(this->root.children) > 1)
+			gui_internal_back(this, NULL, NULL);
+		else
+			gui_internal_prune_menu(this, NULL);
 		break;
 	case NAVIT_KEY_RETURN:
 		if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
