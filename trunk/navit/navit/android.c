@@ -19,6 +19,7 @@
 #include "color.h"
 #include "types.h"
 #include "search.h"
+#include "start_real.h"
 
 
 JNIEnv *jnienv;
