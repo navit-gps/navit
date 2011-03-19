@@ -724,9 +724,10 @@ navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr 
 }
 
 static GHashTable *cmd_int_var_hash = NULL;
+static GHashTable *cmd_attr_var_hash = NULL;
 
 /**
- * Store key value pair for the  command system
+ * Store key value pair for the  command system (for int typed values)
  *
  * @param navit The navit instance
  * @param function unused (needed to match command function signiture)
@@ -738,19 +739,52 @@ static GHashTable *cmd_int_var_hash = NULL;
 static void
 navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+	char*key;
+	struct attr*val;
 	if(!cmd_int_var_hash) {
 		cmd_int_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	}
 
 	if ( (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) &&
 	     (in && in[1] && ATTR_IS_NUMERIC(in[1]->type))) {
-		char*key;
-		struct attr*val = g_new(struct attr,1);
+		val = g_new(struct attr,1);
 		attr_dup_content(in[1],val);
 		key = g_strdup(in[0]->u.str);
 		g_hash_table_insert(cmd_int_var_hash, key, val);
         }
 }
+
+
+/**
+ * Store key value pair for the  command system (for attr typed values, can be used as opaque handles)
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes in[0] is the key string, in[1] is the attr* value to store
+ * @param out output attributes, unused 
+ * @param valid unused 
+ * @returns nothing
+ */
+//TODO free stored attributes on navit_destroy
+static void
+navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char*key;
+	struct attr*val;
+	if(!cmd_attr_var_hash) {
+		cmd_attr_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	}
+
+	if ( (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) &&
+	     (in && in[1] )) {
+		val = attr_dup(in[1]);
+		//val = in[1];
+		key = g_strdup(in[0]->u.str);
+		g_hash_table_insert(cmd_attr_var_hash, key, val);
+        }
+}
+
+
 
 /**
  * command to toggle the active state of a named layer of the current layout
@@ -779,6 +813,186 @@ navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, str
 			}
 		}
         }
+}
+
+/**
+ * adds an item with the current coordinate of the vehicle to a named map
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] is the name of the map 
+ * @param out output attribute, 0 on error or the id of the created item on success
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr **list = g_new0(struct attr *,2);
+	struct attr*val = g_new0(struct attr,1);
+	struct mapset* ms;
+	struct map_selection sel;
+	const int selection_range = 10;
+	enum item_type item_type;
+	struct item *it;
+	struct map* curr_map = NULL;
+	struct coord curr_coord;
+	struct map_rect *mr;
+
+	val->type   = attr_type_item_begin;
+	val->u.item  = NULL;	//return invalid item on error
+	list[0]     = val;
+	list[1]     = NULL;
+	*out = list;
+	if (
+		in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str && //map name
+		      in[1] && ATTR_IS_STRING(in[1]->type) && in[1]->u.str    //item type
+	) {
+
+		if(!(ms=navit_get_mapset(this))) {
+			return;
+		}
+
+		if((item_type = item_from_name(in[1]->u.str))==type_none) {
+			return;
+		}
+
+		curr_map = mapset_get_map_by_name(ms, in[0]->u.str);
+
+		//no map with the given name found
+		if( ! curr_map) {
+			return;
+		}
+	
+		if(this->vehicle && this->vehicle->vehicle ) {
+			struct attr pos_attr;
+			if(vehicle_get_attr(this->vehicle->vehicle,attr_position_coord_geo,&pos_attr,NULL)) {
+				transform_from_geo(projection_mg, pos_attr.u.coord_geo, &curr_coord);
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
+
+		sel.next=NULL;
+		sel.order=18;
+		sel.range.min=type_none;
+		sel.range.max=type_tec_common;
+		sel.u.c_rect.lu.x=curr_coord.x-selection_range;
+		sel.u.c_rect.lu.y=curr_coord.y+selection_range;
+		sel.u.c_rect.rl.x=curr_coord.x+selection_range;
+		sel.u.c_rect.rl.y=curr_coord.y-selection_range;
+ 
+		mr = map_rect_new(curr_map, &sel);
+		if(mr) {
+			it = map_rect_create_item( mr, item_type);
+			item_coord_set(it,&curr_coord, 1, change_mode_modify);
+			val->u.item  = it;
+		}
+		map_rect_destroy(mr);
+        }
+}
+
+/**
+ * sets an attribute (name value pair) of a map item specified by map name and item id
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] - name of the map  ; in[1] - item  ; in[2] - attr name ; in[3] - attr value
+ * @param out output attribute, 0 on error, 1 on success
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (
+		in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str  &&//map name
+		      in[1] && ATTR_IS_ITEM(in[1]->type)   &&                  //item
+		      in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str && //attr_type str
+		      in[3] && ATTR_IS_STRING(in[3]->type) && in[3]->u.str    //attr_value str
+	) {
+		struct attr attr_to_set;
+		struct map* curr_map = NULL;
+		struct mapset *ms;
+		struct map_selection sel;
+		const int selection_range = 500;
+		struct coord curr_coord;
+		struct item *it;
+		
+		if(ATTR_IS_STRING(attr_from_name(in[2]->u.str))) {
+			attr_to_set.u.str = in[3]->u.str;
+			attr_to_set.type = attr_from_name(in[2]->u.str);
+		}
+		else if(ATTR_IS_INT(attr_from_name(in[2]->u.str))) {
+			attr_to_set.u.num = atoi(in[3]->u.str);
+			attr_to_set.type = attr_from_name(in[2]->u.str);
+		}
+		else if(ATTR_IS_DOUBLE(attr_from_name(in[2]->u.str))) {
+			double* val = g_new0(double,1);
+			*val = atof(in[3]->u.str);
+			attr_to_set.u.numd = val;
+			attr_to_set.type = attr_from_name(in[2]->u.str);
+		}
+
+		ms = navit_get_mapset(this);
+
+		curr_map = mapset_get_map_by_name(ms, in[0]->u.str);
+
+		if( ! curr_map) {
+			return;
+		}
+		sel.next=NULL;
+		sel.order=18;
+		sel.range.min=type_none;
+		sel.range.max=type_tec_common;
+		sel.u.c_rect.lu.x=curr_coord.x-selection_range;
+		sel.u.c_rect.lu.y=curr_coord.y+selection_range;
+		sel.u.c_rect.rl.x=curr_coord.x+selection_range;
+		sel.u.c_rect.rl.y=curr_coord.y-selection_range;
+ 
+		it = in[1]->u.item;
+		if(it) {
+			item_attr_set(it, &attr_to_set, change_mode_modify);
+		}
+	}
+}
+
+/**
+ * Get attr variable given a key string for the command system (for opaque usage)
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] is the key string
+ * @param out output attribute, the attr for the given key string if exists or NULL  
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr **list = g_new0(struct attr *,2);
+	if(!cmd_int_var_hash) {
+		struct attr*val = g_new0(struct attr,1);
+		val->type   = attr_type_item_begin;
+		val->u.item = NULL;
+		list[0]     = val;
+	}
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
+		struct attr*ret = g_hash_table_lookup(cmd_attr_var_hash, in[0]->u.str);
+                if(ret) {
+			list[0] = ret;
+		}
+		else {
+			struct attr*val = g_new0(struct attr,1);
+			val->type   = attr_type_int_begin;
+			val->u.item = NULL;
+			list[0]   = val;
+		}
+        }
+	list[1] = NULL;
+	*out = list;
 }
 
 
@@ -956,6 +1170,10 @@ static struct command_table commands[] = {
 	{"pop_int",command_cast(navit_cmd_pop_int)},
 	{"int_stack_size",command_cast(navit_cmd_int_stack_size)},
 	{"toggle_layer",command_cast(navit_cmd_toggle_layer)},
+	{"map_add_curr_pos",command_cast(navit_cmd_map_add_curr_pos)},
+	{"map_item_set_attr",command_cast(navit_cmd_map_item_set_attr)},
+	{"set_attr_var",command_cast(navit_cmd_set_attr_var)},
+	{"get_attr_var",command_cast(navit_cmd_get_attr_var)},
 };
 	
 void 
@@ -1669,6 +1887,7 @@ navit_zoom_to_route(struct navit *this_, int orientation)
 				count++;
 			}
 		}
+		map_rect_destroy(mr);
 	}
 	if (! count)
 		return;
@@ -2248,9 +2467,11 @@ navit_add_layout(struct navit *this_, struct layout *layout)
 	struct attr active;
 	this_->layouts = g_list_append(this_->layouts, layout);
 	layout_get_attr(layout, attr_active, &active, NULL);
-	if(active.u.num || !this_->layout_current) 
+	if(active.u.num || !this_->layout_current) { 
 		this_->layout_current=layout;
-	return 1;
+		return 1;
+	}
+	return 0;
 }
 
 int
@@ -2767,6 +2988,7 @@ navit_block(struct navit *this_, int block)
 void
 navit_destroy(struct navit *this_)
 {
+	struct mapset*ms;
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 
 	/* TODO: destroy objects contained in this_ */
@@ -2795,6 +3017,9 @@ navit_destroy(struct navit *this_)
 	  graphics_remove_callback(this_->gra, this_->predraw_callback);
 	callback_destroy(this_->predraw_callback);
 	route_destroy(this_->route);
+	ms = navit_get_mapset(this_);
+	if(ms)
+		mapset_destroy(ms);
 	graphics_free(this_->gra);
 	g_free(this_);
 }
