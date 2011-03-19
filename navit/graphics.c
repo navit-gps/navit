@@ -1647,7 +1647,6 @@ void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, s
 char *
 graphics_icon_path(char *icon)
 {
-	static char *navit_sharedir;
 	char *ret=NULL;
 	struct file_wordexp *wordexp=NULL;
 	dbg(1,"enter %s\n",icon);
@@ -1669,6 +1668,7 @@ graphics_icon_path(char *icon)
 		// ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
 		ret=g_strdup_printf("res/drawable/%s" ,icon);
 #else
+		static char *navit_sharedir;
 		if (! navit_sharedir)
 			navit_sharedir = getenv("NAVIT_SHAREDIR");
 		ret=g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);

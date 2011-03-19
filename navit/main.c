@@ -307,20 +307,17 @@ char *nls_table[][3]={
 static void
 win_set_nls(void)
 {
-	wchar_t wcountry[32],wlang[32];	
 	char country[32],lang[32];
 	int i=0;
 
 #ifdef HAVE_API_WIN32_CE 
+	wchar_t wcountry[32],wlang[32];	
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
 	WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
-#else
-	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, lang, sizeof(lang));
-#endif
-#ifdef HAVE_API_WIN32_CE 
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
 	WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
 #else
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, lang, sizeof(lang));
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, country, sizeof(country));
 #endif
 	while (nls_table[i][0]) {
