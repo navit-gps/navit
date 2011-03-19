@@ -163,6 +163,86 @@ quadtree_find_item(struct quadtree_node* this_, struct quadtree_item* item) {
   return res;
 }
 
+/*
+ * returns the containing node for an item
+ */
+struct quadtree_node* 
+quadtree_find_containing_node(struct quadtree_node* root, struct quadtree_item* item) 
+{
+    struct quadtree_node*res = NULL;
+
+    if( ! root ) {
+      return NULL;
+    }
+
+    if( root->is_leaf ) { 
+        int i;
+        for(i=0;i<root->node_num;++i) {
+            if(item == &root->items[i]) {
+                res = root;
+            }
+        }
+    }
+    else {
+        if(
+	   root->aa && 
+           root->aa->xmin<=item->longitude && item->longitude<root->aa->xmax &&
+           root->aa->ymin<=item->latitude && item->latitude<root->aa->ymax
+           ) {
+          res = quadtree_find_containing_node(root->aa,item);
+        }
+        else if(
+	   root->ab && 
+           root->ab->xmin<=item->longitude && item->longitude<root->ab->xmax &&
+           root->ab->ymin<=item->latitude && item->latitude<root->ab->ymax
+           ) {
+          res = quadtree_find_containing_node(root->ab,item);
+        }
+        else if(
+	   root->ba && 
+           root->ba->xmin<=item->longitude && item->longitude<root->ba->xmax &&
+           root->ba->ymin<=item->latitude && item->latitude<root->ba->ymax
+           ) {
+          res = quadtree_find_containing_node(root->ba,item);
+        }
+        else if(
+	   root->bb && 
+           root->bb->xmin<=item->longitude && item->longitude<root->bb->xmax &&
+           root->bb->ymin<=item->latitude && item->latitude<root->bb->ymax
+           ) {
+          res = quadtree_find_containing_node(root->bb,item);
+        }
+	else {
+          //this should not happen
+        }
+    }
+  return res;
+}
+
+
+int  quadtree_delete_item(struct quadtree_node* root, struct quadtree_item* item)
+{
+  struct quadtree_node* qn = quadtree_find_containing_node(root,item);
+  int i, bFound = 0;
+
+  if(!qn || !qn->node_num) {
+    return 0;
+  }
+
+  for(i=0;i<qn->node_num;++i) {
+    if( &qn->items[i] == item) {
+      bFound = 1;
+    }
+    if(bFound && i<qn->node_num-1) {
+      qn->items[i] = qn->items[i+1];
+    }
+  }
+  if(bFound) {
+    --qn->node_num;
+  }
+  return bFound;
+}
+
 
 /*
  * tries to find closest item, first it descend into the quadtree as much as possible, then if no point is found go up n levels and flood
@@ -241,6 +321,7 @@ quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
       }
     }
   return res;
+
 }
 
 void
@@ -340,15 +421,19 @@ void
 quadtree_destroy(struct quadtree_node* this_) {
     if(this_->aa) {
         quadtree_destroy(this_->aa);
+	this_->aa = NULL;
     }
     if(this_->ab) {
         quadtree_destroy(this_->ab);
+	this_->ab = NULL;
     }
     if(this_->ba) {
         quadtree_destroy(this_->ba);
+	this_->ba = NULL;
     }
     if(this_->bb) {
         quadtree_destroy(this_->bb);
+	this_->bb = NULL;
     }
     free(this_);
 }

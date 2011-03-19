@@ -30,12 +30,14 @@ struct map_priv {
 	struct quadtree_node* tree_root;
 	int flags;
 	GHashTable*item_hash;
+	GHashTable*qitem_hash;
 	char* filename;
 	int dirty;  //need to write map file on exit
 	int attr_cnt;
 	enum attr_type *attr_types;
 	int next_item_idx;
 	enum item_type item_type;
+	GList* new_items;  //list of quadtree items that have no coord set yet ()
 };
 
 struct map_rect_priv {
