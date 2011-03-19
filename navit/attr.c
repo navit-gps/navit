@@ -499,6 +499,8 @@ attr_data_size(struct attr *attr)
 		return sizeof(*attr->u.color);
 	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) 
 		return sizeof(void *);
+	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end) 
+		return sizeof(struct item);
 	if (attr->type >= attr_type_int64_begin && attr->type <= attr_type_int64_end) 
 		return sizeof(*attr->u.num64);
 	if (attr->type == attr_order)
