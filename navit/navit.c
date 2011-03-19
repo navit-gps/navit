@@ -982,7 +982,7 @@ navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, str
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
 		struct attr*ret = g_hash_table_lookup(cmd_attr_var_hash, in[0]->u.str);
                 if(ret) {
-			list[0] = ret;
+			list[0] = attr_dup(ret);
 		}
 		else {
 			struct attr*val = g_new0(struct attr,1);
