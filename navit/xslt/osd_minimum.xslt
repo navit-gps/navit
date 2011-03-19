@@ -8,7 +8,7 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{navigation.item.destination_length[named]}}\n${{navigation.item.destination_time[arrival]}}" x="{round(-60*number($OSD_SIZE))}" y="0" w="{round(60*number($OSD_SIZE))}" h="{round(40*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" osd_configuration="1"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="navigation_next_turn" x="0" y="{-($NEXT_TURN_SIZE+$NEXT_TURN_SIZE)}" w="{$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" h="{$NEXT_TURN_SIZE}" icon_src="%s_wh_{$ICON_BIG}_{$ICON_BIG}.png" osd_configuration="1"/>
+      <osd type="navigation_next_turn" x="0" y="{-($NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT)}" w="{$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" h="{$NEXT_TURN_SIZE}" icon_src="%s_wh_{$ICON_BIG}_{$ICON_BIG}.png" osd_configuration="1"/>
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{navigation.item[1].length[named]}}" x="0" y="{-$NEXT_TURN_TEXT_HIGHT}" w="{$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" h="{$NEXT_TURN_TEXT_HIGHT}" font_size="{round(200*number($OSD_SIZE))}" osd_configuration="1"/>
       <xsl:text>&#x0A;        </xsl:text>
