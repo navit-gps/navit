@@ -34,7 +34,13 @@
 # endif
 #endif
 
-
+char* g_convert               (const char  *str,
+				int        len,            
+				const char  *to_codeset,
+				const char  *from_codeset,
+				int        *bytes_read,     
+				int        *bytes_written,  
+				void      **error);
 #define G_LOCK_DEFINE_STATIC(name)    //void
 #define G_LOCK(name) //void //g_mutex_lock       (&G_LOCK_NAME (name))
 #define G_UNLOCK(name) //void //g_mutex_unlock   (&G_LOCK_NAME (name))

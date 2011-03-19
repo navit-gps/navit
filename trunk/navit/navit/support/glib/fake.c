@@ -17,8 +17,13 @@
 
 #include <stdio.h>              /* fputs/fprintf */
 
-char *
-g_convert(char *in)
+char* g_convert (const char  *in,
+	int        len,            
+	const char  *to_codeset,
+	const char  *from_codeset,
+	int        *bytes_read,     
+	int        *bytes_written,  
+	void      **error)
 {
 	return g_strdup(in);
 }
@@ -49,7 +54,7 @@ g_private_new_navit ()
 	int dwTlsIndex;
 
 	if ((dwTlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
-      printf(0, "TlsAlloc failed");
+	printf("TlsAlloc failed");
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
 	return dwTlsIndex;
 #else
