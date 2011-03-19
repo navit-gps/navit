@@ -61,6 +61,7 @@ struct map {
 	struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
 	struct attr **attrs;				/**< Attributes of this map */
 	struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
+	int refcount;
 };
 
 /**
@@ -112,8 +113,18 @@ map_new(struct attr *parent, struct attr **attrs)
 		map_destroy(m);
 		m=NULL;
 	}
+	else {
+		m->refcount = 0;
+	}
 	return m;
 }
+
+void
+map_ref(struct map* m)
+{
+	m->refcount++;
+}
+
 
 /**
  * @brief Gets an attribute from a map
@@ -247,6 +258,16 @@ map_set_projection(struct map *this_, enum projection pro)
 	this_->meth.pro=pro;
 }
 
+void
+map_destroy_do(struct map *m)
+{
+	if (m->priv)
+		m->meth.map_destroy(m->priv);
+	attr_list_free(m->attrs);
+	callback_list_destroy(m->attr_cbl);
+	g_free(m);
+}
+
 /**
  * @brief Destroys an opened map
  *
@@ -255,11 +276,12 @@ map_set_projection(struct map *this_, enum projection pro)
 void
 map_destroy(struct map *m)
 {
-	if (m->priv)
-		m->meth.map_destroy(m->priv);
-	attr_list_free(m->attrs);
-	callback_list_destroy(m->attr_cbl);
-	g_free(m);
+	if(0<m->refcount) {
+		m->refcount--;
+	}
+	if(0 == m->refcount) {
+		map_destroy_do(m);
+	}
 }
 
 /**
@@ -672,3 +694,17 @@ map_dump(struct map *map)
 {
 	map_dump_filedesc(map, stdout);
 }
+
+struct item * 
+map_rect_create_item(struct map_rect *mr, enum item_type type_)
+{
+	if(mr && mr->priv && mr->m) {
+		return mr->m->meth.map_rect_create_item(mr->priv, type_) ;
+	}
+	else {
+		return NULL;
+	}
+}
+
+
+

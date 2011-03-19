@@ -87,6 +87,7 @@ mapset_add_attr(struct mapset *ms, struct attr *attr)
 	switch (attr->type) {
 	case attr_map:
 		ms->maps=g_list_append(ms->maps, attr->u.map);
+		map_ref(attr->u.map);
 		return 1;
 	default:
 		return 0;
@@ -147,6 +148,12 @@ static void mapset_maps_free(struct mapset *ms)
  */
 void mapset_destroy(struct mapset *ms)
 {
+	GList *map;
+	map=ms->maps;
+	while (map) {
+		map_destroy(map->data);
+		map=g_list_next(map);
+	}
 	g_free(ms);
 }
 
@@ -221,6 +228,34 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
 		if (active_attr.u.num)
 			return ret;
 	}
+}
+
+/**
+ * @brief Gets a map from the mapset by name
+ *
+ * @param ms The map
+ * @param map_name the map name used by the search
+ * @return The next map
+ */
+struct map * 
+mapset_get_map_by_name(struct mapset *ms, char*map_name)
+{
+	struct mapset_handle*msh;
+	struct map*curr_map;
+	struct attr map_attr;
+	if( !ms || !map_name ) {
+		return NULL;
+	}
+	msh=mapset_open(ms);
+	while ((curr_map=mapset_next(msh, 1))) {
+		//get map name
+		if(map_get_attr(curr_map,attr_name, &map_attr,NULL)) {
+			if( ! strcmp(map_attr.u.str, map_name)) {
+				break;
+			}
+		}
+	}
+	return curr_map;
 }
 
 /**

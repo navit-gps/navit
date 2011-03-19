@@ -3432,8 +3432,10 @@ route_get_map_helper(struct route *this_, struct map **map, char *type, char *de
 	attrs[3]=&a_description;
 	attrs[4]=NULL;
 
-	if (! *map) 
+	if (! *map) { 
 		*map=map_new(NULL, attrs);
+		map_ref(*map);
+	}
  
 	return *map;
 }

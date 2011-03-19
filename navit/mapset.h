@@ -40,6 +40,7 @@ int mapset_add_attr(struct mapset *ms, struct attr *attr);
 int mapset_remove_attr(struct mapset *ms, struct attr *attr);
 int mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void mapset_destroy(struct mapset *ms);
+struct map *mapset_get_map_by_name(struct mapset *ms, char*map_name);
 struct mapset_handle *mapset_open(struct mapset *ms);
 struct map *mapset_next(struct mapset_handle *msh, int active);
 void mapset_close(struct mapset_handle *msh);
