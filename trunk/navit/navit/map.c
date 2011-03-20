@@ -263,9 +263,8 @@ map_destroy_do(struct map *m)
 {
 	if (m->priv)
 		m->meth.map_destroy(m->priv);
-//FIXME below two lines are commented out as a temporary workaround for the map destruction problem 
-//	attr_list_free(m->attrs);
-//	callback_list_destroy(m->attr_cbl);
+	attr_list_free(m->attrs);
+	callback_list_destroy(m->attr_cbl);
 	g_free(m);
 }
 

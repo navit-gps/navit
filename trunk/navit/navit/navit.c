@@ -1728,7 +1728,9 @@ navit_init(struct navit *this_)
 		this_->progress_cb=callback_new_attr_1(callback_cast(navit_map_progress), attr_progress, this_);
 		msh=mapset_open(ms);
 		while (msh && (map=mapset_next(msh, 0))) {
-			map_add_callback(map, this_->progress_cb);
+			//pass new callback instance for each map in the mapset to make map callback list destruction work correctly
+			struct callback *pcb = callback_new_attr_1(callback_cast(navit_map_progress), attr_progress, this_);
+			map_add_callback(map, pcb);
 		}
 		mapset_close(msh);
 		
