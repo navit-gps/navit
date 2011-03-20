@@ -27,6 +27,29 @@ jobject *android_activity;
 struct callback_list *android_activity_cbl;
 int android_version;
 
+int
+android_find_class_global(char *name, jclass *ret)
+{
+	*ret=(*jnienv)->FindClass(jnienv, name);
+	if (! *ret) {
+		dbg(0,"Failed to get Class %s\n",name);
+		return 0;
+	}
+	(*jnienv)->NewGlobalRef(jnienv, *ret);
+	return 1;
+}
+
+int
+android_find_method(jclass class, char *name, char *args, jmethodID *ret)
+{
+	*ret = (*jnienv)->GetMethodID(jnienv, class, name, args);
+	if (*ret == NULL) {
+		dbg(0,"Failed to get Method %s with signature %s\n",name,args);
+		return 0;
+	}
+	return 1;
+}
+
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string)
 {
