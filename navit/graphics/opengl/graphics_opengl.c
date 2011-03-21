@@ -284,7 +284,6 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
   unsigned char *data;
   int width, height, i, j;
   struct graphics_image_priv *gi;
-
   //check if image already exists in hashmap
   struct graphics_image_priv*curr_elem = g_hash_table_lookup(hImageData,path);
   if(curr_elem == &image_error) {
@@ -358,7 +357,7 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
   width = FreeImage_GetWidth (image);
   height = FreeImage_GetHeight (image);
 
-  if(*w!=width || *h!=height) {
+  if( (*w!=width || *h!=height) && 0<*w && 0<*h ) {
     FIBITMAP *image2;
     image2 = FreeImage_Rescale(image, *w, *h, NULL);
     FreeImage_Unload(image);
