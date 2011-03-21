@@ -358,6 +358,15 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
   width = FreeImage_GetWidth (image);
   height = FreeImage_GetHeight (image);
 
+  if(*w!=width || *h!=height) {
+    FIBITMAP *image2;
+    image2 = FreeImage_Rescale(image, *w, *h, NULL);
+    FreeImage_Unload(image);
+    image = image2;
+    width = *w;
+    height = *h;
+  }
+
   data = (unsigned char *) malloc (width * height * 4);
 
   RGBQUAD *palette = NULL;
