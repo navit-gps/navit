@@ -17,8 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
 #include <stdlib.h>
+#include <glib.h>
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -74,8 +74,8 @@ save_map_csv(struct map_priv *m)
 		while(item_it) {
 			int i;
 			enum attr_type *at = m->attr_types;
-			csv_line = g_strdup_printf("");
-			tmpstr = g_strdup_printf("");
+			csv_line = g_strdup("");
+			tmpstr = g_strdup("");
 			for(i=0;i<m->attr_cnt;++i) {
 				if(at != m->attr_types) {
 					csv_line = g_strdup_printf("%s,",tmpstr);
@@ -109,7 +109,7 @@ save_map_csv(struct map_priv *m)
 							tmpstr = g_strdup_printf("%lf", *found_attr->u.numd);
 						}
 						else if(ATTR_IS_STRING(*at)) {
-							tmpstr = g_strdup_printf("%s", found_attr->u.str);
+							tmpstr = g_strdup(found_attr->u.str);
 						}
 					}
 					else {	//TODO handle this error
@@ -124,7 +124,7 @@ save_map_csv(struct map_priv *m)
 				ferr = 1;
 			}
 			item_it = g_list_next(item_it);
-			tmpstr=g_strdup_printf("");
+			tmpstr=g_strdup("");
 		}
 
 		if(fclose(fp)) {
