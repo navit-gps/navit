@@ -62,6 +62,7 @@ save_map_csv(struct map_priv *m)
 		int ferr = 0;
 		char *csv_line = 0;
 		char *tmpstr = 0;
+		char *oldstr = 0;
 
 		if( ! (fp=fopen(filename,"w+"))) {
 			dbg(1, "Error opening csv file to write new entries");
@@ -115,8 +116,10 @@ save_map_csv(struct map_priv *m)
 					else {	//TODO handle this error
 					}
 				}
+				oldstr = csv_line;
 				csv_line = g_strdup_printf("%s%s",csv_line,tmpstr);
 				g_free(tmpstr);
+				g_free(oldstr);
 				tmpstr = csv_line;
 				++at;
 			}
