@@ -147,12 +147,12 @@ map_destroy_csv(struct map_priv *m)
 	dbg(1,"map_destroy_csv\n");
 	//save if changed 
 	save_map_csv(m);	
-	g_free(m->attr_types);
-	g_free(m);
 	g_hash_table_destroy(m->item_hash);
 	g_hash_table_destroy(m->qitem_hash);
 	quadtree_destroy(m->tree_root);
 	g_free(m->filename);
+	g_free(m->attr_types);
+	g_free(m);
 }
 
 static void
