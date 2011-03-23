@@ -2145,6 +2145,10 @@ Navigation</text></img>
 					<polygon color="#041a06"/>
 					<text text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
+					<polygon color="#041a06"/>
+					<text text_size="5"/>
+				</itemgra>
 				<itemgra item_types="poly_farm" order="0-">
 					<polygon color="#041a06"/>
 					<text text_size="5"/>
@@ -3404,10 +3408,6 @@ Navigation</text></img>
 				</itemgra>
 				<itemgra item_types="traffic_signals" order="13-">
 					<icon src="traffic_signals.png"/>
-				</itemgra>
-				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
-					<polygon color="#041a06"/>
-					<text text_size="5"/>
 				</itemgra>
 				<itemgra item_types="poi_image" order="0-">
 					<image/>
