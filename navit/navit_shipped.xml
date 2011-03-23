@@ -3607,17 +3607,11 @@ Navigation</text></img>
         <itemgra item_types="ferry" order="14-">
           <polyline color="#000000" width="1" dash="10" />
         </itemgra>
-        <itemgra item_types="border_country" order="0-4">
-          <polyline color="#9b1199" width="8" />
+        <itemgra item_types="border_country" order="0-">
+          <polyline color="#808080" width="1" dash="10,5,2,5"/>
         </itemgra>
-        <itemgra item_types="border_country" order="5-7">
-          <polyline color="#9b1199" width="12" />
-        </itemgra>
-        <itemgra item_types="border_country" order="8-12">
-          <polyline color="#9b1199" width="20" dash="10,5" />
-        </itemgra>
-        <itemgra item_types="border_country" order="13-">
-          <polyline color="#9b1199" width="30" dash="10,5,2,1" />
+        <itemgra item_types="border_state" order="0-">
+            <polyline color="#808080" width="4"/>
         </itemgra>
       </layer>
       <layer name="streets">
