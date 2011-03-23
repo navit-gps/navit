@@ -1348,7 +1348,7 @@ Navigation</text></img>
 				<itemgra item_types="highway_exit_label" order="10-">
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
-				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street" order="10-18">
 					<text text_size="8"/>
 				</itemgra>
 				<itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
@@ -2796,7 +2796,7 @@ Navigation</text></img>
 				<itemgra item_types="highway_exit_label" order="10-">
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
-				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street" order="10-18">
 					<text text_size="8" color="#55c4bd"/>
 				</itemgra>
 				<itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
@@ -4031,7 +4031,7 @@ Navigation</text></img>
         <itemgra item_types="highway_exit_label" order="13-">
           <circle color="#000000" radius="3" text_size="7" />
         </itemgra>
-        <itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes"
+        <itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street"
         order="13-18">
           <text text_size="8" />
         </itemgra>
@@ -4854,7 +4854,7 @@ Navigation</text></img>
 				<itemgra item_types="water_line" order="11-">
 					<text text_size="16" color="#0000ff" />
 				</itemgra>
-				<itemgra item_types="street_1_city,street_2_city,street_3_city,street_4_city,highway_city,street_1_land,street_2_land,street_3_land,street_4_land,street_n_lanes,highway_land">
+				<itemgra item_types="street_1_city,street_2_city,street_3_city,street_4_city,highway_city,street_1_land,street_2_land,street_3_land,street_4_land,street_n_lanes,highway_land,living_street">
 					<text text_size="16" color="#ffffff" background_color="#000000"/>
 				</itemgra>
 				<itemgra item_types="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="10-">
@@ -5792,7 +5792,7 @@ Navigation</text></img>
 				<itemgra item_types="highway_exit_label" order="10-">
 					<circle color="#000000" radius="3" text_size="12"/>
 				</itemgra>
-				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street" order="10-18">
 					<text text_size="8"/>
 				</itemgra>
 				<itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
@@ -6269,7 +6269,7 @@ Navigation</text></img>
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
 				<!-- highway=primary (font)-->
-				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street" order="10-18">
 					<text text_size="9"/>
 				</itemgra>
 				<itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
