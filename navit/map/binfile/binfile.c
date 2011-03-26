@@ -2073,13 +2073,6 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						int i,match=0;
 						char *str=g_strdup(at.u.str);
 						char *word=str;
-						struct attr at_streetname;
-						if (!binfile_attr_get(it->priv_data, attr_street_name, &at_streetname))
-						{
-							at_streetname.type = attr_street_name;
-							at_streetname.u.str = g_strdup(at.u.str);
-							binfile_attr_set(it->priv_data, &at_streetname, change_mode_modify);
-						}
 						do {
 							for (i = 0 ; i < 3 ; i++) {
 								char *name=linguistics_expand_special(word,i);
