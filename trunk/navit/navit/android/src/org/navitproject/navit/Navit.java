@@ -283,8 +283,6 @@ public class Navit extends Activity implements Handler.Callback
 
 
 		// hardcoded strings for now, use routine down below later!!
-		// hardcoded strings for now, use routine down below later!!
-		// hardcoded strings for now, use routine down below later!!
 		if (lang.compareTo("de") == 0)
 		{
 			NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map_de;
@@ -324,9 +322,6 @@ public class Navit extends Activity implements Handler.Callback
 			NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI = NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI_nl;
 			NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE = NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl;
 		}
-		// hardcoded strings for now, use routine down below later!!
-		// hardcoded strings for now, use routine down below later!!
-
 
 		/*
 		 * show info box for first time users
@@ -1185,19 +1180,21 @@ public class Navit extends Activity implements Handler.Callback
 		this.startActivityForResult(address_result_list_activity, Navit.NavitAddressResultList_id);
 	}
 
+
 	public Handler	progress_handler	= new Handler()
 		{
+
 			public void handleMessage(Message msg)
 			{
 				switch (msg.what)
 				{
-					case 0 :
+					case NavitMessages.DIALOG_REMOVE_DIALOG :
 						// dismiss dialog, remove dialog
 						dismissDialog(msg.getData().getInt("dialog_num"));
 						removeDialog(msg.getData().getInt("dialog_num"));
 
 						// exit_code=0 -> OK, map was downloaded fine
-						if (msg.getData().getInt("exit_code") == 0)
+						if (msg.getData().getInt("value1") == 0)
 						{
 							// try to use the new downloaded map (works fine now!)
 							Log.d("Navit", "instance count=" + Navit.getInstanceCount());
@@ -1205,26 +1202,25 @@ public class Navit extends Activity implements Handler.Callback
 							onCreate(getIntent().getExtras());
 						}
 						break;
-					case 1 :
+					case NavitMessages.DIALOG_PROGRESS_BAR :
 						// change progressbar values
-						int what_dialog = msg.getData()
-								.getInt("dialog_num");
+						int what_dialog = msg.getData().getInt("dialog_num");
 						if (what_dialog == MAPDOWNLOAD_PRI_DIALOG)
 						{
-							mapdownloader_dialog_pri.setMax(msg.getData().getInt("max"));
-							mapdownloader_dialog_pri.setProgress(msg.getData().getInt("cur"));
+							mapdownloader_dialog_pri.setMax(msg.getData().getInt("value1"));
+							mapdownloader_dialog_pri.setProgress(msg.getData().getInt("value2"));
 							mapdownloader_dialog_pri.setTitle(msg.getData().getString("title"));
 							mapdownloader_dialog_pri.setMessage(msg.getData().getString("text"));
 						}
 						else if (what_dialog == MAPDOWNLOAD_SEC_DIALOG)
 						{
-							mapdownloader_dialog_sec.setMax(msg.getData().getInt("max"));
-							mapdownloader_dialog_sec.setProgress(msg.getData().getInt("cur"));
+							mapdownloader_dialog_sec.setMax(msg.getData().getInt("value1"));
+							mapdownloader_dialog_sec.setProgress(msg.getData().getInt("value2"));
 							mapdownloader_dialog_sec.setTitle(msg.getData().getString("title"));
 							mapdownloader_dialog_sec.setMessage(msg.getData().getString("text"));
 						}
 						break;
-					case 2 :
+					case NavitMessages.DIALOG_TOAST :
 						Toast.makeText(getApplicationContext(),
 								msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
 						break;
@@ -1236,8 +1232,8 @@ public class Navit extends Activity implements Handler.Callback
 						int what_dialog_generic = msg.getData().getInt("dialog_num");
 						if (what_dialog_generic == SEARCHRESULTS_WAIT_DIALOG)
 						{
-							search_results_wait.setMax(msg.getData().getInt("max"));
-							search_results_wait.setProgress(msg.getData().getInt("cur"));
+							search_results_wait.setMax(msg.getData().getInt("value1"));
+							search_results_wait.setProgress(msg.getData().getInt("value2"));
 							search_results_wait.setTitle(msg.getData().getString("title"));
 							search_results_wait.setMessage(msg.getData().getString("text"));
 						}
