@@ -1314,7 +1314,7 @@ public class Navit extends Activity implements Handler.Callback
 				mapdownloader_dialog_pri.setOnDismissListener(mOnDismissListener1);
 				mapdownloader_pri = new NavitMapDownloader(this);
 				progressThread_pri = mapdownloader_pri.new ProgressThread(progress_handler,
-						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_PRIMARY);
+						NavitMapDownloader.osm_maps[Navit.download_map_id], MAP_NUM_PRIMARY);
 				progressThread_pri.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
@@ -1342,7 +1342,7 @@ public class Navit extends Activity implements Handler.Callback
 				mapdownloader_dialog_sec.setOnDismissListener(mOnDismissListener2);
 				mapdownloader_sec = new NavitMapDownloader(this);
 				progressThread_sec = mapdownloader_sec.new ProgressThread(progress_handler,
-						NavitMapDownloader.OSM_MAPS[Navit.download_map_id], MAP_NUM_SECONDARY);
+						NavitMapDownloader.osm_maps[Navit.download_map_id], MAP_NUM_SECONDARY);
 				progressThread_sec.start();
 				// show license for OSM maps
 				Toast.makeText(getApplicationContext(),
