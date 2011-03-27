@@ -15,22 +15,13 @@
  */
 package org.navitproject.navit;
 
-import android.app.Activity;
-import android.widget.TextView;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Message;
-import android.os.Handler;
+import java.io.IOException;
+
 import android.content.Context;
-import android.util.Log;
 import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import java.io.IOException;
 
 
 

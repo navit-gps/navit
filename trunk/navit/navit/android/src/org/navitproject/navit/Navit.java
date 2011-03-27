@@ -1094,21 +1094,14 @@ public class Navit extends Activity implements Handler.Callback
 
 	public class SearchResultsThread extends Thread
 	{
-		private Boolean	running;
 		Handler				mHandler;
 		int					my_dialog_num;
 
 		SearchResultsThread(Handler h, int dialog_num)
 		{
-			this.running = true;
 			this.mHandler = h;
 			this.my_dialog_num = dialog_num;
 			Log.e("Navit", "SearchResultsThread created");
-		}
-
-		public void stop_me()
-		{
-			this.running = false;
 		}
 
 		public void run()
@@ -1281,7 +1274,6 @@ public class Navit extends Activity implements Handler.Callback
 						Log.e("Navit", "onDismiss: search_results_wait");
 						dialog.dismiss();
 						dialog.cancel();
-						searchresultsThread.stop_me();
 					}
 				};
 				search_results_wait.setOnDismissListener(mOnDismissListener3);

@@ -15,19 +15,11 @@
  */
 package org.navitproject.navit;
 
-import android.app.Activity;
-import android.widget.TextView;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Message;
-import android.os.Handler;
 import android.content.Context;
-import android.util.Log;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
-import android.hardware.SensorListener;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 
 
