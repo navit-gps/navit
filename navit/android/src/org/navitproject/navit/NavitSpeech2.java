@@ -19,17 +19,9 @@
 
 package org.navitproject.navit;
 
-import java.lang.Thread;
-import android.app.Activity;
-import android.widget.TextView;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Message;
-import android.os.Handler;
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 
 public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {

@@ -19,33 +19,25 @@
 
 package org.navitproject.navit;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.*;
-import android.os.Bundle;
-import android.os.Debug;
-import android.view.*;
-import android.view.Window;
-import android.util.Log;
-import android.widget.RelativeLayout;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.lang.String;
-import android.app.Activity;
-import android.content.Context;
-import android.hardware.Camera;
-import android.os.Bundle;
-import android.opengl.GLSurfaceView;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.Window;
-import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.ByteOrder;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.widget.RelativeLayout;
 
 
 
@@ -75,10 +67,6 @@ class ClearRenderer implements GLSurfaceView.Renderer {
 	if (busy) {
 		return;
 	}
-	 float[] square = new float[] {  -0.25f, -0.25f, 0.0f,
-                        0.25f, -0.25f, 0.0f,
-                        -0.25f, 0.25f, 0.0f,
-                        0.25f, 0.25f, 0.0f };
 
 gl.glClearColor(1.0f, 1.0f, 0.2f, 0.0f);
                 gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -118,7 +106,7 @@ gl.glShadeModel(GL10.GL_SMOOTH);
 
 public class NavitGraphics2 {
 	private NavitGraphics2 parent_graphics;
-	private ArrayList overlays=new ArrayList();
+	private ArrayList<NavitGraphics2> overlays=new ArrayList<NavitGraphics2>();
 	int bitmap_w;
 	int bitmap_h;
 	int pos_x;

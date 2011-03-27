@@ -19,14 +19,13 @@
 
 package org.navitproject.navit;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.*;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Debug;
-import android.view.*;
 import android.util.Log;
-import android.location.*;
 
 public class NavitVehicle {
 	private LocationManager locationManager;
@@ -42,7 +41,7 @@ public class NavitVehicle {
 		   not so precise, but possible faster. The fast provider is 
 		   disabled when the precise provider gets its first fix. */
 		
-		// Selection criterias for the precise provider
+		// Selection criteria for the precise provider
 		Criteria highCriteria = new Criteria();
 		highCriteria.setAccuracy(Criteria.ACCURACY_FINE);
 		highCriteria.setAltitudeRequired(true);
@@ -50,7 +49,7 @@ public class NavitVehicle {
 		highCriteria.setCostAllowed(true);
 		highCriteria.setPowerRequirement(Criteria.POWER_HIGH);
 
-		// Selection criterias for the fast provider
+		// Selection criteria for the fast provider
 		Criteria lowCriteria = new Criteria();
 		lowCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
 		lowCriteria.setAltitudeRequired(false);
