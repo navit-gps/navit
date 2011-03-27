@@ -1136,6 +1136,7 @@ search_by_address(struct mapset *ms, const char *addr, int partial, struct jni_o
 	GList *ret = NULL;
 	struct search_list *sl;
 	struct attr attr;
+	struct attr *country = country_default();
 	dbg(0,"enter %s\n",addr);
 	attr.type=attr_country_all;
 	tmp=phrases;
@@ -1148,6 +1149,8 @@ search_by_address(struct mapset *ms, const char *addr, int partial, struct jni_o
 		tmp=g_list_next(tmp);
 	}
 	search_list_search(sl, country_default(), partial);
+	if (country)
+		search_list_search(sl, country, partial);
 	ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
 	
 	g_free(str);
