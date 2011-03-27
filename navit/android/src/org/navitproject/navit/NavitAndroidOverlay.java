@@ -106,7 +106,7 @@ public class NavitAndroidOverlay extends ImageView
 		//Log.e("Navit", "NavitAndroidOverlay -> show_bubble");
 		if (!this.draw_bubble)
 		{
-			this.confirmed_bubble = false;
+			NavitAndroidOverlay.confirmed_bubble = false;
 			this.draw_bubble = true;
 			this.bubble_showing_since = System.currentTimeMillis();
 			bubble_thread = new BubbleThread(this);
@@ -132,7 +132,7 @@ public class NavitAndroidOverlay extends ImageView
 
 	public void hide_bubble()
 	{
-		this.confirmed_bubble = false;
+		NavitAndroidOverlay.confirmed_bubble = false;
 		this.draw_bubble = false;
 		this.bubble_showing_since = 0L;
 		try
@@ -158,11 +158,10 @@ public class NavitAndroidOverlay extends ImageView
 		//Log.e("Navit", "NavitAndroidOverlay -> onTouchEvent");
 		super.onTouchEvent(event);
 
-		int action = event.getAction();
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 
-		if ((this.draw_bubble) && (!this.confirmed_bubble))
+		if ((this.draw_bubble) && (!NavitAndroidOverlay.confirmed_bubble))
 		{
 			// bubble is showing, test if we touch it to confirm destination
 			float draw_factor = 1.0f;
@@ -187,7 +186,7 @@ public class NavitAndroidOverlay extends ImageView
 			if (box_rect.contains(x, y))
 			{
 				// bubble touched to confirm destination
-				this.confirmed_bubble = true;
+				NavitAndroidOverlay.confirmed_bubble = true;
 				// draw confirmed bubble
 				this.postInvalidate();
 
@@ -241,7 +240,7 @@ public class NavitAndroidOverlay extends ImageView
 
 		if (this.draw_bubble)
 		{
-			if ((System.currentTimeMillis() - this.bubble_showing_since) > this.bubble_max_showing_timespan)
+			if ((System.currentTimeMillis() - this.bubble_showing_since) > NavitAndroidOverlay.bubble_max_showing_timespan)
 			{
 				// bubble has been showing too log, hide it
 				this.hide_bubble();
@@ -333,7 +332,7 @@ public class NavitAndroidOverlay extends ImageView
 			int ry = (int) (20 / 1.5f * draw_factor);
 			c.drawRoundRect(box_rect, rx, ry, bubble_paint);
 
-			if (this.confirmed_bubble)
+			if (NavitAndroidOverlay.confirmed_bubble)
 			{
 				// filled red rect (for confirmed bubble)
 				//bubble_paint.setStyle(Style.FILL);

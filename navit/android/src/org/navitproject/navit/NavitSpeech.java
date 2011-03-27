@@ -19,15 +19,8 @@
 
 package org.navitproject.navit;
 
-import java.lang.Thread;
-import android.app.Activity;
-import android.widget.TextView;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Message;
-import android.os.Handler;
-import android.content.Context;
 import android.util.Log;
+
 import com.google.tts.TTS;
 
 

@@ -48,7 +48,7 @@ import android.widget.RelativeLayout;
 public class NavitGraphics
 {
 	private NavitGraphics		parent_graphics;
-	private ArrayList				overlays										= new ArrayList();
+	private ArrayList<NavitGraphics>				overlays										= new ArrayList<NavitGraphics>();
 	int								bitmap_w;
 	int								bitmap_h;
 	int								pos_x;
@@ -97,35 +97,19 @@ public class NavitGraphics
 		private long						last_down_action	= 0L;
 		private Boolean					is_still_pressing;
 		private View						v						= null;
-		private NavitAndroidOverlay	n_overlay			= null;
-		private float						prev_x;
-		private float						prev_y;
 		private float						x;
 		private float						y;
 
 		SensorThread(long last_touch, View v, NavitAndroidOverlay n_ov, float x, float y)
 		{
-			this.prev_x = x;
-			this.prev_y = y;
 			this.x = x;
 			this.y = y;
 			this.running = true;
-			this.n_overlay = n_ov;
 			this.v = v;
 			this.is_still_pressing = true;
 			last_down_action = System.currentTimeMillis();
 			Log.e("NavitGraphics", "SensorThread created");
 		}
-
-		public void down()
-		{
-			this.is_still_pressing = true;
-		}
-
-		//		public void up()
-		//		{
-		//			this.is_still_pressing=false;
-		//		}
 
 		public void stop_me()
 		{
@@ -146,9 +130,9 @@ public class NavitGraphics
 					{
 						// find the class, to get the method "do_longpress_action"
 						// and then call the method
-						Class cls = this.v.getClass();
+						Class<? extends View> cls = this.v.getClass();
 						//Log.e("NavitGraphics", "c=" + String.valueOf(cls));
-						Class partypes[] = new Class[2];
+						Class<?> partypes[] = new Class[2];
 						partypes[0] = Float.TYPE;
 						partypes[1] = Float.TYPE;
 						Method meth = cls.getMethod("do_longpress_action", partypes);
@@ -156,7 +140,7 @@ public class NavitGraphics
 						Object arglist[] = new Object[2];
 						arglist[0] = new Float(this.x);
 						arglist[1] = new Float(this.y);
-						Object retobj = meth.invoke(methobj, arglist);
+						meth.invoke(methobj, arglist);
 					}
 					catch (Throwable e)
 					{
@@ -289,13 +273,10 @@ public class NavitGraphics
 				{
 					PointF touch_now2 = null;
 					PointF touch_start2 = null;
-					PointF touch_prev2 = null;
-					PointF touch_last_load_tiles2 = null;
 
 					//Log.e("NavitGraphics", "onTouchEvent");
 
 					super.onTouchEvent(event);
-					int action = event.getAction();
 					int x = (int) event.getX();
 					int y = (int) event.getY();
 
@@ -538,7 +519,6 @@ public class NavitGraphics
 							this.touch_now.set(event.getX(), event.getY());
 							touch_now2 = touch_now;
 							touch_start2 = touch_start;
-							touch_prev2 = touch_prev;
 							this.touch_prev.set(event.getX(), event.getY());
 
 							try
