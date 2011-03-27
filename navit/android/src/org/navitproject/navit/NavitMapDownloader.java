@@ -22,17 +22,15 @@ package org.navitproject.navit;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 public class NavitMapDownloader
@@ -164,14 +162,11 @@ public class NavitMapDownloader
 	static final int					MAP_WRITE_FILE_BUFFER						= 1024 * 64;
 	static final int					MAP_WRITE_MEM_BUFFER							= 1024 * 64;
 	static final int					MAP_READ_FILE_BUFFER							= 1024 * 64;
-	static final int					UPDATE_PROGRESS_EVERY_CYCLE				= 8;
-
-	static final String				DOWNLOAD_FILENAME								= "navitmap.tmp";
+	static final int					UPDATE_PROGRESS_EVERY_CYCLE				= 20;
+	static final int                MAX_RETRIES                              = 5;
 	static final String				MAP_FILENAME_PRI								= "navitmap.bin";
-	static final String				MAP_FILENAME_SEC								= "navitmap_002.bin";
+	static final String				MAP_FILENAME_NUM								= "navitmap_%03d.bin";
 	static final String				MAP_FILENAME_PATH								= Navit.MAP_FILENAME_PATH;
-
-	static final int					MAX_MAP_COUNT									= 200;
 
 	public class ProgressThread extends Thread
 	{
@@ -198,16 +193,44 @@ public class NavitMapDownloader
 		public void run()
 		{
 			stop_me = false;
-			int exit_code = download_osm_map(mHandler, map_values, this.map_num);
+			int exit_code;
+			int error_counter = 0;
+			
+			Log.v("NavitMapDownloader", "map_num3=" + this.map_num);
+			int my_dialog_num = 0;
+			int map_num = 0;
+			if (this.map_num == Navit.MAP_NUM_PRIMARY)
+			{
+				my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
+			}
+			else if (this.map_num == Navit.MAP_NUM_SECONDARY)
+			{
+				my_dialog_num = Navit.MAPDOWNLOAD_SEC_DIALOG;
+				map_num = 2;
+			}
 
-			// ok, remove dialog
-			Message msg = mHandler.obtainMessage();
-			Bundle b = new Bundle();
-			msg.what = 0;
-			b.putInt("dialog_num", this.my_dialog_num);
-			b.putInt("exit_code", exit_code);
-			msg.setData(b);
-			mHandler.sendMessage(msg);
+			NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
+					, Navit.get_text("Mapdownload"), Navit.get_text("downloading") + ": " + map_values.map_name
+					, my_dialog_num, 20 , 0);
+
+			do
+			{
+				try
+				{
+					Thread.sleep(10 + error_counter * 1000);
+				} catch (InterruptedException e1)	{}
+			} while ( ( exit_code = download_osm_map(mHandler, map_values, my_dialog_num, map_num)) > 2 
+					&& error_counter++ < MAX_RETRIES
+					&& !stop_me);
+
+			NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
+					, Navit.get_text("Mapdownload"), map_values.map_name + " " + Navit.get_text("ready")
+					, my_dialog_num ,  (int) (map_values.est_size_bytes / 1024) , (int) (map_values.est_size_bytes / 1024));
+
+			Log.d("NavitMapDownloader", "success");
+
+			NavitMessages.sendDialogMessage( mHandler , NavitMessages.DIALOG_REMOVE_DIALOG, null, null, this.my_dialog_num 
+					, exit_code , 0 );
 		}
 
 		public void stop_thread()
@@ -266,134 +289,105 @@ public class NavitMapDownloader
 		}
 	}
 
-	public int download_osm_map(Handler handler, osm_map_values map_values, int map_num3)
+	public int download_osm_map(Handler handler, osm_map_values map_values, int my_dialog_num, int map_number)
 	{
 		int exit_code = 1;
-
-		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
-		int my_dialog_num = 0;
-		if (map_num3 == Navit.MAP_NUM_PRIMARY)
-		{
-			my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
-			//Log.v("NavitMapDownloader", "PRI");
-		}
-		else if (map_num3 == Navit.MAP_NUM_SECONDARY)
-		{
-			my_dialog_num = Navit.MAPDOWNLOAD_SEC_DIALOG;
-			//Log.v("NavitMapDownloader", "SEC");
-		}
-		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
-
-		Message msg = handler.obtainMessage();
-		Bundle b = new Bundle();
-		msg.what = 1;
-		b.putInt("max", 20); // use a dummy number here
-		b.putInt("cur", 0);
-		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", Navit.get_text("Mapdownload")); //TRANS
-		b.putString("text", Navit.get_text("downloading") + ": " + map_values.map_name); //TRANS
-		msg.setData(b);
-		handler.sendMessage(msg);
-		try
-		{
-			// little pause here
-			Thread.sleep(10);
-		}
-		catch (InterruptedException e1)
-		{
-		}
-
-		// output filename
-		String PATH = MAP_FILENAME_PATH;
-		String fileName = DOWNLOAD_FILENAME;
-		String final_fileName = "xxx";
-		//Log.v("NavitMapDownloader", "map_num3=" + map_num3);
-		if (map_num3 == Navit.MAP_NUM_SECONDARY)
-		{
-			final_fileName = MAP_FILENAME_SEC;
-		}
-		else if (map_num3 == Navit.MAP_NUM_PRIMARY)
-		{
-			final_fileName = MAP_FILENAME_PRI;
-		}
-		// output path for output filename
-		// String PATH = Environment.getExternalStorageDirectory() + "/download/";
+		boolean resume = false;
+		HttpURLConnection c = null;
+		BufferedOutputStream buf = null;
+		BufferedInputStream bif = null;
+		File outputFile = null;
+	
+		String fileName = map_values.map_name;
 
 		try
 		{
+			long file_size_expected = -1;
+			long file_time_expected = -1;
+			outputFile = new File(MAP_FILENAME_PATH, fileName);
+			long old_download_size = outputFile.length();
+			long already_read = 0;
+			
+			if (old_download_size > 0)
+			{
+				ObjectInputStream infoStream = new ObjectInputStream(new FileInputStream(MAP_FILENAME_PATH + fileName + ".info"));
+				file_size_expected = infoStream.readLong();
+				file_time_expected = infoStream.readLong();
+				infoStream.close();
+			}
 			URL url = new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
 					+ map_values.lat1 + "," + map_values.lon2 + "," + map_values.lat2);
-			HttpURLConnection c = (HttpURLConnection) url.openConnection();
+			
+//			URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
+			c = (HttpURLConnection) url.openConnection();
 			c.setRequestMethod("GET");
 			c.setDoOutput(true);
 			c.setReadTimeout(SOCKET_READ_TIMEOUT);
 			c.setConnectTimeout(SOCKET_CONNECT_TIMEOUT);
+
+			if ( file_size_expected > old_download_size )
+			{
+				// looks like the same file, try to resume
+				resume = true;
+				c.setRequestProperty("Range", "bytes=" + old_download_size + "-");
+				already_read = old_download_size;
+			}
+			
 			long real_size_bytes = c.getContentLength();
-			c.connect();
+			long fileTime = c.getLastModified();
+			Log.d("NavitMapDownloader"
+					, "size: " + real_size_bytes 
+					+ ", expected: " + file_size_expected 
+					+ ", read: " + already_read
+					+ ", timestamp: " + fileTime
+					+ ", timestamp_old: " + file_time_expected);
+			if (resume && (fileTime != file_time_expected 
+					// some server return the remaining size to dl, other the file size
+					|| ((real_size_bytes + already_read != file_size_expected) && real_size_bytes != file_size_expected)))
+			{
+				Log.w("NavitMapDownloader", "Downloaded content to old. Resume not possible");
+				outputFile.delete();
+				return 3;
+			}
+			
+			if (!resume)
+			{
+				outputFile.delete();
+				File infoFile = new File(MAP_FILENAME_PATH, fileName + ".info");
+				ObjectOutputStream infoStream = new ObjectOutputStream(new FileOutputStream(infoFile));
+				infoStream.writeLong(real_size_bytes);
+				infoStream.writeLong(fileTime);
+				infoStream.close();
+			}
+			else
+			{
+				real_size_bytes = file_size_expected;
+			}
 
 			Log.d("NavitMapDownloader", "real size in bytes: " + real_size_bytes);
-			if (real_size_bytes > 20)
-			{
-				// change the estimated filesize to reported filesize
-				map_values.est_size_bytes = real_size_bytes;
-			}
-			Log.d("NavitMapDownloader", "size in bytes: " + map_values.est_size_bytes);
 
-			File file = new File(PATH);
-			File outputFile = new File(file, fileName);
-			File final_outputFile = new File(file, final_fileName);
-			// tests have shown that deleting the file first is sometimes faster -> so we delete it (who knows)
-			outputFile.delete();
-			// seems this command overwrites the output file anyway
-			FileOutputStream fos = new FileOutputStream(outputFile);
-			BufferedOutputStream buf = new BufferedOutputStream(fos, MAP_WRITE_FILE_BUFFER); // buffer
+			buf = new BufferedOutputStream(new FileOutputStream(outputFile, resume) , MAP_WRITE_FILE_BUFFER);
+			bif = new BufferedInputStream(c.getInputStream(), MAP_READ_FILE_BUFFER);
 
-			InputStream is = c.getInputStream();
-			BufferedInputStream bif = new BufferedInputStream(is, MAP_READ_FILE_BUFFER); // buffer
-
-			byte[] buffer = new byte[MAP_WRITE_MEM_BUFFER]; // buffer
+			byte[] buffer = new byte[MAP_WRITE_MEM_BUFFER];
 			int len1 = 0;
-			int already_read = 0;
-			int alt = UPDATE_PROGRESS_EVERY_CYCLE; // show progress about every xx cylces
 			int alt_cur = 0;
-			String kbytes_per_second = "";
 			long start_timestamp = System.currentTimeMillis();
-			NumberFormat formatter = new DecimalFormat("00000.0");
 			String eta_string = "";
-			float per_second_overall = 0f;
+			String info;
+			float per_second_overall;
 			long bytes_remaining = 0;
 			int eta_seconds = 0;
-			while ((len1 = bif.read(buffer)) != -1)
+			while (!stop_me && (len1 = bif.read(buffer)) != -1)
 			{
-				if (stop_me)
+				already_read += len1;
+				
+//				Log.e("NavitMapDownloader", "read: " + already_read);
+				if (alt_cur++ % UPDATE_PROGRESS_EVERY_CYCLE == 0)
 				{
-					// ok we need to be stopped! close all files and end
-					buf.flush();
-					buf.close();
-					fos.close();
-					bif.close();
-					is.close();
-					c.disconnect();
-					return 2;
-				}
-				already_read = already_read + len1;
-				alt_cur++;
-				if (alt_cur > alt)
-				{
-					alt_cur = 0;
-
-					msg = handler.obtainMessage();
-					b = new Bundle();
-					msg.what = 1;
-					b.putInt("max", (int) (map_values.est_size_bytes / 1024));
-					b.putInt("cur", (int) (already_read / 1024));
-					b.putInt("dialog_num", my_dialog_num);
-					b.putString("title", Navit.get_text("Mapdownload")); //TRANS
-					per_second_overall = (float) already_read
-							/ (float) ((System.currentTimeMillis() - start_timestamp) / 1000);
-					kbytes_per_second = formatter.format((per_second_overall / 1024f));
-					bytes_remaining = map_values.est_size_bytes - already_read;
-					eta_seconds = (int) ((float) bytes_remaining / (float) per_second_overall);
+					bytes_remaining = real_size_bytes - already_read;
+					per_second_overall = (already_read - old_download_size) / ((System.currentTimeMillis() - start_timestamp) / 1000f);
+					eta_seconds = (int) (bytes_remaining / per_second_overall);
 					if (eta_seconds > 60)
 					{
 						eta_string = (int) (eta_seconds / 60f) + " m";
@@ -402,73 +396,86 @@ public class NavitMapDownloader
 					{
 						eta_string = eta_seconds + " s";
 					}
-					b
-							.putString("text", Navit.get_text("downloading") + ": " + map_values.map_name
-									+ "\n" + " " + (int) (already_read / 1024f / 1024f) + "Mb / "
-									+ (int) (map_values.est_size_bytes / 1024f / 1024f) + "Mb" + "\n" + " "
-									+ kbytes_per_second + "kb/s" + " " + Navit.get_text("ETA") + ": "
-									+ eta_string); //TRANS
-					msg.setData(b);
-					handler.sendMessage(msg);
+					Log.e("NavitMapDownloader", "per_second_overall: " + per_second_overall + "already_read: " + already_read);
+					info = String.format("%s: %s\n %dMb / %dMb\n %.1f kb/s %s: %s"
+							, Navit.get_text("downloading")
+							, map_values.map_name
+							, already_read / 1024 / 1024
+							, real_size_bytes / 1024 / 1024
+							, per_second_overall / 1024f
+							, Navit.get_text("ETA")
+							, eta_string);
+					Log.e("NavitMapDownloader", "info: " + info);
+
+					NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_PROGRESS_BAR
+							, Navit.get_text("Mapdownload"), info
+							, my_dialog_num, (int) (real_size_bytes / 1024), (int) (already_read / 1024));
 				}
 				buf.write(buffer, 0, len1);
 			}
-			buf.flush();
-
-			buf.close();
-			fos.close();
-
-			bif.close();
-			is.close();
-
-			c.disconnect();
-
-			// delete an already final filename, first
-			final_outputFile.delete();
-			// rename file to final name
-			outputFile.renameTo(final_outputFile);
+			
+			Log.d("NavitMapDownloader", "Connectionerror: " + c.getResponseCode ());
+			
+			if (stop_me)
+			{
+				exit_code = 2;
+			}
+			else if ( already_read < real_size_bytes )
+			{
+				Log.d("NavitMapDownloader", "Server send only " + already_read + " bytes of " + real_size_bytes);
+				exit_code = 4;
+			}
+			else
+			{
+				exit_code = 0;
+			}
 		}
 		catch (IOException e)
 		{
-			msg = handler.obtainMessage();
-			b = new Bundle();
-			msg.what = 2;
-			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", Navit.get_text("Error downloading map!")); //TRANS
-			msg.setData(b);
-			handler.sendMessage(msg);
+			NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_TOAST
+					, null, Navit.get_text("Error downloading map!")
+					, my_dialog_num , 0 , 0);
 
-			Log.d("NavitMapDownloader", "Error: " + e);
+			Log.d("NavitMapDownloader", "Error: '" + e + "' (" + e.getCause()+ " Stream_Err: " + c.getErrorStream ());
 			exit_code = 3;
 		}
 		catch (Exception e)
 		{
-			msg = handler.obtainMessage();
-			b = new Bundle();
-			msg.what = 2;
-			b.putInt("dialog_num", my_dialog_num);
-			b.putString("text", Navit.get_text("Error downloading map!")); //TRANS
-			msg.setData(b);
-			handler.sendMessage(msg);
+			NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_TOAST
+					, null, Navit.get_text("Error downloading map!")
+					, my_dialog_num , 0 , 0);
 
 			Log.d("NavitMapDownloader", "gerneral Error: " + e);
 			exit_code = 4;
 		}
 
-		msg = handler.obtainMessage();
-		b = new Bundle();
-		msg.what = 1;
-		b.putInt("max", (int) (map_values.est_size_bytes / 1024));
-		b.putInt("cur", (int) (map_values.est_size_bytes / 1024));
-		b.putInt("dialog_num", my_dialog_num);
-		b.putString("title", Navit.get_text("Mapdownload")); //TRANS
-		b.putString("text", map_values.map_name + " "+Navit.get_text("ready")); //TRANS
-		msg.setData(b);
-		handler.sendMessage(msg);
+		// always cleanup, as we might get errors when trying to resume
+		if (buf!=null && bif!=null)
+		{
+			try {
+				buf.flush();
+				buf.close();
+	
+				bif.close();
+			} catch (IOException e) { }
+		}
 
+		if (exit_code == 0)
+		{
+			String final_fileName = MAP_FILENAME_PRI;
+			
+			if (map_number>0)
+			{
+				final_fileName = String.format(MAP_FILENAME_NUM, map_number);
+			}
 
-		Log.d("NavitMapDownloader", "success");
-		exit_code = 0;
+			File final_outputFile = new File(MAP_FILENAME_PATH, final_fileName);
+			// delete an already final filename, first
+			final_outputFile.delete();
+			// rename file to final name
+			outputFile.renameTo(final_outputFile);
+		}
+		
 		return exit_code;
 	}
 }
