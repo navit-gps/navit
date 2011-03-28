@@ -33,7 +33,7 @@ import java.net.URL;
 import android.os.Handler;
 import android.util.Log;
 
-public class NavitMapDownloader
+public class NavitMapDownloader extends Thread
 {
 	public static class osm_map_values
 	{
@@ -61,7 +61,7 @@ public class NavitMapDownloader
 	//
 	// define the maps here
 	//
-	static final osm_map_values[] osm_maps = {
+	private static final osm_map_values[] osm_maps = {
 		new osm_map_values("Whole Planet", "-180", "-90", "180", "90", 5985878379L, 0),
 		new osm_map_values("Africa", "-20.8", "-35.2", "52.5", "37.4", 180836389L, 0),
 		new osm_map_values("Angola", "11.4", "-18.1", "24.2", "-5.3", 56041641L, 1),
@@ -168,87 +168,63 @@ public class NavitMapDownloader
 	static final String				MAP_FILENAME_NUM								= "navitmap_%03d.bin";
 	static final String				MAP_FILENAME_PATH								= Navit.MAP_FILENAME_PATH;
 
-	public class ProgressThread extends Thread
+	Handler			mHandler;
+	osm_map_values	map_values;
+	private int				map_slot;
+	private int				dialog_num;
+
+	public void run()
 	{
-		Handler			mHandler;
-		osm_map_values	map_values;
-		int				map_num;
-		int				my_dialog_num;
+		stop_me = false;
+		int exit_code;
+		int error_counter = 0;
+		
+		Log.v("NavitMapDownloader", "map_num3=" + this.map_slot);
 
-		ProgressThread(Handler h, osm_map_values map_values, int map_num2)
+		NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
+				, Navit.get_text("Mapdownload"), Navit.get_text("downloading") + ": " + map_values.map_name
+				, Navit.MAPDOWNLOAD_DIALOG, 20 , 0);
+
+		do
 		{
-			this.mHandler = h;
-			this.map_values = map_values;
-			this.map_num = map_num2;
-			if (this.map_num == Navit.MAP_NUM_PRIMARY)
+			try
 			{
-				this.my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
-			}
-			else if (this.map_num == Navit.MAP_NUM_SECONDARY)
-			{
-				this.my_dialog_num = Navit.MAPDOWNLOAD_SEC_DIALOG;
-			}
-		}
+				Thread.sleep(10 + error_counter * 1000);
+			} catch (InterruptedException e1)	{}
+		} while ( ( exit_code = download_osm_map(mHandler, map_values, map_slot)) > 2 
+				&& error_counter++ < MAX_RETRIES
+				&& !stop_me);
 
-		public void run()
-		{
-			stop_me = false;
-			int exit_code;
-			int error_counter = 0;
-			
-			Log.v("NavitMapDownloader", "map_num3=" + this.map_num);
-			int my_dialog_num = 0;
-			int map_num = 0;
-			if (this.map_num == Navit.MAP_NUM_PRIMARY)
-			{
-				my_dialog_num = Navit.MAPDOWNLOAD_PRI_DIALOG;
-			}
-			else if (this.map_num == Navit.MAP_NUM_SECONDARY)
-			{
-				my_dialog_num = Navit.MAPDOWNLOAD_SEC_DIALOG;
-				map_num = 2;
-			}
+		NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
+				, Navit.get_text("Mapdownload"), map_values.map_name + " " + Navit.get_text("ready")
+				, dialog_num ,  (int) (map_values.est_size_bytes / 1024) , (int) (map_values.est_size_bytes / 1024));
 
-			NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
-					, Navit.get_text("Mapdownload"), Navit.get_text("downloading") + ": " + map_values.map_name
-					, my_dialog_num, 20 , 0);
+		Log.d("NavitMapDownloader", "success");
 
-			do
-			{
-				try
-				{
-					Thread.sleep(10 + error_counter * 1000);
-				} catch (InterruptedException e1)	{}
-			} while ( ( exit_code = download_osm_map(mHandler, map_values, my_dialog_num, map_num)) > 2 
-					&& error_counter++ < MAX_RETRIES
-					&& !stop_me);
+		NavitMessages.sendDialogMessage( mHandler , NavitMessages.DIALOG_REMOVE_PROGRESS_BAR, null, null, dialog_num 
+				, exit_code , 0 );
+	}
 
-			NavitMessages.sendDialogMessage( mHandler, NavitMessages.DIALOG_PROGRESS_BAR
-					, Navit.get_text("Mapdownload"), map_values.map_name + " " + Navit.get_text("ready")
-					, my_dialog_num ,  (int) (map_values.est_size_bytes / 1024) , (int) (map_values.est_size_bytes / 1024));
-
-			Log.d("NavitMapDownloader", "success");
-
-			NavitMessages.sendDialogMessage( mHandler , NavitMessages.DIALOG_REMOVE_DIALOG, null, null, this.my_dialog_num 
-					, exit_code , 0 );
-		}
-
-		public void stop_thread()
-		{
-			stop_me = true;
-			Log.d("NavitMapDownloader", "stop_me -> true");
-		}
+	public void stop_thread()
+	{
+		stop_me = true;
+		Log.d("NavitMapDownloader", "stop_me -> true");
 	}
 
 	public Navit	navit_jmain	= null;
 
-	public NavitMapDownloader(Navit main)
+	public NavitMapDownloader(Navit main, Handler h, int map_id, int dialog_num, int map_slot)
 	{
+		this.mHandler = h;
+		this.map_values = osm_maps[map_id];
+		this.map_slot = map_slot;
 		this.navit_jmain = main;
+
 	}
 
 	public static void init()
 	{
+
 		// need only init once
 		if (OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE != null) { return; }
 		
@@ -289,7 +265,7 @@ public class NavitMapDownloader
 		}
 	}
 
-	public int download_osm_map(Handler handler, osm_map_values map_values, int my_dialog_num, int map_number)
+	public int download_osm_map(Handler handler, osm_map_values map_values, int map_number)
 	{
 		int exit_code = 1;
 		boolean resume = false;
@@ -409,7 +385,7 @@ public class NavitMapDownloader
 
 					NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_PROGRESS_BAR
 							, Navit.get_text("Mapdownload"), info
-							, my_dialog_num, (int) (real_size_bytes / 1024), (int) (already_read / 1024));
+							, dialog_num, (int) (real_size_bytes / 1024), (int) (already_read / 1024));
 				}
 				buf.write(buffer, 0, len1);
 			}
@@ -434,7 +410,7 @@ public class NavitMapDownloader
 		{
 			NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_TOAST
 					, null, Navit.get_text("Error downloading map!")
-					, my_dialog_num , 0 , 0);
+					, dialog_num , 0 , 0);
 
 			Log.d("NavitMapDownloader", "Error: '" + e + "' (" + e.getCause()+ " Stream_Err: " + c.getErrorStream ());
 			exit_code = 3;
@@ -443,7 +419,7 @@ public class NavitMapDownloader
 		{
 			NavitMessages.sendDialogMessage( handler, NavitMessages.DIALOG_TOAST
 					, null, Navit.get_text("Error downloading map!")
-					, my_dialog_num , 0 , 0);
+					, dialog_num , 0 , 0);
 
 			Log.d("NavitMapDownloader", "gerneral Error: " + e);
 			exit_code = 4;

@@ -37,26 +37,8 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//Log.e("Navit", "all ok");
 
-		/*
-		 * 
-		 * seems not to work with this kind of view, strange
-		 * 
-		 * // make the nice thumb scroll thingy :-)
-		 * ListView v = this.getListView();
-		 * v.setFastScrollEnabled(false);
-		 * v.setVerticalFadingEdgeEnabled(true);
-		 * v.setFadingEdgeLength(25);
-		 * this.setContentView(v);
-		 * 
-		 * TextView text_v = new TextView(this);
-		 * text_v.setText("Select destination");
-		 * 
-		 * v.addHeaderView(text_v);
-		 */
-
-		NavitMapDownloader.init();
+ 		NavitMapDownloader.init();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1,
 				NavitMapDownloader.OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE);
@@ -67,29 +49,11 @@ public class NavitDownloadSelectMapActivity extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
-		// Get the item that was clicked
-		// Object o = this.getListAdapter().getItem(position);
-		// String keyword = o.toString();
 		this.selected_id = position;
-		//Toast.makeText(this, "You selected: " + position + " " + keyword, Toast.LENGTH_LONG).show();
 		Log.e("Navit", "p:" + position);
 		Log.e("Navit", "i:" + id);
-
-		// close this activity
-		executeDone();
-	}
-
-	//	@Override
-	//	public void onBackPressed()
-	//	{
-	//		executeDone();
-	//		super.onBackPressed();
-	//	}
-
-	private void executeDone()
-	{
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("selected_id", String.valueOf(this.selected_id));
+		resultIntent.putExtra("selected_id",this.selected_id);
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
