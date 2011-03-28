@@ -41,7 +41,7 @@
 #ifdef USE_WEBOS
 # include "vehicle.h"
 # include <PDL.h>
-//# define USE_WEBOS_ACCELEROMETER
+# define USE_WEBOS_ACCELEROMETER
 #endif
 
 #define RASTER
@@ -1588,10 +1588,14 @@ sdl_accelerometer_handler(void* param)
     int zAxis = SDL_JoystickGetAxis(gr->accelerometer, 2);
     char new_orientation;
 
-    if (xAxis < -15000 && yAxis > -7000 && yAxis < 7000)
-	new_orientation = WEBOS_ORIENTATION_LANDSCAPE;
-    else if (yAxis > 15000 && xAxis > -7000 && xAxis < 7000)
-	new_orientation = WEBOS_ORIENTATION_PORTRAIT;
+    if (zAxis > -30000) {
+	if (xAxis < -30000)
+	    new_orientation = WEBOS_ORIENTATION_LANDSCAPE;
+	else if (yAxis > 30000)
+	    new_orientation = WEBOS_ORIENTATION_PORTRAIT;
+	else
+	    return;
+    }
     else
 	return;
 
@@ -1742,8 +1746,12 @@ static gboolean graphics_sdl_idle(void *data)
 #endif
 
 #ifdef USE_WEBOS_ACCELEROMETER
-    struct callback* accel_cb = callback_new_1(callback_cast(sdl_accelerometer_handler), gr);
-    struct event_timeout* accel_to = event_add_timeout(200, 1, accel_cb);
+    struct callback* accel_cb = NULL;
+    struct event_timeout* accel_to = NULL;
+    if (PDL_GetPDKVersion() > 100) {
+	accel_cb = callback_new_1(callback_cast(sdl_accelerometer_handler), gr);
+	accel_to = event_add_timeout(200, 1, accel_cb);
+    }
 #endif
 #ifdef USE_WEBOS
     unsigned int idle_tasks_idx=0;
@@ -2087,8 +2095,10 @@ static gboolean graphics_sdl_idle(void *data)
 #endif
 
 #ifdef USE_WEBOS_ACCELEROMETER
-    event_remove_timeout(accel_to);
-    callback_destroy(accel_cb);
+    if (PDL_GetPDKVersion() > 100) {
+	event_remove_timeout(accel_to);
+	callback_destroy(accel_cb);
+    }
 #endif
 
     return TRUE;
