@@ -6,7 +6,7 @@ import android.os.Message;
 
 public class NavitMessages {
 
-	static final int DIALOG_REMOVE_DIALOG = 0;
+	static final int DIALOG_REMOVE_PROGRESS_BAR = 0;
 	static final int DIALOG_PROGRESS_BAR = 1;
 	static final int DIALOG_TOAST = 2;
 		
