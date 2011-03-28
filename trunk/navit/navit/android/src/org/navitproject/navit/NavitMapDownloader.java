@@ -35,7 +35,7 @@ import android.util.Log;
 
 public class NavitMapDownloader extends Thread
 {
-	public static class osm_map_values
+	private static class osm_map_values
 	{
 		String  lon1;
 		String  lat1;
@@ -152,26 +152,26 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Venezuela", "-73.6","0.4", "-59.7","12.8", 64838882L, 1)
 	};
 
-	public static String[]			OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE	= null;
+	private static String[]              OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE    = null;
 
-	public static int[]				OSM_MAP_NAME_ORIG_ID_LIST					= null;
+	public static int[]                 OSM_MAP_NAME_ORIG_ID_LIST               = null;
 
-	public Boolean						stop_me											= false;
-	static final int					SOCKET_CONNECT_TIMEOUT						= 25000;							// 25 secs.
-	static final int					SOCKET_READ_TIMEOUT							= 15000;							// 15 secs.
-	static final int					MAP_WRITE_FILE_BUFFER						= 1024 * 64;
-	static final int					MAP_WRITE_MEM_BUFFER							= 1024 * 64;
-	static final int					MAP_READ_FILE_BUFFER							= 1024 * 64;
-	static final int					UPDATE_PROGRESS_EVERY_CYCLE				= 20;
-	static final int                MAX_RETRIES                              = 5;
-	static final String				MAP_FILENAME_PRI								= "navitmap.bin";
-	static final String				MAP_FILENAME_NUM								= "navitmap_%03d.bin";
-	static final String				MAP_FILENAME_PATH								= Navit.MAP_FILENAME_PATH;
+	private Boolean                     stop_me                                 = false;
+	private static final int            SOCKET_CONNECT_TIMEOUT                  = 25000;			// 25 secs.
+	private static final int            SOCKET_READ_TIMEOUT                     = 15000;			// 15 secs.
+	private static final int            MAP_WRITE_FILE_BUFFER                   = 1024 * 64;
+	private static final int            MAP_WRITE_MEM_BUFFER                    = 1024 * 64;
+	private static final int            MAP_READ_FILE_BUFFER                    = 1024 * 64;
+	private static final int            UPDATE_PROGRESS_EVERY_CYCLE             = 20;
+	private static final int            MAX_RETRIES                             = 5;
+	private static final String         MAP_FILENAME_PRI                        = "navitmap.bin";
+	private static final String         MAP_FILENAME_NUM                        = "navitmap_%03d.bin";
+	private static final String         MAP_FILENAME_PATH                       = Navit.MAP_FILENAME_PATH;
 
-	Handler			mHandler;
-	osm_map_values	map_values;
-	private int				map_slot;
-	private int				dialog_num;
+	private Handler                     mHandler;
+	private osm_map_values              map_values;
+	private int                         map_slot;
+	private int                         dialog_num;
 
 	public void run()
 	{
@@ -211,22 +211,21 @@ public class NavitMapDownloader extends Thread
 		Log.d("NavitMapDownloader", "stop_me -> true");
 	}
 
-	public Navit	navit_jmain	= null;
-
 	public NavitMapDownloader(Navit main, Handler h, int map_id, int dialog_num, int map_slot)
 	{
 		this.mHandler = h;
 		this.map_values = osm_maps[map_id];
 		this.map_slot = map_slot;
-		this.navit_jmain = main;
-
 	}
 
-	public static void init()
+	public static String[] getMenu()
 	{
 
 		// need only init once
-		if (OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE != null) { return; }
+		if (OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE != null) 
+		{ 
+			return OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE;
+		}
 		
 		String menu_temp[] = new String[osm_maps.length*2];
 		OSM_MAP_NAME_ORIG_ID_LIST = new int[osm_maps.length*2];
@@ -263,6 +262,7 @@ public class NavitMapDownloader extends Thread
 		{
 			OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE[i] = menu_temp[i];
 		}
+		return OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE;
 	}
 
 	public int download_osm_map(Handler handler, osm_map_values map_values, int map_number)
@@ -454,4 +454,5 @@ public class NavitMapDownloader extends Thread
 		
 		return exit_code;
 	}
+
 }
