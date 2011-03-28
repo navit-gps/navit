@@ -139,6 +139,7 @@ save_map_csv(struct map_priv *m)
 			rename(filename,m->filename);
 		}
 		g_free(filename);
+		m->dirty = 0;
 	}
 }
 
@@ -263,6 +264,8 @@ csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 						g_free((struct attr*)attr_list->data);
 					}
 					attr_list->data = attr_new;
+					m->dirty = 1;
+					save_map_csv(m);
 					return 1;
 				default:
 					g_free(attr_new);
@@ -276,6 +279,8 @@ csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 		//add new attribute
 		curr_attr_list = g_list_prepend(curr_attr_list, attr_new);	
 		((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list = curr_attr_list;
+			m->dirty = 1;
+			save_map_csv(m);
 		return 1;
 	}
 	g_free(attr_new);
@@ -357,6 +362,8 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	quadtree_delete_item(m->tree_root, query_res);
 	g_free(query_res);
 	quadtree_add( m->tree_root, &insert_item);
+	m->dirty = 1;
+	save_map_csv(m);
 	return 1;
 }
 
