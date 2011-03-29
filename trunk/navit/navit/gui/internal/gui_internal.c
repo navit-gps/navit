@@ -3241,7 +3241,13 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 			if (! strcmp(wm_name,"Town"))
 				trunk_name = g_strrstr(res->town->common.town_name, wi->text);
 			if (! strcmp(wm_name,"Street"))
-				trunk_name = g_strrstr(name=res->street->name, wi->text);
+			{
+				name=res->street->name;
+				if (name)
+					trunk_name = g_strrstr(name, wi->text);
+				else
+					trunk_name = NULL;
+			}
 
 			if (trunk_name) {
 				char next_char = trunk_name[strlen(wi->text)];
