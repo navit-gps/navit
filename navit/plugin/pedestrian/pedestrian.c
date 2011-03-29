@@ -28,7 +28,7 @@
 #include <termios.h>
 #include <errno.h>
 #include <sys/ioctl.h>
-#include <navit/navit_config.h>
+#include "config.h"
 #include <navit/item.h>
 #include <navit/main.h>
 #include <navit/debug.h>

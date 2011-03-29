@@ -408,6 +408,7 @@ if(ANDROID)
    set_with_reason(graphics/android "Android detected" TRUE)
    set_with_reason(speech/android "Android detected" TRUE)
    set_with_reason(vehicle/android "Android detected" TRUE)
+   set_with_reason(plugin/pedestrian "Android detected" TRUE)
    cfg_feature(SHARED_LIBNAVIT "Android detected" TRUE)
    
    add_feature(XPM2PNG "Android detected" TRUE)
