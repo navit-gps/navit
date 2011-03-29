@@ -2,6 +2,10 @@ if (ANDROID)
 
    FILE(GLOB SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*/*/*/*")
 
+   foreach ( PERMISSION ${ANDROID_PERMISSIONS})
+      set(ANDROID_PERMISSIONS_EXPANDED "${ANDROID_PERMISSIONS_EXPANDED}<uses-permission\tandroid:name=\\\"android.permission.${PERMISSION}\\\"/>" )
+   endforeach()
+
    add_custom_command (
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml
       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml.cmake
@@ -11,21 +15,22 @@ if (ANDROID)
                                -D NAME=ANDROID_VERSION_INT
                                -D ANDROID_VERSION_NAME=${PACKAGE_STRING}
                                -D ANDROID_API_VERSION=${ANDROID_API_VERSION}
+                               -D ANDROID_PERMISSIONS:string="${ANDROID_PERMISSIONS_EXPANDED}"
                                -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
    )
 
    add_custom_command (
       OUTPUT build.xml
       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/AndroidManifest.xml ${SRC_FILES}
-      COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
       COMMAND android update project -t android-${ANDROID_API_VERSION} -p ${CMAKE_CURRENT_BINARY_DIR}
    )
 
    add_custom_target( android_resources
       DEPENDS build.xml ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS}
-      COMMAND cmake -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
-      COMMAND cmake -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi
-      COMMAND cmake -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi/
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi
+      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi/
       COMMAND ${CMAKE_COMMAND}
                      -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/navit*.xml" 
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
