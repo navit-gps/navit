@@ -91,6 +91,7 @@ struct map_priv {
 	char *map_release;
 	int flags;
 	char *url;
+	int update_available;
 	char *progress;
 	struct callback_list *cbl;
 	struct map_download *download;
@@ -2387,6 +2388,13 @@ map_binfile_open(struct map_priv *m)
 				m->map_version=attr.u.num;
 			if (binfile_attr_get(item->priv_data, attr_map_release, &attr))
 				m->map_release=g_strdup(attr.u.str);
+			if (m->url && binfile_attr_get(item->priv_data, attr_url, &attr)) {
+				dbg(0,"url config %s map %s\n",m->url,attr.u.str);
+				if (strcmp(m->url, attr.u.str)) 
+					m->update_available=1;
+				g_free(m->url);
+				m->url=g_strdup(attr.u.str);
+			}
 		}
 		map_rect_destroy_binfile(mr);
 		if (m->map_version >= 16) {
