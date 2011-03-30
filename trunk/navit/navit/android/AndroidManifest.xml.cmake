@@ -4,6 +4,7 @@
       android:sharedUserId="org.navitproject.navit"
       android:versionCode="@ANDROID_VERSION_INT@"
       android:versionName="@ANDROID_VERSION_NAME@"
+      android:installLocation="auto">
     <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
         <activity android:name="Navit"
