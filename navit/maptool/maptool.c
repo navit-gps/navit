@@ -182,6 +182,7 @@ int main(int argc, char **argv)
 	struct zip_info *zip_info=NULL;
 	int suffix_start=0;
 	char *timestamp=current_to_iso8601();
+	char *url=NULL;
 #ifndef HAVE_GLIB
 	_g_slice_thread_init_nomessage();
 #endif
@@ -214,6 +215,7 @@ int main(int argc, char **argv)
 			{"input-file", 1, 0, 'i'},
 			{"rule-file", 1, 0, 'r'},
 			{"ignore-unknown", 0, 0, 'n'},
+			{"url", 1, 0, 'u'},
 			{"ways-only", 0, 0, 'W'},
 			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
@@ -222,7 +224,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hi:knm:p:r:s:wz:", long_options, &option_index);
+					      "e:hi:knm:p:r:s:wu:z:", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -334,6 +336,9 @@ int main(int argc, char **argv)
 			    fprintf( stderr, "\nRule file (%s) not found\n", optarg );
 			    exit( -1 );
 			}
+			break;
+		case 'u':
+			url=optarg;
 			break;
 #ifdef HAVE_ZLIB
 		case 'z':
@@ -585,6 +590,10 @@ int main(int argc, char **argv)
 				if (md5file) 
 					zip_set_md5(zip_info, 1);
 				zip_open(zip_info, result, zipdir, zipindex);	
+				if (url) {
+					map_information_attrs[1].type=attr_url;
+					map_information_attrs[1].u.str=url;
+				}
 				index_init(zip_info, 1);
 			}
 			if (!strcmp(suffix,"r")) {
