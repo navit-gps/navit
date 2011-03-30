@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME GNU)
 
 set(ANDROID TRUE)
-set(ANDROID_API_VERSION 4 CACHE STRING "Andriod API Version")
+set(ANDROID_API_VERSION 8 CACHE STRING "Andriod API Version")
 
 find_program(CMAKE_C_COMPILER arm-eabi-gcc arm-eabi-gcc.exe)
 find_program(CMAKE_CXX_COMPILER arm-eabi-gcc arm-eabi-g++.exe)
