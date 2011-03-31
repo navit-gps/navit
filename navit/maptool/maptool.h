@@ -303,6 +303,7 @@ void zip_set_maxnamelen(struct zip_info *info, int max);
 int zip_get_maxnamelen(struct zip_info *info);
 int zip_add_member(struct zip_info *info);
 int zip_set_timestamp(struct zip_info *info, char *timestamp);
+int zip_set_password(struct zip_info *info, char *password);
 void zip_open(struct zip_info *info, char *out, char *dir, char *index);
 FILE *zip_get_index(struct zip_info *info);
 int zip_get_zipnum(struct zip_info *info);
