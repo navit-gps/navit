@@ -425,6 +425,14 @@ zip_set_timestamp(struct zip_info *info, char *timestamp)
 	return 0;
 }
 
+int
+zip_set_password(struct zip_info *info, char *passwd)
+{
+	info->passwd=passwd;
+	return 1;
+}
+
+
 void
 zip_open(struct zip_info *info, char *out, char *dir, char *index)
 {
