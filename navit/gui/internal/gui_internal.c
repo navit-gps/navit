@@ -3937,15 +3937,126 @@ gui_internal_cmd2_abort_navigation(struct gui_priv *this, char *function, struct
 	navit_set_destination(this->nav, NULL, NULL, 0);
 }
 
+static void
+gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data)
+{
+	char *text=g_strdup_printf(_("Download %s"),wm->name);
+	struct widget *w, *wb;
+	struct map *map=data;
+	double bllon,bllat,trlon,trlat;
+
+	wb=gui_internal_menu(this, text);
+	g_free(text);
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
+	gui_internal_widget_append(wb, w);
+        if (sscanf(wm->prefix,"%lf,%lf,%lf,%lf",&bllon,&bllat,&trlon,&trlat) == 4) {
+		struct coord_geo g;
+		struct map_selection sel;
+		struct map_rect *mr;
+		struct item *item;
+
+		sel.next=NULL;
+		sel.order=255;
+		g.lng=bllon;
+		g.lat=trlat;
+		transform_from_geo(projection_mg, &g, &sel.u.c_rect.lu);
+		g.lng=trlon;
+		g.lat=bllat;
+		transform_from_geo(projection_mg, &g, &sel.u.c_rect.rl);
+		sel.range.min=type_none;
+		sel.range.max=type_last;
+		mr=map_rect_new(map, &sel);
+		while ((item=map_rect_get_item(mr))) {
+			dbg(0,"item\n");
+		}
+		map_rect_destroy(mr);
+	}
+	
+	dbg(0,"bbox=%s\n",wm->prefix);
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct attr on, off;
+	struct widget *w,*wb,*wma;
+	struct map *map=data;
+	FILE *f;
+	char *search,buffer[256];
+	int found,sp_match=0;
+
+	dbg(1,"wm=%p prefix=%s\n",wm,wm->prefix);
+
+	search=wm->prefix;
+	if (search) {
+		found=0;
+		while(search[sp_match] == ' ')
+			sp_match++;
+		sp_match++;
+	} else {
+		found=1;
+	}
+	on.type=off.type=attr_active;
+	on.u.num=1;
+	off.u.num=0;
+	wb=gui_internal_menu(this, wm->name?wm->name:_("Map Download"));
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
+	gui_internal_widget_append(wb, w);
+	if (!search) {
+		wma=gui_internal_button_map_attr_new(this, _("Active"), gravity_left_center|orientation_horizontal|flags_fill, map, &on, &off, 1);
+		gui_internal_widget_append(w, wma);
+	}
+	f=fopen("maps/areas.tsv","r");
+	while (fgets(buffer, sizeof(buffer), f)) {
+		char *nl,*description,*description_size,*bbox,*size=NULL;
+		int sp=0;
+		if ((nl=strchr(buffer,'\n')))
+			*nl='\0';
+		if ((nl=strchr(buffer,'\r')))
+			*nl='\0';
+		while(buffer[sp] == ' ')
+			sp++;
+		if ((bbox=strchr(buffer,'\t')))
+			*bbox++='\0';
+		if (bbox && (size=strchr(bbox,'\t'))) 
+			*size++='\0';
+		if (search && !strcmp(buffer, search)) {
+			wma=gui_internal_button_new_with_callback(this, _("Download completely"), NULL, 
+				gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, map);
+			wma->name=g_strdup(buffer+sp);
+			wma->prefix=g_strdup(bbox);
+			gui_internal_widget_append(w, wma);
+			found=1;
+		} else if (sp < sp_match)
+			found=0;
+		if (sp == sp_match && found && buffer[sp]) {
+			description=g_strdup(buffer+sp);
+			if (size)
+				description_size=g_strdup_printf("%s (%s)",description,size);
+			else
+				description_size=g_strdup(description);
+			wma=gui_internal_button_new_with_callback(this, description_size, NULL, 
+				gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download, map);
+			g_free(description_size);
+			wma->prefix=g_strdup(buffer);
+			wma->name=description;
+			gui_internal_widget_append(w, wma);
+		}
+	}
+	
+	gui_internal_menu_render(this);
+}
 
 static void
 gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	struct attr attr, on, off, description, type, data;
+	struct attr attr, on, off, description, type, data, url, active;
 	struct widget *w,*wb,*wma;
 	char *label;
 	struct attr_iter *iter;
-
 
 	wb=gui_internal_menu(this, _("Maps"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
@@ -3965,8 +4076,16 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 				data.u.str="";
 			label=g_strdup_printf("%s:%s", type.u.str, data.u.str);
 		}
-		wma=gui_internal_button_map_attr_new(this, label, gravity_left_center|orientation_horizontal|flags_fill,
-			attr.u.map, &on, &off, 1);
+		if (map_get_attr(attr.u.map, attr_url, &url, NULL)) {
+			if (!map_get_attr(attr.u.map, attr_active, &active, NULL))
+				active.u.num=1;
+			wma=gui_internal_button_new_with_callback(this, label, image_new_xs(this, active.u.num ? "gui_active" : "gui_inactive"),
+			gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_map_download, attr.u.map);
+		} else {
+			wma=gui_internal_button_map_attr_new(this, label, gravity_left_center|orientation_horizontal|flags_fill,
+				attr.u.map, &on, &off, 1);
+		}	
 		gui_internal_widget_append(w, wma);
 		g_free(label);
 	}
@@ -6304,53 +6423,6 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
-static void
-gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
-{
-	char *html;
-	struct file *f;
-	int size;
-	int mode=0;
-	struct attr *attrs[2]={NULL,NULL};
-	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type) || !in[0]->u.str)
-		return;
-	if (in[1] && ATTR_IS_INT(in[1]->type))
-		mode=in[1]->u.num;
-	attrs[0]=in[0];
-	f=file_create(NULL, attrs);
-	if (! f)
-		return;
-	if (mode) {
-		FILE *fm=fopen("map.bin","wb");
-		unsigned char *data;
-		long long downloaded=0;
-		for (;;) {
-			data=file_data_read_special(f, 8192, &size);
-			if (size) {
-				if (fwrite(data, size, 1, fm) != 1) {
-					dbg(0,"write error\n");
-					break;
-				}
-				downloaded+=size;
-				dbg(0,LONGLONG_FMT" of "LONGLONG_FMT"\n",downloaded,f->size);
-			}
-			g_free(data);
-			if (!size)
-				break;
-		}
-		fclose(fm);
-	} else {
-		html=(char *)file_data_read_special(f, 8192, &size);
-		if (size < 8192) {
-			html[size]='\0';
-			printf("%s\n",html);
-			gui_internal_html_menu(this, html, NULL);
-		}
-		g_free(html);
-	}
-	file_destroy(f);
-}
-
 /**
  * @brief handles the 'next page' table event.
  * A callback function that is invoked when the 'next page' button is pressed
@@ -6568,7 +6640,6 @@ static struct command_table commands[] = {
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
-	{"map_downloader",command_cast(gui_internal_cmd_map_downloader)},
 };
 
 
