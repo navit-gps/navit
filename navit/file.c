@@ -431,6 +431,8 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 	while ((size > 0 || file->requests) && (!eof || file->buffer_len)) {
 		int toread=buffer_size-file->buffer_len;
 		if (toread >= 4096 && !eof) {
+			if (!file->requests && toread > size)
+				toread=size;
 			rd=read(file->fd, file->buffer+file->buffer_len, toread);
 			if (rd > 0) {
 				file->buffer_len+=rd;
@@ -441,7 +443,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 			dbg(1,"checking header\n");
 			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				dbg(1,"found %s\n",file->buffer);
+				dbg(1,"found %s (%d bytes)\n",file->buffer,strlen(file->buffer));
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
