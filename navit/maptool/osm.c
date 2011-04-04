@@ -233,7 +233,7 @@ struct country_table {
 	{ 516,"Namibia"},
 	{ 520,"Nauru"},
 	{ 524,"Nepal"},
-	{ 528,"Nederland,The Netherlands,Niederlande,NL"},
+	{ 528,"Nederland,The Netherlands,Niederlande,NL,Netherlands"},
 	{ 530,"Netherlands Antilles"},
 	{ 533,"Aruba"},
 	{ 540,"New Caledonia"},
