@@ -912,7 +912,7 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
 		switch(this_->debug_idx) {
 		case 0:
                         this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("overall: %d",tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, -1));
+			this_->str=attr->u.str=g_strdup_printf("overall: %d (limit %d)",tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, -1), tr->offroad_limit_pref);
                         return 1;
 		case 1:
 			this_->debug_idx++;
