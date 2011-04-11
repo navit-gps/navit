@@ -221,6 +221,10 @@ static void event_sdl_remove_timeout(struct event_timeout *);
 static struct event_idle *event_sdl_add_idle(int, struct callback *);
 static void event_sdl_remove_idle(struct event_idle *);
 static void event_sdl_call_callback(struct callback_list *);
+# ifdef USE_WEBOS_ACCELEROMETER
+static unsigned int sdl_orientation_count = 2^16;
+static char sdl_next_orientation = WEBOS_ORIENTATION_PORTRAIT;
+# endif
 #endif
 static unsigned char * ft_buffer = NULL;
 static unsigned int    ft_buffer_size = 0;
@@ -1586,12 +1590,14 @@ sdl_accelerometer_handler(void* param)
     int xAxis = SDL_JoystickGetAxis(gr->accelerometer, 0);
     int yAxis = SDL_JoystickGetAxis(gr->accelerometer, 1);
     int zAxis = SDL_JoystickGetAxis(gr->accelerometer, 2);
-    char new_orientation;
+    unsigned char new_orientation;
+
+    dbg(2,"x(%d) y(%d) z(%d) c(%d)\n",xAxis, yAxis, zAxis, sdl_orientation_count);
 
     if (zAxis > -30000) {
-	if (xAxis < -30000)
+	if (xAxis < -15000 && yAxis > -5000 && yAxis < 5000)
 	    new_orientation = WEBOS_ORIENTATION_LANDSCAPE;
-	else if (yAxis > 30000)
+	else if (yAxis > 15000 && xAxis > -5000 && xAxis < 5000)
 	    new_orientation = WEBOS_ORIENTATION_PORTRAIT;
 	else
 	    return;
@@ -1599,8 +1605,20 @@ sdl_accelerometer_handler(void* param)
     else
 	return;
 
-    if (new_orientation != gr->orientation)
+    if (new_orientation == sdl_next_orientation) {
+	if (sdl_orientation_count < 3) sdl_orientation_count++;
+    }
+    else {
+	sdl_orientation_count = 0;
+	sdl_next_orientation = new_orientation;
+	return;
+    }
+
+
+    if (sdl_orientation_count == 3)
     {
+	sdl_orientation_count++;
+
 	dbg(1,"x(%d) y(%d) z(%d) o(%d)\n",xAxis, yAxis, zAxis, new_orientation);
 	gr->orientation = new_orientation;
 
