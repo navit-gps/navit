@@ -31,7 +31,9 @@
 #include "search.h"
 #include "country.h"
 
+#if HAVE_API_ANDROID
 #include "android.h"
+#endif
 #include "layout.h"
 
 struct search_list_level {
