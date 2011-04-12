@@ -2262,6 +2262,7 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	int i;
 	//wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal_vertical|flags_fill);
+	wl->background=this->background;
 	wl->w=this->root.w;
 	wl->cols=this->root.w/this->icon_s;
 	nitems=sizeof(selectors)/sizeof(struct selector);
@@ -2486,11 +2487,12 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		wi->c.y=data->c.y;
 		wi->c.pro=pro;
 		wi->w=width;
+		wi->background=this->background;
 		row = gui_internal_widget_table_row_new(this,
 							  gravity_left
 							  | flags_fill
 							  | orientation_horizontal);
-		row->children=g_list_append(row->children,wi);
+		gui_internal_widget_append(row,wi);
 		row->datai=data->dist;
 		gui_internal_widget_prepend(wtable,row);
 		free(data->label);
@@ -2520,10 +2522,9 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 						  gravity_left
 						  | flags_fill
 						  | orientation_horizontal);
-	row->children=g_list_append(row->children,wl);
 	row->datai=100000000; // Really far away for Earth, but won't work for bigger planets.
 	gui_internal_widget_append(wtable,row);
-
+	gui_internal_widget_append(row,wl);
 	// Rendering now is needed to have table_data->bottomrow filled in.
 	gui_internal_menu_render(this);
 	td=wtable->data;
@@ -2984,6 +2985,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Bookmarks"));
+	wb->background=this->background;
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -3046,11 +3048,12 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 			}
 			
 			row=gui_internal_widget_table_row_new(this,gravity_left| flags_fill| orientation_horizontal);
+			gui_internal_widget_append(tbl, row);
 			wbm=gui_internal_button_new_with_callback(this, label_full,
 				image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
 					hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
 
-			row->children=g_list_append(row->children,wbm);
+			gui_internal_widget_append(row,wbm);
 			if (item_coord_get(item, &c, 1)) {
 				wbm->c.x=c.x;
 				wbm->c.y=c.y;
@@ -3060,7 +3063,6 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				if (!hassub) {
 					wbm->data=(void*)7;//Mark us as a bookmark
 				}
-				gui_internal_widget_append(tbl, row);
 				wbm->prefix=g_strdup(label_full);
 			} else {
 				gui_internal_widget_destroy(this, row);
@@ -5242,7 +5244,10 @@ static void
 gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result)
 {
 	GList *l=wi->children;
-	if (wi->state & STATE_SENSITIVE) {
+	// Skip hidden elements
+	if (wi->p.x==0 && wi->p.y==0 && wi->w==0 && wi->h==0)
+		return;
+	if ((wi->state & STATE_SENSITIVE) ) {
 		int dist1,dist2;
 		struct point wp;
 		gui_internal_keynav_point(wi, -dx, -dy, &wp);
@@ -5594,6 +5599,12 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->flags=flags;
 	widget->data = g_new0(struct table_data,1);
 	widget->data_free=gui_internal_table_data_free;
+
+	// We have to set background here explicitly
+	// because it will be used by inner elements created later in this 
+	// function (navigation buttons). Else that elements won't have
+	// any background.
+	widget->background=this->background;
 	data = (struct table_data*)widget->data;
 
 	if (buttons) {
@@ -5616,13 +5627,11 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 
 	data->button_box=gui_internal_box_new(this,
 					      gravity_center|orientation_horizontal);
-	data->button_box->children=g_list_append(data->button_box->children,
-						 data->prev_button);
-	data->button_box->children=g_list_append(data->button_box->children,
-						 data->next_button);
-	//data->button_box->background=this->background2;
+	gui_internal_widget_append(widget, data->button_box);
+	gui_internal_widget_append(data->button_box, data->prev_button);
+	gui_internal_widget_append(data->button_box, data->next_button);
+
 	data->button_box->bl=this->spacing;
-	widget->children=g_list_append(widget->children,data->button_box);
 	gui_internal_widget_pack(this,data->button_box);
 	}
 
