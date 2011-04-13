@@ -1619,21 +1619,23 @@ sdl_accelerometer_handler(void* param)
     {
 	sdl_orientation_count++;
 
-	dbg(1,"x(%d) y(%d) z(%d) o(%d)\n",xAxis, yAxis, zAxis, new_orientation);
-	gr->orientation = new_orientation;
+	if (new_orientation != gr->orientation) {
+	    dbg(1,"x(%d) y(%d) z(%d) o(%d)\n",xAxis, yAxis, zAxis, new_orientation);
+	    gr->orientation = new_orientation;
 
-	SDL_Event event;
-	SDL_UserEvent userevent;
+	    SDL_Event event;
+	    SDL_UserEvent userevent;
 
-	userevent.type = SDL_USEREVENT;
-	userevent.code = SDL_USEREVENT_CODE_ROTATE;
-	userevent.data1 = NULL;
-	userevent.data2 = NULL;
+	    userevent.type = SDL_USEREVENT;
+	    userevent.code = SDL_USEREVENT_CODE_ROTATE;
+	    userevent.data1 = NULL;
+	    userevent.data2 = NULL;
 
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
+	    event.type = SDL_USEREVENT;
+	    event.user = userevent;
 
-	SDL_PushEvent (&event);
+	    SDL_PushEvent (&event);
+	}
     }
 }
 #endif
