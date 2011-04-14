@@ -3006,6 +3006,7 @@ navit_destroy(struct navit *this_)
 	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
 	callback_destroy(this_->motion_timeout_callback);
+	callback_destroy(this_->progress_cb);
 	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->resize_callback);
 	callback_destroy(this_->resize_callback);
