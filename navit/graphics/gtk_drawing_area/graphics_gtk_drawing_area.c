@@ -19,11 +19,11 @@
 
 #define GDK_ENABLE_BROKEN
 #include "config.h"
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
@@ -110,15 +110,21 @@ static GHashTable *hImageData;   /*hastable for uncompressed image data*/
 static struct graphics_image_priv image_error;
 
 static void
-graphics_destroy_image(gpointer key, gpointer value, gpointer data)
+graphics_destroy_image(gpointer data)
 {
-	g_object_unref(((struct graphics_image_priv*)(value))->pixbuf);
+	struct graphics_image_priv *priv = (struct graphics_image_priv*)data;
+
+	if (priv == &image_error)
+		return;
+
+	if (priv->pixbuf)
+		g_object_unref(priv->pixbuf);
+	g_free(priv);
 }
 
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	g_hash_table_foreach(hImageData, graphics_destroy_image, NULL);
 	g_hash_table_destroy(hImageData);
 }
 
@@ -210,14 +216,14 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	char* hash_key = g_strdup_printf("%s_%d_%d_%d",name,*w,*h,rotation);
 
 	//check if image already exists in hashmap
-	struct graphics_image_priv*curr_elem = g_hash_table_lookup(hImageData,hash_key);
+	struct graphics_image_priv *curr_elem = g_hash_table_lookup(hImageData, hash_key);
 	if(curr_elem == &image_error) {
 		//found but couldn't be loaded
 		g_free(hash_key);
 		return NULL;
 	}
 	else if(curr_elem) {
-		//found and OK -> use hastable entry
+		//found and OK -> use hashtable entry
 		*w = curr_elem->w;
 		*h = curr_elem->h;
 		hot->x = curr_elem->w / 2 - 1;
@@ -233,11 +239,13 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 		else
 			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
-		if (! pixbuf) {
-			g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+
+		if (!pixbuf) {
+			g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
 			g_free(hash_key);
 			return NULL;
 		}
+
 		if (rotation) {
 			GdkPixbuf *tmp;
 			switch (rotation) {
@@ -250,19 +258,24 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 					rotation=90;
 					break;
 				default:
-					g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+					g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
 					g_free(hash_key);
 					return NULL;
 			}
+
 			tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
-			g_object_unref(pixbuf);
-			if (! tmp) {
-				g_hash_table_insert(hImageData,g_strdup(hash_key),&image_error);
+
+			if (!tmp) {
+				g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
 				g_free(hash_key);
+				g_object_unref(pixbuf);
 				return NULL;
 			}
+
+			g_object_unref(pixbuf);
 			pixbuf=tmp;
 		}
+
 		ret=g_new0(struct graphics_image_priv, 1);
 		ret->pixbuf=pixbuf;
 		ret->w=gdk_pixbuf_get_width(pixbuf);
@@ -283,7 +296,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		}
 		struct graphics_image_priv *cached = g_new0(struct graphics_image_priv, 1);
 		*cached = *ret;
-		g_hash_table_insert(hImageData,g_strdup(hash_key),cached);
+		g_hash_table_insert(hImageData, g_strdup(hash_key), cached);
 		g_object_ref(pixbuf);
 		g_free(hash_key);
 		return ret;
@@ -293,6 +306,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 static void 
 image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
+	g_object_unref(priv->pixbuf);
 	g_free(priv);
 }
 
@@ -1140,14 +1154,14 @@ static struct graphics_methods graphics_methods = {
 #endif
 	draw_restore,
 	draw_drag,
-	NULL,
+	NULL, /* font_new */
 	gc_new,
 	background_gc,
 	overlay_new,
 	image_new,
 	get_data,
 	image_free,
-	NULL,
+	NULL, /* get_text_bbox */
 	overlay_disable,
 	overlay_resize,
 	set_attr,
@@ -1214,7 +1228,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	}
 
 	//create hash table for uncompressed image data
-	hImageData = g_hash_table_new(g_str_hash, g_str_equal);
+	hImageData = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, graphics_destroy_image);
 
 	return this;
 }
