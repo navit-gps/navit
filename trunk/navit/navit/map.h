@@ -265,6 +265,7 @@ int map_priv_is(struct map *map, struct map_priv *priv);
 void map_dump_filedesc(struct map *map, FILE *out);
 void map_dump_file(struct map *map, const char *file);
 void map_dump(struct map *map);
+void map_destroy_do(struct map *m);
 /* end of prototypes */
 
 #ifdef __cplusplus
