@@ -1416,7 +1416,7 @@ navit_former_destinations_active(struct navit *this_)
 static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
-	char *destination_file;
+	char *destination_file = bookmarks_get_destination_file(FALSE);
 	struct attr *attrs[4];
 	struct map_rect *mr;
 	struct item *item;
@@ -1427,11 +1427,6 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	struct attr type;
 	struct attr data;
 	struct attr flags;
-
-	if (!this_->route || !navit_former_destinations_active(this_))
-			return;
-
-	destination_file = bookmarks_get_destination_file(FALSE);
 
 	parent.type=attr_navit;
 	parent.u.navit=this_;
@@ -1448,11 +1443,10 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
 
 	this_->former_destination=map_new(&parent, attrs);
-
 	g_free(destination_file);
-
+	if (!this_->route || !navit_former_destinations_active(this_))
+		return;	
 	mr=map_rect_new(this_->former_destination, NULL);
-
 	while ((item=map_rect_get_item(mr))) {
 		if ((item->type == type_former_destination || item->type == type_former_itinerary || item->type == type_former_itinerary_part) && (count=item_coord_get(item, c, 16))) 
 			valid=1;
@@ -3029,8 +3023,6 @@ navit_destroy(struct navit *this_)
 	ms = navit_get_mapset(this_);
 	if(ms)
 		mapset_destroy(ms);
-	if(this_->former_destination)
-		map_destroy(this_->former_destination);
 	graphics_free(this_->gra);
 	g_free(this_);
 }
