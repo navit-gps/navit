@@ -146,7 +146,10 @@ vehicle_destroy(struct vehicle *this_)
 	this_->meth.destroy(this_->priv);
 	callback_list_destroy(this_->cbl);
 	attr_list_free(this_->attrs);
-	graphics_gc_destroy(this_->bg);
+	if (this_->bg)
+		graphics_gc_destroy(this_->bg);
+	if (this_->gra)
+		graphics_free(this_->gra);
 	g_free(this_);
 }
 
