@@ -325,8 +325,8 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 					plugin_call_init(pl);
 			}
 		}
-		file_wordexp_destroy(we);
 	}
+	file_wordexp_destroy(we);
 	return pl;
 #endif
 }
