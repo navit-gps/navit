@@ -443,7 +443,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 			dbg(1,"checking header\n");
 			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				dbg(1,"found %s (%d bytes)\n",file->buffer,strlen(file->buffer));
+				dbg(1,"found %s (%d bytes)\n",file->buffer,sizeof(file->buffer));
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
