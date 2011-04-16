@@ -178,6 +178,7 @@ int main(int argc, char **argv)
 
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
 	int i;
+	char r[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
 	main_init(argv[0]);
 	struct zip_info *zip_info=NULL;
 	int suffix_start=0;
@@ -551,7 +552,7 @@ int main(int argc, char **argv)
 			zipnum=zip_get_zipnum(zip_info);
 			fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
 			tilesdir=tempfile(suffix,"tilesdir",1);
-			if (!strcmp(suffix,"r")) {
+			if (!strcmp(suffix,r)) { /* Makes compiler happy due to bug 35903 in gcc */
 				ch_generate_tiles(suffixes[0],suffix,tilesdir,zip_info);
 			} else {
 				for (f = 0 ; f < 3 ; f++)
@@ -597,7 +598,7 @@ int main(int argc, char **argv)
 				}
 				index_init(zip_info, 1);
 			}
-			if (!strcmp(suffix,"r")) {
+			if (!strcmp(suffix,r)) {  /* Makes compiler happy due to bug 35903 in gcc */
 				ch_assemble_map(suffixes[0],suffix,zip_info);
 			} else {
 				for (f = 0 ; f < 3 ; f++) {
