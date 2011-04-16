@@ -35,9 +35,12 @@ struct osd {
 	struct osd_priv *priv;
 };
 
+static GHashTable *osd_hash = NULL;
+
 struct osd *
 osd_new(struct attr *parent, struct attr **attrs)
 {
+	struct attr *attr;
 	struct osd *o;
 	struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
 	struct attr *type=attr_search(attrs, NULL, attr_type);
@@ -49,7 +52,32 @@ osd_new(struct attr *parent, struct attr **attrs)
                 return NULL;
         o=g_new0(struct osd, 1);
         o->priv=new(parent->u.navit, &o->meth, attrs);
+
+	attr=attr_search(attrs, NULL, attr_name);
+	if (attr && attr->u.str) {
+		if(NULL == osd_hash) {
+			osd_hash = g_hash_table_new_full(g_str_hash,g_str_equal,g_free,NULL);
+		}
+		g_hash_table_insert(osd_hash, g_strdup(attr->u.str), o);
+	}
+
+
         return o;
+}
+
+struct osd*
+osd_get_osd_by_name(char *name)
+{
+	return g_hash_table_lookup(osd_hash, name);
+}
+
+int
+osd_set_attr(struct osd *osd, struct attr* attr)
+{
+	if(osd && osd->meth.set_attr) {
+		osd->meth.set_attr(osd->priv, attr);
+	}
+	return 0;
 }
 
 void
@@ -250,8 +278,8 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	attr=attr_search(attrs, NULL, attr_font);
 	if (attr)
 		item->font_name = g_strdup(attr->u.str);
-}
 
+}
 void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {

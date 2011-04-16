@@ -21,9 +21,11 @@
 #define NAVIT_OSD_H
 
 struct osd_priv;
+struct attr;
 
 struct osd_methods {
 	void (*osd_destroy)(struct osd_priv *osd);
+	void (*set_attr)(struct osd_priv *osd, struct attr* attr);
 };
 
 #define osd_draw_cast(x) (void (*)(struct osd_priv *osd, struct navit *navit, struct vehicle *v))(x)
@@ -66,6 +68,7 @@ void osd_set_std_config(struct navit *nav, struct osd_item *item);
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv);
 void osd_std_resize(struct osd_item *item);
 void osd_std_draw(struct osd_item *item);
+struct osd* osd_get_osd_by_name(char *name);
 /* end of prototypes */
 
 #endif
