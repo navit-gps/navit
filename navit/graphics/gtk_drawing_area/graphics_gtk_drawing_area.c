@@ -125,7 +125,8 @@ graphics_destroy_image(gpointer data)
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	g_hash_table_destroy(hImageData);
+	if (!gr->parent)
+		g_hash_table_destroy(hImageData);
 }
 
 static void
@@ -224,14 +225,14 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	}
 	else if(curr_elem) {
 		//found and OK -> use hashtable entry
+		g_free(hash_key);
 		*w = curr_elem->w;
 		*h = curr_elem->h;
 		hot->x = curr_elem->w / 2 - 1;
 		hot->y = curr_elem->h / 2 - 1;
-		g_free(hash_key);
-		g_object_ref(curr_elem->pixbuf);
 		ret=g_new0(struct graphics_image_priv, 1);
 		*ret = *curr_elem;
+		g_object_ref(ret->pixbuf);
 		return ret;
 	}
 	else {
