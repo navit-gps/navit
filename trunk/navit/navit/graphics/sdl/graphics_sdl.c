@@ -1778,335 +1778,333 @@ static gboolean graphics_sdl_idle(void *data)
 
     while(!quit_event_loop)
 #else
-    	while(1)
+    while(1)
 #endif
-    	{
+    {
 #ifdef USE_WEBOS
-	    ret = 0;
-	    if(idle_tasks->len > 0)
+	ret = 0;
+	if(idle_tasks->len > 0)
+	{
+	    while (!(ret = SDL_PollEvent(&ev)) && idle_tasks->len > 0)
 	    {
-	    	while (!(ret = SDL_PollEvent(&ev)) && idle_tasks->len > 0)
-	    	{
-		    if (idle_tasks_idx >= idle_tasks->len)
-		    	idle_tasks_idx = 0;
+		if (idle_tasks_idx >= idle_tasks->len)
+		    idle_tasks_idx = 0;
 
-		    dbg(3,"idle_tasks_idx(%d)\n",idle_tasks_idx);
-		    task = (struct idle_task *)g_ptr_array_index(idle_tasks,idle_tasks_idx);
+		dbg(3,"idle_tasks_idx(%d)\n",idle_tasks_idx);
+		task = (struct idle_task *)g_ptr_array_index(idle_tasks,idle_tasks_idx);
 
-		    if (idle_tasks_idx == 0)	// only execute tasks with lowest priority value
-		    	idle_tasks_cur_priority = task->priority;
-		    if (task->priority > idle_tasks_cur_priority)
-		    	idle_tasks_idx = 0;
+		if (idle_tasks_idx == 0)	// only execute tasks with lowest priority value
+		    idle_tasks_cur_priority = task->priority;
+		if (task->priority > idle_tasks_cur_priority)
+		    idle_tasks_idx = 0;
+		else
+		{
+		    callback_call_0(task->cb);
+		    idle_tasks_idx++;
+		}
+	    }
+	}
+	if (!ret)	// If we get here there are no idle_tasks and we have no events pending
+	    ret = SDL_WaitEvent(&ev);
+#else
+	ret = SDL_PollEvent(&ev);
+#endif
+	if(ret == 0)
+	{
+	    break;
+	}
+
+#ifdef USE_WEBOS
+	dbg(1,"SDL_Event %d\n", ev.type);
+#endif
+	switch(ev.type)
+	{
+	    case SDL_MOUSEMOTION:
+		{
+		    p.x = ev.motion.x;
+		    p.y = ev.motion.y;
+		    callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
+		    break;
+		}
+
+	    case SDL_KEYDOWN:
+		{
+		    keybuf[1] = 0;
+		    switch(ev.key.keysym.sym)
+		    {
+			case SDLK_LEFT:
+			    {
+				keybuf[0] = NAVIT_KEY_LEFT;
+				break;
+			    }
+			case SDLK_RIGHT:
+			    {
+				keybuf[0] = NAVIT_KEY_RIGHT;
+				break;
+			    }
+			case SDLK_BACKSPACE:
+			    {
+				keybuf[0] = NAVIT_KEY_BACKSPACE;
+				break;
+			    }
+			case SDLK_RETURN:
+			    {
+				keybuf[0] = NAVIT_KEY_RETURN;
+				break;
+			    }
+			case SDLK_DOWN:
+			    {
+				keybuf[0] = NAVIT_KEY_DOWN;
+				break;
+			    }
+			case SDLK_PAGEUP:
+			    {
+				keybuf[0] = NAVIT_KEY_ZOOM_OUT;
+				break;
+			    }
+			case SDLK_UP:
+			    {
+				keybuf[0] = NAVIT_KEY_UP;
+				break;
+			    }
+			case SDLK_PAGEDOWN:
+			    {
+				keybuf[0] = NAVIT_KEY_ZOOM_IN;
+				break;
+			    }
+#ifdef USE_WEBOS
+			case WEBOS_KEY_SHIFT:
+			    {
+				if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) == WEBOS_KEY_MOD_SHIFT_STICKY)
+				    key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
+				else if ((key_mod & WEBOS_KEY_MOD_SHIFT) == WEBOS_KEY_MOD_SHIFT)
+				    key_mod |= WEBOS_KEY_MOD_SHIFT_STICKY;
+				else
+				    key_mod |= WEBOS_KEY_MOD_SHIFT;
+				break;
+			    }
+			case WEBOS_KEY_ORANGE:
+			    {
+				if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) == WEBOS_KEY_MOD_ORANGE_STICKY)
+				    key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
+				else if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE)
+				    key_mod |= WEBOS_KEY_MOD_ORANGE_STICKY;
+				else
+				    key_mod |= WEBOS_KEY_MOD_ORANGE;
+				break;
+			    }
+			case WEBOS_KEY_SYM:
+			    {
+				/* Toggle the on-screen keyboard */
+				//callback_list_call_attr_1(gr->cbl, attr_keyboard_toggle);	// Not implemented yet
+				break;
+			    }
+			case PDLK_GESTURE_BACK:
+			    {
+				keybuf[0] = NAVIT_KEY_BACK;
+				break;
+			    }
+			case PDLK_GESTURE_FORWARD:
+			case PDLK_GESTURE_AREA:
+			    {
+				break;
+			    }
+#endif
+			default:
+			    {
+#ifdef USE_WEBOS
+				if (ev.key.keysym.unicode < 0x80 && ev.key.keysym.unicode > 0) {
+				    keybuf[0] = (char)ev.key.keysym.unicode;
+				    if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE) {
+					switch(keybuf[0]) {
+					    case 'e': keybuf[0] = '1'; break;
+					    case 'r': keybuf[0] = '2'; break;
+					    case 't': keybuf[0] = '3'; break;
+					    case 'd': keybuf[0] = '4'; break;
+					    case 'f': keybuf[0] = '5'; break;
+					    case 'g': keybuf[0] = '6'; break;
+					    case 'x': keybuf[0] = '7'; break;
+					    case 'c': keybuf[0] = '8'; break;
+					    case 'v': keybuf[0] = '9'; break;
+					    case '@': keybuf[0] = '0'; break;
+					    case ',': keybuf[0] = '-'; break;
+					    case 'u': strncpy(keybuf, "ü", sizeof(keybuf)); break;
+					    case 'a': strncpy(keybuf, "ä", sizeof(keybuf)); break;
+					    case 'o': strncpy(keybuf, "ö", sizeof(keybuf)); break;
+					    case 's': strncpy(keybuf, "ß", sizeof(keybuf)); break;
+					}
+}
+				    if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) != WEBOS_KEY_MOD_SHIFT_STICKY)
+					key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
+				    if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) != WEBOS_KEY_MOD_ORANGE_STICKY)
+					key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
+				}
+				else {
+				    dbg(0,"Unknown key sym: %x\n", ev.key.keysym.sym);
+				}
+#else
+				/* return unicode chars when they can be converted to ascii */
+				keybuf[0] = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
+#endif
+				break;
+			    }
+		    }
+
+		    dbg(2,"key mod: 0x%x\n", key_mod);
+
+		    if (keybuf[0]) {
+			dbg(2,"key: %s 0x%x\n", keybuf, keybuf);
+			callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
+		    }
+		    break;
+		}
+
+	    case SDL_KEYUP:
+		{
+		    break;
+		}
+
+	    case SDL_MOUSEBUTTONDOWN:
+		{
+#ifdef DEBUG
+		    printf("SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
+			    ev.button.which,
+			    ev.button.button,
+			    ev.button.state,
+			    ev.button.x,
+			    ev.button.y);
+#endif
+
+		    p.x = ev.button.x;
+		    p.y = ev.button.y;
+		    callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p);
+		    break;
+		}
+
+	    case SDL_MOUSEBUTTONUP:
+		{
+#ifdef DEBUG
+		    printf("SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
+			    ev.button.which,
+			    ev.button.button,
+			    ev.button.state,
+			    ev.button.x,
+			    ev.button.y);
+#endif
+
+		    p.x = ev.button.x;
+		    p.y = ev.button.y;
+		    callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p);
+		    break;
+		}
+
+	    case SDL_QUIT:
+		{
+#ifdef USE_WEBOS
+		    quit_event_loop = 1;
+		    navit_destroy(gr->nav);
+#endif
+		    break;
+		}
+
+	    case SDL_VIDEORESIZE:
+		{
+
+		    gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, gr->video_bpp, gr->video_flags);
+		    if(gr->screen == NULL)
+		    {
+			navit_destroy(gr->nav);
+		    }
 		    else
 		    {
-		    	callback_call_0(task->cb);
-		    	idle_tasks_idx++;
+			callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
 		    }
-	    	}
-	    }
-	    if (!ret)	// If we get here there are no idle_tasks and we have no events pending
-	    	ret = SDL_WaitEvent(&ev);
-#else
-            ret = SDL_PollEvent(&ev);
-#endif
-            if(ret == 0)
-            {
-            	break;
-            }
+
+		    break;
+		}
 
 #ifdef USE_WEBOS
-	    dbg(1,"SDL_Event %d\n", ev.type);
-#endif
-            switch(ev.type)
-            {
-            	case SDL_MOUSEMOTION:
-            	    {
-                	p.x = ev.motion.x;
-                	p.y = ev.motion.y;
-			callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
-                	break;
-            	    }
-
-            	case SDL_KEYDOWN:
-            	    {
-			keybuf[1] = 0;
-                	switch(ev.key.keysym.sym)
-                	{
-                    	    case SDLK_LEFT:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_LEFT;
-                        	    break;
-                    		}
-                    	    case SDLK_RIGHT:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_RIGHT;
-                        	    break;
-                    		}
-                    	    case SDLK_BACKSPACE:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_BACKSPACE;
-                        	    break;
-                    		}
-                    	    case SDLK_RETURN:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_RETURN;
-                        	    break;
-                    		}
-                    	    case SDLK_DOWN:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_DOWN;
-                        	    break;
-                    		}
-                    	    case SDLK_PAGEUP:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_ZOOM_OUT;
-                        	    break;
-                    		}
-                    	    case SDLK_UP:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_UP;
-                        	    break;
-                    		}
-                    	    case SDLK_PAGEDOWN:
-                    		{
-                        	    keybuf[0] = NAVIT_KEY_ZOOM_IN;
-                        	    break;
-                    		}
-#ifdef USE_WEBOS
-		    	    case WEBOS_KEY_SHIFT:
-		    		{
-				    if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) == WEBOS_KEY_MOD_SHIFT_STICKY)
-			    		key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
-				    else if ((key_mod & WEBOS_KEY_MOD_SHIFT) == WEBOS_KEY_MOD_SHIFT)
-			    		key_mod |= WEBOS_KEY_MOD_SHIFT_STICKY;
-				    else
-			    		key_mod |= WEBOS_KEY_MOD_SHIFT;
-				    break;
-		    		}
-		    	    case WEBOS_KEY_ORANGE:
-		    		{
-				    if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) == WEBOS_KEY_MOD_ORANGE_STICKY)
-			    		key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
-				    else if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE)
-			    		key_mod |= WEBOS_KEY_MOD_ORANGE_STICKY;
-				    else
-			    		key_mod |= WEBOS_KEY_MOD_ORANGE;
-				    break;
-		    		}
-		    	    case WEBOS_KEY_SYM:
-		    		{
-				    /* Toggle the on-screen keyboard */
-				    //callback_list_call_attr_1(gr->cbl, attr_keyboard_toggle);	// Not implemented yet
-				    break;
-		    		}
-		    	    case PDLK_GESTURE_BACK:
-		    		{
-                        	    keybuf[0] = NAVIT_KEY_BACK;
-				    break;
-		    		}
-		    	    case PDLK_GESTURE_FORWARD:
-		    	    case PDLK_GESTURE_AREA:
-		    		{
-				    break;
-		    		}
-#endif
-                    	    default:
-                    		{
-#ifdef USE_WEBOS
-                        	    if (ev.key.keysym.unicode < 0x80 && ev.key.keysym.unicode > 0) {
-			    		keybuf[0] = (char)ev.key.keysym.unicode;
-			    		if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE) {
-					    switch(keybuf[0]) {
-				    		case 'e': keybuf[0] = '1'; break;
-				    		case 'r': keybuf[0] = '2'; break;
-				    		case 't': keybuf[0] = '3'; break;
-				    		case 'd': keybuf[0] = '4'; break;
-				    		case 'f': keybuf[0] = '5'; break;
-				    		case 'g': keybuf[0] = '6'; break;
-				    		case 'x': keybuf[0] = '7'; break;
-				    		case 'c': keybuf[0] = '8'; break;
-				    		case 'v': keybuf[0] = '9'; break;
-				    		case '@': keybuf[0] = '0'; break;
-				    		case ',': keybuf[0] = '-'; break;
-				    		case 'u': strncpy(keybuf, "ü", sizeof(keybuf)); break;
-				    		case 'a': strncpy(keybuf, "ä", sizeof(keybuf)); break;
-				    		case 'o': strncpy(keybuf, "ö", sizeof(keybuf)); break;
-				    		case 's': strncpy(keybuf, "ß", sizeof(keybuf)); break;
-					    }
-			    		}
-			    		/*if ((key_mod & WEBOS_KEY_MOD_SHIFT) == WEBOS_KEY_MOD_SHIFT)
-					  key -= 32;*/
-			    		if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) != WEBOS_KEY_MOD_SHIFT_STICKY)
-					    key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
-			    		if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) != WEBOS_KEY_MOD_ORANGE_STICKY)
-					    key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
-				    }
-				    else {
-			    		dbg(0,"Unknown key sym: %x\n", ev.key.keysym.sym);
-				    }
-#else
-				    /* return unicode chars when they can be converted to ascii */
-				    keybuf[0] = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
-#endif
-                        	    break;
-                    		}
-                	}
-
-			dbg(2,"key mod: 0x%x\n", key_mod);
-
-			if (keybuf[0]) {
-		    	    dbg(2,"key: %s 0x%x\n", keybuf, keybuf);
-		    	    callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
-			}
-                	break;
-            	    }
-
-            	case SDL_KEYUP:
-            	    {
-                	break;
-            	    }
-
-            	case SDL_MOUSEBUTTONDOWN:
-            	    {
-#ifdef DEBUG
-                	printf("SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
-                       		ev.button.which,
-                       		ev.button.button,
-                       		ev.button.state,
-                       		ev.button.x,
-                       		ev.button.y);
-#endif
-
-                	p.x = ev.button.x;
-                	p.y = ev.button.y;
-			callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p);
-                	break;
-            	    }
-
-            	case SDL_MOUSEBUTTONUP:
-            	    {
-#ifdef DEBUG
-                	printf("SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
-                       		ev.button.which,
-                       		ev.button.button,
-                       		ev.button.state,
-                       		ev.button.x,
-                       		ev.button.y);
-#endif
-
-                	p.x = ev.button.x;
-                	p.y = ev.button.y;
-			callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p);
-                	break;
-            	    }
-
-            	case SDL_QUIT:
-            	    {
-#ifdef USE_WEBOS
-			quit_event_loop = 1;
-                	navit_destroy(gr->nav);
-#endif
-                	break;
-            	    }
-
-            	case SDL_VIDEORESIZE:
-            	    {
-
-                	gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, gr->video_bpp, gr->video_flags);
-                	if(gr->screen == NULL)
-                	{
-                    	    navit_destroy(gr->nav);
-                	}
-                	else
-                	{
-		    	    callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
-                	}
-
-                	break;
-            	    }
-
-#ifdef USE_WEBOS
-            	case SDL_USEREVENT:
-            	    {
-			SDL_UserEvent userevent = ev.user;
-			dbg(9,"received SDL_USEREVENT type(%x) code(%x)\n",userevent.type,userevent.code);
-			if (userevent.type != SDL_USEREVENT)
-		    	    break;
-
-			if (userevent.code == PDL_GPS_UPDATE)
-			{
-		    	    struct attr vehicle_attr;
-		    	    struct vehicle *v;
-		    	    navit_get_attr(gr->nav, attr_vehicle,  &vehicle_attr, NULL);
-		    	    v = vehicle_attr.u.vehicle;
-		    	    if (v) {
-				struct attr attr;
-				attr.type = attr_pdl_gps_update;
-				attr.u.data = userevent.data1;
-				vehicle_set_attr(v, &attr);
-		    	    }
-			}
-			else if(userevent.code == SDL_USEREVENT_CODE_TIMER)
-			{
-		    	    struct callback *cb = (struct callback *)userevent.data1;
-		    	    dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
-		    	    callback_call_0(cb);
-                	}
-                	else if(userevent.code == SDL_USEREVENT_CODE_WATCH)
-			{
-		    	    struct callback *cb = (struct callback *)userevent.data1;
-		    	    dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
-		    	    callback_call_0(cb);
-                	}
-			else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK)
-			{
-		    	    struct callback_list *cbl = (struct callback_list *)userevent.data1;
-                    	    dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
-		    	    callback_list_call_0(cbl);
-			}
-			else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
-                    	    dbg(1, "SDL_USEREVENT idle_event received\n");
-			}
-#ifdef USE_WEBOS_ACCELEROMETER
-			else if(userevent.code == SDL_USEREVENT_CODE_ROTATE)
-			{
-		    	    dbg(1, "SDL_USEREVENT rotate received\n");
-                    	    switch(gr->orientation)
-		    	    {
-				case WEBOS_ORIENTATION_PORTRAIT:
-			    	    gr->screen = SDL_SetVideoMode(gr->real_w, gr->real_h, gr->video_bpp, gr->video_flags);
-			    	    PDL_SetOrientation(PDL_ORIENTATION_0);
-			    	    break;
-				case WEBOS_ORIENTATION_LANDSCAPE:
-			    	    gr->screen = SDL_SetVideoMode(gr->real_h, gr->real_w, gr->video_bpp, gr->video_flags);
-			    	    PDL_SetOrientation(PDL_ORIENTATION_270);
-			    	    break;
-		    	    }
-                    	    if(gr->screen == NULL)
-                    	    {
-				navit_destroy(gr->nav);
-                    	    }
-                    	    else
-                    	    {
-				callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
-                    	    }
-			}
-#endif
-                	else
-                    	    dbg(1, "unknown SDL_USEREVENT\n");
-
+	    case SDL_USEREVENT:
+		{
+		    SDL_UserEvent userevent = ev.user;
+		    dbg(9,"received SDL_USEREVENT type(%x) code(%x)\n",userevent.type,userevent.code);
+		    if (userevent.type != SDL_USEREVENT)
 			break;
-            	    }
+
+		    if (userevent.code == PDL_GPS_UPDATE)
+		    {
+			struct attr vehicle_attr;
+			struct vehicle *v;
+			navit_get_attr(gr->nav, attr_vehicle,  &vehicle_attr, NULL);
+			v = vehicle_attr.u.vehicle;
+			if (v) {
+			    struct attr attr;
+			    attr.type = attr_pdl_gps_update;
+			    attr.u.data = userevent.data1;
+			    vehicle_set_attr(v, &attr);
+			}
+		    }
+		    else if(userevent.code == SDL_USEREVENT_CODE_TIMER)
+		    {
+			struct callback *cb = (struct callback *)userevent.data1;
+			dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
+			callback_call_0(cb);
+		    }
+		    else if(userevent.code == SDL_USEREVENT_CODE_WATCH)
+		    {
+			struct callback *cb = (struct callback *)userevent.data1;
+			dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
+			callback_call_0(cb);
+		    }
+		    else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK)
+		    {
+			struct callback_list *cbl = (struct callback_list *)userevent.data1;
+			dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
+			callback_list_call_0(cbl);
+		    }
+		    else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
+			dbg(1, "SDL_USEREVENT idle_event received\n");
+		    }
+#ifdef USE_WEBOS_ACCELEROMETER
+		    else if(userevent.code == SDL_USEREVENT_CODE_ROTATE)
+		    {
+			dbg(1, "SDL_USEREVENT rotate received\n");
+			switch(gr->orientation)
+			{
+			    case WEBOS_ORIENTATION_PORTRAIT:
+				gr->screen = SDL_SetVideoMode(gr->real_w, gr->real_h, gr->video_bpp, gr->video_flags);
+				PDL_SetOrientation(PDL_ORIENTATION_0);
+				break;
+			    case WEBOS_ORIENTATION_LANDSCAPE:
+				gr->screen = SDL_SetVideoMode(gr->real_h, gr->real_w, gr->video_bpp, gr->video_flags);
+				PDL_SetOrientation(PDL_ORIENTATION_270);
+				break;
+			}
+			if(gr->screen == NULL)
+			{
+			    navit_destroy(gr->nav);
+			}
+			else
+			{
+			    callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+			}
+		    }
 #endif
-            	default:
-            	    {
+		    else
+			dbg(1, "unknown SDL_USEREVENT\n");
+
+		    break;
+		}
+#endif
+	    default:
+		{
 #ifdef DEBUG
-                	printf("SDL_Event %d\n", ev.type);
+		    printf("SDL_Event %d\n", ev.type);
 #endif
-                	break;
-            	    }
-            }
-    	}
+		    break;
+		}
+	}
+    }
 
 #ifdef USE_WEBOS
     event_sdl_watch_stopthread();
