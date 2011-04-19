@@ -158,8 +158,6 @@ struct graphics_priv {
 #endif
     struct font_freetype_methods freetype_methods;
     /* </main> */
-    unsigned char * ft_buffer;
-    unsigned int    ft_buffer_size;
 };
 
 static int dummy;
@@ -228,6 +226,8 @@ static unsigned int sdl_orientation_count = 2^16;
 static char sdl_next_orientation = WEBOS_ORIENTATION_PORTRAIT;
 # endif
 #endif
+unsigned char * ft_buffer = NULL;
+unsigned int    ft_buffer_size = 0;
 
 struct graphics_font_priv {
 #ifdef SDL_TTF
@@ -262,12 +262,7 @@ static int input_ts_exit(struct graphics_priv *gr);
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-    dbg(0, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
-
-    if (gr->ft_buffer) {
-	g_free (gr->ft_buffer);
-	gr->ft_buffer = NULL;
-    }
+    dbg(1, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
 
     if(gr->overlay_mode)
     {
@@ -276,6 +271,7 @@ graphics_destroy(struct graphics_priv *gr)
     }
     else
     {
+	g_free (ft_buffer);
 #ifdef SDL_TTF
         TTF_Quit();
 #else
@@ -957,14 +953,13 @@ set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint
 
 
 static void
-resize_ft_buffer (struct graphics_priv *gr, unsigned int new_size)
+resize_ft_buffer (unsigned int new_size)
 {
-    if (new_size > gr->ft_buffer_size) {
-	if (gr->ft_buffer)
-	    g_free (gr->ft_buffer);
-	gr->ft_buffer = g_malloc (new_size);
-	dbg(1, "old_size(%i) new_size(%i) ft_buffer(%i)\n", gr->ft_buffer_size, new_size, gr->ft_buffer);
-	gr->ft_buffer_size = new_size;
+    if (new_size > ft_buffer_size) {
+	g_free (ft_buffer);
+	ft_buffer = g_malloc (new_size);
+	dbg(1, "old_size(%i) new_size(%i) ft_buffer(%i)\n", ft_buffer_size, new_size, ft_buffer);
+	ft_buffer_size = new_size;
     }
 }
 
@@ -1024,11 +1019,11 @@ display_text_draw(struct font_freetype_text *text,
 	if (g->w && g->h && bg) {
 	    stride = (g->w + 2) * 4;
 	    if (color) {
-		resize_ft_buffer(gr, stride * (g->h + 2));
-		gr->freetype_methods.get_shadow(g, gr->ft_buffer, 32, stride, &white, &transparent);
+		resize_ft_buffer(stride * (g->h + 2));
+		gr->freetype_methods.get_shadow(g, ft_buffer, 32, stride, &white, &transparent);
 
 		SDL_Surface *glyph_surface =
-		    SDL_CreateRGBSurfaceFrom(gr->ft_buffer, g->w + 2, g->h + 2,
+		    SDL_CreateRGBSurfaceFrom(ft_buffer, g->w + 2, g->h + 2,
 			    32,
 			    stride,
 			    0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
@@ -1058,12 +1053,12 @@ display_text_draw(struct font_freetype_text *text,
 	    if (color) {
 		stride = g->w;
 		if (bg) {
-		    resize_ft_buffer(gr, stride * g->h * 4);
-		    gr->freetype_methods.get_glyph(g, gr->ft_buffer, 32,
+		    resize_ft_buffer(stride * g->h * 4);
+		    gr->freetype_methods.get_glyph(g, ft_buffer, 32,
 			    stride * 4, &black,
 			    &white, &transparent);
 		    SDL_Surface *glyph_surface =
-			SDL_CreateRGBSurfaceFrom(gr->ft_buffer, g->w, g->h, 32,
+			SDL_CreateRGBSurfaceFrom(ft_buffer, g->w, g->h, 32,
 				stride * 4,
 				0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
 		    if (glyph_surface) {
@@ -1078,12 +1073,12 @@ display_text_draw(struct font_freetype_text *text,
 		    }
 		}
 		stride *= 4;
-		resize_ft_buffer(gr, stride * g->h);
-		gr->freetype_methods.get_glyph(g, gr->ft_buffer, 32, stride,
+		resize_ft_buffer(stride * g->h);
+		gr->freetype_methods.get_glyph(g, ft_buffer, 32, stride,
 			&black, &white,
 			&transparent);
 		int ii, jj;
-		unsigned char* pGlyph = gr->ft_buffer;
+		unsigned char* pGlyph = ft_buffer;
 		for (jj = 0; jj < g->h; ++jj) {
 		    for (ii = 0; ii < g->w; ++ii) {
 			if(*(pGlyph+3) > 0) {
