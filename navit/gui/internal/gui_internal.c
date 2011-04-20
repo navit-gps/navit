@@ -5106,7 +5106,7 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 			struct map_rect *mr=map_rect_new(item->map, NULL);
 			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 			struct attr attr;
-			if (item_attr_get(itemo, attr_data, &attr))
+			if (itemo && item_attr_get(itemo, attr_data, &attr))
 				attr_list=attr_generic_add_attr(attr_list, &attr);
 			map_rect_destroy(mr);
 		}
