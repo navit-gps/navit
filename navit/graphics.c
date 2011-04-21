@@ -1655,7 +1655,7 @@ graphics_icon_path(char *icon)
 		if (file_wordexp_get_count(wordexp))
 			icon=file_wordexp_get_array(wordexp)[0];
 	}
-	if (icon[0] == '/')
+	if (strchr(icon,'/'))
 		ret=g_strdup(icon);
 	else {
 #ifdef HAVE_API_ANDROID
