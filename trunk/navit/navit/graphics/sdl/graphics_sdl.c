@@ -1829,7 +1829,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 	    case SDL_KEYDOWN:
 		{
-		    keybuf[1] = 0;
+		    memset(keybuf, 0, sizeof(keybuf));
 		    switch(ev.key.keysym.sym)
 		    {
 			case SDLK_LEFT:
