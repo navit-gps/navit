@@ -17,11 +17,16 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define USE_FREEIMAGE 1
+
 #include <glib.h>
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
+
+#if USE_FREEIMAGE
 #include <FreeImage.h>
+#endif
 #include <time.h>
 
 #include "item.h"
@@ -37,7 +42,6 @@
 #include "keys.h"
 #include "window.h"
 #include "navit/font/freetype/font_freetype.h"
-#include <GL/glc.h>
 
 #if defined(WINDOWS) || defined(WIN32)
 #include <windows.h>
@@ -128,11 +132,11 @@ static struct mouse_event_queue_element mouse_queue[100];
 static GHashTable *hImageData;
 
 /*  prototypes */
-void CALLBACK tessBeginCB (GLenum which);
-void CALLBACK tessEndCB ();
-void CALLBACK tessErrorCB (GLenum errorCode);
-void CALLBACK tessVertexCB (const GLvoid * data);
-void CALLBACK tessVertexCB2 (const GLvoid * data);
+void GLAPIENTRY tessBeginCB (GLenum which);
+void GLAPIENTRY tessEndCB ();
+void GLAPIENTRY tessErrorCB (GLenum errorCode);
+void GLAPIENTRY tessVertexCB (const GLvoid * data);
+void GLAPIENTRY tessVertexCB2 (const GLvoid * data);
 void tessCombineCB (GLdouble c[3], void *d[4], GLfloat w[4], void **out);
 
 static struct graphics_priv *graphics_opengl_new_helper (struct
@@ -279,6 +283,7 @@ static struct graphics_image_priv *
 image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
 	   char *path, int *w, int *h, struct point *hot, int rotation)
 {
+#if USE_FREEIMAGE
   FIBITMAP *image;
   RGBQUAD aPixel;
   unsigned char *data;
@@ -423,6 +428,9 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
   g_hash_table_insert(hImageData,g_strdup(path),gi);
   return gi;
   }
+#else
+  return NULL;
+#endif
 }
 
 const char *
@@ -466,7 +474,7 @@ getPrimitiveType (GLenum type)
   return ret;
 }
 
-void CALLBACK
+void GLAPIENTRY
 tessBeginCB (GLenum which)
 {
   glBegin (which);
@@ -476,7 +484,7 @@ tessBeginCB (GLenum which)
 
 
 
-void CALLBACK
+void GLAPIENTRY
 tessEndCB ()
 {
   glEnd ();
@@ -486,7 +494,7 @@ tessEndCB ()
 
 
 
-void CALLBACK
+void GLAPIENTRY
 tessVertexCB (const GLvoid * data)
 {
   // cast back to double type
