@@ -315,6 +315,10 @@ if (NOT XSL_PROCESSING)
 endif()
 
 ### Platform specific settings
+if(NOT CACHE_SIZE)
+   SET(CACHE_SIZE 1048576)
+endif(CACHE_SIZE)
+
 if(WIN32 OR WINCE)
    SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
    add_module(graphics/win32 "Windows detected" TRUE)
