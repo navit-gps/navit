@@ -43,6 +43,7 @@ add_module(gui/qml "Qt Declarative not found" FALSE)
 add_module(gui/gtk "GTK libs not found" FALSE)
 add_module(vehicle/gpsd "gpsd lib not found" FALSE)
 add_module(vehicle/gypsy "gypsy lib not found" FALSE)
+add_module(vehicle/maemo "Default" FALSE)
 add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
@@ -79,6 +80,7 @@ find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
    pkg_check_modules(QUESOGLC quesoglc)
    pkg_check_modules(LIBGPSD libgpsd)
+   pkg_check_modules(LIBLOCATION liblocation)
 endif(PKG_CONFIG_FOUND)
 #Simple checks
 CHECK_INCLUDE_FILES(wordexp.h HAVE_WORDEXP)
@@ -245,6 +247,10 @@ if (GETTEXT_FOUND)
    endif()
 endif(GETTEXT_FOUND)
 
+if (LIBLOCATION_FOUND)
+    set_with_reason(vehicle/maemo "Maemo location library found" TRUE ${LIBLOCATION_LIBRARIES})
+endif(LIBLOCATION_FOUND)
+
 #Independent modules
 add_module(graphics/null "Default" TRUE)
 add_module(osd/core "Default" TRUE)
@@ -269,7 +275,6 @@ add_module(speech/espeak "Default" FALSE)
 add_plugin(support/espeak "Default" FALSE)
 add_module(vehicle/android "Default" FALSE)
 add_module(vehicle/iphone "Default" FALSE)
-add_module(vehicle/maemo "Default" FALSE)
 add_module(vehicle/wince "Default" FALSE)
 
 # other features
@@ -538,7 +543,7 @@ add_subdirectory (man)
 
 if (GETTEXT_FOUND)
    add_subdirectory (po)
+   #install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION ${LOCALE_DIR})
 endif(GETTEXT_FOUND)
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION ${LOCALE_DIR})
 
