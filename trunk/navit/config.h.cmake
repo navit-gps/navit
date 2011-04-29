@@ -9,11 +9,12 @@
 #cmakedefine HAVE_GLIB 1
 #cmakedefine HAVE_GMODULE 1
 #cmakedefine HAVE_GETCWD 1
-#cmakedefine CACHE_SIZE @CACHE_SIZE@
+#define CACHE_SIZE ${CACHE_SIZE}
 #cmakedefine AVOID_FLOAT 1
 #cmakedefine AVOID_UNALIGNED 1
 #cmakedefine USE_LIBGNUINTL 1
 #cmakedefine HAVE_BYTESWAP_H 1
+#cmakedefine AVOID_FLOAT 1
 /* Versions */
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 #cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
