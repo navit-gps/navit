@@ -48,6 +48,7 @@ add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
+add_module(autoload/osso "Default" FALSE)
 add_feature(ENABLE_NLS "default" TRUE)
 
 INCLUDE (CPack)
@@ -81,6 +82,7 @@ if(PKG_CONFIG_FOUND)
    pkg_check_modules(QUESOGLC quesoglc)
    pkg_check_modules(LIBGPSD libgpsd)
    pkg_check_modules(LIBLOCATION liblocation)
+   pkg_check_modules(LIBOSSO libosso)
 endif(PKG_CONFIG_FOUND)
 #Simple checks
 CHECK_INCLUDE_FILES(wordexp.h HAVE_WORDEXP)
@@ -250,6 +252,10 @@ endif(GETTEXT_FOUND)
 if (LIBLOCATION_FOUND)
     set_with_reason(vehicle/maemo "Maemo location library found" TRUE ${LIBLOCATION_LIBRARIES})
 endif(LIBLOCATION_FOUND)
+
+if (LIBOSSO_FOUND)
+    set_with_reason(autoload/osso "Maemo osso library found" TRUE ${LIBOSSO_LIBRARIES})
+endif(LIBOSSO_FOUND)
 
 #Independent modules
 add_module(graphics/null "Default" TRUE)
