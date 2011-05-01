@@ -101,7 +101,7 @@ struct graphics_priv {
 	void *button_callback_data;
 #if USE_OPENGLES
 	GLuint program;
-	GLint mvp_location, position_location, color_location;
+	GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location, texture_location;
 #else
 	GLuint DLid;
 #endif
@@ -164,10 +164,13 @@ static void glut_close();
 const char vertex_src [] =
 "                                        \
    attribute vec2        position;       \
+   attribute vec2        texture_position;       \
    uniform mat4        mvp;             \
+   varying vec2 v_texture_position; \
                                          \
    void main()                           \
    {                                     \
+      v_texture_position=texture_position; \
       gl_Position = mvp*vec4(position, 0.0, 1.0);   \
    }                                     \
 ";
@@ -175,13 +178,18 @@ const char vertex_src [] =
 const char fragment_src [] =
 "                                                      \
    uniform lowp vec4   avcolor;                        \
+   uniform sampler2D texture; \
+   uniform bool use_texture; \
+   varying vec2 v_texture_position; \
    void  main()                                        \
    {                                                   \
-      gl_FragColor  =  avcolor;     \
+      if (use_texture) { \
+         gl_FragColor = texture2D(texture, v_texture_position);     \
+      } else { \
+         gl_FragColor = avcolor; \
+      } \
    }                                                   \
 ";
-
-
 #endif
 
 static void
@@ -494,6 +502,41 @@ draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode)
     	glDrawArrays(mode, 0, count);
 }
 
+static void
+draw_rectangle_es(struct graphics_priv *gr, struct point *p, int w, int h)
+{
+	struct point pa[4];
+	pa[0]=pa[1]=pa[2]=pa[3]=*p;
+	pa[0].x+=w;
+	pa[1].x+=w;
+	pa[1].y+=h;
+	pa[3].y+=h;
+	draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
+}
+
+static void
+draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned char *data)
+{
+	GLfloat x[8];
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	memset(x, 0, sizeof(x));
+	x[0]+=1.0;
+	x[2]+=1.0;
+	x[3]+=1.0;
+	x[7]+=1.0;
+	glUniform1i(gr->use_texture_location, 1);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnableVertexAttribArray(gr->texture_position_location);
+	glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x );
+	draw_rectangle_es(gr, p, w, h);
+	glUniform1i(gr->use_texture_location, 0);
+	glDisableVertexAttribArray(gr->texture_position_location);
+	glDisable(GL_BLEND);
+}
+
+
 #else
 const char *
 getPrimitiveType(GLenum type)
@@ -709,14 +752,8 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		return;
 	}
 #if USE_OPENGLES
-	struct point pa[4];
-	pa[0]=pa[1]=pa[2]=pa[3]=*p;
-	pa[0].x+=w;
-	pa[1].x+=w;
-	pa[1].y+=h;
-	pa[3].y+=h;
 	set_color(gr, gc);
-	draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
+	draw_rectangle_es(gr, p, w, h);
 #else
 
 	graphics_priv_root->dirty = 1;
@@ -776,8 +813,6 @@ display_text_draw(struct font_freetype_text *text,
 		  struct graphics_priv *gr, struct graphics_gc_priv *fg,
 		  struct graphics_gc_priv *bg, int color, struct point *p)
 {
-#if USE_OPENGLES
-#else
 	int i, x, y, stride;
 	struct font_freetype_glyph *g, **gp;
 	unsigned char *shadow, *glyph;
@@ -835,6 +870,12 @@ display_text_draw(struct font_freetype_text *text,
 								32, stride,
 								&white,
 								&transparent);
+#if USE_OPENGLES
+				struct point p;
+				p.x=((x + g->x) >> 6)-1;
+				p.y=((y + g->y) >> 6)-1;
+				draw_image_es(gr, &p, g->w+2, g->h+2, shadow);
+#else
 #ifdef MIRRORED_VIEW
 				glPixelZoom(-1.0, -1.0);	//mirrored mode
 #else
@@ -844,6 +885,7 @@ display_text_draw(struct font_freetype_text *text,
 					      (y + g->y) >> 6);
 				glDrawPixels(g->w + 2, g->h + 2, GL_BGRA,
 					     GL_UNSIGNED_BYTE, shadow);
+#endif
 				g_free(shadow);
 			}
 		}
@@ -871,6 +913,12 @@ display_text_draw(struct font_freetype_text *text,
 								       &black,
 								       &white,
 								       &transparent);
+#if USE_OPENGLES
+					struct point p;
+					p.x=(x + g->x) >> 6;
+					p.y=(y + g->y) >> 6;
+					draw_image_es(gr, &p, g->w, g->h, glyph);
+#else
 #ifdef MIRRORED_VIEW
 					glPixelZoom(-1.0, -1.0);	//mirrored mode
 #else
@@ -881,7 +929,7 @@ display_text_draw(struct font_freetype_text *text,
 					glDrawPixels(g->w, g->h, GL_BGRA,
 						     GL_UNSIGNED_BYTE,
 						     glyph);
-
+#endif
 					g_free(glyph);
 				}
 				stride *= 4;
@@ -891,7 +939,12 @@ display_text_draw(struct font_freetype_text *text,
 							       &black,
 							       &white,
 							       &transparent);
-
+#if USE_OPENGLES
+				struct point p;
+				p.x=(x + g->x) >> 6;
+				p.y=(y + g->y) >> 6;
+				draw_image_es(gr, &p, g->w, g->h, glyph);
+#else
 #ifdef MIRRORED_VIEW
 				glPixelZoom(-1.0, -1.0);	//mirrored mode
 #else
@@ -901,13 +954,13 @@ display_text_draw(struct font_freetype_text *text,
 					      (y + g->y) >> 6);
 				glDrawPixels(g->w, g->h, GL_BGRA,
 					     GL_UNSIGNED_BYTE, glyph);
+#endif
 				g_free(glyph);
 			}
 		}
 		x += g->dx;
 		y += g->dy;
 	}
-#endif
 }
 
 static void
@@ -949,6 +1002,7 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 	   struct point *p, struct graphics_image_priv *img)
 {
 #if USE_OPENGLES
+	draw_image_es(gr, p, img->w, img->h, img->data);
 #else
 	if ((gr->parent && !gr->parent->overlay_enabled)
 	    || (gr->parent && gr->parent->overlay_enabled
@@ -1175,6 +1229,7 @@ get_data(struct graphics_priv *this, char *type)
 #if USE_OPENGLES
 		GLuint vertexShader;
 		GLuint fragmentShader;
+		GLuint textures;
 		GLfloat matrix[16];
 		int i;
 
@@ -1192,7 +1247,19 @@ get_data(struct graphics_priv *this, char *type)
 		this->mvp_location=glGetUniformLocation(this->program, "mvp");
 		this->position_location=glGetAttribLocation(this->program, "position");
 		glEnableVertexAttribArray(this->position_location);
+		this->texture_position_location=glGetAttribLocation(this->program, "texture_position");
 		this->color_location=glGetUniformLocation(this->program, "avcolor");
+		this->texture_location=glGetUniformLocation(this->program, "texture");
+		this->use_texture_location=glGetUniformLocation(this->program, "use_texture");
+		glUniform1i(this->use_texture_location, 0);
+		glGenTextures(1, &textures);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glUniform1i(this->texture_location, 0);
 
 		for (i = 0 ; i < 16 ; i++)
 			matrix[i]=0.0;
