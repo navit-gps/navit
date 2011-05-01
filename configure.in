@@ -1178,10 +1178,6 @@ if test x"$sdl" != xyes
 	then
         sdl_failures="(libsdl maybe?) "
 fi
-if test x"$xmu" != xyes
-        then                
-        sdl_failures=$sdl_failures"libxmu "
-fi        
 if test x"$glut" != xyes
        then
         sdl_failures=$sdl_failures"glut "
