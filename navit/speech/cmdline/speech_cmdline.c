@@ -26,9 +26,9 @@
 #include "plugin.h"
 #include "file.h"
 #include "speech.h"
+#include "util.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
-#include "util.h"
 #endif
 #ifdef USE_EXEC
 #include <sys/types.h>
@@ -83,92 +83,95 @@ struct speech_priv {
 	char *sample_dir;
 	char *sample_suffix;
 	GList *samples;
+	struct spawn_process_info *spi;
 };
 
 static int 
 speechd_say(struct speech_priv *this, const char *text)
 {
-#ifdef USE_EXEC
-	if (!fork()) {
-		char *cmdline=g_strdup_printf(this->cmdline, text);
-		int argcmax=10;
-		char *argv[argcmax];
-		int argc=0;
-		char *pos=cmdline, end;
-		while (*pos && argc < argcmax-1) {
-			end=' ';
-			if (*pos == '\'' || *pos == '\"') {
-				end=*pos++;
-			}
-			argv[argc]=pos;
-			while (*pos && *pos != end)
-			pos++;
-			if (*pos)
-			*pos++='\0';
-			while (*pos == ' ')
-			pos++;
-			if (strcmp(argv[argc], "2>/dev/null") && strcmp(argv[argc],">/dev/null") && strcmp(argv[argc],"&"))
-			argc++;
+	char **cmdv=g_strsplit(this->cmdline," ", -1);
+	int variable_arg_no=-1;
+	GList *argl=NULL;
+	guint listlen;
+	int samplesmode=0;
+	int i;
+	
+	for(i=0;cmdv[i];i++)
+		if(strchr(cmdv[i],'%')) {
+			variable_arg_no=i;
+			break;
 		}
-		g_free(cmdline);
-		argv[argc++]=NULL;
-		execvp(argv[0], argv);
-		exit(1);
-	}
-	return 0;
-#else
-#ifdef HAVE_API_WIN32_BASE
-	char *cmdline,*p;
-	PROCESS_INFORMATION pr;
-	LPCWSTR cmd,arg;
-	int ret;
-
-
-	cmdline=g_strdup_printf(this->cmdline, text);
-	p=cmdline;
-	while (*p != ' ' && *p != '\0')
-		p++;
-	if (*p == ' ')
-		*p++='\0';
-	cmd = newSysString(cmdline);
-	arg = newSysString(p);
-	ret=!CreateProcess(cmd, arg, NULL, NULL, 0, CREATE_NEW_CONSOLE, NULL, NULL, NULL, &pr);
-	g_free(cmdline);
-	g_free(cmd);
-	g_free(arg);
-	return ret;
-#else
-	char *cmdline;
-	int ret;
+	
 	if (this->sample_dir && this->sample_suffix)  {
-		GList *l=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text);
-		char *new_cmdline,*sep="";
-		cmdline=g_strdup("");
-		dbg(0,"text '%s'\n",text);
-		while (l) {
-			new_cmdline=g_strdup_printf("%s%s\"%s/%s\"",cmdline,sep,this->sample_dir,(char *)l->data);
-			dbg(0,"fragment '%s'\n",l->data);
-			g_free(cmdline);
-			cmdline=new_cmdline;
-			sep=" ";
-			l=g_list_next(l);
+		argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text);
+		samplesmode=1;
+		listlen=g_list_length(argl);
+	} else {
+		listlen=1;
+	}
+	dbg(0,"text '%s'\n",text);
+	if(listlen>0) {
+		int argc;
+		char**argv;
+		int j;
+		int cmdvlen=g_strv_length(cmdv);
+		argc=cmdvlen + listlen - (variable_arg_no>0?1:0);
+		argv=g_new(char *,argc+1);
+		if(variable_arg_no==-1) {
+			argv[cmdvlen]=g_strdup("%s");
+			variable_arg_no=cmdvlen;
 		}
-		new_cmdline=cmdline;
-		cmdline=g_strdup_printf(this->cmdline, new_cmdline);
-		g_free(new_cmdline);
-		dbg(0,"cmdline='%s'\n",cmdline);
-	} else
-		cmdline=g_strdup_printf(this->cmdline, text);
-	ret = system(cmdline);
-	g_free(cmdline);
-	return ret;
-#endif
-#endif
+		
+		for(i=0,j=0;j<argc;) {
+			if( i==variable_arg_no ) {
+				if (samplesmode) {
+					GList *l=argl;
+					while(l) {
+						char *new_arg;
+						new_arg=g_strdup_printf("%s/%s",this->sample_dir,(char *)l->data);
+						dbg(0,"new_arg %s\n",new_arg);
+						argv[j++]=g_strdup_printf(cmdv[i],new_arg);
+						g_free(new_arg);
+						l=g_list_next(l);
+					}
+				} else {
+					argv[j++]=g_strdup_printf(cmdv[i],text);
+				}
+				i++;
+			} else {
+				argv[j++]=g_strdup(cmdv[i++]);
+			}
+		}
+		argv[j]=NULL;
+		if (argl)
+			// No need to free data elements here as they are
+			// still referenced from this->samples 
+			g_list_free(argl); 
+
+		if(this->spi) {
+			spawn_process_check_status(this->spi,1); // Block until previous spawned speech process is terminated.
+			spawn_process_info_free(this->spi);
+		}
+		this->spi=spawn_process(argv);
+		g_strfreev(argv);
+	}
+	g_strfreev(cmdv);
+	return 0;
 }
+
 
 static void 
 speechd_destroy(struct speech_priv *this) {
+	GList *l=this->samples;
 	g_free(this->cmdline);
+	g_free(this->sample_dir);
+	g_free(this->sample_suffix);
+	while(l) {
+		g_free(l->data);
+	}
+	g_list_free(this->samples);
+	if(this->spi)
+		spawn_process_info_free(this->spi);
 	g_free(this);
 }
 
