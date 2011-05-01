@@ -1174,7 +1174,7 @@ echo ""
 echo ""
 echo "Summary of your installation :"
 # FIXME : maybe elaborate missing dependencies
-if test x"$sdl" != xyes
+if test x"$graphics_sdl" != xyes
 	then
         sdl_failures="(libsdl maybe?) "
 fi
