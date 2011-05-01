@@ -243,6 +243,8 @@ bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *t
 		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
 		struct attr *attrs[]={&type, &data, NULL};
 		this_->bookmark=map_new(this_->parent, attrs);
+		if (!this_->bookmark)
+			return NULL;
 		bookmarks_load_hash(this_);
 	}
 
