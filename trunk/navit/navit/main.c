@@ -49,6 +49,7 @@
 #include "event.h"
 #include "callback.h"
 #include "navit_nls.h"
+#include "util.h"
 #if HAVE_API_WIN32_BASE
 #include <windows.h>
 #include <winbase.h>
@@ -58,15 +59,6 @@
 struct map_data *map_data_default;
 
 struct callback_list *cbl;
-
-
-static void sigchld(int sig)
-{
-#if !defined(_WIN32) && !defined(__CEGCC__)
-	int status;
-	while (waitpid(-1, &status, WNOHANG) > 0);
-#endif
-}
 
 #ifdef HAVE_API_WIN32
 void
@@ -340,9 +332,8 @@ main_init(const char *program)
 		wchar_t wfilename[MAX_PATH + 1];
 #endif
 
-#ifndef _WIN32
-	signal(SIGCHLD, sigchld);
-#endif
+	spawn_process_init();
+
 	cbl=callback_list_new();
 #ifdef HAVE_API_WIN32_BASE
 	win_set_nls();

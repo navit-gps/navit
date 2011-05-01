@@ -46,5 +46,13 @@ int gettimeofday(struct timeval *time, void *);
 
 #endif
 
+struct spawn_process_info;
+char * shell_escape(char *arg);
+struct spawn_process_info* spawn_process(char **argv);
+int spawn_process_check_status(struct spawn_process_info *pi,int block);
+
+void spawn_process_info_free(struct spawn_process_info *pi);
+void spawn_process_init(void);
+
 #endif
 
