@@ -276,6 +276,9 @@ map_destroy_do(struct map *m)
 void
 map_destroy(struct map *m)
 {
+	if (!m)
+		return;
+
 	if(0<m->refcount) {
 		m->refcount--;
 	}
