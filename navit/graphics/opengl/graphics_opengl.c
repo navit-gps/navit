@@ -19,6 +19,9 @@
 
 #define USE_FREEIMAGE 1
 #define USE_OPENGLES 0
+#define USE_OPENGLES2 0
+#define USE_FLOAT 0
+#define REQUIRES_POWER_OF_2 0
 
 #include <glib.h>
 #include <unistd.h>
@@ -50,8 +53,39 @@
 #endif
 
 #if USE_OPENGLES
+#if USE_OPENGLES2
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#define glF(x)  x
+#define GL_F    GL_FLOAT
+typedef GLfloat GLf;
+#else
+#include <GLES/gl.h>
+#include <GLES/egl.h>
+
+#if USE_FLOAT
+#define glF(x)  x
+#define glD(x)  x
+#define GL_F    GL_FLOAT
+typedef GLfloat GLf;
+#else
+#define glF(x)  ((GLfixed)((x)*(1<<16)))
+#define glD(x)  glF(x)
+#define GL_F    GL_FIXED
+typedef GLfixed GLf;
+
+#define glClearColor    glClearColorx
+#define glTranslatef    glTranslatex
+#define glRotatef       glRotatex
+#define glMaterialfv    glMaterialxv
+#define glMaterialf     glMaterialx
+#define glOrthof        glOrthox
+#define glScalef        glScalex
+#define glColor4f       glColor4x
+#endif
+#define glTexParameteri       glTexParameterx
+
+#endif
 extern EGLSurface eglwindow;
 extern EGLDisplay egldisplay;
 #else
@@ -160,7 +194,7 @@ static void display(void);
 static void resize_callback(int w, int h);
 static void glut_close();
 
-#if USE_OPENGLES
+#if USE_OPENGLES2
 const char vertex_src [] =
 "                                        \
    attribute vec2        position;       \
@@ -480,25 +514,33 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 static void
 set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
+#if USE_OPENGLES2
 	GLfloat col[4];
 	col[0]=gc->fr;
 	col[1]=gc->fg;
 	col[2]=gc->fb;
 	col[3]=1.0;
 	glUniform4fv(gr->color_location, 1, col);
+#else
+	glColor4f(glF(gc->fr), glF(gc->fg), glF(gc->fb), glF(gc->fa));
+#endif
 }
 
 static void
 draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode)
 {
-	GLfloat x[count*2];
+	GLf x[count*2];
 	int i;
 
 	for (i = 0 ; i < count ; i++) {
-		x[i*2]=p[i].x;
-		x[i*2+1]=p[i].y;
+		x[i*2]=glF(p[i].x);
+		x[i*2+1]=glF(p[i].y);
 	}
+#if USE_OPENGLES2
 	glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
+#else
+	glVertexPointer(2, GL_F, 0, x);
+#endif
     	glDrawArrays(mode, 0, count);
 }
 
@@ -514,25 +556,60 @@ draw_rectangle_es(struct graphics_priv *gr, struct point *p, int w, int h)
 	draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
 }
 
+static int next_power2(int x)
+{
+	int r=1;
+	while (r < x) 
+		r*=2;
+	return r;
+}
+
 static void
 draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned char *data)
 {
-	GLfloat x[8];
+	GLf x[8];
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	memset(x, 0, sizeof(x));
-	x[0]+=1.0;
-	x[2]+=1.0;
-	x[3]+=1.0;
-	x[7]+=1.0;
+#if REQUIRES_POWER_OF_2
+	int w2=next_power2(w);
+	int h2=next_power2(h);
+	int y;
+	if (w2 != w || h2 != h) {
+		char *newpix=g_malloc0(w2*h2*4);
+		for (y=0 ; y < h ; y++) 
+			memcpy(newpix+y*w2*4, data+y*w*4, w*4);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w2, h2, 0, GL_RGBA, GL_UNSIGNED_BYTE, newpix);
+		g_free(newpix);
+		w=w2;
+		h=h2;
+	} else 
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+#else
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+#endif
+	x[0]+=glF(1);
+	x[2]+=glF(1);
+	x[3]+=glF(1);
+	x[7]+=glF(1);
+#if USE_OPENGLES2
 	glUniform1i(gr->use_texture_location, 1);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnableVertexAttribArray(gr->texture_position_location);
 	glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x );
+#else
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+	glTexCoordPointer(2, GL_F, 0, x);
+#endif
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	draw_rectangle_es(gr, p, w, h);
+#if USE_OPENGLES2
 	glUniform1i(gr->use_texture_location, 0);
 	glDisableVertexAttribArray(gr->texture_position_location);
+#else
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+#endif
 	glDisable(GL_BLEND);
 }
 
@@ -638,7 +715,9 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
+#if !USE_OPENGLES || USE_OPENGLES2
 	glLineWidth(gc->linewidth);
+#endif
 #if USE_OPENGLES
 	set_color(gr, gc);
 	draw_array(gr, p, count, GL_LINE_STRIP);
@@ -691,7 +770,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-
 #if USE_OPENGLES
 	set_color(gr, gc);
 	draw_array(gr, p, count, GL_LINE_STRIP);
@@ -1202,7 +1280,7 @@ graphics_opengl_disable_suspend(struct window *w)
 {
 }
 
-#if USE_OPENGLES
+#if USE_OPENGLES2
 static GLuint
 load_shader(const char *shader_source, GLenum type)
 {
@@ -1235,8 +1313,11 @@ get_data(struct graphics_priv *this, char *type)
 
 		createEGLWindow(this->width,this->height,"Navit");
 		resize_callback(this->width,this->height);
+#if 0
 		glClearColor ( 0.4 , 0.4 , 0.4 , 1);
+#endif
 		glClear ( GL_COLOR_BUFFER_BIT );
+#if USE_OPENGLES2
 		this->program=glCreateProgram();
 		vertexShader = load_shader(vertex_src, GL_VERTEX_SHADER);
 		fragmentShader = load_shader(fragment_src, GL_FRAGMENT_SHADER);
@@ -1252,13 +1333,6 @@ get_data(struct graphics_priv *this, char *type)
 		this->texture_location=glGetUniformLocation(this->program, "texture");
 		this->use_texture_location=glGetUniformLocation(this->program, "use_texture");
 		glUniform1i(this->use_texture_location, 0);
-		glGenTextures(1, &textures);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glUniform1i(this->texture_location, 0);
 
 		for (i = 0 ; i < 16 ; i++)
@@ -1270,6 +1344,21 @@ get_data(struct graphics_priv *this, char *type)
 		matrix[13]=1;
 		matrix[15]=1;
 		glUniformMatrix4fv(this->mvp_location, 1, GL_FALSE, matrix);
+#else
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glOrthox(glF(0),glF(this->width),glF(this->height),glF(0),glF(-1),glF(1));
+#endif
+		glGenTextures(1, &textures);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+#if !USE_OPENGLES2
+   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+#endif
 #endif
 		win = g_new0(struct window, 1);
 		win->priv = this;
