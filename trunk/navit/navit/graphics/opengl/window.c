@@ -1,5 +1,12 @@
+#define USE_OPENGLES2 1
+
+#if USE_OPENGLES2
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#else
+#include <GLES/gl.h>
+#include <GLES/egl.h>
+#endif
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include "debug.h"
@@ -9,6 +16,7 @@ EGLDisplay egldisplay;
 Display *dpy;
 Window window;
 
+#if USE_OPENGLES2
 static EGLint attributeList[] = {
 	EGL_RED_SIZE, 8,
 	EGL_GREEN_SIZE, 8,
@@ -17,6 +25,14 @@ static EGLint attributeList[] = {
 	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_NONE
 };
+
+#else
+static EGLint attributeList[] = {
+	EGL_RED_SIZE, 1,
+	EGL_DEPTH_SIZE, 1,
+	EGL_NONE
+};
+#endif
 
 
 int
@@ -30,10 +46,12 @@ createEGLWindow(int width, int height, char *name)
 	XVisualInfo *vi, tmp;
 	int vid, n;
 
+#if USE_OPENGLES2
 	EGLint aEGLContextAttributes[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
 		EGL_NONE
 	};
+#endif
 
 
 	egldisplay = eglGetDisplay(dpy = XOpenDisplay(NULL));
@@ -44,8 +62,11 @@ createEGLWindow(int width, int height, char *name)
 		dbg(0, "can't find requested config\n");
 		return 0;
 	}
-	cx = eglCreateContext(egldisplay, config[0], EGL_NO_CONTEXT,
-			      aEGLContextAttributes);
+#if USE_OPENGLES2
+	cx = eglCreateContext(egldisplay, config[0], EGL_NO_CONTEXT, aEGLContextAttributes);
+#else
+	cx = eglCreateContext(egldisplay, config[0], EGL_NO_CONTEXT, NULL);
+#endif
 
 	eglGetConfigAttrib(egldisplay, config[0], EGL_NATIVE_VISUAL_ID,
 			   &vid);
