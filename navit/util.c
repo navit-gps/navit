@@ -23,7 +23,15 @@
 #include <stdarg.h>
 #include <time.h>
 #include <limits.h>
+#include <string.h>
+
+#ifdef _POSIX_C_SOURCE
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#endif
 #include "util.h"
+#include "debug.h"
 
 void
 strtoupper(char *dest, const char *src)
@@ -348,3 +356,338 @@ current_to_iso8601(void)
 #endif
 	return timep;
 }
+
+
+struct spawn_process_info {
+#ifdef HAVE_API_WIN32_BASE
+	PROCESS_INFORMATION pr;
+#else
+	pid_t pid; // = -1 if non-blocking spawn isn't supported
+	int status; // exit status if non-blocking spawn isn't supported
+#endif
+};
+
+
+/**
+ * Escape and quote string for shell
+ *
+ * @param in arg string to escape
+ * @returns escaped string
+ */
+char *
+shell_escape(char *arg) 
+{
+	char *r;
+	int arglen=strlen(arg);
+	int i,j,rlen;
+#ifdef HAVE_API_WIN32_BASE
+	{
+		int bscount=0;
+		rlen=arglen+3;
+		r=g_new(char,rlen);
+		r[0]='"';
+		for(i=0,j=1;i<arglen;i++) {
+			if(arg[i]=='\\') {
+				bscount++;
+				if(i==(arglen-1)) {
+					// Most special case - last char is 
+					// backslash. We can't escape it inside
+					// quoted string due to Win unescaping 
+					// rules so quote should be closed 
+					// before backslashes and these
+					// backslashes shouldn't be doubled
+					rlen+=bscount;
+					r=g_realloc(r,rlen);
+					r[j++]='"';
+					memset(r+j,'\\',bscount);
+					j+=bscount;
+				}
+			} else {
+				//Any preceeding backslashes will be doubled.
+				bscount*=2;
+				// Double quote needs to be preceeded by 
+				// at least one backslash
+				if(arg[i]=='"')
+					bscount++;
+				if(bscount>0) {
+					rlen+=bscount;
+					r=g_realloc(r,rlen);
+					memset(r+j,'\\',bscount);
+					j+=bscount;
+					bscount=0;
+				}
+				r[j++]=arg[i];
+				if(i==(arglen-1)) {
+					r[j++]='"';
+				}
+			}
+		}
+		r[j++]=0;
+	}
+#else
+	{
+		// Will use hard quoting for the whole string
+		// and replace each singular quote found with a '\'' sequence.
+		rlen=arglen+3;
+		r=g_new(char,rlen);
+		r[0]='\'';
+		for(i=0,j=1;i<arglen;i++) {
+			if(arg[i]=='\'') {
+				rlen+=3;
+				r=g_realloc(r,rlen);
+				g_strlcpy(r+j,"'\\''",rlen-j);
+			} else {
+				r[j++]=arg[i];
+			}
+		}
+		r[j++]='\'';
+		r[j++]=0;
+	}
+#endif
+	return r;
+}
+
+#ifndef _POSIX_C_SOURCE
+static char*
+spawn_process_compose_cmdline(char **argv)
+{
+	int i,j;
+	char *cmdline=shell_escape(argv[0]);
+	for(i=1,j=strlen(cmdline);argv[i];i++) {
+		char *arg=shell_escape(argv[i]);
+		int arglen=strlen(arg);
+		cmdline[j]=' ';
+		cmdline=g_realloc(cmdline,j+1+arglen+1);
+		memcpy(cmdline+j+1,arg,arglen+1);
+		g_free(arg);
+		j=j+1+arglen;
+	}
+	return cmdline;
+}
+#endif
+
+#ifdef _POSIX_C_SOURCE
+
+#ifdef _POSIX_THREADS
+#define spawn_process_sigmask(how,set,old) pthread_sigmask(how,set,old)
+#else
+#define spawn_process_sigmask(how,set,old) sigprocmask(how,set,old)
+#endif
+
+GList *spawn_process_children=NULL;
+
+#endif
+
+
+/**
+ * Call external program
+ *
+ * @param in argv NULL terminated list of parameters,
+ *    zeroeth argument is program name
+ * @returns 0 - success, >0 - return code, -1 - error
+ */
+struct spawn_process_info*
+spawn_process(char **argv)
+{
+	struct spawn_process_info*r=g_new(struct spawn_process_info,1);
+#ifdef _POSIX_C_SOURCE
+	{
+		pid_t pid;
+		
+		sigset_t set, old;
+		sigemptyset(&set);
+		sigaddset(&set,SIGCHLD);
+		spawn_process_sigmask(SIG_BLOCK,&set,&old);
+		pid=fork();
+		if(pid==0) {
+			execvp(argv[0], argv);
+			/*Shouldn't reach here*/
+			exit(1);
+		} else if(pid>0) {
+			r->status=-1;
+			r->pid=pid;
+			spawn_process_children=g_list_prepend(spawn_process_children,r);
+		} else {
+			dbg(0,"fork() returned error.");
+			g_free(r);
+			r=NULL;
+		}
+		spawn_process_sigmask(SIG_SETMASK,&old,NULL);
+		return r;
+	}
+#else
+#ifdef HAVE_API_WIN32_BASE
+	{
+		char *cmdline;
+		LPCWSTR cmd,args;
+		DWORD dwRet;
+
+		// For [desktop] Windows it's adviceable not to use
+		// first CreateProcess parameter because PATH is not used
+		// if it is defined.
+		//
+		// On WinCE 6.0 I was unable to launch anything
+		// without first CreateProcess parameter, also it seems that
+		// no WinCE program has support for quoted strings in arguments.
+		// So...
+#ifdef HAVE_API_WIN32_CE
+		cmdline=g_strjoinv(" ",argv+1);
+		args=newSysString(cmdline);
+		cmd = newSysString(argv[0]);
+		dwRet=CreateProcess(cmd, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
+		dbg(0, "CreateProcess(%s,%s), PID=%i\n",argv[0],cmdline,r->pr.dwProcessId);
+		g_free(cmd);
+#else
+		cmdline=spawn_process_compose_cmdline(argv);
+		args=newSysString(cmdline);
+		dwRet=CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
+		dbg(0, "CreateProcess(%s), PID=%i\n",cmdline,r->pr.dwProcessId);
+#endif
+		g_free(cmdline);
+		g_free(args);
+		return r;
+	}
+#else
+	{
+		char *cmdline=spawn_process_compose_cmdline(argv);
+		int status;
+		dbg(0,"Unblocked spawn_process isn't availiable on this platform.\n");
+		status=system(cmdline);
+		g_free(cmdline);
+		r->status=status;
+		r->pid=0;
+		return r;
+	}
+#endif
+#endif
+}
+
+/**
+ * Check external program status
+ *
+ * @param in *pi pointer to spawn_process_info structure
+ * @param in block =0 do not block =1 block until child terminated
+ * @returns -1 - still running, >=0 program exited, 
+ *     =255 trminated abnormally or wasn't run at all.
+ * 
+ */
+int spawn_process_check_status(struct spawn_process_info *pi, int block)
+{
+	if(pi==NULL) {
+		dbg(0,"Trying to get process status of NULL, assuming process is terminated.\n");
+		return 255;
+	}
+#ifdef HAVE_API_WIN32_BASE
+	{int failcount=0;
+		while(1){
+			DWORD dw;
+			if(GetExitCodeProcess(pi->pr.hProcess,&dw)) {
+				if(dw!=STILL_ACTIVE) {
+					return dw;
+					break;
+				}
+			} else {
+				dbg(0,"GetExitCodeProcess failed. Assuming the process is terminated.");
+				return 255;
+			}
+			if(!block)
+				return -1;
+		
+			dw=WaitForSingleObject(pi->pr.hProcess,INFINITE);
+			if(dw==WAIT_FAILED && failcount++==1) {
+				dbg(0,"WaitForSingleObject failed twice. Assuming the process is terminated.");
+				return 0;
+				break;
+			}
+		}
+	}
+#else
+#ifdef _POSIX_C_SOURCE
+	if(pi->status!=-1) {
+		return pi->status;
+	}
+	while(1) {
+		int status;
+		pid_t w=waitpid(pi->pid,&status,block?0:WNOHANG);
+		if(w>0) {
+			if(WIFEXITED(status))
+				pi->status=WEXITSTATUS(status);
+				return pi->status;
+			if(WIFSTOPPED(status)) {
+				dbg(0,"child is stopped by %i signal\n",WSTOPSIG(status));
+			} else if (WIFSIGNALED(status)) {
+				dbg(0,"child terminated by signal %i\n",WEXITSTATUS(status));
+				pi->status=255;
+				return 255;
+			}
+			if(!block)
+				return -1;
+		} else if(w==0) {
+			if(!block)
+				return -1;
+		} else {
+			if(pi->status!=-1) // Signal handler has changed pi->status while in this function
+				return pi->status;
+			dbg(0,"waitpid() indicated error, reporting process termination.\n");
+			return 255;
+		}
+	}
+#else
+	dbg(0, "Non-blocking spawn_process isn't availiable for this platform, repoting process exit status.\n");
+	return pi->status;
+#endif
+#endif
+}
+
+void spawn_process_info_free(struct spawn_process_info *pi)
+{
+	if(pi==NULL)
+		return;
+#ifdef HAVE_API_WIN32_BASE
+	CloseHandle(pi->pr.hProcess);
+	CloseHandle(pi->pr.hThread);
+#endif
+#ifdef _POSIX_C_SOURCE
+	{
+		sigset_t set, old;
+		sigemptyset(&set);
+		sigaddset(&set,SIGCHLD);
+		spawn_process_sigmask(SIG_BLOCK,&set,&old);
+		spawn_process_children=g_list_remove(spawn_process_children,pi);
+		spawn_process_sigmask(SIG_SETMASK,&old,NULL);
+	}
+#endif
+	g_free(pi);
+}
+
+#ifdef _POSIX_C_SOURCE
+static void spawn_process_sigchld(int sig)
+{
+	int status;
+	pid_t pid;
+	while ((pid=waitpid(-1, &status, WNOHANG)) > 0) {
+		GList *el=g_list_first(spawn_process_children);
+		while(el) {
+			struct spawn_process_info *p=el->data;
+			if(p->pid==pid) {
+				p->status=status;
+			}
+			el=g_list_next(el);
+		}
+	}
+}
+#endif
+
+void spawn_process_init()
+{
+#ifdef _POSIX_C_SOURCE
+	struct sigaction act;
+	act.sa_handler=spawn_process_sigchld;
+	act.sa_flags=0;
+	sigemptyset(&act.sa_mask);
+	sigaction(SIGCHLD, &act, NULL);
+#endif
+	return;
+}
+
+
