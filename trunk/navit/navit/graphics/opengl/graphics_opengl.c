@@ -481,7 +481,7 @@ set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
-draw_array(struct graphics_priv *gr, struct point *p, int count)
+draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode)
 {
 	GLfloat x[count*2];
 	int i;
@@ -491,7 +491,7 @@ draw_array(struct graphics_priv *gr, struct point *p, int count)
 		x[i*2+1]=p[i].y;
 	}
 	glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
-    	glDrawArrays(GL_LINE_STRIP, 0, count);
+    	glDrawArrays(mode, 0, count);
 }
 
 #else
@@ -595,15 +595,15 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
+	glLineWidth(gc->linewidth);
 #if USE_OPENGLES
 	set_color(gr, gc);
-	draw_array(gr, p, count);
+	draw_array(gr, p, count, GL_LINE_STRIP);
 #else
 
 	graphics_priv_root->dirty = 1;
 
 	glColor4f(gc->fr, gc->fg, gc->fb, gc->fa);
-	glLineWidth(gc->linewidth);
 	if (!gr->parent && 0 < gc->dash_count) {
 		glLineStipple(1, gc->dash_mask);
 		glEnable(GL_LINE_STIPPLE);
@@ -651,7 +651,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 
 #if USE_OPENGLES
 	set_color(gr, gc);
-	draw_array(gr, p, count);
+	draw_array(gr, p, count, GL_LINE_STRIP);
 #else
 	graphics_priv_root->dirty = 1;
 
@@ -703,13 +703,21 @@ static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	       struct point *p, int w, int h)
 {
-#if USE_OPENGLES
-#else
 	if ((gr->parent && !gr->parent->overlay_enabled)
 	    || (gr->parent && gr->parent->overlay_enabled
 		&& !gr->overlay_enabled)) {
 		return;
 	}
+#if USE_OPENGLES
+	struct point pa[4];
+	pa[0]=pa[1]=pa[2]=pa[3]=*p;
+	pa[0].x+=w;
+	pa[1].x+=w;
+	pa[1].y+=h;
+	pa[3].y+=h;
+	set_color(gr, gc);
+	draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
+#else
 
 	graphics_priv_root->dirty = 1;
 
@@ -1284,7 +1292,11 @@ static struct graphics_methods graphics_methods = {
 	draw_lines,
 	draw_polygon,
 	draw_rectangle,
+#ifdef USE_OPENGLES
+	NULL,
+#else
 	draw_circle,
+#endif
 	draw_text,
 	draw_image,
 	draw_image_warp,
