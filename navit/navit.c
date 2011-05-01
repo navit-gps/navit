@@ -66,6 +66,10 @@
 #include "vehicleprofile.h"
 #include "sunriset.h"
 #include "bookmarks.h"
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#include "util.h"
+#endif
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
@@ -1155,6 +1159,104 @@ navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, 
 	}
 }
 
+/**
+ * Join several string attributes into one
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes in[0] - separator, in[1..] - attributes to join
+ * @param out output attribute joined attribute as string
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr attr;
+	gchar *ret, *sep;
+	int i;
+	attr.type=attr_type_string_begin;
+	attr.u.str=NULL;
+	if(in[0] && in[1]) {
+		sep=attr_to_text(in[0],NULL,1);
+		ret=attr_to_text(in[1],NULL,1);
+		for(i=2;in[i];i++) {
+			gchar *in_i=attr_to_text(in[i],NULL,1);
+			gchar *r=g_strjoin(sep,ret,in_i,NULL);
+			g_free(in_i);
+			g_free(ret);
+			ret=r;
+		}
+		g_free(sep);
+		attr.u.str=ret;
+		if(out) {
+			*out=attr_generic_add_attr(*out, &attr);
+		}
+		g_free(ret);
+	}
+}
+
+/**
+ * Call external program
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes in[0] - name of executable, in[1..] - parameters
+ * @param out output attribute unused
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	int i,j, nparms, nvalid;
+	const char ** argv=NULL;
+	struct spawn_process_info *pi;
+
+	nparms=0;
+	nvalid=0;
+	if(in) {
+		while(in[nparms]) {
+			if (in[nparms]->type!=attr_none) 
+				nvalid++;
+			nparms++;
+		}
+	}
+	
+	if(nvalid>0) {
+		argv=g_new(char*,nvalid+1);
+		for(i=0,j=0;in[i];i++) {
+			if(in[i]->type!=attr_none ) {
+				argv[j++]=attr_to_text(in[i],NULL,1);
+			} else {
+				dbg(0,"Parameter #%i is attr_none - skipping\n",i);
+			}
+		}
+		argv[j]=NULL;
+		pi=spawn_process(argv);
+		
+		// spawn_process() testing suite - uncomment following code to test.
+		//sleep(3);
+		// example of non-blocking wait
+		//int st=spawn_process_check_status(pi,0);dbg(0,"status %i\n",st);
+		// example of blocking wait
+		//st=spawn_process_check_status(pi,1);dbg(0,"status %i\n",st);
+		// example of wait after process is finished and status is
+		// already tested
+		//st=spawn_process_check_status(pi,1);dbg(0,"status %i\n",st);
+		// example of wait after process is finished and status is
+		// already tested - unblocked
+		//st=spawn_process_check_status(pi,0);dbg(0,"status %i\n",st);
+		
+		// End testing suite
+		spawn_process_info_free(pi);
+		for(i=0;argv[i];i++)
+			g_free(argv[i]);
+		g_free(argv);
+	}
+}
+
+
 static struct command_table commands[] = {
 	{"zoom_in",command_cast(navit_cmd_zoom_in)},
 	{"zoom_out",command_cast(navit_cmd_zoom_out)},
@@ -1170,6 +1272,8 @@ static struct command_table commands[] = {
 	{"pop_int",command_cast(navit_cmd_pop_int)},
 	{"int_stack_size",command_cast(navit_cmd_int_stack_size)},
 	{"toggle_layer",command_cast(navit_cmd_toggle_layer)},
+	{"strjoin",command_cast(navit_cmd_strjoin)},
+	{"spawn",command_cast(navit_cmd_spawn)},
 	{"map_add_curr_pos",command_cast(navit_cmd_map_add_curr_pos)},
 	{"map_item_set_attr",command_cast(navit_cmd_map_item_set_attr)},
 	{"set_attr_var",command_cast(navit_cmd_set_attr_var)},
