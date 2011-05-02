@@ -210,7 +210,7 @@ vehicle_gpsd_dbus_set_attr(struct vehicle_priv *priv, struct attr *attr)
 	return vehicle_gpsd_dbus_set_attr_do(priv, attr, 0);
 }
 
-struct vehicle_methods vehicle_gpsd_methods = {
+static struct vehicle_methods vehicle_gpsd_methods = {
 	vehicle_gpsd_dbus_destroy,
 	vehicle_gpsd_dbus_position_attr_get,
 	vehicle_gpsd_dbus_set_attr,

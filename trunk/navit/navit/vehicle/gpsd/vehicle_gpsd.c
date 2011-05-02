@@ -405,7 +405,7 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 	return 1;
 }
 
-struct vehicle_methods vehicle_gpsd_methods = {
+static struct vehicle_methods vehicle_gpsd_methods = {
 	vehicle_gpsd_destroy,
 	vehicle_gpsd_position_attr_get,
 };
