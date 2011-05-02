@@ -52,9 +52,9 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
    endforeach()
 endmacro()
 
-#install(FILES  desktop_icons/navit.desktop DESTINATION share/applications)
-#install(FILES  desktop_icons/22x22/navit.png DESTINATION share/icons/hicolor/22x22/apps)
-#install(FILES  desktop_icons/128x128/navit.png DESTINATION share/icons/hicolor/128x128/apps)
+install(FILES  desktop_icons/navit.desktop DESTINATION share/applications)
+install(FILES  desktop_icons/22x22/navit.png DESTINATION share/icons/hicolor/22x22/apps)
+install(FILES  desktop_icons/128x128/navit.png DESTINATION share/icons/hicolor/128x128/apps)
 #install(FILES  bench.xpm DESTINATION )
 
 if (USE_SVG OR SVG2PNG)
@@ -97,5 +97,5 @@ add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
 install(
    FILES ${IMAGE_TARGETS}
    DESTINATION ${IMAGE_DIR}
-   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+   PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
