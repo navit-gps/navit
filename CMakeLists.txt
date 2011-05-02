@@ -50,6 +50,7 @@ add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
 add_module(map/garmin "Garmin library not found" FALSE)
+add_module(speech/cmdline "Default" TRUE)
 add_feature(ENABLE_NLS "default" TRUE)
 
 INCLUDE (CPack)
@@ -127,6 +128,8 @@ if (Glib_FOUND)
    list(APPEND NAVIT_LIBS ${Glib_LIBRARIES})
 else(Glib_FOUND)
    set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
+   # speech/cmdline doesn't build with our glib anymore
+   set_with_reason(speech/cmdline "does not build with support/glib" FALSE)
 endif(Glib_FOUND)
 if (Gmodule_FOUND)
    set(HAVE_GMODULE 1)
@@ -282,7 +285,6 @@ endif(NOT MSVC)
 add_module(map/shapefile "Default" TRUE)
 add_module(map/textfile "Default" TRUE)
 add_module(map/csv "Default" TRUE)
-add_module(speech/cmdline "Default" TRUE)
 
 #Modules without test yet
 add_module(plugin/pedestrian "Default" FALSE)
@@ -327,7 +329,7 @@ endif()
 ### Platform specific settings
 if(NOT CACHE_SIZE)
    SET(CACHE_SIZE 1048576)
-endif(CACHE_SIZE)
+endif(NOT CACHE_SIZE)
 
 if(WIN32 OR WINCE)
    SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
