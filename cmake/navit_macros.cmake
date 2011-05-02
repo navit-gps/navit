@@ -45,27 +45,23 @@ macro(module_add_library MODULE_NAME )
    TARGET_LINK_LIBRARIES(${MODULE_NAME} ${${MODULE_NAME}_LIBS})
    SET_TARGET_PROPERTIES( ${MODULE_NAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
    
-   if (ANDROID)
-      TARGET_LINK_LIBRARIES(${MODULE_NAME} ${NAVIT_LIBNAME})
-   endif()
    if (USE_PLUGINS)
+       if (ANDROID)
+           TARGET_LINK_LIBRARIES(${MODULE_NAME} ${NAVIT_LIBNAME})
+       endif()
       # workaround to be compatible with old paths
       set_target_properties( ${MODULE_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.libs")
 
       install(TARGETS ${MODULE_NAME}
               DESTINATION ${LIB_DIR}/navit/${${MODULE_NAME}_TYPE}
               PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-   else()
-      TARGET_LINK_LIBRARIES(${MODULE_NAME} ${NAVIT_LIBNAME})
    endif()
 endmacro(module_add_library)
 
 macro(supportlib_add_library LIB_NAME )
    add_library(${LIB_NAME} ${ARGN})
+   TARGET_LINK_LIBRARIES(${LIB_NAME} ${${LIB_NAME}_LIBS})
    SET_TARGET_PROPERTIES( ${LIB_NAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
-   if (NOT USE_PLUGINS)
-      TARGET_LINK_LIBRARIES(${LIB_NAME} ${NAVIT_LIBNAME})
-   endif(NOT USE_PLUGINS)
 endmacro(supportlib_add_library)
 
 macro(message_error)
