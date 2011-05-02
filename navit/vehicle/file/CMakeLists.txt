@@ -1,4 +1,7 @@
 module_add_library(vehicle_file vehicle_file.c)
+set (vehicle_pipe_TYPE ${vehicle_file_TYPE})
+set (vehicle_serial_TYPE ${vehicle_file_TYPE})
+set (vehicle_socket_TYPE ${vehicle_file_TYPE})
 module_add_library(vehicle_pipe vehicle_pipe.c)
 module_add_library(vehicle_serial vehicle_serial.c)
 module_add_library(vehicle_socket vehicle_socket.c)
