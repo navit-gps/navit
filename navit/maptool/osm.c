@@ -83,6 +83,7 @@ enum attr_strings {
 	attr_string_label,
 	attr_string_postal,
 	attr_string_population,
+	attr_string_county_name,
 	attr_string_last,
 };
 
@@ -1085,6 +1086,7 @@ osm_add_tag(char *k, char *v)
 		* where Galway is the county
 		*/
 		strcpy(is_in_buffer, "Ireland");
+		attr_strings_save(attr_string_county_name, v);
 		level=5;
 	}
 	if (! strcmp(k,"gnis:ST_alpha")) {
@@ -1588,6 +1590,7 @@ osm_end_node(FILE *out)
 		item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
 		item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
 		item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
+		item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 		item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 		item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
@@ -1626,6 +1629,7 @@ osm_end_node(FILE *out)
 					item_bin=init_item(item_bin->type);
 					item_bin_add_coord(item_bin, &ni->c, 1);
 					item_bin_add_attr_string(item_bin, attr_town_postal, postal);
+					item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 					item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
 					item_bin_write_match(item_bin, attr_town_name, attr_town_name_match, result->file);
 				}
