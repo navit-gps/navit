@@ -198,6 +198,10 @@ search_list_common_new(struct item *item, struct search_list_common *common)
 		common->town_name=map_convert_string(item->map, attr.u.str);
 	else
 		common->town_name=NULL;
+	if (item_attr_get(item, attr_county_name, &attr))
+		common->county_name=map_convert_string(item->map, attr.u.str);
+	else
+		common->county_name=NULL;
 	if (item_attr_get(item, attr_district_name, &attr))
 		common->district_name=map_convert_string(item->map, attr.u.str);
 	else
@@ -219,6 +223,7 @@ search_list_common_destroy(struct search_list_common *common)
 {
 	map_convert_free(common->town_name);
 	map_convert_free(common->district_name);
+	map_convert_free(common->county_name);
 	map_convert_free(common->postal);
 	map_convert_free(common->postal_mask);
 }

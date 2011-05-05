@@ -32,6 +32,7 @@ struct search_list_common {
 	char *district_name;
 	char *postal;
 	char *postal_mask;
+	char *county_name;
 };
 
 struct search_list_country {
