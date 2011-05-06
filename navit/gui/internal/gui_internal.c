@@ -3214,12 +3214,16 @@ town_str(struct search_list_result *res, int level, int flags)
 	char *postal_sep=" ";
 	char *district_begin=" (";
 	char *district_end=")";
+	char *county_sep = ", Co. ";
+	char *county = res->town->common.county_name;
 	if (!postal)
 		postal_sep=postal="";
 	if (!district || (flags & 1))
 		district_begin=district_end=district="";
+	if (!county)
+		county_sep=county="";
 
-	return g_strdup_printf("%s%s%s%s%s%s", postal, postal_sep, town, district_begin, district, district_end);
+	return g_strdup_printf("%s%s%s%s%s%s%s%s", postal, postal_sep, town, district_begin, district, district_end, county_sep, county);
 }
 
 static void
