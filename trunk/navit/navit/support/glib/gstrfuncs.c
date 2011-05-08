@@ -49,6 +49,7 @@
 #include "glibintl.h"
 
 #include "galias.h"
+#include "gslist.h"
 
 #ifdef G_OS_WIN32
 #include <windows.h>
@@ -2269,7 +2270,6 @@ g_strchomp (gchar *string)
   return string;
 }
 
-#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_strsplit:
  * @string: a string to split.
@@ -2345,6 +2345,7 @@ g_strsplit (const gchar *string,
   return str_array;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_strsplit_set:
  * @string: The string to be tokenized
@@ -2760,9 +2761,8 @@ g_strrstr_len (const gchar *haystack,
       return NULL;
     }
 }
+
 #if NOT_NEEDED_FOR_NAVIT
-
-
 /**
  * g_str_has_suffix:
  * @str: a nul-terminated string.
@@ -2850,6 +2850,7 @@ g_strip_context  (const gchar *msgid,
 
   return msgval;
 }
+#endif
 
 
 /**
@@ -2876,7 +2877,7 @@ g_strv_length (gchar **str_array)
   return i;
 }
 
-
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_dpgettext:
  * @domain: the translation domain to use, or %NULL to use
