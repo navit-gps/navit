@@ -467,7 +467,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 			hn_distance=distance_sum*hn_pos/hn_length;
 			dbg(1,"hn_distance=%d\n",hn_distance);
 			i=0;
-			while (hn_distance > distances[i] && i < count-1) 
+			while (i < count-1 && hn_distance > distances[i])
 				hn_distance-=distances[i++];
 			dbg(1,"remaining distance=%d from %d\n",hn_distance,distances[i]);
 			ret->x=(c[i+1].x-c[i].x)*hn_distance/distances[i]+c[i].x;
