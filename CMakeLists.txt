@@ -567,6 +567,9 @@ if (EXTRA_DEFINES)
 	add_definitions(${EXTRA_DEFINES})
 endif(EXTRA_DEFINES)
 
+if (EXTRA_LIBS)
+	list(APPEND NAVIT_LIBS ${EXTRA_LIBS})
+endif(EXTRA_LIBS)
 
 if (GETTEXT_FOUND)
    add_subdirectory (po)
