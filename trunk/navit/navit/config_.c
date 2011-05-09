@@ -25,6 +25,9 @@
 #include "callback.h"
 #include "navit.h"
 #include "config_.h"
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 struct config {
 	struct attr **attrs;
