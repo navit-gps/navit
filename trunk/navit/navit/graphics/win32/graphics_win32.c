@@ -1127,7 +1127,11 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     }
 
     /* set up the input control for C streams */
+#if defined(_WIN32_WCE)
+    png_init_io (png_ptr, fileno(png_file));
+#else
     png_init_io (png_ptr, png_file);
+#endif
     png_set_sig_bytes (png_ptr, 8);  /* we already read the 8 signature bytes */
 
     /* read the file information */
