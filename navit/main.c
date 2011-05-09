@@ -55,6 +55,9 @@
 #include <winbase.h>
 #endif
 
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 struct map_data *map_data_default;
 
