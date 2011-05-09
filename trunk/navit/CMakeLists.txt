@@ -563,6 +563,11 @@ endif(NOT NAVIT_DEPENDENCY_ERROR)
 add_subdirectory (navit)
 add_subdirectory (man)
 
+if (EXTRA_DEFINES)
+	add_definitions(${EXTRA_DEFINES})
+endif(EXTRA_DEFINES)
+
+
 if (GETTEXT_FOUND)
    add_subdirectory (po)
    #install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION ${LOCALE_DIR})
