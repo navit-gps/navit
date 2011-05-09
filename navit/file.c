@@ -676,7 +676,7 @@ file_exists(char const *name)
 	if (fd == -1)
 		return 0;
 	close(fd);
-	return 0;
+	return 1;
 }
 
 void
