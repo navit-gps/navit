@@ -66,11 +66,8 @@ endforeach()
 add_subdirectory (fib-1.1)
 
 if(NOT ANDROID)
-   if(WIN32 OR WINCE)
-      add_executable (navit start.c ${CMAKE_CURRENT_SOURCE_DIR}/gui/win32/resources/resource.rc)
-   else()
-      add_executable (navit start.c)
-   endif()
+   # add_executable (navit start.c ${CMAKE_CURRENT_SOURCE_DIR}/gui/win32/resources/resource.rc)
+   add_executable (navit start.c)
    
    target_link_libraries (navit ${NAVIT_LIBNAME})
    set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME}")
