@@ -4,6 +4,10 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef PLATFORM_WINDOWS
+#include "windows.h"
+#endif
+
 int errno;
 
 #define MAXENV 32
@@ -178,5 +182,67 @@ intptr_t _get_osfhandle(int FileHandle)
 {
     return 0;
 }
+
+#ifdef _MSC_VER
+
+HANDLE FindFirstFileA(char* pFileName, LPWIN32_FIND_DATAA pFindFileData)
+{
+    HANDLE hRetVal = INVALID_HANDLE_VALUE;
+    WIN32_FIND_DATAW wFindFileData;
+    wchar_t wFileName[MAX_PATH];
+
+    if (MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, pFileName, -1, wFileName, MAX_PATH) != 0)
+    {
+        hRetVal = FindFirstFileW(wFileName, &wFindFileData);
+
+        pFindFileData->dwFileAttributes = wFindFileData.dwFileAttributes;
+        pFindFileData->ftCreationTime = wFindFileData.ftCreationTime;
+        pFindFileData->ftLastAccessTime = wFindFileData.ftLastAccessTime;
+        pFindFileData->ftLastWriteTime = wFindFileData.ftLastWriteTime;
+        pFindFileData->nFileSizeHigh = wFindFileData.nFileSizeHigh;
+        pFindFileData->nFileSizeLow = wFindFileData.nFileSizeLow;
+   
+        if (WideCharToMultiByte(CP_UTF8, WC_SEPCHARS, wFileName, -1, pFindFileData->cFileName, MAX_PATH, NULL, NULL) == 0)
+        {
+            hRetVal = INVALID_HANDLE_VALUE;
+        }
+    }
+
+    return hRetVal;
+}
+
+BOOL FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA pFindFileData)
+{
+    BOOL boRetVal = FALSE;
+    WIN32_FIND_DATAW wFindFileData;
+
+    wFindFileData.dwFileAttributes = pFindFileData->dwFileAttributes;
+    wFindFileData.ftCreationTime = pFindFileData->ftCreationTime;
+    wFindFileData.ftLastAccessTime = pFindFileData->ftLastAccessTime;
+    wFindFileData.ftLastWriteTime = pFindFileData->ftLastWriteTime;
+    wFindFileData.nFileSizeHigh = pFindFileData->nFileSizeHigh;
+    wFindFileData.nFileSizeLow = pFindFileData->nFileSizeLow;
+
+    if (MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, pFindFileData->cFileName, -1, wFindFileData.cFileName, MAX_PATH) != 0)
+    {
+        boRetVal = FindNextFileW(hFindFile, &wFindFileData);
+
+        pFindFileData->dwFileAttributes = wFindFileData.dwFileAttributes;
+        pFindFileData->ftCreationTime = wFindFileData.ftCreationTime;
+        pFindFileData->ftLastAccessTime = wFindFileData.ftLastAccessTime;
+        pFindFileData->ftLastWriteTime = wFindFileData.ftLastWriteTime;
+        pFindFileData->nFileSizeHigh = wFindFileData.nFileSizeHigh;
+        pFindFileData->nFileSizeLow = wFindFileData.nFileSizeLow;
+   
+        if (WideCharToMultiByte(CP_UTF8, WC_SEPCHARS, wFindFileData.cFileName, -1, pFindFileData->cFileName, MAX_PATH, NULL, NULL) == 0)
+        {
+            boRetVal = FALSE;
+        }
+    }
+
+    return boRetVal;
+}
+
+#endif
 
 #endif
