@@ -309,6 +309,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	struct map_rect_priv* mr;
 	struct map_priv* m;
 	struct quadtree_item* qi;
+	GList* new_it;
 
 	//for now we only support coord modification only  
 	if( ! change_mode_modify) {
@@ -332,7 +333,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	transform_to_geo(projection_mg, &c[0], &cg);
 
 	//if it is on the new list remove from new list and add it to the tree with the coord
-	GList* new_it = m->new_items;	
+	new_it = m->new_items;	
 	while(new_it) {
 		if(new_it->data==qi) {
 			break;
