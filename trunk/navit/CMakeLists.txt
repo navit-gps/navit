@@ -510,6 +510,9 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 add_definitions("-Wall")
+if (EXTRA_DEFINES)
+	add_definitions("${EXTRA_DEFINES}")
+endif(EXTRA_DEFINES)
 
 if (NOT NAVIT_DEPENDENCY_ERROR)
    message("\nSummary:\n")
@@ -563,9 +566,6 @@ endif(NOT NAVIT_DEPENDENCY_ERROR)
 add_subdirectory (navit)
 add_subdirectory (man)
 
-if (EXTRA_DEFINES)
-	add_definitions(${EXTRA_DEFINES})
-endif(EXTRA_DEFINES)
 
 if (EXTRA_LIBS)
 	list(APPEND NAVIT_LIBS ${EXTRA_LIBS})
