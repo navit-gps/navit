@@ -22,10 +22,15 @@ set(LOCALE_DIR share)
 set(IMAGE_DIR share/navit/xpm)
 set(LIB_DIR lib)
 
-### Detect environment
 foreach(EXTRA_MODULE ${EXTRA_MODULES}) 
    add_module(${EXTRA_MODULE} "extra module specified" TRUE)
 endforeach()
+
+if (EXTRA_LIBS)
+	list(APPEND NAVIT_LIBS ${EXTRA_LIBS})
+endif(EXTRA_LIBS)
+
+### Detect environment
 
 add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
@@ -566,10 +571,6 @@ endif(NOT NAVIT_DEPENDENCY_ERROR)
 add_subdirectory (navit)
 add_subdirectory (man)
 
-
-if (EXTRA_LIBS)
-	list(APPEND NAVIT_LIBS ${EXTRA_LIBS})
-endif(EXTRA_LIBS)
 
 if (GETTEXT_FOUND)
    add_subdirectory (po)
