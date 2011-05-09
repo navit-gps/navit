@@ -671,6 +671,8 @@ search_list_get_result(struct search_list *this_)
 {
 	struct search_list_level *le,*leu;
 	int level=this_->level;
+	struct attr attr2;
+	int has_street_name=0;
 
 	//dbg(0,"enter\n");
 	le=&this_->levels[level];
@@ -773,8 +775,6 @@ search_list_get_result(struct search_list *this_)
 				dbg(0,"case 3 HOUSENUMBER");
 
 				// if this housenumber has a streetname tag, set the name now
-				struct attr attr2;
-				int has_street_name=0;
 				if (item_attr_get(this_->item, attr_street_name, &attr2))
 				{
 					dbg(0,"streetname: %s\n",attr2.u.str);
@@ -972,6 +972,7 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 	struct attr attr;
 	struct coord_geo g;
 	struct coord c;
+	struct attr attr2;
 	attr.type=attr_street_name;
 	while ((slr=search_list_get_result(sl)))
 	{
@@ -1011,7 +1012,6 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 #endif
 		count++;
 
-		struct attr attr2;
 		while (tmp)
 		{
 			if (tmp != exclude1 && tmp != exclude2 && tmp != exclude3)
