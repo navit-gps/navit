@@ -1254,7 +1254,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	struct point *res=g_alloca(sizeof(struct point)*maxpoints);
 	struct point pos, poso, neg, nego;
 	int i, dx=0, dy=0, l=0, dxo=0, dyo=0;
-	struct offset o,oo={};
+	struct offset o,oo={0,0,0,0};
 	int fow=0, fowo=0, delta;
 	int wi, ppos = maxpoints/2, npos = maxpoints/2;
 	int state,prec=5;
@@ -1649,6 +1649,7 @@ void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, s
 char *
 graphics_icon_path(char *icon)
 {
+	static char *navit_sharedir;
 	char *ret=NULL;
 	struct file_wordexp *wordexp=NULL;
 	dbg(1,"enter %s\n",icon);
@@ -1670,7 +1671,6 @@ graphics_icon_path(char *icon)
 		// ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
 		ret=g_strdup_printf("res/drawable/%s" ,icon);
 #else
-		static char *navit_sharedir;
 		if (! navit_sharedir)
 			navit_sharedir = getenv("NAVIT_SHAREDIR");
 		ret=g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
