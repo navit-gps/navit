@@ -31,7 +31,9 @@
 #endif /* _MSC_VER */
 #include <string.h>
 #include <fcntl.h>
+#ifndef HAVE_API_WIN32_BASE
 #include <sys/stat.h>
+#endif
 #include <sys/mman.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,6 +50,9 @@
 #ifdef HAVE_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
+#endif
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
 #endif
 
 extern char *version;
@@ -218,7 +223,6 @@ file_http_header(struct file *f, char *header)
 struct file *
 file_create(char *name, struct attr **options)
 {
-	struct stat stat;
 	struct file *file= g_new0(struct file,1);
 	struct attr *attr;
 	int open_flags=O_LARGEFILE|O_BINARY;
@@ -241,8 +245,7 @@ file_create(char *name, struct attr **options)
 			return NULL;
 		}
 		dbg(1,"fd=%d\n", file->fd);
-		fstat(file->fd, &stat);
-		file->size=stat.st_size;
+        	file->size=lseek(file->fd, 0, SEEK_END);
 		dbg(1,"size="LONGLONG_FMT"\n", file->size);
 		file->name_id = (int)atom(name);
 	}
@@ -270,21 +273,27 @@ file_create_url(char *url)
 
 int file_is_dir(char *name)
 {
+#ifndef HAVE_API_WIN32_BASE
 	struct stat buf;
 	if (! stat(name, &buf)) {
 		return S_ISDIR(buf.st_mode);
 	}
+#endif
 	return 0;
 
 }
 
 int file_is_reg(char *name)
 {
+#ifndef HAVE_API_WIN32_BASE
 	struct stat buf;
 	if (! stat(name, &buf)) {
 		return S_ISREG(buf.st_mode);
 	}
 	return 0;
+#else
+	return 1;
+#endif
 }
 
 long long
@@ -443,7 +452,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 			dbg(1,"checking header\n");
 			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				dbg(1,"found %s (%d bytes)\n",file->buffer,sizeof(file->buffer));
+				dbg(1,"found %s (%d bytes)\n",file->buffer,strlen(file->buffer));
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
@@ -663,9 +672,10 @@ file_data_free(struct file *file, unsigned char *data)
 int
 file_exists(char const *name)
 {
-	struct stat buf;
-	if (! stat(name, &buf))
-		return 1;
+	int fd=open(name, O_RDONLY);
+	if (fd == -1)
+		return 0;
+	close(fd);
 	return 0;
 }
 
