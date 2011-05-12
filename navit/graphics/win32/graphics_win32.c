@@ -1127,7 +1127,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     }
 
     /* set up the input control for C streams */
-#if defined(_WIN32_WCE)
+#if defined(_WIN32)
     png_init_io (png_ptr, fileno(png_file));
 #else
     png_init_io (png_ptr, png_file);
