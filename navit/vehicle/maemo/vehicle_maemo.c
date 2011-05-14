@@ -105,6 +105,11 @@ static void vehicle_maemo_callback(LocationGPSDevice *device, gpointer user_data
 			dbg(1,"Time: %f\n",priv->fix_time);
 		}
 
+		if (device->fix->fields & LOCATION_GPS_DEVICE_ALTITUDE_SET) {
+			priv->height=device->fix->altitude;
+			dbg(1,"Elevation: %f\n",priv->height);
+		}
+
 	}
 
 	return;
