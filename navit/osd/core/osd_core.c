@@ -1252,6 +1252,11 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_graphics_ready, this));
 
+	if(b_commandtable_added == 0) {
+		navit_command_add_table(nav, commands, sizeof(commands)/sizeof(struct command_table));
+		b_commandtable_added = 1;
+	}
+
 	return (struct osd_priv *) this;
       error:
 	g_free(this);
