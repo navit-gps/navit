@@ -311,7 +311,9 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
                   vehicle_gpsd_open(priv);
                 }
                 else {
-  	          vehicle_gpsd_callback(priv->gps,priv->gps->buffer,strlen(priv->gps->buffer));
+                  char *buf;
+                  buf = gps_data(priv->gps);
+  	          vehicle_gpsd_callback(priv->gps,buf,strlen(buf));
                 }
 #else
                 if (gps_poll(priv->gps)) {
