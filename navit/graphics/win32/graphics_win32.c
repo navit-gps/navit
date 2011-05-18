@@ -47,7 +47,6 @@ struct graphics_priv
     int width;
     int height;
     int disabled;
-    int flags;
     HANDLE wnd_parent_handle;
     HANDLE wnd_handle;
     COLORREF bg_color;
@@ -535,17 +534,14 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         break;
 #ifdef HAVE_API_WIN32_CE
     case WM_SETFOCUS:
-	/* flags=0: Don't change SIPBUTTON */
-	/* flags=1: Disable SIPBUTTON at fullscreen */
-	/* flags=2: Disable SIPBUTTON when navit gets focus and enable it when it looses focus */
-	if ((flags & 3) && (fullscr || (flags & 2))) {
+        if (fullscr) {
            HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
            // deactivate the SIP button
            ShowWindow(hwndSip, SW_HIDE);
         }
         break;
    case WM_KILLFOCUS:
-        if ((flags & 3) && (fullscr != 1 || (flags & 2))) {
+        if (fullscr != 1) {
            HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
            // active the SIP button
            ShowWindow(hwndSip, SW_SHOW);
@@ -1131,11 +1127,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     }
 
     /* set up the input control for C streams */
-#if defined(_WIN32)
-    png_init_io (png_ptr, fileno(png_file));
-#else
     png_init_io (png_ptr, png_file);
-#endif
     png_set_sig_bytes (png_ptr, 8);  /* we already read the 8 signature bytes */
 
     /* read the file information */
@@ -1538,10 +1530,6 @@ static struct graphics_priv*
     this_->height=547;
     if ((attr=attr_search(attrs, NULL, attr_h)))
         this_->height=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_flags)))
-        this_->flags=attr->u.num;
-    else
-        this_->flags=1;
     this_->overlays = NULL;
     this_->cbl=cbl;
     this_->parent = NULL;
