@@ -232,6 +232,8 @@ flags_to_text(int flags)
 	if (flags & AF_TOLL) ret=g_strconcat_printf(ret,"%sAF_TOLL",ret?"|":"");
 	if (flags & AF_SEASONAL) ret=g_strconcat_printf(ret,"%sAF_SEASONAL",ret?"|":"");
 	if (flags & AF_UNPAVED) ret=g_strconcat_printf(ret,"%sAF_UNPAVED",ret?"|":"");
+	if (flags & AF_FORD) ret=g_strconcat_printf(ret,"%sAF_FORD",ret?"|":"");
+	if (flags & AF_UNDERGROUND) ret=g_strconcat_printf(ret,"%sAF_UNDERGROUND",ret?"|":"");
 	if (flags & AF_DANGEROUS_GOODS) ret=g_strconcat_printf(ret,"%sAF_DANGEROUS_GOODS",ret?"|":"");
 	if ((flags & AF_ALL) == AF_ALL) 
 		return g_strconcat_printf(ret,"%sAF_ALL",ret?"|":"");
