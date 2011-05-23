@@ -101,6 +101,8 @@ struct tracking {
 	struct coord_geo coord_geo;
 	enum projection pro;
 	int street_direction;
+	int no_gps;
+	int tunnel;
 	int angle_pref;
 	int connected_pref;
 	int nostop_pref;
@@ -610,6 +612,8 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 		if (roadprofile && tr->speed > roadprofile->speed * tr->overspeed_percent_pref/ 100)
 			value += tr->overspeed_pref;
 	}
+	if ((flags & 64) && !!(sd->flags & AF_UNDERGROUND) != tr->no_gps) 
+		value+=200;
 	return value;
 }
 
@@ -621,7 +625,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	int i,value,min,time;
 	struct coord lpnt;
 	struct coord cin;
-	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr,static_speed,static_distance;
+	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr,static_speed,static_distance,fix_type;
 	double speed, direction;
 	if (v)
 		tr->vehicle=v;
@@ -647,6 +651,15 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	    vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
 		return;
 	}
+#if 0 /* NOT YET */
+	if (!vehicle_get_attr(tr->vehicle, attr_position_fix_type, &fix_type, NULL)) 
+		fix_type.u.num=2;
+	if (fix_type.u.num) {
+		tr->no_gps=0;
+		tr->tunnel=0;
+	} else
+		tr->no_gps=1;
+#endif
 	if (!vehicleprofile_get_attr(vehicleprofile,attr_static_speed,&static_speed,NULL) || !vehicleprofile_get_attr(vehicleprofile,attr_static_distance,&static_distance,NULL)) {
 		static_speed.u.num=3;
 		static_distance.u.num=10;
@@ -664,7 +677,15 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		tr->speed=0;
 		return;
 	}
-	if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
+	if (tr->tunnel) {
+		tr->curr_in=tr->curr_out;
+		dbg(0,"tunnel extrapolation speed %f dir %f\n",tr->speed,tr->direction);
+		dbg(0,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		speed=tr->speed;
+		direction=tr->curr_line->angle[tr->pos];
+		transform_project(pro, &tr->curr_in, tr->speed*19/36, tr->direction, &tr->curr_in);
+		dbg(0,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+	} else if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
 		double espeed;
 		int edirection;
 		if (time-tr->time == 1) {
@@ -743,6 +764,12 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		tr->curr_out=tr->curr_in;
 		tr->coord_geo_valid=0;
 		tr->street_direction=0;
+	}
+	if (tr->curr_line->street->flags & AF_UNDERGROUND) {
+		if (tr->no_gps) 
+			tr->tunnel=1;
+	} else if (tr->tunnel) {
+		tr->speed=0;
 	}
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
 }
@@ -946,6 +973,10 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
                         this_->str=attr->u.str=g_strdup_printf("overspeed: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 32));
 			return 1;
 		case 7:
+			this_->debug_idx++;
+                        this_->str=attr->u.str=g_strdup_printf("tunnel: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 64));
+			return 1;
+		case 8:
 			this_->debug_idx++;
                         this_->str=attr->u.str=g_strdup_printf("line %p", this_->curr);
 			return 1;
