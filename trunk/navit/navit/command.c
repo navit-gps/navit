@@ -851,22 +851,29 @@ command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 void
 command_evaluate(struct attr *attr, const char *expr)
 {
+	/* Once the eval has started we can't rely anymore on the content of
+	 * expr which may be freed when the calling widget is destroyed by a
+	 * subsequent command call. Hence the g_strdup. */
+
+	const char *expr_dup;
 	struct result res;
 	struct context ctx;
 	memset(&res, 0, sizeof(res));
 	memset(&ctx, 0, sizeof(ctx));
 	ctx.attr=attr;
 	ctx.error=0;
-	ctx.expr=expr;
+	ctx.expr=expr_dup=g_strdup(expr);
 	for (;;) {
 		eval_comma(&ctx,&res);
 		if (ctx.error)
-			return;
+			break;
 		resolve(&ctx, &res, NULL);
 		if (ctx.error)
-			return;
-		if (!get_op(&ctx,0,";",NULL)) return;
+			break;
+		if (!get_op(&ctx,0,";",NULL))
+			break;
 	}
+	g_free(expr_dup);
 }
 
 #if 0
