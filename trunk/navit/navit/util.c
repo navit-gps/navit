@@ -538,9 +538,12 @@ spawn_process(char **argv)
 		dbg(0, "CreateProcess(%s,%s), PID=%i\n",argv[0],cmdline,r->pr.dwProcessId);
 		g_free(cmd);
 #else
+		STARTUPINFO startupInfo;
+		memset(&startupInfo, 0, sizeof(startupInfo));
+		startupInfo.cb = sizeof(startupInfo);
 		cmdline=spawn_process_compose_cmdline(argv);
 		args=newSysString(cmdline);
-		dwRet=CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
+		dwRet=CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, &startupInfo, &(r->pr));
 		dbg(0, "CreateProcess(%s), PID=%i\n",cmdline,r->pr.dwProcessId);
 #endif
 		g_free(cmdline);
