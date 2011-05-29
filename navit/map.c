@@ -110,6 +110,7 @@ map_new(struct attr *parent, struct attr **attrs)
 	m->attr_cbl=callback_list_new();
 	m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
 	if (! m->priv) {
+		m->refcount = 1;
 		map_destroy(m);
 		m=NULL;
 	}
