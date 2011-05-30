@@ -795,7 +795,9 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		ret->streetname_told=0;
 		if (! item_attr_get(ritem, attr_street_item, &street_item)) {
 			dbg(1, "no street item\n");
-			return NULL;
+			g_free(ret);
+			ret = NULL;
+			return ret;
 		}
 		if (item_attr_get(ritem, attr_direction, &direction))
 			ret->direction=direction.u.num;
