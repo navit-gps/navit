@@ -241,6 +241,7 @@ osd_cmd_osd_set_attr(struct navit *this, char *function, struct attr **in, struc
 		in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str    //attr_value str
 	) {
 		struct attr attr_to_set;
+		struct osd* osd;
 		
 		if(ATTR_IS_STRING(attr_from_name(in[1]->u.str))) {
 			attr_to_set.u.str = in[2]->u.str;
@@ -256,7 +257,6 @@ osd_cmd_osd_set_attr(struct navit *this, char *function, struct attr **in, struc
 			attr_to_set.u.numd = val;
 			attr_to_set.type = attr_from_name(in[1]->u.str);
 		}
-		struct osd* osd;
 		osd = osd_get_osd_by_name(in[0]->u.str);
 		if(osd) { 
 			osd_set_attr(osd, &attr_to_set);
@@ -1184,14 +1184,16 @@ osd_button_set_attr(struct osd_button *this_, struct attr* attr)
 		return 0;
 	}	
 	if(attr->type == attr_src) {
+		struct navit *nav;
+		struct graphics *gra;
 		if(this_->src) {
 			g_free(this_->src);
 		}
 		if(attr->u.str) {
 			this_->src = graphics_icon_path(attr->u.str);
 		}
-		struct navit* nav = this_->item.navit;
-		struct graphics *gra = navit_get_graphics(nav);
+		nav = this_->item.navit;
+		gra = navit_get_graphics(nav);
 		this_->img = graphics_image_new(gra, this_->src);
 		if (!this_->img) {
 			dbg(1, "failed to load '%s'\n", this_->src);
