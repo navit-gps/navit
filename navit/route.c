@@ -413,7 +413,9 @@ route_path_destroy(struct route_path *this, int recurse)
 			g_free(c);
 			c=n;
 		}
-		g_free(this);
+		this->in_use--;
+		if (!this->in_use)
+			g_free(this);
 		if (!recurse)
 			break;
 		this=next;
@@ -696,7 +698,7 @@ route_path_update_done(struct route *this, int new_graph)
 	struct attr route_status;
 	struct route_info *prev_dst;
 	route_status.type=attr_route_status;
-	if (this->path2 && this->path2->in_use) {
+	if (this->path2 && (this->path2->in_use>1)) {
 		this->path2->update_required=1+new_graph;
 		return;
 	}
@@ -2123,6 +2125,7 @@ route_path_new_offroad(struct route_graph *this, struct route_info *pos, struct 
 	struct route_path *ret;
 
 	ret=g_new0(struct route_path, 1);
+	ret->in_use=1;
 	ret->path_hash=item_hash_new();
 	route_path_add_line(ret, &pos->c, &dst->c, pos->lenextra+dst->lenextra);
 	ret->updated=1;
@@ -2254,6 +2257,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		s=s2;
 	}
 	ret=g_new0(struct route_path, 1);
+	ret->in_use=1;
 	ret->updated=1;
 	if (pos->lenextra) 
 		route_path_add_line(ret, &pos->c, &pos->lp, pos->lenextra);
@@ -3224,8 +3228,10 @@ rm_rect_destroy(struct map_rect_priv *mr)
 	}
 	if (mr->path) {
 		mr->path->in_use--;
-		if (mr->path->update_required && !mr->path->in_use) 
+		if (mr->path->update_required && (mr->path->in_use==1)) 
 			route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
+		else if (!mr->path->in_use)
+			g_free(mr->path);
 	}
 
 	g_free(mr);
@@ -3325,10 +3331,15 @@ rm_get_item(struct map_rect_priv *mr)
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
 		if (!mr->seg && mr->path && mr->path->next) {
+			struct route_path *p=NULL;
 			mr->path->in_use--;
+			if (!mr->path->in_use)
+				p=mr->path;
 			mr->path=mr->path->next;
 			mr->path->in_use++;
 			mr->seg=mr->path->path;
+			if (p)
+				g_free(p);
 		}
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;
