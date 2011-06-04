@@ -1,17 +1,51 @@
 include $(top_srcdir)/Makefile.inc
 
-xpm_DATA = bench.xpm
-xpm_DATA += biergarten.xpm
-xpm_DATA += boundary_stone.xpm
-xpm_DATA += bus_halt.xpm
+xpm_DATA =  bus_halt.xpm
 xpm_DATA += car_dealer.xpm
 xpm_DATA += castle.xpm
-xpm_DATA += ruins.xpm
 xpm_DATA += cemetery.xpm
 xpm_DATA += dumping_station.xpm
+xpm_DATA += highway_exit.xpm
+xpm_DATA += hunting_stand.xpm
+xpm_DATA += level_crossing.xpm
+xpm_DATA += library.xpm
+xpm_DATA += memorial.xpm
+xpm_DATA += picnic.xpm
+xpm_DATA += potable_water.xpm
+xpm_DATA += shelter.xpm
+xpm_DATA += sport.xpm
+xpm_DATA += theater.xpm
+xpm_DATA += tower.xpm
+xpm_DATA += townhall.xpm
+xpm_DATA += trailerpark.xpm
+xpm_DATA += unknown.xpm
+xpm_DATA += public_office.xpm
+
+
+## Obsolete. Should be removed eventually...
+
+xpm_DATA += bench.xpm
+xpm_DATA += biergarten.xpm
+xpm_DATA += boundary_stone.xpm
 xpm_DATA += fountain.xpm
-xpm_DATA += flag_bk_tr.xpm flag_bk_wh.xpm flag_bl_wh.xpm flag_wh_bk.xpm
 xpm_DATA += golf.xpm
+xpm_DATA += justice.xpm
+xpm_DATA += military.xpm
+xpm_DATA += restroom.xpm
+xpm_DATA += ruins.xpm
+xpm_DATA += skiing.xpm
+xpm_DATA += swimming.xpm
+xpm_DATA += toilets.xpm
+xpm_DATA += wifi.xpm
+
+## Obsolete end
+
+
+xpm_DATA += flag_bk_tr.xpm
+xpm_DATA += flag_bk_wh.xpm
+xpm_DATA += flag_bl_wh.xpm
+xpm_DATA += flag_wh_bk.xpm
+
 xpm_DATA += gc_tradi.xpm
 xpm_DATA += gc_multi.xpm
 xpm_DATA += gc_mystery.xpm
@@ -20,35 +54,20 @@ xpm_DATA += gc_reference.xpm
 xpm_DATA += gc_webcam.xpm
 xpm_DATA += gc_question.xpm
 xpm_DATA += gc_stages.xpm
-xpm_DATA += highway_exit.xpm
-xpm_DATA += hunting_stand.xpm
-xpm_DATA += justice.xpm
-xpm_DATA += level_crossing.xpm
-xpm_DATA += library.xpm
-xpm_DATA += memorial.xpm
-xpm_DATA += military.xpm
-xpm_DATA += nav_left_1.xpm nav_left_2.xpm
-xpm_DATA += nav_right_1.xpm nav_right_2.xpm
-xpm_DATA += nav_straight.xpm nav_straight_32.xpm
-xpm_DATA += nav_left_1_32.xpm nav_left_2_32.xpm
-xpm_DATA += nav_right_1_32.xpm nav_right_2_32.xpm
-xpm_DATA += picnic.xpm
-xpm_DATA += potable_water.xpm
-xpm_DATA += restroom.xpm
-xpm_DATA += shelter.xpm
-xpm_DATA += skiing.xpm
-xpm_DATA += sport.xpm
-xpm_DATA += swimming.xpm
-xpm_DATA += theater.xpm
-xpm_DATA += toilets.xpm
-xpm_DATA += tower.xpm
-xpm_DATA += townhall.xpm
-xpm_DATA += trailerpark.xpm
-xpm_DATA += unknown.xpm
-xpm_DATA += wifi.xpm
-xpm_DATA += toggle_fullscreen.xpm
+
+xpm_DATA += nav_left_1.xpm
+xpm_DATA += nav_left_2.xpm
+xpm_DATA += nav_right_1.xpm
+xpm_DATA += nav_right_2.xpm
+xpm_DATA += nav_straight.xpm
+xpm_DATA += nav_straight_32.xpm
+xpm_DATA += nav_left_1_32.xpm
+xpm_DATA += nav_left_2_32.xpm
+xpm_DATA += nav_right_1_32.xpm
+xpm_DATA += nav_right_2_32.xpm
+
 xpm_DATA += menu.xpm
-xpm_DATA += public_office.xpm
+xpm_DATA += toggle_fullscreen.xpm
 
 svgs  = gui_about.svg
 svgs += gui_actions.svg
@@ -67,8 +86,8 @@ svgs += gui_sound_off.svg
 svgs += gui_tools.svg
 svgs += gui_fullscreen.svg
 svgs += gui_leave_fullscreen.svg
-svgs += mark.svg
-svgs += gui_quit.svg gui_stop.svg
+svgs += gui_quit.svg
+svgs += gui_stop.svg
 svgs += gui_town.svg
 svgs += gui_vehicle.svg
 svgs += gui_vehicle_pedestrian.svg
@@ -76,7 +95,6 @@ svgs += gui_zoom_in.svg
 svgs += gui_zoom_out.svg
 svgs += zoom_in.svg
 svgs += zoom_out.svg
-svgs += tec_common.svg
 svgs += gui_select_street.svg
 svgs += gui_select_town.svg
 svgs += gui_select_country.svg
@@ -99,7 +117,10 @@ svgs += airport.svg
 svgs += attraction.svg
 svgs += bank.svg
 svgs += bar.svg
+svgs += beer.svg
+svgs += bench.svg
 svgs += boat_ramp.svg
+svgs += boundary_stone.svg
 svgs += bus.svg
 svgs += cafe.svg
 svgs += camping.svg
@@ -109,10 +130,15 @@ svgs += danger.svg
 svgs += exit.svg
 svgs += fastfood.svg
 svgs += firebrigade.svg
+svgs += fountain.svg
 svgs += fuel.svg
+svgs += golf.svg
 svgs += hospital.svg
 svgs += hotel.svg
 svgs += information.svg
+svgs += justice.svg
+svgs += mark.svg
+svgs += military.svg
 svgs += mini_roundabout.svg
 svgs += museum.svg
 svgs += parking.svg
@@ -123,16 +149,23 @@ svgs += post.svg
 svgs += repair_service.svg
 svgs += resort.svg
 svgs += restaurant.svg
+svgs += ruins.svg
 svgs += school.svg
 svgs += shopping.svg
 svgs += shop_grocery.svg
+svgs += skiing.svg
 svgs += stadium.svg
+svgs += swimming.svg
+svgs += tec_common.svg
 svgs += telephone.svg
+svgs += toilets.svg
 svgs += traffic_signals.svg
 svgs += church.svg
 svgs += zoo.svg
 svgs += heliport.svg
+svgs += wifi.svg
 svgs += viewpoint.svg
+
 
 nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
 nav_svgs += nav_right_1_bk.svg nav_right_1_wh.svg nav_right_2_bk.svg nav_right_2_wh.svg nav_right_3_bk.svg nav_right_3_wh.svg
