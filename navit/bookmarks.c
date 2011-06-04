@@ -670,7 +670,7 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, in
 		int offset_pos=0;
 		int offset;
 		char buffer[4096];
-		memset(offsets, 0, sizeof(offsets));
+		memset(offsets, 0, sizeof(int)*limit);
 		for (;;) {
 			offset=ftell(f);
 			if (!fgets(buffer, sizeof(buffer), f))
