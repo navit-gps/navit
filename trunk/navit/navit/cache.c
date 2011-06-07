@@ -277,6 +277,16 @@ cache_flush(struct cache *cache, void *id)
 	}
 }
 
+void
+cache_flush_data(struct cache *cache, void *data)
+{
+	struct cache_entry *entry=(struct cache_entry *)((char *)data-cache->entry_size);
+	if (entry) {
+		cache_remove_from_list(entry->where, entry);
+		cache_remove(cache, entry);
+	}
+}
+
 
 void *
 cache_lookup(struct cache *cache, void *id) {
