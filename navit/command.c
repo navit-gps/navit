@@ -855,7 +855,7 @@ command_evaluate(struct attr *attr, const char *expr)
 	 * expr which may be freed when the calling widget is destroyed by a
 	 * subsequent command call. Hence the g_strdup. */
 
-	const char *expr_dup;
+	char *expr_dup;
 	struct result res;
 	struct context ctx;
 	memset(&res, 0, sizeof(res));

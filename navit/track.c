@@ -625,7 +625,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	int i,value,min,time;
 	struct coord lpnt;
 	struct coord cin;
-	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr,static_speed,static_distance,fix_type;
+	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr,static_speed,static_distance;
 	double speed, direction;
 	if (v)
 		tr->vehicle=v;
