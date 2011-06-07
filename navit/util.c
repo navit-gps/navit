@@ -333,11 +333,6 @@ char *
 current_to_iso8601(void)
 {
 	char *timep=NULL;
-#ifdef HAVE_GLIB
-	GTimeVal time; 
-	g_get_current_time(&time); 
-	timep = g_time_val_to_iso8601(&time);
-#else
 #ifdef HAVE_API_WIN32_BASE
 	SYSTEMTIME ST;
 	GetSystemTime(&ST);
@@ -352,7 +347,6 @@ current_to_iso8601(void)
 		strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
 		timep=g_strdup(buffer);	
 	}
-#endif
 #endif
 	return timep;
 }
