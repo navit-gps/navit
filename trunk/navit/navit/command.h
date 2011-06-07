@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 struct command_table {
-	char *command;
+	const char *command;
 	int (*func)(void *data, char *cmd, struct attr **in, struct attr ***out);
 };
 

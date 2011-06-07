@@ -396,8 +396,6 @@ struct gui_methods gui_qml_methods = {
 
 static void
 gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct attr ***out, int *valid) {
-	struct attr **curr=in;
-	struct attr *attr;
 	this_->guiProxy->processCommand(function);
 }
 

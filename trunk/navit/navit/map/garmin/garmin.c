@@ -919,11 +919,11 @@ static struct map_methods map_methods = {
 	gmap_rect_get_item_byid,
 	gmap_search_new,
 	gmap_search_destroy,
-	gmap_rect_get_item,
+	NULL,
 };
 
 static struct map_priv *
-gmap_new(struct map_methods *meth, struct attr **attrs)
+gmap_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m;
 	struct attr *data;

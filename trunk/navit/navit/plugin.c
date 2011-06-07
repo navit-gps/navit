@@ -328,6 +328,8 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	}
 	file_wordexp_destroy(we);
 	return pl;
+#else
+    return 0;
 #endif
 }
 
