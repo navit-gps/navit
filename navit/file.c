@@ -653,9 +653,24 @@ file_data_free(struct file *file, unsigned char *data)
 			return;
 		if (data >= file->begin && data < file->end)
 			return;
-	}	
+	}
 	if (file->cache && data) {
 		cache_entry_destroy(file_cache, data);
+	} else
+		g_free(data);
+}
+
+void
+file_data_remove(struct file *file, unsigned char *data)
+{
+	if (file->begin) {
+		if (data == file->begin)
+			return;
+		if (data >= file->begin && data < file->end)
+			return;
+	}
+	if (file->cache && data) {
+		cache_flush_data(file_cache, data);
 	} else
 		g_free(data);
 }
