@@ -1042,14 +1042,14 @@ download_start(struct map_download *download)
 		download->cd_copy=g_malloc(download->m->cde_size);
 		memcpy(download->cd_copy, download->cd, download->m->cde_size);
 	}
-	file_data_free(download->file, (unsigned char *)download->cd);
+	file_data_remove(download->file, (unsigned char *)download->cd);
 	download->cd=NULL;
 	offset=file_size(download->file);
 	offset-=sizeof(struct zip_eoc);
 	eoc=(struct zip_eoc *)file_data_read(download->file, offset, sizeof(struct zip_eoc));
 	download->zip_eoc=g_malloc(sizeof(struct zip_eoc));
 	memcpy(download->zip_eoc, eoc, sizeof(struct zip_eoc));
-	file_data_free(download->file, (unsigned char *)eoc);
+	file_data_remove(download->file, (unsigned char *)eoc);
 	download->start_offset=download->offset=offset;
 	return download_request(download);
 }
@@ -1090,21 +1090,22 @@ download_finish(struct map_download *download)
 	struct zip_lfh *lfh;
 	char *lfh_filename;
 	struct zip_cd_ext *ext;
-
+	long long lfh_offset;
 	file_data_write(download->file, download->offset, sizeof(struct zip_eoc), (void *)download->zip_eoc);
 	lfh=(struct zip_lfh *)(file_data_read(download->file,download->start_offset, sizeof(struct zip_lfh)));
 	ext=binfile_cd_ext(download->cd_copy);
-	if (ext) 
+	if (ext)
 		ext->zipofst=download->start_offset;
 	else
 		download->cd_copy->zipofst=download->start_offset;
 	download->cd_copy->zipcsiz=lfh->zipsize;
 	download->cd_copy->zipcunc=lfh->zipuncmp;
 	download->cd_copy->zipccrc=lfh->zipcrc;
-	lfh_filename=(char *)file_data_read(download->file,binfile_cd_offset(download->cd_copy)+sizeof(struct zip_lfh),lfh->zipfnln);
+	lfh_offset = binfile_cd_offset(download->cd_copy)+sizeof(struct zip_lfh);
+	lfh_filename=(char *)file_data_read(download->file,lfh_offset,lfh->zipfnln);
 	memcpy(download->cd_copy+1,lfh_filename,lfh->zipfnln);
-	file_data_free(download->file,(void *)lfh_filename);
-	file_data_free(download->file,(void *)lfh);
+	file_data_remove(download->file,(void *)lfh_filename);
+	file_data_remove(download->file,(void *)lfh);
 	file_data_write(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, binfile_cd_extra(download->cd_copy)+sizeof(struct zip_cd), (void *)download->cd_copy);
 	file_data_flush(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, sizeof(struct zip_cd));
 
