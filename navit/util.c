@@ -468,7 +468,7 @@ spawn_process_compose_cmdline(char **argv)
 
 #ifdef _POSIX_C_SOURCE
 
-#ifdef _POSIX_THREADS
+#if 0 /* def _POSIX_THREADS */
 #define spawn_process_sigmask(how,set,old) pthread_sigmask(how,set,old)
 #else
 #define spawn_process_sigmask(how,set,old) sigprocmask(how,set,old)
