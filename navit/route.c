@@ -1653,23 +1653,22 @@ route_graph_destroy(struct route_graph *this)
 }
 
 /**
- * @brief Returns the time needed to drive len on item
+ * @brief Returns the estimated speed on a segment
  *
- * This function returns the time needed to drive len meters on 
- * the item passed in item in tenth of seconds.
+ * This function returns the estimated speed to be driven on a segment, 0=not passable
  *
  * @param profile The routing preferences
  * @param over The segment which is passed
- * @return The time needed to drive len on item in thenth of senconds
+ * @param dist A traffic distortion if applicable
+ * @return The estimated speed
  */
-
 static int
-route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist)
+route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist)
 {
 	struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
 	int speed,maxspeed;
 	if (!roadprofile || !roadprofile->route_weight)
-		return INT_MAX;
+		return 0;
 	/* maxspeed_handling: 0=always, 1 only if maxspeed restricts the speed, 2 never */
 	speed=roadprofile->route_weight;
 	if (profile->maxspeed_handling != 2) {
@@ -1686,21 +1685,40 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
 	}
 	if (over->flags & AF_DANGEROUS_GOODS) {
 		if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
-			return INT_MAX;
+			return 0;
 	}
 	if (over->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
 		struct size_weight_limit *size_weight=&RSD_SIZE_WEIGHT(over);
 		if (size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
-			return INT_MAX;
+			return 0;
 		if (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
-			return INT_MAX;
+			return 0;
 		if (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
-			return INT_MAX;
+			return 0;
 		if (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
-			return INT_MAX;
+			return 0;
 		if (size_weight->axle_weight != -1 && profile->axle_weight != -1 && profile->axle_weight > size_weight->axle_weight)
-			return INT_MAX;
+			return 0;
 	}
+	return speed;
+}
+
+/**
+ * @brief Returns the time needed to drive len on item
+ *
+ * This function returns the time needed to drive len meters on 
+ * the item passed in item in tenth of seconds.
+ *
+ * @param profile The routing preferences
+ * @param over The segment which is passed
+ * @param dist A traffic distortion if applicable
+ * @return The time needed to drive len on item in thenth of senconds
+ */
+
+static int
+route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist)
+{
+	int speed=route_seg_speed(profile, over, dist);
 	if (!speed)
 		return INT_MAX;
 	return over->len*36/speed+(dist ? dist->delay : 0);
@@ -2892,9 +2910,16 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				return 0;
 			return 1;
 		case attr_time:
-			mr->attr_next=attr_none;
+			mr->attr_next=attr_speed;
 			if (seg)
 				attr->u.num=route_time_seg(route->vehicleprofile, seg->data, NULL);
+			else
+				return 0;
+			return 1;
+		case attr_speed:
+			mr->attr_next=attr_none;
+			if (seg)
+				attr->u.num=route_seg_speed(route->vehicleprofile, seg->data, NULL);
 			else
 				return 0;
 			return 1;
