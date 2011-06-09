@@ -110,6 +110,7 @@ struct tracking {
 	int route_pref;
 	int overspeed_pref;
 	int overspeed_percent_pref;
+	int tunnel_extrapolation;
 };
 
 
@@ -651,15 +652,16 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	    vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
 		return;
 	}
-#if 0 /* NOT YET */
-	if (!vehicle_get_attr(tr->vehicle, attr_position_fix_type, &fix_type, NULL)) 
-		fix_type.u.num=2;
-	if (fix_type.u.num) {
-		tr->no_gps=0;
-		tr->tunnel=0;
-	} else
-		tr->no_gps=1;
-#endif
+	if (tr->tunnel_extrapolation) {
+		struct attr fix_type;
+		if (!vehicle_get_attr(tr->vehicle, attr_position_fix_type, &fix_type, NULL)) 
+			fix_type.u.num=2;
+		if (fix_type.u.num) {
+			tr->no_gps=0;
+			tr->tunnel=0;
+		} else
+			tr->no_gps=1;
+	}
 	if (!vehicleprofile_get_attr(vehicleprofile,attr_static_speed,&static_speed,NULL) || !vehicleprofile_get_attr(vehicleprofile,attr_static_distance,&static_distance,NULL)) {
 		static_speed.u.num=3;
 		static_distance.u.num=10;
@@ -683,7 +685,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(0,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
 		speed=tr->speed;
 		direction=tr->curr_line->angle[tr->pos];
-		transform_project(pro, &tr->curr_in, tr->speed*19/36, tr->direction, &tr->curr_in);
+		transform_project(pro, &tr->curr_in, tr->speed*tr->tunnel_extrapolation/36, tr->direction, &tr->curr_in);
 		dbg(0,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
 	} else if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
 		double espeed;
@@ -798,6 +800,9 @@ tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial)
 		return 1;
 	case attr_overspeed_percent_pref:
 		tr->overspeed_percent_pref=attr->u.num;
+		return 1;
+	case attr_tunnel_extrapolation:
+		tr->tunnel_extrapolation=attr->u.num;
 		return 1;
 	default:
 		return 0;
