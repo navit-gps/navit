@@ -1893,7 +1893,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
 	struct item *town;
-	struct item *street;
 	
 	msp->search = search;
 	msp->partial = partial;
@@ -1950,19 +1949,19 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				break;
 			if (!map_priv_is(item->map, map))
 				break;
-
-			map_rec = map_rect_new_binfile(map, NULL);
-			street = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
-			if (street)
-			{
+			msp->map=map;
+			msp->mr_item = map_rect_new_binfile(map, NULL);
+			msp->item = map_rect_get_item_byid_binfile(msp->mr_item, item->id_hi, item->id_lo);
+			if (binmap_search_by_index(map, msp->item, &msp->mr) != 3) {
 				struct coord c;
-				if (item_coord_get(street, &c, 1))
+				if (item_coord_get(msp->item, &c, 1))
 				{
 					msp->mr=binmap_search_housenumber_by_estimate(map, &c, &msp->ms);
 					msp->mode = 2;
 				}
+				map_rect_destroy_binfile(msp->mr_item);
+				msp->mr_item=NULL;
 			}
-			map_rect_destroy_binfile(map_rec);
 			if (!msp->mr)
 			{
 				break;
@@ -2117,7 +2116,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 								return it;
 							}
 						}
-					}
+					} else
+						return it;
 				}
 				continue;
 			default:
