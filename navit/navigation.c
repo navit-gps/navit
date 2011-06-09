@@ -250,11 +250,7 @@ struct navigation_way {
 };
 
 struct navigation_itm {
-	char *name1;
-	char *name2;
-	struct item item;
-	int direction;
-	int angle_start;
+	struct navigation_way way;
 	int angle_end;
 	struct coord start,end;
 	int time;
@@ -264,10 +260,8 @@ struct navigation_itm {
 	int told;							/**< Indicates if this item's announcement has been told earlier and should not be told again*/
 	int streetname_told;				/**< Indicates if this item's streetname has been told in speech navigation*/
 	int dest_count;
-	int flags;
 	struct navigation_itm *next;
 	struct navigation_itm *prev;
-	struct navigation_way *ways;		/**< Pointer to all ways one could drive from here */
 };
 
 static int is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode);
@@ -584,7 +578,7 @@ navigation_itm_ways_clear(struct navigation_itm *itm)
 {
 	struct navigation_way *c,*n;
 
-	c = itm->ways;
+	c = itm->way.next;
 	while (c) {
 		n = c->next;
 		map_convert_free(c->name1);
@@ -593,7 +587,7 @@ navigation_itm_ways_clear(struct navigation_itm *itm)
 		c = n;
 	}
 
-	itm->ways = NULL;
+	itm->way.next = NULL;
 }
 
 /**
@@ -652,7 +646,7 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 		}
 
 		sitem = sitem_attr.u.item;
-		if (item_is_equal(itm->item,*sitem) || ((itm->prev) && item_is_equal(itm->prev->item,*sitem))) {
+		if (item_is_equal(itm->way.item,*sitem) || ((itm->prev) && item_is_equal(itm->prev->way.item,*sitem))) {
 			continue;
 		}
 
@@ -666,7 +660,7 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 
 	map_rect_destroy(g_rect);
 	
-	itm->ways = w;
+	itm->way.next = w;
 }
 
 static void
@@ -680,7 +674,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 	while (this_->first && this_->first != end) {
 		itm=this_->first;
 		dbg(3,"destroying %p\n", itm);
-		item_hash_remove(this_->hash, &itm->item);
+		item_hash_remove(this_->hash, &itm->way.item);
 		this_->first=itm->next;
 		if (this_->first)
 			this_->first->prev=NULL;
@@ -692,8 +686,8 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 			}
 			g_free(cmd);
 		}
-		map_convert_free(itm->name1);
-		map_convert_free(itm->name2);
+		map_convert_free(itm->way.name1);
+		map_convert_free(itm->way.name2);
 		navigation_itm_ways_clear(itm);
 		g_free(itm);
 	}
@@ -767,7 +761,7 @@ check_roundabout(struct navigation_itm *itm, struct map *graph_map)
 		}		
 
 		sitem = sitem_attr.u.item;
-		if (item_is_equal(itm->item,*sitem)) {
+		if (item_is_equal(itm->way.item,*sitem)) {
 			if (item_attr_get(i,attr_flags,&flags_attr) && (flags_attr.u.num & AF_ROUNDABOUT)) {
 				map_rect_destroy(g_rect);
 				return 1;
@@ -800,20 +794,20 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			return ret;
 		}
 		if (item_attr_get(ritem, attr_direction, &direction))
-			ret->direction=direction.u.num;
+			ret->way.dir=direction.u.num;
 		else
-			ret->direction=0;
+			ret->way.dir=0;
 
 		sitem=street_item.u.item;
-		ret->item=*sitem;
+		ret->way.item=*sitem;
 		item_hash_insert(this_->hash, sitem, ret);
 		mr=map_rect_new(sitem->map, NULL);
 		if (! (sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo)))
 			return NULL;
 		if (item_attr_get(sitem, attr_street_name, &attr))
-			ret->name1=map_convert_string(sitem->map,attr.u.str);
+			ret->way.name1=map_convert_string(sitem->map,attr.u.str);
 		if (item_attr_get(sitem, attr_street_name_systematic, &attr))
-			ret->name2=map_convert_string(sitem->map,attr.u.str);
+			ret->way.name2=map_convert_string(sitem->map,attr.u.str);
 		navigation_itm_update(ret, ritem);
 
 		while (item_coord_get(ritem, &c[i], 1)) {
@@ -829,7 +823,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		dbg(1,"count=%d\n", i);
 		i--;
 
-		ret->angle_start=road_angle(&c[0], &c[1], 0);
+		ret->way.angle2=road_angle(&c[0], &c[1], 0);
 		ret->angle_end=road_angle(&c[i-1], &c[i], 0);
 
 		ret->start=c[0];
@@ -838,10 +832,10 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		item_attr_get(ritem, attr_route, &route_attr);
 		graph_map = route_get_graph_map(route_attr.u.route);
 		if (check_roundabout(ret, graph_map)) {
-			ret->flags |= AF_ROUNDABOUT;
+			ret->way.flags |= AF_ROUNDABOUT;
 		}
 
-		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
+		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->way.angle2, ret->angle_end, ret->way.name1, ret->way.name2);
 		map_rect_destroy(mr);
 	} else {
 		if (this_->last)
@@ -883,7 +877,7 @@ count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct
 	count = 0;
 	curr = from->next;
 	while (curr && (curr != to)) {
-		w = curr->ways;
+		w = curr->way.next;
 
 		while (w) {
 			if (is_way_allowed(nav, w, 4)) {
@@ -1021,7 +1015,7 @@ is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new
 static int 
 maneuver_multiple_streets(struct navigation_itm *new)
 {
-	if (new->ways) {
+	if (new->way.next) {
 		return 1;
 	} else {
 		return 0;
@@ -1045,7 +1039,7 @@ maneuver_straight(struct navigation_itm *new, int diff)
 	int curr_diff;
 	struct navigation_way *w;
 
-	w = new->ways;
+	w = new->way.next;
 	dbg(1,"diff=%d\n", diff);
 	while (w) {
 		curr_diff=abs(angle_delta(new->prev->angle_end, w->angle2));
@@ -1128,21 +1122,21 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	int cat,ncat,wcat,maxcat,left=-180,right=180,is_unambigous=0,is_same_street;
 
 	dbg(1,"enter %p %p %p\n",old, new, delta);
-	d=angle_delta(old->angle_end, new->angle_start);
-	if (!new->ways) {
+	d=angle_delta(old->angle_end, new->way.angle2);
+	if (!new->way.next) {
 		/* No announcement necessary */
 		r="no: Only one possibility";
-	} else if (!new->ways->next && new->ways->item.type == type_ramp && !is_way_allowed(nav,new->ways,1)) {
+	} else if (!new->way.next->next && new->way.next->item.type == type_ramp && !is_way_allowed(nav,new->way.next,1)) {
 		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
 		r="no: Only ramp";
 	}
 	if (! r) {
-		if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
+		if ((old->way.flags & AF_ROUNDABOUT) && ! (new->way.flags & AF_ROUNDABOUT)) {
 			r="yes: leaving roundabout";
 			ret=1;
-		} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
+		} else 	if (!(old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) {
 			r="no: entering roundabout";
-		} else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
+		} else if ((old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) 
 			r="no: staying in roundabout";
 	}
 	if (!r && abs(d) > 75) {
@@ -1150,12 +1144,12 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		r="yes: delta over 75";
 		ret=1;
 	}
-	cat=maneuver_category(old->item.type);
-	ncat=maneuver_category(new->item.type);
+	cat=maneuver_category(old->way.item.type);
+	ncat=maneuver_category(new->way.item.type);
 	if (!r) {
 		/* Check whether the street keeps its name */
-		is_same_street=is_same_street2(old->name1, old->name2, new->name1, new->name2);
-		w = new->ways;
+		is_same_street=is_same_street2(old->way.name1, old->way.name2, new->way.name1, new->way.name2);
+		w = new->way.next;
 		maxcat=-1;
 		while (w) {
 			dw=angle_delta(old->angle_end, w->angle2);
@@ -1169,10 +1163,10 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 			wcat=maneuver_category(w->item.type);
 			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
 			   we can't use the same name criterium  */
-			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(nav,w,2))
+			if (is_same_street && is_same_street2(old->way.name1, old->way.name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(nav,w,2))
 				is_same_street=0;
 			/* Even if the ramp has the same name, announce it */
-			if (new->item.type == type_ramp && old->item.type != type_ramp)
+			if (new->way.item.type == type_ramp && old->way.item.type != type_ramp)
 				is_same_street=0;
 			/* Mark if the street has a higher or the same category */
 			if (wcat > maxcat)
@@ -1251,7 +1245,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		return 0;
 	}
 #endif
-	dbg(1,"delta=%d-%d=%d\n", new->angle_start, old->angle_end, *delta);
+	dbg(1,"delta=%d-%d=%d\n", new->way.angle2, old->angle_end, *delta);
 	if ((new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) && (!is_same_street_systematic(old, new) || (old->name2 != NULL && new->name2 == NULL))) {
 		dbg(1, "maneuver_required: highway changed name\n");
 		if (reason)
@@ -1300,22 +1294,22 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	dbg(1,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
-	if (itm && itm->prev && itm->ways && itm->prev->ways && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
+	if (itm && itm->prev && itm->way.next && itm->prev->way.next && !(itm->way.flags & AF_ROUNDABOUT) && (itm->prev->way.flags & AF_ROUNDABOUT)) {
 		int len=0;
 		int angle=0;
 		int entry_angle;
 		struct navigation_itm *itm2=itm->prev;
-		int exit_angle=angle_median(itm->prev->angle_end, itm->ways->angle2);
-		dbg(1,"exit %d median from %d,%d\n", exit_angle,itm->prev->angle_end, itm->ways->angle2);
-		while (itm2 && (itm2->flags & AF_ROUNDABOUT)) {
+		int exit_angle=angle_median(itm->prev->angle_end, itm->way.next->angle2);
+		dbg(1,"exit %d median from %d,%d\n", exit_angle,itm->prev->angle_end, itm->way.next->angle2);
+		while (itm2 && (itm2->way.flags & AF_ROUNDABOUT)) {
 			len+=itm2->length;
 			angle=itm2->angle_end;
 			itm2=itm2->prev;
 		}
-		if (itm2 && itm2->next && itm2->next->ways) {
+		if (itm2 && itm2->next && itm2->next->way.next) {
 			itm2=itm2->next;
-			entry_angle=angle_median(angle_opposite(itm2->angle_start), itm2->ways->angle2);
-			dbg(1,"entry %d median from %d(%d),%d\n", entry_angle,angle_opposite(itm2->angle_start), itm2->angle_start, itm2->ways->angle2);
+			entry_angle=angle_median(angle_opposite(itm2->way.angle2), itm2->way.next->angle2);
+			dbg(1,"entry %d median from %d(%d),%d\n", entry_angle,angle_opposite(itm2->way.angle2), itm2->way.angle2, itm2->way.next->angle2);
 		} else {
 			entry_angle=angle_opposite(angle);
 		}
@@ -1395,18 +1389,18 @@ navigation_item_destination(struct navigation *nav, struct navigation_itm *itm, 
 		vocabulary1=attr.u.num;
 	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_name_systematic, &attr, NULL))
 		vocabulary2=attr.u.num;
-	n1=itm->name1;
-	n2=itm->name2;
+	n1=itm->way.name1;
+	n2=itm->way.name2;
 	if (!vocabulary1)
 		n1=NULL;
 	if (!vocabulary2)
 		n2=NULL;
-	if(!n1 && !n2 && itm->item.type == type_ramp && vocabulary2) {
-		dbg(1,">> Next is ramp %lx current is %lx \n", itm->item.type, next->item.type);
+	if(!n1 && !n2 && itm->way.item.type == type_ramp && vocabulary2) {
+		dbg(1,">> Next is ramp %lx current is %lx \n", itm->way.item.type, next->way.item.type);
 			 
-		if(next->item.type == type_ramp)
+		if(next->way.item.type == type_ramp)
 			return NULL;
-		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
+		if(itm->way.item.type == type_highway_city || itm->way.item.type == type_highway_land )
 			return g_strdup_printf("%s%s",prefix,_("exit"));	/* %FIXME Can this even be reached? */			 
 		else
 			return g_strdup_printf("%s%s",prefix,_("into the ramp"));
@@ -1496,9 +1490,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		level=1;
 	}
 
-	w = itm->next->ways;
+	w = itm->next->way.next;
 	strength_needed = 0;
-	if (angle_delta(itm->next->angle_start,itm->angle_end) < 0) {
+	if (angle_delta(itm->next->way.angle2,itm->angle_end) < 0) {
 		while (w) {
 			if (angle_delta(w->angle2,itm->angle_end) < 0) {
 				strength_needed = 1;
@@ -1546,16 +1540,16 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
 			return g_strdup(_("When possible, please turn around"));
 		if (!connect) {
-			level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
+			level=navigation_get_announce_level(nav, itm->way.item.type, distance-cmd->length);
 		}
-		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
+		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->way.item.type);
 	}
 
-	if (cmd->itm->prev->flags & AF_ROUNDABOUT) {
+	if (cmd->itm->prev->way.flags & AF_ROUNDABOUT) {
 		cur = cmd->itm->prev;
 		count_roundabout = 0;
-		while (cur && (cur->flags & AF_ROUNDABOUT)) {
-			if (cur->next->ways && is_way_allowed(nav,cur->next->ways,3)) { // If the next segment has no exit or the exit isn't allowed, don't count it
+		while (cur && (cur->way.flags & AF_ROUNDABOUT)) {
+			if (cur->next->way.next && is_way_allowed(nav,cur->next->way.next,3)) { // If the next segment has no exit or the exit isn't allowed, don't count it
 				count_roundabout++;
 			}
 			cur = cur->prev;
@@ -1687,7 +1681,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		return show_maneuver(nav, itm, cmd, type, 0); // We accumulate maneuvers only in speech navigation
 	}
 
-	level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
+	level=navigation_get_announce_level(nav, itm->way.item.type, distance-cmd->length);
 
 	if (level > 1) {
 		return show_maneuver(nav, itm, cmd, type, 0); // We accumulate maneuvers only if they are close
@@ -1777,9 +1771,9 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	} else if (!this_->turn_around_limit || this_->turn_around == -this_->turn_around_limit+1) {
 		this_->distance_turn=50;
 		distance-=this_->cmd_first->length;
-		level=navigation_get_announce_level(this_, this_->first->item.type, distance);
+		level=navigation_get_announce_level(this_, this_->first->way.item.type, distance);
 		if (this_->cmd_first->itm->prev) {
-			level2=navigation_get_announce_level(this_, this_->cmd_first->itm->prev->item.type, distance);
+			level2=navigation_get_announce_level(this_, this_->cmd_first->itm->prev->way.item.type, distance);
 			if (level2 > level)
 				level=level2;
 		}
@@ -1788,15 +1782,15 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 			this_->level_last=level;
 			force_speech=1;
 		}
-		if (!item_is_equal(this_->cmd_first->itm->item, this_->item_last)) {
+		if (!item_is_equal(this_->cmd_first->itm->way.item, this_->item_last)) {
 			dbg(1,"item different\n");
-			this_->item_last=this_->cmd_first->itm->item;
+			this_->item_last=this_->cmd_first->itm->way.item;
 			force_speech=1;
 		}
 	}
 	if (force_speech) {
 		this_->level_last=level;
-		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->item.type);
+		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->way.item.type);
 		callback_list_call(this_->callback_speech, 1, &p);
 	}
 }
@@ -1849,7 +1843,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 			dbg(1,"sitem=%p\n", sitem);
 			itm=item_hash_lookup(this_->hash, sitem);
 			dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
-			if (itm && itm->direction != street_direction.u.num) {
+			if (itm && itm->way.dir != street_direction.u.num) {
 				dbg(2,"wrong direction\n");
 				itm=NULL;
 			}
@@ -2039,13 +2033,13 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		this_->attr_next=attr_street_name;
 		return 1;
 	case attr_street_name:
-		attr->u.str=itm->name1;
+		attr->u.str=itm->way.name1;
 		this_->attr_next=attr_street_name_systematic;
 		if (attr->u.str)
 			return 1;
 		return 0;
 	case attr_street_name_systematic:
-		attr->u.str=itm->name2;
+		attr->u.str=itm->way.name2;
 		this_->attr_next=attr_debug;
 		if (attr->u.str)
 			return 1;
@@ -2054,11 +2048,11 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		switch(this_->debug_idx) {
 		case 0:
 			this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("angle:%d (- %d)", itm->angle_start, itm->angle_end);
+			this_->str=attr->u.str=g_strdup_printf("angle:%d (- %d)", itm->way.angle2, itm->angle_end);
 			return 1;
 		case 1:
 			this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("item type:%s", item_to_name(itm->item.type));
+			this_->str=attr->u.str=g_strdup_printf("item type:%s", item_to_name(itm->way.item.type));
 			return 1;
 		case 2:
 			this_->debug_idx++;
@@ -2069,26 +2063,26 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		case 3:
 			this_->debug_idx++;
 			if (prev) {
-				this_->str=attr->u.str=g_strdup_printf("prev street_name:%s", prev->name1);
+				this_->str=attr->u.str=g_strdup_printf("prev street_name:%s", prev->way.name1);
 				return 1;
 			}
 		case 4:
 			this_->debug_idx++;
 			if (prev) {
-				this_->str=attr->u.str=g_strdup_printf("prev street_name_systematic:%s", prev->name2);
+				this_->str=attr->u.str=g_strdup_printf("prev street_name_systematic:%s", prev->way.name2);
 				return 1;
 			}
 		case 5:
 			this_->debug_idx++;
 			if (prev) {
-				this_->str=attr->u.str=g_strdup_printf("prev angle:(%d -) %d", prev->angle_start, prev->angle_end);
+				this_->str=attr->u.str=g_strdup_printf("prev angle:(%d -) %d", prev->way.angle2, prev->angle_end);
 				return 1;
 			}
 		case 6:
 			this_->debug_idx++;
-			this_->ways=itm->ways;
+			this_->ways=itm->way.next;
 			if (prev) {
-				this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->item.type));
+				this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->way.item.type));
 				return 1;
 			}
 		case 7:
@@ -2191,7 +2185,7 @@ navigation_map_get_item(struct map_rect_priv *priv)
 		if (priv->cmd_itm_next && !priv->cmd_itm_next->next)
 			ret->type=type_nav_destination;
 		else {
-			if (priv->itm && priv->itm->prev && !(priv->itm->flags & AF_ROUNDABOUT) && (priv->itm->prev->flags & AF_ROUNDABOUT)) {
+			if (priv->itm && priv->itm->prev && !(priv->itm->way.flags & AF_ROUNDABOUT) && (priv->itm->prev->way.flags & AF_ROUNDABOUT)) {
 			
 				switch (((180+22)-priv->cmd->roundabout_delta)/45) {
 				case 0:
