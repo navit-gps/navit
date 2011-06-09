@@ -646,6 +646,9 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 		}
 
 		sitem = sitem_attr.u.item;
+		if (sitem->type == type_street_turn_restriction_no || sitem->type == type_street_turn_restriction_only)
+			continue;
+
 		if (item_is_equal(itm->way.item,*sitem) || ((itm->prev) && item_is_equal(itm->prev->way.item,*sitem))) {
 			continue;
 		}
