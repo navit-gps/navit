@@ -80,6 +80,8 @@ struct navigation {
 	struct callback *route_cb;
 	int announce[route_item_last-route_item_first+1][3];
 	int tell_street_name;
+	int delay;
+	int curr_delay;
 };
 
 int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
@@ -205,6 +207,9 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	if ((attr=attr_search(attrs, NULL, attr_tell_street_name))) {
 		ret->tell_street_name = attr->u.num;
 	}
+	if ((attr=attr_search(attrs, NULL, attr_delay))) {
+		ret->delay = attr->u.num;
+	}
 
 	return ret;	
 }
@@ -236,6 +241,7 @@ navigation_get_announce_level(struct navigation *this_, enum item_type type, int
 	return i;
 }
 
+
 /**
  * @brief Holds a way that one could possibly drive from a navigation item
  */
@@ -255,6 +261,7 @@ struct navigation_itm {
 	struct coord start,end;
 	int time;
 	int length;
+	int speed;
 	int dest_time;
 	int dest_length;
 	int told;							/**< Indicates if this item's announcement has been told earlier and should not be told again*/
@@ -265,6 +272,18 @@ struct navigation_itm {
 };
 
 static int is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode);
+
+static int
+navigation_get_announce_level_cmd(struct navigation *this_, struct navigation_itm *itm, struct navigation_command *cmd, int distance)
+{
+	int level2,level=navigation_get_announce_level(this_, itm->way.item.type, distance);
+	if (this_->cmd_first->itm->prev) {
+		level2=navigation_get_announce_level(this_, cmd->itm->prev->way.item.type, distance);
+		if (level2 > level)
+			level=level2;
+	}
+	return level;
+}
 
 /* 0=N,90=E */
 static int
@@ -704,7 +723,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 static void
 navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 {
-	struct attr length, time;
+	struct attr length, time, speed;
 
 	if (! item_attr_get(ritem, attr_length, &length)) {
 		dbg(0,"no length\n");
@@ -714,10 +733,15 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		dbg(0,"no time\n");
 		return;
 	}
+	if (! item_attr_get(ritem, attr_speed, &speed)) {
+		dbg(0,"no time\n");
+		return;
+	}
 
-	dbg(1,"length=%d time=%d\n", length.u.num, time.u.num);
+	dbg(1,"length=%d time=%d speed=%d\n", length.u.num, time.u.num, speed.u.num);
 	itm->length=length.u.num;
 	itm->time=time.u.num;
+	itm->speed=speed.u.num;
 }
 
 /**
@@ -1543,7 +1567,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
 			return g_strdup(_("When possible, please turn around"));
 		if (!connect) {
-			level=navigation_get_announce_level(nav, itm->way.item.type, distance-cmd->length);
+			level=navigation_get_announce_level_cmd(nav, itm, cmd, distance-cmd->length);
 		}
 		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->way.item.type);
 	}
@@ -1753,7 +1777,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 static void
 navigation_call_callbacks(struct navigation *this_, int force_speech)
 {
-	int distance, level = 0, level2;
+	int distance, level = 0;
 	void *p=this_;
 	if (!this_->cmd_first)
 		return;
@@ -1765,7 +1789,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 		while (distance > this_->distance_turn) {
 			this_->level_last=4;
 			level=4;
-			force_speech=1;
+			force_speech=2;
 			if (this_->distance_turn >= 500)
 				this_->distance_turn*=2;
 			else
@@ -1774,26 +1798,35 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	} else if (!this_->turn_around_limit || this_->turn_around == -this_->turn_around_limit+1) {
 		this_->distance_turn=50;
 		distance-=this_->cmd_first->length;
-		level=navigation_get_announce_level(this_, this_->first->way.item.type, distance);
-		if (this_->cmd_first->itm->prev) {
-			level2=navigation_get_announce_level(this_, this_->cmd_first->itm->prev->way.item.type, distance);
-			if (level2 > level)
-				level=level2;
-		}
+		level=navigation_get_announce_level_cmd(this_, this_->first, this_->cmd_first, distance);
 		if (level < this_->level_last) {
-			dbg(1,"level %d < %d\n", level, this_->level_last);
-			this_->level_last=level;
-			force_speech=1;
+			/* only tell if the level is valid for more than 3 seconds */
+			int speed_distance=this_->first->speed*30/36;
+			if (distance < speed_distance || navigation_get_announce_level_cmd(this_, this_->first, this_->cmd_first, distance-speed_distance) == level) {
+				dbg(1,"distance %d speed_distance %d\n",distance,speed_distance);
+				dbg(1,"level %d < %d\n", level, this_->level_last);
+				this_->level_last=level;
+				force_speech=3;
+			}
 		}
 		if (!item_is_equal(this_->cmd_first->itm->way.item, this_->item_last)) {
-			dbg(1,"item different\n");
 			this_->item_last=this_->cmd_first->itm->way.item;
-			force_speech=1;
+			if (this_->delay)
+				this_->curr_delay=this_->delay;
+			else
+				force_speech=5;
+		} else {
+			if (this_->curr_delay) {
+				this_->curr_delay--;
+				if (!this_->curr_delay)
+					force_speech=4;
+			}
 		}
 	}
 	if (force_speech) {
 		this_->level_last=level;
-		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->way.item.type);
+		this_->curr_delay=0;
+		dbg(1,"force_speech=%d distance=%d level=%d type=0x%x\n", force_speech, distance, level, this_->first->way.item.type);
 		callback_list_call(this_->callback_speech, 1, &p);
 	}
 }
