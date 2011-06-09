@@ -124,6 +124,10 @@ $button = Gtk2::Button->new("Max");
 $button->signal_connect(clicked => sub { add_timeout(1,1); });
 $box->add($button);
 $window->show_all;
+if ($ARGV[0] eq '100' || $ARGV[0] eq '10' || $ARV[0] eq '4' || $ARGV[0] eq '1') {
+	add_timeout(1000/$ARGV[0], 1);
+	shift(@ARGV);
+}
 if ($ARGV[0]) {
 	$match=$ARGV[0];
 	process_one_packet();
