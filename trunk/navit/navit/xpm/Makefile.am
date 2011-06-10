@@ -24,19 +24,8 @@ xpm_DATA += public_office.xpm
 
 ## Obsolete. Should be removed eventually...
 
-xpm_DATA += bench.xpm
 xpm_DATA += biergarten.xpm
-xpm_DATA += boundary_stone.xpm
-xpm_DATA += fountain.xpm
-xpm_DATA += golf.xpm
-xpm_DATA += justice.xpm
-xpm_DATA += military.xpm
 xpm_DATA += restroom.xpm
-xpm_DATA += ruins.xpm
-xpm_DATA += skiing.xpm
-xpm_DATA += swimming.xpm
-xpm_DATA += toilets.xpm
-xpm_DATA += wifi.xpm
 
 ## Obsolete end
 
