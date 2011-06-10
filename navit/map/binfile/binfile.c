@@ -96,6 +96,7 @@ struct map_priv {
 	struct callback_list *cbl;
 	struct map_download *download;
 	int redirect;
+	long download_enabled;
 };
 
 struct map_rect_priv {
@@ -1006,6 +1007,11 @@ download_request(struct map_download *download)
 	struct attr persistent={attr_persistent};
 	struct attr *attrs[4];
 
+	if(!download->m->download_enabled)
+	{
+		dbg(0,"Tried downloading while it's not allowed\n");
+		return 0;
+	}
 	attrs[0]=&url;
 	persistent.u.num=1;
 	attrs[1]=&persistent;
@@ -1243,6 +1249,9 @@ static struct zip_cd *
 download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length, int async)
 {
 	struct map_download *download;
+
+	if(!m->download_enabled)
+		return NULL;
 
 	if (async == 2) {
 		download=m->download;
@@ -2167,6 +2176,19 @@ binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)
 	return 0;
 }
 
+static int
+binmap_set_attr(struct map_priv *map, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_update:
+		map->download_enabled = attr->u.num;
+		return 1;
+	default:
+		return 0;
+	}
+
+}
+
 static struct map_methods map_methods_binfile = {
 	projection_mg,
 	"utf-8",
@@ -2180,6 +2202,7 @@ static struct map_methods map_methods_binfile = {
 	binmap_search_get_item,
 	NULL,
 	binmap_get_attr,
+	binmap_set_attr,
 };
 
 static int
@@ -2454,7 +2477,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct attr *check_version,*map_pass,*flags,*url;
+	struct attr *check_version,*map_pass,*flags,*url,*download_enabled;
 	struct file_wordexp *wexp;
 	char **wexp_data;
 	if (! data)
@@ -2482,6 +2505,10 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 	url=attr_search(attrs, NULL, attr_url);
 	if (url)
 		m->url=g_strdup(url->u.str);
+	download_enabled = attr_search(attrs, NULL, attr_update);
+	if (download_enabled)
+		m->download_enabled=download_enabled->u.num;
+
 	if (!map_binfile_open(m) && !m->check_version && !m->url) {
 		map_binfile_destroy(m);
 		m=NULL;
