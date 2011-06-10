@@ -3986,7 +3986,7 @@ gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void 
 static void
 gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct attr on, off;
+	struct attr on, off, download_enabled, download_disabled;
 	struct widget *w,*wb,*wma;
 	struct map *map=data;
 	FILE *f;
@@ -4015,8 +4015,20 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
 		wma=gui_internal_button_map_attr_new(this, _("Active"), gravity_left_center|orientation_horizontal|flags_fill, map, &on, &off, 1);
 		gui_internal_widget_append(w, wma);
 	}
+	download_enabled.type=download_disabled.type=attr_update;
+	download_enabled.u.num=1;
+	download_disabled.u.num=0;
+	wma=gui_internal_button_map_attr_new(this
+		, _("Download Enabled")
+		, gravity_left_center|orientation_horizontal|flags_fill
+		, map
+		, &download_enabled
+		, &download_disabled
+		, 0);
+	gui_internal_widget_append(w, wma);
+
 	f=fopen("maps/areas.tsv","r");
-	while (fgets(buffer, sizeof(buffer), f)) {
+	while (f && fgets(buffer, sizeof(buffer), f)) {
 		char *nl,*description,*description_size,*bbox,*size=NULL;
 		int sp=0;
 		if ((nl=strchr(buffer,'\n')))
