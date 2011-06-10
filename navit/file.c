@@ -244,7 +244,7 @@ file_create(char *name, struct attr **options)
 		fstat(file->fd, &stat);
 		file->size=stat.st_size;
 		dbg(1,"size="LONGLONG_FMT"\n", file->size);
-		file->name_id = (int)atom(name);
+		file->name_id = (long)atom(name);
 	}
 #ifdef CACHE_SIZE
 	if (!options || !(attr=attr_search(options, NULL, attr_cache)) || attr->u.num)
