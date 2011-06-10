@@ -2896,7 +2896,7 @@ static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 {
 	int flags;
-	switch ((int) wm->data) {
+	switch ((long) wm->data) {
 	case 0:
 		flags=8|16|32|64|128|256;
 		break;
@@ -4015,6 +4015,7 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
 		wma=gui_internal_button_map_attr_new(this, _("Active"), gravity_left_center|orientation_horizontal|flags_fill, map, &on, &off, 1);
 		gui_internal_widget_append(w, wma);
 	}
+
 	download_enabled.type=download_disabled.type=attr_update;
 	download_enabled.u.num=1;
 	download_disabled.u.num=0;
@@ -4026,6 +4027,7 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
 		, &download_disabled
 		, 0);
 	gui_internal_widget_append(w, wma);
+
 
 	f=fopen("maps/areas.tsv","r");
 	while (f && fgets(buffer, sizeof(buffer), f)) {
@@ -4144,7 +4146,7 @@ gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm,
 		row = gui_internal_widget_table_row_new(this,gravity_left_top);
 		for (i = 0 ; i < sizeof(types)/sizeof(enum attr_type) ; i++) {
 			if (item_attr_get(attr.u.item, types[i], &sat_attr))
-				str=g_strdup_printf("%d", sat_attr.u.num);
+				str=g_strdup_printf("%ld", sat_attr.u.num);
 			else
 				str=g_strdup("");
 			gui_internal_widget_append(row, gui_internal_label_new(this, str));
@@ -6348,10 +6350,10 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 	g_free(text);
 #ifdef HAVE_API_WIN32_BASE
 	{
-		wchar_t wcountry[32],wlang[32];
 		char country[32],lang[32];
+#ifdef HAVE_API_WIN32_CE
+		wchar_t wcountry[32],wlang[32];
 
-#ifdef HAVE_API_WIN32_CE 
 		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
 		WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
 #else
@@ -6361,11 +6363,11 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 		w->flags=gravity_left_center|orientation_horizontal|flags_fill;
 		g_free(text);
-#ifdef HAVE_API_WIN32_CE 
-	        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
+#ifdef HAVE_API_WIN32_CE
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
 		WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
 #else
-	        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, country, sizeof(country));
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, country, sizeof(country));
 #endif
 		text=g_strdup_printf("LOCALE_SABBREVCTRYNAME=%s",country);
 		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
