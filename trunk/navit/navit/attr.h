@@ -111,7 +111,7 @@ struct attr {
 	union {
 		char *str;
 		void *data;
-		int num;
+		long num;
 		struct item *item;
 		enum item_type item_type;
 		enum projection projection;
