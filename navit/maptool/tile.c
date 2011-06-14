@@ -236,6 +236,11 @@ merge_tile(char *base, char *sub)
 	return 1;
 }
 
+static gint
+get_tiles_list_cmp(gconstpointer s1, gconstpointer s2)
+{
+	return strcmp((char *)s1, (char *)s2);
+}
 
 static void
 get_tiles_list_func(char *key, struct tile_head *th, GList **list)
@@ -248,6 +253,7 @@ get_tiles_list(void)
 {
 	GList *ret=NULL;
 	g_hash_table_foreach(tile_hash, (GHFunc)get_tiles_list_func, &ret);
+	ret=g_list_sort(ret, get_tiles_list_cmp);
 	return ret;
 }
 
