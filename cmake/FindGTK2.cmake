@@ -164,6 +164,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
         /opt/include/cairo
         /sw/include
         /sw/include/cairo
+        /sw/include/gdk-pixbuf-2.0
     )
     gtk2_debug_message("GTK2_CAIRO_INCLUDE_DIR is ${GTK2_CAIRO_INCLUDE_DIR}")
 
