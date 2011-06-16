@@ -363,7 +363,7 @@ if(WIN32 OR WINCE)
 
    set(BIN_DIR ./)
    set(SHARE_DIR ./)
-   set(LOCALE_DIR ./)
+   set(LOCALE_DIR locale)
    set(IMAGE_DIR xpm)
 
    
