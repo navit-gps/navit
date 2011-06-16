@@ -1,16 +1,18 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 
-FIND_PROGRAM(CMAKE_C_COMPILER NAMES i686-mingw32-gcc i586-mingw32-gcc mingw32-gcc)
-FIND_PROGRAM(CMAKE_CXX_COMPILER NAMES i686-mingw32-g++ i586-mingw32-gcc mingw32-g++)
+FIND_PROGRAM(CMAKE_C_COMPILER NAMES i686-mingw32-gcc i586-mingw32-gcc i386-mingw32-gcc mingw32-gcc)
+FIND_PROGRAM(CMAKE_CXX_COMPILER NAMES i686-mingw32-g++ i586-mingw32-gcc i386-mingw-gcc mingw32-g++)
 
-FIND_PROGRAM(CMAKE_RC_COMPILER_INIT NAMES i686-mingw32-windres i586-mingw32-windres mingw32-windres windres.exe)
+FIND_PROGRAM(CMAKE_RC_COMPILER_INIT NAMES i686-mingw32-windres i586-mingw32-windres i386-mingw32-windres mingw32-windres windres.exe)
 
-FIND_PROGRAM(CMAKE_AR NAMES i686-mingw32-ar i586-mingw32-ar mingw32-ar ar.exe)
+FIND_PROGRAM(CMAKE_AR NAMES i686-mingw32-ar i586-mingw32-ar i386-mingw32-ar mingw32-ar ar.exe)
 
+IF (NOT CMAKE_FIND_ROOT_PATH)
 EXECUTE_PROCESS( 
    COMMAND ${CMAKE_C_COMPILER} -print-sysroot
    OUTPUT_VARIABLE CMAKE_FIND_ROOT_PATH
 )
+ENDIF(NOT CMAKE_FIND_ROOT_PATH)
 
 set(PKG_CONFIG_EXECUTABLE "mingw32-pkg-config")
 
