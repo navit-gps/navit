@@ -340,7 +340,7 @@ if(WIN32 OR WINCE)
    add_module(graphics/win32 "Windows detected" TRUE)
    add_plugin(support/win32 "Windows detected" TRUE)
 
-   SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+   SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -I ${CMAKE_CURRENT_SOURCE_DIR}/navit/gui/win32/resources <DEFINES> -i <SOURCE> -o <OBJECT>")
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
    set_with_reason(support/espeak "Windows detected" TRUE)
