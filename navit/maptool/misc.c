@@ -194,6 +194,8 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 		case type_street_n_lanes:
 		case type_highway_city:
 		case type_highway_land:
+		case type_street_4_land:
+		case type_street_4_city:
 		case type_ramp:
 			max=8;
 			break;
@@ -212,9 +214,7 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 		case type_district_label_2e3:
 		case type_district_label_1e3:
 		case type_street_3_city:
-		case type_street_4_city:
 		case type_street_3_land:
-		case type_street_4_land:
 			max=12;
 			break;
 		default:
