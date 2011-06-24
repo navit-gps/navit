@@ -50,6 +50,8 @@ int ignore_unkown = 0;
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
+int unknown_country;
+
 struct buffer node_buffer = {
 	64*1024*1024,
 };
@@ -129,6 +131,7 @@ usage(FILE *f)
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)         : process only ways\n");
 	fprintf(f,"-z (--compression-level) : set the compression level\n");
+	fprintf(f,"-U (--unknown-country)   : add objects with unknown country to index\n");
 	
 	exit(1);
 }
@@ -219,13 +222,14 @@ int main(int argc, char **argv)
 			{"url", 1, 0, 'u'},
 			{"ways-only", 0, 0, 'W'},
 			{"slice-size", 1, 0, 'S'},
+			{"unknown-country", 0, 0, 'U'},
 			{0, 0, 0, 0}
 		};
 		c = getopt_long (argc, argv, "5:6B:DNO:PWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hi:knm:p:r:s:wu:z:", long_options, &option_index);
+					      "e:hi:knm:p:r:s:wu:z:U", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -259,6 +263,9 @@ int main(int argc, char **argv)
 			break;
 		case 'W':
 			process_nodes=0;
+			break;
+		case 'U':
+			unknown_country=1;
 			break;
 		case 'a':
 			attr_debug_level=atoi(optarg);

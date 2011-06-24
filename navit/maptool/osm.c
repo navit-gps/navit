@@ -1611,7 +1611,7 @@ osm_end_node(FILE *out)
 		item_bin_write(item_bin,out);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
 			char *tok,*buf=is_in_buffer;
-			if (!buf[0])
+			if (!buf[0] && unknown_country)
 				strcpy(is_in_buffer, "Unknown");
 			while ((tok=strtok(buf, ",;"))) {
 				while (*tok==' ')

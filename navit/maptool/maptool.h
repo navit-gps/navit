@@ -203,6 +203,7 @@ extern int processed_nodes, processed_nodes_out, processed_ways, processed_relat
 extern struct item_bin *item_bin;
 extern int bytes_read;
 extern int overlap;
+extern int unknown_country;
 void sig_alrm(int sig);
 void sig_alrm_end(void);
 
