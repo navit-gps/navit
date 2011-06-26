@@ -767,7 +767,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		tr->coord_geo_valid=0;
 		tr->street_direction=0;
 	}
-	if (tr->curr_line->street->flags & AF_UNDERGROUND) {
+	if (tr->curr_line && tr->curr_line->street->flags & AF_UNDERGROUND) {
 		if (tr->no_gps) 
 			tr->tunnel=1;
 	} else if (tr->tunnel) {
