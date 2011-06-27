@@ -361,7 +361,7 @@ if(WIN32 OR WINCE)
       MESSAGE(STATUS "win32: SVGs may not be supported by every available graphics")
    endif(NOT graphics/qt_qpainter)
 
-   set(BIN_DIR ./)
+   set(BIN_DIR bin)
    set(SHARE_DIR ./)
    set(LOCALE_DIR locale)
    set(IMAGE_DIR xpm)
