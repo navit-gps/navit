@@ -95,6 +95,7 @@ int file_version(struct file *file, int byname);
 void *file_get_os_handle(struct file *file);
 void file_init(void);
 int file_is_reg(char *name);
+void file_data_remove(struct file *file, unsigned char *data);
 /* end of prototypes */
 
 #ifdef __cplusplus
