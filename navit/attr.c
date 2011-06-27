@@ -288,7 +288,7 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	if (type == attr_flags || type == attr_through_traffic_flags)
 		return flags_to_text(attr->u.num);
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
-		return g_strdup_printf("%d", attr->u.num);
+		return g_strdup_printf("%ld", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
 		return g_strdup_printf(LONGLONG_FMT, *attr->u.num64);
 	if (type >= attr_type_double_begin && type <= attr_type_double_end) 
