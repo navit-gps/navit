@@ -380,6 +380,7 @@ main_init(const char *program)
 	{
 		char  filename[MAX_PATH + 1],
 		     *end;
+		int len;
 
 		*filename = '\0';
 #ifdef _UNICODE		/* currently for wince */
@@ -393,6 +394,10 @@ main_init(const char *program)
 			end = strrchr(filename, L'\\');	/* eliminate the file name which is on the right side */
 			if(end)
 				*end = '\0';
+		}
+		len=strlen(filename);
+		if (len > 4 && !strcmp(filename+len-4,"\\bin")) {
+			filename[len-4]='\0';
 		}
 		setenv("NAVIT_PREFIX", filename, 0);
 	}
