@@ -64,8 +64,8 @@ XSLTS=@XSLTS@
 navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt)))) navit_android_xml
 	cp $< navit.xml.new
 	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
-	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; @SAXON@ -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv navit.xml.tmp navit.xml.new || exit ; fi ; done
-	mv navit.xml.new navit.xml
+	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; @SAXON@ -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv -f navit.xml.tmp navit.xml.new || exit ; fi ; done
+	mv -f navit.xml.new navit.xml
 	rm -f navit.xml.tmp
 
 navit_android_xml: navit_shipped.xml
@@ -83,9 +83,9 @@ if SUPPORT_ANDROID
 	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
 	rm -f navit_android.xml.new
 	rm -f navit_android.xml.new.tmp
-	mv navit_android_mdpi.xml.tmp navit_android_mdpi.xml
-	mv navit_android_ldpi.xml.tmp navit_android_ldpi.xml
-	mv navit_android_hdpi.xml.tmp navit_android_hdpi.xml
+	mv -f navit_android_mdpi.xml.tmp navit_android_mdpi.xml
+	mv -f navit_android_ldpi.xml.tmp navit_android_ldpi.xml
+	mv -f navit_android_hdpi.xml.tmp navit_android_hdpi.xml
 	rm -f navit_android_mdpi.xml.tmp
 	rm -f navit_android_ldpi.xml.tmp
 	rm -f navit_android_hdpi.xml.tmp
@@ -107,9 +107,9 @@ android/AndroidManifest.xml: android/AndroidManifest.xml.in
 	for i in $(subst $(comma), ,@ANDROID_PERMISSIONS@); do echo "    <uses-permission android:name=\"android.permission.$$i\" />" >>$@; done
 	sed '0,/<uses-sdk/d' <$< >>$@
 	sed -e "s/@ANDROID_VERSION_INT@/$(v_int)/" <$@ >android/AndroidManifest.xml.tmp
-	mv android/AndroidManifest.xml.tmp $@
+	mv -f android/AndroidManifest.xml.tmp $@
 	sed -e "s/@ANDROID_VERSION_NAME@/$(v_name)/" <$@ >android/AndroidManifest.xml.tmp
-	mv android/AndroidManifest.xml.tmp $@
+	mv -f android/AndroidManifest.xml.tmp $@
 
 android/build.xml: android/AndroidManifest.xml android/dummy.txt
 #	this is needed, otherwise somehow the files cant be deleted
@@ -211,7 +211,7 @@ endif
 	echo "#define NAVIT_VARIANT \"@NAVIT_VARIANT@\"" >>version.h.tmp
 	if ! diff version.h.tmp version.h >/dev/null 2>/dev/null; \
 	then \
-		mv version.h.tmp version.h; \
+		mv -f version.h.tmp version.h; \
 	fi
 
 version.h: version.h.tmp
@@ -220,7 +220,7 @@ navit_config.h: ../config.h
 	cp ../config.h navit_config.h.tmp
 	if ! diff navit_config.h.tmp navit_config.h >/dev/null 2>/dev/null; \
 	then \
-		mv navit_config.h.tmp navit_config.h; \
+		mv -f navit_config.h.tmp navit_config.h; \
 	fi
 
 
