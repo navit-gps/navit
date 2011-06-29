@@ -172,9 +172,6 @@ if(FREETYPE_FOUND)
    pkg_check_modules(FRIBIDI2 fribidi>=0.19.0)
    include_directories(${FREETYPE_INCLUDE_DIRS})
    set_with_reason(font/freetype "freetype found" TRUE "${FREETYPE_LIBRARY};${FONTCONFIG_LIBRARIES};${FRIBIDI_LIBRARIES}")
-   if(NOT FONTCONFIG_FOUND)
-      add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/navit/fonts")
-   endif()
 else(FREETYPE_FOUND)
    MESSAGE("No freetype library found, graphics modules may not be available")
    set_with_reason(graphics/android "FreeType library not found" FALSE)
@@ -448,6 +445,10 @@ if(ANDROID)
    set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
 
 endif(ANDROID)
+
+if(FREETYPE_FOUND AND NOT FONTCONFIG_FOUND)
+   add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/navit/fonts")
+endif()
 
 # Image conversion
 find_program(IMAGE_CONVERTER NAMES convert)
