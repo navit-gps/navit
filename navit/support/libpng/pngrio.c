@@ -49,7 +49,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    /* fread() returns 0 on error, so it is OK to store this in a png_size_t
     * instead of an int, which is what fread() actually returns.
     */
-#if defined(_WIN32_WCE)
+#if 0 /* defined(_WIN32_WCE) */
    if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, NULL) )
       check = 0;
 #else
@@ -82,7 +82,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    io_ptr = (png_FILE_p)CVT_PTR(png_ptr->io_ptr);
    if ((png_bytep)n_data == data)
    {
-#if defined(_WIN32_WCE)
+#if 0 /* defined(_WIN32_WCE) */
       if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, NULL) )
          check = 0;
 #else
@@ -98,7 +98,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
       do
       {
          read = MIN(NEAR_BUF_SIZE, remaining);
-#if defined(_WIN32_WCE)
+#if 0 /* defined(_WIN32_WCE) */
          if ( !ReadFile((HANDLE)(io_ptr), buf, read, &err, NULL) )
             err = 0;
 #else
