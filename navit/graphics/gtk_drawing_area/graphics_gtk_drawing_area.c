@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <locale.h> /* For WIN32 */
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
@@ -1239,5 +1240,8 @@ plugin_init(void)
 {
 	gtk_init(&gtk_argc, &gtk_argv);
 	gtk_set_locale();
+#ifdef HAVE_API_WIN32
+	setlocale(LC_NUMERIC, "C"); /* WIN32 gtk resets LC_NUMERIC */
+#endif
 	plugin_register_graphics_type("gtk_drawing_area", graphics_gtk_drawing_area_new);
 }
