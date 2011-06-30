@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <locale.h>
 #include <gdk/gdkkeysyms.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
@@ -296,6 +297,7 @@ gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav)
 {
 	/* FIXME remove attr_navit callback */
 	navit_destroy(nav);
+	exit(0);
 
 	return TRUE;
 }
@@ -798,6 +800,9 @@ plugin_init(void)
 {
 	gtk_init(&gtk_argc, &gtk_argv);
 	gtk_set_locale();
+#ifdef HAVE_API_WIN32
+	setlocale(LC_NUMERIC,"C");
+#endif
 
 
 	plugin_register_gui_type("gtk", gui_gtk_new);
