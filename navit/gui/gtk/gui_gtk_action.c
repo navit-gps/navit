@@ -189,6 +189,7 @@ static void
 quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	navit_destroy(gui->nav);
+	exit(0);
 }
 
 static GtkActionEntry entries[] =
