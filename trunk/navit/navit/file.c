@@ -241,8 +241,7 @@ file_create(char *name, struct attr **options)
 			return NULL;
 		}
 		dbg(1,"fd=%d\n", file->fd);
-		fstat(file->fd, &stat);
-		file->size=stat.st_size;
+		file->size=lseek(file->fd, 0, SEEK_END);
 		dbg(1,"size="LONGLONG_FMT"\n", file->size);
 		file->name_id = (long)atom(name);
 	}
