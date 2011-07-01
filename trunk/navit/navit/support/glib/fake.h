@@ -13,9 +13,9 @@
 #if USE_POSIX_THREADS
 # define GMutex pthread_mutex_t
 # define g_mutex_new g_mutex_new_navit
-# define g_mutex_lock(lock) (pthread_mutex_lock(lock))
-# define g_mutex_unlock(lock) (pthread_mutex_unlock(lock))
-# define g_mutex_trylock(lock) (pthread_mutex_trylock(lock) == 0)
+# define g_mutex_lock(lock) ((lock == NULL) ? 0 : pthread_mutex_lock(lock))
+# define g_mutex_unlock(lock) ((lock == NULL) ? 0 : pthread_mutex_unlock(lock))
+# define g_mutex_trylock(lock) (((lock == NULL) ? 0 : pthread_mutex_trylock(lock)) == 0)
 #  define GPrivate pthread_key_t
 #  define g_private_new(xd) g_private_new_navit()
 #  define g_private_get(xd) pthread_getspecific(xd)
