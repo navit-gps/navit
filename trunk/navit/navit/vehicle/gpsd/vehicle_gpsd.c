@@ -36,9 +36,7 @@
 
 static struct vehicle_priv {
 	char *source;
-#ifndef HAVE_LIBGPS19
 	char *gpsd_query;
-#endif
 	struct callback_list *cbl;
 	struct callback *cb;
 	struct event_watch *evwatch;
@@ -334,10 +332,8 @@ vehicle_gpsd_destroy(struct vehicle_priv *priv)
 	vehicle_gpsd_close(priv);
 	if (priv->source)
 		g_free(priv->source);
-#ifndef HAVE_LIBGPS19
 	if (priv->gpsd_query)
 		g_free(priv->gpsd_query);
-#endif
 #if GPSD_API_MAJOR_VERSION >= 5
         g_free(priv->gps);
 #endif
@@ -421,11 +417,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		      *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
-#ifdef HAVE_LIBGPS19
-	struct attr *source, *retry_int;
-#else
 	struct attr *source, *query, *retry_int;
-#endif
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -434,7 +426,6 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	ret->gps = g_new0(struct gps_data_t, 1);
 #endif
 	ret->source = g_strdup(source->u.str);
-#ifndef HAVE_LIBGPS19
 	query = attr_search(attrs, NULL, attr_gpsd_query);
 	if (query) {
 		ret->gpsd_query = g_strconcat(query->u.str, "\n", NULL);
@@ -442,7 +433,6 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		ret->gpsd_query = g_strdup("w+x\n");
 	}
 	dbg(1,"Format string for gpsd_query: %s\n",ret->gpsd_query);
-#endif
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
