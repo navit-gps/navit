@@ -2240,19 +2240,110 @@ struct selector selectors[]={
 		type_poi_peak+1, type_poi_motel-1,
 		type_poi_hostel+1,type_line-1,
 		type_none}},
-	{"unknown","Unknown",(enum item_type []){
+/*	{"unknown","Unknown",(enum item_type []){
 		type_point_unkn,type_point_unkn,
-		type_none}},
+		type_none}},*/
 };
 
-union poi_param {
-	guint i;
-	struct {
-		unsigned char sel, selnb, pagenb, dist;
-	} p;
+
+/*
+ *  Get a utf-8 string, return the same prepared for case insensetive search. Result shoud be g_free()d after use.
+ */
+
+static char *
+removecase(char *s) 
+{
+	char *r;
+	r=g_utf8_casefold(s,-1);
+	return r;
+}
+
+/**
+ * POI search/filtering parameters.
+ *
+ */
+
+struct poi_param {
+
+		/**
+ 		 * =1 if selnb is defined, 0 otherwize.
+		 */
+		unsigned char sel;
+
+		/**
+ 		 * Index to struct selector selectors[], shows what type of POIs is defined.
+		 */		
+		unsigned char selnb;
+		/**
+ 		 * Page number to display.
+		 */		
+		unsigned char pagenb;
+		/**
+ 		 * Radius (number of 10-kilometer intervals) to search for POIs.
+		 */		
+		unsigned char dist;
+		/**
+ 		 * Should filter phrase be compared to postal address of the POI.
+ 		 * =1 - address filter, =0 - name filter
+		 */		
+		unsigned char isAddressFilter;
+		/**
+ 		 * Filter string, casefold()ed and divided into substrings at the spaces, which are replaced by ASCII 0*.
+		 */		
+		char *filterstr; 
+		/**
+ 		 * list of pointers to individual substrings of filterstr.
+		 */		
+		GList *filter;
+		
 };
+
+
+/**
+ * @brief Free poi_param structure.
+ *
+ * @param p reference to the object to be freed.
+ */
+static void
+gui_internal_poi_param_free(void *p) 
+{
+	if(((struct poi_param *)p)->filterstr)
+	   g_free(((struct poi_param *)p)->filterstr);
+	if(((struct poi_param *)p)->filter)
+	   g_list_free(((struct poi_param *)p)->filter);
+	g_free(p);
+};
+
+/**
+ * @brief Clone poi_param structure.
+ *
+ * @param p reference to the object to be cloned.
+ * @return  Cloned object reference.
+ */
+static struct poi_param *
+gui_internal_poi_param_clone(struct poi_param *p) 
+{
+	struct poi_param *r=g_new(struct poi_param,1);
+	GList *l=p->filter;
+	memcpy(r,p,sizeof(struct poi_param));
+	r->filter=NULL;
+	r->filterstr=NULL;
+	if(p->filterstr) {
+		char *last=g_list_last(l)->data;
+		int len=(last - p->filterstr) + strlen(last)+1;
+		r->filterstr=g_memdup(p->filterstr,len);
+	}
+	while(l) {
+		r->filter=g_list_append(r->filter, r->filterstr + ((char*)(l->data) - p->filterstr) );
+		l=g_list_next(l);
+	}
+	return r;
+};
+
 
 static void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);
+static void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data);
+
 
 static struct widget *
 gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb)
@@ -2269,17 +2360,27 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	nrows=nitems/wl->cols + (nitems%wl->cols>0);
 	wl->h=this->icon_l*nrows;
 	for (i = 0 ; i < nitems ; i++) {
-		union poi_param p;
-		p.p.sel = 1;
-		p.p.selnb = i;
-		p.p.pagenb = pagenb;
-		p.p.dist = 0;
+		struct poi_param *p=g_new(struct poi_param,1);
+		p->sel = 1;
+		p->selnb = i;
+		p->pagenb = pagenb;
+		p->dist = 0;
+		p->filter=NULL;
+		p->filterstr=NULL;
 		gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
 			image_new_s(this, selectors[i].icon), gravity_left_center|orientation_vertical,
-			gui_internal_cmd_pois, GUINT_TO_POINTER(p.i)));
+			gui_internal_cmd_pois, p));
 		wb->c=*c;
+		wb->data_free=gui_internal_poi_param_free;
 		wb->bt=10;
 	}
+
+	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
+			image_new_s(this, "gui_about"), gravity_left_center|orientation_vertical,
+			gui_internal_cmd_pois_filter, NULL));
+	wb->c=*c;
+	wb->bt=10;
+	
 	gui_internal_widget_pack(this,wl);
 	return wl;
 }
@@ -2333,22 +2434,83 @@ gui_internal_cmd_pois_sort_num(gconstpointer a, gconstpointer b, gpointer user_d
 #endif
 }
 
+/**
+ * @brief Get string representation of item address suitable for doing search and for display in POI list.
+ *
+ * @param item reference to item.
+ * @return  Pointer to string representation of address. To be g_free()d after use.
+ */
+char *
+gui_internal_compose_item_address_string(struct item *item)
+{
+	char *s=g_strdup("");
+	struct attr attr;
+	if(item_attr_get(item, attr_house_number, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_street_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_street_name_systematic, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_district_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_town_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_county_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_country_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	
+	if(item_attr_get(item, attr_address, &attr)) 
+		s=g_strjoin(" ",s,"|",attr.u.str,NULL);
+	return s;
+}
+
 static int
-gui_internal_cmd_pois_item_selected(struct selector *sel, enum item_type type)
+gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 {
 	enum item_type *types;
-	if (type >= type_line)
+	struct selector *sel = param->sel? &selectors[param->selnb]: NULL;
+	enum item_type type=item->type;
+	struct attr attr;
+	int match=0;
+	if (type >= type_line && param->filter==NULL)
 		return 0;
-	if (! sel || !sel->types)
-		return 1;
-	types=sel->types;
-	while (*types != type_none) {
-		if (type >= types[0] && type <= types[1]) {
-			return 1;
+	if (! sel || !sel->types) {
+		match=1;
+	} else {
+		types=sel->types;
+		while (*types != type_none) {
+			if (item->type >= types[0] && item->type <= types[1]) {
+				return 1;
+			}
+			types+=2;
 		}
-		types+=2;
 	}
-	return 0;
+	if (param->filter) {
+		char *long_name, *s;
+		GList *f;
+		if (param->isAddressFilter) {
+			s=gui_internal_compose_item_address_string(item);
+		} else if (item_attr_get(item, attr_label, &attr)) {
+			s=g_strdup_printf("%s %s", item_to_name(item->type), attr.u.str);
+		} else {
+			s=g_strdup(item_to_name(item->type));
+		}
+		long_name=removecase(s);
+		g_free(s);
+                item_attr_rewind(item);
+                
+		for(s=long_name,f=param->filter;f && s;f=g_list_next(f)) {
+			s=strstr(s,f->data);
+			if(!s) 
+				break;
+			s=g_utf8_strchr(s,-1,' ');
+		}
+		if(f)
+			match=0;
+		g_free(long_name);
+	}
+	return match;
 }
 
 struct item_data {
@@ -2372,12 +2534,127 @@ gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data)
 	w->data=wm->data;
 	w->c=wm->c;
 	w->w=wm->w;
+	wm->data_free=NULL;
 	gui_internal_back(this, NULL, NULL);
-	gui_internal_cmd_pois(this, w, NULL);
+	gui_internal_cmd_pois(this, w, w->data);
 	free(w);
 }
 
+/**
+ * @brief apply POIs text filter.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data (pointer to editor widget containg filter text).
+ */
+static void
+gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *w=data;
+	struct poi_param *param;
+	char *s1, *s2;
+	
+	if(!w->text)
+		return;
+	
+	if(w->data) {
+		param=gui_internal_poi_param_clone(w->data);
+		param->pagenb=0;
+	} else {
+		param=g_new0(struct poi_param,1);
+	}
+	param->filterstr=removecase(w->text);
+	param->isAddressFilter=strcmp(wm->name,"AddressFilter")==0;
+	s1=param->filterstr;
+	do {
+		s2=g_utf8_strchr(s1,-1,' ');
+		if(s2)
+			*s2++=0;
+		param->filter=g_list_append(param->filter,s1);
+		if(s2) {
+			while(*s2==' ')
+				s2++;
+		}
+		s1=s2;
+	} while(s2 && *s2);
 
+	gui_internal_cmd_pois(this,w,param);
+	gui_internal_poi_param_free(param);
+}
+
+/**
+ * @brief POIs filter dialog.
+ * Event to handle '\r' '\n' keys pressed.
+ * 
+ */
+
+static void
+gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data)
+{
+	int len;
+	if (wm->text) {
+		len=strlen(wm->text);
+		dbg(1,"len=%d\n", len);
+		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
+			wm->text[len-1]='\0';
+			//gui_internal_cmd_pois_filter_do(this, wm, wm); // Doesnt clean filter editor from the screen. How to disable its redrawal after POI list is drawn?
+		}
+	}
+}
+
+
+/**
+ * @brief POIs filter dialog.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data.
+ */
+static void
+gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *wb, *w, *wr, *wk, *we;
+	int keyboard_mode=2;
+	wb=gui_internal_menu(this,"Filter");
+	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	wr=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+        gui_internal_widget_append(w, wr);
+        we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+        gui_internal_widget_append(wr, we);
+
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
+	wk->state |= STATE_EDIT|STATE_EDITABLE;
+	wk->func=gui_internal_cmd_pois_filter_changed;
+	wk->background=this->background;
+	wk->flags |= flags_expand|flags_fill;
+	wk->name=g_strdup("POIsFilter");
+	wk->c=wm->c;
+	gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wb->state |= STATE_SENSITIVE;
+	wb->func = gui_internal_cmd_pois_filter_do;
+	wb->name=g_strdup("NameFilter");
+	wb->data=wk;
+	gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "post")));
+	wb->state |= STATE_SENSITIVE;
+	wb->name=g_strdup("AddressFilter");
+	wb->func = gui_internal_cmd_pois_filter_do;
+	wb->data=wk;
+	
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
+	gui_internal_menu_render(this);
+
+
+}
+
+/**
+ * @brief Do POI search specified by poi_param and display POIs found
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data, reference to poi_param or NULL.
+ */
 static void
 gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -2389,25 +2666,44 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct item *item;
 	struct widget *wi,*w,*w2,*wb, *wtable, *row;
 	enum projection pro=wm->c.pro;
-	union poi_param param = {.i = GPOINTER_TO_UINT(wm->data)};
-	int idist,dist=10000*(param.p.dist+1);
-	struct selector *isel = param.p.sel? &selectors[param.p.selnb]: NULL;
-	int pagenb = param.p.pagenb;
-	int prevdist=param.p.dist*10000;
-	const int pagesize = 50; // Starting value and increment of count of items to be extracted
-	int maxitem = pagesize*(pagenb+1), it = 0, i;
-	struct item_data *items= g_new0( struct item_data, maxitem);
+	struct poi_param *param;
+	int param_free=0;
+	int idist,dist;
+	struct selector *isel;
+	int pagenb;
+	int prevdist;
+	// Starting value and increment of count of items to be extracted
+	const int pagesize = 50; 
+	int maxitem, it = 0, i;
+	struct item_data *items;
 	struct fibheap* fh = fh_makekeyheap();
 	int cnt = 0;
 	struct table_data *td;
 	int width=wm->w;
-	dbg(2, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i\n",
-		param.p.sel, param.p.selnb, param.p.pagenb, param.p.dist);
+	
+	
+	if(data) {
+	  param = data;
+	} else {
+	  param = g_new0(struct poi_param,1);
+	  param_free=1;
+	}
+	
+	dist=10000*(param->dist+1);
+	isel = param->sel? &selectors[param->selnb]: NULL;
+	pagenb = param->pagenb;
+	prevdist=param->dist*10000;
+	maxitem = pagesize*(pagenb+1);
+	items= g_new0( struct item_data, maxitem);
+	
+	
+	dbg(0, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, isAddressFilter= %d\n",
+		param->sel, param->selnb, param->pagenb, param->dist, param->filterstr, param->isAddressFilter);
 
 	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	if (!isel)
+	if (!isel && !param->filter)
 		gui_internal_widget_append(w, gui_internal_cmd_pois_selector(this,&wm->c,pagenb));
 	w2=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, w2);
@@ -2422,27 +2718,45 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		dbg(2,"mr=%p\n", mr);
 		if (mr) {
 			while ((item=map_rect_get_item(mr))) {
-				if (gui_internal_cmd_pois_item_selected(isel, item->type) &&
+				if (gui_internal_cmd_pois_item_selected(param, item) &&
 				    item_coord_get_pro(item, &c, 1, pro) &&
 				    coord_rect_contains(&sel->u.c_rect, &c)  &&
 				    (idist=transform_distance(pro, &center, &c)) < dist) {
 					struct item_data *data;
 					struct attr attr;
+					char *label;
+					
+					if (item->type==type_house_number) {
+						label=gui_internal_compose_item_address_string(item);
+					} else if (item_attr_get(item, attr_label, &attr)) {
+						label=g_strdup(attr.u.str);
+						// Buildings which label is equal to addr:housenumber value
+						// are duplicated by item_house_number. Don't include such 
+						// buildings into the list. This is true for OSM maps created with 
+						// maptool patched with #859 latest patch.
+						// FIXME: For non-OSM maps, we probably would better don't skip these items.
+						if(item->type==type_poly_building && item_attr_get(item, attr_house_number, &attr) ) {
+							if(strcmp(label,attr.u.str)==0) {
+								g_free(label);
+								continue;
+							}
+						}
+
+					} else {
+						label=g_strdup("");
+					}
+					
 					if(it>=maxitem) {
 						data = fh_extractmin(fh);
-						free(data->label);
+						g_free(data->label);
 						data->label=NULL;
 					} else {
 						data = &items[it++];
 					}
+					data->label=label;
 					data->item = *item;
 					data->c = c;
 					data->dist = idist;
-					if (item_attr_get(item, attr_label, &attr)) {
-						data->label=g_strdup(attr.u.str);
-					} else {
-						data->label=g_strdup("");
-					}
 					// Key expression is a workaround to fight
 					// probable heap collisions when two objects
 					// are at the same distance. But it destroys
@@ -2504,18 +2818,21 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	// Add an entry for more POI
 	struct widget *wl,*wt;
 	char buffer[32];
+	struct poi_param *paramnew;
+	paramnew=gui_internal_poi_param_clone(param);
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	if (it == maxitem) {
-		param.p.pagenb++;
-		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (param.p.pagenb+1)*pagesize);
+		paramnew->pagenb++;
+		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (paramnew->pagenb+1)*pagesize);
 	} else {
-		param.p.dist++;
-		snprintf(buffer, sizeof(buffer), "Set search distance to %i km", 10*(param.p.dist+1));
+		paramnew->dist++;
+		snprintf(buffer, sizeof(buffer), "Set search distance to %i km", 10*(paramnew->dist+1));
 	}
 	wt=gui_internal_label_new(this, buffer);
 	gui_internal_widget_append(wl, wt);
 	wl->func=gui_internal_cmd_pois_more;
-	wl->data=GUINT_TO_POINTER(param.i);
+	wl->data=paramnew;
+	wl->data_free=gui_internal_poi_param_free;
 	wl->state |= STATE_SENSITIVE;
 	wl->c = wm->c;
 	row = gui_internal_widget_table_row_new(this,
@@ -2537,7 +2854,8 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		}
 	}
 	gui_internal_menu_render(this);
-
+        if(param_free)
+        	g_free(param);
 }
 #endif /* _MSC_VER */
 
