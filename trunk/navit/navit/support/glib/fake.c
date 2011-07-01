@@ -109,3 +109,8 @@ g_get_current_time (GTimeVal *result)
 #endif
 }
 
+// FIXME: should use real utf8-aware function
+gchar * g_utf8_casefold(const gchar *s, gssize len) 
+{
+  return g_ascii_strdown(s,len);
+}
