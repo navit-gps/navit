@@ -221,7 +221,10 @@ vehicle_gpsd_try_open(gpointer *data)
 	g_free(source);
 
 #ifdef HAVE_LIBGPS19
-	gps_stream(priv->gps, WATCH_ENABLE|WATCH_NMEA|WATCH_JSON, NULL);
+	if (strchr(priv->gpsd_query,'r'))
+		gps_stream(priv->gps, WATCH_ENABLE|WATCH_NMEA|WATCH_JSON, NULL);
+	else
+		gps_stream(priv->gps, WATCH_ENABLE|WATCH_JSON, NULL);
 #else
 	gps_query(priv->gps, priv->gpsd_query);
 #endif
