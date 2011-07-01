@@ -428,7 +428,8 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 {
 	struct pcoord *ret=g_new(struct pcoord, 1);
 	ret->pro = map_projection(item->map);
-	if (item_is_point(*item)) {
+	dbg(0,"%s\n",item_to_name(item->type));
+	if (item->type<type_house_number_interpolation_even || item->type>type_house_number_interpolation_alphabetic) {
 		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
 			ret->x=c.x;
@@ -472,7 +473,9 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 			dbg(1,"remaining distance=%d from %d\n",hn_distance,distances[i]);
 			ret->x=(c[i+1].x-c[i].x)*hn_distance/distances[i]+c[i].x;
 			ret->y=(c[i+1].y-c[i].y)*hn_distance/distances[i]+c[i].y;
+			g_free(distances);
 		}
+		g_free(c);
 	}
 	return ret;
 }
@@ -772,7 +775,8 @@ search_list_get_result(struct search_list *this_)
 				this_->item=NULL;
 				break;
 			case 3:
-				dbg(0,"case 3 HOUSENUMBER");
+				dbg(0,"case 3 HOUSENUMBER\n");
+				has_street_name=0;
 
 				// if this housenumber has a streetname tag, set the name now
 				if (item_attr_get(this_->item, attr_street_name, &attr2))
@@ -780,7 +784,7 @@ search_list_get_result(struct search_list *this_)
 					dbg(0,"streetname: %s\n",attr2.u.str);
 					has_street_name=1;
 				}
-
+				
 				p=search_list_house_number_new(this_->item, &this_->inter, le->attr->u.str, le->partial);
 				if (!p)
 				{
@@ -788,11 +792,32 @@ search_list_get_result(struct search_list *this_)
 					this_->item=NULL;
 					continue;
 				}
+
 				this_->result.house_number=p;
 				if (!this_->result.house_number->interpolation)
 				{
 					this_->item=NULL;
+				} else {
+					dbg(0,"interpolation!\n");
 				}
+				
+				if(le->parent && has_street_name) {
+					struct search_list_street *street=this_->levels[level-1].last->data;
+					char *s1,*s2;
+					int cmpres;
+					s1=g_utf8_casefold(street->name,-1);
+					s2=g_utf8_casefold(attr2.u.str,-1);
+					cmpres=strcmp(s1,s2);
+					dbg(1,"Compared %s with %s, got %d\n",s1,s2,cmpres);
+					g_free(s1);
+					g_free(s2);
+					if(cmpres) {
+						search_list_house_number_destroy(p);
+						//this_->item=NULL;
+						continue;
+					}
+				}
+
 
 				this_->result.house_number->common.parent=this_->levels[2].last->data;
 				this_->result.street=this_->result.house_number->common.parent;
@@ -800,15 +825,9 @@ search_list_get_result(struct search_list *this_)
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.house_number->common.c;
 
-				if (has_street_name==1)
-				{
-					gchar *tmp_name=g_strdup(attr2.u.str);
-					this_->result.street->name=tmp_name;
-					//dbg(0,"res streetname=%s\n",this_->result.street->name);
-				}
-				else
-				{
-					this_->result.street->name=NULL;
+				if(!has_street_name) {
+					static struct search_list_street null_street;
+					this_->result.street=&null_street;
 				}
 			}
 			if (p)
