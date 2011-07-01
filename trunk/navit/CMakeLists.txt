@@ -18,7 +18,7 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 # install path
 set(BIN_DIR bin)
 set(SHARE_DIR share/navit)
-set(LOCALE_DIR share)
+set(LOCALE_DIR share/locale)
 set(IMAGE_DIR share/navit/xpm)
 set(LIB_DIR lib)
 
