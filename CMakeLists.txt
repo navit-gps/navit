@@ -242,7 +242,8 @@ if (GYPSY_FOUND)
 endif(GYPSY_FOUND)
 
 if (LIBGARMIN_FOUND)
-   set_with_reason(map/garmin "Garmin library found" TRUE ${LIBGARMIN_LIBRARIES})
+   include_directories(${LIBGARMIN_INCLUDE_DIRS})
+   set_with_reason(map/garmin "Garmin library found" TRUE ${LIBGARMIN_LDFLAGS})
 endif(LIBGARMIN_FOUND)
 
 if(DBusGLib_FOUND)
@@ -576,7 +577,6 @@ add_subdirectory (man)
 
 if (GETTEXT_FOUND)
    add_subdirectory (po)
-   #install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION ${LOCALE_DIR})
 endif(GETTEXT_FOUND)
 
 
