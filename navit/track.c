@@ -329,12 +329,15 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 {
 	struct item *item;
 	struct map_rect *mr;
+	struct tracking_line *tl;
+
 	int result=0;
 	dbg(1,"enter %s\n",attr_to_name(type));
 	if (_this->attr) {
 		attr_free(_this->attr);
 		_this->attr=NULL;
 	}
+	attr->type=type;
 	switch (type) {
 	case attr_position_valid:
 		attr->u.num=_this->valid;
@@ -362,6 +365,14 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 		if (! _this->curr_line || ! _this->curr_line->street)
 			return 0;
 		attr->u.item=&_this->curr_line->street->item;
+		return 1;
+	case attr_street_count:
+		attr->u.num=0;
+		tl=_this->lines;
+		while (tl) {
+			attr->u.num++;
+			tl=tl->next;
+		}
 		return 1;
 	default:
 		if (! _this->curr_line || ! _this->curr_line->street)
