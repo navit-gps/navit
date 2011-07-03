@@ -1390,7 +1390,6 @@ int boundary;
 void
 osm_add_relation(osmid id)
 {
-	struct attr idattr = { attr_type };
 	current_id=id;
 	in_relation=1;
 	debug_attr_buffer[0]='\0';
@@ -1399,8 +1398,7 @@ osm_add_relation(osmid id)
 	admin_level=-1;
 	boundary=0;
 	item_bin_init(item_bin, type_none);
-	idattr.u.num64=&current_id;
-	item_bin_add_attr(item_bin, &idattr);
+	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, current_id);
 }
 
 void
