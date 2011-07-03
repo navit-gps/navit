@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 	int output=0;
 	int input=0;
 	int protobuf=0;
-	int o5m;
+	int o5m=0;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
 	char *protobufdb=NULL,*protobufdb_operation=NULL,*md5file=NULL;
