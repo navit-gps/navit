@@ -2376,7 +2376,7 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	}
 
 	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
-			image_new_s(this, "gui_about"), gravity_left_center|orientation_vertical,
+			image_new_s(this, "gui_search"), gravity_left_center|orientation_vertical,
 			gui_internal_cmd_pois_filter, NULL));
 	wb->c=*c;
 	wb->bt=10;
