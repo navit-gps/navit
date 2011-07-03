@@ -190,7 +190,39 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	int i, bAttrFound = 0;
 	GList* attr_list;
 	struct map_rect_priv *mr=priv_data;
-	enum attr_type *at = mr->m->attr_types;
+	enum attr_type *at;
+	if( !mr || !mr->m || !mr->m->attr_types ) {
+		return 0;
+	}
+
+	attr_list = ((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list;
+
+	if (attr_type == attr_any) {
+		if (mr->at_iter==NULL) {	//start iteration
+			mr->at_iter = attr_list;
+			if (mr->at_iter) {
+				*attr = *(struct attr*)(mr->at_iter->data);
+				mr->at_iter = g_list_next(mr->at_iter);	
+				return 1;
+			}
+			else {	//empty attr list
+				mr->at_iter = NULL;	
+				return 0;
+			}
+		}
+		else {			//continue iteration
+			mr->at_iter = g_list_next(mr->at_iter);	
+			if(mr->at_iter) {
+				*attr = *(struct attr*)mr->at_iter->data;
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+		return 0;
+	}
+
+	at = mr->m->attr_types;
 
 	for(i=0;i<mr->m->attr_cnt;++i) {
 		if(*at == attr_type) {
@@ -203,12 +235,6 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	if(!bAttrFound) {
 		return 0;
 	}
-
-	if(!mr || !mr->curr_item || !mr->curr_item->data ) {
-		return 0;
-	}
-
-	attr_list = ((struct quadtree_data*)(((struct quadtree_item*)(mr->curr_item->data))->data))->attr_list;
 
 	while(attr_list) {
 		if(((struct attr*)attr_list->data)->type == attr_type) {
@@ -448,6 +474,7 @@ map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)
 	else {
 		mr->curr_item = NULL;
 	}
+	it->priv_data=mr;
 	return it;
 }
 
@@ -564,6 +591,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 		m->attr_types = attr_type_list;	
 	}
 	else {
+		m->attr_types = NULL;	
 		return NULL;
 	}
 
