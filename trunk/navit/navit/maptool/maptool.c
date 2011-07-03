@@ -122,6 +122,7 @@ usage(FILE *f)
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-M (--o5m)		    : input file os o5m\n");
 	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
 	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
@@ -157,6 +158,7 @@ int main(int argc, char **argv)
 	int output=0;
 	int input=0;
 	int protobuf=0;
+	int o5m;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
 	char *protobufdb=NULL,*protobufdb_operation=NULL,*md5file=NULL;
@@ -213,6 +215,7 @@ int main(int argc, char **argv)
 			{"keep-tmpfiles", 0, 0, 'k'},
 			{"nodes-only", 0, 0, 'N'},
 			{"map", 1, 0, 'm'},
+			{"o5m", 0, 0, 'M'},
 			{"plugin", 1, 0, 'p'},
 			{"protobuf", 0, 0, 'P'},
 			{"start", 1, 0, 's'},
@@ -225,7 +228,7 @@ int main(int argc, char **argv)
 			{"unknown-country", 0, 0, 'U'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "5:6B:DNO:PWS:a:bc"
+		c = getopt_long (argc, argv, "5:6B:DMNO:PWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -245,6 +248,9 @@ int main(int argc, char **argv)
 		case 'D':
 			output=1;
 			break;
+		case 'M':
+			o5m=1;
+			break;	
 		case 'N':
 			process_ways=0;
 			break;
@@ -402,6 +408,8 @@ int main(int argc, char **argv)
 		}
 		else if (protobuf)
 			map_collect_data_osm_protobuf(input_file,ways,nodes,turn_restrictions,boundaries);
+		else if (o5m)
+			map_collect_data_osm_o5m(input_file,ways,nodes,turn_restrictions,boundaries);
 		else
 			map_collect_data_osm(input_file,ways,nodes,turn_restrictions,boundaries);
 		if (slices) {
