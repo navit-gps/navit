@@ -101,6 +101,7 @@ svgs += gui_strength_5.svg
 svgs += gui_minus.svg
 svgs += gui_plus.svg
 svgs += gui_log.svg
+svgs += gui_search.svg
 
 svgs += airport.svg
 svgs += attraction.svg
