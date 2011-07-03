@@ -248,6 +248,9 @@ void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
 void osm_init(FILE*);
 
+/* osm_o5m.c */
+int map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+
 /* osm_psql.c */
 int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
