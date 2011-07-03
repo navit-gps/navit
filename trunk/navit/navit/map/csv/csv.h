@@ -48,5 +48,6 @@ struct map_rect_priv {
 	int bStarted;
 	struct item item;
 	struct map_priv *m;
+	GList* at_iter;
 };
 
