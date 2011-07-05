@@ -1,2 +1,2 @@
-module_add_library(vehicle_gypsy vehicle_gypsy.c) 
+module_add_library(vehicle_gypsy vehicle_gypsy.c)
 
