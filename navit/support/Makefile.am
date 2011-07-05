@@ -26,4 +26,7 @@ endif
 if SPEECH_ESPEAK
  SUBDIRS+=espeak
 endif
-DIST_SUBDIRS=espeak ezxml glib wordexp win32 zlib libc libpng
+if !HAVE_SYSTEM_SHAPEFILELIB
+ SUBDIRS+=shapefile
+endif
+DIST_SUBDIRS=espeak ezxml glib wordexp win32 zlib libc libpng shapefile
