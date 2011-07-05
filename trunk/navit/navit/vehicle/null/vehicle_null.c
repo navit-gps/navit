@@ -59,7 +59,7 @@ struct vehicle_priv {
 static void
 vehicle_null_destroy(struct vehicle_priv *priv)
 {
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	g_free(priv);
 }
 
