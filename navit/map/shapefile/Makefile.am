@@ -8,8 +8,8 @@ endif
 libmap_shapefile_la_SOURCES = shapefile.c
 libmap_shapefile_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@
 if HAVE_SYSTEM_SHAPEFILELIB
-libmap_shapefile_la_LDFLAGS += @SHAPEFILE_LIBS@
+libmap_shapefile_la_LIBADD = @SHAPEFILE_LIBS@
 else
 AM_CPPFLAGS += -I$(top_srcdir)/navit/support/shapefile
-libmap_shapefile_la_LDFLAGS += $(top_srcdir)/navit/support/shapefile/libsupport_shapefile.la
+libmap_shapefile_la_LIBADD = $(top_builddir)/navit/support/shapefile/libsupport_shapefile.la
 endif
