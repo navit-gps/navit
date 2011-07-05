@@ -396,7 +396,7 @@ if(WIN32 OR WINCE)
 
    set(XSLTS "windows;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
 endif()
-if (WIN32)
+if (WIN32 AND NOT WINCE)
    set(HAVE_API_WIN32 1)
    set(HAVE_STDINT_H 1)
    #set(BUILD_MAPTOOL FALSE)
