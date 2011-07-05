@@ -112,6 +112,7 @@ usage(FILE *f)
 	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)              : this screen\n");
+	fprintf(f,"-2 (--doway2poi)           : convert ways and polygons to POIs when applicable\n");
 	fprintf(f,"-5 (--md5)               : set file where to write md5 sum\n");
 	fprintf(f,"-6 (--64bit)             : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
@@ -122,7 +123,7 @@ usage(FILE *f)
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
-	fprintf(f,"-M (--o5m)		    : input file os o5m\n");
+	fprintf(f,"-M (--o5m)               : input file os o5m\n");
 	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
 	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
@@ -139,7 +140,7 @@ usage(FILE *f)
 
 int main(int argc, char **argv)
 {
-	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL,*boundaries=NULL;
+	FILE *ways=NULL, *way2poi=NULL, *ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL,*boundaries=NULL;
 	FILE *files[10];
 	FILE *references[10];
 
@@ -159,6 +160,7 @@ int main(int argc, char **argv)
 	int input=0;
 	int protobuf=0;
 	int o5m=0;
+	int doway2poi=0;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
 	char *protobufdb=NULL,*protobufdb_operation=NULL,*md5file=NULL;
@@ -199,6 +201,7 @@ int main(int argc, char **argv)
 #endif
 		int option_index = 0;
 		static struct option long_options[] = {
+			{"doway2poi", 0, 0, '2'},
 			{"md5", 1, 0, '5'},
 			{"64bit", 0, 0, '6'},
 			{"attr-debug-level", 1, 0, 'a'},
@@ -228,7 +231,7 @@ int main(int argc, char **argv)
 			{"unknown-country", 0, 0, 'U'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "5:6B:DMNO:PWS:a:bc"
+		c = getopt_long (argc, argv, "25:6B:DMNO:PWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -236,6 +239,9 @@ int main(int argc, char **argv)
 		if (c == -1)
 			break;
 		switch (c) {
+		case '2':
+			doway2poi=1;
+			break;
 		case '5':
 			md5file=optarg;
 			break;
@@ -386,15 +392,18 @@ int main(int argc, char **argv)
 			ways=tempfile(suffix,"ways",1);
 		if (process_nodes)
 			nodes=tempfile(suffix,"nodes",1);
-		if (process_ways && process_nodes)
+		if (process_ways && process_nodes) {
 			turn_restrictions=tempfile(suffix,"turn_restrictions",1);
+			if(doway2poi)
+				way2poi=tempfile(suffix,"way2poi",1);
+		}
 		if (process_relations)
 			boundaries=tempfile(suffix,"boundaries",1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
 		if (dbstr)
-			map_collect_data_osm_db(dbstr,ways,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_db(dbstr,ways,way2poi,nodes,turn_restrictions,boundaries);
 		else
 #endif
 		if (map_handles) {
@@ -407,24 +416,47 @@ int main(int argc, char **argv)
 			}
 		}
 		else if (protobuf)
-			map_collect_data_osm_protobuf(input_file,ways,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_protobuf(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
 		else if (o5m)
-			map_collect_data_osm_o5m(input_file,ways,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_o5m(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
 		else
-			map_collect_data_osm(input_file,ways,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
 		if (slices) {
 			fprintf(stderr,"%d slices\n",slices);
 			flush_nodes(1);
 			for (i = slices-2 ; i>=0 ; i--) {
 				fprintf(stderr, "slice %d of %d\n",slices-i-1,slices-1);
 				load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-				resolve_ways(ways, NULL);
+				resolve_ways(ways, NULL, 1);
 				save_buffer("coords.tmp",&node_buffer, i*slice_size);
+				if(way2poi) {
+					FILE *way2poinew=tempfile(suffix,"way2poinew",1);
+					resolve_ways(way2poi, way2poinew, 0);
+					fclose(way2poi);
+					fclose(way2poinew);
+					tempfile_rename(suffix,"way2poinew","way2poi");
+					way2poi=tempfile(suffix,"way2poi",0);
+				}
 			}
-		} else
+		} else {
 			save_buffer("coords.tmp",&node_buffer, 0);
+			if(way2poi) {
+				FILE *way2poinew=tempfile(suffix,"way2poinew",1);
+				resolve_ways(way2poi, way2poinew, 0);
+				fclose(way2poi);
+				fclose(way2poinew);
+				tempfile_rename(suffix,"way2poinew","way2poi");
+				way2poi=tempfile(suffix,"way2poi",0);
+			}
+		}
 		if (ways)
 			fclose(ways);
+		if (way2poi) {
+			fclose(way2poi);
+			way2poi=tempfile(suffix,"way2poi",0);
+			process_binfile(way2poi, nodes);
+			fclose(way2poi);
+		}
 		if (nodes)
 			fclose(nodes);
 		if (turn_restrictions)
@@ -578,6 +610,7 @@ int main(int argc, char **argv)
 					files[1]=tempfile(suffix,"ways_split",0);
 				if (process_nodes)
 					files[2]=tempfile(suffix,"nodes",0);
+
 				phase4(files,3,0,suffix,tilesdir,zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
@@ -628,6 +661,7 @@ int main(int argc, char **argv)
 				}
 				if (process_nodes)
 					files[2]=tempfile(suffix,"nodes",0);
+
 				fprintf(stderr,"Slice %d\n",i);
 
 				phase5(files,references,3,0,suffix,zip_info);
@@ -642,6 +676,7 @@ int main(int argc, char **argv)
 				tempfile_unlink(suffix,"relations");
 				tempfile_unlink(suffix,"nodes");
 				tempfile_unlink(suffix,"ways_split");
+				tempfile_unlink(suffix,"way2poi");
 				tempfile_unlink(suffix,"ways_split_ref");
 				tempfile_unlink(suffix,"coastline");
 				tempfile_unlink(suffix,"turn_restrictions");

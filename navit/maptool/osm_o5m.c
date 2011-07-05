@@ -170,7 +170,7 @@ o5m_print_end(char c)
 }
 
 int
-map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries)
+map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries)
 {
 	struct o5m o;
 	unsigned char c, *end, *rend;
@@ -304,7 +304,7 @@ map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_tu
 				osm_end_node(out_nodes);
 				break;
 			case 0x11:
-				osm_end_way(out_ways);
+				osm_end_way(out_ways, out_way2poi);
 				break;
 			case 0x12:
 				osm_end_relation(out_turn_restrictions, out_boundaries);
