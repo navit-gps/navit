@@ -144,6 +144,8 @@ struct geom_poly_segment {
 void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse);
 void geom_coord_revert(struct coord *c, int count);
 long long geom_poly_area(struct coord *c, int count);
+int geom_poly_centroid(struct coord *c, int count, struct coord *r);
+int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c);
 GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third);
 void geom_poly_segment_destroy(struct geom_poly_segment *seg);
 GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg);
@@ -235,33 +237,33 @@ void osm_add_way(osmid id);
 void osm_add_relation(osmid id);
 void osm_end_relation(FILE *turn_restrictions, FILE *boundaries);
 void osm_add_member(int type, osmid ref, char *role);
-void osm_end_way(FILE *out);
+void osm_end_way(FILE *out, FILE *outwaypoi);
 void osm_end_node(FILE *out);
 void osm_add_nd(osmid ref);
 long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
-int resolve_ways(FILE *in, FILE *out);
+int resolve_ways(FILE *in, FILE *out, int countreferences);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
 void osm_init(FILE*);
 
 /* osm_o5m.c */
-int map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
 /* osm_psql.c */
-int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
 /* osm_protobuf.c */
-int map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 int osm_protobufdb_load(FILE *in, char *dir);
 
 /* osm_xml.c */
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
 void osm_xml_decode_entities(char *buffer);
-int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
 
 /* sourcesink.c */

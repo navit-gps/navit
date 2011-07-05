@@ -60,13 +60,94 @@ geom_poly_area(struct coord *c, int count)
 #if 0
 		fprintf(stderr,"(%d+%d)*(%d-%d)=%d*%d="LONGLONG_FMT"\n",c[i].x,c[j].x,c[i].y,c[j].y,c[i].x+c[j].x,c[i].y-c[j].y,(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y));
 #endif
-    		area+=(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y);
+		area+=(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y);
 #if 0
 		fprintf(stderr,"area="LONGLONG_FMT"\n",area);
 #endif
 	}
   	return area/2;
 }
+
+/**
+  * Get poly centroid coordinates.
+  * @param in *p array of poly vertex coordinates
+  * @param in count count of poly vertexes
+  * @param out *c coordinates of poly centroid
+  * @returns 1 on success, 0 if poly area is 0
+  */
+int
+geom_poly_centroid(struct coord *p, int count, struct coord *c)
+{
+	long long area=0/*geom_poly_area(p, count)*/;
+	long long sx=0,sy=0,tmp;
+	int i,j;
+	long long x0=p[0].x, y0=p[0].y, xi, yi, xj, yj;
+	
+	/*fprintf(stderr,"area="LONGLONG_FMT"\n", area );*/
+	for (i=0,j=0; i<count; i++) {
+		if (++j == count)
+			j=0;
+		xi=p[i].x-x0;
+		yi=p[i].y-y0;
+		xj=p[j].x-x0;
+		yj=p[j].y-y0;
+		tmp=(xi*yj-xj*yi);
+		sx+=(xi+xj)*tmp;
+		sy+=(yi+yj)*tmp;
+		area+=xi*yj-xj*yi;
+	}
+	if(area!=0) {
+		c->x=x0+sx/3/area;
+		c->y=y0+sy/3/area;
+		return 1;
+	}
+	return 0;
+}
+
+/**
+  * Get coordinates of polyline point c most close to given point p.
+  * @param in *pl array of polyline vertex coordinates
+  * @param in count count of polyline vertexes
+  * @param in *p point coordinates 
+  * @param out *c coordinates of polyline point most close to given point.
+  * @returns first vertex number of polyline segment to which c belongs
+  */
+int
+geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c)
+{
+	int i,vertex=0;
+	long long x, y, xi, xj, yi, yj, u, d, dmin=0;
+	if(count<2) {
+		c->x=pl->x;
+		c->y=pl->y;
+		return 0;
+	}
+	for(i=0;i<count-1;i++) {
+		xi=pl[i].x;
+		yi=pl[i].y;
+		xj=pl[i+1].x;
+		yj=pl[i+1].y;
+		u=(xj-xi)*(xj-xi)+(yj-yi)*(yj-yi);
+		if(u!=0) {
+			u=((p->x-xi)*(xj-xi)+(p->y-yi)*(yj-yi))*1000/u;
+		}
+		if(u<0) 
+			u=0;
+		else if (u>1000) 
+			u=1000;
+		x=xi+u*(xj-xi)/1000;
+		y=yi+u*(yj-yi)/1000;
+		d=(p->x-x)*(p->x-x)+(p->y-y)*(p->y-y);
+		if(i==0 || d<dmin) {
+			dmin=d;
+			c->x=x;
+			c->y=y;
+			vertex=i;
+		}
+	}
+	return vertex;
+}
+
 
 GList *
 geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third)
