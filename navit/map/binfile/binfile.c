@@ -2267,7 +2267,7 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 		m->fis[m->eoc->zipedsk-1]=m->fi;
 		g_free(tmpfilename);
 	}
-	dbg(0,"num_disk %d\n",m->eoc->zipedsk);
+	dbg(1,"num_disk %d\n",m->eoc->zipedsk);
 	m->eoc64=binfile_read_eoc64(m->fi);
 	if (!binfile_get_index(m))
 		return 0;
