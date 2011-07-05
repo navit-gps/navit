@@ -351,96 +351,100 @@ struct country_table {
 	{ 999,"Unknown"},
 };
 
+// first char - item type
+//   =w - ways
+//   =? - used both for nodes and ways
+//   otherwise - nodes
 
 static char *attrmap={
 	"n	*=*			point_unkn\n"
 //	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
-	"n	addr:housenumber=*	house_number\n"
-	"n	aeroway=aerodrome	poi_airport\n"
-	"n	aeroway=airport		poi_airport\n"
-	"n	aeroway=helipad		poi_heliport\n"
-	"n	aeroway=terminal	poi_airport\n"
-	"n	amenity=atm		poi_bank\n"
-	"n	amenity=bank		poi_bank\n"
-	"n	amenity=bar		poi_bar\n"
+	"?	addr:housenumber=*	house_number\n"
+	"?	aeroway=aerodrome	poi_airport\n"
+	"?	aeroway=airport		poi_airport\n"
+	"?	aeroway=helipad		poi_heliport\n"
+	"?	aeroway=terminal	poi_airport\n"
+	"?	amenity=atm		poi_bank\n"
+	"?	amenity=bank		poi_bank\n"
+	"?	amenity=bar		poi_bar\n"
 	"n	amenity=bench		poi_bench\n"
-	"n	amenity=biergarten	poi_biergarten\n"
-	"n	amenity=bus_station	poi_bus_station\n"
-	"n	amenity=cafe		poi_cafe\n"
-	"n	amenity=car_wash	poi_car_wash\n"
-	"n	amenity=cinema		poi_cinema\n"
-	"n	amenity=college		poi_school_college\n"
-	"n	amenity=courthouse	poi_justice\n"
-	"n	amenity=drinking_water	poi_potable_water\n"
-	"n	amenity=fast_food	poi_fastfood\n"
-	"n	amenity=fire_station	poi_firebrigade\n"
-	"n	amenity=fountain	poi_fountain\n"
-	"n	amenity=fuel		poi_fuel\n"
-	"n	amenity=grave_yard	poi_cemetery\n"
-	"n	amenity=hospital	poi_hospital\n"
-	"n	amenity=hunting_stand	poi_hunting_stand\n"
-	"n	amenity=kindergarten	poi_kindergarten\n"
-	"n	amenity=library		poi_library\n"
-	"n	amenity=nightclub	poi_nightclub\n"
-	"n	amenity=park_bench	poi_bench\n"
-	"n	amenity=parking		poi_car_parking\n"
-	"n	amenity=pharmacy	poi_pharmacy\n"
-	"n	amenity=place_of_worship,religion=christian	poi_church\n"
-	"n	amenity=place_of_worship			poi_worship\n"
-	"n	amenity=police		poi_police\n"
-	"n	amenity=post_box	poi_post_box\n"
-	"n	amenity=post_office	poi_post_office\n"
-	"n	amenity=prison		poi_prison\n"
-	"n	amenity=pub		poi_pub\n"
-	"n	amenity=public_building	poi_public_office\n"
-	"n	amenity=recycling	poi_recycling\n"
-	"n	amenity=restaurant,cuisine=fine_dining		poi_dining\n"
-	"n	amenity=restaurant				poi_restaurant\n"
-	"n	amenity=school		poi_school\n"
-	"n	amenity=shelter		poi_shelter\n"
-	"n	amenity=taxi		poi_taxi\n"
-	"n	amenity=tec_common	tec_common\n"
-	"n	amenity=telephone	poi_telephone\n"
-	"n	amenity=theatre		poi_theater\n"
-	"n	amenity=toilets		poi_restroom\n"
-	"n	amenity=townhall	poi_townhall\n"
-	"n	amenity=university	poi_school_university\n"
-	"n	amenity=vending_machine	poi_vending_machine\n"
+	"?	amenity=biergarten	poi_biergarten\n"
+	"?	amenity=bus_station	poi_bus_station\n"
+	"?	amenity=cafe		poi_cafe\n"
+	"?	amenity=car_wash	poi_car_wash\n"
+	"?	amenity=cinema		poi_cinema\n"
+	"?	amenity=college		poi_school_college\n"
+	"?	amenity=courthouse	poi_justice\n"
+	"?	amenity=drinking_water	poi_potable_water\n"
+	"?	amenity=fast_food	poi_fastfood\n"
+	"?	amenity=fire_station	poi_firebrigade\n"
+	"?	amenity=fountain	poi_fountain\n"
+	"?	amenity=fuel		poi_fuel\n"
+	"?	amenity=grave_yard	poi_cemetery\n"
+	"?	amenity=hospital	poi_hospital\n"
+	"?	amenity=hunting_stand	poi_hunting_stand\n"
+	"?	amenity=kindergarten	poi_kindergarten\n"
+	"?	amenity=library		poi_library\n"
+	"?	amenity=nightclub	poi_nightclub\n"
+	"?	amenity=park_bench	poi_bench\n"
+	"?	amenity=parking		poi_car_parking\n"
+	"?	amenity=pharmacy	poi_pharmacy\n"
+	"?	amenity=place_of_worship,religion=christian	poi_church\n"
+	"?	amenity=place_of_worship			poi_worship\n"
+	"?	amenity=police		poi_police\n"
+	"?	amenity=post_box	poi_post_box\n"
+	"?	amenity=post_office	poi_post_office\n"
+	"?	amenity=prison		poi_prison\n"
+	"?	amenity=pub		poi_pub\n"
+	"?	amenity=public_building	poi_public_office\n"
+	"?	amenity=recycling	poi_recycling\n"
+	"?	amenity=restaurant,cuisine=fine_dining		poi_dining\n"
+	"?	amenity=restaurant				poi_restaurant\n"
+	"?	amenity=school		poi_school\n"
+	"?	amenity=shelter		poi_shelter\n"
+	"?	amenity=taxi		poi_taxi\n"
+	"?	amenity=tec_common	tec_common\n"
+	"?	amenity=telephone	poi_telephone\n"
+	"?	amenity=theatre		poi_theater\n"
+	"?	amenity=toilets		poi_restroom\n"
+	"?	amenity=townhall	poi_townhall\n"
+	"?	amenity=university	poi_school_university\n"
+	"?	amenity=vending_machine	poi_vending_machine\n"
 	"n	barrier=bollard		barrier_bollard\n"
 	"n	barrier=cycle_barrier	barrier_cycle\n"
 	"n	barrier=lift_gate	barrier_lift_gate\n"
-	"n	car=car_rental		poi_car_rent\n"
-	"n	highway=bus_station	poi_bus_station\n"
-	"n	highway=bus_stop	poi_bus_stop\n"
+	"?	car=car_rental		poi_car_rent\n"
+	"?	highway=bus_station	poi_bus_station\n"
+	"?	highway=bus_stop	poi_bus_stop\n"
 	"n	highway=mini_roundabout	mini_roundabout\n"
 	"n	highway=motorway_junction	highway_exit\n"
 	"n	highway=stop		traffic_sign_stop\n"
 	"n	highway=toll_booth	poi_toll_booth\n"
 	"n	highway=traffic_signals	traffic_signals\n"
 	"n	highway=turning_circle	turning_circle\n"
-	"n	historic=boundary_stone	poi_boundary_stone\n"
-	"n	historic=castle		poi_castle\n"
-	"n	historic=memorial	poi_memorial\n"
-	"n	historic=monument	poi_monument\n"
-	"n	historic=ruins		poi_ruins\n"
-//	"n	historic=*		poi_ruins\n"
-	"n	landuse=cemetery	poi_cemetery\n"
-	"n	leisure=fishing		poi_fish\n"
-	"n	leisure=golf_course	poi_golf\n"
-	"n	leisure=marina		poi_marine\n"
-	"n	leisure=playground	poi_playground\n"
-	"n	leisure=slipway		poi_boat_ramp\n"
-	"n	leisure=sports_centre	poi_sport\n"
-	"n	leisure=stadium		poi_stadium\n"
-	"n	man_made=tower		poi_tower\n"
-	"n	military=airfield	poi_military\n"
-	"n	military=barracks	poi_military\n"
-	"n	military=bunker		poi_military\n"
-	"n	military=danger_area	poi_danger_area\n"
-	"n	military=range		poi_military\n"
-	"n	natural=bay		poi_bay\n"
-	"n	natural=peak,ele=*		poi_peak\n"     // show only major peaks with elevation
-	"n	natural=tree		poi_tree\n"
+	"?	historic=boundary_stone	poi_boundary_stone\n"
+	"?	historic=castle		poi_castle\n"
+	"?	historic=memorial	poi_memorial\n"
+	"?	historic=monument	poi_monument\n"
+	"?	historic=ruins		poi_ruins\n"
+//	"?	historic=*		poi_ruins\n"
+	"?	landuse=cemetery	poi_cemetery\n"
+	"?	leisure=fishing		poi_fish\n"
+	"?	leisure=golf_course	poi_golf\n"
+	"?	leisure=marina		poi_marine\n"
+	"?	leisure=playground	poi_playground\n"
+	"?	leisure=slipway		poi_boat_ramp\n"
+	"?	leisure=sports_centre	poi_sport\n"
+	"?	leisure=stadium		poi_stadium\n"
+	"?	man_made=tower		poi_tower\n"
+	"?	military=airfield	poi_military\n"
+	"?	military=barracks	poi_military\n"
+	"?	military=bunker		poi_military\n"
+	"?	military=danger_area	poi_danger_area\n"
+	"?	military=range		poi_military\n"
+	"?	natural=bay		poi_bay\n"
+	"?	natural=peak,ele=*		poi_peak\n"     // show only major peaks with elevation
+	"?	natural=tree		poi_tree\n"
 	"n	place=city		town_label_2e5\n"
 	"n	place=hamlet		town_label_2e2\n"
 	"n	place=locality		town_label_2e0\n"
@@ -451,54 +455,54 @@ static char *attrmap={
 	"n	power=sub_station	power_substation\n"
 	"n	railway=halt		poi_rail_halt\n"
 	"n	railway=level_crossing	poi_level_crossing\n"
-	"n	railway=station		poi_rail_station\n"
-	"n	railway=tram_stop	poi_rail_tram_stop\n"
-	"n	shop=baker		poi_shop_baker\n"
-	"n	shop=bakery		poi_shop_baker\n"
-	"n	shop=beverages		poi_shop_beverages\n"
-	"n	shop=bicycle		poi_shop_bicycle\n"
-	"n	shop=butcher		poi_shop_butcher\n"
-	"n	shop=car		poi_car_dealer_parts\n"
-	"n	shop=car_repair		poi_repair_service\n"
-	"n	shop=clothes		poi_shop_apparel\n"
-	"n	shop=convenience	poi_shop_grocery\n"
-	"n	shop=drogist		poi_shop_drugstore\n"
-	"n	shop=florist		poi_shop_florist\n"
-	"n	shop=fruit		poi_shop_fruit\n"
-	"n	shop=furniture		poi_shop_furniture\n"
-	"n	shop=garden_centre	poi_shop_handg\n"
-	"n	shop=hardware		poi_shop_handg\n"
-	"n	shop=hairdresser	poi_hairdresser\n"
-	"n	shop=kiosk		poi_shop_kiosk\n"
-	"n	shop=optician		poi_shop_optician\n"
-	"n	shop=parfum		poi_shop_parfum\n"
-	"n	shop=photo		poi_shop_photo\n"
-	"n	shop=shoes		poi_shop_shoes\n"
-	"n	shop=supermarket	poi_shopping\n"
-	"n	sport=10pin		poi_bowling\n"
-	"n	sport=baseball		poi_baseball\n"
-	"n	sport=basketball	poi_basketball\n"
-	"n	sport=climbing		poi_climbing\n"
-	"n	sport=golf		poi_golf\n"
-	"n	sport=motor_sports	poi_motor_sport\n"
-	"n	sport=skiing		poi_skiing\n"
-	"n	sport=soccer		poi_soccer\n"
-	"n	sport=stadium		poi_stadium\n"
-	"n	sport=swimming		poi_swimming\n"
-	"n	sport=tennis		poi_tennis\n"
-	"n	tourism=attraction	poi_attraction\n"
-	"n	tourism=camp_site	poi_camp_rv\n"
-	"n	tourism=caravan_site	poi_camp_rv\n"
-	"n	tourism=guest_house	poi_guesthouse\n"
-	"n	tourism=hostel		poi_hostel\n"
-	"n	tourism=hotel		poi_hotel\n"
-	"n	tourism=information	poi_information\n"
-	"n	tourism=motel		poi_motel\n"
-	"n	tourism=museum		poi_museum_history\n"
-	"n	tourism=picnic_site	poi_picnic\n"
-	"n	tourism=theme_park	poi_resort\n"
-	"n	tourism=viewpoint	poi_viewpoint\n"
-	"n	tourism=zoo		poi_zoo\n"
+	"?	railway=station		poi_rail_station\n"
+	"?	railway=tram_stop	poi_rail_tram_stop\n"
+	"?	shop=baker		poi_shop_baker\n"
+	"?	shop=bakery		poi_shop_baker\n"
+	"?	shop=beverages		poi_shop_beverages\n"
+	"?	shop=bicycle		poi_shop_bicycle\n"
+	"?	shop=butcher		poi_shop_butcher\n"
+	"?	shop=car		poi_car_dealer_parts\n"
+	"?	shop=car_repair		poi_repair_service\n"
+	"?	shop=clothes		poi_shop_apparel\n"
+	"?	shop=convenience	poi_shop_grocery\n"
+	"?	shop=drogist		poi_shop_drugstore\n"
+	"?	shop=florist		poi_shop_florist\n"
+	"?	shop=fruit		poi_shop_fruit\n"
+	"?	shop=furniture		poi_shop_furniture\n"
+	"?	shop=garden_centre	poi_shop_handg\n"
+	"?	shop=hardware		poi_shop_handg\n"
+	"?	shop=hairdresser	poi_hairdresser\n"
+	"?	shop=kiosk		poi_shop_kiosk\n"
+	"?	shop=optician		poi_shop_optician\n"
+	"?	shop=parfum		poi_shop_parfum\n"
+	"?	shop=photo		poi_shop_photo\n"
+	"?	shop=shoes		poi_shop_shoes\n"
+	"?	shop=supermarket	poi_shopping\n"
+	"?	sport=10pin		poi_bowling\n"
+	"?	sport=baseball		poi_baseball\n"
+	"?	sport=basketball	poi_basketball\n"
+	"?	sport=climbing		poi_climbing\n"
+	"?	sport=golf		poi_golf\n"
+	"?	sport=motor_sports	poi_motor_sport\n"
+	"?	sport=skiing		poi_skiing\n"
+	"?	sport=soccer		poi_soccer\n"
+	"?	sport=stadium		poi_stadium\n"
+	"?	sport=swimming		poi_swimming\n"
+	"?	sport=tennis		poi_tennis\n"
+	"?	tourism=attraction	poi_attraction\n"
+	"?	tourism=camp_site	poi_camp_rv\n"
+	"?	tourism=caravan_site	poi_camp_rv\n"
+	"?	tourism=guest_house	poi_guesthouse\n"
+	"?	tourism=hostel		poi_hostel\n"
+	"?	tourism=hotel		poi_hotel\n"
+	"?	tourism=information	poi_information\n"
+	"?	tourism=motel		poi_motel\n"
+	"?	tourism=museum		poi_museum_history\n"
+	"?	tourism=picnic_site	poi_picnic\n"
+	"?	tourism=theme_park	poi_resort\n"
+	"?	tourism=viewpoint	poi_viewpoint\n"
+	"?	tourism=zoo		poi_zoo\n"
 	"n	traffic_sign=city_limit	traffic_sign_city_limit\n"
 	"n	highway=speed_camera	tec_common\n"
 	"w	*=*			street_unkn\n"
@@ -710,8 +714,8 @@ static void
 build_attrmap_line(char *line)
 {
 	char *t=NULL,*kvl=NULL,*i=NULL,*p,*kv;
-	struct attr_mapping ***attr_mapping_curr,*attr_mapping=g_malloc0(sizeof(struct attr_mapping));
-	int idx,attr_mapping_count=0,*attr_mapping_curr_count;
+	struct attr_mapping *attr_mapping=g_malloc0(sizeof(struct attr_mapping));
+	int idx,attr_mapping_count=0;
 	t=line;
 	p=strchr(t,'\t');
 	if (p) {
@@ -728,13 +732,9 @@ build_attrmap_line(char *line)
 	if (t[0] == 'w') {
 		if (! i)
 			i="street_unkn";
-		attr_mapping_curr=&attr_mapping_way;
-		attr_mapping_curr_count=&attr_mapping_way_count;
 	} else {
 		if (! i)
 			i="point_unkn";
-		attr_mapping_curr=&attr_mapping_node;
-		attr_mapping_curr_count=&attr_mapping_node_count;
 	}
 	attr_mapping->type=item_from_name(i);
 	while ((kv=strtok(kvl, ","))) {
@@ -747,8 +747,15 @@ build_attrmap_line(char *line)
 		attr_mapping->attr_present_idx[attr_mapping_count++]=idx;
 		attr_mapping->attr_present_idx_count=attr_mapping_count;
 	}
-	*attr_mapping_curr=g_realloc(*attr_mapping_curr, sizeof(**attr_mapping_curr)*(*attr_mapping_curr_count+1));
-	(*attr_mapping_curr)[(*attr_mapping_curr_count)++]=attr_mapping;
+	if (t[0]== 'w' || t[0]== '?') {
+		attr_mapping_way=g_realloc(attr_mapping_way, sizeof(*attr_mapping_way)*(attr_mapping_way_count+1));
+		attr_mapping_way[attr_mapping_way_count++]=attr_mapping;
+	}
+	if (t[0]!= 'w') {
+		attr_mapping_node=g_realloc(attr_mapping_node, sizeof(*attr_mapping_node)*(attr_mapping_node_count+1));
+		attr_mapping_node[attr_mapping_node_count++]=attr_mapping;
+	}
+
 }
 
 static void
@@ -1283,7 +1290,6 @@ node_item_get(int id)
 		if (interval > 1)
 			interval/=2;
 	}
-
 	return &ni[p];
 }
 
@@ -1509,7 +1515,7 @@ attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_t
 }
 
 void
-osm_end_way(FILE *out)
+osm_end_way(FILE *out, FILE *outwaypoi)
 {
 	int i,count;
 	int *def_flags,add_flags;
@@ -1542,6 +1548,8 @@ osm_end_way(FILE *out)
 			continue;
 		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
+		if(!outwaypoi && types[i]<type_line)
+			continue;
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		def_flags=item_get_default_flags(types[i]);
@@ -1551,15 +1559,31 @@ osm_end_way(FILE *out)
 				add_flags=1;
 		}
 		item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
-		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
+		if(item_bin->type>type_line) {
+			item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
+		}
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
 			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
-		if (add_flags)
-			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
-		if (maxspeed_attr_value)
-			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
-		item_bin_write(item_bin,out);
+		if(types[i]>=type_line) {
+			if (add_flags)
+				item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
+			if (maxspeed_attr_value)
+				item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+			item_bin_write(item_bin,out);
+		} else {
+			item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
+			item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
+			item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
+			item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
+			item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
+			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
+			item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
+
+			if(outwaypoi) {
+				item_bin_write(item_bin,outwaypoi);
+			}
+		}
 	}
 }
 
@@ -1979,37 +2003,22 @@ process_countries(FILE *way, FILE *ways_index)
 	fclose(in);
 }
 
-static void
-node_ref_way(osmid node)
+struct node_item *
+node_ref_way(osmid node, int countreferences)
 {
 	struct node_item *ni;
 	ni=node_item_get(node);
-	if (ni)
+	if (ni && countreferences)
 		ni->ref_way++;
+	return ni;
 }
 
-int
-resolve_ways(FILE *in, FILE *out)
-{
-	struct item_bin *ib;
-	struct coord *c;
-	int i;
-
-	fseek(in, 0, SEEK_SET);
-	while ((ib=read_item(in))) {
-		c=(struct coord *)(ib+1);
-		for (i = 0 ; i < ib->clen/2 ; i++) {
-			node_ref_way(REF(c[i]));
-		}
-	}
-	return 0;
-}
 
 void
 osm_add_nd(osmid ref)
 {
 	SET_REF(coord_buffer[coord_count], ref);
-	node_ref_way(ref);
+	node_ref_way(ref,1);
 	coord_count++;
 	if (coord_count > 65536) {
 		fprintf(stderr,"ERROR: Overflow\n");
@@ -2055,6 +2064,52 @@ write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *or
 		fwrite(attr, attr_len*4, 1, out_graph);
 #endif
 }
+
+int
+resolve_ways(FILE *in, FILE *out, int countreferences)
+{
+	struct item_bin *ib;
+	struct coord *c;
+	int i;
+	struct node_item *ni;
+
+	fseek(in, 0, SEEK_SET);
+	while ((ib=read_item(in))) {
+		int unresolved=0;
+		c=(struct coord *)(ib+1);
+		for (i = 0 ; i < ib->clen/2 ; i++) {
+			if(!IS_REF(c[i]))
+				continue;
+			ni=node_ref_way(REF(c[i]), countreferences);
+			if(ni && out) {
+				c[i].x=ni->c.x;
+				c[i].y=ni->c.y;
+			}
+			else
+			    unresolved++;
+		}
+		if(out) {
+			if(unresolved==0 && ib->clen>2 && ib->type<type_line) {
+				if(ib->clen/2>2) {
+					if(!geom_poly_centroid(c,ib->clen/2,c)) {
+						// we have poly with zero area
+						// Falling back to coordinates of its first vertex...
+						osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, area is 0\n");
+					}
+				} else if (ib->clen/2==2) {
+					osm_warning("way",item_bin_get_wayid(ib),0, "Expected polygon, but only two points defined\n");
+					c[0].x=(c[0].x+c[1].x)/2;
+					c[0].y=(c[0].y+c[1].y)/2;
+				}
+				write_item_part(out, NULL, NULL, ib, 0, 0, NULL);
+			} else  {
+				item_bin_write(ib,out);
+			}
+		}
+	}
+	return 0;
+}
+
 
 int
 map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
