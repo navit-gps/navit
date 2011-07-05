@@ -25,6 +25,8 @@
 #include "linguistics.h"
 #include "file.h"
 
+extern int doway2poi;
+
 static int in_way, in_node, in_relation;
 static int nodeid,wayid;
 long long current_id;
@@ -747,7 +749,7 @@ build_attrmap_line(char *line)
 		attr_mapping->attr_present_idx[attr_mapping_count++]=idx;
 		attr_mapping->attr_present_idx_count=attr_mapping_count;
 	}
-	if (t[0]== 'w' || t[0]== '?') {
+	if (t[0]== 'w' || (t[0]== '?' && doway2poi)) {
 		attr_mapping_way=g_realloc(attr_mapping_way, sizeof(*attr_mapping_way)*(attr_mapping_way_count+1));
 		attr_mapping_way[attr_mapping_way_count++]=attr_mapping;
 	}
