@@ -287,7 +287,8 @@ add_module(map/filter "Default" TRUE)
 if(NOT MSVC)
 add_module(map/mg "Default" TRUE)
 endif(NOT MSVC)
-add_module(map/shapefile "Default" TRUE)
+# cp15 promised to fix the build against the internal libshapefile
+add_module(map/shapefile "Default" FALSE)
 add_module(map/textfile "Default" TRUE)
 add_module(map/csv "Default" TRUE)
 
