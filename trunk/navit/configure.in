@@ -566,17 +566,22 @@ AC_CHECK_HEADERS(
 			  [1],
 			  Define to 1 if you have the <libshp/shapefil.h> header file.
 			  )
-		SHAPEFILE_LIBS="-lshp"
-		system_shapefile=yes
+		system_shapefile_header=yes
 		)
+if test x"${system_shapefile_header}" = xyes
+then
+	AC_CHECK_LIB([shp], [DBFDeleteField], [SHAPEFILE_LIBS="-lshp";HAVE_SYS_SHAPEFILELIB=0;system_shapefile=yes])
+else
+	AC_MSG_WARN([*** No libshp/shapefil.h -- using included copy])
+fi
+
 AC_SUBST(SHAPEFILE_CFLAGS)
 AC_SUBST(SHAPEFILE_LIBS)
 AM_CONDITIONAL(HAVE_SYSTEM_SHAPEFILELIB, [test "x$system_shapefile" = "xyes" ])
 if test x"${system_shapefile}" = xno
 then
-	AC_MSG_WARN([*** no libshp/shapefil.h -- using included copy])
+	 AC_MSG_WARN([*** The shape library(libshp) from the system is to old!  -- using included copy])
 fi
-
 
 if test x"${USE_GARMIN}" = xyes
 then
@@ -1144,6 +1149,7 @@ navit/support/ezxml/Makefile
 navit/support/glib/Makefile
 navit/support/libc/Makefile
 navit/support/libpng/Makefile
+navit/support/shapefile/Makefile
 navit/support/win32/Makefile
 navit/support/wordexp/Makefile
 navit/support/zlib/Makefile
