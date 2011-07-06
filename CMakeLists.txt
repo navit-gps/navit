@@ -32,7 +32,7 @@ endif(EXTRA_LIBS)
 
 if (EXTRA_INCLUDES)
     include_directories(${EXTRA_INCLUDES})
-endif(EXTRA_INCLUDE)
+endif(EXTRA_INCLUDES)
 
 ### Detect environment
 
