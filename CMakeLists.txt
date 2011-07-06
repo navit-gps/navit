@@ -30,6 +30,10 @@ if (EXTRA_LIBS)
 	list(APPEND NAVIT_LIBS ${EXTRA_LIBS})
 endif(EXTRA_LIBS)
 
+if (EXTRA_INCLUDES)
+    include_directories(${EXTRA_INCLUDES})
+endif(EXTRA_INCLUDE)
+
 ### Detect environment
 
 add_plugin(support/ezxml "native Glib found" FALSE)
