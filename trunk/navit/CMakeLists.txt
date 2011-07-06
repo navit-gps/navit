@@ -191,7 +191,7 @@ if (QT_FOUND)
       set_with_reason(graphics/qt_qpainter "Qt libraries found" TRUE ${QT_LIBRARIES})
 
       if (QTDECLARATIVE_FOUND AND QT_QTXML_FOUND)
-	include_directories(${QTDECLARATIVE_INCLUDE_DIRS})
+         include_directories(${QTDECLARATIVE_INCLUDE_DIRS})
          set_with_reason(gui/qml "Qt Declarative found" TRUE ${QTDECLARATIVE_LIBRARIES})
       endif()
 
@@ -324,9 +324,15 @@ add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
 find_program(SAXON NAMES saxon saxon8 saxon-xslt saxonb-xslt)
-if(NOT SAXON)
+if(SAXON)
+   execute_process(COMMAND ${SAXON} -snone ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xml ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xslt
+      RESULT_VARIABLE SAXON_ERROR)
+   if (NOT SAXON_ERROR)
+      set (SAXON_OPTIONS -snone)
+   endif()
+else()
    cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
-endif()
+endif(SAXON)
 
 if (NOT XSL_PROCESSING)
    message(WARNING "XSLT processing disabled. You have to configure navit.xml yourself, or enable XSLT processing.")
