@@ -293,24 +293,39 @@ public class NavitMapDownloader extends Thread
 
 		try
 		{
-			long file_size_expected = -1;
-			long file_time_expected = -1;
 			outputFile = new File(MAP_FILENAME_PATH, fileName);
 
 			long old_download_size = outputFile.length();
 			long start_timestamp = System.nanoTime();
 
 			outputFile.mkdir();
+			URL url = null;
 			if (old_download_size > 0)
 			{
-				ObjectInputStream infoStream = new ObjectInputStream(new FileInputStream(MAP_FILENAME_PATH + fileName + ".info"));
-				file_size_expected = infoStream.readLong();
-				file_time_expected = infoStream.readLong();
-				infoStream.close();
+				try
+				{
+					ObjectInputStream infoStream = new ObjectInputStream(new FileInputStream(MAP_FILENAME_PATH + fileName + ".info"));
+					String resume_proto = infoStream.readUTF();
+					String resume_host = infoStream.readUTF();
+					String resume_file = infoStream.readUTF();
+					infoStream.close();
+					// looks like the same file, try to resume
+					Log.v(TAG, "Try to resume download");
+					resume = true;
+					url = new URL(resume_proto + "://" + "maps.navit-project.org" + resume_file);
+				} catch (Exception e) {
+					File file = new File(MAP_FILENAME_PATH + fileName + ".info");
+					file.delete();
+				}
 			}
-			URL url = new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
-					+ map_values.lat1 + "," + map_values.lon2 + "," + map_values.lat2);
-
+				
+			if (url == null)
+			{
+				url = new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
+						+ map_values.lat1 + "," + map_values.lon2 + "," + map_values.lat2);
+			}
+			
+			Log.v(TAG, "connect to " + url.toString());
 //			URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
 			c = (HttpURLConnection) url.openConnection();
 			c.setRequestMethod("GET");
@@ -318,11 +333,8 @@ public class NavitMapDownloader extends Thread
 			c.setReadTimeout(SOCKET_READ_TIMEOUT);
 			c.setConnectTimeout(SOCKET_CONNECT_TIMEOUT);
 
-			if ( file_size_expected > 0 || file_time_expected > 0 )
+			if ( resume )
 			{
-				// looks like the same file, try to resume
-				Log.v(TAG, "Try to resume download");
-				resume = true;
 				c.setRequestProperty("Range", "bytes=" + old_download_size + "-");
 				already_read = old_download_size;
 			}
@@ -330,20 +342,9 @@ public class NavitMapDownloader extends Thread
 			real_size_bytes = c.getContentLength();
 			long fileTime = c.getLastModified();
 			Log.d(TAG, "size: " + real_size_bytes 
-					+ ", expected: " + file_size_expected
 					+ ", read: " + already_read
-					+ ", timestamp: " + fileTime
-					+ ", timestamp_old: " + file_time_expected);
+					+ ", timestamp: " + fileTime);
 			
-			if (resume && (fileTime != file_time_expected
-					// some server return the remaining size to dl, other the file size
-					|| ((real_size_bytes + already_read != file_size_expected) && real_size_bytes != file_size_expected)
-				    || (real_size_bytes == -1 && fileTime == -1)))
-			{
-				Log.w(TAG, "Downloaded content to old. Resume not possible");
-				outputFile.delete();
-				return EXIT_RECOVERABLE_ERROR;
-			}
 
 			if (!resume)
 			{
@@ -351,15 +352,13 @@ public class NavitMapDownloader extends Thread
 				old_download_size = 0;
 				File infoFile = new File(MAP_FILENAME_PATH, fileName + ".info");
 				ObjectOutputStream infoStream = new ObjectOutputStream(new FileOutputStream(infoFile));
-				infoStream.writeLong(real_size_bytes);
-				infoStream.writeLong(fileTime);
+				infoStream.writeUTF(c.getURL().getProtocol());
+				infoStream.writeUTF(c.getURL().getHost());
+				infoStream.writeUTF(c.getURL().getFile());
 				infoStream.close();
 			}
-			else
-			{
-				real_size_bytes = file_size_expected;
-			}
 			
+			Log.v(TAG, "Connection ref: " + c.getURL());
 			if ( real_size_bytes <= 0)
 				real_size_bytes = map_values.est_size_bytes;
 			
