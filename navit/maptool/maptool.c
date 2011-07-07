@@ -108,33 +108,41 @@ usage(FILE *f)
 {
 	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
-	fprintf(f,"maptool - parse osm textfile and converts to Navit binfile format\n\n");
-	fprintf(f,"Usage :\n");
+	fprintf(f,"maptool - parse osm textfile and convert to Navit binfile format\n\n");
+	fprintf(f,"Usage (for OSM XML data):\n");
 	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
+    fprintf(f,"Usage (for OSM Protobuf/PBF data):\n");
+    fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
 	fprintf(f,"Available switches:\n");
-	fprintf(f,"-h (--help)              : this screen\n");
-	fprintf(f,"-2 (--doway2poi)           : convert ways and polygons to POIs when applicable\n");
-	fprintf(f,"-5 (--md5)               : set file where to write md5 sum\n");
-	fprintf(f,"-6 (--64bit)             : set zip 64 bit compression\n");
-	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
-	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
+	fprintf(f,"-h (--help)                       : this screen\n");
+	fprintf(f,"-2 (--doway2poi)                  : convert ways and polygons to POIs when applicable\n");
+	fprintf(f,"-5 (--md5) <file>                  : set file where to write md5 sum\n");
+	fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
+	fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
+	fprintf(f,"-c (--dump-coordinates)           : dump coordinates after phase 1\n");
 #ifdef HAVE_POSTGRESQL
-	fprintf(f,"-d (--db)                : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
+	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
-	fprintf(f,"-e (--end)               : end at specified phase\n");
-	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
-	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
-	fprintf(f,"-M (--o5m)               : input file os o5m\n");
-	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
-	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
-	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
-	fprintf(f,"-r (--rule-file)         : read mapping rules from specified file\n");
-	fprintf(f,"-s (--start)             : start at specified phase\n");
-	fprintf(f,"-S (--slice-size)        : defines the amount of memory to use, in bytes. Default is 1GB\n");
-	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
-	fprintf(f,"-W (--ways-only)         : process only ways\n");
-	fprintf(f,"-z (--compression-level) : set the compression level\n");
-	fprintf(f,"-U (--unknown-country)   : add objects with unknown country to index\n");
+	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
+	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
+	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
+	fprintf(f,"-N (--nodes-only)                 : process only nodes\n");
+	fprintf(f,"-o (--coverage)                   : map every street to item coverage\n");
+	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
+	fprintf(f,"-r (--rule-file) <file>            : read mapping rules from specified file\n");
+	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
+	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is 1GB\n");
+	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
+	fprintf(f,"-W (--ways-only)                  : process only ways\n");
+	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
+    fprintf(f,"-z (--compression-level) <level>  : set the compression level\n");
+    fprintf(f,"Internal options (undocumented):\n");                                                                      
+    fprintf(f,"-b (--binfile)\n");                                                                                        
+    fprintf(f,"-B \n");                                                                                                   
+    fprintf(f,"-m (--map) \n");                                                                                           
+    fprintf(f,"-O \n");                                                                                                   
+    fprintf(f,"-p (--plugin) \n");                                                                                        
 	
 	exit(1);
 }
@@ -231,7 +239,7 @@ int main(int argc, char **argv)
 			{"unknown-country", 0, 0, 'U'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "25:6B:DMNO:PWS:a:bc"
+		c = getopt_long (argc, argv, "25:6B:DMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -365,11 +373,10 @@ int main(int argc, char **argv)
 			compression_level=atoi(optarg);
 			break;
 #endif
-		case '?':
-			usage(stderr);
-			break;
+        case '?':
 		default:
 			fprintf(stderr,"c=%d\n", c);
+            usage(stderr);
 		}
 
 	}

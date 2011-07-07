@@ -1,21 +1,34 @@
 .TH maptool 1  "$Date$" "$Revision$" "USER COMMANDS"
 .SH NAME
-maptool \- parse osm textfile and converts to NavIt binfile format
+maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
+.B For OSM XML data:
 .B bzcat planet.osm.bz2 | maptool mymap.bin
-[\-h] [\-N] [\-W] [\-a value] [\-c] [\-d connect string] [\-e phase]
-[\-k] [\-o] [\-s phase] [\-i input file] [\-w] [\-z level]
+[-h] [-2] [-5 <file>] [-6] [-a <level>] [-c] -[-d <connect string] 
+[-e <phase>] [-i <file>] [-k] [-M] [-N] [-o] [-r <file>] [-s <phase>]
+[-S <size>] [-w] [-W] [-U] [-z <level>]
+.B For OSM Protobuf/PBF data:
+.B maptool --protobuf -i planet.osm.pbf planet.bin
+[-h] [-2] [-5 <file>] [-6] [-a <level>] [-c] [-e <phase>] 
+[-i <file>] [-k] [-M] [-N] [-o] [-P] [-r <file>] [-s <phase>]
+[-S <size>] [-w] [-W] [-U] [-z <level>]
 .SH DESCRIPTION
-maptool parses osm textfile and converts to NavIt binfile format
+maptool parses osm textfile and converts it to Navit binfile format
 .SH OPTIONS
 .TP
 \-h (\-\-help)
 display a short help message
 .TP
+\-2 (\-\-dowai2poi)
+convert ways and polygons to POIs when applicable
+.TP
+\-4 (\-\-md5)
+set file where to write md5 sum
+.TP
 \-6 (-\-64bit)
 set zip 64 bit compression
 .TP
-\-a (\-\-attr-debug-level)
+\-a (\-\-attr-debug-level) <level>
 control which data is included in the debug attribute
 .TP
 \-c (\-\-dump-coordinates)
@@ -36,6 +49,17 @@ do not delete tmp files after processing. useful to reuse them
 \-N (\-\-nodes-only)
 process only nodes
 .TP
+\-o (\-\-coverage)
+converts every street to street_converage, resulting in a big fat black line. 
+You can overlay this map with another vector map or image map, and every street 
+you will still see is missing in the -o map
+.TP
+\-P (\-\-protobuf)
+input file is protobuf
+.TP
+\-r (\-\-rule-file) <file>
+read mapping rules from specified file
+.TP
 \-s (\-\-start) <phase>
 start at specified phase
 .TP
@@ -47,6 +71,9 @@ ensure no duplicate ways or nodes. useful when using several input files
 .TP
 \-W (\-\-ways-only)
 process only ways
+.TP
+\-U (\-\-unknown-country)
+add objects with unknown country to index
 .TP
 \-z (\-\-compression-level) <level>
 set the compression level
