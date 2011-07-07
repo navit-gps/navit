@@ -428,40 +428,35 @@ int main(int argc, char **argv)
 			map_collect_data_osm_o5m(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
 		else
 			map_collect_data_osm(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
-		if (slices) {
-			fprintf(stderr,"%d slices\n",slices);
+		if (end == 1 || dump_coordinates || slices || keep_tmpfiles)
 			flush_nodes(1);
-			for (i = slices-2 ; i>=0 ; i--) {
+		if (slices) {
+			int first=1;
+			fprintf(stderr,"%d slices\n",slices);
+			for (i = slices-1 ; i>=0 ; i--) {
 				fprintf(stderr, "slice %d of %d\n",slices-i-1,slices-1);
-				load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-				resolve_ways(ways, NULL, 1);
-				save_buffer("coords.tmp",&node_buffer, i*slice_size);
+				if (!first) {
+					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+					ref_ways(ways);
+					save_buffer("coords.tmp",&node_buffer, i*slice_size);
+				}
 				if(way2poi) {
-					FILE *way2poinew=tempfile(suffix,"way2poinew",1);
-					resolve_ways(way2poi, way2poinew, 0);
+					FILE *way2poinew=tempfile(suffix,"way2poi_resolved_new",1);
+					resolve_ways(way2poi, way2poinew);
 					fclose(way2poi);
 					fclose(way2poinew);
-					tempfile_rename(suffix,"way2poinew","way2poi");
-					way2poi=tempfile(suffix,"way2poi",0);
+					tempfile_rename(suffix,"way2poi_resolved_new","way2poi_resolved");
+					way2poi=tempfile(suffix,"way2poi_resolved",0);
+					if (first && !keep_tmpfiles) 
+						tempfile_unlink(suffix,"way2poi");
 				}
-			}
-		} else {
-			save_buffer("coords.tmp",&node_buffer, 0);
-			if(way2poi) {
-				FILE *way2poinew=tempfile(suffix,"way2poinew",1);
-				resolve_ways(way2poi, way2poinew, 0);
-				fclose(way2poi);
-				fclose(way2poinew);
-				tempfile_rename(suffix,"way2poinew","way2poi");
-				way2poi=tempfile(suffix,"way2poi",0);
+				first=0;
 			}
 		}
 		if (ways)
 			fclose(ways);
 		if (way2poi) {
-			fclose(way2poi);
-			way2poi=tempfile(suffix,"way2poi",0);
-			process_binfile(way2poi, nodes);
+			process_way2poi(way2poi, nodes);
 			fclose(way2poi);
 		}
 		if (nodes)
@@ -470,12 +465,6 @@ int main(int argc, char **argv)
 			fclose(turn_restrictions);
 		if (boundaries)
 			fclose(boundaries);
-	}
-	if (!slices) {
-		if (end == 1 || dump_coordinates)
-			flush_nodes(1);
-		else
-			slices++;
 	}
 	if (end == 1)
 		exit(0);
@@ -683,7 +672,7 @@ int main(int argc, char **argv)
 				tempfile_unlink(suffix,"relations");
 				tempfile_unlink(suffix,"nodes");
 				tempfile_unlink(suffix,"ways_split");
-				tempfile_unlink(suffix,"way2poi");
+				tempfile_unlink(suffix,"way2poi_resolved");
 				tempfile_unlink(suffix,"ways_split_ref");
 				tempfile_unlink(suffix,"coastline");
 				tempfile_unlink(suffix,"turn_restrictions");
