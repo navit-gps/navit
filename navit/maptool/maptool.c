@@ -428,8 +428,7 @@ int main(int argc, char **argv)
 			map_collect_data_osm_o5m(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
 		else
 			map_collect_data_osm(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
-		if (end == 1 || dump_coordinates || slices || keep_tmpfiles)
-			flush_nodes(1);
+		flush_nodes(1);
 		if (slices) {
 			int first=1;
 			fprintf(stderr,"%d slices\n",slices);
