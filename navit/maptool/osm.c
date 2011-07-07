@@ -64,10 +64,15 @@ struct attr_mapping {
 	int attr_present_idx[0];
 };
 
+static void nodes_ref_item_bin(struct item_bin *ib);
+
+
 static struct attr_mapping **attr_mapping_node;
 static int attr_mapping_node_count;
 static struct attr_mapping **attr_mapping_way;
 static int attr_mapping_way_count;
+static struct attr_mapping **attr_mapping_way2poi;
+static int attr_mapping_way2poi_count;
 
 static char *attr_present;
 static int attr_present_count;
@@ -749,9 +754,13 @@ build_attrmap_line(char *line)
 		attr_mapping->attr_present_idx[attr_mapping_count++]=idx;
 		attr_mapping->attr_present_idx_count=attr_mapping_count;
 	}
-	if (t[0]== 'w' || (t[0]== '?' && doway2poi)) {
+	if (t[0]== 'w') {
 		attr_mapping_way=g_realloc(attr_mapping_way, sizeof(*attr_mapping_way)*(attr_mapping_way_count+1));
 		attr_mapping_way[attr_mapping_way_count++]=attr_mapping;
+	}
+	if (t[0]== '?' && doway2poi) {
+		attr_mapping_way2poi=g_realloc(attr_mapping_way2poi, sizeof(*attr_mapping_way2poi)*(attr_mapping_way2poi_count+1));
+		attr_mapping_way2poi[attr_mapping_way2poi_count++]=attr_mapping;
 	}
 	if (t[0]!= 'w') {
 		attr_mapping_node=g_realloc(attr_mapping_node, sizeof(*attr_mapping_node)*(attr_mapping_node_count+1));
@@ -1512,8 +1521,13 @@ attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_t
 		if (sum > 0 && sum == longest && ret < types_count)
 			types[ret++]=curr->type;
 	}
-	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
 	return ret;
+}
+
+static void
+attr_longest_match_clear(void)
+{
+	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
 }
 
 void
@@ -1554,6 +1568,7 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 			continue;
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
+		nodes_ref_item_bin(item_bin);
 		def_flags=item_get_default_flags(types[i]);
 		if (def_flags) {
 			flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
@@ -1561,19 +1576,25 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 				add_flags=1;
 		}
 		item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
-		if(item_bin->type>type_line) {
-			item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
-		}
+		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
 			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
-		if(types[i]>=type_line) {
-			if (add_flags)
-				item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
-			if (maxspeed_attr_value)
-				item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
-			item_bin_write(item_bin,out);
-		} else {
+		if (add_flags)
+			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
+		if (maxspeed_attr_value)
+			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+		item_bin_write(item_bin,out);
+	}
+	if(outwaypoi) {
+		count=attr_longest_match(attr_mapping_way2poi, attr_mapping_way2poi_count, types, sizeof(types)/sizeof(enum item_type));
+		dbg_assert(count < 10);
+		for (i = 0 ; i < count ; i++) {
+			if (types[i] == type_none || types[i] == type_point_unkn)
+				continue;
+			item_bin=init_item(types[i]);
+			item_bin_add_coord(item_bin, coord_buffer, coord_count);
+			item_bin_add_attr_string(item_bin, attr_label, attr_strings[attr_string_label]);
 			item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
 			item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
 			item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
@@ -1581,12 +1602,12 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 			item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
 			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 			item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
+			item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 
-			if(outwaypoi) {
-				item_bin_write(item_bin,outwaypoi);
-			}
+			item_bin_write(item_bin,outwaypoi);
 		}
 	}
+	attr_longest_match_clear();
 }
 
 void
@@ -1671,6 +1692,7 @@ osm_end_node(FILE *out)
 		}
 	}
 	processed_nodes_out++;
+	attr_longest_match_clear();
 }
 
 void
@@ -2005,14 +2027,22 @@ process_countries(FILE *way, FILE *ways_index)
 	fclose(in);
 }
 
-struct node_item *
-node_ref_way(osmid node, int countreferences)
+static void
+node_ref_way(osmid node)
 {
 	struct node_item *ni;
 	ni=node_item_get(node);
-	if (ni && countreferences)
+	if (ni)
 		ni->ref_way++;
-	return ni;
+}
+
+static void
+nodes_ref_item_bin(struct item_bin *ib)
+{
+	int i;
+	struct coord *c=(struct coord *)(ib+1);
+	for (i = 0 ; i < ib->clen/2 ; i++) 
+		node_ref_way(REF(c[i]));
 }
 
 
@@ -2020,7 +2050,6 @@ void
 osm_add_nd(osmid ref)
 {
 	SET_REF(coord_buffer[coord_count], ref);
-	node_ref_way(ref,1);
 	coord_count++;
 	if (coord_count > 65536) {
 		fprintf(stderr,"ERROR: Overflow\n");
@@ -2067,8 +2096,18 @@ write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *or
 #endif
 }
 
-int
-resolve_ways(FILE *in, FILE *out, int countreferences)
+void
+ref_ways(FILE *in)
+{
+	struct item_bin *ib;
+
+	fseek(in, 0, SEEK_SET);
+	while ((ib=read_item(in))) 
+		nodes_ref_item_bin(ib);
+}
+
+void
+resolve_ways(FILE *in, FILE *out)
 {
 	struct item_bin *ib;
 	struct coord *c;
@@ -2077,39 +2116,41 @@ resolve_ways(FILE *in, FILE *out, int countreferences)
 
 	fseek(in, 0, SEEK_SET);
 	while ((ib=read_item(in))) {
-		int unresolved=0;
 		c=(struct coord *)(ib+1);
 		for (i = 0 ; i < ib->clen/2 ; i++) {
 			if(!IS_REF(c[i]))
 				continue;
-			ni=node_ref_way(REF(c[i]), countreferences);
-			if(ni && out) {
+			ni=node_item_get(REF(c[i]));
+			if(ni) {
 				c[i].x=ni->c.x;
 				c[i].y=ni->c.y;
 			}
-			else
-			    unresolved++;
 		}
-		if(out) {
-			if(unresolved==0 && ib->clen>2 && ib->type<type_line) {
-				if(ib->clen/2>2) {
-					if(!geom_poly_centroid(c,ib->clen/2,c)) {
-						// we have poly with zero area
-						// Falling back to coordinates of its first vertex...
-						osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, area is 0\n");
-					}
-				} else if (ib->clen/2==2) {
-					osm_warning("way",item_bin_get_wayid(ib),0, "Expected polygon, but only two points defined\n");
-					c[0].x=(c[0].x+c[1].x)/2;
-					c[0].y=(c[0].y+c[1].y)/2;
+		item_bin_write(ib,out);
+	}
+}
+
+void
+process_way2poi(FILE *in, FILE *out)
+{
+	struct item_bin *ib;
+	while ((ib=read_item(in))) {
+		if(ib->clen>2 && ib->type<type_line) {
+			struct coord *c=(struct coord *)(ib+1);
+			if(ib->clen/2>2) {
+				if(!geom_poly_centroid(c,ib->clen/2,c)) {
+					// we have poly with zero area
+					// Falling back to coordinates of its first vertex...
+					osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, area is 0\n");
 				}
-				write_item_part(out, NULL, NULL, ib, 0, 0, NULL);
-			} else  {
-				item_bin_write(ib,out);
+			} else if (ib->clen/2==2) {
+				osm_warning("way",item_bin_get_wayid(ib),0, "Expected polygon, but only two points defined\n");
+				c[0].x=(c[0].x+c[1].x)/2;
+				c[0].y=(c[0].y+c[1].y)/2;
 			}
+			write_item_part(out, NULL, NULL, ib, 0, 0, NULL);
 		}
 	}
-	return 0;
 }
 
 
