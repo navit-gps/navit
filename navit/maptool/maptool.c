@@ -51,7 +51,7 @@ GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
 int unknown_country;
-int doway2poi;
+int doway2poi=1;
 
 struct buffer node_buffer = {
 	64*1024*1024,
@@ -115,7 +115,6 @@ usage(FILE *f)
     fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)                       : this screen\n");
-	fprintf(f,"-2 (--doway2poi)                  : convert ways and polygons to POIs when applicable\n");
 	fprintf(f,"-5 (--md5) <file>                  : set file where to write md5 sum\n");
 	fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
@@ -209,7 +208,6 @@ int main(int argc, char **argv)
 #endif
 		int option_index = 0;
 		static struct option long_options[] = {
-			{"doway2poi", 0, 0, '2'},
 			{"md5", 1, 0, '5'},
 			{"64bit", 0, 0, '6'},
 			{"attr-debug-level", 1, 0, 'a'},
@@ -239,7 +237,7 @@ int main(int argc, char **argv)
 			{"unknown-country", 0, 0, 'U'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "25:6B:DMNO:PS:Wa:bc"
+		c = getopt_long (argc, argv, "5:6B:DMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -247,9 +245,6 @@ int main(int argc, char **argv)
 		if (c == -1)
 			break;
 		switch (c) {
-		case '2':
-			doway2poi=1;
-			break;
 		case '5':
 			md5file=optarg;
 			break;
