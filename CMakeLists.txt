@@ -55,6 +55,7 @@ add_module(vehicle/gypsy "gypsy lib not found" FALSE)
 add_module(vehicle/maemo "Default" FALSE)
 add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
+add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
@@ -110,6 +111,9 @@ CHECK_INCLUDE_FILES(sys/time.h HAVE_SYS_TIME_H)
 CHECK_INCLUDE_FILES(getopt.h HAVE_GETOPT_H)
 CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
 CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)
+CHECK_SYMBOL_EXISTS(system stdlib.h HAVE_SYSTEM)
+CHECK_SYMBOL_EXISTS(CreateProcess windows.h HAVE_CREATEPROCESS)
+
 
 ### Configure build
 #Required libraries, supplied with navit
@@ -261,6 +265,14 @@ endif()
 if (HAVE_LIBSPEECHD)
    set_with_reason(speech/speech_dispatcher "speech_dispatcher lib found" TRUE speechd)
 endif(HAVE_LIBSPEECHD)
+
+if (HAVE_SYSTEM)
+   set_with_reason(speech/cmdline "system() call is available" TRUE)
+endif(HAVE_SYSTEM)
+
+if (HAVE_CREATEPROCESS)
+   set_with_reason(speech/cmdline "CreateProcess() call is available" TRUE)
+endif(HAVE_CREATEPROCESS)
 
 if (GETTEXT_FOUND)
    execute_process(COMMAND echo "<test/>" COMMAND xgettext -L glade - RESULT_VARIABLE GETTEXT_RET)
