@@ -1,7 +1,46 @@
+/**
+ * Navit, a modular navigation system.
+ * Copyright (C) 2005-2008 Navit Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
+ */
 #include "graphics_qt_qpainter.h"
 #include "RenderArea.h"
 
 #include "RenderArea.moc"
+
+#ifdef QT_QPAINTER_USE_EMBEDDING
+EmbeddedWidget::EmbeddedWidget(struct graphics_priv *priv, QWidget* child, QWidget *parent) 
+: QX11EmbedWidget(parent) {
+    this->gra=priv;
+#if QT_VERSION >= 0x040000
+		this->setWindowTitle("Navit");
+#else
+		this->setCaption("Navit");
+#endif
+        QStackedLayout* _outerLayout = new QStackedLayout(this);
+        this->setLayout(_outerLayout);
+        _outerLayout->addWidget(child);
+        _outerLayout->setCurrentWidget(child);
+}
+
+void EmbeddedWidget::closeEvent(QCloseEvent* event) 
+{
+	gra->widget->processClose();
+}
+#endif /* QT_QPAINTER_USE_EMBEDDING */
 
 //##############################################################################################################
 //# Description: Constructor
@@ -42,9 +81,13 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 //# Description: QWidget:closeEvent
 //# Comment: Deletes navit object and stops event loop on graphics shutdown
 //##############################################################################################################
-void RenderArea::closeEvent(QCloseEvent* event) 
+void RenderArea::processClose() 
 {
 	callback_list_call_attr_0(this->cbl, attr_window_closed);
+}
+void RenderArea::closeEvent(QCloseEvent* event) 
+{
+	this->processClose();
 }
 
 bool RenderArea::event(QEvent *event)
