@@ -744,6 +744,9 @@ build_attrmap_line(char *line)
 			i="point_unkn";
 	}
 	attr_mapping->type=item_from_name(i);
+	if (!attr_mapping->type) {
+		printf("no id found for '%s'\n",i);
+	}
 	while ((kv=strtok(kvl, ","))) {
 		kvl=NULL;
 		if (!(idx=(int)(long)g_hash_table_lookup(attr_hash, kv))) {
