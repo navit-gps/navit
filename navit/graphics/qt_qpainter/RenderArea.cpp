@@ -118,19 +118,18 @@ QSize RenderArea::sizeHint() const
 void RenderArea::paintEvent(QPaintEvent * event)
 {
 	qt_qpainter_draw(gra, &event->rect(), 1);
-#if 0
-	QPainter painter(this);
-	painter.drawPixmap(0, 0, *pixmap);
-#endif
 }
 
 void RenderArea::do_resize(QSize size)
 {
+    if (pixmap->paintingActive()) {
+        pixmap->paintEngine()->painter()->end();
+    }
 	delete pixmap;
 	pixmap=new QPixmap(size);
 	pixmap->fill();
-	QPainter painter(pixmap);
-	QBrush brush;
+    QPainter painter(pixmap);
+    QBrush brush;
 	painter.fillRect(0, 0, size.width(), size.height(), brush);
 	dbg(0,"size %dx%d\n", size.width(), size.height());
 	dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
