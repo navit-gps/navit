@@ -667,16 +667,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 		win=g_new(struct window, 1);
 #ifndef QT_QPAINTER_NO_WIDGET
 #ifdef QT_QPAINTER_USE_EMBEDDING
-		QX11EmbedWidget* _outerWidget=new QX11EmbedWidget();
-#if QT_VERSION >= 0x040000
-		_outerWidget->setWindowTitle("Navit");
-#else
-		_outerWidget->setCaption("Navit");
-#endif
-		QStackedLayout* _outerLayout = new QStackedLayout(_outerWidget);
-		_outerWidget->setLayout(_outerLayout);
-		_outerLayout->addWidget(this_->widget);
-		_outerLayout->setCurrentWidget(this_->widget);
+		EmbeddedWidget* _outerWidget=new EmbeddedWidget(this_,this_->widget,NULL);
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			_outerWidget->embedInto(xid.toULong(&ok,0));
