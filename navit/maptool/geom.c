@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 #include <string.h>
+#include <math.h>
 #include "maptool.h"
 
 void
@@ -31,6 +32,41 @@ geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse)
 	for (i = 0 ; i < count ; i++) 
 		*to++=*--from;	
 }
+
+/**
+  * Get coordinates of polyline middle point.
+  * @param in *p array of poly vertex coordinates
+  * @param in count count of poly vertexes
+  * @param out *c coordinates of middle point
+  * @returns number of first vertex of segment containing middle point
+  */
+int
+geom_line_middle(struct coord *p, int count, struct coord *c)
+{
+	double length=0,half=0,len=0;
+	int i;
+
+	if(count==1) {
+		*c=*p;
+		return 0;
+	}
+	
+	for (i=0; i<count-1; i++) {
+		length+=sqrt(sq(p[i].x-p[i+1].x)+sq(p[i].y-p[i+1].y));
+	}
+
+	length/=2;
+	for (i=0; (i<count-1) && (half<length); i++) {
+		len=sqrt(sq(p[i].x-p[i+1].x)+sq(p[i].y-p[i+1].y));
+		half+=len;
+	}
+	i--;
+	half-=length;
+	c->x=(p[i].x*half+p[i+1].x*(len-half))/len;
+	c->y=(p[i].y*half+p[i+1].y*(len-half))/len;
+	return i;
+}
+
 
 void
 geom_coord_revert(struct coord *c, int count)
@@ -78,7 +114,7 @@ geom_poly_area(struct coord *c, int count)
 int
 geom_poly_centroid(struct coord *p, int count, struct coord *c)
 {
-	long long area=0/*geom_poly_area(p, count)*/;
+	long long area=0;
 	long long sx=0,sy=0,tmp;
 	int i,j;
 	long long x0=p[0].x, y0=p[0].y, xi, yi, xj, yj;
