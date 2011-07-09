@@ -145,6 +145,7 @@ void geom_coord_copy(struct coord *from, struct coord *to, int count, int revers
 void geom_coord_revert(struct coord *c, int count);
 long long geom_poly_area(struct coord *c, int count);
 int geom_poly_centroid(struct coord *c, int count, struct coord *r);
+int geom_poly_point_inside(struct coord *cp, int count, struct coord *c);
 int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c);
 GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third);
 void geom_poly_segment_destroy(struct geom_poly_segment *seg);
