@@ -1568,10 +1568,12 @@ osm_end_way(struct maptool_osm *osm)
 			continue;
 		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
-		if(types[i]<type_area) 	
-			count_lines++;	
-		else	
-			count_areas++;
+		if (types[i] != type_street_unkn) {
+			if(types[i]<type_area) 	
+				count_lines++;	
+			else	
+				count_areas++;
+		}
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		nodes_ref_item_bin(item_bin);
