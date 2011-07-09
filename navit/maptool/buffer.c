@@ -51,7 +51,9 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 		ret=1;
 	}
 	b->size=b->malloced=size;
+#if 0
 	fprintf(stderr,"reading "LONGLONG_FMT" bytes from %s at "LONGLONG_FMT"\n", b->size, filename, offset);
+#endif
 	fseek(f, offset, SEEK_SET);
 	b->base=malloc(b->size);
 	dbg_assert(b->base != NULL);
