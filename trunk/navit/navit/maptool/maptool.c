@@ -172,6 +172,7 @@ struct maptool_params {
 	FILE *ways_split;
 	char *timestamp;
 	char *result;
+	char *dbstr;
 };
 
 static int
