@@ -133,6 +133,7 @@ usage(FILE *f)
 	fprintf(f,"-r (--rule-file) <file>            : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
 	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is 1GB\n");
+	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
 	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
@@ -204,6 +205,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"plugin", 1, 0, 'p'},
 		{"protobuf", 0, 0, 'P'},
 		{"start", 1, 0, 's'},
+		{"timestamp", 1, 0, 't'},
 		{"input-file", 1, 0, 'i'},
 		{"rule-file", 1, 0, 'r'},
 		{"ignore-unknown", 0, 0, 'n'},
@@ -217,7 +219,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 #ifdef HAVE_POSTGRESQL
 				      "d:"
 #endif
-				      "e:hi:knm:p:r:s:wu:z:U", long_options, option_index);
+				      "e:hi:knm:p:r:s:t:wu:z:U", long_options, option_index);
 	if (c == -1)
 		return 1;
 	switch (c) {
@@ -315,6 +317,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 's':
 		p->start=atoi(optarg);
+		break;
+	case 't':
+		p->timestamp=optarg;
 		break;
 	case 'w':
 		dedupe_ways_hash=g_hash_table_new(NULL, NULL);
