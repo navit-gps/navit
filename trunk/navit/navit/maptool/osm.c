@@ -1427,7 +1427,7 @@ osm_add_relation(osmid id)
 }
 
 void
-osm_end_relation(FILE *turn_restrictions, FILE *boundaries)
+osm_end_relation(struct maptool_osm *osm)
 {
 	in_relation=0;
 	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && boundary) {
@@ -1441,11 +1441,11 @@ osm_end_relation(FILE *turn_restrictions, FILE *boundaries)
 			fclose(f);
 		}
 #endif
-		item_bin_write(item_bin, boundaries);
+		item_bin_write(item_bin, osm->boundaries);
 	}
 
 	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
-		item_bin_write(item_bin, turn_restrictions);
+		item_bin_write(item_bin, osm->turn_restrictions);
 }
 
 void
@@ -1534,7 +1534,7 @@ attr_longest_match_clear(void)
 }
 
 void
-osm_end_way(FILE *out, FILE *outwaypoi)
+osm_end_way(struct maptool_osm *osm)
 {
 	int i,count;
 	int *def_flags,add_flags;
@@ -1543,7 +1543,7 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 
 	in_way=0;
 
-	if (! out)
+	if (! osm->ways)
 		return;
 
 	if (dedupe_ways_hash) {
@@ -1567,7 +1567,7 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 			continue;
 		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
-		if(!outwaypoi && types[i]<type_line)
+		if(!osm->way2poi && types[i]<type_line)
 			continue;
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
@@ -1587,9 +1587,9 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
 		if (maxspeed_attr_value)
 			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
-		item_bin_write(item_bin,out);
+		item_bin_write(item_bin,osm->ways);
 	}
-	if(outwaypoi) {
+	if(osm->way2poi) {
 		count=attr_longest_match(attr_mapping_way2poi, attr_mapping_way2poi_count, types, sizeof(types)/sizeof(enum item_type));
 		dbg_assert(count < 10);
 		for (i = 0 ; i < count ; i++) {
@@ -1607,14 +1607,14 @@ osm_end_way(FILE *out, FILE *outwaypoi)
 			item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 			item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 
-			item_bin_write(item_bin,outwaypoi);
+			item_bin_write(item_bin,osm->way2poi);
 		}
 	}
 	attr_longest_match_clear();
 }
 
 void
-osm_end_node(FILE *out)
+osm_end_node(struct maptool_osm *osm)
 {
 	int conflict,count,i;
 	char *postal;
@@ -1623,7 +1623,7 @@ osm_end_node(FILE *out)
 	struct item_bin *item_bin;
 	in_node=0;
 
-	if (!out || ! node_is_tagged || ! nodeid)
+	if (!osm->nodes || ! node_is_tagged || ! nodeid)
 		return;
 	count=attr_longest_match(attr_mapping_node, attr_mapping_node_count, types, sizeof(types)/sizeof(enum item_type));
 	if (!count) {
@@ -1658,7 +1658,7 @@ osm_end_node(FILE *out)
 				*sep='\0';
 			item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_postal : attr_postal, postal);
 		}
-		item_bin_write(item_bin,out);
+		item_bin_write(item_bin,osm->nodes);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
 			char *tok,*buf=is_in_buffer;
 			if (!buf[0] && unknown_country)

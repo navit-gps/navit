@@ -185,7 +185,7 @@ process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val)
 
 
 static void
-process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, FILE *out_nodes)
+process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, struct maptool_osm *osm)
 {
 	int i,j=0,has_tags;
 	long long id=0,lat=0,lon=0,changeset=0,timestamp=0;
@@ -225,7 +225,7 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 #else
 		}
 #endif
-		osm_end_node(out_nodes);
+		osm_end_node(osm);
 		j++;
 	}
 }
@@ -241,7 +241,7 @@ process_info(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Info *info)
 #endif
 
 static void
-process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, FILE *out_ways, FILE *out_way2poi)
+process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct maptool_osm *osm)
 {
 	int i;
 	long long ref=0;
@@ -266,11 +266,11 @@ process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, FILE *out
 #if 0
 	printf("\t</way>\n");
 #endif
-	osm_end_way(out_ways, out_way2poi);
+	osm_end_way(osm);
 }
 
 static void
-process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation, FILE *out_turn_restrictions, FILE *out_boundaries)
+process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation, struct maptool_osm *osm)
 {
 	int i;
 	long long ref=0;
@@ -313,23 +313,23 @@ process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *rela
 #if 0
 	printf("\t</relation>\n");
 #else
-	osm_end_relation(out_turn_restrictions, out_boundaries);
+	osm_end_relation(osm);
 #endif
 }
 
 static void
-process_osmdata(OSMPBF__Blob *blob, unsigned char *data, FILE *out_nodes, FILE *out_ways, FILE *out_way2poi, FILE *out_turn_restrictions, FILE *out_boundaries)
+process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm)
 {
 	int i,j;
 	OSMPBF__PrimitiveBlock *primitive_block;
 	primitive_block=osmpbf__primitive_block__unpack(&protobuf_c_system_allocator, blob->raw_size, data);
 	for (i = 0 ; i < primitive_block->n_primitivegroup ; i++) {
 		OSMPBF__PrimitiveGroup *primitive_group=primitive_block->primitivegroup[i];
-		process_dense(primitive_block, primitive_group->dense, out_nodes);
+		process_dense(primitive_block, primitive_group->dense, osm);
 		for (j = 0 ; j < primitive_group->n_ways ; j++)
-			process_way(primitive_block, primitive_group->ways[j], out_ways, out_way2poi);
+			process_way(primitive_block, primitive_group->ways[j], osm);
 		for (j = 0 ; j < primitive_group->n_relations ; j++)
-			process_relation(primitive_block, primitive_group->relations[j], out_turn_restrictions, out_boundaries);
+			process_relation(primitive_block, primitive_group->relations[j], osm);
 #if 0
 		printf("Group %p %d %d %d %d\n",primitive_group->dense,primitive_group->n_nodes,primitive_group->n_ways,primitive_group->n_relations,primitive_group->n_changesets);
 #endif
@@ -339,7 +339,7 @@ process_osmdata(OSMPBF__Blob *blob, unsigned char *data, FILE *out_nodes, FILE *
 
 
 int
-map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries)
+map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 {
 	OSMPBF__BlobHeader *header;
 	OSMPBF__Blob *blob;
@@ -354,7 +354,7 @@ map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE 
 		if (!strcmp(header->type,"OSMHeader")) {
 			process_osmheader(blob, data);
 		} else if (!strcmp(header->type,"OSMData")) {
-			process_osmdata(blob, data, out_nodes, out_ways, out_way2poi, out_turn_restrictions, out_boundaries);
+			process_osmdata(blob, data, osm);
 		} else {
 			printf("unknown\n");
 			return 0;
