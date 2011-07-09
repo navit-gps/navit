@@ -148,6 +148,28 @@ geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coo
 	return vertex;
 }
 
+/**
+  * Check if point is inside polgone.
+  * @param in *cp array of polygon vertex coordinates
+  * @param in count count of polygon vertexes
+  * @param in *c point coordinates 
+  * @returns 1 - inside, 0 - outside
+  */
+int
+geom_poly_point_inside(struct coord *cp, int count, struct coord *c)
+{
+	int ret=0;
+	struct coord *last=cp+count-1;
+	while (cp < last) {
+		if ((cp[0].y > c->y) != (cp[1].y > c->y) &&
+			c->x < (cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x)
+			ret=!ret;
+		cp++;
+	}
+	return ret;
+}
+
+
 
 GList *
 geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third)
@@ -294,12 +316,7 @@ geom_poly_segments_point_inside(GList *in, struct coord *c)
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
 		cp=seg->first;
-		while (cp < seg->last) {
-			if ((cp[0].y > c->y) != (cp[1].y > c->y) &&
-				c->x < (cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x)
-				ret=!ret;
-			cp++;
-		}
+		ret^=geom_poly_point_inside(seg->first, seg->last-seg->first+1, c);
 		in=g_list_next(in);
 	}
 	return ret;

@@ -2138,15 +2138,23 @@ process_way2poi(FILE *in, FILE *out)
 {
 	struct item_bin *ib;
 	while ((ib=read_item(in))) {
-		if(ib->clen>2 && ib->type<type_line) {
-			struct coord *c=(struct coord *)(ib+1);
-			if(ib->clen/2>2) {
-				if(!geom_poly_centroid(c,ib->clen/2,c)) {
+		int count=ib->clen/2;
+		if(count>1 && ib->type<type_line) {
+			struct coord *c=(struct coord *)(ib+1), c1, c2;
+			if(count>2) {
+				if(!geom_poly_centroid(c, count, &c1)) {
 					// we have poly with zero area
 					// Falling back to coordinates of its first vertex...
 					osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, area is 0\n");
+				} else {
+					if(geom_poly_point_inside(c, count, &c1)) {
+						c[0]=c1;
+					} else {
+						geom_poly_closest_point(c, count, &c1, &c2);
+						c[0]=c2;
+					}
 				}
-			} else if (ib->clen/2==2) {
+			} else if (count==2) {
 				osm_warning("way",item_bin_get_wayid(ib),0, "Expected polygon, but only two points defined\n");
 				c[0].x=(c[0].x+c[1].x)/2;
 				c[0].y=(c[0].y+c[1].y)/2;
