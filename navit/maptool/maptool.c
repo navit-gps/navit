@@ -182,6 +182,7 @@ int main(int argc, char **argv)
 	struct attr *attrs[10];
 	GList *map_handles=NULL;
 	struct map *handle;
+	struct maptool_osm osm;
 #if 0
 	char *suffixes[]={"m0l0", "m0l1","m0l2","m0l3","m0l4","m0l5","m0l6"};
 	char *suffixes[]={"m","r"};
@@ -403,9 +404,14 @@ int main(int argc, char **argv)
 			boundaries=tempfile(suffix,"boundaries",1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
+		osm.ways=ways;
+		osm.way2poi=way2poi;
+		osm.nodes=nodes;
+		osm.turn_restrictions=turn_restrictions;
+		osm.boundaries=boundaries;
 #ifdef HAVE_POSTGRESQL
 		if (dbstr)
-			map_collect_data_osm_db(dbstr,ways,way2poi,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_db(dbstr,&osm);
 		else
 #endif
 		if (map_handles) {
@@ -418,11 +424,11 @@ int main(int argc, char **argv)
 			}
 		}
 		else if (protobuf)
-			map_collect_data_osm_protobuf(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_protobuf(input_file,&osm);
 		else if (o5m)
-			map_collect_data_osm_o5m(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm_o5m(input_file,&osm);
 		else
-			map_collect_data_osm(input_file,ways,way2poi,nodes,turn_restrictions,boundaries);
+			map_collect_data_osm(input_file,&osm);
 		flush_nodes(1);
 		if (slices) {
 			int first=1;

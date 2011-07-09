@@ -178,7 +178,7 @@ parse_nd(char *p)
 }
 
 int
-map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries)
+map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 {
 	int size=BUFFER_SIZE;
 	char buffer[size];
@@ -215,11 +215,11 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_node
 			if (!parse_member(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "</node>",7)) {
-			osm_end_node(out_nodes);
+			osm_end_node(osm);
 		} else if (!strncmp(p, "</way>",6)) {
-			osm_end_way(out_ways, out_way2poi);
+			osm_end_way(osm);
 		} else if (!strncmp(p, "</relation>",11)) {
-			osm_end_relation(out_turn_restrictions, out_boundaries);
+			osm_end_relation(osm);
 		} else if (!strncmp(p, "</osm>",6)) {
 		} else {
 			fprintf(stderr,"WARNING: unknown tag in %s\n", buffer);

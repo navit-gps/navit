@@ -231,15 +231,22 @@ void cat(FILE *in, FILE *out);
 
 /* osm.c */
 typedef long int osmid;
+struct maptool_osm {
+	FILE *boundaries;
+	FILE *turn_restrictions;
+	FILE *nodes;
+	FILE *ways;
+	FILE *way2poi;
+};
 
 void osm_add_tag(char *k, char *v);
 void osm_add_node(osmid id, double lat, double lon);
 void osm_add_way(osmid id);
 void osm_add_relation(osmid id);
-void osm_end_relation(FILE *turn_restrictions, FILE *boundaries);
+void osm_end_relation(struct maptool_osm *osm);
 void osm_add_member(int type, osmid ref, char *role);
-void osm_end_way(FILE *out, FILE *outwaypoi);
-void osm_end_node(FILE *out);
+void osm_end_way(struct maptool_osm *osm);
+void osm_end_node(struct maptool_osm *osm);
 void osm_add_nd(osmid ref);
 long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
@@ -254,19 +261,19 @@ void remove_countryfiles(void);
 void osm_init(FILE*);
 
 /* osm_o5m.c */
-int map_collect_data_osm_o5m(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm);
 
 /* osm_psql.c */
-int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm);
 
 /* osm_protobuf.c */
-int map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm);
 int osm_protobufdb_load(FILE *in, char *dir);
 
 /* osm_xml.c */
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
 void osm_xml_decode_entities(char *buffer);
-int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_way2poi, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+int map_collect_data_osm(FILE *in, struct maptool_osm *osm);
 
 
 /* sourcesink.c */
