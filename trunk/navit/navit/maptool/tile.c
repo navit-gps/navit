@@ -469,7 +469,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 
 	tiles_list=get_tiles_list();
 	info->tiles_list=&tiles_list;
-	if (phase == 3)
+	if (! info->write)
 		create_tile_hash_list(tiles_list);
 	next=g_list_first(tiles_list);
 	last=&tile_head_root;
@@ -490,7 +490,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 		while (next) {
 			if (strlen(next->data) == len) {
 				th=g_hash_table_lookup(tile_hash, next->data);
-				if (phase == 3) {
+				if (!info->write) {
 					*last=th;
 					last=&th->next;
 					th->next=NULL;

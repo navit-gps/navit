@@ -199,7 +199,6 @@ extern int attr_debug_level;
 extern char *suffix;
 extern int ignore_unkown;
 extern GHashTable *dedupe_ways_hash;
-extern int phase;
 extern int slices;
 extern struct buffer node_buffer;
 extern int processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles;
