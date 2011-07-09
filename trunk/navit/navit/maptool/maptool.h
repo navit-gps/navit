@@ -32,6 +32,8 @@
 #define LONGLONG_FMT "%lld"
 #endif
 
+#define sq(x) ((double)(x)*(x))
+
 #define BUFFER_SIZE 1280
 
 #define debug_tile(x) 0
@@ -143,6 +145,7 @@ struct geom_poly_segment {
 
 void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse);
 void geom_coord_revert(struct coord *c, int count);
+int geom_line_middle(struct coord *p, int count, struct coord *c);
 long long geom_poly_area(struct coord *c, int count);
 int geom_poly_centroid(struct coord *c, int count, struct coord *r);
 int geom_poly_point_inside(struct coord *cp, int count, struct coord *c);
@@ -235,7 +238,8 @@ struct maptool_osm {
 	FILE *turn_restrictions;
 	FILE *nodes;
 	FILE *ways;
-	FILE *way2poi;
+	FILE *line2poi;
+	FILE *poly2poi;
 };
 
 void osm_add_tag(char *k, char *v);
@@ -253,7 +257,8 @@ void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void ref_ways(FILE *in);
 void resolve_ways(FILE *in, FILE *out);
-void process_way2poi(FILE *in, FILE *out);
+FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
+void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
