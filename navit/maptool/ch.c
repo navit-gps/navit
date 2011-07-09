@@ -142,8 +142,6 @@ item_id_slice_free(void *data)
 	g_slice_free(struct item_id, data);
 }
 
-#define sq(x) ((double)(x)*(x))
-
 static void
 add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes)
 {

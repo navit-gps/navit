@@ -359,8 +359,10 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		p->osm.nodes=tempfile(suffix,"nodes",1);
 	if (p->process_ways && p->process_nodes) {
 		p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",1);
-		if(doway2poi)
-			p->osm.way2poi=tempfile(suffix,"way2poi",1);
+		if(doway2poi) {
+			p->osm.line2poi=tempfile(suffix,"line2poi",1);
+			p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
+		}
 	}
 	if (p->process_relations)
 		p->osm.boundaries=tempfile(suffix,"boundaries",1);
@@ -393,8 +395,10 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		fclose(p->osm.turn_restrictions);
 	if (p->osm.boundaries)
 		fclose(p->osm.boundaries);
-	if (p->osm.way2poi)
-		fclose(p->osm.way2poi);
+	if (p->osm.poly2poi)
+		fclose(p->osm.poly2poi);
+	if (p->osm.line2poi)
+		fclose(p->osm.line2poi);
 }
 int debug_ref=0;
 
@@ -413,14 +417,22 @@ osm_count_references(struct maptool_params *p, char *suffix)
 			fclose(ways);
 		}
 		if(doway2poi) {
-			FILE *way2poi=tempfile(suffix,first?"way2poi":"way2poi_resolved",0);
-			FILE *way2poinew=tempfile(suffix,"way2poi_resolved_new",1);
-			resolve_ways(way2poi, way2poinew);
-			fclose(way2poi);
-			fclose(way2poinew);
-			tempfile_rename(suffix,"way2poi_resolved_new","way2poi_resolved");
-			if (first && !p->keep_tmpfiles) 
-				tempfile_unlink(suffix,"way2poi");
+			FILE *poly2poi=tempfile(suffix,first?"poly2poi":"poly2poi_resolved",0);
+			FILE *poly2poinew=tempfile(suffix,"poly2poi_resolved_new",1);
+			FILE *line2poi=tempfile(suffix,first?"line2poi":"line2poi_resolved",0);
+			FILE *line2poinew=tempfile(suffix,"line2poi_resolved_new",1);
+			resolve_ways(poly2poi, poly2poinew);
+			resolve_ways(line2poi, line2poinew);
+			fclose(poly2poi);
+			fclose(poly2poinew);
+			fclose(line2poi);
+			fclose(line2poinew);
+			tempfile_rename(suffix,"poly2poi_resolved_new","poly2poi_resolved");
+			tempfile_rename(suffix,"line2poi_resolved_new","line2poi_resolved");
+			if (first && !p->keep_tmpfiles) {
+				tempfile_unlink(suffix,"poly2poi");
+				tempfile_unlink(suffix,"line2poi");
+			}
 		}
 		first=0;
 	}
@@ -462,10 +474,17 @@ osm_find_intersections(struct maptool_params *p, char *suffix)
 static void
 osm_process_way2poi(struct maptool_params *p, char *suffix)
 {
-	FILE *way2poi=tempfile(suffix,"way2poi_resolved",0);
+	FILE *poly2poi=tempfile(suffix,"poly2poi_resolved",0);
+	FILE *line2poi=tempfile(suffix,"line2poi_resolved",0);
 	FILE *way2poi_result=tempfile(suffix,"way2poi_result",1);
-	process_way2poi(way2poi, way2poi_result);
-	fclose(way2poi);
+	if (poly2poi) {
+		process_way2poi(poly2poi, way2poi_result, type_area);
+		fclose(poly2poi);
+	}
+	if (line2poi) {
+		process_way2poi(line2poi, way2poi_result, type_line);
+		fclose(line2poi);
+	}
 	fclose(way2poi_result);
 }
 
@@ -598,7 +617,8 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		tempfile_unlink(suffix,"relations");
 		tempfile_unlink(suffix,"nodes");
 		tempfile_unlink(suffix,"ways_split");
-		tempfile_unlink(suffix,"way2poi_resolved");
+		tempfile_unlink(suffix,"poly2poi_resolved");
+		tempfile_unlink(suffix,"line2poi_resolved");
 		tempfile_unlink(suffix,"ways_split_ref");
 		tempfile_unlink(suffix,"coastline");
 		tempfile_unlink(suffix,"turn_restrictions");

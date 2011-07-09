@@ -1540,6 +1540,7 @@ osm_end_way(struct maptool_osm *osm)
 	int *def_flags,add_flags;
 	enum item_type types[10];
 	struct item_bin *item_bin;
+	int count_lines=0, count_areas=0;
 
 	in_way=0;
 
@@ -1567,8 +1568,10 @@ osm_end_way(struct maptool_osm *osm)
 			continue;
 		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
-		if(!osm->way2poi && types[i]<type_line)
-			continue;
+		if(types[i]<type_area) 	
+			count_lines++;	
+		else	
+			count_areas++;
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		nodes_ref_item_bin(item_bin);
@@ -1589,7 +1592,7 @@ osm_end_way(struct maptool_osm *osm)
 			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
 		item_bin_write(item_bin,osm->ways);
 	}
-	if(osm->way2poi) {
+	if(osm->line2poi) {
 		count=attr_longest_match(attr_mapping_way2poi, attr_mapping_way2poi_count, types, sizeof(types)/sizeof(enum item_type));
 		dbg_assert(count < 10);
 		for (i = 0 ; i < count ; i++) {
@@ -1606,8 +1609,7 @@ osm_end_way(struct maptool_osm *osm)
 			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 			item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 			item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
-
-			item_bin_write(item_bin,osm->way2poi);
+			item_bin_write(item_bin, count_areas<count_lines?osm->line2poi:osm->poly2poi);
 		}
 	}
 	attr_longest_match_clear();
@@ -2133,18 +2135,39 @@ resolve_ways(FILE *in, FILE *out)
 	}
 }
 
+FILE *
+resolve_ways_file(FILE *in, char *suffix, char *filename)
+{
+	char *newfilename=g_strdup_printf("%s_new",filename);
+	FILE *new=tempfile(suffix,newfilename,1);
+	resolve_ways(in, new);
+	fclose(in);
+	fclose(new);
+	tempfile_rename(suffix,newfilename,filename);
+	g_free(newfilename);
+	return tempfile(suffix,filename,0);
+}
+
+/**
+  * Get POI coordinates from area/line coordinates.
+  * @param in *in input file with area/line coordinates.
+  * @param in *out output file with POI coordinates
+  * @param in type input file original contents type: type_line or type_area
+  * @returns nothing
+  */
 void
-process_way2poi(FILE *in, FILE *out)
+process_way2poi(FILE *in, FILE *out, int type)
 {
 	struct item_bin *ib;
 	while ((ib=read_item(in))) {
 		int count=ib->clen/2;
 		if(count>1 && ib->type<type_line) {
 			struct coord *c=(struct coord *)(ib+1), c1, c2;
-			if(count>2) {
-				if(!geom_poly_centroid(c, count, &c1)) {
-					// we have poly with zero area
-					// Falling back to coordinates of its first vertex...
+			int done=0;
+			if(type==type_area) {
+				if(count<3) {
+					osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, less than 3 points defined\n");
+				}  else if(!geom_poly_centroid(c, count, &c1)) {
 					osm_warning("way",item_bin_get_wayid(ib),0,"Broken polygon, area is 0\n");
 				} else {
 					if(geom_poly_point_inside(c, count, &c1)) {
@@ -2153,11 +2176,12 @@ process_way2poi(FILE *in, FILE *out)
 						geom_poly_closest_point(c, count, &c1, &c2);
 						c[0]=c2;
 					}
+					done=1;
 				}
-			} else if (count==2) {
-				osm_warning("way",item_bin_get_wayid(ib),0, "Expected polygon, but only two points defined\n");
-				c[0].x=(c[0].x+c[1].x)/2;
-				c[0].y=(c[0].y+c[1].y)/2;
+			}
+			if(!done) {
+				geom_line_middle(c,count,&c1);
+				c[0]=c1;
 			}
 			write_item_part(out, NULL, NULL, ib, 0, 0, NULL);
 		}
