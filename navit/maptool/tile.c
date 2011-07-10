@@ -460,6 +460,45 @@ create_tile_hash_list(GList *list)
 }
 
 void
+load_tilesdir(FILE *in)
+{
+	char tile[32],subtile[32],c;
+	int size,zipnum=0;
+	create_tile_hash();
+	tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	struct tile_head **last=&tile_head_root;
+	while (fscanf(in,"%[^:]:%d",tile,&size) == 2) {
+		struct tile_head *th=malloc(sizeof(struct tile_head));
+		if (!strcmp(tile,"index"))
+			tile[0]='\0';
+		th->num_subtiles=0;
+		th->total_size=size;
+		th->total_size_used=0;
+		th->zipnum=zipnum++;
+		th->zip_data=NULL;
+		th->name=string_hash_lookup(tile);
+#if 0
+		printf("tile '%s' %d\n",tile,size);
+#endif
+		while (fscanf(in,":%[^:\n]",subtile) == 1) {
+#if 0
+			printf("subtile '%s'\n",subtile);
+#endif
+			th=realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
+			*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
+			th->num_subtiles++;
+		}
+		*last=th;
+		last=&th->next;
+		add_tile_hash(th);
+		g_hash_table_insert(tile_hash, th->name, th);
+		if (fread(&c, 1, 1, in) != 1 || c != '\n') {
+			printf("syntax error\n");
+		}
+	}
+}
+
+void
 write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 {
 	int idx,len,maxlen;
@@ -495,7 +534,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 					last=&th->next;
 					th->next=NULL;
 					th->zipnum=zip_get_zipnum(zip_info);
-					fprintf(out,"%s:%d",(char *)next->data,th->total_size);
+					fprintf(out,"%s:%d",strlen((char *)next->data)?(char *)next->data:"index",th->total_size);
 
 					for ( idx = 0; idx< th->num_subtiles; idx++ ){
 						data= th_get_subtile( th, idx );

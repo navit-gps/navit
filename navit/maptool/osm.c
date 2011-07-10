@@ -2282,6 +2282,40 @@ write_countrydir(struct zip_info *zip_info)
 }
 
 void
+load_countries(void)
+{
+	char filename[32];
+	FILE *f;
+	int i;
+	struct country_table *co;
+
+	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
+		co=&country_table[i];
+		sprintf(filename,"country_%d.bin", co->countryid);
+		f=fopen(filename,"rb");
+		if (f) {
+			int i,first=1;
+			struct item_bin *ib;
+			while ((ib=read_item(f))) {
+				struct coord *c=(struct coord *)(ib+1);
+				co->size+=ib->len*4+4;
+				for (i = 0 ; i < ib->clen/2 ; i++) {
+					if (first) {
+						co->r.l=c[i];
+						co->r.h=c[i];
+						first=0;
+					} else
+						bbox_extend(&c[i], &co->r);
+				}
+			}
+			fseek(f, 0, SEEK_END);
+			co->size=ftell(f);
+			fclose(f);
+		}
+	}
+}
+
+void
 remove_countryfiles(void)
 {
 	int i;
