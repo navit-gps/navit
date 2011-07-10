@@ -1711,7 +1711,7 @@ osm_process_towns(FILE *in)
 		}
 		if (result) {
 			if (!result->file) {
-				char *name=g_strdup_printf("country_%d.bin.unsorted", result->countryid);
+				char *name=g_strdup_printf("country_%d.unsorted.tmp", result->countryid);
 				result->file=fopen(name,"wb");
 				g_free(name);
 			}
@@ -1737,8 +1737,8 @@ sort_countries(int keep_tmpfiles)
 			fclose(co->file);
 			co->file=NULL;
 		}
-		name_in=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
-		name_out=g_strdup_printf("country_%d.bin", co->countryid);
+		name_in=g_strdup_printf("country_%d.unsorted.tmp", co->countryid);
+		name_out=g_strdup_printf("country_%d.tmp", co->countryid);
 		co->r=world_bbox;
 		item_bin_sort_file(name_in, name_out, &co->r, &co->size);
 		if (!keep_tmpfiles)
@@ -2296,7 +2296,7 @@ write_countrydir(struct zip_info *zip_info)
 				sprintf(suffix,"s%d", num);
 				num++;
 				tile(&co->r, suffix, tilename, max, overlap, NULL);
-				sprintf(filename,"country_%d.bin", co->countryid);
+				sprintf(filename,"country_%d.tmp", co->countryid);
 				zipnum=add_aux_tile(zip_info, tilename, filename, co->size);
 			} while (zipnum == -1);
 			index_country_add(zip_info,co->countryid,zipnum);
@@ -2314,7 +2314,7 @@ load_countries(void)
 
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
-		sprintf(filename,"country_%d.bin", co->countryid);
+		sprintf(filename,"country_%d.tmp", co->countryid);
 		f=fopen(filename,"rb");
 		if (f) {
 			int i,first=1;
@@ -2348,7 +2348,7 @@ remove_countryfiles(void)
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->size) {
-			sprintf(filename,"country_%d.bin", co->countryid);
+			sprintf(filename,"country_%d.tmp", co->countryid);
 			unlink(filename);
 		}
 	}
