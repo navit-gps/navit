@@ -665,12 +665,12 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 }
 
 static void
-maptool_load_node_table(struct maptool_params *p, int next_to_last)
+maptool_load_node_table(struct maptool_params *p, int last)
 {
 	if (!p->node_table_loaded) {
-		load_buffer("coords.tmp",&node_buffer,0, slice_size);
+		slices=(sizeof_buffer("coords.tmp")+slice_size-1)/slice_size;
+		load_buffer("coords.tmp",&node_buffer,last?(slices-1)*slice_size:0, slice_size);
 		p->node_table_loaded=1;
-		slices=1;
 	}
 }
 
