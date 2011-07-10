@@ -60,10 +60,16 @@ geom_line_middle(struct coord *p, int count, struct coord *c)
 		len=sqrt(sq(p[i].x-p[i+1].x)+sq(p[i].y-p[i+1].y));
 		half+=len;
 	}
-	i--;
-	half-=length;
-	c->x=(p[i].x*half+p[i+1].x*(len-half))/len;
-	c->y=(p[i].y*half+p[i+1].y*(len-half))/len;
+	if (i > 0) {
+		i--;
+		half-=length;
+		if (len) {
+			c->x=(p[i].x*half+p[i+1].x*(len-half))/len;
+			c->y=(p[i].y*half+p[i+1].y*(len-half))/len;
+		} else
+			*c=p[i];
+	} else
+		*c=p[0];
 	return i;
 }
 
