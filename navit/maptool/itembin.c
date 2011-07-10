@@ -154,6 +154,23 @@ item_bin_add_attr(struct item_bin *ib, struct attr *attr)
 }
 
 void
+item_bin_remove_attr(struct item_bin *ib, void *ptr)
+{
+	unsigned char *s=(unsigned char *)ib;
+	unsigned char *e=s+(ib->len+1)*4;
+	s+=sizeof(struct item_bin)+ib->clen*4;
+	while (s < e) {
+		struct attr_bin *ab=(struct attr_bin *)s;
+		s+=(ab->len+1)*4;
+		if ((void *)(ab+1) == ptr) {
+			ib->len-=ab->len+1;
+			memmove(ab,s,e-s);
+			return;
+		}
+	}
+}
+
+void
 item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val)
 {
 	struct attr attr;
