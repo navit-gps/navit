@@ -412,7 +412,7 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 int debug_ref=0;
 
 static void
-osm_count_references(struct maptool_params *p, char *suffix)
+osm_count_references(struct maptool_params *p, char *suffix, int clear)
 {
 	int i,first=1;
 	fprintf(stderr,"%d slices\n",slices);
@@ -421,6 +421,8 @@ osm_count_references(struct maptool_params *p, char *suffix)
 		if (!first) {
 			FILE *ways=tempfile(suffix,"ways",0);
 			load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+			if (clear) 
+				clear_node_item_buffer();
 			ref_ways(ways);
 			save_buffer("coords.tmp",&node_buffer, i*slice_size);
 			fclose(ways);
@@ -768,7 +770,7 @@ int main(int argc, char **argv)
 		if (p.start <= phase && p.end >= phase) {
 			maptool_load_node_table(&p,1);
 			fprintf(stderr,"PROGRESS: Phase %d: counting references and resolving ways\n",phase);
-			osm_count_references(&p, suffix);
+			osm_count_references(&p, suffix, p.start == phase);
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {

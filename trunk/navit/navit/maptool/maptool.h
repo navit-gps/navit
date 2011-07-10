@@ -256,6 +256,7 @@ long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
+void clear_node_item_buffer(void);
 void ref_ways(FILE *in);
 void resolve_ways(FILE *in, FILE *out);
 FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
