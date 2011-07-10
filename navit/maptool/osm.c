@@ -1253,6 +1253,16 @@ osm_add_node(osmid id, double lat, double lon)
 
 }
 
+void
+clear_node_item_buffer(void)
+{
+	int j,count=node_buffer.size/sizeof(struct node_item);
+	struct node_item *ni=(struct node_item *)(node_buffer.base);
+	for (j = 0 ; j < count ; j++) {
+		ni[j].ref_way=0;
+	}
+}
+
 static struct node_item *
 node_item_get(int id)
 {
