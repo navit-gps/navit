@@ -60,3 +60,14 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	fread(b->base, b->size, 1, f);
 	fclose(f);
 }
+
+long long
+sizeof_buffer(char *filename)
+{
+	long long ret;
+	FILE *f=fopen(filename,"rb");
+	fseek(f, 0, SEEK_END);
+	ret=ftell(f);
+	fclose(f);
+	return ret;
+}

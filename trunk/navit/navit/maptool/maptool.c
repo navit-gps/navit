@@ -174,6 +174,9 @@ struct maptool_params {
 	char *timestamp;
 	char *result;
 	char *dbstr;
+	int node_table_loaded;
+	int countries_loaded;
+	int tilesdir_loaded;
 };
 
 static int
@@ -661,6 +664,35 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 	}
 }
 
+static void
+maptool_load_node_table(struct maptool_params *p, int next_to_last)
+{
+	if (!p->node_table_loaded) {
+		load_buffer("coords.tmp",&node_buffer,0, slice_size);
+		p->node_table_loaded=1;
+		slices=1;
+	}
+}
+
+static void
+maptool_load_countries(struct maptool_params *p)
+{
+	if (!p->countries_loaded) {
+		load_countries();
+		p->countries_loaded=1;
+	}
+}
+
+static void
+maptool_load_tilesdir(struct maptool_params *p, char *suffix)
+{
+	if (!p->tilesdir_loaded) {
+		FILE *tilesdir=tempfile(suffix,"tilesdir",0);
+		load_tilesdir(tilesdir);
+		p->tilesdir_loaded=1;
+	}
+}
+
 int main(int argc, char **argv)
 {
 #if 0
@@ -730,9 +762,11 @@ int main(int argc, char **argv)
 		if (p.start <= phase && p.end >= phase) {
 			fprintf(stderr,"PROGRESS: Phase %d: collecting data\n",phase);
 			osm_collect_data(&p, suffix);
+			p.node_table_loaded=1;
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
+			maptool_load_node_table(&p,1);
 			fprintf(stderr,"PROGRESS: Phase %d: counting references and resolving ways\n",phase);
 			osm_count_references(&p, suffix);
 		}
@@ -742,12 +776,10 @@ int main(int argc, char **argv)
 			osm_process_way2poi(&p, suffix);
 		}
 		phase++;
-		if (0) {
-			load_buffer("coords.tmp",&node_buffer,0, slice_size);
-		}
 		if (p.start <= phase && p.end >= phase) {
 			if (p.process_ways) {
 				fprintf(stderr,"PROGRESS: Phase %d: finding intersections\n",phase);
+				maptool_load_node_table(&p,0);
 				osm_find_intersections(&p, suffix);
 			} else
 				fprintf(stderr,"PROGRESS: Skipping Phase %d\n",phase);
@@ -757,6 +789,7 @@ int main(int argc, char **argv)
 		node_buffer.base=NULL;
 		node_buffer.malloced=0;
 		node_buffer.size=0;
+		p.node_table_loaded=0;
 	} else {
 		fprintf(stderr,"PROGRESS: Phase %d: Reading data\n",phase);
 		FILE *ways_split=tempfile(suffix,"ways_split",0);
@@ -773,6 +806,7 @@ int main(int argc, char **argv)
 	if (p.start <= phase && p.end >= phase) {
 		fprintf(stderr,"PROGRESS: Phase %d: sorting countries\n",phase);
 		sort_countries(p.keep_tmpfiles);
+		p.countries_loaded=1;
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
@@ -811,11 +845,15 @@ int main(int argc, char **argv)
 		suffix=suffixes[i];
 		if (p.start <= phase && p.end >= phase) {
 			fprintf(stderr,"PROGRESS: Phase %d: generating tiles\n",phase);
+			maptool_load_countries(&p);
 			maptool_generate_tiles(&p, suffix, filenames, filename_count, i == suffix_start, suffixes[0]);
+			p.tilesdir_loaded=1;
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
 			fprintf(stderr,"PROGRESS: Phase %d: assembling map\n",phase);
+			maptool_load_countries(&p);
+			maptool_load_tilesdir(&p, suffix);
 			maptool_assemble_map(&p, suffix, filenames, referencenames, filename_count, i == suffix_start, i == suffix_count-1, suffixes[0]);
 		}
 		phase--;
