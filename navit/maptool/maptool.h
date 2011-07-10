@@ -102,9 +102,21 @@ struct item_bin_sink {
 
 struct zip_info;
 
+struct country_table;
+
 /* boundaries.c */
 
-int process_boundaries(FILE *boundaries, FILE *ways);
+struct boundary {
+	struct item_bin *ib;
+	struct country_table *country;
+	GList *segments,*sorted_segments;
+	GList *children;
+	struct rect r;
+};
+
+GList *process_boundaries(FILE *boundaries, FILE *ways);
+
+GList *boundary_find_matches(GList *bl, struct coord *c);
 
 /* buffer.c */
 struct buffer {
@@ -211,6 +223,7 @@ extern struct item_bin *item_bin;
 extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
+extern int experimental;
 void sig_alrm(int sig);
 void sig_alrm_end(void);
 
@@ -245,6 +258,7 @@ struct maptool_osm {
 	FILE *towns;
 };
 
+void osm_warning(char *type, long long id, int cont, char *fmt, ...);
 void osm_add_tag(char *k, char *v);
 void osm_add_node(osmid id, double lat, double lon);
 void osm_add_way(osmid id);
@@ -261,13 +275,17 @@ void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_in
 void clear_node_item_buffer(void);
 void ref_ways(FILE *in);
 void resolve_ways(FILE *in, FILE *out);
+long long item_bin_get_nodeid(struct item_bin *ib);
+long long item_bin_get_wayid(struct item_bin *ib);
+long long item_bin_get_relationid(struct item_bin *ib);
 FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
-void osm_process_towns(FILE *in);
+void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways);
 void load_countries(void);
 void remove_countryfiles(void);
+struct country_table * country_from_iso2(char *iso);
 void osm_init(FILE*);
 
 /* osm_o5m.c */

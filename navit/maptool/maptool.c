@@ -53,6 +53,7 @@ int slices;
 int unknown_country;
 int doway2poi=1;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
+int experimental;
 
 struct buffer node_buffer = {
 	64*1024*1024,
@@ -124,6 +125,7 @@ usage(FILE *f)
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
+	fprintf(f,"-E (--experimental)               : Enable experimental features\n");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
@@ -200,6 +202,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"dump", 0, 0, 'D'},
 		{"dump-coordinates", 0, 0, 'c'},
 		{"end", 1, 0, 'e'},
+		{"experimental", 0, 0, 'E'},
 		{"help", 0, 0, 'h'},
 		{"keep-tmpfiles", 0, 0, 'k'},
 		{"nodes-only", 0, 0, 'N'},
@@ -218,7 +221,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"unknown-country", 0, 0, 'U'},
 		{0, 0, 0, 0}
 	};
-	c = getopt_long (argc, argv, "5:6B:DMNO:PS:Wa:bc"
+	c = getopt_long (argc, argv, "5:6B:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 				      "d:"
 #endif
@@ -237,6 +240,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'D':
 		p->output=1;
+		break;
+	case 'E':
+		experimental=1;
 		break;
 	case 'M':
 		p->o5m=1;
@@ -810,9 +816,17 @@ int main(int argc, char **argv)
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
-		FILE *towns=tempfile(suffix,"towns",0);
+		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
+		if (experimental) {
+			boundaries=tempfile(suffix,"boundaries",0);
+			ways=tempfile(suffix,"ways_split",0);
+		}
 		fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
-		osm_process_towns(towns);
+		osm_process_towns(towns,boundaries,ways);
+		if (experimental) {
+			fclose(ways);
+			fclose(boundaries);
+		}
 		fclose(towns);
 		if(!p.keep_tmpfiles)
 			tempfile_unlink(suffix,"towns");
