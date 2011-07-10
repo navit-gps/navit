@@ -20,13 +20,6 @@
 #include <string.h>
 #include "maptool.h"
 
-struct boundary {
-	struct item_bin *ib;
-	GList *segments,*sorted_segments;
-	GList *children;
-	struct rect r;
-};
-
 struct boundary_member {
 	long long wayid;
 	enum geom_poly_segment_type role;
@@ -51,14 +44,21 @@ boundary_member_equal(gconstpointer a, gconstpointer b)
 GHashTable *member_hash;
 
 static char *
-osm_tag_name(struct item_bin *ib)
+osm_tag_value(struct item_bin *ib, char *key)
 {
 	char *tag=NULL;
+	int len=strlen(key);
 	while ((tag=item_bin_get_attr(ib, attr_osm_tag, tag))) {
-		if (!strncmp(tag,"name=",5))
-			return tag+5;
+		if (!strncmp(tag,key,len) && tag[len] == '=')
+			return tag+len+1;
 	}
 	return NULL;
+}
+
+static char *
+osm_tag_name(struct item_bin *ib)
+{
+	return osm_tag_value(ib, "name");
 }
 
 static GList *
@@ -70,6 +70,17 @@ build_boundaries(FILE *boundaries)
 	while ((ib=read_item(boundaries))) {
 		char *member=NULL;
 		struct boundary *boundary=g_new0(struct boundary, 1);
+		char *admin_level=osm_tag_value(ib, "admin_level");
+		char *iso=osm_tag_value(ib, "ISO3166-1");
+		if (admin_level && !strcmp(admin_level, "2")) {
+			if (iso) {
+				struct country_table *country=country_from_iso2(iso);	
+				if (!country) 
+					osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary contains unknown ISO3166-1 value '%s'\n",iso);
+				boundary->country=country;
+			} else 
+				osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary doesn't contain an ISO3166-1 tag\n");
+		}
 		while ((member=item_bin_get_attr(ib, attr_osm_member, member))) {
 			long long wayid;
 			int read=0;
@@ -98,19 +109,20 @@ build_boundaries(FILE *boundaries)
 	return boundaries_list;
 }
 
-static void
-find_matches(GList *l, struct coord *c)
+GList *
+boundary_find_matches(GList *l, struct coord *c)
 {
+	GList *ret=NULL;
 	while (l) {
 		struct boundary *boundary=l->data;
 		if (bbox_contains_coord(&boundary->r, c)) {
-			struct item_bin *ib=boundary->ib;
 			if (geom_poly_segments_point_inside(boundary->sorted_segments,c)) 
-				printf("%s,",osm_tag_name(ib));
-			find_matches(boundary->children, c);
+				ret=g_list_prepend(ret, boundary);
+			ret=g_list_concat(ret,boundary_find_matches(boundary->children, c));
 		}
 		l=g_list_next(l);
 	}
+	return ret;
 }
 
 static void
@@ -123,7 +135,7 @@ test(GList *boundaries_list)
 		struct coord *c=(struct coord *)(ib+1);
 		char *name=item_bin_get_attr(ib, attr_town_name, NULL);
 		printf("%s:",name);
-		find_matches(boundaries_list, c);
+		boundary_find_matches(boundaries_list, c);
 		printf("\n");
 	}
 	fclose(f);
@@ -158,7 +170,7 @@ boundary_bbox_compare(gconstpointer a, gconstpointer b)
 	return 0;
 }
 
-int
+GList *
 process_boundaries(FILE *boundaries, FILE *ways)
 {
 	struct item_bin *ib;
@@ -201,7 +213,9 @@ process_boundaries(FILE *boundaries, FILE *ways)
 		l=g_list_next(l);
 		
 	}
+#if 0
 	printf("hierarchy\n");
+#endif
 	boundaries_list=g_list_sort(boundaries_list, boundary_bbox_compare);
 	l=boundaries_list;
 	while (l) {
@@ -212,16 +226,20 @@ process_boundaries(FILE *boundaries, FILE *ways)
 			if (bbox_contains_bbox(&boundary2->r, &boundary->r)) {
 				boundaries_list=g_list_remove(boundaries_list, boundary);
 				boundary2->children=g_list_append(boundary2->children, boundary);
+#if 0
 				printf("found\n");
+#endif
 				break;
 			}
 			l2=g_list_next(l2);
 		}
 		l=ln;
 	}
+#if 0
 	printf("hierarchy done\n");
 	dump_hierarchy(boundaries_list,"");
 	printf("test\n");
 	test(boundaries_list);
-	return 1;
+#endif
+	return boundaries_list;
 }

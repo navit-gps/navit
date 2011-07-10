@@ -23,6 +23,7 @@
 #include "maptool.h"
 #include "debug.h"
 #include "linguistics.h"
+#include "country.h"
 #include "file.h"
 
 extern int doway2poi;
@@ -822,7 +823,8 @@ build_countrytable(void)
 		}
 	}
 }
-static void
+
+void
 osm_warning(char *type, long long id, int cont, char *fmt, ...)
 {
 	char str[4096];
@@ -848,7 +850,7 @@ attr_strings_save(enum attr_strings id, char *str)
 	attr_strings_buffer_len+=strlen(str)+1;
 }
 
-static long long
+long long
 item_bin_get_nodeid(struct item_bin *ib)
 {
 	long long *ret=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
@@ -857,7 +859,7 @@ item_bin_get_nodeid(struct item_bin *ib)
 	return 0;
 }
 
-static long long
+long long
 item_bin_get_wayid(struct item_bin *ib)
 {
 	long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
@@ -866,7 +868,7 @@ item_bin_get_wayid(struct item_bin *ib)
 	return 0;
 }
 
-static long long
+long long
 item_bin_get_relationid(struct item_bin *ib)
 {
 	long long *ret=item_bin_get_attr(ib, attr_osm_relationid, NULL);
@@ -1436,6 +1438,43 @@ osm_add_relation(osmid id)
 	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, current_id);
 }
 
+static int
+country_id_from_iso2(char *iso)
+{
+	int ret=0;
+	if (iso) {
+		struct country_search *search;
+		struct attr country_iso2,country_id;
+		struct item *item;
+		country_iso2.type=attr_country_iso2;
+		country_iso2.u.str=iso;
+		search=country_search_new(&country_iso2,0);
+		if ((item=country_search_get_item(search)) && item_attr_get(item, attr_country_id, &country_id))
+			ret=country_id.u.num;
+			
+		country_search_destroy(search);
+	}
+	return ret;
+}
+
+static struct country_table *
+country_from_countryid(int id)
+{
+	int i;
+	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
+		if (country_table[i].countryid == id)
+			return &country_table[i];
+	}
+	return NULL;
+}
+
+struct country_table *
+country_from_iso2(char *iso)
+{
+	return country_from_countryid(country_id_from_iso2(iso));
+}
+
+
 void
 osm_end_relation(struct maptool_osm *osm)
 {
@@ -1500,13 +1539,13 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
 	}
-#if 0
-	if (add_tag) {
-		char tag[strlen(k)+strlen(v)+2];
-		sprintf(tag,"%s=%s",k,v);
-		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
+	if (experimental) {
+		if (add_tag) {
+			char tag[strlen(k)+strlen(v)+2];
+			sprintf(tag,"%s=%s",k,v);
+			item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
+		}
 	}
-#endif
 }
 
 
@@ -1685,30 +1724,77 @@ osm_end_node(struct maptool_osm *osm)
 	attr_longest_match_clear();
 }
 
+static struct country_table *
+osm_process_town_unknown_country(void)
+{
+	static struct country_table *unknown;
+	if (!unknown)
+		unknown=country_from_countryid(999);
+
+	return unknown;
+}
+
+static struct country_table *
+osm_process_town_by_is_in(char *is_in)
+{
+	struct country_table *result=NULL, *lookup;
+	char *tok,*dup=g_strdup(is_in),*buf=dup;
+	int conflict;
+
+	while ((tok=strtok(buf, ",;"))) {
+		while (*tok==' ')
+			tok++;
+		lookup=g_hash_table_lookup(country_table_hash,tok);
+		if (lookup) {
+			if (result && result->countryid != lookup->countryid) {
+				osm_warning("node",nodeid,0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
+				conflict=1;
+			}
+			result=lookup;
+		}
+		buf=NULL;
+	}
+	g_free(dup);
+	return result;
+}
+
+static struct country_table *
+osm_process_town_by_boundary(GList *bl, struct coord *c)
+{
+	GList *l,*matches=boundary_find_matches(bl, c);
+	struct country_table *match=NULL;
+
+	l=matches;
+	while (l) {
+		struct boundary *b=l->data;
+		if (b->country) {
+			if (match)
+				printf("conflict %d vs %d\n",b->country->countryid,match->countryid);
+			match=b->country;
+		}
+		l=g_list_next(l);
+	}
+	return match; 
+}
+
 void
-osm_process_towns(FILE *in)
+osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 {
 	struct item_bin *ib;
+	GList *bl=NULL;
 
+	if (experimental) 
+		bl=process_boundaries(boundaries, ways);
 	while ((ib=read_item(in)))  {
-		struct country_table *result=NULL, *lookup;
-		char *tok,*is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL), *buf=g_strdup(is_in);
-		int conflict;
-		if (!buf && unknown_country)
-			buf=g_strdup("Unknown");
-		while ((tok=strtok(buf, ",;"))) {
-			while (*tok==' ')
-				tok++;
-			lookup=g_hash_table_lookup(country_table_hash,tok);
-			if (lookup) {
-				if (result && result->countryid != lookup->countryid) {
-					osm_warning("node",nodeid,0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
-					conflict=1;
-				}
-				result=lookup;
-			}
-			buf=NULL;
-		}
+		struct coord *c=(struct coord *)(ib+1);
+		struct country_table *result=NULL;
+		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
+		if (experimental)
+			result=osm_process_town_by_boundary(bl, c);
+		if (!result)
+			result=osm_process_town_by_is_in(is_in);
+		if (!result && unknown_country)
+			result=osm_process_town_unknown_country();
 		if (result) {
 			if (!result->file) {
 				char *name=g_strdup_printf("country_%d.unsorted.tmp", result->countryid);
@@ -1721,7 +1807,6 @@ osm_process_towns(FILE *in)
 				item_bin_write_match(ib, attr_town_name, attr_town_name_match, result->file);
 			}
 		}
-		g_free(buf);
 	}
 }
 
@@ -2006,6 +2091,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	}
 }
 
+#if 0
 static void
 process_countries(FILE *way, FILE *ways_index)
 {
@@ -2056,6 +2142,7 @@ process_countries(FILE *way, FILE *ways_index)
 	fclose(tmp);
 	fclose(in);
 }
+#endif
 
 static void
 node_ref_way(osmid node)
