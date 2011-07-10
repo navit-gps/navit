@@ -341,7 +341,7 @@ add_feature(XSL_PROCESSING "default" TRUE)
 find_program(SAXON NAMES saxon saxon8 saxon-xslt saxonb-xslt)
 if(SAXON)
    execute_process(COMMAND ${SAXON} -snone ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xml ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xslt
-      RESULT_VARIABLE SAXON_ERROR)
+      RESULT_VARIABLE SAXON_ERROR ERROR_QUIET)
    if (NOT SAXON_ERROR)
       set (SAXON_OPTIONS -snone)
    endif()
