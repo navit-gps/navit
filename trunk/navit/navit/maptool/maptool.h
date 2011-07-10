@@ -181,6 +181,7 @@ struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
+void item_bin_remove_attr(struct item_bin *ib, void *ptr);
 void item_bin_write(struct item_bin *ib, FILE *out);
 struct item_bin *item_bin_dup(struct item_bin *ib);
 void item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max);
@@ -241,6 +242,7 @@ struct maptool_osm {
 	FILE *ways;
 	FILE *line2poi;
 	FILE *poly2poi;
+	FILE *towns;
 };
 
 void osm_add_tag(char *k, char *v);
@@ -263,6 +265,7 @@ FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
+void osm_process_towns(FILE *in);
 void load_countries(void);
 void remove_countryfiles(void);
 void osm_init(FILE*);

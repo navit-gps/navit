@@ -364,8 +364,10 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 	unlink("coords.tmp");
 	if (p->process_ways)
 		p->osm.ways=tempfile(suffix,"ways",1);
-	if (p->process_nodes)
+	if (p->process_nodes) {
 		p->osm.nodes=tempfile(suffix,"nodes",1);
+		p->osm.towns=tempfile(suffix,"towns",1);
+	}
 	if (p->process_ways && p->process_nodes) {
 		p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",1);
 		if(doway2poi) {
@@ -408,6 +410,8 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		fclose(p->osm.poly2poi);
 	if (p->osm.line2poi)
 		fclose(p->osm.line2poi);
+	if (p->osm.towns)
+		fclose(p->osm.towns);
 }
 int debug_ref=0;
 
@@ -803,6 +807,15 @@ int main(int argc, char **argv)
 	if (p.start <= phase && p.end >= phase) {
 		fprintf(stderr,"PROGRESS: Phase %d: Generating coastlines\n",phase);
 		osm_process_coastlines(&p, suffix);
+	}
+	phase++;
+	if (p.start <= phase && p.end >= phase) {
+		FILE *towns=tempfile(suffix,"towns",0);
+		fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
+		osm_process_towns(towns);
+		fclose(towns);
+		if(!p.keep_tmpfiles)
+			tempfile_unlink(suffix,"towns");
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
