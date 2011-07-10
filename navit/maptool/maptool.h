@@ -116,6 +116,7 @@ struct buffer {
 
 void save_buffer(char *filename, struct buffer *b, long long offset);
 void load_buffer(char *filename, struct buffer *b, long long offset, long long size);
+long long sizeof_buffer(char *filename);
 
 /* ch.c */
 
@@ -261,6 +262,7 @@ FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
+void load_countries(void);
 void remove_countryfiles(void);
 void osm_init(FILE*);
 
@@ -317,6 +319,7 @@ extern GList *aux_tile_list;
 int tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect *tr);
 void tile_bbox(char *tile, struct rect *r, int overlap);
 int tile_len(char *tile);
+void load_tilesdir(FILE *in);
 void tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name);
 void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max);
 int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size);
