@@ -100,6 +100,15 @@ struct item_bin_sink {
 	GList *sink_funcs;
 };
 
+struct node_item {
+	int id;
+	char ref_node;
+	char ref_way;
+	char ref_ref;
+	char dummy;
+	struct coord c;
+};
+
 struct zip_info;
 
 struct country_table;
@@ -205,6 +214,7 @@ void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_ty
 int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size);
 
 /* itembin_buffer.c */
+struct node_item *read_node_item(FILE *in);
 struct item_bin *read_item(FILE *in);
 struct item_bin *read_item_range(FILE *in, int *min, int *max);
 struct item_bin *init_item(enum item_type type);
@@ -297,6 +307,13 @@ int map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm);
 /* osm_protobuf.c */
 int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm);
 int osm_protobufdb_load(FILE *in, char *dir);
+
+/* osm_relations.c */
+struct relations * relations_new(void);
+struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv), void *func_priv);
+void relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
+void relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relations);
+
 
 /* osm_xml.c */
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
