@@ -94,28 +94,32 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relation
 	struct node_item *ni;
 	GList *l;
 
-	item_bin_init(ib, type_point_unkn);
-	item_bin_add_coord(ib, &cn, 1);
-	item_bin_add_attr_longlong(ib, attr_osm_nodeid, 0);
-	id=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
-	while ((ni=read_node_item(nodes))) {
-		*id=ni->id;
-		*c=ni->c;
-		l=g_hash_table_lookup(rel->member_hash[0], id);
-		while (l) {
-			struct relations_member *memb=l->data;
-			memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
-			l=g_list_next(l);
-		}
-	}
-	while ((ib=read_item(ways))) {
-		id=item_bin_get_attr(ib, attr_osm_wayid, NULL);
-		if (id) {
-			l=g_hash_table_lookup(rel->member_hash[1], id);
+	if (nodes) {
+		item_bin_init(ib, type_point_unkn);
+		item_bin_add_coord(ib, &cn, 1);
+		item_bin_add_attr_longlong(ib, attr_osm_nodeid, 0);
+		id=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+		while ((ni=read_node_item(nodes))) {
+			*id=ni->id;
+			*c=ni->c;
+			l=g_hash_table_lookup(rel->member_hash[0], id);
 			while (l) {
 				struct relations_member *memb=l->data;
 				memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
 				l=g_list_next(l);
+			}
+		}
+	}
+	if (ways) {
+		while ((ib=read_item(ways))) {
+			id=item_bin_get_attr(ib, attr_osm_wayid, NULL);
+			if (id) {
+				l=g_hash_table_lookup(rel->member_hash[1], id);
+				while (l) {
+					struct relations_member *memb=l->data;
+					memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
+					l=g_list_next(l);
+				}
 			}
 		}
 	}
