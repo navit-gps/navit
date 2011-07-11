@@ -2222,34 +2222,47 @@ navigation_map_get_item(struct map_rect_priv *priv)
 			ret->type=type_nav_destination;
 		else {
 			if (priv->itm && priv->itm->prev && !(priv->itm->way.flags & AF_ROUNDABOUT) && (priv->itm->prev->way.flags & AF_ROUNDABOUT)) {
-			
+				enum item_type r=type_none,l=type_none;
 				switch (((180+22)-priv->cmd->roundabout_delta)/45) {
 				case 0:
 				case 1:
-					ret->type=type_nav_roundabout_r1;
+					r=type_nav_roundabout_r1;
+					l=type_nav_roundabout_l7;
 					break;
 				case 2:
-					ret->type=type_nav_roundabout_r2;
+					r=type_nav_roundabout_r2;
+					l=type_nav_roundabout_l6;
 					break;
 				case 3:
-					ret->type=type_nav_roundabout_r3;
+					r=type_nav_roundabout_r3;
+					l=type_nav_roundabout_l5;
 					break;
 				case 4:
-					ret->type=type_nav_roundabout_r4;
+					r=type_nav_roundabout_r4;
+					l=type_nav_roundabout_l4;
 					break;
 				case 5:
-					ret->type=type_nav_roundabout_r5;
+					r=type_nav_roundabout_r5;
+					l=type_nav_roundabout_l3;
 					break;
 				case 6:
-					ret->type=type_nav_roundabout_r6;
+					r=type_nav_roundabout_r6;
+					l=type_nav_roundabout_l2;
 					break;
 				case 7:
-					ret->type=type_nav_roundabout_r7;
+					r=type_nav_roundabout_r7;
+					l=type_nav_roundabout_l1;
 					break;
 				case 8:
-					ret->type=type_nav_roundabout_r8;
+					r=type_nav_roundabout_r8;
+					l=type_nav_roundabout_l8;
 					break;
 				}
+				dbg(1,"delta %d\n",priv->cmd->delta);
+				if (priv->cmd->delta < 0)
+					ret->type=l;
+				else
+					ret->type=r;
 			} else {
 				delta=priv->cmd->delta;	
 				if (delta < 0) {
