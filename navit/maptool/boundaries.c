@@ -20,29 +20,6 @@
 #include <string.h>
 #include "maptool.h"
 
-struct boundary_member {
-	long long wayid;
-	enum geom_poly_segment_type role;
-	struct boundary *boundary;
-};
-
-static guint
-boundary_member_hash(gconstpointer key)
-{
-	const struct boundary_member *memb=key;
-	return (memb->wayid >> 32)^(memb->wayid & 0xffffffff);
-}
-
-static gboolean
-boundary_member_equal(gconstpointer a, gconstpointer b)
-{
-	const struct boundary_member *memba=a;
-	const struct boundary_member *membb=b;
-	return (memba->wayid == membb->wayid);
-}
-
-GHashTable *member_hash;
-
 static char *
 osm_tag_value(struct item_bin *ib, char *key)
 {
@@ -61,12 +38,22 @@ osm_tag_name(struct item_bin *ib)
 	return osm_tag_value(ib, "name");
 }
 
+static void
+process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+{
+	struct boundary *b=relation_priv;
+	enum geom_poly_segment_type role=(long)member_priv;
+	b->segments=g_list_prepend(b->segments,item_bin_to_poly_segment(member, role));
+}
+
 static GList *
-build_boundaries(FILE *boundaries)
+process_boundaries_setup(FILE *boundaries, struct relations *relations)
 {
 	struct item_bin *ib;
 	GList *boundaries_list=NULL;
+	struct relations_func *relations_func;
 
+	relations_func=relations_func_new(process_boundaries_member, NULL);
 	while ((ib=read_item(boundaries))) {
 		char *member=NULL;
 		struct boundary *boundary=g_new0(struct boundary, 1);
@@ -85,22 +72,19 @@ build_boundaries(FILE *boundaries)
 			long long wayid;
 			int read=0;
 			if (sscanf(member,"2:%Ld:%n",&wayid,&read) >= 1) {
-				struct boundary_member *memb=g_new(struct boundary_member, 1);
-				char *role=member+read;
-				memb->wayid=wayid;
-				memb->boundary=boundary;
-				if (!strcmp(role,"outer"))
-					memb->role=geom_poly_segment_type_way_outer;
-				else if (!strcmp(role,"inner"))
-					memb->role=geom_poly_segment_type_way_inner;
-				else if (!strcmp(role,""))
-					memb->role=geom_poly_segment_type_way_unknown;
+				char *rolestr=member+read;
+				enum geom_poly_segment_type role;
+				if (!strcmp(rolestr,"outer"))
+					role=geom_poly_segment_type_way_outer;
+				else if (!strcmp(rolestr,"inner"))
+					role=geom_poly_segment_type_way_inner;
+				else if (!strcmp(rolestr,""))
+					role=geom_poly_segment_type_way_unknown;
 				else {
-					printf("Unknown role %s\n",role);
-					memb->role=geom_poly_segment_type_none;
+					printf("Unknown role %s\n",rolestr);
+					role=geom_poly_segment_type_none;
 				}
-				g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
-
+				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, wayid);
 			}
 		}
 		boundary->ib=item_bin_dup(ib);
@@ -170,26 +154,10 @@ boundary_bbox_compare(gconstpointer a, gconstpointer b)
 	return 0;
 }
 
-GList *
-process_boundaries(FILE *boundaries, FILE *ways)
+static GList *
+process_boundaries_finish(GList *boundaries_list)
 {
-	struct item_bin *ib;
-	GList *boundaries_list,*l,*sl,*l2,*ln;
-
-	member_hash=g_hash_table_new_full(boundary_member_hash, boundary_member_equal, NULL, NULL);
-	boundaries_list=build_boundaries(boundaries);
-	while ((ib=read_item(ways))) {
-		long long *wayid=item_bin_get_attr(ib, attr_osm_wayid, NULL);
-		if (wayid) {
-			GList *l=g_hash_table_lookup(member_hash, wayid);
-			while (l) {
-				struct boundary_member *memb=l->data;
-				memb->boundary->segments=g_list_prepend(memb->boundary->segments,item_bin_to_poly_segment(ib, memb->role));
-
-				l=g_list_next(l);
-			}
-		}
-	}
+	GList *l,*sl,*l2,*ln;
 	l=boundaries_list;
 	while (l) {
 		struct boundary *boundary=l->data;
@@ -242,4 +210,15 @@ process_boundaries(FILE *boundaries, FILE *ways)
 	test(boundaries_list);
 #endif
 	return boundaries_list;
+}
+
+GList *
+process_boundaries(FILE *boundaries, FILE *ways)
+{
+	GList *boundaries_list;
+	struct relations *relations=relations_new();
+
+	boundaries_list=process_boundaries_setup(boundaries, relations);
+	relations_process(relations, NULL, ways, NULL);
+	return process_boundaries_finish(boundaries_list);
 }
