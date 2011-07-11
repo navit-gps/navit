@@ -2819,28 +2819,44 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct widget *wl,*wt;
 	char buffer[32];
 	struct poi_param *paramnew;
-	paramnew=gui_internal_poi_param_clone(param);
-	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-	if (it == maxitem) {
-		paramnew->pagenb++;
-		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (paramnew->pagenb+1)*pagesize);
-	} else {
-		paramnew->dist++;
-		snprintf(buffer, sizeof(buffer), "Set search distance to %i km", 10*(paramnew->dist+1));
-	}
-	wt=gui_internal_label_new(this, buffer);
-	gui_internal_widget_append(wl, wt);
-	wl->func=gui_internal_cmd_pois_more;
-	wl->data=paramnew;
-	wl->data_free=gui_internal_poi_param_free;
-	wl->state |= STATE_SENSITIVE;
-	wl->c = wm->c;
 	row = gui_internal_widget_table_row_new(this,
 						  gravity_left
 						  | flags_fill
 						  | orientation_horizontal);
 	row->datai=100000000; // Really far away for Earth, but won't work for bigger planets.
 	gui_internal_widget_append(wtable,row);
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	if (it == maxitem) {
+		paramnew=gui_internal_poi_param_clone(param);
+		paramnew->pagenb++;
+		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (paramnew->pagenb+1)*pagesize);
+		wt=gui_internal_label_new(this, buffer);
+		gui_internal_widget_append(wl, wt);
+		wt->func=gui_internal_cmd_pois_more;
+		wt->data=paramnew;
+		wt->data_free=gui_internal_poi_param_free;
+		wt->state |= STATE_SENSITIVE;
+		wt->c = wm->c;
+	} else {
+		int dist[]={1,5,10,0};
+		wt=gui_internal_label_new(this, "Set distance to");
+		gui_internal_widget_append(wl, wt);
+		for(i=0;dist[i];i++) {
+			paramnew=gui_internal_poi_param_clone(param);
+			paramnew->dist+=dist[i];
+			snprintf(buffer, sizeof(buffer), " %i ", 10*(paramnew->dist+1));
+			wt=gui_internal_label_new(this, buffer);
+			gui_internal_widget_append(wl, wt);
+			wt->func=gui_internal_cmd_pois_more;
+			wt->data=paramnew;
+			wt->data_free=gui_internal_poi_param_free;
+			wt->state |= STATE_SENSITIVE;
+			wt->c = wm->c;
+		}
+		wt=gui_internal_label_new(this, "km.");
+		gui_internal_widget_append(wl, wt);
+
+	}
 	gui_internal_widget_append(row,wl);
 	// Rendering now is needed to have table_data->bottomrow filled in.
 	gui_internal_menu_render(this);
