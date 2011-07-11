@@ -38,6 +38,19 @@ osm_tag_name(struct item_bin *ib)
 	return osm_tag_value(ib, "name");
 }
 
+osmid
+boundary_relid(struct boundary *b)
+{
+	long long *id;
+	if (!b)
+		return 0;
+	if (!b->ib)
+		return 0;
+	id=item_bin_get_attr(b->ib, attr_osm_relationid, NULL);
+	if (id)
+		return *id;
+	return 0;
+}
 static void
 process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
 {
@@ -64,6 +77,8 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 				struct country_table *country=country_from_iso2(iso);	
 				if (!country) 
 					osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary contains unknown ISO3166-1 value '%s'\n",iso);
+				else
+					osm_info("relation",item_bin_get_relationid(ib),0,"Country Boundary for '%s'\n",iso);
 				boundary->country=country;
 			} else 
 				osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary doesn't contain an ISO3166-1 tag\n");
