@@ -804,7 +804,7 @@ int main(int argc, char **argv)
 		p.node_table_loaded=0;
 	} else {
 		fprintf(stderr,"PROGRESS: Phase %d: Reading data\n",phase);
-		FILE *ways_split=tempfile(suffix,"ways_split",0);
+		FILE *ways_split=tempfile(suffix,"ways_split",1);
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 		phase++;
@@ -817,19 +817,22 @@ int main(int argc, char **argv)
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
 		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
-		if (experimental) {
-			boundaries=tempfile(suffix,"boundaries",0);
-			ways=tempfile(suffix,"ways_split",0);
-		}
-		fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
-		osm_process_towns(towns,boundaries,ways);
-		if (experimental) {
-			fclose(ways);
-			fclose(boundaries);
-		}
-		fclose(towns);
-		if(!p.keep_tmpfiles)
-			tempfile_unlink(suffix,"towns");
+		if (towns) {
+			if (experimental) {
+				boundaries=tempfile(suffix,"boundaries",0);
+				ways=tempfile(suffix,"ways_split",0);
+			}
+			fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
+			osm_process_towns(towns,boundaries,ways);
+			if (experimental) {
+				fclose(ways);
+				fclose(boundaries);
+			}
+			fclose(towns);
+			if(!p.keep_tmpfiles)
+				tempfile_unlink(suffix,"towns");
+		} else
+			fprintf(stderr,"PROGRESS: Phase %d: skipped, towns file not found\n",phase);
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
