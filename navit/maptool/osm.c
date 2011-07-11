@@ -835,6 +835,17 @@ osm_warning(char *type, long long id, int cont, char *fmt, ...)
 	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"LONGLONG_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
+void
+osm_info(char *type, long long id, int cont, char *fmt, ...)
+{
+	char str[4096];
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(str, sizeof(str), fmt, ap);
+	va_end(ap);
+	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"LONGLONG_FMT" %s",cont ? "":"OSM Info:",type,id,str);
+}
+
 static void
 attr_strings_clear(void)
 {
@@ -1705,6 +1716,7 @@ osm_end_node(struct maptool_osm *osm)
 			item_bin=init_item(item_bin->type);
 			item_bin_add_coord(item_bin, &ni->c, 1);
 			item_bin_add_attr_string(item_bin, attr_osm_is_in, is_in_buffer);
+			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 			item_bin_add_attr_string(item_bin, attr_town_postal, postal);
 			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 			item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
@@ -1726,7 +1738,7 @@ osm_process_town_unknown_country(void)
 }
 
 static struct country_table *
-osm_process_town_by_is_in(char *is_in)
+osm_process_town_by_is_in(struct item_bin *ib,char *is_in)
 {
 	struct country_table *result=NULL, *lookup;
 	char *tok,*dup=g_strdup(is_in),*buf=dup;
@@ -1738,7 +1750,7 @@ osm_process_town_by_is_in(char *is_in)
 		lookup=g_hash_table_lookup(country_table_hash,tok);
 		if (lookup) {
 			if (result && result->countryid != lookup->countryid) {
-				osm_warning("node",nodeid,0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
+				osm_warning("node",item_bin_get_nodeid(ib),0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
 				conflict=1;
 			}
 			result=lookup;
@@ -1750,22 +1762,28 @@ osm_process_town_by_is_in(char *is_in)
 }
 
 static struct country_table *
-osm_process_town_by_boundary(GList *bl, struct coord *c)
+osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c)
 {
 	GList *l,*matches=boundary_find_matches(bl, c);
-	struct country_table *match=NULL;
+	struct boundary *match=NULL;
 
 	l=matches;
 	while (l) {
 		struct boundary *b=l->data;
 		if (b->country) {
-			if (match)
-				printf("conflict %d vs %d\n",b->country->countryid,match->countryid);
-			match=b->country;
+			if (match) {
+				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) country ", c->x, c->y);
+				osm_warning("relation",boundary_relid(match),1,"country %d vs ",match->country->countryid);
+				osm_warning("relation",boundary_relid(b),1,"country %d\n",b->country->countryid);
+			}
+			match=b;
 		}
 		l=g_list_next(l);
 	}
-	return match; 
+	if (match)
+		return match->country; 
+	else
+		return NULL;
 }
 
 void
@@ -1781,9 +1799,9 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 		struct country_table *result=NULL;
 		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
 		if (experimental)
-			result=osm_process_town_by_boundary(bl, c);
+			result=osm_process_town_by_boundary(bl, ib, c);
 		if (!result)
-			result=osm_process_town_by_is_in(is_in);
+			result=osm_process_town_by_is_in(ib, is_in);
 		if (!result && unknown_country)
 			result=osm_process_town_unknown_country();
 		if (result) {
@@ -1793,8 +1811,12 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 				g_free(name);
 			}
 			if (result->file) {
+				long long *nodeid;
 				if (is_in)
 					item_bin_remove_attr(ib, is_in);
+				nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+				if (nodeid)
+					item_bin_remove_attr(ib, nodeid);
 				item_bin_write_match(ib, attr_town_name, attr_town_name_match, result->file);
 			}
 		}

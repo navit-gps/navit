@@ -113,6 +113,8 @@ struct zip_info;
 
 struct country_table;
 
+typedef long int osmid;
+
 /* boundaries.c */
 
 struct boundary {
@@ -122,6 +124,8 @@ struct boundary {
 	GList *children;
 	struct rect r;
 };
+
+osmid boundary_relid(struct boundary *b);
 
 GList *process_boundaries(FILE *boundaries, FILE *ways);
 
@@ -257,7 +261,6 @@ void cat(FILE *in, FILE *out);
 
 
 /* osm.c */
-typedef long int osmid;
 struct maptool_osm {
 	FILE *boundaries;
 	FILE *turn_restrictions;
