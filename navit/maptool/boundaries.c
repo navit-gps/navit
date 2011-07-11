@@ -72,7 +72,8 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		struct boundary *boundary=g_new0(struct boundary, 1);
 		char *admin_level=osm_tag_value(ib, "admin_level");
 		char *iso=osm_tag_value(ib, "ISO3166-1");
-		if (admin_level && !strcmp(admin_level, "2")) {
+		/* disable spain for now since it creates a too large index */
+		if (admin_level && !strcmp(admin_level, "2") && (!iso || strcasecmp(iso,"es"))) {
 			if (iso) {
 				struct country_table *country=country_from_iso2(iso);	
 				if (!country) 
