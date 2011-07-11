@@ -1163,15 +1163,6 @@ osm_add_tag(char *k, char *v)
 
 int coord_count;
 
-struct node_item {
-	int id;
-	char ref_node;
-	char ref_way;
-	char ref_ref;
-	char dummy;
-	struct coord c;
-};
-
 static void
 extend_buffer(struct buffer *b)
 {
@@ -1975,6 +1966,179 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 	return NULL;
 }
 
+struct turn_restriction {
+	osmid relid;
+	enum item_type type;
+	struct coord *c[3];
+	int c_count[3];
+};
+
+static void
+process_turn_restrictions_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+{
+	int count,type=(long)member_priv;
+	struct turn_restriction *turn_restriction=relation_priv;
+	struct coord *c=(struct coord *)(member+1);
+	int ccount=member->clen/2;
+
+	if (member->type < type_line) 
+		count=1;	
+	else
+		count=2;
+	turn_restriction->c[type]=g_renew(struct coord, turn_restriction->c[type], turn_restriction->c_count[type]+count);
+	turn_restriction->c[type][turn_restriction->c_count[type]++]=c[0];
+	if (count > 1) 
+		turn_restriction->c[type][turn_restriction->c_count[type]++]=c[ccount-1];
+}
+
+static void
+process_turn_restrictions_fromto(struct turn_restriction *t, int type, struct coord **c)
+{
+	int i,j;
+	for (i = 0 ; i < t->c_count[type] ; i+=2) {
+		for (j = 0 ; j < t->c_count[1] ; j++) {
+			if (coord_is_equal(t->c[type][i],t->c[1][j])) {
+				c[0]=&t->c[type][i+1];
+				c[1]=&t->c[type][i];
+				return;
+			}
+			if (coord_is_equal(t->c[type][i+1],t->c[1][j])) {
+				c[0]=&t->c[type][i];
+				c[1]=&t->c[type][i+1];
+				return;
+			}
+		}
+	}
+}
+
+static void
+process_turn_restrictions_dump_coord(struct coord *c, int count)
+{
+	int i;
+	for (i = 0 ; i < count ; i++) {
+		fprintf(stderr,"(0x%x,0x%x)",c[i].x,c[i].y);
+	}
+}
+
+static void
+process_turn_restrictions_finish(GList *tr, FILE *out)
+{
+	GList *l=tr;
+	while (l) {
+		struct turn_restriction *t=l->data;
+		struct coord *c[4];
+		struct item_bin *ib=item_bin;
+
+		if (!t->c_count[0]) {
+			osm_warning("relation",t->relid,0,"turn restriction: from member not found");
+		} else if (!t->c_count[1]) {
+			osm_warning("relation",t->relid,0,"turn restriction: via member not found");
+		} else if (!t->c_count[2]) {
+			osm_warning("relation",t->relid,0,"turn restriction: to member not found");
+		} else {
+			process_turn_restrictions_fromto(t, 0, c);
+			process_turn_restrictions_fromto(t, 2, c+2);
+			if (!c[0] || !c[2]) {
+				osm_warning("relation",t->relid,0,"turn restriction: via (");
+				process_turn_restrictions_dump_coord(t->c[1], t->c_count[1]);
+				fprintf(stderr,")");
+				if (!c[0]) {
+					fprintf(stderr," failed to connect to from (");
+					process_turn_restrictions_dump_coord(t->c[0], t->c_count[0]);
+					fprintf(stderr,")");
+				}
+				if (!c[2]) {
+					fprintf(stderr," failed to connect to to (");
+					process_turn_restrictions_dump_coord(t->c[2], t->c_count[2]);
+					fprintf(stderr,")");
+				}
+				fprintf(stderr,"\n");
+			} else {
+				if (t->c_count[1] <= 2) {
+					item_bin_init(ib,t->type);
+					item_bin_add_coord(ib, c[0], 1);
+					item_bin_add_coord(ib, c[1], 1);
+					if (t->c_count[1] > 1) 
+						item_bin_add_coord(ib, c[3], 1);
+					item_bin_add_coord(ib, c[2], 1);
+					item_bin_write(ib, out);
+				}
+				
+			}
+		}
+		g_free(t);
+		l=g_list_next(l);
+	}
+	g_list_free(tr);
+}
+
+static GList *
+process_turn_restrictions_setup(FILE *in, struct relations *relations)
+{
+	struct relation_member fromm,tom,viam,tmpm;
+	long long relid;
+	struct item_bin *ib;
+	struct relations_func *relations_func;
+	int min_count;
+	GList *turn_restrictions=NULL;
+	
+	fseek(in, 0, SEEK_SET);
+	relations_func=relations_func_new(process_turn_restrictions_member, NULL);
+	while ((ib=read_item(in))) {
+		struct turn_restriction *turn_restriction=g_new0(struct turn_restriction, 1);
+		relid=item_bin_get_relationid(ib);
+		turn_restriction->relid=relid;
+		turn_restriction->type=ib->type;
+		min_count=0;
+		if (!search_relation_member(ib, "from",&fromm,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
+			continue;
+		}
+		if (search_relation_member(ib, "from",&tmpm,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple from members\n");
+			continue;
+		}
+		min_count=0;
+		if (!search_relation_member(ib, "to",&tom,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: to member missing\n");
+			continue;
+		}
+		if (search_relation_member(ib, "to",&tmpm,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple to members\n");
+			continue;
+		}
+		min_count=0;
+		if (!search_relation_member(ib, "via",&viam,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: via member missing\n");
+			continue;
+		}
+		if (search_relation_member(ib, "via",&tmpm,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
+			continue;
+		}
+		if (fromm.type != 2) {
+			osm_warning("relation",relid,0,"turn restriction: wrong type for from member ");
+			osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
+			continue;
+		}
+		if (tom.type != 2) {
+			osm_warning("relation",relid,0,"turn restriction: wrong type for to member ");
+			osm_warning(osm_types[tom.type],tom.id,1,"\n");
+			continue;
+		}
+		if (viam.type != 1 && viam.type != 2) {
+			osm_warning("relation",relid,0,"turn restriction: wrong type for via member ");
+			osm_warning(osm_types[viam.type],viam.id,1,"\n");
+			continue;
+		}
+		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
+		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
+		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
+		turn_restrictions=g_list_append(turn_restrictions, turn_restriction);
+	}
+	return turn_restrictions;
+}
+
 void
 process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
 {
@@ -1984,8 +2148,14 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	char from_buffer[65536],to_buffer[65536],via_buffer[65536];
 	struct item_bin *ib,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
 	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
-	fseek(in, 0, SEEK_SET);
 	int min_count;
+	fseek(in, 0, SEEK_SET);
+	if (experimental > 1) {
+		struct relations *relations=relations_new();
+		GList *turn_restrictions=process_turn_restrictions_setup(in, relations);
+		relations_process(relations, coords, ways, NULL);
+		process_turn_restrictions_finish(turn_restrictions, out);
+	}
 	while ((ib=read_item(in))) {
 		relid=item_bin_get_relationid(ib);
 		min_count=0;

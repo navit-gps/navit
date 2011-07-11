@@ -24,6 +24,15 @@
 
 static char buffer[800000];
 struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
+static struct node_item *node_item=(struct node_item *)(void *)buffer;
+
+struct node_item *
+read_node_item(FILE *in)
+{
+	if (fread(node_item, sizeof(struct node_item), 1, in) != 1)
+		return NULL;
+	return node_item;
+}
 
 struct item_bin *
 read_item(FILE *in)
