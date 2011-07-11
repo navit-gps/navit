@@ -120,6 +120,7 @@ typedef long int osmid;
 struct boundary {
 	struct item_bin *ib;
 	struct country_table *country;
+	char *iso2;
 	GList *segments,*sorted_segments;
 	GList *children;
 	struct rect r;

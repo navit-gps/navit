@@ -77,8 +77,10 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 				struct country_table *country=country_from_iso2(iso);	
 				if (!country) 
 					osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary contains unknown ISO3166-1 value '%s'\n",iso);
-				else
+				else {
+					boundary->iso2=g_strdup(iso);
 					osm_info("relation",item_bin_get_relationid(ib),0,"Country Boundary for '%s'\n",iso);
+				}
 				boundary->country=country;
 			} else 
 				osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary doesn't contain an ISO3166-1 tag\n");
@@ -177,6 +179,11 @@ process_boundaries_finish(GList *boundaries_list)
 	while (l) {
 		struct boundary *boundary=l->data;
 		int first=1;
+		FILE *f=NULL;
+		if (boundary->country) {
+			char *name=g_strdup_printf("country_%s_poly",boundary->iso2);
+			f=tempfile("",name,1);
+		}
 		boundary->sorted_segments=geom_poly_segments_sort(boundary->segments, geom_poly_segment_type_way_right_side);
 		sl=boundary->sorted_segments;
 		while (sl) {
@@ -191,9 +198,26 @@ process_boundaries_finish(GList *boundaries_list)
 					bbox_extend(c, &boundary->r);
 				c++;
 			}
+			if (f) {
+				struct item_bin *ib=item_bin;
+				item_bin_init(ib, type_selected_line);
+				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
+				item_bin_write(ib, f);
+			}
+#if 0
+			if (boundary->country) {
+				if (coord_is_equal(*gs->first,*gs->last)) {
+					fprintf(stderr,"closed\n");
+				} else {
+					fprintf(stderr,"loose end\n");
+				}
+			}
+#endif
 			sl=g_list_next(sl);
 		}	
 		l=g_list_next(l);
+		if (f) 
+			fclose(f);
 		
 	}
 #if 0
