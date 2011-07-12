@@ -2295,7 +2295,10 @@ struct poi_param {
  		 * list of pointers to individual substrings of filterstr.
 		 */		
 		GList *filter;
-		
+		/**
+		 * Number of POIs in this list
+		 */
+		int count;
 };
 
 
@@ -2708,7 +2711,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	w2=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, w2);
 
-	sel=map_selection_rect_new(&wm->c,dist*transform_scale(wm->c.y),18);
+	sel=map_selection_rect_new(&wm->c,dist*transform_scale(abs(wm->c.y)+dist*1.5),18);
 	center.x=wm->c.x;
 	center.y=wm->c.y;
 	h=mapset_open(navit_get_mapset(this->nav));
@@ -2829,6 +2832,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	if (it == maxitem) {
 		paramnew=gui_internal_poi_param_clone(param);
 		paramnew->pagenb++;
+		paramnew->count=it;
 		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (paramnew->pagenb+1)*pagesize);
 		wt=gui_internal_label_new(this, buffer);
 		gui_internal_widget_append(wl, wt);
@@ -2838,12 +2842,13 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		wt->state |= STATE_SENSITIVE;
 		wt->c = wm->c;
 	} else {
-		int dist[]={1,5,10,0};
+		static int dist[]={1,5,10,0};
 		wt=gui_internal_label_new(this, "Set distance to");
 		gui_internal_widget_append(wl, wt);
 		for(i=0;dist[i];i++) {
 			paramnew=gui_internal_poi_param_clone(param);
 			paramnew->dist+=dist[i];
+			paramnew->count=it;
 			snprintf(buffer, sizeof(buffer), " %i ", 10*(paramnew->dist+1));
 			wt=gui_internal_label_new(this, buffer);
 			gui_internal_widget_append(wl, wt);
@@ -2863,11 +2868,29 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	td=wtable->data;
 	if(td->bottom_row!=NULL)
 	{
+#if 0
 		while(((struct widget*)td->bottom_row->data)->datai<=prevdist
 				&& (td->next_button->state & STATE_SENSITIVE))
 		{
 			gui_internal_table_button_next(this, td->next_button, NULL);
 		}
+#else
+		int firstrow=g_list_index(wtable->children, td->top_row->data);
+		while(firstrow>=0) {
+			int currow=g_list_index(wtable->children, td->bottom_row->data) - firstrow;
+			if(currow<0) {
+				dbg(0,"Can't find bottom row in children list. Stop paging.\n");
+				break;
+			}
+			if(currow>=param->count)
+				break;
+			if(!(td->next_button->state & STATE_SENSITIVE)) {
+				dbg(0,"Reached last page but item %i not found. Stop paging.\n",param->count);
+				break;
+			}
+			gui_internal_table_button_next(this, td->next_button, NULL);
+		}
+#endif
 	}
 	gui_internal_menu_render(this);
         if(param_free)
