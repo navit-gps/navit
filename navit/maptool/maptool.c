@@ -818,16 +818,12 @@ int main(int argc, char **argv)
 	if (p.start <= phase && p.end >= phase) {
 		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
 		if (towns) {
-			if (experimental) {
-				boundaries=tempfile(suffix,"boundaries",0);
-				ways=tempfile(suffix,"ways_split",0);
-			}
+			boundaries=tempfile(suffix,"boundaries",0);
+			ways=tempfile(suffix,"ways_split",0);
 			fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
 			osm_process_towns(towns,boundaries,ways);
-			if (experimental) {
-				fclose(ways);
-				fclose(boundaries);
-			}
+			fclose(ways);
+			fclose(boundaries);
 			fclose(towns);
 			if(!p.keep_tmpfiles)
 				tempfile_unlink(suffix,"towns");

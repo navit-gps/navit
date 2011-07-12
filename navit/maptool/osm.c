@@ -1541,12 +1541,10 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
 	}
-	if (experimental) {
-		if (add_tag) {
-			char tag[strlen(k)+strlen(v)+2];
-			sprintf(tag,"%s=%s",k,v);
-			item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
-		}
+	if (add_tag) {
+		char tag[strlen(k)+strlen(v)+2];
+		sprintf(tag,"%s=%s",k,v);
+		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
 	}
 }
 
@@ -1792,14 +1790,12 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 	struct item_bin *ib;
 	GList *bl=NULL;
 
-	if (experimental) 
-		bl=process_boundaries(boundaries, ways);
+	bl=process_boundaries(boundaries, ways);
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
 		struct country_table *result=NULL;
 		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
-		if (experimental)
-			result=osm_process_town_by_boundary(bl, ib, c);
+		result=osm_process_town_by_boundary(bl, ib, c);
 		if (!result)
 			result=osm_process_town_by_is_in(ib, is_in);
 		if (!result && unknown_country)
@@ -2172,7 +2168,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
 	int min_count;
 	fseek(in, 0, SEEK_SET);
-	if (experimental > 1) {
+	if (experimental) {
 		struct relations *relations=relations_new();
 		GList *turn_restrictions=process_turn_restrictions_setup(in, relations);
 		relations_process(relations, coords, ways, NULL);
