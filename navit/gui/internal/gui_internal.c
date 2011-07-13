@@ -2831,6 +2831,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	row->datai=100000000; // Really far away for Earth, but won't work for bigger planets.
 	gui_internal_widget_append(wtable,row);
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(row,wl);
 	if (it == maxitem) {
 		paramnew=gui_internal_poi_param_clone(param);
 		paramnew->pagenb++;
@@ -2864,7 +2865,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_widget_append(wl, wt);
 
 	}
-	gui_internal_widget_append(row,wl);
 	// Rendering now is needed to have table_data->bottomrow filled in.
 	gui_internal_menu_render(this);
 	td=wtable->data;
