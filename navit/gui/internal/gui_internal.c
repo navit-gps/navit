@@ -2208,6 +2208,7 @@ struct selector selectors[]={
 	{"shopping","Shopping",(enum item_type []) {
 		type_poi_mall,type_poi_mall,
 		type_poi_shop_grocery,type_poi_shop_grocery,
+		type_poi_shopping,type_poi_shopping,
 		type_none}},
 	{"hospital","Service",(enum item_type []) {
 		type_poi_marina,type_poi_marina,
@@ -2227,7 +2228,8 @@ struct selector selectors[]={
 	{"unknown","Other",(enum item_type []){
 		type_point_unspecified,type_poi_land_feature-1,
 		type_poi_rock+1,type_poi_fuel-1,
-		type_poi_marina+1,type_poi_car_parking-1,
+		type_poi_marina+1,type_poi_shopping-1,
+		type_poi_shopping+1,type_poi_car_parking-1,
 		type_poi_car_parking+1,type_poi_bar-1,
 		type_poi_bank+1,type_poi_dam-1,
 		type_poi_dam+1,type_poi_information-1,
