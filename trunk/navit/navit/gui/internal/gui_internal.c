@@ -2363,7 +2363,7 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	nrows=nitems/wl->cols + (nitems%wl->cols>0);
 	wl->h=this->icon_l*nrows;
 	for (i = 0 ; i < nitems ; i++) {
-		struct poi_param *p=g_new(struct poi_param,1);
+		struct poi_param *p=g_new0(struct poi_param,1);
 		p->sel = 1;
 		p->selnb = i;
 		p->pagenb = pagenb;
