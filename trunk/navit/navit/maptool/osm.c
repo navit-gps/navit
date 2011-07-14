@@ -2160,6 +2160,17 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 void
 process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
 {
+	struct relations *relations=relations_new();
+	GList *turn_restrictions;
+	fseek(in, 0, SEEK_SET);
+	turn_restrictions=process_turn_restrictions_setup(in, relations);
+	relations_process(relations, coords, ways, NULL);
+	process_turn_restrictions_finish(turn_restrictions, out);
+}
+
+void
+process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
+{
 	struct relation_member fromm,tom,viam,tmpm;
 	struct node_item ni;
 	long long relid;
@@ -2167,13 +2178,6 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	struct item_bin *ib,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
 	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
 	int min_count;
-	fseek(in, 0, SEEK_SET);
-	if (experimental) {
-		struct relations *relations=relations_new();
-		GList *turn_restrictions=process_turn_restrictions_setup(in, relations);
-		relations_process(relations, coords, ways, NULL);
-		process_turn_restrictions_finish(turn_restrictions, out);
-	}
 	while ((ib=read_item(in))) {
 		relid=item_bin_get_relationid(ib);
 		min_count=0;
