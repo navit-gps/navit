@@ -176,8 +176,8 @@ static int dummy;
 # define WEBOS_KEY_MOD_SYM_STICKY 0x44
 
 # ifdef USE_WEBOS_ACCELEROMETER
-#  define WEBOS_ORIENTATION_PORTRAIT 0x0
-#  define WEBOS_ORIENTATION_LANDSCAPE 0x1
+#  define WEBOS_ORIENTATION_PORTRAIT 0x1
+#  define WEBOS_ORIENTATION_LANDSCAPE 0x2
 # endif
 
 # define SDL_USEREVENT_CODE_TIMER 0x1
@@ -223,7 +223,7 @@ static void event_sdl_remove_idle(struct event_idle *);
 static void event_sdl_call_callback(struct callback_list *);
 # ifdef USE_WEBOS_ACCELEROMETER
 static unsigned int sdl_orientation_count = 2^16;
-static char sdl_next_orientation = WEBOS_ORIENTATION_PORTRAIT;
+static char sdl_next_orientation = 0;
 # endif
 #endif
 unsigned char * ft_buffer = NULL;
@@ -1613,7 +1613,7 @@ sdl_accelerometer_handler(void* param)
     }
 
 
-    if (sdl_orientation_count == 3)
+    if (sdl_orientation_count == 3 || sdl_next_orientation == 0)
     {
 	sdl_orientation_count++;
 
@@ -2221,8 +2221,16 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 	    this->screen->w, this->screen->h,
 	    this->screen->format->BytesPerPixel * 8);
 #ifdef USE_WEBOS_ACCELEROMETER
-    this->real_w = w;
-    this->real_h = h;
+    if ( w > h ) {
+	this->orientation = WEBOS_ORIENTATION_LANDSCAPE;
+	this->real_w = h;
+	this->real_h = w;
+    }
+    else {
+	this->orientation = WEBOS_ORIENTATION_PORTRAIT;
+	this->real_w = w;
+	this->real_h = h;
+    }
     this->accelerometer = SDL_JoystickOpen(0);
 #endif
 
