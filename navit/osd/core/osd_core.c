@@ -81,6 +81,7 @@ static struct osd_text_item * oti_new(struct osd_text_item * parent);
 
 static int b_commandtable_added = 0;
 
+
 struct compass {
 	struct osd_item osd_item;
 	int width;
@@ -395,6 +396,35 @@ static void osd_odometer_from_string(struct odometer* this_, char*str)
   g_free(sum_time_str);
 }
 
+static void draw_multiline_osd_text(char *buffer,struct osd_item *osd_item, struct graphics_gc *curr_color)
+{
+  gchar**bufvec = g_strsplit(buffer,"\n",0);
+  struct point p, bbox[4];
+  //count strings
+  int strnum = 0;
+  gchar**pch = bufvec;
+  while(*pch) {
+    ++strnum;
+    ++pch;
+  }
+
+  if(0<strnum) {
+    int dh = osd_item->h / strnum;
+
+    pch = bufvec;
+    p.y = 0;
+    while (*pch) {
+      graphics_get_text_bbox(osd_item->gr, osd_item->font, *pch, 0x10000, 0, bbox, 0);
+      p.x=(osd_item->w-bbox[2].x)/2;
+      p.y += dh;
+      graphics_draw_text(osd_item->gr, curr_color, NULL, osd_item->font, *pch, &p, 0x10000, 0);
+      ++pch;
+    }
+  }
+  g_free(bufvec);
+}
+
+
 static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct vehicle *v)
 {
   struct coord curr_coord;
@@ -502,11 +532,11 @@ static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct v
   }
   g_free(time_buffer);
 
-  graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
-  p.x=(this->osd_item.w-bbox[2].x)/2;
-  p.y = this->osd_item.h-this->osd_item.h/10;
+
   curr_color = this->bActive?this->white:this->orange;
-  graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
+
+  draw_multiline_osd_text(buffer,&this->osd_item, curr_color);
+
   g_free(dist_buffer);
   g_free(spd_buffer);
   g_free(acc_buffer);
@@ -780,8 +810,8 @@ osd_cmd_interface_draw(struct cmd_interface *this, struct navit *nav,
 	p.x=(this->osd_item.w-bbox[2].x)/2;
 	p.y = this->osd_item.h-this->osd_item.h/10;
 	curr_color = this->white;
-if(this->text)
-	graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, this->text, &p, 0x10000, 0);
+	if(this->text)
+		draw_multiline_osd_text(this->text,&this->osd_item, curr_color);
 	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 }
 
@@ -1824,7 +1854,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       else if(dCurrDist <= speed*750.0/130.0) { 
         curr_color = this_->red;
       }
-      graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
+      draw_multiline_osd_text(buffer,&this_->item, curr_color);
       graphics_draw_mode(this_->item.gr, draw_mode_end);
     }
   }
