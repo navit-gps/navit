@@ -21,7 +21,11 @@
 #include <gtk/gtk.h>
 #include "navit.h"
 #include "gui_gtk.h"
+#ifdef __APPLE__
+#include "navit/menu.h"
+#else
 #include "menu.h"
+#endif
 #include "coord.h"
 #include "item.h"
 #include "attr.h"
