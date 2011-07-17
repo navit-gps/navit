@@ -5180,7 +5180,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	case html_tag_a:
 		if (html->name && len) {
 			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
-			gui_internal_widget_append(gui_internal_menu(this, gettext(text_stripped)), this->html_container);
+			gui_internal_widget_append(gui_internal_menu(this, _(text_stripped)), this->html_container);
 			gui_internal_menu_data(this)->href=g_strdup(this->href);
 			gui_internal_set_refresh_callback(this, html->refresh_cond);
 			this->html_container->spx=this->spacing*10;
@@ -5189,7 +5189,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	case html_tag_h1:
 		if (!this->html_container) {
 			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
-			gui_internal_widget_append(gui_internal_menu(this, gettext(text_stripped)), this->html_container);
+			gui_internal_widget_append(gui_internal_menu(this, _(text_stripped)), this->html_container);
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
@@ -5197,13 +5197,13 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 		if (len) {
 			w=gui_internal_box_new(this, gravity_center|orientation_vertical);
 			gui_internal_widget_append(w, html->w);
-			gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text_stripped), gravity_center|orientation_vertical));
+			gui_internal_widget_append(w, gui_internal_text_new(this, _(text_stripped), gravity_center|orientation_vertical));
 			html->w=w;
 		}
 		break;
 	case html_tag_div:
 		if (len) {
-			gui_internal_widget_append(html->w, gui_internal_text_new(this, gettext(text_stripped), gravity_center|orientation_vertical));
+			gui_internal_widget_append(html->w, gui_internal_text_new(this, _(text_stripped), gravity_center|orientation_vertical));
 		}
 		break;
 	case html_tag_script:
@@ -5986,14 +5986,14 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 
 	if (buttons) {
 	data->next_button = gui_internal_button_new_with_callback
-		(this,"Next",image_new_xs(this, "gui_arrow_right") ,
+		(this, _("Next"),image_new_xs(this, "gui_arrow_right") ,
 		 gravity_center  |orientation_vertical,
 		 gui_internal_table_button_next,NULL);
 	data->next_button->data=widget;
 
 
 	data->prev_button =  gui_internal_button_new_with_callback
-		(this,"Prev",
+		(this, _("Prev"),
 		 image_new_xs(this, "gui_arrow_left")
 		 ,gravity_center |orientation_vertical,
 		 gui_internal_table_button_prev,NULL);
@@ -6389,8 +6389,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			table_data->prev_button->state&= ~STATE_SENSITIVE;
 		}
 		gui_internal_widget_render(this,table_data->button_box);
-
-
 	}
 
 	/**
