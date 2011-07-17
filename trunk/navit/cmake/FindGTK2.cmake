@@ -62,6 +62,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
         ${_GLIB2IncDir}
         ${_GMODULE2IncDir}
         ${_GMODULE2IncDir}/glib-2.0
+        ${_GLIB2LinkDir}/glib-2.0/include
         /opt/gnome/lib64/glib-2.0/include
         /opt/gnome/lib/glib-2.0/include
         /opt/lib/glib-2.0/include
@@ -93,6 +94,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
       PATHS
         ${_GDK2IncDir}
 	${_GDK2IncDir}/gtk-2.0
+        ${_GDK2LinkDir}/gtk-2.0/include
         /opt/gnome/lib/gtk-2.0/include
         /opt/gnome/lib64/gtk-2.0/include
         /opt/lib/gtk-2.0/include
