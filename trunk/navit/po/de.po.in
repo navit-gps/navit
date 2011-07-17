@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-05 14:08+0200\n"
+"POT-Creation-Date: 2011-07-16 22:11+0200\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1542,6 +1543,9 @@ msgstr "Kartendownload"
 msgid "Active"
 msgstr "Aktiv"
 
+msgid "Download Enabled"
+msgstr "Download aktiviert"
+
 msgid "Download completely"
 msgstr "Komplett herunterladen"
 
@@ -1600,6 +1604,12 @@ msgstr "Karte folgt Fahrzeug"
 
 msgid "Message"
 msgstr "Benachrichtigung"
+
+msgid "Next"
+msgstr "Vor"
+
+msgid "Prev"
+msgstr "Zurück"
 
 msgid "Route Description"
 msgstr "Wegbeschreibung"
