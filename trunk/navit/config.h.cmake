@@ -68,3 +68,5 @@
 #cmakedefine HAVE_STRING_H 1
 
 #cmakedefine EZXML_NOMMAP 0
+
+#cmakedefine HAVE_STPCPY 1
