@@ -92,9 +92,9 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 			if (sscanf(member,"2:%Ld:%n",&wayid,&read) >= 1) {
 				char *rolestr=member+read;
 				enum geom_poly_segment_type role;
-				if (!strcmp(rolestr,"outer"))
+				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave"))
 					role=geom_poly_segment_type_way_outer;
-				else if (!strcmp(rolestr,"inner"))
+				else if (!strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
 					role=geom_poly_segment_type_way_inner;
 				else if (!strcmp(rolestr,""))
 					role=geom_poly_segment_type_way_unknown;
