@@ -1751,7 +1751,8 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in)
 		lookup=g_hash_table_lookup(country_table_hash,tok);
 		if (lookup) {
 			if (result && result->countryid != lookup->countryid) {
-				osm_warning("node",item_bin_get_nodeid(ib),0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
+				char *label=item_bin_get_attr(ib, attr_town_name, NULL);
+				osm_warning("node",item_bin_get_nodeid(ib),0,"conflict for %s is_in=%s country %d vs %d\n", label, is_in, lookup->countryid, result->countryid);
 				conflict=1;
 			}
 			result=lookup;
