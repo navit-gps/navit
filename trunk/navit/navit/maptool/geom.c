@@ -288,12 +288,12 @@ geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segm
 	int same=0,opposite=0;
 	if (s1->type == geom_poly_segment_type_none || s2->type == geom_poly_segment_type_none)
 		return 0;
-	if (s1->type == s2->type)
+	if (s1->type == s2->type) {
 		same=1;
-	if (s1->type == geom_poly_segment_type_way_inner && s2->type == geom_poly_segment_type_way_outer)
-		opposite=1;
-	if (s1->type == geom_poly_segment_type_way_outer && s2->type == geom_poly_segment_type_way_inner)
-		opposite=1;
+		if (s1->type == geom_poly_segment_type_way_inner || s1->type == geom_poly_segment_type_way_outer) {
+			opposite=1;
+		}
+	}
 	if (s1->type == geom_poly_segment_type_way_left_side && s2->type == geom_poly_segment_type_way_right_side)
 		opposite=1;
 	if (s1->type == geom_poly_segment_type_way_right_side && s2->type == geom_poly_segment_type_way_left_side)

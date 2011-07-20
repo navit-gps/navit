@@ -251,7 +251,8 @@ process_boundaries_finish(GList *boundaries_list)
 		if (f) 
 			fclose(f);
 		if (fu) {
-			osm_warning("relation",item_bin_get_relationid(boundary->ib),0,"Broken country polygon\n");
+			if (boundary->country)
+				osm_warning("relation",item_bin_get_relationid(boundary->ib),0,"Broken country polygon '%s'\n",boundary->iso2);
 			fclose(fu);
 		}
 		
