@@ -99,7 +99,8 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 				else if (!strcmp(rolestr,""))
 					role=geom_poly_segment_type_way_unknown;
 				else {
-					printf("Unknown role %s\n",rolestr);
+					osm_warning("relation",item_bin_get_relationid(ib),0,"Unknown role %s in member ",rolestr);
+					osm_warning("way",wayid,1,"\n");
 					role=geom_poly_segment_type_none;
 				}
 				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, wayid);
@@ -152,7 +153,7 @@ dump_hierarchy(GList *l, char *prefix)
 	strcat(newprefix," ");
 	while (l) {
 		struct boundary *boundary=l->data;
-		printf("%s:%s\n",prefix,osm_tag_name(boundary->ib));
+		fprintf(stderr,"%s:%s (0x%x,0x%x)-(0x%x,0x%x)\n",prefix,osm_tag_name(boundary->ib),boundary->r.l.x,boundary->r.l.y,boundary->r.h.x,boundary->r.h.y);
 		dump_hierarchy(boundary->children, newprefix);
 		l=g_list_next(l);
 	}
@@ -173,9 +174,30 @@ boundary_bbox_compare(gconstpointer a, gconstpointer b)
 }
 
 static GList *
+process_boundaries_insert(GList *list, struct boundary *boundary)
+{
+	GList *l=list;
+	while (l) {
+		struct boundary *b=l->data;
+		if (bbox_contains_bbox(&boundary->r, &b->r)) {
+			list=g_list_remove(list, b);
+			boundary->children=g_list_prepend(boundary->children, b);
+			l=list;
+		} else if (bbox_contains_bbox(&b->r, &boundary->r)) {
+			b->children=process_boundaries_insert(b->children, boundary);
+			return list;
+		} else
+			l=g_list_next(l);
+	}
+	return g_list_prepend(list, boundary);
+}
+
+
+static GList *
 process_boundaries_finish(GList *boundaries_list)
 {
 	GList *l,*sl,*l2,*ln;
+	GList *ret=NULL;
 	l=boundaries_list;
 	while (l) {
 		struct boundary *boundary=l->data;
@@ -216,6 +238,7 @@ process_boundaries_finish(GList *boundaries_list)
 #endif
 			sl=g_list_next(sl);
 		}	
+		ret=process_boundaries_insert(ret, boundary);
 		l=g_list_next(l);
 		if (f) 
 			fclose(f);
@@ -224,6 +247,7 @@ process_boundaries_finish(GList *boundaries_list)
 #if 0
 	printf("hierarchy\n");
 #endif
+#if 0
 	boundaries_list=g_list_sort(boundaries_list, boundary_bbox_compare);
 	l=boundaries_list;
 	while (l) {
@@ -243,13 +267,14 @@ process_boundaries_finish(GList *boundaries_list)
 		}
 		l=ln;
 	}
+	dump_hierarchy(boundaries_list,"");
 #if 0
 	printf("hierarchy done\n");
-	dump_hierarchy(boundaries_list,"");
 	printf("test\n");
 	test(boundaries_list);
 #endif
-	return boundaries_list;
+#endif
+	return ret;
 }
 
 GList *
