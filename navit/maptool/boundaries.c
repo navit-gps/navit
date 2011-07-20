@@ -119,7 +119,7 @@ boundary_find_matches(GList *l, struct coord *c)
 	while (l) {
 		struct boundary *boundary=l->data;
 		if (bbox_contains_coord(&boundary->r, c)) {
-			if (geom_poly_segments_point_inside(boundary->sorted_segments,c)) 
+			if (geom_poly_segments_point_inside(boundary->sorted_segments,c) > 0) 
 				ret=g_list_prepend(ret, boundary);
 			ret=g_list_concat(ret,boundary_find_matches(boundary->children, c));
 		}
@@ -202,10 +202,11 @@ process_boundaries_finish(GList *boundaries_list)
 	while (l) {
 		struct boundary *boundary=l->data;
 		int first=1;
-		FILE *f=NULL;
+		FILE *f=NULL,*fu=NULL;
 		if (boundary->country) {
 			char *name=g_strdup_printf("country_%s_poly",boundary->iso2);
 			f=tempfile("",name,1);
+			g_free(name);
 		}
 		boundary->sorted_segments=geom_poly_segments_sort(boundary->segments, geom_poly_segment_type_way_right_side);
 		sl=boundary->sorted_segments;
@@ -227,21 +228,32 @@ process_boundaries_finish(GList *boundaries_list)
 				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
 				item_bin_write(ib, f);
 			}
-#if 0
 			if (boundary->country) {
-				if (coord_is_equal(*gs->first,*gs->last)) {
-					fprintf(stderr,"closed\n");
-				} else {
-					fprintf(stderr,"loose end\n");
+				if (!coord_is_equal(*gs->first,*gs->last)) {
+					if (!fu) {
+						char *name=g_strdup_printf("country_%s_broken",boundary->iso2);
+						fu=tempfile("",name,1);
+						g_free(name);
+					}
+					struct item_bin *ib=item_bin;
+					item_bin_init(ib, type_selected_point);
+					item_bin_add_coord(ib, gs->first, 1);
+					item_bin_write(ib, fu);
+					item_bin_init(ib, type_selected_point);
+					item_bin_add_coord(ib, gs->last, 1);
+					item_bin_write(ib, fu);
 				}
 			}
-#endif
 			sl=g_list_next(sl);
 		}	
 		ret=process_boundaries_insert(ret, boundary);
 		l=g_list_next(l);
 		if (f) 
 			fclose(f);
+		if (fu) {
+			osm_warning("relation",item_bin_get_relationid(boundary->ib),0,"Broken country polygon\n");
+			fclose(fu);
+		}
 		
 	}
 #if 0
