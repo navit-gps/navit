@@ -177,14 +177,16 @@ if EVENT_GLIB
   lib@LIBNAVIT@_la_SOURCES += event_glib.c
 endif
 
+navit_LDFLAGS = -export-dynamic
+
 if !PLUGINS
   lib@LIBNAVIT@_la_SOURCES += builtin.c
   lib@LIBNAVIT@_la_LIBADD += $(MODULES)
 endif
 
-navit_LDFLAGS = -export-dynamic
 
 navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @CRYPTO_LIBS@ @INTLLIBS@
+ 
 
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc
@@ -232,7 +234,7 @@ builtin.c: $(top_builddir)/config.h
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/\.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
 	echo "extern void builtin_init(void);" >>builtin.c
 	echo "void builtin_init(void) {" >>builtin.c
-	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/\.la/_init();/" -e "s/.*\\/lib/	module_/" >>builtin.c
+	ls $(top_builddir)/navit/*/*/*.la | grep -v shapefile | sed -e "s/\.la/_init();/" -e "s/.*\\/lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
 support-builtin.c: $(top_builddir)/config.h
 	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/\.la/_init(void);/" -e "s/.*lib/extern void module_/" >support-builtin.c
