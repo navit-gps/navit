@@ -353,15 +353,32 @@ geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type)
 int
 geom_poly_segments_point_inside(GList *in, struct coord *c)
 {
-	int ret=0;
+	int open_matches=0,closed_matches=0;
 	struct coord *cp;
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
 		cp=seg->first;
-		ret^=geom_poly_point_inside(seg->first, seg->last-seg->first+1, c);
+		if (geom_poly_point_inside(seg->first, seg->last-seg->first+1, c)) {
+			if (coord_is_equal(*seg->first,*seg->last)) 
+				closed_matches++;
+			else
+				open_matches++;
+		}
 		in=g_list_next(in);
 	}
-	return ret;
+	if (closed_matches) {
+		if (closed_matches & 1)
+			return 0;
+		else
+			return 1;
+	}
+	if (open_matches) {
+		if (open_matches & 1)
+			return 0;
+		else
+			return -1;
+	}
+	return 0;
 }
 
 struct geom_poly_segment *
