@@ -366,7 +366,7 @@ AM_CONDITIONAL(SUPPORT_ZLIB, [test "x$zlib" = "xno"])
 AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
-AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 1 if you have sockets))
+AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 2 if you have sockets))
 AC_CHECK_HEADER(winsock2.h, AC_DEFINE([HAVE_WINSOCK],[],Define to 1 if you have Windows sockets))
 
 # gtk
@@ -558,30 +558,38 @@ fi
 
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" -a "x$freeglut" = "xyes" -a "x$opengl" = "xyes" -a "x$freeimage" = "xyes"  -a "x$glc" = "xyes" ])
 
+
 system_shapefile=no
+if test x"${map_shapefile}" = xyes
+then
 AC_CHECK_HEADERS(
 		[shapefil.h libshp/shapefil.h],
-		AC_DEFINE(
+		[AC_DEFINE(
 			  [HAVE_SYS_SHAPEFILELIB],
 			  [1],
-			  Define to 1 if you have the <libshp/shapefil.h> header file.
-			  )
-		system_shapefile_header=yes
+			  Define to 1 if you have the <shapefil.h> header file.
+			  )],
+		[SHAPEFILE_CFLAGS="-I\$(top_srcdir)/navit/support/shapefile"]
 		)
-if test x"${system_shapefile_header}" = xyes
+
+AC_CHECK_LIB(
+		[shp],
+		[DBFDeleteField],
+		[SHAPEFILE_LIBS="-lshp"
+		 system_shapefile=yes],
+		[SHAPEFILE_LIBS="-L\$(top_builddir)/navit/support/shapefile -lsupport_shapefile"
+		 system_shapefile=no]
+	    )
+
+if test x"${system_shapefile}" = xno
 then
-	AC_CHECK_LIB([shp], [DBFDeleteField], [SHAPEFILE_LIBS="-lshp";HAVE_SYS_SHAPEFILELIB=0;system_shapefile=yes])
-else
-	AC_MSG_WARN([*** No libshp/shapefil.h -- using included copy])
+	 AC_MSG_WARN([*** The shapefile library(libshp) from the system is to old or not found!  -- using included copy])
 fi
 
+fi
 AC_SUBST(SHAPEFILE_CFLAGS)
 AC_SUBST(SHAPEFILE_LIBS)
 AM_CONDITIONAL(HAVE_SYSTEM_SHAPEFILELIB, [test "x$system_shapefile" = "xyes" ])
-if test x"${system_shapefile}" = xno
-then
-	 AC_MSG_WARN([*** The shape library(libshp) from the system is to old!  -- using included copy])
-fi
 
 if test x"${USE_GARMIN}" = xyes
 then
