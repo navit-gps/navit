@@ -44,6 +44,7 @@
 #include "linguistics.h"
 #include "navit_nls.h"
 #include "atom.h"
+#include "command.h"
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
@@ -67,10 +68,10 @@ extern void builtin_init(void);
 int main_real(int argc, char **argv)
 {
 	xmlerror *error = NULL;
-	char *config_file = NULL;
+	char *config_file = NULL, *command=NULL, *startup_file=NULL;
 	int opt;
 	char *cp;
-	struct attr navit;
+	struct attr navit, conf;
 
 	GList *list = NULL, *li;
 	main_argc=argc;
@@ -111,7 +112,7 @@ int main_real(int argc, char **argv)
 #endif /* _MSC_VER */
 	if (argc > 1) {
 		/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
-		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
+		while((opt = getopt(argc, argv, ":hvc:d:e:s:")) != -1) {
 			switch(opt) {
 			case 'h':
 				print_usage();
@@ -127,6 +128,12 @@ int main_real(int argc, char **argv)
 				break;
 			case 'd':
 				printf("TODO Verbose option is set to `%s'\n", optarg);
+				break;
+			case 'e':
+				command=optarg;
+				break;
+			case 's':
+				startup_file=optarg;
 				break;
 #ifdef HAVE_GETOPT_H
 			case ':':
@@ -194,6 +201,20 @@ int main_real(int argc, char **argv)
 	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
 		dbg(0, _("No instance has been created, exiting\n"));
 		exit(1);
+	}
+	conf.type=attr_config;
+	conf.u.config=config;
+	if (startup_file) {
+		FILE *f=fopen(startup_file,"r");
+		if (f) {
+			char buffer[4096];
+			while(fgets(buffer, sizeof(buffer), f)) {
+				command_evaluate(&conf, buffer);
+			}
+		}
+	}
+	if (command) {
+		command_evaluate(&conf, command);
 	}
 	event_main_loop_run();
 
