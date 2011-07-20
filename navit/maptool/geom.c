@@ -368,15 +368,15 @@ geom_poly_segments_point_inside(GList *in, struct coord *c)
 	}
 	if (closed_matches) {
 		if (closed_matches & 1)
-			return 0;
-		else
 			return 1;
+		else
+			return 0;
 	}
 	if (open_matches) {
 		if (open_matches & 1)
-			return 0;
-		else
 			return -1;
+		else
+			return 0;
 	}
 	return 0;
 }
