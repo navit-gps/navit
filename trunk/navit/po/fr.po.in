@@ -6,12 +6,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-07-17 18:31+0200\n"
 "PO-Revision-Date: 2010-06-18 19:16+0000\n"
 "Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,6 +28,7 @@ msgstr "Execution depuis le dossier d'origine\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' mis à '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "zéroième"
 
@@ -48,26 +50,27 @@ msgstr "cinquième"
 msgid "sixth"
 msgstr "sixième"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr "la zéroième sortie"
+msgstr "zéroième sortie"
 
 msgid "first exit"
-msgstr "la première sortie"
+msgstr "première sortie"
 
 msgid "second exit"
-msgstr "la deuxième sortie"
+msgstr "deuxième sortie"
 
 msgid "third exit"
-msgstr "la troisième sortie"
+msgstr "troisième sortie"
 
 msgid "fourth exit"
-msgstr "la quatrième sortie"
+msgstr "quatrième sortie"
 
 msgid "fifth exit"
-msgstr "la cinquième sortie"
+msgstr "cinquième sortie"
 
 msgid "sixth exit"
-msgstr "la sixième sortie"
+msgstr "sixième sortie"
 
 #, c-format
 msgid "%d m"
@@ -78,6 +81,14 @@ msgid "in %d m"
 msgstr "dans %d m"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d mètres"
 
@@ -86,12 +97,32 @@ msgid "in %d meters"
 msgstr "dans %d mètres"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilomètres"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "dans %d.%d kilomètres"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -176,12 +207,12 @@ msgid "In %s, enter the roundabout"
 msgstr "Dans %s, engagez vous dans le rond-point"
 
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Sortez du rond-point à la %s"
-
-#, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "puis sortez du rond-point à la %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Sortez du rond-point à la %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1330,14 +1361,29 @@ msgstr "Véhicule"
 msgid "ZoomOut"
 msgstr "Zoom arrière"
 
+msgid "Decrease zoom level"
+msgstr ""
+
 msgid "ZoomIn"
 msgstr "Zoom avant"
+
+msgid "Increase zoom level"
+msgstr ""
 
 msgid "Recalculate"
 msgstr "Recalculer"
 
+msgid "Redraw map"
+msgstr ""
+
 msgid "Info"
 msgstr "Info"
+
+msgid "Set destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
 
 msgid "Stop Navigation"
 msgstr "Annuler le trajet"
@@ -1348,17 +1394,29 @@ msgstr "Test"
 msgid "_Quit"
 msgstr "_Quitter"
 
-msgid "Cursor"
-msgstr "Curseur"
+msgid "Quit the application"
+msgstr ""
+
+msgid "Show position cursor"
+msgstr ""
 
 msgid "Lock on Road"
 msgstr "Coller à la route"
 
-msgid "Northing"
-msgstr "Orientation toujours au Nord"
+msgid "Keep orientation to the North"
+msgstr ""
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "Show/hide route description"
+msgstr ""
 
 msgid "Autozoom"
 msgstr "Zoom automatique"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
 
 msgid "Fullscreen"
 msgstr "Plein écran"
@@ -1424,6 +1482,7 @@ msgstr "Retour"
 msgid "Add Bookmark"
 msgstr "Ajouter au favoris"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Ajouter un dossier de signets"
 
@@ -1463,6 +1522,7 @@ msgstr "Insérer le signet"
 msgid "Delete Bookmark"
 msgstr "Supprimer le signet"
 
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Insérer le signet"
 
@@ -1472,6 +1532,22 @@ msgstr "Ajouter %s aux favoris"
 
 msgid "House number"
 msgstr "Numéro de maison"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Cartes"
@@ -1520,11 +1596,20 @@ msgstr "Règles"
 msgid "Lock on road"
 msgstr "Coller à la route"
 
+msgid "Northing"
+msgstr "Orientation toujours au Nord"
+
 msgid "Map follows Vehicle"
 msgstr "La carte suit le véhicule"
 
 msgid "Message"
 msgstr "Message"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Description de la route"
@@ -1548,6 +1633,20 @@ msgstr "Et tous les membres du projet Navit"
 
 msgid "members and contributors."
 msgstr "membres et contributeurs"
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr "Attention! Radar!"
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr "Veuillez ralentir"
+
+msgid "Map Point"
+msgstr "Point sur la carte"
+
+msgid "Vehicle Position"
+msgstr "Position du véhicule"
 
 msgid "Main menu"
 msgstr "Menu principal"
@@ -1590,11 +1689,33 @@ msgstr "Description"
 msgid "horse"
 msgstr "cheval"
 
-msgid "Map Point"
-msgstr "Point sur la carte"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Position du véhicule"
+#~ msgid "Cursor"
+#~ msgstr "Curseur"
 
 #~ msgid " SNR "
 #~ msgstr " Rapport Signal/Bruit "
