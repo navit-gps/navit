@@ -110,14 +110,6 @@ sig_alrm_end(void)
 #endif
 }
 
-static void
-start_phase(char *str)
-{
-	fprintf(stderr,"PROGRESS: Phase %d: %s",phase,str);
-	progress_time();
-	progress_memory();
-	fprintf(stderr,"\n");
-}
 
 static struct plugins *plugins;
 
@@ -396,6 +388,20 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		return 0;
 	}
 	return 3;
+}
+
+static int
+start_phase(struct maptool_params *p, char *str)
+{
+	phase++;
+	if (p->start <= phase && p->end >= phase) {
+		fprintf(stderr,"PROGRESS: Phase %d: %s",phase,str);
+		progress_time();
+		progress_memory();
+		fprintf(stderr,"\n");
+		return 1;
+	} else
+		return 0;
 }
 
 static void
@@ -812,56 +818,45 @@ int main(int argc, char **argv)
 		osm_protobufdb_load(p.input_file, p.protobufdb);
 		return 0;
 	}
-	phase=1;
+	phase=0;
 
     // input from an OSM file
 	if (p.input == 0) {
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("collecting data");
+		if (start_phase(&p, "collecting data")) {
 			osm_collect_data(&p, suffix);
 			p.node_table_loaded=1;
 		}
-		phase++;
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("counting references and resolving ways");
+		if (start_phase(&p, "counting references and resolving ways")) {
 			maptool_load_node_table(&p,1);
 			osm_count_references(&p, suffix, p.start == phase);
 		}
-		phase++;
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("converting ways to pois");
+		if (start_phase(&p,"converting ways to pois")) {
 			osm_process_way2poi(&p, suffix);
 		}
-		phase++;
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("finding intersections");
+		if (start_phase(&p,"finding intersections")) {
 			if (p.process_ways) {
 				maptool_load_node_table(&p,0);
 				osm_find_intersections(&p, suffix);
 			}
 		}
-		phase++;
 		free(node_buffer.base);
 		node_buffer.base=NULL;
 		node_buffer.malloced=0;
 		node_buffer.size=0;
 		p.node_table_loaded=0;
 	} else {
-		start_phase("reading data");
-		FILE *ways_split=tempfile(suffix,"ways_split",1);
-		process_binfile(stdin, ways_split);
-		fclose(ways_split);
-		phase++;
+		if (start_phase(&p,"reading data")) {
+			FILE *ways_split=tempfile(suffix,"ways_split",1);
+			process_binfile(stdin, ways_split);
+			fclose(ways_split);
+		}
 	}
 
-	if (p.start <= phase && p.end >= phase) {
-		start_phase("generating coastlines");
+	if (start_phase(&p,"generating coastlines")) {
 		osm_process_coastlines(&p, suffix);
 	}
-	phase++;
-	if (p.start <= phase && p.end >= phase) {
+	if (start_phase(&p,"assinging towns to countries")) {
 		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
-		start_phase("assinging towns to countries");
 		if (towns) {
 			boundaries=tempfile(suffix,"boundaries",0);
 			ways=tempfile(suffix,"ways_split",0);
@@ -873,24 +868,18 @@ int main(int argc, char **argv)
 				tempfile_unlink(suffix,"towns");
 		}
 	}
-	phase++;
-	if (p.start <= phase && p.end >= phase) {
-		start_phase("sorting countries");
+	if (start_phase(&p,"sorting countries")) {
 		sort_countries(p.keep_tmpfiles);
 		p.countries_loaded=1;
 	}
-	phase++;
-	if (p.start <= phase && p.end >= phase) {
-		start_phase("generating turn restrictions");
+	if (start_phase(&p,"generating turn restrictions")) {
 		if (p.process_relations) {
 			osm_process_turn_restrictions(&p, suffix);
 		}
 		if(!p.keep_tmpfiles)
 			tempfile_unlink(suffix,"ways_split_index");
 	}
-	phase++;
-	if (p.output == 1 && p.start <= phase && p.end >= phase) {
-		start_phase("dumping");
+	if (p.output == 1 && start_phase(&p,"dumping")) {
 		maptool_dump(&p, suffix);
 		exit(0);
 	}
@@ -912,22 +901,19 @@ int main(int argc, char **argv)
 	}
 	for (i = suffix_start ; i < suffix_count ; i++) {
 		suffix=suffixes[i];
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("generating tiles");
+		if (start_phase(&p,"generating tiles")) {
 			maptool_load_countries(&p);
 			maptool_generate_tiles(&p, suffix, filenames, filename_count, i == suffix_start, suffixes[0]);
 			p.tilesdir_loaded=1;
 		}
-		phase++;
-		if (p.start <= phase && p.end >= phase) {
-			start_phase("assembling map");
+		if (start_phase(&p,"assembling map")) {
 			maptool_load_countries(&p);
 			maptool_load_tilesdir(&p, suffix);
 			maptool_assemble_map(&p, suffix, filenames, referencenames, filename_count, i == suffix_start, i == suffix_count-1, suffixes[0]);
 		}
-		phase--;
+		phase-=2;
 	}
-	phase++;
-	start_phase("done");
+	phase+=2;
+	start_phase(&p,"done");
 	return 0;
 }
