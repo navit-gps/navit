@@ -1055,6 +1055,9 @@ osm_add_tag(char *k, char *v)
 		flags[access_value(v)] |= AF_DANGEROUS_GOODS;
 		level=5;
 	}
+	if (! strcmp(k,"tunnel") && !strcmp(v,"1")) {
+		flags[0] |= AF_UNDERGROUND;
+	}
 	if (! strcmp(k,"note"))
 		level=5;
 	if (! strcmp(k,"name")) {

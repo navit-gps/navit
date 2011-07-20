@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <zlib.h>
 #include "file.h"
 #include "item.h"
@@ -65,7 +66,27 @@ int overlap=1;
 
 int bytes_read;
 
+static long start_brk;
+static struct timeval start_tv;
 
+static void
+progress_time(void)
+{
+	struct timeval tv;
+	int seconds;
+	gettimeofday(&tv, NULL);
+	seconds=tv.tv_sec-start_tv.tv_sec;
+	fprintf(stderr," %d:%02d",seconds/60,seconds%60);
+}
+
+static void
+progress_memory(void)
+{
+#ifdef HAVE_UNISTD_H
+	long mem=(long)sbrk(0)-start_brk;
+	fprintf(stderr," %ld MB",mem/1024/1024);
+#endif
+}
 
 void
 sig_alrm(int sig)
@@ -74,8 +95,12 @@ sig_alrm(int sig)
 	signal(SIGALRM, sig_alrm);
 	alarm(30);
 #endif
-	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles\n", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
+	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
+	progress_time();
+	progress_memory();
+	fprintf(stderr,"\n");
 }
+
 
 void
 sig_alrm_end(void)
@@ -83,6 +108,15 @@ sig_alrm_end(void)
 #ifndef _WIN32
 	alarm(0);
 #endif
+}
+
+static void
+start_phase(char *str)
+{
+	fprintf(stderr,"PROGRESS: Phase %d: %s",phase,str);
+	progress_time();
+	progress_memory();
+	fprintf(stderr,"\n");
 }
 
 static struct plugins *plugins;
@@ -705,6 +739,7 @@ maptool_load_tilesdir(struct maptool_params *p, char *suffix)
 	}
 }
 
+
 int main(int argc, char **argv)
 {
 #if 0
@@ -744,6 +779,11 @@ int main(int argc, char **argv)
 	p.process_relations=1;
 	p.timestamp=current_to_iso8601();
 
+#ifdef HAVE_UNISTD_H
+	start_brk=(long)sbrk(0);
+#endif
+	gettimeofday(&start_tv, NULL);
+
 	while (1) {
 		int parse_result=parse_option(&p, argv, argc, &option_index);
 		if (!parse_result) {
@@ -757,9 +797,14 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
+	if (experimental) {
+		fprintf(stderr,"No experimental features available\n");
+		exit(0);
+	}
 	if (optind != argc-(p.output == 1 ? 0:1))
 		usage(stderr);
 	p.result=argv[optind];
+
 
     // initialize plugins and OSM mappings
 	maptool_init(p.rule_file);
@@ -772,29 +817,28 @@ int main(int argc, char **argv)
     // input from an OSM file
 	if (p.input == 0) {
 		if (p.start <= phase && p.end >= phase) {
-			fprintf(stderr,"PROGRESS: Phase %d: collecting data\n",phase);
+			start_phase("collecting data");
 			osm_collect_data(&p, suffix);
 			p.node_table_loaded=1;
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
+			start_phase("counting references and resolving ways");
 			maptool_load_node_table(&p,1);
-			fprintf(stderr,"PROGRESS: Phase %d: counting references and resolving ways\n",phase);
 			osm_count_references(&p, suffix, p.start == phase);
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
-			fprintf(stderr,"PROGRESS: Phase %d: converting ways to pois\n",phase);
+			start_phase("converting ways to pois");
 			osm_process_way2poi(&p, suffix);
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
+			start_phase("finding intersections");
 			if (p.process_ways) {
-				fprintf(stderr,"PROGRESS: Phase %d: finding intersections\n",phase);
 				maptool_load_node_table(&p,0);
 				osm_find_intersections(&p, suffix);
-			} else
-				fprintf(stderr,"PROGRESS: Skipping Phase %d\n",phase);
+			}
 		}
 		phase++;
 		free(node_buffer.base);
@@ -803,7 +847,7 @@ int main(int argc, char **argv)
 		node_buffer.size=0;
 		p.node_table_loaded=0;
 	} else {
-		fprintf(stderr,"PROGRESS: Phase %d: Reading data\n",phase);
+		start_phase("reading data");
 		FILE *ways_split=tempfile(suffix,"ways_split",1);
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
@@ -811,45 +855,42 @@ int main(int argc, char **argv)
 	}
 
 	if (p.start <= phase && p.end >= phase) {
-		fprintf(stderr,"PROGRESS: Phase %d: Generating coastlines\n",phase);
+		start_phase("generating coastlines");
 		osm_process_coastlines(&p, suffix);
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
 		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
+		start_phase("assinging towns to countries");
 		if (towns) {
 			boundaries=tempfile(suffix,"boundaries",0);
 			ways=tempfile(suffix,"ways_split",0);
-			fprintf(stderr,"PROGRESS: Phase %d: assinging towns to countries\n",phase);
 			osm_process_towns(towns,boundaries,ways);
 			fclose(ways);
 			fclose(boundaries);
 			fclose(towns);
 			if(!p.keep_tmpfiles)
 				tempfile_unlink(suffix,"towns");
-		} else
-			fprintf(stderr,"PROGRESS: Phase %d: skipped, towns file not found\n",phase);
+		}
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
-		fprintf(stderr,"PROGRESS: Phase %d: sorting countries\n",phase);
+		start_phase("sorting countries");
 		sort_countries(p.keep_tmpfiles);
 		p.countries_loaded=1;
 	}
 	phase++;
 	if (p.start <= phase && p.end >= phase) {
+		start_phase("generating turn restrictions");
 		if (p.process_relations) {
-			fprintf(stderr,"PROGRESS: Phase %d: generating turn restrictions\n",phase);
 			osm_process_turn_restrictions(&p, suffix);
-		} else {
-			fprintf(stderr,"PROGRESS: Skipping phase %d\n",phase);
 		}
 		if(!p.keep_tmpfiles)
 			tempfile_unlink(suffix,"ways_split_index");
 	}
 	phase++;
 	if (p.output == 1 && p.start <= phase && p.end >= phase) {
-		fprintf(stderr,"PROGRESS: Phase %d: dumping\n",phase);
+		start_phase("dumping");
 		maptool_dump(&p, suffix);
 		exit(0);
 	}
@@ -872,14 +913,14 @@ int main(int argc, char **argv)
 	for (i = suffix_start ; i < suffix_count ; i++) {
 		suffix=suffixes[i];
 		if (p.start <= phase && p.end >= phase) {
-			fprintf(stderr,"PROGRESS: Phase %d: generating tiles\n",phase);
+			start_phase("generating tiles");
 			maptool_load_countries(&p);
 			maptool_generate_tiles(&p, suffix, filenames, filename_count, i == suffix_start, suffixes[0]);
 			p.tilesdir_loaded=1;
 		}
 		phase++;
 		if (p.start <= phase && p.end >= phase) {
-			fprintf(stderr,"PROGRESS: Phase %d: assembling map\n",phase);
+			start_phase("assembling map");
 			maptool_load_countries(&p);
 			maptool_load_tilesdir(&p, suffix);
 			maptool_assemble_map(&p, suffix, filenames, referencenames, filename_count, i == suffix_start, i == suffix_count-1, suffixes[0]);
@@ -887,6 +928,6 @@ int main(int argc, char **argv)
 		phase--;
 	}
 	phase++;
-	fprintf(stderr,"PROGRESS: Phase %d done\n",phase);
+	start_phase("done");
 	return 0;
 }
