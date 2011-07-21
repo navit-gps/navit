@@ -82,7 +82,7 @@ progress_time(void)
 static void
 progress_memory(void)
 {
-#ifdef HAVE_UNISTD_H
+#ifdef HAVE_SBRK
 	long mem=(long)sbrk(0)-start_brk;
 	fprintf(stderr," %ld MB",mem/1024/1024);
 #endif
@@ -785,7 +785,7 @@ int main(int argc, char **argv)
 	p.process_relations=1;
 	p.timestamp=current_to_iso8601();
 
-#ifdef HAVE_UNISTD_H
+#ifdef HAVE_SBRK
 	start_brk=(long)sbrk(0);
 #endif
 	gettimeofday(&start_tv, NULL);
