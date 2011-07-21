@@ -204,8 +204,15 @@ geom_poly_point_inside(struct coord *cp, int count, struct coord *c)
 	struct coord *last=cp+count-1;
 	while (cp < last) {
 		if ((cp[0].y > c->y) != (cp[1].y > c->y) &&
-			c->x < (cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x)
+			c->x < ((long long)cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x) {
+#if 0
+			fprintf(stderr," cross 0x%x,0x%x-0x%x,0x%x %dx%d",cp,cp[0].x,cp[0].y,cp[1].x,cp[1].y,cp[1].x-cp[0].x,c->y-cp[0].y);
+			printf("type=selected_line\n");
+			coord_print(projection_mg, &cp[0], stdout);
+			coord_print(projection_mg, &cp[1], stdout);
+#endif
 			ret=!ret;
+		}
 		cp++;
 	}
 	return ret;
@@ -355,17 +362,31 @@ geom_poly_segments_point_inside(GList *in, struct coord *c)
 {
 	int open_matches=0,closed_matches=0;
 	struct coord *cp;
+#if 0
+	fprintf(stderr,"try 0x%x,0x%x:",c->x,c->y);
+#endif
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
 		cp=seg->first;
 		if (geom_poly_point_inside(seg->first, seg->last-seg->first+1, c)) {
+#if 0
+			fprintf(stderr," inside");
+#endif
 			if (coord_is_equal(*seg->first,*seg->last)) 
 				closed_matches++;
 			else
 				open_matches++;
+		} else {
+#if 0
+			fprintf(stderr," outside");
+#endif
 		}
 		in=g_list_next(in);
 	}
+#if 0
+	fprintf(stderr,"\n");
+	fprintf(stderr,"open_matches %d closed_matches %d\n",open_matches,closed_matches);
+#endif
 	if (closed_matches) {
 		if (closed_matches & 1)
 			return 1;
