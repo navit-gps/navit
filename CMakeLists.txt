@@ -317,6 +317,7 @@ add_plugin(support/espeak "Default" FALSE)
 add_module(vehicle/android "Default" FALSE)
 add_module(vehicle/iphone "Default" FALSE)
 add_module(vehicle/wince "Default" FALSE)
+add_module(graphics/cocoa "Default" FALSE "-lcocoa" )
 
 # other features
 add_feature(USE_PLUGINS "default" TRUE)
