@@ -1774,7 +1774,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c)
 		struct boundary *b=l->data;
 		if (b->country) {
 			if (match) {
-				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) country ", c->x, c->y);
+				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) conflict country ", c->x, c->y);
 				osm_warning("relation",boundary_relid(match),1,"country %d vs ",match->country->countryid);
 				osm_warning("relation",boundary_relid(b),1,"country %d\n",b->country->countryid);
 			}
@@ -2052,11 +2052,11 @@ process_turn_restrictions_finish(GList *tr, FILE *out)
 		struct item_bin *ib=item_bin;
 
 		if (!t->c_count[0]) {
-			osm_warning("relation",t->relid,0,"turn restriction: from member not found");
+			osm_warning("relation",t->relid,0,"turn restriction: from member not found\n");
 		} else if (!t->c_count[1]) {
-			osm_warning("relation",t->relid,0,"turn restriction: via member not found");
+			osm_warning("relation",t->relid,0,"turn restriction: via member not found\n");
 		} else if (!t->c_count[2]) {
-			osm_warning("relation",t->relid,0,"turn restriction: to member not found");
+			osm_warning("relation",t->relid,0,"turn restriction: to member not found\n");
 		} else {
 			process_turn_restrictions_fromto(t, 0, c);
 			process_turn_restrictions_fromto(t, 2, c+2);
