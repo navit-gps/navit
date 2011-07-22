@@ -505,7 +505,7 @@ public class NavitMapDownloader extends Thread
 	{
 		StatFs fsInfo = new StatFs(MAP_FILENAME_PATH);
 		
-		long free_space = fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
+		long free_space = (long)fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
 		
 		if ( needed_bytes <= 0 )
 			needed_bytes = MAP_WRITE_FILE_BUFFER;
