@@ -841,10 +841,14 @@ osd_cmd_interface_init(struct cmd_interface *this, struct navit *nav)
 static int
 osd_cmd_interface_set_attr(struct cmd_interface *this_, struct attr* attr)
 {
-	struct navit* nav = this_->osd_item.navit;
+	struct navit* nav;
+
 	if(NULL==attr || NULL==this_) {
 		return 0;
-	}	
+	}
+
+	nav = this_->osd_item.navit;
+
 	if(attr->type == attr_status_text) {
 		if(this_->text) {
 			g_free(this_->text);
