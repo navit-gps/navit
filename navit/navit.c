@@ -1118,37 +1118,63 @@ navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, s
 	cmd_int_var_stack = g_list_remove_link(cmd_int_var_stack,cmd_int_var_stack);
 }
 
+static struct attr **
+navit_get_coord(struct navit *this, struct attr **in, struct pcoord *pc)
+{
+	if (!in)
+		return NULL;
+	if (!in[0])
+		return NULL;
+	pc->pro = transform_get_projection(this->trans);
+	if (ATTR_IS_STRING(in[0]->type)) {
+		struct coord c;
+		coord_parse(in[0]->u.str, pc->pro, &c);
+		pc->x=c.x;
+		pc->y=c.y;
+		in++;	
+	} else if (ATTR_IS_COORD(in[0]->type)) {
+		pc->x=in[0]->u.coord->x;
+		pc->y=in[0]->u.coord->y;
+		in++;
+	} else if (ATTR_IS_PCOORD(in[0]->type)) {
+		*pc=*in[0]->u.pcoord;
+		in++;
+	} else if (in[1] && in[2] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type) && ATTR_IS_INT(in[2]->type)) {
+		pc->pro=in[0]->u.num;
+		pc->x=in[1]->u.num;
+		pc->y=in[2]->u.num;
+		in+=3;
+	} else if (in[1] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type)) {
+		pc->x=in[0]->u.num;
+		pc->y=in[1]->u.num;
+		in+=2;
+	} else
+		return NULL;
+	return in;
+}
+
 static void
 navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct pcoord pc;
 	char *description=NULL;
+	in=navit_get_coord(this, in, &pc);
 	if (!in)
-		return;
-	if (!in[0])
-		return;
-	pc.pro = transform_get_projection(this->trans);
-	if (ATTR_IS_COORD(in[0]->type)) {
-		pc.x=in[0]->u.coord->x;
-		pc.y=in[0]->u.coord->y;
-		in++;
-	} else if (ATTR_IS_PCOORD(in[0]->type)) {
-		pc=*in[0]->u.pcoord;
-		in++;
-	} else if (in[1] && in[2] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type) && ATTR_IS_INT(in[2]->type)) {
-		pc.pro=in[0]->u.num;
-		pc.x=in[1]->u.num;
-		pc.y=in[2]->u.num;
-		in+=3;
-	} else if (in[1] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type)) {
-		pc.x=in[0]->u.num;
-		pc.y=in[1]->u.num;
-		in+=2;
-	} else
 		return;
 	if (in[0] && ATTR_IS_STRING(in[0]->type))
 		description=in[0]->u.str;
 	navit_set_destination(this, &pc, description, 1);
+}
+
+
+static void
+navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct pcoord pc;
+	in=navit_get_coord(this, in, &pc);
+	if (!in)
+		return;
+	navit_set_center(this, &pc, 0);
 }
 
 static void
@@ -1265,6 +1291,7 @@ static struct command_table commands[] = {
 	{"zoom_out",command_cast(navit_cmd_zoom_out)},
 	{"zoom_to_route",command_cast(navit_cmd_zoom_to_route)},
 	{"say",command_cast(navit_cmd_say)},
+	{"set_center",command_cast(navit_cmd_set_center)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
