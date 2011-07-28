@@ -309,8 +309,11 @@ add_module(map/filter "Default" TRUE)
 if(NOT MSVC)
 add_module(map/mg "Default" TRUE)
 endif(NOT MSVC)
-# cp15 promised to fix the build against the internal libshapefile
-add_module(map/shapefile "Default" FALSE)
+add_module_plugin(support/shapefile "Default" TRUE)
+set(map_shapefile_INCLUDES "${CMAKE_SOURCE_DIR}/navit/support/shapefile")
+#set(map_shapefile_LIBRARY_DIRS "${CMAKE_BINARY_DIR}/navit/support/shapefile")
+set(map_shapefile_LIBS "support_shapefile")
+add_module(map/shapefile "Default" TRUE)
 add_module(map/textfile "Default" TRUE)
 add_module(map/csv "Default" TRUE)
 
@@ -556,7 +559,7 @@ endif(EXTRA_DEFINES)
 if (NOT NAVIT_DEPENDENCY_ERROR)
    message("\nSummary:\n")
 
-   set(SUMMARY_COMPONENTS ${ALL_PLUGINS} ${ALL_MODULES})
+   set(SUMMARY_COMPONENTS ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
    list(SORT SUMMARY_COMPONENTS)
 
    set(LAST_TYPE NONE)
