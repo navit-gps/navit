@@ -57,7 +57,7 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builtin.c.in ${CMAKE_CURRENT_BINARY_D
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/fib-1.1")
 
 # Add module paths
-foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULES})
+foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
    if (${CURRENT_MODULE})
       add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_MODULE}")
    endif()
