@@ -345,6 +345,13 @@ AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
 AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
 
+AC_CHECK_HEADER([sys/time.h],
+		 [AC_DEFINE(
+			[HAVE_SYS_TIME_H],
+			[1],
+			[Define to 1 if you have the <sys/time.h> header file.])
+		])
+
 if test "x${ZLIB_CFLAGS}" = "x" -a "x${ZLIB_LIBS}" = "x"; then
 AC_CHECK_HEADER(
 	zlib.h,
