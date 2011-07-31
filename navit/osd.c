@@ -33,6 +33,7 @@
 struct osd {
 	struct osd_methods meth;
 	struct osd_priv *priv;
+	struct attr** osd_attrs;
 };
 
 static GHashTable *osd_hash = NULL;
@@ -61,8 +62,15 @@ osd_new(struct attr *parent, struct attr **attrs)
 		g_hash_table_insert(osd_hash, g_strdup(attr->u.str), o);
 	}
 
+	o->osd_attrs = attr_list_dup(attrs);
 
         return o;
+}
+
+int
+osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	return attr_generic_get_attr(this_->osd_attrs, NULL, type, attr, NULL);
 }
 
 struct osd*
@@ -74,6 +82,7 @@ osd_get_osd_by_name(char *name)
 int
 osd_set_attr(struct osd *osd, struct attr* attr)
 {
+	osd->osd_attrs=attr_generic_set_attr(osd->osd_attrs,attr);
 	if(osd && osd->meth.set_attr) {
 		osd->meth.set_attr(osd->priv, attr);
 	}
