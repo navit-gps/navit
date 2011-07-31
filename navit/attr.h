@@ -153,6 +153,7 @@ struct attr {
 		struct roadprofile *roadprofile;
 		struct bookmarks *bookmarks;
 		struct config *config;
+		struct osd *osd;
 		struct range {
 			short min, max;
 		} range;
