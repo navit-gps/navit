@@ -256,7 +256,7 @@ static struct object_func object_funcs[] = {
 	{ attr_mapset,     NEW(mapset_new),   NULL, NULL, NULL, NULL, ADD(mapset_add_attr)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
 	{ attr_navit,      NEW(navit_new), GET(navit_get_attr), ITERN(navit_attr_iter_new), ITERD(navit_attr_iter_destroy), SET(navit_set_attr), ADD(navit_add_attr), REMOVE(navit_remove_attr), INIT(navit_init), DESTROY(navit_destroy)},
-	{ attr_osd,        NEW(osd_new)},
+	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
 	{ attr_plugins,    NEW(plugins_new),  NULL, NULL, NULL, NULL, NULL, NULL, INIT(plugins_init)},
 	{ attr_plugin,     NEW(plugin_new)},
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
