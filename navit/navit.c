@@ -155,11 +155,13 @@ struct navit {
 		 /* 2=No gui ok */
 	int border;
 	int imperial;
+	struct attr **attr_list;
 };
 
 struct gui *main_loop_gui;
 
 struct attr_iter {
+	void *iter;
 	union {
 		GList *list;
 		struct mapset_handle *mapset_handle;
@@ -2515,6 +2517,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_orientation:
 		attr->u.num=this_->orientation;
 		break;
+	case attr_osd:
+		ret=attr_generic_get_attr(this_->attr_list, NULL, type, attr, iter?(struct attr_iter *)&iter->iter:NULL);
+		break;
 	case attr_osd_configuration:
 		attr->u.num=this_->osd_configuration;
 		break;
@@ -2638,6 +2643,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		break;
 	case attr_navigation:
 		this_->navigation=attr->u.navigation;
+		break;
+	case attr_osd:
+		this_->attr_list=attr_generic_add_attr(this_->attr_list, attr);
 		break;
 	case attr_recent_dest:
 		this_->recentdest_count = attr->u.num;
