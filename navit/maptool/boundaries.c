@@ -20,7 +20,7 @@
 #include <string.h>
 #include "maptool.h"
 
-static char *
+char *
 osm_tag_value(struct item_bin *ib, char *key)
 {
 	char *tag=NULL;

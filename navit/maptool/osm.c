@@ -106,6 +106,7 @@ char *osm_types[]={"unknown","node","way","relation"};
 struct country_table {
 	int countryid;
 	char *names;
+	char *admin_levels;
 	FILE *file;
 	int size;
 	struct rect r;
@@ -193,7 +194,7 @@ struct country_table {
 	{ 268,"Georgia"},
 	{ 270,"Gambia"},
 	{ 275,"Palestinian Territory, Occupied"},
-	{ 276,"Germany,Deutschland,Bundesrepublik Deutschland"},
+	{ 276,"Germany,Deutschland,Bundesrepublik Deutschland","345c7m"},
 	{ 288,"Ghana"},
 	{ 292,"Gibraltar"},
 	{ 296,"Kiribati"},
@@ -1538,7 +1539,7 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"admin_level")) {
 		admin_level=atoi(v);
 	} else if (!strcmp(k,"boundary")) {
-		if (!strcmp(v,"administrative")) {
+		if (!strcmp(v,"administrative") || (experimental && !strcmp(v,"postal_code"))) {
 			boundary=1;
 		}
 	} else if (!strcmp(k,"ISO3166-1")) {
@@ -1764,7 +1765,7 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in)
 }
 
 static struct country_table *
-osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c)
+osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, struct attr *attrs)
 {
 	GList *l,*matches=boundary_find_matches(bl, c);
 	struct boundary *match=NULL;
@@ -1782,9 +1783,46 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c)
 		}
 		l=g_list_next(l);
 	}
-	if (match)
+	if (match) {
+		if (match && match->country && match->country->admin_levels && experimental) {
+			l=matches;
+			while (l) {
+				struct boundary *b=l->data;
+				char *admin_level=osm_tag_value(b->ib, "admin_level");
+				char *postal=osm_tag_value(b->ib, "postal_code");
+				if (admin_level) {
+					int a=atoi(admin_level);
+					int end=strlen(match->country->admin_levels)+3;
+					char *name;
+					if (a > 2 && a < end) {
+						enum attr_type attr_type=attr_none;
+						switch(match->country->admin_levels[a-3]) {
+						case 's':
+							attr_type=attr_state_name;
+							break;
+						case 'c':
+							attr_type=attr_county_name;
+							break;
+						case 'm':
+							attr_type=attr_municipality_name;
+							break;
+						}
+						name=osm_tag_value(b->ib, "name");
+						if (name && attr_type != attr_none) {
+							attrs[a-2].type=attr_type;
+							attrs[a-2].u.str=name;
+						}
+					}
+				}
+				if (postal) {
+					attrs[0].type=attr_town_postal;
+					attrs[0].u.str=postal;
+				}
+				l=g_list_next(l);
+			}
+		}
 		return match->country; 
-	else
+	} else
 		return NULL;
 }
 
@@ -1793,13 +1831,17 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 {
 	struct item_bin *ib;
 	GList *bl=NULL;
+	struct attr attrs[10];
 
 	bl=process_boundaries(boundaries, ways);
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
 		struct country_table *result=NULL;
 		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
-		result=osm_process_town_by_boundary(bl, ib, c);
+		int i;
+
+		memset(attrs, 0, sizeof(attrs));
+		result=osm_process_town_by_boundary(bl, ib, c, attrs);
 		if (!result)
 			result=osm_process_town_by_is_in(ib, is_in);
 		if (!result && unknown_country)
@@ -1817,6 +1859,15 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 				nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
 				if (nodeid)
 					item_bin_remove_attr(ib, nodeid);
+				if (attrs[0].type != attr_none) {
+					char *postal=item_bin_get_attr(ib, attr_town_postal, NULL);
+					if (postal)
+						item_bin_remove_attr(ib, postal);
+				}
+				for (i = 0 ; i < 10 ; i++) {
+					if (attrs[i].type != attr_none)
+						item_bin_add_attr(ib, &attrs[i]);
+				}
 				item_bin_write_match(ib, attr_town_name, attr_town_name_match, result->file);
 			}
 		}

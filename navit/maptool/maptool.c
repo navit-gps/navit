@@ -803,10 +803,12 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
+#if 0
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
 	}
+#endif
 	if (optind != argc-(p.output == 1 ? 0:1))
 		usage(stderr);
 	p.result=argv[optind];
