@@ -126,6 +126,8 @@ struct boundary {
 	struct rect r;
 };
 
+char *osm_tag_value(struct item_bin *ib, char *key);
+
 osmid boundary_relid(struct boundary *b);
 
 GList *process_boundaries(FILE *boundaries, FILE *ways);
