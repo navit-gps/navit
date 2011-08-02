@@ -2522,6 +2522,9 @@ void
 plugin_init(void)
 {
 	dbg(1,"binfile: plugin_init\n");
+	if (sizeof(struct zip_cd) != 46) {
+		dbg(0,"error: sizeof(struct zip_cd)=%d\n",sizeof(struct zip_cd));
+	}
 	plugin_register_map_type("binfile", map_new_binfile);
 }
 
