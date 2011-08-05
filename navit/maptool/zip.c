@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "maptool.h"
+#include "config.h"
 #include "zipfile.h"
 
 #ifdef HAVE_LIBCRYPTO
