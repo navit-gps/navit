@@ -18,10 +18,17 @@
  */
 
 #ifndef __ZIPFILE_H__
-#ifdef HAVE_API_WIN32_CE
-/* cegcc doesn't honor the __attribute__(packed) need pragma to work */
+#define __ZIPFILE_H__
+
+#ifdef HAVE_PRAGMA_PACK
 #pragma pack(push)
 #pragma pack(1)
+#endif
+
+#ifdef  __GNUC__
+#define ATTRIBUTE_PACKED __attribute__ ((packed))
+#else
+#define ATTRIBUTE_PACKED
 #endif
 
 #define zip_split_sig 0x08074b50
@@ -32,9 +39,6 @@ struct zip_split {
 
 #define zip_lfh_sig 0x04034b50
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip_lfh {
 	int ziplocsig;
 	short zipver; 		// 4
@@ -48,18 +52,10 @@ struct zip_lfh {
 	unsigned short zipfnln; // 26
 	unsigned short zipxtraln; // 30
 	char zipname[0]; // 34
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
 #define zip_cd_sig 0x02014b50
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip_cd {
 	int zipcensig;
 	char zipcver;
@@ -81,31 +77,14 @@ struct zip_cd {
 	unsigned int zipext;
 	unsigned int zipofst;
 	char zipcfn[0];	
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
-
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip_cd_ext {
 	short tag;
 	short size;
 	unsigned long long zipofst;
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip_enc {
 	short efield_header;
 	short efield_size;
@@ -113,18 +92,10 @@ struct zip_enc {
 	char vendor_id1,vendor_id2;
 	char encryption_strength;
 	short compress_method; 
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
 #define zip_eoc_sig 0x6054b50
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip_eoc {
 	int zipesig; 		/* end of central dir signature */
 	unsigned short zipedsk; /* number of this disk */
@@ -135,18 +106,10 @@ struct zip_eoc {
 	unsigned int zipeofst; 	/* offset of start of central directory with respect to the starting disk number */
 	short zipecoml; 	/* .ZIP file comment length */
 	char zipecom[0];	/* .ZIP file comment */
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
 #define zip64_eoc_sig 0x6064b50
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip64_eoc {
 	int zip64esig;			/* zip64 end of central dir signature */
 	unsigned long long zip64esize;	/* size of zip64 end of central directory record */
@@ -159,33 +122,22 @@ struct zip64_eoc {
 	unsigned long long zip64ecsz;	/* size of the central directory */
 	unsigned long long zip64eofst;	/* offset of start of central directory with respect to the starting disk number */
 	char zip64ecom[0];		/* zip64 extensible data sector */
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
 #define zip64_eocl_sig 0x07064b50
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
 struct zip64_eocl {
 	int zip64lsig;
 	int zip64ldsk;
 	long long zip64lofst;
 	int zip74lnum;
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
-#pragma pack(pop)
-#endif /* _MSC_VER */
+} ATTRIBUTE_PACKED;
 
-#define __ZIPFILE_H__
-#ifdef __CEGCC__
+struct zip_alignment_check {
+	int x[sizeof(struct zip_cd) == 46 ? 1:-1];
+};
+
+#ifdef HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
-
 #endif

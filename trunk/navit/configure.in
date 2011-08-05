@@ -95,6 +95,7 @@ wince|mingw32ce|cegcc)
 	win32ce=yes
 	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
 	AC_DEFINE(HAVE_API_WIN32_CE, 1, [Have Windows CE API])
+	AC_DEFINE(HAVE_PRAGMA_PACK, 1, [Have pragma pack])
 	gui_win32=yes; gui_win32_reason="host_os is wince"
 	graphics_win32=yes; graphics_win32_reason="host_os is wince"
 	vehicle_wince=yes; vehcile_wince_reason="host_os is wince"
