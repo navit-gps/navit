@@ -45,6 +45,7 @@
 #include "item.h"
 #include "util.h"
 #include "types.h"
+#include "zipfile.h"
 #ifdef HAVE_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -78,20 +79,21 @@ static GHashTable *file_name_hash;
 
 static struct cache *file_cache;
 
-#ifdef _MSC_VER
-#pragma pack(push,1)
-#endif /* _MSC_VER */
+#ifdef HAVE_PRAGMA_PACK
+#pragma pack(push)
+#pragma pack(1)
+#endif
+
 struct file_cache_id {
 	long long offset;
 	int size;
 	int file_name_id;
 	int method;
-#ifndef _MSC_VER
-}__attribute__ ((packed));
-#else /* _MSC_VER */
-};
+} ATTRIBUTE_PACKED;
+
+#ifdef HAVE_PRAGMA_PACK
 #pragma pack(pop)
-#endif /* _MSC_VER */
+#endif
 
 #ifdef HAVE_SOCKET
 static int
