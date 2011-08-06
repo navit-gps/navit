@@ -46,7 +46,7 @@ speech_cmdline_search(GList *l, int suffix_len, const char *s)
 		char *snd=li->data;
 		int snd_len;
 		snd_len=strlen(snd)-suffix_len;
-		if (!strncasecmp(s, snd, snd_len)) {
+		if (!g_strncasecmp(s, snd, snd_len)) {
 			const char *ss=s+snd_len;
 			while (*ss == ' ' || *ss == ',')
 				ss++;
