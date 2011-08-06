@@ -374,7 +374,7 @@ AM_CONDITIONAL(SUPPORT_ZLIB, [test "x$zlib" = "xno"])
 AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
-AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 2 if you have sockets))
+AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 1 if you have sockets))
 AC_CHECK_HEADER(winsock2.h, AC_DEFINE([HAVE_WINSOCK],[],Define to 1 if you have Windows sockets))
 
 # gtk
