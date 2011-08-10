@@ -1,293 +1,0 @@
-TDownloader
-v7
-r0
-t334611807.160889
-cCheck dependencies
-cProcessInfoPlistFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Info.plist Downloader-Info.plist
-cCompileXIB /Users/nick/Documents/Downloader/MainWindow.xib
-cCompileXIB /Users/nick/Documents/Downloader/RootViewController.xib
-cCopyPlistFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/LocationsArray.plist ../NavitMapDownloader/LocationsArray.plist
-cProcessPCH /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch.gch Downloader_Prefix.pch normal i386 objective-c com.apple.compilers.gcc.4_2
-cCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/main.o /Users/nick/Documents/Downloader/main.m normal i386 objective-c com.apple.compilers.gcc.4_2
-cCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/DownloaderAppDelegate.o /Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m normal i386 objective-c com.apple.compilers.gcc.4_2
-cCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/RootViewController.o /Users/nick/Documents/Downloader/Classes/RootViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
-cLd /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader normal i386
-cGenerateDSYMFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app.dSYM /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader
-cTouch /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk
-c000000004D5C9B4E0000000000000110
-t1297914702
-s272
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
-c000000004D54CFFA00000000002999B0
-t1297403898
-s2726320
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/Foundation.framework/Foundation
-c000000004D54CFE5000000000029DA70
-t1297403877
-s2742896
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h
-c000000004D54CFB80000000000001466
-t1297403832
-s5222
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.h
-c000000004D5615B40000000000000AA1
-t1297487284
-s2721
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/UIKit.framework/UIKit
-c000000004D5616030000000000766870
-t1297487363
-s7759984
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/usr/include/Availability.h
-c000000004D4F7A2B0000000000001B19
-t1297054251
-s6937
-
-N/Users/nick/Documents/Downloader/../NavitMapDownloader/LocationsArray.plist
-c000000004E418A510000000000000325
-t1312918097
-s805
-
-N/Users/nick/Documents/Downloader/../NavitMapDownloader/NavitMapDownloader-Info.plist
-c000000004E3EB490000000000000038D
-t1312732304
-s909
-
-N/Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.h
-c000000004E418D4D00000000000001E1
-t1312918861
-s481
-i<UIKit/UIKit.h>
-
-N/Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m
-c000000004E418D4D0000000000000AD0
-t1312918861
-s2768
-i"DownloaderAppDelegate.h"
-i"RootViewController.h"
-
-N/Users/nick/Documents/Downloader/Classes/RootViewController.h
-c000000004E418D4D00000000000000F3
-t1312918861
-s243
-i<UIKit/UIKit.h>
-
-N/Users/nick/Documents/Downloader/Classes/RootViewController.m
-c000000004E418D4D00000000000010CB
-t1312918861
-s4299
-i"RootViewController.h"
-
-N/Users/nick/Documents/Downloader/Downloader_Prefix.pch
-c000000004E418D4E0000000000000146
-t1312918862
-s326
-i<Availability.h>
-i<Foundation/Foundation.h>
-i<UIKit/UIKit.h>
-
-N/Users/nick/Documents/Downloader/MainWindow.xib
-c000000004E418DD90000000000006136
-t1312919001
-s24886
-
-N/Users/nick/Documents/Downloader/RootViewController.xib
-c000000004E418D4D0000000000004455
-t1312918861
-s17493
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app
-t1312919007
-s272
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app.dSYM
-t1312919007
-s102
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader
-t1312919007
-s18072
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Info.plist
-t1312919004
-s603
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/LocationsArray.plist
-t1312919005
-s269
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/MainWindow.nib
-t1312919005
-s2489
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/NavitMapDownloader-Info.plist
-t2
-s0
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/PkgInfo
-t1312919004
-s8
-
-N/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/RootViewController.nib
-t1312919004
-s1518
-
-N/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/Downloader.LinkFileList
-c000000004E418DDC000000000000018D
-t1312919004
-s397
-
-N/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/DownloaderAppDelegate.o
-t1312919006
-s53172
-
-N/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/RootViewController.o
-t1312919007
-s41596
-
-N/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/main.o
-t1312919006
-s6300
-
-N/Users/nick/Documents/Downloader/main.m
-c000000004E418D4E0000000000000171
-t1312918862
-s369
-i<UIKit/UIKit.h>
-
-N/var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch.gch
-t1312919006
-s15814064
-
-NDownloader-Info.plist
-c000000004E418D4E000000000000038D
-t1312918862
-s909
-
-CCheck dependencies
-r0
-lSLF07#2@18"Check dependencies334611804#334611804#0(0"0(0#1#0"8619457600#0"0#
-
-CCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/DownloaderAppDelegate.o /Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m normal i386 objective-c com.apple.compilers.gcc.4_2
-s334611806.865016
-e334611806.959218
-r1
-xCompileC
-xbuild/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/DownloaderAppDelegate.o
-x/Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@72"Compile /Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m334611806#334611806#0(0"0(0#0#64"/Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m8618470656#1950"    cd /Users/nick/Documents/Downloader    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk -fexceptions -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-generated-files.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-own-target-headers.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-all-target-headers.hmap -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-project-headers.hmap -F/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -I/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/include -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources/i386 -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources -include /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch -c /Users/nick/Documents/Downloader/Classes/DownloaderAppDelegate.m -o /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/DownloaderAppDelegate.o0#
-
-CCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/RootViewController.o /Users/nick/Documents/Downloader/Classes/RootViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
-s334611806.930671
-e334611807.017822
-r1
-xCompileC
-xbuild/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/RootViewController.o
-x/Users/nick/Documents/Downloader/Classes/RootViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@69"Compile /Users/nick/Documents/Downloader/Classes/RootViewController.m334611806#334611807#0(0"0(0#0#61"/Users/nick/Documents/Downloader/Classes/RootViewController.m8618074272#1944"    cd /Users/nick/Documents/Downloader    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk -fexceptions -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-generated-files.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-own-target-headers.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-all-target-headers.hmap -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-project-headers.hmap -F/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -I/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/include -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources/i386 -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources -include /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch -c /Users/nick/Documents/Downloader/Classes/RootViewController.m -o /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/RootViewController.o0#
-
-CCompileC build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/main.o /Users/nick/Documents/Downloader/main.m normal i386 objective-c com.apple.compilers.gcc.4_2
-s334611806.863130
-e334611806.930564
-r1
-xCompileC
-xbuild/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/main.o
-x/Users/nick/Documents/Downloader/main.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@47"Compile /Users/nick/Documents/Downloader/main.m334611806#334611806#0(0"0(0#0#39"/Users/nick/Documents/Downloader/main.m8618896640#1908"    cd /Users/nick/Documents/Downloader    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk -fexceptions -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-generated-files.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-own-target-headers.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-all-target-headers.hmap -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-project-headers.hmap -F/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -I/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/include -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources/i386 -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources -include /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch -c /Users/nick/Documents/Downloader/main.m -o /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/main.o0#
-
-CCompileXIB /Users/nick/Documents/Downloader/MainWindow.xib
-s334611804.383863
-e334611805.052001
-r1
-xCompileXIB
-x/Users/nick/Documents/Downloader/MainWindow.xib
-lSLF07#2@25"CompileXIB MainWindow.xib334611804#334611805#0(0"0(0#0#47"/Users/nick/Documents/Downloader/MainWindow.xib8618823104#555"    cd /Users/nick/Documents/Downloader    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/MainWindow.nib /Users/nick/Documents/Downloader/MainWindow.xib --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk0#
-
-CCompileXIB /Users/nick/Documents/Downloader/RootViewController.xib
-s334611804.385013
-e334611805.014219
-r1
-xCompileXIB
-x/Users/nick/Documents/Downloader/RootViewController.xib
-lSLF07#2@33"CompileXIB RootViewController.xib334611804#334611805#0(0"0(0#0#55"/Users/nick/Documents/Downloader/RootViewController.xib8618519136#571"    cd /Users/nick/Documents/Downloader    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/RootViewController.nib /Users/nick/Documents/Downloader/RootViewController.xib --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk0#
-
-CCopyPlistFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/LocationsArray.plist ../NavitMapDownloader/LocationsArray.plist
-s334611805.014314
-e334611805.548060
-r1
-xCopyPlistFile
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/LocationsArray.plist
-x../NavitMapDownloader/LocationsArray.plist
-lSLF07#2@47"Copy ../NavitMapDownloader/LocationsArray.plist334611805#334611805#0(0"0(0#0#75"/Users/nick/Documents/Downloader/../NavitMapDownloader/LocationsArray.plist8620167968#408"    cd /Users/nick/Documents/Downloader    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Library/Xcode/Plug-ins/CoreBuildTasks.xcplugin/Contents/Resources/copyplist --convert binary1 ../NavitMapDownloader/LocationsArray.plist --outdir /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app0#
-
-CCopyPlistFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/NavitMapDownloader-Info.plist ../NavitMapDownloader/NavitMapDownloader-Info.plist
-r0
-
-CGenerateDSYMFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app.dSYM /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader
-s334611807.095849
-e334611807.156170
-r1
-xGenerateDSYMFile
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app.dSYM
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader
-lSLF07#2@118"GenerateDSYMFile build/Debug-iphonesimulator/Downloader.app.dSYM build/Debug-iphonesimulator/Downloader.app/Downloader334611807#334611807#0(0"0(0#0#86"/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader8619566048#374"    cd /Users/nick/Documents/Downloader    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/usr/bin/dsymutil /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader -o /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app.dSYM0#
-
-CLd /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader normal i386
-s334611807.017916
-e334611807.095757
-r1
-xLd
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader
-xnormal
-xi386
-lSLF07#2@91"Link /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader334611807#334611807#0(0"0(0#0#0"8620765120#885"    cd /Users/nick/Documents/Downloader    setenv MACOSX_DEPLOYMENT_TARGET 10.6    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -arch i386 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk -L/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -F/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -filelist /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Objects-normal/i386/Downloader.LinkFileList -mmacosx-version-min=10.6 -Xlinker -objc_abi_version -Xlinker 2 -framework Foundation -framework UIKit -framework CoreGraphics -o /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Downloader0#
-
-CProcessInfoPlistFile /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Info.plist Downloader-Info.plist
-s334611804.376474
-e334611804.383763
-r1
-xProcessInfoPlistFile
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Info.plist
-xDownloader-Info.plist
-lSLF07#2@29"Process Downloader-Info.plist334611804#334611804#0(0"0(0#0#54"/Users/nick/Documents/Downloader/Downloader-Info.plist8616816672#470"    cd /Users/nick/Documents/Downloader    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-infoPlistUtility Downloader-Info.plist -genpkginfo /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -o /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app/Info.plist0#
-
-CProcessPCH /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch.gch Downloader_Prefix.pch normal i386 objective-c com.apple.compilers.gcc.4_2
-s334611805.548176
-e334611806.862892
-r1
-xProcessPCH
-x/var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch.gch
-xDownloader_Prefix.pch
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@32"Precompile Downloader_Prefix.pch334611805#334611806#0(0"0(0#0#54"/Users/nick/Documents/Downloader/Downloader_Prefix.pch8619367264#1803"    cd /Users/nick/Documents/Downloader    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c-header -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk -fexceptions -fvisibility=hidden -mmacosx-version-min=10.6 -gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-generated-files.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-own-target-headers.hmap -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-all-target-headers.hmap -iquote /Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/Downloader-project-headers.hmap -F/Users/nick/Documents/Downloader/build/Debug-iphonesimulator -I/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/include -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources/i386 -I/Users/nick/Documents/Downloader/build/Downloader.build/Debug-iphonesimulator/Downloader.build/DerivedSources -c /Users/nick/Documents/Downloader/Downloader_Prefix.pch -o /var/folders/V1/V1gZegbXF9yier9eCDMB3k+++TM/-Caches-/com.apple.Xcode.502/SharedPrecompiledHeaders/Downloader_Prefix-deognxhcxsrhmydhhsynbaulrifs/Downloader_Prefix.pch.gch0#
-
-CTouch /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app
-s334611807.156277
-e334611807.160840
-r1
-xTouch
-x/Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app
-lSLF07#2@81"Touch /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app334611807#334611807#0(0"0(0#0#0"8619094496#269"    cd /Users/nick/Documents/Downloader    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /usr/bin/touch -c /Users/nick/Documents/Downloader/build/Debug-iphonesimulator/Downloader.app0#
-
