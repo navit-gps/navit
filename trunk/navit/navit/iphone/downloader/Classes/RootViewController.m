@@ -21,8 +21,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	// Sets the title of the Navigation bar.
+	self.title= @"Navit Map Downloader";
+	
+	// Loads in the array for locations and their associated bounding boxes
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"LocationsArray" ofType:@"plist"];
 	locations_ = [[NSMutableArray alloc] initWithContentsOfFile:path];    
+	
 	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -85,6 +90,7 @@
     
 	// Configure the cell.
 	
+	// Gets the location name from LocationsArray.plist
 	cell.textLabel.text = [[self.locations objectAtIndex:indexPath.row] objectForKey:NAME_KEY];
 	
 	//Makes the fancy arrows to the left of the region being downloaded (e.g. "Ireland  > " )
@@ -138,14 +144,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-	
 	 DownloaderDetailViewController *detailViewController = [[DownloaderDetailViewController alloc] initWithNibName:@"DownloaderDetailViewController" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
+
+	// Sets the "Back" button in the next ViewController (DownloaderDetailViewController). 
+	// Which, be default, pulls the name from the previous ViewController
+	// Here, we manually call it the text label "Back"
+	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
+	
+	// Pass the selected object to the new view controller.
 	detailViewController.locationName = [self.locations objectAtIndex:indexPath.row];
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [DownloaderDetailViewController release];
-	 
+	[self.navigationController pushViewController:detailViewController animated:YES];		
+	
+	[DownloaderDetailViewController release];
 }
 
 
