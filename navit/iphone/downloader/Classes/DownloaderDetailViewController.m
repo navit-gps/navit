@@ -11,7 +11,8 @@
 
 @implementation DownloaderDetailViewController
 
-@synthesize nameTextField=nameTextField_, locationName=locationName_;
+@synthesize locationName=locationName_;
+
 
 // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 /*
@@ -24,12 +25,16 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	
+	// Sets the Navigation bar to have the location name
+	self.title = [self.locationName objectForKey:NAME_KEY];
+
+	[super viewDidLoad];
 }
-*/
+
 
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -54,12 +59,9 @@
 
 -(void) viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	// Set up our UI with the provided drink
-	self.nameTextField.text = [self.locationName objectForKey:NAME_KEY];
 }
 	
 - (void)dealloc {
-	[nameTextField_ release];
 	[locationName_ release];
     [super dealloc];
 }

@@ -12,12 +12,11 @@
 @interface DownloaderDetailViewController : UIViewController {
 
 @private
-	UITextField *nameTextField_;
 	NSDictionary *locationName_;
+
 
 }
 
-@property (nonatomic, retain) IBOutlet UITextField *nameTextField;
 @property(nonatomic, retain) NSDictionary *locationName;
 
 @end
