@@ -2192,7 +2192,10 @@ struct selector {
 	enum item_type *types;
 };
 struct selector selectors[]={
-	{"bank","Bank",(enum item_type []){type_poi_bank,type_poi_bank,type_none}},
+	{"bank","Bank",(enum item_type []){
+		type_poi_bank,type_poi_bank,
+		type_poi_atm,type_poi_atm,
+		type_none}},
 	{"fuel","Fuel",(enum item_type []){type_poi_fuel,type_poi_fuel,type_none}},
 	{"hotel","Hotel",(enum item_type []) {
 		type_poi_hotel,type_poi_camp_rv,
@@ -2204,11 +2207,16 @@ struct selector selectors[]={
 		type_poi_bar,type_poi_picnic,
 		type_poi_burgerking,type_poi_fastfood,
 		type_poi_restaurant,type_poi_restaurant,
+		type_poi_cafe,type_poi_cafe,
+		type_poi_pub,type_poi_pub,
 		type_none}},
 	{"shopping","Shopping",(enum item_type []) {
 		type_poi_mall,type_poi_mall,
 		type_poi_shop_grocery,type_poi_shop_grocery,
 		type_poi_shopping,type_poi_shopping,
+		type_poi_shop_butcher,type_poi_shop_baker,
+		type_poi_shop_fruit,type_poi_shop_fruit,
+		type_poi_shop_beverages,type_poi_shop_beverages,
 		type_none}},
 	{"hospital","Service",(enum item_type []) {
 		type_poi_marina,type_poi_marina,
@@ -2216,6 +2224,7 @@ struct selector selectors[]={
 		type_poi_public_utilities,type_poi_public_utilities,
 		type_poi_police,type_poi_autoservice,
 		type_poi_information,type_poi_information,
+		type_poi_pharmacy,type_poi_pharmacy,
 		type_poi_personal_service,type_poi_repair_service,
 		type_poi_restroom,type_poi_restroom,
 		type_none}},
@@ -2235,12 +2244,17 @@ struct selector selectors[]={
 		type_poi_dam+1,type_poi_information-1,
 		type_poi_information+1,type_poi_mall-1,
 		type_poi_mall+1,type_poi_personal_service-1,
+		type_poi_pharmacy+1,type_poi_repair_service-1,
 		type_poi_repair_service+1,type_poi_restaurant-1,
 		type_poi_restaurant+1,type_poi_restroom-1,
 		type_poi_restroom+1,type_poi_shop_grocery-1,
 		type_poi_shop_grocery+1,type_poi_peak-1,
 		type_poi_peak+1, type_poi_motel-1,
-		type_poi_hostel+1,type_line-1,
+		type_poi_hostel+1,type_poi_shop_butcher-1,
+		type_poi_shop_baker+1,type_poi_shop_fruit-1,
+		type_poi_shop_fruit+1,type_poi_shop_beverages-1,
+		type_poi_shop_beverages+1,type_poi_pub-1,
+		type_poi_atm+1,type_line-1,
 		type_none}},
 /*	{"unknown","Unknown",(enum item_type []){
 		type_point_unkn,type_point_unkn,
