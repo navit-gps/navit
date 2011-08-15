@@ -397,7 +397,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     else
     {
         /* TODO: debug "colour parse errors" on xpm */
-        printf("graphics_sdl: image_new on '%s' failed: %s\n", name, IMG_GetError());
+        dbg(0,"image_new on '%s' failed: %s\n", name, IMG_GetError());
         g_free(gi);
         gi = NULL;
     }
