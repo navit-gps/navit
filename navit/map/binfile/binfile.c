@@ -2399,6 +2399,11 @@ map_binfile_open(struct map_priv *m)
 			m->fi=NULL;
 			return 0;
 		}
+	} else if (*magic == zip_lfh_sig_rev || *magic == zip_split_sig_rev || *magic == zip_cd_sig_rev || *magic == zip64_eoc_sig_rev) {
+		dbg(0,"endianness mismatch\n");
+		file_destroy(m->fi);
+		m->fi=NULL;
+		return 0;
 	} else
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
