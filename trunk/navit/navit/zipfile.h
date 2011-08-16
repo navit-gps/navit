@@ -32,12 +32,14 @@
 #endif
 
 #define zip_split_sig 0x08074b50
+#define zip_split_sig_rev 0x504b0708
 
 struct zip_split {
 	int zipsplitsig;
 };
 
 #define zip_lfh_sig 0x04034b50
+#define zip_lfh_sig_rev 0x504b0304
 
 struct zip_lfh {
 	int ziplocsig;
@@ -55,6 +57,7 @@ struct zip_lfh {
 } ATTRIBUTE_PACKED;
 
 #define zip_cd_sig 0x02014b50
+#define zip_cd_sig_rev 0x504b0102
 
 struct zip_cd {
 	int zipcensig;
@@ -95,6 +98,7 @@ struct zip_enc {
 } ATTRIBUTE_PACKED;
 
 #define zip_eoc_sig 0x6054b50
+#define zip_eoc_sig_rev 0x504b0506
 
 struct zip_eoc {
 	int zipesig; 		/* end of central dir signature */
@@ -109,6 +113,7 @@ struct zip_eoc {
 } ATTRIBUTE_PACKED;
 
 #define zip64_eoc_sig 0x6064b50
+#define zip64_eoc_sig_rev 0x504b0606
 
 struct zip64_eoc {
 	int zip64esig;			/* zip64 end of central dir signature */
