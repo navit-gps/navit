@@ -815,6 +815,8 @@ AC_CHECK_HEADER(
 		,
 )
 
+AC_CHECK_HEADER(sys/endian.h,AC_DEFINE([USE_SYS_ENDIAN_H], [1], [Define to 1 if you have sys/endian.h],),)
+
 PACKAGE=navit
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")

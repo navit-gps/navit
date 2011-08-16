@@ -51,6 +51,11 @@
   #include <byteswap.h>
 #elif defined(USE_SYS_ENDIAN_H)
   #include <sys/endian.h>
+#if defined(_BYTE_ORDER) && !defined(__BYTE_ORDER)
+#define __BYTE_ORDER _BYTE_ORDER
+#define __LITTLE_ENDIAN _LITTLE_ENDIAN
+#define __BIG_ENDIAN _BIG_ENDIAN
+#endif
 #elif defined(__APPLE__)
   #include <libkern/OSByteOrder.h>
   #define __bswap_16 OSSwapInt16
