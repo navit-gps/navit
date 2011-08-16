@@ -33,6 +33,7 @@
 <!ATTLIST gui enabled CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
+<!ATTLIST graphics event_loop_system CDATA #IMPLIED>
 <!ELEMENT vehicle (log*)>
 <!ATTLIST vehicle name CDATA #REQUIRED>
 <!ATTLIST vehicle source CDATA #REQUIRED>
