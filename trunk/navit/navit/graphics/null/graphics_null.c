@@ -22,6 +22,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#include "item.h"
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
@@ -230,8 +231,19 @@ static struct graphics_priv *
 graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	*meth=graphics_methods;
-	if (!event_request_system("null","graphics_null"))
-		return NULL;
+	struct attr *event_loop_system = NULL;
+
+        event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
+
+	if (event_loop_system && event_loop_system->u.str) {
+		dbg(1, "event_system is %s\n", event_loop_system->u.str);
+		if (!event_request_system(event_loop_system->u.str, "graphics_null"))
+			return NULL;
+	} else {
+		if (!event_request_system("null", "graphics_null"))
+                        return NULL;
+	}
+
 	return &graphics_priv;
 }
 
