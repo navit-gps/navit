@@ -138,7 +138,9 @@ endif()
 add_subdirectory (maptool)
 add_subdirectory (xpm)
 add_subdirectory (maps)
-add_subdirectory (android)
+if(ANDROID)
+   add_subdirectory (android)
+endif()
 
 install(TARGETS navit
         DESTINATION ${BIN_DIR}
