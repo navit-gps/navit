@@ -128,12 +128,12 @@ speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr
 	struct attr *flags;
 	*meth=speech_android_meth;
 	this=g_new0(struct speech_priv,1);
+	if (android_version < 4)
+		this->flags=3;
 	if (!speech_android_init(this)) {
 		g_free(this);
 		this=NULL;
 	}
-	if (android_version < 4)
-		this->flags=3;
 	if ((flags = attr_search(attrs, NULL, attr_flags)))
 		this->flags=flags->u.num;
 	
