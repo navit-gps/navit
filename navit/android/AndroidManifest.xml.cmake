@@ -25,7 +25,7 @@
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
         <activity android:name=".NavitAddressResultListActivity"></activity>
     </application>
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="@ANDROID_API_VERSION@"/>
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="@ANDROID_API_VERSION@"/>
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
     @ANDROID_PERMISSIONS@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

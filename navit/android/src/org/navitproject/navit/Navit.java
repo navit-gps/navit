@@ -394,8 +394,9 @@ public class Navit extends Activity implements Handler.Callback
 		int height_ = display_.getHeight();
 		metrics = new DisplayMetrics();
 		display_.getMetrics(Navit.metrics);
+		int densityDpi = (int)(( Navit.metrics.density*160)+.5f);
 		Log.e("Navit", "Navit -> pixels x=" + width_ + " pixels y=" + height_);
-		Log.e("Navit", "Navit -> dpi=" + Navit.metrics.densityDpi);
+		Log.e("Navit", "Navit -> dpi=" + densityDpi);
 		Log.e("Navit", "Navit -> density=" + Navit.metrics.density);
 		Log.e("Navit", "Navit -> scaledDensity=" + Navit.metrics.scaledDensity);
 
@@ -410,15 +411,15 @@ public class Navit extends Activity implements Handler.Callback
 			Log.e("Navit", "Failed to extract language resource " + langc);
 		}
 
-		if (Navit.metrics.densityDpi <= 120)
+		if (densityDpi <= 120)
 		{
 			my_display_density = "ldpi";
 		}
-		else if (Navit.metrics.densityDpi <= 160)
+		else if (densityDpi <= 160)
 		{
 			my_display_density = "mdpi";
 		}
-		else if (Navit.metrics.densityDpi < 320)
+		else if (densityDpi < 320)
 		{
 			my_display_density = "hdpi";
 		}
