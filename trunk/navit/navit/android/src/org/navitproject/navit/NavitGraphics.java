@@ -77,6 +77,8 @@ public class NavitGraphics
 	// here you can draw all the nice things you want
 	// and get touch events for it (without touching C-code)
 	public NavitAndroidOverlay	NavitAOverlay								= null;
+	
+	private Handler timer_handler = new Handler();
 
 	public void SetCamera(int use_camera)
 	{
@@ -989,70 +991,57 @@ public class NavitGraphics
 		parent_graphics = parent;
 	}
 
+	static public enum msg_type {
+		CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION, CLB_SET_DISPLAY_DESTINATION, CBL_CALL_CMD
+	};
+
+	static public msg_type[] msg_values = msg_type.values();
+	
 	public Handler	callback_handler	= new Handler()
 		{
 			public void handleMessage(Message msg)
 			{
-				if (msg.getData().getInt("Callback") == 1)
+				switch (msg_values[msg.what])
 				{
-					//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
-					//KeypressCallback(KeypressCallbackID, msg.getData()
-					//		.getString("s"));
+				case CLB_ZOOM_IN:
 					CallbackMessageChannel(1, "");
-				}
-				else if (msg.getData().getInt("Callback") == 2)
-
-				{
+					break;
+				case CLB_ZOOM_OUT:
 					CallbackMessageChannel(2, "");
-				}
-				else if (msg.getData().getInt("Callback") == 3)
-
-				{
+					break;
+				case CLB_MOVE:
+					MotionCallback(MotionCallbackID, msg.getData().getInt("x"), msg.getData().getInt("y"));
+					break;
+				case CLB_SET_DESTINATION:
 					String lat = msg.getData().getString("lat");
 					String lon = msg.getData().getString("lon");
 					String q = msg.getData().getString("q");
 					CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
-				}
-				else if (msg.getData().getInt("Callback") == 4)
-
-				{
+					break;
+				case CLB_SET_DISPLAY_DESTINATION:
 					int x = msg.getData().getInt("x");
 					int y = msg.getData().getInt("y");
 					CallbackMessageChannel(4, "" + x + "#" + y);
-				}
-				else if (msg.getData().getInt("Callback") == 5)
-				{
+					break;
+				case CBL_CALL_CMD:
 					String cmd = msg.getData().getString("cmd");
 					CallbackMessageChannel(5, cmd);
-				}
-				else if (msg.getData().getInt("Callback") == 21)
-				{
-					//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
-					int x = msg.getData().getInt("x");
-					int y = msg.getData().getInt("y");
-					ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-				}
-				else if (msg.getData().getInt("Callback") == 22)
-				{
-					//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
-					int x = msg.getData().getInt("x");
-					int y = msg.getData().getInt("y");
-					ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-				}
-				else if (msg.getData().getInt("Callback") == 23)
-				{
-					//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
-					int x = msg.getData().getInt("x");
-					int y = msg.getData().getInt("y");
-					MotionCallback(MotionCallbackID, x, y);
+					break;
+				case CLB_BUTTON_UP:
+					ButtonCallback(ButtonCallbackID, 0, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // up
+					break;
+				case CLB_BUTTON_DOWN:
+					ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // down
+					break;
 				}
 			}
 		};
 
 	public native void SizeChangedCallback(int id, int x, int y);
+	public native void KeypressCallback(int id, String s);
+	public native int CallbackMessageChannel(int i, String s);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 	public native void MotionCallback(int id, int x, int y);
-	public native void KeypressCallback(int id, String s);
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
 	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
@@ -1199,10 +1188,6 @@ public class NavitGraphics
 		return ret;
 	}
 
-	/**
-	 * generic message channel to C-code
-	 */
-	public native int CallbackMessageChannel(int i, String s);
 
 	/**
 	 * start a search on the map
