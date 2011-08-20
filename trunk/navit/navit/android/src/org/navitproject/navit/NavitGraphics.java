@@ -241,7 +241,6 @@ public class NavitGraphics
 				protected void onSizeChanged(int w, int h, int oldw, int oldh)
 				{
 					Log.e("Navit", "NavitGraphics -> onSizeChanged pixels x=" + w + " pixels y=" + h);
-					Log.e("Navit", "NavitGraphics -> onSizeChanged dpi=" + Navit.metrics.densityDpi);
 					Log.e("Navit", "NavitGraphics -> onSizeChanged density=" + Navit.metrics.density);
 					Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="
 							+ Navit.metrics.scaledDensity);
