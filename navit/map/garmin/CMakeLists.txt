@@ -1,5 +1,7 @@
 add_executable(gentypes gentypes.c)
 
+include_directories( ${CMAKE_CURRENT_BINARY_DIR})
+
 # add the command to generate the source code
 add_custom_command (
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/g2nbuiltin.h
@@ -8,7 +10,3 @@ add_custom_command (
   )
 
 module_add_library(map_garmin garmin.c gar2navit.c g2nbuiltin.h)
-set_property(
-   TARGET map_garmin
-   APPEND PROPERTY COMPILE_FLAGS "-I${CMAKE_CURRENT_BINARY_DIR}"
-)
