@@ -601,14 +601,14 @@ public class Navit extends Activity implements Handler.Callback
 				lon = temp3.split(",", -1)[1];
 				q = temp2;
 
-				Message msg = new Message();
+				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+
 				Bundle b = new Bundle();
-				b.putInt("Callback", 3);
 				b.putString("lat", lat);
 				b.putString("lon", lon);
 				b.putString("q", q);
 				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+				msg.sendToTarget();
 			}
 			else
 			{
@@ -744,11 +744,7 @@ public class Navit extends Activity implements Handler.Callback
 		{
 			case 1 :
 				// zoom in
-				Message msg = new Message();
-				Bundle b = new Bundle();
-				b.putInt("Callback", 1);
-				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
 				if (N_NavitGraphics.NavitAOverlay != null)
 				{
@@ -758,11 +754,7 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 			case 2 :
 				// zoom out
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 2);
-				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
 				if (N_NavitGraphics.NavitAOverlay != null)
 				{
@@ -785,41 +777,20 @@ public class Navit extends Activity implements Handler.Callback
 						Navit.NavitDownloaderSecSelectMap_id);
 				break;
 			case 5 :
-				// toggle the normal POI layers (to avoid double POIs) --> why is this double ???
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 5);
+				// toggle the normal POI layers (to avoid double POIs)
+				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
+				Bundle b = new Bundle();
 				b.putString("cmd", "toggle_layer(\"POI Symbols\");");
 				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+				msg.sendToTarget();
 
-				/*
-				 * // toggle the normal POI layers (to avoid double POIs)
-				 * msg = new Message();
-				 * b = new Bundle();
-				 * b.putInt("Callback", 5);
-				 * b.putString("cmd", "toggle_layer(\"POI Labels\");");
-				 * msg.setData(b);
-				 * N_NavitGraphics.callback_handler.sendMessage(msg);
-				 */
-
-				// toggle full POI icons on/off --> why is this double ???
-				msg = new Message();
+				// toggle full POI icons on/off
+				msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
 				b = new Bundle();
-				b.putInt("Callback", 5);
 				b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
 				msg.setData(b);
-				N_NavitGraphics.callback_handler.sendMessage(msg);
+				msg.sendToTarget();
 
-				/*
-				 * // toggle full POI labels on/off
-				 * msg = new Message();
-				 * b = new Bundle();
-				 * b.putInt("Callback", 5);
-				 * b.putString("cmd", "toggle_layer(\"Android-POI-Labels-full\");");
-				 * msg.setData(b);
-				 * N_NavitGraphics.callback_handler.sendMessage(msg);
-				 */
 				break;
 			case 6 :
 				// ok startup address search activity
@@ -964,9 +935,8 @@ public class Navit extends Activity implements Handler.Callback
 												+ Navit.NavitAddressResultList_foundItems
 														.get(destination_id).addr, Toast.LENGTH_LONG).show(); //TRANS
 
-						Message msg = new Message();
+						Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
 						Bundle b = new Bundle();
-						b.putInt("Callback", 3);
 						b.putString("lat", String.valueOf(Navit.NavitAddressResultList_foundItems
 								.get(destination_id).lat));
 						b.putString("lon", String.valueOf(Navit.NavitAddressResultList_foundItems
@@ -974,7 +944,7 @@ public class Navit extends Activity implements Handler.Callback
 						b.putString("q",
 								Navit.NavitAddressResultList_foundItems.get(destination_id).addr);
 						msg.setData(b);
-						N_NavitGraphics.callback_handler.sendMessage(msg);
+						msg.sendToTarget();
 					}
 					catch (NumberFormatException e)
 					{
