@@ -23,69 +23,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Paint.Style;
+import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-public class NavitAndroidOverlay extends ImageView
+public class NavitAndroidOverlay extends ImageView implements Runnable
 {
 	public Boolean					draw_bubble							= false;
 	public static Boolean		confirmed_bubble					= false;
-	public long						bubble_showing_since				= 0L;
 	public static long			bubble_max_showing_timespan	= 8000L; // 8 secs.
-
-	public static BubbleThread	bubble_thread						= null;
-
-	private class BubbleThread extends Thread
-	{
-		private Boolean					running;
-		private long						bubble_showing_since	= 0L;
-		private NavitAndroidOverlay	a_overlay				= null;
-
-		BubbleThread(NavitAndroidOverlay a_ov)
-		{
-			this.running = true;
-			this.a_overlay = a_ov;
-			this.bubble_showing_since = System.currentTimeMillis();
-			//Log.e("Navit", "BubbleThread created");
-		}
-
-		public void stop_me()
-		{
-			this.running = false;
-		}
-
-		public void run()
-		{
-			//Log.e("Navit", "BubbleThread started");
-			while (this.running)
-			{
-				if ((System.currentTimeMillis() - this.bubble_showing_since) > bubble_max_showing_timespan)
-				{
-					//Log.e("Navit", "BubbleThread: bubble displaying too long, hide it");
-					// with invalidate we call the onDraw() function, that will take care of it
-					this.a_overlay.postInvalidate();
-					this.running = false;
-				}
-				else
-				{
-					try
-					{
-						Thread.sleep(50);
-					}
-					catch (InterruptedException e)
-					{
-						// e.printStackTrace();
-					}
-				}
-			}
-			//Log.e("Navit", "BubbleThread ended");
-		}
-	}
-
 
 	public static class NavitAndroidOverlayBubble
 	{
@@ -106,22 +56,10 @@ public class NavitAndroidOverlay extends ImageView
 		//Log.e("Navit", "NavitAndroidOverlay -> show_bubble");
 		if (!this.draw_bubble)
 		{
+			Handler handler = new Handler();
+			handler.postDelayed(this, bubble_max_showing_timespan);
 			NavitAndroidOverlay.confirmed_bubble = false;
 			this.draw_bubble = true;
-			this.bubble_showing_since = System.currentTimeMillis();
-			bubble_thread = new BubbleThread(this);
-			bubble_thread.start();
-
-			// test test DEBUG
-			/*
-			 * Message msg = new Message();
-			 * Bundle b = new Bundle();
-			 * b.putInt("Callback", 4);
-			 * b.putInt("x", this.bubble_001.x);
-			 * b.putInt("y", this.bubble_001.y);
-			 * msg.setData(b);
-			 * Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
-			 */
 		}
 	}
 
@@ -130,21 +68,13 @@ public class NavitAndroidOverlay extends ImageView
 		return this.draw_bubble;
 	}
 
-	public void hide_bubble()
-	{
-		NavitAndroidOverlay.confirmed_bubble = false;
-		this.draw_bubble = false;
-		this.bubble_showing_since = 0L;
-		try
-		{
-			bubble_thread.stop_me();
-			// bubble_thread.stop();
-		}
-		catch (Exception e)
-		{
-
-		}
-		//this.postInvalidate();
+	public void hide_bubble() {
+		confirmed_bubble = false;
+		draw_bubble = false;
+		Message msg = Message.obtain(Navit.N_NavitGraphics.callback_handler,
+				NavitGraphics.msg_type.CLB_REDRAW.ordinal());
+		msg.sendToTarget();
+		postInvalidate();
 	}
 
 	public void set_bubble(NavitAndroidOverlayBubble b)
@@ -191,29 +121,19 @@ public class NavitAndroidOverlay extends ImageView
 				this.postInvalidate();
 
 				// set destination
-				Message msg = new Message();
+				Message msg = Message.obtain(Navit.N_NavitGraphics.callback_handler,
+						NavitGraphics.msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal());
+
 				Bundle b = new Bundle();
-				b.putInt("Callback", 4);
 				b.putInt("x", this.bubble_001.x);
 				b.putInt("y", this.bubble_001.y);
 				msg.setData(b);
-				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
+				msg.sendToTarget();
+
 				// consume the event
 				return true;
 			}
 		}
-
-		// test if we touched the grey rectangle
-		//
-		//		if ((x < 300) && (x > 10) && (y < 200) && (y > 10))
-		//		{
-		//			Log.e("Navit", "NavitAndroidOverlay -> onTouchEvent -> touch Rect!!");
-		//			return true;
-		//		}
-		//		else
-		//		{
-		//			return false;
-		//		}
 
 		// false -> we dont use this event, give it to other layers
 		return false;
@@ -237,55 +157,6 @@ public class NavitAndroidOverlay extends ImageView
 			draw_factor = 1.5f;
 		}
 
-
-		if (this.draw_bubble)
-		{
-			if ((System.currentTimeMillis() - this.bubble_showing_since) > NavitAndroidOverlay.bubble_max_showing_timespan)
-			{
-				// bubble has been showing too log, hide it
-				this.hide_bubble();
-
-				// next lines are a hack, without it screen will not get updated anymore!
-				// next lines are a hack, without it screen will not get updated anymore!
-				// down
-				Message msg = new Message();
-				Bundle b = new Bundle();
-				b.putInt("Callback", 21);
-				b.putInt("x", 1);
-				b.putInt("y", 1);
-				msg.setData(b);
-				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
-
-				// move
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 23);
-				b.putInt("x", 1 + 10);
-				b.putInt("y", 1);
-				msg.setData(b);
-				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
-
-				// move
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 23);
-				b.putInt("x", 1 - 10);
-				b.putInt("y", 1);
-				msg.setData(b);
-				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
-
-				// up
-				msg = new Message();
-				b = new Bundle();
-				b.putInt("Callback", 22);
-				b.putInt("x", 1);
-				b.putInt("y", 1);
-				msg.setData(b);
-				Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
-				// next lines are a hack, without it screen will not get updated anymore!
-				// next lines are a hack, without it screen will not get updated anymore!
-			}
-		}
 
 		if (this.draw_bubble)
 		{
@@ -360,15 +231,10 @@ public class NavitAndroidOverlay extends ImageView
 					this.bubble_001.y + dy + inner_dy, bubble_paint);
 
 		}
+	}
 
-		//		// test, draw rectangles on top layer!
-		//		Paint paint = new Paint(0);
-		//		paint.setAntiAlias(false);
-		//		paint.setStyle(Style.STROKE);
-		//		paint.setColor(Color.GREEN);
-		//		c.drawRect(0 * draw_factor, 0 * draw_factor, 64 * draw_factor, 64 * draw_factor, paint);
-		//		paint.setColor(Color.RED);
-		//		c.drawRect(0 * draw_factor, (0 + 70) * draw_factor, 64 * draw_factor,
-		//				(64 + 70) * draw_factor, paint);
+	@Override
+	public void run() {
+		hide_bubble();
 	}
 }
