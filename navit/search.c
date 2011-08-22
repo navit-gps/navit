@@ -775,7 +775,7 @@ search_list_get_result(struct search_list *this_)
 				this_->item=NULL;
 				break;
 			case 3:
-				dbg(0,"case 3 HOUSENUMBER\n");
+				dbg(1,"case 3 HOUSENUMBER\n");
 				has_street_name=0;
 
 				// if this housenumber has a streetname tag, set the name now
