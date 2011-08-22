@@ -919,41 +919,27 @@ public class Navit extends Activity implements Handler.Callback
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
-					try
-					{
-						Log.d("Navit", "adress result list id="
-								+ Integer.parseInt(data.getStringExtra("selected_id")));
-						// get the coords for the destination
-						int destination_id = Integer.parseInt(data.getStringExtra("selected_id"));
+					Log.d("Navit", "adress result list id="
+							+ Integer.parseInt(data.getStringExtra("selected_id")));
+					// get the coords for the destination
+					int destination_id = Integer.parseInt(data.getStringExtra("selected_id"));
 
-						// ok now set target
-						Toast
-								.makeText(
-										getApplicationContext(),
-										Navit.get_text("setting destination to")
-												+ "\n"
-												+ Navit.NavitAddressResultList_foundItems
-														.get(destination_id).addr, Toast.LENGTH_LONG).show(); //TRANS
+					// ok now set target
+					Toast.makeText( getApplicationContext(),
+					    Navit.get_text("setting destination to") + "\n" 
+					        + Navit.NavitAddressResultList_foundItems.get(destination_id).addr,
+					    Toast.LENGTH_LONG).show(); //TRANS
 
-						Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
-						Bundle b = new Bundle();
-						b.putString("lat", String.valueOf(Navit.NavitAddressResultList_foundItems
-								.get(destination_id).lat));
-						b.putString("lon", String.valueOf(Navit.NavitAddressResultList_foundItems
-								.get(destination_id).lon));
-						b.putString("q",
-								Navit.NavitAddressResultList_foundItems.get(destination_id).addr);
-						msg.setData(b);
-						msg.sendToTarget();
-					}
-					catch (NumberFormatException e)
-					{
-						Log.d("Navit", "NumberFormatException selected_id");
-					}
-				}
-				else
-				{
-					// user pressed back key
+					Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+					Bundle b = new Bundle();
+					b.putString("lat", String.valueOf(Navit.NavitAddressResultList_foundItems
+							.get(destination_id).lat));
+					b.putString("lon", String.valueOf(Navit.NavitAddressResultList_foundItems
+							.get(destination_id).lon));
+					b.putString("q",
+							Navit.NavitAddressResultList_foundItems.get(destination_id).addr);
+					msg.setData(b);
+					msg.sendToTarget();
 				}
 			}
 			catch (Exception e)
