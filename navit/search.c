@@ -1174,7 +1174,6 @@ search_by_address(struct mapset *ms, const char *addr, int partial, struct jni_o
 		ret=search_address_town(ret, sl, phrases, tmp, partial, jni);
 		tmp=g_list_next(tmp);
 	}
-	search_list_search(sl, country_default(), partial);
 	if (country)
 		search_list_search(sl, country, partial);
 	ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
