@@ -1033,7 +1033,7 @@ search_address_housenumber(GList *result_list, struct search_list *sl, GList *ph
 
 		while (tmp)
 		{
-			if (tmp != exclude1 && tmp != exclude2 && tmp != exclude3)
+			if (tmp != exclude1 && tmp != exclude2 && tmp != exclude3 && slr->street)
 			{
 				attr2.type=attr_house_number;
 				attr2.u.str=tmp->data;
