@@ -235,7 +235,11 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
 		dbg(0,"end\n");
+#if USE_UIKIT
+		[gr->view setNeedsDisplay];
+#else
 		[gr->view display];
+#endif
 	}
 }
 
@@ -416,12 +420,19 @@ event_cocoa_main_loop_run(void)
 	freopen("/tmp/log.txt","a+",stderr);
 	NSLog(@"Test\n");
 #endif
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 #if USE_UIKIT
+#if 1
+	int argc=2;
+	char *argv[]={"Debug/navit.app/navit","-RegisterForSystemEvents",NULL};
+#else
 	int argc=1;
 	char *argv[]={"navit",NULL};
-	int retVal = UIApplicationMain(argc, argv, nil, @"NavitAppDelegate");
+#endif
+	dbg(0,"calling main\n");
+	int retval = UIApplicationMain(argc, argv, nil, @"NavitAppDelegate");
+	dbg(0,"retval=%d\n",retval);
 #else
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NavitAppDelegate * delegate = [[NavitAppDelegate alloc] init];
 	NSApplication * application = [NSApplication sharedApplication];
 	[application setDelegate:delegate];
