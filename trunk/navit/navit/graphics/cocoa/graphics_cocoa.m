@@ -5,8 +5,9 @@
 #include "window.h"
 #include "graphics.h"
 #include "event.h"
+#include "item.h"
+#include "callback.h"
 #include <glib.h>
-
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define USE_UIKIT 1
@@ -17,6 +18,7 @@
 #if USE_UIKIT
 #import <UIKit/UIKit.h>
 #define NSRect CGRect
+#define NSMakeRect CGRectMake
 
 CGContextRef
 current_context(void)
@@ -42,6 +44,12 @@ current_context(void)
 }
 
 #endif
+
+struct graphics_priv {
+	struct window win;
+	struct callback_list *cbl;
+} *global_graphics_cocoa;
+
 
 @interface NavitView : UIView {
 @public
@@ -196,8 +204,7 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 
 	self.viewController = [[[NavitViewController alloc] init_withFrame : appFrame] autorelease];
 
-	CGRect windowRectcg = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);
-	NSRect windowRect = *(NSRect *)&windowRectcg;
+	NSRect windowRect = NSMakeRect(0, 0, appFrame.size.width, appFrame.size.height);
 
 #if USE_UIKIT
 	self.window = [[[UIWindow alloc] initWithFrame:windowRect] autorelease];
@@ -218,6 +225,10 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 
 #endif
 
+	if (global_graphics_cocoa) {
+		callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)appFrame.size.width, (int)appFrame.size.height);
+		
+	}
 
 	return YES;
 }
@@ -233,9 +244,104 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 @end
 
 
-struct graphics_priv {
-	struct window win;
+static void
+draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
+{
+	if (mode == draw_mode_end) {
+		dbg(0,"end\n");
+	}
+}
+
+static void
+draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+{
+}
+
+static void
+draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+{
+}
+
+static void
+draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
+{
+}
+
+static void
+draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
+{
+}
+
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags)
+{
+	return NULL;
+}
+
+struct graphics_gc_priv {
+	int dummy;
 };
+
+
+static void
+gc_destroy(struct graphics_gc_priv *gc)
+{
+	g_free(gc);
+}
+
+static void
+gc_set_linewidth(struct graphics_gc_priv *gc, int w)
+{
+}
+
+static void
+gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
+{
+}
+
+static void
+gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
+{
+}
+
+static void
+gc_set_background(struct graphics_gc_priv *gc, struct color *c)
+{
+}
+
+static void
+gc_set_stipple(struct graphics_gc_priv *gc, struct graphics_image_priv *img)
+{
+}
+
+static struct graphics_gc_methods gc_methods = {
+	gc_destroy, 
+	gc_set_linewidth, 
+	gc_set_dashes,
+	gc_set_foreground,
+	gc_set_background,
+	gc_set_stipple,
+};
+
+static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
+{
+        struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
+
+        *meth=gc_methods;
+        return gc;
+}
+
+
+static void
+background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
+{
+}
+
+
+static struct graphics_image_priv *
+image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
+{
+	return NULL;
+}
 
 static void *
 get_data(struct graphics_priv *this, const char *type)
@@ -247,23 +353,24 @@ get_data(struct graphics_priv *this, const char *type)
 }
 
 
+
 static struct graphics_methods graphics_methods = {
 	NULL, /* graphics_destroy, */
-	NULL, /* draw_mode, */
-	NULL, /* draw_lines, */
-	NULL, /* draw_polygon, */
-	NULL, /* draw_rectangle, */
+	draw_mode,
+	draw_lines,
+	draw_polygon,
+	draw_rectangle,
 	NULL, /* draw_circle, */
-	NULL, /* draw_text, */
+	draw_text, 
 	NULL, /* draw_image, */
 	NULL, /* draw_image_warp, */
 	NULL, /* draw_restore, */
 	NULL, /* draw_drag, */
-	NULL, /* font_new, */
-	NULL, /* gc_new, */
-	NULL, /* background_gc, */
+	font_new,
+	gc_new,
+	background_gc,
 	NULL, /* overlay_new, */
-	NULL, /* image_new, */
+	image_new,
 	get_data,
 	NULL, /* image_free, */
 	NULL, /* get_text_bbox, */
@@ -277,11 +384,15 @@ static struct graphics_methods graphics_methods = {
 struct graphics_priv *
 graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
+	struct graphics_priv *ret;
 	*meth=graphics_methods;
 	dbg(0,"enter\n");
 	if(!event_request_system("cocoa","graphics_cocoa"))
 		return NULL;
-	return g_new0(struct graphics_priv, 1);
+	ret=g_new0(struct graphics_priv, 1);
+	ret->cbl=cbl;
+	global_graphics_cocoa=ret;
+	return ret;
 }
 
 static void
@@ -321,6 +432,51 @@ event_cocoa_add_timeout(void)
 	return NULL;
 }
 
+
+@interface NavitTimer : NSObject{
+@public
+	struct callback *cb;
+	NSTimer *timer;
+}
+- (void)onTimer:(NSTimer*)theTimer;
+
+@end
+
+@implementation NavitTimer
+
+- (void)onTimer:(NSTimer*)theTimer
+{
+	callback_call_0(cb);
+}
+
+
+@end
+
+struct event_idle {
+	struct callback *cb;
+	NSTimer *timer;
+};
+
+static struct event_idle *
+event_cocoa_add_idle(int priority, struct callback *cb)
+{
+	NavitTimer *ret=[[NavitTimer alloc]init];
+	ret->cb=cb;
+	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:YES];
+
+	dbg(0,"timer=%p\n",ret->timer);
+	return ret;
+}
+
+static void
+event_cocoa_remove_idle(struct event_idle *ev)
+{
+	NavitTimer *t=(NavitTimer *)ev;
+	
+	[t->timer invalidate];
+	[t release];
+}
+
 static struct event_methods event_cocoa_methods = {
 	event_cocoa_main_loop_run,
 	NULL, /* event_cocoa_main_loop_quit, */
@@ -328,8 +484,8 @@ static struct event_methods event_cocoa_methods = {
 	NULL, /* event_cocoa_remove_watch, */
 	event_cocoa_add_timeout,
 	NULL, /* event_cocoa_remove_timeout, */
-	NULL, /* event_cocoa_add_idle, */
-	NULL, /* event_cocoa_remove_idle, */
+	event_cocoa_add_idle,
+	event_cocoa_remove_idle, 
 	NULL, /* event_cocoa_call_callback, */
 };
 
