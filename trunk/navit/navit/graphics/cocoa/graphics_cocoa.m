@@ -7,6 +7,7 @@
 #include "event.h"
 #include "item.h"
 #include "callback.h"
+#include "color.h"
 #include <glib.h>
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
@@ -45,55 +46,37 @@ current_context(void)
 
 #endif
 
-struct graphics_priv {
-	struct window win;
-	struct callback_list *cbl;
-} *global_graphics_cocoa;
-
 
 @interface NavitView : UIView {
 @public
 	CGLayerRef layer;
+	CGContextRef layer_context;
 }
 
 @end
+
+struct graphics_priv {
+	struct window win;
+	NavitView *view;
+	struct callback_list *cbl;
+} *global_graphics_cocoa;
+
+struct graphics_gc_priv {
+	CGFloat rgba[4];
+};
+
+
 
 @implementation NavitView
 
 - (void)drawRect:(NSRect)rect
 {
+#if 0
 	NSLog(@"NavitView:drawRect...");
+#endif
 
 	CGContextRef X = current_context();
 
-	CGRect bounds = CGContextGetClipBoundingBox(X);
-	CGPoint center = CGPointMake((bounds.size.width / 2), (bounds.size.height / 2));
-
-	// fill background rect dark blue
-	CGContextSetRGBFillColor(X, 0,0,0.3, 1.0);
-	CGContextFillRect(X, bounds);
-
-	// circle
-	CGContextSetRGBFillColor(X, 0,0,0.6, 1.0);
-	CGContextFillEllipseInRect(X, bounds);
-
-	// fat rounded-cap line from origin to center of view
-	CGContextSetRGBStrokeColor(X, 0,0,1, 1.0);
-	CGContextSetLineWidth(X, 30);
-	CGContextSetLineCap(X, kCGLineCapRound);
-	CGContextBeginPath(X);
-	CGContextMoveToPoint(X, 0,0);
-	CGContextAddLineToPoint(X, center.x, center.y);
-	CGContextStrokePath(X);
-
-	// Draw the text Navit in red
-	char* text = "Hello World!";
-	CGContextSelectFont(X, "Helvetica Bold", 24.0f, kCGEncodingMacRoman);
-	CGContextSetTextDrawingMode(X, kCGTextFill);
-	CGContextSetRGBFillColor(X, 0.8f, 0.3f, 0.1f, 1.0f);
-	CGAffineTransform xform = CGAffineTransformMake( 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	CGContextSetTextMatrix(X, xform);
-	CGContextShowTextAtPoint(X, center.x, center.y, text, strlen(text));
 	CGContextDrawLayerAtPoint(X, CGPointZero, layer);
 }
 
@@ -135,12 +118,15 @@ struct graphics_priv {
 	NSLog(@"loadView");
 	NavitView* myV = [NavitView alloc];
 
+	if (global_graphics_cocoa)
+		global_graphics_cocoa->view=myV;
+
 	CGContextRef X = current_context();
-	CGRect lr=CGRectMake(0, 0, 64, 64);
+	CGRect lr=CGRectMake(0, 0, frame.size.width, frame.size.height);
 	myV->layer=CGLayerCreateWithContext(X, lr.size, NULL);
-	CGContextRef lc=CGLayerGetContext(myV->layer);
-	CGContextSetRGBFillColor(lc, 1, 0, 0, 1);
-	CGContextFillRect(lc, lr);
+	myV->layer_context=CGLayerGetContext(myV->layer);
+	CGContextSetRGBFillColor(myV->layer_context, 1, 1, 1, 1);
+	CGContextFillRect(myV->layer_context, lr);
 
 	[myV initWithFrame: frame];
 
@@ -249,22 +235,45 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
 		dbg(0,"end\n");
+		[gr->view display];
 	}
 }
 
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
+	CGPoint points[count];
+	int i;
+	for (i = 0 ; i < count ; i++) {
+		points[i].x=p[i].x;
+		points[i].y=p[i].y;
+	}
+	CGContextSetStrokeColor(gr->view->layer_context, gc->rgba);
+	CGContextAddLines(gr->view->layer_context, points, count);
+	CGContextStrokePath(gr->view->layer_context);
+	
 }
 
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
+	CGPoint points[count];
+	int i;
+	for (i = 0 ; i < count ; i++) {
+		points[i].x=p[i].x;
+		points[i].y=p[i].y;
+	}
+	CGContextSetFillColor(gr->view->layer_context, gc->rgba);
+	CGContextAddLines(gr->view->layer_context, points, count);
+	CGContextFillPath(gr->view->layer_context);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
+	CGRect lr=CGRectMake(p->x, p->y, w, h);
+	CGContextSetFillColor(gr->view->layer_context, gc->rgba);
+	CGContextFillRect(gr->view->layer_context, lr);
 }
 
 static void
@@ -276,10 +285,6 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 {
 	return NULL;
 }
-
-struct graphics_gc_priv {
-	int dummy;
-};
 
 
 static void
@@ -301,6 +306,10 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
+	gc->rgba[0]=c->r/65535.0;
+	gc->rgba[1]=c->g/65535.0;
+	gc->rgba[2]=c->b/65535.0;
+	gc->rgba[3]=c->a/65535.0;
 }
 
 static void
