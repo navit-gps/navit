@@ -58,7 +58,7 @@
 #include "keys.h"
 #include "mapset.h"
 #include "route.h"
-#include "search.h"
+#include "navit/search.h"
 #include "track.h"
 #include "country.h"
 #include "config.h"
