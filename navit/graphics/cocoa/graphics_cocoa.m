@@ -70,10 +70,12 @@ iconv_t utf8_macosroman;
 
 struct graphics_gc_priv {
 	CGFloat rgba[4];
+	int w;
 };
 
 struct graphics_font_priv {
 	int size;
+	char *name;
 };
 
 
@@ -161,6 +163,16 @@ struct graphics_font_priv {
 	dbg(0,"Enter %d %d\n",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
+
+- (void)mouseDragged:(UIEvent *)theEvent
+{
+	struct point p;
+	p.x=theEvent.locationInWindow.x;
+	p.y=graphics->h-theEvent.locationInWindow.y;
+	
+	dbg(0,"Enter %d %d\n",p.x,p.y);
+	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
+}
 #endif
 
 - (void)dealloc {
@@ -216,6 +228,7 @@ struct graphics_font_priv {
 	CGContextTranslateCTM(myV->layer_context, 0, -frame.size.height);
 #endif
 	CGContextSetRGBFillColor(myV->layer_context, 1, 1, 1, 1);
+  	CGContextSetRGBStrokeColor(myV->layer_context, 1, 1, 1, 1);
 	CGContextFillRect(myV->layer_context, lr);
 
 	[myV initWithFrame: frame];
@@ -346,6 +359,9 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		points[i].y=p[i].y;
 	}
 	CGContextSetStrokeColor(gr->view->layer_context, gc->rgba);
+	CGContextSetLineWidth(gr->view->layer_context, gc->w);
+	CGContextSetLineCap(gr->view->layer_context, kCGLineCapRound);
+    	CGContextBeginPath(gr->view->layer_context);
 	CGContextAddLines(gr->view->layer_context, points, count);
 	CGContextStrokePath(gr->view->layer_context);
 	
@@ -361,6 +377,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 		points[i].y=p[i].y;
 	}
 	CGContextSetFillColor(gr->view->layer_context, gc->rgba);
+    	CGContextBeginPath(gr->view->layer_context);
 	CGContextAddLines(gr->view->layer_context, points, count);
 	CGContextFillPath(gr->view->layer_context);
 }
@@ -384,9 +401,9 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	CGContextSetFillColor(gr->view->layer_context, fg->rgba);
 
-	CGContextSelectFont(gr->view->layer_context, "Helvetica Bold", 24.0f, kCGEncodingMacRoman);
+	CGContextSelectFont(gr->view->layer_context, font->name, font->size/16.0, kCGEncodingMacRoman);
 	CGContextSetTextDrawingMode(gr->view->layer_context, kCGTextFill);
-	CGAffineTransform xform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	CGAffineTransform xform = CGAffineTransformMake(dx/65536.0, dy/65536.0, dy/65536.0, -dx/65536.0, 0.0f, 0.0f);
 	CGContextSetTextMatrix(gr->view->layer_context, xform);
 	CGContextShowTextAtPoint(gr->view->layer_context, p->x, p->y, outb, strlen(outb));
 }
@@ -420,6 +437,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	*meth=font_methods;
 
 	ret->size=size;
+	ret->name="Helvetica";
 	return ret;
 }
 
@@ -432,6 +450,7 @@ gc_destroy(struct graphics_gc_priv *gc)
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
+	gc->w=w;
 }
 
 static void
@@ -470,6 +489,7 @@ static struct graphics_gc_methods gc_methods = {
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
         struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
+	gc->w=1;
 
         *meth=gc_methods;
         return gc;
@@ -618,14 +638,6 @@ event_cocoa_main_loop_run(void)
 	[pool release];
 }
 
-static void *
-event_cocoa_add_timeout(void)
-{
-	dbg(0,"enter\n");
-	return NULL;
-}
-
-
 @interface NavitTimer : NSObject{
 @public
 	struct callback *cb;
@@ -649,6 +661,27 @@ struct event_idle {
 	struct callback *cb;
 	NSTimer *timer;
 };
+
+static void *
+event_cocoa_add_timeout(int timeout, int multi, struct callback *cb)
+{
+	NavitTimer *ret=[[NavitTimer alloc]init];
+	ret->cb=cb;
+	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:multi?YES:NO];
+	dbg(0,"timer=%p\n",ret->timer);
+	return ret;
+}
+
+
+static void
+event_cocoa_remove_timeout(struct event_timeout *ev)
+{
+	NavitTimer *t=(NavitTimer *)ev;
+	
+	[t->timer invalidate];
+	[t release];
+}
+
 
 static struct event_idle *
 event_cocoa_add_idle(int priority, struct callback *cb)
@@ -676,7 +709,7 @@ static struct event_methods event_cocoa_methods = {
 	NULL, /* event_cocoa_add_watch, */
 	NULL, /* event_cocoa_remove_watch, */
 	event_cocoa_add_timeout,
-	NULL, /* event_cocoa_remove_timeout, */
+	event_cocoa_remove_timeout,
 	event_cocoa_add_idle,
 	event_cocoa_remove_idle, 
 	NULL, /* event_cocoa_call_callback, */
