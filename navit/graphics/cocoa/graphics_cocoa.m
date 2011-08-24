@@ -9,6 +9,7 @@
 #include "callback.h"
 #include "color.h"
 #include <glib.h>
+#include <iconv.h>
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define USE_UIKIT 1
@@ -36,6 +37,7 @@ current_context(void)
 #define UIApplication NSApplication
 #define UIApplicationMain(a,b,c,d) NSApplicationMain(a,b)
 #define UIScreen NSScreen
+#define UIEvent NSEvent
 #define applicationFrame frame
 
 CGContextRef
@@ -51,18 +53,27 @@ current_context(void)
 @public
 	CGLayerRef layer;
 	CGContextRef layer_context;
+	struct graphics_priv *graphics;
 }
 
 @end
 
-struct graphics_priv {
+static struct graphics_priv {
 	struct window win;
 	NavitView *view;
 	struct callback_list *cbl;
+	int w;
+	int h;
 } *global_graphics_cocoa;
+
+iconv_t utf8_macosroman;
 
 struct graphics_gc_priv {
 	CGFloat rgba[4];
+};
+
+struct graphics_font_priv {
+	int size;
 };
 
 
@@ -80,6 +91,77 @@ struct graphics_gc_priv {
 	CGContextDrawLayerAtPoint(X, CGPointZero, layer);
 }
 
+#if USE_UIKIT
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	NSArray *arr=touches.allObjects;
+	UITouch *touch=[arr objectAtIndex: 0];
+	struct CGPoint pc=[touch locationInView: self];
+	struct point p;
+	p.x=pc.x;
+	p.y=pc.y;
+	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+        callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
+}
+
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	NSArray *arr=touches.allObjects;
+	UITouch *touch=[arr objectAtIndex: 0];
+	struct CGPoint pc=[touch locationInView: self];
+	struct point p;
+	p.x=pc.x;
+	p.y=pc.y;
+	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+        callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	NSArray *arr=touches.allObjects;
+	UITouch *touch=[arr objectAtIndex: 0];
+	struct CGPoint pc=[touch locationInView: self];
+	struct point p;
+	p.x=pc.x;
+	p.y=pc.y;
+	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+        callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	NSArray *arr=touches.allObjects;
+	UITouch *touch=[arr objectAtIndex: 0];
+	struct CGPoint pc=[touch locationInView: self];
+	struct point p;
+	p.x=pc.x;
+	p.y=pc.y;
+	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
+}
+
+#else
+- (void)mouseDown:(UIEvent *)theEvent
+{
+	struct point p;
+	p.x=theEvent.locationInWindow.x;
+	p.y=graphics->h-theEvent.locationInWindow.y;
+	
+	dbg(0,"Enter %d %d\n",p.x,p.y);
+        callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
+}
+
+- (void)mouseUp:(UIEvent *)theEvent
+{
+	struct point p;
+	p.x=theEvent.locationInWindow.x;
+	p.y=graphics->h-theEvent.locationInWindow.y;
+	
+	dbg(0,"Enter %d %d\n",p.x,p.y);
+        callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
+}
+#endif
 
 - (void)dealloc {
 	[super dealloc];
@@ -118,13 +200,21 @@ struct graphics_gc_priv {
 	NSLog(@"loadView");
 	NavitView* myV = [NavitView alloc];
 
-	if (global_graphics_cocoa)
+	if (global_graphics_cocoa) {
 		global_graphics_cocoa->view=myV;
+		global_graphics_cocoa->w=frame.size.width;
+		global_graphics_cocoa->h=frame.size.height;
+		myV->graphics=global_graphics_cocoa;
+	}
 
 	CGContextRef X = current_context();
 	CGRect lr=CGRectMake(0, 0, frame.size.width, frame.size.height);
 	myV->layer=CGLayerCreateWithContext(X, lr.size, NULL);
 	myV->layer_context=CGLayerGetContext(myV->layer);
+#if !USE_UIKIT
+	CGContextScaleCTM(myV->layer_context, 1, -1);
+	CGContextTranslateCTM(myV->layer_context, 0, -frame.size.height);
+#endif
 	CGContextSetRGBFillColor(myV->layer_context, 1, 1, 1, 1);
 	CGContextFillRect(myV->layer_context, lr);
 
@@ -197,6 +287,7 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 #else
 	self.window = [[[UIWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
 #endif
+	utf8_macosroman=iconv_open("MACROMAN","UTF-8");
 
 #if USE_UIKIT
 	[window addSubview:viewController.view];
@@ -216,7 +307,9 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 		
 	}
 
+#if USE_UIKIT
 	return YES;
+#endif
 }
 
 
@@ -281,15 +374,54 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 }
 
 static void
-draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
+draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
+	size_t len,inlen=strlen(text)+1,outlen=strlen(text)+1;
+	char outb[outlen];
+	char *inp=text,*outp=outb;
+
+	len=iconv (utf8_macosroman, &inp, &inlen, &outp, &outlen);
+
+	CGContextSetFillColor(gr->view->layer_context, fg->rgba);
+
+	CGContextSelectFont(gr->view->layer_context, "Helvetica Bold", 24.0f, kCGEncodingMacRoman);
+	CGContextSetTextDrawingMode(gr->view->layer_context, kCGTextFill);
+	CGAffineTransform xform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	CGContextSetTextMatrix(gr->view->layer_context, xform);
+	CGContextShowTextAtPoint(gr->view->layer_context, p->x, p->y, outb, strlen(outb));
 }
+
+static void
+draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
+{
+	CGImageRef imgc=(CGImageRef) img;
+	int w=CGImageGetWidth(imgc);
+	int h=CGImageGetHeight(imgc);
+	CGRect rect=CGRectMake(0, 0, w, h);
+	CGContextSaveGState(gr->view->layer_context);
+	CGContextTranslateCTM(gr->view->layer_context, p->x, p->y+h);
+	CGContextScaleCTM(gr->view->layer_context, 1.0, -1.0);
+	CGContextDrawImage(gr->view->layer_context, rect, imgc);
+	CGContextRestoreGState(gr->view->layer_context);
+}
+
+static void font_destroy(struct graphics_font_priv *font)
+{
+	g_free(font);
+}
+
+static struct graphics_font_methods font_methods = {
+	font_destroy
+};
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags)
 {
-	return NULL;
-}
+	struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
+	*meth=font_methods;
 
+	ret->size=size;
+	return ret;
+}
 
 static void
 gc_destroy(struct graphics_gc_priv *gc)
@@ -353,7 +485,25 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
-	return NULL;
+	NSString *s=[[NSString alloc]initWithCString:path encoding:NSMacOSRomanStringEncoding];
+	CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((CFDataRef)[NSData dataWithContentsOfFile:s]);
+	[s release];
+
+	if (!imgDataProvider)
+		return NULL;
+
+	CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
+	CGDataProviderRelease(imgDataProvider);
+	dbg(0,"size %dx%d\n",CGImageGetWidth(image),CGImageGetHeight(image));
+	if (w)
+		*w=CGImageGetWidth(image);
+	if (h)
+		*h=CGImageGetHeight(image);
+	if (hot) {
+		hot->x=CGImageGetWidth(image)/2;
+		hot->y=CGImageGetHeight(image)/2;
+	}
+	return image;
 }
 
 static void *
@@ -365,7 +515,30 @@ get_data(struct graphics_priv *this, const char *type)
 	return &this->win;
 }
 
+static void
+image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
+{
+	CGImageRelease(priv);
+}
 
+static void
+get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
+{
+	int len = g_utf8_strlen(text, -1);
+	int xMin = 0;
+	int yMin = 0;
+	int yMax = 13*font->size/256;
+	int xMax = 9*font->size*len/256;
+
+	ret[0].x = xMin;
+	ret[0].y = -yMin;
+	ret[1].x = xMin;
+	ret[1].y = -yMax;
+	ret[2].x = xMax;
+	ret[2].y = -yMax;
+	ret[3].x = xMax;
+	ret[3].y = -yMin;
+}
 
 static struct graphics_methods graphics_methods = {
 	NULL, /* graphics_destroy, */
@@ -375,7 +548,7 @@ static struct graphics_methods graphics_methods = {
 	draw_rectangle,
 	NULL, /* draw_circle, */
 	draw_text, 
-	NULL, /* draw_image, */
+	draw_image,
 	NULL, /* draw_image_warp, */
 	NULL, /* draw_restore, */
 	NULL, /* draw_drag, */
@@ -385,8 +558,8 @@ static struct graphics_methods graphics_methods = {
 	NULL, /* overlay_new, */
 	image_new,
 	get_data,
-	NULL, /* image_free, */
-	NULL, /* get_text_bbox, */
+	image_free,
+	get_text_bbox,
 	NULL, /* overlay_disable, */
 	NULL, /* overlay_resize, */
 	NULL, /* set_attr, */
