@@ -847,7 +847,7 @@ file_wordexp_new(const char *pattern)
 int
 file_wordexp_get_count(struct file_wordexp *wexp)
 {
-	if (wexp->error)
+	if (wexp->err)
 		return 1;
 	return wexp->we.we_wordc;
 }
@@ -855,7 +855,7 @@ file_wordexp_get_count(struct file_wordexp *wexp)
 char **
 file_wordexp_get_array(struct file_wordexp *wexp)
 {
-	if (wexp->error)
+	if (wexp->err)
 		return &wexp->pattern;
 	return wexp->we.we_wordv;
 }
