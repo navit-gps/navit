@@ -110,6 +110,9 @@ int main_real(int argc, char **argv)
 #ifdef HAVE_GETOPT_H
 	opterr=0;  //don't bomb out on errors.
 #endif /* _MSC_VER */
+	/* ingore iphone command line argument */
+	if (argc == 2 && !strcmp(argv[1],"-RegisterForSystemEvents"))
+		argc=1;
 	if (argc > 1) {
 		/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 		while((opt = getopt(argc, argv, ":hvc:d:e:s:")) != -1) {

@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_.h"
 #include "debug.h"
 #include "plugin.h"
 #include "point.h"
@@ -615,15 +616,8 @@ event_cocoa_main_loop_run(void)
 #endif
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 #if USE_UIKIT
-#if 1
-	int argc=2;
-	char *argv[]={"Debug/navit.app/navit","-RegisterForSystemEvents",NULL};
-#else
-	int argc=1;
-	char *argv[]={"navit",NULL};
-#endif
 	dbg(0,"calling main\n");
-	int retval = UIApplicationMain(argc, argv, nil, @"NavitAppDelegate");
+	int retval = UIApplicationMain(main_argc, main_argv, nil, @"NavitAppDelegate");
 	dbg(0,"retval=%d\n",retval);
 #else
 	NavitAppDelegate * delegate = [[NavitAppDelegate alloc] init];
