@@ -88,7 +88,11 @@ debug_init(const char *program_name)
 	gdb_program=g_strdup(program_name);
 	signal(SIGSEGV, sigsegv);
 	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+	debug_fp = stdout;
+#else
 	debug_fp = stderr;
+#endif
 }
 
 
