@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 #define NSRect CGRect
 #define NSMakeRect CGRectMake
+#define REVERSE_Y 0
 
 CGContextRef
 current_context(void)
@@ -40,6 +41,7 @@ current_context(void)
 #define UIScreen NSScreen
 #define UIEvent NSEvent
 #define applicationFrame frame
+#define REVERSE_Y 1
 
 CGContextRef
 current_context(void)
@@ -52,8 +54,6 @@ current_context(void)
 
 @interface NavitView : UIView {
 @public
-	CGLayerRef layer;
-	CGContextRef layer_context;
 	struct graphics_priv *graphics;
 }
 
@@ -62,9 +62,12 @@ current_context(void)
 static struct graphics_priv {
 	struct window win;
 	NavitView *view;
+	CGLayerRef layer;
+	CGContextRef layer_context;
 	struct callback_list *cbl;
-	int w;
-	int h;
+	struct point p;
+	int w, h, wraparound;
+	struct graphics_priv *parent, *next, *overlays;
 } *global_graphics_cocoa;
 
 iconv_t utf8_macosroman;
@@ -85,13 +88,32 @@ struct graphics_font_priv {
 
 - (void)drawRect:(NSRect)rect
 {
+	struct graphics_priv *gr;
 #if 0
 	NSLog(@"NavitView:drawRect...");
 #endif
 
 	CGContextRef X = current_context();
 
-	CGContextDrawLayerAtPoint(X, CGPointZero, layer);
+	CGContextDrawLayerAtPoint(X, CGPointZero, graphics->layer);
+	gr=graphics->overlays;
+	while (gr) {
+		struct CGPoint pc;
+		pc.x=gr->p.x;
+		pc.y=gr->p.y;
+		if (gr->wraparound) {
+			if (pc.x < 0)
+				pc.x+=graphics->w;
+			if (pc.y < 0)
+				pc.y+=graphics->h;
+		}
+#if REVERSE_Y
+		pc.y=graphics->h-pc.y-gr->h;
+#endif
+		dbg(0,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
+		CGContextDrawLayerAtPoint(X, pc, gr->layer);
+		gr=gr->next;
+	}
 }
 
 #if USE_UIKIT
@@ -208,6 +230,24 @@ struct graphics_font_priv {
 	return [self init];
 }
 
+void setup_graphics(struct graphics_priv *gr, CGContextRef context, int w, int h)
+{
+	CGRect lr=CGRectMake(0, 0, w, h);
+	gr->layer=CGLayerCreateWithContext(context, lr.size, NULL);
+	gr->layer_context=CGLayerGetContext(gr->layer);
+	gr->w=w;
+	gr->h=h;
+#if REVERSE_Y
+	CGContextScaleCTM(gr->layer_context, 1, -1);
+	CGContextTranslateCTM(gr->layer_context, 0, -h);
+#endif
+	CGContextSetRGBFillColor(gr->layer_context, 0, 0, 0, 0);
+  	CGContextSetRGBStrokeColor(gr->layer_context, 0, 0, 0, 0);
+	CGContextFillRect(gr->layer_context, lr);
+}
+
+
+
 - (void)loadView
 {
 	NSLog(@"loadView");
@@ -215,22 +255,9 @@ struct graphics_font_priv {
 
 	if (global_graphics_cocoa) {
 		global_graphics_cocoa->view=myV;
-		global_graphics_cocoa->w=frame.size.width;
-		global_graphics_cocoa->h=frame.size.height;
 		myV->graphics=global_graphics_cocoa;
+		setup_graphics(global_graphics_cocoa, current_context(), frame.size.width, frame.size.height);
 	}
-
-	CGContextRef X = current_context();
-	CGRect lr=CGRectMake(0, 0, frame.size.width, frame.size.height);
-	myV->layer=CGLayerCreateWithContext(X, lr.size, NULL);
-	myV->layer_context=CGLayerGetContext(myV->layer);
-#if !USE_UIKIT
-	CGContextScaleCTM(myV->layer_context, 1, -1);
-	CGContextTranslateCTM(myV->layer_context, 0, -frame.size.height);
-#endif
-	CGContextSetRGBFillColor(myV->layer_context, 1, 1, 1, 1);
-  	CGContextSetRGBStrokeColor(myV->layer_context, 1, 1, 1, 1);
-	CGContextFillRect(myV->layer_context, lr);
 
 	[myV initWithFrame: frame];
 
@@ -240,10 +267,7 @@ struct graphics_font_priv {
 }
 
 - (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-
-	// Release any cached data, images, etc that aren't in use.
+	dbg(0,"enter\n");
 }
 
 - (void)viewDidUnload {
@@ -342,11 +366,13 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
 		dbg(0,"end\n");
+		if (!gr->parent) {
 #if USE_UIKIT
-		[gr->view setNeedsDisplay];
+			[gr->view setNeedsDisplay];
 #else
-		[gr->view display];
+			[gr->view display];
 #endif
+		}
 	}
 }
 
@@ -359,12 +385,12 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		points[i].x=p[i].x;
 		points[i].y=p[i].y;
 	}
-	CGContextSetStrokeColor(gr->view->layer_context, gc->rgba);
-	CGContextSetLineWidth(gr->view->layer_context, gc->w);
-	CGContextSetLineCap(gr->view->layer_context, kCGLineCapRound);
-    	CGContextBeginPath(gr->view->layer_context);
-	CGContextAddLines(gr->view->layer_context, points, count);
-	CGContextStrokePath(gr->view->layer_context);
+	CGContextSetStrokeColor(gr->layer_context, gc->rgba);
+	CGContextSetLineWidth(gr->layer_context, gc->w);
+	CGContextSetLineCap(gr->layer_context, kCGLineCapRound);
+    	CGContextBeginPath(gr->layer_context);
+	CGContextAddLines(gr->layer_context, points, count);
+	CGContextStrokePath(gr->layer_context);
 	
 }
 
@@ -377,18 +403,18 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 		points[i].x=p[i].x;
 		points[i].y=p[i].y;
 	}
-	CGContextSetFillColor(gr->view->layer_context, gc->rgba);
-    	CGContextBeginPath(gr->view->layer_context);
-	CGContextAddLines(gr->view->layer_context, points, count);
-	CGContextFillPath(gr->view->layer_context);
+	CGContextSetFillColor(gr->layer_context, gc->rgba);
+    	CGContextBeginPath(gr->layer_context);
+	CGContextAddLines(gr->layer_context, points, count);
+	CGContextFillPath(gr->layer_context);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
 	CGRect lr=CGRectMake(p->x, p->y, w, h);
-	CGContextSetFillColor(gr->view->layer_context, gc->rgba);
-	CGContextFillRect(gr->view->layer_context, lr);
+	CGContextSetFillColor(gr->layer_context, gc->rgba);
+	CGContextFillRect(gr->layer_context, lr);
 }
 
 static void
@@ -400,13 +426,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	len=iconv (utf8_macosroman, &inp, &inlen, &outp, &outlen);
 
-	CGContextSetFillColor(gr->view->layer_context, fg->rgba);
+	CGContextSetFillColor(gr->layer_context, fg->rgba);
 
-	CGContextSelectFont(gr->view->layer_context, font->name, font->size/16.0, kCGEncodingMacRoman);
-	CGContextSetTextDrawingMode(gr->view->layer_context, kCGTextFill);
+	CGContextSelectFont(gr->layer_context, font->name, font->size/16.0, kCGEncodingMacRoman);
+	CGContextSetTextDrawingMode(gr->layer_context, kCGTextFill);
 	CGAffineTransform xform = CGAffineTransformMake(dx/65536.0, dy/65536.0, dy/65536.0, -dx/65536.0, 0.0f, 0.0f);
-	CGContextSetTextMatrix(gr->view->layer_context, xform);
-	CGContextShowTextAtPoint(gr->view->layer_context, p->x, p->y, outb, strlen(outb));
+	CGContextSetTextMatrix(gr->layer_context, xform);
+	CGContextShowTextAtPoint(gr->layer_context, p->x, p->y, outb, strlen(outb));
 }
 
 static void
@@ -416,11 +442,11 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 	int w=CGImageGetWidth(imgc);
 	int h=CGImageGetHeight(imgc);
 	CGRect rect=CGRectMake(0, 0, w, h);
-	CGContextSaveGState(gr->view->layer_context);
-	CGContextTranslateCTM(gr->view->layer_context, p->x, p->y+h);
-	CGContextScaleCTM(gr->view->layer_context, 1.0, -1.0);
-	CGContextDrawImage(gr->view->layer_context, rect, imgc);
-	CGContextRestoreGState(gr->view->layer_context);
+	CGContextSaveGState(gr->layer_context);
+	CGContextTranslateCTM(gr->layer_context, p->x, p->y+h);
+	CGContextScaleCTM(gr->layer_context, 1.0, -1.0);
+	CGContextDrawImage(gr->layer_context, rect, imgc);
+	CGContextRestoreGState(gr->layer_context);
 }
 
 static void font_destroy(struct graphics_font_priv *font)
@@ -502,6 +528,9 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 }
 
+static struct graphics_priv *
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
+
 
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
@@ -524,7 +553,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		hot->x=CGImageGetWidth(image)/2;
 		hot->y=CGImageGetHeight(image)/2;
 	}
-	return image;
+	return (struct graphics_image_priv *)image;
 }
 
 static void *
@@ -539,7 +568,7 @@ get_data(struct graphics_priv *this, const char *type)
 static void
 image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-	CGImageRelease(priv);
+	CGImageRelease((CGImageRef)priv);
 }
 
 static void
@@ -576,7 +605,7 @@ static struct graphics_methods graphics_methods = {
 	font_new,
 	gc_new,
 	background_gc,
-	NULL, /* overlay_new, */
+	overlay_new, 
 	image_new,
 	get_data,
 	image_free,
@@ -586,6 +615,22 @@ static struct graphics_methods graphics_methods = {
 	NULL, /* set_attr, */
 };
 
+
+static struct graphics_priv *
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+{
+	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
+	*meth=graphics_methods;
+	ret->p=*p;
+	ret->w=w;
+	ret->h=h;
+	ret->parent=gr;
+	ret->next=gr->overlays;
+	ret->wraparound=wraparound;
+	gr->overlays=ret;
+	setup_graphics(ret, current_context(), w, h);
+	return ret;
+}
 
 
 struct graphics_priv *
@@ -656,14 +701,14 @@ struct event_idle {
 	NSTimer *timer;
 };
 
-static void *
+static struct event_timeout *
 event_cocoa_add_timeout(int timeout, int multi, struct callback *cb)
 {
 	NavitTimer *ret=[[NavitTimer alloc]init];
 	ret->cb=cb;
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:multi?YES:NO];
 	dbg(0,"timer=%p\n",ret->timer);
-	return ret;
+	return (struct event_timeout *)ret;
 }
 
 
@@ -685,7 +730,7 @@ event_cocoa_add_idle(int priority, struct callback *cb)
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:YES];
 
 	dbg(0,"timer=%p\n",ret->timer);
-	return ret;
+	return (struct event_idle *)ret;
 }
 
 static void
