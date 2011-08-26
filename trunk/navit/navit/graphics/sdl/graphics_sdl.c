@@ -2312,9 +2312,8 @@ sdl_timer_callback(Uint32 interval, void* param)
 
     SDL_PushEvent (&event);
 
-    if (timeout->multi==0) {
-	g_free(timeout);
-	timeout = NULL;
+    if (timeout->multi == 0) {
+	timeout->id = 0;
 	return 0; // cancel timer
     }
     return interval; // reactivate timer
@@ -2462,8 +2461,10 @@ static struct event_timeout *
 event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
 {
     struct event_timeout * ret =  g_new0(struct event_timeout, 1);
-    if(!ret)
+    if(!ret) {
+	dbg (0,"g_new0 failed\n");
 	return ret;
+    }
     dbg(1,"timer(%p) multi(%d) interval(%d) cb(%p) added\n",ret, multi, timeout, cb);
     ret->multi = multi;
     ret->cb = cb;
@@ -2476,16 +2477,16 @@ static void
 event_sdl_remove_timeout(struct event_timeout *to)
 {
     dbg(2,"enter %p\n", to);
-    if(to!=NULL)
+    if(to)
     {
-	int ret = to->id ? SDL_RemoveTimer(to->id) : SDL_TRUE;
-        if (ret == SDL_FALSE) {
+	/* do not SDL_RemoveTimer if oneshot timer has already fired */
+	int ret = to->id == 0 ? SDL_TRUE : SDL_RemoveTimer(to->id);
+
+        if (ret == SDL_FALSE)
 	    dbg(0,"SDL_RemoveTimer (%p) failed\n", to->id);
-	}
-	else {
-            g_free(to);
-            dbg(1,"timer(%p) removed\n", to);
-	}
+
+	g_free(to);
+	dbg(1,"timer(%p) removed\n", to);
     }
 }
 
