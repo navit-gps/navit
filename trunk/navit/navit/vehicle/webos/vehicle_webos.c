@@ -46,6 +46,9 @@ struct vehicle_priv {
 	struct attr ** attrs;
 	char fixiso8601[128];
 	int pdk_version;
+	struct event_timeout *ev_timeout;
+	struct callback *timeout_cb;
+	char has_fix;
 };
 
 static void
@@ -89,9 +92,16 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 {
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
-	priv->fix_time = tv.tv_sec;
 
+	event_remove_timeout(priv->ev_timeout);
+	priv->ev_timeout = NULL;
+
+	int new_timeout = (priv->fix_time == 0 ? 1 : (int)difftime(tv.tv_sec, priv->fix_time)) * 2000;
+
+	priv->fix_time = tv.tv_sec;
+	priv->has_fix = 1;
 	priv->geo.lat = location->latitude;
+	/* workaround for webOS GPS bug following */
 	priv->geo.lng = (priv->pdk_version == 200 && location->longitude >= -1 && location->longitude <= 1) ? 
 		-location->longitude : location->longitude;
 
@@ -117,12 +127,29 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 
 	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 
-	return;
+	dbg(1, "add timeout(%i)\n", new_timeout);
+	priv->ev_timeout = event_add_timeout(new_timeout, 0, priv->timeout_cb);
+}
+
+static void
+vehicle_webos_timeout_callback(struct vehicle_priv *priv)
+{
+	dbg(1, "GPS timeout triggered cb(%p)\n", priv->timeout_cb);
+
+	priv->fix_time = 0;
+	priv->has_fix = 0;
+
+	callback_list_call_attr_0(priv->cbl, attr_position_fix_type);
 }
 
 static void
 vehicle_webos_close(struct vehicle_priv *priv)
 {
+	event_remove_timeout(priv->ev_timeout);
+	priv->ev_timeout = NULL;
+
+	callback_destroy(priv->timeout_cb);
+
 	if (priv->pdk_version <= 100)
 		PDL_UnregisterServiceCallback((PDL_ServiceCallbackFunc)vehicle_webos_callback);
 	else
@@ -217,16 +244,18 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 
 			break;
 		case attr_position_fix_type:
-			if (priv->radius == 0.0)
-				return 0;		// strength = -1
-			else if (priv->radius > 20.0)
+			if (!priv->has_fix || priv->radius == 0.0)
 				attr->u.num = 0;	// strength = 1
+			else if (priv->radius > 20.0)
+				attr->u.num = 1;	// strength >= 2
 			else
-				attr->u.num = 1;	// strength = 2
+				attr->u.num = 2;	// strength >= 2
 
 			break;
 		case attr_position_sats_used:
-			if (priv->radius <= 6.0 )
+			if (!priv->has_fix)
+				attr->u.num = 0;
+			else if (priv->radius <= 6.0 )
 				attr->u.num = 6;	// strength = 5
 			else if (priv->radius <= 10.0 )
 				attr->u.num = 5;	// strength = 4
@@ -291,10 +320,12 @@ vehicle_webos_new(struct vehicle_methods
 {
 	struct vehicle_priv *priv;
 
-
 	priv = g_new0(struct vehicle_priv, 1);
 	priv->attrs = attrs;
 	priv->cbl = cbl;
+
+	priv->timeout_cb = callback_new_1(callback_cast(vehicle_webos_timeout_callback), priv);
+
 	*meth = vehicle_webos_methods;
 	while (*attrs) {
 		vehicle_webos_set_attr_do(priv, *attrs, 1);
