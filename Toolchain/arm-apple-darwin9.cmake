@@ -1,0 +1,22 @@
+
+# specify the cross compiler
+SET(CMAKE_C_COMPILER "arm-apple-darwin9-gcc")
+SET(CMAKE_CXX_COMPILER "arm-apple-darwin9-g++")
+SET(CMAKE_RC_COMPILER_INIT "arm-apple-darwin9-windres")
+SET(PKG_CONFIG_EXECUTABLE "arm-apple-darwin9-pkg-config")
+
+get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} PATH)
+set (SDKROOT "/work/compile/cc/iphone/trunk/toolchain" CACHE STRING "PATH to iPhone SDK")
+set(CMAKE_FIND_ROOT_PATH "${SDKROOT}/sys")
+INCLUDE_DIRECTORIES("${SDKROOT}/sys/usr/include")
+
+SET(USE_UIKIT TRUE)
+SET(APPLE_BUILD TRUE)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+ADD_DEFINITIONS(-D__IPHONE_OS_VERSION_MIN_REQUIRED=20200)
+set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_REQUIRED_FLAGS} -lobjc -framework CoreFoundation -bind_at_load")
