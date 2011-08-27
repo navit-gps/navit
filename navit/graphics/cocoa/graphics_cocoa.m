@@ -230,20 +230,28 @@ struct graphics_font_priv {
 	return [self init];
 }
 
-void setup_graphics(struct graphics_priv *gr, CGContextRef context, int w, int h)
+static 
+void free_graphics(struct graphics_priv *gr)
 {
-	CGRect lr=CGRectMake(0, 0, w, h);
-	gr->layer=CGLayerCreateWithContext(context, lr.size, NULL);
+	if (gr->layer) {
+		CGLayerRelease(gr->layer);
+		gr->layer=NULL;
+	}
+}
+
+static void
+setup_graphics(struct graphics_priv *gr)
+{
+	CGRect lr=CGRectMake(0, 0, gr->w, gr->h);
+	gr->layer=CGLayerCreateWithContext(current_context(), lr.size, NULL);
 	gr->layer_context=CGLayerGetContext(gr->layer);
-	gr->w=w;
-	gr->h=h;
 #if REVERSE_Y
 	CGContextScaleCTM(gr->layer_context, 1, -1);
-	CGContextTranslateCTM(gr->layer_context, 0, -h);
+	CGContextTranslateCTM(gr->layer_context, 0, -gr->h);
 #endif
 	CGContextSetRGBFillColor(gr->layer_context, 0, 0, 0, 0);
   	CGContextSetRGBStrokeColor(gr->layer_context, 0, 0, 0, 0);
-	CGContextFillRect(gr->layer_context, lr);
+	CGContextClearRect(gr->layer_context, lr);
 }
 
 
@@ -256,7 +264,9 @@ void setup_graphics(struct graphics_priv *gr, CGContextRef context, int w, int h
 	if (global_graphics_cocoa) {
 		global_graphics_cocoa->view=myV;
 		myV->graphics=global_graphics_cocoa;
-		setup_graphics(global_graphics_cocoa, current_context(), frame.size.width, frame.size.height);
+		global_graphics_cocoa->w=frame.size.width;
+		global_graphics_cocoa->h=frame.size.height;
+		setup_graphics(global_graphics_cocoa);
 	}
 
 	[myV initWithFrame: frame];
@@ -364,6 +374,10 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
+	if (mode == draw_mode_begin) {
+		free_graphics(gr);
+		setup_graphics(gr);
+	}
 	if (mode == draw_mode_end) {
 		dbg(0,"end\n");
 		if (!gr->parent) {
@@ -628,7 +642,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	ret->next=gr->overlays;
 	ret->wraparound=wraparound;
 	gr->overlays=ret;
-	setup_graphics(ret, current_context(), w, h);
+	setup_graphics(gr);
 	return ret;
 }
 
