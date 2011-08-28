@@ -66,7 +66,7 @@ static struct graphics_priv {
 	CGContextRef layer_context;
 	struct callback_list *cbl;
 	struct point p;
-	int w, h, wraparound;
+	int w, h, wraparound, overlay_disabled;
 	struct graphics_priv *parent, *next, *overlays;
 } *global_graphics_cocoa;
 
@@ -88,7 +88,7 @@ struct graphics_font_priv {
 
 - (void)drawRect:(NSRect)rect
 {
-	struct graphics_priv *gr;
+	struct graphics_priv *gr=NULL;
 #if 0
 	NSLog(@"NavitView:drawRect...");
 #endif
@@ -96,22 +96,25 @@ struct graphics_font_priv {
 	CGContextRef X = current_context();
 
 	CGContextDrawLayerAtPoint(X, CGPointZero, graphics->layer);
-	gr=graphics->overlays;
+	if (!graphics->overlay_disabled)
+		gr=graphics->overlays;
 	while (gr) {
-		struct CGPoint pc;
-		pc.x=gr->p.x;
-		pc.y=gr->p.y;
-		if (gr->wraparound) {
-			if (pc.x < 0)
-				pc.x+=graphics->w;
-			if (pc.y < 0)
-				pc.y+=graphics->h;
+		if (!gr->overlay_disabled) {
+			struct CGPoint pc;
+			pc.x=gr->p.x;
+			pc.y=gr->p.y;
+			if (gr->wraparound) {
+				if (pc.x < 0)
+					pc.x+=graphics->w;
+				if (pc.y < 0)
+					pc.y+=graphics->h;
+			}
+	#if REVERSE_Y
+			pc.y=graphics->h-pc.y-gr->h;
+	#endif
+			dbg(0,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
+			CGContextDrawLayerAtPoint(X, pc, gr->layer);
 		}
-#if REVERSE_Y
-		pc.y=graphics->h-pc.y-gr->h;
-#endif
-		dbg(0,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
-		CGContextDrawLayerAtPoint(X, pc, gr->layer);
 		gr=gr->next;
 	}
 }
@@ -374,12 +377,8 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	if (mode == draw_mode_begin) {
-		free_graphics(gr);
-		setup_graphics(gr);
-	}
 	if (mode == draw_mode_end) {
-		dbg(0,"end\n");
+		dbg(0,"end %p\n",gr);
 		if (!gr->parent) {
 #if USE_UIKIT
 			[gr->view setNeedsDisplay];
@@ -427,6 +426,11 @@ static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
 	CGRect lr=CGRectMake(p->x, p->y, w, h);
+	if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
+		dbg(0,"clear %p %dx%d\n",gr,w,h);
+		free_graphics(gr);
+		setup_graphics(gr);
+	}
 	CGContextSetFillColor(gr->layer_context, gc->rgba);
 	CGContextFillRect(gr->layer_context, lr);
 }
@@ -604,6 +608,12 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 	ret[3].y = -yMin;
 }
 
+static void
+overlay_disable(struct graphics_priv *gr, int disabled)
+{
+	gr->overlay_disabled=disabled;
+}
+
 static struct graphics_methods graphics_methods = {
 	NULL, /* graphics_destroy, */
 	draw_mode,
@@ -624,7 +634,7 @@ static struct graphics_methods graphics_methods = {
 	get_data,
 	image_free,
 	get_text_bbox,
-	NULL, /* overlay_disable, */
+	overlay_disable,
 	NULL, /* overlay_resize, */
 	NULL, /* set_attr, */
 };
