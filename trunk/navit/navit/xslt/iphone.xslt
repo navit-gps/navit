@@ -16,6 +16,9 @@
       <xsl:attribute name="follow">1</xsl:attribute>
       <xsl:apply-templates/></xsl:copy>
    </xsl:template>
+   <xsl:template match="/config/navit/mapset/xi:include">
+      <map type="binfile" enabled="yes" data="/var/mobile/navit/navitmap.bin" />
+   </xsl:template>
    <xsl:template match="@*|node()">
       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
    </xsl:template>
