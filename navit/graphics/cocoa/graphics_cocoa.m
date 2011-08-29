@@ -65,8 +65,8 @@ static struct graphics_priv {
 	CGLayerRef layer;
 	CGContextRef layer_context;
 	struct callback_list *cbl;
-	struct point p;
-	int w, h, wraparound, overlay_disabled;
+	struct point p, pclean;
+	int w, h, wraparound, overlay_disabled, cleanup;
 	struct graphics_priv *parent, *next, *overlays;
 } *global_graphics_cocoa;
 
@@ -476,6 +476,21 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
+static void
+draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	if (!gr->cleanup) {
+		gr->pclean=gr->p;
+		gr->cleanup=1;
+	}
+	if (p)
+		gr->p=*p;
+	else {
+		gr->p.x=0;
+		gr->p.y=0;
+	}
+}
+
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags)
 {
 	struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
@@ -625,7 +640,7 @@ static struct graphics_methods graphics_methods = {
 	draw_image,
 	NULL, /* draw_image_warp, */
 	NULL, /* draw_restore, */
-	NULL, /* draw_drag, */
+	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
