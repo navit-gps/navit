@@ -142,12 +142,12 @@ int main_real(int argc, char **argv)
 			case ':':
 				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
 				print_usage();
-				exit(1);
+				exit(2);
 				break;
 			case '?':
 				fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
 				print_usage();
-				exit(1);
+				exit(3);
 #endif
 			}
 	  }
@@ -178,10 +178,11 @@ int main_real(int argc, char **argv)
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
 			dbg(0,_("No config file navit.xml, navit.xml.local found\n"));
-			return 1;
+			return 4;
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
+		dbg(0,"trying %s\n",config_file);
 		if (file_exists(config_file))
 		{
 			break;
@@ -203,7 +204,7 @@ int main_real(int argc, char **argv)
 	g_list_free(list);
 	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
 		dbg(0, _("No instance has been created, exiting\n"));
-		exit(1);
+		exit(5);
 	}
 	conf.type=attr_config;
 	conf.u.config=config;
