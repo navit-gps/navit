@@ -59,6 +59,7 @@
 //##############################################################################################################
 struct graphics
 {
+	struct graphics* parent;
 	struct graphics_priv *priv;
 	struct graphics_methods meth;
 	char *default_font;
@@ -72,6 +73,7 @@ struct graphics
 	int colormgmt;
 	int font_size;
 	GList *selection;
+	int disabled;
 };
 
 struct display_context
@@ -270,6 +272,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 		return NULL;
 	this_=g_new0(struct graphics, 1);
 	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha, wraparound);
+	this_->parent = parent;
 	pr.lu.x=0;
 	pr.lu.y=0;
 	pr.rl.x=w;
@@ -740,8 +743,14 @@ void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, 
 */
 void graphics_overlay_disable(struct graphics *this_, int disable)
 {
+	this_->disabled = disable;
 	if (this_->meth.overlay_disable)
 		this_->meth.overlay_disable(this_->priv, disable);
+}
+
+int  graphics_is_disabled(struct graphics *this_)
+{
+	return this_->disabled || (this_->parent && this_->parent->disabled);
 }
 
 /**

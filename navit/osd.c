@@ -85,6 +85,7 @@ osd_set_attr(struct osd *osd, struct attr* attr)
 	osd->osd_attrs=attr_generic_set_attr(osd->osd_attrs,attr);
 	if(osd && osd->meth.set_attr) {
 		osd->meth.set_attr(osd->priv, attr);
+		return 1;
 	}
 	return 0;
 }
@@ -177,7 +178,7 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key)
 		dbg(0,"accesskey:0x%02x\n",item->accesskey[i]);
 	}
 #endif
-	if (item->accesskey && key && !strcmp(key, item->accesskey)) 
+	if ( ! graphics_is_disabled(item->gr) && item->accesskey && key && !strcmp(key, item->accesskey)) 
 		osd_evaluate_command(item, nav);
 }
 
