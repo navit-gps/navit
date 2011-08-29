@@ -170,6 +170,7 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy);
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret, int estimate);
 void graphics_overlay_disable(struct graphics *this_, int disable);
+int  graphics_is_disabled(struct graphics *this_);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 int graphics_draw_drag(struct graphics *this_, struct point *p);
 void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
