@@ -2033,7 +2033,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 {
 	struct route_graph_point *p_min;
 	struct route_graph_segment *s=NULL;
-	int min,new,old,val;
+	int min,new,val;
 	struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
 
 	heap = fh_makekeyheap();   
@@ -2098,7 +2098,6 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 				if (debug_route)
 					printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
 				if (new < s->start->value) {
-					old=s->start->value;
 					s->start->value=new;
 					s->start->seg=s;
 					if (! s->start->el) {
@@ -2224,7 +2223,7 @@ route_get_coord_dist(struct route *this_, int dist)
 static struct route_path *
 route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile)
 {
-	struct route_graph_segment *first,*s=NULL,*s1=NULL,*s2=NULL;
+	struct route_graph_segment *s=NULL,*s1=NULL,*s2=NULL;
 	struct route_graph_point *start;
 	struct route_info *posinfo, *dstinfo;
 	int segs=0;
@@ -2282,7 +2281,6 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	ret->path_hash=item_hash_new();
 	dstinfo=NULL;
 	posinfo=pos;
-	first=s;
 	while (s && !dstinfo) { /* following start->seg, which indicates the least costly way to reach our destination */
 		segs++;
 #if 0

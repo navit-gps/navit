@@ -705,7 +705,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 {
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t,*tn,new;
-	int extend,offset,delta,move_len;
+	int offset,delta,move_len;
 	int write_offset,move_offset,naoffset,coffset,oattr_len;
 	int nattr_size,nattr_len,pad;
 	int *data;
@@ -744,7 +744,6 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 		nattr_size=0;
 		nattr_len=0;
 		pad=0;
-		extend=0;
 		break;
 	case change_mode_modify:
 	case change_mode_prepend:
