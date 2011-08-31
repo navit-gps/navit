@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ public class NavitDialogs extends Handler{
 	public static Boolean             NavitAddressSearchSpinnerActive  = false;
 	public static String              Navit_last_address_search_string = "";
 	public static Boolean             Navit_last_address_partial_match = false;
+	public static String              Navit_last_country = "";
 
 	// Dialogs
 	public static final int           DIALOG_MAPDOWNLOAD               = 1;
@@ -227,7 +229,7 @@ public class NavitDialogs extends Handler{
 				{
 					Message msg = mHandler.obtainMessage();
 					Bundle b = new Bundle();
-					msg.what = 10;
+					msg.what = MSG_PROGRESS_BAR_SEARCH;
 					b.putInt("dialog_num", this.dialog_num);
 					b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
 					b.putInt("cur", this.spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
@@ -270,7 +272,7 @@ public class NavitDialogs extends Handler{
 			// initialize the dialog with sane values
 			Message msg = mHandler.obtainMessage();
 			Bundle b = new Bundle();
-			msg.what = 10;
+			msg.what = MSG_PROGRESS_BAR_SEARCH;
 			b.putInt("dialog_num", this.my_dialog_num);
 			b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
 			b.putInt("cur", 0);
@@ -288,9 +290,8 @@ public class NavitDialogs extends Handler{
 			// start the search, this could take a long time!!
 			Log.e("Navit", "SearchResultsThread run1");
 			Navit_last_address_search_string = filter_bad_chars(Navit_last_address_search_string);
-			Navit.N_NavitGraphics.CallbackSearchResultList(partial_match_i, Navit_last_address_search_string);
+			Navit.N_NavitGraphics.CallbackSearchResultList(partial_match_i, Navit_last_country, Navit_last_address_search_string);
 			Log.e("Navit", "SearchResultsThread run2");
-
 			NavitAddressSearchSpinnerActive = false;
 
 			if (Navit.NavitAddressResultList_foundItems.size() > 0)

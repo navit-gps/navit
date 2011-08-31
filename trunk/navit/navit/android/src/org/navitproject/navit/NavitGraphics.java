@@ -112,7 +112,7 @@ public class NavitGraphics
 			
 			menu.setHeaderTitle("Position...");
 			menu.add(1, 1, NONE, Navit.get_text("drive here")).setOnMenuItemClickListener(this);
-			menu.add(1, 2, NONE, Navit.get_text("Add to contacts")).setOnMenuItemClickListener(this);
+//			menu.add(1, 2, NONE, Navit.get_text("Add to contacts")).setOnMenuItemClickListener(this);
 		}
 
 		@Override
@@ -717,7 +717,8 @@ public class NavitGraphics
 	}
 
 	static public enum msg_type {
-		CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION, CLB_SET_DISPLAY_DESTINATION, CBL_CALL_CMD
+		CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION
+		, CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER
 	};
 
 	static public msg_type[] msg_values = msg_type.values();
@@ -748,7 +749,7 @@ public class NavitGraphics
 					int y = msg.arg2;
 					CallbackMessageChannel(4, "" + x + "#" + y);
 					break;
-				case CBL_CALL_CMD:
+				case CLB_CALL_CMD:
 					String cmd = msg.getData().getString("cmd");
 					CallbackMessageChannel(5, cmd);
 					break;
@@ -757,6 +758,9 @@ public class NavitGraphics
 					break;
 				case CLB_BUTTON_DOWN:
 					ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // down
+					break;
+				case CLB_COUNTRY_CHOOSER:
+					
 					break;
 				}
 			}
@@ -767,6 +771,8 @@ public class NavitGraphics
 	public native int CallbackMessageChannel(int i, String s);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 	public native void MotionCallback(int id, int x, int y);
+	public native String GetDefaultCountry(int id, String s);
+	public static native String[][] GetAllCountries();
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
 	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
@@ -953,7 +959,7 @@ public class NavitGraphics
 				, Navit.NavitAddressResultList_foundItems.size() % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
 	}
 
-	public native void CallbackSearchResultList(int partial_match, String s);
+	public native void CallbackSearchResultList(int partial_match, String country, String s);
 
 
 	/**
