@@ -3,8 +3,8 @@ set(CMAKE_SYSTEM_NAME GNU)
 set(ANDROID TRUE)
 set(ANDROID_API_VERSION 8 CACHE STRING "Andriod API Version")
 
-find_program(CMAKE_C_COMPILER arm-eabi-gcc arm-eabi-gcc.exe)
-find_program(CMAKE_CXX_COMPILER arm-eabi-gcc arm-eabi-g++.exe)
+find_program(CMAKE_C_COMPILER arm-linux-androideabi-gcc arm-eabi-gcc arm-eabi-gcc.exe)
+find_program(CMAKE_CXX_COMPILER arm-linux-androideabi-gcc arm-eabi-gcc arm-eabi-g++.exe)
 set(PKG_CONFIG_EXECUTABLE "arm-eabi-pkg-config")
 
 get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} PATH)
