@@ -28,15 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.navitproject.navit.NavitMapDownloader;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,6 +70,7 @@ public class Navit extends Activity implements Handler.Callback
 	}
 
 	public Handler												handler;
+	public NavitDialogs										dialogs;
 	private PowerManager.WakeLock							wl;
 	private NavitActivityResult							ActivityResults[];
 	public static InputMethodManager						mgr											= null;
@@ -85,28 +83,17 @@ public class Navit extends Activity implements Handler.Callback
 	private static long										startup_intent_timestamp				= 0L;
 	public static String										my_display_density						= "mdpi";
 	private boolean											searchBoxShown								= false;
-	public static final int									MAPDOWNLOAD_DIALOG					= 1;
-	public static final int									SEARCHRESULTS_WAIT_DIALOG				= 3;
 	public static final int									ADDRESS_RESULTS_DIALOG_MAX				= 10;
-	public ProgressDialog									mapdownloader_dialog				= null;
-	public ProgressDialog									search_results_wait						= null;
-	public static Handler									Navit_progress_h							= null;
-	public static NavitMapDownloader						mapdownloader							= null;
 	public static final int									NavitDownloaderPriSelectMap_id		= 967;
 	public static final int									NavitDownloaderSecSelectMap_id		= 968;
 	public static int											search_results_towns						= 0;
 	public static int											search_results_streets					= 0;
 	public static int											search_results_streets_hn				= 0;
-	SearchResultsThread										searchresultsThread						= null;
-	SearchResultsThreadSpinnerThread						spinner_thread								= null;
-	public static Boolean									NavitAddressSearchSpinnerActive		= false;
 	public static final int									MAP_NUM_PRIMARY							= 11;
 	public static final int									NavitAddressSearch_id					= 70;
 	public static final int									NavitAddressResultList_id				= 71;
 	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems	= new ArrayList<Navit_Address_Result_Struct>();
 
-	public static String										Navit_last_address_search_string		= "";
-	public static Boolean									Navit_last_address_partial_match		= false;
 
 	public static final int									MAP_NUM_SECONDARY							= 12;
 	static final String										MAP_FILENAME_PATH							= "/sdcard/navit/";
@@ -218,6 +205,8 @@ public class Navit extends Activity implements Handler.Callback
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		dialogs = new NavitDialogs(this);
 
 		// only take arguments here, onResume gets called all the time (e.g. when screenblanks, etc.)
 		Navit.startup_intent = this.getIntent();
@@ -385,9 +374,8 @@ public class Navit extends Activity implements Handler.Callback
 		/*
 		 * show info box for first time users
 		 */
-
+		
 		// make handler statically available for use in "msg_to_msg_handler"
-		Navit_progress_h = this.progress_handler;
 
 		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
@@ -712,13 +700,13 @@ public class Navit extends Activity implements Handler.Callback
 
 	public void start_targetsearch_from_intent(String target_address)
 	{
-		Navit_last_address_partial_match = false;
-		Navit_last_address_search_string = target_address;
+		NavitDialogs.Navit_last_address_partial_match = false;
+		NavitDialogs.Navit_last_address_search_string = target_address;
 
 		// clear results
 		Navit.NavitAddressResultList_foundItems.clear();
 
-		if (Navit_last_address_search_string.equals(""))
+		if (NavitDialogs.Navit_last_address_search_string.equals(""))
 		{
 			// empty search string entered
 			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"),
@@ -727,12 +715,7 @@ public class Navit extends Activity implements Handler.Callback
 		else
 		{
 			// show dialog
-			Message msg = progress_handler.obtainMessage();
-			Bundle b = new Bundle();
-			msg.what = 11;
-			b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
-			msg.setData(b);
-			progress_handler.sendMessage(msg);
+			dialogs.obtainMessage(NavitDialogs.MSG_SEARCH).sendToTarget();
 		}
 	}
 
@@ -764,17 +747,13 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 			case 3 :
 				// map download menu for primary
-				Intent map_download_list_activity = new Intent(this,
-					NavitDownloadSelectMapActivity.class);
-				this.startActivityForResult(map_download_list_activity,
-						Navit.NavitDownloaderPriSelectMap_id);
+				Intent map_download_list_activity = new Intent(this, NavitDownloadSelectMapActivity.class);
+				startActivityForResult(map_download_list_activity, Navit.NavitDownloaderPriSelectMap_id);
 				break;
 			case 4 :
 				// map download menu for second map
-				Intent map_download_list_activity2 = new Intent(this,
-						NavitDownloadSelectMapActivity.class);
-				this.startActivityForResult(map_download_list_activity2,
-						Navit.NavitDownloaderSecSelectMap_id);
+				Intent map_download_list_activity2 = new Intent(this, NavitDownloadSelectMapActivity.class);
+				startActivityForResult(map_download_list_activity2, Navit.NavitDownloaderSecSelectMap_id);
 				break;
 			case 5 :
 				// toggle the normal POI layers (to avoid double POIs)
@@ -796,9 +775,9 @@ public class Navit extends Activity implements Handler.Callback
 				// ok startup address search activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
 				search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
-				search_intent.putExtra("address_string", Navit_last_address_search_string);
+				search_intent.putExtra("address_string", NavitDialogs.Navit_last_address_search_string);
 				String pm_temp = "0";
-				if (Navit_last_address_partial_match)
+				if ( NavitDialogs.Navit_last_address_partial_match)
 				{
 					pm_temp = "1";
 				}
@@ -832,33 +811,10 @@ public class Navit extends Activity implements Handler.Callback
 		case Navit.NavitDownloaderSecSelectMap_id :
 			if (resultCode == Activity.RESULT_OK)
 			{
-				try
-				{
-					Log.d("Navit", "PRI id=" + data.getIntExtra("selected_id", -1));
-					// set map id to download
-
-					int download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[data.getIntExtra("selected_id", -1)];
-					// show the map download progressbar, and download the map
-					if (download_map_id > -1)
-					{
-						int map_slot = 0;
-						if (requestCode == Navit.NavitDownloaderSecSelectMap_id)
-						{
-							map_slot = 2;
-						}
-						
-						showDialog(Navit.MAPDOWNLOAD_DIALOG);
-
-						mapdownloader = new NavitMapDownloader(this, progress_handler, download_map_id
-								, Navit.MAPDOWNLOAD_DIALOG, map_slot);
-						mapdownloader.start();
-
-					}
-				}
-				catch (Exception e)
-				{
-					Log.d("Navit", "error on onActivityResult");
-				}
+				Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD
+						, data.getIntExtra("selected_id", -1)
+						, requestCode == Navit.NavitDownloaderSecSelectMap_id ? 2 : 0);
+				msg.sendToTarget();
 			}
 			break;
 		case NavitAddressSearch_id :
@@ -871,8 +827,8 @@ public class Navit extends Activity implements Handler.Callback
 						String addr = data.getStringExtra("address_string");
 						Boolean partial_match = data.getStringExtra("partial_match").equals("1");
 
-						Navit_last_address_partial_match = partial_match;
-						Navit_last_address_search_string = addr;
+						NavitDialogs.Navit_last_address_partial_match = partial_match;
+						NavitDialogs.Navit_last_address_search_string = addr;
 
 						// clear results
 						Navit.NavitAddressResultList_foundItems.clear();
@@ -891,12 +847,7 @@ public class Navit extends Activity implements Handler.Callback
 							// show dialog, and start search for the results
 							// make it indirect, to give our activity a chance to startup
 							// (remember we come straight from another activity and ours is still paused!)
-							Message msg = progress_handler.obtainMessage();
-							Bundle b = new Bundle();
-							msg.what = 11;
-							b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
-							msg.setData(b);
-							progress_handler.sendMessage(msg);
+							dialogs.obtainMessage(NavitDialogs.MSG_SEARCH).sendToTarget();
 						}
 					}
 					catch (NumberFormatException e)
@@ -954,295 +905,9 @@ public class Navit extends Activity implements Handler.Callback
 		}
 	}
 
-	public class SearchResultsThreadSpinnerThread extends Thread
-	{
-		int					dialog_num;
-		int					spinner_current_value;
-		private Boolean	running;
-		Handler				mHandler;
-		SearchResultsThreadSpinnerThread(Handler h, int dialog_num)
-		{
-			this.dialog_num = dialog_num;
-			this.mHandler = h;
-			this.spinner_current_value = 0;
-			this.running = true;
-			Log.e("Navit", "SearchResultsThreadSpinnerThread created");
-		}
-		public void run()
-		{
-			Log.e("Navit", "SearchResultsThreadSpinnerThread started");
-			while (this.running)
-			{
-				if (Navit.NavitAddressSearchSpinnerActive == false)
-				{
-					this.running = false;
-				}
-				else
-				{
-					Message msg = mHandler.obtainMessage();
-					Bundle b = new Bundle();
-					msg.what = 10;
-					b.putInt("dialog_num", this.dialog_num);
-					b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-					b.putInt("cur", this.spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-					b.putString("title", Navit.get_text("getting search results")); //TRANS
-					b.putString("text", Navit.get_text("searching ...")); //TRANS
-					msg.setData(b);
-					mHandler.sendMessage(msg);
-					try
-					{
-						Thread.sleep(700);
-					}
-					catch (InterruptedException e)
-					{
-						// e.printStackTrace();
-					}
-					this.spinner_current_value++;
-				}
-			}
-			Log.e("Navit", "SearchResultsThreadSpinnerThread ended");
-		}
-	}
-
-
-	public class SearchResultsThread extends Thread
-	{
-		Handler				mHandler;
-		int					my_dialog_num;
-
-		SearchResultsThread(Handler h, int dialog_num)
-		{
-			this.mHandler = h;
-			this.my_dialog_num = dialog_num;
-			Log.e("Navit", "SearchResultsThread created");
-		}
-
-		public void run()
-		{
-			Log.e("Navit", "SearchResultsThread started");
-
-			// initialize the dialog with sane values
-			Message msg = mHandler.obtainMessage();
-			Bundle b = new Bundle();
-			msg.what = 10;
-			b.putInt("dialog_num", this.my_dialog_num);
-			b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-			b.putInt("cur", 0);
-			b.putString("title", Navit.get_text("getting search results")); //TRANS
-			b.putString("text", Navit.get_text("searching ...")); //TRANS
-			msg.setData(b);
-			mHandler.sendMessage(msg);
-
-			int partial_match_i = 0;
-			if (Navit_last_address_partial_match)
-			{
-				partial_match_i = 1;
-			}
-
-			// start the search, this could take a long time!!
-			Log.e("Navit", "SearchResultsThread run1");
-			Navit_last_address_search_string = filter_bad_chars(Navit_last_address_search_string);
-			N_NavitGraphics.CallbackSearchResultList(partial_match_i, Navit_last_address_search_string);
-			Log.e("Navit", "SearchResultsThread run2");
-
-			Navit.NavitAddressSearchSpinnerActive = false;
-
-			if (Navit.NavitAddressResultList_foundItems.size() > 0)
-			{
-				open_search_result_list();
-			}
-			else
-			{
-				// not results found, show toast
-				msg = mHandler.obtainMessage();
-				b = new Bundle();
-				msg.what = 3;
-				b.putString("text", Navit.get_text("No Results found!")); //TRANS
-				msg.setData(b);
-				mHandler.sendMessage(msg);
-			}
-
-			// ok, remove dialog
-			msg = mHandler.obtainMessage();
-			b = new Bundle();
-			msg.what = 99;
-			b.putInt("dialog_num", this.my_dialog_num);
-			msg.setData(b);
-			mHandler.sendMessage(msg);
-
-			Log.e("Navit", "SearchResultsThread ended");
-		}
-	}
-
-	public static String filter_bad_chars(String in)
-	{
-		String out = in;
-		out = out.replaceAll("\\n", " "); // newline -> space
-		out = out.replaceAll("\\r", " "); // return -> space
-		out = out.replaceAll("\\t", " "); // tab -> space
-		return out;
-	}
-
-	public static void msg_to_msg_handler(Bundle b, int id)
-	{
-		Message msg = Navit_progress_h.obtainMessage();
-		msg.what = id;
-		msg.setData(b);
-		Navit_progress_h.sendMessage(msg);
-	}
-
-	public void open_search_result_list()
-	{
-		// open result list
-		Intent address_result_list_activity = new Intent(this, NavitAddressResultListActivity.class);
-		this.startActivityForResult(address_result_list_activity, Navit.NavitAddressResultList_id);
-	}
-
-
-	public Handler	progress_handler	= new Handler()
-		{
-
-			public void handleMessage(Message msg)
-			{
-				switch (msg.what)
-				{
-					case NavitMessages.DIALOG_REMOVE_PROGRESS_BAR :
-						// dismiss dialog, remove dialog
-						dismissDialog(Navit.MAPDOWNLOAD_DIALOG);
-						removeDialog(Navit.MAPDOWNLOAD_DIALOG);
-
-						// exit_code=0 -> OK, map was downloaded fine
-						if (msg.getData().getInt("value1") == 0)
-						{
-							// try to use the new downloaded map (works fine now!)
-							Log.d("Navit", "instance count=" + Navit.getInstanceCount());
-							onStop();
-							onCreate(getIntent().getExtras());
-						}
-						break;
-					case NavitMessages.DIALOG_PROGRESS_BAR :
-						// change progressbar values
-						mapdownloader_dialog.setMax(msg.getData().getInt("value1"));
-						mapdownloader_dialog.setProgress(msg.getData().getInt("value2"));
-						mapdownloader_dialog.setTitle(msg.getData().getString("title"));
-						mapdownloader_dialog.setMessage(msg.getData().getString("text"));
-						break;
-					case NavitMessages.DIALOG_TOAST :
-						Toast.makeText(getApplicationContext(),
-								msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
-						break;
-					case 3 :
-						Toast.makeText(getApplicationContext(), msg.getData().getString("text"), Toast.LENGTH_LONG).show();
-						break;
-					case 10 :
-						// change values - generic
-						int what_dialog_generic = msg.getData().getInt("dialog_num");
-						if (what_dialog_generic == SEARCHRESULTS_WAIT_DIALOG)
-						{
-							search_results_wait.setMax(msg.getData().getInt("value1"));
-							search_results_wait.setProgress(msg.getData().getInt("value2"));
-							search_results_wait.setTitle(msg.getData().getString("title"));
-							search_results_wait.setMessage(msg.getData().getString("text"));
-						}
-						break;
-					case 11 :
-						// show dialog - generic
-						showDialog(msg.getData().getInt("dialog_num"));
-						break;
-					case 99 :
-						// dismiss dialog, remove dialog - generic
-						dismissDialog(msg.getData().getInt("dialog_num"));
-						removeDialog(msg.getData().getInt("dialog_num"));
-						break;
-				}
-			}
-		};
-
 	protected Dialog onCreateDialog(int id)
 	{
-		switch (id)
-		{
-			case Navit.SEARCHRESULTS_WAIT_DIALOG :
-				search_results_wait = new ProgressDialog(this);
-				search_results_wait.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				search_results_wait.setTitle("--");
-				search_results_wait.setMessage("--");
-				search_results_wait.setCancelable(false);
-				search_results_wait.setProgress(0);
-				search_results_wait.setMax(10);
-				DialogInterface.OnDismissListener mOnDismissListener3 = new DialogInterface.OnDismissListener()
-				{
-					public void onDismiss(DialogInterface dialog)
-					{
-						Log.e("Navit", "onDismiss: search_results_wait");
-						dialog.dismiss();
-						dialog.cancel();
-					}
-				};
-				search_results_wait.setOnDismissListener(mOnDismissListener3);
-				searchresultsThread = new SearchResultsThread(progress_handler, Navit.SEARCHRESULTS_WAIT_DIALOG);
-				searchresultsThread.start();
-
-				NavitAddressSearchSpinnerActive = true;
-				spinner_thread = new SearchResultsThreadSpinnerThread(progress_handler, Navit.SEARCHRESULTS_WAIT_DIALOG);
-				spinner_thread.start();
-
-				return search_results_wait;
-			case Navit.MAPDOWNLOAD_DIALOG :
-				mapdownloader_dialog = new ProgressDialog(this);
-				mapdownloader_dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				mapdownloader_dialog.setTitle("--");
-				mapdownloader_dialog.setMessage("--");
-				mapdownloader_dialog.setCancelable(true);
-				mapdownloader_dialog.setProgress(0);
-				mapdownloader_dialog.setMax(200);
-				DialogInterface.OnDismissListener mOnDismissListener1 = new DialogInterface.OnDismissListener()
-				{
-					public void onDismiss(DialogInterface dialog)
-					{
-						Log.e("Navit", "onDismiss: mapdownloader_dialog");
-						dialog.dismiss();
-						dialog.cancel();
-						mapdownloader.stop_thread();
-					}
-				};
-				mapdownloader_dialog.setOnDismissListener(mOnDismissListener1);
-				// show license for OSM maps
-				Toast.makeText(getApplicationContext(),
-						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
-						Toast.LENGTH_LONG).show(); //TRANS
-				return mapdownloader_dialog;
-//			case Navit.MAPDOWNLOAD_SEC_DIALOG :
-//				mapdownloader_dialog_sec = new ProgressDialog(this);
-//				mapdownloader_dialog_sec.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//				mapdownloader_dialog_sec.setTitle("--");
-//				mapdownloader_dialog_sec.setMessage("--");
-//				mapdownloader_dialog_sec.setCancelable(true);
-//				mapdownloader_dialog_sec.setProgress(0);
-//				mapdownloader_dialog_sec.setMax(200);
-//				DialogInterface.OnDismissListener mOnDismissListener2 = new DialogInterface.OnDismissListener()
-//				{
-//					public void onDismiss(DialogInterface dialog)
-//					{
-//						Log.e("Navit", "onDismiss: mapdownloader_dialog sec");
-//						dialog.dismiss();
-//						dialog.cancel();
-//						progressThread_sec.stop_thread();
-//					}
-//				};
-//				mapdownloader_dialog_sec.setOnDismissListener(mOnDismissListener2);
-//				mapdownloader_sec = new NavitMapDownloader(this);
-//				progressThread_sec = mapdownloader_sec.new ProgressThread(progress_handler,
-//						NavitMapDownloader.osm_maps[Navit.download_map_id], MAP_NUM_SECONDARY);
-//				progressThread_sec.start();
-//				// show license for OSM maps
-//				Toast.makeText(getApplicationContext(),
-//						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
-//						Toast.LENGTH_LONG).show(); //TRANS
-//				return mapdownloader_dialog_sec;
-		}
-		// should never get here!!
-		return null;
+		return dialogs.createDialog(id);
 	}
 
 	public void disableSuspend()
@@ -1287,7 +952,7 @@ public class Navit extends Activity implements Handler.Callback
 		search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
 		search_intent.putExtra("address_string", search);
 		String pm_temp = "0";
-		if (Navit_last_address_partial_match)
+		if (NavitDialogs.Navit_last_address_partial_match)
 		{
 			pm_temp = "1";
 		}
