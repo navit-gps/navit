@@ -669,20 +669,12 @@ public class Navit extends Activity
 				// zoom in
 				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
-				if (N_NavitGraphics.NavitAOverlay != null)
-				{
-					N_NavitGraphics.NavitAOverlay.hide_bubble();
-				}
 				Log.e("Navit", "onOptionsItemSelected -> zoom in");
 				break;
 			case 2 :
 				// zoom out
 				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
-				if (N_NavitGraphics.NavitAOverlay != null)
-				{
-					N_NavitGraphics.NavitAOverlay.hide_bubble();
-				}
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
 				break;
 			case 3 :
