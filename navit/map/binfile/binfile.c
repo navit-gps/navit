@@ -226,9 +226,9 @@ binfile_read_eoc64(struct file *fi)
 			dbg(1,"eoc wrong\n");
 			eoc=NULL;
 		}
+		dbg(1,"eoc64 ok 0x%Lx 0x%Lx\n",eoc->zip64eofst,eoc->zip64ecsz);
 	}
 	file_data_free(fi,(unsigned char *)eocl);
-	dbg(1,"eoc64 ok 0x%Lx 0x%Lx\n",eoc->zip64eofst,eoc->zip64ecsz);
 	return eoc;
 }
 
