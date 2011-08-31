@@ -55,6 +55,8 @@ struct graphics_priv {
 	jobject Resources;
 	jmethodID Resources_getIdentifier;
 
+	jobject packageName;
+
 	struct callback_list *cbl;
 	struct window win;
 };
@@ -210,7 +212,6 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		dbg(1,"enter %s\n",path);
 		if (!strncmp(path,"res/drawable/",13)) {
 			jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
-			jstring b=(*jnienv)->NewStringUTF(jnienv, "org.navitproject.navit");
 			char *path_noext=g_strdup(path+13);
 			char *pos=strrchr(path_noext, '.');
 			if (pos) 
@@ -218,11 +219,10 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 			dbg(1,"path_noext=%s\n",path_noext);
 			string = (*jnienv)->NewStringUTF(jnienv, path_noext);
 			g_free(path_noext);
-			id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, b);
+			id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, gra->packageName);
 			dbg(1,"id=%d\n",id);
 			if (id)
 				ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
-			(*jnienv)->DeleteLocalRef(jnienv, b);
 			(*jnienv)->DeleteLocalRef(jnienv, a);
 		} else {
 			string = (*jnienv)->NewStringUTF(jnienv, path);
@@ -500,7 +500,7 @@ static int
 graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int alpha, int wraparound, int use_camera)
 {
 	struct callback *cb;
-	jmethodID cid;
+	jmethodID cid, Context_getPackageName;
 
 	dbg(0,"at 2 jnienv=%p\n",jnienv);
 	if (!find_class_global("android/graphics/Paint", &ret->PaintClass))
@@ -540,6 +540,11 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	if (!find_method(ret->ResourcesClass, "getIdentifier", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I", &ret->Resources_getIdentifier))
 		return 0;
 
+	if (!find_method(ret->ContextClass, "getPackageName", "()Ljava/lang/String;", &Context_getPackageName))
+		return 0;
+	ret->packageName=(*jnienv)->CallObjectMethod(jnienv, android_activity, Context_getPackageName);
+	(*jnienv)->NewGlobalRef(jnienv, ret->packageName);
+
 	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
 	dbg(0,"at 3\n");
@@ -553,6 +558,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	dbg(0,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		(*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
+	
 
 	/* Create a single global Paint, otherwise android will quickly run out
 	 * of global refs.*/
