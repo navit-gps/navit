@@ -438,7 +438,7 @@ public class Navit extends Activity implements Handler.Callback
 		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT="
 				+ Integer.valueOf(android.os.Build.VERSION.SDK));
-		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density);
+		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
 		// CAUTION: don't use android.os.Build.VERSION.SDK_INT if <uses-sdk android:minSdkVersion="3" />
 		// You will get exception on all devices with Android 1.5 and lower
 		// because Build.VERSION.SDK_INT is since SDK 4 (Donut 1.6)
