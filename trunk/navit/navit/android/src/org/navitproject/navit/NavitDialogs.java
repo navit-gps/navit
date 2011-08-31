@@ -68,74 +68,74 @@ public class NavitDialogs extends Handler{
 	{
 		switch (msg.what)
 		{
-			case MSG_REMOVE_PROGRESS_BAR :
-				// dismiss dialog, remove dialog
-				mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
-				mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
+		case MSG_REMOVE_PROGRESS_BAR :
+			// dismiss dialog, remove dialog
+			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
+			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
 
-				// exit_code=0 -> OK, map was downloaded fine
-				if (msg.getData().getInt("value1") == 0)
-				{
-					// try to use the new downloaded map (works fine now!)
-					Log.d("Navit", "instance count=" + Navit.getInstanceCount());
-					//mActivity.onStop();
-					//mActivity.onCreate(mActivity.getIntent().getExtras());
-				}
-				break;
-			case MSG_PROGRESS_BAR :
-				// change progressbar values
-				mapdownloader_dialog.setMax(msg.getData().getInt("value1"));
-				mapdownloader_dialog.setProgress(msg.getData().getInt("value2"));
-				mapdownloader_dialog.setTitle(msg.getData().getString("title"));
-				mapdownloader_dialog.setMessage(msg.getData().getString("text"));
-				break;
-			case MSG_TOAST :
-				Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
-				break;
-			case MSG_TOAST_LONG :
-				Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_LONG).show();
-				break;
-			case MSG_PROGRESS_BAR_SEARCH :
-				// change values - generic
-				int what_dialog_generic = msg.getData().getInt("dialog_num");
-				if (what_dialog_generic == DIALOG_SEARCHRESULTS_WAIT)
-				{
-					search_results_wait.setMax(msg.getData().getInt("value1"));
-					search_results_wait.setProgress(msg.getData().getInt("value2"));
-					search_results_wait.setTitle(msg.getData().getString("title"));
-					search_results_wait.setMessage(msg.getData().getString("text"));
-				}
-				break;
-			case MSG_SEARCH :
-				// show dialog - generic
-				mActivity.showDialog(DIALOG_SEARCHRESULTS_WAIT);
-				break;
-			case MSG_START_MAP_DOWNLOAD:
+			// exit_code=0 -> OK, map was downloaded fine
+			if (msg.getData().getInt("value1") == 0)
 			{
-				int map_selected = msg.arg1;
-				int map_slot     = msg.arg2;
-				Log.d("Navit", "PRI id=" + map_selected);
-				// set map id to download
-
-				int download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[map_selected];
-				// show the map download progressbar, and download the map
-				if (download_map_id > -1)
-				{
-					mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
-
-					mapdownloader = new NavitMapDownloader(download_map_id
-							, NavitDialogs.DIALOG_MAPDOWNLOAD, map_slot);
-					mapdownloader.start();
-
-				}
+				// try to use the new downloaded map (works fine now!)
+				Log.d("Navit", "instance count=" + Navit.getInstanceCount());
+				//mActivity.onStop();
+				//mActivity.onCreate(mActivity.getIntent().getExtras());
 			}
 			break;
-				
-			case 99 :
-				// dismiss dialog, remove dialog - generic
-				mActivity.dismissDialog(msg.getData().getInt("dialog_num"));
-				mActivity.removeDialog(msg.getData().getInt("dialog_num"));
-				break;
+		case MSG_PROGRESS_BAR :
+			// change progressbar values
+			mapdownloader_dialog.setMax(msg.getData().getInt("value1"));
+			mapdownloader_dialog.setProgress(msg.getData().getInt("value2"));
+			mapdownloader_dialog.setTitle(msg.getData().getString("title"));
+			mapdownloader_dialog.setMessage(msg.getData().getString("text"));
+			break;
+		case MSG_TOAST :
+			Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
+			break;
+		case MSG_TOAST_LONG :
+			Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_LONG).show();
+			break;
+		case MSG_PROGRESS_BAR_SEARCH :
+			// change values - generic
+			int what_dialog_generic = msg.getData().getInt("dialog_num");
+			if (what_dialog_generic == DIALOG_SEARCHRESULTS_WAIT)
+			{
+				search_results_wait.setMax(msg.getData().getInt("value1"));
+				search_results_wait.setProgress(msg.getData().getInt("value2"));
+				search_results_wait.setTitle(msg.getData().getString("title"));
+				search_results_wait.setMessage(msg.getData().getString("text"));
+			}
+			break;
+		case MSG_SEARCH :
+			// show dialog - generic
+			mActivity.showDialog(DIALOG_SEARCHRESULTS_WAIT);
+			break;
+		case MSG_START_MAP_DOWNLOAD:
+		{
+			int map_selected = msg.arg1;
+			int map_slot     = msg.arg2;
+			Log.d("Navit", "PRI id=" + map_selected);
+			// set map id to download
+
+			int download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[map_selected];
+			// show the map download progressbar, and download the map
+			if (download_map_id > -1)
+			{
+				mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
+
+				mapdownloader = new NavitMapDownloader(download_map_id
+						, NavitDialogs.DIALOG_MAPDOWNLOAD, map_slot);
+				mapdownloader.start();
+
+			}
+		}
+		break;
+			
+		case 99 :
+			// dismiss dialog, remove dialog - generic
+			mActivity.dismissDialog(msg.getData().getInt("dialog_num"));
+			mActivity.removeDialog(msg.getData().getInt("dialog_num"));
+			break;
 		}
 	}
 
