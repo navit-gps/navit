@@ -16,6 +16,7 @@ if (ANDROID)
                                -D ANDROID_VERSION_NAME=${PACKAGE_STRING}
                                -D ANDROID_API_VERSION=${ANDROID_API_VERSION}
                                -D ANDROID_PERMISSIONS:string="${ANDROID_PERMISSIONS_EXPANDED}"
+                               -D STRIP_M="1"
                                -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
    )
 
