@@ -84,7 +84,7 @@ struct search_list_common *search_list_select(struct search_list *this_, enum at
 struct search_list_result *search_list_get_result(struct search_list *this_);
 void search_list_destroy(struct search_list *this_);
 void search_init(void);
-GList * search_by_address(struct mapset *ms, const char *addr, int partial, struct jni_object *jni);
+GList * search_by_address(struct search_list *this_, const char *addr, int partial, struct jni_object *jni);
 /* end of prototypes */
 #ifdef __cplusplus
 }

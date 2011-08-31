@@ -659,14 +659,14 @@ public class Navit extends Activity
 				break;
 			case 5 :
 				// toggle the normal POI layers (to avoid double POIs)
-				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
+				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
 				Bundle b = new Bundle();
 				b.putString("cmd", "toggle_layer(\"POI Symbols\");");
 				msg.setData(b);
 				msg.sendToTarget();
 
 				// toggle full POI icons on/off
-				msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CBL_CALL_CMD.ordinal());
+				msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
 				b = new Bundle();
 				b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
 				msg.setData(b);
@@ -728,9 +728,11 @@ public class Navit extends Activity
 					{
 						String addr = data.getStringExtra("address_string");
 						Boolean partial_match = data.getStringExtra("partial_match").equals("1");
+						String country = data.getStringExtra("country");
 
 						NavitDialogs.Navit_last_address_partial_match = partial_match;
 						NavitDialogs.Navit_last_address_search_string = addr;
+						NavitDialogs.Navit_last_country = country;
 
 						// clear results
 						Navit.NavitAddressResultList_foundItems.clear();

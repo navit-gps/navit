@@ -20,30 +20,61 @@
 package org.navitproject.navit;
 
 
+import java.lang.reflect.Field;
+import java.util.Locale;
+
+import android.R.color;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
 
 public class NavitAddressSearchActivity extends Activity
 {
-	private EditText			address_string;
-	private CheckBox			pm_checkbox;
+	private EditText     address_string;
+	private CheckBox     pm_checkbox;
+	private String       mCountry;
+	private ImageButton  mCountryButton;
 
 	public RelativeLayout	NavitAddressSearchActivity_layout;
 
+	private int getDrawableID(String resourceName)
+	{
+		int drawableId = 0;
+		try {
+			Class<?> res = R.drawable.class;
+			Field field = res.getField(resourceName);
+			drawableId = field.getInt(null);
+		}
+		catch (Exception e) {
+			Log.e("NavitAddressSearch", "Failure to get drawable id.", e);
+		}
+		
+		
+		return drawableId;
+	}
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -54,6 +85,31 @@ public class NavitAddressSearchActivity extends Activity
 		LinearLayout panel = new LinearLayout(this);
 		panel.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		panel.setOrientation(LinearLayout.VERTICAL);
+
+		// address: label and text field
+		SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
+		mCountry = settings.getString("DefaultCountry", null);
+		
+		if (mCountry == null)
+		{
+			Locale defaultLocale = Locale.getDefault();
+			mCountry = defaultLocale.getCountry().toLowerCase(defaultLocale);
+			SharedPreferences.Editor edit_settings = settings.edit();
+			edit_settings.putString("DefaultCountry", mCountry);
+			edit_settings.commit();
+		}
+		
+		mCountryButton = new ImageButton(this);
+		
+		mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
+		
+		mCountryButton.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				requestCountryDialog();
+			}
+		});
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
@@ -67,10 +123,11 @@ public class NavitAddressSearchActivity extends Activity
 		pm_checkbox = new CheckBox(this);
 		pm_checkbox.setText(Navit.get_text("partial match")); //TRANS
 		pm_checkbox.setChecked(false);
-		pm_checkbox.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT));
+//		pm_checkbox.setLayoutParams(new LayoutParams(LayoutParams,
+//				LayoutParams.WRAP_CONTENT));
 		pm_checkbox.setGravity(Gravity.CENTER);
 
+		
 
 		// search button
 		final Button btnSearch = new Button(this);
@@ -86,67 +143,80 @@ public class NavitAddressSearchActivity extends Activity
 			}
 		});
 
-
-		// title
-		try
-		{
-			String s = getIntent().getExtras().getString("title");
-			if (s.length() > 0)
-			{
-				this.setTitle(s);
-			}
-		}
-		catch (Exception e)
-		{
-		}
+		Bundle extras = getIntent().getExtras();
 		
-		// partial match
-		try
+		if ( extras != null )
 		{
-			String s = getIntent().getExtras().getString("partial_match");
-			if (s.length() > 0)
-			{
-				if (s.equals("1"))
-				{
-					pm_checkbox.setChecked(true);
-				}
-				else
-				{
-					pm_checkbox.setChecked(false);
-				}
-			}
-		}
-		catch (Exception e)
-		{
-		}
+			String title = extras.getString("title");
+			String partial = extras.getString("partial_match");
+			String address = extras.getString("address_string");
+			
+			if ( title != null && title.length() > 0)
+				this.setTitle(title);
+			
+			if (partial != null && partial.length() > 0)
+				pm_checkbox.setChecked(partial.equals("1"));
 
-		// address string
-		try
-		{
 			address_string = new EditText(this);
-			address_string.setText(getIntent().getExtras().getString("address_string"));
-		}
-		catch (Exception e)
-		{
+			if (address != null)
+				address_string.setText(address);
+			
 		}
 
+		LinearLayout searchSettingsLayout = new LinearLayout(this);
+		searchSettingsLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-		// actually adding the views (that have layout set on them) to the panel
+		searchSettingsLayout.addView(mCountryButton);
+		searchSettingsLayout.addView(pm_checkbox);
 		panel.addView(addr_view);
 		panel.addView(address_string);
-		panel.addView(pm_checkbox);
+		panel.addView(searchSettingsLayout);
 		panel.addView(btnSearch);
 
 		setContentView(panel);
 
 	}
 
+	private void requestCountryDialog()
+	{
+		//Message msg = Message.obtain(Navit.N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_COUNTRY_CHOOSER.ordinal());
+		//msg.sendToTarget();
+		final String [][]all_countries = NavitGraphics.GetAllCountries();
+
+		AlertDialog.Builder mapModeChooser = new AlertDialog.Builder(this);
+		// ToDo also show icons and country code
+		String []country_name = new String[all_countries.length];
+		
+		for (int country_index = 0; country_index < all_countries.length; country_index++)
+		{
+			country_name[country_index] = all_countries[country_index][1];
+		}
+		
+		mapModeChooser.setItems(country_name, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
+				mCountry = all_countries[item][0];
+				SharedPreferences.Editor edit_settings = settings.edit();
+				edit_settings.putString("DefaultCountry", mCountry);
+				edit_settings.commit();
+				
+				mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
+		 	}
+			
+		});
+
+		
+		mapModeChooser.show();
+
+
+	}
+
 	private void executeDone()
 	{
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("address_string", NavitAddressSearchActivity.this.address_string
-				.getText().toString());
-		if (NavitAddressSearchActivity.this.pm_checkbox.isChecked())
+		resultIntent.putExtra("address_string", address_string.getText().toString());
+		resultIntent.putExtra("country", mCountry);
+		if (pm_checkbox.isChecked())
 		{
 			resultIntent.putExtra("partial_match", "1");
 		}
