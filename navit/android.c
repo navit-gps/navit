@@ -51,9 +51,9 @@ android_find_method(jclass class, char *name, char *args, jmethodID *ret)
 }
 
 JNIEXPORT void JNICALL
-Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string)
+Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string, jobject path)
 {
-	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
+	char *strings[]={NULL,NULL};
 	const char *langstr;
 	const char *displaydensitystr;
 	android_version=version;
@@ -71,7 +71,10 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	dbg(0,"*****displaydensity=%s\n",displaydensitystr);
 	setenv("ANDROID_DENSITY",displaydensitystr,1);
 	(*env)->ReleaseStringUTFChars(env, display_density_string, displaydensitystr);
+	strings[0]=(*env)->GetStringUTFChars(env, path, NULL);
 	main_real(1, strings);
+	(*env)->ReleaseStringUTFChars(env, path, strings[0]);
+	
 }
 
 JNIEXPORT void JNICALL
