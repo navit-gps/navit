@@ -37,6 +37,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -98,7 +99,8 @@ public class Navit extends Activity
 	static final String              NAVIT_DATA_DIR                 = "/data/data/org.navitproject.navit";
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
-
+	public static final String       NAVIT_PREFS                    = "NavitPrefs";
+	
 	public static String get_text(String in)
 	{
 		return NavitTextTranslations.get_text(in);
@@ -196,6 +198,57 @@ public class Navit extends Activity
 		return true;
 	}
 
+	private void showInfos()
+	{
+		SharedPreferences settings = getSharedPreferences(NAVIT_PREFS, MODE_PRIVATE);
+		boolean firstStart = settings.getBoolean("firstStart", true);
+		
+		
+		if (firstStart)
+		{
+			AlertDialog.Builder infobox = new AlertDialog.Builder(this);
+			infobox.setTitle(NavitTextTranslations.INFO_BOX_TITLE); // TRANS
+			infobox.setCancelable(false);
+			final TextView message = new TextView(this);
+			message.setFadingEdgeLength(20);
+			message.setVerticalFadingEdgeEnabled(true);
+			// message.setVerticalScrollBarEnabled(true);
+			RelativeLayout.LayoutParams rlp =
+			        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+			                RelativeLayout.LayoutParams.FILL_PARENT);
+	
+			message.setLayoutParams(rlp);
+			final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT); // TRANS
+			Linkify.addLinks(s, Linkify.WEB_URLS);
+			message.setText(s);
+			message.setMovementMethod(LinkMovementMethod.getInstance());
+			infobox.setView(message);
+	
+			// TRANS
+			infobox.setPositiveButton(Navit.get_text("Ok"), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					Log.e("Navit", "Ok, user saw the infobox");
+				}
+			});
+	
+			
+			// TRANS
+			infobox.setNeutralButton(NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					Log.e("Navit", "user wants more info, show the website");
+					String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(url));
+					startActivity(i);
+				}
+			});
+			infobox.show();
+			SharedPreferences.Editor edit_settings = settings.edit();
+			edit_settings.putBoolean("firstStart", false);
+			edit_settings.commit();
+		}
+	}
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -256,7 +309,7 @@ public class Navit extends Activity
 		File navit_maps_dir = new File(MAP_FILENAME_PATH);
 		navit_maps_dir.mkdirs();
 
-		// make sure the share dir exists, otherwise the infobox will not show
+		// make sure the share dir exists
 		File navit_data_share_dir = new File(NAVIT_DATA_SHARE_DIR);
 		navit_data_share_dir.mkdirs();
 
@@ -301,77 +354,6 @@ public class Navit extends Activity
 			NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI = NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI_nl;
 			NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE = NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl;
 		}
-
-		/*
-		 * show info box for first time users
-		 */
-		AlertDialog.Builder infobox = new AlertDialog.Builder(this);
-		infobox.setTitle(NavitTextTranslations.INFO_BOX_TITLE); //TRANS
-		infobox.setCancelable(false);
-		final TextView message = new TextView(this);
-		message.setFadingEdgeLength(20);
-		message.setVerticalFadingEdgeEnabled(true);
-		//message.setVerticalScrollBarEnabled(true);
-		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-
-		// margins seem not to work, hmm strange
-		// so add a " " at start of every line. well whadda you gonna do ...
-		//rlp.leftMargin = 8; -> we use "m" string
-
-		message.setLayoutParams(rlp);
-		final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT); //TRANS
-		Linkify.addLinks(s, Linkify.WEB_URLS);
-		message.setText(s);
-		message.setMovementMethod(LinkMovementMethod.getInstance());
-		infobox.setView(message);
-
-		//TRANS
-		infobox.setPositiveButton(Navit.get_text("Ok"), new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface arg0, int arg1)
-			{
-				Log.e("Navit", "Ok, user saw the infobox");
-			}
-		});
-
-		//TRANS
-		infobox.setNeutralButton(NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO,
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-						Log.e("Navit", "user wants more info, show the website");
-						String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(url));
-						startActivity(i);
-					}
-				});
-
-		File navit_first_startup = new File(FIRST_STARTUP_FILE);
-		// if file does NOT exist, show the info box
-		if (!navit_first_startup.exists())
-		{
-			FileOutputStream fos_temp;
-			try
-			{
-				fos_temp = new FileOutputStream(navit_first_startup);
-				fos_temp.write((int) 65); // just write an "A" to the file, but really doesnt matter
-				fos_temp.flush();
-				fos_temp.close();
-				infobox.show();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		/*
-		 * show info box for first time users
-		 */
-		
-		// make handler statically available for use in "msg_to_msg_handler"
 
 		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
@@ -419,23 +401,11 @@ public class Navit extends Activity
 			Log.e("Navit", "Failed to extract navit.xml for " + my_display_density);
 		}
 
-		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
-		Log.e("Navit", "android.os.Build.VERSION.SDK_INT="
-				+ Integer.valueOf(android.os.Build.VERSION.SDK));
+		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
+		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
-		// CAUTION: don't use android.os.Build.VERSION.SDK_INT if <uses-sdk android:minSdkVersion="3" />
-		// You will get exception on all devices with Android 1.5 and lower
-		// because Build.VERSION.SDK_INT is since SDK 4 (Donut 1.6)
 
-		//		Platform Version   API Level
-		//		Android 2.2       8
-		//		Android 2.1       7
-		//		Android 2.0.1     6
-		//		Android 2.0       5
-		//		Android 1.6       4
-		//		Android 1.5       3
-		//		Android 1.1       2
-		//		Android 1.0       1
+		showInfos();
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
