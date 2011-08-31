@@ -1196,7 +1196,7 @@ public class NavitGraphics
 	{
 		// Log.e("NavitGraphics", "**** fillStringArray s=" + s);
 		// deactivate the spinner
-		Navit.NavitAddressSearchSpinnerActive = false;
+		NavitDialogs.NavitAddressSearchSpinnerActive = false;
 
 		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
 		String[] tmp_s = s.split(":");
@@ -1221,18 +1221,16 @@ public class NavitGraphics
 		{
 			Navit.search_results_streets_hn++;
 		}
-
+		
 		// make the dialog move its bar ...
-		Bundle b = new Bundle();
-		b.putInt("dialog_num", Navit.SEARCHRESULTS_WAIT_DIALOG);
-		b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-		b.putInt("cur", Navit.NavitAddressResultList_foundItems.size()
-				% (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-		b.putString("title", Navit.get_text("loading search results")); //TRANS
-		b.putString("text", Navit.get_text("towns") + ":" + Navit.search_results_towns + " "
-				+ Navit.get_text("Streets") + ":" + Navit.search_results_streets + "/"
-				+ Navit.search_results_streets_hn);
-		Navit.msg_to_msg_handler(b, 10); //TRANS
+		NavitDialogs.sendDialogMessage( NavitDialogs.MSG_PROGRESS_BAR_SEARCH
+				, Navit.get_text("loading search results")
+				, Navit.get_text("towns") + ":" + Navit.search_results_towns + " "
+					+ Navit.get_text("Streets") + ":" + Navit.search_results_streets + "/"
+					+ Navit.search_results_streets_hn
+				, NavitDialogs.DIALOG_SEARCHRESULTS_WAIT
+				, Navit.ADDRESS_RESULTS_DIALOG_MAX
+				, Navit.NavitAddressResultList_foundItems.size() % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
 	}
 
 	public native void CallbackSearchResultList(int partial_match, String s);
