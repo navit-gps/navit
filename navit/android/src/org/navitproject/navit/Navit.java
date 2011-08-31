@@ -41,7 +41,6 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.text.SpannableString;
@@ -58,7 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class Navit extends Activity implements Handler.Callback
+public class Navit extends Activity
 {
 	public static final class Navit_Address_Result_Struct
 	{
@@ -69,39 +68,36 @@ public class Navit extends Activity implements Handler.Callback
 		String	addr;
 	}
 
-	public Handler												handler;
-	public NavitDialogs										dialogs;
-	private PowerManager.WakeLock							wl;
-	private NavitActivityResult							ActivityResults[];
-	public static InputMethodManager						mgr											= null;
-	public static DisplayMetrics							metrics										= null;
-	public static Boolean									show_soft_keyboard						= false;
-	public static Boolean									show_soft_keyboard_now_showing		= false;
-	public static long										last_pressed_menu_key					= 0L;
-	public static long										time_pressed_menu_key					= 0L;
-	private static Intent									startup_intent								= null;
-	private static long										startup_intent_timestamp				= 0L;
-	public static String										my_display_density						= "mdpi";
-	private boolean											searchBoxShown								= false;
-	public static final int									ADDRESS_RESULTS_DIALOG_MAX				= 10;
-	public static final int									NavitDownloaderPriSelectMap_id		= 967;
-	public static final int									NavitDownloaderSecSelectMap_id		= 968;
-	public static int											search_results_towns						= 0;
-	public static int											search_results_streets					= 0;
-	public static int											search_results_streets_hn				= 0;
-	public static final int									MAP_NUM_PRIMARY							= 11;
-	public static final int									NavitAddressSearch_id					= 70;
-	public static final int									NavitAddressResultList_id				= 71;
-	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems	= new ArrayList<Navit_Address_Result_Struct>();
+	public NavitDialogs              dialogs;
+	private PowerManager.WakeLock    wl;
+	private NavitActivityResult      ActivityResults[];
+	public static InputMethodManager mgr                            = null;
+	public static DisplayMetrics     metrics                        = null;
+	public static Boolean            show_soft_keyboard             = false;
+	public static Boolean            show_soft_keyboard_now_showing = false;
+	public static long               last_pressed_menu_key          = 0L;
+	public static long               time_pressed_menu_key          = 0L;
+	private static Intent            startup_intent                 = null;
+	private static long              startup_intent_timestamp       = 0L;
+	public static String             my_display_density             = "mdpi";
+	private boolean                  searchBoxShown                 = false;
+	public static final int          ADDRESS_RESULTS_DIALOG_MAX     = 10;
+	public static final int          NavitDownloaderPriSelectMap_id = 967;
+	public static final int          NavitDownloaderSecSelectMap_id = 968;
+	public static int                search_results_towns           = 0;
+	public static int                search_results_streets         = 0;
+	public static int                search_results_streets_hn      = 0;
+	public static final int          MAP_NUM_PRIMARY                = 11;
+	public static final int          NavitAddressSearch_id          = 70;
+	public static final int          NavitAddressResultList_id      = 71;
+	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems	
+	         = new ArrayList<Navit_Address_Result_Struct>();
 
-
-	public static final int									MAP_NUM_SECONDARY							= 12;
-	static final String										MAP_FILENAME_PATH							= "/sdcard/navit/";
-	static final String										NAVIT_DATA_DIR								= "/data/data/org.navitproject.navit";
-	static final String										NAVIT_DATA_SHARE_DIR						= NAVIT_DATA_DIR
-																															+ "/share";
-	static final String										FIRST_STARTUP_FILE						= NAVIT_DATA_SHARE_DIR
-																															+ "/has_run_once.txt";
+	public static final int          MAP_NUM_SECONDARY              = 12;
+	static final String              MAP_FILENAME_PATH              = "/sdcard/navit/";
+	static final String              NAVIT_DATA_DIR                 = "/data/data/org.navitproject.navit";
+	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
+	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 
 	public static String get_text(String in)
 	{
@@ -441,29 +437,12 @@ public class Navit extends Activity implements Handler.Callback
 		//		Android 1.1       2
 		//		Android 1.0       1
 
-		NavitActivity(3);
-
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// unpack some localized Strings
 		// a test now, later we will unpack all needed string for java, here at this point!!
 		String x = NavitGraphics.getLocalizedString("Austria");
 		Log.e("Navit", "x=" + x);
-	}
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		Log.e("Navit", "OnStart");
-		NavitActivity(2);
-	}
-
-	@Override
-	public void onRestart()
-	{
-		super.onRestart();
-		Log.e("Navit", "OnRestart");
-		NavitActivity(0);
 	}
 
 	@Override
@@ -472,7 +451,6 @@ public class Navit extends Activity implements Handler.Callback
 		super.onResume();
 		Log.e("Navit", "OnResume");
 		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		NavitActivity(1);
 
 		String intent_data = null;
 		if (startup_intent != null)
@@ -492,7 +470,6 @@ public class Navit extends Activity implements Handler.Callback
 		if ((intent_data != null) && (intent_data.substring(0, 18).equals("google.navigation:")))
 		{
 			// better use regex later, but for now to test this feature its ok :-)
-			// better use regex later, but for now to test this feature its ok :-)
 
 			// d: google.navigation:q=blabla-strasse # (this happens when you are offline, or from contacts)
 			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
@@ -510,15 +487,10 @@ public class Navit extends Activity implements Handler.Callback
 			boolean unparsable_info_box = true;
 
 			// DEBUG
-			// DEBUG
-			// DEBUG
 			// intent_data = "google.navigation:q=Wien Burggasse 27";
 			// intent_data = "google.navigation:q=48.25676,16.643";
 			// intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
 			// intent_data = "google.navigation:ll=48.25676,16.643";
-			// DEBUG
-			// DEBUG
-			// DEBUG
 
 			Log.e("Navit", "found DEBUG 1: " + intent_data.substring(0, 20));
 			Log.e("Navit", "found DEBUG 2: " + intent_data.substring(20, 22));
@@ -613,43 +585,11 @@ public class Navit extends Activity implements Handler.Callback
 			}
 		}
 	}
-	@Override
-	public void onPause()
-	{
-		super.onPause();
-		Log.e("Navit", "OnPause");
-		NavitActivity(-1);
-	}
-
-	@Override
-	public void onStop()
-	{
-		super.onStop();
-		Log.e("Navit", "OnStop");
-		NavitActivity(-2);
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		Log.e("Navit", "OnDestroy");
-		NavitActivity(-3);
-	}
-
 
 	public void setActivityResult(int requestCode, NavitActivityResult ActivityResult)
 	{
 		//Log.e("Navit", "setActivityResult " + requestCode);
 		ActivityResults[requestCode] = ActivityResult;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		super.onCreateOptionsMenu(menu);
-		//Log.e("Navit","onCreateOptionsMenu");
-		return true;
 	}
 
 	@Override
@@ -923,15 +863,7 @@ public class Navit extends Activity implements Handler.Callback
 		finish();
 	}
 
-	public boolean handleMessage(Message m)
-	{
-		//Log.e("Navit", "Handler received message");
-		return true;
-	}
-
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path);
-
-	public native void NavitActivity(int activity);
 
 	/*
 	 * this is used to load the 'navit' native library on
