@@ -299,18 +299,18 @@ struct country_search {
 static int
 country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
-        struct country_search *this_=priv_data;
+	struct country_search *this_=priv_data;
 	struct country *country=this_->country;
 
-        attr->type=attr_type;
-        switch (attr_type) {
-        case attr_any:
-                while (this_->attr_next != attr_none) {
-                        if (country_attr_get(this_, this_->attr_next, attr))
-                                return 1;
-                }
-                return 0;
-        case attr_label:
+	attr->type=attr_type;
+	switch (attr_type) {
+	case attr_any:
+			while (this_->attr_next != attr_none) {
+					if (country_attr_get(this_, this_->attr_next, attr))
+							return 1;
+			}
+			return 0;
+	case attr_label:
 		attr->u.str=gettext(country->name);
 		this_->attr_next=attr_country_id;
 		return 1;
@@ -318,25 +318,25 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->u.num=country->id;
 		this_->attr_next=country->car ? attr_country_car : attr_country_iso2;
 		return 1;
-        case attr_country_car:
+	case attr_country_car:
 		attr->u.str=country->car;
 		this_->attr_next=attr_country_iso2;
 		return attr->u.str ? 1 : 0;
-        case attr_country_iso2:
+	case attr_country_iso2:
 		attr->u.str=country->iso2;
 		this_->attr_next=attr_country_iso3;
 		return 1;
-        case attr_country_iso3:
+	case attr_country_iso3:
 		attr->u.str=country->iso3;
 		this_->attr_next=attr_country_name;
 		return 1;
-        case attr_country_name:
+	case attr_country_name:
 		attr->u.str=gettext(country->name);
 		this_->attr_next=attr_none;
 		return 1;
- 	default:
-                return 0;
-        }
+	default:
+		return 0;
+	}
 }
 
 
@@ -361,7 +361,7 @@ country_search_new(struct attr *search, int partial)
 	ret->count=0;
 
 	ret->item.type=type_country_label;
-	ret->item.id_hi=0;		
+	ret->item.id_hi=0;
 	ret->item.map=NULL;
 	ret->item.meth=&country_meth;
 	ret->item.priv_data=ret;
@@ -382,7 +382,7 @@ match(struct country_search *this_, enum attr_type type, const char *name)
 	else
 		ret=(g_strcasecmp(this_->search.u.str, name) == 0);
 	return ret;
-	
+
 }
 
 
