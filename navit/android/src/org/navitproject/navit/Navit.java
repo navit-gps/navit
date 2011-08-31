@@ -1264,7 +1264,7 @@ public class Navit extends Activity implements Handler.Callback
 		return true;
 	}
 
-	public native void NavitMain(Navit x, String lang, int version, String display_density_string);
+	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path);
 
 	public native void NavitActivity(int activity);
 
