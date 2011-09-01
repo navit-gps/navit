@@ -157,8 +157,8 @@ public class NavitMapDownloader extends Thread
 	public static int[]                 OSM_MAP_NAME_ORIG_ID_LIST               = null;
 
 	private Boolean                     stop_me                                 = false;
-	private static final int            SOCKET_CONNECT_TIMEOUT                  = 25000;			// 25 secs.
-	private static final int            SOCKET_READ_TIMEOUT                     = 15000;			// 15 secs.
+	private static final int            SOCKET_CONNECT_TIMEOUT                  = 60000;			// 60 secs.
+	private static final int            SOCKET_READ_TIMEOUT                     = 120000;			// 120 secs.
 	private static final int            MAP_WRITE_FILE_BUFFER                   = 1024 * 64;
 	private static final int            MAP_WRITE_MEM_BUFFER                    = 1024 * 64;
 	private static final int            MAP_READ_FILE_BUFFER                    = 1024 * 64;
