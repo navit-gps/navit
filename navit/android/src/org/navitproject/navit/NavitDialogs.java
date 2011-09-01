@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,24 +24,25 @@ public class NavitDialogs extends Handler{
 	public static final int           DIALOG_SEARCHRESULTS_WAIT        = 3;
 
 	// dialog messages
-	static final int MSG_REMOVE_PROGRESS_BAR = 0;
-	static final int MSG_PROGRESS_BAR = 1;
-	static final int MSG_TOAST = 2;
-	static final int MSG_TOAST_LONG = 3;
-	static final int MSG_SEARCH = 11;
-	static final int MSG_PROGRESS_BAR_SEARCH = 21;
-	static final int MSG_POSITION_MENU = 22;
-	static final int MSG_START_MAP_DOWNLOAD =23;
+	static final int MSG_REMOVE_PROGRESS_BAR   = 0;
+	static final int MSG_PROGRESS_BAR          = 1;
+	static final int MSG_TOAST                 = 2;
+	static final int MSG_TOAST_LONG            = 3;
+	static final int MSG_SEARCH                = 4;
+	static final int MSG_PROGRESS_BAR_SEARCH   = 5;
+	static final int MSG_POSITION_MENU         = 6;
+	static final int MSG_START_MAP_DOWNLOAD    = 7;
+	static final int MSG_REMOVE_DIALOG_GENERIC = 99;
 	static Handler mHandler;
 
 	private ProgressDialog                    mapdownloader_dialog     = null;
 	private ProgressDialog                    search_results_wait      = null;
 	private SearchResultsThread               searchresultsThread      = null;
-	private SearchResultsThreadSpinnerThread  spinner_thread           = null;
+	private SearchResultsThreadSpinner        searchresultsSpinner     = null;
 	private NavitMapDownloader                mapdownloader            = null;
-	
+
 	private Activity mActivity;
-	
+
 	public NavitDialogs(Activity activity) {
 		super();
 		mActivity = activity;
@@ -74,15 +74,6 @@ public class NavitDialogs extends Handler{
 			// dismiss dialog, remove dialog
 			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
 			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
-
-			// exit_code=0 -> OK, map was downloaded fine
-			if (msg.getData().getInt("value1") == 0)
-			{
-				// try to use the new downloaded map (works fine now!)
-				Log.d("Navit", "instance count=" + Navit.getInstanceCount());
-				//mActivity.onStop();
-				//mActivity.onCreate(mActivity.getIntent().getExtras());
-			}
 			break;
 		case MSG_PROGRESS_BAR :
 			// change progressbar values
@@ -132,8 +123,7 @@ public class NavitDialogs extends Handler{
 			}
 		}
 		break;
-			
-		case 99 :
+		case MSG_REMOVE_DIALOG_GENERIC :
 			// dismiss dialog, remove dialog - generic
 			mActivity.dismissDialog(msg.getData().getInt("dialog_num"));
 			mActivity.removeDialog(msg.getData().getInt("dialog_num"));
@@ -165,11 +155,11 @@ public class NavitDialogs extends Handler{
 				search_results_wait.setOnDismissListener(mOnDismissListener3);
 				searchresultsThread = new SearchResultsThread(this, DIALOG_SEARCHRESULTS_WAIT);
 				searchresultsThread.start();
-	
+
 				NavitAddressSearchSpinnerActive = true;
-				spinner_thread = new SearchResultsThreadSpinnerThread(this, DIALOG_SEARCHRESULTS_WAIT);
-				spinner_thread.start();
-	
+				searchresultsSpinner = new SearchResultsThreadSpinner(this, DIALOG_SEARCHRESULTS_WAIT);
+				post(searchresultsSpinner);
+
 				return search_results_wait;
 			case DIALOG_MAPDOWNLOAD :
 				mapdownloader_dialog = new ProgressDialog(mActivity);
@@ -200,55 +190,32 @@ public class NavitDialogs extends Handler{
 		// should never get here!!
 		return null;
 	}
-	
-	public class SearchResultsThreadSpinnerThread extends Thread
+
+	public class SearchResultsThreadSpinner implements Runnable
 	{
 		int             dialog_num;
 		int             spinner_current_value;
-		private Boolean running;
-		Handler         mHandler;
-		
-		SearchResultsThreadSpinnerThread(Handler h, int dialog_num)
+
+		SearchResultsThreadSpinner(Handler h, int dialog_num)
 		{
 			this.dialog_num = dialog_num;
-			this.mHandler = h;
 			this.spinner_current_value = 0;
-			this.running = true;
 			Log.e("Navit", "SearchResultsThreadSpinnerThread created");
 		}
 		public void run()
 		{
-			Log.e("Navit", "SearchResultsThreadSpinnerThread started");
-			while (this.running)
-			{
-				if (NavitAddressSearchSpinnerActive == false)
-				{
-					this.running = false;
-				}
-				else
-				{
-					Message msg = mHandler.obtainMessage();
-					Bundle b = new Bundle();
-					msg.what = MSG_PROGRESS_BAR_SEARCH;
-					b.putInt("dialog_num", this.dialog_num);
-					b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-					b.putInt("cur", this.spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-					b.putString("title", Navit.get_text("getting search results")); //TRANS
-					b.putString("text", Navit.get_text("searching ...")); //TRANS
-					msg.setData(b);
-					mHandler.sendMessage(msg);
-					try
-					{
-						Thread.sleep(700);
-					}
-					catch (InterruptedException e)
-					{
-						// e.printStackTrace();
-					}
-					this.spinner_current_value++;
-				}
+			if ( NavitAddressSearchSpinnerActive ) {
+				
+				sendDialogMessage( MSG_PROGRESS_BAR_SEARCH
+				                 , Navit.get_text("getting search results")
+				                 , Navit.get_text("searching ...")
+				                 , dialog_num
+				                 , Navit.ADDRESS_RESULTS_DIALOG_MAX
+				                 , spinner_current_value % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
+				
+				spinner_current_value++;
+				postDelayed(this, 700);
 			}
-			Log.e("Navit", "SearchResultsThreadSpinnerThread ended");
 		}
 	}
 
@@ -268,18 +235,15 @@ public class NavitDialogs extends Handler{
 		public void run()
 		{
 			Log.e("Navit", "SearchResultsThread started");
-
+			Message msg;
+			Bundle  bundle;
 			// initialize the dialog with sane values
-			Message msg = mHandler.obtainMessage();
-			Bundle b = new Bundle();
-			msg.what = MSG_PROGRESS_BAR_SEARCH;
-			b.putInt("dialog_num", this.my_dialog_num);
-			b.putInt("max", Navit.ADDRESS_RESULTS_DIALOG_MAX);
-			b.putInt("cur", 0);
-			b.putString("title", Navit.get_text("getting search results")); //TRANS
-			b.putString("text", Navit.get_text("searching ...")); //TRANS
-			msg.setData(b);
-			mHandler.sendMessage(msg);
+			sendDialogMessage( MSG_PROGRESS_BAR_SEARCH
+			                 , Navit.get_text("getting search results")
+			                 , Navit.get_text("searching ...")
+			                 , my_dialog_num
+			                 , Navit.ADDRESS_RESULTS_DIALOG_MAX
+			                 , 0);
 
 			int partial_match_i = 0;
 			if (Navit_last_address_partial_match)
@@ -301,20 +265,18 @@ public class NavitDialogs extends Handler{
 			else
 			{
 				// not results found, show toast
-				msg = mHandler.obtainMessage();
-				b = new Bundle();
-				msg.what = 3;
-				b.putString("text", Navit.get_text("No Results found!")); //TRANS
-				msg.setData(b);
+				msg = mHandler.obtainMessage(MSG_TOAST);
+				bundle = new Bundle();
+				bundle.putString("text", Navit.get_text("No Results found!")); //TRANS
+				msg.setData(bundle);
 				mHandler.sendMessage(msg);
 			}
 
 			// ok, remove dialog
-			msg = mHandler.obtainMessage();
-			b = new Bundle();
-			msg.what = 99;
-			b.putInt("dialog_num", this.my_dialog_num);
-			msg.setData(b);
+			msg = mHandler.obtainMessage(MSG_REMOVE_DIALOG_GENERIC);
+			bundle = new Bundle();
+			bundle.putInt("dialog_num", this.my_dialog_num);
+			msg.setData(bundle);
 			mHandler.sendMessage(msg);
 
 			Log.e("Navit", "SearchResultsThread ended");
