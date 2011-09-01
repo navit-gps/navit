@@ -21,32 +21,30 @@ package org.navitproject.navit;
 
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Locale;
 
-import android.R.color;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
 
 public class NavitAddressSearchActivity extends Activity
@@ -69,12 +67,9 @@ public class NavitAddressSearchActivity extends Activity
 		catch (Exception e) {
 			Log.e("NavitAddressSearch", "Failure to get drawable id.", e);
 		}
-		
-		
 		return drawableId;
 	}
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -89,7 +84,7 @@ public class NavitAddressSearchActivity extends Activity
 		// address: label and text field
 		SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
 		mCountry = settings.getString("DefaultCountry", null);
-		
+
 		if (mCountry == null)
 		{
 			Locale defaultLocale = Locale.getDefault();
@@ -98,11 +93,11 @@ public class NavitAddressSearchActivity extends Activity
 			edit_settings.putString("DefaultCountry", mCountry);
 			edit_settings.commit();
 		}
-		
+
 		mCountryButton = new ImageButton(this);
-		
+
 		mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
-		
+
 		mCountryButton.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v)
@@ -123,11 +118,8 @@ public class NavitAddressSearchActivity extends Activity
 		pm_checkbox = new CheckBox(this);
 		pm_checkbox.setText(Navit.get_text("partial match")); //TRANS
 		pm_checkbox.setChecked(false);
-//		pm_checkbox.setLayoutParams(new LayoutParams(LayoutParams,
-//				LayoutParams.WRAP_CONTENT));
 		pm_checkbox.setGravity(Gravity.CENTER);
 
-		
 
 		// search button
 		final Button btnSearch = new Button(this);
@@ -144,23 +136,22 @@ public class NavitAddressSearchActivity extends Activity
 		});
 
 		Bundle extras = getIntent().getExtras();
-		
+
 		if ( extras != null )
 		{
 			String title = extras.getString("title");
 			String partial = extras.getString("partial_match");
 			String address = extras.getString("address_string");
-			
+
 			if ( title != null && title.length() > 0)
 				this.setTitle(title);
-			
+
 			if (partial != null && partial.length() > 0)
 				pm_checkbox.setChecked(partial.equals("1"));
 
 			address_string = new EditText(this);
 			if (address != null)
 				address_string.setText(address);
-			
 		}
 
 		LinearLayout searchSettingsLayout = new LinearLayout(this);
@@ -174,24 +165,29 @@ public class NavitAddressSearchActivity extends Activity
 		panel.addView(btnSearch);
 
 		setContentView(panel);
-
 	}
 
 	private void requestCountryDialog()
 	{
-		//Message msg = Message.obtain(Navit.N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_COUNTRY_CHOOSER.ordinal());
-		//msg.sendToTarget();
 		final String [][]all_countries = NavitGraphics.GetAllCountries();
+
+		Comparator<String[]> country_comperator = new Comparator<String[]>(){
+			@Override
+			public int compare(String[] object1, String[] object2) {
+				return object1[1].compareTo(object2[1]);
+			}};
+
+		Arrays.sort(all_countries, country_comperator );
 
 		AlertDialog.Builder mapModeChooser = new AlertDialog.Builder(this);
 		// ToDo also show icons and country code
 		String []country_name = new String[all_countries.length];
-		
+
 		for (int country_index = 0; country_index < all_countries.length; country_index++)
 		{
 			country_name[country_index] = all_countries[country_index][1];
 		}
-		
+
 		mapModeChooser.setItems(country_name, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
 				SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
@@ -199,16 +195,12 @@ public class NavitAddressSearchActivity extends Activity
 				SharedPreferences.Editor edit_settings = settings.edit();
 				edit_settings.putString("DefaultCountry", mCountry);
 				edit_settings.commit();
-				
+
 				mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
 		 	}
-			
 		});
 
-		
 		mapModeChooser.show();
-
-
 	}
 
 	private void executeDone()
