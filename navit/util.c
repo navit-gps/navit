@@ -32,6 +32,7 @@
 #endif
 #include "util.h"
 #include "debug.h"
+#include "config.h"
 
 void
 strtoupper(char *dest, const char *src)
@@ -165,6 +166,7 @@ char *stristr(const char *String, const char *Pattern)
 #endif
 
 
+#ifndef HAVE_GETDELIM
 /**
  * Read the part of a file up to a delimiter to a string.
  * <p> 
@@ -178,7 +180,7 @@ char *stristr(const char *String, const char *Pattern)
  * @return Number of characters read (not including
    the null terminator), or -1 on error or EOF.
 */
-int
+ssize_t
 getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
   int result;
@@ -252,12 +254,15 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 
   return result;
 }
+#endif
 
-int
+#ifndef HAVE_GETLINE
+ssize_t
 getline (char **lineptr, size_t *n, FILE *stream)
 {
   return getdelim (lineptr, n, '\n', stream);
 }
+#endif
 
 #if defined(_UNICODE)
 wchar_t* newSysString(const char *toconvert)
