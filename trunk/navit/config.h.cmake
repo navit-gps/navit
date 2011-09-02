@@ -73,3 +73,7 @@
 #cmakedefine HAVE_SBRK 1
 
 #cmakedefine HAVE_PRAGMA_PACK 1
+
+#cmakedefine HAVE_GETDELIM 1
+
+#cmakedefine HAVE_GETLINE 1
