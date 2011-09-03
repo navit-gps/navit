@@ -824,6 +824,7 @@ public class Navit extends Activity
 	{
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nm.cancel(R.string.app_name);
+		NavitVehicle.removeListener();
 		finish();
 	}
 
