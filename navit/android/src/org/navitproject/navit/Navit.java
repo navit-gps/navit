@@ -814,6 +814,17 @@ public class Navit extends Activity
 		return dialogs.createDialog(id);
 	}
 
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		Log.e("Navit", "OnDestroy");
+		// TODO next call will kill our app the hard way. This should not be necessary, but ensures navit is
+		// properly restarted and no resources are wasted with navit in background. Remove this call after 
+		// code review
+		NavitDestroy();
+	}
+
 	public void disableSuspend()
 	{
 		wl.acquire();
@@ -829,6 +840,7 @@ public class Navit extends Activity
 	}
 
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path);
+	public native void NavitDestroy();
 
 	/*
 	 * this is used to load the 'navit' native library on
