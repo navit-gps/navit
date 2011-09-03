@@ -28,19 +28,43 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class NavitVehicle {
-	private LocationManager locationManager;
+	private static LocationManager sLocationManager = null;
 	private int vehicle_callbackid;
 	private String preciseProvider;
 	private String fastProvider;
+
+	private static NavitLocationListener preciseLocationListener = null;
+	private static NavitLocationListener fastLocationListener = null;
+
 	public native void VehicleCallback(int id, Location location);
 
+	private class NavitLocationListener implements LocationListener {
+		public boolean precise = false;
+		public void onLocationChanged(Location location) {
+			
+			// Disable the fast provider if still active
+			if (precise && fastProvider != null) {
+				sLocationManager.removeUpdates(fastLocationListener);
+				fastProvider = null;
+			}
+			
+			VehicleCallback(vehicle_callbackid, location);
+		}
+		public void onProviderDisabled(String provider){}
+		public void onProviderEnabled(String provider) {}
+		public void onStatusChanged(String provider, int status, Bundle extras) {}
+	}
+
 	NavitVehicle (Context context, int callbackid) {
-		locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+		sLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+		preciseLocationListener = new NavitLocationListener();
+		preciseLocationListener.precise = true;
+		fastLocationListener = new NavitLocationListener();
 
 		/* Use 2 LocationProviders, one precise (usually GPS), and one
-		   not so precise, but possible faster. The fast provider is 
+		   not so precise, but possible faster. The fast provider is
 		   disabled when the precise provider gets its first fix. */
-		
+
 		// Selection criteria for the precise provider
 		Criteria highCriteria = new Criteria();
 		highCriteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -56,50 +80,30 @@ public class NavitVehicle {
 		lowCriteria.setBearingRequired(false);
 		lowCriteria.setCostAllowed(true);
 		lowCriteria.setPowerRequirement(Criteria.POWER_HIGH);
-		
-		Log.e("NavitVehicle", "Providers "+locationManager.getAllProviders());
-		
-		preciseProvider = locationManager.getBestProvider(highCriteria, false);
+
+		Log.e("NavitVehicle", "Providers " + sLocationManager.getAllProviders());
+
+		preciseProvider = sLocationManager.getBestProvider(highCriteria, false);
 		Log.e("NavitVehicle", "Precise Provider " + preciseProvider);
-		fastProvider = locationManager.getBestProvider(lowCriteria, false);
+		fastProvider = sLocationManager.getBestProvider(lowCriteria, false);
 		Log.e("NavitVehicle", "Fast Provider " + fastProvider);
 		vehicle_callbackid=callbackid;
-		
-		locationManager.requestLocationUpdates(preciseProvider, 0, 0, preciseLocationListener);
-		
-		// If the 2 providers is the same, only activate one listener
+
+		sLocationManager.requestLocationUpdates(preciseProvider, 0, 0, preciseLocationListener);
+
+		// If the 2 providers are the same, only activate one listener
 		if (fastProvider == null || preciseProvider.compareTo(fastProvider) == 0) {
 			fastProvider = null;
 		} else {
-			locationManager.requestLocationUpdates(fastProvider, 0, 0, fastLocationListener);
+			sLocationManager.requestLocationUpdates(fastProvider, 0, 0, fastLocationListener);
 		}
 	}
-	private final LocationListener preciseLocationListener = new LocationListener() {
-		public void onLocationChanged(Location location) {
-			
-			// Disable the fast provider if still active
-			if (fastProvider != null) {
-				locationManager.removeUpdates(fastLocationListener);
-				fastProvider = null;
-			}
-			
-			// Log.e("NavitVehicle", "LocationChanged Accuracy " + location.getAccuracy() + " Altitude " + location.getAltitude() + " Bearing " + location.getBearing() + " Speed " + location.getSpeed() + " Latitude " + location.getLatitude() + " Longitude " + location.getLongitude());
-			VehicleCallback(vehicle_callbackid, location);
-		}
-	  	public void onProviderDisabled(String provider){}
-	  	public void onProviderEnabled(String provider) {}
-	  	public void onStatusChanged(String provider, int status, Bundle extras) {}
-	};
 
-	private final LocationListener fastLocationListener = new LocationListener() {
-		public void onLocationChanged(Location location) {
-			
-			// Log.e("NavitVehicle", "LocationChanged Accuracy " + location.getAccuracy() + " Altitude " + location.getAltitude() + " Bearing " + location.getBearing() + " Speed " + location.getSpeed() + " Latitude " + location.getLatitude() + " Longitude " + location.getLongitude());
-			VehicleCallback(vehicle_callbackid, location);
+	public static void removeListener() {
+		if (sLocationManager != null) {
+			if (preciseLocationListener != null) sLocationManager.removeUpdates(preciseLocationListener);
+			if (fastLocationListener != null) sLocationManager.removeUpdates(preciseLocationListener);
 		}
-	  	public void onProviderDisabled(String provider){}
-	  	public void onProviderEnabled(String provider) {}
-	  	public void onStatusChanged(String provider, int status, Bundle extras) {}
-	};
 
+	}
 }
