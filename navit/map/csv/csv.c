@@ -104,7 +104,7 @@ save_map_csv(struct map_priv *m)
 					}
 					if(found_attr) {
 						if(ATTR_IS_INT(*at)) {
-							tmpstr = g_strdup_printf("%d", found_attr->u.num);
+							tmpstr = g_strdup_printf("%d", (int)found_attr->u.num);
 						}
 						else if(ATTR_IS_DOUBLE(*at)) {
 							tmpstr = g_strdup_printf("%lf", *found_attr->u.numd);
@@ -610,10 +610,18 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	data=attr_search(attrs, NULL, attr_data);
 
 	if(data) {
+	  struct file_wordexp *wexp;
+	  char **wexp_data;
+	  wexp=file_wordexp_new(data->u.str);
+	  wexp_data=file_wordexp_get_array(wexp);
+	  dbg(1,"map_new_csv %s\n", data->u.str);	
+	  m->filename=g_strdup(wexp_data[0]);
+	  file_wordexp_destroy(wexp);
+
 	  //load csv file into quadtree structure
 	  //if column number is wrong skip
 	  FILE*fp;
-	  if((fp=fopen(data->u.str,"rt"))) {
+	  if((fp=fopen(m->filename,"rt"))) {
 		const int max_line_len = 256;
 		char *line=g_alloca(sizeof(char)*max_line_len);
 	  	while(!feof(fp)) {
@@ -706,11 +714,12 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 			}
 		}
 	  	fclose(fp);
-		m->filename = g_strdup(data->u.str);
 	  }
 	  else {
 	  	return NULL;
 	  }
+	} else {
+		return NULL;
 	}
 
 	*meth = map_methods_csv;
