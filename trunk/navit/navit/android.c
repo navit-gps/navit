@@ -78,6 +78,13 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 }
 
 JNIEXPORT void JNICALL
+Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* env)
+{
+	dbg(0, "shutdown navit\n");
+	exit(0);
+}
+
+JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitActivity( JNIEnv* env, jobject thiz, int param)
 {
 	dbg(0,"enter %d\n",param);
