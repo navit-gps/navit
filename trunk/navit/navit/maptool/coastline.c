@@ -21,7 +21,7 @@
 
 struct coastline_tile
 {
-	osmid id;
+	osmid wayid;
 	int edges;
 };
 
@@ -176,10 +176,12 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	struct geom_poly_segment *first;
 	struct item_bin *ib=NULL;
 	struct item_bin_sink *out=data->sink->priv_data[1];
-	struct coastline_tile *ct;
 	int dbgl=1;
 	int edges=0,flags;
 	GList *sorted_segments,*curr;
+	struct item_bin *ibt=(struct item_bin *)(tile_data+1);
+	struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
+	ct->wayid=item_bin_get_wayid(ibt);
 #if 0
 	if (strncmp(tile,"bcdbdcabddddba",7))
 		return;
@@ -230,11 +232,11 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		curr=g_list_next(curr);
 	}
 	if (flags == 1) {
-		struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
+		ct->edges=15;
 		ib=init_item(type_poly_water_tiled);
 		item_bin_bbox(ib, &bbox);
+		item_bin_add_attr_longlong(ib, attr_osm_wayid, ct->wayid);
 		item_bin_write_to_sink(ib, out, NULL);
-		ct->edges=15;
 		g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
 		return;
 	}
@@ -279,6 +281,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 				close_polygon(ib, &end, &cn[0], 1, &bbox, &edges);
 				if (cn[0].x == poly_start.x && cn[0].y == poly_start.y) {
 					dbg(dbgl,"poly end reached\n");
+					item_bin_add_attr_longlong(ib, attr_osm_wayid, ct->wayid);
 					item_bin_write_to_sink(ib, out, NULL);
 					end=cn[0];
 					break;
@@ -329,7 +332,6 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		}
 	}
 #endif
-	ct=g_new0(struct coastline_tile, 1);
 	ct->edges=edges;
 	g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
 #if 0
@@ -346,7 +348,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 }
 
 static void
-ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
+ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct item_bin_sink *out)
 {
 	int len=strlen(tile);
 	char *tile2=g_alloca(sizeof(char)*(len+1));
@@ -365,9 +367,11 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 	tile_bbox(tile2, &bbox, 0);
 	ib=init_item(type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
+	item_bin_add_attr_longlong(ib, attr_osm_wayid, wayid);
 	item_bin_write_to_sink(ib, out, NULL);
 	ct=g_new0(struct coastline_tile, 1);
 	ct->edges=15;
+	ct->wayid=wayid;
 	g_hash_table_insert(hash, g_strdup(tile2), ct);
 #if 0
 	item_bin_init(ib, type_border_country);
@@ -402,21 +406,21 @@ tile_collector_add_siblings(char *tile, struct coastline_tile *ct, struct coastl
 	if (debug)
 		fprintf(stderr,"%s (%c) has %d edges active\n",tile,t,edges);
 	if (t == 'a' && (edges & 1)) 
-		ocean_tile(data->tile_edges, tile, 'b', out);
+		ocean_tile(data->tile_edges, tile, 'b', ct->wayid, out);
 	if (t == 'a' && (edges & 8)) 
-		ocean_tile(data->tile_edges, tile, 'c', out);
+		ocean_tile(data->tile_edges, tile, 'c', ct->wayid, out);
 	if (t == 'b' && (edges & 4)) 
-		ocean_tile(data->tile_edges, tile, 'a', out);
+		ocean_tile(data->tile_edges, tile, 'a', ct->wayid, out);
 	if (t == 'b' && (edges & 8)) 
-		ocean_tile(data->tile_edges, tile, 'd', out);
+		ocean_tile(data->tile_edges, tile, 'd', ct->wayid, out);
 	if (t == 'c' && (edges & 1)) 
-		ocean_tile(data->tile_edges, tile, 'd', out);
+		ocean_tile(data->tile_edges, tile, 'd', ct->wayid, out);
 	if (t == 'c' && (edges & 2)) 
-		ocean_tile(data->tile_edges, tile, 'a', out);
+		ocean_tile(data->tile_edges, tile, 'a', ct->wayid, out);
 	if (t == 'd' && (edges & 4)) 
-		ocean_tile(data->tile_edges, tile, 'c', out);
+		ocean_tile(data->tile_edges, tile, 'c', ct->wayid, out);
 	if (t == 'd' && (edges & 2)) 
-		ocean_tile(data->tile_edges, tile, 'b', out);
+		ocean_tile(data->tile_edges, tile, 'b', ct->wayid, out);
 }
 
 static int
@@ -507,8 +511,11 @@ tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, struct coast
 		fprintf(stderr,"result '%s' %d old %d\n",tile2,pedges,co?co->edges:0);
 	cn=g_new0(struct coastline_tile, 1);
 	cn->edges=pedges;
-	if (co) 
+	if (co) {
 		cn->edges|=co->edges;
+		cn->wayid=co->wayid;
+	} else
+		cn->wayid=ct->wayid;
 	g_hash_table_insert(data->tile_edges, g_strdup(tile2), cn);
 }
 
@@ -584,10 +591,10 @@ coastline_processor_new(struct item_bin_sink *out)
 	struct item_bin_sink_func *tile_collector=tile_collector_new(out);
 	struct tile_parameter *param=g_new0(struct tile_parameter, 1);
 
-	fprintf(stderr,"new:out=%p\n",out);
 	param->min=14;
 	param->max=14;
 	param->overlap=0;
+	param->attr_to_copy=attr_osm_wayid;
 
 	item_bin_sink_add_func(tiles, tile_collector);
 	coastline_processor->priv_data[0]=param;

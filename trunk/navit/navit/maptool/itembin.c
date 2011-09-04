@@ -100,6 +100,17 @@ item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir)
 }
 
 void
+item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type attr)
+{
+	struct attr_bin *ab=item_bin_get_attr_bin(from, attr, NULL);
+	if (ab)
+		item_bin_add_attr_data(ib, ab->type, (void *)(ab+1), (ab->len-1)*4);
+#include <assert.h>
+	assert(attr == attr_osm_wayid);
+	assert(item_bin_get_wayid(ib) == item_bin_get_wayid(from));
+}
+
+void
 item_bin_add_coord_rect(struct item_bin *ib, struct rect *r)
 {
 	item_bin_add_coord(ib, &r->l, 1);
@@ -190,6 +201,22 @@ item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last)
 		s+=(ab->len+1)*4;
 		if (ab->type == type && (void *)(ab+1) > last) {
 			return (ab+1);
+		}
+	}
+	return NULL;
+}
+
+struct attr_bin *
+item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type, void *last)
+{
+	unsigned char *s=(unsigned char *)ib;
+	unsigned char *e=s+(ib->len+1)*4;
+	s+=sizeof(struct item_bin)+ib->clen*4;
+	while (s < e) {
+		struct attr_bin *ab=(struct attr_bin *)s;
+		s+=(ab->len+1)*4;
+		if (ab->type == type && (void *)(ab+1) > last) {
+			return ab;
 		}
 	}
 	return NULL;
