@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
    <xsl:param name="OSD_SIZE" select="1.33"/>
    <xsl:param name="ICON_SMALL" select="32"/>
    <xsl:param name="ICON_MEDIUM" select="32"/>
