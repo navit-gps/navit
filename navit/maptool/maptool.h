@@ -54,6 +54,7 @@ struct tile_parameter {
 	int min;
 	int max;
 	int overlap;
+	enum attr_type attr_to_copy;
 };
 
 struct tile_info {
@@ -198,6 +199,7 @@ void item_bin_add_coord(struct item_bin *ib, struct coord *c, int count);
 void item_bin_add_coord_reverse(struct item_bin *ib, struct coord *c, int count);
 void item_bin_bbox(struct item_bin *ib, struct rect *r);
 void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir);
+void item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type attr);
 void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r);
 int attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int size);
 int attr_bin_write_attr(struct attr_bin *ab, struct attr *attr);
@@ -205,6 +207,7 @@ void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data
 void item_bin_add_attr(struct item_bin *ib, struct attr *attr);
 void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val);
 void *item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last);
+struct attr_bin * item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type, void *last);
 struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
