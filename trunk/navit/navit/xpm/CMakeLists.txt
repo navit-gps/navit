@@ -23,6 +23,13 @@ macro(convert_to_png IMAGE_INPUT IMAGE_OUTPUT SCALE)
          string(REGEX REPLACE ".*width=\"([0-9]*).*" "\\1" NEW_SCALE ${NEW_SCALE_LINE})
        endif()
       set(COMMAND_ARGS ${NEW_SCALE} ${NEW_SCALE}  ${IMAGE_INPUT} --output ${IMAGE_OUTPUT})
+   elseif(${IMAGE_CONVERTER_${FILE_TYPE}} MATCHES "inkscape")
+      if (${SCALE} GREATER 0)
+         set(SCALE_ARGS --export-width=${SCALE} --export-height=${SCALE})
+      else()
+         set(SCALE_ARGS)
+      endif()
+      set(COMMAND_ARGS --without-gui --export-background-opacity=0 --export-png ${IMAGE_OUTPUT} ${SCALE_ARGS} ${IMAGE_INPUT})
    else()
       message(FATAL_ERROR "no svg2png converter defined here.")
    endif()
@@ -93,6 +100,7 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
 endforeach()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
+add_custom_command(TARGET images COMMAND mkdir -p ../resources/share/navit/xpm COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)
 
 install(
    FILES ${IMAGE_TARGETS}
