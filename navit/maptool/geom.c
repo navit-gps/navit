@@ -509,6 +509,8 @@ clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, str
 				item_bin_add_coord(ib_new, &p2, 1);
 			}
 			if (i == count-1 || (code & 4)) {
+				if (param->attr_to_copy)
+					item_bin_copy_attr(ib_new, ib, param->attr_to_copy);
 				if (ib_new->clen)
 					item_bin_write_clipped(ib_new, param, out);
 				item_bin_init(ib_new, ib->type);
@@ -518,6 +520,8 @@ clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, str
 				item_bin_init(ib_new, ib->type);
 				item_bin_add_coord(ib_new, &p1, 1);
 				item_bin_add_coord(ib_new, &p2, 1);
+				if (param->attr_to_copy)
+					item_bin_copy_attr(ib_new, ib, param->attr_to_copy);
 				item_bin_write_clipped(ib_new, param, out);
 			}
 #endif
@@ -610,6 +614,9 @@ clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, 
 			ib_out=ib2;
 		}
 	}
-	if (ib_in->clen)
+	if (ib_in->clen) {
+		if (param->attr_to_copy)
+			item_bin_copy_attr(ib_in, ib, param->attr_to_copy);
 		item_bin_write_clipped(ib_in, param, out);
+	}
 }
