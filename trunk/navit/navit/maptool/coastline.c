@@ -19,6 +19,12 @@
 #include "maptool.h"
 #include "debug.h"
 
+struct coastline_tile
+{
+	osmid id;
+	int edges;
+};
+
 static int distance_from_ll(struct coord *c, struct rect *bbox)
 {
 	int dist=0;
@@ -170,6 +176,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	struct geom_poly_segment *first;
 	struct item_bin *ib=NULL;
 	struct item_bin_sink *out=data->sink->priv_data[1];
+	struct coastline_tile *ct;
 	int dbgl=1;
 	int edges=0,flags;
 	GList *sorted_segments,*curr;
@@ -223,10 +230,12 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		curr=g_list_next(curr);
 	}
 	if (flags == 1) {
+		struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
 		ib=init_item(type_poly_water_tiled);
 		item_bin_bbox(ib, &bbox);
 		item_bin_write_to_sink(ib, out, NULL);
-		g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)15);
+		ct->edges=15;
+		g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
 		return;
 	}
 #if 1
@@ -320,7 +329,9 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		}
 	}
 #endif
-	g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)edges);
+	ct=g_new0(struct coastline_tile, 1);
+	ct->edges=edges;
+	g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
 #if 0
 	item_bin_init(ib, type_border_country);
 	item_bin_bbox(ib, &bbox);
@@ -342,18 +353,22 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 	struct rect bbox;
 	struct item_bin *ib;
 	struct coord co;
+	struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
 
 	strcpy(tile2, tile);
 	tile2[len-1]=c;
 	//fprintf(stderr,"Testing %s\n",tile2);
-	if (g_hash_table_lookup_extended(hash, tile2, NULL, NULL))
+	ct=g_hash_table_lookup(hash, tile2);
+	if (ct)
 		return;
 	//fprintf(stderr,"%s ok\n",tile2);
 	tile_bbox(tile2, &bbox, 0);
 	ib=init_item(type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
 	item_bin_write_to_sink(ib, out, NULL);
-	g_hash_table_insert(hash, g_strdup(tile2), (void *)15);
+	ct=g_new0(struct coastline_tile, 1);
+	ct->edges=15;
+	g_hash_table_insert(hash, g_strdup(tile2), ct);
 #if 0
 	item_bin_init(ib, type_border_country);
 	item_bin_bbox(ib, &bbox);
@@ -370,12 +385,12 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 /* dc */
 
 static void
-tile_collector_add_siblings(char *tile, void *edgesp, struct coastline_tile_data *data)
+tile_collector_add_siblings(char *tile, struct coastline_tile *ct, struct coastline_tile_data *data)
 {
 	int len=strlen(tile);
 	char t=tile[len-1];
 	struct item_bin_sink *out=data->sink->priv_data[1];
-	int edges=(int)edgesp;
+	int edges=ct->edges;
 	int debug=0;
 
 	if (len != data->level)
@@ -408,18 +423,14 @@ static int
 tile_sibling_edges(GHashTable *hash, char *tile, char c)
 {
 	int len=strlen(tile);
-	int ret;
 	char *tile2=g_alloca(sizeof(char)*(len+1));
-	void *data;
+	struct coastline_tile *ct;
 	strcpy(tile2, tile);
 	tile2[len-1]=c;
-	if (!g_hash_table_lookup_extended(hash, tile2, NULL, &data))
-		ret=15;
-	else
-		ret=(int)data;
-	//fprintf(stderr,"checking '%s' with %d edges active\n",tile2,ret);
-
-	return ret;
+	ct=g_hash_table_lookup(hash, tile2);
+	if (ct)
+		return ct->edges;
+	return 15;
 }
 
 static void
@@ -452,9 +463,9 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 }
 
 static void
-tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_data *data)
+tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, struct coastline_tile_data *data)
 {
-	int edges=(int)edgesp;
+	int edges=ct->edges;
 	int pedges=0;
 	int debug=0;
 	int len=strlen(tile);
@@ -462,6 +473,7 @@ tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_dat
 	char t=tile[len-1];
 	strcpy(tile2, tile);
 	tile2[len-1]='\0';
+	struct coastline_tile *cn, *co;
 #if 0
 	if (!strncmp(tile,"bcacccaadbdcd",10))
 		debug=1;
@@ -490,9 +502,14 @@ tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_dat
 		pedges|=8;
 	if (t == 'c' && (edges & 8) && (tile_sibling_edges(data->tile_edges, tile, 'd') & 8))
 		pedges|=8;
+	co=g_hash_table_lookup(data->tile_edges, tile2);
 	if (debug)
-		fprintf(stderr,"result '%s' %d old %d\n",tile2,pedges,(int)g_hash_table_lookup(data->tile_edges, tile2));
-	g_hash_table_insert(data->tile_edges, g_strdup(tile2), (void *)((int)g_hash_table_lookup(data->tile_edges, tile2)|pedges));
+		fprintf(stderr,"result '%s' %d old %d\n",tile2,pedges,co?co->edges:0);
+	cn=g_new0(struct coastline_tile, 1);
+	cn->edges=pedges;
+	if (co) 
+		cn->edges|=co->edges;
+	g_hash_table_insert(data->tile_edges, g_strdup(tile2), cn);
 }
 
 static int
@@ -502,7 +519,7 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 	int i;
 	GHashTable *hash;
 	data.sink=tile_collector;
-	data.tile_edges=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	data.tile_edges=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	hash=tile_collector->priv_data[0];
 	fprintf(stderr,"tile_collector_finish\n");
 	g_hash_table_foreach(hash, (GHFunc) tile_collector_process_tile, &data);
