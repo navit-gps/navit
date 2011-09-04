@@ -353,16 +353,16 @@ add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
-find_program(SAXON NAMES saxon saxon8 saxon-xslt saxonb-xslt)
-if(SAXON)
-   execute_process(COMMAND ${SAXON} -snone ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xml ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xslt
+find_program(XSLT_PROCESSOR NAMES saxon saxon8 saxon-xslt saxonb-xslt xsltproc)
+if(XSLT_PROCESSOR)
+   execute_process(COMMAND ${XSLT_PROCESSOR} -snone ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xml ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xslt
       RESULT_VARIABLE SAXON_ERROR ERROR_QUIET)
    if (NOT SAXON_ERROR)
-      set (SAXON_OPTIONS -snone)
+      set (XSLT_PROCESSOR_OPTIONS -snone)
    endif()
 else()
    cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
-endif(SAXON)
+endif(XSLT_PROCESSOR)
 
 if (NOT XSL_PROCESSING)
    message(WARNING "XSLT processing disabled. You have to configure navit.xml yourself, or enable XSLT processing.")
