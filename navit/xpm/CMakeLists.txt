@@ -100,6 +100,7 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
 endforeach()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
+add_custom_target(images_resource DEPENDS images COMMAND mkdir -p ../resources/share/navit/xpm COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)
 
 install(
    FILES ${IMAGE_TARGETS}
