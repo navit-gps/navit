@@ -453,6 +453,7 @@ endif()
 if (APPLE OR USE_UIKIT)
    set_with_reason(vehicle/iphone "apple detected" TRUE)
    set_with_reason(graphics/cocoa "apple detected" TRUE)
+   set(BUILD_BUNDLE TRUE)
 endif()
 
 set(LOCALEDIR "${LOCALE_DIR}/locale")
