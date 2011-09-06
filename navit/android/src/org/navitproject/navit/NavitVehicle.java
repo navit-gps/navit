@@ -102,7 +102,7 @@ public class NavitVehicle {
 	public static void removeListener() {
 		if (sLocationManager != null) {
 			if (preciseLocationListener != null) sLocationManager.removeUpdates(preciseLocationListener);
-			if (fastLocationListener != null) sLocationManager.removeUpdates(preciseLocationListener);
+			if (fastLocationListener != null) sLocationManager.removeUpdates(fastLocationListener);
 		}
 
 	}
