@@ -238,7 +238,6 @@ public class NavitGraphics
 
 			if (switch_value == MotionEvent.ACTION_DOWN)
 			{
-				ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 				touch_mode = PRESSED;
 				mPressedPosition = new PointF(x, y);
 				postDelayed(this, time_for_long_press);
@@ -296,6 +295,7 @@ public class NavitGraphics
 				}
 				else if (touch_mode == PRESSED)
 				{
+					ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 					ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 				}
 				touch_mode = NONE;
@@ -347,8 +347,10 @@ public class NavitGraphics
 				else if (touch_mode == PRESSED)
 				{
 					Log.e("NavitGraphics", "Start drag mode");
-					if ( spacing(mPressedPosition, new PointF(event.getX(),  event.getY()))  > 20f)
+					if ( spacing(mPressedPosition, new PointF(event.getX(),  event.getY()))  > 20f) {
+						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 						touch_mode = DRAG;
+					}
 				}
 			}
 			else if (switch_value == _ACTION_POINTER_DOWN_)
@@ -358,7 +360,6 @@ public class NavitGraphics
 				if (oldDist > 2f)
 				{
 					touch_mode = ZOOM;
-					
 					//Log.e("NavitGraphics", "--> zoom");
 				}
 			}
