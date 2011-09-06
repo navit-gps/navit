@@ -468,6 +468,9 @@ if (SAMPLE_MAP)
 endif(SAMPLE_MAP)
 
 if(ANDROID)
+   # for android API 3 compatiblity
+   SET(CMAKE_SHARED_LIBRARY_SONAME_C_FLAG "-Wl,-soname,/data/data/org.navitproject.navit/lib/")
+   
    find_program(ANDROID_LOCATION NAMES android android.bat)
    find_program(ANT_LOCATION NAMES ant)
    if (NOT ANT_LOCATION)
