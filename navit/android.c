@@ -24,7 +24,6 @@
 
 JNIEnv *jnienv;
 jobject *android_activity;
-struct callback_list *android_activity_cbl;
 int android_version;
 
 int
@@ -58,7 +57,6 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	const char *displaydensitystr;
 	android_version=version;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
-	android_activity_cbl=callback_list_new();
 	jnienv=env;
 	android_activity=activity;
 	(*jnienv)->NewGlobalRef(jnienv, activity);
@@ -82,15 +80,6 @@ Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* env)
 {
 	dbg(0, "shutdown navit\n");
 	exit(0);
-}
-
-JNIEXPORT void JNICALL
-Java_org_navitproject_navit_Navit_NavitActivity( JNIEnv* env, jobject thiz, int param)
-{
-	dbg(0,"enter %d\n",param);
-	callback_list_call_1(android_activity_cbl, param);
-	if (param == -3)
-		exit(0);
 }
 
 JNIEXPORT void JNICALL
