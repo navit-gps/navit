@@ -98,7 +98,7 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 	priv->fix_time = tv.tv_sec;
 	priv->geo.lat = location->latitude;
 	/* workaround for webOS GPS bug following */
-	priv->geo.lng = (priv->pdk_version == 200 && location->longitude >= -1 && location->longitude <= 1) ?
+	priv->geo.lng = (priv->pdk_version >= 200 && location->longitude >= -1 && location->longitude <= 1) ?
 		-location->longitude : location->longitude;
 
 	dbg(2,"Location: %f %f %f %.12g %.12g +-%fm\n",
