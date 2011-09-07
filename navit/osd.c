@@ -36,8 +36,6 @@ struct osd {
 	struct attr** osd_attrs;
 };
 
-static GHashTable *osd_hash = NULL;
-
 struct osd *
 osd_new(struct attr *parent, struct attr **attrs)
 {
@@ -54,15 +52,7 @@ osd_new(struct attr *parent, struct attr **attrs)
         o=g_new0(struct osd, 1);
         o->priv=new(parent->u.navit, &o->meth, attrs);
 
-	attr=attr_search(attrs, NULL, attr_name);
-	if (attr && attr->u.str) {
-		if(NULL == osd_hash) {
-			osd_hash = g_hash_table_new_full(g_str_hash,g_str_equal,g_free,NULL);
-		}
-		g_hash_table_insert(osd_hash, g_strdup(attr->u.str), o);
-	}
-
-	o->osd_attrs = attr_list_dup(attrs);
+		o->osd_attrs = attr_list_dup(attrs);
 
         return o;
 }
@@ -71,12 +61,6 @@ int
 osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	return attr_generic_get_attr(this_->osd_attrs, NULL, type, attr, NULL);
-}
-
-struct osd*
-osd_get_osd_by_name(char *name)
-{
-	return g_hash_table_lookup(osd_hash, name);
 }
 
 int

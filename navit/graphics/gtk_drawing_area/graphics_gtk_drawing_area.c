@@ -950,6 +950,11 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 static void
 overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
 {
+	//do not dereference parent for non overlay osds
+	if(!this->parent) {
+		return;
+	}
+
 	int changed = 0;
 	int w2,h2;
 

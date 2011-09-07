@@ -68,7 +68,6 @@ void osd_set_std_config(struct navit *nav, struct osd_item *item);
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv);
 void osd_std_resize(struct osd_item *item);
 void osd_std_draw(struct osd_item *item);
-struct osd* osd_get_osd_by_name(char *name);
 int osd_set_attr(struct osd *osd, struct attr* attr);
 int osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 /* end of prototypes */
