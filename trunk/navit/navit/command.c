@@ -15,6 +15,7 @@
 #include "command.h"
 #include "event.h"
 #include "navit_nls.h"
+#include "obj_filter.h"
 
 /*
 gui.fullscreen=!gui.fullscreen
@@ -266,6 +267,18 @@ eval_value(struct context *ctx, struct result *res) {
 	while (g_ascii_isspace(*op)) {
 		op++;
 	}
+
+	struct obj_filter_t out;
+	int parsed_chars = parse_obj_filter(op, &out);
+	if (parsed_chars) {
+		struct attr* res_attr = filter_object(ctx->attr, out.iterator_type, out.filter_expr, out.idx);
+		if (res_attr) {
+			res->attr = *res_attr;
+			g_free(res_attr);
+			ctx->expr = op+parsed_chars;
+			return;
+		}
+	} 
 
 	if ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
 		res->attr.type=attr_none;
