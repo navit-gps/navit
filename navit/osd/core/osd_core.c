@@ -222,28 +222,38 @@ int set_std_osd_attr(struct osd_priv_common*opc, struct attr*the_attr)
 	if(opc && the_attr && ATTR_IS_INT(the_attr->type)) {
 		if(attr_w == the_attr->type) {
 			opc->osd_item.w = the_attr->u.num;
-			osd_std_resize(&opc->osd_item);
-			return 1;
+			if(opc->osd_item.gr) {
+				osd_std_resize(&opc->osd_item);
+				return 1;
+			}
 		}
 		else if(attr_h == the_attr->type) {
 			opc->osd_item.h = the_attr->u.num;
-			osd_std_resize(&opc->osd_item);
-			return 1;
+			if(opc->osd_item.gr) {
+				osd_std_resize(&opc->osd_item);
+				return 1;
+			}
 		}
 		else if(attr_x == the_attr->type) {
 			opc->osd_item.p.x = the_attr->u.num;
-			osd_std_resize(&opc->osd_item);
-			return 1;
+			if(opc->osd_item.gr) {
+				osd_std_resize(&opc->osd_item);
+				return 1;
+			}
 		}
 		else if(attr_y == the_attr->type) {
 			opc->osd_item.p.y = the_attr->u.num;
-			osd_std_resize(&opc->osd_item);
-			return 1;
+			if(opc->osd_item.gr) {
+				osd_std_resize(&opc->osd_item);
+				return 1;
+			}
 		}
 		else if(attr_font_size == the_attr->type) {
 			opc->osd_item.font_size = the_attr->u.num;
-			osd_std_resize(&opc->osd_item);
-			return 1;
+			if(opc->osd_item.gr) {
+				osd_std_resize(&opc->osd_item);
+				return 1;
+			}
 		}
 	} 
 	if(opc->spec_set_attr_func) {
