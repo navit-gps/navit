@@ -345,9 +345,23 @@ quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
 void
 quadtree_add(struct quadtree_node* this_, struct quadtree_item* item) {
     if( this_->is_leaf ) {
+        int bSame = 1;
+        int i;
+        double lon = this_->items[0].longitude, lat = this_->items[0].latitude;
+
         this_->items[this_->node_num++] = *item;
         if(QUADTREE_NODE_CAPACITY == this_->node_num) {
-            quadtree_split(this_);
+          //avoid infinite recursion when all elements has the same coordinate
+          for(i=0;i<this_->node_num;++i) {
+            if (lon != this_->items[i].longitude || lat != this_->items[i].latitude) {
+              bSame = 0;
+              break;
+            }
+          }
+          if (bSame) {
+            return;
+          }
+          quadtree_split(this_);
         }
     }
     else {
