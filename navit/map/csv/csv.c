@@ -492,6 +492,8 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	struct quadtree_item* qi;
 	struct item* curr_item;
 	int* pID;
+	struct map_rect_priv *mr2 = g_new0(struct map_rect_priv, 1);
+	*mr2 = *mr;
 	if(mr && mr->m) {
 		m = mr->m;
 	}
@@ -507,7 +509,7 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	//add item to the map
 	curr_item = item_new("",zoom_max);
 	curr_item->type = m->item_type;
-	curr_item->priv_data = mr;
+	curr_item->priv_data = mr2;
 
 	curr_item->id_lo = m->next_item_idx;
 	if (m->flags & 1)
@@ -527,7 +529,7 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	//add the coord less item to the new list
 	//TODO remove unnecessary indirection
 	m->new_items = g_list_prepend(m->new_items, qi);
-	mr->curr_item = m->new_items;
+	mr2->curr_item = m->new_items;
 	//don't add to the quadtree yet, wait until we have a valid coord
 	pID = g_new(int,1);
 	*pID = m->next_item_idx;
