@@ -239,6 +239,7 @@ public class NavitGraphics
 			if (switch_value == MotionEvent.ACTION_DOWN)
 			{
 				touch_mode = PRESSED;
+				if (!in_map) ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 				mPressedPosition = new PointF(x, y);
 				postDelayed(this, time_for_long_press);
 			}
@@ -295,7 +296,7 @@ public class NavitGraphics
 				}
 				else if (touch_mode == PRESSED)
 				{
-					ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+					if (in_map) ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 					ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 				}
 				touch_mode = NONE;
