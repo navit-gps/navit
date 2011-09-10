@@ -847,9 +847,10 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 	struct map* curr_map = NULL;
 	struct coord curr_coord;
 	struct map_rect *mr;
-
-	val->type   = attr_type_item_begin;
-	val->u.item  = NULL;	//return invalid item on error
+	
+	//return invalid item on error
+	val->type   = attr_none;
+	val->u.item  = NULL;	
 	list[0]     = val;
 	list[1]     = NULL;
 	*out = list;
@@ -896,7 +897,10 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 		mr = map_rect_new(curr_map, &sel);
 		if(mr) {
 			it = map_rect_create_item( mr, item_type);
-			item_coord_set(it,&curr_coord, 1, change_mode_modify);
+			if (it) {
+				val->type = attr_type_item_begin;
+				item_coord_set(it,&curr_coord, 1, change_mode_modify);
+			}
 			val->u.item  = it;
 		}
 		map_rect_destroy(mr);
