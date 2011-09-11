@@ -349,8 +349,7 @@ quadtree_add(struct quadtree_node* this_, struct quadtree_item* item) {
         int i;
         double lon = this_->items[0].longitude, lat = this_->items[0].latitude;
 
-        this_->items[this_->node_num++] = *item;
-        if(QUADTREE_NODE_CAPACITY == this_->node_num) {
+        if(QUADTREE_NODE_CAPACITY-1 == this_->node_num) {
           //avoid infinite recursion when all elements has the same coordinate
           for(i=0;i<this_->node_num;++i) {
             if (lon != this_->items[i].longitude || lat != this_->items[i].latitude) {
@@ -361,7 +360,10 @@ quadtree_add(struct quadtree_node* this_, struct quadtree_item* item) {
           if (bSame) {
             return;
           }
+          this_->items[this_->node_num++] = *item;
           quadtree_split(this_);
+        } else {
+          this_->items[this_->node_num++] = *item;
         }
     }
     else {
