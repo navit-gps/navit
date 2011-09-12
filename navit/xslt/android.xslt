@@ -4,7 +4,7 @@
    <xsl:param name="ICON_SMALL" select="32"/>
    <xsl:param name="ICON_MEDIUM" select="32"/>
    <xsl:param name="ICON_BIG" select="64"/>
-   
+
    <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
    <xsl:include href="default_plugins.xslt"/>
    <xsl:include href="map_sdcard_navitmap_bin.xslt"/>
@@ -26,8 +26,8 @@
       <xsl:copy>
          <xsl:copy-of select="@*[not(name()='font_size')]"/>
          <xsl:attribute name="font_size"><xsl:value-of select="round(185*number($OSD_SIZE))"/></xsl:attribute>
-         <xsl:attribute name="icon_xs"><xsl:value-of select="number($ICON_MEDIUM)"/></xsl:attribute>
-         <xsl:attribute name="icon_s"><xsl:value-of select="number($ICON_SMALL)"/></xsl:attribute>
+         <xsl:attribute name="icon_xs"><xsl:value-of select="number($ICON_SMALL)"/></xsl:attribute>
+         <xsl:attribute name="icon_s"><xsl:value-of select="number($ICON_MEDIUM)"/></xsl:attribute>
          <xsl:attribute name="icon_l"><xsl:value-of select="number($ICON_BIG)"/></xsl:attribute>
          <xsl:attribute name="spacing"><xsl:value-of select="round(2*number($OSD_SIZE))"/></xsl:attribute>
          <xsl:apply-templates/>
