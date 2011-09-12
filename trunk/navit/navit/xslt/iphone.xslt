@@ -18,6 +18,7 @@
    </xsl:template>
    <xsl:template match="/config/navit/mapset/xi:include">
       <map type="binfile" enabled="yes" data="/var/mobile/navit/navitmap.bin" />
+      <map type="binfile" enabled="yes" data="../Documents/navitmap.bin" />
    </xsl:template>
    <xsl:template match="@*|node()">
       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
