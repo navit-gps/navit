@@ -19,6 +19,7 @@
 #ifndef __RENDERAREA_H
 #define __RENDERAREA_H
 
+#ifdef QT_QPAINTER_USE_EMBEDDING
 class EmbeddedWidget : public QX11EmbedWidget {
     Q_OBJECT
 
@@ -28,6 +29,7 @@ public:
 protected:
         void closeEvent(QCloseEvent *event);
 };
+#endif
 
 class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
 {
