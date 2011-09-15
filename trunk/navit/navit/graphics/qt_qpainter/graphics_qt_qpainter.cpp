@@ -829,12 +829,6 @@ static void event_qt_main_loop_quit(void)
 	exit(0);
 }
 
-struct event_watch {
-	QSocketNotifier *sn;
-	struct callback *cb;
-	void *fd;
-};
-
 static struct event_watch *
 event_qt_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 {
@@ -867,7 +861,7 @@ event_qt_add_timeout(int timeout, int multi, struct callback *cb)
 	return (struct event_timeout *)id;
 }
 
-static void
+void
 event_qt_remove_timeout(struct event_timeout *ev)
 {
 	event_gr->widget->killTimer((int)(long)ev);
@@ -943,8 +937,10 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #endif
 #if QT_QPAINTER_USE_FREETYPE
 	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
-	if (!font_freetype_new)
+	if (!font_freetype_new) {
+		dbg(0,"no freetype\n");
 		return NULL;
+	}
 #endif
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;

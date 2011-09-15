@@ -145,5 +145,12 @@ struct graphics_priv {
 };
 
 void qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev);
+struct event_watch {
+	        QSocketNotifier *sn;
+		        struct callback *cb;
+			        void *fd;
+};
+
+void event_qt_remove_timeout(struct event_timeout *ev);
 
 #endif /* __GRAPHICS_QT_QPAINTER_H */
