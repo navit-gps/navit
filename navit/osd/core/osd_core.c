@@ -3178,8 +3178,8 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_scale *this = (struct osd_scale *)opc->data;
 
-	struct color color_white={0xffff,0xffff,0xffff,0x0000};
-	struct color color_black={0x0000,0x0000,0x0000,0x0000};
+	struct color color_white={COLOR_WHITE_};
+	struct color color_black={COLOR_BLACK_};
 	struct graphics *gra = navit_get_graphics(nav);
 	dbg(1, "enter\n");
 	if (this->use_overlay) {
