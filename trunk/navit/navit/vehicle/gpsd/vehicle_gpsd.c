@@ -38,7 +38,7 @@ static struct vehicle_priv {
 	char *source;
 	char *gpsd_query;
 	struct callback_list *cbl;
-	struct callback *cb;
+	struct callback *cb, *cbt;
 	struct event_watch *evwatch;
 	guint retry_interval;
 	struct gps_data_t *gps;
@@ -55,7 +55,7 @@ static struct vehicle_priv {
 	int sats_used;
 	char *nmea_data;
 	char *nmea_data_buf;
-	guint retry_timer;
+	struct event_timeout *retry_timer2;
 	struct attr ** attrs;
 	char fixiso8601[128];
 #ifdef HAVE_GPSBT
@@ -192,10 +192,9 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
  * Return FALSE if retry not required
  * Return TRUE to try again
  */
-static gboolean
-vehicle_gpsd_try_open(gpointer *data)
+static int
+vehicle_gpsd_try_open(struct vehicle_priv *priv)
 {
-	struct vehicle_priv *priv = (struct vehicle_priv *)data;
 	char *source = g_strdup(priv->source);
 	char *colon = index(source + 7, ':');
 	char *port=NULL;
@@ -231,11 +230,14 @@ vehicle_gpsd_try_open(gpointer *data)
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 #endif
 	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
+	priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
 	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
 	if (!priv->gps->gps_fd) {
 		dbg(0,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
 	}
 	dbg(0,"Connected to gpsd fd=%d evwatch=%p\n", priv->gps->gps_fd, priv->evwatch);
+	event_remove_timeout(priv->retry_timer2);
+	priv->retry_timer2=NULL;
 	return FALSE;
 }
 
@@ -258,10 +260,9 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	sleep(1);       /* give gpsd time to start */
 	dbg(1,"gpsbt_start: completed\n");
 #endif
-	priv->retry_timer=0;
-	if (vehicle_gpsd_try_open((gpointer *)priv)) {
-		priv->retry_timer = g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gpsd_try_open, (gpointer *)priv);
-	}
+	priv->retry_timer2=NULL;
+	if (vehicle_gpsd_try_open(priv)) 
+		priv->retry_timer2=event_add_timeout(priv->retry_interval*1000, 1, priv->cbt);
 }
 
 static void
@@ -271,9 +272,9 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	int err;
 #endif
 
-	if (priv->retry_timer) {
-		g_source_remove(priv->retry_timer);
-		priv->retry_timer=0;
+	if (priv->retry_timer2) {
+		event_remove_timeout(priv->retry_timer2);
+		priv->retry_timer2=NULL;
 	}
 	if (priv->evwatch) {
 		event_remove_watch(priv->evwatch);
@@ -282,6 +283,10 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	if (priv->cb) {
 		callback_destroy(priv->cb);
 		priv->cb = NULL;
+	}
+	if (priv->cbt) {
+		callback_destroy(priv->cbt);
+		priv->cbt = NULL;
 	}
 	if (priv->gps) {
 		gps_close(priv->gps);
@@ -307,7 +312,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
                 if(gps_read(priv->gps)==-1) {
-                  g_warning("gps_poll failed\n");
+                  dbg(0,"gps_poll failed\n");
                   vehicle_gpsd_close(priv);
                   vehicle_gpsd_open(priv);
                 }
@@ -318,7 +323,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
                 }
 #else
                 if (gps_poll(priv->gps)) {
-			g_warning("gps_poll failed\n");
+			dbg(0,"gps_poll failed\n");
 			vehicle_gpsd_close(priv);
 			vehicle_gpsd_open(priv);
                 }
