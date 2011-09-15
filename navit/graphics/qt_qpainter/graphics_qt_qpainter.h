@@ -140,7 +140,7 @@ struct graphics_priv {
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
 #endif
-	int w,h;
+	int w,h,flags;
 	struct navit* nav;
 };
 
