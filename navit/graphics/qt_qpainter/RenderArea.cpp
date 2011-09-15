@@ -72,7 +72,11 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 	timer_callback=g_hash_table_new(NULL, NULL);
 	watches=g_hash_table_new(NULL, NULL);
 #ifndef QT_QPAINTER_NO_WIDGET
+#if QT_VERSION >= 0x040000
+	setAttribute(Qt::WA_OpaquePaintEvent, true);
+#else
 	setBackgroundMode(QWidget::NoBackground);
+#endif
 #endif
 #endif
 }
@@ -225,12 +229,17 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 	event->accept();
 }
 
+#define CASE(x) case x:
+
 void RenderArea::keyPressEvent(QKeyEvent *event)
 {
-#if QT_VERSION < 0x040000
 	QString str=event->text();
+#if QT_VERSION < 0x040000 
 	QCString cstr=str.utf8();
 	const char *text=cstr;
+#else
+	const char *text=str.toUtf8().constData();
+#endif
 	dbg(0,"enter text='%s' 0x%x (%d) key=%d\n", text, text[0], strlen(text), event->key());
 	if (!text || !text[0] || text[0] == 0x7f) {
 		dbg(0,"special key\n");
@@ -241,26 +250,41 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 			}
 			break;
 		case 4101:
+#ifdef QT_QPAINTER_CUSTOM_RETURN
+		QT_QPAINTER_CUSTOM_RETURN
+#endif
 			{
 				text=(char []){NAVIT_KEY_RETURN,'\0'};
 			}
 			break;
 		case 4114:
+#ifdef QT_QPAINTER_CUSTOM_LEFT
+		QT_QPAINTER_CUSTOM_LEFT
+#endif
 			{
 				text=(char []){NAVIT_KEY_LEFT,'\0'};
 			}
 			break;
 		case 4115:
+#ifdef QT_QPAINTER_CUSTOM_UP
+		QT_QPAINTER_CUSTOM_UP
+#endif
 			{
 				text=(char []){NAVIT_KEY_UP,'\0'};
 			}
 			break;
 		case 4116:
+#ifdef QT_QPAINTER_CUSTOM_RIGHT
+		QT_QPAINTER_CUSTOM_RIGHT
+#endif
 			{
 				text=(char []){NAVIT_KEY_RIGHT,'\0'};
 			}
 			break;
 		case 4117:
+#ifdef QT_QPAINTER_CUSTOM_DOWN
+		QT_QPAINTER_CUSTOM_DOWN
+#endif
 			{
 				text=(char []){NAVIT_KEY_DOWN,'\0'};
 			}
@@ -269,7 +293,6 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 	}
 	callback_list_call_attr_1(this->cbl, attr_keypress, (void *)text);
 	event->accept();
-#endif
 }
 
 void RenderArea::watchEvent(int fd)
