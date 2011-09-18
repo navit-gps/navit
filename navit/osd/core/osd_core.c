@@ -676,7 +676,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.navit = nav;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_odometer_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	this->bActive = 0; //do not count on init
 	this->sum_dist = 0;
@@ -901,7 +901,7 @@ osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.meth.draw = osd_draw_cast(osd_cmd_interface_draw);
 
 	opc->spec_set_attr_func = osd_cmd_interface_set_attr;
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
@@ -1061,7 +1061,7 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.navit = nav;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_stopwatch_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	this->bActive = 0; //do not count on init
 	this->current_base_time = 0;
@@ -1173,7 +1173,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.navit = nav;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
@@ -1298,7 +1298,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
 
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	opc->spec_set_attr_func = osd_button_set_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 1|16);
@@ -1397,7 +1397,7 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_image_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 1);
 
@@ -1539,7 +1539,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.h = 70;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_nav_next_turn_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -1672,7 +1672,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 	opc->osd_item.navit = nav;
 	opc->osd_item.p.y = 76;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_nav_toggle_announcer_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
@@ -1966,7 +1966,7 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
   opc->osd_item.navit = nav;
   opc->osd_item.font_size = 200;
   opc->osd_item.meth.draw = osd_draw_cast(osd_speed_cam_draw);
-  meth->set_attr = set_std_osd_attr;
+  meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
   osd_set_std_attr(attrs, &opc->osd_item, 2);
   attr = attr_search(attrs, NULL, attr_width);
@@ -2193,7 +2193,7 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	opc->osd_item.h=60;
 	this->active=-1;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_speed_warner_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	attr = attr_search(attrs, NULL, attr_speed_exceed_limit_offset);
 	if (attr) {
@@ -2829,7 +2829,7 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.navit = nav;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
 	this->active = -1;
@@ -2940,7 +2940,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.h = 40;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_gps_status_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -3052,7 +3052,7 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.h = 40;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_volume_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -3211,7 +3211,7 @@ osd_scale_new(struct navit *nav, struct osd_methods *meth,
 
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_scale_draw);
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 3);
 
@@ -3315,7 +3315,7 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 	opc->osd_item.w = 60;
 	opc->osd_item.h = 40;
 	opc->osd_item.font_size = 200;
-	meth->set_attr = set_std_osd_attr;
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, opc));
