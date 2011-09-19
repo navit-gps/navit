@@ -4,14 +4,14 @@ maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
 .B For OSM XML data:
 .B bzcat planet.osm.bz2 | maptool mymap.bin
-[-h] [-2] [-5 <file>] [-6] [-a <level>] [-c] -[-d <connect string] 
-[-e <phase>] [-i <file>] [-k] [-M] [-N] [-o] [-r <file>] [-s <phase>]
-[-S <size>] [-w] [-W] [-U] [-z <level>]
+[\-h] [\-2] [\-5 <file>] [\-6] [\-a <level>] [\-c] -[\-d <connect string] 
+[\-e <phase>] [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-r <file>] [\-s <phase>]
+[\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 .B For OSM Protobuf/PBF data:
-.B maptool --protobuf -i planet.osm.pbf planet.bin
-[-h] [-2] [-5 <file>] [-6] [-a <level>] [-c] [-e <phase>] 
-[-i <file>] [-k] [-M] [-N] [-o] [-P] [-r <file>] [-s <phase>]
-[-S <size>] [-w] [-W] [-U] [-z <level>]
+.B maptool \-\-protobuf \-i planet.osm.pbf planet.bin
+[\-h] [\-2] [\-5 <file>] [\-6] [\-a <level>] [\-c] [\-e <phase>] 
+[\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
+[\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 .SH DESCRIPTION
 maptool parses osm textfile and converts it to Navit binfile format
 .SH OPTIONS
@@ -25,7 +25,7 @@ convert ways and polygons to POIs when applicable
 \-4 (\-\-md5)
 set file where to write md5 sum
 .TP
-\-6 (-\-64bit)
+\-6 (\-\-64bit)
 set zip 64 bit compression
 .TP
 \-a (\-\-attr-debug-level) <level>
@@ -52,7 +52,7 @@ process only nodes
 \-o (\-\-coverage)
 converts every street to street_converage, resulting in a big fat black line. 
 You can overlay this map with another vector map or image map, and every street 
-you will still see is missing in the -o map
+you will still see is missing in the \-o map
 .TP
 \-P (\-\-protobuf)
 input file is protobuf
