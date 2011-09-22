@@ -421,6 +421,8 @@ static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
 static void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags);
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
+static void gui_internal_widget_prepend(struct widget *parent, struct widget *child);
+static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 static void gui_internal_apply_config(struct gui_priv *this);
 
@@ -1330,6 +1332,18 @@ static void gui_internal_widget_prepend(struct widget *parent, struct widget *ch
 		child->background=parent->background;
 	parent->children=g_list_prepend(parent->children, child);
 }
+
+static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child)
+{
+	GList *sib=NULL;
+	if (! child->background)
+		child->background=parent->background;
+
+	if(sibling) 
+		sib=g_list_find(parent->children,sibling);
+	parent->children=g_list_insert_before(parent->children, sib, child);
+}
+
 
 static void gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 {
@@ -3602,19 +3616,25 @@ town_str(struct search_list_result *res, int level, int flags)
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
+        static struct widget *partial;
 	char *text=NULL,*text2=NULL,*name=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
 	struct item *item=NULL;
 	GList *l;
 	static char possible_keys[256]="";
+        struct widget *wi=NULL;
+
+	if(!search_list->children) {
+		partial=NULL;
+	}
 
 	res=search_list_get_result(this->sl);
 	if (res) {
 		gchar* trunk_name = NULL;
 
 		struct widget *menu=g_list_last(this->root.children)->data;
-		struct widget *wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
+		wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 
 		if (wi) {
 			if (! strcmp(wm_name,"Town"))
@@ -3719,7 +3739,24 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 			wc->data=param;
 			wc->state |= STATE_SENSITIVE;
 			wc->speech=g_strdup(text);
-			gui_internal_widget_append(search_list, wc);
+			
+			if (! strcmp(wm_name,"House number") && !res->street->name) {
+				gui_internal_widget_append(search_list, wc);
+				if(!partial)
+					partial=wc;
+
+			} else {
+				if(!wi)
+					dbg(0,"search text widget is NULL\n");
+				if(wi && strlen(name)==strlen(wi->text)) {
+					dbg(1,"xact %s %s\n",name, wi->text);
+					gui_internal_widget_prepend(search_list, wc);
+				} else {
+					dbg(1,"not xact %s %s\n",name, wi->text);
+					gui_internal_widget_insert_before(search_list, partial, wc);
+					partial=wc;
+				}
+			}
 		}
 		wc->name=g_strdup(name);
 		if (res->c)
