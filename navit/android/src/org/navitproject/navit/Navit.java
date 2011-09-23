@@ -60,7 +60,7 @@ import android.widget.Toast;
 
 public class Navit extends Activity
 {
-	public static final class Navit_Address_Result_Struct
+	public static final class NavitAddress
 	{
 		String	result_type;	// TWN,STR,SHN
 		String	item_id;		// H<ddddd>L<ddddd> -> item.id_hi item.id_lo
@@ -91,8 +91,9 @@ public class Navit extends Activity
 	public static final int          MAP_NUM_PRIMARY                = 11;
 	public static final int          NavitAddressSearch_id          = 70;
 	public static final int          NavitAddressResultList_id      = 71;
-	public static List<Navit_Address_Result_Struct>	NavitAddressResultList_foundItems	
-	         = new ArrayList<Navit_Address_Result_Struct>();
+
+	public static List<NavitAddress>	NavitAddressResultList_foundItems	
+	         = new ArrayList<NavitAddress>();
 
 	public static final int          MAP_NUM_SECONDARY              = 12;
 	static final String              MAP_FILENAME_PATH              = "/sdcard/navit/";
@@ -678,12 +679,7 @@ public class Navit extends Activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
 				search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
 				search_intent.putExtra("address_string", NavitDialogs.Navit_last_address_search_string);
-				String pm_temp = "0";
-				if ( NavitDialogs.Navit_last_address_partial_match)
-				{
-					pm_temp = "1";
-				}
-				search_intent.putExtra("partial_match", pm_temp);
+				search_intent.putExtra("partial_match", NavitDialogs.Navit_last_address_partial_match);
 				this.startActivityForResult(search_intent, NavitAddressSearch_id);
 				break;
 			case 88 :
@@ -693,17 +689,23 @@ public class Navit extends Activity
 				// exit
 				this.onStop();
 				this.exit();
-				//msg = new Message();
-				//b = new Bundle();
-				//b.putInt("Callback", 5);
-				//b.putString("cmd", "quit();");
-				//msg.setData(b);
-				//N_NavitGraphics.callback_handler.sendMessage(msg);
 				break;
 		}
 		return true;
 	}
 
+	void setDestination(float latitude, float longitude, String address) {
+		Toast.makeText( getApplicationContext(),
+			Navit.get_text("setting destination to") + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
+
+		Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+		Bundle b = new Bundle();
+		b.putFloat("lat", latitude);
+		b.putFloat("lon", longitude);
+		b.putString("q", address);
+		msg.setData(b);
+		msg.sendToTarget();
+	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -720,53 +722,40 @@ public class Navit extends Activity
 			}
 			break;
 		case NavitAddressSearch_id :
-			try
-			{
-				if (resultCode == Activity.RESULT_OK)
-				{
-					try
-					{
-						String addr = data.getStringExtra("address_string");
-						Boolean partial_match = data.getStringExtra("partial_match").equals("1");
-						String country = data.getStringExtra("country");
-
-						NavitDialogs.Navit_last_address_partial_match = partial_match;
-						NavitDialogs.Navit_last_address_search_string = addr;
-						NavitDialogs.Navit_last_country = country;
-
-						// clear results
-						Navit.NavitAddressResultList_foundItems.clear();
-						Navit.search_results_towns = 0;
-						Navit.search_results_streets = 0;
-						Navit.search_results_streets_hn = 0;
-
-						if (addr.equals(""))
-						{
-							// empty search string entered
-							Toast.makeText(getApplicationContext(),
-									Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
-						}
-						else
-						{
-							// show dialog, and start search for the results
-							// make it indirect, to give our activity a chance to startup
-							// (remember we come straight from another activity and ours is still paused!)
-							dialogs.obtainMessage(NavitDialogs.MSG_SEARCH).sendToTarget();
-						}
-					}
-					catch (NumberFormatException e)
-					{
-						Log.d("Navit", "NumberFormatException selected_id");
+			if (resultCode == Activity.RESULT_OK) {
+				Boolean addr_selected = data.getBooleanExtra("addr_selected", false);
+				
+				// address already choosen, or do we have to search?
+				if (addr_selected) {
+					setDestination( NavitAddressResultList_foundItems .get(0).lat
+					              , NavitAddressResultList_foundItems.get(0).lon
+					              , NavitAddressResultList_foundItems.get(0).addr);
+				} else {
+					String addr = data.getStringExtra("address_string");
+					Boolean partial_match = data.getBooleanExtra("partial_match", false);
+					String country = data.getStringExtra("country");
+	
+					NavitDialogs.Navit_last_address_partial_match = partial_match;
+					NavitDialogs.Navit_last_address_search_string = addr;
+					NavitDialogs.Navit_last_country = country;
+	
+					// clear results
+					Navit.NavitAddressResultList_foundItems.clear();
+					Navit.search_results_towns = 0;
+					Navit.search_results_streets = 0;
+					Navit.search_results_streets_hn = 0;
+	
+					if (addr.equals("")) {
+						// empty search string entered
+						Toast.makeText(getApplicationContext(),
+								Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
+					} else {
+						// show dialog, and start search for the results
+						// make it indirect, to give our activity a chance to startup
+						// (remember we come straight from another activity and ours is still paused!)
+						dialogs.obtainMessage(NavitDialogs.MSG_SEARCH).sendToTarget();
 					}
 				}
-				else
-				{
-					// user pressed back key
-				}
-			}
-			catch (Exception e)
-			{
-				Log.d("Navit", "error on onActivityResult");
 			}
 			break;
 		case Navit.NavitAddressResultList_id :
@@ -774,27 +763,11 @@ public class Navit extends Activity
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
-					Log.d("Navit", "adress result list id="
-							+ Integer.parseInt(data.getStringExtra("selected_id")));
-					// get the coords for the destination
-					int destination_id = Integer.parseInt(data.getStringExtra("selected_id"));
-
-					// ok now set target
-					Toast.makeText( getApplicationContext(),
-					    Navit.get_text("setting destination to") + "\n" 
-					        + Navit.NavitAddressResultList_foundItems.get(destination_id).addr,
-					    Toast.LENGTH_LONG).show(); //TRANS
-
-					Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
-					Bundle b = new Bundle();
-					b.putString("lat", String.valueOf(Navit.NavitAddressResultList_foundItems
-							.get(destination_id).lat));
-					b.putString("lon", String.valueOf(Navit.NavitAddressResultList_foundItems
-							.get(destination_id).lon));
-					b.putString("q",
-							Navit.NavitAddressResultList_foundItems.get(destination_id).addr);
-					msg.setData(b);
-					msg.sendToTarget();
+					int destination_id = data.getIntExtra("selected_id", 0);
+					
+					setDestination( NavitAddressResultList_foundItems .get(destination_id).lat
+					              , NavitAddressResultList_foundItems.get(destination_id).lon
+					              , NavitAddressResultList_foundItems.get(destination_id).addr);
 				}
 			}
 			catch (Exception e)
@@ -860,12 +833,7 @@ public class Navit extends Activity
 		Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
 		search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
 		search_intent.putExtra("address_string", search);
-		String pm_temp = "0";
-		if (NavitDialogs.Navit_last_address_partial_match)
-		{
-			pm_temp = "1";
-		}
-		search_intent.putExtra("partial_match", pm_temp);
+		search_intent.putExtra("partial_match", NavitDialogs.Navit_last_address_partial_match);
 		this.startActivityForResult(search_intent, NavitAddressSearch_id);
 	}
 }

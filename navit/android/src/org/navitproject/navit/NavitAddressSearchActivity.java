@@ -23,6 +23,7 @@ package org.navitproject.navit;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -37,11 +38,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -53,9 +58,10 @@ public class NavitAddressSearchActivity extends Activity
 	private CheckBox     pm_checkbox;
 	private String       mCountry;
 	private ImageButton  mCountryButton;
-
+	
 	public RelativeLayout	NavitAddressSearchActivity_layout;
 
+	
 	private int getDrawableID(String resourceName)
 	{
 		int drawableId = 0;
@@ -120,7 +126,6 @@ public class NavitAddressSearchActivity extends Activity
 		pm_checkbox.setChecked(false);
 		pm_checkbox.setGravity(Gravity.CENTER);
 
-
 		// search button
 		final Button btnSearch = new Button(this);
 		btnSearch.setText(Navit.get_text("Search")); //TRANS
@@ -135,19 +140,45 @@ public class NavitAddressSearchActivity extends Activity
 			}
 		});
 
-		Bundle extras = getIntent().getExtras();
+		ListView lastAddresses = new ListView(this);
+		NavitAppConfig navitConfig = (NavitAppConfig)getApplicationContext();
 
+		final List<Navit.NavitAddress> addresses = navitConfig.getLastAddresses();
+		int addressCount = addresses.size();
+		if (addressCount > 0) {
+			String[] strAddresses = new String[addressCount];
+			for (int addrIndex = 0; addrIndex < addressCount; addrIndex++) {
+				strAddresses[addrIndex] = addresses.get(addrIndex).addr;
+			}
+			ArrayAdapter<String> addressList = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, strAddresses);
+			lastAddresses.setAdapter(addressList);
+			lastAddresses.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					Intent resultIntent = new Intent();
+					resultIntent.putExtra("addr_selected", true);
+					
+					Navit.NavitAddressResultList_foundItems.clear();
+					Navit.NavitAddressResultList_foundItems.add(addresses.get(arg2));
+					
+					setResult(Activity.RESULT_OK, resultIntent);
+					finish();
+				}
+			});
+		}
+		
+		Bundle extras = getIntent().getExtras();
 		if ( extras != null )
 		{
 			String title = extras.getString("title");
-			String partial = extras.getString("partial_match");
+			Boolean partial = extras.getBoolean("partial_match");
 			String address = extras.getString("address_string");
 
 			if ( title != null && title.length() > 0)
 				this.setTitle(title);
 
-			if (partial != null && partial.length() > 0)
-				pm_checkbox.setChecked(partial.equals("1"));
+			pm_checkbox.setChecked(partial);
 
 			address_string = new EditText(this);
 			if (address != null)
@@ -163,6 +194,7 @@ public class NavitAddressSearchActivity extends Activity
 		panel.addView(address_string);
 		panel.addView(searchSettingsLayout);
 		panel.addView(btnSearch);
+		panel.addView(lastAddresses);
 
 		setContentView(panel);
 	}
@@ -208,14 +240,7 @@ public class NavitAddressSearchActivity extends Activity
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("address_string", address_string.getText().toString());
 		resultIntent.putExtra("country", mCountry);
-		if (pm_checkbox.isChecked())
-		{
-			resultIntent.putExtra("partial_match", "1");
-		}
-		else
-		{
-			resultIntent.putExtra("partial_match", "0");
-		}
+		resultIntent.putExtra("partial_match", pm_checkbox.isChecked());
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
