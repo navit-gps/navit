@@ -268,29 +268,13 @@ public class NavitGraphics
 					if (scale > 1.3)
 					{
 						// zoom in
-						CallbackMessageChannel(1, "");
-
-						// next lines are a hack, without it screen will not get updated anymore!
-						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-						MotionCallback(MotionCallbackID, x + 15, y);
-						MotionCallback(MotionCallbackID, x - 15, y);
-						ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-						this.postInvalidate();
-
+						CallbackMessageChannel(1, null);
 						//Log.e("NavitGraphics", "onTouch zoom in");
 					}
 					else if (scale < 0.8)
 					{
-						// zoom out    
-						CallbackMessageChannel(2, "");
-
-						// next lines are a hack, without it screen will not get updated anymore!
-						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-						MotionCallback(MotionCallbackID, x + 15, y);
-						MotionCallback(MotionCallbackID, x - 15, y);
-						ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-						this.postInvalidate();
-
+						// zoom out
+						CallbackMessageChannel(2, null);
 						//Log.e("NavitGraphics", "onTouch zoom out");
 					}
 				}
@@ -319,29 +303,13 @@ public class NavitGraphics
 						// zoom in
 						CallbackMessageChannel(1, "");
 						oldDist = newDist;
-
-						// next lines are a hack, without it screen will not get updated anymore!
-						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-						MotionCallback(MotionCallbackID, x + 15, y);
-						MotionCallback(MotionCallbackID, x - 15, y);
-						ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-						this.postInvalidate();
-
 						//Log.e("NavitGraphics", "onTouch zoom in");
 					}
 					else if (scale < 0.8)
 					{
 						oldDist = newDist;
-						// zoom out    
+						// zoom out
 						CallbackMessageChannel(2, "");
-
-						// next lines are a hack, without it screen will not get updated anymore!
-						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-						MotionCallback(MotionCallbackID, x + 15, y);
-						MotionCallback(MotionCallbackID, x - 15, y);
-						ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-						this.postInvalidate();
-
 						//Log.e("NavitGraphics", "onTouch zoom out");
 					}
 				}
