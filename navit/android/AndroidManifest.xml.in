@@ -6,7 +6,8 @@
       android:versionName="@ANDROID_VERSION_NAME@"
       android:installLocation="auto">
     <application android:label="@string/app_name"
-                 android:icon="@drawable/icon">
+                 android:icon="@drawable/icon"
+                 android:name=".NavitAppConfig">
         <activity android:name="Navit"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"

@@ -32,10 +32,9 @@ import android.widget.ListView;
 
 public class NavitAddressResultListActivity extends ListActivity
 {
-
-	private int			selected_id	= -1;
-	private Boolean	is_empty		= true;
-	public String[]	result_list	= new String[]{"loading results ..."};
+	private int              selected_id        = -1;
+	private Boolean          is_empty           = true;
+	public String[]          result_list        = new String[]{"loading results ..."};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -43,16 +42,15 @@ public class NavitAddressResultListActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		//Log.e("Navit", "all ok");
 
-		Navit.Navit_Address_Result_Struct tmp = new Navit.Navit_Address_Result_Struct();
+		Navit.NavitAddress tmp = new Navit.NavitAddress();
 
-		Log.e("Navit", "########### full result count: "
-				+ Navit.NavitAddressResultList_foundItems.size());
+		Log.e("Navit", "full result count: " + Navit.NavitAddressResultList_foundItems.size());
 
 		// show "town names" as results only when we dont have any street names in resultlist
 		if ((Navit.search_results_streets > 0) || (Navit.search_results_streets_hn > 0))
 		{
 			// clear out towns from result list
-			for (Iterator<Navit.Navit_Address_Result_Struct> k = Navit.NavitAddressResultList_foundItems
+			for (Iterator<Navit.NavitAddress> k = Navit.NavitAddressResultList_foundItems
 					.iterator(); k.hasNext();)
 			{
 				tmp = k.next();
@@ -63,12 +61,11 @@ public class NavitAddressResultListActivity extends ListActivity
 			}
 		}
 
-		Log.e("Navit", "########### final result count: "
-				+ Navit.NavitAddressResultList_foundItems.size());
+		Log.e("Navit", "final result count: " + Navit.NavitAddressResultList_foundItems.size());
 
 		this.result_list = new String[Navit.NavitAddressResultList_foundItems.size()];
 		int j = 0;
-		for (Iterator<Navit.Navit_Address_Result_Struct> i = Navit.NavitAddressResultList_foundItems
+		for (Iterator<Navit.NavitAddress> i = Navit.NavitAddressResultList_foundItems
 				.iterator(); i.hasNext();)
 		{
 			tmp = i.next();
@@ -125,18 +122,15 @@ public class NavitAddressResultListActivity extends ListActivity
 		executeDone();
 	}
 
-	//	@Override
-	//	public void onBackPressed()
-	//	{
-	//		executeDone();
-	//		super.onBackPressed();
-	//	}
-
 	private void executeDone()
 	{
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("selected_id", String.valueOf(this.selected_id));
+		resultIntent.putExtra("selected_id", selected_id);
 		setResult(Activity.RESULT_OK, resultIntent);
+		
+		NavitAppConfig navitConfig = (NavitAppConfig)getApplicationContext();
+		navitConfig.addLastAddress(Navit.NavitAddressResultList_foundItems.get(selected_id));
+
 		finish();
 	}
 

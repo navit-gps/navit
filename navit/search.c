@@ -956,11 +956,11 @@ search_address_housenumber_real(GList *result_list, struct search_list *sl, char
 				// ca. 9 chars : ca. 9 chars : max. 100 max. 100 max. 100 max. 15 chars -> this sould be max. about 335 chars long
 				if (slr->town->common.postal == NULL)
 				{
-					buffer=g_strdup_printf("SHN:H%dL%d:%f:%f:%.101s,%.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+					buffer=g_strdup_printf("SHN:H%dL%d:%f:%f:%.101s, %.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
 				}
 				else
 				{
-					buffer=g_strdup_printf("SHN:H%dL%d:%f:%f:%.101s,%.7s %.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
+					buffer=g_strdup_printf("SHN:H%dL%d:%f:%f:%.101s, %.7s %.101s, %.101s %.15s",slr->street->common.item.id_hi,slr->street->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name,slr->street->name,slr->house_number->house_number);
 				}
 				// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 #ifdef HAVE_API_ANDROID
@@ -1081,11 +1081,11 @@ search_address_street(GList *result_list, struct search_list *sl, GList *phrases
 		// TWN -> town
 		if (slr->town->common.postal == NULL)
 		{
-			buffer=g_strdup_printf("TWN:H%dL%d:%f:%f:%.101s,%.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name);
+			buffer=g_strdup_printf("TWN:H%dL%d:%f:%f:%.101s, %.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.town_name);
 		}
 		else
 		{
-			buffer=g_strdup_printf("TWN:H%dL%d:%f:%f:%.101s,%.7s %.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name);
+			buffer=g_strdup_printf("TWN:H%dL%d:%f:%f:%.101s, %.7s %.101s",slr->town->common.item.id_hi,slr->town->common.item.id_lo,g.lat,g.lng,slr->country->name,slr->town->common.postal,slr->town->common.town_name);
 		}
 		// deactivated now * result_list=g_list_prepend(result_list,g_strdup(buffer));
 #ifdef HAVE_API_ANDROID
@@ -1158,7 +1158,7 @@ GList *
 search_by_address(struct search_list *sl, const char *addr, int partial, struct jni_object *jni)
 {
 	char *str=search_fix_spaces(addr);
-	GList *tmp,*phrases=search_split_phrases(str);
+	GList *phrases=search_split_phrases(str);
 	GList *ret = NULL;
 	dbg(0,"enter %s\n",addr);
 	ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
