@@ -22,7 +22,7 @@ package org.navitproject.navit;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import org.navitproject.navit.Navit.Navit_Address_Result_Struct;
+import org.navitproject.navit.Navit.NavitAddress;
 
 import android.app.Activity;
 import android.content.Context;
@@ -741,8 +741,8 @@ public class NavitGraphics
 					MotionCallback(MotionCallbackID, msg.getData().getInt("x"), msg.getData().getInt("y"));
 					break;
 				case CLB_SET_DESTINATION:
-					String lat = msg.getData().getString("lat");
-					String lon = msg.getData().getString("lon");
+					String lat = Float.toString(msg.getData().getFloat("lat"));
+					String lon = Float.toString(msg.getData().getFloat("lon"));
 					String q = msg.getData().getString("q");
 					CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
 					break;
@@ -926,7 +926,7 @@ public class NavitGraphics
 		// deactivate the spinner
 		NavitDialogs.NavitAddressSearchSpinnerActive = false;
 
-		Navit.Navit_Address_Result_Struct tmp_addr = new Navit_Address_Result_Struct();
+		Navit.NavitAddress tmp_addr = new NavitAddress();
 		String[] tmp_s = s.split(":");
 		tmp_addr.result_type = tmp_s[0];
 		tmp_addr.item_id = tmp_s[1];
