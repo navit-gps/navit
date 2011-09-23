@@ -119,7 +119,6 @@ public class NavitDialogs extends Handler{
 				mapdownloader = new NavitMapDownloader(download_map_id
 						, NavitDialogs.DIALOG_MAPDOWNLOAD, map_slot);
 				mapdownloader.start();
-
 			}
 		}
 		break;
@@ -143,16 +142,6 @@ public class NavitDialogs extends Handler{
 				search_results_wait.setCancelable(false);
 				search_results_wait.setProgress(0);
 				search_results_wait.setMax(10);
-				DialogInterface.OnDismissListener mOnDismissListener3 = new DialogInterface.OnDismissListener()
-				{
-					public void onDismiss(DialogInterface dialog)
-					{
-						Log.e("Navit", "onDismiss: search_results_wait");
-						dialog.dismiss();
-						dialog.cancel();
-					}
-				};
-				search_results_wait.setOnDismissListener(mOnDismissListener3);
 				searchresultsThread = new SearchResultsThread(this, DIALOG_SEARCHRESULTS_WAIT);
 				searchresultsThread.start();
 
@@ -169,18 +158,15 @@ public class NavitDialogs extends Handler{
 				mapdownloader_dialog.setCancelable(true);
 				mapdownloader_dialog.setProgress(0);
 				mapdownloader_dialog.setMax(200);
-				DialogInterface.OnDismissListener mOnDismissListener1 = new DialogInterface.OnDismissListener()
+				DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener()
 				{
 					public void onDismiss(DialogInterface dialog)
 					{
 						Log.e("Navit", "onDismiss: mapdownloader_dialog");
-						dialog.dismiss();
-						dialog.cancel();
-						// todo: do better
 						mapdownloader.stop_thread();
 					}
 				};
-				mapdownloader_dialog.setOnDismissListener(mOnDismissListener1);
+				mapdownloader_dialog.setOnDismissListener(onDismissListener);
 				// show license for OSM maps
 				Toast.makeText(mActivity.getApplicationContext(),
 						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
