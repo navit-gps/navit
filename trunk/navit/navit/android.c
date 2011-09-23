@@ -20,6 +20,7 @@
 #include "types.h"
 #include "search.h"
 #include "start_real.h"
+#include "track.h"
 
 
 JNIEnv *jnienv;
@@ -267,21 +268,14 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 	case 1:
 		// zoom in
 		navit_zoom_in_cursor(attr.u.navit, 2);
+		navit_draw(attr.u.navit);
 		break;
 	case 2:
 		// zoom out
 		navit_zoom_out_cursor(attr.u.navit, 2);
+		navit_draw(attr.u.navit);
 		break;
 	case 6:
-
-		// this procedure is not used at the moment!!
-
-		// hopefully use a newly downloaded map, we just hope its set in navit.xml (make nicer soon)
-		// remove all curents maps
-		// ******global_navit->mapsets=NULL; // is this the correct way to clear the list?
-		// now add the default /sdcard/navitmap.bin entry to the list
-		// ******navit_add_mapset(global_navit,ms); // but how? please write me!!
-		// now reload some stuff to make the change stick
 		break;
 	case 5:
 		// call a command (like in gui)
@@ -433,7 +427,7 @@ Java_org_navitproject_navit_NavitGraphics_GetAllCountries( JNIEnv* env, jobject 
 
 	struct mapset *ms=navit_get_mapset(attr.u.navit);
 	struct search_list *search_list = search_list_new(ms);
-	jobjectArray current_country;
+	jobjectArray current_country = NULL;
 	search_attr.type=attr_country_all;
 	//dbg(0,"country %s\n", country_name.u.str);
 	search_attr.u.str=g_strdup("");//country_name.u.str;
