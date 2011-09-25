@@ -66,6 +66,7 @@ struct default_flags default_flags2[]={
 	{type_footway, AF_PBH},
 	{type_living_street, AF_ALL},
 	{type_street_service, AF_ALL},
+	{type_street_parking_lane, AF_ALL},
 	{type_bridleway, AF_PBH},
 	{type_path, AF_PBH},
 	{type_steps, AF_PBH},

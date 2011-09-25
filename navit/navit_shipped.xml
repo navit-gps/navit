@@ -120,7 +120,7 @@ Navigation</text></img>
 		<tracking cdf_histsize="0"/>
 
 		<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved" speed="10" route_weight="10">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
@@ -185,7 +185,7 @@ Navigation</text></img>
 		</vehicleprofile>
 
 		<vehicleprofile name="car_avoid_tolls" flags="0x4000000" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved" speed="10" route_weight="10">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
@@ -341,7 +341,7 @@ Navigation</text></img>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
 			</roadprofile>
-			<roadprofile item_types="street_3_city,street_4_city,street_service" speed="5" route_weight="5">
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="5">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
@@ -395,7 +395,7 @@ Navigation</text></img>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
 			</roadprofile>
-			<roadprofile item_types="street_3_city,street_4_city,street_service" speed="5" route_weight="4">
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="4">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
@@ -440,7 +440,7 @@ Navigation</text></img>
  static_distance="25"
                                 vehicle_width="274" vehicle_height="411" vehicle_length="2134"
                                 vehicle_weight="36287" vehicle_axle_weight="15422">
-                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved" speed="5" route_weight="5">
+                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="5" route_weight="5">
                                         <announcement level="0" distance_metric="25"/>
                                         <announcement level="1" distance_metric="100"/>
                                         <announcement level="2" distance_metric="200"/>
