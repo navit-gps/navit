@@ -261,6 +261,226 @@ int set_std_osd_attr(struct osd_priv_common*opc, struct attr*the_attr)
 	}
 	return 0;
 }
+
+
+struct route_guard {
+	int coord_num;
+	struct coord *coords;
+	double min_dist;	//distance treshold, exceeding this distance will trigger announcement
+	double max_dist;	//out of range distance, farther than this distance no warning will be given
+	char*item_name;
+	char*map_name;
+	int warned;
+	double last_time;
+	int update_period;
+	struct color active_color;
+	struct graphics_gc *red;
+	struct graphics_gc *white;
+	int width;
+};
+
+static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v)
+{
+	int i=0;
+	struct vehicle* curr_vehicle = v;
+	struct attr position_attr, vehicle_attr, imperial_attr;
+	struct coord curr_coord;
+	struct route_guard *this = (struct route_guard *)opc->data;
+	double curr_time;
+	struct timeval tv;
+	struct point p;
+	struct point bbox[4];
+	char* dist_str;
+	struct graphics_gc *curr_color;
+	int imperial=0;
+      
+      //do not execute for each gps update
+	gettimeofday(&tv,NULL);
+	curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
+	if ( this->last_time+this->update_period > curr_time) {
+		this->last_time = curr_time;
+		return;
+	}
+	if(nav) {
+		navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
+		if (vehicle_attr.u.vehicle) {
+			curr_vehicle = vehicle_attr.u.vehicle;
+		}
+		if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL)) {
+			imperial=imperial_attr.u.num;
+		}
+	}
+
+	if(0==curr_vehicle)
+		return;
+
+	if(!vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL)) {
+		return;
+	}
+	transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
+
+	double min_dist = 1000000;
+	//calculate min dist
+	if(this->coord_num > 1) {
+		double scale = transform_scale(curr_coord.y);
+		for( i=1 ; i<this->coord_num ; ++i ) {
+			struct coord proj_coord;
+			double curr_dist = sqrt(transform_distance_line_sq(&this->coords[i-1], &this->coords[i], &curr_coord, &proj_coord));
+			curr_dist /= scale;
+			if (curr_dist<min_dist) {
+				min_dist = curr_dist;
+			}
+		}
+		if ( this->warned == 0 && this->min_dist < min_dist && min_dist < this->max_dist) {
+			navit_say(nav, _("Return to route!"));
+			this->warned = 1;
+		} else if( min_dist < this->min_dist ) {
+			this->warned = 0;
+		}
+	}
+	osd_std_draw(&opc->osd_item);
+
+	dist_str = format_distance(min_dist, "", imperial);
+
+	graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, dist_str, 0x10000, 0, bbox, 0);
+	p.x=(opc->osd_item.w-bbox[2].x)/2;
+	p.y = opc->osd_item.h-opc->osd_item.h/10;
+
+	curr_color = (this->min_dist < min_dist && min_dist < this->max_dist) ? this->red : this->white;
+	graphics_draw_text(opc->osd_item.gr, curr_color, NULL, opc->osd_item.font, dist_str, &p, 0x10000, 0);
+
+	g_free(dist_str);
+
+	graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+}
+
+static void
+osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav)
+{
+	struct color red_color={0xffff,0x0000,0x0000,0xffff};
+	struct route_guard *this = (struct route_guard *)opc->data;
+	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
+	//load coord data
+	if (this->map_name && this->item_name) {
+		struct mapset* ms;
+		struct map_rect *mr;
+		struct mapset_handle *msh;
+		struct map *map = NULL;
+		struct item *item = NULL;
+		if(!(ms=navit_get_mapset(nav))) {
+			return;
+		}
+		msh=mapset_open(ms);
+		while ((map=mapset_next(msh, 1))) {
+			struct attr attr;
+			if(map_get_attr(map, attr_name, &attr, NULL)) {
+				if( ! strcmp(this->map_name, attr.u.str) ) {
+    				mr=map_rect_new(map, NULL);
+					if (mr) {
+						while ((item=map_rect_get_item(mr))) {
+							struct attr item_attr;
+							if(item_attr_get(item, attr_name, &item_attr)) {
+								if (!strcmp(item_attr.u.str,this->item_name)) {
+									//item found, get coords
+									struct coord c;
+									this->coord_num=0;
+									while (item_coord_get(item,&c,1)) {
+										this->coords = g_renew(struct coord,this->coords,this->coord_num+1);
+										this->coords[this->coord_num] = c;
+										++this->coord_num;
+									}
+								}
+							}
+						}
+					} 
+				} else {
+					continue;
+				}
+			} else {
+				continue;
+			}
+		}
+		mapset_close(msh);
+	}
+
+	this->red = graphics_gc_new(opc->osd_item.gr);
+	graphics_gc_set_foreground(this->red, &red_color);
+	graphics_gc_set_linewidth(this->red, this->width);
+
+	this->white = graphics_gc_new(opc->osd_item.gr);
+	graphics_gc_set_foreground(this->white, &opc->osd_item.text_color);
+	graphics_gc_set_linewidth(this->white, this->width);
+
+	//setup draw callback
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_draw), attr_position_coord_geo, opc));
+}
+
+static void 
+osd_route_guard_destroy(struct osd_priv_common *opc)
+{
+	struct route_guard *this = (struct route_guard *)opc->data;
+	g_free(this->coords);
+}
+
+static struct osd_priv *
+osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
+		struct attr **attrs)
+{
+	struct route_guard *this = g_new0(struct route_guard, 1);
+	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
+	opc->data = (void*)this;
+
+	struct attr *attr;
+	opc->osd_item.p.x = 120;
+	opc->osd_item.p.y = 20;
+	opc->osd_item.w = 60;
+	opc->osd_item.h = 80;
+	opc->osd_item.navit = nav;
+	opc->osd_item.font_size = 200;
+	opc->osd_item.meth.draw = osd_draw_cast(osd_route_guard_draw);
+	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr)) set_std_osd_attr;
+	osd_set_std_attr(attrs, &opc->osd_item, 2);
+
+	attr = attr_search(attrs, NULL, attr_min_dist);
+	if (attr) {
+		this->min_dist = attr->u.num;
+        }
+	else
+		this->min_dist = 30;	//default tolerance is 30m
+
+	attr = attr_search(attrs, NULL, attr_max_dist);
+	if (attr) {
+		this->max_dist = attr->u.num;
+        }
+	else
+		this->max_dist = 500;	//default 
+
+	attr = attr_search(attrs, NULL, attr_item_name);
+	if (attr) {
+		this->item_name = g_strdup(attr->u.str);
+        }
+	else
+		this->item_name = NULL;	 
+
+	attr = attr_search(attrs, NULL, attr_map_name);
+	if (attr) {
+		this->map_name = g_strdup(attr->u.str);
+        }
+	else
+		this->map_name = NULL;	 
+
+	attr = attr_search(attrs, NULL, attr_update_period);
+	this->update_period=attr ? attr->u.num : 10;
+
+	attr = attr_search(attrs, NULL, attr_width);
+	this->width=attr ? attr->u.num : 2;
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_init), attr_graphics_ready, opc));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_destroy), attr_destroy, opc));
+
+	return (struct osd_priv *) opc;
+}
+
  
 static int odometers_saved = 0;
 static GList* odometer_list = NULL;
@@ -3341,4 +3561,5 @@ plugin_init(void)
 	plugin_register_osd_type("odometer", osd_odometer_new);
 	plugin_register_osd_type("auxmap", osd_auxmap_new);
 	plugin_register_osd_type("cmd_interface", osd_cmd_interface_new);
+	plugin_register_osd_type("route_guard", osd_route_guard_new);
 }
