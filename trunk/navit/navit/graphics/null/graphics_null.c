@@ -29,10 +29,14 @@
 #include "plugin.h"
 #include "event.h"
 #include "debug.h"
+#include "window.h"
+#include "callback.h"
 #if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
 #include <windows.h>
 # define sleep(i) Sleep(i * 1000)
 #endif
+
+static struct callback_list* callbacks;
 
 static int dummy;
 static struct graphics_priv {
@@ -173,10 +177,37 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
 
+static void
+resize_callback(int w, int h)
+{
+	callback_list_call_attr_2(callbacks, attr_resize,
+				  GINT_TO_POINTER(1), GINT_TO_POINTER(1));
+}
+
+static int
+graphics_null_fullscreen(struct window *w, int on)
+{
+	return 1;
+}
+
+static void
+graphics_null_disable_suspend(struct window *w)
+{
+}
+
 static void *
 get_data(struct graphics_priv *this, char const *type)
 {
-	return &dummy;
+	if (strcmp(type, "window") == 0) {
+		struct window *win;
+		win = g_new0(struct window, 1);
+		win->priv = this;
+		win->fullscreen = graphics_null_fullscreen;
+		win->disable_suspend = graphics_null_disable_suspend;
+		resize_callback(1,1);
+		return win;
+	}
+	return NULL;
 }
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
@@ -243,7 +274,8 @@ graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr 
 		if (!event_request_system("null", "graphics_null"))
                         return NULL;
 	}
-
+	callbacks = cbl;
+	resize_callback(1,1);
 	return &graphics_priv;
 }
 
