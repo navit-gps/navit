@@ -3520,7 +3520,7 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 				image_new_xs(this, "gui_active"),
 				gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, NULL);
-		gui_internal_widget_append(w, wbm);
+		gui_internal_widget_prepend(w, wbm);
 		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
 			wbm->c.x=c.x;
