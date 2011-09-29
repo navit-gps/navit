@@ -1345,6 +1345,14 @@ msgstr "Route"
 msgid "Former Destinations"
 msgstr "Vorherige Ziele"
 
+msgid "Former\n"
+"Destinations"
+msgstr "Vorherige\n"
+"Ziele"
+
+msgid "- No former destinations available -"
+msgstr "- Keine vorherigen Ziele -"
+
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 

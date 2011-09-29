@@ -20,6 +20,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #include <math.h>
 #include "config.h"
@@ -49,6 +50,7 @@ get_line(struct map_rect_priv *mr)
 		mr->lastlen=strlen(mr->line)+1;
 		if (strlen(mr->line) >= SIZE-1) 
 			printf("line too long\n");
+	        dbg(1,"read textfile line: %s\n", mr->line);
 	}
 }
 
@@ -205,7 +207,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 		mr->f=fopen(map->filename, "r");
 	}
 	if(!mr->f) {
-		printf("map_rect_new_textfile unable to open textfile %s\n",map->filename);
+		printf("map_rect_new_textfile unable to open textfile %s. Error: %s\n",map->filename, strerror(errno));
 	}
 	get_line(mr);
 	return mr;
