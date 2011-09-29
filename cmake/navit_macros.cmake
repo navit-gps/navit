@@ -72,6 +72,7 @@ macro(supportlib_add_library LIB_NAME )
    add_library(${LIB_NAME} ${ARGN})
    TARGET_LINK_LIBRARIES(${LIB_NAME} ${${LIB_NAME}_LIBS})
    SET_TARGET_PROPERTIES( ${LIB_NAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
+   SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=${LIB_NAME}")
 endmacro(supportlib_add_library)
 
 macro(message_error)
