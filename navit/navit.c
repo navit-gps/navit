@@ -1553,40 +1553,40 @@ navit_former_destinations_active(struct navit *this_)
 	return active;
 }
 
+struct map* read_former_destinations_from_file(){
+	struct attr type;
+	type.type=attr_type;
+	type.u.str="textfile";
+
+	struct attr data;
+	data.type=attr_data;
+	char *destination_file = bookmarks_get_destination_file(FALSE);
+	data.u.str=destination_file;
+
+	struct attr flags;
+	flags.type=attr_flags;
+	flags.u.num=1;
+
+	struct attr *attrs[4];
+	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
+
+	struct map* m=map_new(NULL, attrs);
+	g_free(destination_file);
+	return m;
+}
+
 static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
-	char *destination_file = bookmarks_get_destination_file(FALSE);
-	struct attr *attrs[4];
-	struct map_rect *mr;
 	struct item *item;
 	int i,valid=0,count=0;
 	struct coord c[16];
 	struct pcoord pc[16];
-	struct attr parent;
-	struct attr type;
-	struct attr data;
-	struct attr flags;
 
-	parent.type=attr_navit;
-	parent.u.navit=this_;
-
-	type.type=attr_type;
-	type.u.str="textfile";
-
-	data.type=attr_data;
-	data.u.str=destination_file;
-
-	flags.type=attr_flags;
-	flags.u.num=1;
-
-	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
-
-	this_->former_destination=map_new(&parent, attrs);
-	g_free(destination_file);
+	this_->former_destination=read_former_destinations_from_file();
 	if (!this_->route || !navit_former_destinations_active(this_))
 		return;	
-	mr=map_rect_new(this_->former_destination, NULL);
+	struct map_rect *mr=map_rect_new(this_->former_destination, NULL);
 	while ((item=map_rect_get_item(mr))) {
 		if ((item->type == type_former_destination || item->type == type_former_itinerary || item->type == type_former_itinerary_part) && (count=item_coord_get(item, c, 16))) 
 			valid=1;

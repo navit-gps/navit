@@ -1310,6 +1310,16 @@ msgstr "Ruta"
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
 
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Destinos\n"
+"anteriores"
+
+msgid "- No former destinations available -"
+msgstr "- No hay destinos anteriores -"
+
 msgid "Bookmarks"
 msgstr "Favoritos"
 

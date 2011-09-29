@@ -79,6 +79,7 @@ GList *navit_get_vehicleprofiles(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async);
 int navit_check_route(struct navit *this_);
+struct map* read_former_destinations_from_file();
 void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...);
 void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *fmt, ...);
 int navit_speech_estimate(struct navit *this_, char *str);

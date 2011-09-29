@@ -3061,6 +3061,18 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	}
 }
 
+// meaning of the bits in "flags":
+// 1: "Streets"
+// 2: "House numbers"
+// 4: "View in Browser", "View Attributes"
+// 8: "Set as dest."
+// 16: "Set as pos."
+// 32: "Add as bookm."
+// 64: "POIs"
+// 128: "View on Map"
+// 256: POIs around this point
+// 512: "Cut/Copy... bookmark"
+// TODO define constants for these values
 static void
 gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, char *name, int flags)
 {
@@ -3277,6 +3289,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	     5 Street
  		 6 House number
  		 7 Bookmark
+		 8 Former destination
 */
 
 static void
@@ -3310,6 +3323,9 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		break;
 	case 7:
 		flags=8|16|64|128|512;
+		break;
+	case 8:
+		flags=8|16|64|128;
 		break;
 	default:
 		return;
@@ -3473,6 +3489,56 @@ gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr *
 		str=in[0]->u.str;
 	}
 	gui_internal_cmd_bookmarks(this, NULL, str);
+}
+
+
+static void
+gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct widget *wb,*w,*wbm;
+	gui_internal_prune_menu_count(this, 1, 0);
+	wb=gui_internal_menu(this, _("Former Destinations"));
+	wb->background=this->background;
+
+	w=gui_internal_box_new(this,
+			gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*2;
+	gui_internal_widget_append(wb, w);
+
+	struct map* formerdests=read_former_destinations_from_file();
+	struct map_rect *mr_formerdests=map_rect_new(formerdests, NULL);
+	struct item* item;
+	struct attr attr;
+	char* label_full;
+	enum projection projection = map_projection(formerdests);
+	int formerdests_available=0;
+	while ((item=map_rect_get_item(mr_formerdests))) {
+	        formerdests_available=1;
+		if (!item_attr_get(item, attr_label, &attr)) continue;
+		label_full=attr.u.str;
+		wbm=gui_internal_button_new_with_callback(this, label_full,
+				image_new_xs(this, "gui_active"),
+				gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_position, NULL);
+		gui_internal_widget_append(w, wbm);
+		struct coord c;
+		if (item_coord_get(item, &c, 1)) {
+			wbm->c.x=c.x;
+			wbm->c.y=c.y;
+			wbm->c.pro=projection;
+			wbm->name=g_strdup_printf(_("Destination %s"),label_full);
+			wbm->text=g_strdup(label_full);
+			wbm->data=(void*)8; //Mark us as a former destination 
+			wbm->prefix=g_strdup(label_full);
+		}
+	}
+	if (!formerdests_available){
+        	wbm=gui_internal_text_new(this, _("- No former destinations available -"), 
+		    gravity_left_center|orientation_horizontal|flags_fill);
+		gui_internal_widget_append(w, wbm);
+	}
+	gui_internal_menu_render(this);
+	map_rect_destroy(mr_formerdests);
 }
 
 static void
@@ -7060,6 +7126,7 @@ static struct command_table commands[] = {
 	{"back",command_cast(gui_internal_cmd2_back)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
 	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
+	{"formerdests",command_cast(gui_internal_cmd_formerdests)},
 	{"get_data",command_cast(gui_internal_get_data)},
 	{"locale",command_cast(gui_internal_cmd2_locale)},
 	{"log",command_cast(gui_internal_cmd_log)},
@@ -7075,6 +7142,7 @@ static struct command_table commands[] = {
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
+
 };
 
 
