@@ -23,10 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -422,137 +425,78 @@ public class Navit extends Activity
 		super.onResume();
 		Log.e("Navit", "OnResume");
 		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-		String intent_data = null;
+		// DEBUG
+		// intent_data = "google.navigation:q=Wien Burggasse 27";
+		// intent_data = "google.navigation:q=48.25676,16.643";
+		// intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
+		// intent_data = "google.navigation:ll=48.25676,16.643";
 		if (startup_intent != null)
 		{
 			if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L)
 			{
 				Log.e("Navit", "**2**A " + startup_intent.getAction());
 				Log.e("Navit", "**2**D " + startup_intent.getDataString());
-				intent_data = startup_intent.getDataString();
+				String navi_scheme = startup_intent.getScheme();
+				if ( navi_scheme != null && navi_scheme.equals("google.navigation")) {
+					parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
+				}
 			}
-			else
-			{
+			else {
 				Log.e("Navit", "timestamp for navigate_to expired! not using data");
 			}
 		}
+	}
 
-		if ((intent_data != null) && (intent_data.substring(0, 18).equals("google.navigation:")))
-		{
-			// better use regex later, but for now to test this feature its ok :-)
-
-			// d: google.navigation:q=blabla-strasse # (this happens when you are offline, or from contacts)
-			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
-			// c: google.navigation:ll=48.25676,16.643
-			// b: google.navigation:q=48.25676,16.643
-
-			String lat;
-			String lon;
-			String q;
-
-			String temp1 = null;
-			String temp2 = null;
-			String temp3 = null;
-			boolean parsable = false;
-			boolean unparsable_info_box = true;
-
-			// DEBUG
-			// intent_data = "google.navigation:q=Wien Burggasse 27";
-			// intent_data = "google.navigation:q=48.25676,16.643";
-			// intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
-			// intent_data = "google.navigation:ll=48.25676,16.643";
-
-			Log.e("Navit", "found DEBUG 1: " + intent_data.substring(0, 20));
-			Log.e("Navit", "found DEBUG 2: " + intent_data.substring(20, 22));
-			Log.e("Navit", "found DEBUG 3: " + intent_data.substring(20, 21));
-
-			// if d: then start target search
-			if ((intent_data.substring(0, 20).equals("google.navigation:q="))
-					&& ((!intent_data.substring(20, 21).equals('+'))
-							&& (!intent_data.substring(20, 21).equals('-')) && (!intent_data.substring(20,
-							22).matches("[0-9][0-9]"))))
-			{
-				Log.e("Navit", "target found (d): " + intent_data.split("q=", -1)[1]);
-				start_targetsearch_from_intent(intent_data.split("q=", -1)[1]);
-				// dont use this here, already starting search, so set to "false"
-				parsable = false;
-				unparsable_info_box = false;
+	private void parseNavigationURI(String schemeSpecificPart) {
+		String naviData[]= schemeSpecificPart.split("&");
+		Pattern p = Pattern.compile("(.*)=(.*)");
+		Map<String,String> params = new HashMap<String,String>();
+		for (int count=0; count < naviData.length; count++) {
+			Matcher m = p.matcher(naviData[count]);
+			
+			if (m.matches()) {
+				params.put(m.group(1), m.group(2));
 			}
-			// if b: then remodel the input string to look like a:
-			else if (intent_data.substring(0, 20).equals("google.navigation:q="))
-			{
-				intent_data = "ll=" + intent_data.split("q=", -1)[1] + "&q=Target";
-				Log.e("Navit", "target found (b): " + intent_data);
-				parsable = true;
-			}
-			// if c: then remodel the input string to look like a:
-			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
-					&& (intent_data.split("&q=").length < 2))
-			{
-				intent_data = intent_data + "&q=Target";
-				Log.e("Navit", "target found (c): " + intent_data);
-				parsable = true;
-			}
-			// already looks like a: just set flag
-			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
-					&& (intent_data.split("&q=").length > 1))
-			{
-				// dummy, just set the flag
-				Log.e("Navit", "target found (a): " + intent_data);
-				Log.e("Navit", "target found (a): " + intent_data.split("&q=").length);
-				parsable = true;
-			}
+		}
+		
+		// d: google.navigation:q=blabla-strasse # (this happens when you are offline, or from contacts)
+		// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
+		// c: google.navigation:ll=48.25676,16.643
+		// b: google.navigation:q=48.25676,16.643
+		
+		Float lat;
+		Float lon;
+		Bundle b = new Bundle();
+		
+		String geoString = params.get("ll");
+		if (geoString != null) {
+			String address = params.get("q");
+			if (address != null) b.putString("q", address);
+		}
+		else {
+			geoString = params.get("q");
+		}
+		
+		if ( geoString != null) {
+			if (geoString.matches("^[+-]{0,1}\\d+(|\\.\\d*),[+-]{0,1}\\d+(|\\.\\d*)$")) {
+				String geo[] = geoString.split(",");
+				if (geo.length == 2) {
+					try {
+						lat = Float.valueOf(geo[0]);
+						lon = Float.valueOf(geo[1]);
+						b.putFloat("lat", lat);
+						b.putFloat("lon", lon);
+						Message msg = Message.obtain(N_NavitGraphics.callback_handler
+								, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 
-
-			if (parsable)
-			{
-				// now string should be in form --> a:
-				// now split the parts off
-				temp1 = intent_data.split("&q=", -1)[0];
-				try
-				{
-					temp3 = temp1.split("ll=", -1)[1];
-					temp2 = intent_data.split("&q=", -1)[1];
+						msg.setData(b);
+						msg.sendToTarget();
+						Log.e("Navit", "target found (b): " + geoString);
+					} catch (NumberFormatException e) { } // nothing to do here
 				}
-				catch (Exception e)
-				{
-					// java.lang.ArrayIndexOutOfBoundsException most likely
-					// so let's assume we dont have '&q=xxxx'
-					temp3 = temp1;
-				}
-
-				if (temp2 == null)
-				{
-					// use some default name
-					temp2 = "Target";
-				}
-
-				lat = temp3.split(",", -1)[0];
-				lon = temp3.split(",", -1)[1];
-				q = temp2;
-
-				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
-
-				Bundle b = new Bundle();
-				b.putString("lat", lat);
-				b.putString("lon", lon);
-				b.putString("q", q);
-				msg.setData(b);
-				msg.sendToTarget();
 			}
-			else
-			{
-				if (unparsable_info_box && !searchBoxShown)
-				{
-
-					searchBoxShown = true;
-					String searchString = intent_data.split("q=")[1];
-					searchString = searchString.split("&")[0];
-					searchString = URLDecoder.decode(searchString); // decode the URL: e.g. %20 -> space
-					Log.e("Navit", "Search String :" + searchString);
-					executeSearch(searchString);
-				}
+			else {
+				start_targetsearch_from_intent(geoString);
 			}
 		}
 	}
