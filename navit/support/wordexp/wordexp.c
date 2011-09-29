@@ -87,16 +87,13 @@ wordexp(const char *words, wordexp_t *we, int flags)
 	int     i;
 	int     error = 0;
 	char   *words_expanded;
-#ifdef HAVE_API_WIN32_BASE
 	glob_t  pglob;
-#endif
 
 	assert(we != NULL);
 	assert(words != NULL);
  
 	/* expansion of ´$NAME´ or ´${NAME}´ */
 	words_expanded=expand_variables(words);
-#ifdef HAVE_API_WIN32_BASE
 	/* expansion of ´*´, ´?´ */
 	error=glob(words_expanded, 0, NULL, &pglob);
 	if (!error)
@@ -114,13 +111,10 @@ wordexp(const char *words, wordexp_t *we, int flags)
 	}
 	else
 	{
-#endif
 		we->we_wordc = 1;		
 		we->we_wordv = malloc(sizeof(char*));	
 		we->we_wordv[0] = words_expanded;
-#ifdef HAVE_API_WIN32_BASE
 	}
-#endif
 
 
 	return error;	

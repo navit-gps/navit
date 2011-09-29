@@ -2,7 +2,6 @@
 #define _GLOB_H_
 
 #ifndef HAVE_GLOB
-#if defined __MINGW32__ || defined _MSC_VER
 
 typedef struct {
   size_t   gl_pathc;  /* count of file names */
@@ -13,7 +12,8 @@ typedef struct {
 int  glob(const char *pattern, int flags, int (*errfunc)(const char *epath, int eerrno), glob_t *pglob);
 void globfree(glob_t *pglob);
 
-#endif /* defined __MINGW32__ || defined _MSC_VER */
+#define GLOB_NOSPACE 1
+
 #endif
 
 #endif /* _GLOB_H_ */
