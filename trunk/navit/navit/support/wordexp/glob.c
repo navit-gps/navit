@@ -93,6 +93,94 @@ int glob(const char *pattern, int flags,
 	FindClose(hFiles);
 	return 0;
 }
+#else
+
+#include <dirent.h>
+#include <string.h>
+#include <fnmatch.h>
+#include "debug.h"
+#include "glob.h"
+
+static int
+glob_requires_match(const char *pattern, int flags)
+{
+	for (;;) {
+		switch (*pattern++) {
+		case '\0':
+			return 0;
+		case '?':
+		case '*':
+		case '[':
+			return 1;
+		case '\\':
+			if (!*pattern++)
+				return 0;
+		}
+	}
+	return 0;
+}
+
+static int
+glob_recursive(const char *path1, const char *path2, const char *pattern, int flags, int (*errfunc) (const char *epath, int eerrno), glob_t *pglob)
+{
+	const char *next;
+	char *fname,*path=malloc(strlen(path1)+strlen(path2)+2);
+	int flen;
+	strcpy(path, path1);
+	if (path1[0] && path2[0] && (path1[1] != '\0' || path1[0] != '/'))
+		strcat(path, "/");
+	strcat(path, path2);
+	if (!strlen(pattern)) {
+		dbg(0,"found %s\n",path);
+		pglob->gl_pathv=realloc(pglob->gl_pathv, (pglob->gl_pathc+1)*sizeof(char *));
+		if (!pglob->gl_pathv) {
+			pglob->gl_pathc=0;
+			return GLOB_NOSPACE;
+		}
+		pglob->gl_pathv[pglob->gl_pathc++]=path;
+		return 0;
+	}
+	dbg(0,"searching for %s in %s\n",pattern,path);
+	flen=strcspn(pattern,"/");
+	next=pattern+flen;
+	if (*next == '/')
+		next++;
+	fname=malloc(flen+1);
+	strncpy(fname, pattern, flen);
+	fname[flen]='\0';
+	if (glob_requires_match(fname, 0)) {
+		DIR *dh;
+		struct dirent *de;
+		dbg(0,"in dir %s search for %s\n",path,fname);
+		dh=opendir(path);
+		if (dh) {
+			while ((de=readdir(dh))) {
+				if (fnmatch(fname,de->d_name,0) == 0) {
+					glob_recursive(path, de->d_name, next, flags, errfunc, pglob);
+				}
+			}
+			closedir(dh);
+		}	
+	} else {
+		glob_recursive(path, fname, next, flags, errfunc, pglob);
+	}
+	free(fname);
+	free(path);
+	return 0;
+}
+
+int
+glob(const char *pattern, int flags, int (*errfunc) (const char *epath, int eerrno), glob_t *pglob)
+{
+	pglob->gl_pathc=0;
+	pglob->gl_pathv=NULL;
+	if (pattern[0] == '/')
+		return glob_recursive("/", "", pattern+1, flags, errfunc, pglob);
+	else
+		return glob_recursive("", "", pattern, flags, errfunc, pglob);
+}
+
+#endif     /* _WIN32 || _WIN32_WCE */
 
 void globfree(glob_t *pglob)
 {
@@ -106,5 +194,4 @@ void globfree(glob_t *pglob)
 	pglob->gl_pathc = 0;
 }
 
-#endif     /* _WIN32 || _WIN32_WCE */
 #endif     /* HAVE_GLOB */
