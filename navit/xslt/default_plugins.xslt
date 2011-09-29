@@ -8,6 +8,14 @@
 		<plugin path="$NAVIT_PREFIX/lib/libmap_binfile.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
 		<plugin path="$NAVIT_PREFIX/lib/libosd_core.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+		<plugin path="/data/data/org.navitproject.navitfp1/lib/libauto*.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+		<plugin path="/data/data/org.navitproject.navitfp2/lib/libauto*.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+		<plugin path="/data/data/org.navitproject.navitfp3/lib/libauto*.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+		<plugin path="/data/data/org.navitproject.navitfp4/lib/libauto*.so" ondemand="no"/>
         </xsl:template>
         <xsl:template match="/config/plugins/plugin"/>
 </xsl:transform>
