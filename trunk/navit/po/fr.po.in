@@ -1346,6 +1346,17 @@ msgstr "Itinéraire"
 msgid "Former Destinations"
 msgstr "Destinations précédentes"
 
+msgid ""
+"Former\n"
+"Destinations"
+
+msgstr ""
+"Destinations\n"
+"précédentes"
+
+msgid "- No former destinations available -"
+msgstr "- Pas de destinations précedentes -"
+
 msgid "Bookmarks"
 msgstr "Favoris"
 
