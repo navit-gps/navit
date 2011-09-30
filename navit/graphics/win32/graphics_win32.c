@@ -26,6 +26,19 @@
 
 //#define FAST_TRANSPARENCY 1
 
+#if defined(_WIN32_WCE) && _WIN32_WCE < 0x500
+
+typedef struct {
+		int BlendOp;
+		int BlendFlags;
+		int SourceConstantAlpha;
+		int AlphaFormat;
+} BLENDFUNCTION;
+
+#define AC_SRC_OVER 1
+#define AC_SRC_ALPHA 2
+#endif
+
 typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
                                        int nXOriginDest,
                                        int nYOriginDest,
