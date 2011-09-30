@@ -16,7 +16,7 @@ set(ANDROID_NDK "${COMPILER_PATH}/../../../../.." CACHE STRING "PATH to Andriod 
 set(NDK_ARCH_DIR "${ANDROID_NDK}/platforms/android-${ANDROID_NDK_API_VERSION}/arch-arm")
 set(CMAKE_FIND_ROOT_PATH ${NDK_ARCH_DIR})
 
-set(CMAKE_REQUIRED_FLAGS "-nostdlib -lc -ldl -lgcc -L${NDK_ARCH_DIR}/usr/lib")
+set(CMAKE_REQUIRED_FLAGS "-nostdlib -lc -ldl -lgcc -L${NDK_ARCH_DIR}/usr/lib ${EXTRA_COMPILER_FLAGS}")
 set(CMAKE_REQUIRED_INCLUDES "${NDK_ARCH_DIR}/usr/include")
 
 set(NAVIT_COMPILE_FLAGS "-I${NDK_ARCH_DIR}/usr/include -g -D_GNU_SOURCE -DANDROID -fno-short-enums ${CMAKE_REQUIRED_FLAGS}")
