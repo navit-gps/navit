@@ -14,6 +14,7 @@ extern "C" {
 
 extern int errno;
 int* _errno(void);
+char *strerror(int num);
 
 #ifdef	__cplusplus
 }

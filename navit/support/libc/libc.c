@@ -166,6 +166,12 @@ alarm(unsigned int seconds)
 	return 0;
 }
 
+char *
+strerror(int num)
+{
+	return "unknown";
+}
+
 #ifdef _MSC_VER
 
 size_t strftime (char *s, size_t maxsize, const char *format, const struct tm *tp)
