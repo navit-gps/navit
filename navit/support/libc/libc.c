@@ -184,7 +184,7 @@ __int64 _lseeki64(int FileHandle, __int64 Offset, int Origin)
     return 0;
 }
 
-intptr_t _get_osfhandle(int FileHandle)
+int * _get_osfhandle(int FileHandle)
 {
     return 0;
 }
