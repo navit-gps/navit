@@ -115,7 +115,6 @@ public class NavitGraphics
 //			menu.add(1, 2, NONE, Navit.get_text("Add to contacts")).setOnMenuItemClickListener(this);
 		}
 
-		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			switch(item.getItemId()) {
 			case 1:
@@ -639,7 +638,6 @@ public class NavitGraphics
 			//Log.e("NavitGraphics", "FocusChange " + gainFocus);
 		}
 
-		@Override
 		public void run() {
 			if (in_map && touch_mode == PRESSED)
 			{

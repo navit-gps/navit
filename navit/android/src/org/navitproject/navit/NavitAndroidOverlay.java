@@ -233,7 +233,6 @@ public class NavitAndroidOverlay extends ImageView implements Runnable
 		}
 	}
 
-	@Override
 	public void run() {
 		hide_bubble();
 	}
