@@ -53,6 +53,9 @@ g_private_new_navit ()
 #if HAVE_API_WIN32_BASE
 	int dwTlsIndex;
 
+#ifndef TLS_OUT_OF_INDEXES
+#define TLS_OUT_OF_INDEXES (-1)
+#endif
 	if ((dwTlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
 	printf("TlsAlloc failed");
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
