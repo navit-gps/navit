@@ -77,3 +77,5 @@
 #cmakedefine HAVE_GETDELIM 1
 
 #cmakedefine HAVE_GETLINE 1
+
+#cmakedefine HAVE_ENDIAN_H 1

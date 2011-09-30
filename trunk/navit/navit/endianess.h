@@ -49,6 +49,9 @@
 #if HAVE_BYTESWAP_H
   /* machine dependent versions of byte swapping functions.  GNU extension.*/
   #include <byteswap.h>
+#if HAVE_ENDIAN_H
+  #include <endian.h>
+#endif
 #elif defined(USE_SYS_ENDIAN_H)
   #include <sys/endian.h>
 #if defined(_BYTE_ORDER) && !defined(__BYTE_ORDER)
