@@ -317,9 +317,10 @@ static enum operator_t parse_bool_operator(struct ctx*the_ctx)
 {
   char* input = the_ctx->expr;
   char *sym;
+  enum operator_t op;
   sym = get_op(input,"&&","||","^",NULL);
  
-  enum operator_t op = get_operator_by_symbol(sym);
+  op = get_operator_by_symbol(sym);
   switch(op) {
     case OP_LOGICAL_AND:
     case OP_LOGICAL_OR:
@@ -336,9 +337,10 @@ static enum operator_t parse_cond_operator(struct ctx*the_ctx)
 {
   char* input = the_ctx->expr;
   char *sym;
+  enum operator_t op;
   sym = get_op(input, "==", "<", ">", "<=", ">=", "!=", NULL);
  
-  enum operator_t op = get_operator_by_symbol(sym);
+  op = get_operator_by_symbol(sym);
   switch(op) {
     case OP_EQ:
     case OP_GT:
@@ -358,9 +360,10 @@ static enum operator_t parse_numeric_multiplicative_operator(struct ctx*the_ctx)
 {
   char* input = the_ctx->expr;
   char *sym;
+  enum operator_t op;
   sym = get_op(input, "*", "/", "%", NULL);
  
-  enum operator_t op = get_operator_by_symbol(sym);
+  op = get_operator_by_symbol(sym);
   switch(op) {
     case OP_MUL:
     case OP_DIV:
@@ -377,9 +380,10 @@ static enum operator_t parse_numeric_additive_operator(struct ctx*the_ctx)
 {
   char* input = the_ctx->expr;
   char *sym;
+  enum operator_t op;
   sym = get_op(input, "+", "-", NULL);
  
-  enum operator_t op = get_operator_by_symbol(sym);
+  op = get_operator_by_symbol(sym);
   switch(op) {
     case OP_ADD:
     case OP_SUB:
@@ -669,9 +673,10 @@ static int parse_cond_expr(struct ctx*the_ctx)
   //expect cond operand
   if(parse_string_operand(&sub_ctx)) {
     char* op1 = sub_ctx.res.res_str;
+    enum operator_t op;
+
     //expect cond operand
     sub_ctx.expr = next_sym_ptr;
-    enum operator_t op;
     if( (op=parse_cond_operator(&sub_ctx)) ) {
       next_sym_ptr += whitespace_num(next_sym_ptr) + strlen(get_opstr_by_op(op));
       sub_ctx.expr = next_sym_ptr;
