@@ -1,1 +1,1 @@
-supportlib_add_library(support_libc libc.c libc_init.c unlink.c rename.c time.c open.c abort.c mkdir.c lseek.c stat.c close.c chsize.c read.c write.c strcasecmp localtime.c gmtime.c mktime.c timeutil.c calloc.c bsearch.c)
+supportlib_add_library(support_libc libc.c libc_init.c unlink.c rename.c time.c open.c abort.c mkdir.c lseek.c stat.c close.c chsize.c read.c write.c strcasecmp.c localtime.c gmtime.c mktime.c timeutil.c calloc.c bsearch.c)
