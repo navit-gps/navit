@@ -293,6 +293,7 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
 	char* dist_str;
 	struct graphics_gc *curr_color;
 	int imperial=0;
+	double min_dist;
       
       //do not execute for each gps update
 	gettimeofday(&tv,NULL);
@@ -319,7 +320,7 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
 	}
 	transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
 
-	double min_dist = 1000000;
+	min_dist = 1000000;
 	//calculate min dist
 	if(this->coord_num > 1) {
 		double scale = transform_scale(curr_coord.y);
@@ -428,9 +429,9 @@ osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct route_guard *this = g_new0(struct route_guard, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
+
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 120;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -885,10 +886,10 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 
 	struct odometer *this = g_new0(struct odometer, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 	struct color orange_color={0xffff,0xa5a5,0x0000,0xffff};
+
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 120;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -1108,10 +1109,9 @@ osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct cmd_interface *this = g_new0(struct cmd_interface, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 120;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -1269,11 +1269,10 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct stopwatch *this = g_new0(struct stopwatch, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 	struct color orange_color={0xffff,0xa5a5,0x0000,0xffff};
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 120;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -1383,9 +1382,9 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct compass *this = g_new0(struct compass, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
+
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 20;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -1511,10 +1510,9 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct osd_button *this = g_new0(struct osd_button, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
 
@@ -1611,10 +1609,9 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct osd_image *this = g_new0(struct osd_image, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_image_draw);
 	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
@@ -1748,10 +1745,9 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct nav_next_turn *this = g_new0(struct nav_next_turn, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 20;
 	opc->osd_item.p.y = -80;
 	opc->osd_item.w = 70;
@@ -1882,10 +1878,10 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 {
 	struct nav_toggle_announcer *this = g_new0(struct nav_toggle_announcer, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
 	struct attr *attr;
 	char *command = "announcer_toggle()";
 
+	opc->data = (void*)this;
 	opc->osd_item.w = 48;
 	opc->osd_item.h = 48;
 	opc->osd_item.p.x = -64;
@@ -2176,9 +2172,9 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
 
   struct osd_speed_cam *this = g_new0(struct osd_speed_cam, 1);
   struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-  opc->data = (void*)this;
-
   struct attr *attr;
+
+  opc->data = (void*)this;
   opc->osd_item.p.x = 120;
   opc->osd_item.p.y = 20;
   opc->osd_item.w = 60;
@@ -2403,9 +2399,9 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 {
 	struct osd_speed_warner *this=g_new0(struct osd_speed_warner, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
+
+	opc->data = (void*)this;
 	opc->osd_item.p.x=-80;
 	opc->osd_item.p.y=20;
 	opc->osd_item.w=60;
@@ -3038,10 +3034,9 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct osd_text *this = g_new0(struct osd_text, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = -80;
 	opc->osd_item.p.y = 20;
 	opc->osd_item.w = 60;
@@ -3149,10 +3144,9 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct gps_status *this = g_new0(struct gps_status, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 20;
 	opc->osd_item.p.y = -80;
 	opc->osd_item.w = 60;
@@ -3261,10 +3255,9 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct volume *this = g_new0(struct volume, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
 
+	opc->data = (void*)this;
 	opc->osd_item.p.x = 20;
 	opc->osd_item.p.y = -80;
 	opc->osd_item.w = 60;
@@ -3425,9 +3418,9 @@ osd_scale_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct osd_scale *this = g_new0(struct osd_scale, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-	opc->data = (void*)this;
-
 	struct attr *attr;
+
+	opc->data = (void*)this;
 
 	opc->osd_item.navit = nav;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_scale_draw);

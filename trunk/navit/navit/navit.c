@@ -1581,11 +1581,12 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	int i,valid=0,count=0;
 	struct coord c[16];
 	struct pcoord pc[16];
+	struct map_rect *mr;
 
 	this_->former_destination=read_former_destinations_from_file();
 	if (!this_->route || !navit_former_destinations_active(this_))
 		return;	
-	struct map_rect *mr=map_rect_new(this_->former_destination, NULL);
+	mr=map_rect_new(this_->former_destination, NULL);
 	while ((item=map_rect_get_item(mr))) {
 		if ((item->type == type_former_destination || item->type == type_former_itinerary || item->type == type_former_itinerary_part) && (count=item_coord_get(item, c, 16))) 
 			valid=1;

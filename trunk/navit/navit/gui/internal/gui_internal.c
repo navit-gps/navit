@@ -3496,6 +3496,14 @@ static void
 gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *wb,*w,*wbm;
+	struct map *formerdests;
+	struct map_rect *mr_formerdests;
+	struct item *item;
+	struct attr attr;
+	char *label_full;
+	enum projection projection;
+	int formerdests_available=0;
+
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Former Destinations"));
 	wb->background=this->background;
@@ -3505,14 +3513,11 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 	w->spy=this->spacing*2;
 	gui_internal_widget_append(wb, w);
 
-	struct map* formerdests=read_former_destinations_from_file();
-	struct map_rect *mr_formerdests=map_rect_new(formerdests, NULL);
-	struct item* item;
-	struct attr attr;
-	char* label_full;
-	enum projection projection = map_projection(formerdests);
-	int formerdests_available=0;
+	formerdests=read_former_destinations_from_file();
+	mr_formerdests=map_rect_new(formerdests, NULL);
+	projection = map_projection(formerdests);
 	while ((item=map_rect_get_item(mr_formerdests))) {
+		struct coord c;
 	        formerdests_available=1;
 		if (!item_attr_get(item, attr_label, &attr)) continue;
 		label_full=attr.u.str;
@@ -3521,7 +3526,6 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 				gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, NULL);
 		gui_internal_widget_prepend(w, wbm);
-		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
 			wbm->c.x=c.x;
 			wbm->c.y=c.y;
