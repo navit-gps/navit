@@ -614,6 +614,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	if(data) {
 	  struct file_wordexp *wexp;
 	  char **wexp_data;
+	  FILE *fp;
 	  wexp=file_wordexp_new(data->u.str);
 	  wexp_data=file_wordexp_get_array(wexp);
 	  dbg(1,"map_new_csv %s\n", data->u.str);	
@@ -622,7 +623,6 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 
 	  //load csv file into quadtree structure
 	  //if column number is wrong skip
-	  FILE*fp;
 	  if((fp=fopen(m->filename,"rt"))) {
 		const int max_line_len = 256;
 		char *line=g_alloca(sizeof(char)*max_line_len);

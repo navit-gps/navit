@@ -258,6 +258,9 @@ static void
 eval_value(struct context *ctx, struct result *res) {
 	const char *op;
 	int len,dots=0;
+	struct obj_filter_t out;
+	int parsed_chars;
+
 	op=ctx->expr;
 	res->varlen=0;
 	res->var=NULL;
@@ -268,8 +271,7 @@ eval_value(struct context *ctx, struct result *res) {
 		op++;
 	}
 
-	struct obj_filter_t out;
-	int parsed_chars = parse_obj_filter(op, &out);
+	parsed_chars = parse_obj_filter(op, &out);
 	if (parsed_chars) {
 		struct attr* res_attr = filter_object(ctx->attr, out.iterator_type, out.filter_expr, out.idx);
 		if (res_attr) {

@@ -261,8 +261,8 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 static struct graphics_priv *
 graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
-	*meth=graphics_methods;
 	struct attr *event_loop_system = NULL;
+	*meth=graphics_methods;
 
         event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
 
