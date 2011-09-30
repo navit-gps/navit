@@ -30,8 +30,8 @@ if (ANDROID)
    add_custom_target( android_resources
       DEPENDS build.xml ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi
-      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi/
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
+      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}/
       COMMAND ${CMAKE_COMMAND}
                      -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/navit*.xml" 
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
@@ -43,7 +43,7 @@ if (ANDROID)
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
       COMMAND ${CMAKE_COMMAND} 
                      -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/*.so"
-                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/armeabi
+		     -D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
       COMMAND ${CMAKE_COMMAND} 
                      -D GLOB_EXP="${PROJECT_BINARY_DIR}/po/*.mo" 
