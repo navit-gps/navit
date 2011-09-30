@@ -1554,23 +1554,22 @@ navit_former_destinations_active(struct navit *this_)
 }
 
 struct map* read_former_destinations_from_file(){
-	struct attr type;
+	struct attr type, data, flags, *attrs[4];
+	char *destination_file = bookmarks_get_destination_file(FALSE);
+	struct map *m;
+
 	type.type=attr_type;
 	type.u.str="textfile";
 
-	struct attr data;
 	data.type=attr_data;
-	char *destination_file = bookmarks_get_destination_file(FALSE);
 	data.u.str=destination_file;
 
-	struct attr flags;
 	flags.type=attr_flags;
 	flags.u.num=1;
 
-	struct attr *attrs[4];
 	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
 
-	struct map* m=map_new(NULL, attrs);
+	m=map_new(NULL, attrs);
 	g_free(destination_file);
 	return m;
 }
