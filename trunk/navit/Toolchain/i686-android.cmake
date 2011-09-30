@@ -3,17 +3,17 @@ set(CMAKE_SYSTEM_NAME GNU)
 set(ANDROID TRUE)
 set(ANDROID_API_VERSION 8 CACHE STRING "Andriod API Version")
 set(ANDROID_NDK_API_VERSION ${ANDROID_API_VERSION} CACHE STRING "Andriod NDK API Version")
-set(ANDROID_ARCH "armeabi" CACHE STRING "Android architecture")
+set(ANDROID_ARCH "x86" CACHE STRING "Android architecture")
 
-find_program(CMAKE_C_COMPILER NAMES arm-eabi-gcc arm-eabi-gcc.exe arm-linux-androideabi-gcc arm-linux-androideabi-gcc.exe)
-find_program(CMAKE_CXX_COMPILER NAMES arm-eabi-gcc arm-eabi-g++.exe arm-linux-androideabi-g++ arm-linux-androideabi-g++.exe)
-set(PKG_CONFIG_EXECUTABLE "arm-eabi-pkg-config")
+find_program(CMAKE_C_COMPILER NAMES i686-android-linux-gcc i686-android-linux-gcc.exe)
+find_program(CMAKE_CXX_COMPILER NAMES i686-android-linux-g++ i686-android-linux-g++.exe)
+set(PKG_CONFIG_EXECUTABLE "i686-android-pkg-config")
 
 get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} PATH)
 
 set(ANDROID_NDK "${COMPILER_PATH}/../../../../.." CACHE STRING "PATH to Andriod NDK")
 
-set(NDK_ARCH_DIR "${ANDROID_NDK}/platforms/android-${ANDROID_NDK_API_VERSION}/arch-arm")
+set(NDK_ARCH_DIR "${ANDROID_NDK}/platforms/android-${ANDROID_NDK_API_VERSION}/arch-x86")
 set(CMAKE_FIND_ROOT_PATH ${NDK_ARCH_DIR})
 
 set(CMAKE_REQUIRED_FLAGS "-nostdlib -lc -ldl -lgcc -L${NDK_ARCH_DIR}/usr/lib")
