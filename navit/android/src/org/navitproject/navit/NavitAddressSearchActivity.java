@@ -154,7 +154,6 @@ public class NavitAddressSearchActivity extends Activity
 					android.R.layout.simple_list_item_1, strAddresses);
 			lastAddresses.setAdapter(addressList);
 			lastAddresses.setOnItemClickListener(new OnItemClickListener() {
-				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 					Intent resultIntent = new Intent();
 					resultIntent.putExtra("addr_selected", true);
@@ -204,7 +203,6 @@ public class NavitAddressSearchActivity extends Activity
 		final String [][]all_countries = NavitGraphics.GetAllCountries();
 
 		Comparator<String[]> country_comperator = new Comparator<String[]>(){
-			@Override
 			public int compare(String[] object1, String[] object2) {
 				return object1[1].compareTo(object2[1]);
 			}};
