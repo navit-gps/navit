@@ -186,15 +186,12 @@
 #endif
 
 #ifdef __cplusplus
-#abort1
 # define __CRT_INLINE inline
 #else
 # if __GNUC_STDC_INLINE__
-#abort2
 #  define __CRT_INLINE extern inline __attribute__((__gnu_inline__))
 # else
 #  ifdef __COREDLL__
-#abort3
    /* There isn't any out-of-line version of most of 
       these functions in coredll.dll, so we need this for -O0,
       or for -fno-inline.  This is still problematic if the user
