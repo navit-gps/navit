@@ -26,7 +26,7 @@
 
 //#define FAST_TRANSPARENCY 1
 
-#if defined(_WIN32_WCE) && _WIN32_WCE < 0x500
+#if defined(_WIN32_WCE) && _WIN32_WCE < 0x500 && !defined(__MINGW32CE__)
 
 typedef struct {
 		int BlendOp;
