@@ -1930,6 +1930,7 @@ struct osd_speed_cam_entry {
 
 struct osd_speed_cam {
   int width;
+  int flags;
   struct graphics_gc *white,*orange;
   struct graphics_gc *red;
   struct color idle_color; 
@@ -2066,7 +2067,7 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
   }
   mapset_close(msh);
 
-  if(bFound) {
+  if(bFound && (idx==-1 || this_->flags & (1<<(idx-1))) ) {
     dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
     ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
     if(0==ret_attr) {
@@ -2203,6 +2204,14 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
   }
   else {
     this->announce_on = 1;    //announce by default
+  }
+
+  attr = attr_search(attrs, NULL, attr_flags);
+  if (attr) {
+    this->flags = attr->u.num;
+  }
+  else {
+    this->flags = -1;    //every cam type is on by default
   }
 
   navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_init), attr_graphics_ready, opc));
@@ -3542,13 +3551,13 @@ plugin_init(void)
 	plugin_register_osd_type("compass", osd_compass_new);
 	plugin_register_osd_type("navigation_next_turn", osd_nav_next_turn_new);
 	plugin_register_osd_type("button", osd_button_new);
-    	plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
-    	plugin_register_osd_type("speed_warner", osd_speed_warner_new);
-    	plugin_register_osd_type("speed_cam", osd_speed_cam_new);
-    	plugin_register_osd_type("text", osd_text_new);
-    	plugin_register_osd_type("gps_status", osd_gps_status_new);
-    	plugin_register_osd_type("volume", osd_volume_new);
-    	plugin_register_osd_type("scale", osd_scale_new);
+	plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
+	plugin_register_osd_type("speed_warner", osd_speed_warner_new);
+	plugin_register_osd_type("speed_cam", osd_speed_cam_new);
+	plugin_register_osd_type("text", osd_text_new);
+	plugin_register_osd_type("gps_status", osd_gps_status_new);
+	plugin_register_osd_type("volume", osd_volume_new);
+	plugin_register_osd_type("scale", osd_scale_new);
 	plugin_register_osd_type("image", osd_image_new);
 	plugin_register_osd_type("stopwatch", osd_stopwatch_new);
 	plugin_register_osd_type("odometer", osd_odometer_new);
