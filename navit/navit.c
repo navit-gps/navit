@@ -1643,8 +1643,13 @@ navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *
 void
 navit_say(struct navit *this_, char *text)
 {
+	struct attr attr;
 	if(this_->speech) {
-		speech_say(this_->speech, text);
+		if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
+			attr.u.num = 1;
+		dbg(1, "this_.speech->active %i\n", attr.u.num);
+		if(attr.u.num)
+			speech_say(this_->speech, text);
 	}
 }
 
