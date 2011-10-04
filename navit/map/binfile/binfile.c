@@ -198,6 +198,7 @@ binfile_read_eoc(struct file *fi)
 		eoc_to_cpu(eoc);
 		dbg(1,"sig 0x%x\n", eoc->zipesig);
 		if (eoc->zipesig != zip_eoc_sig) {
+			dbg(0,"eoc signature check failed: 0x%x vs 0x%x\n",eoc->zipesig,zip_eoc_sig);
 			file_data_free(fi,(unsigned char *)eoc);
 			eoc=NULL;
 		}
@@ -2251,8 +2252,10 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 {
 	struct zip_cd *first_cd;
 	int i;
-	if (!(m->eoc=binfile_read_eoc(m->fi)))
+	if (!(m->eoc=binfile_read_eoc(m->fi))) {
+		dbg(0,"unable to read eoc\n");
 		return 0;
+	}
 	dbg_assert(m->eoc->zipedsk == m->eoc->zipecen);
 	if (m->eoc->zipedsk && strlen(filename) > 3) {
 		char *tmpfilename=g_strdup(filename),*ext=tmpfilename+strlen(tmpfilename)-3;
@@ -2268,10 +2271,14 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 	}
 	dbg(1,"num_disk %d\n",m->eoc->zipedsk);
 	m->eoc64=binfile_read_eoc64(m->fi);
-	if (!binfile_get_index(m))
+	if (!binfile_get_index(m)) {
+		dbg(0,"no index found\n");
 		return 0;
-	if (!(first_cd=binfile_read_cd(m, 0, 0)))
+	}
+	if (!(first_cd=binfile_read_cd(m, 0, 0))) {
+		dbg(0,"unable to get first cd\n");
 		return 0;
+	}
 	m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
 	m->zip_members=m->index_offset/m->cde_size+1;
 	dbg(1,"cde_size %d\n", m->cde_size);
