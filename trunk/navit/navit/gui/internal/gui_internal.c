@@ -4398,6 +4398,108 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
 	gui_internal_menu_render(this);
 }
 
+static char *
+gui_internal_cmd_match_expand(char *pattern, struct attr **in)
+{
+	char p,*ret=g_strdup(pattern),*r=ret,*a;
+	int len;
+	while ((p=*pattern++)) {
+		switch (p) {
+		case '*':
+			*r='\0';
+			a=attr_to_text(*in++,NULL,0);
+			len=strlen(ret)+strlen(a)+strlen(pattern)+1;
+			r=g_malloc(len);
+			strcpy(r, ret);
+			strcat(r, a);
+			g_free(ret);
+			g_free(a);
+			ret=r;
+			r=ret+strlen(ret);
+			break;
+		case '\\':
+			p=*pattern++;
+		default:
+			*r++=p;
+		}	
+	}
+	*r++='\0';
+	return ret;
+}
+
+static int 
+gui_internal_match(const char *pattern, const char *string)
+{
+	char p,s;
+	while ((p=*pattern++)) {
+		switch (p) {
+		case '*':
+			while ((s=*string)) {
+				if (gui_internal_match(pattern,string))
+					return 1;
+				string++;
+			}
+			break;
+		case '\\':
+			p=*pattern++;
+		default:
+			if (*string++ != p)
+				return 0;
+		}
+	}
+	return 1;
+}
+
+static int
+gui_internal_set(char *remove, char *add)
+{
+	char *gui_file=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/gui_internal.txt", NULL);
+	char *gui_file_new=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/gui_internal_new.txt", NULL);
+	FILE *fo=fopen(gui_file_new,"w");
+	FILE *fi=fopen(gui_file,"r");
+	char *line=NULL;
+	int ret;
+	size_t size=0;
+	while (getline(&line,&size,fi) > 0) {
+		int len=strlen(line);
+		if (len > 0 && line[len-1] == '\n') 
+			line[len-1]='\0';
+		dbg(0,"line=%s\n",line);
+		if (!gui_internal_match(remove, line)) 
+			fprintf(fo,"%s\n",line);
+	}
+	if (line)
+		free(line);
+	fprintf(fo,"%s;\n",add);
+	fclose(fi);
+	fclose(fo);
+	ret=(rename(gui_file_new, gui_file)==0);
+	g_free(gui_file_new);
+	g_free(gui_file);
+
+	return ret;
+}
+
+static void
+gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *pattern,*command=NULL;
+	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
+		dbg(0,"first parameter missing or wrong type\n");
+		return;
+	}
+	pattern=in[0]->u.str;
+	dbg(0,"pattern %s\n",pattern);
+	if (in[1]) {
+		command=gui_internal_cmd_match_expand(pattern, in+1);
+		dbg(0,"expand %s\n",command);
+		gui_internal_set(pattern, command);
+		command_evaluate(&this->self, command);
+		g_free(command);
+	}
+
+}
+
 static void
 gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -5672,11 +5774,14 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 }
 
 static void
-gui_internal_setup_gc(struct gui_priv *this)
+gui_internal_setup(struct gui_priv *this)
 {
 	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
 	struct graphics *gra=this->gra;
+	unsigned char *buffer;
+	char *gui_file;
+	int size;
 
 	if (this->background)
 		return;
@@ -5692,6 +5797,16 @@ gui_internal_setup_gc(struct gui_priv *this)
 	graphics_gc_set_foreground(this->background2, &this->background2_color);
 	graphics_gc_set_foreground(this->text_background, &this->text_background_color);
 	graphics_gc_set_foreground(this->text_foreground, &this->text_foreground_color);
+	gui_file=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/gui_internal.txt", NULL);
+	if (file_get_contents(gui_file,&buffer,&size)) {
+		char *command=g_malloc(size+1);
+		strncpy(command,(const char *)buffer,size);
+		command[size]=0;
+		command_evaluate(&this->self, command);
+		g_free(command);
+		g_free(buffer);
+	}
+	g_free(gui_file);
 }
 
 //##############################################################################################################
@@ -5704,7 +5819,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	struct gui_priv *this=data;
 	int changed=0;
 
-	gui_internal_setup_gc(this);
+	gui_internal_setup(this);
 
 	if (this->root.w != w || this->root.h != h) {
 		this->root.w=w;
@@ -5938,7 +6053,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 		this->win->fullscreen(this->win, this->fullscreen != 0);
 	/* Was resize callback already issued? */
 	if (navit_get_ready(this->nav) & 2)
-		gui_internal_setup_gc(this);
+		gui_internal_setup(this);
 	return 0;
 }
 
@@ -7138,6 +7253,7 @@ static struct command_table commands[] = {
 	{"position",command_cast(gui_internal_cmd2_position)},
 	{"route_description",command_cast(gui_internal_cmd2_route_description)},
 	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
+	{"set",command_cast(gui_internal_cmd2_set)},
 	{"setting_layout",command_cast(gui_internal_cmd2_setting_layout)},
 	{"setting_maps",command_cast(gui_internal_cmd2_setting_maps)},
 	{"setting_rules",command_cast(gui_internal_cmd2_setting_rules)},
