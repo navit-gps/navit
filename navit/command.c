@@ -153,6 +153,25 @@ command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type
 	return func->get_attr(object->u.data, attr_type, ret, NULL);
 }
 
+static int
+command_object_add_attr(struct context *ctx, struct attr *object, struct attr *attr)
+{
+	struct object_func *func=object_func_lookup(object->type);
+	if (!func || !func->add_attr)
+		return 0;
+	return func->add_attr(object->u.data, attr);
+}
+
+static int
+command_object_remove_attr(struct context *ctx, struct attr *object, struct attr *attr)
+{
+	struct object_func *func=object_func_lookup(object->type);
+	if (!func || !func->remove_attr)
+		return 0;
+	return func->remove_attr(object->u.data, attr);
+}
+
+
 static void
 command_get_attr(struct context *ctx, struct result *res)
 {
@@ -409,6 +428,10 @@ command_call_function(struct context *ctx, struct result *res)
 				res->attr.u.data=func->create(NULL, list);
 			}
 		}
+	} else if (!strcmp(function,"add_attr")) {
+		command_object_add_attr(ctx, &res->attr, list[0]);
+	} else if (!strcmp(function,"remove_attr")) {
+		command_object_remove_attr(ctx, &res->attr, list[0]);
 	} else {
 		if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 			int valid;
