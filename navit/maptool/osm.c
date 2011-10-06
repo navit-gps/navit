@@ -553,6 +553,8 @@ static char *attrmap={
 	"w	highway=path				path\n"
 	"w	highway=path,bicycle=designated		cycleway\n"
 	"w	highway=path,bicycle=official		cycleway\n"
+	"w	highway=path,bicycle=designated,foot=designated		cycleway\n"
+	"w	highway=path,bicycle=official,foot=official		cycleway\n"
 	"w	highway=path,foot=designated		footway\n"
 	"w	highway=path,foot=official		footway\n"
 	"w	highway=path,horse=designated		bridleway\n"
