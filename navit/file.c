@@ -358,7 +358,7 @@ file_data_read(struct file *file, long long offset, int size)
 		return NULL;
 	if (file->begin)
 		return file->begin+offset;
-	if (file_cache) {
+	if (file->cache) {
 		struct file_cache_id id={offset,size,file->name_id,0};
 		ret=cache_lookup(file_cache,&id); 
 		if (ret)
@@ -475,7 +475,7 @@ file_data_read_all(struct file *file)
 void
 file_data_flush(struct file *file, long long offset, int size)
 {
-	if (file_cache) {
+	if (file->cache) {
 		struct file_cache_id id={offset,size,file->name_id,0};
 		cache_flush(file_cache,&id);
 		dbg(1,"Flushing "LONGLONG_FMT" %d bytes\n",offset,size);
@@ -501,6 +501,7 @@ file_get_contents(char *name, unsigned char **buffer, int *size)
 	file=file_create(name, 0);
 	if (!file)
 		return 0;
+	file->cache=0;
 	*size=file_size(file);
 	*buffer=file_data_read_all(file);
 	file_destroy(file);
@@ -545,7 +546,7 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 	char *buffer = 0;
 	uLongf destLen=size_uncomp;
 
-	if (file_cache) {
+	if (file->cache) {
 		struct file_cache_id id={offset,size,file->name_id,1};
 		ret=cache_lookup(file_cache,&id); 
 		if (ret)
@@ -579,7 +580,7 @@ file_data_read_encrypted(struct file *file, long long offset, int size, int size
 	unsigned char *buffer = 0;
 	uLongf destLen=size_uncomp;
 
-	if (file_cache) {
+	if (file->cache) {
 		struct file_cache_id id={offset,size,file->name_id,1};
 		ret=cache_lookup(file_cache,&id); 
 		if (ret)
