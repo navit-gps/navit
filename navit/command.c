@@ -199,6 +199,15 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 	struct object_func *func=object_func_lookup(res->attr.type);
 	if (!func || !func->set_attr)
 		return;
+	if (attr_type == attr_attr_types) {
+		char *attrn=g_alloca(sizeof(char)*(res->attrnlen+1));
+		struct attr *tmp;
+		strncpy(attrn, res->attrn, res->attrnlen);
+		attrn[res->attrnlen]='\0';
+		tmp=attr_new_from_text(attrn, newres->attr.u.str);
+		newres->attr.u.data=tmp->u.data;
+		g_free(tmp);
+	}
 	newres->attr.type=attr_type;
 	result=func->set_attr(res->attr.u.data, &newres->attr);
 	*res=*newres;
@@ -425,7 +434,7 @@ command_call_function(struct context *ctx, struct result *res)
 			struct object_func *func=object_func_lookup(attr_type);
 			if (func && func->create) {
 				res->attr.type=attr_type;
-				res->attr.u.data=func->create(NULL, list);
+				res->attr.u.data=func->create(list[0], list+1);
 			}
 		}
 	} else if (!strcmp(function,"add_attr")) {
