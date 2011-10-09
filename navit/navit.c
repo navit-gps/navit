@@ -988,6 +988,7 @@ navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, str
 	struct attr **list = g_new0(struct attr *,2);
 	if(!cmd_int_var_hash) {
 		struct attr*val = g_new0(struct attr,1);
+		cmd_attr_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
 		val->type   = attr_type_item_begin;
 		val->u.item = NULL;
 		list[0]     = val;
