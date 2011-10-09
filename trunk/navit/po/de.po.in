@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-16 22:11+0200\n"
+"POT-Creation-Date: 2011-10-09 12:20+0200\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -199,8 +199,8 @@ msgstr "Demnächst in den Kreisverkehr einfahren"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "In %s in den Kreisverkehr einfahren"
+msgid "Enter the roundabout %s"
+msgstr "%s in den Kreisverkehr einfahren"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -1345,14 +1345,6 @@ msgstr "Route"
 msgid "Former Destinations"
 msgstr "Vorherige Ziele"
 
-msgid "Former\n"
-"Destinations"
-msgstr "Vorherige\n"
-"Ziele"
-
-msgid "- No former destinations available -"
-msgstr "- Keine vorherigen Ziele -"
-
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
@@ -1538,6 +1530,13 @@ msgstr "Lesezeichen einfügen"
 msgid "Bookmark %s"
 msgstr "Lesezeichen %s"
 
+#, c-format
+msgid "Destination %s"
+msgstr "Ziel %s"
+
+msgid "- No former destinations available -"
+msgstr "- Keine vorherigen Ziele -"
+
 msgid "House number"
 msgstr "Hausnummer"
 
@@ -1642,13 +1641,16 @@ msgstr "Und das ganze Navit Team"
 msgid "members and contributors."
 msgstr "Mitglieder und Mitarbeiter"
 
+msgid "Return to route!"
+msgstr "Zurück zur Route!"
+
 #. warning told
 msgid "Look out! Camera!"
 msgstr "Achtung Blitzer!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr "Du bist zu schnell"
+msgstr "Bitte Geschwindigkeit verringern"
 
 msgid "Map Point"
 msgstr "Kartenpunkt"
@@ -1678,6 +1680,13 @@ msgstr "Über"
 msgid "Actions"
 msgstr "Aktionen"
 
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Vorherige\n"
+"Ziele"
+
 msgid "Quit"
 msgstr "Ende"
 
@@ -1693,6 +1702,9 @@ msgstr "Fenstermodus"
 
 msgid "Description"
 msgstr "Beschreibung"
+
+msgid "car_avoid_tolls"
+msgstr "Auto ohne Maut"
 
 msgid "horse"
 msgstr "Pferd"
@@ -1721,9 +1733,3 @@ msgstr "Pferd"
 #.
 msgid "Truck"
 msgstr "LKW"
-
-#~ msgid "Cursor"
-#~ msgstr "Positionsmarke"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d,%d Kilometer"
