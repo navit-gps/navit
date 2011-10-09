@@ -1587,7 +1587,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		case 1:
 			d = get_distance(nav, distance, type, 0);
 			/* TRANSLATORS: %s is the distance to the roundabout */
-			ret = g_strdup_printf(_("In %s, enter the roundabout"), d);
+			ret = g_strdup_printf(_("Enter the roundabout %s"), d);
 			g_free(d);
 			return ret;
 		case -2:
