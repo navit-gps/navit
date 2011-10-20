@@ -6450,9 +6450,12 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 			count++;
 		}
 	}
-	if (table_data->button_box)
-		gui_internal_widget_pack(this,table_data->button_box);
 
+	w->w = width;
+	if(w->w + w->c.x > this->root.w)
+	{
+		w->w = this->root.w - w->c.x;
+	}
 
 
 	if(w->h + w->c.y   > this->root.h   )
@@ -6463,7 +6466,12 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		 */
 		w->h = this->root.h- w->c.y  - height;
 	}
-	w->w = width;
+
+	if (table_data->button_box) 
+	{
+		gui_internal_widget_pack(this,table_data->button_box);
+	}
+
 
 	/**
 	 * Deallocate column descriptions.
