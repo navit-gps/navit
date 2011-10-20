@@ -3325,7 +3325,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=8|16|64|128|512;
 		break;
 	case 8:
-		flags=8|16|64|128;
+		flags=8|16|32|64|128;
 		break;
 	default:
 		return;
