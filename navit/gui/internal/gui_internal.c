@@ -3495,14 +3495,13 @@ gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr *
 static void
 gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	struct widget *wb,*w,*wbm;
+	struct widget *wb,*w,*wbm,*tbl=NULL;
 	struct map *formerdests;
 	struct map_rect *mr_formerdests;
 	struct item *item;
 	struct attr attr;
 	char *label_full;
 	enum projection projection;
-	int formerdests_available=0;
 
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Former Destinations"));
@@ -3518,25 +3517,31 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 	projection = map_projection(formerdests);
 	while ((item=map_rect_get_item(mr_formerdests))) {
 		struct coord c;
-	        formerdests_available=1;
+		struct widget *row;
 		if (!item_attr_get(item, attr_label, &attr)) continue;
+		if(!tbl) {
+			tbl=gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand | orientation_vertical,1);
+			gui_internal_widget_append(w,tbl);
+		}
+		row=gui_internal_widget_table_row_new(this,gravity_left| flags_fill| orientation_vertical);
+		gui_internal_widget_prepend(tbl, row);
 		label_full=attr.u.str;
 		wbm=gui_internal_button_new_with_callback(this, label_full,
 				image_new_xs(this, "gui_active"),
 				gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, NULL);
-		gui_internal_widget_prepend(w, wbm);
+		gui_internal_widget_append(row,wbm);
 		if (item_coord_get(item, &c, 1)) {
 			wbm->c.x=c.x;
 			wbm->c.y=c.y;
 			wbm->c.pro=projection;
-			wbm->name=g_strdup_printf(_("Destination %s"),label_full);
+			wbm->name=g_strdup(label_full);
 			wbm->text=g_strdup(label_full);
 			wbm->data=(void*)8; //Mark us as a former destination 
 			wbm->prefix=g_strdup(label_full);
 		}
 	}
-	if (!formerdests_available){
+	if (!tbl){
         	wbm=gui_internal_text_new(this, _("- No former destinations available -"), 
 		    gravity_left_center|orientation_horizontal|flags_fill);
 		gui_internal_widget_append(w, wbm);
