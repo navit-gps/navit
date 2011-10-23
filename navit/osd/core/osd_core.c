@@ -511,6 +511,7 @@ struct odometer {
 	double last_update_time;     //time of last  position update
 	struct coord last_coord;
 	double last_speed; 
+	double max_speed; 
 	double acceleration; 
 };
 
@@ -558,7 +559,7 @@ str_replace(char*output, char*input, char*pattern, char*replacement)
  */
 static char *osd_odometer_to_string(struct odometer *this_)
 {
-  return g_strdup_printf("odometer %s %lf %lf %d\n",this_->name,this_->sum_dist,this_->time_all,this_->bActive);
+  return g_strdup_printf("odometer %s %lf %lf %d %lf\n",this_->name,this_->sum_dist,this_->time_all,this_->bActive,this_->max_speed);
 }
 
 /*
@@ -571,6 +572,7 @@ static void osd_odometer_from_string(struct odometer *this_, char*str)
   char*  sum_dist_str;
   char*  sum_time_str;
   char*  active_str;
+  char*  max_spd_str;
   tok = strtok(str, " ");
   if( !tok || strcmp("odometer",tok)) {
     return;
@@ -597,14 +599,25 @@ static void osd_odometer_from_string(struct odometer *this_, char*str)
     g_free(sum_time_str);
     return;
   }
+  max_spd_str = g_strdup(strtok(NULL, " "));
+  if(!max_spd_str) {
+    g_free(name_str);
+    g_free(sum_dist_str);
+    g_free(sum_time_str);
+    g_free(active_str);
+    return;
+  }
+
   this_->name = name_str;
   this_->sum_dist = atof(sum_dist_str); 
   this_->sum_time = atof(sum_time_str); 
   this_->bActive = atoi(active_str); 
+  this_->max_speed = atof(max_spd_str); 
   this_->last_coord.x = -1;
   g_free(active_str);
   g_free(sum_dist_str);
   g_free(sum_time_str);
+  g_free(max_spd_str);
 }
 
 static void draw_multiline_osd_text(char *buffer,struct osd_item *osd_item, struct graphics_gc *curr_color)
@@ -645,6 +658,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 
   char *dist_buffer=0;
   char *spd_buffer=0;
+  char *max_spd_buffer=0;
   char *time_buffer = 0;
   char *acc_buffer = 0;
   struct attr position_attr,vehicle_attr,imperial_attr,speed_attr;
@@ -700,6 +714,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
       }
       this->time_all = curr_time-this->last_click_time+this->sum_time;
       spd = 3.6*(double)this->sum_dist/(double)this->time_all;
+      this->max_speed = (spd<=this->max_speed) ? this->max_speed : spd;
       if(dt != 0) {
         if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
           if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
@@ -718,6 +733,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 
   dist_buffer = format_distance(this->sum_dist,"",imperial);
   spd_buffer = format_speed(spd,"","value",imperial);
+  max_spd_buffer = format_speed(this->max_speed,"","value",imperial);
   acc_buffer = g_strdup_printf("%.3f m/s2",this->acceleration);
   remainder = (int)this->time_all;
   days  = remainder  / (24*60*60);
@@ -737,10 +753,11 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
   buffer [0] = 0;
   buffer2[0] = 0;
   if(this->text) {
-    str_replace(buffer2,this->text,"${avg_spd}",spd_buffer);
-    str_replace(buffer,buffer2,"${distance}",dist_buffer);
-    str_replace(buffer2,buffer,"${time}",time_buffer);
-    str_replace(buffer,buffer2,"${acceleration}",acc_buffer);
+    str_replace(buffer,this->text,"${avg_spd}",spd_buffer);
+    str_replace(buffer2,buffer,"${distance}",dist_buffer);
+    str_replace(buffer,buffer2,"${time}",time_buffer);
+    str_replace(buffer2,buffer,"${acceleration}",acc_buffer);
+    str_replace(buffer,buffer2,"${max_spd}",max_spd_buffer);
   }
   g_free(time_buffer);
 
@@ -749,6 +766,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 
   g_free(dist_buffer);
   g_free(spd_buffer);
+  g_free(max_spd_buffer);
   g_free(acc_buffer);
   graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
@@ -760,12 +778,13 @@ osd_odometer_reset(struct osd_priv_common *opc)
   struct odometer *this = (struct odometer *)opc->data;
 
   if(!this->bDisableReset) {
-    this->bActive = 0;
-    this->sum_dist = 0;
-    this->sum_time = 0;
+    this->bActive         = 0;
+    this->sum_dist        = 0;
+    this->sum_time        = 0;
+    this->max_speed       = 0;
     this->last_start_time = 0;
-    this->last_coord.x = -1;
-    this->last_coord.y = -1;
+    this->last_coord.x    = -1;
+    this->last_coord.y    = -1;
   }
 }
 
@@ -899,11 +918,12 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.meth.draw = osd_draw_cast(osd_odometer_draw);
 	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 
-	this->bActive = 0; //do not count on init
-	this->sum_dist = 0;
+	this->bActive         = 0; //do not count on init
+	this->sum_dist        = 0;
+	this->max_speed       = 0;
 	this->last_click_time = time(0);
-	this->last_coord.x = -1;
-	this->last_coord.y = -1;
+	this->last_coord.x    = -1;
+	this->last_coord.y    = -1;
 
 	attr = attr_search(attrs, NULL, attr_label);
 	//FIXME find some way to free text!!!!
