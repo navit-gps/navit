@@ -714,7 +714,6 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
       }
       this->time_all = curr_time-this->last_click_time+this->sum_time;
       spd = 3.6*(double)this->sum_dist/(double)this->time_all;
-      this->max_speed = (spd<=this->max_speed) ? this->max_speed : spd;
       if(dt != 0) {
         if (curr_coord.x!=this->last_coord.x || curr_coord.y!=this->last_coord.y) {
           if(vehicle_get_attr(curr_vehicle, attr_position_speed,&speed_attr, NULL)) {
@@ -727,6 +726,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
           }
         }
       }
+      this->max_speed = (curr_spd<=this->max_speed) ? this->max_speed : curr_spd;
     }
     this->last_coord = curr_coord;
   }
