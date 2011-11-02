@@ -198,6 +198,7 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Wales","-5.56","51.28","-2.60","53.60", 84860075L, 1),
 		new osm_map_values("Albania","19.09","39.55","21.12","42.72", 71097966L, 1),
 		new osm_map_values("Belarus","23.12","51.21","32.87","56.23", 100471644L, 1),
+		new osm_map_values("Russia","27.9","41.5","190.4", "77.6", 508559360L, 1),
 		new osm_map_values("Bulgaria","24.7","42.1","24.8","42.1", 62211433L, 1),
 		new osm_map_values("Bosnia-Herzegovina","15.69","42.52","19.67","45.32", 75756822L, 1),
 		new osm_map_values("Czech Republic","11.91","48.48","19.02","51.17", 288911729L, 1),
