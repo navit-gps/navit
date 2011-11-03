@@ -684,7 +684,11 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, in
 		bookmarks_shrink(file, offsets[offset_pos]);
 	}
 	f=fopen(file, "a");
-	if (f) {
+	if (f == NULL) {	
+       		dbg(0, "Failed to open destination.txt for writing\n");
+		return 0;
+	}	
+	else if (f != NULL) {
 		if (c) {
 			int i;
 			if (description) 
