@@ -1845,16 +1845,28 @@ binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct
 		case type_town_label_1e6:
 		case type_town_label_5e5:
 		case type_town_label_2e5:
+		case type_district_label_1e7:
+		case type_district_label_5e6:
+		case type_district_label_2e6:
+		case type_district_label_1e6:
+		case type_district_label_5e5:
+		case type_district_label_2e5:
 			size = 10000;
 			break;
 		case type_town_label_1e5:
 		case type_town_label_5e4:
 		case type_town_label_2e4:
+		case type_district_label_1e5:
+		case type_district_label_5e4:
+		case type_district_label_2e4:
 			size = 5000;
 			break;
 		case type_town_label_1e4:
 		case type_town_label_5e3:
 		case type_town_label_2e3:
+		case type_district_label_1e4:
+		case type_district_label_5e3:
+		case type_district_label_2e3:
 			size = 2500;
 			break;
 		case type_town_label_1e3:
@@ -1868,6 +1880,17 @@ binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct
 		case type_town_label_2e0:
 		case type_town_label_1e0:
 		case type_town_label_0e0:
+		case type_district_label_1e3:
+		case type_district_label_5e2:
+		case type_district_label_2e2:
+		case type_district_label_1e2:
+		case type_district_label_5e1:
+		case type_district_label_2e1:
+		case type_district_label_1e1:
+		case type_district_label_5e0:
+		case type_district_label_2e0:
+		case type_district_label_1e0:
+		case type_district_label_0e0:
 			size = 1000;
 			break;
 		default:
@@ -2055,7 +2078,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			case attr_town_name:
 			case attr_district_name:
 			case attr_town_or_district_name:
-				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
+				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && map_search->search->type != attr_district_name) {
 					if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
 						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
 							return it;
