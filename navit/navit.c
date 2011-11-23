@@ -1480,7 +1480,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 	} else
 		this_->destination_valid=0;
 	destination_file = bookmarks_get_destination_file(TRUE);
-	bookmarks_append_coord(this_->bookmarks, destination_file, c, 1, "former_destination", description, NULL, this_->recentdest_count);
+	bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_destination, description, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
@@ -1509,7 +1509,7 @@ navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const c
 	} else
 		this_->destination_valid=0;
 	destination_file = bookmarks_get_destination_file(TRUE);
-	bookmarks_append_coord(this_->bookmarks, destination_file, c, count, "former_itinerary", description, NULL, this_->recentdest_count);
+	bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_itinerary, description, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
@@ -2841,7 +2841,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			route_remove_waypoint(this_->route);
 			count=route_get_destinations(this_->route, pc, 16);
 			destination_file = bookmarks_get_destination_file(TRUE);
-			bookmarks_append_coord(this_->bookmarks, destination_file, pc, count, "former_itinerary_part", NULL, NULL, this_->recentdest_count);
+			bookmarks_append_coord(this_->former_destination, destination_file, pc, type_former_itinerary_part, NULL, this_->recentdest_count);
 			break;	
 		case 2:
 			navit_set_destination(this_, NULL, NULL, 0);
