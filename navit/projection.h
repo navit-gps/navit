@@ -30,7 +30,7 @@ enum map_datum {
 
 struct coord;
 enum projection projection_from_name(const char *name, struct coord *offset);
-char * projection_to_name(enum projection proj, struct coord *offset);
+char * projection_to_name(enum projection proj);
 
 #endif
 

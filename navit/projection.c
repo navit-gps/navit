@@ -60,7 +60,7 @@ projection_from_name(const char *name, struct coord *offset)
 }
 
 char *
-projection_to_name(enum projection proj, struct coord *offset)
+projection_to_name(enum projection proj)
 {
 	int i;
 

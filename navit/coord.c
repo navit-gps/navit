@@ -303,7 +303,7 @@ coord_print(enum projection pro, struct coord *c, FILE *out) {
 		y = c->y;
 	}
 	fprintf( out, "%s: %s0x%x %s0x%x\n",
-		 projection_to_name( pro , NULL),
+		 projection_to_name( pro ),
 		 sign_x, x,
 		 sign_y, y );
 	return;

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <stdio.h>
+#include <errno.h>
 #include "config.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -315,7 +316,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 		if (!g_hash_table_lookup(dedup,fullname)) {
 			g_hash_table_insert(dedup,fullname,fullname);
 			if (item->type == type_bookmark) {
-				prostr = projection_to_name(projection_mg,NULL);
+				prostr = projection_to_name(projection_mg);
 				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
 					 prostr, *prostr ? ":" : "",
 					 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x,
@@ -326,7 +327,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 				}
 			}
 			if (item->type == type_bookmark_folder) {
-				prostr = projection_to_name(projection_mg,NULL);
+				prostr = projection_to_name(projection_mg);
 				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
 					 prostr, *prostr ? ":" : "",
 					 "", 0,
@@ -625,86 +626,127 @@ bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const ch
 	return FALSE;
 }
 
-static int
-bookmarks_shrink(char *bookmarks, int offset) 
-{
-	char buffer[4096];
-	int count,ioffset=offset,ooffset=0;
-	FILE *f;
-	if (!offset)
-		return 1;
-	f = fopen(bookmarks, "r+");
-	if (!f)
-		return 0;
-	for (;;) {
-		fseek(f, ioffset, SEEK_SET);
-		count=fread(buffer, 1, sizeof(buffer), f);
-		if (!count) 
-			break;
-		fseek(f, ooffset, SEEK_SET);
-		if (fwrite(buffer, count, 1, f) != 1)
-			return 0;
-		ioffset+=count;
-		ooffset+=count;
+struct former_destination{
+	enum item_type type;
+	char* description;
+	struct coord c;
+};
+
+static void free_former_destination(struct former_destination* former_destination){
+	g_free(former_destination->description);
+	g_free(former_destination);
+}
+
+
+static GList* read_former_destination_map_as_list(struct map *map){
+	struct map_rect *mr;
+	struct item *item;
+	struct attr attr;
+	struct former_destination *dest;
+	GList* list = NULL;
+	if (map && (mr=map_rect_new(map, NULL))) {
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type != type_former_destination) continue;
+			dest = g_new(struct former_destination, 1);
+			dest->type=item->type;
+			item_attr_get(item, attr_label, &attr);
+			dest->description = g_strdup(attr.u.str);
+			item_coord_get(item, &(dest->c), 1);
+			list = g_list_prepend(list, dest);
+		}
+		map_rect_destroy(mr);
 	}
-	fflush(f);
-	ftruncate(fileno(f),ooffset);
-#ifdef HAVE_FSYNC
-	fsync(fileno(f));
-#endif
-	fclose(f);
-	return 1;
+	return g_list_reverse(list);
+}
+
+static int
+destination_equal(struct former_destination* dest1, struct former_destination* dest2)
+{
+	if ((dest1->type == dest2->type) &&
+	    (!strcmp(dest1->description, dest2->description)) &&
+	    (coord_equal(&(dest1->c), &(dest2->c)))){
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static GList*
+remove_destination_from_list(struct former_destination* dest_to_remove, GList* former_destinations)
+{
+	GList* curr_el = former_destinations; 
+	GList* prev_el = NULL;
+	struct former_destination* curr_dest;
+
+	while(curr_el){
+		curr_dest = curr_el->data;
+		if (destination_equal(dest_to_remove, curr_dest)){
+			free_former_destination(curr_dest);
+			curr_el = g_list_remove(curr_el, curr_dest);
+		}else{
+			prev_el = curr_el;
+			curr_el = g_list_next(curr_el);
+		}
+	}
+	return g_list_first(prev_el);
+}
+
+static void 
+write_former_destinations(GList* former_destinations, char *former_destination_file, enum projection proj)
+{
+	FILE *f;
+	GList* currdest = NULL;
+	struct former_destination *dest;
+	const char* prostr = projection_to_name(proj);
+	f=fopen(former_destination_file, "w");
+	if (f) {
+		for(currdest = former_destinations; currdest; currdest = g_list_next(currdest)){
+			dest = currdest->data;
+			if (dest->description) 
+				fprintf(f,"type=%s label=\"%s\"\n", item_to_name(dest->type), dest->description);
+			else
+				fprintf(f,"type=%s\n", item_to_name(dest->type));
+			fprintf(f,"%s%s%s0x%x %s0x%x\n",
+			prostr, *prostr ? ":" : "",
+			dest->c.x >= 0 ? "":"-", dest->c.x >= 0 ? dest->c.x : -dest->c.x,
+			dest->c.y >= 0 ? "":"-", dest->c.y >= 0 ? dest->c.y : -dest->c.y);
+			
+		}
+		fclose(f);
+	} else {
+		dbg(0, "Error updating destinations file %s: %s\n", former_destination_file, strerror(errno));
+	}
 }
 
 /**
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
 void
-bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, int count, const char *type, const char *description, GHashTable *h, int limit)
+bookmarks_append_coord(struct map *former_destination_map, char *former_destination_file, 
+		struct pcoord *c, enum item_type type, const char *description, int limit)
 {
-	FILE *f;
-	const char *prostr;
+	struct former_destination *new_dest;
+	GList* former_destinations = NULL;
+	GList* former_destinations_shortened = NULL;
+	int no_of_former_destinations;
 
-	if (limit != 0 && (f=fopen(file, "r"))) {
-		int *offsets=g_alloca(sizeof(int)*limit);
-		int offset_pos=0;
-		int offset;
-		char buffer[4096];
-		memset(offsets, 0, sizeof(int)*limit);
-		for (;;) {
-			offset=ftell(f);
-			if (!fgets(buffer, sizeof(buffer), f))
-				break;
-			if (strstr(buffer,"type=")) {
-				offsets[offset_pos]=offset;
-				offset_pos=(offset_pos+1)%limit;
-			}
-		}
-		fclose(f);
-		bookmarks_shrink(file, offsets[offset_pos]);
-	}
-	f=fopen(file, "a");
-	if (f == NULL) {	
-       		dbg(0, "Failed to open destination.txt for writing\n");
-		return 0;
-	}	
-	else if (f != NULL) {
-		if (c) {
-			int i;
-			if (description) 
-				fprintf(f,"type=%s label=\"%s\"\n", type, description);
-			else
-				fprintf(f,"type=%s\n", type);
-			for (i = 0 ; i < count ; i++) {
-				prostr = projection_to_name(c[i].pro,NULL);
-				fprintf(f,"%s%s%s0x%x %s0x%x\n",
-				 prostr, *prostr ? ":" : "",
-				 c[i].x >= 0 ? "":"-", c[i].x >= 0 ? c[i].x : -c[i].x,
-				 c[i].y >= 0 ? "":"-", c[i].y >= 0 ? c[i].y : -c[i].y);
-			}
-		} else
-			fprintf(f,"\n");
-	}
-	fclose(f);
+	former_destinations = read_former_destination_map_as_list(former_destination_map);
+
+ 	new_dest = g_new(struct former_destination, 1);
+ 	new_dest->type = type;
+ 	new_dest->description = g_strdup(description);
+ 	new_dest->c.x = c->x;
+ 	new_dest->c.y = c->y;
+	former_destinations = remove_destination_from_list(new_dest, former_destinations);
+ 	former_destinations = g_list_append(former_destinations, new_dest);
+
+	no_of_former_destinations = g_list_length(former_destinations);
+	if (limit > 0 && no_of_former_destinations > limit)
+		former_destinations_shortened = g_list_nth(former_destinations, no_of_former_destinations - limit);
+	else
+		former_destinations_shortened = former_destinations;
+
+	write_former_destinations(former_destinations_shortened, former_destination_file, map_projection(former_destination_map));
+	g_list_foreach(former_destinations, (GFunc) free_former_destination, NULL);
+	g_list_free(former_destinations);
 }
 
