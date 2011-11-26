@@ -28,7 +28,7 @@ msgid "setting '%s' to '%s'\n"
 msgstr "impostazione di '%s' a '%s'\n"
 
 msgid "zeroth"
-msgstr "zeresimo"
+msgstr "zero"
 
 msgid "first"
 msgstr "primo"
@@ -49,7 +49,7 @@ msgid "sixth"
 msgstr "sesto"
 
 msgid "zeroth exit"
-msgstr "Uscita zeroth"
+msgstr "Uscita zero"
 
 msgid "first exit"
 msgstr "prima uscita"
@@ -87,7 +87,7 @@ msgstr "fra %d metri"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d chilometri"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -154,7 +154,7 @@ msgstr "decisamente "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr "decisamente "
+msgstr "molto decisamente "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -164,7 +164,7 @@ msgid "When possible, please turn around"
 msgstr "Appena possibile, invertire il senso di marcia"
 
 msgid "Enter the roundabout soon"
-msgstr "Entrare in rotatoria"
+msgstr "Tra poco si entrerà in rotonda"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
@@ -173,11 +173,11 @@ msgstr "Tra %s entrare nella rotonda"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr "Alla rotonda prendere l'uscita %s"
+msgstr "Alla rotonda prendere la %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr "e alla rotonda prendere l'uscita %s"
+msgstr "e alla rotonda prendere la %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -193,7 +193,7 @@ msgstr "Prendere la %1$s strada a %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "tra %i roads"
+msgstr "tra %i strade"
 
 msgid "now"
 msgstr "adesso"
@@ -217,7 +217,7 @@ msgstr "poi girare %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Destinazione raggiunta %s"
+msgstr "Siete arrivati a destinazione %s"
 
 msgid "then you have reached your destination."
 msgstr "poi sarete arrivati a destinazione"
@@ -1296,7 +1296,7 @@ msgid "Map"
 msgstr "Mappa"
 
 msgid "Bookmark"
-msgstr "Segnalibro"
+msgstr "Posto"
 
 msgid "Destination"
 msgstr "Destinazione"
@@ -1311,7 +1311,7 @@ msgid "Former Destinations"
 msgstr "Destinazioni precedenti"
 
 msgid "Bookmarks"
-msgstr "Segnalibri"
+msgstr "Posti"
 
 msgid "Layout"
 msgstr "Layout"
@@ -1398,10 +1398,10 @@ msgid "OT"
 msgstr "OT"
 
 #, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
+msgid "Route %4.0fkm %02d:%02d ETA"
 msgstr "Percorso %4.0f km, %02d:%02d ETA"
 
-msgid "Route 0000km  0+00:00 ETA"
+msgid "Route 0000km 0+00:00 ETA"
 msgstr "Percorso 0000 km, 00:00 ETA"
 
 msgid "Back to map"
@@ -1417,13 +1417,13 @@ msgid "Back"
 msgstr "Indietro"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Aggiungere un posto"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Aggiungere una cartella di posti"
 
 msgid "Rename"
-msgstr ""
+msgstr "Rinomina"
 
 msgid "POIs"
 msgstr "Punti d'interesse"
@@ -1444,26 +1444,26 @@ msgid "View on map"
 msgstr "Visualizza sulla mappa"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Taglia posto"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copia posto"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Rinomina posto"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Incolla posto"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Cancella posto"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Incolla posto"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr "Segnalibro %s"
+msgstr "Posto %s"
 
 msgid "House number"
 msgstr "Numero civico"
@@ -1475,10 +1475,10 @@ msgid "Show Satellite Status"
 msgstr "Mostra stato satellite"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Elevazione "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimuth "
 
 msgid "Show NMEA Data"
 msgstr "Mostra dati NMEA"
@@ -1522,27 +1522,27 @@ msgid "Message"
 msgstr "Messaggio"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Descrizione del percorso"
 
 msgid "Height Profile"
 msgstr "Altimetria"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Mostra la localizzazione"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Info su Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "di"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "e tutta la squadra Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "membri e contributori."
 
 msgid "Main menu"
 msgstr "Menù principale"
@@ -1561,7 +1561,7 @@ msgid "Tools"
 msgstr "Strumenti"
 
 msgid "About"
-msgstr ""
+msgstr "Info"
 
 msgid "Actions"
 msgstr "Azioni"
@@ -1581,7 +1581,7 @@ msgid "Description"
 msgstr "Descrizione"
 
 msgid "horse"
-msgstr ""
+msgstr "cavallo"
 
 msgid "Map Point"
 msgstr "Punto sulla mappa"
