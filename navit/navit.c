@@ -1474,14 +1474,12 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 		this_->destination=*c;
 		this_->destination_valid=1;
 
-	    dbg(1, "navit->navit_set_destination %i\n", c->x);
-	    dbg(1, "navit->navit_set_destination %i\n", c->y);
-
+		dbg(1, "c=(%i,%i)\n", c->x,c->y);
+		destination_file = bookmarks_get_destination_file(TRUE);
+		bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_destination, description, this_->recentdest_count);
+		g_free(destination_file);
 	} else
 		this_->destination_valid=0;
-	destination_file = bookmarks_get_destination_file(TRUE);
-	bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_destination, description, this_->recentdest_count);
-	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
 		route_set_destination(this_->route, c, async);
@@ -1506,11 +1504,12 @@ navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const c
 	if (c && count) {
 		this_->destination=c[count-1];
 		this_->destination_valid=1;
+
+		destination_file = bookmarks_get_destination_file(TRUE);
+		bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_itinerary, description, this_->recentdest_count);
+		g_free(destination_file);
 	} else
 		this_->destination_valid=0;
-	destination_file = bookmarks_get_destination_file(TRUE);
-	bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_itinerary, description, this_->recentdest_count);
-	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
 		route_set_destinations(this_->route, c, count, async);
