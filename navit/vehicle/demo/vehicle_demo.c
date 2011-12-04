@@ -38,6 +38,7 @@ struct vehicle_priv {
 	int position_set;
 	struct callback_list *cbl;
 	struct navit *navit;
+	struct route *route;
 	struct coord_geo geo;
 	struct coord last;
 	double config_speed;
@@ -83,11 +84,40 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
 }
 
 static int
+vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
+{
+	switch(attr->type) {
+	case attr_navit:
+		priv->navit = attr->u.navit;
+		break;
+	case attr_route:
+		priv->route = attr->u.route;
+		break;
+	case attr_speed:
+		priv->config_speed=attr->u.num;
+		break;
+	case attr_interval:
+		priv->interval=attr->u.num;
+		if (priv->timer)
+			event_remove_timeout(priv->timer);
+		priv->timer=event_add_timeout(priv->interval, 1, priv->timer_callback);
+		break;
+	case attr_position_coord_geo:
+		priv->geo=*(attr->u.coord_geo);
+		priv->position_set=1;
+		dbg(0,"position_set %f %f\n", priv->geo.lat, priv->geo.lng);
+		break;
+	default:
+		dbg(0,"unsupported attribute %s\n",attr_to_name(attr->type));
+		return 0;
+	}
+	return 1;
+}
+
+static int
 vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr)
 {
-	if (attr->type == attr_navit) 
-		priv->navit = attr->u.navit;
-	return 1;
+	return vehicle_demo_set_attr_do(priv, attr);
 }
 
 struct vehicle_methods vehicle_demo_methods = {
@@ -108,7 +138,11 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 
 	len = (priv->config_speed * priv->interval / 1000)/ 3.6;
 	dbg(1, "###### Entering simulation loop\n");
-	if (priv->navit) 
+	if (!priv->config_speed)
+		return;
+	if (priv->route)
+		route=priv->route;
+	else if (priv->navit) 
 		route=navit_get_route(priv->navit);
 	if (route)
 		route_map=route_get_map(route);
@@ -175,26 +209,18 @@ vehicle_demo_new(struct vehicle_methods
 		 *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
-	struct attr *interval,*speed,*position_coord_geo;
 
 	dbg(1, "enter\n");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	ret->interval=1000;
 	ret->config_speed=40;
-	if ((speed=attr_search(attrs, NULL, attr_speed))) {
-		ret->config_speed=speed->u.num;
-	}
-	if ((interval=attr_search(attrs, NULL, attr_interval)))
-		ret->interval=interval->u.num;
-	if ((position_coord_geo=attr_search(attrs, NULL, attr_position_coord_geo))) {
-		ret->geo=*(position_coord_geo->u.coord_geo);
-		ret->position_set=1;
-		dbg(0,"position_set %f %f\n", ret->geo.lat, ret->geo.lng);
-	}
-	*meth = vehicle_demo_methods;
 	ret->timer_callback=callback_new_1(callback_cast(vehicle_demo_timer), ret);
-	ret->timer=event_add_timeout(ret->interval, 1, ret->timer_callback);
+	*meth = vehicle_demo_methods;
+	while (attrs && *attrs) 
+		vehicle_demo_set_attr_do(ret, *attrs++);
+	if (!ret->timer)
+		ret->timer=event_add_timeout(ret->interval, 1, ret->timer_callback);
 	return ret;
 }
 
