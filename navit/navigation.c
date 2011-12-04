@@ -2018,6 +2018,14 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 			cmd=NULL;	
 	}
 	switch(attr_type) {
+	case attr_level:
+		if (cmd) {
+			int distance=this_->cmd_itm->dest_length-cmd->itm->dest_length;
+			distance=round_distance(distance);
+			attr->u.num=navigation_get_announce_level(this_->nav, this_->cmd_itm->way.item.type, distance-cmd->length);
+			return 1;
+		}
+		return 0;
 	case attr_navigation_short:
 		this_->attr_next=attr_navigation_long;
 		if (cmd) {
