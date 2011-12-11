@@ -115,7 +115,7 @@ struct menu *
 gui_popup_new(struct gui *gui)
 {
 	struct menu *this_;
-	if (! gui->meth.popup_new)
+	if (!gui || ! gui->meth.popup_new)
 		return NULL;
 	this_=g_new0(struct menu, 1);
 	this_->priv=gui->meth.popup_new(gui->priv, &this_->meth);
