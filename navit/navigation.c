@@ -2350,11 +2350,19 @@ void
 navigation_set_route(struct navigation *this_, struct route *route)
 {
 	struct attr callback;
-	this_->route=route;
-	this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route_status, this_);
+	if (!this_->route_cb)
+		this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route_status, this_);
 	callback.type=attr_callback;
 	callback.u.callback=this_->route_cb;
-	route_add_attr(route, &callback);
+	if (this_->route)
+		route_remove_attr(this_->route, &callback);
+	this_->route=route;
+	if (this_->route) {
+		struct attr route_status;
+		route_add_attr(this_->route, &callback);
+		if (route_get_attr(this_->route, attr_route_status, &route_status, NULL))
+			navigation_update(this_, this_->route, &route_status);
+	}
 }
 
 void
