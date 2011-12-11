@@ -3820,7 +3820,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 				if(!partial)
 					partial=wc;
 
-			} else {
+			} else if(name) {
 				if(!wi)
 					dbg(0,"search text widget is NULL\n");
 				if(wi && strlen(name)==strlen(wi->text)) {
