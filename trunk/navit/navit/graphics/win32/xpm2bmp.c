@@ -495,6 +495,7 @@ static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
     unsigned char i, row;
 	char line[ 1024   ];
 	int nbytes ;
+	int padding, rowsize;
 	FILE* file_xpm = fopen( filename, "r" );
 
 	int phase = 0;
@@ -530,11 +531,17 @@ static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
 						pXpm2bmp->color_entires[i].color_str = pXpm2bmp->color_entires[0].color_str + ( pXpm2bmp->chars_per_pixel + 1 ) * i;
 					}
 
-					if (!(pXpm2bmp->dib = (unsigned char *)g_malloc(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3)))
+					rowsize=pXpm2bmp->size_x * 3;
+					padding=4-(rowsize%4);
+					if(padding<4)
+						rowsize+=padding;
+
+
+					if (!(pXpm2bmp->dib = (unsigned char *)g_malloc(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y )))
 					{
 						return 4;
 					}
-					if (!(pXpm2bmp->dib_trans = (unsigned char *)g_malloc0(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3)))
+					if (!(pXpm2bmp->dib_trans = (unsigned char *)g_malloc0(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y )))
 					{
 						return 4;
 					}
@@ -571,8 +578,8 @@ static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
 				break;
 				case 2:
 					parse_pixel_line_values( line, pXpm2bmp,
-					pXpm2bmp->wimage_data + row * pXpm2bmp->size_x * 3,
-					pXpm2bmp->wimage_data_trans + row * pXpm2bmp->size_x * 3 );
+					pXpm2bmp->wimage_data + row * rowsize,
+					pXpm2bmp->wimage_data_trans + row * rowsize );
 
 					row++;
 					if ( row >= pXpm2bmp->size_y )
