@@ -1720,7 +1720,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 			if (!gr_image) {
 				dbg(0,"failed to load %s in %dx%d\n",image,this->icon_w,this->icon_h);
 				g_free(image);
-				image = graphics_icon_path("unknown.xpm");
+				image = graphics_icon_path("unknown.png");
 				gr_image =
 				    graphics_image_new_scaled(opc->
 							      osd_item.gr,
@@ -1863,7 +1863,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
         if (!gr_image)
         {
             g_free(path);
-            path = graphics_icon_path("unknown.xpm");
+            path = graphics_icon_path("unknown.png");
             gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
         }
         

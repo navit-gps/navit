@@ -18,7 +18,6 @@ xpm_DATA += theater.xpm
 xpm_DATA += tower.xpm
 xpm_DATA += townhall.xpm
 xpm_DATA += trailerpark.xpm
-xpm_DATA += unknown.xpm
 xpm_DATA += public_office.xpm
 
 
@@ -155,6 +154,7 @@ svgs += zoo.svg
 svgs += heliport.svg
 svgs += wifi.svg
 svgs += viewpoint.svg
+svgs += unknown.svg
 
 
 nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
