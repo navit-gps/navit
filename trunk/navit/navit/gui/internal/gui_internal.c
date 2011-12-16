@@ -1524,6 +1524,8 @@ gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 	if (l) {
 		w=l->data;
 		gui_internal_prune_menu_do(this, w, render);
+	} else {
+		gui_internal_prune_menu(this, NULL);
 	}
 }
 
