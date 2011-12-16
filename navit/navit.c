@@ -1810,6 +1810,7 @@ navit_window_roadbook_destroy(struct navit *this_)
 {
 	dbg(0, "enter\n");
 	navigation_unregister_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
+	callback_destroy(this_->roadbook_callback);
 	this_->roadbook_window=NULL;
 	this_->roadbook_callback=NULL;
 }

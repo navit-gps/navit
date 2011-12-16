@@ -1938,9 +1938,9 @@ void
 navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
 	if (type == attr_navigation_speech)
-		callback_list_remove_destroy(this_->callback_speech, cb);
+		callback_list_remove(this_->callback_speech, cb);
 	else
-		callback_list_remove_destroy(this_->callback, cb);
+		callback_list_remove(this_->callback, cb);
 }
 
 struct map *
