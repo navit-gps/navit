@@ -53,6 +53,9 @@ struct vehicle_priv {
 static void
 vehicle_demo_destroy(struct vehicle_priv *priv)
 {
+	if (priv->timer)
+		event_remove_timeout(priv->timer);
+	callback_destroy(priv->timer_callback);
 	g_free(priv->timep);
 	g_free(priv);
 }
