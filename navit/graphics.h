@@ -184,10 +184,13 @@ struct displaylist_handle *graphics_displaylist_open(struct displaylist *display
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
+struct map_selection *displaylist_get_selection(struct displaylist *displaylist);
+GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct point *p, int radius);
 struct item *graphics_displayitem_get_item(struct displayitem *di);
 int graphics_displayitem_get_coord_count(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
 int graphics_displayitem_get_displayed(struct displayitem *di);
+int graphics_displayitem_get_z_order(struct displayitem *di);
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist);
 void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);

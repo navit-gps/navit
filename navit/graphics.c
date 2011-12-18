@@ -74,6 +74,10 @@ struct graphics
 	int font_size;
 	GList *selection;
 	int disabled;
+	/*
+	 * Counter for z_order of displayitems;
+	*/
+	int current_z_order;
 };
 
 struct display_context
@@ -838,6 +842,7 @@ static void graphics_popup(struct display_list *list, struct popup_item **popup)
 }
 #endif
 
+
 /**
  * FIXME
  * @param <>
@@ -848,6 +853,7 @@ struct displayitem {
 	struct displayitem *next;
 	struct item item;
 	char *label;
+	int z_order;
 	int count;
 	struct coord c[0];
 };
@@ -898,6 +904,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
 	di=(struct displayitem *)p;
 	p+=sizeof(*di)+count*sizeof(*c);
 	di->item=*item;
+	di->z_order=0;
 	if (label && label_count) {
 		di->label=p;
 		for (i = 0 ; i < label_count ; i++) {
@@ -1717,6 +1724,8 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	while (di) {
 	int i,count=di->count,mindist=dc->mindist;
 
+	di->z_order=++(gra->current_z_order);
+	
 	if (! gc) {
 		gc=graphics_gc_new(gra);
 		graphics_gc_set_foreground(gc, &e->color);
@@ -1877,6 +1886,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	di->item.id_hi=0;
 	di->item.id_lo=0;
 	di->item.map=NULL;
+	di->z_order=0;
 	di->label=label;
 	dc.gra=gra;
 	dc.gc=NULL;
@@ -1930,8 +1940,6 @@ static void xdisplay_draw_layer(struct displaylist *display_list, struct graphic
 }
 
 
-
-
 /**
  * FIXME
  * @param <>
@@ -1943,6 +1951,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 	GList *lays;
 	struct layer *lay;
 
+	gra->current_z_order=0;
 	lays=l->layers;
 	while (lays) {
 		lay=lays->data;
@@ -1992,6 +2001,52 @@ displaylist_update_hash(struct displaylist *displaylist)
 }
 
 
+/**
+ * @brief Returns selection structure based on displaylist transform, projection and order.
+ * Use this function to get map selection if you are going to fetch complete item data from the map based on displayitem reference.
+ * @param displaylist 
+ * @returns Pointer to selection structure
+ */
+struct map_selection *displaylist_get_selection(struct displaylist *displaylist)
+{
+	return transform_get_selection(displaylist->dc.trans, displaylist->dc.pro, displaylist->order);	
+}
+
+/**
+ * @brief Compare displayitems based on their zorder values. 
+ * Use with g_list_insert_sorted to sort less shaded items to be before more shaded ones in the result list.
+ */
+static int displaylist_cmp_zorder(const struct displayitem *a, const struct displayitem *b)
+{
+	if(a->z_order>b->z_order)
+		return -1;
+	if(a->z_order<b->z_order)
+		return 1;
+	return 0;
+}
+
+/**
+ * @brief Returns list of displayitems clicked at given coordinates. The deeper item is in current layout, the deeper it will be in the list.
+ * @param displaylist 
+ * @param p clicked point
+ * @param radius radius of clicked area 
+ * @returns GList of displayitems
+ */
+GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct point *p, int radius)
+{
+	GList *l=NULL;
+	struct displayitem *di;
+	struct displaylist_handle *dlh=graphics_displaylist_open(displaylist);
+
+	while ((di=graphics_displaylist_next(dlh))) {
+		if (di->z_order>0 && graphics_displayitem_within_dist(displaylist, di, p,radius))
+			l=g_list_insert_sorted(l,(gpointer) di, (GCompareFunc) displaylist_cmp_zorder);
+	}
+
+	return l;
+}
+
+
 
 static void
 do_draw(struct displaylist *displaylist, int cancel, int flags)
@@ -2024,7 +2079,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 			if (route_selection)
 				displaylist->sel=route_selection;
 			else
-				displaylist->sel=transform_get_selection(displaylist->dc.trans, displaylist->dc.pro, displaylist->order);
+				displaylist->sel=displaylist_get_selection(displaylist);
 			displaylist->mr=map_rect_new(displaylist->m, displaylist->sel);
 		}
 		if (displaylist->mr) {
@@ -2276,15 +2331,29 @@ struct displaylist * graphics_displaylist_new(void)
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * Get the map item which given displayitem is based on.
+ * NOTE: returned structure doesn't contain any attributes or coordinates. type, map, idhi and idlow seem to be the only useable members.
+ * @param di pointer to displayitem structure
+ * @returns Pointer to struct item
  * @author Martin Schaller (04/2008)
 */
 struct item * graphics_displayitem_get_item(struct displayitem *di)
 {
 	return &di->item;
 }
+
+/**
+ * Get the number of this item as it was last displayed on the screen, dependent of current layout. Items with lower numbers  
+ * are shaded by items with higher ones when they overlap. Zero means item was not displayed at all. If the item is displayed twice, its topmost 
+ * occurence is used.
+ * @param di pointer to displayitem structure
+ * @returns z-order of current item. 
+*/
+int graphics_displayitem_get_z_order(struct displayitem *di)
+{
+	return di->z_order;
+}
+
 
 int
 graphics_displayitem_get_coord_count(struct displayitem *di)
