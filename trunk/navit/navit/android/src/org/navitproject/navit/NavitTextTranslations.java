@@ -38,9 +38,9 @@ public class NavitTextTranslations
 	// space !!
 	static final String													m													= " ";
 
-	static final String													NAVIT_JAVA_MENU_download_first_map_en	= "download first map";
-	static final String													NAVIT_JAVA_MENU_download_first_map_fr	= "télécharchez 1ere carte";
-	static final String													NAVIT_JAVA_MENU_download_first_map_nl	= "download eerste kaart";
+	static final String													NAVIT_JAVA_MENU_download_first_map_en	= "Download first map";
+	static final String													NAVIT_JAVA_MENU_download_first_map_fr	= "Télécharchez 1ere carte";
+	static final String													NAVIT_JAVA_MENU_download_first_map_nl	= "Download eerste kaart";
 	static final String													NAVIT_JAVA_MENU_download_first_map_de	= "1te karte runterladen";
 
 	static final String													INFO_BOX_TITLE_en								= "Welcome to Navit";
@@ -51,30 +51,30 @@ public class NavitTextTranslations
 	static final String													INFO_BOX_TEXT_en								= m
 																																			+ "You are running Navit for the first time!\n\n"
 																																			+ m
-																																			+ "To start select \""
+																																			+ "To start, select \""
 																																			+ NAVIT_JAVA_MENU_download_first_map_en
 																																			+ "\"\n"
 																																			+ m
-																																			+ "from the menu, and download a map\n"
+																																			+ "from the menu to download a map\n"
 																																			+ m
-																																			+ "for your current Area.\n"
+																																			+ "of your area.\n"
 																																			+ m
-																																			+ "This will download a large file, so please\n"
+																																			+ "Note: The map filesize may be large\n"
 																																			+ m
-																																			+ "make sure you have a flatrate or similar!\n\n"
+																																			+ "(>50MB) - a wifi connection is recommended.\n\n"
 																																			+ m
 																																			+ "Mapdata:\n"
 																																			+ m
 																																			+ "CC-BY-SA OpenStreetMap Project\n\n"
 																																			+ m
-																																			+ "For more information on Navit\n"
+																																			+ "More information on Navit\n"
 																																			+ m
-																																			+ "visit our Website\n"
+																																			+ "can be found at\n"
 																																			+ m
-																																			+ "http://wiki.navit-project.org/\n"
+																																			+ "http://wiki.navit-project.org\n"
 																																			+ "\n"
 																																			+ m
-																																			+ "      Have fun using Navit.";
+																																			+ "Enjoy Navit!";
 	static final String													INFO_BOX_TEXT_fr								= m
 
 																																			+ "Vous exécutez Navit pour la première fois\n\n"
@@ -180,7 +180,7 @@ public class NavitTextTranslations
 	static final String													NAVIT_JAVA_MENU_EXIT_nl						= "Navit afsluiten";
 	static final String													NAVIT_JAVA_MENU_EXIT_de						= "Navit Beenden";
 
-	static final String													NAVIT_JAVA_MENU_TOGGLE_POI_en				= "toggle POI";
+	static final String													NAVIT_JAVA_MENU_TOGGLE_POI_en				= "POI show/hide";
 	static final String													NAVIT_JAVA_MENU_TOGGLE_POI_fr				= "POI on/off";
 	static final String													NAVIT_JAVA_MENU_TOGGLE_POI_nl				= "POI aan/uit";
 	static final String													NAVIT_JAVA_MENU_TOGGLE_POI_de				= "POI ein/aus";
@@ -190,9 +190,9 @@ public class NavitTextTranslations
 	static final String													NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl	= "Ga naar hier";
 	static final String													NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_de	= "Ziel setzen";
 
-	static final String													NAVIT_JAVA_MENU_download_second_map_en	= "download 2nd map";
-	static final String													NAVIT_JAVA_MENU_download_second_map_fr	= "télécharchez 2ème carte";
-	static final String													NAVIT_JAVA_MENU_download_second_map_nl	= "download 2de kaart";
+	static final String													NAVIT_JAVA_MENU_download_second_map_en	= "Download second map";
+	static final String													NAVIT_JAVA_MENU_download_second_map_fr	= "Télécharchez 2ème carte";
+	static final String													NAVIT_JAVA_MENU_download_second_map_nl	= "Download 2de kaart";
 	static final String													NAVIT_JAVA_MENU_download_second_map_de	= "2te karte runterladen";
 
 	// default values
@@ -257,7 +257,7 @@ public class NavitTextTranslations
 		p(k, v);
 
 		k = "Ok";
-		v = new String[]{"en", "Ok"};
+		v = new String[]{"en", "OK"};
 		p(k, v);
 
 		k = "No address found";
@@ -265,15 +265,15 @@ public class NavitTextTranslations
 		p(k, v);
 
 		k = "Enter: City and Street";
-		v = new String[]{"en", "Enter: City and Street", "de", "Stadt und Straße:"};
+		v = new String[]{"en", "Enter: City, Street", "de", "Stadt und Straße:"};
 		p(k, v);
 
 		k = "No search string entered";
-		v = new String[]{"en", "No search string entered", "de", "Keine Eingabe"};
+		v = new String[]{"en", "No text entered", "de", "Keine Eingabe"};
 		p(k, v);
 
 		k = "setting destination to";
-		v = new String[]{"en", "setting destination to", "de", "neues Fahrziel"};
+		v = new String[]{"en", "Setting destination to:", "de", "neues Fahrziel"};
 		p(k, v);
 
 		k = "getting search results";
@@ -301,15 +301,15 @@ public class NavitTextTranslations
 		p(k, v);
 
 		k = "drive here";
-		v = new String[]{"en", "drive here", "de", "Ziel setzen"};
+		v = new String[]{"en", "Route to here", "de", "Ziel setzen"};
 		p(k, v);
 
 		k = "loading search results";
-		v = new String[]{"en", "loading search results", "de", "lade Suchergebnisse"};
+		v = new String[]{"en", "Loading search results", "de", "lade Suchergebnisse"};
 		p(k, v);
 
 		k = "towns";
-		v = new String[]{"en", "towns", "de", "Städte"};
+		v = new String[]{"en", "Towns", "de", "Städte"};
 		p(k, v);
 
 
