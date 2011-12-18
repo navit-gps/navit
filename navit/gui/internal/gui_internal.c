@@ -299,6 +299,7 @@ struct gui_priv {
 	int pitch;
 	int flags_town,flags_street,flags_house_number;
 	int radius;
+	int mouse_button_clicked_on_map;
 /* html */
 	char *html_text;
 	int html_depth;
@@ -460,6 +461,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
 static void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor);
 static void gui_internal_html_load_href(struct gui_priv *this, char *href, int replace);
 static void gui_internal_destroy(struct gui_priv *this);
+
 
 /*
  * * Display image scaled to specific size
@@ -2373,6 +2375,31 @@ gui_internal_poi_param_clone(struct poi_param *p)
 	return r;
 };
 
+/**
+ * @brief Set POIs filter data in poi_param structure.
+ * @param param poi_param structure with unset filter data.
+ * @param text filter text.
+ */
+static void
+gui_internal_poi_param_set_filter(struct poi_param *param, char *text) 
+{
+	char *s1, *s2;
+	
+	param->filterstr=removecase(text);
+	s1=param->filterstr;
+	do {
+		s2=g_utf8_strchr(s1,-1,' ');
+		if(s2)
+			*s2++=0;
+		param->filter=g_list_append(param->filter,s1);
+		if(s2) {
+			while(*s2==' ')
+				s2++;
+		}
+		s1=s2;
+	} while(s2 && *s2);
+}
+
 
 static void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);
 static void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data);
@@ -2447,24 +2474,6 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	g_free(text);
 
 	return wl;
-}
-
-static gint
-gui_internal_cmd_pois_sort_num(gconstpointer a, gconstpointer b, gpointer user_data)
-{
-	const struct widget *wa=a;
-	const struct widget *wb=b;
-	struct widget *wac=wa->children->data;
-	struct widget *wbc=wb->children->data;
-#if 0
-	int ia,ib;
-	ia=atoi(wac->text);
-	ib=atoi(wbc->text);
-
-	return ia-ib;
-#else
-	return wac->datai-wbc->datai;
-#endif
 }
 
 /**
@@ -2573,8 +2582,9 @@ gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data)
 	free(w);
 }
 
+
 /**
- * @brief apply POIs text filter.
+ * @brief Event to apply POIs text filter.
  *
  * @param this The graphics context.
  * @param wm called widget.
@@ -2585,7 +2595,6 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 {
 	struct widget *w=data;
 	struct poi_param *param;
-	char *s1, *s2;
 	
 	if(!w->text)
 		return;
@@ -2596,20 +2605,9 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 	} else {
 		param=g_new0(struct poi_param,1);
 	}
-	param->filterstr=removecase(w->text);
 	param->isAddressFilter=strcmp(wm->name,"AddressFilter")==0;
-	s1=param->filterstr;
-	do {
-		s2=g_utf8_strchr(s1,-1,' ');
-		if(s2)
-			*s2++=0;
-		param->filter=g_list_append(param->filter,s1);
-		if(s2) {
-			while(*s2==' ')
-				s2++;
-		}
-		s1=s2;
-	} while(s2 && *s2);
+
+	gui_internal_poi_param_set_filter(param, w->text);
 
 	gui_internal_cmd_pois(this,w,param);
 	gui_internal_poi_param_free(param);
@@ -3012,6 +3010,13 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
 	dbg(0,"item=%p\n", item);
 	if (item) {
+		text=g_strdup_printf("%s:%s", _("Item type"), item_to_name(item->type));
+		gui_internal_widget_append(w,
+		wb=gui_internal_button_new(this, text,
+			NULL, gravity_left_center|orientation_horizontal|flags_fill));
+		wb->name=g_strdup(text);
+		wb->item=wm->item;
+		g_free(text);
 		while(item_attr_get(item, attr_any, &attr)) {
 			text=g_strdup_printf("%s:%s", attr_to_name(attr.type), attr_to_text(&attr, wm->item.map, 1));
 			gui_internal_widget_append(w,
@@ -3061,22 +3066,24 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	}
 }
 
-// meaning of the bits in "flags":
-// 1: "Streets"
-// 2: "House numbers"
-// 4: "View in Browser", "View Attributes"
-// 8: "Set as dest."
-// 16: "Set as pos."
-// 32: "Add as bookm."
-// 64: "POIs"
-// 128: "View on Map"
-// 256: POIs around this point
-// 512: "Cut/Copy... bookmark"
-// TODO define constants for these values
+/* meaning of the bits in "flags":
+ * 1: "Streets"
+ * 2: "House numbers"
+ * 4: "View in Browser", "View Attributes"
+ * 8: "Set as dest."
+ * 16: "Set as pos."
+ * 32: "Add as bookm."
+ * 64: "POIs"
+ * 128: "View on Map"
+ * 256: POIs around this point
+ * 512: "Cut/Copy... bookmark"
+ * 1024: "Jump to attributes of top item within this->radius pixels of this point (implies flags|=256)"
+ * TODO define constants for these values
+ */
 static void
 gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, char *name, int flags)
 {
-	struct widget *wb,*w,*wc,*wbc;
+	struct widget *wb,*w,*wc,*wbc,*wclosest=NULL;
 	struct coord_geo g;
 	struct pcoord pc;
 	struct coord c;
@@ -3195,61 +3202,60 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		else
 			wbc->item.type=type_none;
 	}
-	if (flags & 256) {
-		int dist=10;
-		struct mapset *ms;
-		struct mapset_handle *h;
-		struct map_rect *mr;
-		struct map *m;
-		struct item *item;
-		struct street_data *data;
-		struct map_selection sel;
-		struct transformation *trans;
-		enum projection pro;
+	if ((flags & 256) || (flags & 1024)) {
+		struct displaylist_handle *dlh;
+		struct displaylist *display;
 		struct attr attr;
-		char *label,*text;
+		struct point p;
+		struct transformation *trans;
+		
+		char *text, *label;
+		struct map_selection *sel;
+		GList *l, *ll;
+		
+		c.x=pc.x;
+		c.y=pc.y;
 
 		trans=navit_get_trans(this->nav);
-		pro=transform_get_projection(trans);
-		transform_from_geo(pro, &g, &c);
-		ms=navit_get_mapset(this->nav);
-		sel.next=NULL;
-		sel.u.c_rect.lu.x=c.x-dist;
-		sel.u.c_rect.lu.y=c.y+dist;
-		sel.u.c_rect.rl.x=c.x+dist;
-		sel.u.c_rect.rl.y=c.y-dist;
-		sel.order=18;
-		sel.range=item_range_all;
-		h=mapset_open(ms);
-		while ((m=mapset_next(h,1))) {
-			mr=map_rect_new(m, &sel);
-			if (! mr)
-				continue;
-			while ((item=map_rect_get_item(mr))) {
-				data=street_get_data(item);
-				if (transform_within_dist_item(&c, item->type, data->c, data->count, dist)) {
-					if (item_attr_get(item, attr_label, &attr)) {
-						label=map_convert_string(m, attr.u.str);
-						text=g_strdup_printf("%s %s", item_to_name(item->type), label);
-						map_convert_free(label);
-					} else
-						text=g_strdup_printf("%s", item_to_name(item->type));
-					gui_internal_widget_append(w,
-						wc=gui_internal_button_new_with_callback(this, text,
-						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-						gui_internal_cmd_position, (void *)2));
-					wc->c.x=data->c[0].x;
-					wc->c.y=data->c[0].y;
-					wc->c.pro=pro;
-					wc->name=g_strdup(text);
-					wc->item=*item;
-					g_free(text);
-				}
-				street_data_free(data);
-			}
+		transform(trans,pc.pro,&c,&p,1,0,0,0);
+		display=navit_get_displaylist(this->nav);
+		dlh=graphics_displaylist_open(display);
+		sel=displaylist_get_selection(display);
+		l=displaylist_get_clicked_list(display, &p, this->radius);
+		for(ll=l;ll;ll=g_list_next(ll)) {
+			struct displayitem *di;
+			struct item *item;
+			struct map_rect *mr;
+			struct item *itemo;
+
+			di=(struct displayitem*)ll->data;
+			item=graphics_displayitem_get_item(di);
+			
+			mr=map_rect_new(item->map, sel);
+			itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+				
+			if (item_attr_get(itemo, attr_label, &attr)) {
+				label=map_convert_string(itemo->map, attr.u.str);
+				text=g_strdup_printf("%s %s", item_to_name(item->type), label);
+				map_convert_free(label);
+			} else
+				text=g_strdup_printf("%s", item_to_name(item->type));
+			gui_internal_widget_append(w,
+				wc=gui_internal_button_new_with_callback(this, text,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_position, (void *)2));
+			wc->c=pc;
+			wc->name=g_strdup(text);
+			wc->item=*itemo;
+			g_free(text);
 			map_rect_destroy(mr);
+			if(!wclosest)
+				wclosest=wc;
+
 		}
-		mapset_close(h);
+		g_list_free(l);
+		map_selection_destroy(sel);
+	       	graphics_displaylist_close(dlh);
 	}
 	if (flags & 512) {
 		gui_internal_widget_append(w,
@@ -3278,6 +3284,9 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->text=g_strdup(wm->text);
 	}
 	gui_internal_menu_render(this);
+
+	if((flags & 1024) && wclosest) 
+			gui_internal_cmd_view_attributes(this,wclosest,wclosest->data);
 }
 
 
@@ -3360,6 +3369,39 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	dbg(1,"flags=0x%x\n",flags);
 	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
+
+static void
+gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct widget *w;
+	struct poi_param *param;
+	struct attr pro;
+	struct coord c;
+
+	dbg(1,"enter\n");
+	if (!in || !in[0])
+		return;
+	if (!ATTR_IS_COORD_GEO(in[0]->type))
+		return;
+	if (!navit_get_attr(this->nav, attr_projection, &pro, NULL))
+		return;
+	w=g_new0(struct widget,1);
+	param=g_new0(struct poi_param,1);
+	if (in[1] && ATTR_IS_STRING(in[1]->type)) {
+		gui_internal_poi_param_set_filter(param, in[1]->u.str);
+		if (in[2] && ATTR_IS_INT(in[2]->type))
+			param->isAddressFilter=in[2]->u.num;
+	}
+	
+	transform_from_geo(pro.u.projection,in[0]->u.coord_geo,&c);
+	w->c.x=c.x;
+	w->c.y=c.y;
+	w->c.pro=pro.u.projection;
+	gui_internal_cmd_pois(this, w, param);
+	g_free(w);
+	gui_internal_poi_param_free(param);
+}
+
 
 /**
   * The "Bookmarks" section of the OSD
@@ -5653,6 +5695,9 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
 	case attr_pitch:
 		attr->u.num=this->pitch;
 		break;
+	case attr_button:
+		attr->u.num=this->mouse_button_clicked_on_map;
+		break;
 	default:
 		return 0;
 	}
@@ -5716,11 +5761,12 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 			map_rect_destroy(mr);
 		}
 	}
-       	graphics_displaylist_close(dlh);
-       	if (attr_list && navit_get_attr(this->nav, attr_callback_list, &cb, NULL))
+	graphics_displaylist_close(dlh);
+	if (attr_list && navit_get_attr(this->nav, attr_callback_list, &cb, NULL))
 		callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
 	attr_list_free(attr_list);
 }
+
 
 
 //##############################################################################################################
@@ -5748,7 +5794,9 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		if (button != 1)
 			return;
 		if (this->menu_on_map_click) {
+			this->mouse_button_clicked_on_map=1;
 			gui_internal_cmd_menu(this, p, 0, NULL);
+			this->mouse_button_clicked_on_map=0;
 			return;
 		}
 		if (this->signal_on_map_click) {
@@ -7264,6 +7312,7 @@ static struct command_table commands[] = {
 	{"log",command_cast(gui_internal_cmd_log)},
 	{"menu",command_cast(gui_internal_cmd_menu2)},
 	{"position",command_cast(gui_internal_cmd2_position)},
+	{"pois",command_cast(gui_internal_cmd2_pois)},
 	{"route_description",command_cast(gui_internal_cmd2_route_description)},
 	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
 	{"set",command_cast(gui_internal_cmd2_set)},
