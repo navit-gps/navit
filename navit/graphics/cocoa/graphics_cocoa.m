@@ -1,3 +1,4 @@
+#include <glib.h>
 #include "config.h"
 #include "config_.h"
 #include "debug.h"
@@ -9,7 +10,6 @@
 #include "item.h"
 #include "callback.h"
 #include "color.h"
-#include <glib.h>
 #include <iconv.h>
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
