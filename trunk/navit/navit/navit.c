@@ -2207,16 +2207,6 @@ navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout)
 	navit_set_center(this_, &pc, set_timeout);
 }
 
-#if 0
-		switch((*attrs)->type) {
-		case attr_zoom:
-			zoom=(*attrs)->u.num;
-			break;
-		case attr_center:
-			g=*((*attrs)->u.coord_geo);
-			break;
-#endif
-
 static int
 navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 {
