@@ -39,6 +39,13 @@
 static int map_id;
 
 static void
+remove_comment_line(char* line){
+	if (line==TEXTFILE_COMMENT_CHAR){
+		line='\0';
+	}
+}
+
+static void
 get_line(struct map_rect_priv *mr)
 {
 	if(mr->f) {
@@ -47,10 +54,11 @@ get_line(struct map_rect_priv *mr)
 		else
 			mr->pos+=mr->lastlen;
 		fgets(mr->line, SIZE, mr->f);
+	        dbg(1,"read textfile line: %s\n", mr->line);
+		remove_comment_line(mr->line);
 		mr->lastlen=strlen(mr->line)+1;
 		if (strlen(mr->line) >= SIZE-1) 
 			printf("line too long\n");
-	        dbg(1,"read textfile line: %s\n", mr->line);
 	}
 }
 
