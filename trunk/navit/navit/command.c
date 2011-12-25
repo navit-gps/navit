@@ -443,10 +443,14 @@ command_call_function(struct context *ctx, struct result *res)
 		command_object_remove_attr(ctx, &res->attr, list[0]);
 	} else {
 		if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
-			int valid;
+			int valid =0;
 			struct attr **out=NULL;
 			dbg(1,"function call %s from %s\n",function, attr_to_name(res->attr.type));
 			callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
+			if (valid!=1){
+				dbg(0, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
+				    "The_Navit_Command_Interface for valid commands.\n", function);
+			}
 			if (out && out[0]) {
 				attr_dup_content(out[0], &res->attr);
 				attr_list_free(out);
