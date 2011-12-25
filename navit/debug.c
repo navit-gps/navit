@@ -52,7 +52,7 @@ static struct sockaddr_in debug_sin;
 #endif
 
 
-int debug_level=3;
+int debug_level=0;
 int segv_level=0;
 int timestamp_prefix=0;
 
