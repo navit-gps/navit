@@ -23,6 +23,7 @@
 #include <unistd.h>
 #endif
 #include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
@@ -66,6 +67,7 @@
 #include "vehicleprofile.h"
 #include "sunriset.h"
 #include "bookmarks.h"
+#include "map/textfile/textfile.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include "util.h"
@@ -1458,6 +1460,18 @@ navit_projection_set(struct navit *this_, enum projection pro, int draw)
 		navit_draw(this_);
 }
 
+static void
+navit_mark_navigation_stopped(char *former_destination_file){
+        FILE *f;
+	f=fopen(former_destination_file, "a");
+	if (f) {
+		fprintf(f,"%s", TEXTFILE_COMMENT_NAVI_STOPPED);
+		fclose(f);
+	}else{
+		dbg(0, "Error setting mark in destination file %s: %s\n", former_destination_file, strerror(errno));
+	}
+}
+
 /**
  * Start the route computing to a given set of coordinates
  *
@@ -1470,16 +1484,18 @@ void
 navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async)
 {
 	char *destination_file;
+	destination_file = bookmarks_get_destination_file(TRUE);
 	if (c) {
 		this_->destination=*c;
 		this_->destination_valid=1;
 
 		dbg(1, "c=(%i,%i)\n", c->x,c->y);
-		destination_file = bookmarks_get_destination_file(TRUE);
 		bookmarks_append_coord(this_->former_destination, destination_file, c, type_former_destination, description, this_->recentdest_count);
-		g_free(destination_file);
-	} else
+	} else {
 		this_->destination_valid=0;
+		navit_mark_navigation_stopped(destination_file);
+	}
+	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
 		route_set_destination(this_->route, c, async);
@@ -1540,17 +1556,19 @@ navit_check_route(struct navit *this_)
 static int
 navit_former_destinations_active(struct navit *this_)
 {
-	char *destination_file = bookmarks_get_destination_file(FALSE);
-	FILE *f;
+	char *destination_file_name = bookmarks_get_destination_file(FALSE);
+	FILE *destination_file;
 	int active=0;
-	char buffer[3];
-	f=fopen(destination_file,"r");
-	if (f) {
-		if(!fseek(f, -2, SEEK_END) && fread(buffer, 2, 1, f) == 1 && (buffer[0]!='\n' || buffer[1]!='\n')) 
+	char lastline[100];
+	destination_file=fopen(destination_file_name,"r");
+	if (destination_file) {
+		while(fgets(lastline, sizeof(lastline), destination_file));
+		fclose(destination_file);
+		if ((lastline != NULL) && (strcmp(lastline, TEXTFILE_COMMENT_NAVI_STOPPED))){
 			active=1;
-		fclose(f);
+		}
 	}
-	g_free(destination_file);
+	g_free(destination_file_name);
 	return active;
 }
 
