@@ -1338,58 +1338,58 @@ msgstr "Reiseziel"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Anzeige"
+msgstr "_Anzeige"
 
 msgid "_Route"
-msgstr "Route"
+msgstr "_Route"
 
 msgid "_Former Destinations"
-msgstr "Vorherige Ziele"
+msgstr "_Vorherige Ziele"
 
 msgid "_Bookmarks"
-msgstr "Lesezeichen"
+msgstr "_Lesezeichen"
 
 msgid "_Map"
-msgstr "Karte"
+msgstr "_Karte"
 
 msgid "_Layout"
-msgstr "Erscheinungsbild"
+msgstr "_Erscheinungsbild"
 
 msgid "_Projection"
-msgstr "Projektion"
+msgstr "_Projektion"
 
 msgid "_Vehicle"
-msgstr "Fahrzeug"
+msgstr "_Fahrzeug"
 
 msgid "Zoom_Out"
-msgstr "Verkleinern"
+msgstr "Ver_kleinern"
 
 msgid "Decrease zoom level"
 msgstr "Verkleinern"
 
 msgid "Zoom_In"
-msgstr "Vergrößern"
+msgstr "Ver_größern"
 
 msgid "Increase zoom level"
 msgstr "Vergrößern"
 
 msgid "_Recalculate"
-msgstr "Neu berechnen"
+msgstr "_Neu berechnen"
 
 msgid "Redraw map"
 msgstr "Karte neuzeichnen"
 
 msgid "_Info"
-msgstr "Info"
+msgstr "_Info"
 
 msgid "Set _destination"
-msgstr "Als Ziel setzen"
+msgstr "Als _Ziel setzen"
 
 msgid "Opens address search dialog"
 msgstr "Öffnet Adresssuche-Dialog"
 
 msgid "_Stop Navigation"
-msgstr "Navigation beenden"
+msgstr "Navigation be_enden"
 
 msgid "Test"
 msgstr "Test"
@@ -1401,32 +1401,32 @@ msgid "Quit the application"
 msgstr "Die Anwendung beenden"
 
 msgid "Show position _cursor"
-msgstr "Positionsmarke zeigen"
+msgstr "Positions_marke zeigen"
 
 msgid "_Lock on Road"
-msgstr "Auf Straße zeigen"
+msgstr "Auf Straße _zeigen"
 
 msgid "_Keep orientation to the North"
-msgstr "Nordorientierung"
+msgstr "_Nordorientierung"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr ""
 "Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
 
 msgid "_Roadbook"
-msgstr "Straßenkarte"
+msgstr "_Straßenkarte"
 
 msgid "Show/hide route description"
 msgstr "Routenbeschreibung anzeigen/schließen"
 
 msgid "_Autozoom"
-msgstr "automatischer Zoom"
+msgstr "_automatischer Zoom"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr "Automatischen Zoom einschalten/ausschalten"
 
 msgid "_Fullscreen"
-msgstr "Vollbild"
+msgstr "_Vollbild"
 
 msgid "Data"
 msgstr "Daten"
