@@ -774,6 +774,8 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, st
 	if (this->statusbar_enable) {
 		this->statusbar=gui_gtk_statusbar_new(this);
 	}
+	gtk_window_add_accel_group (GTK_WINDOW (this->win),
+	    gtk_ui_manager_get_accel_group(this->ui_manager));
 	gtk_container_add(GTK_CONTAINER(this->win), this->vbox);
 	gtk_widget_show_all(this->win);
 
