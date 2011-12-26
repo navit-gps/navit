@@ -198,24 +198,25 @@ quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy)
 
 static GtkActionEntry entries[] =
 {
-	{ "DisplayMenuAction", NULL, _n("Display") },
-	{ "RouteMenuAction", NULL, _n("Route") },
-	{ "FormerDestinationMenuAction", NULL, _n("Former Destinations") },
-	{ "BookmarkMenuAction", NULL, _n("Bookmarks") },
-	{ "MapMenuAction", NULL, _n("Map") },
-	{ "LayoutMenuAction", NULL, _n("Layout") },
-	{ "ProjectionMenuAction", NULL, _n("Projection") },
-	{ "VehicleMenuAction", NULL, _n("Vehicle") },
-	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), "<control>minus", _n("Decrease zoom level"), G_CALLBACK(zoom_out_action) },
-	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), "<control>plus", _n("Increase zoom level"), G_CALLBACK(zoom_in_action) },
-	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Recalculate"), "<control>R", _n("Redraw map"), G_CALLBACK(refresh_action) },
+	/* TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired). */
+	{ "DisplayMenuAction", NULL, _n("_Display") },
+	{ "RouteMenuAction", NULL, _n("_Route") },
+	{ "FormerDestinationMenuAction", NULL, _n("_Former Destinations") },
+	{ "BookmarkMenuAction", NULL, _n("_Bookmarks") },
+	{ "MapMenuAction", NULL, _n("_Map") },
+	{ "LayoutMenuAction", NULL, _n("_Layout") },
+	{ "ProjectionMenuAction", NULL, _n("_Projection") },
+	{ "VehicleMenuAction", NULL, _n("_Vehicle") },
+	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("Zoom_Out"), "<control>minus", _n("Decrease zoom level"), G_CALLBACK(zoom_out_action) },
+	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("Zoom_In"), "<control>plus", _n("Increase zoom level"), G_CALLBACK(zoom_in_action) },
+	{ "RefreshAction", GTK_STOCK_REFRESH, _n("_Recalculate"), "<control>R", _n("Redraw map"), G_CALLBACK(refresh_action) },
 #ifdef GTK_STOCK_INFO
-	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
+	{ "InfoAction", GTK_STOCK_INFO, _n("_Info"), NULL, NULL, G_CALLBACK(info_action) },
 #else
-	{ "InfoAction", NULL, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
+	{ "InfoAction", NULL, _n("_Info"), NULL, NULL, G_CALLBACK(info_action) },
 #endif /*GTK_STOCK_INFO*/
-	{ "DestinationAction", "flag_icon", _n("Set destination"), "<control>D", _n("Opens address search dialog"), G_CALLBACK(destination_action) },
-	{ "RouteClearAction", NULL, _n("Stop Navigation"), "<control>S", NULL, G_CALLBACK(route_clear_action) },
+	{ "DestinationAction", "flag_icon", _n("Set _destination"), "<control>D", _n("Opens address search dialog"), G_CALLBACK(destination_action) },
+	{ "RouteClearAction", NULL, _n("_Stop Navigation"), "<control>S", NULL, G_CALLBACK(route_clear_action) },
 	{ "Test", NULL, _n("Test"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",_n("Quit the application"), G_CALLBACK (quit_action) }
 };
@@ -224,15 +225,15 @@ static guint n_entries = G_N_ELEMENTS (entries);
 
 static GtkToggleActionEntry toggleentries[] =
 {
-	{ "CursorAction", "cursor_icon",_n("Show position cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-	{ "TrackingAction", NULL ,_n("Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
-	{ "OrientationAction", "orientation_icon", _n("Keep orientation to the North"), NULL, _n("Switches map orientation to the north or the vehicle"), G_CALLBACK(orient_north_action),FALSE },
-	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), "<control>B", _n("Show/hide route description"), G_CALLBACK(roadbook_action), FALSE },
-	{ "AutozoomAction", GTK_STOCK_ZOOM_FIT, _n("Autozoom"), "<control>A", _n("Enable/disable automatic zoom level changing"), G_CALLBACK(autozoom_action), FALSE },
+	{ "CursorAction", "cursor_icon",_n("Show position _cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
+	{ "TrackingAction", NULL ,_n("_Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
+	{ "OrientationAction", "orientation_icon", _n("_Keep orientation to the North"), NULL, _n("Switches map orientation to the north or the vehicle"), G_CALLBACK(orient_north_action),FALSE },
+	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("_Roadbook"), "<control>B", _n("Show/hide route description"), G_CALLBACK(roadbook_action), FALSE },
+	{ "AutozoomAction", GTK_STOCK_ZOOM_FIT, _n("_Autozoom"), "<control>A", _n("Enable/disable automatic zoom level changing"), G_CALLBACK(autozoom_action), FALSE },
 #ifdef GTK_STOCK_FULLSCREEN
-	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("Fullscreen"), "<control>F", NULL, G_CALLBACK(window_fullscreen_action), FALSE }
+	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("_Fullscreen"), "<control>F", NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 #else
-	{ "FullscreenAction", NULL, _n("Fullscreen"), "<control>F", NULL, G_CALLBACK(window_fullscreen_action), FALSE }
+	{ "FullscreenAction", NULL, _n("_Fullscreen"), "<control>F", NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 #endif /*GTK_STOCK_FULLSCREEN*/
 };
 
