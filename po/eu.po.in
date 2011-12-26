@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-26 11:29+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-08-27 18:11+0000\n"
 "Last-Translator: Inaki Saez <Inaki.Saez@gmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "Iturburu direktoriotik ari\\n\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' '%s'ra ezartzen\\n\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "zero"
 
@@ -47,6 +49,7 @@ msgstr "boskarren"
 msgid "sixth"
 msgstr "seigarren"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "zerogarren irteera"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "%d metrotan"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metro"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "%d metrotan"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d,%d kilometro"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d,%d kilometrotan"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -162,14 +193,13 @@ msgstr "ezezaguna "
 msgid "When possible, please turn around"
 msgstr "Ahal duzunean eman itzulia, mesedez"
 
-#, c-format
-msgid "Enter the roundabout soon and leave it at the %s"
-msgstr "Hurrengoan sartu errotondan eta atera %sean"
+msgid "Enter the roundabout soon"
+msgstr ""
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "%s-tan sartu errotondan"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -1301,55 +1331,59 @@ msgstr "Gogokoa"
 msgid "Destination"
 msgstr "Helburua"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Bistaratzea"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Ibilbidea"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Aurreko Helburuak"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Gogokoak"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Mapa"
+
+msgid "_Layout"
 msgstr "Antolaketa"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Proiekzioa"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Ibilgailua"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Hurrundu"
 
 msgid "Decrease zoom level"
 msgstr "Txikitu zooma"
 
-msgid "ZoomIn"
+msgid "Zoom_In"
 msgstr "Hurbildu"
 
 msgid "Increase zoom level"
 msgstr "Handitu zooma"
 
-msgid "Recalculate"
+msgid "_Recalculate"
 msgstr "Birkalkulatu"
 
 msgid "Redraw map"
 msgstr "Mapa Birmargotu"
 
-msgid "Info"
+msgid "_Info"
 msgstr "Datuak"
 
-msgid "Set destination"
+msgid "Set _destination"
 msgstr "Helburua ezarri"
 
 msgid "Opens address search dialog"
 msgstr "Ireki helbidea bilatzeko lehioa"
 
-msgid "Stop Navigation"
+msgid "_Stop Navigation"
 msgstr "Nabigazioa Gelditu"
 
 msgid "Test"
@@ -1361,28 +1395,31 @@ msgstr "_Irten"
 msgid "Quit the application"
 msgstr "Irten programatik"
 
-msgid "Show position cursor"
+msgid "Show position _cursor"
 msgstr "Erakutsi kurtsore kokalekua"
 
-msgid "Lock on Road"
+msgid "_Lock on Road"
 msgstr "Bidean oztopoa"
 
-msgid "Keep orientation to the North"
+msgid "_Keep orientation to the North"
 msgstr "Iparralderantz begira"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr "Maparen norabidea iparralde edo berebilaren artean aldatu"
 
+msgid "_Roadbook"
+msgstr "Gida"
+
 msgid "Show/hide route description"
 msgstr "Erakutsi/ezkutatu hibilbidearen berri"
 
-msgid "Autozoom"
+msgid "_Autozoom"
 msgstr "Autohanditu"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr "Zoom automatikoa onartu/debekatu"
 
-msgid "Fullscreen"
+msgid "_Fullscreen"
 msgstr "Pantaila osoa"
 
 msgid "Data"
@@ -1446,6 +1483,7 @@ msgstr "Atzera"
 msgid "Add Bookmark"
 msgstr "Gogokoa gehitu"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Gehitu Gogokoen direktorioa"
 
@@ -1485,6 +1523,10 @@ msgstr "Itsatsi Gogokoa"
 msgid "Delete Bookmark"
 msgstr "Ezabatu Gogokoa"
 
+msgid "Bookmarks"
+msgstr "Gogokoak"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Itsatsi gogokoa"
 
@@ -1492,8 +1534,33 @@ msgstr "Itsatsi gogokoa"
 msgid "Bookmark %s"
 msgstr "%s marka"
 
+msgid "Former Destinations"
+msgstr "Aurreko Helburuak"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Etxebizitza zenbakia"
+
+msgid "Layout"
+msgstr "Antolaketa"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Mapak"
@@ -1536,6 +1603,9 @@ msgstr "Sateliteen egoera erakutsi"
 msgid "Show NMEA data"
 msgstr "NMEA datuak erakutsi"
 
+msgid "Vehicle"
+msgstr "Ibilgailua"
+
 msgid "Rules"
 msgstr "Arauak"
 
@@ -1550,6 +1620,12 @@ msgstr "Mapak ibilgailua jarraitzen du"
 
 msgid "Message"
 msgstr "Mezua"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Ibilbidearen nondik-norakoa"
@@ -1574,6 +1650,23 @@ msgstr "Eta Navit talde osoa"
 msgid "members and contributors."
 msgstr "partaide eta laguntzaileak."
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Mapako puntua"
+
+msgid "Vehicle Position"
+msgstr "Berebilaren kokalekua"
+
 msgid "Main menu"
 msgstr "Menu nagusia"
 
@@ -1590,11 +1683,19 @@ msgstr "Ezarpenak"
 msgid "Tools"
 msgstr "Tresnak"
 
+msgid "Route"
+msgstr "Ibilbidea"
+
 msgid "About"
 msgstr "Honi buruz"
 
 msgid "Actions"
 msgstr "Ekintzak"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Irten"
@@ -1606,17 +1707,54 @@ msgstr ""
 "Nabigazioa\n"
 "Gelditu"
 
+msgid "Display"
+msgstr "Bistaratzea"
+
+msgid "Fullscreen"
+msgstr "Pantaila osoa"
+
 msgid "Window Mode"
 msgstr "Lehio modua"
 
 msgid "Description"
 msgstr "Zehazketa"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "zaldia"
 
-msgid "Map Point"
-msgstr "Mapako puntua"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Berebilaren kokalekua"
+#~ msgid "Enter the roundabout soon and leave it at the %s"
+#~ msgstr "Hurrengoan sartu errotondan eta atera %sean"
+
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "%s-tan sartu errotondan"

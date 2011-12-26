@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-05-27 15:01+0000\n"
 "Last-Translator: M Bambang I <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr ""
 msgid "setting '%s' to '%s'\n"
 msgstr "penataan '%s' ke '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "ke nol"
 
@@ -47,6 +49,7 @@ msgstr "kelima"
 msgid "sixth"
 msgstr "keenam"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr ""
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "dalam %d meter"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d meter"
 
@@ -85,12 +96,30 @@ msgid "in %d meters"
 msgstr "dalam %d meter"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilometer"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "dalam %d.%d kilometer"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
 
 #, c-format
 msgid "one kilometer"
@@ -166,16 +195,16 @@ msgstr "segera memasuki bundaran"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Dalam %s,memasuki bundaran"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Tinggalkan bundaran pada %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "kemudian tinggalkan bundaran pada %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Tinggalkan bundaran pada %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1299,40 +1328,59 @@ msgstr ""
 msgid "Destination"
 msgstr "Tujuan"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Tampilan"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Rute"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr ""
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr ""
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Peta"
+
+msgid "_Layout"
 msgstr ""
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Proyeksi"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Kendaraan"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr ""
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
 msgstr ""
 
-msgid "Recalculate"
+msgid "Zoom_In"
+msgstr ""
+
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Menghitung ulang"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Informasi"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Navigasi berhenti"
 
 msgid "Test"
@@ -1341,19 +1389,34 @@ msgstr "Tes"
 msgid "_Quit"
 msgstr ""
 
-msgid "Cursor"
+msgid "Quit the application"
 msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
 msgstr ""
 
-msgid "Northing"
-msgstr "Keutara"
+msgid "_Lock on Road"
+msgstr ""
 
-msgid "Autozoom"
+msgid "_Keep orientation to the North"
+msgstr ""
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Panduan perjalanan"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "AutoZoom"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Layar penuh"
 
 msgid "Data"
@@ -1417,6 +1480,7 @@ msgstr "Kembali"
 msgid "Add Bookmark"
 msgstr "Tambah Penanda"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1456,6 +1520,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr ""
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1463,8 +1531,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Penanda %s"
 
+msgid "Former Destinations"
+msgstr ""
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Nomer rumah"
+
+msgid "Layout"
+msgstr ""
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Peta - peta"
@@ -1507,17 +1600,29 @@ msgstr "Status Satelit"
 msgid "Show NMEA data"
 msgstr "Data NMEA"
 
+msgid "Vehicle"
+msgstr "Kendaraan"
+
 msgid "Rules"
 msgstr "Aturan - aturan"
 
 msgid "Lock on road"
 msgstr "Kunci pada jalan"
 
+msgid "Northing"
+msgstr "Keutara"
+
 msgid "Map follows Vehicle"
 msgstr "Peta mengikuti kendaraan"
 
 msgid "Message"
 msgstr "Pesan"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Deskripsi rute"
@@ -1542,6 +1647,23 @@ msgstr "Dan seluruh anggota tim Navit"
 msgid "members and contributors."
 msgstr "para anggota dan kontributor"
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Letak pada peta"
+
+msgid "Vehicle Position"
+msgstr "Posisi kendaraan"
+
 msgid "Main menu"
 msgstr "Menu Utama"
 
@@ -1558,11 +1680,19 @@ msgstr "Pengaturan"
 msgid "Tools"
 msgstr "Peralatan"
 
+msgid "Route"
+msgstr "Rute"
+
 msgid "About"
 msgstr "Tentang"
 
 msgid "Actions"
 msgstr "Tindakan-tindakan"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Berhenti"
@@ -1574,17 +1704,51 @@ msgstr ""
 "Navigasi\n"
 "Berhenti"
 
+msgid "Display"
+msgstr "Tampilan"
+
+msgid "Fullscreen"
+msgstr "Layar penuh"
+
 msgid "Window Mode"
 msgstr ""
 
 msgid "Description"
 msgstr "Deskripsi"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "kuda"
 
-msgid "Map Point"
-msgstr "Letak pada peta"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Posisi kendaraan"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Dalam %s,memasuki bundaran"

@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2009-12-20 21:38+0000\n"
 "Last-Translator: Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "Đang chạy từ thư mục nguồn\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "thiết lập '%s' đến '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "Thứ 0"
 
@@ -47,6 +49,7 @@ msgstr "thứ năm"
 msgid "sixth"
 msgstr "thứ sáu"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "Thoát thứ 0"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "trong %d m"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d mét"
 
@@ -85,12 +96,30 @@ msgid "in %d meters"
 msgstr "trong %d mét"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "trong %d.%d km"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
 
 #, c-format
 msgid "one kilometer"
@@ -165,16 +194,16 @@ msgstr "Sắp tới chỗ vòng"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Còn %s, đi vào đường vòng"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Ra khỏi đường vòng tại %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "sau đó ra khỏi đường vòng tại %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Ra khỏi đường vòng tại %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1298,40 +1327,59 @@ msgstr "Đánh dấu"
 msgid "Destination"
 msgstr "Điểm đến"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Hiển thị"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Tuyến"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Điểm đến trước"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Đánh dấu"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Bản đồ"
+
+msgid "_Layout"
 msgstr "Layout"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Phép chiếu"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Phương tiện"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Thu nhỏ"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Phóng to"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Tính lại"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Thông tin"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Dừng dẫn đường"
 
 msgid "Test"
@@ -1340,19 +1388,34 @@ msgstr "Kiểm tra"
 msgid "_Quit"
 msgstr "_Thoát"
 
-msgid "Cursor"
-msgstr "Con trỏ"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Bám vào đường"
 
-msgid "Northing"
-msgstr "Hướng Bắc"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Roadbook"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Tự động thu phóng"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Toàn màn hình"
 
 msgid "Data"
@@ -1416,6 +1479,7 @@ msgstr "Quay lại"
 msgid "Add Bookmark"
 msgstr ""
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1455,6 +1519,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr "Đánh dấu"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1462,8 +1530,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Đánh dấu %s"
 
+msgid "Former Destinations"
+msgstr "Điểm đến trước"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Số nhà"
+
+msgid "Layout"
+msgstr "Layout"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Bản đồ"
@@ -1506,17 +1599,29 @@ msgstr "Xem thông tin vệ tinh"
 msgid "Show NMEA data"
 msgstr "Xem dữ liệu dạng NMEA"
 
+msgid "Vehicle"
+msgstr "Phương tiện"
+
 msgid "Rules"
 msgstr "Quy tắc"
 
 msgid "Lock on road"
 msgstr "Bám vào đường"
 
+msgid "Northing"
+msgstr "Hướng Bắc"
+
 msgid "Map follows Vehicle"
 msgstr "Dịch bản đồ theo phương tiện khi di chuyển"
 
 msgid "Message"
 msgstr "Thông điệp"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr ""
@@ -1541,6 +1646,23 @@ msgstr ""
 msgid "members and contributors."
 msgstr ""
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Map Point"
+
+msgid "Vehicle Position"
+msgstr "Vị trí phương tiện"
+
 msgid "Main menu"
 msgstr "Trình đơn chính"
 
@@ -1555,11 +1677,19 @@ msgstr "Thiết lập"
 msgid "Tools"
 msgstr "Công cụ"
 
+msgid "Route"
+msgstr "Tuyến"
+
 msgid "About"
 msgstr ""
 
 msgid "Actions"
 msgstr "Thao tác"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Thoát"
@@ -1569,21 +1699,57 @@ msgid ""
 "Navigation"
 msgstr "Dừng dẫn đường"
 
+msgid "Display"
+msgstr "Hiển thị"
+
+msgid "Fullscreen"
+msgstr "Toàn màn hình"
+
 msgid "Window Mode"
 msgstr "Chế độ cửa sổ"
 
 msgid "Description"
 msgstr "Mô tả"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr ""
 
-msgid "Map Point"
-msgstr "Map Point"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Vị trí phương tiện"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Còn %s, đi vào đường vòng"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Con trỏ"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d km"

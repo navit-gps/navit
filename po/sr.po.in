@@ -5,17 +5,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-08 21:56+0000\n"
 "Last-Translator: momcilo <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -27,6 +28,7 @@ msgstr "Покренут из изворног директоријума\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "постављам вредност '%s' на '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "нулти"
 
@@ -48,6 +50,7 @@ msgstr "пето"
 msgid "sixth"
 msgstr "шестп"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "нулти излаз"
 
@@ -78,6 +81,14 @@ msgid "in %d m"
 msgstr "за %d м"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d метара"
 
@@ -86,12 +97,34 @@ msgid "in %d meters"
 msgstr "за %d метара"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d километара"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "за %d.%d километара"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -170,16 +203,16 @@ msgstr "Ускоро прелазак на обилазницу"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "За %s, прелазак на обилазницу"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Напуштање обилазнице за %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "потом напутстите обилазницу на %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Напуштање обилазнице за %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1303,40 +1336,59 @@ msgstr "Обележивач"
 msgid "Destination"
 msgstr "Одредиште"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Приказ"
 
-msgid "Route"
+msgid "_Route"
 msgstr "рута"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Претходна одредишта"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Обележивачи"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Карта"
+
+msgid "_Layout"
 msgstr "Распоред"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Пројекција"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Возило"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Умањи"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Увећај"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Прерачунај"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Подаци"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Заустави навигацију"
 
 msgid "Test"
@@ -1345,19 +1397,34 @@ msgstr "Проба"
 msgid "_Quit"
 msgstr "_Изађи"
 
-msgid "Cursor"
-msgstr "Курсор"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Прати пут"
 
-msgid "Northing"
-msgstr "Ништа"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "План пута"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Аутоматски увећавање"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Цео екран"
 
 msgid "Data"
@@ -1421,6 +1488,7 @@ msgstr "Назад"
 msgid "Add Bookmark"
 msgstr "Додавање обележивача"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Додај фолдер са обележивачима"
 
@@ -1460,6 +1528,10 @@ msgstr "Прилепи обележивач"
 msgid "Delete Bookmark"
 msgstr "Обриши обележивач"
 
+msgid "Bookmarks"
+msgstr "Обележивачи"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Прилепи обележивач"
 
@@ -1467,8 +1539,33 @@ msgstr "Прилепи обележивач"
 msgid "Bookmark %s"
 msgstr "Обележи %s"
 
+msgid "Former Destinations"
+msgstr "Претходна одредишта"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Кућни број"
+
+msgid "Layout"
+msgstr "Распоред"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Мапе"
@@ -1511,17 +1608,29 @@ msgstr "Прикажи стање сателита"
 msgid "Show NMEA data"
 msgstr "Прикажи NMEA податке"
 
+msgid "Vehicle"
+msgstr "Возило"
+
 msgid "Rules"
 msgstr "Правила"
 
 msgid "Lock on road"
 msgstr "Прати пут"
 
+msgid "Northing"
+msgstr "Ништа"
+
 msgid "Map follows Vehicle"
 msgstr "Мапа прати возило"
 
 msgid "Message"
 msgstr "Порука"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Опис руте"
@@ -1546,6 +1655,23 @@ msgstr "И цео Navit тим"
 msgid "members and contributors."
 msgstr "чланови и доприносиоци"
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Тачка на мапи"
+
+msgid "Vehicle Position"
+msgstr "Позиција возила"
+
 msgid "Main menu"
 msgstr "Главни мени"
 
@@ -1560,11 +1686,19 @@ msgstr "Подешавања"
 msgid "Tools"
 msgstr "Алати"
 
+msgid "Route"
+msgstr "рута"
+
 msgid "About"
 msgstr "O"
 
 msgid "Actions"
 msgstr "Поступци"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Заврши"
@@ -1576,17 +1710,54 @@ msgstr ""
 "Заустави\n"
 "навигацију"
 
+msgid "Display"
+msgstr "Приказ"
+
+msgid "Fullscreen"
+msgstr "Цео екран"
+
 msgid "Window Mode"
 msgstr "Режим прозора"
 
 msgid "Description"
 msgstr "Опис"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "коњ"
 
-msgid "Map Point"
-msgstr "Тачка на мапи"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Позиција возила"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "За %s, прелазак на обилазницу"
+
+#~ msgid "Cursor"
+#~ msgstr "Курсор"

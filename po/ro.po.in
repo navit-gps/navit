@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-12 09:37+0000\n"
 "Last-Translator: igorashu <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,6 +28,7 @@ msgstr "Rulează din directorul sursă\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "se setează „%s” ca „%s”\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "zero"
 
@@ -48,6 +50,7 @@ msgstr "a cincea"
 msgid "sixth"
 msgstr "a șasea"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "ieșirea zero"
 
@@ -78,6 +81,14 @@ msgid "in %d m"
 msgstr "în %d m"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metri"
 
@@ -86,12 +97,34 @@ msgid "in %d meters"
 msgstr "în %d metri"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilometri"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "în %d.%d kilometri"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -170,16 +203,16 @@ msgstr "Intrați în curând în giratoriu"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "În %s, intrați în sensul giratoriu"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Ieșiți din giratoriu la %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "apoi ieșiți din giratoriu la %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Ieșiți din giratoriu la %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1303,40 +1336,59 @@ msgstr "Semn de carte"
 msgid "Destination"
 msgstr "Destinaţie"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Ecran"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Traseu"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Destinații anterioare"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Semne de carte"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Hartă"
+
+msgid "_Layout"
 msgstr "Dispunere"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Proiecție"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Vehicul"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Depărtează"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Apropie"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Recalculează"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Informații"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Oprește navigarea"
 
 msgid "Test"
@@ -1345,19 +1397,34 @@ msgstr "Testează"
 msgid "_Quit"
 msgstr "_Ieșire"
 
-msgid "Cursor"
-msgstr "Cursor"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Fixează strada"
 
-msgid "Northing"
-msgstr "Nimic"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Drum blocat"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Autozoom"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Pe tot ecranul"
 
 msgid "Data"
@@ -1421,6 +1488,7 @@ msgstr "Înapoi"
 msgid "Add Bookmark"
 msgstr "Adaugă semn de carte"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Adaugă director pentru semne de carte"
 
@@ -1460,6 +1528,10 @@ msgstr "Lipește semnul de carte"
 msgid "Delete Bookmark"
 msgstr "Șterge semnul de carte"
 
+msgid "Bookmarks"
+msgstr "Semne de carte"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Lipește semn de carte"
 
@@ -1467,8 +1539,33 @@ msgstr "Lipește semn de carte"
 msgid "Bookmark %s"
 msgstr "%s ca semn de carte"
 
+msgid "Former Destinations"
+msgstr "Destinații anterioare"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Număr casă"
+
+msgid "Layout"
+msgstr "Dispunere"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Hărți"
@@ -1511,17 +1608,29 @@ msgstr "Arată starea sateliților"
 msgid "Show NMEA data"
 msgstr "Arată datele NMEA"
 
+msgid "Vehicle"
+msgstr "Vehicul"
+
 msgid "Rules"
 msgstr "Reguli"
 
 msgid "Lock on road"
 msgstr "Fixează strada"
 
+msgid "Northing"
+msgstr "Nimic"
+
 msgid "Map follows Vehicle"
 msgstr "Harta urmează vehiculul"
 
 msgid "Message"
 msgstr "Mesaj"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Descrerea traseului"
@@ -1546,6 +1655,23 @@ msgstr "Și întreaga echipă Navit"
 msgid "members and contributors."
 msgstr "membri și colaboratori."
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Locație pe hartă"
+
+msgid "Vehicle Position"
+msgstr "Poziția vehiculului"
+
 msgid "Main menu"
 msgstr "Meniu principal"
 
@@ -1562,11 +1688,19 @@ msgstr "Configurații"
 msgid "Tools"
 msgstr "Unelte"
 
+msgid "Route"
+msgstr "Traseu"
+
 msgid "About"
 msgstr "Despre"
 
 msgid "Actions"
 msgstr "Acțiuni"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Ieși"
@@ -1578,21 +1712,57 @@ msgstr ""
 "Oprește\n"
 "navigația"
 
+msgid "Display"
+msgstr "Ecran"
+
+msgid "Fullscreen"
+msgstr "Pe tot ecranul"
+
 msgid "Window Mode"
 msgstr "Mod „fereastră”"
 
 msgid "Description"
 msgstr "Descriere"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "cal"
 
-msgid "Map Point"
-msgstr "Locație pe hartă"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Poziția vehiculului"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "În %s, intrați în sensul giratoriu"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Cursor"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "kilometrul %d.%d"

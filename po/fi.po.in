@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-08 07:37+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@gmail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "Ajetaan lähdehakemistosta\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "asetetaan '%s' arvoon '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "nollas"
 
@@ -47,6 +49,7 @@ msgstr "viides"
 msgid "sixth"
 msgstr "kuudes"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "nollannesta liittymästä"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "%d m päästä"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metriä"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "%d metrin päästä"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilometriä"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d,%d kilometrin päästä"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -167,16 +198,16 @@ msgstr "Liity liikenneympyrään pian"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "%s, liity liikenneympyrään"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Poistu liikenneympyrästä %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "poistu sitten liikenneympyrästä %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Poistu liikenneympyrästä %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1304,40 +1335,59 @@ msgstr "Kirjanmerkki"
 msgid "Destination"
 msgstr "Kohde"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Näyttö"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Reitti"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Aiemmat kohteet"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Kirjanmerkit"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Kartta"
+
+msgid "_Layout"
 msgstr "Pohja"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projektio"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Kulkuneuvo"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Loitonna"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Lähennä"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Laske uudelleen"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Info"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Lopeta navigointi"
 
 msgid "Test"
@@ -1346,19 +1396,34 @@ msgstr "Testi"
 msgid "_Quit"
 msgstr "Sulje"
 
-msgid "Cursor"
-msgstr "Osoitin"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Lukitse tiehen"
 
-msgid "Northing"
-msgstr "Pohjoinen ylhäällä"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Ohjeistaja"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Autom. suurennus"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Koko ruutu"
 
 msgid "Data"
@@ -1422,6 +1487,7 @@ msgstr "Takaisin"
 msgid "Add Bookmark"
 msgstr "Lisää kirjanmerkki"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Lisää kirjanmerkkikansio"
 
@@ -1461,6 +1527,10 @@ msgstr "Liitä kirjanmerkki"
 msgid "Delete Bookmark"
 msgstr "Poista kirjanmerkki"
 
+msgid "Bookmarks"
+msgstr "Kirjanmerkit"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Liitä kirjanmerkki"
 
@@ -1468,8 +1538,33 @@ msgstr "Liitä kirjanmerkki"
 msgid "Bookmark %s"
 msgstr "Tee kirjanmerkki %s"
 
+msgid "Former Destinations"
+msgstr "Aiemmat kohteet"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Talon numero"
+
+msgid "Layout"
+msgstr "Pohja"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Kartat"
@@ -1512,17 +1607,29 @@ msgstr "Näytä satelliittien tila"
 msgid "Show NMEA data"
 msgstr "Näytä NMEA-tiedot"
 
+msgid "Vehicle"
+msgstr "Kulkuneuvo"
+
 msgid "Rules"
 msgstr "Säännöt"
 
 msgid "Lock on road"
 msgstr "Lukitse tiehen"
 
+msgid "Northing"
+msgstr "Pohjoinen ylhäällä"
+
 msgid "Map follows Vehicle"
 msgstr "Kartta seuraa ajoneuvoa"
 
 msgid "Message"
 msgstr "Viesti"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Reitin kuvaus"
@@ -1547,6 +1654,23 @@ msgstr "sekä koko Navit-tiimi"
 msgid "members and contributors."
 msgstr "jäsenet ja osallistujat."
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Karttapiste"
+
+msgid "Vehicle Position"
+msgstr "Ajoneuvon sijainti"
+
 msgid "Main menu"
 msgstr "Päävalikko"
 
@@ -1563,11 +1687,19 @@ msgstr "Asetukset"
 msgid "Tools"
 msgstr "Työkalut"
 
+msgid "Route"
+msgstr "Reitti"
+
 msgid "About"
 msgstr "Tietoja"
 
 msgid "Actions"
 msgstr "Toiminnat"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Lopeta"
@@ -1579,22 +1711,58 @@ msgstr ""
 "Lopeta\n"
 "Suunnistus"
 
+msgid "Display"
+msgstr "Näyttö"
+
+msgid "Fullscreen"
+msgstr "Koko ruutu"
+
 msgid "Window Mode"
 msgstr "Ikkunatila"
 
 msgid "Description"
 msgstr "Kuvaus"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "hevonen"
 
-msgid "Map Point"
-msgstr "Karttapiste"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Ajoneuvon sijainti"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "%s, liity liikenneympyrään"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Osoitin"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d kilometri"
 
