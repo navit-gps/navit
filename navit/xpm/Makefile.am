@@ -61,6 +61,7 @@ svgs  = gui_about.svg
 svgs += gui_actions.svg
 svgs += gui_active.svg
 svgs += gui_bookmark.svg
+svgs += gui_formerdests.svg
 svgs += gui_display.svg
 svgs += gui_help.svg
 svgs += gui_home.svg
