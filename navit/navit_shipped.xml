@@ -55,7 +55,7 @@ Map</text></img>
 				</a>
 			<a name='Actions'><text>Actions</text>
 				<img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
-				<img src='gui_bookmark' onclick='formerdests()'><text>Former
+				<img src='gui_formerdests' onclick='formerdests()'><text>Former
 Destinations</text></img>
 				<img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><script>write(click_coord_geo)</script></img>
 				<img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img>
