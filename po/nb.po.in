@@ -6,12 +6,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-19 07:59+0000\n"
 "Last-Translator: Kurt Nielsen <Unknown>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,6 +28,7 @@ msgstr "Kjører fra kildemappen\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "setter '%s' til '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "nullte"
 
@@ -48,6 +50,7 @@ msgstr "femte"
 msgid "sixth"
 msgstr "sjette"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "nullte avkjørsel"
 
@@ -78,6 +81,14 @@ msgid "in %d m"
 msgstr "om %d meter"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d meter"
 
@@ -86,12 +97,32 @@ msgid "in %d meters"
 msgstr "om %d meter"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilometer"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "om %d,%d kilometer"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -168,16 +199,16 @@ msgstr "Kjør inn i rundkjøringen snart"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Om %s, kjør inn i rundkjøringen"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Forlat rundkjøringen ut %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "forlat så rundkjøringen ut %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Forlat rundkjøringen ut %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1301,40 +1332,59 @@ msgstr "Bokmerke"
 msgid "Destination"
 msgstr "Reisemål"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Visning"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Rute"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Tidligere reisemål"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Bokmerker"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Kart"
+
+msgid "_Layout"
 msgstr "Utseende"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projeksjon"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Kjøretøy"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Zoom ut"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Zoom inn"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Omberegn"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Info"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Stopp navigasjon"
 
 msgid "Test"
@@ -1343,19 +1393,34 @@ msgstr "Test"
 msgid "_Quit"
 msgstr "_Avslutt"
 
-msgid "Cursor"
-msgstr "Markør"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Lås til vei"
 
-msgid "Northing"
-msgstr "Hold nord oppover"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Kjørebok"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Auto-zoom"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Fullskjerm"
 
 msgid "Data"
@@ -1419,6 +1484,7 @@ msgstr "Tilbake"
 msgid "Add Bookmark"
 msgstr "Legg til bokmerke"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Legg til bokmerke mappe"
 
@@ -1458,6 +1524,10 @@ msgstr "Lim inn bokmerke"
 msgid "Delete Bookmark"
 msgstr "Slett bokmerke"
 
+msgid "Bookmarks"
+msgstr "Bokmerker"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Lim inn bokmerke"
 
@@ -1465,8 +1535,33 @@ msgstr "Lim inn bokmerke"
 msgid "Bookmark %s"
 msgstr "Bokmerk %s"
 
+msgid "Former Destinations"
+msgstr "Tidligere reisemål"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Husnummer"
+
+msgid "Layout"
+msgstr "Utseende"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Kart"
@@ -1509,17 +1604,29 @@ msgstr "Vis satelittstatus"
 msgid "Show NMEA data"
 msgstr "Vis NMEA-data"
 
+msgid "Vehicle"
+msgstr "Kjøretøy"
+
 msgid "Rules"
 msgstr "Regler"
 
 msgid "Lock on road"
 msgstr "Lås til vei"
 
+msgid "Northing"
+msgstr "Hold nord oppover"
+
 msgid "Map follows Vehicle"
 msgstr "Kart følger kjøretøy"
 
 msgid "Message"
 msgstr "Melding"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr ""
@@ -1544,6 +1651,23 @@ msgstr "Og alle i Navit teamet"
 msgid "members and contributors."
 msgstr "medlemmer og bidragsytere."
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Kartpunkt"
+
+msgid "Vehicle Position"
+msgstr "Kjøretøysposisjon"
+
 msgid "Main menu"
 msgstr "Hovedmeny"
 
@@ -1560,11 +1684,19 @@ msgstr "Innstillinger"
 msgid "Tools"
 msgstr "Verktøy"
 
+msgid "Route"
+msgstr "Rute"
+
 msgid "About"
 msgstr "Om"
 
 msgid "Actions"
 msgstr "Handlinger"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Avslutt"
@@ -1576,21 +1708,57 @@ msgstr ""
 "Stopp\n"
 "navigasjon"
 
+msgid "Display"
+msgstr "Visning"
+
+msgid "Fullscreen"
+msgstr "Fullskjerm"
+
 msgid "Window Mode"
 msgstr "Vindusmodus"
 
 msgid "Description"
 msgstr "Beskrivelse"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "hest"
 
-msgid "Map Point"
-msgstr "Kartpunkt"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Kjøretøysposisjon"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Om %s, kjør inn i rundkjøringen"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Markør"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d kilometer"

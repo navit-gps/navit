@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-05-24 14:51+0000\n"
 "Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "Λειτουργία από τον πηγαίο κατάλογο\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "ρύθμιση '%s' στο'%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "τρέχουσα"
 
@@ -47,6 +49,7 @@ msgstr "πέμπτος"
 msgid "sixth"
 msgstr "έκτος"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "τρέχουσα έξοδο"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "σε %d μ"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d μέτρα"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "σε %d μέτρα"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d χιλιόμετρα"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "σε %d %d χιλιόμετρα"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -167,16 +198,16 @@ msgstr "Μπές στη κυκλική πορεία άμεσα"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Σε %s, μπες σε κυκλική πορεία"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Εξοδος απο την κυκλική πορεία στην %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "και βγείτε απο την κυκλική πορεία στην %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Εξοδος απο την κυκλική πορεία στην %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1300,40 +1331,59 @@ msgstr "Σελιδοδείκτης"
 msgid "Destination"
 msgstr "Προορισμός"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Προβολή"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Διαδρομή"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Προγενέστερες διαδρομές"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Σελιδοδείκτες"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Χάρτης"
+
+msgid "_Layout"
 msgstr "Διάταξη"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Προβολή :"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Όχημα"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Σμίκρυνση"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Μεγέθυνση"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Επαναϋπολογισμός"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Πληροφορίες"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Διακοπή πλοήγησης"
 
 msgid "Test"
@@ -1342,19 +1392,34 @@ msgstr "Δοκιμή"
 msgid "_Quit"
 msgstr "_Έξοδος"
 
-msgid "Cursor"
-msgstr "Δρομέας"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Κλείδωμα στο δρόμο"
 
-msgid "Northing"
-msgstr "Χάρτης στο βορρά"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Οδηγίες Διαδρομής"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Αυτόματο Ζουμ"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Πλήρης Οθόνη"
 
 msgid "Data"
@@ -1418,6 +1483,7 @@ msgstr "Προηγ."
 msgid "Add Bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Πρόσθεση φακέλου Σελιδοδείκτη"
 
@@ -1457,6 +1523,10 @@ msgstr "Επικόληση Σελιδοδείκτη"
 msgid "Delete Bookmark"
 msgstr "Διαγραφή Σελιδοδείκτη"
 
+msgid "Bookmarks"
+msgstr "Σελιδοδείκτες"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Επικόληση σελιδοδείκτη"
 
@@ -1464,8 +1534,33 @@ msgstr "Επικόληση σελιδοδείκτη"
 msgid "Bookmark %s"
 msgstr "Σελιδοδείκτης %s"
 
+msgid "Former Destinations"
+msgstr "Προγενέστερες διαδρομές"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Αριθμός σπιτιού"
+
+msgid "Layout"
+msgstr "Διάταξη"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Χάρτες"
@@ -1508,17 +1603,29 @@ msgstr "Εμφάνιση Κατάστασης Δορυφόρων"
 msgid "Show NMEA data"
 msgstr "Εμφάνιση δεδομένων ΝΜΕΑ"
 
+msgid "Vehicle"
+msgstr "Όχημα"
+
 msgid "Rules"
 msgstr "Κανόνες"
 
 msgid "Lock on road"
 msgstr "Κλείδωμα στο δρόμο"
 
+msgid "Northing"
+msgstr "Χάρτης στο βορρά"
+
 msgid "Map follows Vehicle"
 msgstr "Ο χάρτης ακολουθεί το Όχημα"
 
 msgid "Message"
 msgstr "Μήνυμα"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Περιγραφή Διαδρομής"
@@ -1543,6 +1650,23 @@ msgstr "Και όλη την ομάδα του Navit"
 msgid "members and contributors."
 msgstr "μέλη και συνεισφέροντες"
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Σημείο Χάρτη"
+
+msgid "Vehicle Position"
+msgstr "Θέση Οχήματος"
+
 msgid "Main menu"
 msgstr "Κύριο Μενού"
 
@@ -1559,11 +1683,19 @@ msgstr "Ρυθμίσεις"
 msgid "Tools"
 msgstr "Εργαλεία"
 
+msgid "Route"
+msgstr "Διαδρομή"
+
 msgid "About"
 msgstr "Περί"
 
 msgid "Actions"
 msgstr "Ενέργειες"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Έξοδος"
@@ -1573,22 +1705,58 @@ msgid ""
 "Navigation"
 msgstr "Διακοπή"
 
+msgid "Display"
+msgstr "Προβολή"
+
+msgid "Fullscreen"
+msgstr "Πλήρης Οθόνη"
+
 msgid "Window Mode"
 msgstr "Λειτουργία παραθύρων"
 
 msgid "Description"
 msgstr "Περιγραφή"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "άλογο"
 
-msgid "Map Point"
-msgstr "Σημείο Χάρτη"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Θέση Οχήματος"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Σε %s, μπες σε κυκλική πορεία"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Δρομέας"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d %d χιλιόμετρα"
 

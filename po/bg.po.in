@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2009-12-20 20:36+0000\n"
 "Last-Translator: Alex Stanev <alex@stanev.org>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr ""
 msgid "setting '%s' to '%s'\n"
 msgstr ""
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "нулев"
 
@@ -47,6 +49,7 @@ msgstr "пети"
 msgid "sixth"
 msgstr "шести"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "няма изход"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "след %d м"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d метра"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "след %d метра"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "след %d.%d километра"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -167,16 +198,16 @@ msgstr "Скоро навлизате в кръгово"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "След %s влезте в кръговото"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Излезте от кръговото на %s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "след това излезте от кръговото на %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Излезте от кръговото на %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1300,40 +1331,59 @@ msgstr "Отметка"
 msgid "Destination"
 msgstr "Местоназначение"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Показване"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Маршрут"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Предишни Местоназначения"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Отметки"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Карта"
+
+msgid "_Layout"
 msgstr "Изглед"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Проекция"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Превозно средство"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Отдалечи"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Приближи"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Преизчисляване"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Информация"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Спри Навигацията"
 
 msgid "Test"
@@ -1342,19 +1392,34 @@ msgstr "Тест"
 msgid "_Quit"
 msgstr "_Изход"
 
-msgid "Cursor"
-msgstr "Курсор"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Придържай към пътя"
 
-msgid "Northing"
+msgid "_Keep orientation to the North"
 msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
 msgstr ""
 
-msgid "Fullscreen"
+msgid "_Roadbook"
+msgstr "Пътна книга"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
+msgstr ""
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Цял екран"
 
 msgid "Data"
@@ -1418,6 +1483,7 @@ msgstr "Назад"
 msgid "Add Bookmark"
 msgstr ""
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1457,6 +1523,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr "Отметки"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1464,7 +1534,32 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Отметка %s"
 
+msgid "Former Destinations"
+msgstr "Предишни Местоназначения"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
+msgstr ""
+
+msgid "Layout"
+msgstr "Изглед"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
 msgstr ""
 
 msgid "Maps"
@@ -1508,16 +1603,28 @@ msgstr "Покажи състояние на Сателити"
 msgid "Show NMEA data"
 msgstr "Покажи NMEA Данни"
 
+msgid "Vehicle"
+msgstr "Превозно средство"
+
 msgid "Rules"
 msgstr "Правила"
 
 msgid "Lock on road"
 msgstr ""
 
+msgid "Northing"
+msgstr ""
+
 msgid "Map follows Vehicle"
 msgstr "Картата следва Автомобила"
 
 msgid "Message"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
 msgstr ""
 
 msgid "Route Description"
@@ -1543,6 +1650,23 @@ msgstr ""
 msgid "members and contributors."
 msgstr ""
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Точка на карта"
+
+msgid "Vehicle Position"
+msgstr "Позиция на автомобил"
+
 msgid "Main menu"
 msgstr "Главно меню"
 
@@ -1559,11 +1683,19 @@ msgstr "Настройки"
 msgid "Tools"
 msgstr "Инструменти"
 
+msgid "Route"
+msgstr "Маршрут"
+
 msgid "About"
 msgstr ""
 
 msgid "Actions"
 msgstr "Действия"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Излез"
@@ -1575,21 +1707,57 @@ msgstr ""
 "Спри\n"
 "Навигацията"
 
+msgid "Display"
+msgstr "Показване"
+
+msgid "Fullscreen"
+msgstr "Цял екран"
+
 msgid "Window Mode"
 msgstr "Режим Прозорец"
 
 msgid "Description"
 msgstr ""
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr ""
 
-msgid "Map Point"
-msgstr "Точка на карта"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Позиция на автомобил"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "След %s влезте в кръговото"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Курсор"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d километра"

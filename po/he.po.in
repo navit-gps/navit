@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2009-12-20 20:37+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "מופעל מתיקיית המקור\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "הגדרת '%s' ל־'%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "במקום ה־0"
 
@@ -47,6 +49,7 @@ msgstr "חמישי"
 msgid "sixth"
 msgstr "שישי"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "היציאה ה-0"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "בעוד %d מ'"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d מטרים"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "בעוד %d מטרים"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "בעוד  %d.%d קילומטרים"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -167,16 +198,16 @@ msgstr "הכנס לכיכר הקרובה"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "ב%s, הכנס לכיכר"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "צא מהכיכר ב%s"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "אחר כך צא מהכיכר ב%s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "צא מהכיכר ב%s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1300,40 +1331,59 @@ msgstr "סימניה"
 msgid "Destination"
 msgstr "יעד"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "תצוגה"
 
-msgid "Route"
+msgid "_Route"
 msgstr "מסלול"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "יעדים קודמים"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "סימניות"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "מפה"
+
+msgid "_Layout"
 msgstr "מערך"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "תכנון"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "רכב (ׂGPS)"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "התרחק"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "התקרב"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "חשב מחדש"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "מידע"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "עצור ניווט"
 
 msgid "Test"
@@ -1342,19 +1392,34 @@ msgstr "בדיקה"
 msgid "_Quit"
 msgstr "_יציאה"
 
-msgid "Cursor"
-msgstr "סמן"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "הנעל על הדרך"
 
-msgid "Northing"
-msgstr "הצפנה"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "הוראות נסיעה"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "זום אוטומטי"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "מסך מלא"
 
 msgid "Data"
@@ -1418,6 +1483,7 @@ msgstr "חזרה"
 msgid "Add Bookmark"
 msgstr ""
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1457,6 +1523,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr "סימניות"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1464,8 +1534,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "סימנייה %s"
 
+msgid "Former Destinations"
+msgstr "יעדים קודמים"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "מספר בית"
+
+msgid "Layout"
+msgstr "מערך"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "מפות"
@@ -1508,17 +1603,29 @@ msgstr "הצגת מצב הלוויינים"
 msgid "Show NMEA data"
 msgstr "הצגת נתוני NMEA"
 
+msgid "Vehicle"
+msgstr "רכב (ׂGPS)"
+
 msgid "Rules"
 msgstr "כללים"
 
 msgid "Lock on road"
 msgstr "נעול על הדרך"
 
+msgid "Northing"
+msgstr "הצפנה"
+
 msgid "Map follows Vehicle"
 msgstr "מפה עוקבת אחר הרכב"
 
 msgid "Message"
 msgstr "הודעה"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr ""
@@ -1543,6 +1650,23 @@ msgstr ""
 msgid "members and contributors."
 msgstr ""
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "נקודה במפה"
+
+msgid "Vehicle Position"
+msgstr "מיקום רכב"
+
 msgid "Main menu"
 msgstr "תפריט ראשי"
 
@@ -1559,11 +1683,19 @@ msgstr "הגדרות"
 msgid "Tools"
 msgstr "כלים"
 
+msgid "Route"
+msgstr "מסלול"
+
 msgid "About"
 msgstr ""
 
 msgid "Actions"
 msgstr "פעולות"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "יציאה"
@@ -1575,21 +1707,57 @@ msgstr ""
 "עצור\n"
 "ניווט"
 
+msgid "Display"
+msgstr "תצוגה"
+
+msgid "Fullscreen"
+msgstr "מסך מלא"
+
 msgid "Window Mode"
 msgstr "מצב חלון"
 
 msgid "Description"
 msgstr "תיאור"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr ""
 
-msgid "Map Point"
-msgstr "נקודה במפה"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "מיקום רכב"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "ב%s, הכנס לכיכר"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "סמן"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d קילומטר"

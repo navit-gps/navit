@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-05-18 09:31+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "S'està executant des del directori arrel\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "s'està establint '%s' a '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr ""
 
@@ -47,6 +49,7 @@ msgstr "cinquena"
 msgid "sixth"
 msgstr "sisena"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr ""
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "d'aquí a %d m"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metres"
 
@@ -85,12 +96,32 @@ msgid "in %d meters"
 msgstr "d'aquí a %d metres"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d,%d quilòmetres"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "d'aquí a %d,%d quilòmetres"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -167,16 +198,16 @@ msgstr ""
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
+msgid "Enter the roundabout %s"
 msgstr ""
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Deixeu la rotonda a la %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "aleshores deixeu la rotonda a la %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Deixeu la rotonda a la %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1300,40 +1331,59 @@ msgstr ""
 msgid "Destination"
 msgstr "Destinació"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Pantalla"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Ruta"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Destinacions anteriors"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr ""
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Mapa"
+
+msgid "_Layout"
 msgstr "Disposició"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projecció"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Vehicle"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Allunya"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Apropa"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Recalcula"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Informació"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Atura la navegació"
 
 msgid "Test"
@@ -1342,19 +1392,34 @@ msgstr "Prova"
 msgid "_Quit"
 msgstr "_Surt"
 
-msgid "Cursor"
-msgstr "Cursor"
-
-msgid "Lock on Road"
+msgid "Quit the application"
 msgstr ""
 
-msgid "Northing"
+msgid "Show position _cursor"
 msgstr ""
 
-msgid "Autozoom"
+msgid "_Lock on Road"
+msgstr ""
+
+msgid "_Keep orientation to the North"
+msgstr ""
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr ""
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Zoom automàtic"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Pantalla completa"
 
 msgid "Data"
@@ -1418,6 +1483,7 @@ msgstr "Enrere"
 msgid "Add Bookmark"
 msgstr ""
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1457,6 +1523,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr ""
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1464,8 +1534,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Afegeix %s a les adreces d'interès"
 
+msgid "Former Destinations"
+msgstr "Destinacions anteriors"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Número de casa/portal"
+
+msgid "Layout"
+msgstr "Disposició"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Mapes"
@@ -1508,10 +1603,16 @@ msgstr "Mostra l'estat del satèl·lit"
 msgid "Show NMEA data"
 msgstr "Mostra les dades NMEA"
 
+msgid "Vehicle"
+msgstr "Vehicle"
+
 msgid "Rules"
 msgstr "Regles"
 
 msgid "Lock on road"
+msgstr ""
+
+msgid "Northing"
 msgstr ""
 
 msgid "Map follows Vehicle"
@@ -1519,6 +1620,12 @@ msgstr "El mapa segueix el vehicle"
 
 msgid "Message"
 msgstr "Missatge"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Descripció de la ruta"
@@ -1543,6 +1650,23 @@ msgstr ""
 msgid "members and contributors."
 msgstr ""
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Punt del mapa"
+
+msgid "Vehicle Position"
+msgstr "Posició del vehicle"
+
 msgid "Main menu"
 msgstr "Menú principal"
 
@@ -1559,11 +1683,19 @@ msgstr "Configuració"
 msgid "Tools"
 msgstr "Eines"
 
+msgid "Route"
+msgstr "Ruta"
+
 msgid "About"
 msgstr ""
 
 msgid "Actions"
 msgstr "Accions"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Surt"
@@ -1575,17 +1707,51 @@ msgstr ""
 "Atura la\n"
 "Navegació"
 
+msgid "Display"
+msgstr "Pantalla"
+
+msgid "Fullscreen"
+msgstr "Pantalla completa"
+
 msgid "Window Mode"
 msgstr "Mode de la finestra"
 
 msgid "Description"
 msgstr "Descripció"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "cavall"
 
-msgid "Map Point"
-msgstr "Punt del mapa"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Posició del vehicle"
+#~ msgid "Cursor"
+#~ msgstr "Cursor"

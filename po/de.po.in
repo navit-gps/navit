@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-09 12:20+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -1336,55 +1336,59 @@ msgstr "Lesezeichen"
 msgid "Destination"
 msgstr "Reiseziel"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Anzeige"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Route"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Vorherige Ziele"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Lesezeichen"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Karte"
+
+msgid "_Layout"
 msgstr "Erscheinungsbild"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projektion"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Fahrzeug"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Verkleinern"
 
 msgid "Decrease zoom level"
 msgstr "Verkleinern"
 
-msgid "ZoomIn"
+msgid "Zoom_In"
 msgstr "Vergrößern"
 
 msgid "Increase zoom level"
 msgstr "Vergrößern"
 
-msgid "Recalculate"
+msgid "_Recalculate"
 msgstr "Neu berechnen"
 
 msgid "Redraw map"
 msgstr "Karte neuzeichnen"
 
-msgid "Info"
+msgid "_Info"
 msgstr "Info"
 
-msgid "Set destination"
+msgid "Set _destination"
 msgstr "Als Ziel setzen"
 
 msgid "Opens address search dialog"
 msgstr "Öffnet Adresssuche-Dialog"
 
-msgid "Stop Navigation"
+msgid "_Stop Navigation"
 msgstr "Navigation beenden"
 
 msgid "Test"
@@ -1396,29 +1400,32 @@ msgstr "_Beenden"
 msgid "Quit the application"
 msgstr "Die Anwendung beenden"
 
-msgid "Show position cursor"
+msgid "Show position _cursor"
 msgstr "Positionsmarke zeigen"
 
-msgid "Lock on Road"
+msgid "_Lock on Road"
 msgstr "Auf Straße zeigen"
 
-msgid "Keep orientation to the North"
+msgid "_Keep orientation to the North"
 msgstr "Nordorientierung"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr ""
 "Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
 
+msgid "_Roadbook"
+msgstr "Straßenkarte"
+
 msgid "Show/hide route description"
 msgstr "Routenbeschreibung anzeigen/schließen"
 
-msgid "Autozoom"
+msgid "_Autozoom"
 msgstr "automatischer Zoom"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr "Automatischen Zoom einschalten/ausschalten"
 
-msgid "Fullscreen"
+msgid "_Fullscreen"
 msgstr "Vollbild"
 
 msgid "Data"
@@ -1522,6 +1529,9 @@ msgstr "Lesezeichen einfügen"
 msgid "Delete Bookmark"
 msgstr "Lesezeichen entfernen"
 
+msgid "Bookmarks"
+msgstr "Lesezeichen"
+
 #. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Lesezeichen einfügen"
@@ -1530,15 +1540,17 @@ msgstr "Lesezeichen einfügen"
 msgid "Bookmark %s"
 msgstr "Lesezeichen %s"
 
-#, c-format
-msgid "Destination %s"
-msgstr "Ziel %s"
+msgid "Former Destinations"
+msgstr "Vorherige Ziele"
 
 msgid "- No former destinations available -"
 msgstr "- Keine vorherigen Ziele -"
 
 msgid "House number"
 msgstr "Hausnummer"
+
+msgid "Layout"
+msgstr "Erscheinungsbild"
 
 #, c-format
 msgid "Download %s"
@@ -1596,6 +1608,9 @@ msgstr "Satellitenstatus anzeigen"
 
 msgid "Show NMEA data"
 msgstr "NMEA Daten anzeigen"
+
+msgid "Vehicle"
+msgstr "Fahrzeug"
 
 msgid "Rules"
 msgstr "Regeln"
@@ -1674,6 +1689,9 @@ msgstr "Einstellungen"
 msgid "Tools"
 msgstr "Werkzeuge"
 
+msgid "Route"
+msgstr "Route"
+
 msgid "About"
 msgstr "Über"
 
@@ -1697,11 +1715,20 @@ msgstr ""
 "Navigation\n"
 "beenden"
 
+msgid "Display"
+msgstr "Anzeige"
+
+msgid "Fullscreen"
+msgstr "Vollbild"
+
 msgid "Window Mode"
 msgstr "Fenstermodus"
 
 msgid "Description"
 msgstr "Beschreibung"
+
+msgid "car_shortest"
+msgstr ""
 
 msgid "car_avoid_tolls"
 msgstr "Auto ohne Maut"

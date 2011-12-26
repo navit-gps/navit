@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-02 15:43+0100\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-11-14 14:11+0000\n"
 "Last-Translator: asghar <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
+"Language: ur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,6 +23,14 @@ msgstr ""
 #, c-format
 msgid "Running from source directory\n"
 msgstr "سورس ڈایرکٹری سے چلا ر ہے ہیں\n"
+
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "ترتیب '%s' سے '%s'\n"
+
+#. TRANSLATORS: the following counts refer to streets
+msgid "zeroth"
+msgstr "صفر سے"
 
 msgid "first"
 msgstr "پہلا"
@@ -41,6 +50,7 @@ msgstr "پانچواں"
 msgid "sixth"
 msgstr "چھٹا"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "صفر سے خارج"
 
@@ -67,6 +77,18 @@ msgid "%d m"
 msgstr "%d میٹر"
 
 #, c-format
+msgid "in %d m"
+msgstr "%d میٹر میں"
+
+#, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d میٹر"
 
@@ -75,12 +97,44 @@ msgid "in %d meters"
 msgstr "%d میٹر میں"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d کلومیٹر"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d.%d کلومیٹر میں"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "ایک کلومیٹر"
+msgstr[1] "%d کلومیٹر"
+
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "ایک کلومیٹر میں"
+msgstr[1] "%d کلومیٹر میں"
 
 msgid "exit"
 msgstr "اخراج"
@@ -140,61 +194,13 @@ msgstr "نا معلوم "
 msgid "When possible, please turn around"
 msgstr "جب ممکن ہو گھومیں"
 
-#, c-format
-msgid "Enter the roundabout soon and leave it at the %s"
-msgstr "گول چوراہے میں  داخل ہوں اور %s سے باہر نکل جایئں"
+msgid "Enter the roundabout soon"
+msgstr ""
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "%s کے بعد گول چوراہے میں داخل ہو جایئں"
-
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "%1$s%2$s %3$s%4$s پھر گومیں"
-
-msgid "Set as destination"
-msgstr "بطور منزل انتخاب"
-
-msgid "Enter Destination"
-msgstr "منزل داخل کریں"
-
-msgid "Enable/disable automatic zoom level changing"
-msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
-
-msgid "Add Bookmark"
-msgstr "بک مارک میں شامل"
-
-msgid " Elevation "
-msgstr " ارتفاع "
-
-#, c-format
-msgid "Current profile: %s"
-msgstr "موجودہ پروفائل: %s"
-
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "ترتیب '%s' سے '%s'\n"
-
-msgid "zeroth"
-msgstr "صفر سے"
-
-#, c-format
-msgid "in %d m"
-msgstr "%d میٹر میں"
-
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "ایک کلومیٹر"
-msgstr[1] "%d کلومیٹر"
-
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "ایک کلومیٹر میں"
-msgstr[1] "%d کلومیٹر میں"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -235,6 +241,11 @@ msgstr "غلطی"
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%1$s%2$s %3$s%4$s گومیں"
 
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "%1$s%2$s %3$s%4$s پھر گومیں"
+
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "آپ اپنی منزل %s پے پہنچ کئے ہیں"
@@ -271,6 +282,9 @@ msgstr "روڈ بک"
 
 msgid "Set as position"
 msgstr "بطور موجودہ مقام انتخاب"
+
+msgid "Set as destination"
+msgstr "بطور منزل انتخاب"
 
 msgid "Add as bookmark"
 msgstr "بک مارک میں محفوظ کریں"
@@ -1297,6 +1311,9 @@ msgstr "سڑک"
 msgid "Number"
 msgstr "نمبر"
 
+msgid "Enter Destination"
+msgstr "منزل داخل کریں"
+
 msgid "Zip Code"
 msgstr "زپ کوڈ"
 
@@ -1315,55 +1332,59 @@ msgstr "بک مارک"
 msgid "Destination"
 msgstr "منزل"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "ڈسپلئے"
 
-msgid "Route"
+msgid "_Route"
 msgstr "راستہ"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "سابقہ منازل"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "بک مارکس"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "نقشہ"
+
+msgid "_Layout"
 msgstr "بناوٹ"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "پروجیکشن"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "گاڑی"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "چھوٹا کریں"
 
 msgid "Decrease zoom level"
 msgstr "زوم لیول کم کریں"
 
-msgid "ZoomIn"
+msgid "Zoom_In"
 msgstr "بڑا کریں"
 
 msgid "Increase zoom level"
 msgstr "زوم لیول بڑہائیں"
 
-msgid "Recalculate"
+msgid "_Recalculate"
 msgstr "دوبارہ حساب"
 
 msgid "Redraw map"
 msgstr "نقشہ دوبارہ بنائیں"
 
-msgid "Info"
+msgid "_Info"
 msgstr "معلومات"
 
-msgid "Set destination"
+msgid "Set _destination"
 msgstr "منزل منتخب کریں"
 
 msgid "Opens address search dialog"
 msgstr "پتہ تلاش والا خانہ کھولیں"
 
-msgid "Stop Navigation"
+msgid "_Stop Navigation"
 msgstr "نیویگیشن بند کریں"
 
 msgid "Test"
@@ -1375,25 +1396,31 @@ msgstr "_بند"
 msgid "Quit the application"
 msgstr "پروگرام بند کریں"
 
-msgid "Show position cursor"
+msgid "Show position _cursor"
 msgstr "کرسر کا مقام دکھائیں"
 
-msgid "Lock on Road"
+msgid "_Lock on Road"
 msgstr "سڑک پر گرفت"
 
-msgid "Keep orientation to the North"
+msgid "_Keep orientation to the North"
 msgstr "قطب نما کو شمال کی طرف رکھیں"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr "قطب نما کو شمال یا گاڑی کی طرف کریں"
 
+msgid "_Roadbook"
+msgstr "روڈ بک"
+
 msgid "Show/hide route description"
 msgstr "دکھیں/نہ دیکھیں سفر کی تفصیل"
 
-msgid "Autozoom"
+msgid "_Autozoom"
 msgstr "خودکار زوم"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
+
+msgid "_Fullscreen"
 msgstr "پوری سکرین"
 
 msgid "Data"
@@ -1454,6 +1481,10 @@ msgstr "مدد"
 msgid "Back"
 msgstr "واپس"
 
+msgid "Add Bookmark"
+msgstr "بک مارک میں شامل"
+
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "بک مارک فولڈر میں شامل"
 
@@ -1493,6 +1524,10 @@ msgstr "بک مارک پیسٹ کریں"
 msgid "Delete Bookmark"
 msgstr "ڈیلیٹ بک مارک"
 
+msgid "Bookmarks"
+msgstr "بک مارکس"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "بک مارک پیسٹ کریں"
 
@@ -1500,14 +1535,42 @@ msgstr "بک مارک پیسٹ کریں"
 msgid "Bookmark %s"
 msgstr "بک مارک %s"
 
+msgid "Former Destinations"
+msgstr "سابقہ منازل"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "مکان نمبر"
+
+msgid "Layout"
+msgstr "بناوٹ"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "نقشے"
 
 msgid "Show Satellite Status"
 msgstr "سٹلائٹ کی حالت دیکھیں"
+
+msgid " Elevation "
+msgstr " ارتفاع "
 
 msgid " Azimuth "
 msgstr " سمت "
@@ -1525,6 +1588,10 @@ msgid "pedestrian"
 msgstr "پیدل"
 
 #, c-format
+msgid "Current profile: %s"
+msgstr "موجودہ پروفائل: %s"
+
+#, c-format
 msgid "Change profile to: %s"
 msgstr "پروفائل کو :%s میں بدلیں"
 
@@ -1536,6 +1603,9 @@ msgstr "سٹلائٹ کی حالت دیکھیں"
 
 msgid "Show NMEA data"
 msgstr "NMEA ڈیٹا دیکھیں"
+
+msgid "Vehicle"
+msgstr "گاڑی"
 
 msgid "Rules"
 msgstr "قوانین"
@@ -1551,6 +1621,12 @@ msgstr "نقشہ گاڑی کا تعاقب کرے"
 
 msgid "Message"
 msgstr "پیغام"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "سفر کی تفصیل"
@@ -1575,6 +1651,17 @@ msgstr "اور ناوٹ کی ساری ٹیم"
 msgid "members and contributors."
 msgstr "ممبر اور حصہ دار"
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
 msgid "Map Point"
 msgstr "نقشہ کا نقطہ"
 
@@ -1597,11 +1684,19 @@ msgstr "تراتیب"
 msgid "Tools"
 msgstr "ہتھیار"
 
+msgid "Route"
+msgstr "راستہ"
+
 msgid "About"
 msgstr "مطعلق"
 
 msgid "Actions"
 msgstr "ایکشن"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "بند"
@@ -1613,11 +1708,54 @@ msgstr ""
 "روکیں\n"
 "نیویگیشن"
 
+msgid "Display"
+msgstr "ڈسپلئے"
+
+msgid "Fullscreen"
+msgstr "پوری سکرین"
+
 msgid "Window Mode"
 msgstr "ونڈو موڈ"
 
 msgid "Description"
 msgstr "تفصیل"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "گھوڑا"
+
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
+
+#~ msgid "Enter the roundabout soon and leave it at the %s"
+#~ msgstr "گول چوراہے میں  داخل ہوں اور %s سے باہر نکل جایئں"
+
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "%s کے بعد گول چوراہے میں داخل ہو جایئں"

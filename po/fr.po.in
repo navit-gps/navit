@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-17 18:31+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-06-18 19:16+0000\n"
 "Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -203,8 +203,8 @@ msgstr "Préparez vous à vous engager dans le rond-point"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Dans %s, engagez vous dans le rond-point"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -1337,66 +1337,59 @@ msgstr "Favoris"
 msgid "Destination"
 msgstr "Destination"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Affichage"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Itinéraire"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Destinations précédentes"
 
-msgid ""
-"Former\n"
-"Destinations"
-
-msgstr ""
-"Destinations\n"
-"précédentes"
-
-msgid "- No former destinations available -"
-msgstr "- Pas de destinations précedentes -"
-
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Favoris"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Carte"
+
+msgid "_Layout"
 msgstr "Thème"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projection"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Véhicule"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Zoom arrière"
 
 msgid "Decrease zoom level"
 msgstr ""
 
-msgid "ZoomIn"
+msgid "Zoom_In"
 msgstr "Zoom avant"
 
 msgid "Increase zoom level"
 msgstr ""
 
-msgid "Recalculate"
+msgid "_Recalculate"
 msgstr "Recalculer"
 
 msgid "Redraw map"
 msgstr ""
 
-msgid "Info"
+msgid "_Info"
 msgstr "Info"
 
-msgid "Set destination"
+msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
 msgstr ""
 
-msgid "Stop Navigation"
+msgid "_Stop Navigation"
 msgstr "Annuler le trajet"
 
 msgid "Test"
@@ -1408,28 +1401,31 @@ msgstr "_Quitter"
 msgid "Quit the application"
 msgstr ""
 
-msgid "Show position cursor"
+msgid "Show position _cursor"
 msgstr ""
 
-msgid "Lock on Road"
+msgid "_Lock on Road"
 msgstr "Coller à la route"
 
-msgid "Keep orientation to the North"
+msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr ""
 
+msgid "_Roadbook"
+msgstr "Carnet de route"
+
 msgid "Show/hide route description"
 msgstr ""
 
-msgid "Autozoom"
+msgid "_Autozoom"
 msgstr "Zoom automatique"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr ""
 
-msgid "Fullscreen"
+msgid "_Fullscreen"
 msgstr "Plein écran"
 
 msgid "Data"
@@ -1533,6 +1529,9 @@ msgstr "Insérer le signet"
 msgid "Delete Bookmark"
 msgstr "Supprimer le signet"
 
+msgid "Bookmarks"
+msgstr "Favoris"
+
 #. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Insérer le signet"
@@ -1541,8 +1540,17 @@ msgstr "Insérer le signet"
 msgid "Bookmark %s"
 msgstr "Ajouter %s aux favoris"
 
+msgid "Former Destinations"
+msgstr "Destinations précédentes"
+
+msgid "- No former destinations available -"
+msgstr "- Pas de destinations précedentes -"
+
 msgid "House number"
 msgstr "Numéro de maison"
+
+msgid "Layout"
+msgstr "Thème"
 
 #, c-format
 msgid "Download %s"
@@ -1601,6 +1609,9 @@ msgstr "Afficher les infos satellite"
 msgid "Show NMEA data"
 msgstr "Afficher les données NMEA"
 
+msgid "Vehicle"
+msgstr "Véhicule"
+
 msgid "Rules"
 msgstr "Règles"
 
@@ -1645,6 +1656,9 @@ msgstr "Et tous les membres du projet Navit"
 msgid "members and contributors."
 msgstr "membres et contributeurs"
 
+msgid "Return to route!"
+msgstr ""
+
 #. warning told
 msgid "Look out! Camera!"
 msgstr "Attention! Radar!"
@@ -1675,11 +1689,21 @@ msgstr "Configuration"
 msgid "Tools"
 msgstr "Outils"
 
+msgid "Route"
+msgstr "Itinéraire"
+
 msgid "About"
 msgstr "À propos"
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Destinations\n"
+"précédentes"
 
 msgid "Quit"
 msgstr "Quitter"
@@ -1691,11 +1715,23 @@ msgstr ""
 "Arrêter\n"
 "La navigation"
 
+msgid "Display"
+msgstr "Affichage"
+
+msgid "Fullscreen"
+msgstr "Plein écran"
+
 msgid "Window Mode"
 msgstr "Mode fenêtré"
 
 msgid "Description"
 msgstr "Description"
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
 
 msgid "horse"
 msgstr "cheval"
@@ -1724,6 +1760,9 @@ msgstr "cheval"
 #.
 msgid "Truck"
 msgstr ""
+
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Dans %s, engagez vous dans le rond-point"
 
 #~ msgid "Cursor"
 #~ msgstr "Curseur"

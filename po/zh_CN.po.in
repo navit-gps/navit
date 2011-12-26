@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2009-12-20 20:38+0000\n"
 "Last-Translator: Kyle WANG <waxaca@163.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "从根目录执行\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' 设置为 '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "第零个"
 
@@ -47,6 +49,7 @@ msgstr "第五个"
 msgid "sixth"
 msgstr "第六个"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "第零个退出"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "距离%d米"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d米"
 
@@ -85,12 +96,30 @@ msgid "in %d meters"
 msgstr "距离%d米"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d千米"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "距离%d.%d千米"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
 
 #, c-format
 msgid "one kilometer"
@@ -165,16 +194,16 @@ msgstr "不久将进入环形交叉路口"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "还有%s进入环形环形交叉路口"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "还有%s就将驶离环形区"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "然后在%s处驶出环形区"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "还有%s就将驶离环形区"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1298,40 +1327,59 @@ msgstr "书签"
 msgid "Destination"
 msgstr "目的地"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "显示"
 
-msgid "Route"
+msgid "_Route"
 msgstr "路线"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "前一目的地"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "书签"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "地图"
+
+msgid "_Layout"
 msgstr "布局"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "规划"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "车辆"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "缩小"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "放大"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "重新计算"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "信息"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "停止导航"
 
 msgid "Test"
@@ -1340,19 +1388,34 @@ msgstr "测试"
 msgid "_Quit"
 msgstr "退出（_Q）"
 
-msgid "Cursor"
-msgstr "光标"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "锁定路线"
 
-msgid "Northing"
-msgstr "总指向北"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "路线指南"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "自动缩放"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "全屏"
 
 msgid "Data"
@@ -1416,6 +1479,7 @@ msgstr "返回"
 msgid "Add Bookmark"
 msgstr "增加书签"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "添加书签文件夹"
 
@@ -1455,6 +1519,10 @@ msgstr "粘帖标签"
 msgid "Delete Bookmark"
 msgstr "删除标签"
 
+msgid "Bookmarks"
+msgstr "书签"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "粘帖标签"
 
@@ -1462,8 +1530,33 @@ msgstr "粘帖标签"
 msgid "Bookmark %s"
 msgstr "书签 %s"
 
+msgid "Former Destinations"
+msgstr "前一目的地"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "房屋编号（门牌号）"
+
+msgid "Layout"
+msgstr "布局"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "地图"
@@ -1506,17 +1599,29 @@ msgstr "显示卫星状态"
 msgid "Show NMEA data"
 msgstr "显示NMEA数据"
 
+msgid "Vehicle"
+msgstr "车辆"
+
 msgid "Rules"
 msgstr "规则"
 
 msgid "Lock on road"
 msgstr "锁定路线"
 
+msgid "Northing"
+msgstr "总指向北"
+
 msgid "Map follows Vehicle"
 msgstr "随车显示地图"
 
 msgid "Message"
 msgstr "信息"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "到目的地的路线"
@@ -1541,44 +1646,16 @@ msgstr "和整个的Navit组"
 msgid "members and contributors."
 msgstr "成员和贡献者"
 
-msgid "Main menu"
-msgstr "主菜单"
-
-msgid ""
-"Show\n"
-"Map"
+msgid "Return to route!"
 msgstr ""
-"显示地图"
 
-msgid "Settings"
-msgstr "设置"
-
-msgid "Tools"
-msgstr "工具"
-
-msgid "About"
-msgstr "关于"
-
-msgid "Actions"
-msgstr "动作"
-
-msgid "Quit"
-msgstr "退出"
-
-msgid ""
-"Stop\n"
-"Navigation"
+#. warning told
+msgid "Look out! Camera!"
 msgstr ""
-"停止导航"
 
-msgid "Window Mode"
-msgstr "窗口模式"
-
-msgid "Description"
-msgstr "描述"
-
-msgid "horse"
-msgstr "骑马"
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
 
 msgid "Map Point"
 msgstr "地图位置点"
@@ -1586,6 +1663,93 @@ msgstr "地图位置点"
 msgid "Vehicle Position"
 msgstr "车辆位置"
 
-#, c-format
+msgid "Main menu"
+msgstr "主菜单"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr "显示地图"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Tools"
+msgstr "工具"
+
+msgid "Route"
+msgstr "路线"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Actions"
+msgstr "动作"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+
+msgid "Quit"
+msgstr "退出"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr "停止导航"
+
+msgid "Display"
+msgstr "显示"
+
+msgid "Fullscreen"
+msgstr "全屏"
+
+msgid "Window Mode"
+msgstr "窗口模式"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "horse"
+msgstr "骑马"
+
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
+
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "还有%s进入环形环形交叉路口"
+
+#~ msgid "Cursor"
+#~ msgstr "光标"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d千米"

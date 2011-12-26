@@ -5,12 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2010-05-10 15:05+0000\n"
 "Last-Translator: seqizz (gurkanGur) <seqizz@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +27,7 @@ msgstr "Kaynak klasörden çalıştırılıyor\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' , '%s' değerine ayarlanıyor\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "sıfırıncı"
 
@@ -47,6 +49,7 @@ msgstr "beşinci"
 msgid "sixth"
 msgstr "altıncı"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "sıfırıncı çıkış"
 
@@ -77,6 +80,14 @@ msgid "in %d m"
 msgstr "%d m'de"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metre"
 
@@ -85,12 +96,30 @@ msgid "in %d meters"
 msgstr "%d metrede"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d kilometre"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d.%d kilometrede"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
 
 #, c-format
 msgid "one kilometer"
@@ -165,16 +194,16 @@ msgstr "Yakındaki kavşağa girin"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "%s içerisinde kavşağa girin"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "%s'de kavşaktan çıkın"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "ardından %s'de kavşaktan çıkın"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "%s'de kavşaktan çıkın"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1298,40 +1327,59 @@ msgstr "Yer imi"
 msgid "Destination"
 msgstr "Hedef"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Görüntüle"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Rota"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "önceki istikamet"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Yer İmleri"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Harita"
+
+msgid "_Layout"
 msgstr "Yerleşim"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "İzdüşüm"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Araç"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Uzaklaştır"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Yakınlaştır"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Yeniden hesapla"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Bilgi"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Dolaşmayı Durdur"
 
 msgid "Test"
@@ -1340,19 +1388,34 @@ msgstr "Test"
 msgid "_Quit"
 msgstr "Çı_kış"
 
-msgid "Cursor"
-msgstr "İmleç"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Kapalı yol"
 
-msgid "Northing"
-msgstr "Kuzey mesafesi"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Yol Haritası"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Oto-yaklaş"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Tam Ekran"
 
 msgid "Data"
@@ -1416,6 +1479,7 @@ msgstr "Geri"
 msgid "Add Bookmark"
 msgstr "Yer İmi Ekle"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1455,6 +1519,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr "Yer İmleri"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1462,8 +1530,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Yerimi ata %s"
 
+msgid "Former Destinations"
+msgstr "önceki istikamet"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Ev no:"
+
+msgid "Layout"
+msgstr "Yerleşim"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Haritalar"
@@ -1506,17 +1599,29 @@ msgstr "Uydu durumunuı göster"
 msgid "Show NMEA data"
 msgstr "NMEA verisi göster"
 
+msgid "Vehicle"
+msgstr "Araç"
+
 msgid "Rules"
 msgstr "Kurallar"
 
 msgid "Lock on road"
 msgstr "Yola Kilitlen"
 
+msgid "Northing"
+msgstr "Kuzey mesafesi"
+
 msgid "Map follows Vehicle"
 msgstr "Harita aracı takip etsin"
 
 msgid "Message"
 msgstr "Mesaj"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Rota Açıklaması"
@@ -1541,6 +1646,23 @@ msgstr "Ve tüm Navit takımı"
 msgid "members and contributors."
 msgstr "üyeler ve katkıda bulunanlar."
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Harita Noktası"
+
+msgid "Vehicle Position"
+msgstr "Araç Konumu"
+
 msgid "Main menu"
 msgstr "Ana menü"
 
@@ -1555,11 +1677,19 @@ msgstr "Ayarlar"
 msgid "Tools"
 msgstr "Araçlar"
 
+msgid "Route"
+msgstr "Rota"
+
 msgid "About"
 msgstr "Hakkında"
 
 msgid "Actions"
 msgstr "Eylemler"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Çık"
@@ -1571,21 +1701,57 @@ msgstr ""
 "Navigasyonu\n"
 "Durdur"
 
+msgid "Display"
+msgstr "Görüntüle"
+
+msgid "Fullscreen"
+msgstr "Tam Ekran"
+
 msgid "Window Mode"
 msgstr "Pencere Modu"
 
 msgid "Description"
 msgstr "Açıklama"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr "at"
 
-msgid "Map Point"
-msgstr "Harita Noktası"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Araç Konumu"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "%s içerisinde kavşağa girin"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "İmleç"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometre"
