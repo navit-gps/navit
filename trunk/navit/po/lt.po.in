@@ -5,17 +5,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-12-05 18:13+0100\n"
 "PO-Revision-Date: 2009-12-20 20:38+0000\n"
 "Last-Translator: laimonas <laimonas.mockus@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -27,6 +28,7 @@ msgstr "Paleidžiu pradiniame kataloge\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "nustatau iš '%s' į '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "nulinis"
 
@@ -48,6 +50,7 @@ msgstr "penktas"
 msgid "sixth"
 msgstr "šeštas"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "nulinis išvažiavimas"
 
@@ -78,6 +81,14 @@ msgid "in %d m"
 msgstr "už %d m"
 
 #, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
 msgid "%d meters"
 msgstr "%d metrai"
 
@@ -86,12 +97,34 @@ msgid "in %d meters"
 msgstr "už %d metrų"
 
 #, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
 msgid "%d.%d kilometers"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "už %d.%d kilometrų"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -170,16 +203,16 @@ msgstr "Netrukus įsukite į žiedą"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
-msgid "In %s, enter the roundabout"
-msgstr "Už %s, įsukite į žiedą"
-
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "išsukite iš žiedo %s išvažiavime"
+msgid "Enter the roundabout %s"
+msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "tada išsukite iš žiedo %s išvažiavime"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "išsukite iš žiedo %s išvažiavime"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1303,40 +1336,59 @@ msgstr "Pažymėti"
 msgid "Destination"
 msgstr "Kelionės tikslas"
 
-msgid "Display"
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
 msgstr "Rodyti"
 
-msgid "Route"
+msgid "_Route"
 msgstr "Parinkti kelią"
 
-msgid "Former Destinations"
+msgid "_Former Destinations"
 msgstr "Ankstesnės vietos"
 
-msgid "Bookmarks"
+msgid "_Bookmarks"
 msgstr "Adresynas"
 
-msgid "Layout"
+msgid "_Map"
+msgstr "Žemėlapis"
+
+msgid "_Layout"
 msgstr "Išdėstymas"
 
-msgid "Projection"
+msgid "_Projection"
 msgstr "Projekcija"
 
-msgid "Vehicle"
+msgid "_Vehicle"
 msgstr "Transporto priemonė"
 
-msgid "ZoomOut"
+msgid "Zoom_Out"
 msgstr "Sumažinti"
 
-msgid "ZoomIn"
+msgid "Decrease zoom level"
+msgstr ""
+
+msgid "Zoom_In"
 msgstr "Padidinti"
 
-msgid "Recalculate"
+msgid "Increase zoom level"
+msgstr ""
+
+msgid "_Recalculate"
 msgstr "Perskaičiuoti"
 
-msgid "Info"
+msgid "Redraw map"
+msgstr ""
+
+msgid "_Info"
 msgstr "Informacija"
 
-msgid "Stop Navigation"
+msgid "Set _destination"
+msgstr ""
+
+msgid "Opens address search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
 msgstr "Stabdyti navigaciją"
 
 msgid "Test"
@@ -1345,19 +1397,34 @@ msgstr "Bandymas"
 msgid "_Quit"
 msgstr "_Išeiti"
 
-msgid "Cursor"
-msgstr "Kursorius"
+msgid "Quit the application"
+msgstr ""
 
-msgid "Lock on Road"
+msgid "Show position _cursor"
+msgstr ""
+
+msgid "_Lock on Road"
 msgstr "Sekti kelią"
 
-msgid "Northing"
-msgstr "Į šiaurę"
+msgid "_Keep orientation to the North"
+msgstr ""
 
-msgid "Autozoom"
+msgid "Switches map orientation to the north or the vehicle"
+msgstr ""
+
+msgid "_Roadbook"
+msgstr "Kelionės knyga"
+
+msgid "Show/hide route description"
+msgstr ""
+
+msgid "_Autozoom"
 msgstr "Automatinis didinimas"
 
-msgid "Fullscreen"
+msgid "Enable/disable automatic zoom level changing"
+msgstr ""
+
+msgid "_Fullscreen"
 msgstr "Visas ekranas"
 
 msgid "Data"
@@ -1421,6 +1488,7 @@ msgstr "Grįžti"
 msgid "Add Bookmark"
 msgstr ""
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr ""
 
@@ -1460,6 +1528,10 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Bookmarks"
+msgstr "Adresynas"
+
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr ""
 
@@ -1467,8 +1539,33 @@ msgstr ""
 msgid "Bookmark %s"
 msgstr "Pasižymėti %s"
 
+msgid "Former Destinations"
+msgstr "Ankstesnės vietos"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "House number"
 msgstr "Namo numeris"
+
+msgid "Layout"
+msgstr "Išdėstymas"
+
+#, c-format
+msgid "Download %s"
+msgstr ""
+
+msgid "Map Download"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Download Enabled"
+msgstr ""
+
+msgid "Download completely"
+msgstr ""
 
 msgid "Maps"
 msgstr "Žemėlapiai"
@@ -1511,17 +1608,29 @@ msgstr "Parodyti palydovų būseną"
 msgid "Show NMEA data"
 msgstr "Parodyti NMEA duomenis"
 
+msgid "Vehicle"
+msgstr "Transporto priemonė"
+
 msgid "Rules"
 msgstr "Taisyklės"
 
 msgid "Lock on road"
 msgstr "Sekti kelią"
 
+msgid "Northing"
+msgstr "Į šiaurę"
+
 msgid "Map follows Vehicle"
 msgstr "Sekti transporto priemonę"
 
 msgid "Message"
 msgstr "Žinutė"
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
 
 msgid "Route Description"
 msgstr ""
@@ -1546,6 +1655,23 @@ msgstr ""
 msgid "members and contributors."
 msgstr ""
 
+msgid "Return to route!"
+msgstr ""
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr ""
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Vieta žemėlapyje"
+
+msgid "Vehicle Position"
+msgstr "Transporto priemonės vieta"
+
 msgid "Main menu"
 msgstr "Pagrindinis meniu"
 
@@ -1562,11 +1688,19 @@ msgstr "Parinktys"
 msgid "Tools"
 msgstr "Įrankiai"
 
+msgid "Route"
+msgstr "Parinkti kelią"
+
 msgid "About"
 msgstr ""
 
 msgid "Actions"
 msgstr "Veiksmai"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
 
 msgid "Quit"
 msgstr "Išeiti"
@@ -1578,21 +1712,57 @@ msgstr ""
 "Stabdyti\n"
 "navigaciją"
 
+msgid "Display"
+msgstr "Rodyti"
+
+msgid "Fullscreen"
+msgstr "Visas ekranas"
+
 msgid "Window Mode"
 msgstr "Langų režimas"
 
 msgid "Description"
 msgstr "Aprašas"
 
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
 msgid "horse"
 msgstr ""
 
-msgid "Map Point"
-msgstr "Vieta žemėlapyje"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr ""
 
-msgid "Vehicle Position"
-msgstr "Transporto priemonės vieta"
+#~ msgid "In %s, enter the roundabout"
+#~ msgstr "Už %s, įsukite į žiedą"
 
-#, c-format
+#~ msgid "Cursor"
+#~ msgstr "Kursorius"
+
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometras"
