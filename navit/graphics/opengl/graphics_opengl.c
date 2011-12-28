@@ -28,9 +28,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#if USE_FREEIMAGE
-#include <FreeImage.h>
-#endif
 #include <time.h>
 
 #include "item.h"
@@ -48,8 +45,15 @@
 #include "navit/font/freetype/font_freetype.h"
 
 #if defined(WINDOWS) || defined(WIN32)
+#define PIXEL_FORMAT GL_RGBA
 #include <windows.h>
 # define sleep(i) Sleep(i * 1000)
+#else
+#define PIXEL_FORMAT GL_BGRA
+#endif
+
+#if USE_FREEIMAGE
+#include <FreeImage.h>
 #endif
 
 #if USE_OPENGLES
@@ -94,6 +98,10 @@ extern EGLDisplay egldisplay;
 #else
 #include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
 #endif
+#endif
+
+#ifdef HAVE_FREEGLUT || __FREEGLUT_EXT_H__
+#define USE_FREEGLUT 1
 #endif
 
 #define SCREEN_WIDTH 700
@@ -178,12 +186,12 @@ static GHashTable *hImageData;
 #if USE_OPENGLES
 #else
 /*  prototypes */
-void GLAPIENTRY tessBeginCB(GLenum which);
-void GLAPIENTRY tessEndCB();
-void GLAPIENTRY tessErrorCB(GLenum errorCode);
-void GLAPIENTRY tessVertexCB(const GLvoid * data);
-void GLAPIENTRY tessVertexCB2(const GLvoid * data);
-void tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out);
+void APIENTRY tessBeginCB(GLenum which);
+void APIENTRY tessEndCB();
+void APIENTRY tessErrorCB(GLenum errorCode);
+void APIENTRY tessVertexCB(const GLvoid * data);
+void APIENTRY tessVertexCB2(const GLvoid * data);
+void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out);
 const char *getPrimitiveType(GLenum type);
 #endif
 
@@ -655,7 +663,7 @@ getPrimitiveType(GLenum type)
 	return ret;
 }
 
-void GLAPIENTRY
+void APIENTRY
 tessBeginCB(GLenum which)
 {
 	glBegin(which);
@@ -665,7 +673,7 @@ tessBeginCB(GLenum which)
 
 
 
-void GLAPIENTRY
+void APIENTRY
 tessEndCB()
 {
 	glEnd();
@@ -675,7 +683,7 @@ tessEndCB()
 
 
 
-void GLAPIENTRY
+void APIENTRY
 tessVertexCB(const GLvoid * data)
 {
 	// cast back to double type
@@ -747,7 +755,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 
 #if USE_OPENGLES
 #else
-void
+void APIENTRY
 tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
 {
 	GLdouble *nv = (GLdouble *) malloc(sizeof(GLdouble) * 3);
@@ -789,14 +797,11 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 
 
 	// register callback functions
-	gluTessCallback(tess, GLU_TESS_BEGIN,
-			(void (*)(void)) tessBeginCB);
-	gluTessCallback(tess, GLU_TESS_END, (void (*)(void)) tessEndCB);
+	gluTessCallback(tess, GLU_TESS_BEGIN,	(void (APIENTRY *)(void)) tessBeginCB);
+	gluTessCallback(tess, GLU_TESS_END,		(void (APIENTRY *)(void)) tessEndCB);
 	//     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
-	gluTessCallback(tess, GLU_TESS_VERTEX,
-			(void (*)(void)) tessVertexCB);
-	gluTessCallback(tess, GLU_TESS_COMBINE,
-			(void (*)(void)) tessCombineCB);
+	gluTessCallback(tess, GLU_TESS_VERTEX,	(void (APIENTRY *)(void)) tessVertexCB);
+	gluTessCallback(tess, GLU_TESS_COMBINE, (void (APIENTRY *)(void)) tessCombineCB);
 
 	// tessellate and compile a concave quad into display list
 	// gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
@@ -961,7 +966,7 @@ display_text_draw(struct font_freetype_text *text,
 #endif
 				glRasterPos2d((x + g->x) >> 6,
 					      (y + g->y) >> 6);
-				glDrawPixels(g->w + 2, g->h + 2, GL_BGRA,
+				glDrawPixels(g->w + 2, g->h + 2, PIXEL_FORMAT,
 					     GL_UNSIGNED_BYTE, shadow);
 #endif
 				g_free(shadow);
@@ -1004,7 +1009,7 @@ display_text_draw(struct font_freetype_text *text,
 #endif
 					glRasterPos2d((x + g->x) >> 6,
 						      (y + g->y) >> 6);
-					glDrawPixels(g->w, g->h, GL_BGRA,
+					glDrawPixels(g->w, g->h, PIXEL_FORMAT,
 						     GL_UNSIGNED_BYTE,
 						     glyph);
 #endif
@@ -1030,7 +1035,7 @@ display_text_draw(struct font_freetype_text *text,
 #endif
 				glRasterPos2d((x + g->x) >> 6,
 					      (y + g->y) >> 6);
-				glDrawPixels(g->w, g->h, GL_BGRA,
+				glDrawPixels(g->w, g->h, PIXEL_FORMAT,
 					     GL_UNSIGNED_BYTE, glyph);
 #endif
 				g_free(glyph);
@@ -1586,7 +1591,10 @@ graphics_opengl_idle(void *data)
 					  (graphics_priv_root->height));
 		opengl_init_ok = 1;
 	} else {
+		
+#if USE_FREEGLUT
 		glutMainLoopEvent();
+#endif
 		handle_mouse_queue();
 	}
 	return TRUE;
@@ -1744,8 +1752,9 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 	glutMouseFunc(click_notify);
 	glutKeyboardFunc(ProcessNormalKeys);
 	glutSpecialFunc(ProcessSpecialKeys);
+#if USE_FREEGLUT
 	glutCloseFunc(glut_close);
-
+#endif
 	this->DLid = glGenLists(1);
 #endif
 
