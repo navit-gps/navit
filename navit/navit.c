@@ -792,7 +792,9 @@ navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, str
 		//val = in[1];
 		key = g_strdup(in[0]->u.str);
 		g_hash_table_insert(cmd_attr_var_hash, key, val);
-        }
+        } else {
+		dbg(1, "Wrong parameters for set_attr_var() command function\n");
+	}
 }
 
 
@@ -862,10 +864,12 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 	) {
 
 		if(!(ms=navit_get_mapset(this))) {
+			dbg(1, "Command function map_add_curr_pos(): there is no active mapset\n");
 			return;
 		}
 
 		if((item_type = item_from_name(in[1]->u.str))==type_none) {
+			dbg(1, "Command function map_add_curr_pos(): unknown item type\n");
 			return;
 		}
 
@@ -873,6 +877,7 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 
 		//no map with the given name found
 		if( ! curr_map) {
+			dbg(1, "Command function map_add_curr_pos(): map not found\n");
 			return;
 		}
 	
@@ -881,9 +886,11 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 			if(vehicle_get_attr(this->vehicle->vehicle,attr_position_coord_geo,&pos_attr,NULL)) {
 				transform_from_geo(projection_mg, pos_attr.u.coord_geo, &curr_coord);
 			} else {
+				dbg(1, "Command function map_add_curr_pos(): vehicle position is not accessible\n");
 				return;
 			}
 		} else {
+			dbg(1, "Command function map_add_curr_pos(): no vehicle\n");
 			return;
 		}
 
@@ -971,6 +978,12 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
 		if(it) {
 			item_attr_set(it, &attr_to_set, change_mode_modify);
 		}
+	} else {
+		dbg(4,"Error in command function item_set_attr()\n");
+		dbg(4,"Command function item_set_attr(): map cond:       %d\n",(in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)?1:0);
+		dbg(4,"Command function item_set_attr(): item cond:      %d\n",(in[1] && ATTR_IS_ITEM(in[1]->type))?1:0);
+		dbg(4,"Command function item_set_attr(): attr type cond: %d\n",(in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str)?1:0);
+		dbg(4,"Command function item_set_attr(): attr val cond:  %d\n",(in[3] && ATTR_IS_STRING(in[3]->type) && in[3]->u.str)?1:0);
 	}
 }
 
@@ -988,7 +1001,7 @@ static void
 navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr **list = g_new0(struct attr *,2);
-	if(!cmd_int_var_hash) {
+	if(!cmd_attr_var_hash) {
 		struct attr*val = g_new0(struct attr,1);
 		cmd_attr_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
 		val->type   = attr_type_item_begin;
