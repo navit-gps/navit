@@ -67,7 +67,6 @@
 #include "vehicleprofile.h"
 #include "sunriset.h"
 #include "bookmarks.h"
-#include "map/textfile/textfile.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include "util.h"
@@ -75,6 +74,9 @@
 #ifdef HAVE_API_WIN32_CE
 #include "libc.h"
 #endif
+
+/*FIXME: don't include pvt textfile map includes here */
+#include "map/textfile/textfile.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
