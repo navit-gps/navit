@@ -655,12 +655,10 @@ static struct widget *
 gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
 {
 	struct widget *ret=NULL;
-	char *tmp=g_malloc(strlen(text)+3);
-	int i;
-
-
-	i=strlen(text)-1;
-	while (i >= 0) {
+	char *tmp=g_malloc(strlen(text)+3), *p;
+	p=text+strlen(text);
+	while ((p=g_utf8_find_prev_char(text, p)) >= text) {
+		int i=p-text;
 		strcpy(tmp, text);
 		strcpy(tmp+i,"..");
 		ret=gui_internal_label_new(this, tmp);
@@ -668,7 +666,6 @@ gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
 			break;
 		gui_internal_widget_destroy(this, ret);
 		ret=NULL;
-		i--;
 	}
 	if(!ret)
 		ret=gui_internal_label_new(this, "");
