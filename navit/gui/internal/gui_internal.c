@@ -658,6 +658,7 @@ gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
 	char *tmp=g_malloc(strlen(text)+3);
 	int i;
 
+
 	i=strlen(text)-1;
 	while (i >= 0) {
 		strcpy(tmp, text);
@@ -669,6 +670,8 @@ gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
 		ret=NULL;
 		i--;
 	}
+	if(!ret)
+		ret=gui_internal_label_new(this, "");
 	g_free(tmp);
 	return ret;
 }
@@ -1667,14 +1670,16 @@ gui_internal_top_bar(struct gui_priv *this)
 			wcn->state |= STATE_SENSITIVE;
 			res=g_list_prepend(res, wcn);
 			l=g_list_previous(l);
-			wc=l->data;
+			wc=l?l->data:NULL;
 		}
-		wcn=gui_internal_label_new(this, ".. »");
-		wcn->foreground=foreground;
-		wcn->func=gui_internal_cmd_return;
-		wcn->data=wc;
-		wcn->state |= STATE_SENSITIVE;
-		res=g_list_prepend(res, wcn);
+		if(wc) {
+			wcn=gui_internal_label_new(this, ".. »");
+			wcn->foreground=foreground;
+			wcn->func=gui_internal_cmd_return;
+			wcn->data=wc;
+			wcn->state |= STATE_SENSITIVE;
+			res=g_list_prepend(res, wcn);
+		}
 	}
 	l=res;
 	while (l) {
