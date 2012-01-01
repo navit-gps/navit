@@ -53,11 +53,11 @@ get_line(struct map_rect_priv *mr)
 			mr->pos=ftell(mr->f);
 		else
 			mr->pos+=mr->lastlen;
-		fgets(mr->line, SIZE, mr->f);
+		fgets(mr->line, TEXTFILE_LINE_SIZE, mr->f);
 	        dbg(1,"read textfile line: %s\n", mr->line);
 		remove_comment_line(mr->line);
 		mr->lastlen=strlen(mr->line)+1;
-		if (strlen(mr->line) >= SIZE-1) 
+		if (strlen(mr->line) >= TEXTFILE_LINE_SIZE-1) 
 			printf("line too long\n");
 	}
 }
@@ -241,7 +241,7 @@ map_rect_destroy_textfile(struct map_rect_priv *mr)
 static struct item *
 map_rect_get_item_textfile(struct map_rect_priv *mr)
 {
-	char *p,type[SIZE];
+	char *p,type[TEXTFILE_LINE_SIZE];
 	dbg(1,"map_rect_get_item_textfile id_hi=%d line=%s", mr->item.id_hi, mr->line);
 	if (!mr->f) {
 		return NULL;
