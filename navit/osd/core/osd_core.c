@@ -299,9 +299,9 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
 	gettimeofday(&tv,NULL);
 	curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
 	if ( this->last_time+this->update_period > curr_time) {
-		this->last_time = curr_time;
 		return;
 	}
+	this->last_time = curr_time;
 	if(nav) {
 		navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
 		if (vehicle_attr.u.vehicle) {
