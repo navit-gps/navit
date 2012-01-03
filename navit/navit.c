@@ -1202,6 +1202,18 @@ navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struc
 	navit_set_center(this, &pc, 0);
 }
 
+
+static void
+navit_cmd_set_position(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct pcoord pc;
+	in=navit_get_coord(this, in, &pc);
+	if (!in)
+		return;
+	navit_set_position(this, &pc);
+}
+
+
 static void
 navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -1319,6 +1331,7 @@ static struct command_table commands[] = {
 	{"set_center",command_cast(navit_cmd_set_center)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
+	{"set_position",command_cast(navit_cmd_set_position)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 	{"fmt_coordinates",command_cast(navit_cmd_fmt_coordinates)},
 	{"set_int_var",command_cast(navit_cmd_set_int_var)},
