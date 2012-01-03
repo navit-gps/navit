@@ -733,7 +733,7 @@ bookmarks_append_coord(struct map *former_destination_map, char *former_destinat
 
  	new_dest = g_new(struct former_destination, 1);
  	new_dest->type = type;
- 	new_dest->description = g_strdup(description);
+ 	new_dest->description = g_strdup(description?description:_("Map Point"));
  	new_dest->c.x = c->x;
  	new_dest->c.y = c->y;
 	former_destinations = remove_destination_from_list(new_dest, former_destinations);
