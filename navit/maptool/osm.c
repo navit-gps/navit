@@ -75,9 +75,6 @@ static int attr_mapping_way_count;
 static struct attr_mapping **attr_mapping_way2poi;
 static int attr_mapping_way2poi_count;
 
-static char *attr_present;
-static int attr_present_count;
-
 
 
 enum attr_strings {
