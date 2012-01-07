@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-01-06 19:50-0300\n"
 "PO-Revision-Date: 2010-06-13 14:14+0000\n"
-"Last-Translator: leopoldonet <Unknown>\n"
+"Last-Translator: Leonardo Hamada <leonardohamada@hotmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -73,19 +73,19 @@ msgstr "sexta saída"
 
 #, c-format
 msgid "%d m"
-msgstr "%d m"
+msgstr "%d metros"
 
 #, c-format
 msgid "in %d m"
-msgstr "em %d m"
+msgstr "em %d metros"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d pés"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "em %d pés"
 
 #, c-format
 msgid "%d meters"
@@ -97,43 +97,43 @@ msgstr "em %d metros"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d vírgula %d milhas"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "em %d vírgula %d milhas"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d kilometros"
+msgstr "%d vírgula %d quilômetros"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "em %d.%d kilometros"
+msgstr "em %d vírgula %d quilômetros"
 
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "uma milha"
+msgstr[1] "%d milhas"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "em uma milha"
+msgstr[1] "em %d milhas"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "um kilometro"
-msgstr[1] "%d kilometros"
+msgstr[0] "um quilômetro"
+msgstr[1] "%d quilômetros"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "em um kilometro"
-msgstr[1] "em %d kilometros"
+msgstr[0] "em um quilômetro"
+msgstr[1] "em %d quilômetros"
 
 msgid "exit"
 msgstr "saída"
@@ -144,7 +144,7 @@ msgstr "na rampa"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sna rua %s%s%s"
+msgstr "%sna %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
@@ -168,11 +168,11 @@ msgstr "%sna %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
-msgstr "direita"
+msgstr "à direita"
 
 #. TRANSLATORS: left, as in 'Turn left'
 msgid "left"
-msgstr "esquerda"
+msgstr "à esquerda"
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "easily "
@@ -180,26 +180,26 @@ msgstr "levemente "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr "fortemente "
+msgstr "acentuadamente "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr "com força "
+msgstr "vigorosamente "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
 msgstr "desconhecido "
 
 msgid "When possible, please turn around"
-msgstr "retorne assim que possivel"
+msgstr "Quando possível, favor retornar"
 
 msgid "Enter the roundabout soon"
-msgstr "em breve entre na rotatória"
+msgstr "Prepare-se para entrar na rotatória em breve"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Entrarás na rotatória %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -211,7 +211,7 @@ msgstr "Deixe a rotatória na %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Siga a estrada pelo próximo %s"
+msgstr "Continue na via pelos próximos %s"
 
 msgid "soon"
 msgstr "em breve"
@@ -219,18 +219,18 @@ msgstr "em breve"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr "Pegue a %1$s estrada para o %2$s"
+msgstr "Pegue a %1$s via para a %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "após %i estradas"
+msgstr "após %i vias"
 
 msgid "now"
 msgstr "agora"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "então pegue a %1$s estrada para o %2$s"
+msgstr "então pegue a %1$s via para a %2$s"
 
 msgid "error"
 msgstr "erro"
@@ -247,10 +247,10 @@ msgstr "então vire %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Você chegou ao destino %s"
+msgstr "Você chegará ao destino %s"
 
 msgid "then you have reached your destination."
-msgstr "então você chegou ao seu destino."
+msgstr "então você chegará ao destino."
 
 msgid "Position"
 msgstr "Posição"
@@ -274,19 +274,19 @@ msgid "Destination Length"
 msgstr "Distância ao Destino"
 
 msgid "Destination Time"
-msgstr "Tempo ao Destino"
+msgstr "Tempo até o Destino"
 
 msgid "Roadbook"
 msgstr "Guia de estrada"
 
 msgid "Set as position"
-msgstr "Marcar como posição"
+msgstr "Definir como posição"
 
 msgid "Set as destination"
-msgstr "Marcar como destino"
+msgstr "Definir como destino"
 
 msgid "Add as bookmark"
-msgstr "Adicionar como marcador"
+msgstr "Adicionar aos marcadores"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
@@ -294,7 +294,7 @@ msgstr "Ponto 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr "Coord na tela: %d %d"
+msgstr "Coordenada na tela : %d %d"
 
 #. 020
 msgid "Andorra"
@@ -310,7 +310,7 @@ msgstr "Afeganistão"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr "Antigua e Barbuda"
+msgstr "Antígua e Barbuda"
 
 #. 660
 msgid "Anguilla"
@@ -438,7 +438,7 @@ msgstr "Botswana"
 
 #. 112
 msgid "Belarus"
-msgstr "Belarus"
+msgstr "Bielorrússia"
 
 #. 084
 msgid "Belize"
@@ -482,7 +482,7 @@ msgstr "Chile"
 
 #. 120
 msgid "Cameroon"
-msgstr "Camarão"
+msgstr "Camarões"
 
 #. 156
 msgid "China"
@@ -506,7 +506,7 @@ msgstr "Cabo Verde"
 
 #. 162
 msgid "Christmas Island"
-msgstr "Ilha do Natal"
+msgstr "Ilha Christmas"
 
 #. 196
 msgid "Cyprus"
@@ -558,7 +558,7 @@ msgstr "Saara Ocidental"
 
 #. 232
 msgid "Eritrea"
-msgstr "Eritréia"
+msgstr "Eritreia"
 
 #. 724
 msgid "Spain"
@@ -690,7 +690,7 @@ msgstr "Haiti"
 
 #. 348
 msgid "Hungary"
-msgstr "Hungária"
+msgstr "Hungria"
 
 #. 360
 msgid "Indonesia"
@@ -706,7 +706,7 @@ msgstr "Israel"
 
 #. 833
 msgid "Isle of Man"
-msgstr "Ilha do Homem"
+msgstr "Ilha de Man"
 
 #. 356
 msgid "India"
@@ -742,7 +742,7 @@ msgstr "Jamaica"
 
 #. 400
 msgid "Jordan"
-msgstr "Jordão"
+msgstr "Jordânia"
 
 #. 392
 msgid "Japan"
@@ -786,11 +786,11 @@ msgstr "Kuwait"
 
 #. 136
 msgid "Cayman Islands"
-msgstr "Ilhas Cayman"
+msgstr "Ilhas Caiman"
 
 #. 398
 msgid "Kazakhstan"
-msgstr "Casaquistão"
+msgstr "Cazaquistão"
 
 #. 418
 msgid "Lao People's Democratic Republic"
@@ -978,7 +978,7 @@ msgstr "Nova Zelândia"
 
 #. 512
 msgid "Oman"
-msgstr "Oman"
+msgstr "Omã"
 
 #. 591
 msgid "Panama"
@@ -1010,7 +1010,7 @@ msgstr "Polônia"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr "São Pierre e Miquelão"
+msgstr "São Pedro e Miquelão"
 
 #. 612
 msgid "Pitcairn"
@@ -1066,7 +1066,7 @@ msgstr "Arábia Saudita"
 
 #. 090
 msgid "Solomon Islands"
-msgstr "Ilhas Solomon"
+msgstr "Ilhas Salomão"
 
 #. 690
 msgid "Seychelles"
@@ -1122,7 +1122,7 @@ msgstr "Suriname"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr "São Tome e Príncipe"
+msgstr "São Tomé e Príncipe"
 
 #. 222
 msgid "El Salvador"
@@ -1246,7 +1246,7 @@ msgstr "Ilhas Virgens (Estados Unidos)"
 
 #. 704
 msgid "Viet Nam"
-msgstr "Vietinã"
+msgstr "Vietnã"
 
 #. 548
 msgid "Vanuatu"
@@ -1311,7 +1311,7 @@ msgid "Number"
 msgstr "Número"
 
 msgid "Enter Destination"
-msgstr "Entre Destino"
+msgstr "Especifique o Destino"
 
 msgid "Zip Code"
 msgstr "Código Postal"
@@ -1320,7 +1320,7 @@ msgid "City"
 msgstr "Cidade"
 
 msgid "District/Township"
-msgstr "Distrito/Povoado"
+msgstr "Distrito/Comunidade"
 
 msgid "Map"
 msgstr "Mapa"
@@ -1333,94 +1333,94 @@ msgstr "Destino"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Display"
+msgstr "E_xibição"
 
 msgid "_Route"
-msgstr "Rota"
+msgstr "Ro_ta"
 
 msgid "_Former Destinations"
-msgstr "Destinos anteriores"
+msgstr "Destinos _Anteriores"
 
 msgid "_Bookmarks"
-msgstr "Marcadores"
+msgstr "Mar_cadores"
 
 msgid "_Map"
-msgstr "Mapa"
+msgstr "_Mapa"
 
 msgid "_Layout"
-msgstr "Layout"
+msgstr "Dis_posição"
 
 msgid "_Projection"
-msgstr "Projeção"
+msgstr "Pro_jeção"
 
 msgid "_Vehicle"
-msgstr "Veículo"
+msgstr "_Veículo"
 
 msgid "Zoom_Out"
-msgstr "Afastar"
+msgstr "A_fastar"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Diminuir o nível de aproximação"
 
 msgid "Zoom_In"
-msgstr "Aproximar"
+msgstr "Apro_ximar"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Aumentar o nível de aproximação"
 
 msgid "_Recalculate"
-msgstr "Recalcular"
+msgstr "_Recalcular"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Redesenhar mapa"
 
 msgid "_Info"
-msgstr "Informação"
+msgstr "In_formação"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "Estabelecer _destino"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Abre a busca de endereço"
 
 msgid "_Stop Navigation"
-msgstr "Parar Navegação"
+msgstr "Parar Nave_gação"
 
 msgid "Test"
-msgstr "Teste"
+msgstr "Verificação"
 
 msgid "_Quit"
 msgstr "_Sair"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Sair da aplicação"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "Mostrar o curs_or de posição"
 
 msgid "_Lock on Road"
-msgstr "Prender na Estrada"
+msgstr "Prender na _Estrada"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "Ma_nter orientado ao Norte"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Muda a orientação do mapa para o norte ou o veículo"
 
 msgid "_Roadbook"
-msgstr "Guia de estrada"
+msgstr "G_uia de estrada"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Mostrar/ocultar descrição da rota"
 
 msgid "_Autozoom"
-msgstr "Zoom Automático"
+msgstr "Aproximação Automática"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Ativar/desativar a mudança automática do nível de aproximação"
 
 msgid "_Fullscreen"
-msgstr "Tela Inteira"
+msgstr "Tela _Inteira"
 
 msgid "Data"
 msgstr "Dados"
@@ -1469,7 +1469,7 @@ msgid "Route 0000km  0+00:00 ETA"
 msgstr "Rota 0000km  TEC 0+00:00"
 
 msgid "Back to map"
-msgstr "Volta ao mapa"
+msgstr "Voltar ao mapa"
 
 msgid "Main Menu"
 msgstr "Menu Principal"
@@ -1481,20 +1481,23 @@ msgid "Back"
 msgstr "Voltar"
 
 msgid "Add Bookmark"
-msgstr "Adicionar aos Favoritos"
+msgstr "Adicionar aos Marcadores"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr "Adicionar Pasta de Favoritos"
+msgstr "Adicionar Pasta de Marcadores"
 
 msgid "Rename"
 msgstr "Renomear"
 
 msgid "POIs"
-msgstr "POIs"
+msgstr "Pontos de Interesse"
 
 msgid "View in Browser"
 msgstr "Ver no Navegador"
+
+msgid "Item type"
+msgstr "Tipo do item"
 
 msgid "Streets"
 msgstr "Ruas"
@@ -1509,64 +1512,64 @@ msgid "View on map"
 msgstr "Ver no mapa"
 
 msgid "Cut Bookmark"
-msgstr "Corta Favorito"
+msgstr "Recortar Marcador"
 
 msgid "Copy Bookmark"
-msgstr "Copiar Favorito"
+msgstr "Copiar Marcador"
 
 msgid "Rename Bookmark"
-msgstr "Renomear Favorito"
+msgstr "Renomear Marcador"
 
 msgid "Paste Bookmark"
-msgstr "Colar Favorito"
+msgstr "Colar Marcador"
 
 msgid "Delete Bookmark"
-msgstr "Apagar Favorito"
+msgstr "Apagar Marcador"
 
 msgid "Bookmarks"
 msgstr "Marcadores"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr "Colar favorito"
+msgstr "Colar marcador"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr "Anotar %s"
+msgstr "Marcar %s"
 
 msgid "Former Destinations"
-msgstr "Destinos anteriores"
+msgstr "Destinos Anteriores"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "- Destinos anteriores indisponíveis -"
 
 msgid "House number"
 msgstr "Número da casa"
 
 msgid "Layout"
-msgstr "Layout"
+msgstr "Disposição"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Baixar %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Baixar Mapa"
 
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Habilitado para Baixar"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Baixar completamente"
 
 msgid "Maps"
 msgstr "Mapas"
 
 msgid "Show Satellite Status"
-msgstr "Mostrar Status Satélite"
+msgstr "Mostrar Estado do Satélite"
 
 msgid " Elevation "
 msgstr " Elevação "
@@ -1595,10 +1598,10 @@ msgid "Change profile to: %s"
 msgstr "Alterar perfil para: %s"
 
 msgid "Set as active"
-msgstr "Marcar como ativo"
+msgstr "Definir como ativo"
 
 msgid "Show Satellite status"
-msgstr "Mostrar Status do Satélite"
+msgstr "Mostrar estado do Satélite"
 
 msgid "Show NMEA data"
 msgstr "Mostrar dados NMEA"
@@ -1616,25 +1619,25 @@ msgid "Northing"
 msgstr "Ao Norte"
 
 msgid "Map follows Vehicle"
-msgstr "Mapa segue veículo"
+msgstr "Mapa segue Veículo"
 
 msgid "Message"
 msgstr "Mensagem"
 
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 msgid "Prev"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Route Description"
-msgstr "Descrição da Rota"
+msgstr "Descrição do Percurso"
 
 msgid "Height Profile"
 msgstr "Perfil de Altitude"
 
 msgid "Show Locale"
-msgstr "Mostrar seu Local"
+msgstr "Mostrar a Localidade"
 
 msgid "About Navit"
 msgstr "Sobre Navit"
@@ -1645,24 +1648,24 @@ msgstr "Por"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr "e tudo o equipe do Navit"
+msgstr "E toda a equipe do Navit, "
 
 msgid "members and contributors."
-msgstr "membros e contributores"
+msgstr "membros e contribuintes."
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Retorne para a rota!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Atenção! Camera!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "Por favor, diminua a velocidade"
 
 msgid "Map Point"
-msgstr "Ponto no mapa"
+msgstr "Ponto no Mapa"
 
 msgid "Vehicle Position"
 msgstr "Posição do Veículo"
@@ -1696,6 +1699,8 @@ msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
+"Destinos\n"
+"Anteriores"
 
 msgid "Quit"
 msgstr "Sair"
@@ -1708,7 +1713,7 @@ msgstr ""
 "Navegação"
 
 msgid "Display"
-msgstr "Display"
+msgstr "Exibição"
 
 msgid "Fullscreen"
 msgstr "Tela Inteira"
@@ -1751,7 +1756,7 @@ msgstr "cavalo"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #.
 msgid "Truck"
-msgstr ""
+msgstr "Caminhão"
 
 #~ msgid "In %s, enter the roundabout"
 #~ msgstr "Em %s, entre na rotatória"
@@ -1760,7 +1765,7 @@ msgstr ""
 #~ msgstr "Cursor"
 
 #~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometros"
+#~ msgstr "%d.%d quilômetros"
 
 #~ msgid " SNR "
 #~ msgstr " SNR "
