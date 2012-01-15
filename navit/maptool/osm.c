@@ -707,6 +707,7 @@ static char *attrmap={
 	"w	waterway=canal		water_canal\n"
 	"w	waterway=drain		water_drain\n"
 	"w	waterway=river		water_river\n"
+	"w	water=river		water_river\n"
 	"w	waterway=riverbank	poly_water\n"
 	"w	waterway=stream		water_stream\n"
 	"w	barrier=ditch	ditch\n"
@@ -940,6 +941,24 @@ osm_add_tag(char *k, char *v)
 	char buffer[BUFFER_SIZE*2+2];
 	if (in_relation) {
 		relation_add_tag(k,v);
+
+		//for relation areas we don't set flags
+		strcpy(buffer,"*=*");
+		if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+			attr_present[idx]=1;
+
+		sprintf(buffer,"%s=*", k);
+		if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+			attr_present[idx]=2;
+
+		sprintf(buffer,"*=%s", v);
+		if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+			attr_present[idx]=2;
+
+		sprintf(buffer,"%s=%s", k, v);
+		if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+			attr_present[idx]=4;
+
 		return;
 	}
 	if (! strcmp(k,"ele"))
@@ -1480,9 +1499,69 @@ country_from_iso2(char *iso)
 }
 
 
+static int
+attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count)
+{
+	int i,j,longest=0,ret=0,sum,val;
+	struct attr_mapping *curr;
+	for (i = 0 ; i < mapping_count ; i++) {
+		sum=0;
+		curr=mapping[i];
+		for (j = 0 ; j < curr->attr_present_idx_count ; j++) {
+			val=attr_present[curr->attr_present_idx[j]];
+			if (val)
+				sum+=val;
+			else {
+				sum=-1;
+				break;
+			}
+		}
+		if (sum > longest) {
+			longest=sum;
+			ret=0;
+		}
+		if (sum > 0 && sum == longest && ret < types_count)
+			types[ret++]=curr->type;
+	}
+	return ret;
+}
+
+static void
+attr_longest_match_clear(void)
+{
+	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
+}
+
 void
 osm_end_relation(struct maptool_osm *osm)
 {
+	int count,itcount=0;
+	enum item_type types[10];
+	types[0] = type_none;
+
+	count=attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types)/sizeof(enum item_type));
+	if(count>0) {
+		int ii;
+
+		struct attr attr;
+		attr.type = attr_item_types;
+		attr.u.item_types = NULL;
+
+		for(ii=0;ii<count;ii++) {
+			if(item_type_is_area(types[ii])) {
+				boundary = 1;
+				attr.u.item_types = g_realloc(attr.u.item_types, (itcount+2)*sizeof(enum item_type));
+				attr.u.item_types[itcount] = types[ii];
+				attr.u.item_types[itcount+1] = type_none;
+				++itcount;
+			}
+		}
+		if(itcount>0) {
+			item_bin_add_attr(item_bin, &attr);
+		}
+	}
+	attr_longest_match_clear();
+
 	in_relation=0;
 	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && boundary) {
 #if 0
@@ -1549,40 +1628,6 @@ relation_add_tag(char *k, char *v)
 		sprintf(tag,"%s=%s",k,v);
 		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
 	}
-}
-
-
-static int
-attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count)
-{
-	int i,j,longest=0,ret=0,sum,val;
-	struct attr_mapping *curr;
-	for (i = 0 ; i < mapping_count ; i++) {
-		sum=0;
-		curr=mapping[i];
-		for (j = 0 ; j < curr->attr_present_idx_count ; j++) {
-			val=attr_present[curr->attr_present_idx[j]];
-			if (val)
-				sum+=val;
-			else {
-				sum=-1;
-				break;
-			}
-		}
-		if (sum > longest) {
-			longest=sum;
-			ret=0;
-		}
-		if (sum > 0 && sum == longest && ret < types_count)
-			types[ret++]=curr->type;
-	}
-	return ret;
-}
-
-static void
-attr_longest_match_clear(void)
-{
-	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
 }
 
 void
@@ -2560,6 +2605,7 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	sig_alrm(0);
 	while ((ib=read_item(in))) {
+		int self_intersect;
 #if 0
 		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
 #endif
@@ -2575,7 +2621,8 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 				if (ni) {
 					c[i]=ni->c;
 					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
-						write_item_part(out, out_index, out_graph, ib, last, i, &last_id);
+						if(!(0 != self_intersect_test(ib) && item_type_is_area(ib->type)))
+							write_item_part(out, out_index, out_graph, ib, last, i, &last_id);
 						last=i;
 					}
 				} else if (final) {
@@ -2590,10 +2637,16 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 				}
 			}
 		}
+		self_intersect = self_intersect_test(ib);
+		if(self_intersect!=0 && (ib->type == type_water_line || item_type_is_area(ib->type)) ) {
+			osm_warning("way", item_bin_get_wayid(ib), 0, "Self intersecting area\n");
+		}
 		if (ccount) {
-			write_item_part(out, out_index, out_graph, ib, last, ccount-1, &last_id);
+			if(!(0 != self_intersect && item_type_is_area(ib->type)))
+				write_item_part(out, out_index, out_graph, ib, last, ccount-1, &last_id);
 			if (final && ib->type == type_water_line && out_coastline) {
-				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1, NULL);
+				if(0 == self_intersect)
+					write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1, NULL);
 			}
 		}
 	}
