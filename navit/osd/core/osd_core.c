@@ -326,8 +326,9 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
 		double scale = transform_scale(curr_coord.y);
 		for( i=1 ; i<this->coord_num ; ++i ) {
 			struct coord proj_coord;
+			double curr_dist;
 			transform_distance_line_sq(&this->coords[i-1], &this->coords[i], &curr_coord, &proj_coord);
-      			double curr_dist = transform_distance(projection_mg, &proj_coord, &curr_coord);
+      			curr_dist = transform_distance(projection_mg, &proj_coord, &curr_coord);
 			curr_dist /= scale;
 			if (curr_dist<min_dist) {
 				min_dist = curr_dist;
