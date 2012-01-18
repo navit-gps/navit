@@ -62,6 +62,7 @@ add_module(gui/gtk "GTK libs not found" FALSE)
 add_module(vehicle/gpsd "gpsd lib not found" FALSE)
 add_module(vehicle/gypsy "gypsy lib not found" FALSE)
 add_module(vehicle/maemo "Default" FALSE)
+add_module(binding/win32 "Default" FALSE)
 add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
@@ -388,6 +389,7 @@ if(WIN32 OR WINCE)
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
    set_with_reason(support/espeak "Windows detected" TRUE)
+   set_with_reason(binding/win32 "Windows detected" TRUE)
 
    # vehicle_file is broken for windows. use vehicle_wince instead
    # whicle_wince isn't buildable on non-CE windows ssytems

@@ -79,6 +79,8 @@ struct graphics_priv
     FP_AlphaBlend AlphaBlend;
     HANDLE hCoreDll;
     GHashTable *image_cache_hash;
+    BOOL WINAPI (*ChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
+    BOOL WINAPI (*ChangeWindowMessageFilterEx)( HWND hWnd, UINT message, DWORD action, void *pChangeFilterStruct);
 };
 
 struct window_priv
@@ -545,6 +547,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     case WM_KEYDOWN:
         HandleKeyDown( gra_priv, wParam);
         break;
+   case WM_COPYDATA:
+   	dbg(0,"got WM_COPYDATA\n");
+        callback_list_call_attr_2(gra_priv->cbl, attr_wm_copydata, (void *)wParam, (void*)lParam);
+        break;
 #ifdef HAVE_API_WIN32_CE
     case WM_SETFOCUS:
         if (fullscr) {
@@ -710,6 +716,14 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
         dbg(0, "Window creation failed: %d\n",  GetLastError());
         return NULL;
     }
+    /* For Vista, we need here ChangeWindowMessageFilter(WM_COPYDATA,MSGFLT_ADD); since Win7 we need above one or ChangeWindowMessageFilterEx (MSDN), both are
+      not avail for earlier Win and not present in my mingw :(. ChangeWindowMessageFilter may not be present in later Win versions. Welcome late binding!
+    */
+    if(gr->ChangeWindowMessageFilter)
+    	gr->ChangeWindowMessageFilter(WM_COPYDATA,1 /*MSGFLT_ADD*/);
+    else if(gr->ChangeWindowMessageFilterEx) 
+    	gr->ChangeWindowMessageFilterEx(hwnd,WM_COPYDATA,1 /*MSGFLT_ALLOW*/,NULL);
+
     gr->wnd_handle = hwnd;
 
     callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
@@ -1533,6 +1547,7 @@ static struct graphics_priv*
     struct attr *attr;
 
     struct graphics_priv* this_;
+    HMODULE user32;
     if (!event_request_system("win32","graphics_win32"))
         return NULL;
     this_=graphics_win32_new_helper(meth);
@@ -1549,6 +1564,12 @@ static struct graphics_priv*
     this_->window.priv = NULL;
     this_->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
     set_alphablend(this_);
+
+    user32=GetModuleHandle("user32.dll");
+    if(user32) {
+    	this_->ChangeWindowMessageFilterEx=GetProcAddress(user32,"ChangeWindowMessageFilterEx");
+    	this_->ChangeWindowMessageFilter=GetProcAddress(user32,"ChangeWindowMessageFilter");
+    }
     return this_;
 }
 
