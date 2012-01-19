@@ -17,15 +17,17 @@
  * Boston, MA  02110-1301, USA.
  */
 
+
+#include "config.h"
+
 #include <stdlib.h>
 #include <glib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <math.h>
-#include "config.h"
 #include "debug.h"
 #include "plugin.h"
 #include "projection.h"
