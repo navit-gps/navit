@@ -227,7 +227,7 @@ navit_config.h: ../config.h
 
 
 distclean-local:
-	rm -f version.h version.h.tmp navit_config.h navit_config.h.tmp builtin.c support-builtin.c navit.xml
+	rm -f version.h version.h.tmp navit_config.h navit_config.h.tmp builtin.c support-builtin.c navit.xml resurce.rsc
 	if [ "$(top_builddir)" != "$(top_srcdir)" ]; then rm -f navit.dtd; fi
 
 builtin.c: $(top_builddir)/config.h
