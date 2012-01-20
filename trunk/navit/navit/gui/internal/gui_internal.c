@@ -7320,6 +7320,7 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 	struct attr attr;
 	struct widget * label = NULL;
 	struct widget * row = NULL;
+	struct coord c;
 	nav = navit_get_navigation(navit);
 	if(!nav) {
 		return;
@@ -7332,6 +7333,15 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 		while((item = map_rect_get_item(mr))) {
 			if(item_attr_get(item,attr_navigation_long,&attr)) {
 			  label = gui_internal_label_new(this,attr.u.str);
+			  label->item=*item;
+			  item_coord_get(item, &c, 1);
+			  label->c.x=c.x;
+			  label->c.y=c.y;
+			  label->c.pro=map_projection(map);
+			  label->func=gui_internal_cmd_position;
+			  label->state|=STATE_SENSITIVE;
+			  label->data=(void*)2;	  
+			  
 			  row = gui_internal_widget_table_row_new(this,
 								  gravity_left
 								  | flags_fill
