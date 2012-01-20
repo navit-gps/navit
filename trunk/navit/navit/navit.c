@@ -1804,7 +1804,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 			else
 			{
-				param[1].value=g_strdup_printf("%7d %s",attr.u.num, _("m"));
+				param[1].value=g_strdup_printf("%7ld %s",attr.u.num, _("m"));
 			}
 
 			item_attr_get(item, attr_time, &attr);
@@ -1829,7 +1829,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 			else
 			{
-				param[3].value=g_strdup_printf("%d %s",attr.u.num, _("m"));
+				param[3].value=g_strdup_printf("%ld %s",attr.u.num, _("m"));
 			}
 
 			item_attr_get(item, attr_destination_time, &attr);
