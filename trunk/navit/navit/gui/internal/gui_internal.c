@@ -382,6 +382,11 @@ struct table_data
   struct widget * button_box;
 
   /**
+   * Button box should not be displayed if button_box_hide is not zero.
+   */
+  int button_box_hide;
+  
+  /**
    * A button widget to handle 'next page' requests
    */
   struct widget * next_button;
@@ -435,6 +440,7 @@ static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * table);
+static int gui_internal_widget_table_is_empty(struct gui_priv *this,struct widget * table);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_data_free(void * d);
 static void gui_internal_route_update(struct gui_priv * this, struct navit * navit,
@@ -1361,6 +1367,7 @@ static void gui_internal_widget_children_destroy(struct gui_priv *this, struct w
 	g_list_free(w->children);
 	w->children=NULL;
 }
+
 
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 {
@@ -3744,7 +3751,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	static char possible_keys[256]="";
         struct widget *wi=NULL;
 
-	if(!search_list->children) {
+	if(gui_internal_widget_table_is_empty(this,search_list)) {
 		partial=NULL;
 	}
 
@@ -3840,42 +3847,47 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text2=town_str(res, 3, 0);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
+	struct widget *wr;
+	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
+
 		if (!text2) {
-		gui_internal_widget_append(search_list,
+			gui_internal_widget_append(search_list, wr);
+			gui_internal_widget_append(wr,
 				wc=gui_internal_button_new_with_callback(this, text,
 					image_new_xs(this, res->country->flag),
 					gravity_left_center|orientation_horizontal|flags_fill,
 					gui_internal_cmd_position, param));
 		} else {
 			struct widget *wb;
-			wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
-			wb=gui_internal_box_new(this, gravity_left_center|orientation_vertical|flags_fill);
-			gui_internal_widget_append(wb, gui_internal_label_new(this, text));
-			gui_internal_widget_append(wb, gui_internal_label_font_new(this, text2, 1));
-			gui_internal_widget_append(wc, wb);
-			wc->func=gui_internal_cmd_position;
-			wc->data=param;
-			wc->state |= STATE_SENSITIVE;
-			wc->speech=g_strdup(text);
-			
+
 			if (! strcmp(wm_name,"House number") && !res->street->name) {
-				gui_internal_widget_append(search_list, wc);
+				gui_internal_widget_append(search_list, wr);
 				if(!partial)
-					partial=wc;
+					partial=wr;
 
 			} else if(name) {
 				if(!wi)
 					dbg(0,"search text widget is NULL\n");
 				if(wi && strlen(name)==strlen(wi->text)) {
 					dbg(1,"xact %s %s\n",name, wi->text);
-					gui_internal_widget_prepend(search_list, wc);
+					gui_internal_widget_prepend(search_list, wr);
 				} else {
 					dbg(1,"not xact %s %s\n",name, wi->text);
-					gui_internal_widget_insert_before(search_list, partial, wc);
-					partial=wc;
+					gui_internal_widget_insert_before(search_list, partial, wr);
+					partial=wr;
 				}
 			}
+			wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+			gui_internal_widget_append(wr, wc);
+			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
+			wb=gui_internal_box_new(this, gravity_left_center|orientation_vertical|flags_fill);
+			gui_internal_widget_append(wc, wb);
+			gui_internal_widget_append(wb, gui_internal_label_new(this, text));
+			gui_internal_widget_append(wb, gui_internal_label_font_new(this, text2, 1));
+			wc->func=gui_internal_cmd_position;
+			wc->data=param;
+			wc->state |= STATE_SENSITIVE;
+			wc->speech=g_strdup(text);
 		}
 		wc->name=g_strdup(name);
 		if (res->c)
@@ -3914,7 +3926,8 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
 	void *param=(void *)3;
 	int minlen=1;
-	gui_internal_widget_children_destroy(this, search_list);
+
+	gui_internal_widget_table_clear(this, search_list);
 
 	if (! strcmp(wm->name,"Country"))
 		param=(void *)4;
@@ -4166,7 +4179,12 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
-	
+
+
+	if(md->search_list && md->search_list->type==widget_table) {
+		struct table_data *td=(struct table_data*)(md->search_list->data);
+		td->button_box_hide=mode<1024;
+	}
 	
 	if (mode >= 1024) {
 		char *text=NULL;
@@ -4341,7 +4359,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 		gui_internal_widget_append(we, wnext);
 		wnext->state |= STATE_SENSITIVE;
 	}
-	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	wl=gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);//gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wr, wl);
 	gui_internal_menu_data(this)->search_list=wl;
 	wk->state |= STATE_EDIT|STATE_EDITABLE;
@@ -6341,6 +6359,24 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
   table_data->page_headers=NULL;
 }
 
+/**
+ * @brief Check if table has any data rows filled.
+ * @param this The graphics context
+ * @param table table widget
+ * @returns 1 if the table is empty, 0 if there any data rows present.
+ */
+static int gui_internal_widget_table_is_empty(struct gui_priv *this, struct widget * table)
+{
+   GList *l;
+   struct table_data *td=(struct table_data*) table->data;
+
+   for(l=table->children;l;l=g_list_next(l)) {
+   	if(l->data != td->button_box)
+   		return 0;
+   }
+
+   return 1;
+}
 
 /**
  * Creates a new table_row widget.
@@ -6577,16 +6613,20 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 
 	dbg_assert(table_data);
 	column_desc = gui_internal_compute_table_dimensions(this,w);
+	if(!column_desc)
+		return;
 	y=w->p.y;
 	gui_internal_table_hide_rows(table_data);
 	/**
 	 * Skip rows that are on previous pages.
 	 */
 	cur_row = w->children;
-	if(table_data->top_row && table_data->top_row != w->children )
+	if(table_data->top_row && table_data->top_row != w->children && !table_data->button_box_hide)
 	{
 		cur_row = table_data->top_row;
 		is_first_page=0;
+	} else {
+		table_data->top_row=NULL;
 	}
 	/**
 	 * Loop through each row.  Drawing each cell with the proper sizes,
@@ -6594,7 +6634,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	 */
 	for(table_data->top_row=cur_row; cur_row; cur_row = g_list_next(cur_row))
 	{
-		int max_height=0;
+		int max_height=0, bbox_height=0;
 		struct widget * cur_row_widget;
 		GList * cur_column=NULL;
 		current_desc = column_desc;
@@ -6606,7 +6646,10 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		}
 		dim = (struct table_column_desc*)current_desc->data;
 
-		if( y + dim->height + (table_data->button_box ? table_data->button_box->h : 0) + this->spacing >= w->p.y + w->h )
+		if (table_data->button_box && !table_data->button_box_hide)
+			bbox_height=table_data->button_box->h;
+
+		if( y + dim->height + bbox_height + this->spacing >= w->p.y + w->h )
 		{
 			/*
 			 * No more drawing space left.
@@ -6649,7 +6692,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		table_data->bottom_row=cur_row;
 		current_desc = g_list_next(current_desc);
 	}
-	if(table_data->button_box && (is_skipped || !is_first_page)  )
+	if(table_data->button_box && (is_skipped || !is_first_page) && !table_data->button_box_hide )
 	{
 		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h -
 			this->spacing;
