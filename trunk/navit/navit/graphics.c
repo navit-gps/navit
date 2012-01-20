@@ -402,6 +402,9 @@ void graphics_free(struct graphics *gra)
 {
 	if (!gra)
 		return;
+        graphics_gc_destroy(gra->gc[0]);
+        graphics_gc_destroy(gra->gc[1]);
+        graphics_gc_destroy(gra->gc[2]);
 	gra->meth.graphics_destroy(gra->priv);
 	g_free(gra->default_font);
 	graphics_font_destroy_all(gra);
@@ -449,6 +452,8 @@ struct graphics_gc * graphics_gc_new(struct graphics *gra)
 */
 void graphics_gc_destroy(struct graphics_gc *gc)
 {
+	if (!gc)
+            return;
 	gc->meth.gc_destroy(gc->priv);
 	g_free(gc);
 }
