@@ -6294,31 +6294,31 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	data = (struct table_data*)widget->data;
 
 	if (buttons) {
-	data->next_button = gui_internal_button_new_with_callback
-		(this, _("Next"),image_new_xs(this, "gui_arrow_right") ,
-		 gravity_center  |orientation_vertical,
-		 gui_internal_table_button_next,NULL);
-	data->next_button->data=widget;
+		data->next_button=gui_internal_box_new(this, gravity_center|orientation_horizontal);
+		gui_internal_widget_append(data->next_button, gui_internal_text_new(this,_("Next"),gravity_center|orientation_horizontal));
+		gui_internal_widget_append(data->next_button, gui_internal_image_new(this, image_new_xs(this, "gui_arrow_right")));
+		data->next_button->func=gui_internal_table_button_next;
+		data->next_button->data=widget;
 
 
-	data->prev_button =  gui_internal_button_new_with_callback
-		(this, _("Prev"),
-		 image_new_xs(this, "gui_arrow_left")
-		 ,gravity_center |orientation_vertical,
-		 gui_internal_table_button_prev,NULL);
+		data->prev_button =  gui_internal_button_new_with_callback
+			(this, _("Prev"),
+			image_new_xs(this, "gui_arrow_left"),
+		 	gravity_center |orientation_horizontal,
+		 	gui_internal_table_button_prev,NULL);
 
-	data->prev_button->data=widget;
+		data->prev_button->data=widget;
 
-	data->this=this;
+		data->this=this;
 
-	data->button_box=gui_internal_box_new(this,
+		data->button_box=gui_internal_box_new(this,
 					      gravity_center|orientation_horizontal);
-	gui_internal_widget_append(widget, data->button_box);
-	gui_internal_widget_append(data->button_box, data->prev_button);
-	gui_internal_widget_append(data->button_box, data->next_button);
+		gui_internal_widget_append(widget, data->button_box);
+		gui_internal_widget_append(data->button_box, data->prev_button);
+		gui_internal_widget_append(data->button_box, data->next_button);
 
-	data->button_box->bl=this->spacing;
-	gui_internal_widget_pack(this,data->button_box);
+		data->button_box->bl=this->spacing;
+		gui_internal_widget_pack(this,data->button_box);
 	}
 
 	return widget;
