@@ -3185,34 +3185,42 @@ navit_destroy(struct navit *this_)
 	/* TODO: destroy objects contained in this_ */
 	if (this_->vehicle)
 		vehicle_destroy(this_->vehicle->vehicle);
+
 	if (this_->bookmarks) {
 		char *center_file = bookmarks_get_center_file(TRUE);
 		bookmarks_write_center_to_file(this_->bookmarks, center_file);
 		g_free(center_file);
 		bookmarks_destroy(this_->bookmarks);
 	}
+
 	callback_destroy(this_->nav_speech_cb);
 	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
 	callback_destroy(this_->motion_timeout_callback);
 	callback_destroy(this_->progress_cb);
-	if(this_->gra)
+
+	if(this_->gra) {
 	  graphics_remove_callback(this_->gra, this_->resize_callback);
-	callback_destroy(this_->resize_callback);
-	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->button_callback);
-	callback_destroy(this_->button_callback);
-	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->motion_callback);
-	callback_destroy(this_->motion_callback);
-	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->predraw_callback);
+        }
+
+	callback_destroy(this_->resize_callback);
+	callback_destroy(this_->motion_callback);
 	callback_destroy(this_->predraw_callback);
+
+        callback_destroy(this_->route_cb);
 	route_destroy(this_->route);
+
+        map_destroy(this_->former_destination);
+
 	ms = navit_get_mapset(this_);
 	if(ms)
 		mapset_destroy(ms);
+
 	graphics_free(this_->gra);
+
 	g_free(this_);
 }
 
