@@ -6772,7 +6772,6 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 	}
 
 	this->route_data.route_table = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
-	row = gui_internal_widget_table_row_new(this,gravity_left | orientation_horizontal | flags_fill);
 
 	row = gui_internal_widget_table_row_new(this,gravity_left | orientation_horizontal | flags_fill);
 
