@@ -146,6 +146,9 @@ static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
 
 static void
 bookmarks_clear_hash(struct bookmarks *this_) {
+        if (this_->mr) {
+            map_rect_destroy(this_->mr);
+        }
 	bookmarks_clear_item(this_->root);
 	g_hash_table_destroy(this_->bookmarks_hash);
 	g_list_free(this_->bookmarks_list);
