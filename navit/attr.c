@@ -325,7 +325,7 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		return ret;
 	}
 	if (type >= attr_type_item_type_begin && type <= attr_type_item_type_end) {
-		return g_strdup_printf("0x%x[%s]",attr->u.num,item_to_name(attr->u.num));
+		return g_strdup_printf("0x%ld[%s]",attr->u.num,item_to_name(attr->u.num));
 	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
