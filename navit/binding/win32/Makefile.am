@@ -11,5 +11,5 @@ libbinding_win32_la_LDFLAGS = -module -avoid-version
 bin_PROGRAMS=tell_navit
 tell_navit_LDADD = @NAVIT_LIBS@
 if SUPPORT_WIN32CE
-  tell_navit_LDADD += -L$(top_srcdir)/navit/support/libc -lsupport_libc
+   tell_navit_LDADD += -L$(top_builddir)/navit/support/libc -lsupport_libc
 endif
