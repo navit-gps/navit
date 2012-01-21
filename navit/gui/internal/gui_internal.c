@@ -7332,7 +7332,15 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 		gui_internal_widget_table_clear(this,this->route_data.route_table);
 		while((item = map_rect_get_item(mr))) {
 			if(item_attr_get(item,attr_navigation_long,&attr)) {
+			  row = gui_internal_widget_table_row_new(this,
+								  gravity_left
+								  | flags_fill
+								  | orientation_horizontal);
+			  gui_internal_widget_append(this->route_data.route_table,row);
+
 			  label = gui_internal_label_new(this,attr.u.str);
+			  gui_internal_widget_append(row,label);
+
 			  label->item=*item;
 			  item_coord_get(item, &c, 1);
 			  label->c.x=c.x;
@@ -7341,13 +7349,6 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 			  label->func=gui_internal_cmd_position;
 			  label->state|=STATE_SENSITIVE;
 			  label->data=(void*)2;	  
-			  
-			  row = gui_internal_widget_table_row_new(this,
-								  gravity_left
-								  | flags_fill
-								  | orientation_horizontal);
-			  row->children=g_list_append(row->children,label);
-			  gui_internal_widget_append(this->route_data.route_table,row);
 			}
 
 		}
