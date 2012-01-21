@@ -458,7 +458,7 @@ GList* geom_poly_segments_group(GList *in, GList *out)
 					} else if( !order_12 && size_1>1) {
 						l2_->first = g_realloc(l2_->first,sizeof(struct coord)*(size_1+size_2-1));
 						memcpy(l2_->first+size_2,l1_->first,(size_1-1)*sizeof(struct coord));
-						l2_->last = size_1-1;
+						l2_->last += size_1-1;
 					}
 					//remove l1 or l2 appropriately
 					if (order_12) {
@@ -481,13 +481,11 @@ int
 geom_poly_segments_point_inside(GList *in, struct coord *c)
 {
 	int open_matches=0,closed_matches=0;
-	struct coord *cp;
 #if 0
 	fprintf(stderr,"try 0x%x,0x%x:",c->x,c->y);
 #endif
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
-		cp=seg->first;
 		if (geom_poly_point_inside(seg->first, seg->last-seg->first+1, c)) {
 #if 0
 			fprintf(stderr," inside");
@@ -796,7 +794,7 @@ int self_intersect_test(struct item_bin*ib)
                 {
                     int modK = k % vertices_count;
 		    coord_sub(&vertices[modK], &vertices[i], &iTok);
-                    if (onLeftSide != coord_dot_prod(&iTok, &iTojNormal) >= 0)
+                    if (onLeftSide != (coord_dot_prod(&iTok, &iTojNormal) >= 0))
                     {
                         struct coord prevKtoK, idiff, jdiff;
 			coord_sub(&vertices[modK], &prevK, &prevKtoK);
@@ -805,7 +803,7 @@ int self_intersect_test(struct item_bin*ib)
 			prevKtoKNormal.y = -prevKtoK.x;
 			coord_sub(&vertices[i],&prevK,&idiff);
 			coord_sub(&vertices[j],&prevK,&jdiff);
-                        if ((coord_dot_prod(&idiff, &prevKtoKNormal) >= 0) != (coord_dot_prod(&jdiff, &prevKtoKNormal) >= 0))
+                        if (((coord_dot_prod(&idiff, &prevKtoKNormal) >= 0)) != ((coord_dot_prod(&jdiff, &prevKtoKNormal) >= 0)))
                         {
                             if(i!=j-1 && i!=j+1) {
                                return 1;
