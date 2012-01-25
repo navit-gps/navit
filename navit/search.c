@@ -781,7 +781,7 @@ search_list_get_result(struct search_list *this_)
 				// if this housenumber has a streetname tag, set the name now
 				if (item_attr_get(this_->item, attr_street_name, &attr2))
 				{
-					dbg(0,"streetname: %s\n",attr2.u.str);
+					dbg(1,"streetname: %s\n",attr2.u.str);
 					has_street_name=1;
 				}
 
