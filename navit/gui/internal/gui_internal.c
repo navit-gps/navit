@@ -429,6 +429,7 @@ static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags fl
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 static void gui_internal_widget_prepend(struct widget *parent, struct widget *child);
 static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child);
+static void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 static void gui_internal_apply_config(struct gui_priv *this);
 
@@ -1350,6 +1351,14 @@ static void gui_internal_widget_insert_before(struct widget *parent, struct widg
 	if(sibling) 
 		sib=g_list_find(parent->children,sibling);
 	parent->children=g_list_insert_before(parent->children, sib, child);
+}
+
+static void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func)
+{
+	if (! child->background)
+		child->background=parent->background;
+
+	parent->children=g_list_insert_sorted(parent->children, child, func);
 }
 
 
@@ -3739,10 +3748,34 @@ town_str(struct search_list_result *res, int level, int flags)
 	return g_strdup_printf("%s%s%s%s%s%s%s%s", postal, postal_sep, town, district_begin, district, district_end, county_sep, county);
 }
 
+static int gui_internal_search_cmp(gconstpointer _a, gconstpointer _b)
+{
+  struct widget *a=(struct widget *)_a, *b=(struct widget *)_b;
+  char *sa,*sb;
+  int r;
+  if(!b)
+  if((!a || a->type!=widget_table_row || !a->text) && (!b || b->type!=widget_table_row || !b->text))
+  	return 0;
+  if(!a || a->type!=widget_table_row || !a->text)
+  	return -1;
+  if(!b || b->type!=widget_table_row || !b->text)
+  	return 1;
+  r=a->datai-b->datai;
+  if(r<0)
+  	return -1;
+  if(r>0)
+  	return 1;
+  sa=removecase(a->text);
+  sb=removecase(b->text);
+  r=strcmp(sa,sb);
+  g_free(sa);
+  g_free(sb);
+  return r;
+}
+
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
-        static struct widget *partial;
 	char *text=NULL,*text2=NULL,*name=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
@@ -3750,10 +3783,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	GList *l;
 	static char possible_keys[256]="";
         struct widget *wi=NULL;
-
-	if(gui_internal_widget_table_is_empty(this,search_list)) {
-		partial=NULL;
-	}
 
 	res=search_list_get_result(this->sl);
 	if (res) {
@@ -3851,7 +3880,8 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 
 		if (!text2) {
-			gui_internal_widget_append(search_list, wr);
+			wr->text=g_strdup(text);
+			gui_internal_widget_insert_sorted(search_list, wr, gui_internal_search_cmp);
 			gui_internal_widget_append(wr,
 				wc=gui_internal_button_new_with_callback(this, text,
 					image_new_xs(this, res->country->flag),
@@ -3859,24 +3889,23 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 					gui_internal_cmd_position, param));
 		} else {
 			struct widget *wb;
+			wr->text=g_strdup_printf("%s %s",text,text2);
 
 			if (! strcmp(wm_name,"House number") && !res->street->name) {
-				gui_internal_widget_append(search_list, wr);
-				if(!partial)
-					partial=wr;
-
+				wr->datai=1000;
 			} else if(name) {
 				if(!wi)
 					dbg(0,"search text widget is NULL\n");
 				if(wi && strlen(name)==strlen(wi->text)) {
 					dbg(1,"xact %s %s\n",name, wi->text);
-					gui_internal_widget_prepend(search_list, wr);
+					wr->datai=-1000;
 				} else {
 					dbg(1,"not xact %s %s\n",name, wi->text);
-					gui_internal_widget_insert_before(search_list, partial, wr);
-					partial=wr;
+					wr->datai=0;
 				}
 			}
+			gui_internal_widget_insert_sorted(search_list, wr, gui_internal_search_cmp);
+			
 			wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 			gui_internal_widget_append(wr, wc);
 			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
