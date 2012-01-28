@@ -4556,18 +4556,20 @@ gui_internal_set(char *remove, char *add)
 	char *line=NULL;
 	int ret;
 	size_t size=0;
-	while (getline(&line,&size,fi) > 0) {
-		int len=strlen(line);
-		if (len > 0 && line[len-1] == '\n') 
-			line[len-1]='\0';
-		dbg(0,"line=%s\n",line);
-		if (!gui_internal_match(remove, line)) 
-			fprintf(fo,"%s\n",line);
+	if (fi != NULL){
+		while (getline(&line,&size,fi) > 0) {
+			int len=strlen(line);
+			if (len > 0 && line[len-1] == '\n')
+				line[len-1]='\0';
+			dbg(1,"line=%s\n",line);
+			if (!gui_internal_match(remove, line))
+				fprintf(fo,"%s\n",line);
+		}
+		if (line)
+			free(line);
+		fclose(fi);
 	}
-	if (line)
-		free(line);
 	fprintf(fo,"%s;\n",add);
-	fclose(fi);
 	fclose(fo);
 	ret=(rename(gui_file_new, gui_file)==0);
 	g_free(gui_file_new);
