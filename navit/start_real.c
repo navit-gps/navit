@@ -57,7 +57,7 @@ char **main_argv;
 static void
 print_usage(void)
 {
-	printf(_("navit usage:\nnavit [options] [configfile]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the debug output level to <n>. (TODO)\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
+	printf(_("navit usage:\nnavit [options] [configfile]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the global debug output level to <n> (0-3).\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
 }
 
 
@@ -130,7 +130,7 @@ int main_real(int argc, char **argv)
 	            config_file = optarg;
 				break;
 			case 'd':
-				printf("TODO Verbose option is set to `%s'\n", optarg);
+				debug_level_set(DEBUG_MODULE_GLOBAL, atoi(optarg));
 				break;
 			case 'e':
 				command=optarg;

@@ -52,7 +52,8 @@ static struct sockaddr_in debug_sin;
 #endif
 
 
-int debug_level=0;
+int max_debug_level=0;
+int global_debug_level=0;
 int segv_level=0;
 int timestamp_prefix=0;
 
@@ -99,8 +100,8 @@ debug_init(const char *program_name)
 static void
 debug_update_level(gpointer key, gpointer value, gpointer user_data)
 {
-	if (debug_level < GPOINTER_TO_INT(value))
-		debug_level = GPOINTER_TO_INT(value);
+	if (max_debug_level < GPOINTER_TO_INT(value))
+		max_debug_level = GPOINTER_TO_INT(value);
 }
 
 void
@@ -114,8 +115,12 @@ debug_level_set(const char *name, int level)
 			signal(SIGSEGV, NULL);
 	} else if (!strcmp(name, "timestamps")) {
 		timestamp_prefix=level;
+	} else if (!strcmp(name, DEBUG_MODULE_GLOBAL)) {
+		global_debug_level=level;
+		if (max_debug_level < global_debug_level){
+			max_debug_level = global_debug_level;
+		}
 	} else {
-		debug_level=0;
 		g_hash_table_insert(debug_hash, g_strdup(name), GINT_TO_POINTER(level));
 		g_hash_table_foreach(debug_hash, debug_update_level, NULL);
 	}
@@ -204,7 +209,7 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 	FILE *fp=debug_fp;
 
 	sprintf(buffer, "%s:%s", module, function);
-	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
+	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
 		wchar_t muni[4096];
 #endif
