@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
 	For configuration options used in this file, please read
-	http://wiki.navit-project.org/index.php/Configuring_NavIt 
+	http://wiki.navit-project.org/index.php/Configuring_Navit
 	Do not edit /usr/share/navit/navit.xml : changes would be lost
-	on upgrade. Rather copy it to ~/.navit/. Please read wiki
+	on upgrade. Rather copy it to ~/.navit/.
 -->
 <!DOCTYPE config
   SYSTEM "navit.dtd">
@@ -14,6 +14,9 @@
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no"/>
 	</plugins>
 
+	<!-- The global debug level (like using command line option "-d"). -->
+	<debug name="global" level="0"/>
+	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" level="0"/>
 	<!-- This is here so one can copy&paste the contents of popup menus --> 
 	<debug name="navit:popup_printf_cb" level="0"/>
@@ -21,13 +24,13 @@
 	<debug name="segv" level="1"/>
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
+
 	<!-- This line defines which location on the map navit will show after startup.
 		It makes sense to set it to your home coordinates.
 		Center coordinates format:
 		[D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
 		[-][D]D.d[d]... [-][D][D]D.d[d]... 
 		[-]0xX [-]0xX -->
-
 	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
 		     On windows systems, use win32 -->
