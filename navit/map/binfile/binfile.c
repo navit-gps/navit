@@ -41,19 +41,48 @@
 
 static int map_id;
 
+
+/**
+ * @brief A map tile, a rectangular region of the world.
+ *
+ * Represents a "map tile", a rectangular region of the world. The
+ * binfile format divides the world into tiles of different sizes for
+ * easy handling.
+ * A binfile is a ZIP archive; each member file (with the exception of
+ * index files) represents one tile. The data from a tile file is read
+ * into memory and used directly as the tile data of this struct.
+ * <p>
+ * See the Navit wiki for details on the binfile format:
+ *
+ * http://wiki.navit-project.org/index.php/Navit%27s_binary_map_driver
+ * <p>
+ * Note that this tile struct also maintains pointers to several current positions
+ * inside the tile. These are not part of the actual tile data, but are
+ * used for working with the data.
+ */
 struct tile {
-	int *start;
-	int *end;
-	int *pos;
-	int *pos_coord_start;
-	int *pos_coord;
-	int *pos_attr_start;
-	int *pos_attr;
-	int *pos_next;
-	struct file *fi;
+	int *start;             //!< Memory address of the buffer containing the tile data (the actual map data).
+	int *end;               //!< First memory address not belonging to the tile data.
+                                /**< Thus tile->end - tile->start represents the size of the tile data
+                                 * in multiples of 4 Bytes.
+                                 */
+	int *pos;               //!< Pointer to current position (start of current item) inside the tile data.
+	int *pos_coord_start;   //!< Pointer to the first element inside the current item that is a coordinate.
+                                /**< That is the first position after the header of an
+                                 * item. The header holds 3 entries each 32bit wide integers:
+                                 * header[0] holds the size of the whole item (excluding this size field)
+                                 * header[1] holds the type of the item
+                                 * header[2] holds the size of the coordinates in the tile
+                                 */
+	int *pos_coord;         //!< Current position in the coordinates region of the current item.
+	int *pos_attr_start;    //!< Pointer to the first attr data structure of the current item.
+	int *pos_attr;          //!< Current position in the attr region of the current item.
+	int *pos_next;          //!< Pointer to the next item (the item which follows the "current item" as indicated by *pos).
+	struct file *fi;        //!< The file from which this tile was loaded.
 	int zipfile_num;
 	int mode;
 };
+
 
 struct map_download {
 	int state;
@@ -68,9 +97,13 @@ struct map_download {
 	struct zip_cd *cd_copy,*cd;
 };
 
+/**
+ * @brief Represents the map from a single binfile.
+ *
+ */
 struct map_priv {
 	int id;
-	char *filename;
+	char *filename;              //!< Filename of the binfile.
 	char *cachedir;
 	struct file *fi,*http;
 	struct file **fis;
@@ -120,6 +153,11 @@ struct map_rect_priv {
 #endif
 };
 
+/**
+ * @brief Represents a search on a map.
+ * This struct represents a search on a map; it is created
+ * when starting a search, and is used for retrieving results.
+ */
 struct map_search_priv {
 	struct map_priv *map;
 	struct map_rect_priv *mr;
@@ -263,20 +301,32 @@ binfile_read_cd(struct map_priv *m, int offset, int len)
 	return cd;
 }
 
+/**
+ * @brief Get the ZIP64 extra field data corresponding to a zip central
+ * directory header.
+ *
+ * @param cd pointer to zip central directory structure
+ * @return pointer to ZIP64 extra field, or NULL if not available
+ */
 static struct zip_cd_ext *
 binfile_cd_ext(struct zip_cd *cd)
 {
 	struct zip_cd_ext *ext;
-	if (cd->zipofst != 0xffffffff)
+	if (cd->zipofst != zip_size_64bit_placeholder)
 		return NULL;
 	if (cd->zipcxtl != sizeof(*ext))
 		return NULL;
 	ext=(struct zip_cd_ext *)((unsigned char *)cd+sizeof(*cd)+cd->zipcfnl);
-	if (ext->tag != 0x0001 || ext->size != 8)
+	if (ext->tag != zip_extra_header_id_zip64 || ext->size != 8)
 		return NULL;
 	return ext;
 }
 
+/**
+ * @param cd pointer to zip central directory structure
+ * @return Offset of local file header in zip file.
+ * Will use ZIP64 data if present.
+ */
 static long long
 binfile_cd_offset(struct zip_cd *cd)
 {
@@ -431,6 +481,11 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 	return ret;
 }
 
+/**
+ * @brief
+ * @param
+ * @return
+ */
 static void
 binfile_attr_rewind(void *priv_data)
 {
@@ -2036,6 +2091,12 @@ duplicate_equal(gconstpointer a, gconstpointer b)
 	return (da->c.x == db->c.x && da->c.y == da->c.y && g_str_equal(da->str,db->str));
 }
 
+/**
+ * @brief
+ * @param msp pointer to private map search data
+ * @param item item to check
+ * @param attr_type
+ */
 static int
 duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
 {

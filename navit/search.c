@@ -82,6 +82,12 @@ search_item_hash_equal(gconstpointer a, gconstpointer b)
 	return FALSE;
 }
 
+/**
+ * @brief Create new instance of search_list to run a search.
+ *
+ * @param ms mapset that is to be searched
+ * @returns new search_list
+ */
 struct search_list *
 search_list_new(struct mapset *ms)
 {
@@ -95,6 +101,11 @@ search_list_new(struct mapset *ms)
 
 static void search_list_search_free(struct search_list *sl, int level);
 
+/**
+ * @brief Determine search list level for given attr_type.
+ * @param attr_type attribute value
+ * @return corresponding search list level (country=0, town=1, ...)
+ */
 static int
 search_list_level(enum attr_type attr_type)
 {
@@ -134,6 +145,13 @@ interpolation_clear(struct interpolation *inter)
 	inter->first=inter->last=inter->curr=NULL;
 }
 
+/**
+ * @brief Start a search.
+ *
+ * @param this search_list to use for the search
+ * @param search_attr attributes to use for the search
+ * @param partial do partial search? (1=yes,0=no)
+ */
 void
 search_list_search(struct search_list *this_, struct attr *search_attr, int partial)
 {
@@ -669,6 +687,12 @@ search_add_result(struct search_list_level *le, struct search_list_common *slc)
 	return 0;
 }
 
+/**
+ * @brief Get (next) result from a search.
+ *
+ * @param this_ search_list representing the search
+ * @return next result
+ */
 struct search_list_result *
 search_list_get_result(struct search_list *this_)
 {
