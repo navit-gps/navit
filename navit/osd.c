@@ -332,6 +332,7 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 
 	item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes), attr_resize, item, priv);
 	graphics_add_callback(navit_gr, item->resize_cb);
+	osd_std_calculate_sizes(item, priv, navit_get_width(nav), navit_get_height(nav));
 	dbg(0,"accesskey %s\n",item->accesskey);
 	if (item->accesskey) {
 		item->keypress_cb=callback_new_attr_2(callback_cast(osd_std_keypress), attr_keypress, item, nav);
