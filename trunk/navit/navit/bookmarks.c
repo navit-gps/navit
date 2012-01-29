@@ -371,14 +371,12 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	return result;
 }
 
-/*
- * bookmarks_get_destination_file
- *
- * returns the name of the file used to store destinations with its
- * full path
- *
- * arg: gboolean create: create the directory where the file is stored
+/**
+ * @param create: create the directory where the file is stored
  * if it does not exist
+ * @return The name of the file used to store destinations with its
+ * full path. Should be freed using g_free.
+ *
  */
 char*
 bookmarks_get_destination_file(gboolean create)
