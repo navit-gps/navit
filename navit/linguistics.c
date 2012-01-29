@@ -230,6 +230,16 @@ static const char *special[][3]={
 {"þ","t","th"},
 };
 
+/**
+ * @brief Replace special characters in string (e.g. umlauts) with plain letters.
+ * This is useful e.g. to canonicalize a string for comparison.
+ *
+ * @param str string to process
+ * @param mode Replacement mode. 0=do nothing, 1=replace with single
+ * ASCII letter, 2=replace with multiple letters if the commonly used
+ * ASCII replacement has multitple letter (e.g. a-umlaut -> ae)
+ * @returns copy of string, with characters replaced
+ */
 char *
 linguistics_expand_special(char *str, int mode)
 {
