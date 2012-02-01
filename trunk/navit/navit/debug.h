@@ -31,7 +31,7 @@ extern "C" {
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
 
-extern int max_debug_level;
+extern int debug_level;
 #define dbg_str2(x) #x
 #define dbg_str1(x) dbg_str2(x)
 #define dbg_module dbg_str1(MODULE)
