@@ -24,6 +24,19 @@
 extern "C" {
 #endif
 
+typedef void *(*object_func_new)(struct attr *parent, struct attr **attrs);
+typedef int (*object_func_get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+typedef struct attr_iter *(*object_func_iter_new)(void *);
+typedef void (*object_func_iter_destroy)(struct attr_iter *);
+typedef int (*object_func_set_attr)(void *, struct attr *attr);
+typedef int (*object_func_add_attr)(void *, struct attr *attr);
+typedef int (*object_func_remove_attr)(void *, struct attr *attr);
+typedef int (*object_func_init)(void *);
+typedef void (*object_func_destroy)(void *);
+typedef void *(*object_func_dup)(void *);
+typedef void *(*object_func_ref)(void *);
+typedef void *(*object_func_unref)(void *);
+
 struct object_func {
 	enum attr_type type;
 	void *(*create)(struct attr *parent, struct attr **attrs);
@@ -35,6 +48,9 @@ struct object_func {
 	int (*remove_attr)(void *, struct attr *attr);
 	int (*init)(void *);
 	void (*destroy)(void *);
+	void *(*dup)(void *);
+	void *(*ref)(void *);
+	void *(*unref)(void *);
 };
 
 typedef GError xmlerror;
