@@ -39,8 +39,11 @@
 #include "color.h"
 #include "layout.h"
 #include "vehicle.h"
+#include "xmlconfig.h"
 
 struct vehicle {
+	struct object_func *func;
+	int refcount;
 	struct vehicle_methods meth;
 	struct vehicle_priv *priv;
 	struct callback_list *cbl;
@@ -62,6 +65,8 @@ struct vehicle {
 	int sequence;
 	GHashTable *log_to_cb;
 };
+
+struct object_func vehicle_func;
 
 static void vehicle_draw_do(struct vehicle *this_, int lazy);
 static void vehicle_log_nmea(struct vehicle *this_, struct log *log);
@@ -109,6 +114,8 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	}
 	g_free(type);
 	this_ = g_new0(struct vehicle, 1);
+	this_->func=&vehicle_func;
+	this_->refcount = 1;
 	this_->cbl = callback_list_new();
 	this_->priv = vehicletype_new(&this_->meth, this_->cbl, attrs);
 	if (!this_->priv) {
@@ -151,6 +158,23 @@ vehicle_destroy(struct vehicle *this_)
 	if (this_->gra)
 		graphics_free(this_->gra);
 	g_free(this_);
+}
+
+struct vehicle *
+vehicle_ref(struct vehicle *this_)
+{
+	this_->refcount++;
+	dbg(0,"refcount %d\n",this_->refcount);
+	return this_;
+}
+
+void
+vehicle_unref(struct vehicle *this_)
+{
+	this_->refcount--;
+	dbg(0,"refcount %d\n",this_->refcount);
+	if (this_->refcount <= 0)
+		vehicle_destroy(this_);
 }
 
 /**
@@ -680,3 +704,18 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 	return 0;
 }
 
+struct object_func vehicle_func = {
+	attr_vehicle,
+	(object_func_new)vehicle_new,
+	(object_func_get_attr)vehicle_get_attr,
+	(object_func_iter_new)vehicle_attr_iter_new,
+	(object_func_iter_destroy)vehicle_attr_iter_destroy,
+	(object_func_set_attr)vehicle_set_attr,
+	(object_func_add_attr)vehicle_add_attr,
+	(object_func_remove_attr)vehicle_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)vehicle_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)vehicle_ref,
+	(object_func_unref)vehicle_unref,
+};
