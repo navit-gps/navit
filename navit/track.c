@@ -95,7 +95,7 @@ struct tracking {
 	struct attr *attr;
 	int valid;
 	int time;
-	double direction;
+	double direction, direction_matched;
 	double speed;
 	int coord_geo_valid;
 	struct coord_geo coord_geo;
@@ -344,6 +344,9 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 		return 1;
 	case attr_position_direction:
 		attr->u.numd=&_this->direction;
+		return 1;
+	case attr_position_direction_matched:
+		attr->u.numd=&_this->direction_matched;
 		return 1;
 	case attr_position_speed:
 		attr->u.numd=&_this->speed;
@@ -751,6 +754,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
+				tr->direction_matched=t->angle[i];
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt_tmp),
 					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*tr->angle_pref,
