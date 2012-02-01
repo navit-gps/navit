@@ -266,19 +266,25 @@ static struct object_func object_funcs[] = {
 	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
 	{ attr_text,       NEW(text_new)},
 	{ attr_tracking,   NEW(tracking_new)},
-	{ attr_vehicle,    NEW(vehicle_new),  GET(vehicle_get_attr), NULL, NULL, SET(vehicle_set_attr), ADD(vehicle_add_attr), REMOVE(vehicle_remove_attr) },
 	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
+
+extern struct object_func vehicle_func;
 
 struct object_func *
 object_func_lookup(enum attr_type type)
 {
 	int i;
-	for (i = 0 ; i < sizeof(object_funcs)/sizeof(struct object_func); i++) {
-		if (object_funcs[i].type == type)
-			return &object_funcs[i];
+	switch (type) {
+	case attr_vehicle:
+		return &vehicle_func;
+	default:
+		for (i = 0 ; i < sizeof(object_funcs)/sizeof(struct object_func); i++) {
+			if (object_funcs[i].type == type)
+				return &object_funcs[i];
+		}
+		return NULL;
 	}
-	return NULL;
 }
 
 struct element_func {
@@ -655,6 +661,10 @@ end_element (GMarkupParseContext *context,
 	curr=*state;
 	if (curr->object_func && curr->object_func->init)
 		curr->object_func->init(curr->element_attr.u.data);
+#if 0
+	if (curr->object_func && curr->object_func->unref) 
+		curr->object_func->unref(curr->element_attr.u.data);
+#endif
 	*state=curr->parent;
 	g_free(curr);
 }
