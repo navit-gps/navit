@@ -1656,7 +1656,7 @@ setup_pos(struct map_rect_priv *mr)
 #if 0
 		fprintf(stderr,"offset=%d\n", (unsigned char *)(mr->pos)-mr->m->f->begin);
 #endif
-		dbg(0,"size error");
+		dbg(0,"size error\n");
 	}
 	t->pos_next=t->pos+size+1;
 	mr->item.type=le32_to_cpu(t->pos[1]);
