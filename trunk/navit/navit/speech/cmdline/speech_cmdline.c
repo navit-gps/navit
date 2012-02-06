@@ -37,14 +37,36 @@
 #endif
 
 
+static char *urldecode(char *str)
+{
+	char *ret=g_strdup(str);
+	char *src=ret;
+	char *dst=ret;
+	while (*src) {
+		if (*src == '%') {
+			int val;
+			if (sscanf(src+1,"%02x",&val)) {
+				src+=2;
+				*dst++=val;
+			}
+			src++;
+		} else
+			*dst++=*src++;
+	}
+	*dst++='\0';
+	return ret;
+}
+
 static GList *
-speech_cmdline_search(GList *l, int suffix_len, const char *s)
+speech_cmdline_search(GList *l, int suffix_len, const char *s, int decode)
 {
 	GList *li=l,*ret=NULL,*tmp;
 	int len=0;
 	while (li) {
 		char *snd=li->data;
 		int snd_len;
+		if (decode)
+			snd=urldecode(snd);
 		snd_len=strlen(snd)-suffix_len;
 		if (!g_strncasecmp(s, snd, snd_len)) {
 			const char *ss=s+snd_len;
@@ -52,7 +74,7 @@ speech_cmdline_search(GList *l, int suffix_len, const char *s)
 				ss++;
 			dbg(1,"found %s remaining %s\n",snd,ss);
 			if (*ss) 
-				tmp=speech_cmdline_search(l, suffix_len, ss);
+				tmp=speech_cmdline_search(l, suffix_len, ss, decode);
 			else 
 				tmp=NULL;
 			if (!ret || g_list_length(tmp) < len) {
@@ -60,10 +82,12 @@ speech_cmdline_search(GList *l, int suffix_len, const char *s)
 				g_list_free(ret);
 				ret=tmp;
 				if (!*ss || tmp) 
-					ret=g_list_prepend(ret, snd);
+					ret=g_list_prepend(ret, li->data);
 			} else
 				g_list_free(tmp);
 		}
+		if (decode)
+			g_free(snd);
 		li=g_list_next(li);
 	}
 	return ret;
@@ -82,6 +106,7 @@ struct speech_priv {
 	char *cmdline;
 	char *sample_dir;
 	char *sample_suffix;
+	int flags;
 	GList *samples;
 	struct spawn_process_info *spi;
 };
@@ -103,7 +128,7 @@ speechd_say(struct speech_priv *this, const char *text)
 		}
 	
 	if (this->sample_dir && this->sample_suffix)  {
-		argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text);
+		argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text, !!(this->flags & 1));
 		samplesmode=1;
 		listlen=g_list_length(argl);
 	} else {
@@ -193,6 +218,8 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 		this->sample_dir=g_strdup(attr->u.str);
 	if ((attr=attr_search(attrs, NULL, attr_sample_suffix)))
 		this->sample_suffix=g_strdup(attr->u.str);
+	if ((attr=attr_search(attrs, NULL, attr_flags)))
+		this->flags=attr->u.num;
 	if (this->sample_dir && this->sample_suffix) {
 		void *handle=file_opendir(this->sample_dir);
 		char *name;
