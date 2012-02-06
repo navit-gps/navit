@@ -37,6 +37,7 @@ typedef void *(*object_func_dup)(void *);
 typedef void *(*object_func_ref)(void *);
 typedef void *(*object_func_unref)(void *);
 
+
 struct object_func {
 	enum attr_type type;
 	void *(*create)(struct attr *parent, struct attr **attrs);
@@ -52,6 +53,12 @@ struct object_func {
 	void *(*ref)(void *);
 	void *(*unref)(void *);
 };
+
+struct navit_object {
+	struct object_func *func;
+	int refcount;
+};
+
 
 typedef GError xmlerror;
 
