@@ -32,17 +32,19 @@ public class NavitWatch implements Runnable {
 		}
 	};
 	private boolean removed;
+	private int watch_func;
 	private int watch_fd;
 	private int watch_cond;
 	private int watch_callbackid;
 	private boolean callback_pending;
 	private Runnable callback_runnable;
-	public native void poll(int fd, int cond);
+	public native void poll(int func, int fd, int cond);
 	public native void WatchCallback(int id);
 
-	NavitWatch(int fd, int cond, int callbackid) 
+	NavitWatch(int func, int fd, int cond, int callbackid) 
 	{
 		// Log.e("NavitWatch","Creating new thread for "+fd+" "+cond+" from current thread " + java.lang.Thread.currentThread().getName());
+		watch_func=func;
 		watch_fd=fd;
 		watch_cond=cond;
 		watch_callbackid=callbackid;
@@ -60,7 +62,7 @@ public class NavitWatch implements Runnable {
 	{
 		for (;;) {
 			// Log.e("NavitWatch","Polling "+watch_fd+" "+watch_cond + " from " + java.lang.Thread.currentThread().getName());
-			poll(watch_fd, watch_cond);
+			poll(watch_func, watch_fd, watch_cond);
 			// Log.e("NavitWatch","poll returned");
 			if (removed)
 				break;

@@ -19,6 +19,7 @@
 
 #include <unistd.h>
 #include <glib.h>
+#include <poll.h>
 #include "config.h"
 #include "window.h"
 #include "point.h"
@@ -715,11 +716,34 @@ static jclass NavitWatchClass;
 static jmethodID NavitWatch_init;
 static jmethodID NavitWatch_remove;
 
+
+static void do_poll(JNIEnv *env, int fd, int cond)
+{
+	struct pollfd pfd;
+	pfd.fd=fd;
+	dbg(1,"%p poll called for %d %d\n", fd, cond);
+	switch ((enum event_watch_cond)cond) {
+	case event_watch_cond_read:
+		pfd.events=POLLIN;
+		break;
+	case event_watch_cond_write:
+		pfd.events=POLLOUT;
+		break;
+	case event_watch_cond_except:
+		pfd.events=POLLERR;
+		break;
+	default:
+		pfd.events=0;
+	}
+	pfd.revents=0;
+	poll(&pfd, 1, -1);
+}
+
 static struct event_watch *
 event_android_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
 {
 	jobject ret;
-	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int) h, (int) cond, (int)cb);
+	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, (int) h, (int) cond, (int)cb);
 	dbg(0,"result for %p,%d,%p=%p\n",h,cond,cb,ret);
 	if (ret)
 		(*jnienv)->NewGlobalRef(jnienv, ret);
@@ -832,7 +856,7 @@ event_android_new(struct event_methods *meth)
 
 	if (!find_class_global("org/navitproject/navit/NavitWatch", &NavitWatchClass))
 		return NULL;
-	NavitWatch_init = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "<init>", "(III)V");
+	NavitWatch_init = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "<init>", "(IIII)V");
 	if (NavitWatch_init == NULL) 
 		return NULL;
 	NavitWatch_remove = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "remove", "()V");
