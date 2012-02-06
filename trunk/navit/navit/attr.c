@@ -32,6 +32,7 @@
 #include "endianess.h"
 #include "util.h"
 #include "types.h"
+#include "xmlconfig.h"
 
 struct attr_name {
 	enum attr_type attr;
@@ -568,6 +569,11 @@ attr_free(struct attr *attr)
 {
 	if (!attr)
 		return;
+	if (attr->type == attr_navit || attr->type == attr_vehicle) {
+		struct navit_object *obj=attr->u.data;
+		if (obj && obj->func && obj->func->unref)
+			obj->func->unref(obj);
+	}
 	if (!(attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) && 
 	    !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end))
 		g_free(attr->u.data);
@@ -581,9 +587,16 @@ attr_dup_content(struct attr *src, struct attr *dst)
 	dst->type=src->type;
 	if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end) 
 		dst->u.num=src->u.num;
-	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) 
-		dst->u.data=src->u.data;
-	else {
+	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) {
+		if (src->type == attr_navit || src->type == attr_vehicle) {
+			struct navit_object *obj=src->u.data;
+			if (obj && obj->func && obj->func->ref) {
+				dst->u.data=obj->func->ref(obj);
+			} else
+				dst->u.data=obj;
+		} else 
+			dst->u.data=src->u.data;
+	} else {
 		size=attr_data_size(src);
 		if (size) {
 			dst->u.data=g_malloc(size);

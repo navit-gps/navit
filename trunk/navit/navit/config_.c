@@ -60,12 +60,7 @@ config_destroy(struct config *this_)
 static void
 config_terminate(int sig)
 {
-	struct attr_iter *iter=config_attr_iter_new();
-	struct attr navit;
 	dbg(0,"terminating\n");
-	while (config_get_attr(config, attr_navit, &navit, iter)) 
-		navit_destroy(navit.u.navit);
-	config_attr_iter_destroy(iter);
 	config_destroy(config);
 }
 
