@@ -125,6 +125,8 @@ struct vehicle_priv {
 	struct gps_sat next[24];
 	struct item sat_item;
 	int valid;
+	char *statefile;
+	int process_statefile;
 };
 
 //***************************************************************************
@@ -619,7 +621,20 @@ vehicle_file_io(struct vehicle_priv *priv)
 	char *str, *tok;
     dbg(1, "vehicle_file_io : enter\n");
 
-	size = read(priv->fd, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
+	if (priv->process_statefile) {
+		unsigned char *data;
+		priv->process_statefile=0;
+		if (file_get_contents(priv->statefile, &data, &size)) {
+			if (size > buffer_size)
+				size=buffer_size;
+			memcpy(priv->buffer, data, size);
+			priv->buffer_pos=0;
+			g_free(data);
+		} else
+			return;
+	} else {
+		size = read(priv->fd, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
+	}
 	if (size <= 0) {
 		switch (priv->on_eof) {
 		case 0:
@@ -734,9 +749,24 @@ vehicle_file_disable_watch(struct vehicle_priv *priv)
 static void
 vehicle_file_destroy(struct vehicle_priv *priv)
 {
+	if (priv->statefile && priv->nmea_data) {
+		struct attr readwrite={attr_readwrite};
+		struct attr create={attr_create};
+		struct attr *attrs[]={&readwrite,&create,NULL};
+		struct file *f;
+		readwrite.u.num=1;
+		create.u.num=1;
+		f=file_create(priv->statefile, attrs);
+		if (f) {
+			file_data_write(f, 0, strlen(priv->nmea_data), priv->nmea_data);
+			file_destroy(f);
+		}	
+	}
 	vehicle_file_close(priv);
 	callback_destroy(priv->cb);
 	callback_destroy(priv->cbt);
+	if (priv->statefile)
+		g_free(priv->statefile);
 	if (priv->source)
 		g_free(priv->source);
 	if (priv->buffer)
@@ -913,6 +943,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct attr *on_eof;
 	struct attr *baudrate;
 	struct attr *checksum_ignore;
+	struct attr *state_file;
 
 	dbg(1, "enter\n");
 
@@ -928,6 +959,9 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=B4800;
+	state_file=attr_search(attrs, NULL, attr_state_file);
+	if (state_file) 
+		ret->statefile=g_strdup(state_file->u.str);
 	time = attr_search(attrs, NULL, attr_time);
 	if (time)
 		ret->time=time->u.num;
@@ -973,6 +1007,10 @@ vehicle_file_new_file(struct vehicle_methods
 	*meth = vehicle_file_methods;
 	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
 	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
+	if (ret->statefile && file_exists(ret->statefile)) {
+		ret->process_statefile=1;
+		event_add_timeout(1000, 0, ret->cb);
+	}
 	ret->sat_item.type=type_position_sat;
 	ret->sat_item.id_hi=ret->sat_item.id_lo=0;
 	ret->sat_item.priv_data=ret;
