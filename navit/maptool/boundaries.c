@@ -70,16 +70,6 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 	while ((ib=read_item(boundaries))) {
 		char *member=NULL;
 		struct boundary *boundary=g_new0(struct boundary, 1);
-		boundary->area_item_types = NULL; 
-		enum item_type* p_item_type;
-		if(p_item_type = item_bin_get_attr(ib,attr_item_types,NULL)) {
-			int i=0;
-			do {
-				boundary->area_item_types = g_realloc(boundary->area_item_types, (i+1)*sizeof(enum item_type));
-				boundary->area_item_types[i] = *p_item_type;
-				i++;
-			} while(*p_item_type++!=type_none); 
-		}
 		char *admin_level=osm_tag_value(ib, "admin_level");
 		char *iso=osm_tag_value(ib, "ISO3166-1");
 		/* disable spain for now since it creates a too large index */
@@ -212,17 +202,11 @@ process_boundaries_finish(GList *boundaries_list)
 	while (l) {
 		struct boundary *boundary=l->data;
 		int first=1;
-		FILE *f=NULL,*fu=NULL,*ways_split=NULL;
+		FILE *f=NULL,*fu=NULL;
 		if (boundary->country) {
 			char *name=g_strdup_printf("country_%s_poly",boundary->iso2);
 			f=tempfile("",name,1);
 			g_free(name);
-		}
-		int to_write = 0;
-		if (boundary->area_item_types) {
-			ways_split=tempfile("","ways_split",2);
-			struct item_bin *ib=item_bin_relation_area;
-			item_bin_init(ib, boundary->area_item_types[0]);
 		}
 		boundary->sorted_segments=geom_poly_segments_sort(boundary->segments, geom_poly_segment_type_way_right_side);
 		sl=boundary->sorted_segments;
@@ -244,11 +228,6 @@ process_boundaries_finish(GList *boundaries_list)
 				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
 				item_bin_write(ib, f);
 			}
-			if (ways_split && gs->type==geom_poly_segment_type_way_outer) {
-				struct item_bin *ib=item_bin_relation_area;
-				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
-				to_write = 1;
-			}
 			if (boundary->country) {
 				if (!coord_is_equal(*gs->first,*gs->last)) {
 					if (!fu) {
@@ -267,60 +246,16 @@ process_boundaries_finish(GList *boundaries_list)
 			}
 			sl=g_list_next(sl);
 		}	
-
-
-		if (ways_split && to_write ) {
-			struct item_bin *ib=item_bin_relation_area;
-			if(0 == self_intersect_test(ib)) {
-				int i=0;
-				do {
-					ib->type= boundary->area_item_types[i++];
-					item_bin_write(ib, ways_split);
-				} while(boundary->area_item_types[i]!=type_none);
-			} else {
-				//if segments are disjunct polygons, group outer segments and write items for them
-				GList*grouped_segments =
-					geom_poly_segments_group(boundary->sorted_segments, grouped_segments);
-				GList *l = grouped_segments;
-				int self_intersecting_grouped = 0;
-				while (l) {
-					struct geom_poly_segment *gs=l->data;
-					int i=0;
-					struct item_bin *ib=item_bin_relation_area;
-					item_bin_init(ib,boundary->area_item_types[0]);
-					item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
-					if( 0!=self_intersect_test(ib)) {
-						self_intersecting_grouped = 1;
-					} else {
-						do {
-							ib->type= boundary->area_item_types[i++];
-							item_bin_write(ib, ways_split);
-						} while(boundary->area_item_types[i]!=type_none);
-					}
-					l=g_list_next(l);
-				}
-
-				//if there is also self intersecting poly in the disjuct set
-				if(self_intersecting_grouped) {
-					osm_warning("relation",item_bin_get_relationid(boundary->ib),0,"Self intersecting relation area\n");
-				}
-				g_list_free(grouped_segments);
-			}
-			item_bin_init(ib, type_poly_water);
-		}
-
 		ret=process_boundaries_insert(ret, boundary);
 		l=g_list_next(l);
 		if (f) 
 			fclose(f);
-		if (ways_split) 
-			fclose(ways_split);
 		if (fu) {
 			if (boundary->country)
 				osm_warning("relation",item_bin_get_relationid(boundary->ib),0,"Broken country polygon '%s'\n",boundary->iso2);
 			fclose(fu);
 		}
-	g_free(boundary->area_item_types);
+		
 	}
 #if 0
 	printf("hierarchy\n");

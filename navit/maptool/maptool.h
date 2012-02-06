@@ -121,7 +121,6 @@ typedef long int osmid;
 struct boundary {
 	struct item_bin *ib;
 	struct country_table *country;
-	enum item_type* area_item_types;
 	char *iso2;
 	GList *segments,*sorted_segments;
 	GList *children;
@@ -188,10 +187,8 @@ int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_
 GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type);
 struct geom_poly_segment *item_bin_to_poly_segment(struct item_bin *ib, int type);
 int geom_poly_segments_point_inside(GList *in, struct coord *c);
-GList* geom_poly_segments_group(GList *in, GList *out);
 void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
 void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
-int self_intersect_test(struct item_bin*ib);
 
 /* itembin.c */
 
@@ -243,7 +240,6 @@ extern int slices;
 extern struct buffer node_buffer;
 extern int processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles;
 extern struct item_bin *item_bin;
-extern struct item_bin *item_bin_relation_area;
 extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
