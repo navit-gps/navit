@@ -67,6 +67,7 @@
 #include "vehicleprofile.h"
 #include "sunriset.h"
 #include "bookmarks.h"
+#include "xmlconfig.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include "util.h"
@@ -99,6 +100,9 @@ struct navit_vehicle {
 };
 
 struct navit {
+	struct object_func *func;
+	int refcount;
+	struct attr *attrs;
 	struct attr self;
 	GList *mapsets;
 	GList *layouts;
@@ -182,6 +186,7 @@ static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
+struct object_func navit_func;
 
 struct navit *global_navit;
 
@@ -1366,6 +1371,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 	g.lat=53.13;
 	g.lng=11.70;
 
+	this_->func=&navit_func;
+	this_->refcount=1;
+	this_->attrs=attr_list_dup(attrs);
 	this_->self.type=attr_navit;
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
@@ -2715,6 +2723,8 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	default:
 		return 0;
 	}
+	if (ret)
+		this_->attrs=attr_generic_add_attr(this_->attrs, attr);
 	callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 	return ret;
 }
@@ -2727,6 +2737,9 @@ navit_remove_attr(struct navit *this_, struct attr *attr)
 	case attr_callback:
 		navit_remove_callback(this_, attr->u.callback);
 		break;
+	case attr_vehicle:
+		this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
+		return 1;
 	default:
 		return 0;
 	}
@@ -3181,11 +3194,7 @@ navit_destroy(struct navit *this_)
 {
 	struct mapset*ms;
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
-
-	/* TODO: destroy objects contained in this_ */
-	if (this_->vehicle)
-		vehicle_destroy(this_->vehicle->vehicle);
-
+	attr_list_free(this_->attrs);
 	if (this_->bookmarks) {
 		char *center_file = bookmarks_get_center_file(TRUE);
 		bookmarks_write_center_to_file(this_->bookmarks, center_file);
@@ -3223,5 +3232,38 @@ navit_destroy(struct navit *this_)
 
 	g_free(this_);
 }
+
+struct navit *
+navit_ref(struct navit *this_)
+{
+	this_->refcount++;
+	dbg(0,"refcount %d\n",this_->refcount);
+	return this_;
+}
+
+void
+navit_unref(struct navit *this_)
+{
+	this_->refcount--;
+	dbg(0,"refcount %d\n",this_->refcount);
+	if (this_->refcount <= 0)
+		navit_destroy(this_);
+}
+
+struct object_func navit_func = {
+	attr_navit,
+	(object_func_new)navit_new,
+	(object_func_get_attr)navit_get_attr,
+	(object_func_iter_new)navit_attr_iter_new,
+	(object_func_iter_destroy)navit_attr_iter_destroy,
+	(object_func_set_attr)navit_set_attr,
+	(object_func_add_attr)navit_add_attr,
+	(object_func_remove_attr)navit_remove_attr,
+	(object_func_init)navit_init,
+	(object_func_destroy)navit_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_ref,
+	(object_func_unref)navit_unref,
+};
 
 /** @} */

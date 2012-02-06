@@ -255,7 +255,6 @@ static struct object_func object_funcs[] = {
 	{ attr_map,        NEW(map_new)},
 	{ attr_mapset,     NEW(mapset_new),   NULL, NULL, NULL, NULL, ADD(mapset_add_attr)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
-	{ attr_navit,      NEW(navit_new), GET(navit_get_attr), ITERN(navit_attr_iter_new), ITERD(navit_attr_iter_destroy), SET(navit_set_attr), ADD(navit_add_attr), REMOVE(navit_remove_attr), INIT(navit_init), DESTROY(navit_destroy)},
 	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
 	{ attr_plugins,    NEW(plugins_new),  NULL, NULL, NULL, NULL, NULL, NULL, INIT(plugins_init)},
 	{ attr_plugin,     NEW(plugin_new)},
@@ -269,13 +268,15 @@ static struct object_func object_funcs[] = {
 	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
 
-extern struct object_func vehicle_func;
+extern struct object_func navit_func, vehicle_func;
 
 struct object_func *
 object_func_lookup(enum attr_type type)
 {
 	int i;
 	switch (type) {
+	case attr_navit:
+		return &navit_func;
 	case attr_vehicle:
 		return &vehicle_func;
 	default:
@@ -661,10 +662,8 @@ end_element (GMarkupParseContext *context,
 	curr=*state;
 	if (curr->object_func && curr->object_func->init)
 		curr->object_func->init(curr->element_attr.u.data);
-#if 0
 	if (curr->object_func && curr->object_func->unref) 
 		curr->object_func->unref(curr->element_attr.u.data);
-#endif
 	*state=curr->parent;
 	g_free(curr);
 }
