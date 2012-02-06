@@ -24,8 +24,6 @@
 
 static char buffer[800000];
 struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
-static char buffer_relation_area[800000];
-struct item_bin *item_bin_relation_area=(struct item_bin *)(void *)buffer_relation_area;
 static struct node_item *node_item=(struct node_item *)(void *)buffer;
 
 struct node_item *
