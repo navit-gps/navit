@@ -2179,7 +2179,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int flags)
 {
 	int order=transform_get_order(trans);
-	displaylist->dc.trans=trans;
+	if(displaylist->dc.trans && displaylist->dc.trans!=trans)
+		transform_destroy(displaylist->dc.trans);
+	if(displaylist->dc.trans!=trans)
+		displaylist->dc.trans=transform_dup(trans);
 	displaylist->dc.gra=gra;
 	displaylist->dc.mindist=transform_get_scale(trans)/2;
 	// FIXME find a better place to set the background color
@@ -2217,7 +2220,10 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 
 	displaylist->dc.gra=gra;
 	displaylist->ms=mapset;
-	displaylist->dc.trans=trans;
+	if(displaylist->dc.trans && displaylist->dc.trans!=trans)
+		transform_destroy(displaylist->dc.trans);
+	if(displaylist->dc.trans!=trans)
+		displaylist->dc.trans=transform_dup(trans);
 	displaylist->workload=async ? 100 : 0;
 	displaylist->cb=cb;
 	displaylist->seq++;
@@ -2334,6 +2340,15 @@ struct displaylist * graphics_displaylist_new(void)
 
 	return ret;
 }
+
+void graphics_displaylist_destroy(struct displaylist *displaylist)
+{
+	if(displaylist->dc.trans)
+		transform_destroy(displaylist->dc.trans);
+	g_free(displaylist);
+	
+}
+
 
 /**
  * Get the map item which given displayitem is based on.
