@@ -3224,6 +3224,8 @@ navit_destroy(struct navit *this_)
 
         map_destroy(this_->former_destination);
 
+        graphics_displaylist_destroy(this_->displaylist);
+
 	ms = navit_get_mapset(this_);
 	if(ms)
 		mapset_destroy(ms);

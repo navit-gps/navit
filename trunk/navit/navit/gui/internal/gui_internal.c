@@ -5642,6 +5642,7 @@ gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, 
 		gui_internal_html_load_href(this, href, replace);
 		return;
 	}
+	/* FIXME: third argument should be 1 when called from OSD button and 0 when called from dbus or similar interface (see r2872) */
 	gui_internal_cmd_menu(this, NULL, 0, href);
 }
 
