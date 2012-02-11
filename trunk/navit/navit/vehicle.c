@@ -171,6 +171,8 @@ vehicle_ref(struct vehicle *this_)
 void
 vehicle_unref(struct vehicle *this_)
 {
+	if(!this_)
+		return;
 	this_->refcount--;
 	dbg(0,"refcount %d\n",this_->refcount);
 	if (this_->refcount <= 0)
