@@ -4181,7 +4181,7 @@ Navigation</text></img>
         order="13-18">
           <text text_size="9" />
         </itemgra>
-        <itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,fotway"
+        <itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,footway"
         order="13-18">
           <text text_size="9" />
         </itemgra>
