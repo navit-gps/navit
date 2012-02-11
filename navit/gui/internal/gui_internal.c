@@ -5630,20 +5630,25 @@ static void
 gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *href=NULL;
-	int replace=0;
-	if (in && in[0] && ATTR_IS_STRING(in[0]->type)) {
-		href=in[0]->u.str;
-		if (in[1] && ATTR_IS_INT(in[1]->type))
-			replace=in[1]->u.num;
+	int i=0, ignore=0, replace=0;
+
+	if (in && in[i] && ATTR_IS_INT(in[i]->type))
+		ignore=in[i++]->u.num;
+
+	if (in && in[i] && ATTR_IS_STRING(in[i]->type)) {
+		href=in[i++]->u.str;
+		if (in[i] && ATTR_IS_INT(in[i]->type))
+			replace=in[i++]->u.num;
 	}
+
 	if (this->root.children) {
 		if (!href)
 			return;
 		gui_internal_html_load_href(this, href, replace);
 		return;
 	}
-	/* FIXME: third argument should be 1 when called from OSD button and 0 when called from dbus or similar interface (see r2872) */
-	gui_internal_cmd_menu(this, NULL, 0, href);
+
+	gui_internal_cmd_menu(this, NULL, ignore, href);
 }
 
 
