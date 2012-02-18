@@ -163,6 +163,7 @@ struct widget {
 	struct menu_data *menu_data;
 	struct form *form;
 	GList *children;
+	struct widget *parent;
 };
 
 /**
@@ -369,13 +370,6 @@ struct table_data
   GList * bottom_row;
 
   /**
-   * A list of table_row widgets that mark the
-   * top rows for each page of the table.
-   * This is needed for the 'previous page' function of the table.
-   */
-  GList * page_headers;
-
-  /**
    * A container box that is the child of the table widget that contains+groups
    * the next and previous button.
    */
@@ -442,6 +436,8 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * table);
 static int gui_internal_widget_table_is_empty(struct gui_priv *this,struct widget * table);
+static GList * gui_internal_widget_table_next_row(GList * row);
+static GList * gui_internal_widget_table_prev_row(GList * row);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_data_free(void * d);
 static void gui_internal_route_update(struct gui_priv * this, struct navit * navit,
@@ -991,6 +987,84 @@ static void gui_internal_highlight(struct gui_priv *this)
 	this->motion_timeout_event=NULL;
 }
 
+static void gui_internal_motion_cb(struct gui_priv *this)
+{
+	this->motion_timeout_event=NULL;
+
+	/* Check for scrollable table below the highligted item if there's a movement with the button pressed */
+	if (this->pressed && this->highlighted) {
+		struct widget *menu, *wt=NULL;
+		struct widget *wr=NULL;
+	
+		if(this->highlighted)
+			for(wr=this->highlighted;wr && wr->type!=widget_table_row;wr=wr->parent);
+		if(wr)
+			wt=wr->parent;
+
+		if(wt && wt->type==widget_table && (wt->state & STATE_SCROLLABLE)) {
+			struct table_data *td=wt->data;
+			GList *top=NULL;
+			GList *btm=NULL;
+			GList *ttop, *tbtm;
+			
+			
+
+			if(!wr || !wr->h)
+				return;
+			
+			if(this->current.y < wr->p.y  && wr!=td->top_row->data ) {
+				int n=(wr->p.y-this->current.y)/wr->h+1;
+
+				btm=td->bottom_row;
+				top=td->top_row;
+
+				while(n-->0 && (tbtm=gui_internal_widget_table_next_row(btm))!=NULL && (ttop=gui_internal_widget_table_next_row(top))!=NULL) {
+					top=ttop;
+					btm=tbtm;
+					if(top->data==wr)
+						break;
+				}
+				this->pressed=2;
+			} else if (this->current.y > wr->p.y + wr->h ) {
+				int y=wt->p.y;
+				int n;
+
+				if(td->button_box && td->button_box->p.y!=0)
+		    			y=td->button_box->p.y - td->button_box->h;
+
+				if(y>this->current.y)
+					y=this->current.y;
+
+				n=(y - wr->p.y )/wr->h;
+
+				btm=td->bottom_row;
+				top=td->top_row;
+				
+				while(n-->0 && (ttop=gui_internal_widget_table_prev_row(top))!=NULL && (tbtm=gui_internal_widget_table_prev_row(btm))!=NULL) {
+					btm=tbtm;
+					top=ttop;
+					if(btm->data==wr)
+						break;
+				}
+				this->pressed=2;
+			}
+			if( top && btm && (td->top_row!=top || td->bottom_row!=btm) ) {
+				gui_internal_table_hide_rows(wt->data);
+				td->top_row=top;
+				td->bottom_row=btm;
+				graphics_draw_mode(this->gra, draw_mode_begin);
+				gui_internal_widget_render(this,wt);
+				graphics_draw_mode(this->gra, draw_mode_end);
+			}
+
+			return;
+		}
+	}
+
+	/* Else, just move highlight after pointer if there's nothing to scroll */
+	gui_internal_highlight(this);
+}
+
 static struct widget *
 gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const char *label)
 {
@@ -1333,6 +1407,7 @@ gui_internal_widget_append(struct widget *parent, struct widget *child)
 	if (! child->background)
 		child->background=parent->background;
 	parent->children=g_list_append(parent->children, child);
+	child->parent=parent;
 }
 
 static void gui_internal_widget_prepend(struct widget *parent, struct widget *child)
@@ -1340,6 +1415,7 @@ static void gui_internal_widget_prepend(struct widget *parent, struct widget *ch
 	if (! child->background)
 		child->background=parent->background;
 	parent->children=g_list_prepend(parent->children, child);
+	child->parent=parent;
 }
 
 static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child)
@@ -1351,6 +1427,7 @@ static void gui_internal_widget_insert_before(struct widget *parent, struct widg
 	if(sibling) 
 		sib=g_list_find(parent->children,sibling);
 	parent->children=g_list_insert_before(parent->children, sib, child);
+	child->parent=parent;
 }
 
 static void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func)
@@ -1359,6 +1436,7 @@ static void gui_internal_widget_insert_sorted(struct widget *parent, struct widg
 		child->background=parent->background;
 
 	parent->children=g_list_insert_sorted(parent->children, child, func);
+	child->parent=parent;
 }
 
 
@@ -5127,9 +5205,9 @@ static void gui_internal_motion(void *data, struct point *p)
 		return;
 	this->current=*p;
 	if(!this->motion_timeout_callback)
-		this->motion_timeout_callback=callback_new_1(callback_cast(gui_internal_highlight), this);
+		this->motion_timeout_callback=callback_new_1(callback_cast(gui_internal_motion_cb), this);
 	if(!this->motion_timeout_event)
-		this->motion_timeout_event=event_add_timeout(100,0, this->motion_timeout_callback);
+		this->motion_timeout_event=event_add_timeout(30,0, this->motion_timeout_callback);
 }
 
 static const char *
@@ -5863,17 +5941,21 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	}
 
 
-	// if already in the menu:
+	/*
+	 * If already in the menu:
+	 */
+
 	if (pressed) {
 		this->pressed=1;
 		this->current=*p;
 		gui_internal_highlight(this);
 	} else {
-		this->pressed=0;
 		this->current.x=-1;
 		this->current.y=-1;
 		graphics_draw_mode(gra, draw_mode_begin);
-		gui_internal_call_highlighted(this);
+		if(this->pressed!=2)
+			gui_internal_call_highlighted(this);
+		this->pressed=0;
 		if (!event_main_loop_has_quit()) {
 			gui_internal_highlight(this);
 			graphics_draw_mode(gra, draw_mode_end);
@@ -6319,7 +6401,8 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	struct table_data * data = NULL;
 	widget->type=widget_table;
 	widget->flags=flags;
-	widget->data = g_new0(struct table_data,1);
+	widget->state=STATE_SCROLLABLE;
+	widget->data=g_new0(struct table_data,1);
 	widget->data_free=gui_internal_table_data_free;
 
 	// We have to set background here explicitly
@@ -6390,9 +6473,6 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
   }
   table_data->top_row=NULL;
   table_data->bottom_row=NULL;
-  if(table_data->page_headers)
-	  g_list_free(table_data->page_headers);
-  table_data->page_headers=NULL;
 }
 
 /**
@@ -6413,6 +6493,35 @@ static int gui_internal_widget_table_is_empty(struct gui_priv *this, struct widg
 
    return 1;
 }
+
+/**
+ * @brief Move GList pointer to the next table row, skipping other table children (button box, for example).
+ * @param row GList pointer into the children list 
+ * @returns GList pointer to the next row in the children list, or NULL if there are no any rows left.
+ */
+static GList * gui_internal_widget_table_next_row(GList * row)
+{
+  while((row=g_list_next(row))!=NULL) {
+   	if(row->data && ((struct widget *)(row->data))->type == widget_table_row)
+   		break;
+   }
+  return row;
+}
+
+/**
+ * @brief Move GList pointer to the previous table row, skipping other table children (button box, for example).
+ * @param row GList pointer into the children list 
+ * @returns GList pointer to the previous row in the children list, or NULL if there are no any rows left.
+ */
+static GList * gui_internal_widget_table_prev_row(GList * row)
+{
+  while((row=g_list_previous(row))!=NULL) {
+   	if(row->data && ((struct widget *)(row->data))->type == widget_table_row)
+   		break;
+   }
+  return row;
+}
+
 
 /**
  * Creates a new table_row widget.
@@ -6606,12 +6715,15 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 }
 
+
+
+
 /**
  * @brief Invalidates coordinates for previosly rendered table widget rows.
  *
  * @param table_data Data from the table object.
  */
-void gui_internal_table_hide_rows(struct table_data * table_data)
+static void gui_internal_table_hide_rows(struct table_data * table_data)
 {
 	GList*cur_row;
 	for(cur_row=table_data->top_row; cur_row ; cur_row = g_list_next(cur_row))
@@ -6627,6 +6739,7 @@ void gui_internal_table_hide_rows(struct table_data * table_data)
 			break;
 	}
 }
+
 
 /**
  * @brief Renders a table widget.
@@ -7196,52 +7309,17 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 {
 	struct widget * table_widget = (struct widget * ) wm->data;
 	struct table_data * table_data = NULL;
-	int found=0;
-	GList * iterator;
 
-	if(table_widget)
-	{
+	if(table_widget && table_widget->type==widget_table)
 		table_data = (struct table_data*) table_widget->data;
 
-	}
 	if(table_data)
 	{
-		/**
-		 * Before advancing to the next page we need to ensure
-		 * that the current top_row is in the list of previous top_rows
-		 * so previous page can work.
-		 *
-		 */
-		for(iterator=table_data->page_headers; iterator != NULL;
-		    iterator = g_list_next(iterator) )
-		{
-			if(iterator->data == table_data->top_row)
-			{
-				found=1;
-				break;
-			}
-
+		GList *l=g_list_next(table_data->bottom_row);
+		if(l)	{
+			gui_internal_table_hide_rows(table_data);
+			table_data->top_row=l;
 		}
-		if( ! found)
-		{
-			table_data->page_headers=g_list_append(table_data->page_headers,
-							       table_data->top_row);
-		}
-		/**
-		 * Invalidate row coordinates for all rows which were previously rendered
-		 
-		for(iterator=table_data->top_row; iterator && table_data->rows_on_page; iterator = g_list_next(iterator))
-		{
-			struct widget * cur_row_widget = (struct widget*)iterator->data;
-			cur_row_widget->p.x=-1;
-			cur_row_widget->p.y=-1;
-			cur_row_widget->w=0;
-			cur_row_widget->h=0;
-			table_data->rows_on_page--;
-		}
-		*/
-		gui_internal_table_hide_rows(table_data);
-		table_data->top_row=g_list_next(table_data->bottom_row);
 	}
 	wm->state&= ~STATE_HIGHLIGHTED;
 	gui_internal_menu_render(this);
@@ -7261,26 +7339,24 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 {
 	struct widget * table_widget = (struct widget * ) wm->data;
 	struct table_data * table_data = NULL;
-	GList * current_page_top=NULL;
 
-	GList * iterator;
-	if(table_widget)
-	{
+	if(table_widget && table_widget->type==widget_table)
 		table_data = (struct table_data*) table_widget->data;
-		if(table_data)
-		{
-			gui_internal_table_hide_rows(table_data);
-			current_page_top = table_data->top_row;
-			for(iterator = table_data->page_headers; iterator != NULL;
-			    iterator = g_list_next(iterator))
-			{
-				if(current_page_top == iterator->data)
-				{
-					break;
-				}
-				table_data->top_row = (GList*) iterator->data;
-			}
+
+	if(table_data)	{
+		int bottomy=table_widget->p.y+table_widget->h;
+		int n;
+		GList *top=table_data->top_row,
+		      *btm=table_data->bottom_row;
+		struct widget *w=(struct widget*)top->data;
+		if(table_data->button_box->p.y!=0) {
+		    bottomy=table_data->button_box->p.y;
 		}
+		n=(bottomy-w->p.y)/w->h;
+		dbg(0,"%d %d %d %d\n",n, bottomy, w->p.y, w->h);
+		while(n-- > 0 && (top=g_list_previous(top))!=NULL);
+		gui_internal_table_hide_rows(table_data);
+		table_data->top_row=top;
 	}
 	wm->state&= ~STATE_HIGHLIGHTED;
 	gui_internal_menu_render(this);
@@ -7300,7 +7376,6 @@ void gui_internal_table_data_free(void * p)
 	 * have their memory managed by the table itself.
 	 */
 	struct table_data * table_data =  (struct table_data*) p;
-	g_list_free(table_data->page_headers);
 	g_free(p);
 
 
