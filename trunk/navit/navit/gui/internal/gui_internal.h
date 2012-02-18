@@ -8,6 +8,7 @@ struct graphics_image;
 #define STATE_EDIT 16
 #define STATE_CLEAR 32
 #define STATE_EDITABLE 64
+#define STATE_SCROLLABLE 128
 
 enum widget_type {
 	widget_box=1,
