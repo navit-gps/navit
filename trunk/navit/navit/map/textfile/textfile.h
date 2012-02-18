@@ -22,7 +22,6 @@
 #include "coord.h"
 
 #define TEXTFILE_COMMENT_CHAR '#'
-#define TEXTFILE_COMMENT_NAVI_STOPPED "# navigation stopped\n"
 
 struct map_priv {
 	int id;
