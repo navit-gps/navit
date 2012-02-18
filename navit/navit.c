@@ -76,8 +76,8 @@
 #include "libc.h"
 #endif
 
-/*FIXME: don't include pvt textfile map includes here */
-#include "map/textfile/textfile.h"
+/* define string for bookmark handling */
+#define TEXTFILE_COMMENT_NAVI_STOPPED "# navigation stopped\n"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
