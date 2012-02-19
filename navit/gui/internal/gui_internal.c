@@ -1026,7 +1026,7 @@ static void gui_internal_motion_cb(struct gui_priv *this)
 				}
 				this->pressed=2;
 			} else if (this->current.y > wr->p.y + wr->h ) {
-				int y=wt->p.y;
+				int y=wt->p.y+wt->h-wr->h;
 				int n;
 
 				if(td->button_box && td->button_box->p.y!=0)
