@@ -53,6 +53,8 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
 void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int lazy, int angle, int speed);
 int vehicle_get_cursor_data(struct vehicle *this_, struct point *pnt, int *angle, int *speed);
 void vehicle_log_gpx_add_tag(char *tag, char **logstr);
+struct vehicle * vehicle_ref(struct vehicle *this_);
+void vehicle_unref(struct vehicle *this_);
 /* end of prototypes */
 
 #ifdef __cplusplus
