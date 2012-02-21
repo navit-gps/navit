@@ -278,6 +278,7 @@ struct maptool_osm {
 };
 
 void osm_warning(char *type, long long id, int cont, char *fmt, ...);
+void osm_info(char *type, long long id, int cont, char *fmt, ...);
 void osm_add_tag(char *k, char *v);
 void osm_add_node(osmid id, double lat, double lon);
 void osm_add_way(osmid id);
@@ -291,6 +292,7 @@ long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
+void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void clear_node_item_buffer(void);
 void ref_ways(FILE *in);
 void resolve_ways(FILE *in, FILE *out);
