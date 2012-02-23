@@ -37,6 +37,9 @@
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #endif
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif /* _MSC_VER */
 #include "item.h"
 #include "file.h"
 #include "navit.h"
@@ -330,7 +333,19 @@ struct gui_priv {
 		struct widget *w;
 		struct widget *container;
 	} html[10];
+
+/* gestures */	
+
+	struct gesture_elem {
+		int msec;
+		struct point p;
+	} gesture_ring[GESTURE_RINGSIZE];
+	int gesture_ring_last, gesture_ring_first;
 };
+
+
+
+
 
 struct html_tag_map {
 	char *tag_name;
@@ -987,9 +1002,95 @@ static void gui_internal_highlight(struct gui_priv *this)
 	this->motion_timeout_event=NULL;
 }
 
+
+void gui_internal_gesture_ring_clear(struct gui_priv *this)
+{
+	this->gesture_ring_last=this->gesture_ring_first=0;
+};
+
+
+struct gesture_elem * gui_internal_gesture_ring_get(struct gui_priv *this, int i)
+{
+	int n=(this->gesture_ring_last-i)%GESTURE_RINGSIZE;
+	if(n==this->gesture_ring_first)
+		return NULL;
+	return this->gesture_ring+n;
+};
+
+void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
+{
+	int msec;
+#ifndef HAVE_API_WIN32_CE
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	msec=tv.tv_sec*1000+tv.tv_usec/1000;
+#else
+	msec=GetTickCount();
+#endif
+	this->gesture_ring_last++;
+	this->gesture_ring_last%=GESTURE_RINGSIZE;
+	if(this->gesture_ring_last==this->gesture_ring_first) {
+		this->gesture_ring_first++;
+		this->gesture_ring_first%=GESTURE_RINGSIZE;
+   	}
+	this->gesture_ring[this->gesture_ring_last].p=*p;
+	this->gesture_ring[this->gesture_ring_last].msec=msec;
+	dbg(2,"msec=%d x=%d y=%d\n",msec,p->x,p->y);
+};
+
+int gui_internal_gesture_do(struct gui_priv *this)
+{
+	int i;
+	struct gesture_elem *g;
+	int msec;
+	int dx=0,dy=0,dt=0;
+	int x,y;
+	g=gui_internal_gesture_ring_get(this,0);
+	if(!g)
+		return 0;
+	x=g->p.x;
+	y=g->p.y;
+	msec=g->msec;
+	dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
+	for(i=1;(g=gui_internal_gesture_ring_get(this,i))!=NULL;i++) {
+		if( msec-g->msec > 1000 )
+			break;
+		dx=x-g->p.x;
+		dy=y-g->p.y;
+		dt=msec-g->msec;
+		dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
+	}
+	if( abs(dx) > this->root.w/4 && abs(dy) < this->icon_s ) {
+		struct widget *wt;
+		dbg(1,"horizontal dx=%d dy=%d\n",dx,dy);
+		for(wt=this->highlighted;wt && wt->type!=widget_table;wt=wt->parent);
+		if(!wt || wt->type!=widget_table || !wt->data)
+			return 0;
+		if(this->highlighted) {
+			this->highlighted->state &= ~STATE_HIGHLIGHTED;
+			this->highlighted=NULL;
+		}
+		if(dx<0)
+			gui_internal_table_button_prev(this,NULL,wt);
+		else
+			gui_internal_table_button_next(this,NULL,wt);
+		return 1;
+	} else if( abs(dy) > this->root.h/4 && abs(dx) < this->icon_s ) {
+		dbg(1,"vertical dx=%d dy=%d\n",dx,dy);
+	} else if (dt>300 && abs(dx) <this->icon_s && abs(dy) <this->icon_s ) {
+		dbg(1,"longtap dx=%d dy=%d\n",dx,dy);
+	} else {
+		dbg(1,"none dx=%d dy=%d\n",dx,dy);
+	}
+	
+	return 0;
+
+};
+
 static void gui_internal_motion_cb(struct gui_priv *this)
 {
 	this->motion_timeout_event=NULL;
+	gui_internal_gesture_ring_add(this, &(this->current));
 
 	/* Check for scrollable table below the highligted item if there's a movement with the button pressed */
 	if (this->pressed && this->highlighted) {
@@ -5948,12 +6049,15 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	if (pressed) {
 		this->pressed=1;
 		this->current=*p;
+		gui_internal_gesture_ring_clear(this);
+		gui_internal_gesture_ring_add(this, p);
 		gui_internal_highlight(this);
 	} else {
+		gui_internal_gesture_ring_add(this, p);
 		this->current.x=-1;
 		this->current.y=-1;
 		graphics_draw_mode(gra, draw_mode_begin);
-		if(this->pressed!=2)
+		if(!gui_internal_gesture_do(this) && this->pressed!=2)
 			gui_internal_call_highlighted(this);
 		this->pressed=0;
 		if (!event_main_loop_has_quit()) {
@@ -7307,8 +7411,13 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
  */
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data)
 {
-	struct widget * table_widget = (struct widget * ) wm->data;
+	struct widget * table_widget=NULL;
 	struct table_data * table_data = NULL;
+
+	if(wm)
+		table_widget = (struct widget * ) wm->data;
+	else 
+		table_widget = data;
 
 	if(table_widget && table_widget->type==widget_table)
 		table_data = (struct table_data*) table_widget->data;
@@ -7321,7 +7430,10 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 			table_data->top_row=l;
 		}
 	}
-	wm->state&= ~STATE_HIGHLIGHTED;
+
+	if(wm)
+		wm->state&= ~STATE_HIGHLIGHTED;
+
 	gui_internal_menu_render(this);
 }
 
@@ -7337,8 +7449,13 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
  */
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data)
 {
-	struct widget * table_widget = (struct widget * ) wm->data;
+	struct widget * table_widget = NULL;
 	struct table_data * table_data = NULL;
+	
+	if(wm)
+		table_widget=(struct widget * ) wm->data;
+	else 
+		table_widget=(struct widget * ) data;
 
 	if(table_widget && table_widget->type==widget_table)
 		table_data = (struct table_data*) table_widget->data;
@@ -7358,7 +7475,8 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 		gui_internal_table_hide_rows(table_data);
 		table_data->top_row=top;
 	}
-	wm->state&= ~STATE_HIGHLIGHTED;
+	if(wm)
+		wm->state&= ~STATE_HIGHLIGHTED;
 	gui_internal_menu_render(this);
 }
 
