@@ -10,6 +10,8 @@ struct graphics_image;
 #define STATE_EDITABLE 64
 #define STATE_SCROLLABLE 128
 
+#define GESTURE_RINGSIZE 100
+
 enum widget_type {
 	widget_box=1,
 	widget_button,
