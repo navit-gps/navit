@@ -1003,13 +1003,13 @@ static void gui_internal_highlight(struct gui_priv *this)
 }
 
 
-void gui_internal_gesture_ring_clear(struct gui_priv *this)
+static void gui_internal_gesture_ring_clear(struct gui_priv *this)
 {
 	this->gesture_ring_last=this->gesture_ring_first=0;
 };
 
 
-struct gesture_elem * gui_internal_gesture_ring_get(struct gui_priv *this, int i)
+static struct gesture_elem * gui_internal_gesture_ring_get(struct gui_priv *this, int i)
 {
 	int n=(this->gesture_ring_last-i)%GESTURE_RINGSIZE;
 	if(n==this->gesture_ring_first)
@@ -1017,7 +1017,7 @@ struct gesture_elem * gui_internal_gesture_ring_get(struct gui_priv *this, int i
 	return this->gesture_ring+n;
 };
 
-void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
+static void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
 {
 	int msec;
 #ifndef HAVE_API_WIN32_CE
@@ -1048,7 +1048,7 @@ void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
  * @param out dy pointer to variable to store vertical movement of the gesture.
  * @returns amount of time the actual movement took.
  */
-int gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p0, int *dx, int *dy)
+static int gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p0, int *dx, int *dy)
 {
 	struct gesture_elem *g;
 	int x,y,dt;
@@ -1087,7 +1087,7 @@ int gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct poin
 	return dt;
 }
 
-int gui_internal_gesture_do(struct gui_priv *this)
+static int gui_internal_gesture_do(struct gui_priv *this)
 {
 	int dt;
 	int dx,dy;
@@ -1133,7 +1133,7 @@ static void gui_internal_motion_cb(struct gui_priv *this)
 
 	/* Check for scrollable table below the highligted item if there's a movement with the button pressed */
 	if (this->pressed && this->highlighted) {
-		struct widget *menu, *wt=NULL;
+		struct widget *wt=NULL;
 		struct widget *wr=NULL;
 		int dx,dy;
 		
@@ -6104,7 +6104,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		this->current.x=-1;
 		this->current.y=-1;
 		graphics_draw_mode(gra, draw_mode_begin);
-		if(!gui_internal_gesture_do(this) && this->pressed!=2 && abs(dx)<this->icon_s & abs(dy)<this->icon_s)
+		if(!gui_internal_gesture_do(this) && this->pressed!=2 && abs(dx)<this->icon_s && abs(dy)<this->icon_s)
 			gui_internal_call_highlighted(this);
 		this->pressed=0;
 		if (!event_main_loop_has_quit()) {
@@ -7510,8 +7510,7 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 	if(table_data)	{
 		int bottomy=table_widget->p.y+table_widget->h;
 		int n;
-		GList *top=table_data->top_row,
-		      *btm=table_data->bottom_row;
+		GList *top=table_data->top_row;
 		struct widget *w=(struct widget*)top->data;
 		if(table_data->button_box->p.y!=0) {
 		    bottomy=table_data->button_box->p.y;
@@ -7539,7 +7538,6 @@ void gui_internal_table_data_free(void * p)
 	 * @note button_box and its children (next_button,prev_button)
 	 * have their memory managed by the table itself.
 	 */
-	struct table_data * table_data =  (struct table_data*) p;
 	g_free(p);
 
 
