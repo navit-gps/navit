@@ -1135,6 +1135,12 @@ static void gui_internal_motion_cb(struct gui_priv *this)
 	if (this->pressed && this->highlighted) {
 		struct widget *menu, *wt=NULL;
 		struct widget *wr=NULL;
+		int dx,dy;
+		
+		/* Guard against accidental scrolling when user is likely going to swipe */
+		gui_internal_gesture_get_vector(this, 1000, NULL, &dx, &dy);
+		if(abs(dx)>abs(dy) || abs(dy)<this->icon_s)
+			return;
 	
 		if(this->highlighted)
 			for(wr=this->highlighted;wr && wr->type!=widget_table_row;wr=wr->parent);
