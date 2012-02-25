@@ -1038,31 +1038,70 @@ void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
 	dbg(2,"msec=%d x=%d y=%d\n",msec,p->x,p->y);
 };
 
-int gui_internal_gesture_do(struct gui_priv *this)
+
+/*
+ * @brief Calculate movement vector and timing of the gesture.
+ * @param in this gui context
+ * @param in msec time in milliseconds to find gesture within
+ * @param out p0 pointer to the point object, where gesture starting point coordinates should be placed. Can be NULL.
+ * @param out dx pointer to variable to store horizontal movement of the gesture.
+ * @param out dy pointer to variable to store vertical movement of the gesture.
+ * @returns amount of time the actual movement took.
+ */
+int gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p0, int *dx, int *dy)
 {
-	int i;
 	struct gesture_elem *g;
-	int msec;
-	int dx=0,dy=0,dt=0;
-	int x,y;
+	int x,y,dt;
+	int i;
+
+	dt=0;
+
+	if(dx) *dx=0;
+	if(dy) *dy=0;
+	if(p0) {
+		p0->x=-1;
+		p0->y=-1;
+	}
+
 	g=gui_internal_gesture_ring_get(this,0);
 	if(!g)
 		return 0;
 	x=g->p.x;
 	y=g->p.y;
+	if(p0) {
+		*p0=g->p;
+	}
 	msec=g->msec;
 	dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
 	for(i=1;(g=gui_internal_gesture_ring_get(this,i))!=NULL;i++) {
 		if( msec-g->msec > 1000 )
 			break;
-		dx=x-g->p.x;
-		dy=y-g->p.y;
 		dt=msec-g->msec;
+		if(dx) *dx=x-g->p.x;
+		if(dy) *dy=y-g->p.y;
+		if(p0) {
+			*p0=g->p;
+		}
 		dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
 	}
-	if( abs(dx) > this->root.w/4 && abs(dy) < this->icon_s ) {
+	return dt;
+}
+
+int gui_internal_gesture_do(struct gui_priv *this)
+{
+	int dt;
+	int dx,dy;
+	
+	dt=gui_internal_gesture_get_vector(this, 1000, NULL, &dx, &dy);
+
+	if( abs(dx) > this->icon_s*3 && abs(dy) < this->icon_s ) {
 		struct widget *wt;
 		dbg(1,"horizontal dx=%d dy=%d\n",dx,dy);
+
+		/* Prevent swiping if widget was scrolled beforehand */
+		if(this->pressed==2)
+			return 0;
+
 		for(wt=this->highlighted;wt && wt->type!=widget_table;wt=wt->parent);
 		if(!wt || wt->type!=widget_table || !wt->data)
 			return 0;
@@ -1071,11 +1110,11 @@ int gui_internal_gesture_do(struct gui_priv *this)
 			this->highlighted=NULL;
 		}
 		if(dx<0)
-			gui_internal_table_button_prev(this,NULL,wt);
-		else
 			gui_internal_table_button_next(this,NULL,wt);
+		else
+			gui_internal_table_button_prev(this,NULL,wt);
 		return 1;
-	} else if( abs(dy) > this->root.h/4 && abs(dx) < this->icon_s ) {
+	} else if( abs(dy) > this->icon_s*3 && abs(dx) < this->icon_s ) {
 		dbg(1,"vertical dx=%d dy=%d\n",dx,dy);
 	} else if (dt>300 && abs(dx) <this->icon_s && abs(dy) <this->icon_s ) {
 		dbg(1,"longtap dx=%d dy=%d\n",dx,dy);
@@ -6053,11 +6092,13 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		gui_internal_gesture_ring_add(this, p);
 		gui_internal_highlight(this);
 	} else {
+		int dx,dy;
 		gui_internal_gesture_ring_add(this, p);
+		gui_internal_gesture_get_vector(this, 300, NULL, &dx, &dy);
 		this->current.x=-1;
 		this->current.y=-1;
 		graphics_draw_mode(gra, draw_mode_begin);
-		if(!gui_internal_gesture_do(this) && this->pressed!=2)
+		if(!gui_internal_gesture_do(this) && this->pressed!=2 && abs(dx)<this->icon_s & abs(dy)<this->icon_s)
 			gui_internal_call_highlighted(this);
 		this->pressed=0;
 		if (!event_main_loop_has_quit()) {
@@ -7470,7 +7511,6 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 		    bottomy=table_data->button_box->p.y;
 		}
 		n=(bottomy-w->p.y)/w->h;
-		dbg(0,"%d %d %d %d\n",n, bottomy, w->p.y, w->h);
 		while(n-- > 0 && (top=g_list_previous(top))!=NULL);
 		gui_internal_table_hide_rows(table_data);
 		table_data->top_row=top;
