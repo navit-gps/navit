@@ -5242,7 +5242,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 	gui_internal_widget_append(parent,
 		gui_internal_button_new_with_callback(
 			this, label,
-			image_new_xs(this, active ? "gui_active" : "gui_inactive"),
+			image_new_s(this, active ? "gui_active" : "gui_inactive"),
 			gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_active_profile, context));
 
@@ -5252,35 +5252,38 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 static void
 gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct widget *w,*wb;
+	struct widget *w,*wb,*row;
 	struct attr attr;
 	struct vehicle *v=wm->data;
     struct vehicleprofile *profile = NULL;
 	GList *profiles;
 
 	wb=gui_internal_menu(this, wm->text);
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
 	gui_internal_widget_append(wb, w);
 
     // Add the "Set as active" button if this isn't the active
     // vehicle.
 	if (!gui_internal_is_active_vehicle(this, v)) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Set as active"),
-				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_active_vehicle, wm->data));
 	}
 
 	if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show Satellite status"),
-				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_show_satellite_status, wm->data));
 	}
 	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show NMEA data"),
-				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_show_nmea_data, wm->data));
 	}
 
@@ -5288,7 +5291,8 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 	profiles = navit_get_vehicleprofiles(this->nav);
     while(profiles) {
         profile = (struct vehicleprofile *)profiles->data;
-        gui_internal_add_vehicle_profile(this, w, v, profile);
+	gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+        gui_internal_add_vehicle_profile(this, row, v, profile);
 		profiles = g_list_next(profiles);
     }
 
@@ -5315,7 +5319,7 @@ gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct 
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
 		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
 		wl=gui_internal_button_new_with_callback(this, vattr.u.str,
-			image_new_l(this, attr.u.vehicle == active_vehicle.u.vehicle ? "gui_active" : "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
+			image_new_s(this, attr.u.vehicle == active_vehicle.u.vehicle ? "gui_active" : "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_vehicle_settings, attr.u.vehicle);
 		wl->text=g_strdup(vattr.u.str);
 		gui_internal_widget_append(w, wl);
