@@ -822,7 +822,7 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 			wi=l->data;
 			if (wi->img)
 				graphics_image_free(this->gra, wi->img);
-			wi->img=image_new_xs(this, is_on ? "gui_active" : "gui_inactive");
+			wi->img=image_new_s(this, is_on ? "gui_active" : "gui_inactive");
 		}
 		if (w->is_on && w->off.type == attr_none)
 			w->state &= ~STATE_SENSITIVE;
@@ -878,7 +878,7 @@ gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags f
 {
 	struct graphics_image *image=NULL;
 	struct widget *ret;
-	image=image_new_xs(this, "gui_inactive");
+	image=image_new_s(this, "gui_inactive");
 	if (!on && !off)
 		return NULL;
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
@@ -3325,7 +3325,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 static void
 gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, char *name, int flags)
 {
-	struct widget *wb,*w,*wc,*wbc,*wclosest=NULL;
+	struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
 	struct coord_geo g;
 	struct pcoord pc;
 	struct coord c;
@@ -3355,8 +3355,12 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	coord=coordinates(&pc, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
+	wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+	gui_internal_widget_append(w,wtable);
+	
 	if ((flags & 1) && wm) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wc=gui_internal_button_new_with_callback(this, _("Streets"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_search_street_in_town, wm));
@@ -3364,7 +3368,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wc->selection_id=wm->selection_id;
 	}
 	if ((flags & 2) && wm) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wc=gui_internal_button_new_with_callback(this, _("House numbers"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_search_house_number_in_street, wm));
@@ -3381,13 +3386,15 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			if (item_attr_get(item, attr_description, &attr))
 				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
 			if (item_attr_get(item, attr_url_local, &attr)) {
-				gui_internal_widget_append(w,
+				gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+				gui_internal_widget_append(row,
 					wb=gui_internal_button_new_with_callback(this, _("View in Browser"),
 						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 						gui_internal_cmd_view_in_browser, NULL));
 				wb->item=wm->item;
 			}
-			gui_internal_widget_append(w,
+			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+			gui_internal_widget_append(row,
 				wb=gui_internal_button_new_with_callback(this, _("View Attributes"),
 					image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 					gui_internal_cmd_view_attributes, NULL));
@@ -3396,7 +3403,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		map_rect_destroy(mr);
 	}
 	if (flags & 8) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Set as destination"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_destination, g_strdup(name)));
@@ -3404,14 +3412,16 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->c=pc;
 	}
 	if (flags & 16) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Set as position"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_position, wm));
 		wbc->c=pc;
 	}
 	if (flags & 32) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Add as bookmark"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_add_bookmark2, g_strdup(name)));
@@ -3421,7 +3431,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 #ifndef _MSC_VER
 //POIs are not operational under MSVC yet
 	if (flags & 64) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("POIs"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_pois, NULL));
@@ -3429,12 +3440,14 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	}
 #endif /* _MSC_VER */
 #if 0
-	gui_internal_widget_append(w,
+	gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+	gui_internal_widget_append(row,
 		gui_internal_button_new(this, "Add to tour",
 			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 #endif
 	if (flags & 128) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("View on map"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_view_on_map, NULL));
@@ -3482,7 +3495,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				map_convert_free(label);
 			} else
 				text=g_strdup_printf("%s", item_to_name(item->type));
-			gui_internal_widget_append(w,
+			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+			gui_internal_widget_append(row,
 				wc=gui_internal_button_new_with_callback(this, text,
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, (void *)2));
@@ -3500,26 +3514,31 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	       	graphics_displaylist_close(dlh);
 	}
 	if (flags & 512) {
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Cut Bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_cut_bookmark, NULL));
 		wbc->text=g_strdup(wm->text);
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Copy Bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_copy_bookmark, NULL));
 		wbc->text=g_strdup(wm->text);
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Rename Bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_rename_bookmark, NULL));
 		wbc->text=g_strdup(wm->text);
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Paste Bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_paste_bookmark, NULL));
-		gui_internal_widget_append(w,
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Delete Bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_delete_bookmark, NULL));
@@ -4977,13 +4996,14 @@ static void
 gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr, on, off, description, type, data, url, active;
-	struct widget *w,*wb,*wma;
+	struct widget *w,*wb,*row,*wma;
 	char *label;
 	struct attr_iter *iter;
 
 	wb=gui_internal_menu(this, _("Maps"));
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	w->spy=this->spacing*3;
+	//w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	//w->spy=this->spacing*3;
+	w = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	on.type=off.type=attr_active;
@@ -5002,14 +5022,15 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 		if (map_get_attr(attr.u.map, attr_url, &url, NULL)) {
 			if (!map_get_attr(attr.u.map, attr_active, &active, NULL))
 				active.u.num=1;
-			wma=gui_internal_button_new_with_callback(this, label, image_new_xs(this, active.u.num ? "gui_active" : "gui_inactive"),
+			wma=gui_internal_button_new_with_callback(this, label, image_new_s(this, active.u.num ? "gui_active" : "gui_inactive"),
 			gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_map_download, attr.u.map);
 		} else {
 			wma=gui_internal_button_map_attr_new(this, label, gravity_left_center|orientation_horizontal|flags_fill,
 				attr.u.map, &on, &off, 1);
 		}	
-		gui_internal_widget_append(w, wma);
+		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row, wma);
 		g_free(label);
 	}
 	navit_attr_iter_destroy(iter);
