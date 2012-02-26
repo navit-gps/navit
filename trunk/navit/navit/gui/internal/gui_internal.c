@@ -857,7 +857,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 	struct widget *ret;
 	if (!on && !off)
 		return NULL;
-	image=image_new_xs(this, "gui_inactive");
+	image=image_new_s(this, "gui_inactive");
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
 	if (on)
 		ret->on=*on;
@@ -4719,19 +4719,19 @@ static void
 gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr;
-	struct widget *w,*wb,*wl;
+	struct widget *w,*wb,*wl,*row;
 	struct attr_iter *iter;
 
 
 	wb=gui_internal_menu(this, _("Layout"));
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	w->spy=this->spacing*3;
+	w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
+		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		wl=gui_internal_button_navit_attr_new(this, attr.u.layout->name, gravity_left_center|orientation_horizontal|flags_fill,
 			&attr, NULL);
-		gui_internal_widget_append(w, wl);
+		gui_internal_widget_append(row, wl);
 	}
 	navit_attr_iter_destroy(iter);
 	gui_internal_menu_render(this);
