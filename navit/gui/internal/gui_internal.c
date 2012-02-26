@@ -2687,34 +2687,108 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	return wl;
 }
 
+/**
+ * @brief Get icon for given POI type.
+ *
+ * @param this pointer to gui context
+ * @param type POI type
+ * @return  Pointer to graphics_image object, or NULL if no picture available. 
+ */
+static struct graphics_image * gui_internal_poi_icon(struct gui_priv *this, enum item_type type)
+{
+	struct attr layout;
+	GList *layer;
+	navit_get_attr(this->nav, attr_layout, &layout, NULL);
+	layer=layout.u.layout->layers;
+	while(layer) {
+		GList *itemgra=((struct layer *)layer->data)->itemgras;
+		while(itemgra) {
+			GList *types=((struct itemgra *)itemgra->data)->type;
+			while(types) {
+				if((int)types->data==type) {
+					GList *element=((struct itemgra *)itemgra->data)->elements;
+					while(element) {
+						struct element * el=element->data;
+						if(el->type==element_icon) {
+							struct graphics_image *img;
+							char *icon=g_strdup(el->u.icon.src);
+							char *dot=g_strrstr(icon,".");
+							dbg(0,"%s %s\n", item_to_name(type),icon);
+							if(dot)
+								*dot=0;
+							img=image_new_s(this,icon);
+							g_free(icon);
+							if(img) 
+								return img;
+						}
+						element=g_list_next(element);
+					}
+				}
+				types=g_list_next(types);	
+			}
+			itemgra=g_list_next(itemgra);
+		}
+		layer=g_list_next(layer);
+	}
+	return NULL;
+}
+
+/**
+ * @brief Widget to display POI item.
+ *
+ * @param this pointer to gui context
+ * @param center reference to the standing point where angle to be counted from
+ * @param item POI item reference
+ * @param c POI coordinates
+ * @param dist precomputed distance to POI (or -1 if it's not to be displayed)
+ * @param name POI name
+ * @return  Pointer to new widget.
+ */
 static struct widget *
 gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char* name)
 {
-	char distbuf[32];
-	char dirbuf[32];
+	char distbuf[32]="";
+	char dirbuf[32]="";
 	char *type;
 	struct widget *wl,*wt;
 	char *text;
-
-	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	struct graphics_image *icon;
 
 	if (dist > 10000)
-		sprintf(distbuf,"%d", dist/1000);
-	else
-		sprintf(distbuf,"%d.%d", dist/1000, (dist%1000)/100);
-	get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
+		sprintf(distbuf,"%d ", dist/1000);
+	else if (dist>0)
+		sprintf(distbuf,"%d.%d ", dist/1000, (dist%1000)/100);
+	if(c) {
+		int len; 		
+		get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
+		len=strlen(dirbuf);
+		dirbuf[len]=' ';
+		dirbuf[len+1]=0;
+	}
+	
 	type=item_to_name(item->type);
+
+	icon=gui_internal_poi_icon(this,item->type);
+	if(!icon) {
+		icon=image_new_s(this,"gui_inactive");
+		text=g_strdup_printf("%s%s%s %s", distbuf, dirbuf, type, name);
+	} else if(strlen(name)>0)
+		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, name);
+	else 
+		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, type);
+		
+	wl=gui_internal_button_new_with_callback(this, text, icon, gravity_left_center|orientation_horizontal|flags_fill, NULL, NULL);
+	wl->datai=dist;
+	g_free(text);
 	if (name[0]) {
 		wl->name=g_strdup_printf("%s %s",type,name);
 	} else {
 		wl->name=g_strdup(type);
 	}
-	text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, name);
-	wt=gui_internal_label_new(this, text);
-	wt->datai=dist;
-	gui_internal_widget_append(wl, wt);
-	g_free(text);
-
+	wl->func=gui_internal_cmd_position;
+	wl->data=(void *)2;
+	wl->item=*item;
+	wl->state|= STATE_SENSITIVE;
 	return wl;
 }
 
@@ -3066,10 +3140,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		if(i==(it-pagesize*pagenb) && data->dist>prevdist)
 			prevdist=data->dist;
 		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, data->dist, data->label);
-		wi->func=gui_internal_cmd_position;
-		wi->data=(void *)2;
-		wi->item=data->item;
-		wi->state |= STATE_SENSITIVE;
 		wi->c.x=data->c.x;
 		wi->c.y=data->c.y;
 		wi->c.pro=pro;
@@ -3496,10 +3566,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			} else
 				text=g_strdup_printf("%s", item_to_name(item->type));
 			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
-			gui_internal_widget_append(row,
-				wc=gui_internal_button_new_with_callback(this, text,
-				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_position, (void *)2));
+			gui_internal_widget_append(row,	wc=gui_internal_cmd_pois_item(this, NULL, itemo, NULL, -1, text));
 			wc->c=pc;
 			wc->name=g_strdup(text);
 			wc->item=*itemo;
