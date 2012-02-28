@@ -183,15 +183,15 @@ struct gui_config_settings {
   int font_size;
   /**
    * The size (in pixels) that xs style icons should be scaled to.
-   * This icon size can be too small to click it on some devices.
+   * This icon size is typically used in various lists and should be set to value which allows a list row to be easily cliked or dragged.
    */
   int icon_xs;
   /**
-   * The size (in pixels) that s style icons (small) should be scaled to
+   * The size (in pixels) that s style icons (small) should be scaled to, used for the menu top row icons
    */
   int icon_s;
   /**
-   * The size (in pixels) that l style icons should be scaled to
+   * The size (in pixels) that l style icons should be scaled to, used for icons defined in the menu html
    */
   int icon_l;
   /**
@@ -822,7 +822,7 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 			wi=l->data;
 			if (wi->img)
 				graphics_image_free(this->gra, wi->img);
-			wi->img=image_new_s(this, is_on ? "gui_active" : "gui_inactive");
+			wi->img=image_new_xs(this, is_on ? "gui_active" : "gui_inactive");
 		}
 		if (w->is_on && w->off.type == attr_none)
 			w->state &= ~STATE_SENSITIVE;
@@ -857,7 +857,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 	struct widget *ret;
 	if (!on && !off)
 		return NULL;
-	image=image_new_s(this, "gui_inactive");
+	image=image_new_xs(this, "gui_inactive");
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
 	if (on)
 		ret->on=*on;
@@ -878,7 +878,7 @@ gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags f
 {
 	struct graphics_image *image=NULL;
 	struct widget *ret;
-	image=image_new_s(this, "gui_inactive");
+	image=image_new_xs(this, "gui_inactive");
 	if (!on && !off)
 		return NULL;
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
@@ -2716,7 +2716,7 @@ static struct graphics_image * gui_internal_poi_icon(struct gui_priv *this, enum
 							dbg(0,"%s %s\n", item_to_name(type),icon);
 							if(dot)
 								*dot=0;
-							img=image_new_s(this,icon);
+							img=image_new_xs(this,icon);
 							g_free(icon);
 							if(img) 
 								return img;
@@ -2750,7 +2750,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	char distbuf[32]="";
 	char dirbuf[32]="";
 	char *type;
-	struct widget *wl,*wt;
+	struct widget *wl;
 	char *text;
 	struct graphics_image *icon;
 
@@ -2770,7 +2770,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 
 	icon=gui_internal_poi_icon(this,item->type);
 	if(!icon) {
-		icon=image_new_s(this,"gui_inactive");
+		icon=image_new_xs(this,"gui_inactive");
 		text=g_strdup_printf("%s%s%s %s", distbuf, dirbuf, type, name);
 	} else if(strlen(name)>0)
 		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, name);
@@ -3143,7 +3143,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		wi->c.x=data->c.x;
 		wi->c.y=data->c.y;
 		wi->c.pro=pro;
-		wi->w=width;
 		wi->background=this->background;
 		row = gui_internal_widget_table_row_new(this,
 							  gravity_left
@@ -5089,7 +5088,7 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 		if (map_get_attr(attr.u.map, attr_url, &url, NULL)) {
 			if (!map_get_attr(attr.u.map, attr_active, &active, NULL))
 				active.u.num=1;
-			wma=gui_internal_button_new_with_callback(this, label, image_new_s(this, active.u.num ? "gui_active" : "gui_inactive"),
+			wma=gui_internal_button_new_with_callback(this, label, image_new_xs(this, active.u.num ? "gui_active" : "gui_inactive"),
 			gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_map_download, attr.u.map);
 		} else {
@@ -5309,7 +5308,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 	gui_internal_widget_append(parent,
 		gui_internal_button_new_with_callback(
 			this, label,
-			image_new_s(this, active ? "gui_active" : "gui_inactive"),
+			image_new_xs(this, active ? "gui_active" : "gui_inactive"),
 			gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_active_profile, context));
 
@@ -5335,7 +5334,7 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Set as active"),
-				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_active_vehicle, wm->data));
 	}
 
@@ -5343,14 +5342,14 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show Satellite status"),
-				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_show_satellite_status, wm->data));
 	}
 	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
 		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show NMEA data"),
-				image_new_s(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_show_nmea_data, wm->data));
 	}
 
@@ -5386,7 +5385,7 @@ gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct 
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
 		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
 		wl=gui_internal_button_new_with_callback(this, vattr.u.str,
-			image_new_s(this, attr.u.vehicle == active_vehicle.u.vehicle ? "gui_active" : "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
+			image_new_xs(this, attr.u.vehicle == active_vehicle.u.vehicle ? "gui_active" : "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_vehicle_settings, attr.u.vehicle);
 		wl->text=g_strdup(vattr.u.str);
 		gui_internal_widget_append(w, wl);
