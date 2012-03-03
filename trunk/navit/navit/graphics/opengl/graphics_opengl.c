@@ -1346,7 +1346,6 @@ get_data(struct graphics_priv *this, char *type)
 		glUniformMatrix4fv(this->mvp_location, 1, GL_FALSE, matrix);
 #else
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glOrthox(glF(0),glF(this->width),glF(this->height),glF(0),glF(-1),glF(1));
 #endif
 		glGenTextures(1, &textures);
 		glActiveTexture(GL_TEXTURE0);
@@ -1657,10 +1656,15 @@ static void
 resize_callback(int w, int h)
 {
 	glViewport(0, 0, w, h);
-#if USE_OPENGLES
-#else
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+#if USE_OPENGLES
+#ifdef MIRRORED_VIEW
+	glOrthof(glF(w), glF(0), glF(h), glF(0), glF(1), glF(-1));
+#else
+	glOrthof(glF(0), glF(w), glF(h), glF(0), glF(1), glF(-1));
+#endif
+#else
 #ifdef MIRRORED_VIEW
 	gluOrtho2D(w, 0, h, 0.0);	//mirrored mode
 #else
