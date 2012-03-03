@@ -79,3 +79,5 @@
 #cmakedefine HAVE_GETLINE 1
 
 #cmakedefine HAVE_ENDIAN_H 1
+
+#cmakedefine HAVE_FREEIMAGE 1
