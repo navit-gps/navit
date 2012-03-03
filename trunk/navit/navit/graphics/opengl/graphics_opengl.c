@@ -17,7 +17,6 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#define USE_FREEIMAGE 1
 #define USE_OPENGLES 0
 #define USE_OPENGLES2 0
 #define USE_FLOAT 0
@@ -52,7 +51,7 @@
 #define PIXEL_FORMAT GL_BGRA
 #endif
 
-#if USE_FREEIMAGE
+#if HAVE_FREEIMAGE
 #include <FreeImage.h>
 #endif
 
@@ -98,10 +97,6 @@ extern EGLDisplay egldisplay;
 #else
 #include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
 #endif
-#endif
-
-#ifdef HAVE_FREEGLUT || __FREEGLUT_EXT_H__
-#define USE_FREEGLUT 1
 #endif
 
 #define SCREEN_WIDTH 700
@@ -357,7 +352,7 @@ static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 	  char *path, int *w, int *h, struct point *hot, int rotation)
 {
-#if USE_FREEIMAGE
+#if HAVE_FREEIMAGE
 	FIBITMAP *image;
 	RGBQUAD aPixel;
 	unsigned char *data;
@@ -1592,7 +1587,7 @@ graphics_opengl_idle(void *data)
 		opengl_init_ok = 1;
 	} else {
 		
-#if USE_FREEGLUT
+#ifdef FREEGLUT
 		glutMainLoopEvent();
 #endif
 		handle_mouse_queue();
@@ -1752,7 +1747,7 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 	glutMouseFunc(click_notify);
 	glutKeyboardFunc(ProcessNormalKeys);
 	glutSpecialFunc(ProcessSpecialKeys);
-#if USE_FREEGLUT
+#ifdef FREEGLUT
 	glutCloseFunc(glut_close);
 #endif
 	this->DLid = glGenLists(1);
