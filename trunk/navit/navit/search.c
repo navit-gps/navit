@@ -30,6 +30,7 @@
 #include "transform.h"
 #include "search.h"
 #include "country.h"
+#include "linguistics.h"
 
 #if HAVE_API_ANDROID
 #include "android.h"
@@ -685,6 +686,122 @@ search_add_result(struct search_list_level *le, struct search_list_common *slc)
 		slo->postal_mask=merged;
 	}
 	return 0;
+}
+
+static char *
+search_list_get_unique_truncate(char *common, char *result)
+{
+	dbg(0,"%s vs %s\n",common,result);
+	while (*common) {
+		if (g_utf8_get_char(common) != g_utf8_get_char(result)) {
+			dbg(0,"truncating at %s vs %s\n",common,result);
+			return common;
+		}
+		result=g_utf8_next_char(result);
+		common=g_utf8_next_char(common);
+	}
+	return common;
+}
+
+static char *
+search_list_get_unique_append(char *list, char *append)
+{
+	char *c=list;
+	int llen=list?strlen(list):0;
+	int len=g_utf8_next_char(append)-append;
+	gunichar a=g_utf8_get_char(append);
+	while(c && *c) {
+		if (g_utf8_get_char(c) == a)
+			return list;
+		c=g_utf8_next_char(c);
+	}
+	list=g_renew(char, list, llen+len+1);
+	strncpy(list+llen,append,len);
+	list[llen+len]='\0';
+	return list;
+}
+
+char *
+search_list_get_unique(struct search_list *this_, char *unique)
+{
+	int level=this_->level;
+	struct search_list_level *le=&this_->levels[level];
+	struct search_list_country *slc;
+	struct search_list_town *slt;
+	char *retf=NULL,*ret=NULL;
+	char *strings[4]={NULL,};
+	char *search=g_utf8_casefold(unique?unique:le->attr->u.str,-1);
+	char *name,*max;
+	int search_len=strlen(search);
+	int i,count=sizeof(strings)/sizeof(char *);
+
+	dbg(0,"enter level=%d %s\n",level,search);
+	GList *l=le->list;
+	while (l) {
+		switch (level) {
+		case 0:
+			slc=l->data;
+			strings[0]=g_strdup(slc->name);
+			strings[1]=g_strdup(slc->car);
+			strings[2]=g_strdup(slc->iso2);
+			strings[3]=g_strdup(slc->iso3);
+			break;
+		case 1:
+			slt=l->data;
+			name=slt->common.town_name;
+			for (i = 0 ; i < 3 ; i++)
+				strings[i]=linguistics_expand_special(name, i);
+			break;
+		default:
+			dbg(0,"entry\n");
+		}
+		dbg(0,"entry %s %s %s %s\n",strings[0],strings[1],strings[2],strings[3]);
+		max=NULL;
+		for (i = 0 ; i < count ; i++) {
+			char *str=strings[i];
+			while (str) {
+				char *strf=g_utf8_casefold(str,-1);
+				dbg(0,"word %s\n",strf);
+				if (!strncmp(strf, search, search_len)) {
+					dbg(0,"match\n");
+					if (unique) {
+						dbg(0,"possible next %s %s ret %s\n",strf+search_len,str+search_len,ret);
+						ret=search_list_get_unique_append(ret, strf+search_len);
+						ret=search_list_get_unique_append(ret, str+search_len);
+						dbg(0,"ret now %s\n",ret);
+					} else {
+						if (!ret) {
+							ret=g_strdup(str);
+							retf=g_utf8_casefold(ret,-1);
+							dbg(0,"ret now %s\n",ret);
+						} else {
+							char *end=search_list_get_unique_truncate(retf,strf);
+							dbg(0,"%d characters\n",end-retf);
+							if (!max || max < end)
+								max=end;
+						}
+					}
+				}
+				g_free(strf);
+				str=linguistics_next_word(str);
+			}
+			g_free(strings[i]);
+		}
+		if (!unique) {
+			if (max) {
+				dbg(0,"max %s (%d characters)\n",max,max-retf);
+				ret[max-retf]='\0';
+			} else {
+				dbg(0,"new max\n");
+			}
+		}
+		dbg(0,"common %s\n",ret);
+		l=g_list_next(l);
+	}
+	g_free(search);
+	g_free(retf);
+	dbg(0,"return %s\n",ret);
+	return ret;
 }
 
 /**
