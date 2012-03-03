@@ -59,12 +59,24 @@
 #if USE_OPENGLES2
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
-#define glF(x)  x
-#define GL_F    GL_FLOAT
-typedef GLfloat GLf;
+#undef USE_FLOAT
+#define USE_FLOAT 1
 #else
 #include <GLES/gl.h>
 #include <GLES/egl.h>
+#endif
+extern EGLSurface eglwindow;
+extern EGLDisplay egldisplay;
+#else
+#define glOrthof	glOrtho
+#undef USE_FLOAT
+#define USE_FLOAT 1
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
+#endif
+#endif
 
 #if USE_FLOAT
 #define glF(x)  x
@@ -87,17 +99,6 @@ typedef GLfixed GLf;
 #define glColor4f       glColor4x
 #endif
 #define glTexParameteri       glTexParameterx
-
-#endif
-extern EGLSurface eglwindow;
-extern EGLDisplay egldisplay;
-#else
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
-#endif
-#endif
 
 #define SCREEN_WIDTH 700
 #define SCREEN_HEIGHT 700
@@ -1658,20 +1659,11 @@ resize_callback(int w, int h)
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-#if USE_OPENGLES
 #ifdef MIRRORED_VIEW
 	glOrthof(glF(w), glF(0), glF(h), glF(0), glF(1), glF(-1));
 #else
 	glOrthof(glF(0), glF(w), glF(h), glF(0), glF(1), glF(-1));
 #endif
-#else
-#ifdef MIRRORED_VIEW
-	gluOrtho2D(w, 0, h, 0.0);	//mirrored mode
-#else
-	gluOrtho2D(0, w, h, 0.0);
-#endif
-#endif
-
 	graphics_priv_root->width = w;
 	graphics_priv_root->height = h;
 
