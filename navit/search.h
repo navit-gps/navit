@@ -81,6 +81,7 @@ void search_list_search(struct search_list *this_, struct attr *search_attr, int
 char *search_postal_merge(char *mask, char *new_);
 char *search_postal_merge_replace(char *mask, char *new_);
 struct search_list_common *search_list_select(struct search_list *this_, enum attr_type attr_type, int id, int mode);
+char *search_list_get_unique(struct search_list *this_, char *unique);
 struct search_list_result *search_list_get_result(struct search_list *this_);
 void search_list_destroy(struct search_list *this_);
 void search_init(void);
