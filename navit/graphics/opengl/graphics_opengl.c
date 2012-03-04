@@ -516,7 +516,6 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 #endif
 }
 
-#ifdef USE_OPENGLES
 
 static void
 set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
@@ -536,23 +535,35 @@ set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void
 draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode)
 {
-	GLf x[count*2];
 	int i;
+#ifdef USE_OPENGLES
+	GLf x[count*2];
+#else
+	glBegin(mode);
+#endif
 
 	for (i = 0 ; i < count ; i++) {
+#ifdef USE_OPENGLES
 		x[i*2]=glF(p[i].x);
 		x[i*2+1]=glF(p[i].y);
+#else
+		glVertex2f(p[i].x, p[i].y);
+#endif
 	}
+#ifdef USE_OPENGLES
 #ifdef USE_OPENGLES2
 	glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
 #else
 	glVertexPointer(2, GL_F, 0, x);
 #endif
     	glDrawArrays(mode, 0, count);
+#else
+	glEnd();
+#endif
 }
 
 static void
-draw_rectangle_es(struct graphics_priv *gr, struct point *p, int w, int h)
+draw_rectangle_do(struct graphics_priv *gr, struct point *p, int w, int h)
 {
 	struct point pa[4];
 	pa[0]=pa[1]=pa[2]=pa[3]=*p;
@@ -562,6 +573,8 @@ draw_rectangle_es(struct graphics_priv *gr, struct point *p, int w, int h)
 	pa[3].y+=h;
 	draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
 }
+
+#ifdef USE_OPENGLES
 
 static int next_power2(int x)
 {
@@ -609,7 +622,7 @@ draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned 
 #endif
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	draw_rectangle_es(gr, p, w, h);
+	draw_rectangle_do(gr, p, w, h);
 #ifdef USE_OPENGLES2
 	glUniform1i(gr->use_texture_location, 0);
 	glDisableVertexAttribArray(gr->texture_position_location);
@@ -725,27 +738,17 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 #if !defined(USE_OPENGLES) || defined(USE_OPENGLES2)
 	glLineWidth(gc->linewidth);
 #endif
-#ifdef USE_OPENGLES
 	set_color(gr, gc);
-	draw_array(gr, p, count, GL_LINE_STRIP);
-#else
-
 	graphics_priv_root->dirty = 1;
 
-	glColor4f(gc->fr, gc->fg, gc->fb, gc->fa);
+#ifndef USE_OPENGLES
 	if (!gr->parent && 0 < gc->dash_count) {
 		glLineStipple(1, gc->dash_mask);
 		glEnable(GL_LINE_STIPPLE);
 	}
-	glBegin(GL_LINE_STRIP);
-	int i;
-	for (i = 0; i < count; i++) {
-		struct point p_eff;
-		p_eff.x = p[i].x;
-		p_eff.y = p[i].y;
-		glVertex2f(p_eff.x, p_eff.y);
-	}
-	glEnd();
+#endif
+	draw_array(gr, p, count, GL_LINE_STRIP);
+#ifndef USE_OPENGLES
 	if (!gr->parent && 0 < gc->dash_count) {
 		glDisable(GL_LINE_STIPPLE);
 	}
@@ -832,61 +835,9 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-#ifdef USE_OPENGLES
 	set_color(gr, gc);
-	draw_rectangle_es(gr, p, w, h);
-#else
-
+	draw_rectangle_do(gr, p, w, h);
 	graphics_priv_root->dirty = 1;
-
-	struct point p_eff;
-	p_eff.x = p->x;
-	p_eff.y = p->y;
-
-	glColor4f(gc->fr, gc->fg, gc->fb, gc->fa);
-	glBegin(GL_POLYGON);
-	glVertex2f(p_eff.x, p_eff.y);
-	glVertex2f(p_eff.x + w, p_eff.y);
-	glVertex2f(p_eff.x + w, p_eff.y + h);
-	glVertex2f(p_eff.x, p_eff.y + h);
-	glEnd();
-#endif
-}
-
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-	    struct point *p, int r)
-{
-#ifdef USE_OPENGLES
-#else
-	if ((gr->parent && !gr->parent->overlay_enabled)
-	    || (gr->parent && gr->parent->overlay_enabled
-		&& !gr->overlay_enabled)) {
-		return;
-	}
-
-	graphics_priv_root->dirty = 1;
-
-	/* FIXME: does not quite match gtk */
-	/* hack for osd compass.. why is this needed!? */
-	if (gr->parent) {
-		r = r / 2;
-	}
-
-	struct point p_eff;
-	p_eff.x = p->x;
-	p_eff.y = p->y;
-
-	GLUquadricObj *quadratic;
-	quadratic = gluNewQuadric();
-	glPushMatrix();
-	glTranslatef(p_eff.x, p_eff.y, 0);
-	glColor4f(gc->fr, gc->fg, gc->fb, gc->fa);
-	gluDisk(quadratic, r - (gc->linewidth / 2) - 2,
-		r + (gc->linewidth / 2), 10 + r / 5, 10 + r / 5);
-	glPopMatrix();
-	gluDeleteQuadric(quadratic);
-#endif
 }
 
 static void
@@ -1455,11 +1406,7 @@ static struct graphics_methods graphics_methods = {
 	draw_lines,
 	draw_polygon,
 	draw_rectangle,
-#ifdef USE_OPENGLES
 	NULL,
-#else
-	draw_circle,
-#endif
 	draw_text,
 	draw_image,
 	draw_image_warp,
