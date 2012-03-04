@@ -64,6 +64,15 @@
 #include <GLES/gl.h>
 #include <GLES/egl.h>
 #endif
+#ifdef USE_GLUT_FOR_OPENGLES
+#define APIENTRY
+#define GLU_TESS_BEGIN                     100100
+#define GLU_TESS_VERTEX                    100101
+#define GLU_TESS_END                       100102
+#define GLU_TESS_COMBINE                   100105
+typedef struct GLUtesselator GLUtesselator;
+typedef double GLdouble;
+#endif
 #else
 #define glOrthof	glOrtho
 #undef USE_FLOAT
@@ -634,77 +643,6 @@ draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned 
 }
 
 
-#else
-const char *
-getPrimitiveType(GLenum type)
-{
-	char *ret = "";
-
-	switch (type) {
-	case 0x0000:
-		ret = "GL_POINTS";
-		break;
-	case 0x0001:
-		ret = "GL_LINES";
-		break;
-	case 0x0002:
-		ret = "GL_LINE_LOOP";
-		break;
-	case 0x0003:
-		ret = "GL_LINE_STRIP";
-		break;
-	case 0x0004:
-		ret = "GL_TRIANGLES";
-		break;
-	case 0x0005:
-		ret = "GL_TRIANGLE_STRIP";
-		break;
-	case 0x0006:
-		ret = "GL_TRIANGLE_FAN";
-		break;
-	case 0x0007:
-		ret = "GL_QUADS";
-		break;
-	case 0x0008:
-		ret = "GL_QUAD_STRIP";
-		break;
-	case 0x0009:
-		ret = "GL_POLYGON";
-		break;
-	}
-	return ret;
-}
-
-void APIENTRY
-tessBeginCB(GLenum which)
-{
-	glBegin(which);
-
-	dbg(1, "glBegin( %s );\n", getPrimitiveType(which));
-}
-
-
-
-void APIENTRY
-tessEndCB()
-{
-	glEnd();
-
-	dbg(1, "glEnd();\n");
-}
-
-
-
-void APIENTRY
-tessVertexCB(const GLvoid * data)
-{
-	// cast back to double type
-	const GLdouble *ptr = (const GLdouble *) data;
-
-	glVertex3dv(ptr);
-
-	dbg(1, "  glVertex3d();\n");
-}
 #endif
 
 static void
@@ -755,8 +693,85 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 #endif
 }
 
-#ifdef USE_OPENGLES
-#else
+#if !defined(USE_OPENGLES) || defined(USE_GLUT_FOR_OPENGLES)
+static int tess_count;
+static struct point tess_array[512];
+static GLenum tess_type;
+
+const char *
+getPrimitiveType(GLenum type)
+{
+	char *ret = "";
+
+	switch (type) {
+	case 0x0000:
+		ret = "GL_POINTS";
+		break;
+	case 0x0001:
+		ret = "GL_LINES";
+		break;
+	case 0x0002:
+		ret = "GL_LINE_LOOP";
+		break;
+	case 0x0003:
+		ret = "GL_LINE_STRIP";
+		break;
+	case 0x0004:
+		ret = "GL_TRIANGLES";
+		break;
+	case 0x0005:
+		ret = "GL_TRIANGLE_STRIP";
+		break;
+	case 0x0006:
+		ret = "GL_TRIANGLE_FAN";
+		break;
+	case 0x0007:
+		ret = "GL_QUADS";
+		break;
+	case 0x0008:
+		ret = "GL_QUAD_STRIP";
+		break;
+	case 0x0009:
+		ret = "GL_POLYGON";
+		break;
+	}
+	return ret;
+}
+
+void APIENTRY
+tessBeginCB(GLenum which)
+{
+	dbg(1, "glBegin( %s );\n", getPrimitiveType(which));
+	tess_type=which;
+	tess_count=0;
+}
+
+
+
+void APIENTRY
+tessEndCB()
+{
+	dbg(1, "glEnd();\n");
+	draw_array(graphics_priv_root, tess_array, tess_count, tess_type);
+}
+
+
+
+void APIENTRY
+tessVertexCB(const GLvoid * data)
+{
+	// cast back to double type
+	const GLdouble *ptr = (const GLdouble *) data;
+	dbg(1, "  glVertex3d();\n");
+
+	tess_array[tess_count].x=ptr[0];
+	tess_array[tess_count].y=ptr[1];
+	if (tess_count < 511)
+		tess_count++;
+	else
+		dbg(0,"overflow\n");
+}
+
 void APIENTRY
 tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
 {
@@ -766,6 +781,7 @@ tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
 	nv[2] = c[2];
 	*out = nv;
 }
+
 #endif
 
 
@@ -778,11 +794,11 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-#ifdef USE_OPENGLES
 	set_color(gr, gc);
+	graphics_priv_root->dirty = 1;
+#if defined(USE_OPENGLES) && !defined(USE_GLUT_FOR_OPENGLES)
 	draw_array(gr, p, count, GL_LINE_STRIP);
 #else
-	graphics_priv_root->dirty = 1;
 
 	GLUtesselator *tess = gluNewTess();	// create a tessellator
 	if (!tess)
@@ -813,7 +829,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	// and UV coords which are needed for actual drawing.
 	// Here, we are looking at only vertex coods, so the 2nd and 3rd params are
 	// pointing same address.
-	glColor4f(gc->fr, gc->fg, gc->fb, gc->fa);
 	gluTessBeginPolygon(tess, 0);	// with NULL data
 	gluTessBeginContour(tess);
 	for (i = 0; i < count; i++) {
