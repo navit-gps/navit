@@ -43,6 +43,10 @@ if (EXTRA_INCLUDES)
     include_directories(${EXTRA_INCLUDES})
 endif(EXTRA_INCLUDES)
 
+if (EXTRA_LIBDIR)
+    link_directories(${EXTRA_LIBDIR})
+endif(EXTRA_LIBDIR)
+
 ### Detect environment
 
 add_plugin(support/ezxml "native Glib found" FALSE)
