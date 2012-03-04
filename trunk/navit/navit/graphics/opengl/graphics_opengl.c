@@ -17,8 +17,6 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#define USE_OPENGLES 0
-#define USE_OPENGLES2 0
 #define USE_FLOAT 0
 #define REQUIRES_POWER_OF_2 0
 
@@ -55,8 +53,8 @@
 #include <FreeImage.h>
 #endif
 
-#if USE_OPENGLES
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES
+#ifdef USE_OPENGLES2
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #undef USE_FLOAT
@@ -137,7 +135,7 @@ struct graphics_priv {
 	void (*button_callback) (void *data, int press, int button,
 				 struct point * p);
 	void *button_callback_data;
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 	GLuint program;
 	GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location, texture_location;
 #else
@@ -179,7 +177,7 @@ static struct mouse_event_queue_element mouse_queue[100];
 //hastable for uncompressed image data
 static GHashTable *hImageData;
 
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 /*  prototypes */
 void APIENTRY tessBeginCB(GLenum which);
@@ -198,7 +196,7 @@ static void display(void);
 static void resize_callback(int w, int h);
 static void glut_close();
 
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 const char vertex_src [] =
 "                                        \
    attribute vec2        position;       \
@@ -513,12 +511,12 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 #endif
 }
 
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 
 static void
 set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	GLfloat col[4];
 	col[0]=gc->fr;
 	col[1]=gc->fg;
@@ -540,7 +538,7 @@ draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode)
 		x[i*2]=glF(p[i].x);
 		x[i*2+1]=glF(p[i].y);
 	}
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
 #else
 	glVertexPointer(2, GL_F, 0, x);
@@ -595,7 +593,7 @@ draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned 
 	x[2]+=glF(1);
 	x[3]+=glF(1);
 	x[7]+=glF(1);
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	glUniform1i(gr->use_texture_location, 1);
 	glEnableVertexAttribArray(gr->texture_position_location);
 	glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x );
@@ -607,7 +605,7 @@ draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	draw_rectangle_es(gr, p, w, h);
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	glUniform1i(gr->use_texture_location, 0);
 	glDisableVertexAttribArray(gr->texture_position_location);
 #else
@@ -719,10 +717,10 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-#if !USE_OPENGLES || USE_OPENGLES2
+#if !defined(USE_OPENGLES) || defined(USE_OPENGLES2)
 	glLineWidth(gc->linewidth);
 #endif
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 	set_color(gr, gc);
 	draw_array(gr, p, count, GL_LINE_STRIP);
 #else
@@ -749,7 +747,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 #endif
 }
 
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 void APIENTRY
 tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
@@ -767,14 +765,12 @@ static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	     struct point *p, int count)
 {
-	int i;
-
 	if ((gr->parent && !gr->parent->overlay_enabled)
 	    || (gr->parent && gr->parent->overlay_enabled
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 	set_color(gr, gc);
 	draw_array(gr, p, count, GL_LINE_STRIP);
 #else
@@ -785,6 +781,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		return;		// failed to create tessellation object, return 0
 
 	GLdouble quad1[count][3];
+	int i;
 	for (i = 0; i < count; i++) {
 		quad1[i][0] = (GLdouble) (p[i].x);
 		quad1[i][1] = (GLdouble) (p[i].y);
@@ -830,7 +827,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		&& !gr->overlay_enabled)) {
 		return;
 	}
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 	set_color(gr, gc);
 	draw_rectangle_es(gr, p, w, h);
 #else
@@ -855,7 +852,7 @@ static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	    struct point *p, int r)
 {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 	if ((gr->parent && !gr->parent->overlay_enabled)
 	    || (gr->parent && gr->parent->overlay_enabled
@@ -949,7 +946,7 @@ display_text_draw(struct font_freetype_text *text,
 								32, stride,
 								&white,
 								&transparent);
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 				struct point p;
 				p.x=((x + g->x) >> 6)-1;
 				p.y=((y + g->y) >> 6)-1;
@@ -992,7 +989,7 @@ display_text_draw(struct font_freetype_text *text,
 								       &black,
 								       &white,
 								       &transparent);
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 					struct point p;
 					p.x=(x + g->x) >> 6;
 					p.y=(y + g->y) >> 6;
@@ -1018,7 +1015,7 @@ display_text_draw(struct font_freetype_text *text,
 							       &black,
 							       &white,
 							       &transparent);
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 				struct point p;
 				p.x=(x + g->x) >> 6;
 				p.y=(y + g->y) >> 6;
@@ -1080,7 +1077,7 @@ static void
 draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 	   struct point *p, struct graphics_image_priv *img)
 {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 	draw_image_es(gr, p, img->w, img->h, img->data);
 #else
 	if ((gr->parent && !gr->parent->overlay_enabled)
@@ -1138,7 +1135,7 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void
 handle_mouse_queue()
 {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 	static locked = 0;
 	if (!locked) {
@@ -1190,7 +1187,7 @@ handle_mouse_queue()
 static int
 redraw_screen(struct graphics_priv *gr)
 {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 	time_t curr_time = time(0);
 	graphics_priv_root->dirty = 0;
@@ -1217,6 +1214,7 @@ redraw_screen(struct graphics_priv *gr)
 }
 
 
+#ifndef USE_OPENGLES
 /*filters call to redraw in overlay enabled(map) mode*/
 static void
 redraw_filter(struct graphics_priv *gr)
@@ -1225,6 +1223,7 @@ redraw_filter(struct graphics_priv *gr)
 		redraw_screen(gr);
 	}
 }
+#endif
 
 
 
@@ -1232,7 +1231,7 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (gr->parent) {	//overlay
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 		if (mode == draw_mode_begin) {
 			glNewList(gr->DLid, GL_COMPILE);
@@ -1244,14 +1243,14 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 	} else {		//root graphics
 		if (mode == draw_mode_begin) {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 			glNewList(gr->DLid, GL_COMPILE);
 #endif
 		}
 
 		if (mode == draw_mode_end) {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 			eglSwapBuffers(egldisplay, eglwindow);
 #else
 			glEndList();
@@ -1281,7 +1280,7 @@ graphics_opengl_disable_suspend(struct window *w)
 {
 }
 
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 static GLuint
 load_shader(const char *shader_source, GLenum type)
 {
@@ -1301,11 +1300,11 @@ get_data(struct graphics_priv *this, char *type)
 	if (!strcmp(type, "gtk_widget")) {
 		fprintf(stderr,
 			"Currently GTK gui is not yet supported with opengl graphics driver\n");
-		exit(-1);
+		return NULL;
 	}
 	if (strcmp(type, "window") == 0) {
 		struct window *win;
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 		GLuint vertexShader;
 		GLuint fragmentShader;
 		GLuint textures;
@@ -1318,7 +1317,7 @@ get_data(struct graphics_priv *this, char *type)
 		glClearColor ( 0.4 , 0.4 , 0.4 , 1);
 #endif
 		glClear ( GL_COLOR_BUFFER_BIT );
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 		this->program=glCreateProgram();
 		vertexShader = load_shader(vertex_src, GL_VERTEX_SHADER);
 		fragmentShader = load_shader(fragment_src, GL_FRAGMENT_SHADER);
@@ -1351,12 +1350,12 @@ get_data(struct graphics_priv *this, char *type)
 		glGenTextures(1, &textures);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures);
+#ifndef USE_OPENGLES2
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-#if !USE_OPENGLES2
    		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 #endif
 #endif
@@ -1366,7 +1365,7 @@ get_data(struct graphics_priv *this, char *type)
 		win->disable_suspend = graphics_opengl_disable_suspend;
 		return win;
 	} else {
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 		return NULL;
 #else
 		return &this->DLid;
@@ -1529,7 +1528,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 
 	this->next = gr->overlays;
 	gr->overlays = this;
-#if USE_OPENGLES
+#ifdef USE_OPENGLES
 #else
 	this->DLid = glGenLists(1);
 #endif
@@ -1571,11 +1570,10 @@ motion_notify(int x, int y)
 	return;
 }
 
+#ifndef USE_OPENGLES
 static gboolean
 graphics_opengl_idle(void *data)
 {
-#if USE_OPENGLES
-#else
 	static int opengl_init_ok = 0;
 	if (!opengl_init_ok) {
 		callback_list_call_attr_2(graphics_priv_root->cbl,
@@ -1593,8 +1591,8 @@ graphics_opengl_idle(void *data)
 		handle_mouse_queue();
 	}
 	return TRUE;
-#endif
 }
+#endif
 
 static void
 ProcessNormalKeys(unsigned char key_in, int x, int y)
@@ -1657,12 +1655,14 @@ static void
 resize_callback(int w, int h)
 {
 	glViewport(0, 0, w, h);
+#ifndef USE_OPENGLES2
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 #ifdef MIRRORED_VIEW
 	glOrthof(glF(w), glF(0), glF(h), glF(0), glF(1), glF(-1));
 #else
 	glOrthof(glF(0), glF(w), glF(h), glF(0), glF(1), glF(-1));
+#endif
 #endif
 	graphics_priv_root->width = w;
 	graphics_priv_root->height = h;
@@ -1720,7 +1720,7 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 
 	char *cmdline = "";
 	int argc = 0;
-#if !USE_OPENGLES
+#ifndef USE_OPENGLES
 	glutInit(&argc, &cmdline);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
@@ -1737,7 +1737,7 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 	graphics_priv_root->width = this->width;
 	graphics_priv_root->height = this->height;
 
-#if !USE_OPENGLES
+#ifndef USE_OPENGLES
 	glutMotionFunc(motion_notify);
 	glutPassiveMotionFunc(motion_notify);
 	glutMouseFunc(click_notify);
@@ -1747,12 +1747,12 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 	glutCloseFunc(glut_close);
 #endif
 	this->DLid = glGenLists(1);
-#endif
 
 	g_timeout_add(G_PRIORITY_DEFAULT + 10, graphics_opengl_idle, NULL);
 
 	/*this will only refresh screen in map(overlay enabled) mode */
 	g_timeout_add(G_PRIORITY_DEFAULT + 1000, redraw_filter, this);
+#endif
 
 	//create hash table for uncompressed image data
 	hImageData = g_hash_table_new(g_str_hash, g_str_equal);
