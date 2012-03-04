@@ -40,6 +40,7 @@
 #include "keys.h"
 #include "window.h"
 #include "navit/font/freetype/font_freetype.h"
+#include "graphics_opengl.h"
 
 #if defined(WINDOWS) || defined(WIN32)
 #define PIXEL_FORMAT GL_RGBA
@@ -63,8 +64,6 @@
 #include <GLES/gl.h>
 #include <GLES/egl.h>
 #endif
-extern EGLSurface eglwindow;
-extern EGLDisplay egldisplay;
 #else
 #define glOrthof	glOrtho
 #undef USE_FLOAT
@@ -150,6 +149,10 @@ struct graphics_priv {
 	int dirty;		//display needs to be redrawn (draw on root graphics or overlay is done)
 	int force_redraw;	//display needs to be redrawn (draw on root graphics or overlay is done)
 	time_t last_refresh_time;	//last display refresh time
+	struct graphics_opengl_window_system *window_system;
+	struct graphics_opengl_window_system_methods *window_system_methods;
+	struct graphics_opengl_platform *platform;
+	struct graphics_opengl_platform_methods *platform_methods;
 };
 
 static struct graphics_priv *graphics_priv_root;
@@ -1251,7 +1254,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 		if (mode == draw_mode_end) {
 #ifdef USE_OPENGLES
-			eglSwapBuffers(egldisplay, eglwindow);
+			gr->platform_methods->swap_buffers(gr->platform);
 #else
 			glEndList();
 			gr->force_redraw = 1;
@@ -1311,7 +1314,10 @@ get_data(struct graphics_priv *this, char *type)
 		GLfloat matrix[16];
 		int i;
 
-		createEGLWindow(this->width,this->height,"Navit");
+		this->window_system=graphics_opengl_x11_new(this->width, this->height, 32, &this->window_system_methods);
+		this->platform=graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
+						       this->window_system_methods->get_window(this->window_system),
+						       &this->platform_methods);
 		resize_callback(this->width,this->height);
 #if 0
 		glClearColor ( 0.4 , 0.4 , 0.4 , 1);
