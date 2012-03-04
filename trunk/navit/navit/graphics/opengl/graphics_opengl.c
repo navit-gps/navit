@@ -95,7 +95,6 @@ typedef GLfixed GLf;
 #define glScalef        glScalex
 #define glColor4f       glColor4x
 #endif
-#define glTexParameteri       glTexParameterx
 
 #define SCREEN_WIDTH 700
 #define SCREEN_HEIGHT 700
@@ -1356,12 +1355,11 @@ get_data(struct graphics_priv *this, char *type)
 		glGenTextures(1, &textures);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures);
-#ifndef USE_OPENGLES2
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+#ifndef USE_OPENGLES2
    		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 #endif
 #endif
