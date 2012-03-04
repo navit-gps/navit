@@ -196,6 +196,9 @@ static struct graphics_priv *graphics_opengl_new_helper(struct
 							*meth);
 static void display(void);
 static void resize_callback(int w, int h);
+static void click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y);
+static void motion_notify_do(struct graphics_priv *priv, int x, int y);
+static void resize_callback_do(struct graphics_priv *priv, int w, int h);
 static void glut_close();
 
 #ifdef USE_OPENGLES2
@@ -1313,10 +1316,11 @@ get_data(struct graphics_priv *this, char *type)
 		GLfloat matrix[16];
 		int i;
 
-		this->window_system=graphics_opengl_x11_new(this->width, this->height, 32, &this->window_system_methods);
+		this->window_system=graphics_opengl_x11_new(NULL, this->width, this->height, 32, &this->window_system_methods);
 		this->platform=graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
 						       this->window_system_methods->get_window(this->window_system),
 						       &this->platform_methods);
+		this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do, motion_notify_do, NULL);
 		resize_callback(this->width,this->height);
 #if 0
 		glClearColor ( 0.4 , 0.4 , 0.4 , 1);
@@ -1541,6 +1545,14 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 
 
 static void
+click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y)
+{
+	struct point p={x,y};
+	dbg(0,"enter state %d button %d\n",state,button);
+	callback_list_call_attr_3(priv->cbl, attr_button, (void *) state, (void *)button, (void *) &p);
+}
+
+static void
 click_notify(int button, int state, int x, int y)
 {
 	mouse_queue[mouse_event_queue_end_idx %
@@ -1560,18 +1572,24 @@ click_notify(int button, int state, int x, int y)
 }
 
 static void
-motion_notify(int x, int y)
+motion_notify_do(struct graphics_priv *priv, int x, int y)
 {
 	struct point p;
 #ifdef MIRRORED_VIEW
-	p.x = graphics_priv_root->width - x;
+	p.x = priv->width - x;
 #else
 	p.x = x;
 #endif
 	p.y = y;
-	callback_list_call_attr_1(graphics_priv_root->cbl, attr_motion,
+	callback_list_call_attr_1(priv->cbl, attr_motion,
 				  (void *) &p);
 	return;
+}
+
+static void
+motion_notify(int x, int y)
+{
+	motion_notify_do(graphics_priv_root, x, y);
 }
 
 #ifndef USE_OPENGLES
@@ -1656,7 +1674,7 @@ ProcessSpecialKeys(int key_in, int x, int y)
 }
 
 static void
-resize_callback(int w, int h)
+resize_callback_do(struct graphics_priv *priv, int w, int h)
 {
 	glViewport(0, 0, w, h);
 #ifndef USE_OPENGLES2
@@ -1668,11 +1686,17 @@ resize_callback(int w, int h)
 	glOrthof(glF(0), glF(w), glF(h), glF(0), glF(1), glF(-1));
 #endif
 #endif
-	graphics_priv_root->width = w;
-	graphics_priv_root->height = h;
+	priv->width = w;
+	priv->height = h;
 
-	callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize,
+	callback_list_call_attr_2(priv->cbl, attr_resize,
 				  GINT_TO_POINTER(w), GINT_TO_POINTER(h));
+}
+
+static void
+resize_callback(int w, int h)
+{
+	resize_callback_do(graphics_priv_root, w, h);
 }
 
 static void
