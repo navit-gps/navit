@@ -81,3 +81,7 @@
 #cmakedefine HAVE_ENDIAN_H 1
 
 #cmakedefine HAVE_FREEIMAGE 1
+
+#cmakedefine USE_OPENGLES 1
+
+#cmakedefine USE_OPENGLES2 1

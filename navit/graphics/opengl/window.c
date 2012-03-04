@@ -1,6 +1,5 @@
-#define USE_OPENGLES2 1
-
-#if USE_OPENGLES2
+#include "config.h"
+#ifdef USE_OPENGLES2
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #else
@@ -16,7 +15,7 @@ EGLDisplay egldisplay;
 Display *dpy;
 Window window;
 
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 static EGLint attributeList[] = {
 	EGL_RED_SIZE, 8,
 	EGL_GREEN_SIZE, 8,
@@ -46,7 +45,7 @@ createEGLWindow(int width, int height, char *name)
 	XVisualInfo *vi, tmp;
 	int vid, n;
 
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	EGLint aEGLContextAttributes[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
 		EGL_NONE
@@ -62,7 +61,7 @@ createEGLWindow(int width, int height, char *name)
 		dbg(0, "can't find requested config\n");
 		return 0;
 	}
-#if USE_OPENGLES2
+#ifdef USE_OPENGLES2
 	cx = eglCreateContext(egldisplay, config[0], EGL_NO_CONTEXT, aEGLContextAttributes);
 #else
 	cx = eglCreateContext(egldisplay, config[0], EGL_NO_CONTEXT, NULL);
