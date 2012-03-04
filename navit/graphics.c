@@ -1841,7 +1841,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		display_draw_arrows(gra,gc,pa,count);
 		break;
 	default:
-		printf("Unhandled element type %d\n", e->type);
+		dbg(0, "Unhandled element type %d\n", e->type);
 
 	}
 	di=di->next;
