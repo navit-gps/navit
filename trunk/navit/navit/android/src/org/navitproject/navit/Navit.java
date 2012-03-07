@@ -66,9 +66,9 @@ public class Navit extends Activity
 	public static final class NavitAddress
 	{
 		String	result_type;	// TWN,STR,SHN
-		String	item_id;		// H<ddddd>L<ddddd> -> item.id_hi item.id_lo
-		float		lat;
-		float		lon;
+		String	item_id;	// H<ddddd>L<ddddd> -> item.id_hi item.id_lo
+		float	lat;
+		float	lon;
 		String	addr;
 	}
 
@@ -95,8 +95,7 @@ public class Navit extends Activity
 	public static final int          NavitAddressSearch_id          = 70;
 	public static final int          NavitAddressResultList_id      = 71;
 
-	public static List<NavitAddress>	NavitAddressResultList_foundItems	
-	         = new ArrayList<NavitAddress>();
+	public static List<NavitAddress> NavitAddressResultList_foundItems = new ArrayList<NavitAddress>();
 
 	public static final int          MAP_NUM_SECONDARY              = 12;
 	static final String              MAP_FILENAME_PATH              = "/sdcard/navit/";
@@ -120,7 +119,9 @@ public class Navit extends Activity
 		Log.e("Navit", "result " + result);
 		int id = res.getIdentifier(resname, "raw", "org.navitproject.navit");
 		Log.e("Navit", "Res ID " + id);
-		if (id == 0) return false;
+		if (id == 0) 
+			return false;
+
 		while ((slash = result.indexOf("/", slash + 1)) != -1)
 		{
 			if (slash != 0)
@@ -130,13 +131,17 @@ public class Navit extends Activity
 				if (!resultfile.exists())
 				{
 					Log.e("Navit", "Creating dir");
-					if (!resultfile.mkdir()) return false;
+					if (!resultfile.mkdir())
+						return false;
 					needs_update = true;
 				}
 			}
 		}
+
 		resultfile = new File(result);
-		if (!resultfile.exists()) needs_update = true;
+		if (!resultfile.exists()) 
+			needs_update = true;
+
 		if (!needs_update)
 		{
 			try
@@ -217,9 +222,7 @@ public class Navit extends Activity
 			message.setFadingEdgeLength(20);
 			message.setVerticalFadingEdgeEnabled(true);
 			// message.setVerticalScrollBarEnabled(true);
-			RelativeLayout.LayoutParams rlp =
-			        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
-			                RelativeLayout.LayoutParams.FILL_PARENT);
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
 	
 			message.setLayoutParams(rlp);
 			final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT); // TRANS
@@ -373,8 +376,7 @@ public class Navit extends Activity
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
-				"NavitDoNotDimScreen");
+		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"NavitDoNotDimScreen");
 
 		if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo"))
 		{
@@ -486,8 +488,7 @@ public class Navit extends Activity
 						lon = Float.valueOf(geo[1]);
 						b.putFloat("lat", lat);
 						b.putFloat("lon", lon);
-						Message msg = Message.obtain(N_NavitGraphics.callback_handler
-								, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+						Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 
 						msg.setData(b);
 						msg.sendToTarget();
@@ -532,7 +533,7 @@ public class Navit extends Activity
 	}
 
 	// define callback id here
-	public static NavitGraphics	N_NavitGraphics	= null;
+	public static NavitGraphics N_NavitGraphics = null;
 
 	// callback id gets set here when called from NavitGraphics
 	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
@@ -564,8 +565,7 @@ public class Navit extends Activity
 		if (NavitDialogs.Navit_last_address_search_string.equals(""))
 		{
 			// empty search string entered
-			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"),
-					Toast.LENGTH_LONG).show(); //TRANS
+			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"), Toast.LENGTH_LONG).show(); //TRANS
 		}
 		else
 		{
@@ -639,8 +639,7 @@ public class Navit extends Activity
 	}
 
 	void setDestination(float latitude, float longitude, String address) {
-		Toast.makeText( getApplicationContext(),
-			Navit.get_text("setting destination to") + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
+		Toast.makeText( getApplicationContext(),Navit.get_text("setting destination to") + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
 
 		Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 		Bundle b = new Bundle();
@@ -691,8 +690,7 @@ public class Navit extends Activity
 	
 					if (addr.equals("")) {
 						// empty search string entered
-						Toast.makeText(getApplicationContext(),
-								Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
+						Toast.makeText(getApplicationContext(),Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
 					} else {
 						// show dialog, and start search for the results
 						// make it indirect, to give our activity a chance to startup
