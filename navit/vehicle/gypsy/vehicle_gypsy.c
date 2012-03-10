@@ -230,7 +230,7 @@ vehicle_gypsy_course_changed (GypsyCourse *course,
 
 	if (fields & GYPSY_COURSE_FIELDS_SPEED)
 	{
-		priv->speed = speed;
+		priv->speed = speed*3.6;
 		cb = TRUE;
 	}
 	if (fields & GYPSY_COURSE_FIELDS_DIRECTION)
