@@ -264,11 +264,10 @@ static struct object_func object_funcs[] = {
 	{ attr_route,      NEW(route_new), GET(route_get_attr), NULL, NULL, SET(route_set_attr), ADD(route_add_attr), REMOVE(route_remove_attr)},
 	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
 	{ attr_text,       NEW(text_new)},
-	{ attr_tracking,   NEW(tracking_new)},
 	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
 
-extern struct object_func navit_func, vehicle_func;
+extern struct object_func navit_func, tracking_func, vehicle_func;
 
 struct object_func *
 object_func_lookup(enum attr_type type)
@@ -277,6 +276,8 @@ object_func_lookup(enum attr_type type)
 	switch (type) {
 	case attr_navit:
 		return &navit_func;
+	case attr_trackingo:
+		return &tracking_func;
 	case attr_vehicle:
 		return &vehicle_func;
 	default:
@@ -347,7 +348,7 @@ static void initStatic(void) {
 	elements[3].name="tracking";
 	elements[3].parent="navit";
 	elements[3].func=NULL;
-	elements[3].type=attr_tracking;
+	elements[3].type=attr_trackingo;
 
 	elements[4].name="route";
 	elements[4].parent="navit";
@@ -640,6 +641,8 @@ start_element(GMarkupParseContext *context,
 		new->element_attr.type=attr_from_name(element_name);
 		if (new->element_attr.type == attr_none)
 			dbg(0,"failed to create object of type '%s'\n", element_name);
+		if (new->element_attr.type == attr_tracking)
+			new->element_attr.type=attr_trackingo;
 		if (new->parent && new->parent->object_func && new->parent->object_func->add_attr)
 			new->parent->object_func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}

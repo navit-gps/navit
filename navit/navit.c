@@ -2708,7 +2708,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_speech:
 		this_->speech=attr->u.speech;
 		break;
-	case attr_tracking:
+	case attr_trackingo:
 		this_->tracking=attr->u.tracking;
 		break;
 	case attr_vehicle:
