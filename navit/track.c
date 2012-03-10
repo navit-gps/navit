@@ -37,6 +37,10 @@
 #include "roadprofile.h"
 #include "util.h"
 #include "config.h"
+#include "xmlconfig.h"
+#include "callback.h"
+
+struct object_func tracking_func;
 
 struct tracking_line
 {
@@ -79,6 +83,10 @@ struct cdf_data {
 };
 
 struct tracking {
+	struct object_func *func;
+	int refcount;
+	struct attr *attrs;
+	struct callback_list *callback_list;
 	struct mapset *ms;
 	struct route *rt;
 	struct map *map;
@@ -789,6 +797,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		tr->speed=0;
 	}
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
+	callback_list_call_attr_0(tr->callback_list, attr_position_coord_geo);
 }
 
 static int
@@ -830,16 +839,77 @@ tracking_set_attr(struct tracking *tr, struct attr *attr)
 	return tracking_set_attr_do(tr, attr, 0);
 }
 
+int
+tracking_add_attr(struct tracking *this_, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_callback:
+		callback_list_add(this_->callback_list, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+int
+tracking_remove_attr(struct tracking *this_, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_callback:
+		callback_list_remove(this_->callback_list, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+struct tracking *
+tracking_ref(struct tracking *this_)
+{
+	this_->refcount++;
+	dbg(0,"refcount %d\n",this_->refcount);
+	return this_;
+}
+
+void
+tracking_unref(struct tracking *this_)
+{
+	this_->refcount--;
+	dbg(0,"refcount %d\n",this_->refcount);
+	if (this_->refcount <= 0)
+		tracking_destroy(this_);
+}
+
+struct object_func tracking_func = {
+	attr_trackingo,
+	(object_func_new)tracking_new,
+	(object_func_get_attr)tracking_get_attr,
+	(object_func_iter_new)NULL,
+	(object_func_iter_destroy)NULL,
+	(object_func_set_attr)tracking_set_attr,
+	(object_func_add_attr)tracking_add_attr,
+	(object_func_remove_attr)tracking_remove_attr,
+	(object_func_init)tracking_init,
+	(object_func_destroy)tracking_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)tracking_ref,
+	(object_func_unref)tracking_unref,
+};
+
+
 struct tracking *
 tracking_new(struct attr *parent, struct attr **attrs)
 {
 	struct tracking *this=g_new0(struct tracking, 1);
 	struct attr hist_size;
+	this->func=&tracking_func;
+	this->refcount=1;
 	this->angle_pref=10;
 	this->connected_pref=10;
 	this->nostop_pref=10;
 	this->offroad_limit_pref=5000;
 	this->route_pref=300;
+	this->callback_list=callback_list_new();
 
 
 	if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {
@@ -873,6 +943,7 @@ tracking_destroy(struct tracking *tr)
 	if (tr->attr) 
 		attr_free(tr->attr);
 	tracking_flush(tr);
+	callback_list_destroy(tr->callback_list);
 	g_free(tr);
 }
 
