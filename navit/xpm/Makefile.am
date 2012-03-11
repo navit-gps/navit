@@ -1,61 +1,61 @@
 include $(top_srcdir)/Makefile.inc
 
-xpm_DATA =  bus_halt.xpm
-xpm_DATA += car_dealer.xpm
-xpm_DATA += castle.xpm
-xpm_DATA += cemetery.xpm
-xpm_DATA += dumping_station.xpm
-xpm_DATA += highway_exit.xpm
-xpm_DATA += hunting_stand.xpm
-xpm_DATA += level_crossing.xpm
-xpm_DATA += library.xpm
-xpm_DATA += memorial.xpm
-xpm_DATA += picnic.xpm
-xpm_DATA += potable_water.xpm
-xpm_DATA += shelter.xpm
-xpm_DATA += sport.xpm
-xpm_DATA += theater.xpm
-xpm_DATA += tower.xpm
-xpm_DATA += townhall.xpm
-xpm_DATA += trailerpark.xpm
-xpm_DATA += public_office.xpm
+image_DATA =  bus_halt.xpm
+image_DATA += car_dealer.xpm
+image_DATA += castle.xpm
+image_DATA += cemetery.xpm
+image_DATA += dumping_station.xpm
+image_DATA += highway_exit.xpm
+image_DATA += hunting_stand.xpm
+image_DATA += level_crossing.xpm
+image_DATA += library.xpm
+image_DATA += memorial.xpm
+image_DATA += picnic.xpm
+image_DATA += potable_water.xpm
+image_DATA += shelter.xpm
+image_DATA += sport.xpm
+image_DATA += theater.xpm
+image_DATA += tower.xpm
+image_DATA += townhall.xpm
+image_DATA += trailerpark.xpm
+image_DATA += public_office.xpm
 
 
 ## Obsolete. Should be removed eventually...
 
-xpm_DATA += biergarten.xpm
-xpm_DATA += restroom.xpm
+image_DATA += biergarten.xpm
+image_DATA += restroom.xpm
 
 ## Obsolete end
 
 
-xpm_DATA += flag_bk_tr.xpm
-xpm_DATA += flag_bk_wh.xpm
-xpm_DATA += flag_bl_wh.xpm
-xpm_DATA += flag_wh_bk.xpm
+image_DATA += flag_bk_tr.xpm
+image_DATA += flag_bk_wh.xpm
+image_DATA += flag_bl_wh.xpm
+image_DATA += flag_wh_bk.xpm
 
-xpm_DATA += gc_tradi.xpm
-xpm_DATA += gc_multi.xpm
-xpm_DATA += gc_mystery.xpm
-xpm_DATA += gc_event.xpm
-xpm_DATA += gc_reference.xpm
-xpm_DATA += gc_webcam.xpm
-xpm_DATA += gc_question.xpm
-xpm_DATA += gc_stages.xpm
+image_DATA += gc_tradi.xpm
+image_DATA += gc_multi.xpm
+image_DATA += gc_mystery.xpm
+image_DATA += gc_event.xpm
+image_DATA += gc_reference.xpm
+image_DATA += gc_webcam.xpm
+image_DATA += gc_question.xpm
+image_DATA += gc_stages.xpm
 
-xpm_DATA += nav_left_1.xpm
-xpm_DATA += nav_left_2.xpm
-xpm_DATA += nav_right_1.xpm
-xpm_DATA += nav_right_2.xpm
-xpm_DATA += nav_straight.xpm
-xpm_DATA += nav_straight_32.xpm
-xpm_DATA += nav_left_1_32.xpm
-xpm_DATA += nav_left_2_32.xpm
-xpm_DATA += nav_right_1_32.xpm
-xpm_DATA += nav_right_2_32.xpm
+image_DATA += nav_left_1.xpm
+image_DATA += nav_left_2.xpm
+image_DATA += nav_right_1.xpm
+image_DATA += nav_right_2.xpm
+image_DATA += nav_straight.xpm
+image_DATA += nav_straight_32.xpm
+image_DATA += nav_left_1_32.xpm
+image_DATA += nav_left_2_32.xpm
+image_DATA += nav_right_1_32.xpm
+image_DATA += nav_right_2_32.xpm
 
-xpm_DATA += menu.xpm
-xpm_DATA += toggle_fullscreen.xpm
+image_DATA += menu.xpm
+image_DATA += toggle_fullscreen.xpm
 
 svgs  = gui_about.svg
 svgs += gui_actions.svg
@@ -208,7 +208,7 @@ flag_svgs += country_VA.svgz country_VC.svgz country_VE.svgz country_VG.svgz cou
 flag_svgs += country_WF.svgz country_WS.svgz country_YE.svgz country_YT.svgz country_ZA.svgz country_ZM.svgz country_ZW.svgz
 
 if USE_SVG
-  xpm_DATA += $(svgs) $(nav_svgs) $(flag_svgs)
+  image_DATA += $(svgs) $(nav_svgs) $(flag_svgs)
 endif
 
 if USE_SVG2PNG
@@ -234,7 +234,7 @@ endif
 if USE_SVG2PNG_SCALES_NAV
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
-xpm_DATA += $(pngs)
+image_DATA += $(pngs)
 endif
 
 if !SUPPORT_WIN32
@@ -248,11 +248,9 @@ if !SUPPORT_WIN32
   ICON22_DATA = desktop_icons/22x22/navit.png
 endif
 
-EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE_DATA) $(ICON128_DATA) $(ICON22_DATA) navit_svg2png
-#burgerking.ico:
-#	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
+EXTRA_DIST = $(image_DATA) $(DESKTOPFILE_DATA) $(ICON128_DATA) $(ICON22_DATA) navit_svg2png
 
 if USE_SVG2PNG
-distclean-local:
+clean:
 	rm -f $(pngs)
 endif
