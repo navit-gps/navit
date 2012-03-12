@@ -53,6 +53,10 @@ void tracking_set_mapset(struct tracking *this_, struct mapset *ms);
 void tracking_set_route(struct tracking *this_, struct route *rt);
 void tracking_destroy(struct tracking *tr);
 struct map *tracking_get_map(struct tracking *this_);
+int tracking_add_attr(struct tracking *this_, struct attr *attr);
+int tracking_remove_attr(struct tracking *this_, struct attr *attr);
+struct tracking *tracking_ref(struct tracking *this_);
+void tracking_unref(struct tracking *this_);
 void tracking_init(void);
 /* end of prototypes */
 #ifdef __cplusplus
