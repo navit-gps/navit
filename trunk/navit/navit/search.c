@@ -728,6 +728,8 @@ search_list_get_unique(struct search_list *this_, char *unique)
 	struct search_list_level *le=&this_->levels[level];
 	struct search_list_country *slc;
 	struct search_list_town *slt;
+	struct search_list_street *sls;
+	struct search_list_house_number *slh;
 	char *retf=NULL,*ret=NULL;
 	char *strings[4]={NULL,};
 	char *search=g_utf8_casefold(unique?unique:le->attr->u.str,-1);
@@ -749,6 +751,18 @@ search_list_get_unique(struct search_list *this_, char *unique)
 		case 1:
 			slt=l->data;
 			name=slt->common.town_name;
+			for (i = 0 ; i < 3 ; i++)
+				strings[i]=linguistics_expand_special(name, i);
+			break;
+		case 2:
+			sls=l->data;
+			name=sls->name;
+			for (i = 0 ; i < 3 ; i++)
+				strings[i]=linguistics_expand_special(name, i);
+			break;
+		case 3:
+			slh=l->data;
+			name=slh->house_number;
 			for (i = 0 ; i < 3 ; i++)
 				strings[i]=linguistics_expand_special(name, i);
 			break;
@@ -966,10 +980,12 @@ search_list_get_result(struct search_list *this_)
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.house_number->common.c;
 
+#if 0
 				if(!has_street_name) {
 					static struct search_list_street null_street;
 					this_->result.street=&null_street;
 				}
+#endif
 			}
 			if (p)
 			{
