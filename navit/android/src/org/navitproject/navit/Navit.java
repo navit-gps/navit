@@ -277,7 +277,7 @@ public class Navit extends Activity
 		// Setup a notification in the android notification bar, remove it in the exit() function
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Notification notification = new Notification(R.drawable.icon,"Navit is running",0);
-		notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
+		notification.flags = Notification.FLAG_NO_CLEAR;
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 		notification.setLatestEventInfo(getApplicationContext(), "Navit running", "Navit still running", appIntent);
 		nm.notify(R.string.app_name, notification);
