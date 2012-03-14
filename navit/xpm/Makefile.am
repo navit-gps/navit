@@ -212,19 +212,30 @@ if USE_SVG
 endif
 
 if USE_SVG2PNG
-%.png: $(srcdir)/*.svgz
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-%.png: $(srcdir)/*.svg
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
+# Implicit rules for generating the PNG files. This only generates the
+# standard size; for additional sizes see below.
+%.png: $(srcdir)/%.svg
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$@"
+%.png: $(srcdir)/%.svgz
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$@"
 
 pngs  = $(addsuffix .png,$(basename $(svgs)))
 xsize = $(word 1,$(subst x, ,$(scale)))
 ysize = $(word $(words $(scale)),$(subst x, ,$(scale)))
 comma =,
 
+# template to generate scaling rules for the various PNG sizes
+define scaling_rule_template
+%_$(1)_$(1).png: $(srcdir)/%.$(2)
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$$@"
+endef
+
 # png images of the user interface and other, sizes e.g. "8,16,32,48,96"
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
+
+# create rules from template
+$(foreach extension,svg svgz, $(foreach size,@SVG2PNG_SCALES@,$(eval $(call scaling_rule_template,$(size),$(extension)))))
 endif
 # png state flags
 if USE_SVG2PNG_SCALES_FLAG
