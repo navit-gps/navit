@@ -50,6 +50,7 @@
 #include "plugin.h"
 #include "callback.h"
 #include "country.h"
+#include "xmlconfig.h"
 
 /**
  * @brief Holds information about a map
@@ -57,11 +58,12 @@
  * This structure holds information about a map.
  */
 struct map {
+	struct object_func *func;			/**< Object functions */
+	int refcount;					/**< Reference count */
+	struct attr **attrs;				/**< Attributes of this map */
 	struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
 	struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
-	struct attr **attrs;				/**< Attributes of this map */
 	struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
-	int refcount;
 };
 
 /**
@@ -107,23 +109,22 @@ map_new(struct attr *parent, struct attr **attrs)
 
 	m=g_new0(struct map, 1);
 	m->attrs=attr_list_dup(attrs);
+	m->func=&map_func;
+	m->refcount = 1;
 	m->attr_cbl=callback_list_new();
 	m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
 	if (! m->priv) {
-		m->refcount = 1;
 		map_destroy(m);
 		m=NULL;
-	}
-	else {
-		m->refcount = 0;
 	}
 	return m;
 }
 
-void
+struct map *
 map_ref(struct map* m)
 {
 	m->refcount++;
+	return m;
 }
 
 
@@ -259,9 +260,17 @@ map_set_projection(struct map *this_, enum projection pro)
 	this_->meth.pro=pro;
 }
 
+/**
+ * @brief Destroys an opened map
+ *
+ * @param m The map to be destroyed
+ */
+
 void
-map_destroy_do(struct map *m)
+map_destroy(struct map *m)
 {
+	if (!m)
+		return;
 	if (m->priv)
 		m->meth.map_destroy(m->priv);
 	attr_list_free(m->attrs);
@@ -269,23 +278,12 @@ map_destroy_do(struct map *m)
 	g_free(m);
 }
 
-/**
- * @brief Destroys an opened map
- *
- * @param m The map to be destroyed
- */
 void
-map_destroy(struct map *m)
+map_unref(struct map *m)
 {
-	if (!m)
-		return;
-
-	if(0<m->refcount) {
-		m->refcount--;
-	}
-	if(0 == m->refcount) {
-		map_destroy_do(m);
-	}
+	m->refcount--;
+	if (m->refcount <= 0)
+		map_destroy(m);
 }
 
 /**
@@ -709,6 +707,22 @@ map_rect_create_item(struct map_rect *mr, enum item_type type_)
 		return NULL;
 	}
 }
+
+struct object_func map_func = {
+	attr_map,
+	(object_func_new)map_new,
+	(object_func_get_attr)map_get_attr,
+	(object_func_iter_new)NULL,
+	(object_func_iter_destroy)NULL,
+	(object_func_set_attr)map_set_attr,
+	(object_func_add_attr)NULL,
+	(object_func_remove_attr)NULL,
+	(object_func_init)NULL,
+	(object_func_destroy)map_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)map_ref,
+	(object_func_unref)map_unref,
+};
 
 
 

@@ -569,7 +569,7 @@ attr_free(struct attr *attr)
 {
 	if (!attr)
 		return;
-	if (attr->type == attr_navit || attr->type == attr_trackingo || attr->type == attr_vehicle) {
+	if (HAS_OBJECT_FUNC(attr->type)) {
 		struct navit_object *obj=attr->u.data;
 		if (obj && obj->func && obj->func->unref)
 			obj->func->unref(obj);
@@ -588,7 +588,7 @@ attr_dup_content(struct attr *src, struct attr *dst)
 	if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end) 
 		dst->u.num=src->u.num;
 	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) {
-		if (src->type == attr_navit || src->type == attr_trackingo || src->type == attr_vehicle) {
+		if (HAS_OBJECT_FUNC(src->type)) {
 			struct navit_object *obj=src->u.data;
 			if (obj && obj->func && obj->func->ref) {
 				dst->u.data=obj->func->ref(obj);
@@ -626,8 +626,11 @@ attr_list_free(struct attr **attrs)
 struct attr **
 attr_list_dup(struct attr **attrs)
 {
-	struct attr **ret=attrs;
+	struct attr **ret;
 	int i,count=0;
+
+	if (!attrs)
+		return NULL;
 
 	while (attrs[count])
 		count++;
