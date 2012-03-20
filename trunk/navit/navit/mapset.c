@@ -34,6 +34,7 @@
 #include "mapset.h"
 #include "projection.h"
 #include "map.h"
+#include "xmlconfig.h"
 
 /**
  * @brief A mapset
@@ -41,6 +42,9 @@
  * This structure holds a complete mapset
  */
 struct mapset {
+	struct object_func *func;
+	int refcount;
+	struct attr **attrs;
 	GList *maps; /**< Linked list of all the maps in the mapset */
 };
 
@@ -58,8 +62,18 @@ struct mapset *mapset_new(struct attr *parent, struct attr **attrs)
 	struct mapset *ms;
 
 	ms=g_new0(struct mapset, 1);
+	ms->func=&mapset_func;
+	ms->refcount=1;
+	ms->attrs=attr_list_dup(attrs);
 
 	return ms;
+}
+
+struct mapset *mapset_dup(struct mapset *ms)
+{
+	struct mapset *ret=mapset_new(NULL, ms->attrs);
+	ret->maps=g_list_copy(ms->maps);
+	return ret;
 }
 
 
@@ -86,8 +100,8 @@ mapset_add_attr(struct mapset *ms, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_map:
+		ms->attrs=attr_generic_add_attr(ms->attrs,attr);
 		ms->maps=g_list_append(ms->maps, attr->u.map);
-		map_ref(attr->u.map);
 		return 1;
 	default:
 		return 0;
@@ -99,6 +113,7 @@ mapset_remove_attr(struct mapset *ms, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_map:
+		ms->attrs=attr_generic_remove_attr(ms->attrs,attr);
 		ms->maps=g_list_remove(ms->maps, attr->u.map);
 		return 1;
 	default:
@@ -130,14 +145,6 @@ mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struc
 	return 0;
 }
 
-
-#if 0
-static void mapset_maps_free(struct mapset *ms)
-{
-	/* todo */
-}
-#endif
-
 /**
  * @brief Destroys a mapset. 
  *
@@ -148,13 +155,25 @@ static void mapset_maps_free(struct mapset *ms)
  */
 void mapset_destroy(struct mapset *ms)
 {
-	GList *map;
-	map=ms->maps;
-	while (map) {
-		map_destroy(map->data);
-		map=g_list_next(map);
-	}
+	g_list_free(ms->maps);
+	attr_list_free(ms->attrs);
 	g_free(ms);
+}
+
+struct mapset *
+mapset_ref(struct mapset* m)
+{
+	m->refcount++;
+	return m;
+}
+
+
+void
+mapset_unref(struct mapset *m)
+{
+	m->refcount--;
+	if (m->refcount <= 0)
+		mapset_destroy(m);
 }
 
 /**
@@ -377,3 +396,22 @@ mapset_search_destroy(struct mapset_search *this_)
 		g_free(this_);
 	}
 }
+
+struct object_func mapset_func = {
+	attr_mapset,
+	(object_func_new)mapset_new,
+	(object_func_get_attr)mapset_get_attr,
+	(object_func_iter_new)mapset_attr_iter_new,
+	(object_func_iter_destroy)mapset_attr_iter_destroy,
+	(object_func_set_attr)NULL,
+	(object_func_add_attr)mapset_add_attr,
+	(object_func_remove_attr)mapset_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)mapset_destroy,
+	(object_func_dup)mapset_dup,
+	(object_func_ref)mapset_ref,
+	(object_func_unref)mapset_unref,
+};
+
+
+
