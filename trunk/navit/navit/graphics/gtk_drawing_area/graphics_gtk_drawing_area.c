@@ -108,6 +108,7 @@ struct graphics_image_priv {
 };
 
 static GHashTable *hImageData;   /*hastable for uncompressed image data*/
+static int hImageDataCount;
 static struct graphics_image_priv image_error;
 
 static void
@@ -126,8 +127,16 @@ graphics_destroy_image(gpointer data)
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	if (!gr->parent)
+	dbg(0,"enter win %p\n",gr->win);
+	if (gr->win)
+		g_object_unref(gr->win);
+	dbg(0,"widget %p\n",gr->widget);
+	if (gr->widget)
+		g_object_unref(gr->widget);
+	dbg(0,"hImageDataCount %d\n",hImageDataCount);
+	if (!--hImageDataCount)
 		g_hash_table_destroy(hImageData);
+	g_free(gr);
 }
 
 static void
@@ -1235,7 +1244,8 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	}
 
 	//create hash table for uncompressed image data
-	hImageData = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, graphics_destroy_image);
+	if (!hImageDataCount++)
+		hImageData = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, graphics_destroy_image);
 
 	return this;
 }
