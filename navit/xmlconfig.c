@@ -252,8 +252,6 @@ static struct object_func object_funcs[] = {
 	{ attr_layer,      NEW(layer_new),    NULL, NULL, NULL, NULL, ADD(layer_add_attr)},
 	{ attr_layout,     NEW(layout_new),   NULL, NULL, NULL, NULL, ADD(layout_add_attr)},
 	{ attr_log,        NEW(log_new)},
-	{ attr_map,        NEW(map_new)},
-	{ attr_mapset,     NEW(mapset_new),   NULL, NULL, NULL, NULL, ADD(mapset_add_attr)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
 	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
 	{ attr_plugins,    NEW(plugins_new),  NULL, NULL, NULL, NULL, NULL, NULL, INIT(plugins_init)},
@@ -267,13 +265,15 @@ static struct object_func object_funcs[] = {
 	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
 
-extern struct object_func navit_func, tracking_func, vehicle_func;
-
 struct object_func *
 object_func_lookup(enum attr_type type)
 {
 	int i;
 	switch (type) {
+	case attr_map:
+		return &map_func;
+	case attr_mapset:
+		return &mapset_func;
 	case attr_navit:
 		return &navit_func;
 	case attr_trackingo:

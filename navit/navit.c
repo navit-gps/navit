@@ -102,7 +102,7 @@ struct navit_vehicle {
 struct navit {
 	struct object_func *func;
 	int refcount;
-	struct attr *attrs;
+	struct attr **attrs;
 	struct attr self;
 	GList *mapsets;
 	GList *layouts;
@@ -1414,6 +1414,8 @@ navit_new(struct attr *parent, struct attr **attrs)
 	command_add_table(this_->attr_cbl, commands, sizeof(commands)/sizeof(struct command_table), this_);
 
 	this_->messages = messagelist_new(attrs);
+
+	dbg(0,"return %p\n",this_);
 	
 	return this_;
 }
@@ -3192,7 +3194,7 @@ navit_block(struct navit *this_, int block)
 void
 navit_destroy(struct navit *this_)
 {
-	struct mapset*ms;
+	dbg(0,"enter %p\n",this_);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 	attr_list_free(this_->attrs);
 	if (this_->bookmarks) {
@@ -3220,15 +3222,12 @@ navit_destroy(struct navit *this_)
 	callback_destroy(this_->predraw_callback);
 
         callback_destroy(this_->route_cb);
-	route_destroy(this_->route);
+	if (this_->route)
+		route_destroy(this_->route);
 
         map_destroy(this_->former_destination);
 
         graphics_displaylist_destroy(this_->displaylist);
-
-	ms = navit_get_mapset(this_);
-	if(ms)
-		mapset_destroy(ms);
 
 	graphics_free(this_->gra);
 
