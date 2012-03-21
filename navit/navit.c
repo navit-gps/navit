@@ -2039,26 +2039,29 @@ void
 navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
 {
 	struct coord c;
-	int scale=16;
+	int w,h,scale=16;
 
 	c.x=(r->rl.x+r->lu.x)/2;
 	c.y=(r->rl.y+r->lu.y)/2;
 	transform_set_center(this_->trans, &c);
-	dbg(1,"%x,%x-%x,%x\n", r->rl.x,r->rl.y,r->lu.x,r->lu.y);
+	transform_get_size(this_->trans, &w, &h);
+	dbg(0,"center 0x%x,0x%x w %d h %d\n",c.x,c.y,w,h);
+	dbg(0,"%x,%x-%x,%x\n", r->lu.x,r->lu.y,r->rl.x,r->rl.y);
 	while (scale < 1<<20) {
 		struct point p1,p2;
 		transform_set_scale(this_->trans, scale);
 		transform_setup_source_rect(this_->trans);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1, 1, 0, 0, NULL);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2, 1, 0, 0, NULL);
-		dbg(1,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
-		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
-		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
+		dbg(0,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		if (p1.x < 0 || p2.x < 0 || p1.x > w || p2.x > w ||
+		    p1.y < 0 || p2.y < 0 || p1.y > h || p2.y > h)
 			scale*=2;
 		else
 			break;
 	
 	}
+	dbg(0,"scale=%d (0x%x) of %d (0x%x)\n",scale,scale,1<<20,1<<20);
 	if (this_->ready == 3)
 		navit_draw_async(this_,0);
 }
@@ -3195,6 +3198,7 @@ void
 navit_destroy(struct navit *this_)
 {
 	dbg(0,"enter %p\n",this_);
+	graphics_draw_cancel(this_->gra, this_->displaylist);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 	attr_list_free(this_->attrs);
 	if (this_->bookmarks) {
