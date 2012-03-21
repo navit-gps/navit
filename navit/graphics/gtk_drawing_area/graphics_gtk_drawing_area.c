@@ -127,12 +127,15 @@ graphics_destroy_image(gpointer data)
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	dbg(0,"enter win %p\n",gr->win);
-	if (gr->win)
-		g_object_unref(gr->win);
-	dbg(0,"widget %p\n",gr->widget);
-	if (gr->widget)
-		g_object_unref(gr->widget);
+	dbg(0,"enter parent %p\n",gr->parent);
+	if (!gr->parent) {
+		dbg(0,"enter win %p\n",gr->win);
+		if (gr->win)
+			gtk_widget_destroy(gr->win);
+		dbg(0,"widget %p\n",gr->widget);
+		if (gr->widget)
+			gtk_widget_destroy(gr->widget);
+	}
 	dbg(0,"hImageDataCount %d\n",hImageDataCount);
 	if (!--hImageDataCount)
 		g_hash_table_destroy(hImageData);
