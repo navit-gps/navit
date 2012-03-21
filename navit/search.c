@@ -691,10 +691,10 @@ search_add_result(struct search_list_level *le, struct search_list_common *slc)
 static char *
 search_list_get_unique_truncate(char *common, char *result)
 {
-	dbg(0,"%s vs %s\n",common,result);
+	dbg(1,"%s vs %s\n",common,result);
 	while (*common) {
 		if (g_utf8_get_char(common) != g_utf8_get_char(result)) {
-			dbg(0,"truncating at %s vs %s\n",common,result);
+			dbg(1,"truncating at %s vs %s\n",common,result);
 			return common;
 		}
 		result=g_utf8_next_char(result);
@@ -737,7 +737,7 @@ search_list_get_unique(struct search_list *this_, char *unique)
 	int search_len=strlen(search);
 	int i,count=sizeof(strings)/sizeof(char *);
 
-	dbg(0,"enter level=%d %s\n",level,search);
+	dbg(0,"enter level=%d %s %s\n",level,search,unique);
 	GList *l=le->list;
 	while (l) {
 		switch (level) {
@@ -769,28 +769,28 @@ search_list_get_unique(struct search_list *this_, char *unique)
 		default:
 			dbg(0,"entry\n");
 		}
-		dbg(0,"entry %s %s %s %s\n",strings[0],strings[1],strings[2],strings[3]);
+		dbg(1,"entry %s %s %s %s\n",strings[0],strings[1],strings[2],strings[3]);
 		max=NULL;
 		for (i = 0 ; i < count ; i++) {
 			char *str=strings[i];
 			while (str) {
 				char *strf=g_utf8_casefold(str,-1);
-				dbg(0,"word %s\n",strf);
+				dbg(1,"word %s\n",strf);
 				if (!strncmp(strf, search, search_len)) {
-					dbg(0,"match\n");
+					dbg(1,"match\n");
 					if (unique) {
-						dbg(0,"possible next %s %s ret %s\n",strf+search_len,str+search_len,ret);
+						dbg(1,"possible next %s %s ret %s\n",strf+search_len,str+search_len,ret);
 						ret=search_list_get_unique_append(ret, strf+search_len);
 						ret=search_list_get_unique_append(ret, str+search_len);
-						dbg(0,"ret now %s\n",ret);
+						dbg(1,"ret now %s\n",ret);
 					} else {
 						if (!ret) {
 							ret=g_strdup(str);
 							retf=g_utf8_casefold(ret,-1);
-							dbg(0,"ret now %s\n",ret);
+							dbg(1,"ret now %s\n",ret);
 						} else {
 							char *end=search_list_get_unique_truncate(retf,strf);
-							dbg(0,"%d characters\n",end-retf);
+							dbg(1,"%d characters\n",end-retf);
 							if (!max || max < end)
 								max=end;
 						}
@@ -803,13 +803,13 @@ search_list_get_unique(struct search_list *this_, char *unique)
 		}
 		if (!unique) {
 			if (max) {
-				dbg(0,"max %s (%d characters)\n",max,max-retf);
+				dbg(1,"max %s (%d characters)\n",max,max-retf);
 				ret[max-retf]='\0';
 			} else {
-				dbg(0,"new max\n");
+				dbg(1,"new max\n");
 			}
 		}
-		dbg(0,"common %s\n",ret);
+		dbg(1,"common %s\n",ret);
 		l=g_list_next(l);
 	}
 	g_free(search);
