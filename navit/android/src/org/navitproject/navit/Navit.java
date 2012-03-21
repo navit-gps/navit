@@ -274,13 +274,15 @@ public class Navit extends Activity
 		// init translated text
 		NavitTextTranslations.init();
 		
-		// Setup a notification in the android notification bar, remove it in the exit() function
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.icon,"Navit is running",0);
-		notification.flags = Notification.FLAG_NO_CLEAR;
+		// NOTIFICATION
+		// Setup the status bar notification		
+		// This notification is removed in the exit() function
+		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);	// Grab a handle to the NotificationManager
+		Notification NavitNotification = new Notification(R.drawable.icon,"Navit started",System.currentTimeMillis());	// Create a new notification, with the text string to show when the notification first appears
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
-		notification.setLatestEventInfo(getApplicationContext(), "Navit running", "Navit still running", appIntent);
-		nm.notify(R.string.app_name, notification);
+		NavitNotification.setLatestEventInfo(getApplicationContext(), "Navit", "Navit running", appIntent);	// Set the text in the notification
+		NavitNotification.flags|=Notification.FLAG_ONGOING_EVENT;	// Ensure that the notification appears in Ongoing
+		nm.notify(R.string.app_name, NavitNotification);	// Set the notification
 		
 		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
