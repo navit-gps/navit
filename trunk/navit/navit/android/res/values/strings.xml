@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Navit</string>
+
+	<!-- GENERIC -->
+	<string name="app_name">Navit</string>
+	<string name="map_data_copyright">CC-BY-SA OpenStreetMap Project</string>
+	<string name="url_wiki_android">http://wiki.navit-project.org/index.php/Navit_on_Android</string>
+	<string name="url_wiki_main">http://wiki.navit-project.org</string>
+	
+	<!-- NOTIFICATION -->
+	<string name="notification_name">@string/app_name</string>
+	<string name="notification_ticker">Navit started</string>
+	<string name="notification_event_default">Navit running</string>
+
+	<!-- INITIAL INFOBOX -->
+	<string name="initial_info_box_title">Welcome to Navit</string>
+	<string name="intial_info_box_message">"You are running Navit for the first time!\n\nTo start, select \"Download first map\" from the menu to download a map. Note: The map filesize may be large (>50MB) - a wifi connection is recommended.\n\nMapdata: CC-BY-SA OpenStreetMap Project\n\nEnjoy Navit!"</string>
+	<string name="initial_info_box_OK">OK</string>
+	<string name="initial_info_box_more_info">More info</string>
+
+
+	<!-- OPTIONS MENU -->
+	<string name="optionsmenu_zoom_in">Zoom in</string>
+	<string name="optionsmenu_zoom_out">Zoom out</string>
+	<string name="optionsmenu_download_first_map">Download first map</string>
+	<string name="optionsmenu_toggle_poi">Toggle POIs</string>
+	<string name="optionsmenu_address_search">Address search</string>
+	<string name="optionsmenu_download_second_map">Download second map</string>
+	<string name="optionsmenu_exit_navit">Exit Navit</string>
+
+	<!-- POSITION POP-UP -->
+	<string name="position_popup_title">Position</string>
+	<string name="position_popup_drive_here">Route to here</string>
+
+	<!-- MAP DOWNLOAD -->
+	<string name="map_download_title">Map Download</string>
+	<string name="map_download_downloading">Currently downloading</string>
+	<string name="map_download_eta">ETA</string>
+	<string name="map_download_download_error">Error downloading map</string>
+
+	<!-- ADDRESS SEARCH -->
+	<string name="address_search_title">Address Search</string>
+	<string name="address_search_enter_string">Enter: City, Street</string>
+	<string name="address_search_not_found">Address not found</string>
+	<string name="address_search_getting_results">Getting search results</string>
+	<string name="address_search_loading_results">Loading search results</string>
+	<string name="address_search_searching">Searching#8230;</string>
+	<string name="address_search_no_results">No results found</string>
+	<string name="address_search_no_text_entered">No text entered</string>
+	<string name="address_search_set_destination">Setting destination to:</string>
+
 </resources>
 
