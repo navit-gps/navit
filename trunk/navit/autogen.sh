@@ -15,3 +15,6 @@ do
 done
 
 autoreconf --install -I m4 "$@"
+echo "***** WARNING *****"
+echo "Support for autotools will be removed soon from navit, please use cmake instead"
+sleep 5
