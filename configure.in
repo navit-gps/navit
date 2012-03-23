@@ -1335,3 +1335,5 @@ then
 	echo "" 
 fi
 
+echo "Support for autotools will be removed soon from navit, please use cmake instead"
+sleep 5
