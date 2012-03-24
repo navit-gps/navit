@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- LANG=nl -->
+	<!-- GENERIC -->
+	<!-- All generic strings fallback to default (en) -->
+
+	<!-- NOTIFICATION -->
+	<string name="notification_name">@string/app_name</string>
+	<string name="notification_ticker">Navit gestart</string>
+	<string name="notification_event_default">Navit actief</string>
+
+	<!-- INITIAL INFOBOX -->
+	<string name="initial_info_box_title">Welkom bij Navit!</string>
+	<string name="intial_info_box_message">"Dank u voor het installeren van Navit!\n\nOm te beginnen, selecteer \"Download eerste kaart\" uit het menu en download een kaart\n van je regio. De kaarten zijn groot, dus is het aangeraden om een ongelimiteerde internetverbinding te hebben!\n\nKaartendata: CC-BY-SA OpenStreetMap Project\n\nNog veel plezier met Navit!"</string>
+	<string name="initial_info_box_OK">OK</string>
+	<string name="initial_info_box_more_info">Meer info</string>
+
+	<!-- OPTIONS MENU -->
+	<string name="optionsmenu_zoom_in">Inzoomen</string>
+	<string name="optionsmenu_zoom_out">Uitzoomen</string>
+	<string name="optionsmenu_download_first_map">Download eerste kaart</string>
+	<string name="optionsmenu_toggle_poi">Schakel POIs</string>
+	<string name="optionsmenu_address_search">@string/address_search_title</string>
+	<string name="optionsmenu_download_second_map">Download tweede kaart</string>
+	<string name="optionsmenu_exit_navit">Verlaat Navit</string>
+
+	<!-- POSITION POP-UP -->
+	<string name="position_popup_title">Position</string>
+	<string name="popup_drive_here">Ga naar hier</string>
+
+	<!-- MAP DOWNLOAD -->
+	<string name="map_download_title">Kaart downloaden</string>
+	<string name="map_download_downloading">Downloading:</string>
+	<string name="map_download_eta">Resterende tijd</string>
+	<string name="map_download_download_error">Fout met kaart downloaden</string>
+
+	<!-- ADDRESS SEARCH -->
+	<string name="address_search_title">Zoek een adres</string>
+	<string name="address_enter_destination">Uwe bestemming</string>
+	<string name="address_partial_match">Partieel</string>
+	<string name="address_search_searching">Zoeken#8230;</string>
+	<string name="address_search_not_found">Adres niet gevonden</string>
+	<string name="address_search_getting_results">Zoekresultaten krijgen</string>
+	<string name="address_search_loading_results">Zoekresultaten laden</string>
+	<string name="address_search_no_results">Geen resultaten gevonden</string>
+	<string name="address_search_no_text_entered">Geen tekst ingevoerd</string>
+	<string name="address_search_set_destination">Bestemming ingesteld:</string>
+</resources>
+
