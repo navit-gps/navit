@@ -216,7 +216,7 @@ public class Navit extends Activity
 		if (firstStart)
 		{
 			AlertDialog.Builder infobox = new AlertDialog.Builder(this);
-			infobox.setTitle(NavitTextTranslations.INFO_BOX_TITLE); // TRANS
+			infobox.setTitle(getString(R.string.initial_info_box_title)); // TRANS
 			infobox.setCancelable(false);
 			final TextView message = new TextView(this);
 			message.setFadingEdgeLength(20);
@@ -225,14 +225,14 @@ public class Navit extends Activity
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
 	
 			message.setLayoutParams(rlp);
-			final SpannableString s = new SpannableString(NavitTextTranslations.INFO_BOX_TEXT); // TRANS
+			final SpannableString s = new SpannableString(getString(R.string.initial_info_box_message)); // TRANS
 			Linkify.addLinks(s, Linkify.WEB_URLS);
 			message.setText(s);
 			message.setMovementMethod(LinkMovementMethod.getInstance());
 			infobox.setView(message);
 	
 			// TRANS
-			infobox.setPositiveButton(Navit.get_text("Ok"), new DialogInterface.OnClickListener() {
+			infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
 					Log.e("Navit", "Ok, user saw the infobox");
 				}
@@ -240,7 +240,7 @@ public class Navit extends Activity
 	
 			
 			// TRANS
-			infobox.setNeutralButton(NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO, new DialogInterface.OnClickListener() {
+			infobox.setNeutralButton(getString(R.string.initial_info_box_more_info), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
 					Log.e("Navit", "user wants more info, show the website");
 					String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
@@ -520,17 +520,17 @@ public class Navit extends Activity
 		menu.clear();
 
 		// group-id,item-id,sort order number
-		menu.add(1, 1, 100, get_text("zoom in")); //TRANS
-		menu.add(1, 2, 200, get_text("zoom out")); //TRANS
+		menu.add(1, 1, 100, getString(R.string.optionsmenu_zoom_in)); //TRANS
+		menu.add(1, 2, 200, getString(R.string.optionsmenu_zoom_out)); //TRANS
 
-		menu.add(1, 3, 300, NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map); //TRANS
-		menu.add(1, 5, 400, NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI); //TRANS
+		menu.add(1, 3, 300, getString(R.string.optionsmenu_download_first_map)); //TRANS
+		menu.add(1, 5, 400, getString(R.string.optionsmenu_toggle_poi)); //TRANS
 
-		menu.add(1, 6, 500, get_text("address search")); //TRANS
+		menu.add(1, 6, 500, getString(R.string.optionsmenu_address_search)); //TRANS
 
-		menu.add(1, 4, 600, NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map); //TRANS
+		menu.add(1, 4, 600, getString(R.string.optionsmenu_download_second_map)); //TRANS
 		menu.add(1, 88, 800, "--");
-		menu.add(1, 99, 900, get_text("exit navit")); //TRANS
+		menu.add(1, 99, 900, getString(R.string.optionsmenu_exit_navit)); //TRANS
 		return true;
 	}
 
@@ -567,7 +567,7 @@ public class Navit extends Activity
 		if (NavitDialogs.Navit_last_address_search_string.equals(""))
 		{
 			// empty search string entered
-			Toast.makeText(getApplicationContext(), Navit.get_text("No address found"), Toast.LENGTH_LONG).show(); //TRANS
+			Toast.makeText(getApplicationContext(), getString(R.string.address_search_not_found), Toast.LENGTH_LONG).show(); //TRANS
 		}
 		else
 		{
@@ -623,7 +623,7 @@ public class Navit extends Activity
 			case 6 :
 				// ok startup address search activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-				search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
+				search_intent.putExtra("title", getString(R.string.address_search_title)); //TRANS
 				search_intent.putExtra("address_string", NavitDialogs.Navit_last_address_search_string);
 				search_intent.putExtra("partial_match", NavitDialogs.Navit_last_address_partial_match);
 				this.startActivityForResult(search_intent, NavitAddressSearch_id);
@@ -641,7 +641,7 @@ public class Navit extends Activity
 	}
 
 	void setDestination(float latitude, float longitude, String address) {
-		Toast.makeText( getApplicationContext(),Navit.get_text("setting destination to") + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
+		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
 
 		Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 		Bundle b = new Bundle();
@@ -692,7 +692,7 @@ public class Navit extends Activity
 	
 					if (addr.equals("")) {
 						// empty search string entered
-						Toast.makeText(getApplicationContext(),Navit.get_text("No search string entered"), Toast.LENGTH_LONG).show(); //TRANS
+						Toast.makeText(getApplicationContext(),getString(R.string.address_search_no_text_entered), Toast.LENGTH_LONG).show(); //TRANS
 					} else {
 						// show dialog, and start search for the results
 						// make it indirect, to give our activity a chance to startup
@@ -775,7 +775,7 @@ public class Navit extends Activity
 	private void executeSearch(String search)
 	{
 		Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-		search_intent.putExtra("title", Navit.get_text("Enter: City and Street")); //TRANS
+		search_intent.putExtra("title", getString(R.string.address_search_title)); //TRANS
 		search_intent.putExtra("address_string", search);
 		search_intent.putExtra("partial_match", NavitDialogs.Navit_last_address_partial_match);
 		this.startActivityForResult(search_intent, NavitAddressSearch_id);
