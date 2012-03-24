@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- LANG=fr -->
+	<!-- GENERIC -->
+	<!-- All generic strings fallback to default (en) -->
+	
+	<!-- NOTIFICATION -->
+	<string name="notification_name">@string/app_name</string>
+	<string name="notification_ticker">Navit commencé</string>
+	<string name="notification_event_default">Navit exécute</string>
+
+	<!-- INITIAL INFOBOX -->
+	<string name="initial_info_box_title">Bienvenue chez Navit</string>
+	<string name="intial_info_box_message">"Nous vous remercie pour l'installation de Navit!\n\nPour commencer, sélectionnez \"Télécharchez 1ere carte\" du menu et télechargez une carte de votre région. Les cartes sont volumineux, donc il est préférable d'avoir une connection internet illimitée!\n\nCartes: CC-BY-SA OpenStreetMap Project\n\nAmusez vous avec Navit!"</string>
+	<string name="initial_info_box_OK">OK</string>
+	<string name="initial_info_box_more_info">Plus d'infos</string>
+
+	<!-- OPTIONS MENU -->
+	<string name="optionsmenu_zoom_in">Zoom-avant</string>
+	<string name="optionsmenu_zoom_out">Zoom-arrière</string>
+	<string name="optionsmenu_download_first_map">Télécharchez 1ere carte</string>
+	<string name="optionsmenu_toggle_poi">POI on/off</string>
+	<string name="optionsmenu_address_search">@string/address_search_title</string>
+	<string name="optionsmenu_download_second_map">Télécharchez 2ème carte</string>
+	<string name="optionsmenu_exit_navit">Quittez Navit</string>
+
+	<!-- POSITION POP-UP -->
+	<string name="position_popup_title">Position</string>
+	<string name="position_popup_drive_here">Conduire ici</string>
+
+	<!-- MAP DOWNLOAD -->
+	<string name="map_download_title">Carte téléchargement</string>
+	<string name="map_download_downloading">Télécharger:</string>
+	<string name="map_download_eta">Temps restant</string>
+	<string name="map_download_download_error">Erreur de téléchargement carte</string>
+
+	<!-- ADDRESS SEARCH -->
+	<string name="address_search_title">Recherche d'adresse</string>
+	<string name="address_enter_destination">Entrez votre destination</string>
+	<string name="address_partial_match">Correspondance partielle</string>
+	<string name="address_search_searching">Recherche en cours#8230;</string>
+	<string name="address_search_not_found">Adresse introuvable</string>
+	<string name="address_search_getting_results">Obtenir des résultats de recherche</string>
+	<string name="address_search_loading_results">Chargement des résultats de recherche</string>
+	<string name="address_search_no_results">Pas de résultats trouvés</string>
+	<string name="address_search_no_text_entered">Aucun texte entré</string>
+	<string name="address_search_set_destination">Destination fixée à:</string>
+</resources>
+

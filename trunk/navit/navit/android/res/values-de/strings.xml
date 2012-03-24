@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- LANG=de -->
+	<!-- GENERIC -->
+	<!-- All generic strings fallback to default (en) -->
+	
+	<!-- NOTIFICATION -->
+	<string name="notification_name">@string/app_name</string>
+	<string name="notification_ticker">Navit gestartet</string>
+	<string name="notification_event_default">Navit running</string>
+
+	<!-- INITIAL INFOBOX -->
+	<string name="initial_info_box_title">Willkommen bei Navit!</string>
+	<string name="intial_info_box_message">"Vielen Dank für die Installation von Navit!\n\nZum loslegen im Menu \"1te karte runterladen\" auswählen und Karte für die gewünschte Region downloaden. Die Kartendatei ist sehr gross, bitte flatrate oder ähnliches aktivieren!\n\nKartendaten: CC-BY-SA OpenStreetMap Project\n\nViel Spaß mit Navit!"</string>
+	<string name="initial_info_box_OK">OK</string>
+	<string name="initial_info_box_more_info">Mehr infos</string>
+
+	<!-- OPTIONS MENU -->
+	<string name="optionsmenu_zoom_in">Zoom in</string>
+	<string name="optionsmenu_zoom_out">Zoom out</string>
+	<string name="optionsmenu_download_first_map">1te karte runterladen</string>
+	<string name="optionsmenu_toggle_poi">POI ein/aus</string>
+	<string name="optionsmenu_address_search">@string/address_search_title</string>
+	<string name="optionsmenu_download_second_map">2te karte runterladen</string>
+	<string name="optionsmenu_exit_navit">Navit Beenden</string>
+
+	<!-- POSITION POP-UP -->
+	<string name="position_popup_title">Position</string>
+	<string name="position_popup_drive_here">Ziel setzen</string>
+
+	<!-- MAP DOWNLOAD -->
+	<string name="map_download_title">Kartendownload</string>
+	<string name="map_download_downloading">Runterladen:</string>
+	<string name="map_download_eta">Fertig in</string>
+	<string name="map_download_download_error">Fehler beim Kartendownload</string>
+
+	<!-- ADDRESS SEARCH -->
+	<string name="address_search_title">Adresse suchen</string>
+	<string name="address_enter_destination">Geben Sie Ihr Ziel</string>
+	<string name="address_partial_match">Ungefähr</string>
+	<string name="address_search_searching">Suche läuft#8230;</string>
+	<string name="address_search_not_found">Keine Adresse gefunden</string>
+	<string name="address_search_getting_results">Abrufen von Suchergebnissen</string>
+	<string name="address_search_loading_results">Lädt Suchergebnisse</string>
+	<string name="address_search_no_results">Suche liefert kein Ergebnis!</string>
+	<string name="address_search_no_text_entered">Keine Eingabe</string>
+	<string name="address_search_set_destination">Neues Fahrziel:</string>
+</resources>
+
