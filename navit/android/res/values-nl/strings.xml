@@ -11,7 +11,7 @@
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Welkom bij Navit!</string>
-	<string name="intial_info_box_message">"Dank u voor het installeren van Navit!\n\nOm te beginnen, selecteer \"Download eerste kaart\" uit het menu en download een kaart\n van je regio. De kaarten zijn groot, dus is het aangeraden om een ongelimiteerde internetverbinding te hebben!\n\nKaartendata: CC-BY-SA OpenStreetMap Project\n\nNog veel plezier met Navit!"</string>
+	<string name="initial_info_box_message">"Dank u voor het installeren van Navit!\n\nOm te beginnen, selecteer \"Download eerste kaart\" uit het menu en download een kaart\n van je regio. De kaarten zijn groot, dus is het aangeraden om een ongelimiteerde internetverbinding te hebben!\n\nKaartendata: CC-BY-SA OpenStreetMap Project\n\nNog veel plezier met Navit!"</string>
 	<string name="initial_info_box_OK">OK</string>
 	<string name="initial_info_box_more_info">Meer info</string>
 

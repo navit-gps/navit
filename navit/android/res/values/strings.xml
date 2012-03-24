@@ -14,7 +14,7 @@
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Welcome to Navit!</string>
-	<string name="intial_info_box_message">"Thank you for installing Navit!\n\nTo start, select \"Download first map\" from the menu to download a map. Note: The map filesize may be large (>50MB) - a wifi connection is recommended.\n\nMapdata: CC-BY-SA OpenStreetMap Project\n\nEnjoy Navit!"</string>
+	<string name="initial_info_box_message">"Thank you for installing Navit!\n\nTo start, select \"Download first map\" from the menu to download a map. Note: The map filesize may be large (>50MB) - a wifi connection is recommended.\n\nMapdata: CC-BY-SA OpenStreetMap Project\n\nEnjoy Navit!"</string>
 	<string name="initial_info_box_OK">OK</string>
 	<string name="initial_info_box_more_info">More info</string>
 
