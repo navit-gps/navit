@@ -77,7 +77,7 @@ speech_cmdline_search(GList *l, int suffix_len, const char *s, int decode)
 				tmp=speech_cmdline_search(l, suffix_len, ss, decode);
 			else 
 				tmp=NULL;
-			if (!ret || g_list_length(tmp) < len) {
+			if (!ret || (tmp && g_list_length(tmp) < len)) {
 				len=g_list_length(tmp);
 				g_list_free(ret);
 				ret=tmp;
