@@ -11,9 +11,9 @@
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Bienvenue chez Navit</string>
-	<string name="initial_info_box_message">"Nous vous remercie pour l'installation de Navit!\n\nPour commencer, sélectionnez \"Télécharchez 1ere carte\" du menu et télechargez une carte de votre région. Les cartes sont volumineux, donc il est préférable d'avoir une connection internet illimitée!\n\nCartes: CC-BY-SA OpenStreetMap Project\n\nAmusez vous avec Navit!"</string>
+	<string name="initial_info_box_message">Nous vous remercie pour l\'installation de Navit!\n\nPour commencer, sélectionnez \"Télécharchez 1ere carte\" du menu et télechargez une carte de votre région. Les cartes sont volumineux, donc il est préférable d\'avoir une connection internet illimitée!\n\nCartes: CC-BY-SA OpenStreetMap Project\n\nAmusez vous avec Navit!</string>
 	<string name="initial_info_box_OK">OK</string>
-	<string name="initial_info_box_more_info">Plus d'infos</string>
+	<string name="initial_info_box_more_info">Plus d\'infos</string>
 
 	<!-- OPTIONS MENU -->
 	<string name="optionsmenu_zoom_in">Zoom-avant</string>
@@ -35,7 +35,7 @@
 	<string name="map_download_download_error">Erreur de téléchargement carte</string>
 
 	<!-- ADDRESS SEARCH -->
-	<string name="address_search_title">Recherche d'adresse</string>
+	<string name="address_search_title">Recherche d\'adresse</string>
 	<string name="address_enter_destination">Entrez votre destination</string>
 	<string name="address_partial_match">Correspondance partielle</string>
 	<string name="address_search_searching">Recherche en cours#8230;</string>
