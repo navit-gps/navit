@@ -281,6 +281,8 @@ map_destroy(struct map *m)
 void
 map_unref(struct map *m)
 {
+	if(!m)
+		return;
 	m->refcount--;
 	if (m->refcount <= 0)
 		map_destroy(m);
