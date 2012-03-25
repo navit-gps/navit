@@ -32,12 +32,16 @@
 	<string name="map_download_title">Carte téléchargement</string>
 	<string name="map_download_downloading">Télécharger:</string>
 	<string name="map_download_eta">Temps restant</string>
+	<string name="map_download_ready">prêt</string>
 	<string name="map_download_download_error">Erreur de téléchargement carte</string>
+	<string name="map_download_download_aborted">Carte télécharger avortée</string>
+	<string name="map_download_not_enough_free_space">Pas assez d\'espace libre</string>
 
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Recherche d\'adresse</string>
 	<string name="address_enter_destination">Entrez votre destination</string>
 	<string name="address_partial_match">Correspondance partielle</string>
+	<string name="address_search_button">Chercher</string>
 	<string name="address_search_searching">Recherche en cours#8230;</string>
 	<string name="address_search_not_found">Adresse introuvable</string>
 	<string name="address_search_getting_results">Obtenir des résultats de recherche</string>
@@ -45,5 +49,7 @@
 	<string name="address_search_no_results">Pas de résultats trouvés</string>
 	<string name="address_search_no_text_entered">Aucun texte entré</string>
 	<string name="address_search_set_destination">Destination fixée à:</string>
+	<string name="address_search_towns">Villes</string>
+	<string name="address_search_streets">Rues</string>
 </resources>
 
