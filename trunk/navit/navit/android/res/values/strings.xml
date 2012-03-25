@@ -36,12 +36,16 @@
 	<string name="map_download_title">Map Download</string>
 	<string name="map_download_downloading">Downloading:</string>
 	<string name="map_download_eta">ETA</string>
+	<string name="map_download_ready">ready</string>
 	<string name="map_download_download_error">Error downloading map.</string>
+	<string name="map_download_download_aborted">Map download aborted</string>
+	<string name="map_download_not_enough_free_space">Not enough free space</string>
 
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Address search</string>
 	<string name="address_enter_destination">Enter destination</string>
 	<string name="address_partial_match">Match partial address</string>
+	<string name="address_search_button">Search</string>
 	<string name="address_search_searching">Searching#8230;</string>
 	<string name="address_search_not_found">Address not found</string>
 	<string name="address_search_getting_results">Getting search results</string>
@@ -49,6 +53,8 @@
 	<string name="address_search_no_results">No results found</string>
 	<string name="address_search_no_text_entered">No text entered</string>
 	<string name="address_search_set_destination">Setting destination to:</string>
+	<string name="address_search_towns">Towns</string>
+	<string name="address_search_streets">Streets</string>
 
 </resources>
 
