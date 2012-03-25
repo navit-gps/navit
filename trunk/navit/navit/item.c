@@ -195,6 +195,20 @@ item_attr_set(struct item *it, struct attr *attr, enum change_mode mode)
 		return 0;
 	return it->meth->item_attr_set(it->priv_data, attr, mode);
 }
+/**
+ * @brief Set map item type. 
+ *
+ * @param it reference to the item.
+ * @param type New type for the item. Setting it to type_none is expected to delete item from the map.
+ * @return  Non-zero if this action is supported by the map and type is set successfully, 0 on error.
+ */
+int
+item_type_set(struct item *it, enum item_type type)
+{
+	if (!it->meth->item_type_set)
+		return 0;
+	return it->meth->item_type_set(it->priv_data, type);
+}
 
 struct item * item_new(char *type, int zoom)
 {
