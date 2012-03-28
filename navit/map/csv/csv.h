@@ -29,21 +29,23 @@ struct map_priv {
 	int id;
 	struct quadtree_node* tree_root;
 	int flags;
-	GHashTable*item_hash;
 	GHashTable*qitem_hash;
 	char* filename;
-	int dirty;  //need to write map file on exit
+	/*need to write map file on exit*/
+	int dirty;  
 	int attr_cnt;
 	enum attr_type *attr_types;
 	int next_item_idx;
 	enum item_type item_type;
-	GList* new_items;  //list of quadtree items that have no coord set yet ()
+	/*list of quadtree items that have no coord set yet ()*/
+	GList* new_items;  
+	char *charset;
 };
 
 struct map_rect_priv {
 	struct map_selection *sel;
-	GList* query_result;
-	GList* curr_item; 
+	struct quadtree_iter *qiter;
+	struct quadtree_item *qitem;
 	struct coord c;
 	int bStarted;
 	struct item item;
