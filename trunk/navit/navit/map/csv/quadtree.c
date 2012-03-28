@@ -20,11 +20,17 @@
 #include <stdlib.h>
 #include <glib.h>
 
+#include "debug.h"
+
 #include "quadtree.h"
 
 #define QUADTREE_NODE_CAPACITY 10
 
 #define MAX_DOUBLE 9999999
+/* Check if two given line segments overlap (1-d case) */
+#define segments_overlap(x11,x12, x21,x22) (((x11)<=(x21) && (x21)<=(x12)) || ((x21)<=(x11) && (x11)<=(x22)))
+/* Check if two given rectanlgles overlap (2-d case) */
+#define rects_overlap(x11,y11,x12,y12, x21,y21,x22,y22) (segments_overlap(x11,x12, x21,x22) && segments_overlap(y11,y12, y21,y22))
 
 static double 
 dist_sq(double x1,double y1,double x2,double y2)
@@ -55,10 +61,10 @@ quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax
         int i;
         //double distance_sq = current_max;
         for(i=0;i<this_->node_num;++i) {	//select only items within input rectangle
-		if(dXMin<=this_->items[i].longitude && this_->items[i].longitude<=dXMax &&
-		   dYMin<=this_->items[i].latitude && this_->items[i].latitude<=dYMax
+		if(dXMin<=this_->items[i]->longitude && this_->items[i]->longitude<=dXMax &&
+		   dYMin<=this_->items[i]->latitude && this_->items[i]->latitude<=dYMax
 		  ) {
-		    *out=g_list_prepend(*out,&this_->items[i]);
+		    *out=g_list_prepend(*out,this_->items[i]);
 		}
         }
     }
@@ -90,10 +96,10 @@ quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* i
         int i;
         double distance_sq = current_max;
         for(i=0;i<this_->node_num;++i) {
-            double curr_dist_sq = dist_sq(item->longitude,item->latitude,this_->items[i].longitude,this_->items[i].latitude);
+            double curr_dist_sq = dist_sq(item->longitude,item->latitude,this_->items[i]->longitude,this_->items[i]->latitude);
             if(curr_dist_sq<distance_sq) {
                 distance_sq = curr_dist_sq;
-                res = &this_->items[i];
+                res = this_->items[i];
             }
         }
     }
@@ -138,8 +144,8 @@ quadtree_find_item(struct quadtree_node* this_, struct quadtree_item* item) {
         int i;
         for(i=0;i<this_->node_num;++i) {
             //TODO equality check may not be correct on float values! maybe it can be replaced by range check with some tolerance
-            if(item->longitude==this_->items[i].longitude && item->latitude==this_->items[i].latitude) {
-                res = &this_->items[i];
+            if(item->longitude==this_->items[i]->longitude && item->latitude==this_->items[i]->latitude) {
+                res = this_->items[i];
                 return res;
             }
         }
@@ -196,7 +202,7 @@ quadtree_find_containing_node(struct quadtree_node* root, struct quadtree_item* 
     if( root->is_leaf ) { 
         int i;
         for(i=0;i<root->node_num;++i) {
-            if(item == &root->items[i]) {
+            if(item == root->items[i]) {
                 res = root;
             }
         }
@@ -240,23 +246,19 @@ quadtree_find_containing_node(struct quadtree_node* root, struct quadtree_item* 
 
 int  quadtree_delete_item(struct quadtree_node* root, struct quadtree_item* item)
 {
+
   struct quadtree_node* qn = quadtree_find_containing_node(root,item);
-  int i, bFound = 0;
+  int i, bFound=0;
 
   if(!qn || !qn->node_num) {
     return 0;
   }
 
   for(i=0;i<qn->node_num;++i) {
-    if( &qn->items[i] == item) {
-      bFound = 1;
+    if( qn->items[i] == item) {
+    	qn->items[i]->deleted=1;
+    	bFound=1;
     }
-    if(bFound && i<qn->node_num-1) {
-      qn->items[i] = qn->items[i+1];
-    }
-  }
-  if(bFound) {
-    --qn->node_num;
   }
   return bFound;
 }
@@ -275,10 +277,10 @@ quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
     if( this_->is_leaf ) { 
         int i;
         for(i=0;i<this_->node_num;++i) {
-            double curr_dist_sq = dist_sq(item->longitude,item->latitude,this_->items[i].longitude,this_->items[i].latitude);
+            double curr_dist_sq = dist_sq(item->longitude,item->latitude,this_->items[i]->longitude,this_->items[i]->latitude);
             if(curr_dist_sq<distance_sq) {
                 distance_sq = curr_dist_sq;
-                res = &this_->items[i];
+                res = this_->items[i];
             }
         }
       //go up n levels
@@ -295,8 +297,7 @@ quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
 		  res = res2;
 		}
 	  }
-    }
-    else {
+    } else {
         if(
 	   this_->aa && 
            this_->aa->xmin<=item->longitude && item->longitude<this_->aa->xmax &&
@@ -347,23 +348,28 @@ quadtree_add(struct quadtree_node* this_, struct quadtree_item* item) {
     if( this_->is_leaf ) {
         int bSame = 1;
         int i;
-        double lon = this_->items[0].longitude, lat = this_->items[0].latitude;
-
+	item->deleted=0;
+	item->ref_count=0;
         if(QUADTREE_NODE_CAPACITY-1 == this_->node_num) {
-          //avoid infinite recursion when all elements has the same coordinate
-          for(i=0;i<this_->node_num;++i) {
-            if (lon != this_->items[i].longitude || lat != this_->items[i].latitude) {
+	  double lon, lat;
+          //avoid infinite recursion when all elements have the same coordinate
+	  lon = this_->items[0]->longitude;
+          lat = this_->items[0]->latitude;
+          for(i=1;i<this_->node_num;++i) {
+            if (lon != this_->items[i]->longitude || lat != this_->items[i]->latitude) {
               bSame = 0;
               break;
             }
           }
           if (bSame) {
+            //FIXME: memleak and items thrown away if more than QUADTREE_NODE_CAPACITY-1 items with same coordinates added.
+            dbg(0,"Unable to add another item with same coordinates. Throwing item to the ground. Will leak %p.\n",item);
             return;
           }
-          this_->items[this_->node_num++] = *item;
+          this_->items[this_->node_num++] = item;
           quadtree_split(this_);
         } else {
-          this_->items[this_->node_num++] = *item;
+          this_->items[this_->node_num++] = item;
         }
     }
     else {
@@ -412,40 +418,40 @@ quadtree_split(struct quadtree_node* this_) {
     this_->is_leaf = 0;
     for(i=0;i<this_->node_num;++i) {
         if(
-           this_->xmin<=this_->items[i].longitude && this_->items[i].longitude<this_->xmin+(this_->xmax-this_->xmin)/2.0 &&
-           this_->ymin<=this_->items[i].latitude && this_->items[i].latitude<this_->ymin+(this_->ymax-this_->ymin)/2.0
+           this_->xmin<=this_->items[i]->longitude && this_->items[i]->longitude<this_->xmin+(this_->xmax-this_->xmin)/2.0 &&
+           this_->ymin<=this_->items[i]->latitude && this_->items[i]->latitude<this_->ymin+(this_->ymax-this_->ymin)/2.0
            ) {
 	  if(!this_->aa) {
             this_->aa = quadtree_node_new( this_, this_->xmin, this_->xmin+(this_->xmax-this_->xmin)/2.0 , this_->ymin, this_->ymin+(this_->ymax-this_->ymin)/2.0 );
 	  }
-          quadtree_add(this_->aa,&this_->items[i]);
+          quadtree_add(this_->aa,this_->items[i]);
         }
         else if(
-           this_->xmin+(this_->xmax-this_->xmin)/2.0<=this_->items[i].longitude && this_->items[i].longitude<this_->xmax &&
-           this_->ymin<=this_->items[i].latitude && this_->items[i].latitude<this_->ymin+(this_->ymax-this_->ymin)/2.0
+           this_->xmin+(this_->xmax-this_->xmin)/2.0<=this_->items[i]->longitude && this_->items[i]->longitude<this_->xmax &&
+           this_->ymin<=this_->items[i]->latitude && this_->items[i]->latitude<this_->ymin+(this_->ymax-this_->ymin)/2.0
            ) {
 	  if(!this_->ab) {
             this_->ab = quadtree_node_new( this_, this_->xmin+(this_->xmax-this_->xmin)/2.0, this_->xmax , this_->ymin, this_->ymin+(this_->ymax-this_->ymin)/2.0 );
 	  }
-          quadtree_add(this_->ab,&this_->items[i]);
+          quadtree_add(this_->ab,this_->items[i]);
         }
         else if(
-           this_->xmin<=this_->items[i].longitude && this_->items[i].longitude<this_->xmin+(this_->xmax-this_->xmin)/2.0 &&
-           this_->ymin+(this_->ymax-this_->ymin)/2.0<=this_->items[i].latitude && this_->items[i].latitude<this_->ymax
+           this_->xmin<=this_->items[i]->longitude && this_->items[i]->longitude<this_->xmin+(this_->xmax-this_->xmin)/2.0 &&
+           this_->ymin+(this_->ymax-this_->ymin)/2.0<=this_->items[i]->latitude && this_->items[i]->latitude<this_->ymax
            ) {
 	  if(!this_->ba) {
             this_->ba = quadtree_node_new( this_, this_->xmin, this_->xmin+(this_->xmax-this_->xmin)/2.0 , this_->ymin+(this_->ymax-this_->ymin)/2.0 , this_->ymax);
 	  }
-          quadtree_add(this_->ba,&this_->items[i]);
+          quadtree_add(this_->ba,this_->items[i]);
         }
         else if(
-           this_->xmin+(this_->xmax-this_->xmin)/2.0<=this_->items[i].longitude && this_->items[i].longitude<this_->xmax &&
-           this_->ymin+(this_->ymax-this_->ymin)/2.0<=this_->items[i].latitude && this_->items[i].latitude<this_->ymax
+           this_->xmin+(this_->xmax-this_->xmin)/2.0<=this_->items[i]->longitude && this_->items[i]->longitude<this_->xmax &&
+           this_->ymin+(this_->ymax-this_->ymin)/2.0<=this_->items[i]->latitude && this_->items[i]->latitude<this_->ymax
            ) {
 	  if(!this_->bb) {
             this_->bb = quadtree_node_new( this_, this_->xmin+(this_->xmax-this_->xmin)/2.0, this_->xmax , this_->ymin+(this_->ymax-this_->ymin)/2.0 , this_->ymax);
 	  }
-          quadtree_add(this_->bb,&this_->items[i]);
+          quadtree_add(this_->bb,this_->items[i]);
         }
     }
     this_->node_num = 0;
@@ -472,6 +478,229 @@ quadtree_destroy(struct quadtree_node* this_) {
     free(this_);
 }
 
+/* Structure describing one level of the quadtree iteration query */
+struct quadtree_iter_node {
+	struct quadtree_node *node;
+	/* Number of subnode being analyzed (for non-leafs) */
+	int subnode;
+	/* Number of item being analyzed (for leafs) */
+	int item;
+	/* Number of subitems in items array (for leafs) */
+	int node_num;
+	/* If the node referenced was a leaf when it was analyzed */
+	int is_leaf;
+	struct quadtree_item *items[QUADTREE_NODE_CAPACITY];
+}; 
 
 
+/* Structure describing quadtree iteration query */
+struct quadtree_iter {
+	/* List representing stack of quad_tree_iter_nodes referring to higher-level quadtree_nodes */
+	GList *iter_nodes;
+	double xmin,xmax,ymin,ymax;
+	/* Current item pointer */
+	struct quadtree_item *item;
+	void (*item_free)(void *context, struct quadtree_item *qitem);
+	void *item_free_context;
+};
+
+/*
+ * @brief Start iterating over quadtree items not marked for deletion.
+ * @param this_ Pointer to the quadtree root node.
+ * @param dXMin,dXMax,dYMin,dYMax boundig box of area of interest.
+ * @param item_free function to be called to free the qitem, first parameter would be context, second parameter - actual qitem pointer to free
+ *		if this parameter is NULL, nothing would be called to free qitem pointer (possible massive memleak unless you store each qitem pointer in some
+ *		alternate storage)
+ * @param item_free_context data to be passed as a first parameter to item_free function
+ * @return pointer to the quad tree iteration structure.
+ */
+struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, double dXMax, double dYMin, double dYMax,void (*item_free)(void *context, struct quadtree_item *qitem), void *item_free_context)
+{
+	struct quadtree_iter *ret=g_new0(struct quadtree_iter,1);
+	struct quadtree_iter_node *n=g_new0(struct quadtree_iter_node,1);
+	ret->xmin=dXMin;
+	ret->xmax=dXMax;
+	ret->ymin=dYMin;
+	ret->ymax=dYMax;
+	dbg(1,"%f %f %f %f\n",dXMin,dXMax,dYMin,dYMax)
+	ret->item_free=item_free;
+	ret->item_free_context=item_free_context;
+	n->node=this_;
+	ret->iter_nodes=g_list_prepend(ret->iter_nodes,n);
+	n->is_leaf=this_->is_leaf;
+	if(this_->is_leaf) {
+		int i;
+		n->node_num=this_->node_num;
+		for(i=0;i<n->node_num;i++) {
+			n->items[i]=this_->items[i];
+			n->items[i]->ref_count++;
+		}
+	}	
+	
+	this_->ref_count++;
+	dbg(1,"Query %p \n",this_)
+	return ret;
+
+}
+
+/*
+ * @brief End iteration.
+ * @param iter Pointer to the quadtree iteration structure.
+ */
+void quadtree_query_free(struct quadtree_iter *iter)
+{
+	//Get the rest of the data to collect garbage and dereference all the items/nodes
+	//TODO: No need to iterate the whole tree here. Just dereference nodes/items (if any).
+	while(quadtree_item_next(iter));
+	g_free(iter);
+}
+
+
+/*
+ * @brief Mark current item of iterator for deletion.
+ * @param iter Pointer to the quadtree iteration structure.
+ */
+void quadtree_item_delete(struct quadtree_iter *iter) 
+{
+	if(iter->item)
+		iter->item->deleted=1;
+}
+
+/*
+ * @brief Get next item from the quadtree. Any  met unreferenced items/nodes marked for deletion will be freed here.
+ * @param iter Pointer to the quadtree iteration structure.
+ * @return pointer to the next item, or NULL if no items are left.
+ */
+struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
+{
+	struct quadtree_iter_node *iter_node;
+	struct quadtree_node *subnode;
+
+	if(iter->item) {
+		iter->item->ref_count--;
+		iter->item=NULL;
+	}
+
+	while(iter->iter_nodes)  {
+		struct quadtree_node *nodes[4];
+		iter_node=iter->iter_nodes->data;
+		int i,j;
+
+		if(iter_node->is_leaf) {
+			/* Try to find undeleted item in the current node */
+			dbg(1,"find item %p %p ...\n",iter->iter_nodes,iter->iter_nodes->data);
+			while(iter_node->item<iter_node->node_num) {
+				dbg(1,"%d %d\n",iter_node->item,iter_node->items[iter_node->item]->deleted);
+				if(iter_node->items[iter_node->item]->deleted) {
+					iter_node->item++;
+					continue;
+				}
+				iter->item=iter_node->items[iter_node->item];
+				iter_node->item++;
+				dbg(1,"Returning %p\n",iter->item);
+				iter->item->ref_count++;
+				return iter->item;
+			}
+			for(i=0;i<iter_node->node_num;i++) {
+				iter_node->items[i]->ref_count--;	
+			}
+		} else {
+			/* No items left, try to find non-empty subnode */
+			nodes[0]=iter_node->node->aa;
+			nodes[1]=iter_node->node->ab;
+			nodes[2]=iter_node->node->ba;
+			nodes[3]=iter_node->node->bb;
+		
+			for(subnode=NULL;!subnode && iter_node->subnode<4;iter_node->subnode++) {
+				i=iter_node->subnode;
+				if(!nodes[i] || !rects_overlap(nodes[i]->xmin, nodes[i]->ymin, nodes[i]->xmax, nodes[i]->ymax, iter->xmin, iter->ymin, iter->xmax, iter->ymax))
+					continue;
+				dbg(1,"%f %f %f %f\n",nodes[i]->xmin, nodes[i]->xmax, nodes[i]->ymin, nodes[i]->ymax)
+				subnode=nodes[i];
+			}
+	
+			if(subnode) {
+				/* Go one level deeper */
+				dbg(1,"Go one level deeper...\n");
+				iter_node=g_new0(struct quadtree_iter_node, 1);
+				iter_node->node=subnode;
+				iter_node->is_leaf=subnode->is_leaf;
+				if(iter_node->is_leaf) {
+					int i;
+					iter_node->node_num=subnode->node_num;
+					for(i=0;i<iter_node->node_num;i++) {
+						iter_node->items[i]=subnode->items[i];
+						iter_node->items[i]->ref_count++;
+					}
+				}
+				subnode->ref_count++;
+				iter->iter_nodes=g_list_prepend(iter->iter_nodes,iter_node);
+				continue;
+			}
+		}
+
+		/* No nodes and items left, fix up current subnode... */
+		iter_node=iter->iter_nodes->data;
+		subnode=iter_node->node;
+		subnode->ref_count--;
+
+		if(!subnode->aa && !subnode->ab && !subnode->ba && !subnode->bb)
+			subnode->is_leaf=1;
+
+		/*  1. free deleted items if this subnode is not referenced from any competing iterator */
+		if(!subnode->ref_count) {
+			int node_num=subnode->node_num;
+			dbg(1,"Processing unreferenced subnode children...\n");
+			for(i=0,j=0;i<node_num;i++) {
+				if(subnode->items[i]->deleted && !subnode->items[i]->ref_count) {
+					if(iter->item_free) {
+						(iter->item_free)(iter->item_free_context, subnode->items[i]);
+					} else {
+						g_free(subnode->items[i]);
+					}
+					subnode->node_num--;
+					subnode->items[i]=NULL;
+				} else {
+					subnode->items[j++]=subnode->items[i];
+				}
+				if(i>j)
+					subnode->items[i]=NULL;
+			}
+		}
+		
+		/* 2. remove empty leaf subnode if it's unreferenced */
+		
+		if(!subnode->ref_count && !subnode->node_num && subnode->is_leaf ) {
+			dbg(1,"Going to delete an empty unreferenced leaf subnode...\n");
+
+			if(subnode->parent) {
+				if(subnode->parent->aa==subnode) {
+					subnode->parent->aa=NULL;
+				} else if(subnode->parent->ab==subnode) {
+					subnode->parent->ab=NULL;
+				} else if(subnode->parent->ba==subnode) {
+					subnode->parent->ba=NULL;
+				} else if(subnode->parent->bb==subnode) {
+					subnode->parent->bb=NULL;
+				} else {
+					dbg(0,"Found Quadtree structure corruption while trying to free an empty node.\n");
+				}
+
+				if(!subnode->parent->aa && !subnode->parent->ab && !subnode->parent->ba && !subnode->parent->bb ) 
+					subnode->parent->is_leaf=1;
+				g_free(subnode);
+			} else
+				dbg(1,"Quadtree is empty. NOT deleting the root subnode...\n");
+				
+		}
+
+		/* Go one step towards root */
+		dbg(2,"Going towards root...\n");
+		iter->iter_nodes=g_list_delete_link(iter->iter_nodes,iter->iter_nodes);
+	}
+
+	iter->item=NULL;
+	return NULL;
+	
+}
 
