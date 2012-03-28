@@ -7,22 +7,22 @@
 	<!-- NOTIFICATION -->
 	<string name="notification_name">@string/app_name</string>
 	<string name="notification_ticker">Navit gestartet</string>
-	<string name="notification_event_default">Navit running</string>
+	<string name="notification_event_default">Navit läuft</string>
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Willkommen bei Navit</string>
-	<string name="initial_info_box_message">Vielen Dank für die Installation von Navit!\n\nZum loslegen im Menu \"1te karte runterladen\" auswählen und Karte für die gewünschte Region downloaden. Die Kartendatei ist sehr gross, bitte flatrate oder ähnliches aktivieren!\n\nKartendaten: CC-BY-SA OpenStreetMap Project\n\nViel Spaß mit Navit!</string>
+	<string name="initial_info_box_message">Vielen Dank für die Installation von Navit!\n\nBitte zuerst im Menu \"Erste Karte herunterladen\" auswählen und eine Karte für die gewünschte Region herunterladen. Die Kartendatei ist sehr groß, bitte Flatrate oder ähnliches aktivieren!\n\nKartendaten: CC-BY-SA OpenStreetMap Project\n\nViel Spaß mit Navit!</string>
 	<string name="initial_info_box_OK">OK</string>
-	<string name="initial_info_box_more_info">Mehr infos</string>
+	<string name="initial_info_box_more_info">Mehr Infos</string>
 
 	<!-- OPTIONS MENU -->
-	<string name="optionsmenu_zoom_in">Zoom in</string>
-	<string name="optionsmenu_zoom_out">Zoom out</string>
-	<string name="optionsmenu_download_first_map">1te karte runterladen</string>
+	<string name="optionsmenu_zoom_in"> Vergrößern</string>
+	<string name="optionsmenu_zoom_out">Verkleinern</string>
+	<string name="optionsmenu_download_first_map">Erste Karte herunterladen</string>
 	<string name="optionsmenu_toggle_poi">POI ein/aus</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	<string name="optionsmenu_download_second_map">2te karte runterladen</string>
-	<string name="optionsmenu_exit_navit">Navit Beenden</string>
+	<string name="optionsmenu_download_second_map">Zweite Karte herunterladen</string>
+	<string name="optionsmenu_exit_navit">Navit beenden</string>
 
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>
@@ -30,16 +30,16 @@
 
 	<!-- MAP DOWNLOAD -->
 	<string name="map_download_title">Kartendownload</string>
-	<string name="map_download_downloading">Runterladen:</string>
+	<string name="map_download_downloading">Laden:</string>
 	<string name="map_download_eta">Fertig in</string>
 	<string name="map_download_ready">bereit</string>
 	<string name="map_download_download_error">Fehler beim Kartendownload</string>
-	<string name="map_download_download_aborted">Karte herunterzuladen abgebrochen</string>
+	<string name="map_download_download_aborted">Download der Karte abgebrochen</string>
 	<string name="map_download_not_enough_free_space">Nicht genug freier Speicher</string>
 
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Adresse suchen</string>
-	<string name="address_enter_destination">Geben Sie Ihr Ziel</string>
+	<string name="address_enter_destination">Ziel eingeben</string>
 	<string name="address_partial_match">Ungefähr</string>
 	<string name="address_search_button">Suche</string>
 	<string name="address_search_searching">Suche läuft#8230;</string>
