@@ -3332,7 +3332,9 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 		wb->item=wm->item;
 		g_free(text);
 		while(item_attr_get(item, attr_any, &attr)) {
-			text=g_strdup_printf("%s:%s", attr_to_name(attr.type), attr_to_text(&attr, wm->item.map, 1));
+			char *attrtxt;
+			text=g_strdup_printf("%s:%s", attr_to_name(attr.type), attrtxt=attr_to_text(&attr, wm->item.map, 1));
+			g_free(attrtxt);
 			gui_internal_widget_append(w,
 			wb=gui_internal_button_new_with_callback(this, text,
 				NULL, gravity_left_center|orientation_horizontal|flags_fill,
@@ -5372,8 +5374,11 @@ save_vehicle_xml(struct vehicle *v)
 	while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
 		if (ATTR_IS_OBJECT(attr.type))
 			childs=1;
-		else
-			printf(" %s=\"%s\"",attr_to_name(attr.type),attr_to_text(&attr, NULL, 1));
+		else	{
+			char *attrtxt;
+			printf(" %s=\"%s\"",attr_to_name(attr.type),attrtxt=attr_to_text(&attr, NULL, 1));
+			g_free(attrtxt);
+		}
 	}
 	if (childs) {
 		printf(">\n");
