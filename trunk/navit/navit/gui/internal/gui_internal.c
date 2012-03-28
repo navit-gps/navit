@@ -341,6 +341,9 @@ struct gui_priv {
 		struct point p;
 	} gesture_ring[GESTURE_RINGSIZE];
 	int gesture_ring_last, gesture_ring_first;
+
+
+	int results_map_population;
 };
 
 
@@ -2786,7 +2789,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 		wl->name=g_strdup(type);
 	}
 	wl->func=gui_internal_cmd_position;
-	wl->data=(void *)2;
+	wl->data=(void *)9;
 	wl->item=*item;
 	wl->state|= STATE_SENSITIVE;
 	return wl;
@@ -3377,6 +3380,152 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	}
 }
 
+
+/*
+ * @brief Event to transfer search results to a map.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data (pointer to the table widget containing results, or NULL if results map is only have to be cleaned).
+ */
+static void
+gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct widget *w;
+	struct mapset *ms;	
+	struct map *map;
+	struct map_selection sel;
+	struct map_rect *mr;
+	struct item *item;
+	GList *l;
+	struct coord_rect r;
+	struct attr a;
+	int count;
+	
+	ms=navit_get_mapset(this->nav);
+
+	if(!ms)
+		return;
+
+	map=mapset_get_map_by_name(ms, "search_results");
+	if(!map) {
+		struct attr *attrs[10], attrmap;
+		enum attr_type types[]={attr_position_longitude,attr_position_latitude,attr_label,attr_none};
+		int i;
+		
+		attrs[0]=g_new0(struct attr,1);
+		attrs[0]->type=attr_type;
+		attrs[0]->u.str="csv";
+
+		attrs[1]=g_new0(struct attr,1);
+		attrs[1]->type=attr_name;
+		attrs[1]->u.str="search_results";
+
+		attrs[2]=g_new0(struct attr,1);
+		attrs[2]->type=attr_charset;
+		attrs[2]->u.str="utf-8";
+		
+		attrs[3]=g_new0(struct attr,1);
+		attrs[3]->type=attr_item_type;
+		attrs[3]->u.num=type_found_item;
+
+		attrs[4]=g_new0(struct attr,1);
+		attrs[4]->type=attr_attr_types;
+		attrs[4]->u.attr_types=types;
+		attrs[5]=NULL;
+		
+		attrmap.type=attr_map;
+		map=attrmap.u.map=map_new(NULL,attrs);
+		if(map)
+			mapset_add_attr(ms,&attrmap);
+
+		for(i=0;attrs[i];i++)
+			g_free(attrs[i]);
+
+	}
+
+	if(!map)
+		return;
+
+	sel.next=NULL;
+	sel.order=18;
+	sel.range.min=type_none;
+	sel.range.max=type_tec_common;
+	
+
+	mr = map_rect_new(map, NULL);
+
+	if(!mr)
+		return;
+		
+	/* Clean the map */
+	while((item = map_rect_get_item(mr))!=NULL) {
+		item_type_set(item,type_none);
+	}
+
+	this->results_map_population=0;
+	 
+	/* Find the table to pupulate the map */
+	for(w=data; w && w->type!=widget_table;w=w->parent);
+	
+	if(!w) {
+		map_rect_destroy(mr);
+		dbg(1,"Can't find the results table - only map clean up is done.\n");
+		return;
+	}
+
+	/* Populate the map with search results*/
+	for(l=w->children, count=0;l;l=g_list_next(l)) {
+		struct widget *wr=l->data;
+		if(wr->type==widget_table_row) {
+			struct widget *wi=wr->children->data;
+			if(wi->name==NULL)
+				continue;
+			dbg(0,"%s\n",wi->name);
+			struct item* it=map_rect_create_item(mr,type_found_item);
+			if(it) {
+				struct coord c;
+				struct attr a;
+				c.x=wi->c.x;
+				c.y=wi->c.y;
+				item_coord_set(it, &c, 1, change_mode_modify);
+				a.type=attr_label;
+				a.u.str=wi->name;
+				item_attr_set(it, &a, change_mode_modify);
+				if(!count++)
+					r.lu=r.rl=c;
+				else
+					coord_rect_extend(&r,&c);
+			}
+		}
+	}
+	map_rect_destroy(mr);
+	if(!count)
+		return;
+	a.type=attr_orientation;
+	a.u.num=0;
+	navit_set_attr(this->nav,&a);
+	navit_zoom_to_rect(this->nav,&r);
+	gui_internal_prune_menu(this, NULL);
+	this->results_map_population=count;
+}
+
+/*
+ * @brief Event to remove search results from the a map.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data
+ */
+static void
+gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data)
+{
+	gui_internal_cmd_results_to_map(this,wm,NULL);
+	gui_internal_prune_menu(this, NULL);
+	navit_draw(this->nav);
+}
+
+
 /* meaning of the bits in "flags":
  * 1: "Streets"
  * 2: "House numbers"
@@ -3386,9 +3535,10 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
  * 32: "Add as bookm."
  * 64: "POIs"
  * 128: "View on Map"
- * 256: POIs around this point
+ * 256: POIs around this point, "Drop search results from the map"
  * 512: "Cut/Copy... bookmark"
  * 1024: "Jump to attributes of top item within this->radius pixels of this point (implies flags|=256)"
+ * 2048: "Show search results on the map"
  * TODO define constants for these values
  */
 static void
@@ -3526,6 +3676,22 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		else
 			wbc->item.type=type_none;
 	}
+	if(flags & 256 && this->results_map_population) {
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
+			wbc=gui_internal_button_new_with_callback(this, _("Remove search results from the map"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_results_map_clean, NULL));
+		wbc->data=wm;
+	}
+	if(flags & 2048) {
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
+			wbc=gui_internal_button_new_with_callback(this, _("Show results on the map"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_results_to_map, NULL));
+		wbc->data=wm;
+	}
 	if ((flags & 256) || (flags & 1024)) {
 		struct displaylist_handle *dlh;
 		struct displaylist *display;
@@ -3610,6 +3776,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				gui_internal_cmd_delete_bookmark, NULL));
 		wbc->text=g_strdup(wm->text);
 	}
+	
 	gui_internal_menu_render(this);
 
 	if((flags & 1024) && wclosest) 
@@ -3617,15 +3784,16 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 }
 
 
-/* wm->data: 0 Nothing special
-	     1 Map Point
-	     2 Item
-	     3 Town
-	     4 County
-	     5 Street
- 		 6 House number
- 		 7 Bookmark
-		 8 Former destination
+/* wm->data:	0 Nothing special
+		1 Map Point
+		2 Item
+		3 Town
+		4 County
+		5 Street
+		6 House number
+		7 Bookmark
+		8 Former destination
+		9 Item from the POI list
 */
 
 static void
@@ -3643,18 +3811,18 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=4|8|16|32|64|128;
 		break;
 	case 3:
-		flags=1|8|16|32|64|128;
+		flags=1|8|16|32|64|128|2048;
 		flags &= this->flags_town;
 		break;
 	case 4:
 		gui_internal_search_town_in_country(this, wm);
 		return;
 	case 5:
-		flags=2|8|16|32|64|128;
+		flags=2|8|16|32|64|128|2048;
 		flags &= this->flags_street;
 		break;
 	case 6:
-		flags=8|16|32|64|128;
+		flags=8|16|32|64|128|2048;
 		flags &= this->flags_house_number;
 		break;
 	case 7:
@@ -3662,6 +3830,9 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		break;
 	case 8:
 		flags=8|16|32|64|128;
+		break;
+	case 9:
+		flags=4|8|16|32|64|128|2048;
 		break;
 	default:
 		return;

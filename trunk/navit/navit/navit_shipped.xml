@@ -2254,6 +2254,11 @@ Navigation</text></img>
 					<circle color="#606060" radius="0" width="0" text_size="10"/>
 				</itemgra>
 			</layer>
+			<layer name="Found items" order="0-">
+				<itemgra item_types="found_item">
+					<circle color="#008080" radius="24" width="2" text_size="12"/>
+				</itemgra>
+			</layer>
 		</layout>
 
 		<layout name="Car-dark" daylayout="Car" color="#011001">
@@ -3612,6 +3617,11 @@ Navigation</text></img>
 					<circle color="#606060" radius="0" width="0" text_size="10"/>
 				</itemgra>
 			</layer>
+			<layer name="Found items" order="0-">
+				<itemgra item_types="found_item">
+					<circle color="#008080" radius="24" width="2" text_size="12"/>
+				</itemgra>
+			</layer>
 		</layout>
 
     <layout name="Car-Android" color="#fef9ee" font="Liberation Sans">
@@ -4913,6 +4923,11 @@ Navigation</text></img>
           text_size="10" />
         </itemgra>
       </layer>
+	<layer name="Found items" order="0-">
+		<itemgra item_types="found_item">
+			<circle color="#008080" radius="24" width="2" text_size="12"/>
+		</itemgra>
+	</layer>
     </layout>
 
 		<layout name="Car-simple" color="#839ea9">
@@ -5035,6 +5050,11 @@ Navigation</text></img>
 
 				<itemgra item_types="town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7,district_label_1e6,district_label_2e6,district_label_5e6,district_label_1e7">
 					<circle radius="3" text_size="16" color="#ffffff" background_color="#000000"/>
+				</itemgra>
+			</layer>
+			<layer name="Found items" order="0-">
+				<itemgra item_types="found_item">
+					<circle color="#008080" radius="24" width="2" text_size="12"/>
 				</itemgra>
 			</layer>
 		</layout>
@@ -6002,6 +6022,11 @@ Navigation</text></img>
 					<circle color="#000000" radius="3" text_size="15"/>
 				</itemgra>
 			</layer>
+			<layer name="Found items" order="0-">
+				<itemgra item_types="found_item">
+					<circle color="#008080" radius="24" width="2" text_size="12"/>
+				</itemgra>
+			</layer>
 		</layout>
 
 		<layout name="T@H" font="Liberation Sans">
@@ -6506,6 +6531,11 @@ Navigation</text></img>
 				<itemgra item_types="poi_hotel" order="14-">
 					<icon src="hotel.xpm"/>
 					<circle color="#000000" radius="3" text_size="7"/>
+				</itemgra>
+			</layer>
+			<layer name="Found items" order="0-">
+				<itemgra item_types="found_item">
+					<circle color="#008080" radius="24" width="2" text_size="12"/>
 				</itemgra>
 			</layer>
 		</layout>
