@@ -654,6 +654,10 @@ Navigation</text></img>
 					<polyline color="#79c691"/>
 					<text text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_meadow" order="0-">
+					<polygon color="#c7f1a3"/>
+					<polyline color="#79c691"/>
+				</itemgra>
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#ffc895"/>
 					<polyline color="#ebb481"/>
@@ -2299,6 +2303,9 @@ Navigation</text></img>
 				<itemgra item_types="poly_farm" order="0-">
 					<polygon color="#041a06"/>
 					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_meadow" order="0-">
+					<polygon color="#041a06"/>
 				</itemgra>
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#191711"/>
@@ -5128,6 +5135,10 @@ Navigation</text></img>
 					<polygon color="#c7f1a3"/>
 					<polyline color="#79c691"/>
 					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_meadow" order="0-">
+					<polygon color="#c7f1a3"/>
+					<polyline color="#79c691"/>
 				</itemgra>
 				<itemgra item_types="poly_scree,poly_scrub,poly_fell,poly_heath" order="0-">
 					<polygon color="#c7f1a3"/>
