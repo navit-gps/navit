@@ -25,6 +25,10 @@ image_DATA += public_office.xpm
 
 image_DATA += biergarten.xpm
 image_DATA += restroom.xpm
+xpm_DATA += biergarten.xpm
+xpm_DATA += restroom.xpm
+xpm_DATA += menu.xpm
+xpm_DATA += toggle_fullscreen.xpm
 
 ## Obsolete end
 
@@ -53,9 +57,6 @@ image_DATA += nav_left_1_32.xpm
 image_DATA += nav_left_2_32.xpm
 image_DATA += nav_right_1_32.xpm
 image_DATA += nav_right_2_32.xpm
-
-image_DATA += menu.xpm
-image_DATA += toggle_fullscreen.xpm
 
 svgs  = gui_about.svg
 svgs += gui_actions.svg
@@ -102,6 +103,8 @@ svgs += gui_minus.svg
 svgs += gui_plus.svg
 svgs += gui_log.svg
 svgs += gui_search.svg
+svgs += menu.svg
+svgs += toggle_fullscreen.svg
 
 svgs += airport.svg
 svgs += attraction.svg
