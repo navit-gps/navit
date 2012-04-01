@@ -86,6 +86,10 @@ Navigation</text></img>
 			<a name='Route'><text>Route</text>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
 				<img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
+				<img cond='navit.route.route_status&amp;52' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
+Waypoint</text></img>
+				<img cond='navit.route.route_status&amp;52' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
+Waypoint</text></img>
 			</a>
 			</html>
 		]]></gui>

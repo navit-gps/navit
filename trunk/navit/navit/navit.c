@@ -163,6 +163,7 @@ struct navit {
 		 /* 2=No gui ok */
 	int border;
 	int imperial;
+	int waypoints_flag;
 	struct attr **attr_list;
 };
 
@@ -1198,6 +1199,20 @@ navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, 
 
 
 static void
+navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	navit_remove_waypoint(this);
+}
+
+
+static void
+navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	navit_remove_nth_waypoint(this, navit_get_destination_count(this)-1);
+}
+
+
+static void
 navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct pcoord pc;
@@ -1336,6 +1351,8 @@ static struct command_table commands[] = {
 	{"set_center",command_cast(navit_cmd_set_center)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
+	{"route_remove_next_waypoint",command_cast(navit_cmd_route_remove_next_waypoint)},
+	{"route_remove_last_waypoint",command_cast(navit_cmd_route_remove_last_waypoint)},
 	{"set_position",command_cast(navit_cmd_set_position)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 	{"fmt_coordinates",command_cast(navit_cmd_fmt_coordinates)},
@@ -1511,7 +1528,7 @@ navit_mark_navigation_stopped(char *former_destination_file){
 }
 
 /**
- * Start the route computing to a given set of coordinates
+ * Start or add a given set of coordinates for route computing
  *
  * @param navit The navit instance
  * @param c The coordinate to start routing to
@@ -1536,7 +1553,13 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
-		route_set_destination(this_->route, c, async);
+		struct attr attr;
+		navit_get_attr(this_, attr_waypoints_flag, &attr, NULL);
+		if (this_->waypoints_flag==0 || route_get_destination_count(this_->route)==0){
+			route_set_destination(this_->route, c, async);
+		}else{
+			route_append_destination(this_->route, c, async);
+		}
 
 		if (this_->ready == 3)
 			navit_draw(this_);
@@ -1570,6 +1593,55 @@ navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const c
 
 		if (this_->ready == 3)
 			navit_draw(this_);
+	}
+}
+
+int
+navit_get_destinations(struct navit *this_, struct pcoord *pc, int count)
+{
+	if(!this_->route)
+		return 0;
+ 	return route_get_destinations(this_->route, pc, count);
+
+}
+
+int
+navit_get_destination_count(struct navit *this_)
+{
+	if(!this_->route)
+		return 0;
+	return route_get_destination_count(this_->route);
+}
+
+char*
+navit_get_destination_description(struct navit *this_, int n)
+{
+	if(!this_->route)
+		return NULL;
+	return route_get_destination_description(this_->route, n);
+}
+
+void
+navit_remove_nth_waypoint(struct navit *this_, int n)
+{
+	if(!this_->route)
+		return;
+	if (route_get_destination_count(this_->route)>1){
+		route_remove_nth_waypoint(this_->route, n);
+	}else{
+		navit_set_destination(this_, NULL, NULL, 0);
+	}
+}
+
+void
+navit_remove_waypoint(struct navit *this_)
+{
+	if(!this_->route)
+		return;
+	if (route_get_destination_count(this_->route)>1){
+		route_remove_waypoint(this_->route);
+	}else{
+		navit_set_destination(this_, NULL, NULL, 0);
 	}
 }
 
@@ -2447,10 +2519,14 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		attr_updated=(this_->follow_cursor != !!attr->u.num);
 		this_->follow_cursor=!!attr->u.num;
 		break;
-        case attr_imperial: 
-                attr_updated=(this_->imperial != attr->u.num); 
-                this_->imperial=attr->u.num; 
-                break; 
+	case attr_imperial:
+		attr_updated=(this_->imperial != attr->u.num);
+		this_->imperial=attr->u.num;
+		break;
+	case attr_waypoints_flag:
+		attr_updated=(this_->waypoints_flag != !!attr->u.num);
+		this_->waypoints_flag=!!attr->u.num;
+		break;
 	default:
 		return 0;
 	}
@@ -2637,6 +2713,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_follow_cursor:
 		attr->u.num=this_->follow_cursor;
+		break;
+	case attr_waypoints_flag:
+		attr->u.num=this_->waypoints_flag;
 		break;
 	default:
 		return 0;
@@ -2827,6 +2906,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
 	void *attr_object;
 	char *destination_file;
+	char *description;
 
 	profile(0,NULL);
 	if (this_->ready != 3) {
@@ -2892,12 +2972,19 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (this_->route) {
 		switch(route_destination_reached(this_->route)) {
 		case 1:
+			description=route_get_destination_description(this_->route, 0);
 			route_remove_waypoint(this_->route);
 			count=route_get_destinations(this_->route, pc, 16);
 			destination_file = bookmarks_get_destination_file(TRUE);
-			bookmarks_append_coord(this_->former_destination, destination_file, pc, type_former_itinerary_part, NULL, this_->recentdest_count);
+			bookmarks_append_coord(this_->former_destination, destination_file, pc, type_former_itinerary_part, description, this_->recentdest_count);
+			g_free(description);
 			break;	
 		case 2:
+			description=route_get_destination_description(this_->route, 0);
+			count=route_get_destinations(this_->route, pc, 1);
+			destination_file = bookmarks_get_destination_file(TRUE);
+			bookmarks_append_coord(this_->former_destination, destination_file, pc, type_former_itinerary_part, description, this_->recentdest_count);
+			g_free(description);
 			navit_set_destination(this_, NULL, NULL, 0);
 			break;
 		}

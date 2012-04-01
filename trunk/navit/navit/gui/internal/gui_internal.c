@@ -2415,6 +2415,111 @@ gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widget *wm, void 
 }
 
 static void
+gui_internal_cmd_delete_bookmark_folder(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct attr mattr;
+	GList *l;
+	navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
+	bookmarks_move_up(mattr.u.bookmarks);
+	bookmarks_delete_bookmark(mattr.u.bookmarks,wm->prefix);
+	l=g_list_first(this->root.children);
+	gui_internal_prune_menu(this, l->data);
+}
+
+static void
+gui_internal_cmd_load_bookmarks_as_waypoints(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct attr mattr;
+
+	if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
+		struct attr attr;
+		struct item *item;
+		struct coord c;
+		struct pcoord *pc;
+		enum projection pro=bookmarks_get_projection(mattr.u.bookmarks);
+		int i, bm_count;
+
+		navit_set_destination(this->nav, NULL, NULL, 0);
+
+		bm_count=bookmarks_get_bookmark_count(mattr.u.bookmarks);
+		pc=g_alloca(bm_count*sizeof(struct pcoord));
+		bookmarks_item_rewind(mattr.u.bookmarks);
+		i=0;
+		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
+			if (!item_attr_get(item, attr_label, &attr)) 
+				continue;
+			if (item->type == type_bookmark) {
+				if (item_coord_get(item, &c, 1)) {
+					pc[i].x=c.x;
+					pc[i].y=c.y;
+					pc[i].pro=pro;
+					i++;
+				}
+			}
+		}
+		bm_count=i;
+
+		if (bm_count>0){
+			navit_set_destinations(this->nav, pc, bm_count, wm->prefix, 1);
+			if (this->flags & 512) {
+				struct attr follow;
+				follow.type=attr_follow;
+				follow.u.num=180;
+				navit_set_attr(this->nav, &this->osd_configuration);
+				navit_set_attr(this->nav, &follow);
+				navit_zoom_to_route(this->nav, 0);
+			}
+		}
+	}
+
+	gui_internal_prune_menu(this, NULL);
+}
+
+static void
+gui_internal_cmd_replace_bookmarks_from_waypoints(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct attr mattr;
+
+	if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
+		struct attr attr;
+		char *desc=NULL;
+		struct pcoord *pc;
+		int i, bm_count;
+
+		if (bookmarks_get_bookmark_count(mattr.u.bookmarks)>0){
+			struct item *item;
+			bookmarks_item_rewind(mattr.u.bookmarks);
+
+			while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
+
+				if (!item_attr_get(item, attr_label, &attr)) 
+					continue;
+
+				if (item->type == type_bookmark) 
+					bookmarks_delete_bookmark(mattr.u.bookmarks,  attr.u.str);
+
+				bookmarks_move_down(mattr.u.bookmarks,wm->prefix);
+			}
+		}
+		bookmarks_item_rewind(mattr.u.bookmarks);
+
+		bm_count=navit_get_destination_count(this->nav);
+		pc=g_alloca(bm_count*sizeof(struct pcoord));
+		navit_get_destinations(this->nav, pc, bm_count);
+
+		for (i=0; i<bm_count; i++){
+			desc=g_strdup_printf("%s WP%d", navit_get_destination_description(this->nav, i), i+1);
+			navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
+			bookmarks_add_bookmark(attr.u.bookmarks, &pc[i], desc);
+			bookmarks_move_down(mattr.u.bookmarks,wm->prefix);
+			g_free(desc);
+		}
+	}
+
+	gui_internal_prune_menu(this, NULL);
+}
+
+static void
 get_direction(char *buffer, int angle, int mode)
 {
 	angle=angle%360;
@@ -3926,13 +4031,13 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 			prefix=g_strdup(wm->prefix);
 	}
 	if ( prefix )
-        plen=strlen(prefix);
+		plen=strlen(prefix);
 
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Bookmarks"));
 	wb->background=this->background;
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	w->spy=this->spacing*3;
+	//w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 
 	if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
@@ -3960,6 +4065,40 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 						gui_internal_cmd_bookmarks, NULL);
 						wbm->prefix=g_strdup("..");
 				gui_internal_widget_append(w, wbm);
+
+				// load bookmark folder as Waypoints, if any
+				if (bookmarks_get_bookmark_count(mattr.u.bookmarks) > 0){
+					wbm=gui_internal_button_new_with_callback(this, _("Bookmarks as Waypoints"),
+							image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+							gui_internal_cmd_load_bookmarks_as_waypoints, NULL);
+					wbm->prefix=g_strdup(prefix);
+					gui_internal_widget_append(w, wbm);
+				}
+
+				// save Waypoints in bookmark folder, if route exists
+				if (navit_get_destination_count(this->nav) > 0){
+					if (bookmarks_get_bookmark_count(mattr.u.bookmarks)==0){
+						wbm=gui_internal_button_new_with_callback(this, _("Save Waypoints"),
+									image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+									gui_internal_cmd_replace_bookmarks_from_waypoints, NULL);
+					}else{
+						wbm=gui_internal_button_new_with_callback(this, _("Replace Waypoints"),
+									image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+									gui_internal_cmd_replace_bookmarks_from_waypoints, NULL);
+					}
+					wbm->prefix=g_strdup(prefix);
+					gui_internal_widget_append(w, wbm);
+				}
+
+				// delete empty folder
+				if (bookmarks_get_bookmark_count(mattr.u.bookmarks)==0){
+					gui_internal_widget_append(w,
+							wbm=gui_internal_button_new_with_callback(this, _("Delete Folder"),
+							image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+							gui_internal_cmd_delete_bookmark_folder, NULL));
+					wbm->prefix=g_strdup(prefix);
+				}
+
 			}
 		}
 		
@@ -4014,9 +4153,9 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 			}
 		}
 	}
-	if (plen) {
-		g_free(prefix);
-	}
+
+	g_free(prefix);
+
 	if (found)
 		gui_internal_check_exit(this);
 	else
@@ -5598,6 +5737,12 @@ gui_internal_cmd2_setting_rules(struct gui_priv *this, char *function, struct at
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
+	on.u.num=1;
+	off.u.num=0;
+	on.type=off.type=attr_waypoints_flag;
+	gui_internal_widget_append(w,
+			gui_internal_button_navit_attr_new(this, _("Plan with Waypoints"), gravity_left_center|orientation_horizontal|flags_fill,
+					&on, &off));
 	gui_internal_menu_render(this);
 }
 
@@ -7597,6 +7742,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 
 
 }
+
 
 static void
 gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
