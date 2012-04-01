@@ -234,6 +234,7 @@ ATTR(readwrite)
 ATTR(cache)
 ATTR(create)
 ATTR(persistent)
+ATTR(waypoints_flag) /* toggle for "set as destination" to switch between start a new route or add */
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)

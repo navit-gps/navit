@@ -48,6 +48,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #endif
+#include "navit_nls.h"
 #include "glib_slice.h"
 #include "config.h"
 #include "point.h"
@@ -542,8 +543,12 @@ void
 route_set_profile(struct route *this, struct vehicleprofile *prof)
 {
 	if (this->vehicleprofile != prof) {
-		this->vehicleprofile=prof;
-		route_path_update(this, 1, 1);
+		this->vehicleprofile = prof;
+		int dest_count = g_list_length(this->destinations);
+		struct pcoord *pc;
+		pc = g_alloca(dest_count*sizeof(struct pcoord));
+		route_get_destinations(this, pc, dest_count);
+		route_set_destinations(this, pc, dest_count, 1);
 	}
 }
 
@@ -1054,18 +1059,142 @@ route_get_destinations(struct route *this, struct pcoord *pc, int count)
 	}
 	return ret;
 }
- 
+
+/**
+ * @brief Get the destinations count for the route
+ *
+ * @param this The route instance
+ * @return destination count for the route
+ */
+int
+route_get_destination_count(struct route *this)
+{
+	return g_list_length(this->destinations);
+}
+
+/**
+ * @brief Returns a description for a waypoint as (type or street_name_systematic) + (label or WayID[osm_wayid])
+ *
+ * @param this The route instance
+ * @param n The nth waypoint
+ * @return The description
+ */
+char*
+route_get_destination_description(struct route *this, int n)
+{
+	struct route_info *dst;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	struct attr attr;
+	char *type=NULL;
+	char *label=NULL;
+	char *desc=NULL;
+
+	dst=g_list_nth_data(this->destinations,n);
+	mr=map_rect_new(dst->street->item.map, NULL);
+	item = map_rect_get_item_byid(mr, dst->street->item.id_hi, dst->street->item.id_lo);
+
+	type=g_strdup(item_to_name(dst->street->item.type));
+
+	while(item_attr_get(item, attr_any, &attr)) {
+		if (attr.type==attr_street_name_systematic ){
+			g_free(type);
+			type=attr_to_text(&attr, item->map, 1);
+		} else if (attr.type==attr_label){
+			g_free(label);
+			label=attr_to_text(&attr, item->map, 1);
+		} else if (attr.type==attr_osm_wayid && !label){
+			char *tmp=attr_to_text(&attr, item->map, 1);
+			label=g_strdup_printf("WayID %s", tmp);
+		}
+	}
+
+	if(!label && !type) {
+		desc=g_strdup(_("unknown street"));
+	} else if (!label || strcmp(type, label)==0){
+		desc=g_strdup(type);
+	} else {
+		desc=g_strdup_printf("%s %s", type, label);
+	}
+
+	g_free(label);
+	g_free(type);
+
+	if (mr)
+		map_rect_destroy(mr);
+
+	return desc;
+}
+
+/**
+ * @brief Start a route given set of coordinates
+ *
+ * @param this The route instance
+ * @param c The coordinate to start routing to
+ * @param async 1 for async
+ * @return nothing
+ */
 void
 route_set_destination(struct route *this, struct pcoord *dst, int async)
 {
 	route_set_destinations(this, dst, dst?1:0, async);
 }
 
+/**
+ * @brief Append a given set of coordinates for route computing
+ *
+ * @param this The route instance
+ * @param c The coordinate to start routing to
+ * @param async 1 for async
+ * @return nothing
+ */
+void
+route_append_destination(struct route *this, struct pcoord *dst, int async)
+{
+	if (dst){
+		struct route_info *dsti;
+		dsti=route_find_nearest_street(this->vehicleprofile, this->ms, &dst[0]);
+		if(dsti) {
+			route_info_distances(dsti, dst->pro);
+			this->destinations=g_list_append(this->destinations, dsti);
+		}
+		/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
+		route_graph_destroy(this->graph);
+		this->graph=NULL;
+		this->current_dst=route_get_dst(this);
+		route_path_update(this, 1, async);
+	}else{
+		route_set_destinations(this, NULL, 0, async);
+	}
+}
+
+/**
+ * @brief Remove the nth waypoint of the route
+ *
+ * @param this The route instance
+ * @param n The waypoint to remove
+ * @return nothing
+ */
+void
+route_remove_nth_waypoint(struct route *this, int n)
+{
+	struct route_info *ri=g_list_nth_data(this->destinations, n);
+	this->destinations=g_list_remove(this->destinations,ri);
+	route_info_free(ri);
+	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
+	route_graph_destroy(this->graph);
+	this->graph=NULL;
+	this->current_dst=route_get_dst(this);
+	route_path_update(this, 1, 1);
+}
+
 void
 route_remove_waypoint(struct route *this)
 {
 	struct route_path *path=this->path2;
-	this->destinations=g_list_remove(this->destinations,this->destinations->data);
+	struct route_info *ri=this->destinations->data;
+	this->destinations=g_list_remove(this->destinations,ri);
+	route_info_free(ri);
 	this->path2=this->path2->next;
 	route_path_destroy(path,0);
 	if (!this->destinations)

@@ -95,8 +95,11 @@ void route_set_position_from_tracking(struct route *this_, struct tracking *trac
 struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs);
 void route_set_destinations(struct route *this_, struct pcoord *dst, int count, int async);
 int route_get_destinations(struct route *this_, struct pcoord *pc, int count);
+int route_get_destination_count(struct route *this_);
 void route_set_destination(struct route *this_, struct pcoord *dst, int async);
+void route_remove_nth_waypoint(struct route *this_, int n);
 void route_remove_waypoint(struct route *this_);
+char* route_get_destination_description(struct route *this_, int n);
 struct coord route_get_coord_dist(struct route *this_, int dist);
 struct street_data *street_get_data(struct item *item);
 struct street_data *street_data_dup(struct street_data *orig);

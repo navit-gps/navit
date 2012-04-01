@@ -130,6 +130,19 @@ struct item* bookmarks_get_item(struct bookmarks* this_) {
 	return ret;
 }
 
+int bookmarks_get_bookmark_count(struct bookmarks* this_) {
+	int ret=0;
+	bookmarks_item_rewind(this_);
+	while (this_->current->iter!=NULL) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->iter->data;
+		if (data->type == type_bookmark) {
+			ret++;
+		}
+		this_->current->iter=g_list_next(this_->current->iter);
+	}
+	return ret;
+}
+
 const char* bookmarks_item_cwd(struct bookmarks* this_) {
 	return this_->current->label;
 }
