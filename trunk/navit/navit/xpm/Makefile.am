@@ -25,10 +25,8 @@ image_DATA += public_office.xpm
 
 image_DATA += biergarten.xpm
 image_DATA += restroom.xpm
-xpm_DATA += biergarten.xpm
-xpm_DATA += restroom.xpm
-xpm_DATA += menu.xpm
-xpm_DATA += toggle_fullscreen.xpm
+image_DATA += menu.xpm
+image_DATA += toggle_fullscreen.xpm
 
 ## Obsolete end
 
