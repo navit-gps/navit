@@ -522,7 +522,6 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 			full_name=g_strdup_printf("%s.xpm", name);
 			break;
 		}
-		dbg(1,"trying '%s'\n", full_name);
 		if (! full_name)
 			continue;
 #if 0
@@ -534,13 +533,13 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 #endif
 		full_path=graphics_icon_path(full_name);
 		ret=graphics_image_new_scaled(this->gra, full_path, w, h);
-		dbg(1,"ret=%p\n", ret);
+		dbg(1,"Trying to load image '%s' (w=%d, h=%d): %s\n", full_name, w, h, ret ? "OK" : "NOT FOUND");
 		g_free(full_path);
 		g_free(full_name);
 		if (ret)
 			return ret;
 	}
-	dbg(0,"failed to load %s with %d,%d\n", name, w, h);
+	dbg(0,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
 	return NULL;
 }
 
