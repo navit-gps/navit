@@ -11,6 +11,8 @@
    <xsl:include href="osd_minimum.xslt"/>
    <xsl:include href="cursor_scale.xslt"/>
    <xsl:template match="/config/plugins/plugin[1]" priority="100">
+      <plugin path="$NAVIT_PREFIX/lib/lib*.so" ondemand="yes"/>
+      <xsl:text>&#x0A;        </xsl:text>
       <plugin path="$NAVIT_PREFIX/lib/libgraphics_android.so" ondemand="no"/>
       <xsl:text>&#x0A;        </xsl:text>
       <plugin path="$NAVIT_PREFIX/lib/libvehicle_android.so" ondemand="no"/>
