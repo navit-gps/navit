@@ -1132,7 +1132,7 @@ get_data(struct graphics_priv *this, char const *type)
 		return this->widget;
 #ifndef _WIN32
 	if (!strcmp(type,"xwindow_id"))
-		return (void *)GDK_WINDOW_XID(this->widget->window);
+		return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
 #endif
 	if (!strcmp(type,"window")) {
 		char *cp = getenv("NAVIT_XID");
