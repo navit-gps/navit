@@ -2197,8 +2197,10 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
 	if (!(flags & 2))
 		gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
-	if (l)
-		xdisplay_draw(displaylist, gra, l, order+l->order_delta);
+	if (l)	{
+		order+=l->order_delta;
+		xdisplay_draw(displaylist, gra, l, order>0?order:0);
+	}
 	if (flags & 1)
 		callback_list_call_attr_0(gra->cbl, attr_postdraw);
 	if (!(flags & 4))
@@ -2229,7 +2231,7 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 	displaylist->seq++;
 	if (l)
 		order+=l->order_delta;
-	displaylist->order=order;
+	displaylist->order=order>0?order:0;
 	displaylist->busy=1;
 	displaylist->layout=l;
 	if (async) {
