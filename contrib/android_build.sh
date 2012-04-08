@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# (C)opyright 2011 Lutz Möhrmann
+# License: GPL v2
+
 show_api_lvl () {
 	case $1 in
 		 1) ver='Android 1.0' ;;
