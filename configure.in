@@ -560,7 +560,7 @@ AC_CHECK_HEADER(
 	FreeImage.h,
 	AC_DEFINE(
 		[HAVE_FREEIMAGE],
-		[],
+		[1],
 		Define to 1 if you have the <FreeImage.h> header file.
 		)
 		FREEIMAGE_LIBS="-lfreeimage"
