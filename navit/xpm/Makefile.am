@@ -234,18 +234,24 @@ endef
 # png images of the user interface and other, sizes e.g. "8,16,32,48,96"
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
-
 # create rules from template
 $(foreach extension,svg svgz, $(foreach size,@SVG2PNG_SCALES@,$(eval $(call scaling_rule_template,$(size),$(extension)))))
 endif
+
 # png state flags
 if USE_SVG2PNG_SCALES_FLAG
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
+# create rules from template
+$(foreach extension,svg svgz, $(foreach size,@SVG2PNG_SCALES_FLAG@,$(eval $(call scaling_rule_template,$(size),$(extension)))))
 endif
+
 # png symbols for navigation
 if USE_SVG2PNG_SCALES_NAV
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
+# create rules from template
+$(foreach extension,svg svgz, $(foreach size,@SVG2PNG_SCALES_NAV@,$(eval $(call scaling_rule_template,$(size),$(extension)))))
 endif
+
 image_DATA += $(pngs)
 endif
 
