@@ -142,6 +142,7 @@ struct graphics_priv {
 #endif
 	int w,h,flags;
 	struct navit* nav;
+	char *window_title;
 };
 
 void qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev);
