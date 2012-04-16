@@ -91,6 +91,7 @@ struct graphics_priv {
 	struct timeval button_release[8];
 	int timeout;
 	int delay;
+	char *window_title;
 };
 
 
@@ -135,6 +136,7 @@ graphics_destroy(struct graphics_priv *gr)
 		dbg(0,"widget %p\n",gr->widget);
 		if (gr->widget)
 			gtk_widget_destroy(gr->widget);
+		g_free(gr->window_title);
 	}
 	dbg(0,"hImageDataCount %d\n",hImageDataCount);
 	if (!--hImageDataCount)
@@ -1025,8 +1027,8 @@ get_data_window(struct graphics_priv *this, unsigned int xid)
 		gtk_widget_ref(this->widget);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
 	dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
-	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
-	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
+	gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
+	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", this->window_title);
 	gtk_widget_realize(this->win);
 	if (gtk_widget_get_parent(this->widget)) 
 		gtk_widget_reparent(this->widget, this->win);
@@ -1228,6 +1230,10 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	this->delay=0;
 	if ((attr=attr_search(attrs, NULL, attr_delay))) 
 		this->delay=attr->u.num;
+	if ((attr=attr_search(attrs, NULL, attr_window_title))) 
+		this->window_title=g_strdup(attr->u.str);
+	else
+		this->window_title=g_strdup("Navit");
 	this->cbl=cbl;
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
