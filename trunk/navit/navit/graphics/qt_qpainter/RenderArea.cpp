@@ -26,9 +26,9 @@ EmbeddedWidget::EmbeddedWidget(struct graphics_priv *priv, QWidget* child, QWidg
 : QX11EmbedWidget(parent) {
     this->gra=priv;
 #if QT_VERSION >= 0x040000
-		this->setWindowTitle("Navit");
+		this->setWindowTitle(priv->window_title);
 #else
-		this->setCaption("Navit");
+		this->setCaption(priv->window_title);
 #endif
         QStackedLayout* _outerLayout = new QStackedLayout(this);
         this->setLayout(_outerLayout);
@@ -59,9 +59,9 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 		grabGesture(Qt::PanGesture);
 #endif
 #if QT_VERSION >= 0x040000
-		setWindowTitle("Navit");
+		setWindowTitle(priv->window_title);
 #else
-		setCaption("Navit");
+		setCaption(priv->window_title);
 #endif
 	}
 #endif
