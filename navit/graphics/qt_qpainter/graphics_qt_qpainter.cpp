@@ -154,6 +154,8 @@ struct graphics_image_priv {
 //##############################################################################################################
 static void graphics_destroy(struct graphics_priv *gr)
 {
+	g_free(gr->window_title);
+	g_free(gr);
 }
 
 //##############################################################################################################
@@ -983,6 +985,10 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		ret->w=attr->u.num;
 	if ((attr=attr_search(attrs, NULL, attr_h)))
 		ret->h=attr->u.num;
+	if ((attr=attr_search(attrs, NULL, attr_window_title)))
+		ret->window_title=g_strdup(attr->u.str);
+	else
+		ret->window_title=g_strdup("Navit");
 
 	dbg(0,"return\n");
 	return ret;
