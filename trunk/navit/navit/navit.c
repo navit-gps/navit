@@ -1413,6 +1413,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->trans = transform_new();
 	this_->trans_cursor = transform_new();
+	transform_set_projection(this_->trans_cursor, pro);
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
@@ -2909,11 +2910,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	char *description;
 
 	profile(0,NULL);
-	if (this_->ready != 3) {
-		profile(0,"return 1\n");
-		return;
-	}
-	navit_layout_switch(this_);
+	if (this_->ready == 3)
+		navit_layout_switch(this_);
 	if (this_->vehicle == nv && this_->tracking_flag)
 		tracking=this_->tracking;
 	if (tracking) {
@@ -2937,7 +2935,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	nv->speed=*attr_speed.u.numd;
 	transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
 	if (nv != this_->vehicle) {
-		navit_vehicle_draw(this_, nv, NULL);
+		if (this_->ready == 3)
+			navit_vehicle_draw(this_, nv, NULL);
 		profile(0,"return 3\n");
 		return;
 	}
@@ -2952,20 +2951,22 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	}
 	callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
-	if (this_->gui && nv->speed > 2)
-		navit_disable_suspend();
+	if (this_->ready == 3) {
+		if (this_->gui && nv->speed > 2)
+			navit_disable_suspend();
 
-	transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
-	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
-		(nv->follow_curr == 1 || !transform_within_border(this_->trans_cursor, &cursor_pnt, this_->border)))
-		navit_set_center_cursor_draw(this_);
-	else
-		navit_vehicle_draw(this_, nv, pnt);
+		transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+		if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
+			(nv->follow_curr == 1 || !transform_within_border(this_->trans_cursor, &cursor_pnt, this_->border)))
+			navit_set_center_cursor_draw(this_);
+		else
+			navit_vehicle_draw(this_, nv, pnt);
 
-	if (nv->follow_curr > 1)
-		nv->follow_curr--;
-	else
-		nv->follow_curr=nv->follow;
+		if (nv->follow_curr > 1)
+			nv->follow_curr--;
+		else
+			nv->follow_curr=nv->follow;
+	}
 	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
 
 	/* Finally, if we reached our destination, stop navigation. */
