@@ -164,6 +164,7 @@ struct navit {
 	int border;
 	int imperial;
 	int waypoints_flag;
+	struct coord_geo center;
 	struct attr **attr_list;
 };
 
@@ -2549,6 +2550,7 @@ int
 navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	struct message *msg;
+	struct coord *c;
 	int len,offset;
 	int ret=1;
 
@@ -2591,6 +2593,11 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_callback_list:
 		attr->u.callback_list=this_->attr_cbl;
+		break;
+	case attr_center:
+		c=transform_get_center(this_->trans);
+		transform_to_geo(transform_get_projection(this_->trans), c, &this_->center);
+		attr->u.coord_geo=&this_->center;
 		break;
 	case attr_destination:
 		if (! this_->destination_valid)
