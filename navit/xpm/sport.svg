@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg:svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="22"
+   id="svg2"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="sport.svg"
+   version="1.0"
+   width="22">
+  <sodipodi:namedview
+     bordercolor="#666666"
+     borderopacity="1"
+     gridtolerance="10"
+     guidetolerance="10"
+     id="namedview12"
+     inkscape:current-layer="svg2"
+     inkscape:cx="21.683839"
+     inkscape:cy="2.2961172"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-height="725"
+     inkscape:window-maximized="1"
+     inkscape:window-width="1024"
+     inkscape:window-x="-3"
+     inkscape:window-y="-3"
+     inkscape:zoom="10.22135"
+     objecttolerance="10"
+     pagecolor="#ffffff"
+     showgrid="false" />
+  <svg:metadata
+     id="metadata2975">
+    <RDF>
+      <Work
+         about="">
+        <format>image/svg+xml</format>
+        <type
+           resource="http://purl.org/dc/dcmitype/StillImage" />
+        <license
+           resource="http://web.resource.org/cc/PublicDomain" />
+        <language>en</language>
+      </Work>
+    </RDF>
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </svg:metadata>
+  <svg:defs
+     id="defs4" />
+  <svg:g
+     id="g1327"
+     transform="matrix(0.04155328,0,0,0.04155328,-0.9783443,-0.88008389)">
+    <svg:path
+       d="M 66.275,1.768 C 24.94,1.768 1.704,23.139 1.704,86.804 l 0,450.123 c 0,20.844 20.896,42.229 62.192,42.229 l 452.024,0 c 41.307,0 62.229,-20.313 62.229,-62.229 l 0,-450.123 c 0,-42.601 -20.922,-65.036 -63.521,-65.036 -0.004,0 -448.495,-0.143 -448.353,0 z"
+       id="path1329"
+       inkscape:connector-curvature="0"
+       style="fill:#111111;fill-opacity:0;stroke:#eeeeee;stroke-width:3.40799999;stroke-opacity:0" />
+  </svg:g>
+  <svg:path
+     d="M 15.975726,16.070371 12.27898,11.791048 c -0.04242,-0.06748 -0.499761,-0.807422 -0.499761,-1.367768 0,-0.5819119 0.484428,-1.666286 0.493819,-1.6872294 0.0082,-0.00711 0.01675,-0.013631 0.02472,-0.021154 l 3.11421,-2.9756716 c 0.331221,-0.3142259 0.345017,-0.8374648 0.03079,-1.168686 L 15.379558,4.50397 C 15.065335,4.1727531 14.542096,4.1589159 14.210875,4.4731417 L 11.286978,7.266935 C 11.230428,7.25239 11.172749,7.244618 11.114366,7.244618 l -1.1713033,0 L 7.6557201,4.0940481 C 7.3917742,3.7215261 6.8758073,3.6334331 6.5032819,3.897338 L 6.4284029,3.950401 C 6.0558362,4.2143064 5.9677847,4.7302735 6.2316896,5.1028402 l 2.3896456,3.2914348 0,3.916396 -1.8813243,5.257363 c -0.1538303,0.429827 0.069976,0.903035 0.4998027,1.056866 l 0.086431,0.03092 c 0.4298687,0.153831 0.9030357,-0.07001 1.0568664,-0.499803 l 1.830422,-5.115125 0.839085,0 3.602503,4.170245 c 0.298435,0.345474 0.820511,0.383579 1.165985,0.08514 l 0.06948,-0.06 c 0.345432,-0.298311 0.383536,-0.820469 0.08514,-1.165902 z"
+     id="path2044"
+     inkscape:connector-curvature="0"
+     style="fill:#39ac39" />
+  <svg:circle
+     cx="290.267"
+     cy="286.271"
+     id="circle2046"
+     r="245.23801"
+     sodipodi:cx="290.267"
+     sodipodi:cy="286.271"
+     sodipodi:rx="245.23801"
+     sodipodi:ry="245.23801"
+     style="fill:none;stroke:#39ac39;stroke-width:20"
+     transform="matrix(0.04155328,0,0,0.04155328,-0.9783443,-0.88008389)" />
+  <svg:circle
+     cx="285.427"
+     cy="143.92999"
+     id="circle2048"
+     r="35"
+     sodipodi:cx="285.427"
+     sodipodi:cy="143.92999"
+     sodipodi:rx="35"
+     sodipodi:ry="35"
+     style="fill:#39ac39"
+     transform="matrix(0.04155328,0,0,0.04155328,-0.9783443,-0.88008389)" />
+</svg:svg>
