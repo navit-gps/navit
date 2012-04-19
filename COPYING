@@ -103,7 +103,8 @@ navit/phrase.c
 navit/main.c
 navit/xmlconfig.c
 navit/callback.c
-
+contrib/android_build.sh
+contrib/sjjb_import.pl
 
 The following files are lincensed under the terms of the
 GNU Library General Public License (see LGPL):
