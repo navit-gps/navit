@@ -216,9 +216,9 @@ if USE_SVG2PNG
 # Implicit rules for generating the PNG files. This only generates the
 # standard size; for additional sizes see below.
 %.png: $(srcdir)/%.svg
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$@"
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
 %.png: $(srcdir)/%.svgz
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$@"
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
 
 pngs  = $(addsuffix .png,$(basename $(svgs)))
 xsize = $(word 1,$(subst x, ,$(scale)))
@@ -228,7 +228,7 @@ comma =,
 # template to generate scaling rules for the various PNG sizes
 define scaling_rule_template
 %_$(1)_$(1).png: $(srcdir)/%.$(2)
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "/usr/bin/rsvg-convert" "$$@"
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$$@"
 endef
 
 # png images of the user interface and other, sizes e.g. "8,16,32,48,96"
