@@ -1,5 +1,9 @@
 #include "coord.h"
 
+#define GPS_TYPE_NONE 0
+#define GPS_TYPE_INT  1
+#define GPS_TYPE_BT   2
+
 struct vehicle_priv {
 	char *address;
 	char *source;
@@ -9,10 +13,17 @@ struct vehicle_priv {
 	char *nmea_data;
 	char fixiso8601[128];
 	double track, speed, altitude, radius;
+	double hdop;
+	int gps_type;
 	int pdk_version;
 	int spp_instance_id;
 	int buffer_pos;
 	int delta;
+	int sats_used;
+	int sats_visible;
+	int magnetic_direction;
+	int status;
+	int valid;
 	time_t fix_time;
 	struct attr ** attrs;
 	struct callback *event_cb;
