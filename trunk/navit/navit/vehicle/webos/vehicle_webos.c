@@ -1,4 +1,6 @@
 /**
+ * vim: sw=3 ts=3
+ *
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -32,27 +34,15 @@
 #include "item.h"
 #include "vehicle.h"
 #include "event.h"
+#include "vehicle_webos.h"
+#include "bluetooth.h"
 
 static char *vehicle_webos_prefix="webos:";
 
-struct vehicle_priv {
-	char *source;
-	char *address;
-	struct callback_list *cbl;
-	struct callback *event_cb;
-	double track, speed, altitude, radius;
-	time_t fix_time;
-	struct coord_geo geo;
-	struct attr ** attrs;
-	char fixiso8601[128];
-	int pdk_version;
-	struct event_timeout *ev_timeout;
-	struct callback *timeout_cb;
-	unsigned int delta;
-};
+/*******************************************************************/
 
 static void
-vehicle_webos_callback(PDL_ServiceParameters *params, void *user)
+vehicle_webos_callback(PDL_ServiceParameters *params, void *priv)
 {
 	PDL_Location *location;
 	SDL_Event event;
@@ -93,8 +83,8 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
 
-	priv->delta = (unsigned int)difftime(tv.tv_sec, priv->fix_time);
-	dbg(1,"delta(%i)\n",priv->delta);
+	priv->delta = (int)difftime(tv.tv_sec, priv->fix_time);
+	dbg(2,"delta(%i)\n",priv->delta);
 	priv->fix_time = tv.tv_sec;
 	priv->geo.lat = location->latitude;
 	/* workaround for webOS GPS bug following */
@@ -130,20 +120,20 @@ vehicle_webos_timeout_callback(struct vehicle_priv *priv)
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
 
-	if (priv->fix_time) {
+	if (priv->fix_time && priv->delta) {
 		int delta = (int)difftime(tv.tv_sec, priv->fix_time);
 
 		if (delta >= priv->delta*2) {
-			dbg(1, "GPS timeout triggered cb(%p)\n", priv->timeout_cb);
+			dbg(1, "GPS timeout triggered cb(%p) delta(%d)\n", priv->timeout_cb, delta);
 
-			priv->delta = 0;
+			priv->delta = -1;
 
 			callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 		}
 	}
 }
 
-static void
+void
 vehicle_webos_close(struct vehicle_priv *priv)
 {
 	event_remove_timeout(priv->ev_timeout);
@@ -153,8 +143,10 @@ vehicle_webos_close(struct vehicle_priv *priv)
 
 	if (priv->pdk_version <= 100)
 		PDL_UnregisterServiceCallback((PDL_ServiceCallbackFunc)vehicle_webos_callback);
-	else
+	else {
 		PDL_EnableLocationTracking(PDL_FALSE);
+		vehicle_webos_bt_close(priv);
+	}
 }
 
 static int
@@ -166,6 +158,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 	dbg(1,"pdk_version(%d)\n", priv->pdk_version);
 
 	if (priv->pdk_version <= 100) {
+		// Use Location Service via callback interface
 		err = PDL_ServiceCallWithCallback("palm://com.palm.location/startTracking",
 				"{subscribe:true}",
 				(PDL_ServiceCallbackFunc)vehicle_webos_callback,
@@ -178,17 +171,18 @@ vehicle_webos_open(struct vehicle_priv *priv)
 		}
 	}
 	else {
-		dbg(1,"Calling PDL_EnableLocationTracking(PDL_TRUE)\n");
+		PDL_Err err;
 		err = PDL_EnableLocationTracking(PDL_TRUE);
 		if (err != PDL_NOERROR) {
 			dbg(0,"PDL_EnableLocationTracking failed with (%d): (%s)\n", err, PDL_GetError());
-			vehicle_webos_close(priv);
-			return 0;
+//			vehicle_webos_close(priv);
+//			return 0;
 		}
+		if(!vehicle_webos_bt_open(priv))
+			return 0;
 	}
 
 	priv->ev_timeout = event_add_timeout(1000, 1, priv->timeout_cb);
-
 	return 1;
 }
 
@@ -247,7 +241,7 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 
 			break;
 		case attr_position_fix_type:
-			if (priv->delta == 0 || priv->radius == 0.0)
+			if (priv->delta <= 0 || priv->radius == 0.0)
 				attr->u.num = 0;	// strength = 1
 			else if (priv->radius > 20.0)
 				attr->u.num = 1;	// strength >= 2
@@ -256,7 +250,7 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 
 			break;
 		case attr_position_sats_used:
-			if (priv->delta == 0)
+			if (priv->delta <= 0)
 				attr->u.num = 0;
 			else if (priv->radius <= 6.0 )
 				attr->u.num = 6;	// strength = 5
