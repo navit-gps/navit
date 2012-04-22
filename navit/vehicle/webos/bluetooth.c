@@ -446,7 +446,6 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 		event.user = userevent;
 
 		SDL_PushEvent(&event);
-
 	}
 
 	vehicle_webos_spp_init_read(priv, buffer_size - priv->buffer_pos - 1);
@@ -553,6 +552,7 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user)
 		snprintf(parameters, sizeof(parameters), "{\"instanceId\":%i}",priv->spp_instance_id);
 		mlPDL_ServiceCall("palm://com.palm.service.bluetooth.spp/close", parameters);
 		priv->spp_instance_id = 0;
+		vehicle_webos_init_pdl_locationtracking(priv, 1);
 	}
 
 
