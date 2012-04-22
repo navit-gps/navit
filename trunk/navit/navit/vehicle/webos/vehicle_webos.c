@@ -80,36 +80,38 @@ vehicle_webos_callback(PDL_ServiceParameters *params, void *priv)
 static void
 vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 {
-	struct timeval tv;
-	gettimeofday(&tv,NULL);
+	if(location) {	// location may be NULL if called by bluetooth-code. priv is already prefilled there
+		struct timeval tv;
+		gettimeofday(&tv,NULL);
 
-	priv->delta = (int)difftime(tv.tv_sec, priv->fix_time);
-	dbg(2,"delta(%i)\n",priv->delta);
-	priv->fix_time = tv.tv_sec;
-	priv->geo.lat = location->latitude;
-	/* workaround for webOS GPS bug following */
-	priv->geo.lng = (priv->pdk_version >= 200 && location->longitude >= -1 && location->longitude <= 1) ?
-		-location->longitude : location->longitude;
+		priv->delta = (int)difftime(tv.tv_sec, priv->fix_time);
+		dbg(2,"delta(%i)\n",priv->delta);
+		priv->fix_time = tv.tv_sec;
+		priv->geo.lat = location->latitude;
+		/* workaround for webOS GPS bug following */
+		priv->geo.lng = (priv->pdk_version >= 200 && location->longitude >= -1 && location->longitude <= 1) ?
+			-location->longitude : location->longitude;
 
-	dbg(2,"Location: %f %f %f %.12g %.12g +-%fm\n",
-			location->altitude,
-			location->velocity,
-			location->heading,
-			priv->geo.lat,
-			priv->geo.lng,
-			location->horizontalAccuracy);
+		dbg(2,"Location: %f %f %f %.12g %.12g +-%fm\n",
+				location->altitude,
+				location->velocity,
+				location->heading,
+				priv->geo.lat,
+				priv->geo.lng,
+				location->horizontalAccuracy);
 
-	if (location->altitude != -1)
-		priv->altitude = location->altitude;
-	if (location->velocity != -1)
-		priv->speed = location->velocity * 3.6;
-	if (location->heading != -1)
-		priv->track = location->heading;
-	if (location->horizontalAccuracy != -1)
-		priv->radius = location->horizontalAccuracy;
+		if (location->altitude != -1)
+			priv->altitude = location->altitude;
+		if (location->velocity != -1)
+			priv->speed = location->velocity * 3.6;
+		if (location->heading != -1)
+			priv->track = location->heading;
+		if (location->horizontalAccuracy != -1)
+			priv->radius = location->horizontalAccuracy;
 
-	if (priv->pdk_version <= 100)
-		g_free(location);
+		if (priv->pdk_version <= 100)
+			g_free(location);
+	}
 
 	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
