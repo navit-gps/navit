@@ -1815,7 +1815,7 @@ static gboolean graphics_sdl_idle(void *data)
 	}
 
 #ifdef USE_WEBOS
-	dbg(2,"SDL_Event %d\n", ev.type);
+	dbg(5,"SDL_Event %d\n", ev.type);
 #endif
 	switch(ev.type)
 	{
