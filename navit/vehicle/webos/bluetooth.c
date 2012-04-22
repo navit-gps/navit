@@ -105,6 +105,8 @@ vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, stru
 {
 	PDL_Err err;
 
+	priv->gps_type = param ? GPS_TYPE_INT: GPS_TYPE_NONE;
+
 	dbg(1,"Calling PDL_EnableLocationTracking(%i)\n",param);
 	err = PDL_EnableLocationTracking(param);
 
@@ -195,14 +197,14 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		*p++ = '\0';
 	}
 
-	if (buffer[0] == '$') {
-		struct timeval tv;
-		gettimeofday(&tv,NULL);
+//	if (buffer[0] == '$') {
+//		struct timeval tv;
+//		gettimeofday(&tv,NULL);
 
-		priv->delta = (unsigned int)difftime(tv.tv_sec, priv->fix_time);
-		priv->fix_time = tv.tv_sec;
-		dbg(2,"delta(%i)\n",priv->delta);
-	}
+		priv->delta = 0; //			(unsigned int)difftime(tv.tv_sec, priv->fix_time);
+//		priv->fix_time = tv.tv_sec;
+//		dbg(2,"delta(%i)\n",priv->delta);
+//	}
 
 	if (!strncmp(buffer, "$GPGGA", 6)) {
 		/*                                                           1 1111
@@ -227,26 +229,23 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
-		}
-#if 0
 			priv->valid=attr_position_valid_valid;
-            dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+         dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
 		} else
 			priv->valid=attr_position_valid_invalid;
 		if (*item[6])
 			sscanf(item[6], "%d", &priv->status);
 		if (*item[7])
-		sscanf(item[7], "%d", &priv->sats_used);
+			sscanf(item[7], "%d", &priv->sats_used);
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
-#endif
-/*		if (*item[1]) {
+		if (*item[1]) {
 			struct tm tm;
 			strptime(item[1],"%H%M%S",&tm);
 			priv->fix_time = mktime(&tm);
 		}
-*/
+
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->altitude);
 
@@ -295,7 +294,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			priv->speed = g_ascii_strtod( item[7], NULL );
 			priv->speed *= 1.852;
 
-#if 0
 			struct tm tm;
 			char time[13];
 
@@ -304,6 +302,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			strptime(time,"%H%M%S%d%m%y",&tm);
 
 			priv->fix_time = mktime(&tm);
+#if 0
 			sscanf(item[9], "%02d%02d%02d",
 				&priv->fixday,
 				&priv->fixmonth,
@@ -313,7 +312,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		}
 		ret = 1;
 	}
-#if 0
 	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
 		0 GSV	   Satellites in view
@@ -331,6 +329,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		if (item[3]) {
 			sscanf(item[3], "%d", &priv->sats_visible);
 		}
+#if 0
 		j=4;
 		while (j+4 <= i && priv->current_count < 24) {
 			struct gps_sat *sat=&priv->next[priv->next_count++];
@@ -350,8 +349,8 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			priv->current_count=priv->next_count;
 			priv->next_count=0;
 		}
-	}
 #endif
+	}
 #if 0
 	if (!strncmp(buffer, "$GPZDA", 6)) {
 	/*
@@ -370,7 +369,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		}
 	}
 #endif
-#if 0
 	if (!strncmp(buffer, "$IISMD", 6)) {
 	/*
 		0      1   2     3      4
@@ -385,7 +383,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			dbg(1,"magnetic %d\n", priv->magnetic_direction);
 		}
 	}
-#endif
 	return ret;
 }
 
@@ -409,6 +406,8 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 	dbg(9,"data(%s) dataLength(%i)\n",buffer,size);
 
 	memmove(priv->buffer + priv->buffer_pos, buffer, size);
+
+
 
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
@@ -434,8 +433,21 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 		dbg(0,"Overflow. Most likely wrong baud rate or no nmea protocol\n");
 		priv->buffer_pos = 0;
 	}
-	if (rc && priv->delta)
-		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+	if (rc) {
+		SDL_Event event;
+		SDL_UserEvent userevent;
+
+		userevent.type = SDL_USEREVENT;
+		userevent.code = PDL_GPS_UPDATE;
+		userevent.data1 = NULL;
+		userevent.data2 = NULL;
+
+		event.type = SDL_USEREVENT;
+		event.user = userevent;
+
+		SDL_PushEvent(&event);
+
+	}
 
 	vehicle_webos_spp_init_read(priv, buffer_size - priv->buffer_pos - 1);
 }
@@ -471,6 +483,8 @@ vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user)
 		priv->buffer = g_malloc(buffer_size);
 	
 	dbg(1,"instanceId(%i)\n",priv->spp_instance_id);
+
+	priv->gps_type = GPS_TYPE_BT;
 
 	vehicle_webos_spp_init_read(priv, buffer_size-1);
 }
@@ -535,6 +549,9 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user)
 		}
 	}
 	else if(strcmp(notification,"notifndisconnected") == 0) {
+		priv->gps_type = GPS_TYPE_NONE;
+		snprintf(parameters, sizeof(parameters), "{\"instanceId\":%i}",priv->spp_instance_id);
+		mlPDL_ServiceCall("palm://com.palm.service.bluetooth.spp/close", parameters);
 		priv->spp_instance_id = 0;
 	}
 

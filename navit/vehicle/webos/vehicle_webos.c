@@ -178,6 +178,9 @@ vehicle_webos_open(struct vehicle_priv *priv)
 //			vehicle_webos_close(priv);
 //			return 0;
 		}
+		
+		priv->gps_type = GPS_TYPE_INT;
+
 		if(!vehicle_webos_bt_open(priv))
 			return 0;
 	}
@@ -212,6 +215,26 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 			dbg(2,"Direction: %f\n", priv->track);
 			attr->u.numd = &priv->track;
 			break;
+		case attr_position_magnetic_direction:
+			switch (priv->gps_type) {
+				case GPS_TYPE_BT:
+					attr->u.num = priv->magnetic_direction;
+					break;
+				default:
+					return 0;
+					break;
+			}
+			break;
+		case attr_position_hdop:
+			switch (priv->gps_type) {
+				case GPS_TYPE_BT:
+					attr->u.numd = &priv->hdop;
+					break;
+				default:
+					return 0;
+					break;
+			}
+			break;
 		case attr_position_coord_geo:
 			dbg(2,"Coord: %.12g %.12g\n", priv->geo.lat, priv->geo.lng);
 			attr->u.coord_geo = &priv->geo;
@@ -241,26 +264,44 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 
 			break;
 		case attr_position_fix_type:
-			if (priv->delta <= 0 || priv->radius == 0.0)
-				attr->u.num = 0;	// strength = 1
-			else if (priv->radius > 20.0)
-				attr->u.num = 1;	// strength >= 2
-			else
-				attr->u.num = 2;	// strength >= 2
-
+			switch (priv->gps_type) {
+				case GPS_TYPE_INT:
+					if (priv->delta <= 0 || priv->radius == 0.0)
+						attr->u.num = 0;	// strength = 1
+					else if (priv->radius > 20.0)
+						attr->u.num = 1;	// strength >= 2
+					else
+						attr->u.num = 2;	// strength >= 2
+					break;
+				case GPS_TYPE_BT:
+					attr->u.num = priv->status;
+					break;
+				default:
+					return 0;
+					break;
+			}
 			break;
 		case attr_position_sats_used:
-			if (priv->delta <= 0)
-				attr->u.num = 0;
-			else if (priv->radius <= 6.0 )
-				attr->u.num = 6;	// strength = 5
-			else if (priv->radius <= 10.0 )
-				attr->u.num = 5;	// strength = 4
-			else if (priv->radius <= 15.0 )
-				attr->u.num = 4;	// strength = 3
-			else
-				return 0;
-
+			switch (priv->gps_type) {
+				case GPS_TYPE_INT:
+					if (priv->delta <= 0)
+						attr->u.num = 0;
+					else if (priv->radius <= 6.0 )
+						attr->u.num = 6;	// strength = 5
+					else if (priv->radius <= 10.0 )
+						attr->u.num = 5;	// strength = 4
+					else if (priv->radius <= 15.0 )
+						attr->u.num = 4;	// strength = 3
+					else
+						return 0;
+					break;
+				case GPS_TYPE_BT:
+					attr->u.num = priv->sats_used;
+					break;
+				default:
+					return 0;
+					break;
+			}
 			break;
 		default:
 			return 0;
