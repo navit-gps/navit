@@ -150,7 +150,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	unsigned char salt[8], key[34], verify[2], mac[10];
 #endif
 	char filename[filelen+1];
-	int error,crc=0,len,comp_size=data_size;
+	int crc=0,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
 
@@ -175,7 +175,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	lfh.zipmthd=zip_info->compression_level ? 8:0;
 #ifdef HAVE_ZLIB
 	if (zip_info->compression_level) {
-		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
+		int error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
 		if (error == Z_OK) {
 			if (destlen < data_size) {
 				data=compbuffer;

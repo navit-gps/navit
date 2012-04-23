@@ -518,7 +518,6 @@ spawn_process(char **argv)
 #ifdef HAVE_API_WIN32_BASE
 	{
 		char *cmdline;
-		LPCWSTR cmd,args;
 		DWORD dwRet;
 
 		// For [desktop] Windows it's adviceable not to use
@@ -530,6 +529,7 @@ spawn_process(char **argv)
 		// no WinCE program has support for quoted strings in arguments.
 		// So...
 #ifdef HAVE_API_WIN32_CE
+		LPWSTR cmd,args;
 		cmdline=g_strjoinv(" ",argv+1);
 		args=newSysString(cmdline);
 		cmd = newSysString(argv[0]);
@@ -537,6 +537,7 @@ spawn_process(char **argv)
 		dbg(0, "CreateProcess(%s,%s), PID=%i\n",argv[0],cmdline,r->pr.dwProcessId);
 		g_free(cmd);
 #else
+		TCHAR* args;
 		STARTUPINFO startupInfo;
 		memset(&startupInfo, 0, sizeof(startupInfo));
 		startupInfo.cb = sizeof(startupInfo);
