@@ -13,8 +13,8 @@ if(SAMPLE_MAP)
       COMMAND ${CMAKE_COMMAND} -D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.osm.bz2 -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2 -P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
    )
    if(DOWNLOAD_SAMPLE_MAP)
-      add_custom_target (
-         ${SAMPLE_MAP_NAME}.bin
+      add_custom_command (
+         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
          COMMAND ${CMAKE_COMMAND} -D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.bin -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin -P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
       )
    else()
@@ -25,7 +25,6 @@ if(SAMPLE_MAP)
       )
    endif()
    add_custom_target(sample_map ALL DEPENDS ${SAMPLE_MAP_NAME}.xml)
-   add_dependencies(sample_map ${SAMPLE_MAP_NAME}.bin)
    if(NOT CMAKE_CROSSCOMPILING AND BZCAT)
       add_dependencies(sample_map ${SAMPLE_MAP_NAME}.osm.bz2)
    endif()
