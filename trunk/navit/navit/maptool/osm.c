@@ -25,6 +25,7 @@
 #include "linguistics.h"
 #include "country.h"
 #include "file.h"
+#include "profile.h"
 
 extern int doway2poi;
 
@@ -1703,7 +1704,7 @@ osm_end_node(struct maptool_osm *osm)
 		item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
 		item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
 		item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
-		item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
+		item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]);
 		item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 		item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
@@ -1721,7 +1722,7 @@ osm_end_node(struct maptool_osm *osm)
 			item_bin_add_attr_string(item_bin, attr_osm_is_in, is_in_buffer);
 			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 			item_bin_add_attr_string(item_bin, attr_town_postal, postal);
-			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
+			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]);
 			item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
 			item_bin_write(item_bin, osm->towns);
 		}
@@ -1741,15 +1742,25 @@ osm_process_town_unknown_country(void)
 }
 
 static struct country_table *
-osm_process_town_by_is_in(struct item_bin *ib,char *is_in)
+osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, GHashTable *town_hash)
 {
 	struct country_table *result=NULL, *lookup;
 	char *tok,*dup=g_strdup(is_in),*buf=dup;
 	int conflict;
 
+	int find_town_name = 0;
+
+	if (item_is_district(*ib))
+		find_town_name = 1;
+
 	while ((tok=strtok(buf, ",;"))) {
 		while (*tok==' ')
 			tok++;
+		if (find_town_name && g_hash_table_lookup(town_hash, tok)) {
+			attrs[10].type = attr_town_name;
+			attrs[10].u.str = g_strdup(tok);
+			find_town_name = 0;
+		}
 		lookup=g_hash_table_lookup(country_table_hash,tok);
 		if (lookup) {
 			if (result && result->countryid != lookup->countryid) {
@@ -1762,6 +1773,7 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in)
 		buf=NULL;
 	}
 	g_free(dup);
+
 	return result;
 }
 
@@ -1832,9 +1844,25 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 {
 	struct item_bin *ib;
 	GList *bl=NULL;
-	struct attr attrs[10];
+	struct attr attrs[11];
 
+	profile(0,NULL);
 	bl=process_boundaries(boundaries, ways);
+
+	profile(1,"processed boundraries\n");
+
+    GHashTable *town_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	while ((ib=read_item(in)))  {
+		if (!item_is_district(*ib))
+		{
+			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
+			g_hash_table_insert(town_hash, strdup(townname), (gpointer)1);
+		}
+	}
+	fseek(in, 0, SEEK_SET);
+
+	profile(1, "Finished town table rebuild\n");
+
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
 		struct country_table *result=NULL;
@@ -1844,7 +1872,24 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 		memset(attrs, 0, sizeof(attrs));
 		result=osm_process_town_by_boundary(bl, ib, c, attrs);
 		if (!result)
-			result=osm_process_town_by_is_in(ib, is_in);
+			result=osm_process_town_by_is_in(ib, is_in, attrs, town_hash);
+		else if (item_is_district(*ib)) // just for the town name
+			osm_process_town_by_is_in(ib, is_in, attrs, town_hash);
+
+		// treat a district like a town, if we could not find the town it blongs to
+		if (!item_bin_get_attr(ib, attr_town_name, NULL) && attrs[10].type != attr_town_name) {
+			char *district_name = item_bin_get_attr(ib, attr_district_name, NULL);
+
+			if (district_name) {
+				struct attr attr_new_town_name;
+				attr_new_town_name.type = attr_town_name;
+				attr_new_town_name.u.str = district_name;
+
+				item_bin_add_attr(ib, &attr_new_town_name);
+				item_bin_remove_attr(ib, district_name);
+			}
+		}
+
 		if (!result && unknown_country)
 			result=osm_process_town_unknown_country();
 		if (result) {
@@ -1865,7 +1910,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 					if (postal)
 						item_bin_remove_attr(ib, postal);
 				}
-				for (i = 0 ; i < 10 ; i++) {
+				for (i = 0 ; i < 11 ; i++) {
 					if (attrs[i].type != attr_none)
 						item_bin_add_attr(ib, &attrs[i]);
 				}
@@ -1873,6 +1918,8 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 			}
 		}
 	}
+	g_hash_table_destroy(town_hash);
+	profile(0, "Finished processing towns\n");
 }
 
 void
@@ -2691,7 +2738,7 @@ remove_countryfiles(void)
 
 void osm_init(FILE* rule_file)
 {
-        build_attrmap(rule_file);
-        build_countrytable();
+	build_attrmap(rule_file);
+	build_countrytable();
 }
 
