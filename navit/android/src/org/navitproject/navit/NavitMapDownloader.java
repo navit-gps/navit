@@ -99,6 +99,7 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Nambia+Botswana","11.4","-29.1","29.5","-16.9", 64357926L, 1),
 		new osm_map_values("Pakistan","60.83","23.28","77.89","37.15", 74060802L, 1),
 		new osm_map_values("Philippines","115.58","4.47","127.85","21.60", 71601316L, 1),
+		new osm_map_values("Saudi Arabia","33.2","16.1","55.9","33.5", 100651634L, 1),
 		new osm_map_values("Thailand","97.5","5.7","105.2","19.7", 68260330L, 1),
 		new osm_map_values("Turkey","25.1","35.8","46.4","42.8", 105200911L, 1),
 		new osm_map_values("Turkmenistan","51.78","35.07","66.76","42.91", 62188003L, 1),
