@@ -186,7 +186,7 @@ vehicle_android_init(struct vehicle_priv *ret)
 	if (!ret->NavitVehicle)
 		return 0;
         if (ret->NavitVehicle)
-                (*jnienv)->NewGlobalRef(jnienv, ret->NavitVehicle);
+				ret->NavitVehicle = (*jnienv)->NewGlobalRef(jnienv, ret->NavitVehicle);
 
 	return 1;
 }

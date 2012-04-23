@@ -102,23 +102,23 @@ speech_android_init(struct speech_priv *ret)
 
 	if (!android_find_class_global(class, &ret->NavitSpeechClass)) {
 		dbg(0,"No class found\n");
-                return 0;
+		return 0;
 	}
-        dbg(0,"at 3\n");
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitSpeechClass, "<init>", "(Lorg/navitproject/navit/Navit;)V");
-        if (cid == NULL) {
-                dbg(0,"no method found\n");
-                return 0; /* exception thrown */
-        }
+	dbg(0,"at 3\n");
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitSpeechClass, "<init>", "(Lorg/navitproject/navit/Navit;)V");
+	if (cid == NULL) {
+		dbg(0,"no method found\n");
+		return 0; /* exception thrown */
+	}
 	if (!android_find_method(ret->NavitSpeechClass, "say", "(Ljava/lang/String;)V", &ret->NavitSpeech_say))
-                return 0;
-        dbg(0,"at 4 android_activity=%p\n",android_activity);
-        ret->NavitSpeech=(*jnienv)->NewObject(jnienv, ret->NavitSpeechClass, cid, android_activity);
-        dbg(0,"result=%p\n",ret->NavitSpeech);
+		return 0;
+	dbg(0,"at 4 android_activity=%p\n",android_activity);
+	ret->NavitSpeech=(*jnienv)->NewObject(jnienv, ret->NavitSpeechClass, cid, android_activity);
+	dbg(0,"result=%p\n",ret->NavitSpeech);
 	if (!ret->NavitSpeech)
 		return 0;
-        if (ret->NavitSpeech)
-                (*jnienv)->NewGlobalRef(jnienv, ret->NavitSpeech);
+	if (ret->NavitSpeech)
+		ret->NavitSpeech = (*jnienv)->NewGlobalRef(jnienv, ret->NavitSpeech);
 	return 1;
 }
 
