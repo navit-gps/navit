@@ -196,7 +196,7 @@ process_boundaries_insert(GList *list, struct boundary *boundary)
 static GList *
 process_boundaries_finish(GList *boundaries_list)
 {
-	GList *l,*sl,*l2,*ln;
+	GList *l,*sl;
 	GList *ret=NULL;
 	l=boundaries_list;
 	while (l) {
@@ -265,6 +265,7 @@ process_boundaries_finish(GList *boundaries_list)
 	l=boundaries_list;
 	while (l) {
 		struct boundary *boundary=l->data;
+		GList *l2,*ln;
 		ln=l2=g_list_next(l);
 		while (l2) {
 			struct boundary *boundary2=l2->data;
