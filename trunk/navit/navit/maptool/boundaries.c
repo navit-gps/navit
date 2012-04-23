@@ -89,7 +89,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		while ((member=item_bin_get_attr(ib, attr_osm_member, member))) {
 			long long wayid;
 			int read=0;
-			if (sscanf(member,"2:%Ld:%n",&wayid,&read) >= 1) {
+			if (sscanf(member,"2:"LONGLONG_FMT":%n",&wayid,&read) >= 1) {
 				char *rolestr=member+read;
 				enum geom_poly_segment_type role;
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave"))
