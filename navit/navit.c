@@ -1297,7 +1297,7 @@ static void
 navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	int i,j, nparms, nvalid;
-	const char ** argv=NULL;
+	char ** argv=NULL;
 	struct spawn_process_info *pi;
 
 	nparms=0;

@@ -2812,7 +2812,7 @@ static struct graphics_image * gui_internal_poi_icon(struct gui_priv *this, enum
 		while(itemgra) {
 			GList *types=((struct itemgra *)itemgra->data)->type;
 			while(types) {
-				if((int)types->data==type) {
+				if((long)types->data==type) {
 					GList *element=((struct itemgra *)itemgra->data)->elements;
 					while(element) {
 						struct element * el=element->data;
@@ -3133,9 +3133,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct fibheap* fh = fh_makekeyheap();
 	int cnt = 0;
 	struct table_data *td;
-	int width=wm->w;
-	
-	
+
 	if(data) {
 	  param = data;
 	} else {

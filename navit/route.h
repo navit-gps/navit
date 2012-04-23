@@ -97,6 +97,7 @@ void route_set_destinations(struct route *this_, struct pcoord *dst, int count, 
 int route_get_destinations(struct route *this_, struct pcoord *pc, int count);
 int route_get_destination_count(struct route *this_);
 void route_set_destination(struct route *this_, struct pcoord *dst, int async);
+void route_append_destination(struct route *this_, struct pcoord *dst, int async);
 void route_remove_nth_waypoint(struct route *this_, int n);
 void route_remove_waypoint(struct route *this_);
 char* route_get_destination_description(struct route *this_, int n);
