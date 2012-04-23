@@ -144,7 +144,7 @@ o5m_reset(struct o5m *o)
 static void
 o5m_print_start(struct o5m *o, int c)
 {
-	printf("\t<%s id=\"%Ld\"",types[c-0x10],o->id);
+	printf("\t<%s id=\""LONGLONG_FMT"\"",types[c-0x10],o->id);
 }
 
 static void
@@ -153,7 +153,7 @@ o5m_print_version(struct o5m *o, int tags)
 	char timestamp_str[64];
 	if (o->version) {
 		strftime(timestamp_str, sizeof(timestamp_str), "%Y-%m-%dT%H:%M:%SZ", gmtime(&o->timestamp));
-		printf(" version=\"%d\" timestamp=\"%s\" changeset=\"%Ld\"",o->version,timestamp_str,o->changeset);
+		printf(" version=\"%d\" timestamp=\"%s\" changeset=\""LONGLONG_FMT"\"",o->version,timestamp_str,o->changeset);
 		if (o->uid) {
 			printf(" uid=\"%d\" user=\"",o->uid);
 			print_escaped(o->user);
@@ -249,8 +249,8 @@ map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm)
 				while (o.buffer_start < rend) {
 					o.rid[0]+=get_sval(&o.buffer_start);
 					osm_add_nd(o.rid[0]);
-					if (print) 
-						printf("\t\t<nd ref=\"%Ld\"/>\n",o.rid[0]);
+					if (print)
+						printf("\t\t<nd ref=\""LONGLONG_FMT"\"/>\n",o.rid[0]);
 				}
 				break;
 			case 0x12:
@@ -276,7 +276,7 @@ map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm)
 					o.rid[r]+=delta;
 					osm_add_member(r+1, o.rid[r], role+1);
 					if (print)
-						printf("\t\t<member type=\"%s\" ref=\"%Ld\" role=\"%s\"/>\n",types[r], o.rid[r], role+1);
+						printf("\t\t<member type=\"%s\" ref=\""LONGLONG_FMT"\" role=\"%s\"/>\n",types[r], o.rid[r], role+1);
 				}
 				break;
 			}
