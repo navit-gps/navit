@@ -383,7 +383,7 @@ static struct map_methods map_methods_filter = {
 
 
 static struct map_priv *
-map_filter_new(struct map_methods *meth, struct attr **attrs)
+map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m=NULL;
 	struct attr **parent_attrs,type,*subtype=attr_search(attrs, NULL, attr_subtype),*filter=attr_search(attrs, NULL, attr_filter);

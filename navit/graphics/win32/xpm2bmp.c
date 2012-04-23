@@ -495,7 +495,7 @@ static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
     unsigned char i, row;
 	char line[ 1024   ];
 	int nbytes ;
-	int padding, rowsize;
+	int padding, rowsize = 0;
 	FILE* file_xpm = fopen( filename, "r" );
 
 	int phase = 0;
