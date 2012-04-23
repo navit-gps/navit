@@ -34,7 +34,7 @@ android_find_class_global(char *name, jclass *ret)
 		dbg(0,"Failed to get Class %s\n",name);
 		return 0;
 	}
-	(*jnienv)->NewGlobalRef(jnienv, *ret);
+	*ret = (*jnienv)->NewGlobalRef(jnienv, *ret);
 	return 1;
 }
 
@@ -58,10 +58,9 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	android_version=version;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	jnienv=env;
-	android_activity=activity;
-	(*jnienv)->NewGlobalRef(jnienv, activity);
+	android_activity = (*jnienv)->NewGlobalRef(jnienv, activity);
 	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
-	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s version=%d\n",env,thiz,activity,langstr,version);
+	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s version=%d\n",env,thiz,android_activity,langstr,version);
 	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 
@@ -119,12 +118,11 @@ Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject
 }
 
 JNIEXPORT void JNICALL
-Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz, int delete, int id)
+Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz, int id)
 {
-	dbg(1,"enter %p %d %p\n",thiz, delete, (void *)id);
-	callback_call_0((struct callback *)id);
-	if (delete)
-		(*jnienv)->DeleteGlobalRef(jnienv, thiz);
+	void (*event_handler)(void *) = *(void **)id;
+	dbg(0,"enter %p %p\n",thiz, (void *)id);
+	event_handler((void*)id);
 }
 
 JNIEXPORT void JNICALL
@@ -204,7 +202,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackSearchResultList( JNIEnv* env,
 		my_jni_object.jo=thiz;
 		my_jni_object.jm=aMethodID;
 
-		/* TODO (rikky#1#): does return nothing yet, also should use a generic callback instead of jni_object */		ret=search_by_address(sl,search_string,partial,&my_jni_object);
+		/* TODO (rikky#1#): does return nothing yet, also should use a generic callback instead of jni_object */
+		ret=search_by_address(sl,search_string,partial,&my_jni_object);
 		search_list_destroy(sl);
 
 		dbg(0,"ret=%p\n",ret);

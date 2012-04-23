@@ -1252,11 +1252,10 @@ pedestrian_navit_init(struct navit *nav)
 		if (cid) {
 			cb=callback_new_1(callback_cast(android_sensors), nav);
 			navitsensors=(*jnienv)->NewObject(jnienv, navitsensorsclass, cid, android_activity, cb);
-		        dbg(0,"object=%p\n",navitsensors);
-        		if (navitsensors)
-  				(*jnienv)->NewGlobalRef(jnienv, navitsensors);
+			dbg(0,"object=%p\n",navitsensors);
+			if (navitsensors)
+				navitsensors = (*jnienv)->NewGlobalRef(jnienv, navitsensors);
 		}
-			
 	}
 #endif
 	pedestrian_data.nav=nav;
