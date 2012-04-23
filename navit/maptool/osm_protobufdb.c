@@ -421,7 +421,7 @@ osm_protobufdb_string(struct osm_protobufdb_context *ctx, char *str)
 	gpointer value;
 	assert(ctx->string_hash != NULL);
 	if (g_hash_table_lookup_extended(ctx->string_hash, str, NULL, &value)) {
-		return (int)value;	
+		return (long)value;
 	}
 	if (!st->n_s) {
 		st->n_s++;

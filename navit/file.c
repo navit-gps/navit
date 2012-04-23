@@ -220,7 +220,6 @@ file_http_header(struct file *f, char *header)
 struct file *
 file_create(char *name, struct attr **options)
 {
-	struct stat stat;
 	struct file *file= g_new0(struct file,1);
 	struct attr *attr;
 	int open_flags=O_LARGEFILE|O_BINARY;

@@ -39,7 +39,6 @@ struct osd {
 struct osd *
 osd_new(struct attr *parent, struct attr **attrs)
 {
-	struct attr *attr;
 	struct osd *o;
 	struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
 	struct attr *type=attr_search(attrs, NULL, attr_type);
