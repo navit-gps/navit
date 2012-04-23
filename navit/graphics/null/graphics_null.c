@@ -38,7 +38,6 @@
 
 static struct callback_list* callbacks;
 
-static int dummy;
 static struct graphics_priv {
 	int dummy;
 } graphics_priv;

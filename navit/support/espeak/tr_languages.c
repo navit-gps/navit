@@ -493,7 +493,7 @@ Translator *SelectTranslator(const char *name)
 			tr->langopts.stress_flags = 0x0024;  // don't use secondary stress
 			tr->langopts.param[LOPT_IT_LENGTHEN] = 1;    // remove lengthen indicator from unstressed syllables
 
-			tr->langopts.numbers = 0x1509 + 0x8000 + NUM_NOPAUSE | NUM_ROMAN | NUM_VIGESIMAL;
+			tr->langopts.numbers = 0x1509 + 0x8000 + (NUM_NOPAUSE | NUM_ROMAN | NUM_VIGESIMAL);
 			SetLetterVowel(tr,'y');
 		}
 		break;

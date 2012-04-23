@@ -1899,9 +1899,8 @@ static gchar *g_prgname = NULL;
 gchar*
 g_get_prgname (void)
 {
-  gchar* retval;
+  gchar* retval =NULL;
 
-return 0;
 //  G_LOCK (g_prgname);
 //#ifdef G_OS_WIN32
 //  if (g_prgname == NULL)
@@ -1929,7 +1928,7 @@ return 0;
 //  retval = g_prgname;
 //  G_UNLOCK (g_prgname);
 //
-//  return retval;
+  return retval;
 }
 
 /**

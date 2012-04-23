@@ -12,6 +12,7 @@
 #endif /* _MSC_VER */
 #include "wordexp.h"
 #include "glob.h"
+#include <glib.h>
 
 
 static int

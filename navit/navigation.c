@@ -1680,7 +1680,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		if (!connect) {
 			ret=g_strdup_printf(_("You have reached your destination %s"), d);
 		} else {
-			ret=g_strdup_printf(_("then you have reached your destination."));
+			ret=g_strdup(_("then you have reached your destination."));
 		}
 	}
 	g_free(d);

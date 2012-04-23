@@ -957,8 +957,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 }
 
-
-static void * get_data(struct graphics_priv *this_, char *type)
+static void * get_data(struct graphics_priv *this_, const char *type)
 {
     if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 )
     {
@@ -1514,7 +1513,6 @@ static struct graphics_priv *
     this_->mode = -1;
     return this_;
 }
-
 
 static void set_alphablend(struct graphics_priv* gra_priv)
 {
