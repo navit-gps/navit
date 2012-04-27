@@ -436,7 +436,6 @@ public class NavitMapDownloader extends Thread
 //			URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
 			c = (HttpURLConnection) url.openConnection();
 			c.setRequestMethod("GET");
-			c.setDoOutput(true);
 			c.setReadTimeout(SOCKET_READ_TIMEOUT);
 			c.setConnectTimeout(SOCKET_CONNECT_TIMEOUT);
 
