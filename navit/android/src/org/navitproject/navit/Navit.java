@@ -661,7 +661,7 @@ public class Navit extends Activity
 			if (resultCode == Activity.RESULT_OK)
 			{
 				Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD
-						, data.getIntExtra("selected_id", -1)
+						, data.getIntExtra("map_index", -1)
 						, requestCode == Navit.NavitDownloaderSecSelectMap_id ? 2 : 0);
 				msg.sendToTarget();
 			}

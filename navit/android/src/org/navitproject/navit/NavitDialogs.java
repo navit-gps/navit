@@ -105,12 +105,11 @@ public class NavitDialogs extends Handler{
 			break;
 		case MSG_START_MAP_DOWNLOAD:
 		{
-			int map_selected = msg.arg1;
+			int download_map_id = msg.arg1;
 			int map_slot     = msg.arg2;
-			Log.d("Navit", "PRI id=" + map_selected);
+			Log.d("Navit", "PRI id=" + download_map_id);
 			// set map id to download
 
-			int download_map_id = NavitMapDownloader.OSM_MAP_NAME_ORIG_ID_LIST[map_selected];
 			// show the map download progressbar, and download the map
 			if (download_map_id > -1)
 			{
