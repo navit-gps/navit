@@ -261,6 +261,13 @@ public class NavitTextTranslations
 		{
 			// if we still dont have any text, use the ".mo" file and call the c-function gettext(in)
 			out = NavitGraphics.getLocalizedString(in);
+			if (out != null)
+			{
+				HashMap<String, String> langmap = new HashMap<String, String>();
+				langmap.put(main_language, out);
+				Navit_text_lookup.put(in, langmap);
+			}
+
 			//Log.e("NavitTextTranslations", "return the value from gettext() = " + out);
 		}
 		return out;
