@@ -121,7 +121,7 @@ JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz, int id)
 {
 	void (*event_handler)(void *) = *(void **)id;
-	dbg(0,"enter %p %p\n",thiz, (void *)id);
+	dbg(1,"enter %p %p\n",thiz, (void *)id);
 	event_handler((void*)id);
 }
 
