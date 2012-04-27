@@ -24,6 +24,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -269,9 +270,6 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Venezuela","-73.6","0.4","-59.7","12.8", 74521456L, 1)
 	};
 
-	private static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >
-	                                    MAP_MENU                                = null;
-
 	private Boolean                     stop_me                                 = false;
 	private static final int            SOCKET_CONNECT_TIMEOUT                  = 60000;			// 60 secs.
 	private static final int            SOCKET_READ_TIMEOUT                     = 120000;			// 120 secs.
@@ -280,20 +278,17 @@ public class NavitMapDownloader extends Thread
 	private static final int            MAP_READ_FILE_BUFFER                    = 1024 * 64;
 	private static final int            UPDATE_PROGRESS_EVERY_CYCLE             = 8;
 	private static final int            MAX_RETRIES                             = 5;
-	private static final String         MAP_FILENAME_PRI                        = "navitmap.bin";
-	private static final String         MAP_FILENAME_NUM                        = "navitmap_%03d.bin";
 	private static final String         MAP_FILENAME_PATH                       = Navit.MAP_FILENAME_PATH;
 	private static final String         TAG                                     = "NavitMapDownloader";
-	private static final String         MAP_BULLETPOINT                        = " * ";
-	
+	private static final String         MAP_BULLETPOINT                         = " * ";
+
 	private osm_map_values              map_values;
-	private int                         map_slot;
 	private int                         dialog_num;
-	
+
 	public static final int             EXIT_SUCCESS                            = 0;
 	public static final int             EXIT_RECOVERABLE_ERROR                  = 1;
 	public static final int             EXIT_UNRECOVERABLE_ERROR                = 2;
-	
+
 	public static int                   retry_counter                           = 0;
 
 	public void run()
@@ -302,7 +297,7 @@ public class NavitMapDownloader extends Thread
 		int exit_code;
 		retry_counter = 0;
 
-		Log.v(TAG, "map_num3=" + this.map_slot);
+		Log.v(TAG, "start download " + map_values.map_name);
 
 		NavitDialogs.sendDialogMessage( NavitDialogs.MSG_PROGRESS_BAR
 				, Navit.get_text("Mapdownload"), Navit.get_text("downloading") + ": " + map_values.map_name
@@ -314,7 +309,7 @@ public class NavitMapDownloader extends Thread
 			{
 				Thread.sleep(10 + retry_counter * 1000);
 			} catch (InterruptedException e1)	{}
-		} while ( ( exit_code = download_osm_map(map_values, map_slot)) == EXIT_RECOVERABLE_ERROR
+		} while ( ( exit_code = download_osm_map(map_values)) == EXIT_RECOVERABLE_ERROR
 				&& retry_counter++ < MAX_RETRIES
 				&& !stop_me);
 
@@ -326,10 +321,10 @@ public class NavitMapDownloader extends Thread
 
 			Log.d(TAG, "success");
 		}
-		
+
 		if (exit_code == EXIT_SUCCESS || stop_me )
 		{
-			NavitDialogs.sendDialogMessage( NavitDialogs.MSG_REMOVE_PROGRESS_BAR, null, null, dialog_num 
+			NavitDialogs.sendDialogMessage( NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED, MAP_FILENAME_PATH + map_values.map_name + ".bin", null, dialog_num 
 						, exit_code , 0 );
 		}
 	}
@@ -340,52 +335,59 @@ public class NavitMapDownloader extends Thread
 		Log.d(TAG, "stop_me -> true");
 	}
 
-	public NavitMapDownloader(int map_id, int dialog_num, int map_slot)
+	public NavitMapDownloader(int map_id, int dialog_num)
 	{
 		this.map_values = osm_maps[map_id];
-		this.map_slot = map_slot;
 	}
-	
-	public static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> > getMenu() {
-		
-		if (MAP_MENU != null)
-		{
-			return MAP_MENU;
-		}
+
+	public static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>>> getMenu() {
 		ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
-		ArrayList<ArrayList<HashMap<String, String>>> resultChilds = new ArrayList<ArrayList<HashMap<String, String>>>();
+		ArrayList<ArrayList<HashMap<String, String>>> resultChilds =
+		        new ArrayList<ArrayList<HashMap<String, String>>>();
 		ArrayList<HashMap<String, String>> secList = new ArrayList<HashMap<String, String>>();
 
-		for (int currentMapIndex = 0; currentMapIndex < osm_maps.length; currentMapIndex++)
-		{
-			if (osm_maps[currentMapIndex].level == 0)
-			{
-				if (secList.size() > 0)
-				{
+		// add already downloaded maps
+		HashMap<String, String> downloaded_maps_hash = new HashMap<String, String>();
+		downloaded_maps_hash.put("category_name", Navit.get_text("Downloaded Maps"));
+		resultGroups.add(downloaded_maps_hash);
+
+		for (NavitMap map : getAvailableMaps()) {
+			HashMap<String, String> child = new HashMap<String, String>();
+			child.put("map_name", map.mapName + " " + (map.size() / 1024 / 1024) + "MB");
+			child.put("map_location", map.getLocation());
+
+			secList.add(child);
+		}
+		resultChilds.add(secList);
+		secList = null;
+
+		// add all maps
+		for (int currentMapIndex = 0; currentMapIndex < osm_maps.length; currentMapIndex++) {
+			if (osm_maps[currentMapIndex].level == 0) {
+				if (secList != null && secList.size() > 0) {
 					resultChilds.add(secList);
 				}
 				secList = new ArrayList<HashMap<String, String>>();
-				HashMap<String, String> m = new HashMap<String, String>();
-				m.put( "map_name", osm_maps[currentMapIndex].map_name);
-				resultGroups.add( m );
+				HashMap<String, String> map_info_hash = new HashMap<String, String>();
+				map_info_hash.put("category_name", osm_maps[currentMapIndex].map_name);
+				resultGroups.add(map_info_hash);
 			}
 
 			HashMap<String, String> child = new HashMap<String, String>();
 			child.put("map_name", (osm_maps[currentMapIndex].level > 1 ? MAP_BULLETPOINT : "")
-					+ osm_maps[currentMapIndex].map_name
-					+ " "
-					+ (osm_maps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
+			        + osm_maps[currentMapIndex].map_name + " "
+			        + (osm_maps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
 			child.put("map_index", String.valueOf(currentMapIndex));
 
 			secList.add(child);
 		}
 		resultChilds.add(secList);
-		
-		MAP_MENU = new Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >(resultGroups, resultChilds);
-		return MAP_MENU;
+
+		return new Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>>>(resultGroups,
+		        resultChilds);
 	}
 
-	public int download_osm_map(osm_map_values map_values, int map_number)
+	public int download_osm_map(osm_map_values map_values)
 	{
 		int exit_code = EXIT_SUCCESS;
 		boolean resume = false;
@@ -430,7 +432,7 @@ public class NavitMapDownloader extends Thread
 				url = new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
 						+ map_values.lat1 + "," + map_values.lon2 + "," + map_values.lat2);
 			}
-			
+
 			Log.v(TAG, "connect to " + url.toString());
 //			URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
 			c = (HttpURLConnection) url.openConnection();
@@ -590,17 +592,11 @@ public class NavitMapDownloader extends Thread
 
 		if (exit_code == EXIT_SUCCESS)
 		{
-			String final_fileName = MAP_FILENAME_PRI;
-			
-			if (map_number>0)
-			{
-				final_fileName = String.format(MAP_FILENAME_NUM, map_number);
-			}
+			File final_outputFile = new File(MAP_FILENAME_PATH, map_values.map_name + ".bin");
 
-			File final_outputFile = new File(MAP_FILENAME_PATH, final_fileName);
-			// delete an already final filename, first
+			// delete an already existing file first
 			final_outputFile.delete();
-			// rename file to final name
+			// rename file to its final name
 			outputFile.renameTo(final_outputFile);
 		}
 
@@ -632,5 +628,24 @@ public class NavitMapDownloader extends Thread
 	{
 		StatFs fsInfo = new StatFs(MAP_FILENAME_PATH);
 		return (long)fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
+	}
+	
+	public static NavitMap[] getAvailableMaps()
+	{
+		class filterMaps implements FilenameFilter {
+			public boolean accept(File dir, String filename)
+			{
+				if (filename.endsWith(".bin"))
+					return true;
+				return false;
+			}
+		}
+		File map_dir = new File(MAP_FILENAME_PATH);
+		String map_file_names[] = map_dir.list(new filterMaps());
+		NavitMap maps[] = new NavitMap[map_file_names.length];
+		for (int map_file_index = 0; map_file_index < map_file_names.length; map_file_index++) {
+			maps[map_file_index] = new NavitMap(MAP_FILENAME_PATH, map_file_names[map_file_index]);
+		}
+		return maps;
 	}
 }

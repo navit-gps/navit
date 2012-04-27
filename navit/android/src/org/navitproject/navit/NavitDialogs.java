@@ -24,7 +24,7 @@ public class NavitDialogs extends Handler{
 	public static final int           DIALOG_SEARCHRESULTS_WAIT        = 3;
 
 	// dialog messages
-	static final int MSG_REMOVE_PROGRESS_BAR   = 0;
+	static final int MSG_MAP_DOWNLOAD_FINISHED   = 0;
 	static final int MSG_PROGRESS_BAR          = 1;
 	static final int MSG_TOAST                 = 2;
 	static final int MSG_TOAST_LONG            = 3;
@@ -70,12 +70,16 @@ public class NavitDialogs extends Handler{
 	{
 		switch (msg.what)
 		{
-		case MSG_REMOVE_PROGRESS_BAR :
+		case MSG_MAP_DOWNLOAD_FINISHED :
+		{
 			// dismiss dialog, remove dialog
 			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
 			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
-			mActivity.activateNewMap();
+			Message activate_map_msg = Message.obtain(Navit.N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
+			activate_map_msg.setData(msg.getData());
+			activate_map_msg.sendToTarget();
 			break;
+		}
 		case MSG_PROGRESS_BAR :
 			// change progressbar values
 			mapdownloader_dialog.setMax(msg.getData().getInt("value1"));
@@ -107,7 +111,6 @@ public class NavitDialogs extends Handler{
 		case MSG_START_MAP_DOWNLOAD:
 		{
 			int download_map_id = msg.arg1;
-			int map_slot     = msg.arg2;
 			Log.d("Navit", "PRI id=" + download_map_id);
 			// set map id to download
 
@@ -116,8 +119,7 @@ public class NavitDialogs extends Handler{
 			{
 				mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
 
-				mapdownloader = new NavitMapDownloader(download_map_id
-						, NavitDialogs.DIALOG_MAPDOWNLOAD, map_slot);
+				mapdownloader = new NavitMapDownloader(download_map_id, NavitDialogs.DIALOG_MAPDOWNLOAD);
 				mapdownloader.start();
 			}
 		}

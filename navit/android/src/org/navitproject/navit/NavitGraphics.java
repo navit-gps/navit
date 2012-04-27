@@ -19,6 +19,7 @@
 
 package org.navitproject.navit;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -686,7 +687,7 @@ public class NavitGraphics
 
 	static public enum msg_type {
 		CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION
-		, CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER
+		, CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
 	};
 
 	static public msg_type[] msg_values = msg_type.values();
@@ -728,7 +729,16 @@ public class NavitGraphics
 					ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // down
 					break;
 				case CLB_COUNTRY_CHOOSER:
-					
+					break;
+				case CLB_LOAD_MAP:
+					CallbackMessageChannel(6, msg.getData().getString("title"));
+					break;
+				case CLB_DELETE_MAP:
+					File toDelete = new File( msg.getData().getString("title"));
+					toDelete.delete();
+				//fallthrough
+				case CLB_UNLOAD_MAP:
+					CallbackMessageChannel(7, msg.getData().getString("title"));
 					break;
 				}
 			}

@@ -86,8 +86,7 @@ public class Navit extends Activity
 	public static String             my_display_density             = "mdpi";
 	private boolean                  searchBoxShown                 = false;
 	public static final int          ADDRESS_RESULTS_DIALOG_MAX     = 10;
-	public static final int          NavitDownloaderPriSelectMap_id = 967;
-	public static final int          NavitDownloaderSecSelectMap_id = 968;
+	public static final int          NavitDownloaderSelectMap_id    = 967;
 	public static int                search_results_towns           = 0;
 	public static int                search_results_streets         = 0;
 	public static int                search_results_streets_hn      = 0;
@@ -238,8 +237,8 @@ public class Navit extends Activity
 					Log.e("Navit", "Ok, user saw the infobox");
 				}
 			});
-	
-			
+
+
 			// TRANS
 			infobox.setNeutralButton(getString(R.string.initial_info_box_more_info), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
@@ -312,8 +311,6 @@ public class Navit extends Activity
 			NavitTextTranslations.sub_language = country.toUpperCase(locale);
 		}
 		Log.e("Navit", "Language " + lang);
-		// get the local language -------------
-
 
 		// make sure the new path for the navitmap.bin file(s) exist!!
 		File navit_maps_dir = new File(MAP_FILENAME_PATH);
@@ -323,12 +320,10 @@ public class Navit extends Activity
 		File navit_data_share_dir = new File(NAVIT_DATA_SHARE_DIR);
 		navit_data_share_dir.mkdirs();
 
-
 		// hardcoded strings for now, use routine down below later!!
 		if (lang.compareTo("de") == 0)
 		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map_de;
+			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_de;
 			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_de;
 			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_de;
 			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_de;
@@ -340,8 +335,7 @@ public class Navit extends Activity
 		}
 		else if (lang.compareTo("fr") == 0)
 		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map_fr;
+			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_fr;
 			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_fr;
 			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_fr;
 			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_fr;
@@ -353,8 +347,7 @@ public class Navit extends Activity
 		}
 		else if (lang.compareTo("nl") == 0)
 		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_first_map_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map = NavitTextTranslations.NAVIT_JAVA_MENU_download_second_map_nl;
+			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_nl;
 			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_nl;
 			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_nl;
 			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_nl;
@@ -413,7 +406,9 @@ public class Navit extends Activity
 		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
-
+		
+		activateAllMaps();
+		
 		showInfos();
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -422,6 +417,18 @@ public class Navit extends Activity
 		// a test now, later we will unpack all needed string for java, here at this point!!
 		String x = NavitGraphics.getLocalizedString("Austria");
 		Log.e("Navit", "x=" + x);
+	}
+
+	private void activateAllMaps()
+	{
+		NavitMap maps[] = NavitMapDownloader.getAvailableMaps();
+		for (NavitMap map : maps) {
+			Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
+			Bundle b = new Bundle();
+			b.putString("title", map.getLocation());
+			msg.setData(b);
+			msg.sendToTarget();
+		}
 	}
 
 	@Override
@@ -524,13 +531,11 @@ public class Navit extends Activity
 		menu.add(1, 1, 100, getString(R.string.optionsmenu_zoom_in)); //TRANS
 		menu.add(1, 2, 200, getString(R.string.optionsmenu_zoom_out)); //TRANS
 
-		menu.add(1, 3, 300, getString(R.string.optionsmenu_download_first_map)); //TRANS
+		menu.add(1, 3, 300, getString(R.string.optionsmenu_download_maps)); //TRANS
 		menu.add(1, 5, 400, getString(R.string.optionsmenu_toggle_poi)); //TRANS
 
 		menu.add(1, 6, 500, getString(R.string.optionsmenu_address_search)); //TRANS
 
-		menu.add(1, 4, 600, getString(R.string.optionsmenu_download_second_map)); //TRANS
-		menu.add(1, 88, 800, "--");
 		menu.add(1, 99, 900, getString(R.string.optionsmenu_exit_navit)); //TRANS
 		return true;
 	}
@@ -554,8 +559,6 @@ public class Navit extends Activity
 		//N_MotionCallbackID = mo_cb_id;
 		N_NavitGraphics = ng;
 	}
-
-	//public native void KeypressCallback(int id, String s);
 
 	public void start_targetsearch_from_intent(String target_address)
 	{
@@ -596,14 +599,9 @@ public class Navit extends Activity
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
 				break;
 			case 3 :
-				// map download menu for primary
+				// map download menu
 				Intent map_download_list_activity = new Intent(this, NavitDownloadSelectMapActivity.class);
-				startActivityForResult(map_download_list_activity, Navit.NavitDownloaderPriSelectMap_id);
-				break;
-			case 4 :
-				// map download menu for second map
-				Intent map_download_list_activity2 = new Intent(this, NavitDownloadSelectMapActivity.class);
-				startActivityForResult(map_download_list_activity2, Navit.NavitDownloaderSecSelectMap_id);
+				startActivityForResult(map_download_list_activity, Navit.NavitDownloaderSelectMap_id);
 				break;
 			case 5 :
 				// toggle the normal POI layers (to avoid double POIs)
@@ -628,9 +626,6 @@ public class Navit extends Activity
 				search_intent.putExtra("address_string", NavitDialogs.Navit_last_address_search_string);
 				search_intent.putExtra("partial_match", NavitDialogs.Navit_last_address_partial_match);
 				this.startActivityForResult(search_intent, NavitAddressSearch_id);
-				break;
-			case 88 :
-				// dummy entry, just to make "breaks" in the menu
 				break;
 			case 99 :
 				// exit
@@ -657,13 +652,11 @@ public class Navit extends Activity
 	{
 		switch (requestCode)
 		{
-		case Navit.NavitDownloaderPriSelectMap_id :
-		case Navit.NavitDownloaderSecSelectMap_id :
+		case Navit.NavitDownloaderSelectMap_id :
 			if (resultCode == Activity.RESULT_OK)
 			{
 				Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD
-						, data.getIntExtra("map_index", -1)
-						, requestCode == Navit.NavitDownloaderSecSelectMap_id ? 2 : 0);
+						, data.getIntExtra("map_index", -1), 0);
 				msg.sendToTarget();
 			}
 			break;
@@ -760,10 +753,6 @@ public class Navit extends Activity
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path);
 	public native void NavitDestroy();
 
-	public void activateNewMap()
-	{
-		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
-	}
 	/*
 	 * this is used to load the 'navit' native library on
 	 * application startup. The library has already been unpacked at
