@@ -261,7 +261,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 	case 6:
 	{
 		struct mapset *ms = navit_get_mapset(attr.u.navit);
-		struct attr type, name, data, flags, *attrs[5];
+		struct attr type, name, data, *attrs[4];
 		char *map_location=(*env)->GetStringUTFChars(env, str, NULL);
 		dbg(0,"*****string=%s\n",map_location);
 		type.type=attr_type;
@@ -273,10 +273,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		name.type=attr_name;
 		name.u.str=g_strdup(map_location);
 
-		flags.type=attr_flags;
-		flags.u.num=1;
-
-		attrs[0]=&type; attrs[1]=&data; attrs[2]=&name; attrs[3]=&flags; attrs[4]=NULL;
+		attrs[0]=&type; attrs[1]=&data; attrs[2]=&name; attrs[3]=NULL;
 
 		struct map * new_map = map_new(NULL, attrs);
 		struct attr map_a;
