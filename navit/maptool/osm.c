@@ -1091,6 +1091,10 @@ osm_add_tag(char *k, char *v)
 		attr_strings_save(attr_string_postal, v);
 		level=5;
 	}
+	if (! strcmp(k,"addr:postcode") && !attr_strings[attr_string_postal]) {
+		attr_strings_save(attr_string_postal, v);
+		level=5;
+	}
 	if (! strcmp(k,"openGeoDB:postal_codes") && !attr_strings[attr_string_postal]) {
 		attr_strings_save(attr_string_postal, v);
 		level=5;
