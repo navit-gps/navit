@@ -403,7 +403,6 @@ public class NavitMapDownloader extends Thread
 			outputFile = new File(MAP_FILENAME_PATH, fileName);
 
 			long old_download_size = outputFile.length();
-			long start_timestamp = System.nanoTime();
 
 			outputFile.mkdir();
 			URL url = null;
@@ -478,6 +477,7 @@ public class NavitMapDownloader extends Thread
 			buf = new BufferedOutputStream(new FileOutputStream(outputFile, resume) , MAP_WRITE_FILE_BUFFER);
 			bif = new BufferedInputStream(c.getInputStream(), MAP_READ_FILE_BUFFER);
 
+			long start_timestamp = System.nanoTime();
 			byte[] buffer = new byte[MAP_WRITE_MEM_BUFFER];
 			int len1 = 0;
 			int alt_cur = 0;
