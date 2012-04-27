@@ -8,6 +8,8 @@
 	<string name="notification_name">@string/app_name</string>
 	<string name="notification_ticker">Navit gestart</string>
 	<string name="notification_event_default">Navit actief</string>
+	<string name="yes">En</string>
+	<string name="no">Geen</string>
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Welkom bij Navit</string>
@@ -18,10 +20,9 @@
 	<!-- OPTIONS MENU -->
 	<string name="optionsmenu_zoom_in">Inzoomen</string>
 	<string name="optionsmenu_zoom_out">Uitzoomen</string>
-	<string name="optionsmenu_download_first_map">Download eerste kaart</string>
+	<string name="optionsmenu_download_maps">Download kaarten</string>
 	<string name="optionsmenu_toggle_poi">Schakel POIs</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	<string name="optionsmenu_download_second_map">Download tweede kaart</string>
 	<string name="optionsmenu_exit_navit">Verlaat Navit</string>
 
 	<!-- POSITION POP-UP -->
@@ -29,6 +30,7 @@
 	<string name="position_popup_drive_here">Ga naar hier</string>
 
 	<!-- MAP DOWNLOAD -->
+	<string name="map_delete">Verwijder deze kaart?</string>
 	<string name="map_download_title">Kaart downloaden</string>
 	<string name="map_download_downloading">Downloading:</string>
 	<string name="map_download_eta">Resterende tijd</string>

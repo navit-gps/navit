@@ -35,22 +35,22 @@ public class NavitTextTranslations
 	// space !!
 	static final String m = " ";
 
-	static final String NAVIT_JAVA_MENU_download_first_map_en = "Download first map";
-	static final String NAVIT_JAVA_MENU_download_first_map_fr = "Télécharchez 1ere carte";
-	static final String NAVIT_JAVA_MENU_download_first_map_nl = "Download eerste kaart";
-	static final String NAVIT_JAVA_MENU_download_first_map_de = "1te karte runterladen";
+	static final String NAVIT_JAVA_MENU_download_map_en = "Download maps";
+	static final String NAVIT_JAVA_MENU_download_map_fr = "Télécharger des cartes";
+	static final String NAVIT_JAVA_MENU_download_map_nl = "Download kaarten";
+	static final String NAVIT_JAVA_MENU_download_map_de = "Karten herunterladen";
 
 	static final String INFO_BOX_TITLE_en = "Welcome to Navit";
 	static final String INFO_BOX_TITLE_fr = "Bienvenue chez Navit";
 	static final String INFO_BOX_TITLE_nl = "Welkom bij Navit";
 	static final String INFO_BOX_TITLE_de = "Willkommen bei Navit";
 
-	// FIRST RUN STRINGS	
+	// FIRST RUN STRINGS
 	// During first run of Navit, the following text will display in a dialog box.
-	static final String INFO_BOX_TEXT_en =	m + "You are running Navit for the first time!\n\n" + m + "To start, select \"" + NAVIT_JAVA_MENU_download_first_map_en + "\"\n" + m + "from the menu to download a map\n" + m + "of your area.\n" + m + "Note: The map filesize may be large\n" + m + "(>50MB) - a wifi connection is recommended.\n\n" + m + "Mapdata:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "More information on Navit\n" + m + "can be found at\n" + m + "http://wiki.navit-project.org\n" + "\n" + m + "Enjoy Navit!";
-	static final String INFO_BOX_TEXT_fr = m + "Vous exécutez Navit pour la première fois\n\n" + m + "Pour commencer, sélectionnez \n \"" + NAVIT_JAVA_MENU_download_first_map_fr + "\"\n" + m + "du menu et télechargez une carte\n de votre région.\n" + m + "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n" + m + "Cartes:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Pour plus d'infos sur Navit\n" + m + "visitez notre site internet\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Amusez vous avec Navit.";
-	static final String INFO_BOX_TEXT_de = m + "Sie starten Navit zum ersten Mal!\n\n" + m + "Zum loslegen im Menu \"" + NAVIT_JAVA_MENU_download_first_map_en + "\"\n" + m + "auswählen und Karte für die\n" + m + "gewünschte Region downloaden.\n" + m + "Die Kartendatei ist sehr gross,\n" + m + "bitte flatrate oder ähnliches aktivieren!\n\n" + m + "Kartendaten:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Für mehr Infos zu Navit\n" + m + "bitte die Website besuchen\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Viel Spaß mit Navit.";
-	static final String INFO_BOX_TEXT_nl = m + "U voert Navit voor de eerste keer uit.\n\n" + m + "Om te beginnen, selecteer  \n \"" + NAVIT_JAVA_MENU_download_first_map_nl + "\"\n" + m + "uit het menu en download een kaart\n van je regio.\n" + m + "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n" + m + "Kaartdata:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Voor meer info over Navit\n" + m + "bezoek onze site\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Nog veel plezier met Navit.";
+	static final String INFO_BOX_TEXT_en =	m + "You are running Navit for the first time!\n\n" + m + "To start, select \"" + NAVIT_JAVA_MENU_download_map_en + "\"\n" + m + "from the menu to download a map\n" + m + "of your area.\n" + m + "Note: The map filesize may be large\n" + m + "(>50MB) - a wifi connection is recommended.\n\n" + m + "Mapdata:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "More information on Navit\n" + m + "can be found at\n" + m + "http://wiki.navit-project.org\n" + "\n" + m + "Enjoy Navit!";
+	static final String INFO_BOX_TEXT_fr = m + "Vous exécutez Navit pour la première fois\n\n" + m + "Pour commencer, sélectionnez \n \"" + NAVIT_JAVA_MENU_download_map_fr + "\"\n" + m + "du menu et télechargez une carte\n de votre région.\n" + m + "Les cartes sont volumineux, donc\n il est préférable d'avoir une connection\n internet illimitée!\n\n" + m + "Cartes:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Pour plus d'infos sur Navit\n" + m + "visitez notre site internet\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Amusez vous avec Navit.";
+	static final String INFO_BOX_TEXT_de = m + "Sie starten Navit zum ersten Mal!\n\n" + m + "Zum loslegen im Menu \"" + NAVIT_JAVA_MENU_download_map_en + "\"\n" + m + "auswählen und Karte für die\n" + m + "gewünschte Region downloaden.\n" + m + "Die Kartendatei ist sehr gross,\n" + m + "bitte flatrate oder ähnliches aktivieren!\n\n" + m + "Kartendaten:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Für mehr Infos zu Navit\n" + m + "bitte die Website besuchen\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Viel Spaß mit Navit.";
+	static final String INFO_BOX_TEXT_nl = m + "U voert Navit voor de eerste keer uit.\n\n" + m + "Om te beginnen, selecteer  \n \"" + NAVIT_JAVA_MENU_download_map_nl + "\"\n" + m + "uit het menu en download een kaart\n van je regio.\n" + m + "De kaarten zijn groot,\n het is dus aangeraden om een \n ongelimiteerde internetverbinding te hebben!\n\n" + m + "Kaartdata:\n" + m + "CC-BY-SA OpenStreetMap Project\n\n" + m + "Voor meer info over Navit\n" + m + "bezoek onze site\n" + m + "http://wiki.navit-project.org/\n" + "\n" + m + "      Nog veel plezier met Navit.";
 
 	// MENU STRINGS
 	static final String NAVIT_JAVA_MENU_MOREINFO_en = "More info";
@@ -89,8 +89,7 @@ public class NavitTextTranslations
 	static final String NAVIT_JAVA_MENU_download_second_map_de = "2te karte runterladen";
 
 	// default values
-	static String NAVIT_JAVA_MENU_download_first_map	= NAVIT_JAVA_MENU_download_first_map_en;
-	static String NAVIT_JAVA_MENU_download_second_map	= NAVIT_JAVA_MENU_download_second_map_en;
+	static String NAVIT_JAVA_MENU_download_maps	= NAVIT_JAVA_MENU_download_map_en;
 	static String INFO_BOX_TITLE				= INFO_BOX_TITLE_en;
 	static String INFO_BOX_TEXT				= INFO_BOX_TEXT_en;
 	static String NAVIT_JAVA_MENU_MOREINFO			= NAVIT_JAVA_MENU_MOREINFO_en;
@@ -129,6 +128,10 @@ public class NavitTextTranslations
 
 		k = "downloading";
 		v = new String[]{"en", "downloading"};
+		p(k, v);
+
+		k = "Downloaded Maps";
+		v = new String[]{"en", "Downloaded Maps", "de", "Heruntergeladene Karten", "nl", "Gedownloade kaarten", "fr","Cartes téléchargées" };
 		p(k, v);
 
 		k = "ETA";
