@@ -29,9 +29,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import android.os.StatFs;
 import android.util.Log;
+import android.util.Pair;
 
 public class NavitMapDownloader extends Thread
 {
@@ -62,8 +66,8 @@ public class NavitMapDownloader extends Thread
 	// define the maps here
 	//
 	private static final osm_map_values[] osm_maps = {
-		new osm_map_values("Whole Planet","-180","-90","180","90", 7449814676L, 1),
-		new osm_map_values("Africa","-30.89","-36.17","61.68","38.40", 280880799L, 1),
+		new osm_map_values("Whole Planet","-180","-90","180","90", 7449814676L, 0),
+		new osm_map_values("Africa","-30.89","-36.17","61.68","38.40", 280880799L, 0),
 		new osm_map_values("Angola","11.4","-18.1","24.2","-5.3", 55850695L, 1),
 		new osm_map_values("Burundi","28.9","-4.5","30.9","-2.2", 60694550L, 1),
 		new osm_map_values("Canary Islands","-18.69","26.52","-12.79","29.99", 58904212L, 1),
@@ -82,7 +86,7 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("South Africa+Lesotho","15.93","-36.36","33.65","-22.08", 79904318L, 1),
 		new osm_map_values("Tanzania","29.19","-11.87","40.74","-0.88", 65380211L, 1),
 		new osm_map_values("Uganda","29.3","-1.6","35.1","4.3", 61521337L, 1),
-		new osm_map_values("Asia","23.8","0.1","195.0","82.4", 1185692230L, 1),
+		new osm_map_values("Asia","23.8","0.1","195.0","82.4", 1185692230L, 0),
 		new osm_map_values("Azerbaijan","44.74","38.34","51.69","42.37", 64563990L, 1),
 		new osm_map_values("China","67.3","5.3","135.0","54.5", 354889731L, 1),
 		new osm_map_values("Cyprus","32.0","34.5","34.9","35.8", 62657503L, 1),
@@ -104,13 +108,13 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Turkey","25.1","35.8","46.4","42.8", 105200911L, 1),
 		new osm_map_values("Turkmenistan","51.78","35.07","66.76","42.91", 62188003L, 1),
 		new osm_map_values("UAE+Other","51.5","22.6","56.7","26.5", 61873090L, 1),
-		new osm_map_values("Australia+Oceania","89.84","-57.39","179.79","7.26", 185657003L, 1),
-		new osm_map_values("Australia","110.5","-44.2","154.9","-9.2", 138812990L, 1),
+		new osm_map_values("Australia+Oceania","89.84","-57.39","179.79","7.26", 185657003L, 0),
+		new osm_map_values("Australia","110.5","-44.2","154.9","-9.2", 138812990L, 0),
 		new osm_map_values("Tasmania","144.0","-45.1","155.3","-24.8", 109169592L, 1),
 		new osm_map_values("Victoria+New South Wales","140.7","-39.4","153.7","-26.9", 104820309L, 1),
 		new osm_map_values("New Caledonia","157.85","-25.05","174.15","-16.85", 54512722L, 1),
 		new osm_map_values("New Zealand","165.2","-47.6","179.1","-33.7", 68221081L, 1),
-		new osm_map_values("Europe","-12.97","33.59","34.15","72.10", 3570653608L, 1),
+		new osm_map_values("Europe","-12.97","33.59","34.15","72.10", 3570653608L, 0),
 		new osm_map_values("Western Europe","-17.6","34.5","42.9","70.9", 3700019849L, 1),
 		new osm_map_values("Austria","9.4","46.32","17.21","49.1", 289080462L, 1),
 		new osm_map_values("Azores","-31.62","36.63","-24.67","40.13", 54507108L, 1),
@@ -118,85 +122,85 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Denmark","7.65","54.32","15.58","58.07", 154275079L, 1),
 		new osm_map_values("Faroe Islands","-7.8","61.3","-6.1","62.5", 54931474L, 1),
 		new osm_map_values("France","-5.45","42.00","8.44","51.68", 1468741961L, 1),
-		new osm_map_values("Alsace","6.79","47.27","8.48","49.17", 144023488L, 1),
-		new osm_map_values("Aquitaine","-2.27","42.44","1.50","45.76", 186786072L, 1),
-		new osm_map_values("Auvergne","2.01","44.57","4.54","46.85", 118942252L, 1),
-		new osm_map_values("Basse-Normandie","-2.09","48.13","1.03","49.98", 111940365L, 1),
-		new osm_map_values("Bourgogne","2.80","46.11","5.58","48.45", 114109115L, 1),
-		new osm_map_values("Bretagne","-5.58","46.95","-0.96","48.99", 188689862L, 1),
-		new osm_map_values("Centre","0.01","46.29","3.18","48.99", 208870488L, 1),
-		new osm_map_values("Champagne-Ardenne","3.34","47.53","5.94","50.28", 112266252L, 1),
-		new osm_map_values("Corse","8.12","41.32","9.95","43.28", 67997394L, 1),
-		new osm_map_values("Franche-Comte","5.20","46.21","7.83","48.07", 131236689L, 1),
-		new osm_map_values("Haute-Normandie","-0.15","48.62","1.85","50.18", 90484736L, 1),
-		new osm_map_values("Ile-de-France","1.40","48.07","3.61","49.29", 152890366L, 1),
-		new osm_map_values("Languedoc-Roussillon","1.53","42.25","4.89","45.02", 168413195L, 1),
-		new osm_map_values("Limousin","0.58","44.87","2.66","46.50", 98422724L, 1),
-		new osm_map_values("Lorraine","4.84","47.77","7.72","49.73", 137538540L, 1),
-		new osm_map_values("Midi-Pyrenees","-0.37","42.18","3.50","45.10", 186740619L, 1),
-		new osm_map_values("Nord-pas-de-Calais","1.42","49.92","4.49","51.31", 145320230L, 1),
-		new osm_map_values("Pays-de-la-Loire","-2.88","46.20","0.97","48.62", 243736184L, 1),
-		new osm_map_values("Picardie","1.25","48.79","4.31","50.43", 163238861L, 1),
-		new osm_map_values("Poitou-Charentes","-1.69","45.04","1.26","47.23", 197886714L, 1),
-		new osm_map_values("Provence-Alpes-Cote-d-Azur","4.21","42.91","7.99","45.18", 179863755L, 1),
-		new osm_map_values("Rhone-Alpes","3.65","44.07","7.88","46.64", 201452039L, 1),
+		new osm_map_values("Alsace","6.79","47.27","8.48","49.17", 144023488L, 2),
+		new osm_map_values("Aquitaine","-2.27","42.44","1.50","45.76", 186786072L, 2),
+		new osm_map_values("Auvergne","2.01","44.57","4.54","46.85", 118942252L, 2),
+		new osm_map_values("Basse-Normandie","-2.09","48.13","1.03","49.98", 111940365L, 2),
+		new osm_map_values("Bourgogne","2.80","46.11","5.58","48.45", 114109115L, 2),
+		new osm_map_values("Bretagne","-5.58","46.95","-0.96","48.99", 188689862L, 2),
+		new osm_map_values("Centre","0.01","46.29","3.18","48.99", 208870488L, 2),
+		new osm_map_values("Champagne-Ardenne","3.34","47.53","5.94","50.28", 112266252L, 2),
+		new osm_map_values("Corse","8.12","41.32","9.95","43.28", 67997394L, 2),
+		new osm_map_values("Franche-Comte","5.20","46.21","7.83","48.07", 131236689L, 2),
+		new osm_map_values("Haute-Normandie","-0.15","48.62","1.85","50.18", 90484736L, 2),
+		new osm_map_values("Ile-de-France","1.40","48.07","3.61","49.29", 152890366L, 2),
+		new osm_map_values("Languedoc-Roussillon","1.53","42.25","4.89","45.02", 168413195L, 2),
+		new osm_map_values("Limousin","0.58","44.87","2.66","46.50", 98422724L, 2),
+		new osm_map_values("Lorraine","4.84","47.77","7.72","49.73", 137538540L, 2),
+		new osm_map_values("Midi-Pyrenees","-0.37","42.18","3.50","45.10", 186740619L, 2),
+		new osm_map_values("Nord-pas-de-Calais","1.42","49.92","4.49","51.31", 145320230L, 2),
+		new osm_map_values("Pays-de-la-Loire","-2.88","46.20","0.97","48.62", 243736184L, 2),
+		new osm_map_values("Picardie","1.25","48.79","4.31","50.43", 163238861L, 2),
+		new osm_map_values("Poitou-Charentes","-1.69","45.04","1.26","47.23", 197886714L, 2),
+		new osm_map_values("Provence-Alpes-Cote-d-Azur","4.21","42.91","7.99","45.18", 179863755L, 2),
+		new osm_map_values("Rhone-Alpes","3.65","44.07","7.88","46.64", 201452039L, 2),
 		new osm_map_values("Germany","5.18","46.84","15.47","55.64", 1187298374L, 1),
-		new osm_map_values("Baden-Wuerttemberg","7.32","47.14","10.57","49.85", 247149038L, 1),
-		new osm_map_values("Bayern","8.92","47.22","13.90","50.62", 306577202L, 1),
-		new osm_map_values("Mittelfranken","9.86","48.78","11.65","49.84", 95916401L, 1),
-		new osm_map_values("Niederbayern","11.55","47.75","14.12","49.42", 119427776L, 1),
-		new osm_map_values("Oberbayern","10.67","47.05","13.57","49.14", 147630851L, 1),
-		new osm_map_values("Oberfranken","10.31","49.54","12.49","50.95", 104963024L, 1),
-		new osm_map_values("Oberpfalz","11.14","48.71","13.47","50.43", 112413336L, 1),
-		new osm_map_values("Schwaben","9.27","47.10","11.36","49.09", 126836560L, 1),
-		new osm_map_values("Unterfranken","8.59","49.16","10.93","50.67", 124601596L, 1),
-		new osm_map_values("Berlin","13.03","52.28","13.81","52.73", 78189548L, 1),
-		new osm_map_values("Brandenburg","11.17","51.30","14.83","53.63", 126821283L, 1),
-		new osm_map_values("Bremen","8.43","52.96","9.04","53.66", 69427370L, 1),
-		new osm_map_values("Hamburg","9.56","53.34","10.39","53.80", 76388380L, 1),
-		new osm_map_values("Hessen","7.72","49.34","10.29","51.71", 155980870L, 1),
-		new osm_map_values("Mecklenburg-Vorpommern","10.54","53.05","14.48","55.05", 92107050L, 1),
-		new osm_map_values("Niedersachsen","6.40","51.24","11.69","54.22", 288712601L, 1),
-		new osm_map_values("Nordrhein-westfalen","5.46","50.26","9.52","52.59", 335383638L, 1),
-		new osm_map_values("Rheinland-Pfalz","6.06","48.91","8.56","51.00", 157909942L, 1),
-		new osm_map_values("Saarland","6.30","49.06","7.46","49.69", 78579241L, 1),
-		new osm_map_values("Sachsen-Anhalt","10.50","50.88","13.26","53.11", 115314663L, 1),
-		new osm_map_values("Sachsen","11.82","50.11","15.10","51.73", 134182818L, 1),
-		new osm_map_values("Schleswig-Holstein","7.41","53.30","11.98","55.20", 114865543L, 1),
-		new osm_map_values("Thueringen","9.81","50.15","12.72","51.70", 112896293L, 1),
+		new osm_map_values("Baden-Wuerttemberg","7.32","47.14","10.57","49.85", 247149038L, 2),
+		new osm_map_values("Bayern","8.92","47.22","13.90","50.62", 306577202L, 2),
+		new osm_map_values("Mittelfranken","9.86","48.78","11.65","49.84", 95916401L, 2),
+		new osm_map_values("Niederbayern","11.55","47.75","14.12","49.42", 119427776L, 2),
+		new osm_map_values("Oberbayern","10.67","47.05","13.57","49.14", 147630851L, 2),
+		new osm_map_values("Oberfranken","10.31","49.54","12.49","50.95", 104963024L, 2),
+		new osm_map_values("Oberpfalz","11.14","48.71","13.47","50.43", 112413336L, 2),
+		new osm_map_values("Schwaben","9.27","47.10","11.36","49.09", 126836560L, 2),
+		new osm_map_values("Unterfranken","8.59","49.16","10.93","50.67", 124601596L, 2),
+		new osm_map_values("Berlin","13.03","52.28","13.81","52.73", 78189548L, 2),
+		new osm_map_values("Brandenburg","11.17","51.30","14.83","53.63", 126821283L, 2),
+		new osm_map_values("Bremen","8.43","52.96","9.04","53.66", 69427370L, 2),
+		new osm_map_values("Hamburg","9.56","53.34","10.39","53.80", 76388380L, 2),
+		new osm_map_values("Hessen","7.72","49.34","10.29","51.71", 155980870L, 2),
+		new osm_map_values("Mecklenburg-Vorpommern","10.54","53.05","14.48","55.05", 92107050L, 2),
+		new osm_map_values("Niedersachsen","6.40","51.24","11.69","54.22", 288712601L, 2),
+		new osm_map_values("Nordrhein-westfalen","5.46","50.26","9.52","52.59", 335383638L, 2),
+		new osm_map_values("Rheinland-Pfalz","6.06","48.91","8.56","51.00", 157909942L, 2),
+		new osm_map_values("Saarland","6.30","49.06","7.46","49.69", 78579241L, 2),
+		new osm_map_values("Sachsen-Anhalt","10.50","50.88","13.26","53.11", 115314663L, 2),
+		new osm_map_values("Sachsen","11.82","50.11","15.10","51.73", 134182818L, 2),
+		new osm_map_values("Schleswig-Holstein","7.41","53.30","11.98","55.20", 114865543L, 2),
+		new osm_map_values("Thueringen","9.81","50.15","12.72","51.70", 112896293L, 2),
 		new osm_map_values("Germany+Austria+Switzerland","3.4","44.5","18.6","55.1", 1763000779L, 1),
 		new osm_map_values("Iceland","-25.3","62.8","-11.4","67.5", 58803839L, 1),
 		new osm_map_values("Ireland","-11.17","51.25","-5.23","55.9", 74456575L, 1),
 		new osm_map_values("Italy","6.52","36.38","18.96","47.19", 373215809L, 1),
 		new osm_map_values("Spain+Portugal","-11.04","34.87","4.62","44.41", 354839261L, 1),
-		new osm_map_values("Mallorca","2.2","38.8","4.7","40.2", 66781797L, 1),
-		new osm_map_values("Galicia","-10.0","41.7","-6.3","44.1", 69081612L, 1),
+		new osm_map_values("Mallorca","2.2","38.8","4.7","40.2", 66781797L, 2),
+		new osm_map_values("Galicia","-10.0","41.7","-6.3","44.1", 69081612L, 2),
 		new osm_map_values("Scandinavia","4.0","54.4","32.1","71.5", 386082513L, 1),
 		new osm_map_values("Finland","18.6","59.2","32.3","70.3", 167464389L, 1),
 		new osm_map_values("Denmark","7.49","54.33","13.05","57.88", 142017133L, 1),
 		new osm_map_values("Switzerland","5.79","45.74","10.59","47.84", 197612725L, 1),
 		new osm_map_values("UK","-9.7","49.6","2.2","61.2", 308044592L, 1),
 		new osm_map_values("England","-7.80","48.93","2.41","56.14", 331085897L, 1),
-		new osm_map_values("Buckinghamshire","-1.19","51.44","-0.43","52.25", 74619627L, 1),
-		new osm_map_values("Cambridgeshire","-0.55","51.96","0.56","52.79", 71849188L, 1),
-		new osm_map_values("Cumbria","-3.96","53.85","-2.11","55.24", 71699620L, 1),
-		new osm_map_values("East_yorkshire_with_hull","-1.16","53.50","0.54","54.26", 68241870L, 1),
-		new osm_map_values("Essex","-0.07","51.40","1.36","52.14", 82991499L, 1),
-		new osm_map_values("Herefordshire","-3.19","51.78","-2.29","52.45", 66471962L, 1),
-		new osm_map_values("Kent","-0.02","50.81","1.65","51.53", 75449128L, 1),
-		new osm_map_values("Lancashire","-3.20","53.43","-2.00","54.29", 75096621L, 1),
-		new osm_map_values("Leicestershire","-1.65","52.34","-0.61","53.03", 75492394L, 1),
-		new osm_map_values("Norfolk","0.10","52.30","2.04","53.41", 71556838L, 1),
-		new osm_map_values("Nottinghamshire","-1.39","52.73","-0.62","53.55", 72979826L, 1),
-		new osm_map_values("Oxfordshire","-1.77","51.41","-0.82","52.22", 73351886L, 1),
-		new osm_map_values("Shropshire","-3.29","52.26","-2.18","53.05", 69144272L, 1),
-		new osm_map_values("Somerset","-3.89","50.77","-2.20","51.40", 72098176L, 1),
-		new osm_map_values("South_yorkshire","-1.88","53.25","-0.80","53.71", 72594920L, 1),
-		new osm_map_values("Suffolk","0.29","51.88","1.81","52.60", 72985880L, 1),
-		new osm_map_values("Surrey","-0.90","51.02","0.10","51.52", 79850137L, 1),
-		new osm_map_values("Wiltshire","-2.41","50.90","-1.44","51.76", 71244578L, 1),
-		new osm_map_values("Scotland","-8.13","54.49","-0.15","61.40", 102111248L, 1),
-		new osm_map_values("Wales","-5.56","51.28","-2.60","53.60", 84860075L, 1),
+		new osm_map_values("Buckinghamshire","-1.19","51.44","-0.43","52.25", 74619627L, 2),
+		new osm_map_values("Cambridgeshire","-0.55","51.96","0.56","52.79", 71849188L, 2),
+		new osm_map_values("Cumbria","-3.96","53.85","-2.11","55.24", 71699620L, 2),
+		new osm_map_values("East_yorkshire_with_hull","-1.16","53.50","0.54","54.26", 68241870L, 2),
+		new osm_map_values("Essex","-0.07","51.40","1.36","52.14", 82991499L, 2),
+		new osm_map_values("Herefordshire","-3.19","51.78","-2.29","52.45", 66471962L, 2),
+		new osm_map_values("Kent","-0.02","50.81","1.65","51.53", 75449128L, 2),
+		new osm_map_values("Lancashire","-3.20","53.43","-2.00","54.29", 75096621L, 2),
+		new osm_map_values("Leicestershire","-1.65","52.34","-0.61","53.03", 75492394L, 2),
+		new osm_map_values("Norfolk","0.10","52.30","2.04","53.41", 71556838L, 2),
+		new osm_map_values("Nottinghamshire","-1.39","52.73","-0.62","53.55", 72979826L, 2),
+		new osm_map_values("Oxfordshire","-1.77","51.41","-0.82","52.22", 73351886L, 2),
+		new osm_map_values("Shropshire","-3.29","52.26","-2.18","53.05", 69144272L, 2),
+		new osm_map_values("Somerset","-3.89","50.77","-2.20","51.40", 72098176L, 2),
+		new osm_map_values("South_yorkshire","-1.88","53.25","-0.80","53.71", 72594920L, 2),
+		new osm_map_values("Suffolk","0.29","51.88","1.81","52.60", 72985880L, 2),
+		new osm_map_values("Surrey","-0.90","51.02","0.10","51.52", 79850137L, 2),
+		new osm_map_values("Wiltshire","-2.41","50.90","-1.44","51.76", 71244578L, 2),
+		new osm_map_values("Scotland","-8.13","54.49","-0.15","61.40", 102111248L, 2),
+		new osm_map_values("Wales","-5.56","51.28","-2.60","53.60", 84860075L, 2),
 		new osm_map_values("Albania","19.09","39.55","21.12","42.72", 71097966L, 1),
 		new osm_map_values("Belarus","23.12","51.21","32.87","56.23", 100471644L, 1),
 		new osm_map_values("Russia","27.9","41.5","190.4", "77.6", 508559360L, 1),
@@ -212,41 +216,41 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Lithuania","20.9","53.8","26.9","56.5", 77228922L, 1),
 		new osm_map_values("Poland","13.6","48.8","24.5","55.0", 331299544L, 1),
 		new osm_map_values("Romania","20.3","43.5","29.9","48.4", 150011857L, 1),
-		new osm_map_values("North America","-178.1","6.5","-10.4","84.0", 2738147321L, 1),
+		new osm_map_values("North America","-178.1","6.5","-10.4","84.0", 2738147321L, 0),
 		new osm_map_values("Alaska","-179.5","49.5","-129","71.6", 72413728L, 1),
 		new osm_map_values("Canada","-141.3","41.5","-52.2","70.2", 1125713287L, 1),
 		new osm_map_values("Hawaii","-161.07","18.49","-154.45","22.85", 57463829L, 1),
 		new osm_map_values("USA (except Alaska and Hawaii)","-125.4","24.3","-66.5","49.3", 2356238167L, 1),
-		new osm_map_values("Midwest","-104.11","35.92","-80.46","49.46", 663062321L, 1),
-		new osm_map_values("Michigan","-90.47","41.64","-79.00","49.37", 207416918L, 1),
-		new osm_map_values("Ohio","-84.87","38.05","-79.85","43.53", 143571732L, 1),
-		new osm_map_values("Northeast","-80.58","38.72","-66.83","47.53", 517925445L, 1),
-		new osm_map_values("Massachusetts","-73.56","40.78","-68.67","42.94", 159493455L, 1),
-		new osm_map_values("Vermont","-73.49","42.68","-71.41","45.07", 74308439L, 1),
-		new osm_map_values("Pacific","-180.05","15.87","-129.75","73.04", 78496182L, 1),
-		new osm_map_values("South","-106.70","23.98","-71.46","40.70", 1135650708L, 1),
-		new osm_map_values("Arkansas","-94.67","32.95","-89.59","36.60", 89637645L, 1),
-		new osm_map_values("District of Columbia","-77.17","38.74","-76.86","39.05", 64042148L, 1),
-		new osm_map_values("Florida","-88.75","23.63","-77.67","31.05", 118647388L, 1),
-		new osm_map_values("Louisiana","-94.09","28.09","-88.62","33.07", 136435773L, 1),
-		new osm_map_values("Maryland","-79.54","37.83","-74.99","40.22", 134152161L, 1),
-		new osm_map_values("Mississippi","-91.71","29.99","-88.04","35.05", 100291749L, 1),
-		new osm_map_values("Oklahoma","-103.41","33.56","-94.38","37.38", 106601625L, 1),
-		new osm_map_values("Texas","-106.96","25.62","-92.97","36.58", 220587321L, 1),
-		new osm_map_values("Virginia","-83.73","36.49","-74.25","39.52", 218627122L, 1),
-		new osm_map_values("West Virginia","-82.70","37.15","-77.66","40.97", 133830267L, 1),
-		new osm_map_values("West","-133.11","31.28","-101.99","49.51", 616041200L, 1),
-		new osm_map_values("Arizona","-114.88","30.01","-108.99","37.06", 89434673L, 1),
-		new osm_map_values("California","-125.94","32.43","-114.08","42.07", 303663259L, 1),
-		new osm_map_values("Colorado","-109.11","36.52","-100.41","41.05", 132835514L, 1),
-		new osm_map_values("Idaho","-117.30","41.93","-110.99","49.18", 97305030L, 1),
-		new osm_map_values("Montana","-116.10","44.31","-102.64","49.74", 93935496L, 1),
-		new osm_map_values("New Mexico","-109.10","26.98","-96.07","37.05", 185648327L, 1),
-		new osm_map_values("Nevada","-120.2","35.0","-113.8","42.1", 138055868L, 1),
-		new osm_map_values("Oregon","-124.8","41.8","-116.3","46.3", 103551459L, 1),
-		new osm_map_values("Utah","-114.11","36.95","-108.99","42.05", 78249845L, 1),
-		new osm_map_values("Washington State","-125.0","45.5","-116.9","49.0", 100601625L, 1),
-		new osm_map_values("South+Middle America","-83.5","-56.3","-30.8","13.7", 204217202L, 1),
+		new osm_map_values("Midwest","-104.11","35.92","-80.46","49.46", 663062321L, 2),
+		new osm_map_values("Michigan","-90.47","41.64","-79.00","49.37", 207416918L, 2),
+		new osm_map_values("Ohio","-84.87","38.05","-79.85","43.53", 143571732L, 2),
+		new osm_map_values("Northeast","-80.58","38.72","-66.83","47.53", 517925445L, 2),
+		new osm_map_values("Massachusetts","-73.56","40.78","-68.67","42.94", 159493455L, 2),
+		new osm_map_values("Vermont","-73.49","42.68","-71.41","45.07", 74308439L, 2),
+		new osm_map_values("Pacific","-180.05","15.87","-129.75","73.04", 78496182L, 2),
+		new osm_map_values("South","-106.70","23.98","-71.46","40.70", 1135650708L, 2),
+		new osm_map_values("Arkansas","-94.67","32.95","-89.59","36.60", 89637645L, 2),
+		new osm_map_values("District of Columbia","-77.17","38.74","-76.86","39.05", 64042148L, 2),
+		new osm_map_values("Florida","-88.75","23.63","-77.67","31.05", 118647388L, 2),
+		new osm_map_values("Louisiana","-94.09","28.09","-88.62","33.07", 136435773L, 2),
+		new osm_map_values("Maryland","-79.54","37.83","-74.99","40.22", 134152161L, 2),
+		new osm_map_values("Mississippi","-91.71","29.99","-88.04","35.05", 100291749L, 2),
+		new osm_map_values("Oklahoma","-103.41","33.56","-94.38","37.38", 106601625L, 2),
+		new osm_map_values("Texas","-106.96","25.62","-92.97","36.58", 220587321L, 2),
+		new osm_map_values("Virginia","-83.73","36.49","-74.25","39.52", 218627122L, 2),
+		new osm_map_values("West Virginia","-82.70","37.15","-77.66","40.97", 133830267L, 2),
+		new osm_map_values("West","-133.11","31.28","-101.99","49.51", 616041200L, 2),
+		new osm_map_values("Arizona","-114.88","30.01","-108.99","37.06", 89434673L, 2),
+		new osm_map_values("California","-125.94","32.43","-114.08","42.07", 303663259L, 2),
+		new osm_map_values("Colorado","-109.11","36.52","-100.41","41.05", 132835514L, 2),
+		new osm_map_values("Idaho","-117.30","41.93","-110.99","49.18", 97305030L, 2),
+		new osm_map_values("Montana","-116.10","44.31","-102.64","49.74", 93935496L, 2),
+		new osm_map_values("New Mexico","-109.10","26.98","-96.07","37.05", 185648327L, 2),
+		new osm_map_values("Nevada","-120.2","35.0","-113.8","42.1", 138055868L, 2),
+		new osm_map_values("Oregon","-124.8","41.8","-116.3","46.3", 103551459L, 2),
+		new osm_map_values("Utah","-114.11","36.95","-108.99","42.05", 78249845L, 2),
+		new osm_map_values("Washington State","-125.0","45.5","-116.9","49.0", 100601625L, 2),
+		new osm_map_values("South+Middle America","-83.5","-56.3","-30.8","13.7", 204217202L, 0),
 		new osm_map_values("Argentina","-73.9","-57.3","-51.6","-21.0", 105910515L, 1),
 		new osm_map_values("Argentina+Chile","-77.2","-56.3","-52.7","-16.1", 111585063L, 1),
 		new osm_map_values("Bolivia","-70.5","-23.1","-57.3","-9.3", 59215113L, 1),
@@ -265,9 +269,8 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Venezuela","-73.6","0.4","-59.7","12.8", 74521456L, 1)
 	};
 
-	private static String[]             OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE    = null;
-
-	public static int[]                 OSM_MAP_NAME_ORIG_ID_LIST               = null;
+	private static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >
+	                                    MAP_MENU                                = null;
 
 	private Boolean                     stop_me                                 = false;
 	private static final int            SOCKET_CONNECT_TIMEOUT                  = 60000;			// 60 secs.
@@ -280,8 +283,9 @@ public class NavitMapDownloader extends Thread
 	private static final String         MAP_FILENAME_PRI                        = "navitmap.bin";
 	private static final String         MAP_FILENAME_NUM                        = "navitmap_%03d.bin";
 	private static final String         MAP_FILENAME_PATH                       = Navit.MAP_FILENAME_PATH;
-	private static final String 		TAG 									= "NavitMapDownloader";
-
+	private static final String         TAG                                     = "NavitMapDownloader";
+	private static final String         MAP_BULLETPOINT                        = " * ";
+	
 	private osm_map_values              map_values;
 	private int                         map_slot;
 	private int                         dialog_num;
@@ -341,51 +345,44 @@ public class NavitMapDownloader extends Thread
 		this.map_values = osm_maps[map_id];
 		this.map_slot = map_slot;
 	}
+	
+	public static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> > getMenu() {
+		
+		if (MAP_MENU != null)
+		{
+			return MAP_MENU;
+		}
+		ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
+		ArrayList<ArrayList<HashMap<String, String>>> resultChilds = new ArrayList<ArrayList<HashMap<String, String>>>();
+		ArrayList<HashMap<String, String>> secList = new ArrayList<HashMap<String, String>>();
 
-	public static String[] getMenu()
-	{
-		// need only init once
-		if (OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE != null) 
-		{ 
-			return OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE;
-		}
-		
-		String menu_temp[] = new String[osm_maps.length*2];
-		OSM_MAP_NAME_ORIG_ID_LIST = new int[osm_maps.length*2];
-		int counter = 0;
-		int previous_level = -1;
-		for (int i = 0; i < osm_maps.length; i++)
+		for (int currentMapIndex = 0; currentMapIndex < osm_maps.length; currentMapIndex++)
 		{
-			switch (osm_maps[i].level)
+			if (osm_maps[currentMapIndex].level == 0)
 			{
-			case 0: 
-				if (previous_level > 0)
+				if (secList.size() > 0)
 				{
-					OSM_MAP_NAME_ORIG_ID_LIST[counter] = -1;
-					menu_temp[counter++] = "======";
+					resultChilds.add(secList);
 				}
-				menu_temp[counter] = "";
-				break;
-			case 1:
-				menu_temp[counter] = new String(" * ");
-				break;
-			default:
-				menu_temp[counter] = new String(" ** ");
+				secList = new ArrayList<HashMap<String, String>>();
+				HashMap<String, String> m = new HashMap<String, String>();
+				m.put( "map_name", osm_maps[currentMapIndex].map_name);
+				resultGroups.add( m );
 			}
-			
-			menu_temp[counter] = menu_temp[counter].concat(osm_maps[i].map_name + " " + (osm_maps[i].est_size_bytes / 1024 / 1024) + "MB");
-			counter++;
-			OSM_MAP_NAME_ORIG_ID_LIST[counter-1] = i;
-			
-			previous_level = osm_maps[i].level;
+
+			HashMap<String, String> child = new HashMap<String, String>();
+			child.put("map_name", (osm_maps[currentMapIndex].level > 1 ? MAP_BULLETPOINT : "")
+					+ osm_maps[currentMapIndex].map_name
+					+ " "
+					+ (osm_maps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
+			child.put("map_index", String.valueOf(currentMapIndex));
+
+			secList.add(child);
 		}
+		resultChilds.add(secList);
 		
-		OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE = new String[counter];
-		for (int i = 0; i < counter; i++)
-		{
-			OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE[i] = menu_temp[i];
-		}
-		return OSM_MAP_NAME_LIST_inkl_SIZE_ESTIMATE;
+		MAP_MENU = new Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >(resultGroups, resultChilds);
+		return MAP_MENU;
 	}
 
 	public int download_osm_map(osm_map_values map_values, int map_number)
