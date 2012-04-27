@@ -61,6 +61,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 		                                             // TextViews.
 		        );
 		setListAdapter(adapter);
+		setTitle(String.valueOf(NavitMapDownloader.getFreeSpace()/1024/1024) + "MB available");
 	}
 
 	@Override
