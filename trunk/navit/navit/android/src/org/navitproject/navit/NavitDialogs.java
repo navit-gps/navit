@@ -41,9 +41,9 @@ public class NavitDialogs extends Handler{
 	private SearchResultsThreadSpinner        searchresultsSpinner     = null;
 	private NavitMapDownloader                mapdownloader            = null;
 
-	private Activity mActivity;
+	private Navit mActivity;
 
-	public NavitDialogs(Activity activity) {
+	public NavitDialogs(Navit activity) {
 		super();
 		mActivity = activity;
 		mHandler = this;
@@ -74,6 +74,7 @@ public class NavitDialogs extends Handler{
 			// dismiss dialog, remove dialog
 			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
 			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
+			mActivity.activateNewMap();
 			break;
 		case MSG_PROGRESS_BAR :
 			// change progressbar values

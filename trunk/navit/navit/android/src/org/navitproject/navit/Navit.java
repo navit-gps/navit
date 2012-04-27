@@ -94,6 +94,7 @@ public class Navit extends Activity
 	public static final int          MAP_NUM_PRIMARY                = 11;
 	public static final int          NavitAddressSearch_id          = 70;
 	public static final int          NavitAddressResultList_id      = 71;
+	public static String             NavitLanguage;
 
 	public static List<NavitAddress> NavitAddressResultList_foundItems = new ArrayList<NavitAddress>();
 
@@ -266,7 +267,7 @@ public class Navit extends Activity
 
 		// only take arguments here, onResume gets called all the time (e.g. when screenblanks, etc.)
 		Navit.startup_intent = this.getIntent();
-		// hack! remeber timstamp, and only allow 4 secs. later in onResume to set target!
+		// hack! Remember time stamps, and only allow 4 secs. later in onResume to set target!
 		Navit.startup_intent_timestamp = System.currentTimeMillis();
 		Log.e("Navit", "**1**A " + startup_intent.getAction());
 		Log.e("Navit", "**1**D " + startup_intent.getDataString());
@@ -294,18 +295,18 @@ public class Navit extends Activity
 		if (pos != -1)
 		{
 			langc = langu.substring(0, pos);
-			langu = langc + langu.substring(pos).toUpperCase(locale);
-			Log.e("Navit", "substring lang " + langu.substring(pos).toUpperCase(locale));
+			NavitLanguage = langc + langu.substring(pos).toUpperCase(locale);
+			Log.e("Navit", "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
 			// set lang. for translation
 			NavitTextTranslations.main_language = langc;
-			NavitTextTranslations.sub_language = langu.substring(pos).toUpperCase(locale);
+			NavitTextTranslations.sub_language = NavitLanguage.substring(pos).toUpperCase(locale);
 		}
 		else
 		{
 			String country = locale.getCountry();
 			Log.e("Navit", "Country1 " + country);
 			Log.e("Navit", "Country2 " + country.toUpperCase(locale));
-			langu = langc + "_" + country.toUpperCase(locale);
+			NavitLanguage = langc + "_" + country.toUpperCase(locale);
 			// set lang. for translation
 			NavitTextTranslations.main_language = langc;
 			NavitTextTranslations.sub_language = country.toUpperCase(locale);
@@ -411,7 +412,7 @@ public class Navit extends Activity
 
 		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
-		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
+		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
 
 		showInfos();
 
@@ -759,6 +760,10 @@ public class Navit extends Activity
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path);
 	public native void NavitDestroy();
 
+	public void activateNewMap()
+	{
+		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
+	}
 	/*
 	 * this is used to load the 'navit' native library on
 	 * application startup. The library has already been unpacked at
