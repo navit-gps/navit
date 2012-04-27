@@ -8,6 +8,8 @@
 	<string name="notification_name">@string/app_name</string>
 	<string name="notification_ticker">Navit gestartet</string>
 	<string name="notification_event_default">Navit läuft</string>
+	<string name="yes">Ja</string>
+	<string name="no">Nein</string>
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Willkommen bei Navit</string>
@@ -18,10 +20,9 @@
 	<!-- OPTIONS MENU -->
 	<string name="optionsmenu_zoom_in"> Vergrößern</string>
 	<string name="optionsmenu_zoom_out">Verkleinern</string>
-	<string name="optionsmenu_download_first_map">Erste Karte herunterladen</string>
+	<string name="optionsmenu_download_maps">Karten herunterladen</string>
 	<string name="optionsmenu_toggle_poi">POI ein/aus</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	<string name="optionsmenu_download_second_map">Zweite Karte herunterladen</string>
 	<string name="optionsmenu_exit_navit">Navit beenden</string>
 
 	<!-- POSITION POP-UP -->
@@ -29,6 +30,7 @@
 	<string name="position_popup_drive_here">Ziel setzen</string>
 
 	<!-- MAP DOWNLOAD -->
+	<string name="map_delete">Diese Karte löschen?</string>
 	<string name="map_download_title">Kartendownload</string>
 	<string name="map_download_downloading">Laden:</string>
 	<string name="map_download_eta">Fertig in</string>

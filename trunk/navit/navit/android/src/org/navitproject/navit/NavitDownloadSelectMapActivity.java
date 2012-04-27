@@ -24,33 +24,41 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ExpandableListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
+import android.widget.TextView;
 
 public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
+
+	private static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >
+    mapMenu                                = null;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> > listPair = 
-			NavitMapDownloader.getMenu();
+
+		mapMenu = NavitMapDownloader.getMenu();
 
 		SimpleExpandableListAdapter adapter =
 		        new SimpleExpandableListAdapter(this,
-		                listPair.first,
+		        		mapMenu.first,
 		                android.R.layout.simple_expandable_list_item_1, // Group itemlayout XML.
-		                new String[] { "map_name" }, // the key of group item.
+		                new String[] { "category_name" }, // the key of group item.
 		                new int[] { android.R.id.text1 }, // ID of each group
 		                                             // item.-Data under the key
 		                                             // goes into this
-		                listPair.second, // childData describes second-level
+		                mapMenu.second, // childData describes second-level
 		                                   // entries.
 		                android.R.layout.simple_expandable_list_item_1, // Layout for sub-level
 		                                    // entries(second level).
@@ -68,11 +76,57 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 		super.onChildClick(parent, v, groupPosition, childPosition, id);
 		Log.d("Navit", "p:" + groupPosition + ", child_pos:" + childPosition);
-		HashMap<String, String> map = NavitMapDownloader.getMenu().second.get(groupPosition).get(childPosition);
-		Intent resultIntent = new Intent();
-		resultIntent.putExtra("map_index", Integer.parseInt(map.get("map_index")));
-		setResult(Activity.RESULT_OK, resultIntent);
-		finish();
+		HashMap<String, String> map = mapMenu.second.get(groupPosition).get(childPosition);
+		
+		String map_index = map.get("map_index");
+		if (map_index != null) {
+			Intent resultIntent = new Intent();
+			resultIntent.putExtra("map_index", Integer.parseInt(map_index));
+			setResult(Activity.RESULT_OK, resultIntent);
+			finish();
+		}
+		else
+		{
+			// ask user if to delete this map
+			askForMapDeletion(map.get("map_location"));
+		}
 		return true;
+	}
+	
+	private void askForMapDeletion(final String map_location)
+	{
+		AlertDialog.Builder deleteMapBox = new AlertDialog.Builder(this);
+		deleteMapBox.setTitle(getString(R.string.map_delete)); // TRANS
+		deleteMapBox.setCancelable(true);
+		final TextView message = new TextView(this);
+		message.setFadingEdgeLength(20);
+		message.setVerticalFadingEdgeEnabled(true);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+
+		message.setLayoutParams(layoutParams);
+		NavitMap maptoDelete = new NavitMap(map_location);
+		message.setText(maptoDelete.mapName + " " + String.valueOf(maptoDelete.size()/1024/1024)+ "MB");
+		deleteMapBox.setView(message);
+
+		// TRANS
+		deleteMapBox.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface arg0, int arg1) {
+				Log.e("Navit", "Delete Map");
+				Message msg = Message.obtain(Navit.N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_DELETE_MAP.ordinal());
+				Bundle b = new Bundle();
+				b.putString("title", map_location);
+				msg.setData(b);
+				msg.sendToTarget();
+				finish();
+			}
+		});
+
+		// TRANS
+		deleteMapBox.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface arg0, int arg1) {
+				Log.e("Navit", "don't delete map");
+			}
+		});
+		deleteMapBox.show();
 	}
 }
