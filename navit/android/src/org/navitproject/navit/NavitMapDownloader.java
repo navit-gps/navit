@@ -603,30 +603,34 @@ public class NavitMapDownloader extends Thread
 			// rename file to final name
 			outputFile.renameTo(final_outputFile);
 		}
-		
+
 		return exit_code;
 	}
-	
+
 	private boolean checkFreeSpace(long needed_bytes)
 	{
-		StatFs fsInfo = new StatFs(MAP_FILENAME_PATH);
-		
-		long free_space = (long)fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
-		
+		long free_space = getFreeSpace();
+	
 		if ( needed_bytes <= 0 )
 			needed_bytes = MAP_WRITE_FILE_BUFFER;
 
 		if (free_space < needed_bytes )
 		{
 			Log.e(TAG, "Not enough free space. Please free at least " + needed_bytes / 1024 /1024 + "Mb.");
-			
+
 			NavitDialogs.sendDialogMessage( NavitDialogs.MSG_PROGRESS_BAR
 					, Navit.get_text("Mapdownload")
 					, Navit.get_text("Error downloading map!") + "\n" + Navit.get_text("Not enough free space")
 					, dialog_num, (int)(needed_bytes / 1024), (int)(free_space / 1024));
-			
+
 			return false;
 		}
 		return true;
+	}
+
+	public static long getFreeSpace()
+	{
+		StatFs fsInfo = new StatFs(MAP_FILENAME_PATH);
+		return (long)fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
 	}
 }
