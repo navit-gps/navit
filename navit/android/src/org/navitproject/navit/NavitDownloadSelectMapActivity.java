@@ -19,9 +19,7 @@
 
 package org.navitproject.navit;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,7 +29,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
@@ -40,9 +37,7 @@ import android.widget.TextView;
 
 public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
-	private static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>> >
-    mapMenu                                = null;
-
+	private NavitMapDownloader.MapMenu   mapMenu                                = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,21 +47,14 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
 		SimpleExpandableListAdapter adapter =
 		        new SimpleExpandableListAdapter(this,
-		        		mapMenu.first,
-		                android.R.layout.simple_expandable_list_item_1, // Group itemlayout XML.
-		                new String[] { "category_name" }, // the key of group item.
-		                new int[] { android.R.id.text1 }, // ID of each group
-		                                             // item.-Data under the key
-		                                             // goes into this
-		                mapMenu.second, // childData describes second-level
-		                                   // entries.
-		                android.R.layout.simple_expandable_list_item_1, // Layout for sub-level
-		                                    // entries(second level).
-		                new String[] { "map_name" }, // Keys in childData maps
-		                                             // to display.
-		                new int[] { android.R.id.text1 } // Data under the keys
-		                                             // above go into these
-		                                             // TextViews.
+		        		mapMenu.groupList,
+		                android.R.layout.simple_expandable_list_item_1,
+		                new String[] { "category_name" },
+		                new int[] { android.R.id.text1 },
+		                mapMenu.childList,
+		                android.R.layout.simple_expandable_list_item_1, 
+		                new String[] { "map_name" },
+		                new int[] { android.R.id.text1 }
 		        );
 		setListAdapter(adapter);
 		setTitle(String.valueOf(NavitMapDownloader.getFreeSpace()/1024/1024) + "MB available");
@@ -76,8 +64,8 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 		super.onChildClick(parent, v, groupPosition, childPosition, id);
 		Log.d("Navit", "p:" + groupPosition + ", child_pos:" + childPosition);
-		HashMap<String, String> map = mapMenu.second.get(groupPosition).get(childPosition);
-		
+		HashMap<String, String> map = mapMenu.childList.get(groupPosition).get(childPosition);
+
 		String map_index = map.get("map_index");
 		if (map_index != null) {
 			Intent resultIntent = new Intent();
