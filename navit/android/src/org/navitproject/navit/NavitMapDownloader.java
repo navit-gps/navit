@@ -36,7 +36,6 @@ import java.util.List;
 
 import android.os.StatFs;
 import android.util.Log;
-import android.util.Pair;
 
 public class NavitMapDownloader extends Thread
 {
@@ -63,6 +62,17 @@ public class NavitMapDownloader extends Thread
 			this.level = level;
 		}
 	}
+	
+	public static class MapMenu {
+		List<HashMap<String, String>>                 groupList;
+		ArrayList<ArrayList<HashMap<String, String>>> childList;
+
+		MapMenu(List<HashMap<String, String>> groups, ArrayList<ArrayList<HashMap<String, String>>> childs) {
+			groupList = groups;
+			childList = childs;
+		}
+	}
+
 	//
 	// define the maps here
 	//
@@ -340,7 +350,7 @@ public class NavitMapDownloader extends Thread
 		this.map_values = osm_maps[map_id];
 	}
 
-	public static Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>>> getMenu() {
+	public static MapMenu getMenu() {
 		ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
 		ArrayList<ArrayList<HashMap<String, String>>> resultChilds =
 		        new ArrayList<ArrayList<HashMap<String, String>>>();
@@ -383,8 +393,7 @@ public class NavitMapDownloader extends Thread
 		}
 		resultChilds.add(secList);
 
-		return new Pair<List<HashMap<String, String>>, ArrayList<ArrayList<HashMap<String, String>>>>(resultGroups,
-		        resultChilds);
+		return new MapMenu(resultGroups, resultChilds);
 	}
 
 	public int download_osm_map(osm_map_values map_values)
