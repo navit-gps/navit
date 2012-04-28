@@ -20,7 +20,6 @@
 package org.navitproject.navit;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,6 +40,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -98,109 +100,61 @@ public class Navit extends Activity
 	public static List<NavitAddress> NavitAddressResultList_foundItems = new ArrayList<NavitAddress>();
 
 	public static final int          MAP_NUM_SECONDARY              = 12;
+	static final String              NAVIT_PACKAGE_NAME             = "org.navitproject.navit";
+	static final String              TAG                            = "Navit";
 	static final String              MAP_FILENAME_PATH              = "/sdcard/navit/";
-	static final String              NAVIT_DATA_DIR                 = "/data/data/org.navitproject.navit";
+	static final String              NAVIT_DATA_DIR                 = "/data/data/" + NAVIT_PACKAGE_NAME;
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
-	
+
 	public static String get_text(String in)
 	{
 		return NavitTextTranslations.get_text(in);
 	}
 
-	private boolean extractRes(String resname, String result)
-	{
-		int slash = -1;
+	private boolean extractRes(String resname, String result) {
 		boolean needs_update = false;
-		File resultfile;
 		Resources res = getResources();
-		Log.e("Navit", "Res Name " + resname);
-		Log.e("Navit", "result " + result);
-		int id = res.getIdentifier(resname, "raw", "org.navitproject.navit");
-		Log.e("Navit", "Res ID " + id);
-		if (id == 0) 
+		Log.e(TAG, "Res Name " + resname + ", result " + result);
+		int id = res.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
+		Log.e(TAG, "Res ID " + id);
+		if (id == 0)
 			return false;
 
-		while ((slash = result.indexOf("/", slash + 1)) != -1)
-		{
-			if (slash != 0)
-			{
-				Log.e("Navit", "Checking " + result.substring(0, slash));
-				resultfile = new File(result.substring(0, slash));
-				if (!resultfile.exists())
-				{
-					Log.e("Navit", "Creating dir");
-					if (!resultfile.mkdir())
-						return false;
-					needs_update = true;
-				}
-			}
-		}
-
-		resultfile = new File(result);
-		if (!resultfile.exists()) 
+		File resultfile = new File(result);
+		if (!resultfile.exists()) {
 			needs_update = true;
-
-		if (!needs_update)
-		{
-			try
-			{
-				InputStream resourcestream = res.openRawResource(id);
-				FileInputStream resultfilestream = new FileInputStream(resultfile);
-				byte[] resourcebuf = new byte[1024];
-				byte[] resultbuf = new byte[1024];
-				int i = 0;
-				while ((i = resourcestream.read(resourcebuf)) != -1)
-				{
-					if (resultfilestream.read(resultbuf) != i)
-					{
-						Log.e("Navit", "Result is too short");
-						needs_update = true;
-						break;
-					}
-					for (int j = 0; j < i; j++)
-					{
-						if (resourcebuf[j] != resultbuf[j])
-						{
-							Log.e("Navit", "Result is different");
-							needs_update = true;
-							break;
-						}
-					}
-					if (needs_update) break;
-				}
-				if (!needs_update && resultfilestream.read(resultbuf) != -1)
-				{
-					Log.e("Navit", "Result is too long");
-					needs_update = true;
-				}
-
-			}
-			catch (Exception e)
-			{
-				Log.e("Navit", "Exception " + e.getMessage());
+			if (!resultfile.mkdirs())
 				return false;
+		} else {
+			PackageManager pm = getPackageManager();
+			ApplicationInfo appInfo;
+			long apkUpdateTime = 0;
+			try {
+				appInfo = pm.getApplicationInfo(NAVIT_PACKAGE_NAME, 0);
+				apkUpdateTime = new File(appInfo.sourceDir).lastModified();
+			} catch (NameNotFoundException e) {
+				Log.e(TAG, "Could not read package infos");
+				e.printStackTrace();
 			}
+			if (apkUpdateTime > resultfile.lastModified())
+				needs_update = true;
 		}
-		if (needs_update)
-		{
-			Log.e("Navit", "Extracting resource");
 
-			try
-			{
+		if (needs_update) {
+			Log.e(TAG, "Extracting resource");
+
+			try {
 				InputStream resourcestream = res.openRawResource(id);
 				FileOutputStream resultfilestream = new FileOutputStream(resultfile);
 				byte[] buf = new byte[1024];
 				int i = 0;
-				while ((i = resourcestream.read(buf)) != -1)
-				{
+				while ((i = resourcestream.read(buf)) != -1) {
 					resultfilestream.write(buf, 0, i);
 				}
-			}
-			catch (Exception e)
-			{
-				Log.e("Navit", "Exception " + e.getMessage());
+			} catch (Exception e) {
+				Log.e(TAG, "Exception " + e.getMessage());
 				return false;
 			}
 		}
@@ -211,8 +165,7 @@ public class Navit extends Activity
 	{
 		SharedPreferences settings = getSharedPreferences(NAVIT_PREFS, MODE_PRIVATE);
 		boolean firstStart = settings.getBoolean("firstStart", true);
-		
-		
+
 		if (firstStart)
 		{
 			AlertDialog.Builder infobox = new AlertDialog.Builder(this);
@@ -237,7 +190,6 @@ public class Navit extends Activity
 					Log.e("Navit", "Ok, user saw the infobox");
 				}
 			});
-
 
 			// TRANS
 			infobox.setNeutralButton(getString(R.string.initial_info_box_more_info), new DialogInterface.OnClickListener() {
