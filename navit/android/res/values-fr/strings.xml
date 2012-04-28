@@ -13,7 +13,7 @@
 
 	<!-- INITIAL INFOBOX -->
 	<string name="initial_info_box_title">Bienvenue chez Navit</string>
-	<string name="initial_info_box_message">Nous vous remercie pour l\'installation de Navit!\n\nPour commencer, sélectionnez \"Télécharger des cartes\" du menu et télechargez une carte de votre région. Les cartes sont volumineux, donc il est préférable d\'avoir une connection internet illimitée!\n\nCartes: CC-BY-SA OpenStreetMap Project\n\nAmusez vous avec Navit!</string>
+	<string name="initial_info_box_message">Nous vous remercions d'avoir installé Navit!\n\nPour commencer, sélectionnez \"Télécharger des cartes\" du menu et télechargez une carte de votre région. Les cartes sont volumineuses, donc il est préférable d\'avoir une connection internet illimitée!\n\nCartes: CC-BY-SA OpenStreetMap Project\n\nAmusez-vous avec Navit!</string>
 	<string name="initial_info_box_OK">OK</string>
 	<string name="initial_info_box_more_info">Plus d\'infos</string>
 
@@ -23,7 +23,7 @@
 	<string name="optionsmenu_download_maps">Télécharger des cartes</string>
 	<string name="optionsmenu_toggle_poi">POI on/off</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	<string name="optionsmenu_exit_navit">Quittez Navit</string>
+	<string name="optionsmenu_exit_navit">Quitter Navit</string>
 
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>
