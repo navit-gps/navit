@@ -208,9 +208,8 @@ public class NavitTextTranslations
 
 	private static void p(String key, String[] values)
 	{
-		HashMap<String, String> t = null;
-		t = new HashMap<String, String>();
-		Log.e("NavitTextTranslations", "trying: " + key);
+		HashMap<String, String> t = new HashMap<String, String>();
+		//Log.e("NavitTextTranslations", "trying: " + key);
 		try
 		{
 			for (int i = 0; i < (int) (values.length / 2); i++)

@@ -358,17 +358,12 @@ public class Navit extends Activity
 		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
-		
+
 		activateAllMaps();
-		
+
 		showInfos();
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-		// unpack some localized Strings
-		// a test now, later we will unpack all needed string for java, here at this point!!
-		String x = NavitGraphics.getLocalizedString("Austria");
-		Log.e("Navit", "x=" + x);
 	}
 
 	private void activateAllMaps()

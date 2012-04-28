@@ -131,7 +131,7 @@ glob_recursive(const char *path1, const char *path2, const char *pattern, int fl
 		strcat(path, "/");
 	strcat(path, path2);
 	if (!strlen(pattern)) {
-		dbg(0,"found %s\n",path);
+		dbg(1,"found %s\n",path);
 		pglob->gl_pathv=realloc(pglob->gl_pathv, (pglob->gl_pathc+1)*sizeof(char *));
 		if (!pglob->gl_pathv) {
 			pglob->gl_pathc=0;
@@ -140,7 +140,7 @@ glob_recursive(const char *path1, const char *path2, const char *pattern, int fl
 		pglob->gl_pathv[pglob->gl_pathc++]=path;
 		return 0;
 	}
-	dbg(0,"searching for %s in %s\n",pattern,path);
+	dbg(1,"searching for %s in %s\n",pattern,path);
 	flen=strcspn(pattern,"/");
 	next=pattern+flen;
 	if (*next == '/')
@@ -151,7 +151,7 @@ glob_recursive(const char *path1, const char *path2, const char *pattern, int fl
 	if (glob_requires_match(fname, 0)) {
 		DIR *dh;
 		struct dirent *de;
-		dbg(0,"in dir %s search for %s\n",path,fname);
+		dbg(1,"in dir %s search for %s\n",path,fname);
 		dh=opendir(path);
 		if (dh) {
 			while ((de=readdir(dh))) {
