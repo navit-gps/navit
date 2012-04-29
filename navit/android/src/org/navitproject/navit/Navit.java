@@ -272,44 +272,6 @@ public class Navit extends Activity
 		File navit_data_share_dir = new File(NAVIT_DATA_SHARE_DIR);
 		navit_data_share_dir.mkdirs();
 
-		// hardcoded strings for now, use routine down below later!!
-		if (lang.compareTo("de") == 0)
-		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_de;
-			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_de;
-			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_EXIT = NavitTextTranslations.NAVIT_JAVA_MENU_EXIT_de;
-			NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI = NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI_de;
-			NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE = NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_de;
-		}
-		else if (lang.compareTo("fr") == 0)
-		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_fr;
-			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_fr;
-			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_EXIT = NavitTextTranslations.NAVIT_JAVA_MENU_EXIT_fr;
-			NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI = NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI_fr;
-			NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE = NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_fr;
-		}
-		else if (lang.compareTo("nl") == 0)
-		{
-			NavitTextTranslations.NAVIT_JAVA_MENU_download_maps = NavitTextTranslations.NAVIT_JAVA_MENU_download_map_nl;
-			NavitTextTranslations.INFO_BOX_TITLE = NavitTextTranslations.INFO_BOX_TITLE_nl;
-			NavitTextTranslations.INFO_BOX_TEXT = NavitTextTranslations.INFO_BOX_TEXT_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO = NavitTextTranslations.NAVIT_JAVA_MENU_MOREINFO_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMIN_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT = NavitTextTranslations.NAVIT_JAVA_MENU_ZOOMOUT_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_EXIT = NavitTextTranslations.NAVIT_JAVA_MENU_EXIT_nl;
-			NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI = NavitTextTranslations.NAVIT_JAVA_MENU_TOGGLE_POI_nl;
-			NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE = NavitTextTranslations.NAVIT_JAVA_OVERLAY_BUBBLE_DRIVEHERE_nl;
-		}
-
 		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
 		int height_ = display_.getHeight();
