@@ -125,7 +125,7 @@ public class Navit extends Activity
 		File resultfile = new File(result);
 		if (!resultfile.exists()) {
 			needs_update = true;
-			if (!resultfile.mkdirs())
+			if (!resultfile.getParentFile().mkdirs())
 				return false;
 		} else {
 			PackageManager pm = getPackageManager();
