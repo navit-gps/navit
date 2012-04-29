@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-04-29 18:04+0200\n"
 "PO-Revision-Date: 2010-06-18 19:16+0000\n"
 "Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -82,11 +82,11 @@ msgstr "dans %d m"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d pieds"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "dans %d pieds"
 
 #, c-format
 msgid "%d meters"
@@ -98,11 +98,11 @@ msgstr "dans %d mètres"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d milles"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "dans %d.%d milles"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -115,14 +115,14 @@ msgstr "dans %d.%d kilomètres"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "un mille"
+msgstr[1] "%d milles"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "dans un mille"
+msgstr[1] "dans %d milles"
 
 #, c-format
 msgid "one kilometer"
@@ -204,7 +204,7 @@ msgstr "Préparez vous à vous engager dans le rond-point"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Entrer dans le rond-point %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -1366,28 +1366,28 @@ msgid "Zoom_Out"
 msgstr "Zoom arrière"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Réduire le zoom"
 
 msgid "Zoom_In"
 msgstr "Zoom avant"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Augmenter le zoom"
 
 msgid "_Recalculate"
 msgstr "Recalculer"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Redessiner la carte"
 
 msgid "_Info"
 msgstr "Info"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "Fixer _destination"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Ouvrir la fenêtre de recherche d'adresse"
 
 msgid "_Stop Navigation"
 msgstr "Annuler le trajet"
@@ -1399,31 +1399,31 @@ msgid "_Quit"
 msgstr "_Quitter"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Quitter l'application"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "Montrer la position _curseur"
 
 msgid "_Lock on Road"
 msgstr "Coller à la route"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "Garder l'orientation au Nord"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Changer l'orientation de la carte pour nord ou véhicule"
 
 msgid "_Roadbook"
 msgstr "Carnet de route"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Montrer/Masquer la description de la route"
 
 msgid "_Autozoom"
 msgstr "Zoom automatique"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Activer/désactiver le changement automatique du zoom"
 
 msgid "_Fullscreen"
 msgstr "Plein écran"
@@ -1502,6 +1502,9 @@ msgstr "Points d'intérêt"
 msgid "View in Browser"
 msgstr "Voir dans le navigateur"
 
+msgid "Item type"
+msgstr "Type d'objet"
+
 msgid "Streets"
 msgstr "Rues"
 
@@ -1513,6 +1516,12 @@ msgstr "Voir les attributs"
 
 msgid "View on map"
 msgstr "Voir sur la carte"
+
+msgid "Remove search results from the map"
+msgstr "Supprimer les résultats de la carte"
+
+msgid "Show results on the map"
+msgstr "Montrer les résultats sur la carte"
 
 msgid "Cut Bookmark"
 msgstr "Couper le signet"
@@ -1531,6 +1540,18 @@ msgstr "Supprimer le signet"
 
 msgid "Bookmarks"
 msgstr "Favoris"
+
+msgid "Bookmarks as Waypoints"
+msgstr "Favoris comme points de passage"
+
+msgid "Save Waypoints"
+msgstr "Sauvegarder les points de passage"
+
+msgid "Replace Waypoints"
+msgstr "Remplacer les points de passage"
+
+msgid "Delete Folder"
+msgstr "Supprimer le dossier"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1554,19 +1575,19 @@ msgstr "Thème"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Télécharger %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Télécharger la carte"
 
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Téléchargement activé"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Télécharger completement"
 
 msgid "Maps"
 msgstr "Cartes"
@@ -1624,14 +1645,17 @@ msgstr "Orientation toujours au Nord"
 msgid "Map follows Vehicle"
 msgstr "La carte suit le véhicule"
 
+msgid "Plan with Waypoints"
+msgstr "Définir avec points de passage"
+
 msgid "Message"
 msgstr "Message"
 
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 msgid "Prev"
-msgstr ""
+msgstr "Précédent"
 
 msgid "Route Description"
 msgstr "Description de la route"
@@ -1657,7 +1681,7 @@ msgid "members and contributors."
 msgstr "membres et contributeurs"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Retour à la route!"
 
 #. warning told
 msgid "Look out! Camera!"
@@ -1667,6 +1691,7 @@ msgstr "Attention! Radar!"
 msgid "Please decrease your speed"
 msgstr "Veuillez ralentir"
 
+#. Strings from navit_shipped.xml
 msgid "Map Point"
 msgstr "Point sur la carte"
 
@@ -1727,11 +1752,25 @@ msgstr "Mode fenêtré"
 msgid "Description"
 msgstr "Description"
 
-msgid "car_shortest"
+msgid ""
+"Drop last \n"
+"Waypoint"
 msgstr ""
+"Sauter le dernier \n"
+"Point de passage"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Sauter le prochain \n"
+"point de passage"
+
+msgid "car_shortest"
+msgstr "voiture _le plus court"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "voiture _sans péage"
 
 msgid "horse"
 msgstr "cheval"
@@ -1759,7 +1798,7 @@ msgstr "cheval"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #.
 msgid "Truck"
-msgstr ""
+msgstr "Camion"
 
 #~ msgid "In %s, enter the roundabout"
 #~ msgstr "Dans %s, engagez vous dans le rond-point"
