@@ -1799,15 +1799,3 @@ msgstr "cheval"
 #.
 msgid "Truck"
 msgstr "Camion"
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "Dans %s, engagez vous dans le rond-point"
-
-#~ msgid "Cursor"
-#~ msgstr "Curseur"
-
-#~ msgid " SNR "
-#~ msgstr " Rapport Signal/Bruit "
-
-#~ msgid " PRN "
-#~ msgstr " PRN "
