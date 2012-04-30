@@ -523,9 +523,9 @@ osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, str
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
           GList* list = odometer_list;
           while(list) {
-            if(!strcmp(((struct odometer*)(list->data))->name,in[0]->u.str)) {
+            if(!strcmp(((struct odometer*)((struct osd_priv_common *)(list->data))->data)->name,in[0]->u.str)) {
               osd_odometer_reset(list->data);
-	      osd_odometer_draw(list->data,this,NULL);
+	          osd_odometer_draw(list->data,this,NULL);
             }
             list = g_list_next(list);
           }
@@ -845,11 +845,10 @@ osd_odometer_save(struct navit* nav)
 			return TRUE;
 		}
 		while (list) {
-			if( ((struct odometer*)(list->data))->name) {
-				char*odo_str = osd_odometer_to_string(list->data);
+			if(((struct odometer*)((struct osd_priv_common *)(list->data))->data)->name) {
+				char*odo_str = osd_odometer_to_string((struct odometer*)((struct osd_priv_common *)(list->data))->data);
 				fprintf(f,"%s",odo_str);
-                                g_free(odo_str);
-				
+				g_free(odo_str);
 			}
 			list = g_list_next(list);
 		}
@@ -1003,7 +1002,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	}
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, opc));
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_destroy), attr_destroy, nav));
-	odometer_list = g_list_append(odometer_list, this);
+	odometer_list = g_list_append(odometer_list, opc);
 
 	return (struct osd_priv *) opc;
 }
