@@ -52,6 +52,8 @@ typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
                                        BLENDFUNCTION blendFunction
                                      );
 
+typedef int (WINAPI *FP_SetStretchBltMode) (HDC dc,int mode);
+
 struct graphics_priv
 {
     struct navit *nav;
@@ -77,10 +79,13 @@ struct graphics_priv
     HBITMAP hOldBitmap;
     HBITMAP hOldPrebuildBitmap;
     FP_AlphaBlend AlphaBlend;
-    HANDLE hCoreDll;
-    GHashTable *image_cache_hash;
+    FP_SetStretchBltMode SetStretchBltMode;
     BOOL WINAPI (*ChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
     BOOL WINAPI (*ChangeWindowMessageFilterEx)( HWND hWnd, UINT message, DWORD action, void *pChangeFilterStruct);
+    HANDLE hCoreDll;
+    HANDLE hUser32Dll;
+    HANDLE hGdi32Dll;
+    GHashTable *image_cache_hash;
 };
 
 struct window_priv
@@ -1102,6 +1107,8 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     int           ret;
     int           i;
     FILE *png_file;
+    BITMAPINFO pnginfo;
+    HDC dc;
 
     dbg(1,"enter %s\n",name);
     png_file=fopen(name, "rb");
@@ -1176,7 +1183,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     if (png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS))
         png_set_expand (png_ptr);
 
-   png_set_bgr(png_ptr);
+    png_set_bgr(png_ptr);
 
     /* all transformations have been registered; now update info_ptr data,
      * get rowbytes and channels, and allocate image memory */
@@ -1203,31 +1210,16 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
 
-    if (  gr->AlphaBlend && img->channels == 4 )
-    {
-        BITMAPINFO pnginfo;
-	HDC dc;
-        memset(&pnginfo, 0, sizeof(pnginfo));
-        pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        pnginfo.bmiHeader.biWidth = img->width;
-        pnginfo.bmiHeader.biHeight = -img->height;
-        pnginfo.bmiHeader.biBitCount = 32;
-        pnginfo.bmiHeader.biCompression = BI_RGB;
-        pnginfo.bmiHeader.biPlanes = 1;
-        dc = CreateCompatibleDC(NULL);
-        img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS , (void **)&img->png_pixels, NULL, 0);
-        DeleteDC(dc);
-
-    }
-    else
-    {
-        if ((img->png_pixels = (png_byte *) g_malloc (img->row_bytes * img->height * sizeof (png_byte))) == NULL)
-        {
-            fclose(png_file);
-            png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
-            return FALSE;
-        }
-    }
+    memset(&pnginfo, 0, sizeof(pnginfo));
+    pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    pnginfo.bmiHeader.biWidth = img->width;
+    pnginfo.bmiHeader.biHeight = -img->height;
+    pnginfo.bmiHeader.biBitCount = 32;
+    pnginfo.bmiHeader.biCompression = BI_RGB;
+    pnginfo.bmiHeader.biPlanes = 1;
+    dc = CreateCompatibleDC(NULL);
+    img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS , (void **)&img->png_pixels, NULL, 0);
+    DeleteDC(dc);
 
     if ((row_pointers = (png_byte **) g_malloc (img->height * sizeof (png_bytep))) == NULL)
     {
@@ -1262,10 +1254,51 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
 } /* end of source */
 
+static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, int width, int height)
+{
+	HBITMAP origBmp;
+        BITMAPINFO pnginfo;
+	HDC dc1, dc2;
+	png_byte *origPixels;
+	
+	origBmp=img->hBitmap;
+	origPixels=img->png_pixels;
+
+        memset(&pnginfo, 0, sizeof(pnginfo));
+        pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        pnginfo.bmiHeader.biWidth = width;
+        pnginfo.bmiHeader.biHeight = -height;
+        pnginfo.bmiHeader.biBitCount = 32;
+        pnginfo.bmiHeader.biCompression = BI_RGB;
+        pnginfo.bmiHeader.biPlanes = 1;
+        dc1 = CreateCompatibleDC(NULL);
+        dc2 = CreateCompatibleDC(NULL);
+        img->hBitmap = CreateDIBSection(dc1, &pnginfo, DIB_RGB_COLORS , (void **)&(img->png_pixels), NULL, 0);
+
+	if(gr->SetStretchBltMode) {
+		gr->SetStretchBltMode(dc1,STRETCH_HALFTONE);
+		SetBrushOrgEx(dc1,0,0,NULL);
+	}
+
+	SelectBitmap(dc1,img->hBitmap);
+	SelectBitmap(dc2,origBmp);
+
+        StretchBlt(dc1,0,0,width, height, dc2, 0,0, img->width, img->height,SRCCOPY);
+        img->width=width;
+        img->height=height;
+        img->hot.x=width/2-1;
+        img->hot.y=height/2-1;
+        
+	DeleteDC(dc1);
+	DeleteDC(dc2);
+	DeleteObject(origBmp);
+}
+
+
 static void
 pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0)
 {
-	if (img->hBitmap)
+	if (gr->AlphaBlend && img->hBitmap)
 	{
 		HDC hdc;
 		HBITMAP oldBitmap;
@@ -1348,11 +1381,14 @@ xpmdecode(char *name, struct graphics_image_priv *img)
 }
 
 
+
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
     struct graphics_image_priv* ret;
     
-    if ( !g_hash_table_lookup_extended( gr->image_cache_hash, name, NULL, (gpointer)&ret) )
+    char* hash_key = g_strdup_printf("%s_%d_%d_%d",name,*w,*h,rotation);
+    
+    if ( !g_hash_table_lookup_extended( gr->image_cache_hash, hash_key, NULL, (gpointer)&ret) )
     {
         int len=strlen(name);
         int rc=0;
@@ -1374,16 +1410,31 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             g_free(ret);
             ret=NULL;
         }
-        g_hash_table_insert(gr->image_cache_hash, g_strdup( name ),  (gpointer)ret );
+
+        g_hash_table_insert(gr->image_cache_hash, hash_key,  (gpointer)ret );
+        /* Hash_key will be freed ater the hash table, so set it to NULL here to disable freing it on this function return */
+        hash_key=NULL;
+        if(ret) {
+            if (*w==-1)
+                *w=ret->width;
+            if (*h==-1)
+                *h=ret->height;
+            if (*w!=ret->width || *h!=ret->height) {
+                if(ret->png_pixels && ret->hBitmap)
+                    pngscale(ret, gr, *w, *h);
+            }
+       }
     }
     if (ret) {
-        *w=ret->width;
-        *h=ret->height;
+	*w=ret->width;
+	*h=ret->height;
         if (hot)
             *hot=ret->hot;
     }
+    g_free(hash_key);
     return ret;
 }
+
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
@@ -1514,26 +1565,40 @@ static struct graphics_priv *
     return this_;
 }
 
-static void set_alphablend(struct graphics_priv* gra_priv)
+static void bind_late(struct graphics_priv* gra_priv)
 {
 #if HAVE_API_WIN32_CE
     gra_priv->hCoreDll = LoadLibrary(TEXT("coredll.dll"));
 #else
     gra_priv->hCoreDll = LoadLibrary(TEXT("msimg32.dll"));
+    gra_priv->hGdi32Dll = LoadLibrary(TEXT("gdi32.dll"));
+    gra_priv->hUser32Dll = GetModuleHandle("user32.dll");
 #endif
     if ( gra_priv->hCoreDll )
     {
         gra_priv->AlphaBlend  = (FP_AlphaBlend)GetProcAddress(gra_priv->hCoreDll, TEXT("AlphaBlend") );
         if (!gra_priv->AlphaBlend)
         {
-            FreeLibrary(gra_priv->hCoreDll);
-            gra_priv->hCoreDll = NULL;
             dbg(1, "AlphaBlend not supported\n");
+        }
+#if HAVE_API_WIN32_CE
+        gra_priv->SetStretchBltMode= (FP_SetStretchBltMode)GetProcAddress(gra_priv->hCoreDll, TEXT("SetStretchBltMode") );
+#else
+        gra_priv->SetStretchBltMode= (FP_SetStretchBltMode)GetProcAddress(gra_priv->hGdi32Dll, TEXT("SetStretchBltMode") );
+#endif
+        if (!gra_priv->SetStretchBltMode)
+        {
+            dbg(1, "SetStretchBltMode not supported\n");
         }
     }
     else
     {
         dbg(0, "Error loading coredll\n");
+    }
+    
+    if(gra_priv->hUser32Dll) {
+    	gra_priv->ChangeWindowMessageFilterEx=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilterEx");
+    	gra_priv->ChangeWindowMessageFilter=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilter");
     }
 }
 
@@ -1561,13 +1626,9 @@ static struct graphics_priv*
     this_->parent = NULL;
     this_->window.priv = NULL;
     this_->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
-    set_alphablend(this_);
 
-    user32=GetModuleHandle("user32.dll");
-    if(user32) {
-    	this_->ChangeWindowMessageFilterEx=GetProcAddress(user32,"ChangeWindowMessageFilterEx");
-    	this_->ChangeWindowMessageFilter=GetProcAddress(user32,"ChangeWindowMessageFilter");
-    }
+    bind_late(this_);
+
     return this_;
 }
 
