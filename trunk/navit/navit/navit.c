@@ -1969,12 +1969,10 @@ navit_init(struct navit *this_)
 
 	if (!this_->gui && !(this_->flags & 2)) {
 		dbg(0,"Warning: No GUI available.\n");
-		navit_destroy(this_);
 		return;
 	}
 	if (!this_->gra && !(this_->flags & 1)) {
 		dbg(0,"Warning: No graphics subsystem available.\n");
-		navit_destroy(this_);
 		return;
 	}
 	dbg(2,"Connecting gui to graphics\n");
@@ -1985,8 +1983,6 @@ navit_init(struct navit *this_)
 		dbg(0,"failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
 		dbg(0," Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
 		dbg(0," for explanations and solutions\n");
-
-		navit_destroy(this_);
 		return;
 	}
 	if (this_->speech && this_->navigation) {
