@@ -183,6 +183,7 @@ plugin_load(struct plugin *pl)
 		g_module_close(mod);
 		return 0;
 	} else {
+		dbg(1, "loaded module %s\n", pl->name);
 		pl->mod=mod;
 		pl->init=init;
 	}
@@ -298,11 +299,11 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	if (count != 1 || file_exists(array[0])) {
 		for (i = 0 ; i < count ; i++) {
 			name=array[i];
-			dbg(2,"name[%d]='%s'\n", i, name);
+			dbg(2,"found plugin module file [%d]: '%s'\n", i, name);
 			if (! (pls && (pl=g_hash_table_lookup(pls->hash, name)))) {
 				pl=plugin_new_from_path(name);
 				if (! pl) {
-					dbg(0,"failed to create plugin '%s'\n", name);
+					dbg(0,"failed to create plugin from file '%s'\n", name);
 					continue;
 				}
 				if (pls) {
@@ -341,16 +342,20 @@ plugins_init(struct plugins *pls)
 	GList *l;
 
 	l=pls->list;
-	while (l) {
-		pl=l->data;
-		if (! plugin_get_ondemand(pl)) {
-			if (plugin_get_active(pl)) 
-				if (!plugin_load(pl)) 
-					plugin_set_active(pl, 0);
-			if (plugin_get_active(pl)) 
-				plugin_call_init(pl);
+	if (l){
+		while (l) {
+			pl=l->data;
+			if (! plugin_get_ondemand(pl)) {
+				if (plugin_get_active(pl))
+					if (!plugin_load(pl))
+						plugin_set_active(pl, 0);
+				if (plugin_get_active(pl))
+					plugin_call_init(pl);
+			}
+			l=g_list_next(l);
 		}
-		l=g_list_next(l);
+	} else {
+		dbg(0, "Warning: No plugins found. Is Navit installed correctly?\n");
 	}
 #endif
 }

@@ -1968,12 +1968,12 @@ navit_init(struct navit *this_)
 	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 
 	if (!this_->gui && !(this_->flags & 2)) {
-		dbg(0,"no gui\n");
+		dbg(0,"Warning: No GUI available.\n");
 		navit_destroy(this_);
 		return;
 	}
 	if (!this_->gra && !(this_->flags & 1)) {
-		dbg(0,"no graphics\n");
+		dbg(0,"Warning: No graphics subsystem available.\n");
 		navit_destroy(this_);
 		return;
 	}
