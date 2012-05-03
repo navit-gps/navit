@@ -33,13 +33,11 @@ struct speech_priv {
 static int 
 speech_iphone_say(struct speech_priv *this, const char *text)
 {
-#if 0
-	NSString *s=[[NSString alloc]initWithCString:text encoding:NSMacOSRomanStringEncoding];
-#else
-	NSString *s=[NSString stringWithUTF8String: text];
-#endif
-	[this->speech startSpeakingString:s];
+	dbg(0,"enter %s\n",text);
+	NSString *s=[[NSString alloc]initWithUTF8String: text];
+	[this->speech startSpeakingString:s toURL:nil];
 	[s release];
+	dbg(0,"ok\n");
 	return 1;
 }
 
@@ -62,6 +60,7 @@ speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr 
 	*meth=speech_iphone_meth;
 	this=g_new0(struct speech_priv,1);
 	this->speech=[[NSClassFromString(@"VSSpeechSynthesizer") alloc] init];
+	dbg(0,"this->speech=%p\n",this->speech);
 	[this->speech setRate:(float)1.0];
 	return this;
 }
@@ -70,5 +69,6 @@ speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr 
 void
 plugin_init(void)
 {
+	dbg(0,"enter\n");
 	plugin_register_speech_type("iphone", speech_iphone_new);
 }
