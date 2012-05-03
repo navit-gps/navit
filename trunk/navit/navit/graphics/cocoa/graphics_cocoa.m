@@ -112,7 +112,7 @@ struct graphics_font_priv {
 	#if REVERSE_Y
 			pc.y=graphics->h-pc.y-gr->h;
 	#endif
-			dbg(0,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
+			dbg(1,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
 			CGContextDrawLayerAtPoint(X, pc, gr->layer);
 		}
 		gr=gr->next;
@@ -128,7 +128,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -141,7 +141,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -153,7 +153,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -165,7 +165,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(0,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
 	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 
@@ -176,7 +176,7 @@ struct graphics_font_priv {
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
 	
-	dbg(0,"Enter %d %d\n",p.x,p.y);
+	dbg(1,"Enter %d %d\n",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -186,7 +186,7 @@ struct graphics_font_priv {
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
 	
-	dbg(0,"Enter %d %d\n",p.x,p.y);
+	dbg(1,"Enter %d %d\n",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -196,7 +196,7 @@ struct graphics_font_priv {
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
 	
-	dbg(0,"Enter %d %d\n",p.x,p.y);
+	dbg(1,"Enter %d %d\n",p.x,p.y);
 	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 #endif
@@ -378,7 +378,7 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
-		dbg(0,"end %p\n",gr);
+		dbg(1,"end %p\n",gr);
 		if (!gr->parent) {
 #if USE_UIKIT
 			[gr->view setNeedsDisplay];
@@ -427,7 +427,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 {
 	CGRect lr=CGRectMake(p->x, p->y, w, h);
 	if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
-		dbg(0,"clear %p %dx%d\n",gr,w,h);
+		dbg(1,"clear %p %dx%d\n",gr,w,h);
 		free_graphics(gr);
 		setup_graphics(gr);
 	}
@@ -577,7 +577,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 
 	CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
 	CGDataProviderRelease(imgDataProvider);
-	dbg(0,"size %dx%d\n",CGImageGetWidth(image),CGImageGetHeight(image));
+	dbg(1,"size %dx%d\n",CGImageGetWidth(image),CGImageGetHeight(image));
 	if (w)
 		*w=CGImageGetWidth(image);
 	if (h)
@@ -746,7 +746,7 @@ event_cocoa_add_timeout(int timeout, int multi, struct callback *cb)
 	NavitTimer *ret=[[NavitTimer alloc]init];
 	ret->cb=cb;
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:multi?YES:NO];
-	dbg(0,"timer=%p\n",ret->timer);
+	dbg(1,"timer=%p\n",ret->timer);
 	return (struct event_timeout *)ret;
 }
 
@@ -768,7 +768,7 @@ event_cocoa_add_idle(int priority, struct callback *cb)
 	ret->cb=cb;
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:YES];
 
-	dbg(0,"timer=%p\n",ret->timer);
+	dbg(1,"timer=%p\n",ret->timer);
 	return (struct event_idle *)ret;
 }
 
