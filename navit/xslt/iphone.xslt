@@ -16,6 +16,13 @@
       <xsl:attribute name="follow">1</xsl:attribute>
       <xsl:apply-templates/></xsl:copy>
    </xsl:template>
+   <xsl:template match="/config/navit/speech">
+      <xsl:copy>
+         <xsl:copy-of select="@*[not(name()='data')]"/>
+         <xsl:attribute name="type">iphone</xsl:attribute>
+         <xsl:apply-templates/>
+      </xsl:copy>
+   </xsl:template>
    <xsl:template match="/config/navit/mapset/xi:include">
       <map type="binfile" enabled="yes" data="/var/mobile/navit/navitmap.bin" />
       <map type="binfile" enabled="yes" data="../Documents/navitmap.bin" />
