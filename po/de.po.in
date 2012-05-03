@@ -279,7 +279,7 @@ msgid "Destination Time"
 msgstr "Fahrzeit zum Ziel"
 
 msgid "Roadbook"
-msgstr "Straßenkarte"
+msgstr "Wegbeschreibung"
 
 msgid "Set as position"
 msgstr "Als Position setzen"
@@ -1414,7 +1414,7 @@ msgstr ""
 "Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
 
 msgid "_Roadbook"
-msgstr "_Straßenkarte"
+msgstr "_Wegbeschreibung"
 
 msgid "Show/hide route description"
 msgstr "Routenbeschreibung anzeigen/schließen"
