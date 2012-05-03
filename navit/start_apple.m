@@ -28,12 +28,19 @@ main(int argc, char **argv)
 	int ret;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
+	NSString *locale = [[NSLocale currentLocale] localeIdentifier]; 
+	char *lang=g_strdup_printf("%s.UTF-8",[locale UTF8String]);
+	dbg(0,"lang %s\n",lang);
+	setenv("LANG",lang,0);
+	setlocale(LC_ALL, NULL);
+
 	const char *s=[appFolderPath UTF8String];
 	char *user=g_strdup_printf("%s/../Documents",s);
 	chdir(s);
 	argv[0]=g_strdup_printf("%s/bin/navit",s);
 	setenv("NAVIT_USER_DATADIR",user,0);
 
+	dbg(0,"calling main_real\n");
 	ret=main_real(argc, argv);
 	g_free(argv[0]);
 	g_free(user);
