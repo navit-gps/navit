@@ -366,7 +366,7 @@ add_feature(SVG2PNG "default" TRUE)
 add_feature(SAMPLE_MAP "default" TRUE)
 
 IF(NOT svg2png_scaling)
-   set(svg2png_scaling 0 32 48 64)
+   set(svg2png_scaling 0 16 32 48 64 96)
 ENDIF()
 IF(NOT svg2png_scaling_flag)
    set(svg2png_scaling_flag 32)
