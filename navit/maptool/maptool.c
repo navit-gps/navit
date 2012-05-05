@@ -117,8 +117,10 @@ static void add_plugin(char *path)
 {
 	struct attr **attrs;
 
-	if (! plugins)
+	if (! plugins) {
+		file_init();
 		plugins=plugins_new();
+	}
 	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
 	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);
 }
