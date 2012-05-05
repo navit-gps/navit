@@ -116,6 +116,8 @@ struct item_hash;
 struct item_range;
 struct map;
 struct map_selection;
+void item_create_hash(void);
+void item_destroy_hash(void);
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
