@@ -85,6 +85,25 @@ struct item_name item_names[]={
 
 static GHashTable *default_flags_hash;
 
+static GHashTable *item_hash;
+
+void
+item_create_hash(void)
+{
+	int i;
+	item_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	for (i=0 ; i < sizeof(item_names)/sizeof(struct item_name) ; i++) {
+		g_hash_table_insert(item_hash, item_names[i].name, GINT_TO_POINTER(item_names[i].item));
+	}
+}
+
+void
+item_destroy_hash(void)
+{
+	g_hash_table_destroy(item_hash);
+	item_hash=NULL;
+}
+
 int *
 item_get_default_flags(enum item_type type)
 {
@@ -225,6 +244,9 @@ enum item_type
 item_from_name(const char *name)
 {
 	int i;
+
+	if (item_hash)
+		return GPOINTER_TO_INT(g_hash_table_lookup(item_hash, name));
 
 	for (i=0 ; i < sizeof(item_names)/sizeof(struct item_name) ; i++) {
 		if (! strcmp(item_names[i].name, name))

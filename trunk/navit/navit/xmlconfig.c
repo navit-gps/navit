@@ -1187,6 +1187,8 @@ gboolean config_load(const char *filename, xmlerror **error)
 	struct xmlstate *curr=NULL;
 	gboolean result;
 
+	attr_create_hash();
+	item_create_hash();
 	initStatic();
 
 	dbg(1,"enter filename='%s'\n", filename);
@@ -1198,6 +1200,8 @@ gboolean config_load(const char *filename, xmlerror **error)
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_PARSE, "element '%s' not closed", curr->element);
 		result=FALSE;
 	}
+	attr_destroy_hash();
+	item_destroy_hash();
 	dbg(1,"return %d\n", result);
 	return result;
 }
