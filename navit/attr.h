@@ -167,6 +167,8 @@ struct attr {
 
 struct attr_iter;
 /* prototypes */
+void attr_create_hash(void);
+void attr_destroy_hash(void);
 enum attr_type attr_from_name(const char *name);
 char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);

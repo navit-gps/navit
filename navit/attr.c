@@ -48,11 +48,32 @@ static struct attr_name attr_names[]={
 #undef ATTR
 };
 
+static GHashTable *attr_hash;
+
+void
+attr_create_hash(void)
+{
+	int i;
+	attr_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	for (i=0 ; i < sizeof(attr_names)/sizeof(struct attr_name) ; i++) {
+		g_hash_table_insert(attr_hash, attr_names[i].name, GINT_TO_POINTER(attr_names[i].attr));
+	}
+}
+
+void
+attr_destroy_hash(void)
+{
+	g_hash_table_destroy(attr_hash);
+	attr_hash=NULL;
+}
+
 enum attr_type
 attr_from_name(const char *name)
 {
 	int i;
 
+	if (attr_hash)
+		return GPOINTER_TO_INT(g_hash_table_lookup(attr_hash, name));
 	for (i=0 ; i < sizeof(attr_names)/sizeof(struct attr_name) ; i++) {
 		if (! strcmp(attr_names[i].name, name))
 			return attr_names[i].attr;
