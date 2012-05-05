@@ -268,12 +268,12 @@ struct gui_priv {
 	struct widget root;
 	struct widget *highlighted,*editable;
 	struct widget *highlighted_menu;
-	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
 	struct attr *click_coord_geo, *position_coord_geo;
 	struct search_list *sl;
 	int ignore_button;
 	int menu_on_map_click;
+	char *on_map_click;
 	int signal_on_map_click;
 	char *country_iso2;
 	int speech;
@@ -482,6 +482,9 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
 static void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor);
 static void gui_internal_html_load_href(struct gui_priv *this, char *href, int replace);
 static void gui_internal_destroy(struct gui_priv *this);
+static void gui_internal_enter(struct gui_priv *this, int ignore);
+static void gui_internal_enter_setup(struct gui_priv *this);
+static void gui_internal_html_main_menu(struct gui_priv *this);
 
 
 /*
@@ -1801,7 +1804,11 @@ gui_internal_cmd2_back_to_map(struct gui_priv *this, char *function, struct attr
 static void
 gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data)
 {
-	gui_internal_prune_menu(this, this->root.children->data);
+	struct widget *w=this->root.children->data;
+	if (w && w->menu_data && w->menu_data->href && !strcmp(w->menu_data->href,"#Main Menu")) 
+		gui_internal_prune_menu(this, w);
+	else
+		gui_internal_html_main_menu(this);
 }
 
 static struct widget *
@@ -6197,8 +6204,8 @@ static void
 gui_internal_enter(struct gui_priv *this, int ignore)
 {
 	struct graphics *gra=this->gra;
-	this->ignore_button=ignore;
-	this->clickp_valid=this->vehicle_valid=0;
+	if (ignore != -1) 
+		this->ignore_button=ignore;
 
 	navit_block(this->nav, 1);
 	graphics_overlay_disable(gra, 1);
@@ -6214,18 +6221,15 @@ gui_internal_leave(struct gui_priv *this)
 }
 
 static void
-gui_internal_enter_setup(struct gui_priv *this, struct point *p)
+gui_internal_set_click_coord(struct gui_priv *this, struct point *p)
 {
-	struct transformation *trans;
 	struct coord c;
 	struct coord_geo g;
-	struct attr attr,attrp;
-
+	struct attr attr;
+	struct transformation *trans;
 	trans=navit_get_trans(this->nav);
 	attr_free(this->click_coord_geo);
 	this->click_coord_geo=NULL;
-	attr_free(this->position_coord_geo);
-	this->position_coord_geo=NULL;
 	if (p) {
 		transform_reverse(trans, p, &c);
 		dbg(1,"x=0x%x y=0x%x\n", c.x, c.y);
@@ -6237,6 +6241,18 @@ gui_internal_enter_setup(struct gui_priv *this, struct point *p)
 		attr.type=attr_click_coord_geo;
 		this->click_coord_geo=attr_dup(&attr);
 	}
+}
+
+static void
+gui_internal_set_position_coord(struct gui_priv *this)
+{
+	struct transformation *trans;
+	struct attr attr,attrp;
+	struct coord c;
+
+	trans=navit_get_trans(this->nav);
+	attr_free(this->position_coord_geo);
+	this->position_coord_geo=NULL;
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
 		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
 		this->position_coord_geo=attr_dup(&attrp);
@@ -6244,18 +6260,34 @@ gui_internal_enter_setup(struct gui_priv *this, struct point *p)
 		transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
 		this->vehiclep.x=c.x;
 		this->vehiclep.y=c.y;
-		this->vehicle_valid=1;
 	}
 }
 
 static void
-gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore, char *href)
+gui_internal_enter_setup(struct gui_priv *this)
+{
+	if (!this->mouse_button_clicked_on_map)
+		gui_internal_set_position_coord(this);
+}
+
+static void
+gui_internal_html_main_menu(struct gui_priv *this)
+{
+	gui_internal_prune_menu(this, NULL);
+	gui_internal_html_load_href(this, "#Main Menu", 0);
+}
+
+static void
+gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href)
 {
 	dbg(1,"enter\n");
 	gui_internal_enter(this, ignore);
-	gui_internal_enter_setup(this, p);
+	gui_internal_enter_setup(this);
 	// draw menu
-	gui_internal_html_load_href(this, href?href:"#Main Menu", 0);
+	if (href)
+		gui_internal_html_load_href(this, href, 0);
+	else
+		gui_internal_html_main_menu(this);
 }
 
 static void
@@ -6279,8 +6311,7 @@ gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, 
 		gui_internal_html_load_href(this, href, replace);
 		return;
 	}
-
-	gui_internal_cmd_menu(this, NULL, ignore, href);
+	gui_internal_cmd_menu(this, ignore, href);
 }
 
 
@@ -6288,7 +6319,7 @@ static void
 gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget)
 {
 	if (widget->text && strlen(widget->text)) {
-		if (this->vehicle_valid)
+		if (this->position_coord_geo)
 			navit_textfile_debug_log_at(this->nav, &this->vehiclep, "type=log_entry label=\"%s\"",widget->text);
 		else
 			navit_textfile_debug_log(this->nav, "type=log_entry label=\"%s\"",widget->text);
@@ -6324,7 +6355,8 @@ gui_internal_cmd_log(struct gui_priv *this)
 {
 	struct widget *w,*wb,*wk,*wl,*we,*wnext;
 	gui_internal_enter(this, 1);
-	gui_internal_enter_setup(this, NULL);
+	gui_internal_set_click_coord(this, NULL);
+	gui_internal_enter_setup(this);
 	wb=gui_internal_menu(this, "Log Message");
 	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -6422,6 +6454,10 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 	case attr_menu_on_map_click:
 		this->menu_on_map_click=attr->u.num;
 		return 1;
+	case attr_on_map_click:
+		g_free(this->on_map_click);
+		this->on_map_click=g_strdup(attr->u.str);
+		return 1;
 	default:
 		dbg(0,"%s\n",attr_to_name(attr->type));
 		return 1;
@@ -6482,13 +6518,16 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		dbg(1,"menu_on_map_click=%d\n",this->menu_on_map_click);
 		if (button != 1)
 			return;
-		if (this->menu_on_map_click) {
+		if (this->on_map_click || this->menu_on_map_click) {
 			this->mouse_button_clicked_on_map=1;
-			gui_internal_cmd_menu(this, p, 0, NULL);
+			gui_internal_set_click_coord(this, p);
+			gui_internal_set_position_coord(this);
+			if (this->on_map_click)
+				command_evaluate(&this->self, this->on_map_click);
+			else
+				gui_internal_cmd_menu(this, 0, NULL);
 			this->mouse_button_clicked_on_map=0;
-			return;
-		}
-		if (this->signal_on_map_click) {
+		} else if (this->signal_on_map_click) {
 			gui_internal_dbus_signal(this, p);
 			return;
 		}
@@ -6581,8 +6620,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
 		if (changed) {
-			gui_internal_prune_menu(this, NULL);
-			gui_internal_html_load_href(this, "#Main Menu", 0);
+			gui_internal_html_main_menu(this);
 		} else {
 			gui_internal_menu_render(this);
 		}
@@ -6729,7 +6767,8 @@ static void gui_internal_keypress(void *data, char *key)
 			break;
 		case NAVIT_KEY_RETURN:
 		case NAVIT_KEY_MENU:
-			gui_internal_cmd_menu(this, NULL, 0, NULL);
+			gui_internal_set_click_coord(this, NULL);
+			gui_internal_cmd_menu(this, 0, NULL);
 			break;
 		}
 		return;
@@ -8090,6 +8129,10 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=attr->u.num;
 	else
 		this->menu_on_map_click=1;
+
+	if ((attr=attr_search(attrs, NULL, attr_on_map_click)))
+		this->on_map_click=g_strdup(attr->u.str);
+
 	if ((attr=attr_search(attrs, NULL, attr_signal_on_map_click)))
 		this->signal_on_map_click=attr->u.num;
 
@@ -8213,5 +8256,6 @@ gui_internal_destroy(struct gui_priv *this)
 	g_free(this->country_iso2);
 	g_free(this->href);
 	g_free(this->html_text);
+	g_free(this->on_map_click);
 	g_free(this);
 }
