@@ -543,9 +543,9 @@ void
 route_set_profile(struct route *this, struct vehicleprofile *prof)
 {
 	if (this->vehicleprofile != prof) {
-		this->vehicleprofile = prof;
 		int dest_count = g_list_length(this->destinations);
 		struct pcoord *pc;
+		this->vehicleprofile = prof;
 		pc = g_alloca(dest_count*sizeof(struct pcoord));
 		route_get_destinations(this, pc, dest_count);
 		route_set_destinations(this, pc, dest_count, 1);

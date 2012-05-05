@@ -736,9 +736,10 @@ search_list_get_unique(struct search_list *this_, char *unique)
 	char *name,*max;
 	int search_len=strlen(search);
 	int i,count=sizeof(strings)/sizeof(char *);
+	GList *l;
 
 	dbg(0,"enter level=%d %s %s\n",level,search,unique);
-	GList *l=le->list;
+	l=le->list;
 	while (l) {
 		switch (level) {
 		case 0:
