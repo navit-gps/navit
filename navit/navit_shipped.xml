@@ -43,11 +43,12 @@
 			In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
 			Here's an example for a freerunner: -->
 		<!-- <gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/> -->
-
+		<!-- The action that appears on map click is configurable with the attribute "on_map_click".
+		     To get the prvious behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
+	        -->
 		<gui type="internal" enabled="yes"><![CDATA[
 			<html>
 				<a name='Main Menu'><text>Main menu</text>
-					<img cond='button' src='gui_map'><script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script></img>
 					<a href='#Actions'><img src='gui_actions'>Actions</img></a>
 					<img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show
 Map</text></img>
@@ -90,6 +91,9 @@ Navigation</text></img>
 Waypoint</text></img>
 				<img cond='navit.route.route_status&amp;1' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
 Waypoint</text></img>
+			</a>
+			<a name='Map Point'><text>Map Point</text>
+				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
 			</a>
 			</html>
 		]]></gui>
