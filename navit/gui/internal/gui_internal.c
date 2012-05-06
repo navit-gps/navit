@@ -485,6 +485,7 @@ static void gui_internal_destroy(struct gui_priv *this);
 static void gui_internal_enter(struct gui_priv *this, int ignore);
 static void gui_internal_enter_setup(struct gui_priv *this);
 static void gui_internal_html_main_menu(struct gui_priv *this);
+static void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name);
 
 
 /*
@@ -5571,6 +5572,9 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 		navit_set_attr(this->nav, &vehicle);
 	}
 	save_vehicle_xml(v);
+	
+	gui_internal_prune_menu_count(this, 1, 0);
+	gui_internal_menu_vehicle_settings(this, v, vehicle_name);
 }
 
 /**
@@ -5635,15 +5639,14 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 }
 
 static void
-gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name)
 {
 	struct widget *w,*wb,*row;
 	struct attr attr;
-	struct vehicle *v=wm->data;
     struct vehicleprofile *profile = NULL;
 	GList *profiles;
 
-	wb=gui_internal_menu(this, wm->text);
+	wb=gui_internal_menu(this, name);
 	w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
 	gui_internal_widget_append(wb, w);
 
@@ -5654,7 +5657,7 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Set as active"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_set_active_vehicle, wm->data));
+				gui_internal_cmd_set_active_vehicle, v));
 	}
 
 	if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
@@ -5662,14 +5665,14 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show Satellite status"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_show_satellite_status, wm->data));
+				gui_internal_cmd_show_satellite_status, v));
 	}
 	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
 		gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			gui_internal_button_new_with_callback(this, _("Show NMEA data"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_show_nmea_data, wm->data));
+				gui_internal_cmd_show_nmea_data, v));
 	}
 
     // Add all the possible vehicle profiles to the menu
@@ -5681,8 +5684,14 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 		profiles = g_list_next(profiles);
     }
 
-	callback_list_call_attr_2(this->cbl, attr_vehicle, w, wm->data);
+	callback_list_call_attr_2(this->cbl, attr_vehicle, w, v);
 	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
+{
+	gui_internal_menu_vehicle_settings(this, wm->data, wm->text);
 }
 
 static void
