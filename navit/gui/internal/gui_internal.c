@@ -2210,6 +2210,10 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 static void
 gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data)
 {
+	struct attr v;
+	v.type=attr_vehicle;
+	v.u.vehicle=NULL;
+	navit_set_attr(this->nav, &v);
 	navit_set_position(this->nav, &wm->c);
 	gui_internal_prune_menu(this, NULL);
 }
@@ -3743,9 +3747,14 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->c=pc;
 	}
 	if (flags & 16) {
+		const char *text=_("Set as position");
+		struct attr vehicle;
+		if (navit_get_attr(this->nav, attr_vehicle, &vehicle, NULL) && vehicle.u.vehicle) 
+			text=_("Set as position (and deactivate vehicle)");
+
 		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
-			wbc=gui_internal_button_new_with_callback(this, _("Set as position"),
+			wbc=gui_internal_button_new_with_callback(this, text,
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_position, wm));
 		wbc->c=pc;
