@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-06 17:30+0200\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -1502,6 +1502,9 @@ msgstr "Interessante Kartenpunkte"
 msgid "View in Browser"
 msgstr "Im Browser anzeigen"
 
+msgid "Item type"
+msgstr "Elementtyp"
+
 msgid "Streets"
 msgstr "Straßen"
 
@@ -1511,8 +1514,17 @@ msgstr "Hausnummern"
 msgid "View Attributes"
 msgstr "Attribute anzeigen"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr "Als Position setzen (und Fahrzeug deaktivieren)"
+
 msgid "View on map"
 msgstr "Auf der Karte zeigen"
+
+msgid "Remove search results from the map"
+msgstr "Suchergebnisse aus Karte löschen"
+
+msgid "Show results on the map"
+msgstr "Ergebnisse in Karte anzeigen"
 
 msgid "Cut Bookmark"
 msgstr "Lesezeichen entfernen"
@@ -1531,6 +1543,18 @@ msgstr "Lesezeichen entfernen"
 
 msgid "Bookmarks"
 msgstr "Lesezeichen"
+
+msgid "Bookmarks as Waypoints"
+msgstr "Lesezeichen as Wegpunkte"
+
+msgid "Save Waypoints"
+msgstr "Wegpunkte abspeichern"
+
+msgid "Replace Waypoints"
+msgstr "Wegpunkte ersetzen"
+
+msgid "Delete Folder"
+msgstr "Ordner löschen"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1624,6 +1648,9 @@ msgstr "Einnorden"
 msgid "Map follows Vehicle"
 msgstr "Karte folgt Fahrzeug"
 
+msgid "Plan with Waypoints"
+msgstr "Planung mit Wegpunkten"
+
 msgid "Message"
 msgstr "Benachrichtigung"
 
@@ -1667,6 +1694,7 @@ msgstr "Achtung Blitzer!"
 msgid "Please decrease your speed"
 msgstr "Bitte Geschwindigkeit verringern"
 
+#. Strings from navit_shipped.xml
 msgid "Map Point"
 msgstr "Kartenpunkt"
 
@@ -1727,8 +1755,22 @@ msgstr "Fenstermodus"
 msgid "Description"
 msgstr "Beschreibung"
 
-msgid "car_shortest"
+msgid ""
+"Drop last \n"
+"Waypoint"
 msgstr ""
+"Letzten Wegpunkt\n"
+"entfernen"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Nächsten Wegpunkt\n"
+"entfernen"
+
+msgid "car_shortest"
+msgstr "Auto kürzeste"
 
 msgid "car_avoid_tolls"
 msgstr "Auto ohne Maut"
