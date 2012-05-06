@@ -5697,11 +5697,19 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 static void
 gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	struct attr attr,vattr;
+	struct attr attr,attr2,vattr;
 	struct widget *w,*wb,*wl;
 	struct attr_iter *iter;
 	struct attr active_vehicle;
 
+	iter=navit_attr_iter_new();
+	if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
+		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
+		navit_attr_iter_destroy(iter);
+		gui_internal_menu_vehicle_settings(this, attr.u.vehicle, vattr.u.str);
+		return;
+	}
+	navit_attr_iter_destroy(iter);
 
 	wb=gui_internal_menu(this, _("Vehicle"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
