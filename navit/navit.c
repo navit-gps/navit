@@ -2479,6 +2479,14 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->use_mousewheel=!!attr->u.num;
 		break;
 	case attr_vehicle:
+		if (!attr->u.vehicle) {
+			if (this_->vehicle) {
+				vehicle_set_attr(this_->vehicle->vehicle, &active);
+				navit_set_vehicle(this_, NULL);
+				attr_updated=1;
+			}
+			break;
+		}
 		l=this_->vehicles;
 		while(l) {
 			nv=l->data;
@@ -3040,7 +3048,9 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 {
 	struct attr attr;
 	this_->vehicle=nv;
-	if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
+	if (!nv)
+		return;
+	if (vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
 		if (navit_set_vehicleprofile(this_, attr.u.str))
 			return;
 	}
