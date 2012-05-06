@@ -2803,7 +2803,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		ret=navit_add_vehicle(this_, attr->u.vehicle);
 		break;
 	case attr_vehicleprofile:
-		this_->vehicleprofiles=g_list_prepend(this_->vehicleprofiles, attr->u.vehicleprofile);
+		this_->vehicleprofiles=g_list_append(this_->vehicleprofiles, attr->u.vehicleprofile);
 		break;
 	case attr_autozoom_min:
 		this_->autozoom_min = attr->u.num;
