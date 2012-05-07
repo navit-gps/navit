@@ -20,6 +20,7 @@
 package org.navitproject.navit;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -58,7 +59,13 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
 		Log.e("NavitSpeech2","Create");
 		Intent checkIntent = new Intent();
 		checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		navit.startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
+		if (navit.getPackageManager().resolveActivity(checkIntent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+			Log.e("NavitSpeech2","ACTION_CHECK_TTS_DATA available");
+			navit.startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
+		} else {
+			Log.e("NavitSpeech2","ACTION_CHECK_TTS_DATA not available, assume tts is working");
+			mTts = new TextToSpeech(navit, this);
+		}
 	}
 	public void say(String what)
 	{
