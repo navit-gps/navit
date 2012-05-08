@@ -55,7 +55,7 @@ struct quadtree_node* quadtree_find_containing_node(struct quadtree_node* root, 
 int  quadtree_delete_item(struct quadtree_node* root, struct quadtree_item* item);
 void quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax, double dYMin, double dYMax, GList**out);
 void quadtree_split(struct quadtree_node* this_);
-void quadtree_add(struct quadtree_node* this_, struct quadtree_item* item);
+void quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct quadtree_iter* iter);
 void quadtree_destroy(struct quadtree_node* this_);
 struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, double dXMax, double dYMin, double dYMax,void (*item_free)(void *context, struct quadtree_item *qitem), void *context);
 struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter);

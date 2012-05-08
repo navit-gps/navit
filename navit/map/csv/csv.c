@@ -43,7 +43,7 @@
 
 static int map_id;
 
-//prototype
+/*prototypes*/
 static int
 csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode);
 static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type);
@@ -91,7 +91,7 @@ save_map_csv(struct map_priv *m)
 			dbg(0, "Error opening csv file to write new entries");
 			return;
 		}
-		//query the world
+		/*query the world*/
 		iter=quadtree_query(m->tree_root, -180, 180, -180, 180, quadtree_item_free, m);
 
 		while((qitem = quadtree_item_next(iter))!=NULL) {
@@ -110,7 +110,7 @@ save_map_csv(struct map_priv *m)
 					GList* attr_list = ((struct quadtree_data*)(qitem->data))->attr_list;
 					GList* attr_it = attr_list;
 					struct attr* found_attr = NULL;
-					//search attributes
+					/*search attributes*/
 					while(attr_it) {
 						if(((struct attr*)(attr_it->data))->type == *at) {
 							found_attr = attr_it->data;
@@ -171,9 +171,8 @@ static void
 map_destroy_csv(struct map_priv *m)
 {
 	dbg(1,"map_destroy_csv\n");
-	//save if changed 
+	/*save if changed */
 	save_map_csv(m);	
-	//g_hash_table_destroy(m->item_hash);
 	g_hash_table_destroy(m->qitem_hash);
 	quadtree_destroy(m->tree_root);
 	g_free(m->filename);
@@ -202,8 +201,7 @@ csv_coord_get(void *priv_data, struct coord *c, int count)
 static void
 csv_attr_rewind(void *priv_data)
 {
-//	struct map_rect_priv *mr=priv_data;
-	//TODO implement if needed
+	/*TODO implement if needed*/
 }
 
 static int
@@ -220,17 +218,16 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	attr_list = ((struct quadtree_data*)(mr->qitem->data))->attr_list;
 
 	if (attr_type == attr_any) {
-		if (mr->at_iter==NULL) {	//start iteration
+		if (mr->at_iter==NULL) {	/*start iteration*/
 			mr->at_iter = attr_list;
 			if (mr->at_iter) {
 				*attr = *(struct attr*)(mr->at_iter->data);
-				//mr->at_iter = g_list_next(mr->at_iter);	
 				return 1;
-			} else {		//empty attr list
+			} else {		/*empty attr list*/
 				mr->at_iter = NULL;	
 				return 0;
 			}
-		} else {			//continue iteration
+		} else {			/*continue iteration*/
 			mr->at_iter = g_list_next(mr->at_iter);	
 			if(mr->at_iter) {
 				*attr = *(struct attr*)mr->at_iter->data;
@@ -280,7 +277,7 @@ csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 		return 0;
 	}
 
-	//if attribute is not supported by this csv map return 0
+	/*if attribute is not supported by this csv map return 0*/
 	for(i=0;i<m->attr_cnt;++i) {
 		if(*at==attr->type) {
 			bFound = 1;
@@ -415,7 +412,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	if(new_it) {
 		qi->longitude = cg.lng;
 		qi->latitude = cg.lat;
-		quadtree_add( m->tree_root, qi);
+		quadtree_add( m->tree_root, qi, mr->qiter);
 		dbg(1,"Set coordinates %f %f\n", cg.lng, cg.lat);
 		m->new_items = g_list_remove_link(m->new_items,new_it);
 		m->dirty=1;
@@ -437,7 +434,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	insert_item->data=quadtree_data_dup(query_res->data);
 	insert_item->longitude = cg.lng;
 	insert_item->latitude  = cg.lat;
-	quadtree_add(m->tree_root, query_res);
+	quadtree_add(m->tree_root, query_res, mr->qiter);
 
 	mr->qitem->ref_count--;
 	mr->qitem=insert_item;
@@ -473,6 +470,25 @@ static void quadtree_item_free_do(void *data)
 	g_free(data);
 }
 
+static void map_csv_debug_dump(struct map_priv *map)
+{
+	GList *l=g_hash_table_get_values(map->qitem_hash);
+	GList *ll=l;
+	while(ll) {
+		struct quadtree_item *qi;
+		GList *attrs;
+		qi=ll->data;
+		dbg(0,"%p del=%d ref=%d\n", qi,qi->deleted, qi->ref_count);
+		attrs=((struct quadtree_data *)qi->data)->attr_list;
+		while(attrs) {
+			if(((struct attr*)attrs->data)->type==attr_label)
+				dbg(0,"... %s\n",((struct attr*)attrs->data)->u.str);
+			attrs=g_list_next(attrs);
+		}
+		ll=g_list_next(ll);
+	}
+	g_list_free(l);
+}
 
 static struct map_rect_priv *
 map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
@@ -481,8 +497,13 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
 	struct coord_geo lu;
 	struct coord_geo rl;
 	struct quadtree_iter *res = NULL;
-
 	dbg(1,"map_rect_new_csv\n");
+
+#if 0
+	/* Set above value to 1 to have all map data dumped (including deleted items) to the log at each maprect creation */
+	map_csv_debug_dump(map);
+#endif	
+	
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->bStarted = 0;
@@ -548,7 +569,7 @@ map_rect_get_item_csv(struct map_rect_priv *mr)
 static struct item *
 map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	//currently id_hi is ignored
+	/*currently id_hi is ignored*/
 	
 	struct quadtree_item *qit = g_hash_table_lookup(mr->m->qitem_hash,&id_lo);
 	
@@ -593,7 +614,7 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	}
 
 	m->dirty = 1;
-	//add item to the map
+	/*add item to the map*/
 	curr_item = item_new("",zoom_max);
 	curr_item->type = m->item_type;
 	curr_item->meth=&methods_csv;
@@ -609,10 +630,10 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	qd->item = curr_item;
 	qd->attr_list = NULL;
 	qi->data = qd;
-	//we don`t have valid coord yet
+	/*we don`t have valid coord yet*/
 	qi->longitude = 0;
 	qi->latitude  = 0;
-	//add the coord less item to the new list
+	/*add the coord less item to the new list*/
 	m->new_items = g_list_prepend(m->new_items, qi);
 	if(mr->qitem)
 		mr->qitem->ref_count--;
@@ -620,10 +641,9 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 	mr->item=*curr_item;
 	mr->item.priv_data=mr;
 	mr->qitem->ref_count++;
-	//don't add to the quadtree yet, wait until we have a valid coord
+	/*don't add to the quadtree yet, wait until we have a valid coord*/
 	pID = g_new(int,1);
 	*pID = m->next_item_idx;
-	//g_hash_table_insert(m->item_hash, pID,curr_item);
 	g_hash_table_insert(m->qitem_hash, pID,qi);
 	++m->next_item_idx;
 	return &mr->item;
@@ -718,8 +738,8 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  m->filename=g_strdup(wexp_data[0]);
 	  file_wordexp_destroy(wexp);
 
-	  //load csv file into quadtree structure
-	  //if column number is wrong skip
+	  /*load csv file into quadtree structure*/
+	  /*if column number is wrong skip*/
 	  if((fp=fopen(m->filename,"rt"))) {
 		const int max_line_len = 256;
 		char *line=g_alloca(sizeof(char)*max_line_len);
@@ -739,12 +759,12 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 				}
 
 				if(col_cnt==attr_cnt) {
-					int cnt = 0;	//idx of current attr
+					int cnt = 0;	/*index of current attr*/
 					char*tok;
 					GList* attr_list = NULL;
 					int bAddSum = 1;	
 					double longitude = 0.0, latitude=0.0;
-					struct item *curr_item = item_new("",zoom_max);//does not use parameters
+					struct item *curr_item = item_new("",zoom_max);/*does not use parameters*/
 					curr_item->type = item_type_attr->u.item_type;
 					curr_item->id_lo = m->next_item_idx;
 					if (m->flags & 1)
@@ -776,7 +796,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 							}
 						}
 						else {
-							//unknown attribute
+							/*unknown attribute*/
 							bAddSum = bAdd = 0;
 							g_free(curr_attr);
 						}
@@ -795,9 +815,8 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 						qi->data = qd;
 						qi->longitude = longitude;
 						qi->latitude = latitude;
-						quadtree_add(tree_root, qi);
+						quadtree_add(tree_root, qi, NULL);
 						*pID = m->next_item_idx;
-						//g_hash_table_insert(m->item_hash, pID,curr_item);
 						g_hash_table_insert(m->qitem_hash, pID,qi);
 						++m->next_item_idx;
 						dbg(1,"%s\n",line);
