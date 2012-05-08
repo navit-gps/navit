@@ -349,7 +349,7 @@ csv_type_set(void *priv_data, enum item_type type)
 		return 0;
 	
 	mr->qitem->deleted=1;
-	dbg(0,"Item %p is deleted\n",mr->qitem);
+	dbg(1,"Item %p is deleted\n",mr->qitem);
 
 	return 1;
 }
