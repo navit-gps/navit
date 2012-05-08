@@ -1715,7 +1715,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	struct map_rect *mr;
 
 	this_->former_destination=read_former_destinations_from_file();
-	if (!this_->route || !navit_former_destinations_active(this_))
+	if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle)
 		return;	
 	mr=map_rect_new(this_->former_destination, NULL);
 	while ((item=map_rect_get_item(mr))) {
