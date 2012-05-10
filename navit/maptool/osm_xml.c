@@ -187,8 +187,10 @@ map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 	while (fgets(buffer, size, in)) {
 		p=strchr(buffer,'<');
 		if (! p) {
-			fprintf(stderr,"WARNING: wrong line %s\n", buffer);
-			continue;
+			fprintf(stderr,"FATAL: wrong line in input data (does not start with '<'): %s\n", buffer);
+			fprintf(stderr,"This does not look like a valid OSM file.\n"
+		                "Note that maptool can only process OSM files without wrapped or empty lines.\n");
+			exit(EXIT_FAILURE);
 		}
 		if (!strncmp(p, "<?xml ",6)) {
 		} else if (!strncmp(p, "<osm ",5)) {
