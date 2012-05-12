@@ -23,8 +23,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import org.navitproject.navit.Navit.NavitAddress;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -893,51 +891,6 @@ public class NavitGraphics
 	}
 
 
-	/**
-	 * start a search on the map
-	 */
-	public void fillStringArray(String s)
-	{
-		// Log.e("NavitGraphics", "**** fillStringArray s=" + s);
-		// deactivate the spinner
-		NavitDialogs.NavitAddressSearchSpinnerActive = false;
-
-		Navit.NavitAddress tmp_addr = new NavitAddress();
-		String[] tmp_s = s.split(":");
-		tmp_addr.result_type = tmp_s[0];
-		tmp_addr.item_id = tmp_s[1];
-		tmp_addr.lat = Float.parseFloat(tmp_s[2]);
-		tmp_addr.lon = Float.parseFloat(tmp_s[3]);
-		// the rest ist address
-		tmp_addr.addr = s.substring(4 + tmp_s[0].length() + tmp_s[1].length() + tmp_s[2].length()
-				+ tmp_s[3].length(), s.length());
-		Navit.NavitAddressResultList_foundItems.add(tmp_addr);
-
-		if (tmp_addr.result_type.equals("TWN"))
-		{
-			Navit.search_results_towns++;
-		}
-		else if (tmp_addr.result_type.equals("STR"))
-		{
-			Navit.search_results_streets++;
-		}
-		else if (tmp_addr.result_type.equals("SHN"))
-		{
-			Navit.search_results_streets_hn++;
-		}
-		
-		// make the dialog move its bar ...
-		NavitDialogs.sendDialogMessage( NavitDialogs.MSG_PROGRESS_BAR_SEARCH
-				, Navit.get_text("loading search results")
-				, Navit.get_text("towns") + ":" + Navit.search_results_towns + " "
-					+ Navit.get_text("Streets") + ":" + Navit.search_results_streets + "/"
-					+ Navit.search_results_streets_hn
-				, NavitDialogs.DIALOG_SEARCHRESULTS_WAIT
-				, Navit.ADDRESS_RESULTS_DIALOG_MAX
-				, Navit.NavitAddressResultList_foundItems.size() % (Navit.ADDRESS_RESULTS_DIALOG_MAX + 1));
-	}
-
-	public native void CallbackSearchResultList(int partial_match, String country, String s);
 
 
 	/**

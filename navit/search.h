@@ -77,6 +77,7 @@ struct search_list;
 struct search_list_result;
 struct jni_object;
 struct search_list *search_list_new(struct mapset *ms);
+int search_list_level(enum attr_type attr_type);
 void search_list_search(struct search_list *this_, struct attr *search_attr, int partial);
 char *search_postal_merge(char *mask, char *new_);
 char *search_postal_merge_replace(char *mask, char *new_);
@@ -85,7 +86,6 @@ char *search_list_get_unique(struct search_list *this_, char *unique);
 struct search_list_result *search_list_get_result(struct search_list *this_);
 void search_list_destroy(struct search_list *this_);
 void search_init(void);
-GList * search_by_address(struct search_list *this_, const char *addr, int partial, struct jni_object *jni);
 /* end of prototypes */
 #ifdef __cplusplus
 }

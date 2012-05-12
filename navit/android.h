@@ -1,5 +1,3 @@
-#ifdef HAVE_API_ANDROID
-
 #include <jni.h>
 extern JNIEnv *jnienv;
 extern jobject *android_activity;
@@ -13,11 +11,3 @@ struct jni_object {
 	jobject jo;
 	jmethodID jm;
 };
-
-#else
-
-struct jni_object {
-	int dummy;
-};
-
-#endif

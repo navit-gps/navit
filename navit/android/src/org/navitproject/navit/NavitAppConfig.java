@@ -3,7 +3,7 @@ package org.navitproject.navit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.navitproject.navit.Navit.NavitAddress;
+import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ public class NavitAppConfig extends Application {
 
 	private static final int         MAX_LAST_ADDRESSES = 10;
 
-	private List<Navit.NavitAddress> mLastAddresses     = null;
+	private List<NavitAddress> mLastAddresses     = null;
 	private int                      mLastAddressField;
 	private SharedPreferences        mSettings;
 
@@ -24,7 +24,7 @@ public class NavitAppConfig extends Application {
 
 	public List<NavitAddress> getLastAddresses() {
 		if (mLastAddresses == null) {
-			mLastAddresses = new ArrayList<Navit.NavitAddress>();
+			mLastAddresses = new ArrayList<NavitAddress>();
 			int mLastAddressField = mSettings.getInt("LastAddress", -1);
 			if (mLastAddressField >= 0) {
 				int index = mLastAddressField;
@@ -32,11 +32,11 @@ public class NavitAppConfig extends Application {
 					String addr_str = mSettings.getString("LastAddress_" + String.valueOf(index), "");
 
 					if (addr_str.length() > 0) {
-						Navit.NavitAddress address = new Navit.NavitAddress();
-						address.addr = addr_str;
-						address.lat = mSettings.getFloat("LastAddress_Lat_" + String.valueOf(index), 0);
-						address.lon = mSettings.getFloat("LastAddress_Lon_" + String.valueOf(index), 0);
-						mLastAddresses.add(address);
+						mLastAddresses.add(new NavitAddress(
+						        1,
+						        mSettings.getFloat("LastAddress_Lat_" + String.valueOf(index), 0),
+						        mSettings.getFloat("LastAddress_Lon_" + String.valueOf(index), 0),
+						        addr_str));
 					}
 
 					if (--index < 0) index = MAX_LAST_ADDRESSES - 1;
@@ -47,7 +47,7 @@ public class NavitAppConfig extends Application {
 		return mLastAddresses;
 	}
 
-	public void addLastAddress(Navit.NavitAddress newAddress) {
+	public void addLastAddress(NavitAddress newAddress) {
 		getLastAddresses();
 
 		mLastAddresses.add(newAddress);
