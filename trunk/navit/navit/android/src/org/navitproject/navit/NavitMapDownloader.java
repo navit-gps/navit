@@ -345,7 +345,7 @@ public class NavitMapDownloader extends Thread
 		Log.d(TAG, "stop_me -> true");
 	}
 
-	public NavitMapDownloader(int map_id, int dialog_num)
+	public NavitMapDownloader(int map_id)
 	{
 		this.map_values = osm_maps[map_id];
 	}
