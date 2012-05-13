@@ -9,6 +9,7 @@ if(SAMPLE_MAP)
       COMMAND ${CMAKE_COMMAND} -D TYPE=binfile -D DATA=${SAMPLE_MAP_NAME}.bin
          -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.xml
 	 -P ${PROJECT_SOURCE_DIR}/cmake/navit_writemapxml.cmake
+      VERBATIM
       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
    )
    if(DOWNLOAD_SAMPLE_MAP)
@@ -18,12 +19,14 @@ if(SAMPLE_MAP)
 	    -D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.bin
 	    -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
 	    -P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
+	 VERBATIM
       )
    else()
       add_custom_command (
          OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
          COMMAND bzcat ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2
-	    | \"${MAPTOOL_PATH}\" ${maptool_args} ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
+	    | ${MAPTOOL_PATH} ${maptool_args} ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
+	 VERBATIM
          DEPENDS maptool ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2
       )
       add_custom_command (
@@ -32,6 +35,7 @@ if(SAMPLE_MAP)
 	    -D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.osm.bz2
 	    -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2
 	    -P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
+	 VERBATIM
       )
    endif()
 endif()
