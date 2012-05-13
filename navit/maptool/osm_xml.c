@@ -177,6 +177,11 @@ parse_nd(char *p)
 	return 1;
 }
 
+static int
+xml_declaration_in_line(char* buffer){
+	return !strncmp(buffer, "<?xml ", 6);
+}
+
 int
 map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 {
@@ -184,6 +189,11 @@ map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 	char buffer[size];
 	char *p;
 	sig_alrm(0);
+	if (!fgets(buffer, size, in) || !xml_declaration_in_line(buffer)){
+		fprintf(stderr,"FATAL: First line does not start with XML declaration;\n"
+			       "this does not look like a valid OSM file.\n");
+		exit(EXIT_FAILURE);
+	}
 	while (fgets(buffer, size, in)) {
 		p=strchr(buffer,'<');
 		if (! p) {
@@ -192,8 +202,7 @@ map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 		                "Note that maptool can only process OSM files without wrapped or empty lines.\n");
 			exit(EXIT_FAILURE);
 		}
-		if (!strncmp(p, "<?xml ",6)) {
-		} else if (!strncmp(p, "<osm ",5)) {
+		if (!strncmp(p, "<osm ",5)) {
 		} else if (!strncmp(p, "<bound ",7)) {
 		} else if (!strncmp(p, "<node ",6)) {
 			if (!parse_node(p))
