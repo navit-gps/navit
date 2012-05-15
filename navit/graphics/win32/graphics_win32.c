@@ -1175,38 +1175,42 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     /* transform paletted images into full-color rgb */
     if (color_type == PNG_COLOR_TYPE_PALETTE)
-        png_set_expand (png_ptr);
+        png_set_palette_to_rgb(png_ptr);
+
     /* expand images to bit-depth 8 (only applicable for grayscale images) */
-    if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-        png_set_expand (png_ptr);
+    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8) 
+    	png_set_gray_1_2_4_to_8(png_ptr);
+
+    /* Expand grayscale to rgb */
+    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+          png_set_gray_to_rgb(png_ptr);
+
+    /* expand colored images to bit-depth 8 */
+    if (color_type == PNG_COLOR_TYPE_RGB && bit_depth < 8)
+        png_set_packing(png_ptr);
+
     /* transform transparency maps into full alpha-channel */
-    if (png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS))
-        png_set_expand (png_ptr);
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) 
+    	png_set_tRNS_to_alpha(png_ptr);
+
+    /* Add opaque alpha channel if no alpha channel exist */
+    if (color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_PALETTE)
+        png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
+
+    /* Strip the pixels down to 8 bit */
+    if (bit_depth == 16)
+        png_set_strip_16(png_ptr);
 
     png_set_bgr(png_ptr);
 
     /* all transformations have been registered; now update info_ptr data,
-     * get rowbytes and channels, and allocate image memory */
+     * get rowbytes, and allocate image memory */
 
     png_read_update_info (png_ptr, info_ptr);
 
-    /* get the new color-type and bit-depth (after expansion/stripping) */
-    png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)&img->width, (png_uint_32*)&img->height, &bit_depth, &color_type,
-                  NULL, NULL, NULL);
-
-    /* calculate new number of channels and store alpha-presence */
-    if (color_type == PNG_COLOR_TYPE_GRAY)
-        img->channels = 1;
-    else if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-        img->channels = 2;
-    else if (color_type == PNG_COLOR_TYPE_RGB)
-        img->channels = 3;
-    else if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
-        img->channels = 4;
-    else
-        img->channels = 0; /* should never happen */
-    alpha_present = (img->channels - 1) % 2;
-
+    img->channels = 4;
+    alpha_present = 1;
+    
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
 
