@@ -391,7 +391,7 @@ IF(NOT svg2png_scaling_flag)
    set(svg2png_scaling_flag 32)
 ENDIF()
 IF(NOT svg2png_scaling_nav)
-   set(svg2png_scaling_nav 64)
+   set(svg2png_scaling_nav 64 64)
 ENDIF()
 
 add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
