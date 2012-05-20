@@ -1114,7 +1114,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     png_file=fopen(name, "rb");
     if (!png_file)
     {
-        dbg(0,"failed to open %s\n",name);
+        dbg(1,"failed to open %s\n",name);
         return FALSE;
     }
 
@@ -1410,7 +1410,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             }
         }
         if (!rc) {
-            dbg(0, "failed loading '%s'\n", name );
+            dbg(1, "failed loading '%s'\n", name );
             g_free(ret);
             ret=NULL;
         }

@@ -242,7 +242,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		} else {
 			g_free(ret);
 			ret=NULL;
-			dbg(0,"Failed to open %s\n",path);
+			dbg(1,"Failed to open %s\n",path);
 		}
 		(*jnienv)->DeleteLocalRef(jnienv, string);
 		g_hash_table_insert(image_cache_hash, g_strdup( path ),  (gpointer)ret );
