@@ -78,6 +78,7 @@ struct graphics
 	 * Counter for z_order of displayitems;
 	*/
 	int current_z_order;
+	GHashTable *image_cache_hash;
 };
 
 struct display_context
@@ -244,6 +245,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	this_->contrast=65536;
 	this_->gamma=65536;
 	this_->font_size=20;
+	this_->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	while (*attrs) {
 		graphics_set_attr_do(this_,*attrs);
 		attrs++;
@@ -276,6 +278,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 		return NULL;
 	this_=g_new0(struct graphics, 1);
 	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha, wraparound);
+	this_->image_cache_hash = parent->image_cache_hash;
 	this_->parent = parent;
 	pr.lu.x=0;
 	pr.lu.y=0;
@@ -402,6 +405,22 @@ void graphics_free(struct graphics *gra)
 {
 	if (!gra)
 		return;
+
+	/* If it's not an overlay, free the image cache. */
+	if(!gra->parent) {
+		GHashTableIter iter;
+		char *key;
+		struct graphics_image *img;
+	        g_hash_table_iter_init (&iter, gra->image_cache_hash);
+		while (g_hash_table_iter_next (&iter, (gpointer *) &key, (gpointer *) &img)) {
+			g_hash_table_iter_remove (&iter);
+			g_free(key);
+			if (img && gra->meth.image_free)
+				gra->meth.image_free(gra->priv, img->priv);
+			g_free(img);
+		}
+	}
+
         graphics_gc_destroy(gra->gc[0]);
         graphics_gc_destroy(gra->gc[1]);
         graphics_gc_destroy(gra->gc[2]);
@@ -570,17 +589,7 @@ void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsig
 */
 struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h)
 {
-	struct graphics_image *this_;
-
-	this_=g_new0(struct graphics_image,1);
-	this_->height=h;
-	this_->width=w;
-	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot, 0);
-	if (! this_->priv) {
-		g_free(this_);
-		this_=NULL;
-	}
-	return this_;
+	return graphics_image_new_scaled_rotated(gra, path, w, h, 0);
 }
 
 /**
@@ -596,15 +605,132 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, char *path, int w, int h, int rotate)
 {
 	struct graphics_image *this_;
+	char* hash_key = g_strdup_printf("%s*%d*%d*%d",path,w,h,rotate);
+
+	if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
+		g_free(hash_key);
+		dbg(3,"Found cached image%sfor '%s'\n",this_?" ":" miss ",path);
+		return this_;
+	}
 
 	this_=g_new0(struct graphics_image,1);
 	this_->height=h;
 	this_->width=w;
-	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot, rotate);
+
+	if(!this_->priv) {
+		char *ext;
+		char *s, *name, *new_name;
+		int len=strlen(path);
+		int i,k;
+		int newwidth=-1, newheight=-1;
+
+		ext=g_utf8_strrchr(path,-1,'.');
+		i=path-ext+len;
+		
+		/* Dont allow too long or too short file name extensions*/
+		if(ext && ((i>5) || (i<1)))
+			ext=NULL;
+
+		/* Search for _w_h name part, begin from char before extension if it exists */
+		if(ext)
+			s=ext-1;
+		else
+			s=path+len;
+		
+		k=1;
+		while(s>path && g_ascii_isdigit(*s)) {
+			if(newheight<0)
+				newheight=0;
+			newheight+=(*s-'0')*k;
+			k*=10;
+			s--;
+		}
+		
+		if(k>1 && s>path && *s=='_') {
+			k=1;
+			s--;
+			while(s>path && g_ascii_isdigit(*s)) {
+				if(newwidth<0)
+					newwidth=0;
+				newwidth+=(*s-'0')*k;;
+				k*=10;
+				s--;
+			}
+		}
+		
+		if(k==1 || s<=path || *s!='_') {
+			newwidth=-1;
+			newheight=-1;
+			if(ext)
+				s=ext;
+			else
+				s=path+len;
+				
+		}
+		
+		/* If exact h and w values were given as function parameters, they take precedence over values guessed from the image name */
+		if(w!=-1)
+			newwidth=w;
+		if(h!=-1)
+			newheight=h;
+			
+		name=g_strndup(path,s-path);
+		for (i = 1 ; i < 6 ; i++) {
+			new_name=NULL;
+			switch (i) {
+				case 1:
+					/* The best variant both for cpu usage and quality would be prescaled png of a needed size */
+					if (newwidth != -1 && newheight != -1) {
+						new_name=g_strdup_printf("%s_%d_%d.png", name, newwidth, newheight);
+					}
+					break;
+				case 2:
+					/* Try to load image by the exact name given by user. For example, if she wants to
+					  scale some prescaled png variant to a new size given as function params, or have
+					  default png image to be displayed unscaled. */
+					new_name=g_strdup(path);
+					break;
+				case 3:
+					/* Next, try uncompressed and compressed svgs as they should give best quality but 
+					   rendering might take more cpu resources when the image is displayed for the first time */
+					new_name=g_strdup_printf("%s.svg", name);
+					break;
+				case 4:
+					new_name=g_strdup_printf("%s.svgz", name);
+					break;
+				case 5:
+					/* Scaling the default png to the needed size may give some quality loss */
+					new_name=g_strdup_printf("%s.png", name);
+					break;
+				case 6: 
+					/* xpm format is used as a last resort, because its not widely supported and we are moving to svg and png formats */
+					new_name=g_strdup_printf("%s.xpm", name);
+					break;
+			}
+			if (! new_name)
+				continue;
+
+			this_->width=newwidth;
+			this_->height=newheight;
+			dbg(2,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
+			this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
+			if (this_->priv) {
+				dbg(1,"Using image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
+				break;
+			}
+			g_free(new_name);
+		}
+		g_free(name);
+	}
+
 	if (! this_->priv) {
+		dbg(0,"No image for '%s'\n", path);
 		g_free(this_);
 		this_=NULL;
 	}
+
+        g_hash_table_insert(gra->image_cache_hash, hash_key,  (gpointer)this_ );
+
 	return this_;
 }
 
@@ -617,7 +743,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 */
 struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
 {
-	return graphics_image_new_scaled(gra, path, -1, -1);
+	return graphics_image_new_scaled_rotated(gra, path, -1, -1, 0);
 }
 
 /**
@@ -628,9 +754,7 @@ struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
 */
 void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 {
-	if (gra->meth.image_free)
-		gra->meth.image_free(gra->priv, img->priv);
-	g_free(img);
+	/* Image is cached inside gra->image_cache_hash. So it would be freed only when graphics is destroyed => Do nothing here. */
 }
 
 /**
