@@ -501,50 +501,14 @@ static struct graphics_image *
 image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 {
 	struct graphics_image *ret=NULL;
-	char *full_name=NULL;
 	char *full_path=NULL;
-	int i;
-
-	for (i = 1 ; i < 6 ; i++) {
-		full_name=NULL;
-		switch (i) {
-		case 3:
-			full_name=g_strdup_printf("%s.svg", name);
-			break;
-		case 2:
-			full_name=g_strdup_printf("%s.svgz", name);
-			break;
-		case 1:
-			if (w != -1 && h != -1) {
-				full_name=g_strdup_printf("%s_%d_%d.png", name, w, h);
-			}
-			break;
-		case 4:
-			full_name=g_strdup_printf("%s.png", name);
-			break;
-		case 5:
-			full_name=g_strdup_printf("%s.xpm", name);
-			break;
-		}
-		if (! full_name)
-			continue;
-#if 0
-		/* needs to be checked in the driver */
-		if (!file_exists(full_name)) {
-			g_free(full_name);
-			continue;
-		}
-#endif
-		full_path=graphics_icon_path(full_name);
-		ret=graphics_image_new_scaled(this->gra, full_path, w, h);
-		dbg(1,"Trying to load image '%s' (w=%d, h=%d): %s\n", full_name, w, h, ret ? "OK" : "NOT FOUND");
-		g_free(full_path);
-		g_free(full_name);
-		if (ret)
-			return ret;
-	}
-	dbg(0,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
-	return NULL;
+	full_path=graphics_icon_path(name);
+	ret=graphics_image_new_scaled(this->gra, full_path, w, h);
+	dbg(1,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
+	g_free(full_path);
+	if (!ret)
+		dbg(0,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
+	return ret;
 }
 
 #if 0
