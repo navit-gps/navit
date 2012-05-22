@@ -435,7 +435,7 @@ public class NavitMapDownloader extends Thread
 					file.delete();
 				}
 			}
-				
+
 			if (url == null)
 			{
 				url = new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
@@ -455,12 +455,11 @@ public class NavitMapDownloader extends Thread
 				already_read = old_download_size;
 			}
 
-			real_size_bytes = c.getContentLength();
+			real_size_bytes = c.getContentLength() + already_read;
 			long fileTime = c.getLastModified();
-			Log.d(TAG, "size: " + real_size_bytes 
+			Log.d(TAG, "size: " + real_size_bytes
 					+ ", read: " + already_read
 					+ ", timestamp: " + fileTime);
-			
 
 			if (!resume)
 			{
@@ -471,9 +470,10 @@ public class NavitMapDownloader extends Thread
 				infoStream.writeUTF(c.getURL().getProtocol());
 				infoStream.writeUTF(c.getURL().getHost());
 				infoStream.writeUTF(c.getURL().getFile());
+				infoStream.writeLong(real_size_bytes);
 				infoStream.close();
 			}
-			
+
 			Log.v(TAG, "Connection ref: " + c.getURL());
 			if ( real_size_bytes <= 0)
 				real_size_bytes = map_values.est_size_bytes;
