@@ -116,12 +116,6 @@ find_package(PNG)
 find_package(DBusGLib)
 find_package(OpenSSL)
 find_package(Threads)
-if (NOT CMAKE_USE_PTHREADS_INIT)
-   # We use Pthreads in several places, no point in continuing without.
-   MESSAGE(FATAL_ERROR "PThreads not found. Navit cannot be built without Pthreads.")
-endif(NOT CMAKE_USE_PTHREADS_INIT)
-list(APPEND NAVIT_LIBS "pthread")
-
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
@@ -176,6 +170,12 @@ else()
    endif(NEEDS_LIBINTL)
 endif(NOT HAVE_LIBINTL)
 
+
+if (CMAKE_USE_PTHREADS_INIT) 	 
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}") 	 
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}") 	 
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}") 	 
+endif(CMAKE_USE_PTHREADS_INIT)
 if (Glib_FOUND)
    set(HAVE_GLIB 1)
    include_directories(${Glib_INCLUDE_DIRS})
