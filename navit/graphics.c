@@ -245,7 +245,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	this_->contrast=65536;
 	this_->gamma=65536;
 	this_->font_size=20;
-	this_->image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
 	while (*attrs) {
 		graphics_set_attr_do(this_,*attrs);
 		attrs++;
@@ -411,14 +411,18 @@ void graphics_free(struct graphics *gra)
 		GHashTableIter iter;
 		char *key;
 		struct graphics_image *img;
-	        g_hash_table_iter_init (&iter, gra->image_cache_hash);
-		while (g_hash_table_iter_next (&iter, (gpointer *) &key, (gpointer *) &img)) {
-			g_hash_table_iter_remove (&iter);
-			g_free(key);
+		GList *l;
+
+		/* We can't specify context (pointer to struct graphics) for g_hash_table_new to have it passed to free function
+		   so we have to free img->priv manually, the rest would be freed by g_hash_table_destroy. GHashTableIter isn't used because it
+		   broke n800 build at r5107.
+		*/
+		for(l=g_hash_table_get_values(gra->image_cache_hash);l;l=g_list_next(l)) {
+			img=l->data;
 			if (img && gra->meth.image_free)
 				gra->meth.image_free(gra->priv, img->priv);
-			g_free(img);
 		}
+		g_hash_table_destroy(gra->image_cache_hash);
 	}
 
         graphics_gc_destroy(gra->gc[0]);
