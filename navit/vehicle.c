@@ -145,6 +145,14 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 void
 vehicle_destroy(struct vehicle *this_)
 {
+	/* flush all logfiles on exit to avoid loss of yet unwritten data*/
+	GHashTableIter iter;
+	gpointer key, value;
+	g_hash_table_iter_init (&iter, this_->log_to_cb);
+	while (g_hash_table_iter_next (&iter, &key, &value)) {
+		log_write(key,"",0,log_flag_force_flush);
+	}
+
 	if (this_->animate_callback) {
 		callback_destroy(this_->animate_callback);
 		event_remove_timeout(this_->animate_timer);
