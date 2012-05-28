@@ -290,18 +290,24 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 			/* TODO (rikky#1#): should use blocking */
 			if ( priv->file_type != file_type_file )
 			{
-				dbg(0, "GPS data comes too fast. Have to wait here\n");
+				dbg(3, "GPS data comes too fast. Have to wait here\n");
 			}
 
 			Sleep(50);
 			waitcounter++;
 			if ( waitcounter % 8 == 0 )
 			{
-				dbg(0, "Remind them of the data\n");
+				dbg(1, "Remind them of the data\n");
 				event_call_callback(priv->priv_cbl);
+			}
+			if(waitcounter%2000) {
+				dbg(0,"Will GPS data be ever processed by the main thread? Already %d intervals gone.\n",waitcounter);
 			}
 
 		}
+		
+		if(waitcounter>2)
+			dbg(0,"Sent GPS data to the main thread after %d intervals delay.\n",waitcounter);
 
 		g_mutex_lock(&priv->lock);
 		memcpy(priv->read_buffer + priv->read_buffer_pos , chunk_buffer, bytes_read );
