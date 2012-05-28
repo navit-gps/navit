@@ -52,12 +52,12 @@ typedef int (WINAPI *PFN_BthGetMode)(DWORD* pBthMode);
 char *_convert = NULL;
 wchar_t *_wconvert = NULL;
 #define W2A(lpw) (\
-    ((LPCSTR)lpw == NULL) ? NULL : (\
-          _convert = alloca(wcslen(lpw)+1),  wcstombs(_convert, lpw, wcslen(lpw) + 1), _convert) )
+	((LPCSTR)lpw == NULL) ? NULL : (\
+		_convert = alloca(wcslen(lpw)+1),  wcstombs(_convert, lpw, wcslen(lpw) + 1), _convert) )
 
 #define A2W(lpa) (\
-    ((LPCSTR)lpa == NULL) ? NULL : (\
-          _wconvert = alloca(strlen(lpa)*2+1),  mbstowcs(_wconvert, lpa, strlen(lpa) * 2 + 1), _wconvert) )
+	((LPCSTR)lpa == NULL) ? NULL : (\
+		_wconvert = alloca(strlen(lpa)*2+1),  mbstowcs(_wconvert, lpa, strlen(lpa) * 2 + 1), _wconvert) )
 
 static void vehicle_wince_disable_watch(struct vehicle_priv *priv);
 static void vehicle_wince_enable_watch(struct vehicle_priv *priv);
@@ -82,7 +82,7 @@ struct gps_sat {
 struct vehicle_priv {
 	char *source;
 	struct callback_list *cbl;
-    struct callback_list *priv_cbl;
+	struct callback_list *priv_cbl;
 	int is_running;
 	int thread_up;
 	int fd;
@@ -172,88 +172,88 @@ static void initBth(struct vehicle_priv *priv)
 static int initDevice(struct vehicle_priv *priv)
 {
 	COMMTIMEOUTS commTiming;
-    HANDLE hGPS;
-    if ( priv->m_hGPSDevice )
-        CloseHandle(priv->m_hGPSDevice);
-    
+	HANDLE hGPS;
+	if ( priv->m_hGPSDevice )
+		CloseHandle(priv->m_hGPSDevice);
+	
 	if ( priv->file_type == file_type_device )
 	{
-	    dbg(0, "Init Device\n");
-        /* GPD0 is the control port for the GPS driver */
-        hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-        if (hGPS != INVALID_HANDLE_VALUE) {
+		dbg(0, "Init Device\n");
+		/* GPD0 is the control port for the GPS driver */
+		hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (hGPS != INVALID_HANDLE_VALUE) {
 #ifndef IOCTL_SERVICE_REFRESH
 #define IOCTL_SERVICE_REFRESH 0x4100000C
 #endif
-            DeviceIoControl(hGPS,IOCTL_SERVICE_REFRESH,0,0,0,0,0,0);
+			DeviceIoControl(hGPS,IOCTL_SERVICE_REFRESH,0,0,0,0,0,0);
 #ifndef IOCTL_SERVICE_START
 #define IOCTL_SERVICE_START 0x41000004
 #endif
-            DeviceIoControl(hGPS,IOCTL_SERVICE_START,0,0,0,0,0,0);
-            CloseHandle(hGPS);
-        }
+			DeviceIoControl(hGPS,IOCTL_SERVICE_START,0,0,0,0,0,0);
+			CloseHandle(hGPS);
+		}
 
-        while (priv->is_running &&
-            (priv->m_hGPSDevice = CreateFile(A2W(priv->source),
-                GENERIC_READ, 0,
-                NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
-            Sleep(1000);
-            dbg(0, "Waiting to connect to %s\n", priv->source);
-        }
-        GetCommTimeouts (priv->m_hGPSDevice, &commTiming);
-        commTiming.ReadIntervalTimeout = 20;
-        commTiming.ReadTotalTimeoutMultiplier = 0;
-        commTiming.ReadTotalTimeoutConstant = 200;
+		while (priv->is_running &&
+			(priv->m_hGPSDevice = CreateFile(A2W(priv->source),
+				GENERIC_READ, 0,
+				NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) 
+		{
+			Sleep(1000);
+			dbg(0, "Waiting to connect to %s\n", priv->source);
+		}
+		GetCommTimeouts (priv->m_hGPSDevice, &commTiming);
+		commTiming.ReadIntervalTimeout = 20;
+		commTiming.ReadTotalTimeoutMultiplier = 0;
+		commTiming.ReadTotalTimeoutConstant = 200;
 
-        commTiming.WriteTotalTimeoutMultiplier=5;
-        commTiming.WriteTotalTimeoutConstant=5;
-        SetCommTimeouts (priv->m_hGPSDevice, &commTiming);
+		commTiming.WriteTotalTimeoutMultiplier=5;
+		commTiming.WriteTotalTimeoutConstant=5;
+		SetCommTimeouts (priv->m_hGPSDevice, &commTiming);
 
-        if (priv->baudrate) {
-            DCB portState;
-            if (!GetCommState(priv->m_hGPSDevice, &portState)) {
-                MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
-                    MB_APPLMODAL|MB_OK);
-                priv->thread_up = 0;
-                return 0;
-            }
-            portState.BaudRate = priv->baudrate;
-            if (!SetCommState(priv->m_hGPSDevice, &portState)) {
-                MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
-                    MB_APPLMODAL|MB_OK);
-                priv->thread_up = 0;
-                return 0;
-            }
-        }
-	    
+		if (priv->baudrate) {
+			DCB portState;
+			if (!GetCommState(priv->m_hGPSDevice, &portState)) {
+			MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
+				MB_APPLMODAL|MB_OK);
+			priv->thread_up = 0;
+			return 0;
+			}
+			portState.BaudRate = priv->baudrate;
+			if (!SetCommState(priv->m_hGPSDevice, &portState)) {
+				MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
+					MB_APPLMODAL|MB_OK);
+				priv->thread_up = 0;
+				return 0;
+			}
+		}
+	
 	}
 	else
 	{
-	    dbg(0, "Open File\n");
-        priv->m_hGPSDevice = CreateFileW( A2W(priv->source),
+		dbg(0, "Open File\n");
+		priv->m_hGPSDevice = CreateFileW( A2W(priv->source),
 			GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
-        if ( priv->m_hGPSDevice == INVALID_HANDLE_VALUE) {
-            dbg(0, "Could not open %s\n", priv->source);
-            return 0;
-        }
+		if ( priv->m_hGPSDevice == INVALID_HANDLE_VALUE) {
+			dbg(0, "Could not open %s\n", priv->source);
+			return 0;
+		}
 	}
 	return 1;
-    
 }
 
 static int read_win32(struct vehicle_priv *priv, char *buffer, size_t size)
 {
-    int ret_size;
+	int ret_size;
 
-    g_mutex_lock(&priv->lock);
-    ret_size = MIN(size,priv->read_buffer_pos);
-    priv->has_data = 0;
-    memcpy(buffer, priv->read_buffer, ret_size);
-    
-    memmove(priv->read_buffer, priv->read_buffer + ret_size, buffer_size - ret_size);
-    priv->read_buffer_pos -= ret_size;
-    g_mutex_unlock(&priv->lock);
-    return ret_size;
+	g_mutex_lock(&priv->lock);
+	ret_size = MIN(size,priv->read_buffer_pos);
+	priv->has_data = 0;
+	memcpy(buffer, priv->read_buffer, ret_size);
+	
+	memmove(priv->read_buffer, priv->read_buffer + ret_size, buffer_size - ret_size);
+	priv->read_buffer_pos -= ret_size;
+	g_mutex_unlock(&priv->lock);
+	return ret_size;
 }
 
 static DWORD WINAPI wince_reader_thread (LPVOID lParam)
@@ -267,7 +267,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 	dbg(0, "GPS Port:[%s]\n", priv->source);
 	priv->thread_up = 1;
 	
-    if ( !initDevice(priv) ) {
+	if ( !initDevice(priv) ) {
 		return -1;
 	}
 	while (priv->is_running)
@@ -277,47 +277,46 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 		status = ReadFile(priv->m_hGPSDevice,
 			chunk_buffer, sizeof(chunk_buffer),
 			&bytes_read, NULL);
-	    
-	    if ( !status )
-	    {
-	        dbg(0,"Error reading file/device. Try again.\n");
+
+		if ( !status )
+		{
+			dbg(0,"Error reading file/device. Try again.\n");
 			initDevice(priv);
 			continue;
-	    }
-	    
-	    while ( priv->read_buffer_pos + bytes_read > buffer_size )
-	    {
-/* TODO (rikky#1#): should use blocking */
-            if ( priv->file_type != file_type_file )
-            {
-                dbg(0, "GPS data comes too fast. Have to wait here\n");
-            }
+		}
 
-            Sleep(50);
-            waitcounter++;
-            if ( waitcounter % 8 == 0 )
-            {
-                dbg(0, "Remind them of the data\n");
-                event_call_callback(priv->priv_cbl);
-            }
+		while ( priv->read_buffer_pos + bytes_read > buffer_size )
+		{
+			/* TODO (rikky#1#): should use blocking */
+			if ( priv->file_type != file_type_file )
+			{
+				dbg(0, "GPS data comes too fast. Have to wait here\n");
+			}
 
-	    }
-    
-        g_mutex_lock(&priv->lock);
-	    memcpy(priv->read_buffer + priv->read_buffer_pos , chunk_buffer, bytes_read );
-	    
-	    priv->read_buffer_pos += bytes_read;
-	    
-	    if ( !priv->has_data )
-	    {
-            event_call_callback(priv->priv_cbl);
-	        priv->has_data = 1;
-	    }
-	    
-        g_mutex_unlock(&priv->lock);
-	    
+			Sleep(50);
+			waitcounter++;
+			if ( waitcounter % 8 == 0 )
+			{
+				dbg(0, "Remind them of the data\n");
+				event_call_callback(priv->priv_cbl);
+			}
+
+		}
+
+		g_mutex_lock(&priv->lock);
+		memcpy(priv->read_buffer + priv->read_buffer_pos , chunk_buffer, bytes_read );
+
+		priv->read_buffer_pos += bytes_read;
+		
+		if ( !priv->has_data )
+		{
+			event_call_callback(priv->priv_cbl);
+			priv->has_data = 1;
+		}
+		
+		g_mutex_unlock(&priv->lock);
 	}
-    return TRUE;
+	return TRUE;
 }
 
 static int
@@ -363,9 +362,9 @@ vehicle_wince_available_ports(void)
 static int
 vehicle_wince_open(struct vehicle_priv *priv)
 {
-    char* raw_setting_str;
-    char* strport;
-    char* strsettings;
+	char* raw_setting_str;
+	char* strport;
+	char* strsettings;
 
 	dbg(1, "enter vehicle_wince_open, priv->source='%s'\n", priv->source);
 
@@ -397,7 +396,7 @@ vehicle_wince_open(struct vehicle_priv *priv)
 static void
 vehicle_wince_close(struct vehicle_priv *priv)
 {
-    dbg(1,"enter");
+	dbg(1,"enter");
 }
 
 static int
@@ -419,9 +418,9 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n') {
 			buffer[--len] = '\0';
-            if (buffer[len - 1] == '\r')
-                buffer[--len] = '\0';
-        } else
+			if (buffer[len - 1] == '\r')
+				buffer[--len] = '\0';
+		} else
 			break;
 	}
 	if (buffer[0] != '$') {
@@ -486,7 +485,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
 			priv->valid=attr_position_valid_valid;
-            dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+		dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
 		} else
 			priv->valid=attr_position_valid_invalid;
@@ -642,7 +641,7 @@ vehicle_wince_io(struct vehicle_priv *priv)
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
 	dbg(1, "size=%d pos=%d buffer='%s'\n", size,
-	    priv->buffer_pos, priv->buffer);
+		priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
@@ -658,10 +657,10 @@ vehicle_wince_io(struct vehicle_priv *priv)
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
 		dbg(2, "now pos=%d buffer='%s'\n",
-		    priv->buffer_pos, priv->buffer);
+			priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
 		dbg(0,
-		    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
+			"Overflow. Most likely wrong baud rate or no nmea protocol\n");
 		priv->buffer_pos = 0;
 	}
 	if (rc)
@@ -671,13 +670,13 @@ vehicle_wince_io(struct vehicle_priv *priv)
 static void
 vehicle_wince_enable_watch(struct vehicle_priv *priv)
 {
-    dbg(1, "enter");
+	dbg(1, "enter");
 	vehicle_wince_disable_watch(priv);
 	priv->is_running = 1;
 
-    InitializeCriticalSection(&priv->lock);
-    priv->m_hGPSThread = CreateThread(NULL, 0, wince_reader_thread,
-        priv, 0, &priv->m_dwGPSThread);
+	InitializeCriticalSection(&priv->lock);
+	priv->m_hGPSThread = CreateThread(NULL, 0, wince_reader_thread,
+	priv, 0, &priv->m_dwGPSThread);
 
 	if (!priv->m_hGPSThread) {
 		priv->is_running = 0;
@@ -692,7 +691,7 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv)
 {
 	int wait = 5000;
 
-    dbg(1, "enter");
+	dbg(1, "enter");
 
 	priv->is_running = 0;
 	while (wait-- > 0 && priv->thread_up) {
@@ -797,7 +796,7 @@ static int
 vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)
 {
 	struct vehicle_priv *priv=priv_data;
-    struct gps_sat *sat;
+	struct gps_sat *sat;
 
 	if (priv->sat_item.id_lo < 1)
 		return 0;
@@ -865,8 +864,8 @@ vehicle_wince_new(struct vehicle_methods
 	cp = strchr(source->u.str,':');
 	if (cp)
 	{
-	    if ( strncmp(source->u.str, "file", 4) == 0 )
-	        ret->file_type = file_type_file;
+		if ( strncmp(source->u.str, "file", 4) == 0 )
+			ret->file_type = file_type_file;
 		cp++;
 	}
 	else
@@ -901,7 +900,7 @@ vehicle_wince_new(struct vehicle_methods
 	ret->sat_item.priv_data=ret;
 	ret->sat_item.meth=&vehicle_wince_sat_methods;
 
-    ret->read_buffer = g_malloc(buffer_size);
+	ret->read_buffer = g_malloc(buffer_size);
 
 	handle_bluetooth = attr_search(attrs, NULL, attr_bluetooth);
 	if ( handle_bluetooth && handle_bluetooth->u.num == 1 )
