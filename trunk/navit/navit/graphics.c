@@ -408,20 +408,19 @@ void graphics_free(struct graphics *gra)
 
 	/* If it's not an overlay, free the image cache. */
 	if(!gra->parent) {
-		GHashTableIter iter;
-		char *key;
 		struct graphics_image *img;
-		GList *l;
+		GList *ll, *l;
 
 		/* We can't specify context (pointer to struct graphics) for g_hash_table_new to have it passed to free function
 		   so we have to free img->priv manually, the rest would be freed by g_hash_table_destroy. GHashTableIter isn't used because it
 		   broke n800 build at r5107.
 		*/
-		for(l=g_hash_table_get_values(gra->image_cache_hash);l;l=g_list_next(l)) {
+		for(ll=l=g_hash_to_list(gra->image_cache_hash);l;l=g_list_next(l)) {
 			img=l->data;
 			if (img && gra->meth.image_free)
 				gra->meth.image_free(gra->priv, img->priv);
 		}
+		g_list_free(ll);
 		g_hash_table_destroy(gra->image_cache_hash);
 	}
 
