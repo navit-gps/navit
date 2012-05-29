@@ -2175,9 +2175,11 @@ static void
 gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct attr v;
-	v.type=attr_vehicle;
-	v.u.vehicle=NULL;
-	navit_set_attr(this->nav, &v);
+	if(data) {
+		v.type=attr_vehicle;
+		v.u.vehicle=NULL;
+		navit_set_attr(this->nav, &v);
+	}
 	navit_set_position(this->nav, &wm->c);
 	gui_internal_prune_menu(this, NULL);
 }
@@ -3711,16 +3713,20 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->c=pc;
 	}
 	if (flags & 16) {
-		const char *text=_("Set as position");
-		struct attr vehicle;
-		if (navit_get_attr(this->nav, attr_vehicle, &vehicle, NULL) && vehicle.u.vehicle) 
-			text=_("Set as position (and deactivate vehicle)");
+		const char *text;
+		struct attr vehicle, source;
+		int deactivate=0;
+		if (navit_get_attr(this->nav, attr_vehicle, &vehicle, NULL) && vehicle.u.vehicle && 
+				!(vehicle_get_attr(vehicle.u.vehicle, attr_source, &source, NULL) && source.u.str && !strcmp("demo://",source.u.str))) 
+			deactivate=1;
+
+		text=deactivate? _("Set as position (and deactivate vehicle)") : _("Set as position");
 
 		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, text,
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_set_position, wm));
+			gui_internal_cmd_set_position, (void*)deactivate));
 		wbc->c=pc;
 	}
 	if (flags & 32) {
