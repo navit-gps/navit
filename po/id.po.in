@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-05-27 15:01+0000\n"
 "Last-Translator: M Bambang I <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
@@ -1280,6 +1280,41 @@ msgstr "Zimbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr ""
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Letak pada peta"
+
 msgid "Car"
 msgstr "Mibil"
 
@@ -1493,6 +1528,9 @@ msgstr "POIs"
 msgid "View in Browser"
 msgstr ""
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "jalan"
 
@@ -1502,8 +1540,17 @@ msgstr "Nomor Rumah"
 msgid "View Attributes"
 msgstr "Lihat atribut"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Lihat pada peta"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Hapus penanda"
@@ -1521,6 +1568,18 @@ msgid "Delete Bookmark"
 msgstr ""
 
 msgid "Bookmarks"
+msgstr ""
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
 msgstr ""
 
 #. Pastes the Bookmark
@@ -1615,6 +1674,9 @@ msgstr "Keutara"
 msgid "Map follows Vehicle"
 msgstr "Peta mengikuti kendaraan"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Pesan"
 
@@ -1657,9 +1719,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Letak pada peta"
 
 msgid "Vehicle Position"
 msgstr "Posisi kendaraan"
@@ -1715,6 +1774,16 @@ msgstr ""
 
 msgid "Description"
 msgstr "Deskripsi"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

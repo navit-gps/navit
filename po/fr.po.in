@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-29 18:04+0200\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-06-18 19:16+0000\n"
 "Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -1289,6 +1289,41 @@ msgstr "Zimbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "Inconnu, ajoutez des étiquettes d'is_in à ces villes"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Point sur la carte"
+
 msgid "Car"
 msgstr "Voiture"
 
@@ -1514,6 +1549,9 @@ msgstr "Numéros de maison"
 msgid "View Attributes"
 msgstr "Voir les attributs"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Voir sur la carte"
 
@@ -1690,10 +1728,6 @@ msgstr "Attention! Radar!"
 #. warning told
 msgid "Please decrease your speed"
 msgstr "Veuillez ralentir"
-
-#. Strings from navit_shipped.xml
-msgid "Map Point"
-msgstr "Point sur la carte"
 
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
