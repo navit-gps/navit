@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-05-28 14:54+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -1288,6 +1288,41 @@ msgstr "Зімбабве"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "Новідомо, додайте is_in теґ до цих міст"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Точка на карті"
+
 msgid "Car"
 msgstr "Машина"
 
@@ -1501,6 +1536,9 @@ msgstr "Інформація про об’єкти"
 msgid "View in Browser"
 msgstr "Показати в переглядачі"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Вулиці"
 
@@ -1510,8 +1548,17 @@ msgstr "Номери будинків"
 msgid "View Attributes"
 msgstr "Показати атрибути"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Показати на карті"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Вирізати закладку"
@@ -1530,6 +1577,18 @@ msgstr "Вилучити закладку"
 
 msgid "Bookmarks"
 msgstr "Закладки"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1623,6 +1682,9 @@ msgstr "Північніше"
 msgid "Map follows Vehicle"
 msgstr "Карта слідує за транспортним засобом"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Повідомлення"
 
@@ -1665,9 +1727,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Точка на карті"
 
 msgid "Vehicle Position"
 msgstr "Положення транспорту"
@@ -1723,6 +1782,16 @@ msgstr "Режим вікна"
 
 msgid "Description"
 msgstr "Опис"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

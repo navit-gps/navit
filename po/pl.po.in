@@ -7,13 +7,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-06-09 18:10+0000\n"
 "Last-Translator: Lukasz Semler <lukasz_semler@o2.pl>\n"
 "Language-Team: Translators\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
@@ -1290,6 +1290,41 @@ msgstr "Zimbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Nieznane, dodaj tag \"is_in\" dla tych miast"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Punkt na mapie"
+
 msgid "Car"
 msgstr "Samochód"
 
@@ -1503,6 +1538,9 @@ msgstr "Użyteczne miejsca"
 msgid "View in Browser"
 msgstr "Zobacz w przeglądarce"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Ulice"
 
@@ -1512,8 +1550,17 @@ msgstr "Numery domów"
 msgid "View Attributes"
 msgstr "Zobacz właściwości"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Zobacz na mapie"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Wytnij zakładkę"
@@ -1532,6 +1579,18 @@ msgstr "Usuń zakładkę"
 
 msgid "Bookmarks"
 msgstr "Zakładki"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1625,6 +1684,9 @@ msgstr "Północ zawsze na górze"
 msgid "Map follows Vehicle"
 msgstr "Wyśrodkuj mapę"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Wiadomość"
 
@@ -1667,9 +1729,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Punkt na mapie"
 
 msgid "Vehicle Position"
 msgstr "Pozycja pojazdu"
@@ -1725,6 +1784,16 @@ msgstr "Tryb Widoku"
 
 msgid "Description"
 msgstr "Opis"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

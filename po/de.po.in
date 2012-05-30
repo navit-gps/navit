@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-06 17:30+0200\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -1287,6 +1287,41 @@ msgstr "Simbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "*Unbekannt, füge Etikett \"ist in\" zu diesen Städten hinzu"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Keine Konfigurations-Datei navit.xml oder navit.xml.local gefunden\n"
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr "Fehler beim Parsen der Konfigurations-Datei '%s': %s\n"
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr "Benutze Konfigurations-Datei '%s'\n"
+
+msgid "Internal initialization failed, exiting\n"
+msgstr "Interne Initialisierung fehlgeschlagen, Programm wird beendet\n"
+
+msgid "unknown street"
+msgstr "unbekannte Straße"
+
+msgid "Failed to write bookmarks file"
+msgstr "Lesezeichen-Datei konnte nicht geschrieben werden"
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Kartenpunkt"
+
 msgid "Car"
 msgstr "Auto"
 
@@ -1693,10 +1728,6 @@ msgstr "Achtung Blitzer!"
 #. warning told
 msgid "Please decrease your speed"
 msgstr "Bitte Geschwindigkeit verringern"
-
-#. Strings from navit_shipped.xml
-msgid "Map Point"
-msgstr "Kartenpunkt"
 
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"

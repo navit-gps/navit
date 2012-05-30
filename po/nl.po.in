@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-06-17 08:22+0000\n"
 "Last-Translator: Christ van Willegen <cvwillegen+launchpad@gmail.com>\n"
 "Language-Team: afaber\n"
@@ -1285,6 +1285,41 @@ msgstr "Zimbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Onbekend, voeg een is_in-label toe aan deze steden"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Punt op de kaart"
+
 msgid "Car"
 msgstr "Auto"
 
@@ -1501,6 +1536,9 @@ msgstr "bezienswaardigheden"
 msgid "View in Browser"
 msgstr "Bekijk in browser"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Straten"
 
@@ -1510,8 +1548,17 @@ msgstr "huisnummers"
 msgid "View Attributes"
 msgstr "Bekijk eigenschappen"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Bekijk op de kaart"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr ""
@@ -1530,6 +1577,18 @@ msgstr "Verwijder Bladwijzer"
 
 msgid "Bookmarks"
 msgstr "Favorieten"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1623,6 +1682,9 @@ msgstr "Noord boven"
 msgid "Map follows Vehicle"
 msgstr "Kaart volgt voertuig"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Boodschap"
 
@@ -1665,9 +1727,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Punt op de kaart"
 
 msgid "Vehicle Position"
 msgstr "Voertuigpositie"
@@ -1725,6 +1784,16 @@ msgstr "Venstermodus"
 
 msgid "Description"
 msgstr "Beschrijving"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

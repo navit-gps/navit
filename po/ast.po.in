@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-05-21 17:35+0000\n"
 "Last-Translator: Xuacu Saturio <xuacusk8@gmail.com>\n"
 "Language-Team: Asturian <ast@li.org>\n"
@@ -1283,6 +1283,41 @@ msgstr "Zimbabue"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Desconocíes, amestar etiquetes is_in a eses ciudaes"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Puntu del mapa"
+
 msgid "Car"
 msgstr "Coche"
 
@@ -1496,6 +1531,9 @@ msgstr "PDIs"
 msgid "View in Browser"
 msgstr "Ver nel navegador"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Cais"
 
@@ -1505,8 +1543,17 @@ msgstr "Númberos de portal"
 msgid "View Attributes"
 msgstr "Ver atributos"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Ver nel mapa"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Cortar marcador"
@@ -1525,6 +1572,18 @@ msgstr "Desaniciar marcador"
 
 msgid "Bookmarks"
 msgstr "Marcadores"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1618,6 +1677,9 @@ msgstr "Llatitú"
 msgid "Map follows Vehicle"
 msgstr "El mapa sigue al vehículu"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Mensax"
 
@@ -1660,9 +1722,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Puntu del mapa"
 
 msgid "Vehicle Position"
 msgstr "Posición del vehículu"
@@ -1718,6 +1777,16 @@ msgstr "Mou ventana"
 
 msgid "Description"
 msgstr "Descripción"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""
