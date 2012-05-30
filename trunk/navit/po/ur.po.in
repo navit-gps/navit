@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-11-14 14:11+0000\n"
 "Last-Translator: asghar <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
@@ -1284,6 +1284,41 @@ msgstr "زمبابوے"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* نامعلوم شہروں کیلیئے"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "نقشہ کا نقطہ"
+
 msgid "Car"
 msgstr "کار"
 
@@ -1497,6 +1532,9 @@ msgstr "پسندیدہ جگہیں"
 msgid "View in Browser"
 msgstr "براؤزر میں دیکھیں"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "سڑکیں"
 
@@ -1506,8 +1544,17 @@ msgstr "مکان نمبر"
 msgid "View Attributes"
 msgstr "خصوصیات دیکھں"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "نقشہ پہ دیکھیں"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "بک مارک کو کاٹیں"
@@ -1526,6 +1573,18 @@ msgstr "ڈیلیٹ بک مارک"
 
 msgid "Bookmarks"
 msgstr "بک مارکس"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1619,6 +1678,9 @@ msgstr "شمالی سمت"
 msgid "Map follows Vehicle"
 msgstr "نقشہ گاڑی کا تعاقب کرے"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "پیغام"
 
@@ -1661,9 +1723,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "نقشہ کا نقطہ"
 
 msgid "Vehicle Position"
 msgstr "گاڑی کی حالت"
@@ -1719,6 +1778,16 @@ msgstr "ونڈو موڈ"
 
 msgid "Description"
 msgstr "تفصیل"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

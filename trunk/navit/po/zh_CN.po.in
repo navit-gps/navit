@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2009-12-20 20:38+0000\n"
 "Last-Translator: Kyle WANG <waxaca@163.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -1279,6 +1279,41 @@ msgstr "津巴布韦"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* 未知，添加标签"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "地图位置点"
+
 msgid "Car"
 msgstr "汽车"
 
@@ -1492,6 +1527,9 @@ msgstr "您可能感兴趣的位置"
 msgid "View in Browser"
 msgstr "在浏览器中查看"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "街道"
 
@@ -1501,8 +1539,17 @@ msgstr "编号"
 msgid "View Attributes"
 msgstr "查看属性"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "在地图中查看"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "剪切标签"
@@ -1521,6 +1568,18 @@ msgstr "删除标签"
 
 msgid "Bookmarks"
 msgstr "书签"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1614,6 +1673,9 @@ msgstr "总指向北"
 msgid "Map follows Vehicle"
 msgstr "随车显示地图"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "信息"
 
@@ -1656,9 +1718,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "地图位置点"
 
 msgid "Vehicle Position"
 msgstr "车辆位置"
@@ -1710,6 +1769,16 @@ msgstr "窗口模式"
 
 msgid "Description"
 msgstr "描述"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""

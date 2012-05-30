@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2009-07-02 21:39+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -1292,6 +1292,41 @@ msgstr "Zimbabve"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr ""
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr ""
+
 msgid "Car"
 msgstr "Avto"
 
@@ -1505,6 +1540,9 @@ msgstr ""
 msgid "View in Browser"
 msgstr "Prikaz v brskalniku"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Ceste"
 
@@ -1514,8 +1552,17 @@ msgstr ""
 msgid "View Attributes"
 msgstr "Prikaz lastnosti"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Prikaz na zemljevidu"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr ""
@@ -1534,6 +1581,18 @@ msgstr ""
 
 msgid "Bookmarks"
 msgstr "Zaznamki"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1627,6 +1686,9 @@ msgstr "Sever zgoraj"
 msgid "Map follows Vehicle"
 msgstr "Zemljevid sledi vozilu"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr ""
 
@@ -1668,9 +1730,6 @@ msgstr ""
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
-
-msgid "Map Point"
 msgstr ""
 
 msgid "Vehicle Position"
@@ -1722,6 +1781,16 @@ msgid "Window Mode"
 msgstr "Okenski način"
 
 msgid "Description"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
 msgstr ""
 
 msgid "car_shortest"

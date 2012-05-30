@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 18:13+0100\n"
+"POT-Creation-Date: 2012-05-23 20:16+0200\n"
 "PO-Revision-Date: 2010-06-08 07:37+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@gmail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -1284,6 +1284,41 @@ msgstr "Zimbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Tuntematon, lisätä is_in koodit näistä kaupungeista"
 
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Internal initialization failed, exiting\n"
+msgstr ""
+
+msgid "unknown street"
+msgstr ""
+
+msgid "Failed to write bookmarks file"
+msgstr ""
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Karttapiste"
+
 msgid "Car"
 msgstr "Auto"
 
@@ -1500,6 +1535,9 @@ msgstr "POIt"
 msgid "View in Browser"
 msgstr "Näytä selaimessa"
 
+msgid "Item type"
+msgstr ""
+
 msgid "Streets"
 msgstr "Kadut"
 
@@ -1509,8 +1547,17 @@ msgstr "Talojen numerot"
 msgid "View Attributes"
 msgstr "Näytä ominaisuudet"
 
+msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
 msgid "View on map"
 msgstr "Näytä kartalla"
+
+msgid "Remove search results from the map"
+msgstr ""
+
+msgid "Show results on the map"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Leikkaa kirjanmerkki"
@@ -1529,6 +1576,18 @@ msgstr "Poista kirjanmerkki"
 
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
+
+msgid "Bookmarks as Waypoints"
+msgstr ""
+
+msgid "Save Waypoints"
+msgstr ""
+
+msgid "Replace Waypoints"
+msgstr ""
+
+msgid "Delete Folder"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1622,6 +1681,9 @@ msgstr "Pohjoinen ylhäällä"
 msgid "Map follows Vehicle"
 msgstr "Kartta seuraa ajoneuvoa"
 
+msgid "Plan with Waypoints"
+msgstr ""
+
 msgid "Message"
 msgstr "Viesti"
 
@@ -1664,9 +1726,6 @@ msgstr ""
 #. warning told
 msgid "Please decrease your speed"
 msgstr ""
-
-msgid "Map Point"
-msgstr "Karttapiste"
 
 msgid "Vehicle Position"
 msgstr "Ajoneuvon sijainti"
@@ -1722,6 +1781,16 @@ msgstr "Ikkunatila"
 
 msgid "Description"
 msgstr "Kuvaus"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
 
 msgid "car_shortest"
 msgstr ""
