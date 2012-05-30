@@ -35,11 +35,11 @@ ADD_CUSTOM_COMMAND(
 )
 
 ADD_CUSTOM_COMMAND(
-   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit.po
+   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit.pot
    DEPENDS ${POTFILES}
    COMMAND ${XGETTEXT} --no-location --default-domain=navit_tmp --add-comments --keyword=_ --keyword=_n ${POTFILES}
    COMMAND ${CMAKE_COMMAND} -DMATCHES="CHARSET" -DREPLACE="utf-8"
-                            -DSRC=${CMAKE_CURRENT_BINARY_DIR}/navit_tmp.po -DDST=${CMAKE_CURRENT_BINARY_DIR}/navit.po
+                            -DSRC=${CMAKE_CURRENT_BINARY_DIR}/navit_tmp.po -DDST=${CMAKE_CURRENT_BINARY_DIR}/navit.pot
                             -P ${PROJECT_SOURCE_DIR}/cmake/replace.cmake 
 )
 
@@ -50,9 +50,9 @@ string(REPLACE ".po.in" "" LANGUAGES "${POIN_FILES}")
 foreach (LANG ${LANGUAGES})
    ADD_CUSTOM_COMMAND(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po
-      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/navit.po
+      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/navit.pot ${CMAKE_CURRENT_SOURCE_DIR}/${LANG}.po.in
       COMMAND ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/${LANG}.po.in -D DST=${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po.tmp -DPACKAGE_STRING=${PACKAGE_STRING} -P ${PROJECT_SOURCE_DIR}/cmake/navit_po_version.cmake
-      COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --no-fuzzy-matching --verbose -o "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po" "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po.tmp" ${CMAKE_CURRENT_BINARY_DIR}/navit.po
+      COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --no-fuzzy-matching --verbose --quiet -o "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po" "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po.tmp" ${CMAKE_CURRENT_BINARY_DIR}/navit.pot
       COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po.tmp"
    )
 endforeach(LANG ${LANGUAGES})
