@@ -182,7 +182,7 @@ int main_real(int argc, char **argv)
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
-		dbg(0,"trying %s\n",config_file);
+		dbg(1,"trying %s\n",config_file);
 		if (file_exists(config_file))
 		{
 			break;
@@ -193,9 +193,9 @@ int main_real(int argc, char **argv)
 	}
 
 	if (!config_load(config_file, &error)) {
-		dbg(0, _("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
+		dbg(0, _("Error parsing config file '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
-		dbg(0, _("Using '%s'\n"), config_file);
+		dbg(0, _("Using config file '%s'\n"), config_file);
 	}
 	while (li) {
 		g_free(li->data);
@@ -203,7 +203,7 @@ int main_real(int argc, char **argv)
 	}
 	g_list_free(list);
 	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
-		dbg(0, _("No instance has been created, exiting\n"));
+		dbg(0, _("Internal initialization failed, exiting. Check previous error messages.\n"));
 		exit(5);
 	}
 	conf.type=attr_config;
