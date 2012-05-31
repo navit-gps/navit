@@ -171,8 +171,10 @@ else()
 endif(NOT HAVE_LIBINTL)
 
 
-if (CMAKE_USE_PTHREADS_INIT) 	 
-   list(APPEND NAVIT_LIBS pthread)
+if (CMAKE_USE_PTHREADS_INIT)
+   if (NOT ANDROID)
+      list(APPEND NAVIT_LIBS pthread)
+   endif(NOT ANDROID)
 endif(CMAKE_USE_PTHREADS_INIT)
 if (Glib_FOUND)
    set(HAVE_GLIB 1)
