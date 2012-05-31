@@ -137,7 +137,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 		mCountryButton = new ImageButton(this);
 
-		mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
+		mCountryButton.setImageResource(getDrawableID("country_" + mCountry));
 
 		mCountryButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
