@@ -42,6 +42,8 @@ struct vehicleprofile {
 };
 
 struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs);
+struct attr_iter *vehicleprofile_attr_iter_new(void);
+void vehicleprofile_attr_iter_destroy(struct attr_iter *iter);
 int vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr);
 int vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr);
