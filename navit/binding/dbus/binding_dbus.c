@@ -353,6 +353,16 @@ dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage
 	return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path parameter invalid");
 }
 
+static DBusHandlerResult
+dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message)
+{
+#if 1
+	return dbus_error(connection, message, DBUS_ERROR_FILE_NOT_FOUND, "no data available");
+#else
+	return empty_reply(connection, message);
+#endif
+}
+
 #if 0
 static void
 dbus_dump_iter(char *prefix, DBusMessageIter *iter)
@@ -688,7 +698,7 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	return empty_reply(connection, message);
+	return dbus_error_no_data_available(connection, message);
 
 }
 
@@ -849,7 +859,7 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	return empty_reply(connection, message);
+	return dbus_error_no_data_available(connection, message);
 }
 
 /* gui */
@@ -1373,7 +1383,7 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 	result=search_list_get_result(search_list);
 	if (!result)
-		return empty_reply(connection, message);
+		return dbus_error_no_data_available(connection, message);
 	reply = dbus_message_new_method_return(message);
 	dbus_message_iter_init_append(reply, &iter);
 	dbus_message_iter_append_basic(&iter, DBUS_TYPE_INT32, &result->id);
