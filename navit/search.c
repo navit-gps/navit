@@ -37,6 +37,12 @@
 #endif
 #include "layout.h"
 
+static struct search_list_result *search_list_result_dup(struct search_list_result *slr);
+static void search_list_country_destroy(struct search_list_country *this_);
+static void search_list_town_destroy(struct search_list_town *this_);
+static void search_list_street_destroy(struct search_list_street *this_);
+static void search_list_house_number_destroy(struct search_list_house_number *this_);
+
 struct search_list_level {
 	struct mapset *ms;
 	struct search_list_common *parent;
@@ -63,6 +69,8 @@ struct search_list {
 	int last_result_valid;
 	char *postal;
 	struct interpolation inter;
+	int use_address_results;
+	GList *address_results,*address_results_pos;
 };
 
 static guint
@@ -146,6 +154,197 @@ interpolation_clear(struct interpolation *inter)
 	inter->first=inter->last=inter->curr=NULL;
 }
 
+static char *
+search_fix_spaces(char *str)
+{
+	int i;
+	int len=strlen(str);
+	char c,*s,*d,*ret=g_strdup(str);
+
+	for (i = 0 ; i < len ; i++) {
+		if (ret[i] == ',' || ret[i] == ',' || ret[i] == '/')
+			ret[i]=' ';
+	}
+	s=ret;
+	d=ret;
+	len=0;
+	do {
+		c=*s++;
+		if (c != ' ' || len != 0) {
+			*d++=c;
+			len++;
+		}
+		while (c == ' ' && *s == ' ')
+			s++;
+		if (c == ' ' && *s == '\0') {
+			d--;
+			len--;
+		}
+	} while (c);
+	return ret;
+}
+
+struct phrase {
+	char *start;
+	char *end;
+	int wordcount;
+};
+
+static GList *
+search_split_phrases(char *str)
+{
+	char *s,*d;
+	int wordcount=0;
+	s=str;
+	GList *ret=NULL;
+	do {
+		d=s;
+		wordcount=0;
+		do {
+			d++;
+			if (*d == ' ' || *d == '\0') {
+				struct phrase *phrase=g_new(struct phrase, 1);
+				phrase->start=s;
+				phrase->end=d;
+				phrase->wordcount=++wordcount;	
+				ret=g_list_append(ret, phrase);
+			}
+		} while (*d != '\0');
+		do {
+			s++;
+			if (*s == ' ') {
+				s++;
+				break;
+			}
+		} while (*s != '\0');
+	} while (*s != '\0');
+	return ret;
+}
+
+static char *
+search_phrase_str(struct phrase *p)
+{
+	int len=p->end-p->start;
+	char *ret=g_malloc(len+1);
+	strncpy(ret, p->start, len);
+	ret[len]='\0';
+	return ret;
+}
+
+static int
+search_phrase_used(struct phrase *p, GList *used_phrases)
+{
+	while (used_phrases) {
+		struct phrase *pu=used_phrases->data;
+		dbg(1,"'%s'-'%s' vs '%s'-'%s'\n",p->start,p->end,pu->start,pu->end);
+		if (p->start < pu->end && p->end > pu->start)
+			return 1;
+		dbg(1,"unused\n");
+		used_phrases=g_list_next(used_phrases);
+	}
+	return 0;
+}
+
+static gint
+search_by_address_compare(gconstpointer a, gconstpointer b)
+{
+	const struct search_list_result *slra=a;
+	const struct search_list_result *slrb=b;
+	return slrb->id-slra->id;
+}
+
+
+static GList *
+search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, GList *exclude, enum attr_type attr_type, int wordcount)
+{
+	GList *tmp=phrases;
+	struct attr attr;
+	attr.type=attr_type;
+	while (tmp) {
+		if (!search_phrase_used(tmp->data, exclude)) {
+			struct phrase *p=tmp->data;
+			int count=0,wordcount_all=wordcount+p->wordcount;
+			struct search_list_result *slr;
+			attr.u.str=search_phrase_str(p);
+			dbg(1,"%s phrase '%s'\n",attr_to_name(attr_type),attr.u.str);
+			search_list_search(sl, &attr, 0);
+			while ((slr=search_list_get_result(sl))) {
+				if (attr_type != attr_country_all) {
+					struct search_list_result *slrd=search_list_result_dup(slr);
+					slrd->id=wordcount_all;
+					results=g_list_insert_sorted(results, slrd, search_by_address_compare);
+				}
+				count++;
+			}
+			dbg(1,"%d results wordcount %d\n",count,wordcount_all);
+			if (count) {
+				GList *used=g_list_prepend(g_list_copy(exclude), tmp->data);
+				enum attr_type new_attr_type=attr_none;
+				switch (attr_type) {
+				case attr_country_all:
+					new_attr_type=attr_town_or_district_name;
+					break;
+				case attr_town_or_district_name:
+					new_attr_type=attr_street_name;
+					break;
+				case attr_street_name:
+					new_attr_type=attr_house_number;
+					break;
+				default:
+					break;
+				}
+				if (new_attr_type != attr_none)
+					results=search_by_address_attr(results, sl, phrases, used, new_attr_type, wordcount_all);
+				g_list_free(used);
+			}
+			g_free(attr.u.str);
+		}
+		tmp=g_list_next(tmp);
+	}
+	return results;
+}
+
+static void
+search_by_address(struct search_list *this_, char *addr)
+{
+	char *str=search_fix_spaces(addr);
+	GList *tmp,*phrases=search_split_phrases(str);
+	struct search_list *sl=search_list_new(this_->ms);
+	this_->address_results=search_by_address_attr(NULL, sl, phrases, NULL, attr_country_all, 0);
+	this_->address_results_pos=this_->address_results;
+	search_list_destroy(sl);
+	tmp=phrases;
+	while (tmp) {
+		g_free(tmp->data);
+		tmp=g_list_next(tmp);
+	}	
+	g_list_free(phrases);
+}
+
+static void
+search_address_results_free(struct search_list *this_)
+{
+	GList *tmp;
+	tmp=this_->address_results;
+	while (tmp) {
+		struct search_list_result *slr=tmp->data;
+		if (slr->country);
+			search_list_country_destroy(slr->country);
+		if (slr->town)
+			search_list_town_destroy(slr->town);
+		if (slr->street)
+			search_list_street_destroy(slr->street);
+		if (slr->house_number)
+			search_list_house_number_destroy(slr->house_number);
+		if (slr->c)
+			g_free(slr->c);
+		g_free(slr);
+		tmp=g_list_next(tmp);
+	}
+	g_list_free(this_->address_results);
+	this_->address_results=this_->address_results_pos=NULL;
+}
+
 /**
  * @brief Start a search.
  *
@@ -157,7 +356,15 @@ void
 search_list_search(struct search_list *this_, struct attr *search_attr, int partial)
 {
 	struct search_list_level *le;
-	int level=search_list_level(search_attr->type);
+	int level;
+	search_address_results_free(this_);
+	if (search_attr->type == attr_address) {
+		search_by_address(this_, search_attr->u.str);
+		this_->use_address_results=1;
+		return;	
+	}
+	this_->use_address_results=0;
+	level=search_list_level(search_attr->type);
 	this_->item=NULL;
 	interpolation_clear(&this_->inter);
 	//dbg(0,"level=%d\n", level);
@@ -238,6 +445,21 @@ search_list_common_new(struct item *item, struct search_list_common *common)
 }
 
 static void
+search_list_common_dup(struct search_list_common *src, struct search_list_common *dst)
+{
+	dst->town_name=map_convert_dup(src->town_name);
+	dst->district_name=map_convert_dup(src->district_name);
+	dst->county_name=map_convert_dup(src->county_name);
+	dst->postal=map_convert_dup(src->postal);
+	dst->postal_mask=map_convert_dup(src->postal_mask);
+	if (src->c) {
+		dst->c=g_new(struct pcoord, 1);
+		*dst->c=*src->c;
+	} else
+		dst->c=NULL;
+}
+
+static void
 search_list_common_destroy(struct search_list_common *common)
 {
 	map_convert_free(common->town_name);
@@ -245,6 +467,14 @@ search_list_common_destroy(struct search_list_common *common)
 	map_convert_free(common->county_name);
 	map_convert_free(common->postal);
 	map_convert_free(common->postal_mask);
+	if (common->c)
+		g_free(common->c);
+	common->town_name=NULL;
+	common->district_name=NULL;
+	common->county_name=NULL;
+	common->postal=NULL;
+	common->postal_mask=NULL;
+	common->c=NULL;
 }
 
 static struct search_list_country *
@@ -269,6 +499,18 @@ search_list_country_new(struct item *item)
 		ret->iso3=g_strdup(attr.u.str);
 	if (item_attr_get(item, attr_country_name, &attr))
 		ret->name=g_strdup(attr.u.str);
+	return ret;
+}
+
+static struct search_list_country *
+search_list_country_dup(struct search_list_country *this_)
+{
+	struct search_list_country *ret=g_new(struct search_list_country, 1);
+	ret->car=g_strdup(this_->car);
+	ret->iso2=g_strdup(this_->iso2);
+	ret->iso3=g_strdup(this_->iso3);
+	ret->flag=g_strdup(this_->flag);
+	ret->name=g_strdup(this_->name);
 	return ret;
 }
 
@@ -310,13 +552,20 @@ search_list_town_new(struct item *item)
 	return ret;
 }
 
+static struct search_list_town *
+search_list_town_dup(struct search_list_town *this_)
+{
+	struct search_list_town *ret=g_new0(struct search_list_town, 1);
+	ret->county=map_convert_dup(this_->county);
+	search_list_common_dup(&this_->common, &ret->common);
+	return ret;
+}
+
 static void
 search_list_town_destroy(struct search_list_town *this_)
 {
 	map_convert_free(this_->county);
 	search_list_common_destroy(&this_->common);
-	if (this_->common.c)
-		g_free(this_->common.c);
 	g_free(this_);
 }
 
@@ -343,16 +592,20 @@ search_list_street_new(struct item *item)
 	return ret;
 }
 
+static struct search_list_street *
+search_list_street_dup(struct search_list_street *this_)
+{
+	struct search_list_street *ret=g_new0(struct search_list_street, 1);
+	ret->name=map_convert_dup(this_->name);
+	search_list_common_dup(&this_->common, &ret->common);
+	return ret;
+}
 
 static void
 search_list_street_destroy(struct search_list_street *this_)
 {
 	map_convert_free(this_->name);
 	search_list_common_destroy(&this_->common);
-	if (this_->common.c)
-	{
-		g_free(this_->common.c);
-	}
 	g_free(this_);
 }
 
@@ -447,7 +700,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 {
 	struct pcoord *ret=g_new(struct pcoord, 1);
 	ret->pro = map_projection(item->map);
-	dbg(0,"%s\n",item_to_name(item->type));
+	dbg(1,"%s\n",item_to_name(item->type));
 	if (item->type<type_house_number_interpolation_even || item->type>type_house_number_interpolation_alphabetic) {
 		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
@@ -553,13 +806,20 @@ search_list_house_number_new(struct item *item, struct interpolation *inter, cha
 	return ret;
 }
 
+static struct search_list_house_number *
+search_list_house_number_dup(struct search_list_house_number *this_)
+{
+	struct search_list_house_number *ret=g_new0(struct search_list_house_number, 1);
+	ret->house_number=map_convert_dup(this_->house_number);
+	search_list_common_dup(&this_->common, &ret->common);
+	return ret;
+}
+
 static void
 search_list_house_number_destroy(struct search_list_house_number *this_)
 {
 	map_convert_free(this_->house_number);
 	search_list_common_destroy(&this_->common);
-	if (this_->common.c)
-		g_free(this_->common.c);
 	g_free(this_);
 }
 
@@ -580,6 +840,26 @@ search_list_result_destroy(int level, void *p)
 		search_list_house_number_destroy(p);
 		break;
 	}
+}
+
+static struct search_list_result *
+search_list_result_dup(struct search_list_result *slr)
+{
+	struct search_list_result *ret=g_new0(struct search_list_result, 1);
+	ret->id=slr->id;
+	if (slr->c) {
+		ret->c=g_new(struct pcoord, 1);
+		*ret->c=*slr->c;
+	}
+	if (slr->country) 
+		ret->country=search_list_country_dup(slr->country);
+	if (slr->town)
+		ret->town=search_list_town_dup(slr->town);
+	if (slr->street)
+		ret->street=search_list_street_dup(slr->street);
+	if (slr->house_number)
+		ret->house_number=search_list_house_number_dup(slr->house_number);
+	return ret;	
 }
 
 static void
@@ -833,6 +1113,15 @@ search_list_get_result(struct search_list *this_)
 	struct attr attr2;
 	int has_street_name=0;
 
+	if (this_->use_address_results) {
+		struct search_list_result *ret=NULL;
+		if (this_->address_results_pos) {
+			ret=this_->address_results_pos->data;
+			this_->address_results_pos=g_list_next(this_->address_results_pos);
+		}
+		return ret;
+	}
+
 	//dbg(0,"enter\n");
 	le=&this_->levels[level];
 	//dbg(0,"le=%p\n", le);
@@ -909,6 +1198,9 @@ search_list_get_result(struct search_list *this_)
 				p=search_list_country_new(this_->item);
 				this_->result.country=p;
 				this_->result.country->common.parent=NULL;
+				this_->result.town=NULL;
+				this_->result.street=NULL;
+				this_->result.house_number=NULL;
 				this_->item=NULL;
 				break;
 			case 1:
@@ -918,6 +1210,8 @@ search_list_get_result(struct search_list *this_)
 				this_->result.town->common.parent=this_->levels[0].last->data;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.town->common.c;
+				this_->result.street=NULL;
+				this_->result.house_number=NULL;
 				this_->item=NULL;
 				break;
 			case 2:
@@ -928,6 +1222,7 @@ search_list_get_result(struct search_list *this_)
 				this_->result.town=this_->result.street->common.parent;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.street->common.c;
+				this_->result.house_number=NULL;
 				this_->item=NULL;
 				break;
 			case 3:
