@@ -23,6 +23,11 @@
 #include "item.h"
 #include "color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 struct element {
 	enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
 	struct color color;
@@ -124,4 +129,9 @@ struct image *image_new(struct attr *parent, struct attr **attrs);
 struct arrows *arrows_new(struct attr *parent, struct attr **attrs);
 int element_add_attr(struct element *e, struct attr *attr);
 /* end of prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
