@@ -106,6 +106,10 @@ enum attr_position_valid {
 #define ATTR_DEF_ITEMS(x,...) (&(struct attr){attr_##x,{(char *)((enum item_type[]){__VA_ARGS__ , type_none})}})
 #define ATTR_LIST(...) (struct attr *[]) { __VA_ARGS__, NULL}
 
+struct range {
+	short min, max;
+};
+
 struct attr {
 	enum attr_type type;
 	union {
@@ -154,9 +158,7 @@ struct attr {
 		struct bookmarks *bookmarks;
 		struct config *config;
 		struct osd *osd;
-		struct range {
-			short min, max;
-		} range;
+		struct range range;
 		int *dash;
 		enum item_type *item_types;
 		enum attr_type *attr_types;
