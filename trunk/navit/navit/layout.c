@@ -79,6 +79,9 @@ layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, s
 	GList *cursor,*layer;
 	attr->type=type;
 	switch (type) {
+	case attr_name:
+		attr->u.str=layout->name;
+		return 1;
 	case attr_cursor:
 		cursor=layout->cursors;
 		while (cursor) {
