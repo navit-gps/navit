@@ -32,12 +32,6 @@
 #include "command.h"
 #include "keys.h"
 
-//WORKAOUND for the c/c++ compatibility issues.
-//range is defined inside of struct attr so it is invisible in c++
-struct range {
-	short min, max;
-} range;
-
 #include "layout.h"
 
 struct gui_priv {
