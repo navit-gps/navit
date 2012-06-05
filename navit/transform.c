@@ -248,6 +248,8 @@ transform_dup(struct transformation *t)
 {
 	struct transformation *ret=g_new0(struct transformation, 1);
 	*ret=*t;
+	ret->map_sel=map_selection_dup(t->map_sel);
+	ret->screen_sel=map_selection_dup(t->screen_sel);
 	return ret;
 }
 
@@ -1453,6 +1455,8 @@ transform_copy(struct transformation *src, struct transformation *dst)
 void
 transform_destroy(struct transformation *t)
 {
+	map_selection_destroy(t->map_sel);
+	map_selection_destroy(t->screen_sel);
 	g_free(t);
 }
 
