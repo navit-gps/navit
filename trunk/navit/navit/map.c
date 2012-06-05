@@ -225,6 +225,12 @@ map_convert_string(struct map *this_, char *str)
 	return g_convert(str, -1,"utf-8",this_->meth.charset,NULL,NULL,NULL);
 }
 
+char *
+map_convert_dup(char *str)
+{
+	return g_strdup(str);
+}
+
 /**
  * @brief Frees the memory allocated for a converted string
  *
