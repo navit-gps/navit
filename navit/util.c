@@ -313,7 +313,8 @@ iso8601_to_secs(char *iso8601)
 			pos++;
 			start=pos;
 		} 
-		pos++;
+		if(*pos)
+			pos++;
 	}
 	
 	a=val[0]/100;
