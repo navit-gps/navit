@@ -300,8 +300,8 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 				dbg(1, "Remind them of the data\n");
 				event_call_callback(priv->priv_cbl);
 			}
-			if(waitcounter%2000) {
-				dbg(0,"Will GPS data be ever processed by the main thread? Already %d intervals gone.\n",waitcounter);
+			if(waitcounter % 200 == 0) {
+				dbg(0,"Will main thread ever be ready for the GPS data? Already %d intervals gone.\n",waitcounter);
 			}
 
 		}
