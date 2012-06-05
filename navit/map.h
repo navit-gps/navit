@@ -243,6 +243,7 @@ void map_add_callback(struct map *this_, struct callback *cb);
 void map_remove_callback(struct map *this_, struct callback *cb);
 int map_requires_conversion(struct map *this_);
 char *map_convert_string(struct map *this_, char *str);
+char *map_convert_dup(char *str);
 void map_convert_free(char *str);
 enum projection map_projection(struct map *this_);
 void map_set_projection(struct map *this_, enum projection pro);
