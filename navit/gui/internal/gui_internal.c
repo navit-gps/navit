@@ -7302,12 +7302,8 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 	/**
 	 * Deallocate column descriptions.
 	 */
-	current = column_data;
-	while( (current = g_list_last(current)) )
-	{
-		current = g_list_remove(current,current->data);
-	}
-
+	g_list_foreach(column_data,(GFunc)g_free,NULL);
+	g_list_free(column_data);
 }
 
 
@@ -7480,11 +7476,8 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	/**
 	 * Deallocate column descriptions.
 	 */
-	current_desc = column_desc;
-	while( (current_desc = g_list_last(current_desc)) )
-	{
-		current_desc = g_list_remove(current_desc,current_desc->data);
-	}
+	g_list_foreach(column_desc,(GFunc)g_free,NULL);
+	g_list_free(column_desc);
 }
 
 

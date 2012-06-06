@@ -2316,6 +2316,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	if (l) {
 		graphics_gc_set_background(gra->gc[0], &l->color);
 		graphics_gc_set_foreground(gra->gc[0], &l->color);
+		g_free(gra->default_font);
 		gra->default_font = g_strdup(l->font);
 	}
 	graphics_background_gc(gra, gra->gc[0]);
