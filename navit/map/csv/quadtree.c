@@ -717,6 +717,7 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 
 		/* Go one step towards root */
 		dbg(2,"Going towards root...\n");
+		g_free(iter->iter_nodes->data);
 		iter->iter_nodes=g_list_delete_link(iter->iter_nodes,iter->iter_nodes);
 	}
 
