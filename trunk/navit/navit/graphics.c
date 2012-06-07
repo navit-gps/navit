@@ -429,6 +429,7 @@ void graphics_free(struct graphics *gra)
         graphics_gc_destroy(gra->gc[2]);
 	g_free(gra->default_font);
 	graphics_font_destroy_all(gra);
+	g_free(gra->font);
 	gra->meth.graphics_destroy(gra->priv);
 	g_free(gra);
 }
@@ -719,6 +720,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
 			if (this_->priv) {
 				dbg(1,"Using image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
+				g_free(new_name);
 				break;
 			}
 			g_free(new_name);
