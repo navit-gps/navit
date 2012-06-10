@@ -2201,6 +2201,7 @@ navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)
 static void
 navigation_map_rect_destroy(struct map_rect_priv *priv)
 {
+	g_free(priv->str);
 	g_free(priv);
 }
 

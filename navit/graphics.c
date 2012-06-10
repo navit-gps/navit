@@ -2177,6 +2177,8 @@ GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct poin
 			l=g_list_insert_sorted(l,(gpointer) di, (GCompareFunc) displaylist_cmp_zorder);
 	}
 
+	graphics_displaylist_close(dlh);
+
 	return l;
 }
 
