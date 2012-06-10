@@ -3824,6 +3824,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 			gui_internal_widget_append(row,	wc=gui_internal_cmd_pois_item(this, NULL, itemo, NULL, -1, text));
 			wc->c=pc;
+			g_free(wc->name);
 			wc->name=g_strdup(text);
 			wc->item=*itemo;
 			g_free(text);
@@ -6223,10 +6224,10 @@ gui_internal_set_click_coord(struct gui_priv *this, struct point *p)
 	struct coord_geo g;
 	struct attr attr;
 	struct transformation *trans;
-	trans=navit_get_trans(this->nav);
 	attr_free(this->click_coord_geo);
 	this->click_coord_geo=NULL;
 	if (p) {
+		trans=navit_get_trans(this->nav);
 		transform_reverse(trans, p, &c);
 		dbg(1,"x=0x%x y=0x%x\n", c.x, c.y);
 		this->clickp.pro=transform_get_projection(trans);
@@ -6246,11 +6247,11 @@ gui_internal_set_position_coord(struct gui_priv *this)
 	struct attr attr,attrp;
 	struct coord c;
 
-	trans=navit_get_trans(this->nav);
 	attr_free(this->position_coord_geo);
 	this->position_coord_geo=NULL;
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
 		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
+		trans=navit_get_trans(this->nav);
 		this->position_coord_geo=attr_dup(&attrp);
 		this->vehiclep.pro=transform_get_projection(trans);
 		transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
@@ -8242,6 +8243,8 @@ void plugin_init(void)
 static void
 gui_internal_destroy(struct gui_priv *this)
 {
+	attr_free(this->click_coord_geo);
+	attr_free(this->position_coord_geo);
 	g_free(this->country_iso2);
 	g_free(this->href);
 	g_free(this->html_text);
