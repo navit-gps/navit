@@ -2836,6 +2836,9 @@ route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *
 	struct street_data *sd;
 	struct coord c;
 	struct coord_geo g;
+	
+	if(!vehicleprofile)
+		return NULL;
 
 	ret=g_new0(struct route_info, 1);
 	mindist = INT_MAX;
