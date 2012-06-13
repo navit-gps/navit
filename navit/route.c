@@ -714,6 +714,8 @@ route_path_update_done(struct route *this, int new_graph)
 		this->path2=route_path_new(this->graph, NULL, prev_dst, this->current_dst, this->vehicleprofile);
 		if (this->path2)
 		    this->path2->next=oldpath;
+		else
+		    route_path_destroy(oldpath,0);
 	} else {
 		this->path2=route_path_new(this->graph, oldpath, prev_dst, this->current_dst, this->vehicleprofile);
 		if (oldpath && this->path2) {
@@ -1636,7 +1638,7 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 static int
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath, struct route_graph_segment *rgs, int dir, struct route_info *pos, struct route_info *dst)
 {
-	struct route_path_segment *segment;
+	struct route_path_segment *segment=NULL;
 	int i, ccnt, extra=0, ret=0;
 	struct coord *c,*cd,ca[2048];
 	int offset=1;
@@ -1655,6 +1657,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 				if (!pos)
 					goto linkold;
 			}
+			g_free(segment);
 		}
 	}
 
