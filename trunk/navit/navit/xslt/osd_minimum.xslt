@@ -16,6 +16,8 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="gui_zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="0" y="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" osd_configuration="1"/>
       <xsl:text>&#x0A;        </xsl:text>
+      <osd type="button" src="cursor_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(-60*number($OSD_SIZE))}" y="{round(40*number($OSD_SIZE))}" enable_expression="follow>1"/>
+      <xsl:text>&#x0A;        </xsl:text>
       <xsl:copy><xsl:copy-of select="@*|node()"/></xsl:copy>
    </xsl:template>
 </xsl:transform>
