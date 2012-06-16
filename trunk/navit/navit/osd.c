@@ -169,7 +169,9 @@ static void
 osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 {
 	if (!command_saved_error(cs)) {
-		graphics_overlay_disable(item->gr, !command_saved_get_int(cs));
+		item->configured = !! command_saved_get_int(cs);
+		if (item->gr && !(item->flags & 16)) 
+			graphics_overlay_disable(item->gr, !item->configured);
 	} else {
 		dbg(0, "Error in saved command: %i\n", command_saved_error(cs));
 	}
@@ -208,7 +210,7 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 
 	attr=attr_search(attrs, NULL, attr_enable_expression);
 	if (attr) {
-		item->enable_cs = command_saved_new(attr->u.str, item->navit, NULL);
+		item->enable_cs = command_saved_new(attr->u.str, item->navit, NULL, 0);
 	}
 
 	attr = attr_search(attrs, NULL, attr_w);
