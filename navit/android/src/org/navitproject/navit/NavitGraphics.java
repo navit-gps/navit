@@ -873,7 +873,20 @@ public class NavitGraphics
 		// assume we are NOT in map view mode!
 		if (parent_graphics == null)
 			in_map = (disable==0);
-		overlay_disabled = disable;
+		if (overlay_disabled != disable) {
+			overlay_disabled = disable;
+			if (parent_graphics) {
+				int x = pos_x;
+				int y = pos_y;
+				int width = w;
+				int height = h;
+				if (pos_wraparound != 0 && x < 0) x += parent_graphics.w;
+				if (pos_wraparound != 0 && y < 0) y += parent_graphics.h;
+				if (pos_wraparound != 0 && width < 0) width += parent_graphics.w;
+				if (pos_wraparound != 0 && height < 0) height += parent_graphics.h;
+				canvas.invalidate(x,y,x+w,y+h);
+			}
+		}
 	}
 
 	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparond)
