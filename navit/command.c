@@ -65,6 +65,7 @@ struct command_saved {
 	struct command_saved_cb *cbs;		// List of callbacks for this saved command
 	struct callback *cb; // Callback that should be called when we re-evaluate
 	int error;
+	int async;
 };
 
 enum error {
@@ -1016,6 +1017,10 @@ command_saved_evaluate_idle (struct command_saved *cs)
 static void
 command_saved_evaluate(struct command_saved *cs)
 {	
+	if (!cs->async) {
+		command_saved_evaluate_idle(cs);
+		return;
+	}
 	if (cs->idle_ev) {
 		// We're already scheduled for reevaluation
 		return;
@@ -1127,8 +1132,8 @@ command_register_callbacks(struct command_saved *cs)
 	return 1;
 }
 
-struct command_saved
-*command_saved_new(char *command, struct navit *navit, struct callback *cb)
+struct command_saved *
+command_saved_new(char *command, struct navit *navit, struct callback *cb, int async)
 {
 	struct command_saved *ret;
 
@@ -1138,6 +1143,7 @@ struct command_saved
 	ret->navit.type = attr_navit;
 	ret->cb = cb;
 	ret->error = not_ready;
+	ret->async = async;
 
 	if (!command_register_callbacks(ret)) {
 		// We try this as an idle call again

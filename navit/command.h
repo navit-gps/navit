@@ -50,7 +50,7 @@ void command_add_table(struct callback_list *cbl, struct command_table *table, i
 void command_saved_set_cb(struct command_saved *cs, struct callback *cb);
 int command_saved_get_int(struct command_saved *cs);
 int command_saved_error(struct command_saved *cs);
-struct command_saved *command_saved_new(char *command, struct navit *navit, struct callback *cb);
+struct command_saved *command_saved_new(char *command, struct navit *navit, struct callback *cb, int async);
 void command_saved_destroy(struct command_saved *cs);
 /* end of prototypes */
 #ifdef __cplusplus
