@@ -958,7 +958,14 @@ static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphic
 static void
 overlay_disable(struct graphics_priv *gr, int disabled)
 {
-	gr->overlay_disabled=disabled;
+	if (!gr->overlay_disabled != !disabled) {
+		gr->overlay_disabled=disabled;
+		if (gr->parent) {
+			GdkRectangle r;
+			overlay_rect(gr->parent, gr, 0, &r);
+			gtk_drawing_area_draw(gr->parent, &r);
+		}
+	}
 }
 
 static void
