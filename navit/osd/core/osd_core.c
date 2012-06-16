@@ -1540,11 +1540,11 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
 	opc->spec_set_attr_func = osd_button_set_attr;
 
-	osd_set_std_attr(attrs, &opc->osd_item, 1|16);
-
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
 		this->use_overlay=attr->u.num;
+	osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? 1:(1|16));
+
 	if (!opc->osd_item.command) {
 		dbg(0, "no command\n");
 		goto error;
