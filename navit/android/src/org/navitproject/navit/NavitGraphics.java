@@ -875,16 +875,16 @@ public class NavitGraphics
 			in_map = (disable==0);
 		if (overlay_disabled != disable) {
 			overlay_disabled = disable;
-			if (parent_graphics) {
+			if (parent_graphics != null) {
 				int x = pos_x;
 				int y = pos_y;
-				int width = w;
-				int height = h;
-				if (pos_wraparound != 0 && x < 0) x += parent_graphics.w;
-				if (pos_wraparound != 0 && y < 0) y += parent_graphics.h;
-				if (pos_wraparound != 0 && width < 0) width += parent_graphics.w;
-				if (pos_wraparound != 0 && height < 0) height += parent_graphics.h;
-				canvas.invalidate(x,y,x+w,y+h);
+				int width = bitmap_width;
+				int height = bitmap_height;
+				if (pos_wraparound != 0 && x < 0) x += parent_graphics.bitmap_width;
+				if (pos_wraparound != 0 && y < 0) y += parent_graphics.bitmap_height;
+				if (pos_wraparound != 0 && width < 0) width += parent_graphics.bitmap_width;
+				if (pos_wraparound != 0 && height < 0) height += parent_graphics.bitmap_height;
+				draw_canvas.invalidate(x,y,x+w,y+h);
 			}
 		}
 	}
