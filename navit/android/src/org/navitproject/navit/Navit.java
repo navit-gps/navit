@@ -306,23 +306,9 @@ public class Navit extends Activity
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit");
 
-		activateAllMaps();
-
 		showInfos();
 
 		Navit.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-	}
-
-	private void activateAllMaps()
-	{
-		NavitMap maps[] = NavitMapDownloader.getAvailableMaps();
-		for (NavitMap map : maps) {
-			Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
-			Bundle b = new Bundle();
-			b.putString("title", map.getLocation());
-			msg.setData(b);
-			msg.sendToTarget();
-		}
 	}
 
 	@Override
