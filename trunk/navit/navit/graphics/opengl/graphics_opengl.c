@@ -521,6 +521,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 		return gi;
 	}
 #else
+	dbg(0,"FreeImage not available - cannot load any images.\n", path);
 	return NULL;
 #endif
 }
