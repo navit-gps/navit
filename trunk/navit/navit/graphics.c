@@ -424,6 +424,7 @@ void graphics_free(struct graphics *gra)
 		g_hash_table_destroy(gra->image_cache_hash);
 	}
 
+	attr_list_free(gra->attrs);
         graphics_gc_destroy(gra->gc[0]);
         graphics_gc_destroy(gra->gc[1]);
         graphics_gc_destroy(gra->gc[2]);
