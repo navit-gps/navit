@@ -73,7 +73,7 @@ if (USE_SVG OR SVG2PNG)
    FILE(GLOB SVG_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.svg" "*.svgz")
    
    if(USE_SVG)
-      list(APPEND IMAGE_TARGETS ${SVG_FILES})
+      list(APPEND IMAGES_TO_COPY ${SVG_FILES})
    endif(USE_SVG)
    if(SVG2PNG)
       list(APPEND FILES_TO_PNG ${SVG_FILES})
@@ -96,7 +96,7 @@ if(XPM2PNG)
       endif()
    endforeach()
 else()
-   list(APPEND IMAGE_TARGETS ${XPM_FILES})
+   list(APPEND IMAGES_TO_COPY ${XPM_FILES})
 endif(XPM2PNG)
 
 foreach (IMAGE_SRC ${FILES_TO_PNG})
@@ -114,6 +114,15 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
       add_scale_targets(${IMAGE_SRC} ${IMAGE} 0)
    endif()
       
+endforeach()
+
+foreach (IMAGE_FILE ${IMAGES_TO_COPY})
+   add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+		      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+		      COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+		      "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+   )
+   list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}")
 endforeach()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
