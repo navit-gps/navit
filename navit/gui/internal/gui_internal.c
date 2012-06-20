@@ -8243,6 +8243,10 @@ void plugin_init(void)
 static void
 gui_internal_destroy(struct gui_priv *this)
 {
+
+	graphics_font_destroy(this->fonts[0]);
+	graphics_font_destroy(this->fonts[1]);
+	graphics_font_destroy(this->fonts[2]);
 	attr_free(this->click_coord_geo);
 	attr_free(this->position_coord_geo);
 	g_free(this->country_iso2);
