@@ -272,6 +272,8 @@ object_func_lookup(enum attr_type type)
 	switch (type) {
 	case attr_map:
 		return &map_func;
+	case attr_maps:
+		return &maps_func;
 	case attr_mapset:
 		return &mapset_func;
 	case attr_navit:
@@ -519,6 +521,11 @@ static void initStatic(void) {
 	elements[37].parent="plugins";
 	elements[37].func=NULL;
 	elements[37].type=attr_plugin;
+
+	elements[38].name="maps";
+	elements[38].parent="mapset";
+	elements[38].func=NULL;
+	elements[38].type=attr_maps;
 }
 
 /**
