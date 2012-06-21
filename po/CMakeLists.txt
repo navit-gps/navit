@@ -20,6 +20,8 @@ if (XGETTEXT_GLADE)
       list(APPEND POTFILES ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade)
 endif()
 
+# Trick gettext to get translateable strings out of navit_shipped.xml
+
 ADD_CUSTOM_COMMAND(
    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
    DEPENDS ${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml
