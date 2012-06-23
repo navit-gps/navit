@@ -1670,7 +1670,7 @@ osm_end_way(struct maptool_osm *osm)
 			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]); 
 			item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 			item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
-			item_bin_write(item_bin, count_areas<count_lines?osm->line2poi:osm->poly2poi);
+			item_bin_write(item_bin, count_areas<=count_lines ? osm->line2poi:osm->poly2poi);
 		}
 	}
 	attr_longest_match_clear();
