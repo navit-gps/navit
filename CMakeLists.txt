@@ -399,8 +399,10 @@ add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
-find_program(XSLT_PROCESSOR NAMES saxon saxon8 saxon-xslt saxonb-xslt xsltproc transform.exe)
+set(SUPPORTED_XSLT_PROCESSORS "saxon;saxon8;saxon-xslt;saxonb-xslt;xsltproc;transform.exe")
+find_program(XSLT_PROCESSOR NAMES ${SUPPORTED_XSLT_PROCESSORS})
 if(XSLT_PROCESSOR)
+   message(STATUS "Found XSLT processor: ${XSLT_PROCESSOR}")
    execute_process(COMMAND ${XSLT_PROCESSOR} -snone ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xml ${CMAKE_CURRENT_SOURCE_DIR}/cmake/test.xslt
       RESULT_VARIABLE SAXON_ERROR ERROR_QUIET)
    if (NOT SAXON_ERROR)
@@ -411,7 +413,9 @@ else()
 endif(XSLT_PROCESSOR)
 
 if (NOT XSL_PROCESSING)
-   message(WARNING "XSLT processing disabled. You have to configure navit.xml yourself, or enable XSLT processing.")
+   message(WARNING "No XSLT processor available. You have to configure "
+"navit.xml yourself, or install an XSLT processor (supported: "
+"${SUPPORTED_XSLT_PROCESSORS}).")
 endif()
 
 ### Platform specific settings
@@ -528,9 +532,6 @@ if(ANDROID)
    endif()
    if (NOT ANDROID_LOCATION)
       message_error( "Could not find 'Android SDK and AVD Manager'. Please install the android sdk and add the <android-sdk>/tools directory to the search path.")
-   endif()
-   if (NOT XSL_PROCESSING)
-      message(WARNING "XSLT processing disabled. You have to configure navit.xml yourself, or enable XSLT processing.")
    endif()
    set(XSLTS "android;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
    list(APPEND NAVIT_LIBS log)
@@ -663,10 +664,12 @@ if (NOT NAVIT_DEPENDENCY_ERROR)
    
    if (XSL_PROCESSING)
       if (XSLTS)
-         message("\nProcessing XSLTS: ${XSLTS}")
+         message("\nProcessing XSLT files: ${XSLTS}")
       else()
-         message("\nProcessing XSLTS: NONE")
+         message("\nProcessing XSLT files: NONE")
       endif(XSLTS)
+      message("See navit/xslt for available XSLT files, and put them into "
+	      "cache variable 'XSLTS' (without extension .xslt).")
    endif(XSL_PROCESSING)
    
    message("\nTo configure your build use 'cmake -L' to find changeable variables and run cmake again with 'cmake -D <var-name>=<your value> ...'.")
