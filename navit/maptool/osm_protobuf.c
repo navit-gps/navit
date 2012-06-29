@@ -32,16 +32,30 @@
 
 static double latlon_scale=10000000.0;
 
+/* Maximum length of a BlobHeader, see
+ * http://wiki.openstreetmap.org/wiki/PBF_Format */
+#define MAX_HEADER_LENGTH 1024 * 64
+/* Maximum length of a Blob */
+#define MAX_BLOB_LENGTH 1024 * 1024 * 32
+
+#define SANITY_CHECK_LENGTH(length, max_length) \
+	if (length > max_length){                                          \
+		fprintf(stderr,"Not a valid protobuf file. "               \
+			"Invalid block size in input: %d, max is %d. \n",  \
+				length, max_length);                       \
+		return NULL;                                                   \
+	}
+
 static OSMPBF__BlobHeader *
 read_header(FILE *f)
 {
 	unsigned char *buffer,lenb[4];
 	int len;
 
-	len=sizeof(lenb);
 	if (fread(lenb, 4, 1, f) != 1)
 		return NULL;
 	len=(lenb[0] << 24) | (lenb[1] << 16) | (lenb[2] << 8) | lenb[3];
+	SANITY_CHECK_LENGTH(len, MAX_HEADER_LENGTH)
 	buffer=alloca(len);
 	if (fread(buffer, len, 1, f) != 1)
 		return NULL;
@@ -54,7 +68,7 @@ read_blob(OSMPBF__BlobHeader *header, FILE *f)
 {
 	unsigned char *buffer;
 	int len=header->datasize;
-
+	SANITY_CHECK_LENGTH(len, MAX_BLOB_LENGTH)
 	buffer=alloca(len);
 	if (fread(buffer, len, 1, f) != 1)
 		return NULL;
@@ -356,7 +370,7 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 		} else if (!strcmp(header->type,"OSMData")) {
 			process_osmdata(blob, data, osm);
 		} else {
-			printf("unknown\n");
+			printf("skipping fileblock of unknown type '%s'\n", header->type);
 			return 0;
 		}
 		free(data);
