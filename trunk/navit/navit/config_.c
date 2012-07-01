@@ -42,7 +42,7 @@ config_get(void)
 
 int config_empty_ok;
 
-static int configured;
+int configured;
 
 struct attr_iter {
 	void *iter;
