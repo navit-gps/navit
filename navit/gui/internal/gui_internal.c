@@ -3959,6 +3959,14 @@ gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, 
 	gui_internal_poi_param_free(param);
 }
 
+static void
+gui_internal_cmd2_refresh(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *href=g_strdup(this->href);
+	gui_internal_html_load_href(this, href, 1);
+	g_free(href);
+}
+
 
 /**
   * The "Bookmarks" section of the OSD
@@ -8047,6 +8055,7 @@ static struct command_table commands[] = {
 	{"menu",command_cast(gui_internal_cmd_menu2)},
 	{"position",command_cast(gui_internal_cmd2_position)},
 	{"pois",command_cast(gui_internal_cmd2_pois)},
+	{"refresh",command_cast(gui_internal_cmd2_refresh)},
 	{"route_description",command_cast(gui_internal_cmd2_route_description)},
 	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
 	{"set",command_cast(gui_internal_cmd2_set)},
