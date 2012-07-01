@@ -128,7 +128,7 @@ g_malloc (gsize n_bytes)
     {
       gpointer mem;
 
-      mem = glib_mem_vtable.malloc (n_bytes);
+      mem = glib_mem_vtable.vmalloc (n_bytes);
       if (mem)
 	return mem;
 
@@ -150,7 +150,7 @@ g_malloc0 (gsize n_bytes)
     {
       gpointer mem;
 
-      mem = glib_mem_vtable.calloc (1, n_bytes);
+      mem = glib_mem_vtable.vcalloc (1, n_bytes);
       if (mem)
 	return mem;
 
@@ -171,7 +171,7 @@ g_realloc (gpointer mem,
     g_mem_init_nomessage();
   if (G_LIKELY (n_bytes))
     {
-      mem = glib_mem_vtable.realloc (mem, n_bytes);
+      mem = glib_mem_vtable.vrealloc (mem, n_bytes);
       if (mem)
 	return mem;
 
@@ -182,7 +182,7 @@ g_realloc (gpointer mem,
     }
 
   if (mem)
-    glib_mem_vtable.free (mem);
+    glib_mem_vtable.vfree (mem);
 
   return NULL;
 }
@@ -193,7 +193,7 @@ g_free (gpointer mem)
   if (G_UNLIKELY (!g_mem_initialized))
     g_mem_init_nomessage();
   if (G_LIKELY (mem))
-    glib_mem_vtable.free (mem);
+    glib_mem_vtable.vfree (mem);
 }
 
 gpointer
@@ -202,7 +202,7 @@ g_try_malloc (gsize n_bytes)
   if (G_UNLIKELY (!g_mem_initialized))
     g_mem_init_nomessage();
   if (G_LIKELY (n_bytes))
-    return glib_mem_vtable.try_malloc (n_bytes);
+    return glib_mem_vtable.vtry_malloc (n_bytes);
   else
     return NULL;
 }
@@ -227,10 +227,10 @@ g_try_realloc (gpointer mem,
   if (G_UNLIKELY (!g_mem_initialized))
     g_mem_init_nomessage();
   if (G_LIKELY (n_bytes))
-    return glib_mem_vtable.try_realloc (mem, n_bytes);
+    return glib_mem_vtable.vtry_realloc (mem, n_bytes);
 
   if (mem)
-    glib_mem_vtable.free (mem);
+    glib_mem_vtable.vfree (mem);
 
   return NULL;
 }
@@ -240,7 +240,7 @@ fallback_calloc (gsize n_blocks,
 		 gsize n_block_bytes)
 {
   gsize l = n_blocks * n_block_bytes;
-  gpointer mem = glib_mem_vtable.malloc (l);
+  gpointer mem = glib_mem_vtable.vmalloc (l);
 
   if (mem)
     memset (mem, 0, l);
@@ -274,14 +274,14 @@ g_mem_set_vtable (GMemVTable *vtable)
 {
   if (!vtable_set)
     {
-      if (vtable->malloc && vtable->realloc && vtable->free)
+      if (vtable->vmalloc && vtable->vrealloc && vtable->vfree)
 	{
-	  glib_mem_vtable.malloc = vtable->malloc;
-	  glib_mem_vtable.realloc = vtable->realloc;
-	  glib_mem_vtable.free = vtable->free;
-	  glib_mem_vtable.calloc = vtable->calloc ? vtable->calloc : fallback_calloc;
-	  glib_mem_vtable.try_malloc = vtable->try_malloc ? vtable->try_malloc : glib_mem_vtable.malloc;
-	  glib_mem_vtable.try_realloc = vtable->try_realloc ? vtable->try_realloc : glib_mem_vtable.realloc;
+	  glib_mem_vtable.vmalloc = vtable->vmalloc;
+	  glib_mem_vtable.vrealloc = vtable->vrealloc;
+	  glib_mem_vtable.vfree = vtable->vfree;
+	  glib_mem_vtable.vcalloc = vtable->vcalloc ? vtable->vcalloc : fallback_calloc;
+	  glib_mem_vtable.vtry_malloc = vtable->vtry_malloc ? vtable->vtry_malloc : glib_mem_vtable.vmalloc;
+	  glib_mem_vtable.vtry_realloc = vtable->vtry_realloc ? vtable->vtry_realloc : glib_mem_vtable.vrealloc;
 	  vtable_set = TRUE;
 	}
 #if NOT_NEEDED_FOR_NAVIT

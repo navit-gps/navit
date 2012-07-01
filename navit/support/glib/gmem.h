@@ -82,16 +82,16 @@ gpointer g_try_realloc    (gpointer	 mem,
  */
 struct _GMemVTable
 {
-  gpointer (*malloc)      (gsize    n_bytes);
-  gpointer (*realloc)     (gpointer mem,
-			   gsize    n_bytes);
-  void     (*free)        (gpointer mem);
+  gpointer (*vmalloc)      (gsize    n_bytes);
+  gpointer (*vrealloc)     (gpointer mem,
+			    gsize    n_bytes);
+  void     (*vfree)        (gpointer mem);
   /* optional; set to NULL if not used ! */
-  gpointer (*calloc)      (gsize    n_blocks,
-			   gsize    n_block_bytes);
-  gpointer (*try_malloc)  (gsize    n_bytes);
-  gpointer (*try_realloc) (gpointer mem,
-			   gsize    n_bytes);
+  gpointer (*vcalloc)      (gsize    n_blocks,
+			    gsize    n_block_bytes);
+  gpointer (*vtry_malloc)  (gsize    n_bytes);
+  gpointer (*vtry_realloc) (gpointer mem,
+			    gsize    n_bytes);
 };
 void	 g_mem_set_vtable (GMemVTable	*vtable);
 gboolean g_mem_is_system_malloc (void);
