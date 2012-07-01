@@ -175,7 +175,7 @@ char *ezxml_decode(char *s, char **ent, char t)
     }
     
     for (s = r; ; ) {
-        while (*s && *s != '&' && (*s != '%' || t != '%') && !isspace(*s)) s++;
+        while (*s && *s != '&' && (*s != '%' || t != '%') && !isspace((unsigned char)(*s))) s++;
 
         if (! *s) break;
         else if (t != 'c' && ! strncmp(s, "&#", 2)) { // character reference
