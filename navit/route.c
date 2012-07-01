@@ -3659,6 +3659,9 @@ route_set_attr(struct route *this_, struct attr *attr)
 	case attr_destination:
 		route_set_destination(this_, attr->u.pcoord, 1);
 		return 1;
+	case attr_position:
+		route_set_position(this_, attr->u.pcoord);
+		return 1;
 	case attr_vehicle:
 		attr_updated = (this_->v != attr->u.vehicle);
 		this_->v=attr->u.vehicle;
