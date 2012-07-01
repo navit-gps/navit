@@ -5919,10 +5919,13 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 
 	if (!g_strcasecmp(tag_name,"text"))
 		return;
+	html->skip=0;
 	html->command=NULL;
 	html->name=NULL;
 	html->href=NULL;
-	html->skip=0;
+	html->refresh_cond=NULL;
+	html->w=NULL;
+	html->container=NULL;
 	cond=find_attr(names, values, "cond");
 
 	if (cond && !this->html_skip) {
