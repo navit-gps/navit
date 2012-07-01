@@ -39,6 +39,8 @@
 #endif
 #ifndef _MSC_VER
 #include <sys/time.h>
+#else
+#define snprintf sprintf_s
 #endif /* _MSC_VER */
 #include "item.h"
 #include "file.h"
@@ -2526,82 +2528,47 @@ get_direction(char *buffer, int angle, int mode)
 
 static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
 
-#ifndef _MSC_VER
-//MSVC doesn't supports this style of initialization and i'm not sure
-//how to fix it
 struct selector {
 	char *icon;
 	char *name;
 	enum item_type *types;
 };
+static enum item_type selectors_BankTypes[]={type_poi_bank,type_poi_bank, type_poi_atm,type_poi_atm, type_none};
+static enum item_type selectors_FuelTypes[]={type_poi_fuel,type_poi_fuel,type_none};
+static enum item_type selectors_HotelTypes[]={type_poi_hotel,type_poi_camp_rv,type_poi_camping,type_poi_camping,
+    type_poi_resort,type_poi_resort,type_poi_motel,type_poi_hostel,type_none};
+static enum item_type selectors_RestaurantTypes[]={type_poi_bar,type_poi_picnic,type_poi_burgerking,type_poi_fastfood,
+    type_poi_restaurant,type_poi_restaurant,type_poi_cafe,type_poi_cafe,type_poi_pub,type_poi_pub,type_none};
+static enum item_type selectors_ShoppingTypes[]={type_poi_mall,type_poi_mall,type_poi_shop_grocery,type_poi_shop_grocery,
+    type_poi_shopping,type_poi_shopping,type_poi_shop_butcher,type_poi_shop_baker,type_poi_shop_fruit,
+    type_poi_shop_fruit,type_poi_shop_beverages,type_poi_shop_beverages,type_none};
+static enum item_type selectors_ServiceTypes[]={type_poi_marina,type_poi_marina,type_poi_hospital,type_poi_hospital,
+    type_poi_public_utilities,type_poi_public_utilities,type_poi_police,type_poi_autoservice,type_poi_information,
+    type_poi_information,type_poi_pharmacy,type_poi_pharmacy,type_poi_personal_service,type_poi_repair_service,
+    type_poi_restroom,type_poi_restroom,type_none};
+static enum item_type selectors_ParkingTypes[]={type_poi_car_parking,type_poi_car_parking,type_none};
+static enum item_type selectors_LandFeaturesTypes[]={type_poi_land_feature,type_poi_rock,type_poi_dam,type_poi_dam,
+    type_poi_peak,type_poi_peak,type_none};
+static enum item_type selectors_OtherTypes[]={type_point_unspecified,type_poi_land_feature-1,type_poi_rock+1,type_poi_fuel-1,
+    type_poi_marina+1,type_poi_shopping-1,type_poi_shopping+1,type_poi_car_parking-1,type_poi_car_parking+1,
+    type_poi_bar-1,type_poi_bank+1,type_poi_dam-1,type_poi_dam+1,type_poi_information-1,type_poi_information+1,
+    type_poi_mall-1,type_poi_mall+1,type_poi_personal_service-1,type_poi_pharmacy+1,type_poi_repair_service-1,
+    type_poi_repair_service+1,type_poi_restaurant-1,type_poi_restaurant+1,type_poi_restroom-1,type_poi_restroom+1,
+    type_poi_shop_grocery-1,type_poi_shop_grocery+1,type_poi_peak-1,type_poi_peak+1,type_poi_motel-1,type_poi_hostel+1,
+    type_poi_shop_butcher-1,type_poi_shop_baker+1,type_poi_shop_fruit-1,type_poi_shop_fruit+1,type_poi_shop_beverages-1,
+    type_poi_shop_beverages+1,type_poi_pub-1,type_poi_atm+1,type_line-1,type_none};
+/*static enum item_type selectors_UnknownTypes[]={type_point_unkn,type_point_unkn,type_none};*/
 struct selector selectors[]={
-	{"bank","Bank",(enum item_type []){
-		type_poi_bank,type_poi_bank,
-		type_poi_atm,type_poi_atm,
-		type_none}},
-	{"fuel","Fuel",(enum item_type []){type_poi_fuel,type_poi_fuel,type_none}},
-	{"hotel","Hotel",(enum item_type []) {
-		type_poi_hotel,type_poi_camp_rv,
-		type_poi_camping,type_poi_camping,
-		type_poi_resort,type_poi_resort,
-		type_poi_motel,type_poi_hostel,
-		type_none}},
-	{"restaurant","Restaurant",(enum item_type []) {
-		type_poi_bar,type_poi_picnic,
-		type_poi_burgerking,type_poi_fastfood,
-		type_poi_restaurant,type_poi_restaurant,
-		type_poi_cafe,type_poi_cafe,
-		type_poi_pub,type_poi_pub,
-		type_none}},
-	{"shopping","Shopping",(enum item_type []) {
-		type_poi_mall,type_poi_mall,
-		type_poi_shop_grocery,type_poi_shop_grocery,
-		type_poi_shopping,type_poi_shopping,
-		type_poi_shop_butcher,type_poi_shop_baker,
-		type_poi_shop_fruit,type_poi_shop_fruit,
-		type_poi_shop_beverages,type_poi_shop_beverages,
-		type_none}},
-	{"hospital","Service",(enum item_type []) {
-		type_poi_marina,type_poi_marina,
-		type_poi_hospital,type_poi_hospital,
-		type_poi_public_utilities,type_poi_public_utilities,
-		type_poi_police,type_poi_autoservice,
-		type_poi_information,type_poi_information,
-		type_poi_pharmacy,type_poi_pharmacy,
-		type_poi_personal_service,type_poi_repair_service,
-		type_poi_restroom,type_poi_restroom,
-		type_none}},
-	{"parking","Parking",(enum item_type []){type_poi_car_parking,type_poi_car_parking,type_none}},
-	{"peak","Land Features",(enum item_type []){
-		type_poi_land_feature,type_poi_rock,
-		type_poi_dam,type_poi_dam,
-		type_poi_peak,type_poi_peak,
-		type_none}},
-	{"unknown","Other",(enum item_type []){
-		type_point_unspecified,type_poi_land_feature-1,
-		type_poi_rock+1,type_poi_fuel-1,
-		type_poi_marina+1,type_poi_shopping-1,
-		type_poi_shopping+1,type_poi_car_parking-1,
-		type_poi_car_parking+1,type_poi_bar-1,
-		type_poi_bank+1,type_poi_dam-1,
-		type_poi_dam+1,type_poi_information-1,
-		type_poi_information+1,type_poi_mall-1,
-		type_poi_mall+1,type_poi_personal_service-1,
-		type_poi_pharmacy+1,type_poi_repair_service-1,
-		type_poi_repair_service+1,type_poi_restaurant-1,
-		type_poi_restaurant+1,type_poi_restroom-1,
-		type_poi_restroom+1,type_poi_shop_grocery-1,
-		type_poi_shop_grocery+1,type_poi_peak-1,
-		type_poi_peak+1, type_poi_motel-1,
-		type_poi_hostel+1,type_poi_shop_butcher-1,
-		type_poi_shop_baker+1,type_poi_shop_fruit-1,
-		type_poi_shop_fruit+1,type_poi_shop_beverages-1,
-		type_poi_shop_beverages+1,type_poi_pub-1,
-		type_poi_atm+1,type_line-1,
-		type_none}},
-/*	{"unknown","Unknown",(enum item_type []){
-		type_point_unkn,type_point_unkn,
-		type_none}},*/
+	{"bank","Bank",selectors_BankTypes},
+	{"fuel","Fuel",selectors_FuelTypes},
+	{"hotel","Hotel",selectors_HotelTypes},
+	{"restaurant","Restaurant",selectors_RestaurantTypes},
+	{"shopping","Shopping",selectors_ShoppingTypes},
+	{"hospital","Service",selectors_ServiceTypes},
+	{"parking","Parking",selectors_ParkingTypes},
+	{"peak","Land Features",selectors_LandFeaturesTypes},
+	{"unknown","Other",selectors_OtherTypes},
+/*	{"unknown","Unknown",selectors_UnknownTypes},*/
 };
 
 
@@ -3111,6 +3078,9 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct fibheap* fh = fh_makekeyheap();
 	int cnt = 0;
 	struct table_data *td;
+	struct widget *wl,*wt;
+	char buffer[32];
+	struct poi_param *paramnew;
 
 	if(data) {
 	  param = data;
@@ -3241,9 +3211,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	free(items);
 
 	// Add an entry for more POI
-	struct widget *wl,*wt;
-	char buffer[32];
-	struct poi_param *paramnew;
 	row = gui_internal_widget_table_row_new(this,
 						  gravity_left
 						  | flags_fill
@@ -3318,7 +3285,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
         if(param_free)
         	g_free(param);
 }
-#endif /* _MSC_VER */
 
 static void
 gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data)
@@ -3561,10 +3527,11 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 		struct widget *wr=l->data;
 		if(wr->type==widget_table_row) {
 			struct widget *wi=wr->children->data;
+			struct item* it;
 			if(wi->name==NULL)
 				continue;
 			dbg(0,"%s\n",wi->name);
-			struct item* it=map_rect_create_item(mr,type_found_item);
+			it=map_rect_create_item(mr,type_found_item);
 			if(it) {
 				struct coord c;
 				struct attr a;
@@ -4389,6 +4356,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	GList *l;
 	static char possible_keys[256]="";
         struct widget *wi=NULL;
+	struct widget *wr;
 
 	res=search_list_get_result(this->sl);
 	if (res) {
@@ -4482,7 +4450,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text2=town_str(res, 3, 0);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
-	struct widget *wr;
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 
 		if (!text2) {
@@ -5681,7 +5648,7 @@ gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct 
 	struct widget *w,*wb,*wl;
 	struct attr_iter *iter;
 	struct attr active_vehicle;
-
+    
 	iter=navit_attr_iter_new();
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
 		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);

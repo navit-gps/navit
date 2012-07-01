@@ -195,8 +195,8 @@ search_split_phrases(char *str)
 {
 	char *s,*d;
 	int wordcount=0;
-	s=str;
 	GList *ret=NULL;
+	s=str;
 	do {
 		d=s;
 		wordcount=0;

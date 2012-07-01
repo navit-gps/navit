@@ -230,12 +230,13 @@ process_boundaries_finish(GList *boundaries_list)
 			}
 			if (boundary->country) {
 				if (!coord_is_equal(*gs->first,*gs->last)) {
+					struct item_bin *ib;
 					if (!fu) {
 						char *name=g_strdup_printf("country_%s_broken",boundary->iso2);
 						fu=tempfile("",name,1);
 						g_free(name);
 					}
-					struct item_bin *ib=item_bin;
+					ib=item_bin;
 					item_bin_init(ib, type_selected_point);
 					item_bin_add_coord(ib, gs->first, 1);
 					item_bin_write(ib, fu);
