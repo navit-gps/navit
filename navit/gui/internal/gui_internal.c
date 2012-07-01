@@ -131,7 +131,7 @@ struct widget {
 	 * on deallocation actions to be specified on a per widget basis.
 	 * This function will call g_free on the widget (if required).
 	 */
-	void (*free) (struct gui_priv *this_, struct widget * w);
+	void (*wfree) (struct gui_priv *this_, struct widget * w);
 	char *prefix;
 	char *name;
 	char *speech;
@@ -1592,8 +1592,8 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 		w->remove_cb(w->instance, w->cb);
 	if (w==this->highlighted)
 	    this->highlighted=NULL;
-	if(w->free)
-		w->free(this,w);
+	if(w->wfree)
+		w->wfree(this,w);
 	else
 		g_free(w);
 }
@@ -7491,7 +7491,7 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 
 	menu=gui_internal_menu(this,_("Route Description"));
 
-	menu->free=gui_internal_route_screen_free;
+	menu->wfree=gui_internal_route_screen_free;
 	this->route_data.route_showing=1;
 	this->route_data.route_table->spx = this->spacing;
 
