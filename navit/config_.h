@@ -4,6 +4,7 @@ extern "C" {
 extern int main_argc;
 extern char **main_argv;
 extern struct config *config;
+extern int configured;
 extern int config_empty_ok;
 /* prototypes */
 enum attr_type;
