@@ -80,8 +80,8 @@ struct graphics_priv
     HBITMAP hOldPrebuildBitmap;
     FP_AlphaBlend AlphaBlend;
     FP_SetStretchBltMode SetStretchBltMode;
-    BOOL WINAPI (*ChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
-    BOOL WINAPI (*ChangeWindowMessageFilterEx)( HWND hWnd, UINT message, DWORD action, void *pChangeFilterStruct);
+    BOOL (WINAPI *ChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
+    BOOL (WINAPI *ChangeWindowMessageFilterEx)( HWND hWnd, UINT message, DWORD action, void *pChangeFilterStruct);
     HANDLE hCoreDll;
     HANDLE hUser32Dll;
     HANDLE hGdi32Dll;
@@ -1179,7 +1179,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     /* expand images to bit-depth 8 (only applicable for grayscale images) */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8) 
-    	png_set_gray_1_2_4_to_8(png_ptr);
+   	png_set_gray_1_2_4_to_8(png_ptr);
 
     /* Expand grayscale to rgb */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)

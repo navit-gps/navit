@@ -64,6 +64,7 @@ struct font_freetype_font {
 };
 
 struct font_priv {
+	int data;
 };
 
 static struct font_priv dummy;
@@ -89,10 +90,11 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	FT_Glyph glyph;
 	FT_Matrix matrix;
 	FT_Vector pen;
-	pen.x = 0 * 64;
-	pen.y = 0 * 64;
 	int i;
 	struct point pt;
+	int n, len, x = 0, y = 0;
+	pen.x = 0 * 64;
+	pen.y = 0 * 64;
 #if 0
 	matrix.xx = dx;
 	matrix.xy = dy;
@@ -104,7 +106,6 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	matrix.yx = 0;
 	matrix.yy = 0x10000;
 #endif
-	int n, len, x = 0, y = 0;
 
 	len = g_utf8_strlen(text, -1);
 	if (estimate) {
@@ -122,8 +123,8 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			FT_BBox glyph_bbox;
 #if USE_CACHING
 			FTC_Node anode = NULL;
-			glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
 			FT_Glyph cached_glyph;
+			glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
 #if HAVE_LOOKUP_SCALER
 			FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
 #else
@@ -384,8 +385,6 @@ font_freetype_font_new(struct graphics_priv *gr,
 {
 	struct font_freetype_font *font =
 	    g_new(struct font_freetype_font, 1);
-
-	*meth = font_methods;
 	int exact, found=0;
 	char **family, **family_sav;
 #if USE_CACHING
@@ -395,6 +394,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 #ifndef HAVE_FONTCONFIG
 	char *name;
 #endif
+	*meth = font_methods;
 
 	if (!library_init) {
 		FT_Init_FreeType(&library);

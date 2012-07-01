@@ -52,6 +52,11 @@
 #include "config_.h"
 #include "xmlconfig.h"
 
+#if (defined __MINGW32__) || (defined _MSC_VER)
+/* This only works if a is a string constant, i.e. "name" */
+#define unsetenv(a) putenv(a "=")
+#endif
+
 #ifdef HAVE_GLIB
 #define ATTR_DISTANCE 1
 const int xml_attr_distance=1;
@@ -1123,19 +1128,11 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	if (xmldir)
 		setenv("XMLDIR",xmldir,1);	
 	else
-#ifndef __MINGW32__
 		unsetenv("XMLDIR");
-#else
-		putenv("XMLDIR=");
-#endif /* __MINGW32__ */
 	if (xmlfile)
 		setenv("XMLFILE",xmlfile,1);
 	else
-#ifndef __MINGW32__
 		unsetenv("XMLFILE");
-#else
-		putenv("XMLFILE=");
-#endif /* __MINGW32__ */
 	g_free(newxmldir);
 	g_free(newxmlfile);
 	dbg(1,"return %d\n", result);
