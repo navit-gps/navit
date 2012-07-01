@@ -29,6 +29,13 @@ extern "C" {
 
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCTION__
+
+/* Uncomment the following define to enable MSVC's memory debugging support */ 
+/*#define _CRTDBG_MAP_ALLOC*/
+#ifdef _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
 #endif
 
 extern int debug_level;
