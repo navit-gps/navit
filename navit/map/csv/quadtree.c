@@ -622,8 +622,8 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 
 	while(iter->iter_nodes)  {
 		struct quadtree_node *nodes[4];
-		iter_node=iter->iter_nodes->data;
 		int i;
+		iter_node=iter->iter_nodes->data;
 
 		if(iter_node->is_leaf) {
 			/* Try to find undeleted item in the current node */

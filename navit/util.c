@@ -30,6 +30,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #endif
+#ifdef _MSC_VER
+typedef int ssize_t ;
+#endif
 #include "util.h"
 #include "debug.h"
 #include "config.h"

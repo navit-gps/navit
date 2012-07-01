@@ -183,6 +183,7 @@ static struct event_methods event_glib_methods = {
 };
 
 struct event_priv {
+	int data;
 };
 
 static struct event_priv*
