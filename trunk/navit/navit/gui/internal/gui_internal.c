@@ -99,6 +99,12 @@ struct menu_data {
 	struct attr refresh_callback_obj,refresh_callback;
 };
 
+enum gui_internal_reason {
+  gui_internal_reason_click=1,
+  gui_internal_reason_keypress,
+  gui_internal_reason_keypress_finish
+};
+
 //##############################################################################################################
 //# Description:
 //# Comment:
@@ -117,7 +123,7 @@ struct widget {
 	  *
 	  */
 	void (*func)(struct gui_priv *priv, struct widget *widget, void *data);
-	int reason;
+	enum gui_internal_reason reason;
 	int datai;
 	void *data;
 	/**
@@ -456,8 +462,10 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * table);
 static int gui_internal_widget_table_is_empty(struct gui_priv *this,struct widget * table);
+static GList * gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table);
 static GList * gui_internal_widget_table_next_row(GList * row);
 static GList * gui_internal_widget_table_prev_row(GList * row);
+static GList * gui_internal_widget_table_first_row(GList * row);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_data_free(void * d);
 static void gui_internal_route_update(struct gui_priv * this, struct navit * navit,
@@ -575,12 +583,12 @@ coordinates_geo(const struct coord_geo *gc, char sep)
 		g.lng=-g.lng;
 		lngc='W';
 	}
-	lat_deg=g.lat;
-	lat_min=fmod(g.lat*60,60);
-	lat_sec=fmod(g.lat*3600,60);
-	lng_deg=g.lng;
-	lng_min=fmod(g.lng*60,60);
-	lng_sec=fmod(g.lng*3600,60);
+	lat_sec=fmod(g.lat*3600+0.5,60);
+	lat_min=fmod(g.lat*60-lat_sec/60.0+0.5,60);
+	lat_deg=g.lat-lat_min/60.0-lat_sec/3600.0+0.5;
+	lng_sec=fmod(g.lng*3600+0.5,60);
+	lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
+	lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
 	return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
 }
 
@@ -1646,7 +1654,7 @@ static void gui_internal_call_highlighted(struct gui_priv *this)
 {
 	if (! this->highlighted || ! this->highlighted->func)
 		return;
-	this->highlighted->reason=1;
+	this->highlighted->reason=gui_internal_reason_click;
 	this->highlighted->func(this, this->highlighted, this->highlighted->data);
 }
 
@@ -2249,21 +2257,19 @@ gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *w
 	gui_internal_prune_menu(this, l->data);
 }
 
+/**
+ * @brief Generic notification function for Editable widgets to call Another widget notification function when Enter is pressed in editable field.
+ * The Editable widget should have data member pointing to the Another widget.
+ */
 static void
-gui_internal_cmd_add_bookmark_changed(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data)
 {
-	int len;
-	dbg(1,"enter\n");
-	if (wm->text) {
-		len=strlen(wm->text);
-		dbg(1,"len=%d\n", len);
-		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
-			wm->text[len-1]='\0';
-			gui_internal_cmd_add_bookmark_do(this, wm);
-		}
+	if (wm->reason==gui_internal_reason_keypress_finish && data) {
+			struct widget *w=data;
+			if(w->func)
+				w->func(this, w, w->data);
 	}
 }
-
 
 static struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
 
@@ -2281,12 +2287,13 @@ gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *d
 	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
-	wk->func = gui_internal_cmd_add_bookmark_changed;
+	wk->func = gui_internal_call_linked_on_finish;
 	wk->c=wm->c;
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
 	wnext->func = gui_internal_cmd_add_bookmark_clicked;
 	wnext->data=wk;
+	wk->data=wnext;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
@@ -2308,12 +2315,13 @@ gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, 
 	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
-	wk->func = gui_internal_cmd_add_bookmark_changed;
+	wk->func = gui_internal_call_linked_on_finish;
 	wk->c=wm->c;
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
 	wnext->func = gui_internal_cmd_add_bookmark_folder_clicked;
 	wnext->data=wk;
+	wk->data=wnext;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
@@ -2335,13 +2343,14 @@ gui_internal_cmd_rename_bookmark(struct gui_priv *this, struct widget *wm, void 
 	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
-	wk->func = gui_internal_cmd_add_bookmark_changed;
+	wk->func = gui_internal_call_linked_on_finish;
 	wk->c=wm->c;
 	wk->name=g_strdup(name);
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
 	wnext->func = gui_internal_cmd_rename_bookmark_clicked;
 	wnext->data=wk;
+	wk->data=wnext;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
@@ -2990,14 +2999,8 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 static void
 gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data)
 {
-	int len;
-	if (wm->text) {
-		len=strlen(wm->text);
-		dbg(1,"len=%d\n", len);
-		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
-			wm->text[len-1]='\0';
-			//gui_internal_cmd_pois_filter_do(this, wm, wm); // Doesnt clean filter editor from the screen. How to disable its redrawal after POI list is drawn?
-		}
+	if (wm->text && wm->reason==gui_internal_reason_keypress_finish) {
+		gui_internal_cmd_pois_filter_do(this, wm, wm);
 	}
 }
 
@@ -3859,7 +3862,11 @@ static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 {
 	int flags;
-	switch ((long) wm->data) {
+
+	if(!data)
+		data=wm->data;
+		
+	switch ((long) data) {
 	case 0:
 		flags=8|16|32|64|128|256;
 		break;
@@ -4204,10 +4211,20 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 	wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 	if (wi) {
                 /* select first item of the searchlist */
-                if (*key == NAVIT_KEY_RETURN && (search_list=gui_internal_menu_data(this)->search_list)) {
-			GList *l=search_list->children;
-			if (l && l->data)
-				gui_internal_highlight_do(this, l->data);
+                if (*key == NAVIT_KEY_RETURN) {
+                	search_list=gui_internal_menu_data(this)->search_list;
+                	if(search_list) {
+				GList *l=gui_internal_widget_table_top_row(this, search_list);
+				if (l && l->data) {
+					struct widget *w=l->data;
+					this->current.x=w->p.x+w->w/2;
+					this->current.y=w->p.y+w->h/2;
+					gui_internal_highlight(this);
+				}
+			} else {
+				wi->reason=gui_internal_reason_keypress_finish;
+				wi->func(this, wi, wi->data);
+			}
                        	return; 
 		} else if (*key == NAVIT_KEY_BACKSPACE) {
 			dbg(0,"backspace\n");
@@ -4233,7 +4250,7 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 			wi->text[len]='\0';
 		}
 		if (wi->func) {
-			wi->reason=2;
+			wi->reason=gui_internal_reason_keypress;
 			wi->func(this, wi, wi->data);
 		}
 		gui_internal_widget_render(this, wi);
@@ -4244,8 +4261,9 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct menu_data *md=gui_internal_menu_data(this);
+	struct menu_data *md;
 	gui_internal_keypress_do(this, (char *) wm->data);
+	md=gui_internal_menu_data(this);
 	// Switch to lowercase after the first key is pressed
 	if (md->keyboard_mode == 2) // Latin
 		gui_internal_keyboard_do(this, md->keyboard, 10);
@@ -4795,7 +4813,18 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		struct table_data *td=(struct table_data*)(md->search_list->data);
 		td->button_box_hide=mode<1024;
 	}
-	
+
+	if (mode == 1023) { /* special case for coordinates input screen (enter_coord) */
+		KEY("0"); KEY("1"); KEY("2"); KEY("3"); KEY("4"); SPACER(); KEY("N"); KEY("S");
+		KEY("5"); KEY("6"); KEY("7"); KEY("8"); KEY("9"); SPACER(); KEY("E"); KEY("W");
+		KEY("°"); KEY("."); KEY("'"); 
+		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+		SPACER();
+		SPACER();
+		SPACER();
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+	}	
+
 	if (mode >= 1024) {
 		char *text=NULL;
 		int font=0;
@@ -6312,20 +6341,6 @@ gui_internal_cmd_log_clicked(struct gui_priv *this, struct widget *widget, void 
 }
 
 static void
-gui_internal_cmd_log_changed(struct gui_priv *this, struct widget *wm, void *data)
-{
-	int len;
-	if (wm->text) {
-		len=strlen(wm->text);
-		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
-			wm->text[len-1]='\0';
-			gui_internal_cmd_log_do(this, wm);
-		}
-	}
-}
-
-
-static void
 gui_internal_cmd_log(struct gui_priv *this)
 {
 	struct widget *w,*wb,*wk,*wl,*we,*wnext;
@@ -6341,11 +6356,12 @@ gui_internal_cmd_log(struct gui_priv *this)
 	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
-	wk->func = gui_internal_cmd_log_changed;
+	wk->func = gui_internal_call_linked_on_finish;
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
 	wnext->func = gui_internal_cmd_log_clicked;
 	wnext->data=wk;
+	wk->data=wnext;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
@@ -6467,7 +6483,160 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 	attr_list_free(attr_list);
 }
 
+//##############################################################################################################
+//# Description: Convert one geo coordinate in human readable form to double value.
+//# Comment:
+//# Authors: Martin Bruns (05/2012), mdankov
+//##############################################################################################################
+static int
+gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
+{
+	int sign=0;
+	char *degree, *minute, *second;
+	
+	if(!s)
+		return 0;
+	
+	if (strchr(s, minus)!=NULL) 
+		sign=-1; 
+	else if (strchr(s, plus)!=NULL) 
+		sign=1; 
+	
+	if(!sign)
+		return 0;
+	
 
+	/* Can't just use strtok here because ° is multibyte sequence in utf8 */
+	degree=s;
+	minute=strstr(s,"°");
+	if(minute) {
+		*minute=0;
+		minute+=strlen("°");
+	}
+
+	*x = strtold(degree, NULL);
+	
+	if(strchr(degree, plus) || strchr(degree, minus)) {
+		dbg(3,"degree %c/%c found\n",plus,minus);
+	} else {/* DEGREES_MINUTES */
+		if(!minute)
+			return 0;
+		minute = strtok(minute,"'"); 
+		*x+=strtold(minute, NULL)/60;
+		if(strchr(minute, plus) || strchr(minute, minus)) {
+			dbg(3,"minute %c/%c found\n",plus,minus);
+		} else { /* DEGREES_MINUTES_SECONDS */
+			second=strtok(NULL,"");  
+			if(!second)
+				return 0;
+			*x+=strtold(second, NULL)/3600;
+		}		
+	}
+	*x *= sign;
+	return 1;
+}
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Bruns (05/2012)
+//##############################################################################################################
+static void
+gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget)
+{
+	char *lat, *lng;
+	char *widgettext;
+	double latitude, longitude; 
+	dbg(1,"text entered:%s\n", widget->text);
+
+	/* possible entry can be identical to coord_format output but only space between lat and lng is allowed */
+	widgettext=g_ascii_strup(widget->text,-1);
+
+	lat=strtok(widgettext," ");
+	lng=strtok(NULL,"");
+
+	if(!lat || !lng){
+		g_free(widgettext);
+		return;
+	}
+	if( gui_internal_coordinate_parse(lat, 'N', 'S', &latitude) && gui_internal_coordinate_parse(lng, 'E', 'W', &longitude) ) {
+		g_free(widgettext);
+		widgettext=g_strdup_printf("%lf %lf", longitude, latitude);	
+		pcoord_parse(widgettext, projection_mg, &widget->c );
+	} else if(!pcoord_parse(widget->text, projection_mg, &widget->c )) {
+		g_free(widgettext);
+		return;
+	}
+	g_free(widgettext);
+	
+	gui_internal_cmd_position(this, widget, (void*)8);
+}
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Bruns (05/2012)
+//##############################################################################################################
+static void
+gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widget, void *data)
+{
+	dbg(1,"entered\n");
+        gui_internal_cmd_enter_coord_do(this, widget->data);
+}
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Bruns (05/2012)
+//##############################################################################################################
+static void
+gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+        struct widget *w, *wb, *wk, *we, *wnext, *row;
+/*        gui_internal_enter(this, 1);
+        gui_internal_enter_setup(this);*/
+        wb=gui_internal_menu(this, _("Enter Coordinates"));
+        w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+        gui_internal_widget_append(wb, w);
+
+        we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+        gui_internal_widget_append(w, we);
+        gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Longitude Latitude")));
+        wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
+        wk->background=this->background;
+        wk->flags |= flags_expand|flags_fill;
+        wk->func = gui_internal_call_linked_on_finish;
+        gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+        wnext->state |= STATE_SENSITIVE;
+        wnext->func = gui_internal_cmd_enter_coord_clicked; 
+        wnext->data=wk;
+        wk->data=wnext;
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, _("Enter Coordinates like sample ones below"), gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, "52.5219N 19.4127E", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, "52°31.3167N 19°24.7667E", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, "52°31'19N 19°24'46E", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(w,row);
+
+	if (this->keyboard)
+                gui_internal_widget_append(w, gui_internal_keyboard(this,1023));
+       gui_internal_menu_render(this);
+/*	gui_internal_leave(this);*/
+}
 
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
@@ -7068,6 +7237,7 @@ static int gui_internal_widget_table_is_empty(struct gui_priv *this, struct widg
    return 1;
 }
 
+
 /**
  * @brief Move GList pointer to the next table row, skipping other table children (button box, for example).
  * @param row GList pointer into the children list 
@@ -7095,6 +7265,38 @@ static GList * gui_internal_widget_table_prev_row(GList * row)
    }
   return row;
 }
+
+/**
+ * @brief Move GList pointer to the first table row, skipping other table children (button box, for example).
+ * @param row GList pointer into the children list 
+ * @returns GList pointer to the first row in the children list, or NULL if table is empty.
+ */
+static GList * gui_internal_widget_table_first_row(GList * row)
+{
+  if(!row)
+  	return NULL;
+
+  if(row->data && ((struct widget *)(row->data))->type == widget_table_row)
+  	return row;
+
+  return gui_internal_widget_table_next_row(row);
+}
+
+/**
+ * @brief Get GList pointer to the table row drawn on the top of the screen.
+ * @returns GList pointer to the first row in the children list, or NULL.
+ */
+static GList * gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table)
+{
+	if(table && table->type==widget_table) {
+		struct table_data *d=table->data;
+		dbg(0,"1\n");
+		return gui_internal_widget_table_first_row(d->top_row);
+	}
+	dbg(0,"2\n");
+	return NULL;
+}
+
 
 
 /**
@@ -8067,6 +8269,7 @@ static struct command_table commands[] = {
 	{"setting_rules",command_cast(gui_internal_cmd2_setting_rules)},
 	{"setting_vehicle",command_cast(gui_internal_cmd2_setting_vehicle)},
 	{"town",command_cast(gui_internal_cmd2_town)},
+	{"enter_coord",command_cast(gui_internal_cmd_enter_coord)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
