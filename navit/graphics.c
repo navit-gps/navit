@@ -394,6 +394,8 @@ struct graphics_font * graphics_named_font_new(struct graphics *gra, char *font,
 }
 
 void graphics_font_destroy(struct graphics_font *gra_font) {
+	if(!gra_font)
+		return;
 	gra_font->meth.font_destroy(gra_font->priv);
 	g_free(gra_font);
 }
@@ -1883,7 +1885,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		graphics_draw_polygon_clipped(gra, gc, pa, count);
 		break;
 	case element_polyline:
-		{
+		{	
 			gc->meth.gc_set_linewidth(gc->priv, 1);
 			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
 				graphics_gc_set_dashes(gc, e->u.polyline.width,
@@ -2320,7 +2322,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	if(displaylist->dc.trans!=trans)
 		displaylist->dc.trans=transform_dup(trans);
 	displaylist->dc.gra=gra;
-	displaylist->dc.mindist=transform_get_scale(trans)/2;
+	displaylist->dc.mindist=flags&512?15:2;
 	// FIXME find a better place to set the background color
 	if (l) {
 		graphics_gc_set_background(gra->gc[0], &l->color);
@@ -2657,7 +2659,7 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 	struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
 	int count;
 
-	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 1, 0, NULL);
+	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
 
 	if (di->item.type < type_line) {
 		return within_dist_point(p, &pa[0], dist);
