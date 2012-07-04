@@ -884,7 +884,7 @@ public class NavitGraphics
 				if (pos_wraparound != 0 && y < 0) y += parent_graphics.bitmap_h;
 				if (pos_wraparound != 0 && width < 0) width += parent_graphics.bitmap_w;
 				if (pos_wraparound != 0 && height < 0) height += parent_graphics.bitmap_h;
-				view.invalidate(x,y,x+width,y+height);
+				parent_graphics.view.invalidate(x,y,x+width,y+height);
 			}
 		}
 	}
