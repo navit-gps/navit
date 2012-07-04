@@ -438,16 +438,8 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			xc=c1.x;
 			yc=c1.y;
 		}
-		if (i != 0 && i != count-1 && mindist) {
-			if (xc > c[k].x-mindist && xc < c[k].x+mindist && yc > c[k].y-mindist && yc < c[k].y+mindist &&
-				(c[i+1].x != c[0].x || c[i+1].y != c[0].y))
-				continue;
-			k=i;
-		}
 		xm=xc;
 		ym=yc;
-//		dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
-//		ret=coord_rect_contains(&t->r, c);
 		xc-=t->map_center.x;
 		yc-=t->map_center.y;
 		xc >>= t->scale_shift;
@@ -513,6 +505,18 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		}
 		xc+=t->offx;
 		yc+=t->offy;
+
+		if (i != 0 && i != count-1 && mindist) {
+			/* We expect values of mindist to be within 0..5 pixels for nice looking screens. 
+			   That gives difference of about 1 pixel in worst case between abs(dx)+abs(dy) and sqrt(dx*dx+dy*dy).
+			   We expect significantly bigger values when drawing map while scrolling it. But it anyway will be ugly.
+			   Should anybody care about that inaccuracy? */
+			if ( (abs(xc - p[k].x) + abs(yc - p[k].y)) < mindist &&
+				(c[i+1].x != c[0].x || c[i+1].y != c[0].y))
+				continue;
+			k=j;
+		}		
+
 		p[j].x=xc;
 		p[j].y=yc;
 		if (width_return) {
