@@ -6493,6 +6493,7 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 {
 	int sign=0;
 	char *degree, *minute, *second;
+	double tmp;
 	
 	if(!s)
 		return 0;
@@ -6514,7 +6515,7 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 		minute+=strlen("°");
 	}
 
-	*x = strtold(degree, NULL);
+	sscanf(degree, "%lf", x);
 	
 	if(strchr(degree, plus) || strchr(degree, minus)) {
 		dbg(3,"degree %c/%c found\n",plus,minus);
@@ -6522,14 +6523,16 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 		if(!minute)
 			return 0;
 		minute = strtok(minute,"'"); 
-		*x+=strtold(minute, NULL)/60;
+		sscanf(minute, "%lf", &tmp);
+		*x+=tmp/60;
 		if(strchr(minute, plus) || strchr(minute, minus)) {
 			dbg(3,"minute %c/%c found\n",plus,minus);
 		} else { /* DEGREES_MINUTES_SECONDS */
 			second=strtok(NULL,"");  
 			if(!second)
 				return 0;
-			*x+=strtold(second, NULL)/3600;
+			sscanf(second, "%lf", &tmp);
+			*x+=tmp/3600;
 		}		
 	}
 	*x *= sign;
