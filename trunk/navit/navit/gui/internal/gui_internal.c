@@ -4269,8 +4269,8 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_keyboard_do(this, md->keyboard, 10);
 	if (md->keyboard_mode == 26) // Umlaut
 		gui_internal_keyboard_do(this, md->keyboard, 34);
-	if ((md->keyboard_mode & ~7) == 40) // Russian/Ukrainian/Belorussian
-		gui_internal_keyboard_do(this, md->keyboard, 48);
+	if (md->keyboard_mode == 42) // Russian/Ukrainian/Belorussian
+		gui_internal_keyboard_do(this, md->keyboard, 50);
 }
 
 static void
