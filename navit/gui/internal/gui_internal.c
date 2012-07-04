@@ -4625,7 +4625,8 @@ struct gui_internal_keyb_mode {
 	/*24*/ {"ÄÖÜ", 2, 40, 0},
 	/*32*/ {"äöü", 2, 32, 8},
 	/*40*/ {"АБВ", 2, 48,  0},
-	/*48*/ {"абв", 2, 40,  8}
+	/*48*/ {"абв", 2, 40,  8},
+	/*56*/ {"DEG", 2, 2,  2}
 };
 
 
@@ -4814,13 +4815,16 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		td->button_box_hide=mode<1024;
 	}
 
-	if (mode == 1023) { /* special case for coordinates input screen (enter_coord) */
+	if (mode >= 56 && mode < 64) { /* special case for coordinates input screen (enter_coord) */
 		KEY("0"); KEY("1"); KEY("2"); KEY("3"); KEY("4"); SPACER(); KEY("N"); KEY("S");
 		KEY("5"); KEY("6"); KEY("7"); KEY("8"); KEY("9"); SPACER(); KEY("E"); KEY("W");
 		KEY("°"); KEY("."); KEY("'"); 
 		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
 		SPACER();
-		SPACER();
+
+		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+		wk->datai=mode+1024;
+
 		SPACER();
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}	
@@ -6595,15 +6599,21 @@ gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widge
 static void
 gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-        struct widget *w, *wb, *wk, *we, *wnext, *row;
-/*        gui_internal_enter(this, 1);
-        gui_internal_enter_setup(this);*/
+        struct widget *w, *wb, *wk, *wr, *we, *wnext, *row;
         wb=gui_internal_menu(this, _("Enter Coordinates"));
+	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	wr=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, wr);
+	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(wr, we);
+
+/*
         w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
         gui_internal_widget_append(wb, w);
 
         we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-        gui_internal_widget_append(w, we);
+        gui_internal_widget_append(w, we);*/
         gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Longitude Latitude")));
         wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
         wk->background=this->background;
@@ -6614,31 +6624,18 @@ gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr 
         wnext->func = gui_internal_cmd_enter_coord_clicked; 
         wnext->data=wk;
         wk->data=wnext;
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, _("Enter Coordinates like sample ones below"), gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
+	row=gui_internal_text_new(this, _("Enter coordinates, for example:"), gravity_top_center|flags_fill|orientation_vertical);
+	gui_internal_widget_append(wr,row);
 	row=gui_internal_text_new(this, "52.5219N 19.4127E", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
+	gui_internal_widget_append(wr,row);
 	row=gui_internal_text_new(this, "52°31.3167N 19°24.7667E", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
+	gui_internal_widget_append(wr,row);
 	row=gui_internal_text_new(this, "52°31'19N 19°24'46E", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
-	row=gui_internal_text_new(this, " ", gravity_top_center|flags_fill|orientation_vertical);
-	gui_internal_widget_append(w,row);
+	gui_internal_widget_append(wr,row);
 
 	if (this->keyboard)
-                gui_internal_widget_append(w, gui_internal_keyboard(this,1023));
+                gui_internal_widget_append(w, gui_internal_keyboard(this,56));
        gui_internal_menu_render(this);
-/*	gui_internal_leave(this);*/
 }
 
 //##############################################################################################################
