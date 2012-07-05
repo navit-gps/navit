@@ -1434,7 +1434,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->messages = messagelist_new(attrs);
 
-	dbg(0,"return %p\n",this_);
+	dbg(1,"return %p\n",this_);
 	
 	return this_;
 }
@@ -3346,7 +3346,7 @@ struct navit *
 navit_ref(struct navit *this_)
 {
 	this_->refcount++;
-	dbg(0,"refcount %d\n",this_->refcount);
+	dbg(1,"refcount %d\n",this_->refcount);
 	return this_;
 }
 
@@ -3354,7 +3354,7 @@ void
 navit_unref(struct navit *this_)
 {
 	this_->refcount--;
-	dbg(0,"refcount %d\n",this_->refcount);
+	dbg(1,"refcount %d\n",this_->refcount);
 	if (this_->refcount <= 0)
 		navit_destroy(this_);
 }

@@ -109,7 +109,7 @@ attr_new_from_text(const char *name, const char *value)
 	int min,max,count;
 
 	ret=g_new0(struct attr, 1);
-	dbg(1,"enter name='%s' value='%s'\n", name, value);
+	dbg(3,"enter name='%s' value='%s'\n", name, value);
 	attr=attr_from_name(name);
 	ret->type=attr;
 	switch (attr) {
@@ -355,9 +355,9 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 struct attr *
 attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 {
-	dbg(1, "enter attrs=%p\n", attrs);
+	dbg(2, "enter attrs=%p\n", attrs);
 	while (*attrs) {
-		dbg(1,"*attrs=%p\n", *attrs);
+		dbg(3,"*attrs=%p\n", *attrs);
 		if ((*attrs)->type == attr) {
 			return *attrs;
 		}

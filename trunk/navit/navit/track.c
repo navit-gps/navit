@@ -867,7 +867,7 @@ struct tracking *
 tracking_ref(struct tracking *this_)
 {
 	this_->refcount++;
-	dbg(0,"refcount %d\n",this_->refcount);
+	dbg(1,"refcount %d\n",this_->refcount);
 	return this_;
 }
 
@@ -875,7 +875,7 @@ void
 tracking_unref(struct tracking *this_)
 {
 	this_->refcount--;
-	dbg(0,"refcount %d\n",this_->refcount);
+	dbg(1,"refcount %d\n",this_->refcount);
 	if (this_->refcount <= 0)
 		tracking_destroy(this_);
 }
