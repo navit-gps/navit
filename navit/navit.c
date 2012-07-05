@@ -2054,6 +2054,9 @@ navit_init(struct navit *this_)
 			}
 		}
 		navit_add_former_destinations_from_file(this_);
+	} else {
+		dbg(0, "FATAL: No mapset available. Please add a (valid) mapset to your configuration.\n");
+		exit(1);
 	}
 	if (this_->route) {
 		struct attr callback;
