@@ -1685,7 +1685,7 @@ navit_former_destinations_active(struct navit *this_)
 }
 
 struct map* read_former_destinations_from_file(){
-	struct attr type, data, flags, *attrs[4];
+	struct attr type, data, no_warn, flags, *attrs[5];
 	char *destination_file = bookmarks_get_destination_file(FALSE);
 	struct map *m;
 
@@ -1695,10 +1695,14 @@ struct map* read_former_destinations_from_file(){
 	data.type=attr_data;
 	data.u.str=destination_file;
 
+	no_warn.type=attr_no_warning_if_map_file_missing;
+	no_warn.u.num=1;
+
 	flags.type=attr_flags;
 	flags.u.num=1;
 
-	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
+	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags;
+	attrs[3]=&no_warn; attrs[4]=NULL;
 
 	m=map_new(NULL, attrs);
 	g_free(destination_file);

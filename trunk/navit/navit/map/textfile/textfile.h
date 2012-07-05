@@ -28,6 +28,7 @@ struct map_priv {
 	char *filename;
 	char *charset;
 	int is_pipe;
+	int no_warning_if_map_file_missing;
 	int flags;
 };
 
