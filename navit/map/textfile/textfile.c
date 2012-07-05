@@ -58,14 +58,13 @@ get_line(struct map_rect_priv *mr)
 		remove_comment_line(mr->line);
 		mr->lastlen=strlen(mr->line)+1;
 		if (strlen(mr->line) >= TEXTFILE_LINE_SIZE-1) 
-			printf("line too long\n");
+			dbg(0, "line too long: %s\n", mr->line);
 	}
 }
 
 static void
 map_destroy_textfile(struct map_priv *m)
 {
-	dbg(1,"map_destroy_textfile\n");
 	g_free(m->filename);
 	if(m->charset) {
 		g_free(m->charset);
@@ -95,7 +94,7 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
 	int ret=0;
-	dbg(1,"textfile_coord_get %d\n",count);
+	dbg(1,"enter, count: %d\n",count);
 	while (count--) {
 		if (mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc) && parse_line(mr, mr->item.id_hi)) {
 			*c=mr->c;
@@ -135,7 +134,7 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {	
 	struct map_rect_priv *mr=priv_data;
 	char *str=NULL;
-	dbg(1,"textfile_attr_get mr=%p attrs='%s' ", mr, mr->attrs);
+	dbg(1,"mr=%p attrs='%s' ", mr, mr->attrs);
 	if (attr_type != mr->attr_last) {
 		dbg(1,"reset attr_pos\n");
 		mr->attr_pos=0;
@@ -175,7 +174,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
 
-	dbg(1,"map_rect_new_textfile\n");
+	dbg(1,"enter\n");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
@@ -209,13 +208,13 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 		mr->pos=0;
 		mr->lastlen=0;
 #else
-		dbg(0,"map_rect_new_textfile is unable to work with pipes %s\n",map->filename);
+		dbg(0,"unable to work with pipes %s\n",map->filename);
 #endif 
 	} else {
 		mr->f=fopen(map->filename, "r");
 	}
 	if(!mr->f) {
-		printf("map_rect_new_textfile unable to open textfile %s. Error: %s\n",map->filename, strerror(errno));
+		dbg(0, "error opening textfile %s: %s\n",map->filename, strerror(errno));
 	}
 	get_line(mr);
 	return mr;
@@ -306,7 +305,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			dbg(1,"type='%s'\n", type);
 			mr->item.type=item_from_name(type);
 			if (mr->item.type == type_none) 
-				printf("Warning: type '%s' unknown\n", type);
+				dbg(0, "Warning: type '%s' unknown\n", type);
 		} else {
 			get_line(mr);
 			continue;
