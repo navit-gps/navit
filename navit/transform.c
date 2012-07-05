@@ -427,7 +427,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	int zlimit=t->znear;
 	int visible, visibleo=-1;
 	int i,j = 0,k=0;
-	dbg(1,"count=%d\n", count);
+	dbg(3,"count=%d\n", count);
 	for (i=0; i < count; i++) {
 		if (pro == t->pro) {
 			xc=c[i].x;

@@ -147,7 +147,7 @@ static struct attr ** convert_to_attrs(struct xmlstate *state, struct attr_fixme
 		attribute_value++;
 	}
 	ret[count]=NULL;
-	dbg(1,"ret=%p\n", ret);
+	dbg(3,"ret=%p\n", ret);
 	return ret;
 }
 

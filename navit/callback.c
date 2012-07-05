@@ -143,13 +143,13 @@ callback_call(struct callback *cb, int pcount, void **p)
 	if (! cb)
 		return;
 	if (cb->pcount + pcount <= 8) {
-		dbg(1,"cb->pcount=%d\n", cb->pcount);
+		dbg(3,"cb->pcount=%d\n", cb->pcount);
 		if (cb->pcount && cb->p) 
-			dbg(1,"cb->p[0]=%p\n", cb->p[0]);
-		dbg(1,"pcount=%d\n", pcount);
+			dbg(3,"cb->p[0]=%p\n", cb->p[0]);
+		dbg(3,"pcount=%d\n", pcount);
 		if (pcount) {
 		       	dbg_assert(p!=NULL); 
-			dbg(1,"p[0]=%p\n", p[0]);
+			dbg(3,"p[0]=%p\n", p[0]);
 		}
 		for (i = 0 ; i < cb->pcount ; i++) 
 			pf[i]=cb->p[i];
