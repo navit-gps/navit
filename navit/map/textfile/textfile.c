@@ -214,7 +214,9 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 		mr->f=fopen(map->filename, "r");
 	}
 	if(!mr->f) {
-		dbg(0, "error opening textfile %s: %s\n",map->filename, strerror(errno));
+		if (!(errno == ENOENT && map->no_warning_if_map_file_missing)) {
+			dbg(0, "error opening textfile %s: %s\n", map->filename, strerror(errno));
+		}
 	}
 	get_line(mr);
 	return mr;
@@ -351,6 +353,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *charset=attr_search(attrs, NULL, attr_charset);
 	struct attr *flags=attr_search(attrs, NULL, attr_flags);
+	struct attr *no_warn=attr_search(attrs, NULL, attr_no_warning_if_map_file_missing);
 	struct file_wordexp *wexp;
 	int len,is_pipe=0;
 	char *wdata;
@@ -372,6 +375,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
 	m->id=++map_id;
 	m->filename=g_strdup(wexp_data[0]);
 	m->is_pipe=is_pipe;
+	m->no_warning_if_map_file_missing=(no_warn!=NULL) && (no_warn->u.num);
 	if (flags) 
 		m->flags=flags->u.num;
 	dbg(1,"map_new_textfile %s %s\n", m->filename, wdata);

@@ -257,8 +257,10 @@ bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *t
 
 	{
 		//Load map now
-		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
-		struct attr *attrs[]={&type, &data, NULL};
+		struct attr type={attr_type, {"textfile"}},
+			    data={attr_data, {this_->bookmark_file}},
+			    no_warn={attr_no_warning_if_map_file_missing, {1}};
+		struct attr *attrs[]={&type, &data, &no_warn, NULL};
 		this_->bookmark=map_new(this_->parent, attrs);
 		if (!this_->bookmark)
 			return NULL;
