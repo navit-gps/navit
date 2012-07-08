@@ -57,7 +57,12 @@ char **main_argv;
 static void
 print_usage(void)
 {
-	printf(_("navit usage:\nnavit [options] [configfile]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the global debug output level to <n> (0-3).\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
+	printf(_("navit usage:\n"
+	"navit [options] [configfile]\n"
+	"\t-c <file>: use <file> as config file\n"
+	"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting from config file.\n"
+	"\t-h: print this usage info and exit.\n"
+	"\t-v: Print the version and exit.\n"));
 }
 
 
@@ -114,7 +119,7 @@ int main_real(int argc, char **argv)
 	if (argc == 2 && !strcmp(argv[1],"-RegisterForSystemEvents"))
 		argc=1;
 	if (argc > 1) {
-		/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
+		/* Don't forget to update the manpage if you modify theses options */
 		while((opt = getopt(argc, argv, ":hvc:d:e:s:")) != -1) {
 			switch(opt) {
 			case 'h':
@@ -130,7 +135,7 @@ int main_real(int argc, char **argv)
 	            config_file = optarg;
 				break;
 			case 'd':
-				debug_level_set(DEBUG_MODULE_GLOBAL, atoi(optarg));
+				debug_set_global_level(atoi(optarg), 1);
 				break;
 			case 'e':
 				command=optarg;
