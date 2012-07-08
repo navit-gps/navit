@@ -53,7 +53,8 @@ static struct sockaddr_in debug_sin;
 
 
 int debug_level=0;
-int global_debug_level=0;
+#define GLOBAL_DEBUG_LEVEL_UNSET -1
+int global_debug_level=GLOBAL_DEBUG_LEVEL_UNSET;
 int segv_level=0;
 int timestamp_prefix=0;
 
@@ -105,6 +106,16 @@ debug_update_level(gpointer key, gpointer value, gpointer user_data)
 }
 
 void
+debug_set_global_level(int level, int override_old_value ) {
+	if (global_debug_level == GLOBAL_DEBUG_LEVEL_UNSET || override_old_value) {
+		global_debug_level=level;
+		if (debug_level < global_debug_level){
+			debug_level = global_debug_level;
+		}
+	}
+}
+
+void
 debug_level_set(const char *name, int level)
 {
 	if (!strcmp(name, "segv")) {
@@ -116,10 +127,7 @@ debug_level_set(const char *name, int level)
 	} else if (!strcmp(name, "timestamps")) {
 		timestamp_prefix=level;
 	} else if (!strcmp(name, DEBUG_MODULE_GLOBAL)) {
-		global_debug_level=level;
-		if (debug_level < global_debug_level){
-			debug_level = global_debug_level;
-		}
+		debug_set_global_level(level, 0);
 	} else {
 		g_hash_table_insert(debug_hash, g_strdup(name), GINT_TO_POINTER(level));
 		g_hash_table_foreach(debug_hash, debug_update_level, NULL);
