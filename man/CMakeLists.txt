@@ -1,0 +1,1 @@
+INSTALL(FILES maptool.1 navit.1 DESTINATION ${MAN_DIR})

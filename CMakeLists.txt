@@ -30,6 +30,7 @@ set(BIN_DIR bin)
 set(SHARE_DIR share/navit)
 set(LOCALE_DIR share/locale)
 set(IMAGE_DIR share/navit/xpm)
+set(MAN_DIR share/man/man1)
 # LIB_DIR
 IF(UNIX AND NOT ANDROID AND NOT APPLE)
     IF (NOT LIBDIR)
