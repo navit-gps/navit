@@ -490,6 +490,7 @@ eval_postfix(struct context *ctx, struct result *res)
 				res->attr.type=attr_none;
 				res->attr.u.data=NULL;
 				res->varlen=0;
+				res->attrn=NULL;
 				while (obj_func->get_attr(obj, attr_type, &attr, iter)) {
 					if (command_evaluate_to_boolean(&attr, ctx->expr, &ctx->error)) 
 						res->attr=attr;
