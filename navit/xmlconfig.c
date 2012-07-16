@@ -255,7 +255,6 @@ static struct object_func object_funcs[] = {
 	{ attr_image,      NEW(image_new)},
 	{ attr_itemgra,    NEW(itemgra_new),  NULL, NULL, NULL, NULL, ADD(itemgra_add_attr)},
 	{ attr_layer,      NEW(layer_new),    NULL, NULL, NULL, NULL, ADD(layer_add_attr)},
-	{ attr_layout,     NEW(layout_new),   NULL, NULL, NULL, NULL, ADD(layout_add_attr)},
 	{ attr_log,        NEW(log_new)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
 	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
@@ -275,6 +274,8 @@ object_func_lookup(enum attr_type type)
 {
 	int i;
 	switch (type) {
+	case attr_layout:
+		return &layout_func;
 	case attr_map:
 		return &map_func;
 	case attr_maps:

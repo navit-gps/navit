@@ -24,6 +24,7 @@
 #include "layout.h"
 #include "coord.h"
 #include "debug.h"
+#include "xmlconfig.h"
 
 
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
@@ -566,3 +567,20 @@ element_add_attr(struct element *e, struct attr *attr)
 		return 0;
 	}
 }
+
+struct object_func layout_func = {
+	attr_layout,
+	(object_func_new)layout_new,
+	(object_func_get_attr)layout_get_attr,
+	(object_func_iter_new)layout_attr_iter_new,
+	(object_func_iter_destroy)layout_attr_iter_destroy,
+	(object_func_set_attr)NULL,
+	(object_func_add_attr)layout_add_attr,
+	(object_func_remove_attr)NULL,
+	(object_func_init)NULL,
+	(object_func_destroy)NULL,
+	(object_func_dup)NULL,
+	(object_func_ref)NULL,
+	(object_func_unref)NULL,
+};
+

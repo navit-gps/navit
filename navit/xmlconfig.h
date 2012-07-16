@@ -54,7 +54,7 @@ struct object_func {
 	void *(*unref)(void *);
 };
 
-extern struct object_func map_func, mapset_func, navit_func, tracking_func, vehicle_func, maps_func;
+extern struct object_func map_func, mapset_func, navit_func, tracking_func, vehicle_func, maps_func, layout_func;
 
 #define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_trackingo || (x) == attr_vehicle)
 
