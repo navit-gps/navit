@@ -6414,6 +6414,9 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
 	case attr_button:
 		attr->u.num=this->mouse_button_clicked_on_map;
 		break;
+	case attr_navit:
+		attr->u.navit=this->nav;
+		break;
 	default:
 		return 0;
 	}
