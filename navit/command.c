@@ -15,7 +15,6 @@
 #include "command.h"
 #include "event.h"
 #include "navit_nls.h"
-#include "obj_filter.h"
 
 /*
 gui.fullscreen=!gui.fullscreen
@@ -195,7 +194,6 @@ command_get_attr(struct context *ctx, struct result *res)
 static void
 command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 {
-	int result=0;
 	enum attr_type attr_type=command_attr_type(res);
 	struct object_func *func=object_func_lookup(res->attr.type);
 	if (!func || !func->set_attr)
@@ -210,7 +208,7 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 		g_free(tmp);
 	}
 	newres->attr.type=attr_type;
-	result=func->set_attr(res->attr.u.data, &newres->attr);
+	func->set_attr(res->attr.u.data, &newres->attr);
 	*res=*newres;
 }
 
@@ -287,8 +285,6 @@ static void
 eval_value(struct context *ctx, struct result *res) {
 	const char *op;
 	int len,dots=0;
-	struct obj_filter_t out;
-	int parsed_chars;
 
 	op=ctx->expr;
 	res->varlen=0;
@@ -299,18 +295,6 @@ eval_value(struct context *ctx, struct result *res) {
 	while (g_ascii_isspace(*op)) {
 		op++;
 	}
-
-	parsed_chars = parse_obj_filter(op, &out);
-	if (parsed_chars) {
-		struct attr* res_attr = filter_object(ctx->attr, out.iterator_type, out.filter_expr, out.idx);
-		if (res_attr) {
-			res->attr = *res_attr;
-			g_free(res_attr);
-			ctx->expr = op+parsed_chars;
-			return;
-		}
-	} 
-
 	if ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
 		res->attr.type=attr_none;
 		res->var=op;
@@ -486,6 +470,34 @@ eval_postfix(struct context *ctx, struct result *res)
 			res->attrnlen=tmp.varlen;
 			dump(res);
 		} else if (op[0] == '[') {
+			resolve_object(ctx, res);
+			if (ctx->error) return;
+			if (get_op(ctx,0,"@",NULL)) {
+				struct object_func *obj_func=object_func_lookup(res->attr.type);
+				struct attr_iter *iter;
+				struct attr attr;
+				enum attr_type attr_type=command_attr_type(res);
+				void *obj=res->attr.u.data;
+				if (!obj_func) {
+					dbg(0,"no object func\n");
+					return;
+				}
+				if (!obj_func->iter_new || !obj_func->iter_destroy) {
+					dbg(0,"no iter func\n");
+					return;
+				}
+				iter = obj_func->iter_new(NULL);
+				res->attr.type=attr_none;
+				res->attr.u.data=NULL;
+				res->varlen=0;
+				while (obj_func->get_attr(obj, attr_type, &attr, iter)) {
+					if (command_evaluate_to_boolean(&attr, ctx->expr, &ctx->error)) 
+						res->attr=attr;
+				}
+				obj_func->iter_destroy(iter);
+				if (ctx->error) return;
+				ctx->expr+=command_evaluate_to_length(ctx->expr, &ctx->error);
+			}
 			if (!get_op(ctx,0,"]",NULL)) {
 				ctx->error=missing_closing_bracket;
 				return;
@@ -587,12 +599,24 @@ eval_equality(struct context *ctx, struct result *res)
     		eval_additive(ctx, &tmp);
 		if (ctx->error) return;
 
+		resolve(ctx, res, NULL);
+		resolve(ctx, &tmp, NULL);
 		switch (op[0]) {
 		case '=':
-			set_int(ctx, res, (get_int(ctx, res) == get_int(ctx, &tmp)));
+			if (res->attr.type == attr_none || tmp.attr.type == attr_none) {
+				set_int(ctx, res, 0);
+			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type))
+				set_int(ctx, res, (!strcmp(get_string(ctx, res),get_string(ctx, &tmp))));
+			else
+				set_int(ctx, res, (get_int(ctx, res) == get_int(ctx, &tmp)));
 			break;
 		case '!':
-			set_int(ctx, res, (get_int(ctx, res) != get_int(ctx, &tmp)));
+			if (res->attr.type == attr_none || tmp.attr.type == attr_none) {
+				set_int(ctx, res, 1);
+			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type))
+				set_int(ctx, res, (!!strcmp(get_string(ctx, res),get_string(ctx, &tmp))));
+			else
+				set_int(ctx, res, (get_int(ctx, res) != get_int(ctx, &tmp)));
 			break;
 		case '<':
 			if (op[1] == '=') {
@@ -898,6 +922,21 @@ command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 		return 0;
 	else	
 		return ret;
+}
+
+int
+command_evaluate_to_length(const char *expr, int *error)
+{
+	struct attr attr;
+	struct result res;
+	struct context ctx;
+
+	attr.type=attr_none;
+	attr.u.data=NULL;
+	command_evaluate_to(&attr, expr, &ctx, &res);
+	if (!ctx.error)
+		return ctx.expr-expr;
+	return 0;
 }
 
 void

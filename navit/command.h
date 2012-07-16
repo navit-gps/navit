@@ -44,6 +44,7 @@ void command_evaluate_to_void(struct attr *attr, char *expr, int *error);
 char *command_evaluate_to_string(struct attr *attr, char *expr, int *error);
 int command_evaluate_to_int(struct attr *attr, char *expr, int *error);
 int command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error);
+int command_evaluate_to_length(const char *expr, int *error);
 void command_evaluate(struct attr *attr, const char *expr);
 void command_add_table_attr(struct command_table *table, int count, void *data, struct attr *attr);
 void command_add_table(struct callback_list *cbl, struct command_table *table, int count, void *data);
