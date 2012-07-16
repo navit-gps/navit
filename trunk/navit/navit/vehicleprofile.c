@@ -24,6 +24,7 @@
 #include "item.h"
 #include "roadprofile.h"
 #include "vehicleprofile.h"
+#include "xmlconfig.h"
 
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
@@ -168,3 +169,19 @@ vehicleprofile_get_name(struct vehicleprofile *this_)
 {
     return this_->name;
 }
+
+struct object_func vehicleprofile_func = {
+	attr_vehicleprofile,
+	(object_func_new)vehicleprofile_new,
+	(object_func_get_attr)vehicleprofile_get_attr,
+	(object_func_iter_new)vehicleprofile_attr_iter_new,
+	(object_func_iter_destroy)vehicleprofile_attr_iter_destroy,
+	(object_func_set_attr)vehicleprofile_set_attr,
+	(object_func_add_attr)vehicleprofile_add_attr,
+	(object_func_remove_attr)vehicleprofile_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)NULL,
+	(object_func_dup)NULL,
+	(object_func_ref)NULL,
+	(object_func_unref)NULL,
+};
