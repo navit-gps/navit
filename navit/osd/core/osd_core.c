@@ -201,10 +201,10 @@ format_speed(double speed, char *sep, char *format, int imperial)
 		unit="mph";
 	}
 	if (!format || !strcmp(format,"named"))
-		return g_strdup_printf("%.0f%s%s", speed, sep, unit);
+		return g_strdup_printf((speed < 10) ? "%.1f%s%s":"%.0f%s%s", speed, sep, unit);
 	else if (!strcmp(format,"value") || !strcmp(format,"unit")) {
 		if (!strcmp(format,"value"))
-			return g_strdup_printf("%.0f", speed);
+			return g_strdup_printf((speed < 10) ? "%.1f":"%.0f", speed);
 		else 
 			return g_strdup(unit);
 	} 
