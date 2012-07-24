@@ -160,9 +160,10 @@ int main_real(int argc, char **argv)
 		if (optind < argc) config_file = argv[optind];
 	}
 
-    // if config file is explicitely given only look for it, otherwise try std paths
-	if (config_file) list = g_list_append(list,g_strdup(config_file));
-    else {
+	// if config file is explicitely given only look for it, otherwise try std paths
+	if (config_file) {
+		list = g_list_append(list,g_strdup(config_file));
+	} else {
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_USER_DATADIR"), "/navit.xml" , NULL));
 		list = g_list_append(list,g_strdup("navit.xml.local"));
 		list = g_list_append(list,g_strdup("navit.xml"));
@@ -188,12 +189,10 @@ int main_real(int argc, char **argv)
         // Try the next config file possibility from the list
 		config_file = li->data;
 		dbg(1,"trying %s\n",config_file);
-		if (file_exists(config_file))
-		{
+		if (file_exists(config_file)) {
 			break;
 		}
-		else
-			g_free(config_file);
+		g_free(config_file);
 		li = g_list_next(li);
 	}
 
