@@ -4,7 +4,7 @@ macro(set_feature_switch_default VARIABLE REASON ENABLE)
       ((${VARIABLE}_ORIGINAL AND ${VARIABLE}) OR      # poor man's boolean equal
      (NOT ${VARIABLE}_ORIGINAL AND NOT ${VARIABLE}))))
       set(${VARIABLE}_REASON ${REASON})
-      set(${VARIABLE} ${ENABLE} CACHE BOOL "feature switch")
+      set(${VARIABLE} ${ENABLE} CACHE BOOL "feature switch" FORCE)
    else()
       set(${VARIABLE}_REASON "User defined")
    endif()
