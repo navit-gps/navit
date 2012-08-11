@@ -39,8 +39,6 @@
 #endif
 #ifndef _MSC_VER
 #include <sys/time.h>
-#else
-#define snprintf sprintf_s
 #endif /* _MSC_VER */
 #include "item.h"
 #include "file.h"

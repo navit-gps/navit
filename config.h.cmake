@@ -44,6 +44,7 @@
 
 #cmakedefine HAVE_SOCKET 1
 #cmakedefine HAVE_SNPRINTF 1
+#cmakedefine HAVE_DECL__SNPRINTF 1
 
 #cmakedefine HAVE_WINSOCK 1
 
