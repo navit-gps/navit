@@ -354,7 +354,6 @@ ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct item_bin_si
 	char *tile2=g_alloca(sizeof(char)*(len+1));
 	struct rect bbox;
 	struct item_bin *ib;
-	struct coord co;
 	struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
 
 	strcpy(tile2, tile);
@@ -379,10 +378,14 @@ ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct item_bin_si
 	item_bin_add_attr_string(ib, attr_debug, tile2);
 	item_bin_write_to_sink(ib, out, NULL);
 #endif
-	co.x=(bbox.l.x+bbox.h.x)/2;
-	co.y=(bbox.l.y+bbox.h.y)/2;
-	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
-	
+#if 0
+	{
+		struct coord co;
+		co.x=(bbox.l.x+bbox.h.x)/2;
+		co.y=(bbox.l.y+bbox.h.y)/2;
+		item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
+	}
+#endif
 }
 
 /* ba */
@@ -437,6 +440,7 @@ tile_sibling_edges(GHashTable *hash, char *tile, char c)
 	return 15;
 }
 
+#if 0
 static void
 ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink *out)
 {
@@ -445,7 +449,6 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 	int h=r->h.y-r->l.y;
 	char tile2[32];
 	struct rect bbox;
-	struct coord co;
 	bbox.l.x=r->l.x+dx*w;
 	bbox.l.y=r->l.y+dy*h;
 	bbox.h.x=bbox.l.x+w*wf;
@@ -461,10 +464,16 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 	item_bin_write_to_sink(ib, out, NULL);
 #endif
 	tile(&bbox, NULL, tile2, 32, 0, NULL);
-	co.x=(bbox.l.x+bbox.h.x)/2;
-	co.y=(bbox.l.y+bbox.h.y)/2;
-	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
+#if 0
+	{
+		struct coord co;
+		co.x=(bbox.l.x+bbox.h.x)/2;
+		co.y=(bbox.l.y+bbox.h.y)/2;
+		item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
+	}
+#endif
 }
+#endif
 
 static void
 tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, struct coastline_tile_data *data)
@@ -473,11 +482,11 @@ tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, struct coast
 	int pedges=0;
 	int debug=0;
 	int len=strlen(tile);
+	struct coastline_tile *cn, *co;
 	char *tile2=g_alloca(sizeof(char)*(len+1));
 	char t=tile[len-1];
 	strcpy(tile2, tile);
 	tile2[len-1]='\0';
-	struct coastline_tile *cn, *co;
 #if 0
 	if (!strncmp(tile,"bcacccaadbdcd",10))
 		debug=1;

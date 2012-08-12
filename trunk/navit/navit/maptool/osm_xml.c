@@ -19,14 +19,19 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#ifdef _MSC_VER
+#define atoll _atoi64
+#else
 #include <unistd.h>
+#endif
 #include "maptool.h"
 
 int
 osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 {
 	int len=strlen(attribute);
-	char *pos,*i,s,attr[len+2];
+	char *pos,*i,s,*attr;
+	attr=g_alloca(len+2);
 	strcpy(attr, attribute);
 	strcpy(attr+len, "=");
 	pos=strstr(xml, attr);
@@ -186,7 +191,7 @@ int
 map_collect_data_osm(FILE *in, struct maptool_osm *osm)
 {
 	int size=BUFFER_SIZE;
-	char buffer[size];
+	char buffer[BUFFER_SIZE];
 	char *p;
 	sig_alrm(0);
 	if (!fgets(buffer, size, in) || !xml_declaration_in_line(buffer)){

@@ -19,6 +19,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "maptool.h"
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
 
 char *
 osm_tag_value(struct item_bin *ib, char *key)
@@ -128,6 +131,7 @@ boundary_find_matches(GList *l, struct coord *c)
 	return ret;
 }
 
+#if 0
 static void
 test(GList *boundaries_list)
 {
@@ -172,6 +176,7 @@ boundary_bbox_compare(gconstpointer a, gconstpointer b)
 		return -1;
 	return 0;
 }
+#endif
 
 static GList *
 process_boundaries_insert(GList *list, struct boundary *boundary)
