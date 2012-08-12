@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "maptool.h"
 #include "linguistics.h"
 #include "file.h"
@@ -105,7 +106,6 @@ item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type at
 	struct attr_bin *ab=item_bin_get_attr_bin(from, attr, NULL);
 	if (ab)
 		item_bin_add_attr_data(ib, ab->type, (void *)(ab+1), (ab->len-1)*4);
-#include <assert.h>
 	assert(attr == attr_osm_wayid);
 	assert(item_bin_get_wayid(ib) == item_bin_get_wayid(from));
 }

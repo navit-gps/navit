@@ -28,11 +28,15 @@
 #include <signal.h>
 #include <stdio.h>
 #include <math.h>
-#include <getopt.h>
+#ifdef _MSC_VER
+#include "getopt_long.h"
+#define atoll _atoi64
+#else
 #include <unistd.h>
+#include <sys/time.h>
+#endif
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <zlib.h>
 #include "file.h"
 #include "item.h"
@@ -115,14 +119,17 @@ static struct plugins *plugins;
 
 static void add_plugin(char *path)
 {
-	struct attr **attrs;
+	struct attr pa_attr={attr_path};
+	struct attr pl_attr={attr_plugins};
+	struct attr *attrs[2]={&pa_attr,NULL};
 
 	if (! plugins) {
 		file_init();
 		plugins=plugins_new();
 	}
-	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
-	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);
+	pa_attr.u.str=path;
+	pl_attr.u.plugins=plugins;
+	plugin_new(&pl_attr,attrs);
 }
 
 static void
@@ -141,11 +148,11 @@ usage(FILE *f)
 	fprintf(f,"maptool - parse osm textfile and convert to Navit binfile format\n\n");
 	fprintf(f,"Usage (for OSM XML data):\n");
 	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
-    fprintf(f,"Usage (for OSM Protobuf/PBF data):\n");
-    fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
+	fprintf(f,"Usage (for OSM Protobuf/PBF data):\n");
+	fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)                       : this screen\n");
-	fprintf(f,"-5 (--md5) <file>                  : set file where to write md5 sum\n");
+	fprintf(f,"-5 (--md5) <file>                 : set file where to write md5 sum\n");
 	fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)           : dump coordinates after phase 1\n");
@@ -160,20 +167,20 @@ usage(FILE *f)
 	fprintf(f,"-N (--nodes-only)                 : process only nodes\n");
 	fprintf(f,"-o (--coverage)                   : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
-	fprintf(f,"-r (--rule-file) <file>            : read mapping rules from specified file\n");
+	fprintf(f,"-r (--rule-file) <file>           : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
 	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is 1GB\n");
 	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
 	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
-    fprintf(f,"-z (--compression-level) <level>  : set the compression level\n");
-    fprintf(f,"Internal options (undocumented):\n");                                                                      
-    fprintf(f,"-b (--binfile)\n");                                                                                        
-    fprintf(f,"-B \n");                                                                                                   
-    fprintf(f,"-m (--map) \n");                                                                                           
-    fprintf(f,"-O \n");                                                                                                   
-    fprintf(f,"-p (--plugin) \n");                                                                                        
+	fprintf(f,"-z (--compression-level) <level>  : set the compression level\n");
+	fprintf(f,"Internal options (undocumented):\n");                                                                      
+	fprintf(f,"-b (--binfile)\n");                                                                                        
+	fprintf(f,"-B \n");                                                                                                   
+	fprintf(f,"-m (--map) \n");                                                                                           
+	fprintf(f,"-O \n");                                                                                                   
+	fprintf(f,"-p (--plugin) \n");                                                                                        
 	
 	exit(1);
 }
@@ -439,8 +446,14 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 			l=g_list_next(l);
 		}
 	}
-	else if (p->protobuf)
+	else if (p->protobuf) {
+#ifdef _MSC_VER
+		fprintf(stderr,"Option -P not yet supported on MSVC\n");
+		exit(1);
+#else
 		map_collect_data_osm_protobuf(p->input_file,&p->osm);
+#endif
+	}
 	else if (p->o5m)
 		map_collect_data_osm_o5m(p->input_file,&p->osm);
 	else
@@ -772,10 +785,10 @@ int main(int argc, char **argv)
 
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
 	int i;
-	main_init(argv[0]);
 	int suffix_start=0;
-	int option_index = 0;
-
+	int option_index=0;
+	main_init(argv[0]);
+    
 #ifndef HAVE_GLIB
 	_g_slice_thread_init_nomessage();
 #endif
@@ -820,15 +833,20 @@ int main(int argc, char **argv)
 	p.result=argv[optind];
 
 
-    // initialize plugins and OSM mappings
+	// initialize plugins and OSM mappings
 	maptool_init(p.rule_file);
 	if (p.protobufdb_operation) {
+#ifdef _MSC_VER
+		fprintf(stderr,"Option -O not yet supported on MSVC\n");
+		exit(1);
+#else
 		osm_protobufdb_load(p.input_file, p.protobufdb);
 		return 0;
+#endif
 	}
 	phase=0;
 
-    // input from an OSM file
+	// input from an OSM file
 	if (p.input == 0) {
 		if (start_phase(&p, "collecting data")) {
 			osm_collect_data(&p, suffix);

@@ -28,8 +28,10 @@
 #include <signal.h>
 #include <stdio.h>
 #include <math.h>
+#ifndef _MSC_VER
 #include <getopt.h>
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <zlib.h>
@@ -464,9 +466,10 @@ load_tilesdir(FILE *in)
 {
 	char tile[32],subtile[32],c;
 	int size,zipnum=0;
+	struct tile_head **last;
 	create_tile_hash();
 	tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
-	struct tile_head **last=&tile_head_root;
+	last=&tile_head_root;
 	while (fscanf(in,"%[^:]:%d",tile,&size) == 2) {
 		struct tile_head *th=malloc(sizeof(struct tile_head));
 		if (!strcmp(tile,"index"))
@@ -655,10 +658,11 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 {
 	int tlen=tile_len(th->name);
 	int len=tlen;
-	char index_tile[len+1+strlen(info->suffix)];
+	char *index_tile;
 	struct rect r;
 	struct item_bin *item_bin;
 
+	index_tile=g_alloca(len+1+strlen(info->suffix));
 	strcpy(index_tile, th->name);
 	if (len > 6)
 		len=6;
