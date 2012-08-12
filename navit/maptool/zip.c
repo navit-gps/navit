@@ -149,7 +149,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	};
 	unsigned char salt[8], key[34], verify[2], mac[10];
 #endif
-	char filename[filelen+1];
+	char *filename;
 	int crc=0,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
@@ -214,6 +214,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		cd.zipcflg|=1;
 	}
 #endif
+	filename=g_alloca(filelen+1);
 	strcpy(filename, name);
 	len=strlen(filename);
 	while (len < filelen) {
@@ -281,8 +282,9 @@ void
 zip_write_index(struct zip_info *info)
 {
 	int size=ftell(info->index);
-	char buffer[size];
+	char *buffer;
 
+	buffer=g_alloca(size);
 	fseek(info->index, 0, SEEK_SET);
 	fread(buffer, size, 1, info->index);
 	write_zipmember(info, "index", strlen("index"), buffer, size);

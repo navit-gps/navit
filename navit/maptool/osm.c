@@ -16,7 +16,12 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define snprintf _snprintf
+#else
 #include <unistd.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -26,6 +31,11 @@
 #include "country.h"
 #include "file.h"
 #include "profile.h"
+
+#ifndef M_PI
+#define M_PI       3.14159265358979323846
+#define M_PI_4     0.785398163397448309616
+#endif
 
 extern int doway2poi;
 
@@ -1555,7 +1565,8 @@ relation_add_tag(char *k, char *v)
 		strcpy(iso_code, v);
 	}
 	if (add_tag) {
-		char tag[strlen(k)+strlen(v)+2];
+		char *tag;
+		tag=g_alloca(strlen(k)+strlen(v)+2);
 		sprintf(tag,"%s=%s",k,v);
 		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
 	}
@@ -1850,7 +1861,8 @@ void
 osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 {
 	struct item_bin *ib;
-	GList *bl=NULL;
+	GList *bl;
+	GHashTable *town_hash;
 	struct attr attrs[11];
 
 	profile(0,NULL);
@@ -1858,7 +1870,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 
 	profile(1,"processed boundraries\n");
 
-    GHashTable *town_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	town_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	while ((ib=read_item(in)))  {
 		if (!item_is_district(*ib))
 		{

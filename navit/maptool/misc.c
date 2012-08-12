@@ -28,8 +28,10 @@
 #include <signal.h>
 #include <stdio.h>
 #include <math.h>
+#ifndef _MSC_VER
 #include <getopt.h>
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <zlib.h>
@@ -42,6 +44,8 @@
 #include "linguistics.h"
 #include "plugin.h"
 #include "maptool.h"
+
+#define phase1_coord_max 16384
 
 struct rect world_bbox = {
 	{ -20000000, -20000000},
@@ -131,15 +135,15 @@ phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes)
 {
 	struct map_rect *mr;
 	struct item *item;
-	int count,max=16384;
-	struct coord ca[max];
+	int count;
+	struct coord ca[phase1_coord_max];
 	struct attr attr;
 	struct item_bin *item_bin;
 
 	while (maps) {
 		mr=map_rect_new(maps->data, NULL);
 		while ((item = map_rect_get_item(mr))) {
-			count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+			count=item_coord_get(item, ca, item->type < type_line ? 1: phase1_coord_max);
 			item_bin=init_item(item->type);
 			item_bin_add_coord(item_bin, ca, count);
 			while (item_attr_get(item, attr_any, &attr)) {
