@@ -64,7 +64,11 @@ getopt_long(int argc, char *const argv[],
 {
 	static char *place = EMSG;	/* option letter processing */
 	char	   *oli;			/* option letter list index */
-
+	
+	/* getopt initialises optind to 1, but XGetopt defines it as 0 which breaks getopt_long */
+	if(optind == 0)
+		optind=1;
+    
 	if (!*place)
 	{							/* update scanning pointer */
 		if (optind >= argc)
