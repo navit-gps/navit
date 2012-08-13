@@ -32,6 +32,7 @@
 #include "getopt_long.h"
 #define atoll _atoi64
 #else
+#include <getopt.h>
 #include <unistd.h>
 #include <sys/time.h>
 #endif
