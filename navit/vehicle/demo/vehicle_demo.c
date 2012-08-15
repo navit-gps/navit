@@ -108,7 +108,10 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
 	case attr_position_coord_geo:
 		priv->geo=*(attr->u.coord_geo);
 		priv->position_set=1;
-		dbg(0,"position_set %f %f\n", priv->geo.lat, priv->geo.lng);
+		dbg(1,"position_set %f %f\n", priv->geo.lat, priv->geo.lng);
+		break;
+	case attr_source:
+		// Ignore; is always present, but not read by this vehicle.
 		break;
 	default:
 		dbg(0,"unsupported attribute %s\n",attr_to_name(attr->type));
