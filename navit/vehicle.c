@@ -96,7 +96,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	if (!source) {
-		dbg(0, "no source\n");
+		dbg(0, "incomplete vehicle definition: missing attribute 'source'\n");
 		return NULL;
 	}
 
@@ -108,7 +108,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 
 	vehicletype_new = plugin_get_vehicle_type(type);
 	if (!vehicletype_new) {
-		dbg(0, "invalid type '%s'\n", type);
+		dbg(0, "invalid source '%s': unknown type '%s'\n", source->u.str, type);
 		g_free(type);
 		return NULL;
 	}
