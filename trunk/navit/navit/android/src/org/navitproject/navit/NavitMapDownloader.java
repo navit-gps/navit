@@ -638,7 +638,7 @@ public class NavitMapDownloader extends Thread
 		StatFs fsInfo = new StatFs(MAP_FILENAME_PATH);
 		return (long)fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
 	}
-	
+
 	public static NavitMap[] getAvailableMaps()
 	{
 		class filterMaps implements FilenameFilter {
@@ -649,11 +649,14 @@ public class NavitMapDownloader extends Thread
 				return false;
 			}
 		}
+		NavitMap maps[] = new NavitMap[0];
 		File map_dir = new File(MAP_FILENAME_PATH);
 		String map_file_names[] = map_dir.list(new filterMaps());
-		NavitMap maps[] = new NavitMap[map_file_names.length];
-		for (int map_file_index = 0; map_file_index < map_file_names.length; map_file_index++) {
-			maps[map_file_index] = new NavitMap(MAP_FILENAME_PATH, map_file_names[map_file_index]);
+		if (map_file_names != null) {
+			maps = new NavitMap[map_file_names.length];
+			for (int map_file_index = 0; map_file_index < map_file_names.length; map_file_index++) {
+				maps[map_file_index] = new NavitMap(MAP_FILENAME_PATH, map_file_names[map_file_index]);
+			}
 		}
 		return maps;
 	}
