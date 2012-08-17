@@ -3,7 +3,7 @@
       package="org.navitproject.navit"
       android:sharedUserId="org.navitproject.navit"
       android:versionCode="@ANDROID_VERSION_INT@"
-      android:versionName="@ANDROID_VERSION_NAME@"
+      android:versionName="@ANDROID_VERSION_NAME@-@ANDROID_VERSION_INT@"
       android:installLocation="auto">
     <application android:label="@string/app_name"
                  android:icon="@drawable/icon"
