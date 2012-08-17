@@ -71,11 +71,11 @@ public class NavitAddressSearchActivity extends Activity {
 
 	private static final String TAG                         = "NavitAddress";
 	private static final int    ADDRESS_RESULT_PROGRESS_MAX = 10;
-	
+
 	private List<NavitAddress> Addresses_found              = null;
 	private List<NavitAddress> addresses_shown              = null;
-	private EditText           address_string;
-	private CheckBox           pm_checkbox;
+	private String             mAddressString               = "";
+	private boolean            mPartialSearch               = false;
 	private String             mCountry;
 	private ImageButton        mCountryButton;
 	ProgressDialog             search_results_wait          = null;
@@ -111,12 +111,15 @@ public class NavitAddressSearchActivity extends Activity {
 		{
 			String search_string = extras.getString("search_string");
 			if (search_string != null) {
-				pm_checkbox.setChecked(true);
-				address_string.setText(search_string);
+				mPartialSearch = true;
+				mAddressString = search_string;
 				executeSearch();
 				return;
 			}
 		}
+
+		mPartialSearch = last_address_partial_match;
+		mAddressString = last_address_search_string;
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 		LinearLayout panel = new LinearLayout(this);
@@ -153,10 +156,14 @@ public class NavitAddressSearchActivity extends Activity {
 		addr_view.setPadding(4, 4, 4, 4);
 
 		// partial match checkbox
-		pm_checkbox = new CheckBox(this);
-		pm_checkbox.setText(Navit.get_text("partial match")); // TRANS
-		pm_checkbox.setChecked(last_address_partial_match);
-		pm_checkbox.setGravity(Gravity.CENTER);
+		final CheckBox checkboxPartialMatch = new CheckBox(this);
+		checkboxPartialMatch.setText(Navit.get_text("partial match")); // TRANS
+		checkboxPartialMatch.setChecked(last_address_partial_match);
+		checkboxPartialMatch.setGravity(Gravity.CENTER);
+
+		final EditText address_string = new EditText(this);
+		address_string.setText(last_address_search_string);
+		address_string.setSelectAllOnFocus(true);
 
 		// search button
 		final Button btnSearch = new Button(this);
@@ -165,8 +172,10 @@ public class NavitAddressSearchActivity extends Activity {
 		btnSearch.setGravity(Gravity.CENTER);
 		btnSearch.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				last_address_partial_match = pm_checkbox.isChecked();
-				last_address_search_string = address_string.getText().toString();
+				mPartialSearch = checkboxPartialMatch.isChecked();
+				mAddressString = address_string.getText().toString();
+				last_address_partial_match = mPartialSearch;
+				last_address_search_string = mAddressString;
 				executeSearch();
 			}
 		});
@@ -204,15 +213,11 @@ public class NavitAddressSearchActivity extends Activity {
 		if (title != null && title.length() > 0)
 			this.setTitle(title);
 
-		address_string = new EditText(this);
-		address_string.setText(last_address_search_string);
-		address_string.setSelectAllOnFocus(true);
-
 		LinearLayout searchSettingsLayout = new LinearLayout(this);
 		searchSettingsLayout.setOrientation(LinearLayout.HORIZONTAL);
 
 		searchSettingsLayout.addView(mCountryButton);
-		searchSettingsLayout.addView(pm_checkbox);
+		searchSettingsLayout.addView(checkboxPartialMatch);
 		panel.addView(addr_view);
 		panel.addView(address_string);
 		panel.addView(searchSettingsLayout);
@@ -285,7 +290,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 	public void finishAddressSearch() {
 		if (Addresses_found.isEmpty()) {
-			Toast.makeText( getApplicationContext(),getString(R.string.address_search_not_found) + "\n" + address_string.getText().toString(), Toast.LENGTH_LONG).show(); //TRANS
+			Toast.makeText( getApplicationContext(),getString(R.string.address_search_not_found) + "\n" + mAddressString, Toast.LENGTH_LONG).show(); //TRANS
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
@@ -340,7 +345,7 @@ public class NavitAddressSearchActivity extends Activity {
 		search_results_streets = 0;
 		search_results_streets_hn = 0;
 
-		search_handle = CallbackStartAddressSearch(pm_checkbox.isChecked() ? 1 : 0, mCountry, address_string.getText().toString());
+		search_handle = CallbackStartAddressSearch(mPartialSearch ? 1 : 0, mCountry, mAddressString);
 
 		search_results_wait.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
