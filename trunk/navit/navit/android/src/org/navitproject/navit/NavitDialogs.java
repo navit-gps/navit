@@ -87,9 +87,8 @@ public class NavitDialogs extends Handler{
 			// show the map download progressbar, and download the map
 			if (download_map_id > -1)
 			{
-				mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
-
 				mapdownloader = new NavitMapDownloader(download_map_id);
+				mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
 				mapdownloader.start();
 			}
 		}
