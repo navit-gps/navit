@@ -8,6 +8,10 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import org.acra.*;
+import org.acra.annotation.*;
+
+@ReportsCrashes(formKey = "dGlrNVRIOVVKYjB0UGVoLUZPanlzWFE6MQ") 
 public class NavitAppConfig extends Application {
 
 	private static final int         MAX_LAST_ADDRESSES = 10;
@@ -18,6 +22,8 @@ public class NavitAppConfig extends Application {
 
 	@Override
 	public void onCreate() {
+		ACRA.init(this);
+
 		mSettings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
 		super.onCreate();
 	}
