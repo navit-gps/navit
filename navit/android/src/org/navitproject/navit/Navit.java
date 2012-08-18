@@ -45,6 +45,7 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.os.PowerManager;
 import android.text.SpannableString;
@@ -85,7 +86,7 @@ public class Navit extends Activity
 	public static final int          MAP_NUM_SECONDARY              = 12;
 	static final String              NAVIT_PACKAGE_NAME             = "org.navitproject.navit";
 	static final String              TAG                            = "Navit";
-	static final String              MAP_FILENAME_PATH              = "/sdcard/navit/";
+	static final String              MAP_FILENAME_PATH              = Environment.getExternalStorageDirectory().getPath() + "/navit/";
 	static final String              NAVIT_DATA_DIR                 = "/data/data/" + NAVIT_PACKAGE_NAME;
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
