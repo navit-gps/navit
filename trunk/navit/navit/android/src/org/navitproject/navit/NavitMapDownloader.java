@@ -130,6 +130,7 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values("Austria","9.4","46.32","17.21","49.1", 289080462L, 1),
 		new osm_map_values("Azores","-31.62","36.63","-24.67","40.13", 54507108L, 1),
 		new osm_map_values("BeNeLux","2.08","48.87","7.78","54.52", 656716695L, 1),
+		new osm_map_values("Netherlands","3.07","50.75","7.23","53.73", 525336576L, 1),
 		new osm_map_values("Denmark","7.65","54.32","15.58","58.07", 154275079L, 1),
 		new osm_map_values("Faroe Islands","-7.8","61.3","-6.1","62.5", 54931474L, 1),
 		new osm_map_values("France","-5.45","42.00","8.44","51.68", 1468741961L, 1),
