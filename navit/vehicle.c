@@ -247,6 +247,10 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr)
 	int ret=1;
 	if (this_->meth.set_attr)
 		ret=this_->meth.set_attr(this_->priv, attr);
+	/* attr_profilename probably is never used by vehicle itself but it's used to control the
+	  routing engine. So any vehicle should allow to set and read it. */
+	if(attr->type == attr_profilename)
+		ret=1;
 	if (ret == 1 && attr->type == attr_log_gpx_desc) {
 		g_free(this_->gpx_desc);
 		this_->gpx_desc = attr->u.str;
