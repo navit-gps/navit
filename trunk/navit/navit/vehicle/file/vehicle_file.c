@@ -284,6 +284,11 @@ vehicle_file_open(struct vehicle_priv *priv)
 				return 0;
 			}
 		}
+		p=strchr(p,':');
+		if (p) {
+			p++;
+			write(priv->fd, p, strlen(p));
+		}
 		priv->file_type = file_type_socket;
 #endif //HAVE_SOCKET
 	} else if (!strncmp(priv->source,"serial:",7)) {
@@ -433,7 +438,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data_buf);
 		priv->nmea_data_buf=nmea_data_buf;
 	} else {
-		dbg(0, "nmea buffer overflow, discarding '%s'\n", buffer);
+		dbg(0, "nmea buffer overflow (len %d), discarding '%s'\n", priv->nmea_data_buf?strlen(priv->nmea_data_buf):-1,buffer);
 	}
 	i = 0;
 	p = buffer;
