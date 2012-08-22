@@ -941,21 +941,35 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 }
 
 /**
- * @brief Returns a list of map selections useable to create a route graph
- *
- * Returns a list of  map selections useable to get a  map rect from which items can be
- * retrieved to build a route graph. The selections are a rectangle with
- * c1 and c2 as two corners.
- *
- * @param c1 Corner 1 of the rectangle
- * @param c2 Corder 2 of the rectangle
+ * @brief Appends a map selection to the selection list. Selection list may be NULL.
  */
 static struct map_selection *
-route_calc_selection(struct coord *c, int count)
+route_rect_add(struct map_selection *sel, int order, struct coord *c1, struct coord *c2, int rel, int abs)
 {
-	struct map_selection *ret,*sel;
+	struct map_selection *ret;
+	ret=route_rect(order, c1, c2, rel, abs);
+	ret->next=sel;
+	return ret;
+}
+
+/**
+ * @brief Returns a list of map selections useable to create a route graph
+ *
+ * Returns a list of  map selections useable to get a map rect from which items can be
+ * retrieved to build a route graph. 
+ *
+ * @param c Array containing route points, including start, intermediate and destination ones.
+ * @param count number of route points 
+ * @param proifle vehicleprofile 
+ */
+static struct map_selection *
+route_calc_selection(struct coord *c, int count, struct vehicleprofile *profile)
+{
+	struct map_selection *ret=NULL;
 	int i;
 	struct coord_rect r;
+	char *str, *tok;
+	struct attr attr;
 
 	if (!count)
 		return NULL;
@@ -963,15 +977,27 @@ route_calc_selection(struct coord *c, int count)
 	r.rl=c[0];
 	for (i = 1 ; i < count ; i++)
 		coord_rect_extend(&r, &c[i]);
-	sel=route_rect(4, &r.lu, &r.rl, 25, 0);
-	ret=sel;
-	for (i = 0 ; i < count ; i++) {
-		sel->next=route_rect(8, &c[i], &c[i], 0, 40000);
-		sel=sel->next;
-		sel->next=route_rect(18, &c[i], &c[i], 0, 10000);
-		sel=sel->next;
+
+	if(!vehicleprofile_get_attr(profile,attr_route_depth, &attr, NULL) || attr.u.str==NULL) {
+		attr.u.str="4:25%,8:40000,18:10000";
+	}	
+	
+	attr.u.str=str=g_strdup(attr.u.str);
+	
+	while((tok=strtok(str,","))!=NULL) {
+		int order=0, dist=0;
+		sscanf(tok,"%d:%d",&order,&dist);
+		if(strchr(tok,'%'))
+			ret=route_rect_add(ret, order, &r.lu, &r.rl, dist, 0);
+		else
+			for (i = 0 ; i < count ; i++) {
+				ret=route_rect_add(ret, order, &c[i], &c[i], 0, dist);
+		}
+		str=NULL;
 	}
-	/* route_selection=ret; */
+	
+	g_free(attr.u.str);
+	
 	return ret;
 }
 
@@ -2678,7 +2704,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
 
 	dbg(1,"enter\n");
 
-	ret->sel=route_calc_selection(c, count);
+	ret->sel=route_calc_selection(c, count, profile);
 	ret->h=mapset_open(ms);
 	ret->done_cb=done_cb;
 	ret->busy=1;
