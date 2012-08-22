@@ -110,6 +110,7 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
 		priv->position_set=1;
 		dbg(1,"position_set %f %f\n", priv->geo.lat, priv->geo.lng);
 		break;
+	case attr_profilename:
 	case attr_source:
 		// Ignore; is always present, but not read by this vehicle.
 		break;
