@@ -2068,9 +2068,10 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 	}
 
 	if (item_coord_get(item, &l, 1)) {
+		int default_flags_value=AF_ALL;
 		int *default_flags=item_get_default_flags(item->type);
 		if (! default_flags)
-			return;
+			default_flags=&default_flags_value;
 		if (item_attr_get(item, attr_flags, &attr)) {
 			data.flags = attr.u.num;
 			if (data.flags & AF_SEGMENTED)
