@@ -140,6 +140,10 @@ vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)
 		if (roadprofile_get_attr(attr->u.roadprofile, attr_item_types, &item_types_attr, NULL)) {
 			enum item_type *types=item_types_attr.u.item_types;
 			while (*types != type_none) {
+				/* Maptool won't place any access flags for roads which don't have default access flags set. Warn user. */
+				if(!item_get_default_flags(*types))
+					dbg(0,"On '%s' roads used in '%s' vehicleprofile access restrictions are ignored. You might even be directed to drive in wrong direction on a one-way road. "
+					      "Please define default access flags for above road type to item.c and rebuild the map.\n", item_to_name(*types), this_->name);
 				g_hash_table_insert(this_->roadprofile_hash, (void *)(long)(*types), attr->u.roadprofile);
 				types++;
 			}
