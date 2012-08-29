@@ -1052,7 +1052,15 @@ xml_parse_text(const char *document, void *data, void (*start)(void *, const cha
 	gboolean result;
 
 	context = g_markup_parse_context_new (&parser, 0, data, NULL);
+	if (!document){
+		dbg(0, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).\n");
+		exit(1);
+	}
 	result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
+	if (!result){
+		dbg(0, "FATAL: Cannot parse data as XML: '%s'\n", document);
+		exit(1);
+	}
 	g_markup_parse_context_free (context);
 #else
 	char *str=g_strdup(document);
