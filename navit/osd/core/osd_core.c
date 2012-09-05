@@ -1087,13 +1087,9 @@ osd_cmd_interface_set_attr(struct osd_priv_common *opc, struct attr* attr)
 {
 	struct cmd_interface *this_ = (struct cmd_interface *)opc->data;
 
-	struct navit* nav;
-
 	if(NULL==attr || NULL==this_) {
 		return 0;
 	}
-
-	nav = opc->osd_item.navit;
 
 	if(attr->type == attr_status_text) {
 		if(this_->text) {
@@ -1975,7 +1971,7 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
   struct osd_speed_cam *this_ = (struct osd_speed_cam *)opc->data;
 
   struct attr position_attr,vehicle_attr,imperial_attr;
-  struct point p, bbox[4];
+  struct point bbox[4];
   struct attr speed_attr;
   struct vehicle* curr_vehicle = v;
   struct coord curr_coord;
@@ -2127,8 +2123,6 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
       str_replace(buffer,buffer2,"${speed_limit}",spd_str);
   
       graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, buffer, 0x10000, 0, bbox, 0);
-      p.x=(opc->osd_item.w-bbox[2].x)/2;
-      p.y = opc->osd_item.h-opc->osd_item.h/10;
       curr_color = this_->orange;
       //tolerance is +-20 degrees
       if(
@@ -2705,7 +2699,6 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 	struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
 	struct navigation *nav = NULL;
 	struct tracking *tracking = NULL;
-	struct route *route = NULL;
 	struct map *nav_map = NULL;
 	struct map_rect *nav_mr = NULL;
 	struct item *item;
@@ -2771,7 +2764,6 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 		} else if (oti->section == attr_tracking) {
 			if (navit) {
 				tracking = navit_get_tracking(navit);
-				route = navit_get_route(navit);
 			}
 			if (tracking) {
 				item=tracking_get_current_item(tracking);
