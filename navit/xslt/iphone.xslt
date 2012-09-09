@@ -10,6 +10,13 @@
    <xsl:template match="/config/navit/graphics">
       <graphics type="cocoa" />
    </xsl:template>
+   <xsl:template match="/config/navit[1]">
+      <xsl:copy>
+         <xsl:copy-of select="@*"/>
+         <xsl:attribute name="timeout">86400</xsl:attribute>
+         <xsl:apply-templates/>
+      </xsl:copy>
+   </xsl:template>
    <xsl:template match="/config/navit/vehicle[1]">
       <xsl:copy><xsl:copy-of select="@*[not(name()='gpsd_query')]"/>
       <xsl:attribute name="source">iphone:</xsl:attribute>
