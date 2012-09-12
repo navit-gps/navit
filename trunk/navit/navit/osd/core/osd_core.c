@@ -81,7 +81,7 @@ struct osd_priv_common {
 struct odometer;
 
 int set_std_osd_attr(struct osd_priv_common*opc, struct attr*the_attr);
-static void osd_odometer_reset(struct osd_priv_common *opc);
+static void osd_odometer_reset(struct osd_priv_common *opc, int force);
 static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid);
 static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v);
 static struct osd_text_item * oti_new(struct osd_text_item * parent);
@@ -524,7 +524,7 @@ osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, str
           GList* list = odometer_list;
           while(list) {
             if(!strcmp(((struct odometer*)((struct osd_priv_common *)(list->data))->data)->name,in[0]->u.str)) {
-              osd_odometer_reset(list->data);
+              osd_odometer_reset(list->data,1);
 	          osd_odometer_draw(list->data,this,NULL);
             }
             list = g_list_next(list);
@@ -775,11 +775,11 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 
 
 static void
-osd_odometer_reset(struct osd_priv_common *opc)
+osd_odometer_reset(struct osd_priv_common *opc, int force)
 {
   struct odometer *this = (struct odometer *)opc->data;
 
-  if(!this->bDisableReset) {
+  if(!this->bDisableReset || force) {
     this->bActive         = 0;
     this->sum_dist        = 0;
     this->sum_time        = 0;
@@ -822,7 +822,7 @@ osd_odometer_click(struct osd_priv_common *opc, struct navit *nav, int pressed, 
   this->bActive ^= 1;  //toggle active flag
 
   if (curr_time-double_click_timewin <= this->last_click_time) { //double click handling
-    osd_odometer_reset(opc);
+    osd_odometer_reset(opc,0);
   }
 
   this->last_click_time = curr_time;
