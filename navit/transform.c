@@ -24,6 +24,7 @@
 #include <limits.h>
 #include <glib.h>
 #include <string.h>
+#include <stdlib.h>
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
