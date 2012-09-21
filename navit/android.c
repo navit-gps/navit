@@ -209,11 +209,12 @@ Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, 
 	return js;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jint JNICALL
 Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz, int channel, jobject str)
 {
 	struct attr attr;
 	const char *s;
+	jint ret = 0;
 	dbg(0,"enter %d %p\n",channel,str);
 
 	config_get_attr(config_get(), attr_navit, &attr, NULL);
@@ -230,7 +231,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		navit_zoom_out_cursor(attr.u.navit, 2);
 		navit_draw(attr.u.navit);
 		break;
-	case 6:
+	case 6: // add a map to the current mapset, return 1 on success
 	{
 		struct mapset *ms = navit_get_mapset(attr.u.navit);
 		struct attr type, name, data, *attrs[4];
@@ -248,26 +249,32 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		attrs[0]=&type; attrs[1]=&data; attrs[2]=&name; attrs[3]=NULL;
 
 		struct map * new_map = map_new(NULL, attrs);
-		struct attr map_a;
-		map_a.type=attr_map;
-		map_a.u.map=new_map;
-		mapset_add_attr(ms, &map_a);
-		navit_draw(attr.u.navit);
+		if (new_map) {
+			struct attr map_a;
+			map_a.type=attr_map;
+			map_a.u.map=new_map;
+			ret = mapset_add_attr(ms, &map_a);
+			navit_draw(attr.u.navit);
+		}
 		(*env)->ReleaseStringUTFChars(env, str, map_location);
 	}
 	break;
-	case 7:
+	case 7: // remove a map to the current mapset, return 1 on success
 	{
 		struct mapset *ms = navit_get_mapset(attr.u.navit);
 		struct attr map_r;
 		const char *map_location=(*env)->GetStringUTFChars(env, str, NULL);
-		struct map * delete_map =  mapset_get_map_by_name(ms, map_location);
+		struct map * delete_map = mapset_get_map_by_name(ms, map_location);
 
-		dbg(0,"delete map %s (%p)", map_location, delete_map);
-		map_r.type=attr_map;
-		map_r.u.map=delete_map;
-		mapset_remove_attr(ms, &map_r);
-		navit_draw(attr.u.navit);
+		// FIXME: won't work with new maps.c, because the name is not sets
+		if (delete_map)
+		{
+			dbg(0,"delete map %s (%p)", map_location, delete_map);
+			map_r.type=attr_map;
+			map_r.u.map=delete_map;
+			ret = mapset_remove_attr(ms, &map_r);
+			navit_draw(attr.u.navit);
+		}
 		(*env)->ReleaseStringUTFChars(env, str, map_location);
 	}
 	break;
@@ -363,6 +370,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 	default:
 		dbg(0, "Unknown command");
 	}
+
+	return ret;
 }
 
 JNIEXPORT jstring JNICALL
