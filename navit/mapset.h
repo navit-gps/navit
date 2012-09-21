@@ -48,6 +48,8 @@ void mapset_close(struct mapset_handle *msh);
 struct mapset_search *mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial);
 struct item *mapset_search_get_item(struct mapset_search *this_);
 void mapset_search_destroy(struct mapset_search *this_);
+struct mapset * mapset_ref(struct mapset* m);
+void mapset_unref(struct mapset *m);
 /* end of prototypes */
 #ifdef __cplusplus
 }
