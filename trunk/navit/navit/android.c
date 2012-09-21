@@ -266,7 +266,6 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		const char *map_location=(*env)->GetStringUTFChars(env, str, NULL);
 		struct map * delete_map = mapset_get_map_by_name(ms, map_location);
 
-		// FIXME: won't work with new maps.c, because the name is not sets
 		if (delete_map)
 		{
 			dbg(0,"delete map %s (%p)", map_location, delete_map);

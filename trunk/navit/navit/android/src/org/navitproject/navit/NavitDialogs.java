@@ -60,9 +60,13 @@ public class NavitDialogs extends Handler{
 			// dismiss dialog, remove dialog
 			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
 			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
-			Message activate_map_msg = Message.obtain(Navit.N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
-			activate_map_msg.setData(msg.getData());
-			activate_map_msg.sendToTarget();
+			if (msg.getData().getInt("value1") == 1) {
+				Message activate_map_msg =
+				        Message.obtain(Navit.N_NavitGraphics.callback_handler,
+				                NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
+				activate_map_msg.setData(msg.getData());
+				activate_map_msg.sendToTarget();
+			}
 			break;
 		}
 		case MSG_PROGRESS_BAR :

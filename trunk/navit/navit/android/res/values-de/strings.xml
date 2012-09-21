@@ -38,6 +38,8 @@
 	<string name="map_download_download_error">Fehler beim Kartendownload</string>
 	<string name="map_download_download_aborted">Download der Karte abgebrochen</string>
 	<string name="map_download_not_enough_free_space">Nicht genug freier Speicher</string>
+	<string name="map_no_fix">Position noch nicht bekannt.</string>
+	<string name="maps_for_current_location">Karten passend zur aktuellen Position</string>
 
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Adresse suchen</string>

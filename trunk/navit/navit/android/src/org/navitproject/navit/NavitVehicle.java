@@ -28,6 +28,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class NavitVehicle {
+
+	public static Location lastLocation = null;
+
 	private static LocationManager sLocationManager = null;
 	private int vehicle_callbackid;
 	private String preciseProvider;
@@ -41,7 +44,7 @@ public class NavitVehicle {
 	private class NavitLocationListener implements LocationListener {
 		public boolean precise = false;
 		public void onLocationChanged(Location location) {
-			
+			lastLocation = location;
 			// Disable the fast provider if still active
 			if (precise && fastProvider != null) {
 				sLocationManager.removeUpdates(fastLocationListener);
