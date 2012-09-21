@@ -190,6 +190,7 @@ void attr_dup_content(struct attr *src, struct attr *dst);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
+struct attr **attr_list_append(struct attr **attrs, struct attr *attr);
 int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
 int attr_types_contains(enum attr_type *types, enum attr_type type);
 int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);

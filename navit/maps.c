@@ -46,12 +46,31 @@ maps_new(struct attr *parent, struct attr **attrs)
 		struct file_wordexp *wexp=file_wordexp_new(data->u.str);
 		int i,count=file_wordexp_get_count(wexp);
 		char **array=file_wordexp_get_array(wexp);
+		struct attr *name;
+		struct attr *name_provided = attr_search(attrs_dup, NULL, attr_name);
+
+		// if no name was provided, fill the name with the location
+		if (!name_provided) {
+			struct attr name_tmp;
+			name_tmp.type = attr_name;
+			name_tmp.u.str="NULL";
+			attrs_dup=attr_list_append(attrs_dup, &name_tmp);
+			name = attr_search(attrs_dup, NULL, attr_name);
+		}
+
 		for (i = 0 ; i < count ; i++) {
 			struct attr map;
 			g_free(data->u.str);
 			data->u.str=g_strdup(array[i]);
+
+			if (!name_provided) {
+				g_free(name->u.str);
+				name->u.str=g_strdup(array[i]);
+			}
+
 			map.type=attr_map;
 			map.u.map=map_new(parent, attrs_dup);
+
 			if (map.u.map) {
 				mapset_add_attr(parent->u.mapset, &map);
 				map_unref(map.u.map);
