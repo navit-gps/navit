@@ -268,6 +268,7 @@ void map_dump_filedesc(struct map *map, FILE *out);
 void map_dump_file(struct map *map, const char *file);
 void map_dump(struct map *map);
 void map_destroy_do(struct map *m);
+struct maps * maps_new(struct attr *parent, struct attr **attrs);
 /* end of prototypes */
 
 #ifdef __cplusplus
