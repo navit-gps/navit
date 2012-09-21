@@ -87,6 +87,7 @@ void debug_free(const char *where, int line, const char *func, void *ptr);
 void debug_free_func(void *ptr);
 void debug_finished(void);
 void *debug_realloc(const char *where, int line, const char *func, void *ptr, int size);
+void debug_set_global_level(int level, int override_old_value);
 /* end of prototypes */
 
 #ifdef __cplusplus
