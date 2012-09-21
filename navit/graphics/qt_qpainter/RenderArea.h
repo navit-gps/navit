@@ -21,8 +21,6 @@
 
 #ifdef QT_QPAINTER_USE_EMBEDDING
 class EmbeddedWidget : public QX11EmbedWidget {
-    Q_OBJECT
-
         struct graphics_priv *gra;
 public:
         EmbeddedWidget(struct graphics_priv *priv, QWidget* child, QWidget *parent = NULL);
