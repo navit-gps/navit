@@ -70,7 +70,7 @@ print_usage(void)
 extern void builtin_init(void);
 #endif /* USE_PLUGINS*/
 
-int main_real(int argc, char **argv)
+int main_real(int argc, const char **argv)
 {
 	xmlerror *error = NULL;
 	char *config_file = NULL, *command=NULL, *startup_file=NULL;

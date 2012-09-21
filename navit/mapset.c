@@ -257,7 +257,7 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
  * @return The next map
  */
 struct map * 
-mapset_get_map_by_name(struct mapset *ms, char*map_name)
+mapset_get_map_by_name(struct mapset *ms, const char*map_name)
 {
 	struct mapset_handle*msh;
 	struct map*curr_map;

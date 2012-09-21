@@ -131,6 +131,7 @@ speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr
 	if (android_version < 4)
 		this->flags=3;
 	if (!speech_android_init(this)) {
+		dbg(0,"Failed to init speech %p\n",this->NavitSpeechClass);
 		g_free(this);
 		this=NULL;
 	}
