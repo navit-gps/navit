@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 #include "maptool.h"
 #include "debug.h"
 #include "linguistics.h"
@@ -627,7 +628,7 @@ static char *attrmap={
 	"w	historic=archaeological_site	poly_archaeological_site\n"
 	"w	historic=battlefield	poly_battlefield\n"
 	"w	historic=ruins		poly_ruins\n"
-	"w	historic=town gate	poly_building\n"
+	"w	historic=town_gate	poly_building\n"
 	"w	landuse=allotments	poly_allotments\n"
 	"w	landuse=basin		poly_basin\n"
 	"w	landuse=brownfield	poly_brownfield\n"
@@ -738,15 +739,15 @@ build_attrmap_line(char *line)
 	struct attr_mapping *attr_mapping=g_malloc0(sizeof(struct attr_mapping));
 	int idx,attr_mapping_count=0;
 	t=line;
-	p=strchr(t,'\t');
+	p=strpbrk(t," \t");
 	if (p) {
-		while (*p == '\t')
+		while (*p && isspace(*p))
 			*p++='\0';
 		kvl=p;
-		p=strchr(kvl,'\t');
+		p=strpbrk(kvl," \t");;
 	}
 	if (p) {
-		while (*p == '\t')
+		while (*p && isspace(*p))
 			*p++='\0';
 		i=p;
 	}
@@ -950,7 +951,7 @@ void
 osm_add_tag(char *k, char *v)
 {
 	int idx,level=2;
-	char buffer[BUFFER_SIZE*2+2];
+	char buffer[BUFFER_SIZE*2+2], *p;
 	if (in_relation) {
 		relation_add_tag(k,v);
 		return;
@@ -1183,14 +1184,20 @@ osm_add_tag(char *k, char *v)
 		attr_present[idx]=1;
 
 	sprintf(buffer,"%s=*", k);
+	for(p=buffer;*p;p++)
+		if(isspace(*p))	*p='_';
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
 		attr_present[idx]=2;
 
 	sprintf(buffer,"*=%s", v);
+	for(p=buffer;*p;p++)
+		if(isspace(*p))	*p='_';
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
 		attr_present[idx]=2;
 
 	sprintf(buffer,"%s=%s", k, v);
+	for(p=buffer;*p;p++)
+		if(isspace(*p))	*p='_';
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
 		attr_present[idx]=4;
 }
