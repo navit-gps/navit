@@ -54,7 +54,7 @@ maps_new(struct attr *parent, struct attr **attrs)
 			struct attr name_tmp;
 			name_tmp.type = attr_name;
 			name_tmp.u.str="NULL";
-			attrs_dup=attr_list_append(attrs_dup, &name_tmp);
+			attrs_dup=attr_generic_add_attr(attrs_dup, &name_tmp);
 			name = attr_search(attrs_dup, NULL, attr_name);
 		}
 

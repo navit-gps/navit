@@ -661,28 +661,6 @@ attr_list_dup(struct attr **attrs)
 	return ret;
 }
 
-struct attr **
-attr_list_append(struct attr **attrs, struct attr *attr)
-{
-	struct attr **ret;
-	int i,count=0;
-
-	if (!attrs)
-		return NULL;
-
-	while (attrs[count])
-		count++;
-	ret=g_new0(struct attr *, count+2);
-	for (i = 0 ; i < count ; i++)
-		ret[i]=attr_dup(attrs[i]);
-
-	ret[count]=attr_dup(attr);
-	g_free(attrs);
-
-	return ret;
-}
-
-
 int
 attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 {
