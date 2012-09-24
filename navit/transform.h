@@ -57,6 +57,7 @@ void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int
 void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
 int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return);
 int transform_reverse(struct transformation *t, struct point *p, struct coord *c);
+double transform_pixels_to_map_distance(struct transformation *transformation, int pixels);
 enum projection transform_get_projection(struct transformation *this_);
 void transform_set_projection(struct transformation *this_, enum projection pro);
 struct map_selection *transform_get_selection(struct transformation *this_, enum projection pro, int order);
