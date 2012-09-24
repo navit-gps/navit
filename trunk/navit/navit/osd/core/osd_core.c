@@ -3324,6 +3324,21 @@ struct osd_scale {
 	struct graphics_gc *black;
 };
 
+static int
+round_to_nice_value(double value)
+{
+	double nearest_power_of10,mantissa;
+	nearest_power_of10=pow(10,floor(log10(value)));
+	mantissa=value/nearest_power_of10;
+	if (mantissa >= 5)
+		mantissa=5;
+	else if (mantissa >= 2)
+		mantissa=2;
+	else
+		mantissa=1;
+	return mantissa*nearest_power_of10;
+}
+
 static void
 osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 {
@@ -3332,9 +3347,9 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	struct point item_pos,scale_line_start,scale_line_end;
 	struct point p[10],bbox[4];
 	struct coord c[2];
-	struct attr transformation, imperial_attr;
-	int len;
-	double dist,exp,base,man;
+	struct attr transformation,imperial_attr;
+	int scale_x_offset,scale_length_on_map,scale_length_pixels;
+	double distance_on_map;
 	char *text;
 	struct osd_item scale_item=opc->osd_item;
 	int width_reduced=scale_item.w*9/10;
@@ -3363,19 +3378,13 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	p[1]=scale_line_end;
 	transform_reverse(transformation.u.transformation, &p[0], &c[0]);
 	transform_reverse(transformation.u.transformation, &p[1], &c[1]);
-	dist=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
-	exp=floor(log10(dist));
-	base=pow(10,exp);
-	man=dist/base;
-	if (man >= 5)
-		man=5;
-	else if (man >= 2)
-		man=2;
-	else
-		man=1;
-	len=scale_item.w-man*base/dist*width_reduced;
-	p[0].x+=len/2;
-	p[1].x-=len/2;
+	distance_on_map=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
+	scale_length_on_map=round_to_nice_value(distance_on_map);
+	scale_length_pixels=scale_length_on_map/distance_on_map*width_reduced;
+	scale_x_offset=(scale_item.w-scale_length_pixels) / 2;
+
+	p[0].x+=scale_x_offset;
+	p[1].x-=scale_x_offset;
 	p[2]=p[0];
 	p[3]=p[0];
 	p[2].y-=scale_item.h/10;
@@ -3398,7 +3407,7 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	graphics_draw_lines(scale_item.gr, this->black, p, 2);
 	graphics_draw_lines(scale_item.gr, this->black, p+2, 2);
 	graphics_draw_lines(scale_item.gr, this->black, p+4, 2);
-	text=format_distance(man*base, "", imperial);
+	text=format_distance(scale_length_on_map, "", imperial);
 	graphics_get_text_bbox(scale_item.gr, scale_item.font, text, 0x10000, 0, bbox, 0);
 	p[0].x=(scale_item.w-bbox[2].x)/2+item_pos.x;
 	p[0].y=item_pos.y+scale_item.h-scale_item.h/10;
