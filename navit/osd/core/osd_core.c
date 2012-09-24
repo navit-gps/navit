@@ -3346,7 +3346,6 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 
 	struct point item_pos,scale_line_start,scale_line_end;
 	struct point p[10],bbox[4];
-	struct coord c[2];
 	struct attr transformation,imperial_attr;
 	int scale_x_offset,scale_length_on_map,scale_length_pixels;
 	double distance_on_map;
@@ -3374,15 +3373,14 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	scale_line_start.x+=(scale_item.w-width_reduced)/2;
 	scale_line_end=scale_line_start;
 	scale_line_end.x+=width_reduced;
-	p[0]=scale_line_start;
-	p[1]=scale_line_end;
-	transform_reverse(transformation.u.transformation, &p[0], &c[0]);
-	transform_reverse(transformation.u.transformation, &p[1], &c[1]);
-	distance_on_map=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
+
+	distance_on_map=transform_pixels_to_map_distance(transformation.u.transformation, width_reduced);
 	scale_length_on_map=round_to_nice_value(distance_on_map);
 	scale_length_pixels=scale_length_on_map/distance_on_map*width_reduced;
 	scale_x_offset=(scale_item.w-scale_length_pixels) / 2;
 
+	p[0]=scale_line_start;
+	p[1]=scale_line_end;
 	p[0].x+=scale_x_offset;
 	p[1].x-=scale_x_offset;
 	p[2]=p[0];

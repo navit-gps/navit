@@ -605,6 +605,24 @@ transform_reverse(struct transformation *t, struct point *p, struct coord *c)
 	return transform_reverse_near_far(t, p, c, t->znear, t->zfar);
 }
 
+double
+transform_pixels_to_map_distance(struct transformation *transformation, int pixels)
+{
+	struct point line_in_map_center[2];
+	struct coord c[2];
+	struct point screen_center=transformation->screen_center;
+	// Generally, the scale will not be the same across the map
+	// (for example with Mercator projection), so calculate the
+	// conversion in the screen center for a reasonable average value.
+	line_in_map_center[0].x=screen_center.x-pixels/2;
+	line_in_map_center[1].x=screen_center.x+pixels/2;
+	line_in_map_center[0].y=screen_center.y;
+	line_in_map_center[1].y=screen_center.y;
+	transform_reverse(transformation, &line_in_map_center[0], &c[0]);
+	transform_reverse(transformation, &line_in_map_center[1], &c[1]);
+	return transform_distance(transform_get_projection(transformation), &c[0], &c[1]);
+}
+
 enum projection
 transform_get_projection(struct transformation *this_)
 {
