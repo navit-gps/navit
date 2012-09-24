@@ -3329,15 +3329,15 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_scale *this = (struct osd_scale *)opc->data;
 
-	struct point bp,bp1,bp2;
+	struct point item_pos,scale_line_start,scale_line_end;
 	struct point p[10],bbox[4];
 	struct coord c[2];
 	struct attr transformation, imperial_attr;
 	int len;
 	double dist,exp,base,man;
 	char *text;
-	int w=opc->osd_item.w*9/10;
-	int o=(opc->osd_item.w-w)/2;
+	struct osd_item scale_item=opc->osd_item;
+	int width_reduced=scale_item.w*9/10;
 	int imperial=0;
 
 	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
@@ -3346,21 +3346,21 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
 		return;
 	if (this->use_overlay) {
-		graphics_draw_mode(opc->osd_item.gr, draw_mode_begin);
-		bp.x=0;
-		bp.y=0;
-		graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_bg, &bp, opc->osd_item.w, opc->osd_item.h);
+		graphics_draw_mode(scale_item.gr, draw_mode_begin);
+		item_pos.x=0;
+		item_pos.y=0;
+		graphics_draw_rectangle(scale_item.gr, scale_item.graphic_bg, &item_pos, scale_item.w, scale_item.h);
 	} else {
-		bp=opc->osd_item.p;
-		osd_wrap_point(&bp, nav);
+		item_pos=scale_item.p;
+		osd_wrap_point(&item_pos, nav);
 	}
-	bp1=bp;
-	bp1.y+=opc->osd_item.h/2;
-	bp1.x+=o;
-	bp2=bp1;
-	bp2.x+=w;
-	p[0]=bp1;
-	p[1]=bp2;
+	scale_line_start=item_pos;
+	scale_line_start.y+=scale_item.h/2;
+	scale_line_start.x+=(scale_item.w-width_reduced)/2;
+	scale_line_end=scale_line_start;
+	scale_line_end.x+=width_reduced;
+	p[0]=scale_line_start;
+	p[1]=scale_line_end;
 	transform_reverse(transformation.u.transformation, &p[0], &c[0]);
 	transform_reverse(transformation.u.transformation, &p[1], &c[1]);
 	dist=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
@@ -3373,17 +3373,17 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 		man=2;
 	else
 		man=1;
-	len=opc->osd_item.w-man*base/dist*w;
+	len=scale_item.w-man*base/dist*width_reduced;
 	p[0].x+=len/2;
 	p[1].x-=len/2;
 	p[2]=p[0];
 	p[3]=p[0];
-	p[2].y-=opc->osd_item.h/10;
-	p[3].y+=opc->osd_item.h/10;
+	p[2].y-=scale_item.h/10;
+	p[3].y+=scale_item.h/10;
 	p[4]=p[1];
 	p[5]=p[1];
-	p[4].y-=opc->osd_item.h/10;
-	p[5].y+=opc->osd_item.h/10;
+	p[4].y-=scale_item.h/10;
+	p[5].y+=scale_item.h/10;
 	p[6]=p[2];
 	p[6].x-=2;
 	p[6].y-=2;
@@ -3392,20 +3392,20 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	p[8]=p[4];
 	p[8].x-=2;
 	p[8].y-=2;
-	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg_white, p+6, 4,opc->osd_item.h/5+4);
-	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg_white, p+7, p[1].x-p[0].x, 4);
-	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg_white, p+8, 4,opc->osd_item.h/5+4);
-	graphics_draw_lines(opc->osd_item.gr, this->black, p, 2);
-	graphics_draw_lines(opc->osd_item.gr, this->black, p+2, 2);
-	graphics_draw_lines(opc->osd_item.gr, this->black, p+4, 2);
+	graphics_draw_rectangle(scale_item.gr, scale_item.graphic_fg_white, p+6, 4,scale_item.h/5+4);
+	graphics_draw_rectangle(scale_item.gr, scale_item.graphic_fg_white, p+7, p[1].x-p[0].x, 4);
+	graphics_draw_rectangle(scale_item.gr, scale_item.graphic_fg_white, p+8, 4,scale_item.h/5+4);
+	graphics_draw_lines(scale_item.gr, this->black, p, 2);
+	graphics_draw_lines(scale_item.gr, this->black, p+2, 2);
+	graphics_draw_lines(scale_item.gr, this->black, p+4, 2);
 	text=format_distance(man*base, "", imperial);
-	graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
-	p[0].x=(opc->osd_item.w-bbox[2].x)/2+bp.x;
-	p[0].y=bp.y+opc->osd_item.h-opc->osd_item.h/10;
-	graphics_draw_text(opc->osd_item.gr, this->black, opc->osd_item.graphic_fg_white, opc->osd_item.font, text, &p[0], 0x10000, 0);
+	graphics_get_text_bbox(scale_item.gr, scale_item.font, text, 0x10000, 0, bbox, 0);
+	p[0].x=(scale_item.w-bbox[2].x)/2+item_pos.x;
+	p[0].y=item_pos.y+scale_item.h-scale_item.h/10;
+	graphics_draw_text(scale_item.gr, this->black, scale_item.graphic_fg_white, scale_item.font, text, &p[0], 0x10000, 0);
 	g_free(text);
 	if (this->use_overlay)
-		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+		graphics_draw_mode(scale_item.gr, draw_mode_end);
 }
 
 static void
