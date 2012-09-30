@@ -37,6 +37,7 @@
 #include "navit.h"
 #include "navit_nls.h"
 #include "util.h"
+#include "attr.h"
 
 /* FIXME: Move this to support directory */
 #ifdef _MSC_VER
