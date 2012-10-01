@@ -246,7 +246,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		switch (event->key()) {
 		case 4099:
 			{
-				text=(char []){NAVIT_KEY_BACKSPACE,'\0'};
+				char text_backspace[] = {NAVIT_KEY_BACKSPACE,'\0'};
+				text=text_backspace;
 			}
 			break;
 		case 4101:
@@ -254,7 +255,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		QT_QPAINTER_CUSTOM_RETURN
 #endif
 			{
-				text=(char []){NAVIT_KEY_RETURN,'\0'};
+				char text_return[] = {NAVIT_KEY_RETURN,'\0'};
+				text=text_return;
 			}
 			break;
 		case 4114:
@@ -262,7 +264,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		QT_QPAINTER_CUSTOM_LEFT
 #endif
 			{
-				text=(char []){NAVIT_KEY_LEFT,'\0'};
+				char text_left[] = {NAVIT_KEY_LEFT,'\0'};
+				text=text_left;
 			}
 			break;
 		case 4115:
@@ -270,7 +273,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		QT_QPAINTER_CUSTOM_UP
 #endif
 			{
-				text=(char []){NAVIT_KEY_UP,'\0'};
+				char text_up[] = {NAVIT_KEY_UP,'\0'};
+				text=text_up;
 			}
 			break;
 		case 4116:
@@ -278,7 +282,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		QT_QPAINTER_CUSTOM_RIGHT
 #endif
 			{
-				text=(char []){NAVIT_KEY_RIGHT,'\0'};
+				char text_right[] = {NAVIT_KEY_RIGHT,'\0'};
+				text=text_right;
 			}
 			break;
 		case 4117:
@@ -286,7 +291,8 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		QT_QPAINTER_CUSTOM_DOWN
 #endif
 			{
-				text=(char []){NAVIT_KEY_DOWN,'\0'};
+				char text_down[] = {NAVIT_KEY_DOWN,'\0'};
+				text=text_down;
 			}
 			break;
 		}
