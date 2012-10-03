@@ -61,5 +61,7 @@ struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, 
 struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter);
 void quadtree_query_free(struct quadtree_iter *iter);
 void quadtree_item_delete(struct quadtree_iter *iter);
+struct quadtree_data *quadtree_data_dup(struct quadtree_data *qdata);
+void quadtree_node_drop_garbage(struct quadtree_node* node, struct quadtree_iter *iter);
 
 #endif
