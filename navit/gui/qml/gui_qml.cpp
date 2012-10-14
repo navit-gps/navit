@@ -315,7 +315,12 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->guiWidget->rootContext()->setContextProperty("route",this_->routeProxy);
 	this_->guiWidget->rootContext()->setContextProperty("point",this_->currentPoint);
 
-	this_->guiWidget->setSource(QUrl::fromLocalFile(QString(this_->source)+"/"+this_->skin+"/main.qml"));
+	QString mainQml = QString(this_->source)+"/"+this_->skin+"/main.qml";
+	if (!QFile(mainQml).exists()){
+		dbg(0, "FATAL: QML file %s not found. Navit is not installed correctly.\n", mainQml.toAscii().constData());
+		exit(1);
+	}
+	this_->guiWidget->setSource(QUrl::fromLocalFile(mainQml));
 	this_->switcherWidget->addWidget(this_->guiWidget);
 
 	//Switch to graphics
