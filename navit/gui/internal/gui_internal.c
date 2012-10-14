@@ -2093,7 +2093,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
-		dbg(0,"topbox->menu_data=%p\n", topbox->menu_data);
+		dbg(2,"topbox->menu_data=%p\n", topbox->menu_data);
 		gui_internal_widget_append(wm, w);
 		wb=gui_internal_box_new(this, gravity_right_center|orientation_horizontal|flags_fill);
 		wb->bl=6;
@@ -2166,7 +2166,7 @@ static void
 gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data)
 {
 	char *name=data;
-	dbg(0,"c=%d:0x%x,0x%x\n", wm->c.pro, wm->c.x, wm->c.y);
+	dbg(2,"c=%d:0x%x,0x%x\n", wm->c.pro, wm->c.x, wm->c.y);
 	navit_set_destination(this->nav, &wm->c, name, 1);
 	if (this->flags & 512) {
 		struct attr follow;
@@ -2197,7 +2197,7 @@ gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
 {
 	GList *l;
 	struct attr attr;
-	dbg(0,"text='%s'\n", widget->text);
+	dbg(1,"text='%s'\n", widget->text);
 	if (widget->text && strlen(widget->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_add_bookmark(attr.u.bookmarks, &widget->c, widget->text);
@@ -2213,7 +2213,7 @@ gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *wi
 {
 	GList *l;
 	struct attr attr;
-	dbg(0,"text='%s'\n", widget->text);
+	dbg(1,"text='%s'\n", widget->text);
 	if (widget->text && strlen(widget->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_add_bookmark(attr.u.bookmarks, NULL, widget->text);
@@ -2242,7 +2242,7 @@ gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *w
 	struct widget *w=(struct widget*)widget->data;
 	GList *l;
 	struct attr attr;
-	dbg(0,"text='%s'\n", w->text);
+	dbg(1,"text='%s'\n", w->text);
 	if (w->text && strlen(w->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_rename_bookmark(attr.u.bookmarks, w->name, w->text);
@@ -2772,7 +2772,7 @@ static struct graphics_image * gui_internal_poi_icon(struct gui_priv *this, enum
 							struct graphics_image *img;
 							char *icon=g_strdup(el->u.icon.src);
 							char *dot=g_strrstr(icon,".");
-							dbg(0,"%s %s\n", item_to_name(type),icon);
+							dbg(2,"%s %s\n", item_to_name(type),icon);
 							if(dot)
 								*dot=0;
 							img=image_new_xs(this,icon);
@@ -3098,7 +3098,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	items= g_new0( struct item_data, maxitem);
 	
 	
-	dbg(0, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, isAddressFilter= %d\n",
+	dbg(2, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, isAddressFilter= %d\n",
 		param->sel, param->selnb, param->pagenb, param->dist, param->filterstr, param->isAddressFilter);
 
 	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
@@ -3363,13 +3363,13 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 	char *text;
 	int count=0;
 
-	dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+	dbg(2,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
 	wb=gui_internal_menu(this, "Attributes");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	mr=map_rect_new(wm->item.map, NULL);
 	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-	dbg(0,"item=%p\n", item);
+	dbg(2,"item=%p\n", item);
 	if (item) {
 		text=g_strdup_printf("%s:%s", _("Item type"), item_to_name(item->type));
 		gui_internal_widget_append(w,
@@ -3405,10 +3405,10 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	char *cmd=NULL;
 
 	if (!wm->name) {
-		dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+		dbg(2,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
 		mr=map_rect_new(wm->item.map, NULL);
 		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-		dbg(0,"item=%p\n", item);
+		dbg(2,"item=%p\n", item);
 		if (item) {
 			while(item_attr_get(item, attr_url_local, &attr)) {
 				if (! cmd)
@@ -3423,7 +3423,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 #ifdef HAVE_SYSTEM
 		system(cmd);
 #else
-		dbg(0,"calling external cmd '%s' is not supported\n",cmd);
+		dbg(0,"Error: External commands were disabled during compilation, cannot call '%s'.\n",cmd);
 #endif
 		g_free(cmd);
 	}
@@ -3531,7 +3531,7 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 			struct item* it;
 			if(wi->name==NULL)
 				continue;
-			dbg(0,"%s\n",wi->name);
+			dbg(2,"%s\n",wi->name);
 			it=map_rect_create_item(mr,type_found_item);
 			if(it) {
 				struct coord c;
@@ -3604,7 +3604,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		pc=*pc_in;
 		c.x=pc.x;
 		c.y=pc.y;
-		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
+		dbg(2,"x=0x%x y=0x%x\n", c.x, c.y);
 		transform_to_geo(pc.pro, &c, &g);
 	} else if (g_in) {
 		struct attr attr;
@@ -4087,7 +4087,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label_full=attr.u.str;
-			dbg(0,"full_labled: %s\n",label_full);
+			dbg(2,"full_labled: %s\n",label_full);
 			
 			// hassub == 1 if the item type is a sub-folder
 			if (item->type == type_bookmark_folder) {
@@ -4225,7 +4225,7 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 			}
                        	return; 
 		} else if (*key == NAVIT_KEY_BACKSPACE) {
-			dbg(0,"backspace\n");
+			dbg(1,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
 				wi->text[len]=' ';
@@ -4233,11 +4233,11 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 			}
 		} else {
 			if (wi->state & STATE_CLEAR) {
-				dbg(0,"wi->state=0x%x\n", wi->state);
+				dbg(2,"wi->state=0x%x\n", wi->state);
 				g_free(wi->text);
 				wi->text=NULL;
 				wi->state &= ~STATE_CLEAR;
-				dbg(0,"wi->state=0x%x\n", wi->state);
+				dbg(2,"wi->state=0x%x\n", wi->state);
 			}
 			text=g_strdup_printf("%s%s", wi->text ? wi->text : "", key);
 		}
@@ -4561,13 +4561,13 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 		param=(void *)5;
 	if (! strcmp(wm->name,"House number"))
 		param=(void *)6;
-	dbg(0,"%s now '%s'\n", wm->name, wm->text);
+	dbg(1,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
 	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
 		struct attr search_attr;
 
-		dbg(0,"process\n");
+		dbg(1,"process\n");
 		if (! strcmp(wm->name,"Country"))
 			search_attr.type=attr_country_all;
 		if (! strcmp(wm->name,"Town"))
@@ -4902,7 +4902,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 		item=country_search_get_item(cs);
 		if (item && item_attr_get(item, attr_country_name, &country_name)) {
 			search_attr.type=attr_country_all;
-			dbg(0,"country %s\n", country_name.u.str);
+			dbg(1,"country %s\n", country_name.u.str);
 			search_attr.u.str=country_name.u.str;
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
@@ -5023,7 +5023,7 @@ gui_internal_search_house_number(struct gui_priv *this, struct widget *widget, v
 static void
 gui_internal_search_house_number_in_street(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(0,"id %d\n", widget->selection_id);
+	dbg(2,"id %d\n", widget->selection_id);
 	search_list_select(this->sl, attr_street_name, 0, 0);
 	search_list_select(this->sl, attr_street_name, widget->selection_id, 1);
 	gui_internal_search(this,_("House number"),"House number",0);
@@ -5039,7 +5039,7 @@ gui_internal_search_street(struct gui_priv *this, struct widget *widget, void *d
 static void
 gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(0,"id %d\n", widget->selection_id);
+	dbg(2,"id %d\n", widget->selection_id);
 	search_list_select(this->sl, attr_town_or_district_name, 0, 0);
 	search_list_select(this->sl, attr_town_or_district_name, widget->selection_id, 1);
 	gui_internal_search(this,_("Street"),"Street",0);
@@ -5059,7 +5059,7 @@ static void
 gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget)
 {
 	struct search_list_common *slc;
-	dbg(0,"id %d\n", widget->selection_id);
+	dbg(2,"id %d\n", widget->selection_id);
 	search_list_select(this->sl, attr_country_all, 0, 0);
 	slc=search_list_select(this->sl, attr_country_all, widget->selection_id, 1);
 	if (slc) {
@@ -5199,10 +5199,10 @@ gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, s
 		return;
 	}
 	pattern=in[0]->u.str;
-	dbg(0,"pattern %s\n",pattern);
+	dbg(1,"pattern %s\n",pattern);
 	if (in[1]) {
 		command=gui_internal_cmd_match_expand(pattern, in+1);
-		dbg(0,"expand %s\n",command);
+		dbg(1,"expand %s\n",command);
 		gui_internal_set(pattern, command);
 		command_evaluate(&this->self, command);
 		g_free(command);
@@ -5265,12 +5265,12 @@ gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void 
 		sel.range.max=type_last;
 		mr=map_rect_new(map, &sel);
 		while ((item=map_rect_get_item(mr))) {
-			dbg(0,"item\n");
+			dbg(2,"item\n");
 		}
 		map_rect_destroy(mr);
 	}
 	
-	dbg(0,"bbox=%s\n",wm->prefix);
+	dbg(2,"bbox=%s\n",wm->prefix);
 	gui_internal_menu_render(this);
 }
 
@@ -5499,7 +5499,6 @@ save_vehicle_xml(struct vehicle *v)
 	struct attr attr;
 	struct attr_iter *iter=vehicle_attr_iter_new();
 	int childs=0;
-	dbg(0,"enter\n");
 	printf("<vehicle");
 	while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
 		if (ATTR_IS_OBJECT(attr.type))
@@ -5539,7 +5538,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
 	vehicle_name = vehicle_name_attr.u.str;
 
-	dbg(0, "Changing vehicle %s to profile %s\n", vehicle_name,
+	dbg(1, "Changing vehicle %s to profile %s\n", vehicle_name,
 			profilename);
 
 	// Change the profile name
@@ -5598,7 +5597,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 		active_profile = profile_attr.u.str;
 	active = active_profile != NULL && !strcmp(name, active_profile);
 
-	dbg(0, "Adding vehicle profile %s, active=%s/%i\n", name,
+	dbg(1, "Adding vehicle profile %s, active=%s/%i\n", name,
 			active_profile, active);
 
 	// Build a translatable label.
@@ -6100,12 +6099,12 @@ gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *me
 static void
 gui_internal_set_refresh_callback(struct gui_priv *this, char *cond)
 {
-	dbg(0,"cond=%s\n",cond);
+	dbg(2,"cond=%s\n",cond);
 	if (cond) {
 		enum attr_type type;
 		struct object_func *func;
 		struct menu_data *menu_data=gui_internal_menu_data(this);
-		dbg(0,"navit=%p\n",this->nav);
+		dbg(2,"navit=%p\n",this->nav);
 		type=command_evaluate_to_attr(&this->self, cond, NULL, &menu_data->refresh_callback_obj);
 		if (type == attr_none)
 			return;
@@ -6455,7 +6454,7 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 		this->on_map_click=g_strdup(attr->u.str);
 		return 1;
 	default:
-		dbg(0,"%s\n",attr_to_name(attr->type));
+		dbg(2,"%s\n",attr_to_name(attr->type));
 		return 1;
 	}
 }
@@ -7291,10 +7290,8 @@ static GList * gui_internal_widget_table_top_row(struct gui_priv *this, struct w
 {
 	if(table && table->type==widget_table) {
 		struct table_data *d=table->data;
-		dbg(0,"1\n");
 		return gui_internal_widget_table_first_row(d->top_row);
 	}
-	dbg(0,"2\n");
 	return NULL;
 }
 
@@ -7736,9 +7733,9 @@ line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct 
         if (a > n || b > n)
                 return 0;
 	if (n == 0) {
-		dbg(0,"a=%d b=%d n=%d\n", a, b, n);
-		dbg(0,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
-		dbg(0,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
+		dbg(2,"a=%d b=%d n=%d\n", a, b, n);
+		dbg(2,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
+		dbg(2,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
 		dbg_assert(n != 0);
 	}
         res->x = a1->x + a * adx / n;
@@ -7887,7 +7884,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_point->c.y=heightline->height;
 										diagram_point->next=diagram_points;
 										diagram_points=diagram_point;
-										dbg(0,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+										dbg(2,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
 									}
 								}
 							}
@@ -7916,12 +7913,12 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			coord_rect_extend(&dbbox, &diagram_point->c);
 		diagram_point=diagram_point->next;
 	}
-	dbg(0,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	dbg(2,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
 	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
 		dbbox.lu.x=0;
 	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
 		dbbox.rl.y=0;
-	dbg(0,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	dbg(2,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
 	x=dbbox.lu.x;
 	first=1;
 	for (;;) {
@@ -7937,7 +7934,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			break;
 		p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
 		p[1].y=(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y+5;
-		dbg(0,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+		dbg(2,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
 		graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
 		if (first)
 			first=0;
