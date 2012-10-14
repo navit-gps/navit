@@ -1,6 +1,4 @@
-# Create a library called "Hello" which includes the source file "hello.cxx".
-# The extension is already found. Any number of sources could be listed here.
-
+file(COPY "skins" DESTINATION ".")
 add_definitions( -DMODULE=gui_qml )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 QT4_GENERATE_MOC(proxy.h ${CMAKE_CURRENT_BINARY_DIR}/proxy.moc)
@@ -12,5 +10,14 @@ QT4_GENERATE_MOC(navitProxy.h ${CMAKE_CURRENT_BINARY_DIR}/navitProxy.moc)
 QT4_GENERATE_MOC(guiProxy.h ${CMAKE_CURRENT_BINARY_DIR}/guiProxy.moc)
 QT4_GENERATE_MOC(routeProxy.h ${CMAKE_CURRENT_BINARY_DIR}/routeProxy.moc)
 QT4_GENERATE_MOC(gui_qml.cpp ${CMAKE_CURRENT_BINARY_DIR}/gui_qml.moc)
-module_add_library(gui_qml gui_qml.cpp ${CMAKE_CURRENT_BINARY_DIR}/proxy.moc ${CMAKE_CURRENT_BINARY_DIR}/ngqpoint.moc ${CMAKE_CURRENT_BINARY_DIR}/searchProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/bookmarksProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/vehicleProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/navitProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/guiProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/routeProxy.moc ${CMAKE_CURRENT_BINARY_DIR}/gui_qml.moc) 
-
+module_add_library(gui_qml gui_qml.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/proxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/ngqpoint.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/searchProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/bookmarksProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/vehicleProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/navitProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/guiProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/routeProxy.moc
+  ${CMAKE_CURRENT_BINARY_DIR}/gui_qml.moc
+)
