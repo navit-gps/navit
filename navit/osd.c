@@ -89,7 +89,7 @@ osd_evaluate_command(struct osd_item *this, struct navit *nav)
 	struct attr navit;
 	navit.type=attr_navit;
 	navit.u.navit=nav;
-	dbg(0, "calling command '%s'\n", this->command);
+	dbg(1, "calling command '%s'\n", this->command);
 	command_evaluate(&navit, this->command);
 }
 
