@@ -276,6 +276,10 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			_mainWindow->embedInto(xid.toULong(&ok,0));
+		}else{
+			dbg(0, "\nFATAL: Environment variable NAVIT_XID not set.\n"
+			       "       Please set NAVIT_XID to the window ID of the window to embed into.\n");
+			exit(1);
 		}
 #endif /* Q_WS_X11  */
 	this_->mainWindow=_mainWindow;
