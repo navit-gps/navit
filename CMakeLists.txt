@@ -120,10 +120,10 @@ find_package(Threads)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
-   SET(QT_USE_QTSVG TRUE)
-   SET(QT_USE_QTXML TRUE)
-   SET(QT_USE_QTDECLARATIVE TRUE)
-   find_package(Qt4 COMPONENTS QtCore QtGui QtXml QtDeclarative QtSvg OPTIONAL)
+  # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
+  # and actually requires all components to be installed. Maybe this can
+  # be fixed later...
+  find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
 endif (NOT DISABLE_QT)
 #pkg-config based detection
 find_package(PkgConfig)
