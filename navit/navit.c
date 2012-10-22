@@ -388,9 +388,13 @@ navit_ignore_graphics_events(struct navit *this_, int ignore)
 	this_->ignore_graphics_events=ignore;
 }
 
+/**
+ * @brief Change map center position by translating from "old" to "new".
+ */
 void
 update_transformation(struct transformation *tr, struct point *old, struct point *new)
 {
+        /* Code for rotation was removed in rev. 5252; see Trac #1078. */
 	struct coord co,cn;
 	struct coord c,*cp;
 	if (!transform_reverse(tr, old, &co))
