@@ -388,22 +388,13 @@ navit_ignore_graphics_events(struct navit *this_, int ignore)
 	this_->ignore_graphics_events=ignore;
 }
 
-static void
-update_transformation(struct transformation *tr, struct point *old, struct point *new, struct point *rot)
+void
+update_transformation(struct transformation *tr, struct point *old, struct point *new)
 {
 	struct coord co,cn;
 	struct coord c,*cp;
-	int yaw;
-	double angleo,anglen;
-
 	if (!transform_reverse(tr, old, &co))
 		return;
-	if (rot) {
-		angleo=atan2(old->y-rot->y, old->x-rot->x)*180/M_PI;
-		anglen=atan2(new->y-rot->y, new->x-rot->x)*180/M_PI;
-		yaw=transform_get_yaw(tr)+angleo-anglen;
-		transform_set_yaw(tr, yaw % 360);
-	}
 	if (!transform_reverse(tr, new, &cn))
 		return;
 	cp=transform_get_center(tr);
@@ -471,14 +462,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
-			struct point pr;
-			pr.x=this_->w/2;
-			pr.y=this_->h;
-#if 0
-			update_transformation(this_->trans, &this_->pressed, p, &pr);
-#else
-			update_transformation(this_->trans, &this_->pressed, p, NULL);
-#endif
+			update_transformation(this_->trans, &this_->pressed, p);
 			graphics_draw_drag(this_->gra, NULL);
 			transform_copy(this_->trans, this_->trans_cursor);
 			graphics_overlay_disable(this_->gra, 0);
@@ -525,17 +509,10 @@ navit_motion_timeout(struct navit *this_)
 	dy=(this_->current.y-this_->last.y);
 	if (dx || dy) {
 		struct transformation *tr;
-		struct point pr;
 		this_->last=this_->current;
 		graphics_overlay_disable(this_->gra, 1);
 		tr=transform_dup(this_->trans);
-		pr.x=this_->w/2;
-		pr.y=this_->h;
-#if 0
-		update_transformation(tr, &this_->pressed, &this_->current, &pr);
-#else
-		update_transformation(tr, &this_->pressed, &this_->current, NULL);
-#endif
+		update_transformation(tr, &this_->pressed, &this_->current);
 #if 0
 		graphics_displaylist_move(this_->displaylist, dx, dy);
 #endif
@@ -2225,7 +2202,7 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
 	transform_get_size(this_->trans, &width, &height);
 	po.x=width/2;
 	po.y=height/2;
-	update_transformation(this_->trans, &po, p, NULL);
+	update_transformation(this_->trans, &po, p);
 	if (set_timeout)
 		navit_set_timeout(this_);
 }
