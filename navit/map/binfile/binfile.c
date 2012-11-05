@@ -1484,8 +1484,8 @@ tile_bbox(char *tile, int len, struct coord_rect *r)
 	int overlap=1;
         int xo,yo;
 	struct coord_rect world_bbox = {
-	        { -20000000,  20000000}, /* lu */
-	        {  20000000, -20000000}, /* rl */
+	        { WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_Y}, /* left upper corner */
+	        { WORLD_BOUNDINGBOX_MAX_X, WORLD_BOUNDINGBOX_MIN_Y}, /* right lower corner */
 	};
         *r=world_bbox;
         while (len) {
