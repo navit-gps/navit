@@ -388,24 +388,42 @@ navit_ignore_graphics_events(struct navit *this_, int ignore)
 	this_->ignore_graphics_events=ignore;
 }
 
+static int
+navit_restrict_to_range(int value, int min, int max){
+	if (value>max) {
+		value = max;
+	}
+	if (value<min) {
+		value = min;
+	}
+	return value;
+}
+
+static void
+navit_restrict_map_center_to_visible_area(struct transformation *tr, struct coord *new_center){
+	new_center->x = navit_restrict_to_range(new_center->x, WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_X);
+	new_center->y = navit_restrict_to_range(new_center->y, WORLD_BOUNDINGBOX_MIN_Y, WORLD_BOUNDINGBOX_MAX_Y);
+}
+
 /**
  * @brief Change map center position by translating from "old" to "new".
  */
-void
+static void
 update_transformation(struct transformation *tr, struct point *old, struct point *new)
 {
         /* Code for rotation was removed in rev. 5252; see Trac #1078. */
-	struct coord co,cn;
-	struct coord c,*cp;
-	if (!transform_reverse(tr, old, &co))
+	struct coord coord_old,coord_new;
+	struct coord center_new,*center_old;
+	if (!transform_reverse(tr, old, &coord_old))
 		return;
-	if (!transform_reverse(tr, new, &cn))
+	if (!transform_reverse(tr, new, &coord_new))
 		return;
-	cp=transform_get_center(tr);
-	c.x=cp->x+co.x-cn.x;
-	c.y=cp->y+co.y-cn.y;
-	dbg(1,"from 0x%x,0x%x to 0x%x,0x%x\n", cp->x, cp->y, c.x, c.y);
-	transform_set_center(tr, &c);
+	center_old=transform_get_center(tr);
+	center_new.x=center_old->x+coord_old.x-coord_new.x;
+	center_new.y=center_old->y+coord_old.y-coord_new.y;
+	navit_restrict_map_center_to_visible_area(tr, &center_new);
+	dbg(1,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
+	transform_set_center(tr, &center_new);
 }
 
 void
