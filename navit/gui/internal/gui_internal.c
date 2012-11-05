@@ -446,7 +446,6 @@ static void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags);
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 static void gui_internal_widget_prepend(struct widget *parent, struct widget *child);
-static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child);
 static void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 static void gui_internal_apply_config(struct gui_priv *this);
@@ -459,7 +458,6 @@ static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * table);
-static int gui_internal_widget_table_is_empty(struct gui_priv *this,struct widget * table);
 static GList * gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table);
 static GList * gui_internal_widget_table_next_row(GList * row);
 static GList * gui_internal_widget_table_prev_row(GList * row);
@@ -731,7 +729,7 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
  *
  */
 static struct widget *
-gui_internal_text_font_new(struct gui_priv *this, char *text, int font, enum flags flags)
+gui_internal_text_font_new(struct gui_priv *this, const char *text, int font, enum flags flags)
 {
 	char *s=g_strdup(text),*s2,*tok;
 	struct widget *ret=gui_internal_box_new(this, flags);
@@ -753,7 +751,7 @@ gui_internal_text_new(struct gui_priv *this, char *text, enum flags flags)
 
 
 static struct widget *
-gui_internal_button_font_new_with_callback(struct gui_priv *this, char *text, int font, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
+gui_internal_button_font_new_with_callback(struct gui_priv *this, const char *text, int font, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
 {
 	struct widget *ret=NULL;
 	ret=gui_internal_box_new(this, flags);
@@ -774,7 +772,7 @@ gui_internal_button_font_new_with_callback(struct gui_priv *this, char *text, in
 }
 
 static struct widget *
-gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
+gui_internal_button_new_with_callback(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
 {
 	return gui_internal_button_font_new_with_callback(this, text, 0, image, flags, func, data);
 }
@@ -1539,18 +1537,6 @@ static void gui_internal_widget_prepend(struct widget *parent, struct widget *ch
 	if (! child->background)
 		child->background=parent->background;
 	parent->children=g_list_prepend(parent->children, child);
-	child->parent=parent;
-}
-
-static void gui_internal_widget_insert_before(struct widget *parent, struct widget *sibling, struct widget *child)
-{
-	GList *sib=NULL;
-	if (! child->background)
-		child->background=parent->background;
-
-	if(sibling) 
-		sib=g_list_find(parent->children,sibling);
-	parent->children=g_list_insert_before(parent->children, sib, child);
 	child->parent=parent;
 }
 
@@ -3443,7 +3429,6 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 	struct widget *w;
 	struct mapset *ms;	
 	struct map *map;
-	struct map_selection sel;
 	struct map_rect *mr;
 	struct item *item;
 	GList *l;
@@ -3496,11 +3481,6 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 	if(!map)
 		return;
 
-	sel.next=NULL;
-	sel.order=18;
-	sel.range.min=type_none;
-	sel.range.max=type_tec_common;
-	
 
 	mr = map_rect_new(map, NULL);
 
@@ -5778,7 +5758,7 @@ static const char *
 find_attr(const char **names, const char **values, const char *name)
 {
 	while (*names) {
-		if (!g_strcasecmp(*names, name))
+		if (!g_ascii_strcasecmp(*names, name))
 			return *values;
 		names+=xml_attr_distance;
 		values+=xml_attr_distance;
@@ -5947,7 +5927,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	struct html *html=&this->html[this->html_depth];
 	const char *cond, *type;
 
-	if (!g_strcasecmp(tag_name,"text"))
+	if (!g_ascii_strcasecmp(tag_name,"text"))
 		return;
 	html->skip=0;
 	html->command=NULL;
@@ -5964,7 +5944,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	}
 
 	for (i=0 ; i < sizeof(html_tag_map)/sizeof(struct html_tag_map); i++) {
-		if (!g_strcasecmp(html_tag_map[i].tag_name, tag_name)) {
+		if (!g_ascii_strcasecmp(html_tag_map[i].tag_name, tag_name)) {
 			tag=html_tag_map[i].tag;
 			break;
 		}
@@ -6040,7 +6020,7 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 	struct html *html;
 	struct html *parent=NULL;
 
-	if (!g_strcasecmp(tag_name,"text"))
+	if (!g_ascii_strcasecmp(tag_name,"text"))
 		return;
 	this->html_depth--;
 	html=&this->html[this->html_depth];
@@ -7219,26 +7199,6 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
 }
 
 /**
- * @brief Check if table has any data rows filled.
- * @param this The graphics context
- * @param table table widget
- * @returns 1 if the table is empty, 0 if there any data rows present.
- */
-static int gui_internal_widget_table_is_empty(struct gui_priv *this, struct widget * table)
-{
-   GList *l;
-   struct table_data *td=(struct table_data*) table->data;
-
-   for(l=table->children;l;l=g_list_next(l)) {
-   	if(l->data != td->button_box)
-   		return 0;
-   }
-
-   return 1;
-}
-
-
-/**
  * @brief Move GList pointer to the next table row, skipping other table children (button box, for example).
  * @param row GList pointer into the children list 
  * @returns GList pointer to the next row in the children list, or NULL if there are no any rows left.
@@ -7662,10 +7622,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 
 /**
  * @brief Displays Route information
- *
- * @li The name of the active vehicle
- * @param wm The button that was pressed.
- * @param v Unused
  */
 static void
 gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
@@ -7673,7 +7629,6 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 
 
 	struct widget * menu;
-	struct widget * row;
 	struct widget * box;
 
 
@@ -7689,9 +7644,6 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 
 	this->route_data.route_table = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
 
-	row = gui_internal_widget_table_row_new(this,gravity_left | orientation_horizontal | flags_fill);
-
-
 	menu=gui_internal_menu(this,_("Route Description"));
 
 	menu->wfree=gui_internal_route_screen_free;
@@ -7701,7 +7653,6 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 
 	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
 
-	//	gui_internal_widget_append(box,gui_internal_box_new_with_label(this,"Test"));
 	gui_internal_widget_append(box,this->route_data.route_table);
 	box->w=menu->w;
 	box->spx = this->spacing;

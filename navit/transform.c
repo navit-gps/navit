@@ -36,6 +36,9 @@
 
 #define POST_SHIFT 8
 
+/**
+ * @brief The parameters needed to transform a map for display.
+ */
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
