@@ -48,8 +48,8 @@
 #define phase1_coord_max 16384
 
 struct rect world_bbox = {
-	{ -20000000, -20000000},
-	{  20000000,  20000000},
+	{ WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MIN_Y},
+	{ WORLD_BOUNDINGBOX_MAX_X, WORLD_BOUNDINGBOX_MAX_Y},
 };
 
 void

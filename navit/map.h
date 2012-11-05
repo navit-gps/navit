@@ -39,6 +39,11 @@ struct attr;
 #include "layer.h"
 #include "debug.h"
 
+#define WORLD_BOUNDINGBOX_MIN_X -20000000
+#define WORLD_BOUNDINGBOX_MAX_X  20000000
+#define WORLD_BOUNDINGBOX_MIN_Y -20000000
+#define WORLD_BOUNDINGBOX_MAX_Y  20000000
+
 /**
  * @brief Used to select data from a map
  *
