@@ -422,7 +422,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
-	dbg(1,"enter %d %d (ignore %d)\n",pressed,button,this_->ignore_button);
+	dbg(1,"button %d %s (ignore: %d)\n",button,pressed?"pressed":"released",this_->ignore_button);
 	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, GINT_TO_POINTER(pressed), GINT_TO_POINTER(button), p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
@@ -466,6 +466,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
+			dbg(1, "mouse drag (%d, %d)->(%d, %d)\n", this_->pressed.x, this_->pressed.y, p->x, p->y);
 			update_transformation(this_->trans, &this_->pressed, p);
 			graphics_draw_drag(this_->gra, NULL);
 			transform_copy(this_->trans, this_->trans_cursor);
