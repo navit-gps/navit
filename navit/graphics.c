@@ -1804,7 +1804,7 @@ void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, s
 }
 
 char *
-graphics_icon_path(char *icon)
+graphics_icon_path(const char *icon)
 {
 	static char *navit_sharedir;
 	char *ret=NULL;
