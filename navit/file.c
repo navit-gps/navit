@@ -232,7 +232,7 @@ file_create(char *name, struct attr **options)
 		if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num) {
 			open_flags |= O_RDWR;
 			if ((attr=attr_search(options, NULL, attr_create)) && attr->u.num)
-				open_flags |= O_CREAT;
+				open_flags |= O_CREAT|O_TRUNC;
 		} else
 			open_flags |= O_RDONLY;
 		file->name = g_strdup(name);
@@ -243,6 +243,8 @@ file_create(char *name, struct attr **options)
 		}
 		dbg(1,"fd=%d\n", file->fd);
 		file->size=lseek(file->fd, 0, SEEK_END);
+		if (file->size < 0)
+			file->size=0;
 		dbg(1,"size="LONGLONG_FMT"\n", file->size);
 		file->name_id = (long)atom(name);
 	}
@@ -802,6 +804,14 @@ file_create_caseinsensitive(char *name, struct attr **options)
 		file_closedir(d);
 	}
 	return ret;
+}
+
+void
+file_fsync(struct file *f)
+{
+#ifdef HAVE_FSYNC
+	fsync(f->fd);
+#endif
 }
 
 void
