@@ -764,6 +764,7 @@ vehicle_file_destroy(struct vehicle_priv *priv)
 		f=file_create(priv->statefile, attrs);
 		if (f) {
 			file_data_write(f, 0, strlen(priv->nmea_data), priv->nmea_data);
+			file_fsync(f);
 			file_destroy(f);
 		}	
 	}
