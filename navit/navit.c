@@ -2722,7 +2722,18 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		}
 		break;
 	case attr_vehicleprofile:
-		attr->u.vehicleprofile=this_->vehicleprofile;
+		if (iter) {
+			if(iter->u.list) {
+				iter->u.list=g_list_next(iter->u.list);
+			} else { 
+				iter->u.list=this_->vehicleprofiles;
+			}
+			if(!iter->u.list)
+				return 0;
+			attr->u.vehicleprofile=iter->u.list->data;
+		} else {
+			attr->u.vehicleprofile=this_->vehicleprofile;
+		}
 		break;
 	case attr_zoom:
 		attr->u.num=transform_get_scale(this_->trans);
