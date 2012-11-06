@@ -85,6 +85,7 @@ void *file_opendir(char *dir);
 char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
 struct file *file_create_caseinsensitive(char *name, struct attr **options);
+void file_fsync(struct file *f);
 void file_destroy(struct file *f);
 struct file_wordexp *file_wordexp_new(const char *pattern);
 int file_wordexp_get_count(struct file_wordexp *wexp);
