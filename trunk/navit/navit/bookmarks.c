@@ -645,29 +645,40 @@ bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const ch
 struct former_destination{
 	enum item_type type;
 	char* description;
-	struct coord c;
+	GList* c;
 };
 
 static void free_former_destination(struct former_destination* former_destination){
 	g_free(former_destination->description);
+	g_list_foreach(former_destination->c, (GFunc)g_free, NULL);
+	g_list_free(former_destination->c);
 	g_free(former_destination);
 }
 
-
+/*
+ * Doesn't read any items besides former_destination. So active waypoints items of type former_itinerary and former_itinerary_part are skipped.
+ */
 static GList* read_former_destination_map_as_list(struct map *map){
 	struct map_rect *mr;
 	struct item *item;
 	struct attr attr;
 	struct former_destination *dest;
+	struct coord c;
+	int more;
 	GList* list = NULL;
 	if (map && (mr=map_rect_new(map, NULL))) {
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type != type_former_destination) continue;
-			dest = g_new(struct former_destination, 1);
+			dest = g_new0(struct former_destination, 1);
 			dest->type=item->type;
 			item_attr_get(item, attr_label, &attr);
 			dest->description = g_strdup(attr.u.str);
-			item_coord_get(item, &(dest->c), 1);
+			more = item_coord_get(item, &c, 1);
+			while (more) {
+				dest->c = g_list_append(dest->c, g_new(struct coord, 1));
+				*(struct coord *)g_list_last(dest->c)->data = c;
+				more = item_coord_get(item, &c, 1);
+			}
 			list = g_list_prepend(list, dest);
 		}
 		map_rect_destroy(mr);
@@ -676,41 +687,57 @@ static GList* read_former_destination_map_as_list(struct map *map){
 }
 
 static int
-destination_equal(struct former_destination* dest1, struct former_destination* dest2)
+destination_equal(struct former_destination* dest1, struct former_destination* dest2, int ignore_descriptions)
 {
 	if ((dest1->type == dest2->type) &&
-	    (!strcmp(dest1->description, dest2->description)) &&
-	    (coord_equal(&(dest1->c), &(dest2->c)))){
+	    (ignore_descriptions || !strcmp(dest1->description, dest2->description)) &&
+	    (coord_equal((struct coord *)g_list_last(dest1->c)->data, (struct coord *)g_list_last(dest2->c)->data))){
 		return TRUE;
 	}
 	return FALSE;
 }
 
+/*
+ * Find destination in given GList. If remove_found is non-zero, any matching items are removed and new beginning of the list is returned. 
+ * If remove_found is zero, last matching item is returned. In the latter case, description is ignored and can be NULL.
+ */
 static GList*
-remove_destination_from_list(struct former_destination* dest_to_remove, GList* former_destinations)
+find_destination_in_list(struct former_destination* dest_to_remove, GList* former_destinations, int remove_found)
 {
 	GList* curr_el = former_destinations; 
 	GList* prev_el = NULL;
+	GList* found_el = NULL;
 	struct former_destination* curr_dest;
-
 	while(curr_el){
 		curr_dest = curr_el->data;
-		if (destination_equal(dest_to_remove, curr_dest)){
-			free_former_destination(curr_dest);
-			curr_el = g_list_remove(curr_el, curr_dest);
-		}else{
-			prev_el = curr_el;
-			curr_el = g_list_next(curr_el);
+		if (destination_equal(dest_to_remove, curr_dest, remove_found?0:1)) {
+			if(remove_found) {
+				free_former_destination(curr_dest);
+				curr_el = g_list_remove(curr_el, curr_dest);
+				continue;
+			} else {
+				found_el=curr_el;
+			}
 		}
+		prev_el = curr_el;
+		curr_el = g_list_next(curr_el);
+		
 	}
-	return g_list_first(prev_el);
+	if(remove_found)
+		return g_list_first(prev_el);
+	else
+		return found_el;
+	
 }
+
 
 static void 
 write_former_destinations(GList* former_destinations, char *former_destination_file, enum projection proj)
 {
 	FILE *f;
 	GList* currdest = NULL;
+	GList* c_list = NULL;
+	struct coord *c;
 	struct former_destination *dest;
 	const char* prostr = projection_to_name(proj);
 	f=fopen(former_destination_file, "w");
@@ -721,40 +748,66 @@ write_former_destinations(GList* former_destinations, char *former_destination_f
 				fprintf(f,"type=%s label=\"%s\"\n", item_to_name(dest->type), dest->description);
 			else
 				fprintf(f,"type=%s\n", item_to_name(dest->type));
-			fprintf(f,"%s%s%s0x%x %s0x%x\n",
-			prostr, *prostr ? ":" : "",
-			dest->c.x >= 0 ? "":"-", dest->c.x >= 0 ? dest->c.x : -dest->c.x,
-			dest->c.y >= 0 ? "":"-", dest->c.y >= 0 ? dest->c.y : -dest->c.y);
-			
+			c_list = dest->c;
+			do {
+				c = (struct coord *)c_list->data;
+				fprintf(f,"%s%s%s0x%x %s0x%x\n",
+					prostr, *prostr ? ":" : "",
+					c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x,
+					c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y);
+				c_list = g_list_next(c_list);
+			} while (c_list);
 		}
 		fclose(f);
 	} else {
 		dbg(0, "Error updating destinations file %s: %s\n", former_destination_file, strerror(errno));
 	}
 }
-
 /**
+ * Append recent destination(s) item to the former destionations map.
+ * @param former_destination_map
+ * @param former_destination_file
+ * @param c coordinates of item point(s). Can be set to NULL when navigation is stopped to remove type_former_itinerary and 
+ *    type_former_itinerary_part items from the file.
+ * @param count number of points in this item. Set to 0 when navigation is stopped.
+ * @param type type_former_destination, type_former_itinerary and type_former_itinerary_part are meaningful here
+ * @param description character string used to identify this destination. If NULL, most recent waypoint at these coordinates will be used 
+ *   to get description.
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
 void
-bookmarks_append_coord(struct map *former_destination_map, char *former_destination_file, 
-		struct pcoord *c, enum item_type type, const char *description, int limit)
+bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file,
+		struct pcoord *c, int count, enum item_type type, const char *description, int limit)
 {
-	struct former_destination *new_dest;
+	struct former_destination *new_dest=NULL;
 	GList* former_destinations = NULL;
 	GList* former_destinations_shortened = NULL;
+	struct coord* c_dup;
 	int no_of_former_destinations;
+	int i;
 
 	former_destinations = read_former_destination_map_as_list(former_destination_map);
 
- 	new_dest = g_new(struct former_destination, 1);
- 	new_dest->type = type;
- 	new_dest->description = g_strdup(description?description:_("Map Point"));
- 	new_dest->c.x = c->x;
- 	new_dest->c.y = c->y;
-	former_destinations = remove_destination_from_list(new_dest, former_destinations);
- 	former_destinations = g_list_append(former_destinations, new_dest);
+ 	if(c && count>0) {
+		GList *older;
+		struct coord ctmp;
+	 	new_dest = g_new0(struct former_destination, 1);
+ 		new_dest->type = type;
+		for (i=0; i<count; i++) {
+			ctmp.x=c[i].x;
+			ctmp.y=c[i].y;
+			c_dup = g_new(struct coord, 1);
+			transform_from_to(&ctmp,c[i].pro, c_dup, map_projection(former_destination_map));
+			new_dest->c = g_list_append(new_dest->c, c_dup);
+		}
+		older=find_destination_in_list(new_dest, former_destinations,0);
+		if(!description && older)
+			description=((struct former_destination *)older->data)->description;
+		new_dest->description = g_strdup(description?description:_("Map point"));
 
+		former_destinations = find_destination_in_list(new_dest, former_destinations, 1);
+	 	former_destinations = g_list_append(former_destinations, new_dest);
+	}
 	no_of_former_destinations = g_list_length(former_destinations);
 	if (limit > 0 && no_of_former_destinations > limit)
 		former_destinations_shortened = g_list_nth(former_destinations, no_of_former_destinations - limit);
