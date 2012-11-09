@@ -454,6 +454,7 @@ void graphics_font_destroy_all(struct graphics *gra)
 	for(i = 0 ; i < gra->font_len; i++) {
  		if(!gra->font[i]) continue;
  		gra->font[i]->meth.font_destroy(gra->font[i]->priv);
+ 		g_free(gra->font[i]);
              	gra->font[i] = NULL;
 	}
 }
