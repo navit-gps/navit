@@ -79,6 +79,7 @@ struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_);
 GList *navit_get_vehicleprofiles(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async);
+void navit_add_destination_description(struct navit *this_, struct pcoord *c, const char *description);
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count);
 int navit_get_destination_count(struct navit *this_);
 char* navit_get_destination_description(struct navit *this_, int n);

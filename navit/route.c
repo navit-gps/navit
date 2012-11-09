@@ -233,6 +233,7 @@ struct route {
 	unsigned flags;
 	struct route_info *pos;		/**< Current position within this route */
 	GList *destinations;		/**< Destinations of the route */
+	int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
 	struct route_info *current_dst;	/**< Current destination */
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
@@ -1057,8 +1058,10 @@ route_set_destinations(struct route *this, struct pcoord *dst, int count, int as
 			}
 		}
 		route_status.u.num=route_status_destination_set;
-	} else  
+	} else  {
+		this->reached_destinations_count=0;
 		route_status.u.num=route_status_no_destination;
+	}
 	callback_list_call_attr_1(this->cbl2, attr_destination, this);
 	route_set_attr(this, &route_status);
 	profile(1,"find_nearest_street");
@@ -1118,6 +1121,9 @@ route_get_destination_description(struct route *this, int n)
 	char *label=NULL;
 	char *desc=NULL;
 
+	if(!this->destinations)
+		return NULL;
+
 	dst=g_list_nth_data(this->destinations,n);
 	mr=map_rect_new(dst->street->item.map, NULL);
 	item = map_rect_get_item_byid(mr, dst->street->item.id_hi, dst->street->item.id_lo);
@@ -1134,6 +1140,7 @@ route_get_destination_description(struct route *this, int n)
 		} else if (attr.type==attr_osm_wayid && !label){
 			char *tmp=attr_to_text(&attr, item->map, 1);
 			label=g_strdup_printf("WayID %s", tmp);
+			g_free(tmp);
 		}
 	}
 
@@ -1169,12 +1176,14 @@ route_set_destination(struct route *this, struct pcoord *dst, int async)
 }
 
 /**
- * @brief Append a given set of coordinates for route computing
+ * @brief Append a waypoint to the route.
  *
- * @param this The route instance
- * @param c The coordinate to start routing to
- * @param async 1 for async
- * @return nothing
+ * This appends a waypoint to the current route, targetting the street
+ * nearest to the coordinates passed, and updates the route.
+ * 
+ * @param this The route to set the destination for
+ * @param dst Coordinates of the new waypoint
+ * @param async: If set, do routing asynchronously
  */
 void
 route_append_destination(struct route *this, struct pcoord *dst, int async)
@@ -1219,18 +1228,23 @@ route_remove_nth_waypoint(struct route *this, int n)
 void
 route_remove_waypoint(struct route *this)
 {
-	struct route_path *path=this->path2;
-	struct route_info *ri=this->destinations->data;
-	this->destinations=g_list_remove(this->destinations,ri);
-	route_info_free(ri);
-	this->path2=this->path2->next;
-	route_path_destroy(path,0);
-	if (!this->destinations)
-		return;
-	route_graph_reset(this->graph);
-	this->current_dst=this->destinations->data;
-	route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
-	
+	if (this->path2) {
+		struct route_path *path = this->path2;
+		struct route_info *ri = this->destinations->data;
+		this->destinations = g_list_remove(this->destinations, ri);
+		route_info_free(ri);
+		this->path2 = this->path2->next;
+		route_path_destroy(path, 0);
+		if (!this->destinations) {
+			this->route_status=route_status_no_destination;
+			this->reached_destinations_count=0;
+			return;
+		}
+		this->reached_destinations_count++;
+		route_graph_reset(this->graph);
+		this->current_dst = this->destinations->data;
+		route_graph_flood(this->graph, this->current_dst, this->vehicleprofile,	this->route_graph_flood_done_cb);
+	}
 }
 
 /**
@@ -3003,6 +3017,8 @@ struct map_rect_priv {
 	int hash_bucket;
 	struct coord *coord_sel;	/**< Set this to a coordinate if you want to filter for just a single route graph point */
 	struct route_graph_point_iterator it;
+	/* Pointer to current waypoint element of route->destinations */
+	GList *dest;
 };
 
 static void
@@ -3025,7 +3041,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg=mr->seg;
 	struct route *route=mr->mpriv->route;
-	if (mr->item.type != type_street_route)
+	if (mr->item.type != type_street_route && mr->item.type != type_waypoint)
 		return 0;
 	attr->type=attr_type;
 	switch (attr_type) {
@@ -3077,7 +3093,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				return 0;
 			return 1;
 		case attr_speed:
-			mr->attr_next=attr_none;
+			mr->attr_next=attr_label;
 			if (seg)
 				attr->u.num=route_seg_speed(route->vehicleprofile, seg->data, NULL);
 			else
@@ -3085,6 +3101,13 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 1;
 		case attr_label:
 			mr->attr_next=attr_none;
+			if(mr->item.type==type_waypoint) {
+				if(mr->str)
+					g_free(mr->str);
+				mr->str=g_strdup_printf("%d",route->reached_destinations_count+g_list_position(route->destinations,mr->dest)+1);
+				attr->u.str=mr->str;
+				return 1;
+			}
 			return 0;
 		default:
 			mr->attr_next=attr_none;
@@ -3105,15 +3128,17 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 
 	if (pro == projection_none)
 		return 0;
-	if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse || mr->item.type == type_route_end) {
+	if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse || mr->item.type == type_route_end || mr->item.type == type_waypoint ) {
 		if (! count || mr->last_coord)
 			return 0;
 		mr->last_coord=1;
 		if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse)
 			c[0]=r->pos->c;
-		else {
+		else if (mr->item.type == type_waypoint) {
+			c[0]=((struct route_info *)mr->dest->data)->c;
+		} else { /*type_route_end*/
 			c[0]=route_get_dst(r)->c;
-		}	
+		}
 		return 1;
 	}
 	if (! seg)
@@ -3226,6 +3251,7 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		mr->attr_next=attr_none;
 		if (mr->str)
 			g_free(mr->str);
+		mr->str=NULL;
 		switch (mr->item.type) {
 		case type_rg_point:
 		{
@@ -3461,12 +3487,13 @@ rp_get_item(struct map_rect_priv *mr)
 			rm_coord_rewind(mr);
 			rp_attr_rewind(mr);
 			return &mr->item;
-		} else
+		} else 
 			mr->item.type = type_rg_segment;
 	}
-	
+
+
 	if (mr->coord_sel) {
-		if (!mr->point) { // This means that no point has been found
+		if (!mr->point) { /* This means that no point has been found */
 			return NULL;
 		}
 		seg = rp_iterator_next(&(mr->it));
@@ -3502,6 +3529,8 @@ static struct item *
 rm_get_item(struct map_rect_priv *mr)
 {
 	struct route *route=mr->mpriv->route;
+	void *id=0;
+
 	dbg(1,"enter\n", mr->pos);
 
 	switch (mr->item.type) {
@@ -3510,8 +3539,26 @@ rm_get_item(struct map_rect_priv *mr)
 			mr->item.type=type_route_start_reverse;
 		else
 			mr->item.type=type_route_start;
-		if (route->pos) 
+		if (route->pos) {
+			id=route->pos;
 			break;
+		}
+
+	case type_route_start:
+	case type_route_start_reverse:
+	case type_waypoint:
+		mr->item.type=type_waypoint;
+		mr->seg=NULL;
+		if(!mr->dest)
+			mr->dest=mr->mpriv->route->destinations;
+		else 
+			mr->dest=g_list_next(mr->dest);
+
+		if(mr->dest) {
+			id=mr->dest;
+			break;
+		}
+
 	default:
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
@@ -3528,16 +3575,18 @@ rm_get_item(struct map_rect_priv *mr)
 		}
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;
+			id=mr->seg;
 			break;
 		}
 		mr->item.type=type_route_end;
+		id=&(mr->mpriv->route->destinations);
 		if (mr->mpriv->route->destinations)
 			break;
 	case type_route_end:
 		return NULL;
 	}
 	mr->last_coord = 0;
-	mr->item.id_lo++;
+	item_id_from_ptr(&mr->item,id);
 	rm_attr_rewind(mr);
 	return &mr->item;
 }
@@ -3546,8 +3595,9 @@ static struct item *
 rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	struct item *ret=NULL;
-	while (id_lo-- > 0) 
+	do {
 		ret=rm_get_item(mr);
+	} while (ret && (ret->id_lo!=id_lo || ret->id_hi!=id_hi));
 	return ret;
 }
 

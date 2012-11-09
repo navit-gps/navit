@@ -87,9 +87,10 @@ Navigation</text></img>
 			<a name='Route'><text>Route</text>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
 				<img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
-				<img cond='navit.route.route_status&amp;1' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
 Waypoint</text></img>
-				<img cond='navit.route.route_status&amp;1' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
 Waypoint</text></img>
 			</a>
 			<a name='Map Point'><text>Map Point</text>
@@ -1848,6 +1849,46 @@ Waypoint</text></img>
 					<icon src="gui_sound_32_32.png"/>
 					<circle color="#FF089C" radius="10" text_size="7"/>
 				</itemgra>
+
+				<itemgra item_types="waypoint" order="2">
+					<circle color="#008080" radius="4" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="3-5">
+					<circle color="#008080" radius="8" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="6">
+					<circle color="#008080" radius="10" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="7-8">
+					<circle color="#008080" radius="16" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="9-10">
+					<circle color="#008080" radius="20" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="11">
+					<circle color="#008080" radius="28" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="12">
+					<circle color="#008080" radius="32" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="13">
+					<circle color="#008080" radius="52" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="14">
+					<circle color="#008080" radius="64" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="15">
+					<circle color="#008080" radius="68" width="6" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="16">
+					<circle color="#008080" radius="132" width="8" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="17">
+					<circle color="#008080" radius="268" width="8" text_size="48"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="18">
+					<circle color="#008080" radius="530" width="8" text_size="48"/>
+				</itemgra>
 			</layer>
 			<layer name="Unknown" enabled="no">
 				<!-- This entry shows all unknow point elements as blue circles -->
@@ -3266,6 +3307,46 @@ Waypoint</text></img>
 					<icon src="gui_sound_32_32.png"/>
 					<circle color="#FF089C" radius="10" text_size="7"/>
 				</itemgra>
+				
+				<itemgra item_types="waypoint" order="2">
+					<circle color="#00a0a0" radius="4" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="3-5">
+					<circle color="#00a0a0" radius="8" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="6">
+					<circle color="#00a0a0" radius="10" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="7-8">
+					<circle color="#00a0a0" radius="16" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="9-10">
+					<circle color="#00a0a0" radius="20" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="11">
+					<circle color="#00a0a0" radius="28" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="12">
+					<circle color="#00a0a0" radius="32" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="13">
+					<circle color="#00a0a0" radius="52" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="14">
+					<circle color="#00a0a0" radius="64" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="15">
+					<circle color="#00a0a0" radius="68" width="6" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="16">
+					<circle color="#00a0a0" radius="132" width="8" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="17">
+					<circle color="#00a0a0" radius="268" width="8" text_size="48"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="18">
+					<circle color="#00a0a0" radius="530" width="8" text_size="48"/>
+				</itemgra>
 			</layer>
 			<layer name="points">
 				<itemgra item_types="mini_roundabout" order="12-">
@@ -4542,6 +4623,47 @@ Waypoint</text></img>
         <itemgra item_types="route_end" order="0-">
           <icon src="nav_destination_bk.png" w="32" h="32" />
         </itemgra>
+        
+        <itemgra item_types="waypoint" order="2">
+			<circle color="#000000" radius="4" width="2" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="3-5">
+			<circle color="#000000" radius="8" width="2" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="6">
+			<circle color="#000000" radius="10" width="2" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="7-8">
+			<circle color="#000000" radius="16" width="2" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="9-10">
+			<circle color="#000000" radius="20" width="4" text_size="32"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="11">
+			<circle color="#000000" radius="28" width="4" text_size="32"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="12">
+			<circle color="#000000" radius="32" width="4" text_size="32"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="13">
+			<circle color="#000000" radius="52" width="4" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="14">
+			<circle color="#000000" radius="64" width="4" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="15">
+			<circle color="#000000" radius="68" width="6" text_size="24"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="16">
+			<circle color="#000000" radius="132" width="8" text_size="32"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="17">
+			<circle color="#000000" radius="268" width="8" text_size="48"/>
+		</itemgra>
+		<itemgra item_types="waypoint" order="18">
+			<circle color="#000000" radius="530" width="8" text_size="48"/>
+		</itemgra>
+        
         <itemgra item_types="nav_none" order="0-">
           <icon src="unknown.png" />
         </itemgra>
@@ -5206,6 +5328,10 @@ Waypoint</text></img>
 
 				<itemgra item_types="street_route" >
 					<polyline width="9" color="#ffffff" />
+				</itemgra>
+				
+				<itemgra item_types="waypoint" >
+					<circle color="#000000" radius="8" width="2" text_size="24"/>
 				</itemgra>
 			</layer>
 			<layer name="labels">
@@ -6145,6 +6271,47 @@ Waypoint</text></img>
 				<itemgra item_types="route_end" order="0-">
 					<icon src="nav_destination_bk.svg" w="32" h="32"/>
 				</itemgra>
+				
+				<itemgra item_types="waypoint" order="2">
+					<circle color="#000000" radius="4" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="3-5">
+					<circle color="#000000" radius="8" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="6">
+					<circle color="#000000" radius="10" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="7-8">
+					<circle color="#000000" radius="16" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="9-10">
+					<circle color="#000000" radius="20" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="11">
+					<circle color="#000000" radius="28" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="12">
+					<circle color="#000000" radius="32" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="13">
+					<circle color="#000000" radius="52" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="14">
+					<circle color="#000000" radius="64" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="15">
+					<circle color="#000000" radius="68" width="6" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="16">
+					<circle color="#000000" radius="132" width="8" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="17">
+					<circle color="#000000" radius="268" width="8" text_size="48"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="18">
+					<circle color="#000000" radius="530" width="8" text_size="48"/>
+				</itemgra>
+				
 				<itemgra item_types="nav_none" order="0-">
 					<icon src="unknown.svg"/>
 				</itemgra>
@@ -6701,6 +6868,47 @@ Waypoint</text></img>
 				<itemgra item_types="rg_point" order="0-">
 					<circle color="#FF089C" radius="10"/>
 				</itemgra>
+				
+				<itemgra item_types="waypoint" order="2">
+					<circle color="#008080" radius="4" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="3-5">
+					<circle color="#008080" radius="8" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="6">
+					<circle color="#008080" radius="10" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="7-8">
+					<circle color="#008080" radius="16" width="2" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="9-10">
+					<circle color="#008080" radius="20" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="11">
+					<circle color="#008080" radius="28" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="12">
+					<circle color="#008080" radius="32" width="4" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="13">
+					<circle color="#008080" radius="52" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="14">
+					<circle color="#008080" radius="64" width="4" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="15">
+					<circle color="#008080" radius="68" width="6" text_size="24"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="16">
+					<circle color="#008080" radius="132" width="8" text_size="32"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="17">
+					<circle color="#008080" radius="268" width="8" text_size="48"/>
+				</itemgra>
+				<itemgra item_types="waypoint" order="18">
+					<circle color="#008080" radius="530" width="8" text_size="48"/>
+				</itemgra>
+				
 				<!-- !!!!...POIs...!!!! -->
 				<!-- amenity=bank -->
 				<itemgra item_types="poi_bank" order="14-">

@@ -97,9 +97,11 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 	dbg(1,"enter, count: %d\n",count);
 	while (count--) {
 		if (mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc) && parse_line(mr, mr->item.id_hi)) {
-			*c=mr->c;
-			dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
-			c++;
+			if (c){
+				*c=mr->c;
+				dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
+				c++;
+			}
 			ret++;		
 			get_line(mr);
 			if (mr->item.id_hi)

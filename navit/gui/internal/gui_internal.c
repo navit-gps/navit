@@ -493,6 +493,8 @@ static void gui_internal_enter_setup(struct gui_priv *this);
 static void gui_internal_html_main_menu(struct gui_priv *this);
 static void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name);
 
+static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
+
 
 /*
  * * Display image scaled to specific size
@@ -2166,6 +2168,112 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 }
 
 static void
+gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm, void *data) {
+	char *name=data;
+	int dstcount=navit_get_destination_count(this->nav)+1;
+	int pos,i;
+	struct pcoord *dst=g_alloca(dstcount*sizeof(struct pcoord));
+	dstcount=navit_get_destinations(this->nav,dst,dstcount);
+
+	pos=dstcount-wm->datai;
+	if(pos<0)
+		pos=0;
+	
+	for(i=dstcount;i>pos;i--)
+		dst[i]=dst[i-1];
+		
+	dst[pos]=wm->c;
+	navit_add_destination_description(this->nav,&wm->c,(char*)data);
+	navit_set_destinations(this->nav,dst,dstcount+1,name,1);
+	gui_internal_prune_menu(this, NULL);
+}
+
+/*
+ * @brief Display waypoint list to the user and let she choose one for the action specified as cmd parameter.
+ * Widget passed as wm parameter of the called cmd function will have item set to user choosen waypoint item. Its datai will be set
+ *  to zero-based choosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
+ *  waypoint coordinates will be copied to wm->c.
+ * @param in this gui context
+ * @param title Menu title
+ * @param hint Text to dispaly above the waypoint list describing the action to be performed, can be NULL
+ * @param wm The called widget pointer. Can be NULL.
+ * @param cmd Function to call on item selection
+ * @param data data argument to be passed to the cmd function
+ * @returns nothing
+ */
+static void
+gui_internal_select_waypoint(struct gui_priv *this, char *title, char *hint, struct widget *wm_, void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data)
+{
+	struct widget *wb,*w,*wtable,*row,*wc;
+	struct map *map;
+	struct map_rect *mr;
+	struct item *item;
+	char *label,*text;
+	int i;
+	int dstcount=navit_get_destination_count(this->nav)+1;
+
+	map=route_get_map(navit_get_route(this->nav));
+	if(!map)
+		return;
+	mr = map_rect_new(map, NULL);
+	if(!mr)
+		return;
+	
+	wb=gui_internal_menu(this, title);
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	if(hint)
+		gui_internal_widget_append(w, gui_internal_label_new(this, hint));
+	wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+	gui_internal_widget_append(w,wtable);
+
+	i=0;	
+	while((item = map_rect_get_item(mr))!=NULL) {
+		struct attr attr;
+		if(item->type!=type_waypoint)
+			continue;
+		if (item_attr_get(item, attr_label, &attr)) {
+			label=map_convert_string(item->map, attr.u.str);
+			text=g_strdup_printf(_("Waypoint %s"), label);
+			map_convert_free(label);
+		} else
+			continue;
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,	wc=gui_internal_button_new_with_callback(this, text,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				cmd, data));
+		wc->item=*item;
+		if(wm_)
+			wc->c=wm_->c;
+		else {
+			struct coord c;
+			item_coord_get(item,&c,1);
+			wc->c.x=c.x;
+			wc->c.y=c.y;
+			wc->c.pro=map_projection(item->map);
+		}
+		i++;
+		wc->datai=dstcount-i;
+		g_free(text);
+	}
+	map_rect_destroy(mr);
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_insert_destination(struct gui_priv *this, struct widget *wm, void *data)
+{
+	gui_internal_select_waypoint(this, data, _("Select waypoint to insert the new one before"), wm, gui_internal_cmd_insert_destination_do, data);
+}
+
+static void
+gui_internal_cmd2_waypoints(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	gui_internal_select_waypoint(this, _("Waypoints"), NULL, NULL, gui_internal_cmd_position, (void*)2);
+}
+
+
+static void
 gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct attr v;
@@ -2425,6 +2533,7 @@ gui_internal_cmd_load_bookmarks_as_waypoints(struct gui_priv *this, struct widge
 					pc[i].x=c.x;
 					pc[i].y=c.y;
 					pc[i].pro=pro;
+					navit_add_destination_description(this->nav,&pc[i],attr.u.str);
 					i++;
 				}
 			}
@@ -2480,7 +2589,9 @@ gui_internal_cmd_replace_bookmarks_from_waypoints(struct gui_priv *this, struct 
 		navit_get_destinations(this->nav, pc, bm_count);
 
 		for (i=0; i<bm_count; i++){
-			desc=g_strdup_printf("%s WP%d", navit_get_destination_description(this->nav, i), i+1);
+			char *tmp=navit_get_destination_description(this->nav, i);
+			desc=g_strdup_printf("%s WP%d", tmp, i+1);
+			g_free(tmp);
 			navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 			bookmarks_add_bookmark(attr.u.bookmarks, &pc[i], desc);
 			bookmarks_move_down(mattr.u.bookmarks,wm->prefix);
@@ -2518,8 +2629,6 @@ get_direction(char *buffer, int angle, int mode)
 		break;
 	}
 }
-
-static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
 
 struct selector {
 	char *icon;
@@ -3555,6 +3664,34 @@ gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, voi
 	navit_draw(this->nav);
 }
 
+static void
+gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void *data)
+{
+	int dstcount=navit_get_destination_count(this->nav);
+	int i;
+	struct map_rect *mr;
+	struct item *item;
+	struct pcoord *dst=g_alloca(dstcount*sizeof(struct pcoord));
+	dstcount=navit_get_destinations(this->nav,dst,dstcount);
+	mr=map_rect_new(wm->item.map, NULL);
+	i=0;
+	while((item=map_rect_get_item(mr))!=NULL) {
+		struct coord c;
+		if(item->type!=type_waypoint)
+			continue;
+		if(item_is_equal_id(*item,wm->item))
+			continue;
+		item_coord_get_pro(item,&c,1,projection_mg);
+		dst[i].x=c.x;
+		dst[i].y=c.y;
+		dst[i].pro=projection_mg;
+		i++;
+	}
+	map_rect_destroy(mr);	
+	navit_set_destinations(this->nav,dst,i,NULL,1);
+	gui_internal_prune_menu(this, NULL);
+}
+
 
 /* meaning of the bits in "flags":
  * 1: "Streets"
@@ -3659,6 +3796,15 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				gui_internal_cmd_set_destination, g_strdup(name)));
 		wbc->data_free=g_free_func;
 		wbc->c=pc;
+		if(navit_get_destination_count(this->nav)>=1) {
+			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+			gui_internal_widget_append(row,
+				wbc=gui_internal_button_new_with_callback(this, _("Visit before..."),
+					image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+					gui_internal_cmd_insert_destination, g_strdup(name)));
+			wbc->data_free=g_free_func;
+			wbc->c=pc;
+		}
 	}
 	if (flags & 16) {
 		const char *text;
@@ -3762,13 +3908,16 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			
 			mr=map_rect_new(item->map, sel);
 			itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-				
+			if(!itemo) {
+				map_rect_destroy(mr);
+				continue;
+			}
 			if (item_attr_get(itemo, attr_label, &attr)) {
 				label=map_convert_string(itemo->map, attr.u.str);
-				text=g_strdup_printf("%s %s", item_to_name(item->type), label);
+				text=g_strdup(label);
 				map_convert_free(label);
 			} else
-				text=g_strdup_printf("%s", item_to_name(item->type));
+				text=g_strdup(item_to_name(item->type));
 			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 			gui_internal_widget_append(row,	wc=gui_internal_cmd_pois_item(this, NULL, itemo, NULL, -1, text));
 			wc->c=pc;
@@ -3815,6 +3964,15 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_delete_bookmark, NULL));
 		wbc->text=g_strdup(wm->text);
+	}
+
+	if (wm && wm->item.type==type_waypoint) {
+		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
+		gui_internal_widget_append(row,
+			wbc=gui_internal_button_new_with_callback(this, _("Delete waypoint"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_delete_waypoint, NULL));
+		wbc->item=wm->item;
 	}
 	
 	gui_internal_menu_render(this);
@@ -4013,7 +4171,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 				// load bookmark folder as Waypoints, if any
 				if (bookmarks_get_bookmark_count(mattr.u.bookmarks) > 0){
-					wbm=gui_internal_button_new_with_callback(this, _("Bookmarks as Waypoints"),
+					wbm=gui_internal_button_new_with_callback(this, _("Bookmarks as waypoints"),
 							image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 							gui_internal_cmd_load_bookmarks_as_waypoints, NULL);
 					wbm->prefix=g_strdup(prefix);
@@ -4023,11 +4181,11 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				// save Waypoints in bookmark folder, if route exists
 				if (navit_get_destination_count(this->nav) > 0){
 					if (bookmarks_get_bookmark_count(mattr.u.bookmarks)==0){
-						wbm=gui_internal_button_new_with_callback(this, _("Save Waypoints"),
+						wbm=gui_internal_button_new_with_callback(this, _("Save waypoints"),
 									image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 									gui_internal_cmd_replace_bookmarks_from_waypoints, NULL);
 					}else{
-						wbm=gui_internal_button_new_with_callback(this, _("Replace Waypoints"),
+						wbm=gui_internal_button_new_with_callback(this, _("Replace with waypoints"),
 									image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 									gui_internal_cmd_replace_bookmarks_from_waypoints, NULL);
 					}
@@ -4129,6 +4287,19 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 	char *label_full;
 	enum projection projection;
 
+	if(!navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL))
+		return;
+
+	formerdests=attr.u.map;
+	if(!formerdests) 
+		return;
+
+	mr_formerdests=map_rect_new(formerdests, NULL);
+	if(!mr_formerdests)
+		return;
+
+	projection = map_projection(formerdests);
+
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Former Destinations"));
 	wb->background=this->background;
@@ -4137,13 +4308,10 @@ gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr 
 			gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*2;
 	gui_internal_widget_append(wb, w);
-
-	formerdests=read_former_destinations_from_file();
-	mr_formerdests=map_rect_new(formerdests, NULL);
-	projection = map_projection(formerdests);
 	while ((item=map_rect_get_item(mr_formerdests))) {
 		struct coord c;
 		struct widget *row;
+		if (item->type!=type_former_destination) continue;
 		if (!item_attr_get(item, attr_label, &attr)) continue;
 		if(!tbl) {
 			tbl=gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand | orientation_vertical,1);
@@ -8220,6 +8388,7 @@ static struct command_table commands[] = {
 	{"town",command_cast(gui_internal_cmd2_town)},
 	{"enter_coord",command_cast(gui_internal_cmd_enter_coord)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
+	{"waypoints",command_cast(gui_internal_cmd2_waypoints)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
 
