@@ -159,6 +159,8 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 		item=map_rect_get_item(mr);
 	if (item && item->type == type_route_start)
 		item=map_rect_get_item(mr);
+	while(item && item->type!=type_street_route)
+		item=map_rect_get_item(mr);
 	if (item && item_coord_get(item, &pos, 1)) {
 		priv->position_set=0;
 		dbg(1, "current pos=0x%x,0x%x\n", pos.x, pos.y);

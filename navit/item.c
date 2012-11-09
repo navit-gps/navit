@@ -304,6 +304,28 @@ item_id_equal(const void *a, const void *b)
 	return (id_a->id_hi == id_b->id_hi && id_a->id_lo == id_b->id_lo);
 }
 
+/**
+ * @brief Derive item id_lo and id_hi from pointer, considering pointer could be 32 or 64 bit wide but both ids are 32 bit. 
+ *
+ * @param it reference to the item.
+ * @param id pointer to derive item id from.
+ * @return  Nothing.
+ */
+void
+item_id_from_ptr(struct item *item, void *id) 
+{
+#if !defined(__LP64__) && !defined(__LLP64__) && !defined(WIN64)
+	item->id_lo=(int) id;
+	item->id_hi=0;
+#else
+#	ifndef _MSC_VER
+		item->id_lo=((long long)id)&0xFFFFFFFFll;
+#	else
+		item->id_lo=((long long)id)&0xFFFFFFFFi64;
+#	endif
+		item->id_hi=((long long)id)>>32;
+#endif
+}
 
 
 struct item_hash *

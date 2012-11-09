@@ -134,6 +134,7 @@ enum item_type item_from_name(const char *name);
 char *item_to_name(enum item_type item);
 unsigned int item_id_hash(const void *key);
 int item_id_equal(const void *a, const void *b);
+void item_id_from_ptr(struct item *item, void *id);
 struct item_hash *item_hash_new(void);
 void item_hash_insert(struct item_hash *h, struct item *item, void *val);
 int item_hash_remove(struct item_hash *h, struct item *item);
