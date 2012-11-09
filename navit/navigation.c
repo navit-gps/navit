@@ -639,6 +639,7 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 	
 	i = map_rect_get_item(g_rect);
 	if (!i || i->type != type_rg_point) { // probably offroad? 
+		map_rect_destroy(g_rect);
 		return ;
 	}
 
@@ -829,8 +830,11 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		ret->way.item=*sitem;
 		item_hash_insert(this_->hash, sitem, ret);
 		mr=map_rect_new(sitem->map, NULL);
-		if (! (sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo)))
+		if (! (sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo))) {
+			g_free(ret);
+			map_rect_destroy(mr);
 			return NULL;
+		}
 		if (item_attr_get(sitem, attr_street_name, &attr))
 			ret->way.name1=map_convert_string(sitem->map,attr.u.str);
 		if (item_attr_get(sitem, attr_street_name_systematic, &attr))
