@@ -269,6 +269,7 @@ static void
 set_double(struct context *ctx, struct result *res, double val)
 {
 	result_free(res);
+	res->attr.type=attr_type_double_begin;
 	res->val=val;
 }
 
@@ -444,6 +445,7 @@ command_call_function(struct context *ctx, struct result *res)
 		} else
 			res->attr.type=attr_none;
 	}
+	attr_list_free(list);
 	res->var=NULL;
 	res->varlen=0;
 	res->attrn=NULL;
@@ -606,16 +608,24 @@ eval_equality(struct context *ctx, struct result *res)
 		case '=':
 			if (res->attr.type == attr_none || tmp.attr.type == attr_none) {
 				set_int(ctx, res, 0);
-			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type))
-				set_int(ctx, res, (!strcmp(get_string(ctx, res),get_string(ctx, &tmp))));
+			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type)) {
+				char *s1=get_string(ctx, res),*s2=get_string(ctx, &tmp);
+				set_int(ctx, res, (!strcmp(s1,s2)));
+				g_free(s1);
+				g_free(s2);
+			}
 			else
 				set_int(ctx, res, (get_int(ctx, res) == get_int(ctx, &tmp)));
 			break;
 		case '!':
 			if (res->attr.type == attr_none || tmp.attr.type == attr_none) {
 				set_int(ctx, res, 1);
-			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type))
-				set_int(ctx, res, (!!strcmp(get_string(ctx, res),get_string(ctx, &tmp))));
+			} else if (ATTR_IS_STRING(res->attr.type) && ATTR_IS_STRING(tmp.attr.type)) {
+				char *s1=get_string(ctx, res),*s2=get_string(ctx, &tmp);
+				set_int(ctx, res, (!!strcmp(s1,s2)));
+				g_free(s1);
+				g_free(s2);
+			}
 			else
 				set_int(ctx, res, (get_int(ctx, res) != get_int(ctx, &tmp)));
 			break;

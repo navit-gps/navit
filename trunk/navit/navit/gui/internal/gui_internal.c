@@ -8016,11 +8016,16 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			}
 
 		}
-		map_rect_destroy(mr);
 	}
 
+	if(mr)
+		map_rect_destroy(mr);
 
 	gui_internal_menu_render(this);
+
+	if(!diagram_points) 
+		return;
+
 	first=1;
 	diagram_point=diagram_points;
 	while (diagram_point) {
@@ -8361,7 +8366,7 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 			}
 
 		}
-
+		map_rect_destroy(mr);
 	}
 }
 
@@ -8543,10 +8548,15 @@ void plugin_init(void)
 static void
 gui_internal_destroy(struct gui_priv *this)
 {
-
 	graphics_font_destroy(this->fonts[0]);
 	graphics_font_destroy(this->fonts[1]);
 	graphics_font_destroy(this->fonts[2]);
+	graphics_gc_destroy(this->background);
+	graphics_gc_destroy(this->background2);
+	graphics_gc_destroy(this->highlight_background);
+	graphics_gc_destroy(this->foreground);
+	graphics_gc_destroy(this->text_background);
+	graphics_gc_destroy(this->text_foreground);
 	attr_free(this->click_coord_geo);
 	attr_free(this->position_coord_geo);
 	g_free(this->country_iso2);

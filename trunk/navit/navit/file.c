@@ -238,6 +238,7 @@ file_create(char *name, struct attr **options)
 		file->name = g_strdup(name);
 		file->fd=open(name, open_flags, 0666);
 		if (file->fd == -1) {
+			g_free(file->name);
 			g_free(file);
 			return NULL;
 		}
