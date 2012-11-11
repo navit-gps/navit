@@ -220,6 +220,7 @@ typedef struct g2sprop {
     int speed2sec;	/** value to convert speedTimeUnit to seconde */
     g2sstats *stats;	/** convert statistics */
     g2scolumns *cols;	/** attribute table column switch */
+    int nospeedcheck;	/** disables track check for speed to be non-zero */
 } g2sprop;
 
 /**

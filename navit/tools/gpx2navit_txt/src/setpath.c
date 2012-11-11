@@ -208,10 +208,10 @@ int checkPath(parsedata * pdata)
 	countUnconverted(pdata);
 	return 0;
 	/* check path speed */
-    } else if (pattr->speed == .0) {
+    } else if (!prop->nospeedcheck && pattr->speed == .0) {
 	fprintf
 	    (stderr,
-	     "gpx2navit_txt:%s:%i track was not converted because no move recorded.\n",
+	     "gpx2navit_txt:%s:%i track was not converted because no move recorded. Use --no-speed-check option to bypass this check.\n",
 	     prop->sourcefile, XML_GetCurrentLineNumber(pdata->parser));
 	countUnconverted(pdata);
 	return 0;
