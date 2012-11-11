@@ -120,6 +120,8 @@ void usage(char **argv)
     fprintf
 	(stdout,
 	 "                        You can see the unit list from \"geod -le\" command.\n");
+    fprintf(stdout,
+	    "    --no-speed-check   Disables track check for speed to be non-zero.\n");
     fprintf(stdout, "-v,  --verbose          Gives many messages.\n");
     fprintf(stdout, "     --version          Shows version.\n");
     fprintf(stdout, "-h,  --help             Shows this list.\n");
@@ -229,6 +231,7 @@ void setOptions(int argc, char **argv, g2sprop * prop)
 	{"verbose", no_argument, 0, 'v'},
 	{"gpxline", no_argument, 0, 'g'},
 	{"all", no_argument, 0, 'a'},
+	{"no-speed-check", no_argument, 0, '9'},
 	{"version", no_argument, 0, 'V'},
 	{"help", no_argument, 0, '?'},
 	{0, no_argument, 0, '0'},
@@ -240,7 +243,7 @@ void setOptions(int argc, char **argv, g2sprop * prop)
     }
     /* set option attributes */
     while ((result =
-	    getopt_long(argc, argv, "3wtrao:epfP:l:m:bS4:5:6:7:8:LTSsvg0",
+	    getopt_long(argc, argv, "3wtrao:epfP:l:m:bS4:5:6:7:8:LTSsvg09",
 			long_options, NULL)) != -1) {
 	switch (result) {
 	case '3':		/* 3d output */
@@ -345,6 +348,9 @@ void setOptions(int argc, char **argv, g2sprop * prop)
 	case '8':		/* sets time unit */
 	    prop->timeUnit = malloc(sizeof(char) * (strlen(optarg) + 1));
 	    strcpy(prop->timeUnit, optarg);
+	    break;
+	case '9':		/* disables speed check */
+	    prop->nospeedcheck=1;
 	    break;
 	case 'L':		/* doesn't make length column */
 	    prop->cols->length = 0;
