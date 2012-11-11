@@ -336,6 +336,7 @@ struct gui_priv {
 		char *name;
 		char *href;
 		char *refresh_cond;
+		int font_size;
 		struct widget *w;
 		struct widget *container;
 	} html[10];
@@ -6093,7 +6094,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	int i;
 	enum html_tag tag=html_tag_none;
 	struct html *html=&this->html[this->html_depth];
-	const char *cond, *type;
+	const char *cond, *type, *font_size;
 
 	if (!g_ascii_strcasecmp(tag_name,"text"))
 		return;
@@ -6104,6 +6105,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	html->refresh_cond=NULL;
 	html->w=NULL;
 	html->container=NULL;
+	html->font_size=0;
 	cond=find_attr(names, values, "cond");
 
 	if (cond && !this->html_skip) {
@@ -6170,6 +6172,9 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 			break;
 		case html_tag_div:
 			html->w=gui_internal_box_new(this, div_flags(names, values));
+			font_size=find_attr(names, values, "font");
+			if (font_size)
+				html->font_size=atoi(font_size);
 			html->container=this->html_container;
 			this->html_container=html->w;
 			break;
@@ -6316,7 +6321,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 		break;
 	case html_tag_div:
 		if (len) {
-			gui_internal_widget_append(html->w, gui_internal_text_new(this, _(text_stripped), gravity_center|orientation_vertical));
+			gui_internal_widget_append(html->w, gui_internal_text_font_new(this, _(text_stripped), html->font_size, gravity_center|orientation_vertical));
 		}
 		break;
 	case html_tag_script:
