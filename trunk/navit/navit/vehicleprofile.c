@@ -55,6 +55,9 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	case attr_vehicle_axle_weight:
 		this_->axle_weight=attr->u.num;
 		break;
+	case attr_vehicle_dangerous_goods:
+		this_->dangerous_goods=attr->u.num;
+		break;
 	case attr_vehicle_height:
 		this_->height=attr->u.num;
 		break;
