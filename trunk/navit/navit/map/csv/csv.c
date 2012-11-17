@@ -682,6 +682,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	m = g_new0(struct map_priv, 1);
 	m->id = ++map_id;
 	m->qitem_hash = g_hash_table_new_full(g_int_hash, g_int_equal, g_free, quadtree_item_free_do);
+	m->tree_root = tree_root;
 
 	item_type  = attr_search(attrs, NULL, attr_item_type);
 	attr_types = attr_search(attrs, NULL, attr_attr_types);
@@ -726,6 +727,13 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 
 	m->item_type = item_type_attr->u.item_type;
 
+	flags=attr_search(attrs, NULL, attr_flags);
+	if (flags) 
+		m->flags=flags->u.num;
+
+	*meth = map_methods_csv;
+	meth->charset=m->charset;
+
 	data=attr_search(attrs, NULL, attr_data);
 
 	if(data) {
@@ -749,7 +757,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 				char* delim = ",";
 				int col_cnt=0;
 				char*tok;
-	
+				
 				if(line[strlen(line)-1]=='\n' || line[strlen(line)-1]=='\r') {
 					line[strlen(line)-1] = '\0';
 				}
@@ -765,6 +773,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 					int bAddSum = 1;	
 					double longitude = 0.0, latitude=0.0;
 					struct item *curr_item = item_new("",zoom_max);/*does not use parameters*/
+					
 					curr_item->type = item_type_attr->u.item_type;
 					curr_item->id_lo = m->next_item_idx;
 					if (m->flags & 1)
@@ -808,7 +817,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 					}
 					if(bAddSum && (longitude!=0.0 || latitude!=0.0)) {
 						struct quadtree_data* qd = g_new0(struct quadtree_data,1);
-						struct quadtree_item* qi =g_new(struct quadtree_item,1);
+						struct quadtree_item* qi =g_new0(struct quadtree_item,1);
 						int* pID = g_new(int,1);
 						qd->item = curr_item;
 						qd->attr_list = attr_list;
@@ -841,15 +850,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  	dbg(1,"No data attribute, starting with in-memory map\n");
 	}
 
-	*meth = map_methods_csv;
-
-	meth->charset=m->charset;
-	
-	m->tree_root = tree_root;
 	dbg(2,"%p\n",tree_root);
-	flags=attr_search(attrs, NULL, attr_flags);
-	if (flags) 
-		m->flags=flags->u.num;
 	return m;
 }
 
