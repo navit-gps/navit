@@ -5367,7 +5367,6 @@ gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, 
 	navit.type=attr_navit;
 	navit.u.navit=this->nav;
 	config_remove_attr(config, &navit);
-	gui_internal_destroy(this);
 	event_main_loop_quit();
 }
 
