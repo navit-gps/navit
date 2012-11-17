@@ -274,6 +274,7 @@ mapset_get_map_by_name(struct mapset *ms, const char*map_name)
 			}
 		}
 	}
+	mapset_close(msh);
 	return curr_map;
 }
 
