@@ -148,6 +148,7 @@ save_map_csv(struct map_priv *m)
 			if(fprintf(fp,"%s\n", csv_line)<0) {
 				ferr = 1;
 			}
+			g_free(csv_line);
 		}
 
 		if(fclose(fp)) {
@@ -176,6 +177,7 @@ map_destroy_csv(struct map_priv *m)
 	g_hash_table_destroy(m->qitem_hash);
 	quadtree_destroy(m->tree_root);
 	g_free(m->filename);
+	g_free(m->charset);
 	g_free(m->attr_types);
 	g_free(m);
 }
@@ -465,6 +467,8 @@ static void quadtree_item_free_do(void *data)
 			attr = attr_it->data;
 			attr_free(attr);
 		}
+		g_list_free(qdata->attr_list);
+		g_free(qdata->item);
 		g_free(qitem->data);
 	}
 	g_free(data);
