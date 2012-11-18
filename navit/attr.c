@@ -585,8 +585,8 @@ attr_data_set_le(struct attr * attr, void * data)
 
 }
 
-void
-attr_free(struct attr *attr)
+static void
+attr_free_content_do(struct attr *attr)
 {
 	if (!attr)
 		return;
@@ -598,6 +598,19 @@ attr_free(struct attr *attr)
 	if (!(attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) && 
 	    !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end))
 		g_free(attr->u.data);
+}
+
+void
+attr_free_content(struct attr *attr)
+{
+	attr_free_content_do(attr);
+	memset(attr,0,sizeof(*attr));
+}
+
+void
+attr_free(struct attr *attr)
+{
+	attr_free_content_do(attr);
 	g_free(attr);
 }
 

@@ -77,6 +77,13 @@ static struct attr ** eval_list(struct context *ctx);
 static void
 result_free(struct result *res)
 {
+	if(res->allocated) {
+		attr_free_content(&res->attr);
+		res->allocated=0;
+	} else {
+		res->attr.type=type_none;
+		res->attr.u.data=NULL;
+	}
 }
 
 static int command_register_callbacks(struct command_saved *cs);
@@ -147,10 +154,15 @@ command_attr_type(struct result *res)
 static int
 command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type attr_type, struct attr *ret)
 {
+	int r;
+	struct attr dup;
 	struct object_func *func=object_func_lookup(object->type);
 	if (!func || !func->get_attr)
 		return 0;
-	return func->get_attr(object->u.data, attr_type, ret, NULL);
+	r=func->get_attr(object->u.data, attr_type, &dup, NULL);
+	if(r)
+		attr_dup_content(&dup,ret);
+	return r;
 }
 
 static int
@@ -176,12 +188,17 @@ static void
 command_get_attr(struct context *ctx, struct result *res)
 {
 	int result;
+	struct result tmp={};
 	enum attr_type attr_type=command_attr_type(res);
-	result=command_object_get_attr(ctx, &res->attr, attr_type, &res->attr);
+	result=command_object_get_attr(ctx, &res->attr, attr_type, &tmp.attr);
+	result_free(res);
+	*res=tmp;
+	res->allocated=1;
 	if (result) {
 		res->var=res->attrn;
 		res->varlen=res->attrnlen;
 	} else {
+		result_free(res);
 		res->attr.type=attr_none;
 		res->var=NULL;
 		res->varlen=0;
@@ -205,10 +222,12 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 		attrn[res->attrnlen]='\0';
 		tmp=attr_new_from_text(attrn, newres->attr.u.str);
 		newres->attr.u.data=tmp->u.data;
+		newres->allocated=1;
 		g_free(tmp);
 	}
 	newres->attr.type=attr_type;
 	func->set_attr(res->attr.u.data, &newres->attr);
+	result_free(res);
 	*res=*newres;
 }
 
@@ -270,6 +289,7 @@ set_double(struct context *ctx, struct result *res, double val)
 {
 	result_free(res);
 	res->attr.type=attr_type_double_begin;
+	res->attr.u.numd=&res->val;
 	res->val=val;
 }
 
@@ -288,6 +308,9 @@ eval_value(struct context *ctx, struct result *res) {
 	int len,dots=0;
 
 	op=ctx->expr;
+
+	result_free(res);
+
 	res->varlen=0;
 	res->var=NULL;
 	res->attrnlen=0;
@@ -347,6 +370,7 @@ eval_value(struct context *ctx, struct result *res) {
 		res->attr.u.str=g_malloc(len+1);
 		strncpy(res->attr.u.str, ctx->expr+1, len);
 		res->attr.u.str[len]='\0';
+		res->allocated=1;
 		op++;
 		ctx->expr=op;
 		return;
@@ -404,23 +428,35 @@ command_call_function(struct context *ctx, struct result *res)
 	dbg(1,"function=%s\n", function);
 	if (ctx->expr[0] != ')') {
 		list=eval_list(ctx);	
-		if (ctx->error) return;
+		if (ctx->error) {
+			attr_list_free(list);
+			return;
+		}
 	}
 	if (!get_op(ctx,0,")",NULL)) {
+		attr_list_free(list);
 		ctx->error=missing_closing_brace;
 		return;
 	}
+	
+	
 	if (!strcmp(function,"_") && list && list[0] && list[0]->type >= attr_type_string_begin && list[0]->type <= attr_type_string_end) {
+		result_free(res);
 		res->attr.type=list[0]->type;
-		res->attr.u.str=g_strdup(gettext(list[0]->u.str));	
+		res->attr.u.str=g_strdup(gettext(list[0]->u.str));
+		res->allocated=1;
 		
 	} else if (!strncmp(function,"new ",4)) {
 		enum attr_type attr_type=attr_from_name(function+4);
+		result_free(res);
 		if (attr_type != attr_none) {
 			struct object_func *func=object_func_lookup(attr_type);
 			if (func && func->create) {
 				res->attr.type=attr_type;
 				res->attr.u.data=func->create(list[0], list+1);
+				/* Setting allocated to 1 here will make object to be destroyed when last reference is destroyed. 
+				   So created persistent objects should be stored with set_attr_var command. */
+				res->allocated=1;
 			}
 		}
 	} else if (!strcmp(function,"add_attr")) {
@@ -438,12 +474,14 @@ command_call_function(struct context *ctx, struct result *res)
 				    "The_Navit_Command_Interface for valid commands.\n", function);
 			}
 			if (out && out[0]) {
+				result_free(res);
 				attr_dup_content(out[0], &res->attr);
+				res->allocated=1;
 				attr_list_free(out);
 			} else
-				res->attr.type=attr_none;
+				result_free(res);
 		} else
-			res->attr.type=attr_none;
+			result_free(res);
 	}
 	attr_list_free(list);
 	res->var=NULL;
@@ -455,7 +493,7 @@ command_call_function(struct context *ctx, struct result *res)
 static void
 eval_postfix(struct context *ctx, struct result *res)
 {
-	struct result tmp;
+	struct result tmp={};
 	const char *op;
 
     	eval_brace(ctx, res);
@@ -489,13 +527,14 @@ eval_postfix(struct context *ctx, struct result *res)
 					return;
 				}
 				iter = obj_func->iter_new(NULL);
-				res->attr.type=attr_none;
-				res->attr.u.data=NULL;
+				result_free(res);
 				res->varlen=0;
 				res->attrn=NULL;
 				while (obj_func->get_attr(obj, attr_type, &attr, iter)) {
-					if (command_evaluate_to_boolean(&attr, ctx->expr, &ctx->error)) 
+					if (command_evaluate_to_boolean(&attr, ctx->expr, &ctx->error)) {
+						result_free(res);
 						res->attr=attr;
+					}
 				}
 				obj_func->iter_destroy(iter);
 				if (ctx->error) return;
@@ -532,7 +571,7 @@ eval_unary(struct context *ctx, struct result *res)
 static void
 eval_multiplicative(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 	const char *op;
 
     	eval_unary(ctx, res);
@@ -540,7 +579,10 @@ eval_multiplicative(struct context *ctx, struct result *res)
 	for (;;) {
 		if (!(op=get_op(ctx,0,"*","/","%",NULL))) return;
     		eval_unary(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		if (is_double(res) || is_double(&tmp)) {
 			if (op[0] == '*')
 				set_double(ctx, res, get_double(ctx, res) * get_double(ctx, &tmp));
@@ -548,6 +590,7 @@ eval_multiplicative(struct context *ctx, struct result *res)
 				set_double(ctx, res, get_double(ctx, res) / get_double(ctx, &tmp));
 			else {
 				ctx->error=invalid_type;
+				result_free(&tmp);
 				return;
 			}
 		} else {
@@ -558,14 +601,16 @@ eval_multiplicative(struct context *ctx, struct result *res)
 			else
 				set_int(ctx, res, get_int(ctx, res) % get_int(ctx, &tmp));
 		}
-		if (ctx->error) return;
+		result_free(&tmp);
+		if (ctx->error)
+			return;
 	}
 }
 
 static void
 eval_additive(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 	const char *op;
 
     	eval_multiplicative(ctx, res);
@@ -573,7 +618,10 @@ eval_additive(struct context *ctx, struct result *res)
 	for (;;) {
 		if (!(op=get_op(ctx,0,"-","+",NULL))) return;
     		eval_multiplicative(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		if (is_double(res) || is_double(&tmp)) {
 			if (op[0] == '+')
 				set_double(ctx, res, get_double(ctx, res) + get_double(ctx, &tmp));
@@ -585,6 +633,7 @@ eval_additive(struct context *ctx, struct result *res)
 			else
 				set_int(ctx, res, get_int(ctx, res) - get_int(ctx, &tmp));
 		}
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -592,7 +641,7 @@ eval_additive(struct context *ctx, struct result *res)
 static void
 eval_equality(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 	const char *op;
 
     	eval_additive(ctx, res);
@@ -600,7 +649,10 @@ eval_equality(struct context *ctx, struct result *res)
 	for (;;) {
 		if (!(op=get_op(ctx,0,"==","!=","<=",">=","<",">",NULL))) return;
     		eval_additive(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 
 		resolve(ctx, res, NULL);
 		resolve(ctx, &tmp, NULL);
@@ -654,7 +706,7 @@ eval_equality(struct context *ctx, struct result *res)
 static void
 eval_bitwise_and(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 
     	eval_equality(ctx, res);
 	if (ctx->error) return;
@@ -662,8 +714,12 @@ eval_bitwise_and(struct context *ctx, struct result *res)
 		if (get_op(ctx,1,"&&",NULL)) return;
 		if (!get_op(ctx,0,"&",NULL)) return;
     		eval_equality(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		set_int(ctx, res, get_int(ctx, res) & get_int(ctx, &tmp));
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -671,15 +727,19 @@ eval_bitwise_and(struct context *ctx, struct result *res)
 static void
 eval_bitwise_xor(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 
     	eval_bitwise_and(ctx, res);
 	if (ctx->error) return;
 	for (;;) {
 		if (!get_op(ctx,0,"^",NULL)) return;
     		eval_bitwise_and(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		set_int(ctx, res, get_int(ctx, res) ^ get_int(ctx, &tmp));
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -687,7 +747,7 @@ eval_bitwise_xor(struct context *ctx, struct result *res)
 static void
 eval_bitwise_or(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 
     	eval_bitwise_xor(ctx, res);
 	if (ctx->error) return;
@@ -695,8 +755,12 @@ eval_bitwise_or(struct context *ctx, struct result *res)
 		if (get_op(ctx,1,"||",NULL)) return;
 		if (!get_op(ctx,0,"|",NULL)) return;
     		eval_bitwise_xor(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		set_int(ctx, res, get_int(ctx, res) | get_int(ctx, &tmp));
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -704,15 +768,19 @@ eval_bitwise_or(struct context *ctx, struct result *res)
 static void
 eval_logical_and(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 
     	eval_bitwise_or(ctx, res);
 	if (ctx->error) return;
 	for (;;) {
 		if (!get_op(ctx,0,"&&",NULL)) return;
     		eval_bitwise_or(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		set_int(ctx, res, get_int(ctx, res) && get_int(ctx, &tmp));
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -720,15 +788,19 @@ eval_logical_and(struct context *ctx, struct result *res)
 static void
 eval_logical_or(struct context *ctx, struct result *res) 
 {
-	struct result tmp;
+	struct result tmp={};
 
     	eval_logical_and(ctx, res);
 	if (ctx->error) return;
 	for (;;) {
 		if (!get_op(ctx,0,"||",NULL)) return;
     		eval_logical_and(ctx, &tmp);
-		if (ctx->error) return;
+		if (ctx->error) {
+			result_free(&tmp);
+			return;
+		}
 		set_int(ctx, res, get_int(ctx, res) || get_int(ctx, &tmp));
+		result_free(&tmp);
 		if (ctx->error) return;
 	}
 }
@@ -736,7 +808,7 @@ eval_logical_or(struct context *ctx, struct result *res)
 static void
 eval_conditional(struct context *ctx, struct result *res)
 {
-	struct result tmp;
+	struct result tmp={};
 	int cond;
 
     	eval_logical_or(ctx, res);
@@ -745,7 +817,10 @@ eval_conditional(struct context *ctx, struct result *res)
 	cond=!!get_int(ctx, res);
 	if (ctx->error) return;
     	eval_logical_or(ctx, &tmp);
-	if (ctx->error) return;
+	if (ctx->error) {
+		result_free(&tmp);
+		return;
+	}
 	if (cond)
 		*res=tmp;
 	if (!get_op(ctx,0,":",NULL)) {
@@ -753,9 +828,14 @@ eval_conditional(struct context *ctx, struct result *res)
 		return;
 	}
     	eval_logical_or(ctx, &tmp);
-	if (ctx->error) return;
-	if (!cond)
+	if (ctx->error) {
+		result_free(&tmp);
+		return;
+	}
+	if (!cond) {
+		result_free(res);
 		*res=tmp;
+	}
 }
 
 /* = *= /= %= += -= >>= <<= &= ^= |= */
@@ -763,14 +843,20 @@ eval_conditional(struct context *ctx, struct result *res)
 static void
 eval_assignment(struct context *ctx, struct result *res)
 {
-	struct result tmp;
+	struct result tmp={};
     	eval_conditional(ctx, res);
 	if (ctx->error) return;
 	if (!get_op(ctx,0,"=",NULL)) return;
     	eval_conditional(ctx, &tmp);
-	if (ctx->error) return;
+	if (ctx->error) {
+		result_free(&tmp);
+		return;
+	}
 	resolve(ctx, &tmp, NULL);
-	if (ctx->error) return;
+	if (ctx->error) {
+		result_free(&tmp);
+		return;
+	}
 	resolve_object(ctx, res);
 	command_set_attr(ctx, res, &tmp);
 }
@@ -779,7 +865,7 @@ eval_assignment(struct context *ctx, struct result *res)
 static void
 eval_comma(struct context *ctx, struct result *res)
 {
-	struct result tmp;
+	struct result tmp={};
 
 	eval_assignment(ctx, res);
 	if (ctx->error) return;
@@ -787,6 +873,7 @@ eval_comma(struct context *ctx, struct result *res)
 		if (!get_op(ctx,0,",",NULL)) return;
     		eval_assignment(ctx, &tmp);
 		if (ctx->error) return;
+		result_free(res);
 		*res=tmp;
 	}
 }
@@ -794,17 +881,19 @@ eval_comma(struct context *ctx, struct result *res)
 static struct attr **
 eval_list(struct context *ctx)
 {
-	struct result tmp;
+	struct result tmp={};
 
 	struct attr **ret=NULL;
 	for (;;) {
     		eval_assignment(ctx, &tmp);
 		if (ctx->error) {
+			result_free(&tmp);
 			attr_list_free(ret);
 			return NULL;
 		}
 		resolve(ctx, &tmp, NULL);
 		ret=attr_generic_add_attr(ret, &tmp.attr);
+		result_free(&tmp);
 		if (!get_op(ctx,0,",",NULL)) return ret;
 	}
 }
@@ -834,6 +923,7 @@ void command(struct attr *attr, char *expr)
 static void
 command_evaluate_to(struct attr *attr, const char *expr, struct context *ctx, struct result *res)
 {
+	result_free(res);
 	memset(res, 0, sizeof(*res));
 	memset(ctx, 0, sizeof(*ctx));
 	ctx->attr=attr;
@@ -844,34 +934,35 @@ command_evaluate_to(struct attr *attr, const char *expr, struct context *ctx, st
 enum attr_type
 command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret)
 {
-	struct result res;
+	struct result res={};
 	struct context ctx;
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (ctx.error)
 		return attr_none;
 	resolve_object(&ctx, &res);
 	*ret=res.attr;
-	dbg(0,"type %s\n",attr_to_name(command_attr_type(&res)));
+	dbg(1,"type %s\n",attr_to_name(command_attr_type(&res)));
 	return command_attr_type(&res);
 }
 
 void
 command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 {
-	struct result res;
+	struct result res={};
 	struct context ctx;
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
 		resolve(&ctx, &res, NULL);
 	if (error)
 		*error=ctx.error;
+	result_free(&res);
 
 }
 
 char *
 command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 {
-	struct result res;
+	struct result res={};
 	struct context ctx;
 	char *ret=NULL;
 
@@ -882,6 +973,9 @@ command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 		ret=get_string(&ctx, &res);
 	if (error)
 		*error=ctx.error;
+
+	result_free(&res);
+
 	if (ctx.error)
 		return NULL;
 	else
@@ -891,7 +985,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 int
 command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 {
-	struct result res;
+	struct result res={};
 	struct context ctx;
 	int ret=0;
 
@@ -902,6 +996,9 @@ command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 		ret=get_int(&ctx, &res);
 	if (error)
 		*error=ctx.error;
+
+	result_free(&res);
+
 	if (ctx.error)
 		return 0;
 	else
@@ -911,7 +1008,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 int
 command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 {
-	struct result res;
+	struct result res={};
 	struct context ctx;
 	int ret=0;
 
@@ -927,6 +1024,9 @@ command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 		else 
 			ret=res.attr.u.data != NULL;
 	}
+
+	result_free(&res);
+
 	if (error)
 		*error=ctx.error;
 	if (ctx.error)
@@ -939,12 +1039,15 @@ int
 command_evaluate_to_length(const char *expr, int *error)
 {
 	struct attr attr;
-	struct result res;
+	struct result res={};
 	struct context ctx;
 
 	attr.type=attr_none;
 	attr.u.data=NULL;
 	command_evaluate_to(&attr, expr, &ctx, &res);
+
+	result_free(&res);
+	
 	if (!ctx.error)
 		return ctx.expr-expr;
 	return 0;
@@ -958,10 +1061,8 @@ command_evaluate(struct attr *attr, const char *expr)
 	 * subsequent command call. Hence the g_strdup. */
 
 	char *expr_dup;
-	struct result res;
-	struct context ctx;
-	memset(&res, 0, sizeof(res));
-	memset(&ctx, 0, sizeof(ctx));
+	struct result res={};
+	struct context ctx={};
 	ctx.attr=attr;
 	ctx.error=0;
 	ctx.expr=expr_dup=g_strdup(expr);
@@ -970,6 +1071,9 @@ command_evaluate(struct attr *attr, const char *expr)
 		if (ctx.error)
 			break;
 		resolve(&ctx, &res, NULL);
+
+		result_free(&res);
+
 		if (ctx.error)
 			break;
 		if (!get_op(&ctx,0,";",NULL))

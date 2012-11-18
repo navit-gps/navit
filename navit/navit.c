@@ -785,20 +785,18 @@ navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, stru
  * @param valid unused 
  * @returns nothing
  */
-//TODO free stored attributes on navit_destroy
 static void
 navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char*key;
 	struct attr*val;
 	if(!cmd_attr_var_hash) {
-		cmd_attr_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
+		cmd_attr_var_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)attr_free);
 	}
 
 	if ( (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) &&
 	     (in && in[1] )) {
 		val = attr_dup(in[1]);
-		//val = in[1];
 		key = g_strdup(in[0]->u.str);
 		g_hash_table_insert(cmd_attr_var_hash, key, val);
         } else {
@@ -914,12 +912,15 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
  
 		mr = map_rect_new(curr_map, &sel);
 		if(mr) {
+			
 			it = map_rect_create_item( mr, item_type);
 			if (it) {
-				val->type = attr_type_item_begin;
+				struct attr attr;
+				attr.type=attr_type_item_begin;
+				attr.u.item=it;
+				attr_dup_content(&attr,val);
 				item_coord_set(it,&curr_coord, 1, change_mode_modify);
 			}
-			val->u.item  = it;
 		}
 		map_rect_destroy(mr);
         }
@@ -940,17 +941,15 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
 {
 	if (
 		in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str  &&//map name
-		      in[1] && ATTR_IS_ITEM(in[1]->type)   &&                  //item
+		      in[1] && ATTR_IS_ITEM(in[1]->type)   && in[2]->u.item &&//item
 		      in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str && //attr_type str
 		      in[3] && ATTR_IS_STRING(in[3]->type) && in[3]->u.str    //attr_value str
 	) {
 		struct attr attr_to_set;
 		struct map* curr_map = NULL;
 		struct mapset *ms;
-		struct map_selection sel;
-		const int selection_range = 500;
-		struct coord curr_coord;
 		struct item *it;
+		struct map_rect *mr;
 		
 		if(ATTR_IS_STRING(attr_from_name(in[2]->u.str))) {
 			attr_to_set.u.str = in[3]->u.str;
@@ -974,19 +973,15 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
 		if( ! curr_map) {
 			return;
 		}
-		sel.next=NULL;
-		sel.order=18;
-		sel.range.min=type_none;
-		sel.range.max=type_tec_common;
-		sel.u.c_rect.lu.x=curr_coord.x-selection_range;
-		sel.u.c_rect.lu.y=curr_coord.y+selection_range;
-		sel.u.c_rect.rl.x=curr_coord.x+selection_range;
-		sel.u.c_rect.rl.y=curr_coord.y-selection_range;
- 
-		it = in[1]->u.item;
+		
+		mr=map_rect_new(curr_map,NULL);
+		it=in[1]->u.item;
+		it=map_rect_get_item_byid(mr,it->id_hi,it->id_lo);
+		
 		if(it) {
 			item_attr_set(it, &attr_to_set, change_mode_modify);
 		}
+		map_rect_destroy(mr);
 	} else {
 		dbg(4,"Error in command function item_set_attr()\n");
 		dbg(4,"Command function item_set_attr(): map cond:       %d\n",(in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)?1:0);
@@ -1010,12 +1005,14 @@ static void
 navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr **list = g_new0(struct attr *,2);
+	list[1] = NULL;
+	*out = list;
 	if(!cmd_attr_var_hash) {
 		struct attr*val = g_new0(struct attr,1);
-		cmd_attr_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
 		val->type   = attr_type_item_begin;
 		val->u.item = NULL;
 		list[0]     = val;
+		return;
 	}
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
 		struct attr*ret = g_hash_table_lookup(cmd_attr_var_hash, in[0]->u.str);
@@ -1029,8 +1026,6 @@ navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, str
 			list[0]   = val;
 		}
         }
-	list[1] = NULL;
-	*out = list;
 }
 
 
@@ -1048,12 +1043,14 @@ static void
 navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr **list = g_new0(struct attr *,2);
+	list[1] = NULL;
+	*out = list;
 	if(!cmd_int_var_hash) {
 		struct attr*val = g_new0(struct attr,1);
-		cmd_int_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
 		val->type   = attr_type_int_begin;
 		val->u.num  = 0;
 		list[0]     = val;
+		return;
 	}
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
 		struct attr*ret = g_hash_table_lookup(cmd_int_var_hash, in[0]->u.str);
@@ -1067,8 +1064,6 @@ navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, stru
 			list[0]   = val;
 		}
         }
-	list[1] = NULL;
-	*out = list;
 }
 
 GList *cmd_int_var_stack = NULL;
@@ -3371,6 +3366,21 @@ navit_destroy(struct navit *this_)
 	graphics_draw_cancel(this_->gra, this_->displaylist);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 	attr_list_free(this_->attrs);
+
+	if(cmd_int_var_hash) {
+		g_hash_table_destroy(cmd_int_var_hash);
+		cmd_int_var_hash=NULL;
+	}
+	if(cmd_attr_var_hash) {
+		g_hash_table_destroy(cmd_attr_var_hash);
+		cmd_attr_var_hash=NULL;
+	}
+	if(cmd_int_var_stack) {
+		g_list_foreach(cmd_int_var_stack, (GFunc)attr_free, NULL);
+		g_list_free(cmd_int_var_stack);
+		cmd_int_var_stack=NULL;
+	}
+
 	if (this_->bookmarks) {
 		char *center_file = bookmarks_get_center_file(TRUE);
 		bookmarks_write_center_to_file(this_->bookmarks, center_file);
