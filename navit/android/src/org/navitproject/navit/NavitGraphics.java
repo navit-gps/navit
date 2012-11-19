@@ -79,6 +79,32 @@ public class NavitGraphics
 		}
 	}
 
+	protected Rect get_rect()
+	{
+		Rect ret=new Rect();
+		ret.left=pos_x;
+		ret.top=pos_y;
+		if (pos_wraparound != 0) {
+			if (ret.left < 0) {
+				ret.left+=parent_graphics.bitmap_w;
+			}
+			if (ret.top < 0) {
+				ret.top+=parent_graphics.bitmap_h;
+			}
+		}
+		ret.right=ret.left+bitmap_w;
+		ret.bottom=ret.top+bitmap_h;
+		if (pos_wraparound != 0) {
+			if (bitmap_w < 0) {
+				ret.right=ret.left+bitmap_w+parent_graphics.bitmap_w;
+			}
+			if (bitmap_h < 0) {
+				ret.bottom=ret.top+bitmap_h+parent_graphics.bitmap_h;
+			}
+		}
+		return ret;
+	}
+
 	private class NavitView extends View implements Runnable, MenuItem.OnMenuItemClickListener{
 		int               touch_mode = NONE;
 		float             oldDist    = 0;
@@ -126,6 +152,7 @@ public class NavitGraphics
 			}
 			return false;
 		}
+
 		
 		@Override
 		protected void onDraw(Canvas canvas)
@@ -148,12 +175,8 @@ public class NavitGraphics
 					if (overlay_graphics.overlay_disabled == 0)
 					{
 						//Log.e("NavitGraphics","view -> onDraw 3");
-
-						int x = overlay_graphics.pos_x;
-						int y = overlay_graphics.pos_y;
-						if (overlay_graphics.pos_wraparound != 0 && x < 0) x += bitmap_w;
-						if (overlay_graphics.pos_wraparound != 0 && y < 0) y += bitmap_h;
-						canvas.drawBitmap(overlay_graphics.draw_bitmap, x, y, null);
+						Rect r=overlay_graphics.get_rect();
+						canvas.drawBitmap(overlay_graphics.draw_bitmap, r.left, r.top, null);
 					}
 				}
 			}
@@ -857,7 +880,13 @@ public class NavitGraphics
 		//Log.e("NavitGraphics", "draw_mode mode=" + mode + " parent_graphics="
 		//		+ String.valueOf(parent_graphics));
 
-		if (mode == 2 && parent_graphics == null) view.invalidate();
+		if (mode == 2) {
+			if (parent_graphics == null) {
+				view.invalidate();
+			} else {
+				parent_graphics.view.invalidate(get_rect());
+			}
+		}
 		if (mode == 1 || (mode == 0 && parent_graphics != null)) draw_bitmap.eraseColor(0);
 
 	}
@@ -876,15 +905,7 @@ public class NavitGraphics
 		if (overlay_disabled != disable) {
 			overlay_disabled = disable;
 			if (parent_graphics != null) {
-				int x = pos_x;
-				int y = pos_y;
-				int width = bitmap_w;
-				int height = bitmap_h;
-				if (pos_wraparound != 0 && x < 0) x += parent_graphics.bitmap_w;
-				if (pos_wraparound != 0 && y < 0) y += parent_graphics.bitmap_h;
-				if (pos_wraparound != 0 && width < 0) width += parent_graphics.bitmap_w;
-				if (pos_wraparound != 0 && height < 0) height += parent_graphics.bitmap_h;
-				parent_graphics.view.invalidate(x,y,x+width,y+height);
+				parent_graphics.view.invalidate(get_rect());
 			}
 		}
 	}
