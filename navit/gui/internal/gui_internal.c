@@ -2024,6 +2024,11 @@ static void gui_internal_apply_config(struct gui_priv *this)
   {
     this->spacing = current_config->spacing;
   }
+  if (!this->fonts[0]) {
+    this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
+    this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
+    this->fonts[2]=graphics_font_new(this->gra,this->font_size*50/100,1);
+  }
 
 }
 
@@ -2065,11 +2070,6 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	menu->h=this->root.h;
 	menu->background=this->background;
 	gui_internal_apply_config(this);
-	if (!this->fonts[0]) {
-		this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
-		this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
-		this->fonts[2]=graphics_font_new(this->gra,this->font_size*50/100,1);
-	}
  	topbox->menu_data=g_new0(struct menu_data, 1);
 	gui_internal_widget_append(topbox, menu);
 	w=gui_internal_top_bar(this);
@@ -2481,7 +2481,8 @@ gui_internal_cmd_paste_bookmark(struct gui_priv *this, struct widget *wm, void *
 	navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
 	bookmarks_paste_bookmark(mattr.u.bookmarks);
 	l=g_list_previous(g_list_last(this->root.children));
-	gui_internal_prune_menu(this, l->data);
+	if(l)
+		gui_internal_prune_menu(this, l->data);
 }
 
 static void
@@ -4273,6 +4274,7 @@ gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr *
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type)) {
 		str=in[0]->u.str;
 	}
+
 	gui_internal_cmd_bookmarks(this, NULL, str);
 }
 
@@ -8374,32 +8376,92 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 	}
 }
 
+/*
+ *  Command interface wrapper for commands which can be used both from gui html and to enter internal gui (for example, from osd or dbus). 
+ *  Set first command argument to integer 1, if this command was called by mouse click from oustside of gui (default). Set it to 0
+ *  if command is called by some other means (dbus signal, for example). If first argument is non integer, it's passed on
+ *  to actual handler.
+ *  
+ */
+static void
+gui_internal_cmd2(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	int entering=0;
+	int ignore=1;
+	if (in && in[0] && ATTR_IS_INT(in[0]->type)) {
+		ignore=in[0]->u.num;
+		in++;
+	}
+
+	if(!this->root.children) {
+		entering=1;
+		gui_internal_apply_config(this);
+		gui_internal_enter(this, ignore);
+		gui_internal_enter_setup(this);
+	}
+
+	if(!strcmp(function, "bookmarks"))
+		gui_internal_cmd2_bookmarks(this, function, in, out, valid);
+	else if(!strcmp(function, "formerdests"))
+		gui_internal_cmd_formerdests(this, function, in, out, valid);
+	else if(!strcmp(function, "locale"))
+		gui_internal_cmd2_locale(this, function, in, out, valid);
+	else if(!strcmp(function, "position"))
+		gui_internal_cmd2_position(this, function, in, out, valid);
+	else if(!strcmp(function, "pois"))
+		gui_internal_cmd2_pois(this, function, in, out, valid);
+	else if(!strcmp(function, "route_description"))
+		gui_internal_cmd2_route_description(this, function, in, out, valid);
+	else if(!strcmp(function, "route_height_profile"))
+		gui_internal_cmd2_route_height_profile(this, function, in, out, valid);
+	else if(!strcmp(function, "setting_layout"))
+		gui_internal_cmd2_setting_layout(this, function, in, out, valid);
+	else if(!strcmp(function, "setting_maps"))
+		gui_internal_cmd2_setting_maps(this, function, in, out, valid);
+	else if(!strcmp(function, "setting_rules"))
+		gui_internal_cmd2_setting_rules(this, function, in, out, valid);
+	else if(!strcmp(function, "setting_vehicle"))
+		gui_internal_cmd2_setting_vehicle(this, function, in, out, valid);
+	else if(!strcmp(function, "town"))
+		gui_internal_cmd2_town(this, function, in, out, valid);
+	else if(!strcmp(function, "enter_coord"))
+		gui_internal_cmd_enter_coord(this, function, in, out, valid);
+	else if(!strcmp(function, "waypoints"))
+		gui_internal_cmd2_waypoints(this, function, in, out, valid);
+	else if(!strcmp(function, "about"))
+		gui_internal_cmd2_about(this, function, in, out, valid);
+
+	if(entering)
+		graphics_draw_mode(this->gra, draw_mode_end);
+}
+
+
 static struct command_table commands[] = {
 	{"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
 	{"back",command_cast(gui_internal_cmd2_back)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
-	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
-	{"formerdests",command_cast(gui_internal_cmd_formerdests)},
+	{"bookmarks",command_cast(gui_internal_cmd2)},
+	{"formerdests",command_cast(gui_internal_cmd2)},
 	{"get_data",command_cast(gui_internal_get_data)},
-	{"locale",command_cast(gui_internal_cmd2_locale)},
+	{"locale",command_cast(gui_internal_cmd2)},
 	{"log",command_cast(gui_internal_cmd_log)},
 	{"menu",command_cast(gui_internal_cmd_menu2)},
 	{"position",command_cast(gui_internal_cmd2_position)},
-	{"pois",command_cast(gui_internal_cmd2_pois)},
+	{"pois",command_cast(gui_internal_cmd2)},
 	{"refresh",command_cast(gui_internal_cmd2_refresh)},
-	{"route_description",command_cast(gui_internal_cmd2_route_description)},
-	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
+	{"route_description",command_cast(gui_internal_cmd2)},
+	{"route_height_profile",command_cast(gui_internal_cmd2)},
 	{"set",command_cast(gui_internal_cmd2_set)},
-	{"setting_layout",command_cast(gui_internal_cmd2_setting_layout)},
-	{"setting_maps",command_cast(gui_internal_cmd2_setting_maps)},
-	{"setting_rules",command_cast(gui_internal_cmd2_setting_rules)},
-	{"setting_vehicle",command_cast(gui_internal_cmd2_setting_vehicle)},
-	{"town",command_cast(gui_internal_cmd2_town)},
-	{"enter_coord",command_cast(gui_internal_cmd_enter_coord)},
+	{"setting_layout",command_cast(gui_internal_cmd2)},
+	{"setting_maps",command_cast(gui_internal_cmd2)},
+	{"setting_rules",command_cast(gui_internal_cmd2)},
+	{"setting_vehicle",command_cast(gui_internal_cmd2)},
+	{"town",command_cast(gui_internal_cmd2)},
+	{"enter_coord",command_cast(gui_internal_cmd2)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
-	{"waypoints",command_cast(gui_internal_cmd2_waypoints)},
+	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
-	{"about",command_cast(gui_internal_cmd2_about)},
+	{"about",command_cast(gui_internal_cmd2)},
 
 };
 
