@@ -815,15 +815,19 @@ eval_conditional(struct context *ctx, struct result *res)
 	if (ctx->error) return;
 	if (!get_op(ctx,0,"?",NULL)) return;
 	cond=!!get_int(ctx, res);
+	result_free(res);
 	if (ctx->error) return;
     	eval_logical_or(ctx, &tmp);
 	if (ctx->error) {
 		result_free(&tmp);
 		return;
 	}
-	if (cond)
-		*res=tmp;
+
+	*res=tmp;
+	memset(&tmp,0,sizeof(tmp));
+
 	if (!get_op(ctx,0,":",NULL)) {
+		dbg(0,"ctxerr\n");
 		ctx->error=missing_colon;
 		return;
 	}
@@ -835,7 +839,8 @@ eval_conditional(struct context *ctx, struct result *res)
 	if (!cond) {
 		result_free(res);
 		*res=tmp;
-	}
+	} else
+		result_free(&tmp);
 }
 
 /* = *= /= %= += -= >>= <<= &= ^= |= */
