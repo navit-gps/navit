@@ -229,7 +229,7 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 			strcpy(xbuffer+strlen(xbuffer),buffer);
 			strcpy(xbuffer+strlen(xbuffer),":");
 		}
-		vsprintf(xbuffer+strlen(xbuffer),fmt,ap);
+		vsnprintf(xbuffer+strlen(xbuffer),4095-strlen(xbuffer),fmt,ap);
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
 		mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
