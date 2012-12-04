@@ -1502,7 +1502,10 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 			opc->osd_item.w=this_->img->width;
 		if (!opc->osd_item.h)
 			opc->osd_item.h=this_->img->height;
- 
+
+		if(navit_get_blocked(nav)&1)
+		        return 1;
+
 		if (this_->use_overlay) {
 			struct graphics_image *img;
 			struct point p;

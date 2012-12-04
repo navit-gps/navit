@@ -120,6 +120,7 @@ int navit_set_vehicle_by_name(struct navit *n, const char *name);
 int navit_set_layout_by_name(struct navit *n, const char *name);
 void navit_disable_suspend(void);
 int navit_block(struct navit *this_, int block);
+int navit_get_blocked(struct navit *this_);
 void navit_destroy(struct navit *this_);
 void navit_command_add_table(struct navit*this_, struct command_table *commands, int count);
 struct navit * navit_ref(struct navit *this_);
