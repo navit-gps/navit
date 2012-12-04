@@ -157,7 +157,7 @@ command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type
 	int r;
 	struct attr dup;
 	struct object_func *func=object_func_lookup(object->type);
-	if (!func || !func->get_attr)
+	if (!object->u.data || !func || !func->get_attr)
 		return 0;
 	r=func->get_attr(object->u.data, attr_type, &dup, NULL);
 	if(r)
@@ -169,7 +169,7 @@ static int
 command_object_add_attr(struct context *ctx, struct attr *object, struct attr *attr)
 {
 	struct object_func *func=object_func_lookup(object->type);
-	if (!func || !func->add_attr)
+	if (!object->u.data || !func || !func->add_attr)
 		return 0;
 	return func->add_attr(object->u.data, attr);
 }
@@ -178,7 +178,7 @@ static int
 command_object_remove_attr(struct context *ctx, struct attr *object, struct attr *attr)
 {
 	struct object_func *func=object_func_lookup(object->type);
-	if (!func || !func->remove_attr)
+	if (!object->u.data || !func || !func->remove_attr)
 		return 0;
 	return func->remove_attr(object->u.data, attr);
 }
@@ -213,7 +213,7 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 {
 	enum attr_type attr_type=command_attr_type(res);
 	struct object_func *func=object_func_lookup(res->attr.type);
-	if (!func || !func->set_attr)
+	if (!res->attr.u.data || !func || !func->set_attr)
 		return;
 	if (attr_type == attr_attr_types) {
 		char *attrn=g_alloca(sizeof(char)*(res->attrnlen+1));
@@ -518,6 +518,10 @@ eval_postfix(struct context *ctx, struct result *res)
 				struct attr attr;
 				enum attr_type attr_type=command_attr_type(res);
 				void *obj=res->attr.u.data;
+				if (!obj) {
+					dbg(0,"no object\n");
+					return;
+				}
 				if (!obj_func) {
 					dbg(0,"no object func\n");
 					return;
