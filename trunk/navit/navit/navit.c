@@ -3359,6 +3359,11 @@ navit_block(struct navit *this_, int block)
 	return 0;
 }
 
+int navit_get_blocked(struct navit *this_)
+{
+	return this_->blocked;
+}
+
 void
 navit_destroy(struct navit *this_)
 {
