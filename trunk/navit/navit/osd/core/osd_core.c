@@ -1434,7 +1434,8 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 	if (!opc->osd_item.configured)
 		return;
 	osd_wrap_point(&bp, nav);
-	graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &bp, this->img);
+	if(this->img)
+		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &bp, this->img);
 }
 
 static void
@@ -1571,23 +1572,6 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	return NULL;
 }
 
-struct osd_image {
-	int use_overlay;
-	struct callback *draw_cb,*navit_init_cb;
-	struct graphics_image *img;
-	char *src;
-};
-
-static void
-osd_image_draw(struct osd_priv_common *opc, struct navit *nav)
-{
-	struct osd_button *this = (struct osd_button *)opc->data;
-
-	struct point bp = opc->osd_item.p;
-	osd_wrap_point(&bp, nav);
-	graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &bp, this->img);
-}
-
 static void
 osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 {
@@ -1621,21 +1605,22 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 		opc->osd_item.graphic_bg=graphics_gc_new(opc->osd_item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
 	}
-	osd_image_draw(opc,nav);
+	osd_button_draw(opc,nav);
 }
 
 static struct osd_priv *
 osd_image_new(struct navit *nav, struct osd_methods *meth,
 	       struct attr **attrs)
 {
-	struct osd_image *this = g_new0(struct osd_image, 1);
+	struct osd_button *this = g_new0(struct osd_button, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
 	struct attr *attr;
 
 	opc->data = (void*)this;
 	opc->osd_item.navit = nav;
-	opc->osd_item.meth.draw = osd_draw_cast(osd_image_draw);
+	opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
 	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
+	opc->spec_set_attr_func = osd_button_set_attr;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 1);
 
@@ -1652,8 +1637,9 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_image_init), attr_graphics_ready, opc));
 
-	return (struct osd_priv *) this;
+	return (struct osd_priv *) opc;
       error:
+	g_free(opc);
 	g_free(this);
 	return NULL;
 }
