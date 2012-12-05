@@ -95,7 +95,7 @@ get_op(struct context *ctx, int test, ...)
 	const char *ret=NULL;
 	va_list ap;
 
-	while (g_ascii_isspace(*ctx->expr)) {
+	while (*ctx->expr && g_ascii_isspace(*ctx->expr)) {
 		ctx->expr++;
 	}
 
@@ -364,14 +364,15 @@ eval_value(struct context *ctx, struct result *res) {
 	if (op[0] == '"') {
 		do {
 			op++;
-		} while (op[0] != '"');
+		} while (op[0] && op[0] != '"');
 		res->attr.type=attr_type_string_begin;
 		len=op-ctx->expr-1;
 		res->attr.u.str=g_malloc(len+1);
 		strncpy(res->attr.u.str, ctx->expr+1, len);
 		res->attr.u.str[len]='\0';
 		res->allocated=1;
-		op++;
+		if(*op)
+			op++;
 		ctx->expr=op;
 		return;
 	}
