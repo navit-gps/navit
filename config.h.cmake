@@ -88,3 +88,5 @@
 #cmakedefine USE_OPENGLES 1
 
 #cmakedefine USE_OPENGLES2 1
+
+#cmakedefine HAVE_SHMEM 1
