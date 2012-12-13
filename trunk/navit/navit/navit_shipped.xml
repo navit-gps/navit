@@ -1977,7 +1977,7 @@ Waypoint</text></img>
 					<icon src="bank.png"/>
 				</itemgra>
 				<itemgra item_types="poi_atm" order="12-">
-					<icon src="bank.png"/>
+					<icon src="atm.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bay" order="12-">
 					<icon src="bay.xpm"/>
@@ -3431,7 +3431,7 @@ Waypoint</text></img>
 					<icon src="bank.png"/>
 				</itemgra>
 				<itemgra item_types="poi_atm" order="12-">
-					<icon src="bank.png"/>
+					<icon src="atm.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bay" order="0-">
 					<icon src="bay.xpm"/>
@@ -4698,7 +4698,7 @@ Waypoint</text></img>
           <icon src="bank.png" />
         </itemgra>
 	<itemgra item_types="poi_atm" order="13-">
-		<icon src="bank.png"/>
+		<icon src="atm.png"/>
 	</itemgra>
         <itemgra item_types="poi_danger_area" order="13-">
           <icon src="danger_16_16.png" />
@@ -4794,7 +4794,7 @@ Waypoint</text></img>
           <icon src="bank.png" />
         </itemgra>
 	<itemgra item_types="poi_atm" order="12-">
-	  <icon src="bank.png"/>
+	  <icon src="atm.png"/>
 	</itemgra>
         <itemgra item_types="poi_bay" order="12-">
           <icon src="bay.png" />
@@ -6916,7 +6916,7 @@ Waypoint</text></img>
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
 				<itemgra item_types="poi_atm" order="12-">
-					<icon src="bank.png"/>
+					<icon src="atm.png"/>
 				</itemgra>
 				<!-- amenity=fuel -->
 				<itemgra item_types="poi_fuel" order="14-">

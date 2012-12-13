@@ -102,6 +102,7 @@ svgs += menu.svg
 svgs += toggle_fullscreen.svg
 
 svgs += airport.svg
+svgs += atm.svg
 svgs += attraction.svg
 svgs += bahai.svg
 svgs += bank.svg
