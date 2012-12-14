@@ -47,6 +47,7 @@
 #include "callback.h"
 #include "gui.h"
 #include "layout.h"
+#include "roadprofile.h"
 #include "util.h"
 
 
@@ -301,6 +302,11 @@ encode_attr(DBusMessageIter *iter1, struct attr *attr)
 		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_OBJECT_PATH_AS_STRING, &iter2);
 		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_OBJECT_PATH, &object);
 		dbus_message_iter_close_container(iter1, &iter2);
+	}
+	if (attr->type == attr_item_types) {
+		char *str=attr_to_text(attr,NULL,0);
+		encode_variant_string(iter1, str);
+		g_free(str);
 	}
 	return 1;
 }
@@ -967,6 +973,20 @@ request_osd_set_attr(DBusConnection *connection, DBusMessage *message)
 	return request_set_add_remove_attr(connection, message, "osd", NULL, (int (*)(void *, struct attr *))osd_set_attr);
 }
 
+/* roadprofile */
+
+static DBusHandlerResult
+request_roadprofile_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "roadprofile", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))roadprofile_get_attr);
+}
+
+
+static DBusHandlerResult
+request_roadprofile_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "roadprofile", NULL, (int (*)(void *, struct attr *))roadprofile_set_attr);
+}
 
 /* route */
 
@@ -1571,6 +1591,18 @@ request_vehicleprofile_set_attr(DBusConnection *connection, DBusMessage *message
 	return request_set_add_remove_attr(connection, message, "vehicleprofile", NULL, (int (*)(void *, struct attr *))vehicleprofile_set_attr);
 }
 
+static DBusHandlerResult
+request_vehicleprofile_attr_iter(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter(connection, message, "vehicleprofile", (struct attr_iter * (*)(void))vehicleprofile_attr_iter_new);
+}
+
+static DBusHandlerResult
+request_vehicleprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter_destroy(connection, message, "vehicleprofile", (void (*)(struct attr_iter *))vehicleprofile_attr_iter_destroy);
+}
+
 struct dbus_method {
 	char *path;
 	char *method;
@@ -1629,6 +1661,8 @@ struct dbus_method {
 	{".navigation","get_attr",         "s",       "attribute",                               "",   "",      request_navigation_get_attr},
 	{".osd",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_osd_get_attr},
 	{".osd",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_osd_set_attr},
+	{".roadprofile", "get_attr",       "s",       "attribute",                               "sv",  "attrname,value", request_roadprofile_get_attr},
+	{".roadprofile", "set_attr",       "sv",      "attribute,value",                         "",    "",  request_roadprofile_set_attr},
 	{".route",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_route_get_attr},
 	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
 	{".route",    "add_attr",          "sv",      "attribute,value",                         "",    "",  request_route_add_attr},
@@ -1640,7 +1674,10 @@ struct dbus_method {
 	{".tracking","get_attr",           "s",       "attribute",                               "",   "",      request_tracking_get_attr},
 	{".vehicle","set_attr",            "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
 	{".vehicleprofile","get_attr",     "s",       "attribute",                               "",   "",      request_vehicleprofile_get_attr},
+	{".vehicleprofile","get_attr_wi",  "so",      "attribute,attr_iter",                     "",   "",      request_vehicleprofile_get_attr},
 	{".vehicleprofile","set_attr",     "sv",      "attribute,value",                         "",   "",      request_vehicleprofile_set_attr},
+	{".vehicleprofile","attr_iter",     "",       "",                                        "o",  "attr_iter",  request_vehicleprofile_attr_iter},
+	{".vehicleprofile","attr_iter_destroy","o",   "attr_iter",                               "",   "",      request_vehicleprofile_attr_iter_destroy},
 };
 
 static char *
