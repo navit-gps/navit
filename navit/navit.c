@@ -188,6 +188,7 @@ static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
+static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
 struct object_func navit_func;
 
 struct navit *global_navit;
@@ -2555,6 +2556,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			l=g_list_next(l);
 		}
 		break;
+	case attr_vehicleprofile:
+		attr_updated=navit_set_vehicleprofile(this_, attr->u.vehicleprofile);
+		break;
 	case attr_zoom:
 		zoom=transform_get_scale(this_->trans);
 		attr_updated=(zoom != attr->u.num);
@@ -3088,7 +3092,18 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 }
 
 static int
-navit_set_vehicleprofile(struct navit *this_, char *name)
+navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp)
+{
+	if (this_->vehicleprofile == vp)
+		return 0;
+	this_->vehicleprofile=vp;
+	if (this_->route)
+		route_set_profile(this_->route, this_->vehicleprofile);
+	return 1;
+}
+
+static int
+navit_set_vehicleprofile_name(struct navit *this_, char *name)
 {
 	struct attr attr;
 	GList *l;
@@ -3096,9 +3111,7 @@ navit_set_vehicleprofile(struct navit *this_, char *name)
 	while (l) {
 		if (vehicleprofile_get_attr(l->data, attr_name, &attr, NULL)) {
 			if (!strcmp(attr.u.str, name)) {
-				this_->vehicleprofile=l->data;
-				if (this_->route)
-					route_set_profile(this_->route, this_->vehicleprofile);
+				navit_set_vehicleprofile(this_, l->data);
 				return 1;
 			}
 		}
@@ -3115,10 +3128,10 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 	if (!nv)
 		return;
 	if (vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
-		if (navit_set_vehicleprofile(this_, attr.u.str))
+		if (navit_set_vehicleprofile_name(this_, attr.u.str))
 			return;
 	}
-	if (!navit_set_vehicleprofile(this_,"car")) {
+	if (!navit_set_vehicleprofile_name(this_,"car")) {
 		/* We do not have a fallback "car" profile
 		* so lets set any profile */
 		GList *l;
