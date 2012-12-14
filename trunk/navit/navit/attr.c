@@ -333,6 +333,15 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		int *data=attr->u.data;
 		return g_strdup_printf("0x%x,0x%x",data[0],data[1]);
 	}
+	if (type == attr_item_types) {
+		enum item_type *item_types=attr->u.item_types;
+		char *sep="",*ret=NULL;
+		while (item_types && *item_types) {
+			ret=g_strconcat_printf(ret,"%s%s",sep,item_to_name(*item_types++));
+			sep=",";
+		}
+		return ret;
+	}
 	if (type >= attr_type_group_begin && type <= attr_type_group_end) {
 		int i=0;
 		char *ret=g_strdup("");
