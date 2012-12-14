@@ -46,6 +46,7 @@
 #include "search.h"
 #include "callback.h"
 #include "gui.h"
+#include "layout.h"
 #include "util.h"
 
 
@@ -559,6 +560,17 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 			return 1;
 		}
 	}
+	if(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_OBJECT_PATH) {
+			char *obj;
+			dbus_message_iter_get_basic(&iterattr, &obj);
+			attr->u.data=object_get(obj);
+			if (attr->u.data) {
+				return 1;
+			}
+		}
+		return 0;
+	}
 	if(attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
 			attr->u.coord_geo=g_new(typeof(*attr->u.coord_geo),1);
@@ -743,6 +755,9 @@ request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, ch
 		destroy_attr(&attr);
 		if (ret)
 			return empty_reply(connection, message);
+		dbg(0,"failed to set/add/remove attr\n");
+	} else {
+		dbg(0,"failed to decode attr\n");
 	}
     	return dbus_error_invalid_parameter(connection, message);
 }
@@ -883,6 +898,16 @@ request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
 {
 	return request_set_add_remove_attr(connection, message, "graphics", NULL, (int (*)(void *, struct attr *))graphics_set_attr);
 }
+
+/* layout */
+
+static DBusHandlerResult
+request_layout_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "layout", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))layout_get_attr);
+}
+
+
 
 /* map */
 
@@ -1594,6 +1619,7 @@ struct dbus_method {
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
 	{".navit",  "clear_destination",   "",        "",                                        "",   "",      request_navit_clear_destination},
 	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",      request_navit_evaluate},
+	{".layout", "get_attr",		   "s",	      "attribute",                               "sv",  "attrname,value", request_layout_get_attr},
 	{".map",    "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_map_get_attr},
 	{".map",    "set_attr",            "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
 	{".mapset", "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_mapset_attr_iter},
