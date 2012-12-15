@@ -33,6 +33,8 @@ int roadprofile_get_attr(struct roadprofile *this_, enum attr_type type, struct 
 int roadprofile_set_attr(struct roadprofile *this_, struct attr *attr);
 int roadprofile_add_attr(struct roadprofile *this_, struct attr *attr);
 int roadprofile_remove_attr(struct roadprofile *this_, struct attr *attr);
+struct attr_iter *roadprofile_attr_iter_new(void);
+void roadprofile_attr_iter_destroy(struct attr_iter *iter);
 #ifdef __cplusplus
 }
 #endif
