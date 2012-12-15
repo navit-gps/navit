@@ -81,3 +81,14 @@ roadprofile_remove_attr(struct roadprofile *this_, struct attr *attr)
 	return 1;
 }
 
+struct attr_iter *
+roadprofile_attr_iter_new(void)
+{
+	return g_new0(void *,1);
+}
+
+void
+roadprofile_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
+}
