@@ -1961,8 +1961,13 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				g_free(path);
 			}
 			if (img) {
-				p.x=pa[0].x - img->hot.x;
-				p.y=pa[0].y - img->hot.y;
+				if (e->u.icon.x != -1 || e->u.icon.y != -1) {
+					p.x=pa[0].x - e->u.icon.x;
+					p.y=pa[0].y - e->u.icon.y;
+				} else {
+					p.x=pa[0].x - img->hot.x;
+					p.y=pa[0].y - img->hot.y;
+				}
 				gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
 			}
 		}
