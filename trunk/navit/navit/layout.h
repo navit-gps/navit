@@ -56,6 +56,8 @@ struct element {
 			int width;
 			int height;
 			int rotation;
+			int x;
+			int y;
 		} icon;
 		struct element_text {
 			struct color background_color;
