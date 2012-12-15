@@ -988,6 +988,18 @@ request_roadprofile_set_attr(DBusConnection *connection, DBusMessage *message)
 	return request_set_add_remove_attr(connection, message, "roadprofile", NULL, (int (*)(void *, struct attr *))roadprofile_set_attr);
 }
 
+static DBusHandlerResult
+request_roadprofile_attr_iter(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter(connection, message, "roadprofile", (struct attr_iter * (*)(void))roadprofile_attr_iter_new);
+}
+
+static DBusHandlerResult
+request_roadprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter_destroy(connection, message, "roadprofile", (void (*)(struct attr_iter *))roadprofile_attr_iter_destroy);
+}
+
 /* route */
 
 static DBusHandlerResult
@@ -1662,7 +1674,10 @@ struct dbus_method {
 	{".osd",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_osd_get_attr},
 	{".osd",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_osd_set_attr},
 	{".roadprofile", "get_attr",       "s",       "attribute",                               "sv",  "attrname,value", request_roadprofile_get_attr},
+	{".roadprofile", "get_attr_wi",    "so",      "attribute,attr_iter",                     "",   "",      request_roadprofile_get_attr},
 	{".roadprofile", "set_attr",       "sv",      "attribute,value",                         "",    "",  request_roadprofile_set_attr},
+	{".roadprofile", "attr_iter",      "",        "",                                        "o",  "attr_iter",  request_roadprofile_attr_iter},
+	{".roadprofile", "attr_iter_destroy","o",     "attr_iter",                               "",   "",      request_roadprofile_attr_iter_destroy},
 	{".route",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_route_get_attr},
 	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
 	{".route",    "add_attr",          "sv",      "attribute,value",                         "",    "",  request_route_add_attr},
