@@ -73,6 +73,7 @@
 #include "xmlconfig.h"
 #include "util.h"
 #include "bookmarks.h"
+#include "linguistics.h"
 #include "debug.h"
 #include "fib.h"
 #include "types.h"
@@ -2684,7 +2685,7 @@ static char *
 removecase(char *s) 
 {
 	char *r;
-	r=g_utf8_casefold(s,-1);
+	r=linguistics_casefold(s);
 	return r;
 }
 
@@ -3003,6 +3004,7 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 	if (param->filter) {
 		char *long_name, *s;
 		GList *f;
+		int i;
 		if (param->isAddressFilter) {
 			s=gui_internal_compose_item_address_string(item);
 		} else if (item_attr_get(item, attr_label, &attr)) {
@@ -3014,14 +3016,20 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 		g_free(s);
                 item_attr_rewind(item);
                 
-		for(s=long_name,f=param->filter;f && s;f=g_list_next(f)) {
-			s=strstr(s,f->data);
-			if(!s) 
-				break;
-			s=g_utf8_strchr(s,-1,' ');
+		match=0;
+		for(i=0;i<3 && !match;i++) {
+			char *long_name_exp=linguistics_expand_special(long_name, i);
+			for(s=long_name_exp,f=param->filter;f && s;f=g_list_next(f)) {
+				s=strstr(s,f->data);
+				if(!s) {
+					break;
+				}
+				s=g_utf8_strchr(s,-1,' ');
+			}
+			g_free(long_name_exp);
+			if(!f)
+				match=1;
 		}
-		if(f)
-			match=0;
 		g_free(long_name);
 	}
 	return match;

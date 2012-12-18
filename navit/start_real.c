@@ -226,6 +226,8 @@ int main_real(int argc, const char **argv)
 	}
 	event_main_loop_run();
 
+	linguistics_free();
+
 #ifndef HAVE_API_ANDROID
 	debug_finished();
 #endif
