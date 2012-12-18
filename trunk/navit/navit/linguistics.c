@@ -228,7 +228,99 @@ static const char *special[][3]={
 {"ð","d","dh"},
 {"ŋ","n","ng"},
 {"þ","t","th"},
+
+/* Cyrillic capital */
+{"Ё","Е"},
+{"Й","И"},
+{"І","I"},
+{"Ї","I"},
+{"Ў","У"},
+{"Є","Е","Э"},
+{"Ґ","Г"},
+{"Ѓ","Г"},
+{"Ђ","Д"},
+{"Ќ","К"},
+{"Љ","Л","ЛЬ"},
+{"Њ","Н","НЬ"},
+{"Џ","Ц"},
+
+/* Cyrillic small */
+{"ё","е"},
+{"й","и"},
+{"і","i"},
+{"ї","i"},
+{"ў","у"},
+{"є","е","э"},
+{"ґ","г"},
+{"ѓ","г"},
+{"ђ","д"},
+{"ќ","к"},
+{"љ","л","ль"},
+{"њ","н","нь"},
+{"џ","ц"},
+
 };
+
+/* Array of strings for case conversion
+ * Even elements of array are strings of upper-case letters
+ * Odd elements of array are strings of lower-case letters, in the order corresponding to directly preceeding even element.
+ * Last element of array should be NULL.
+ */
+static const char *upperlower[]={
+/*Latin diacritics*/
+"ÄËÏÖÜŸŐŰÁĆÉÍĹŃÓŔŚÚÝŹĄĘĮŲĊĖĠİĿŻĐĦŁŦÅŮČĎĚĽŇŘŠŤŽØĀĒĪŌŪĂĔĞĬŎŬÂĈÊĜĤÎĴÔŜÛŴŶÇĢĶĻŅŖŞŢÃĨÑÕŨÀÈÌÒÙÆĲŒÐŊÞ",
+"äëïöüÿőűáćéíĺńóŕśúýźąęįųċėġıŀżđħłŧåůčďěľňřšťžøāēīōūăĕğĭŏŭâĉêĝĥîĵôŝûŵŷçģķļņŗşţãĩõñũàèìòùæĳœðŋþ",
+/*Cyrillic*/
+"АБВГҐЃДЂЕЄЁЖЗИЙКЌЛЉМНЊОПРСТУФХЦЏЧШЩЪЫЬЭЮЯІЇЎ",
+"абвгґѓдђеєёжзийкќлљмнњопрстуфхцџчшщъыьэюяіїў",
+
+NULL
+};
+
+static GHashTable *casefold_hash;
+
+
+/*
+ * @brief Prepare an utf-8 string for case insensitive comparison.
+ * @param in String to prepeare.
+ * @return String prepared for case insensitive search. Result shoud be g_free()d after use.
+ */
+char*
+linguistics_casefold(char *in)
+{
+	int len=strlen(in);
+	char *src=in;
+	char *ret=g_new(char,len+1);
+	char *dest=ret;
+	char buf[10];
+	while(*src && dest-ret<len){
+		if(*src>='A' && *src<='Z') {
+			*dest++=*src++ - 'A' + 'a';
+		} else if (!(*src&128)) {
+			*dest++=*src++;
+		} else {
+			int charlen;
+			char *tmp, *folded;
+			tmp=g_utf8_find_next_char(src,NULL);
+			charlen=tmp-src+1;
+			g_strlcpy(buf,src,charlen>10?10:charlen);
+			folded=g_hash_table_lookup(casefold_hash,buf);
+			if(folded) {
+				while(*folded && dest-ret<len)
+					*dest++=*folded++;
+				src=tmp;
+			} else {
+				while(src<tmp && dest-ret<len)
+					*dest++=*src++;
+			}
+		}
+	}
+	*dest=0;
+	if(*src)
+		dbg(0,"Casefolded string for '%s' needs extra space, result is trucated to '%s'.\n",in,ret);
+	return ret;
+}
+
 
 /**
  * @brief Replace special characters in string (e.g. umlauts) with plain letters.
@@ -236,8 +328,8 @@ static const char *special[][3]={
  *
  * @param str string to process
  * @param mode Replacement mode. 0=do nothing, 1=replace with single
- * ASCII letter, 2=replace with multiple letters if the commonly used
- * ASCII replacement has multitple letter (e.g. a-umlaut -> ae)
+ * UTF character, 2=replace with multiple letters if the commonly used
+ * replacement has multitple letter (e.g. a-umlaut -> ae)
  * @returns copy of string, with characters replaced
  */
 char *
@@ -246,13 +338,23 @@ linguistics_expand_special(char *str, int mode)
 	char *in=str;
 	char *out,*ret;
 	int found=0;
+	int ret_len=strlen(str);
+	int in_rest=ret_len;
 	out=ret=g_strdup(str);
 	if (!mode) 
 		return ret;
 	while (*in) {
 		char *next=g_utf8_find_next_char(in, NULL);
-		int i,len=next-in;
+		int i,len;
 		int match=0;
+
+		if(next)
+			len=next-in;
+		else
+			len=strlen(in);
+
+		in_rest-=len;
+		
 		if (len > 1) {
 			for (i = 0 ; i < sizeof(special)/sizeof(special[0]); i++) {
 				const char *search=special[i][0];
@@ -260,7 +362,13 @@ linguistics_expand_special(char *str, int mode)
 					const char *replace=special[i][mode];
 					if (replace) {
 						int replace_len=strlen(replace);
-						dbg_assert(replace_len <= len);
+						if(out-ret+replace_len+in_rest>ret_len) {
+							char *new_ret;
+							ret_len+=(replace_len-len)*10;
+							new_ret=g_realloc(ret,ret_len+1);
+							out=new_ret+(out-ret);
+							ret=new_ret;
+						}
 						dbg(1,"found %s %s %d %s %d\n",in,search,len,replace,replace_len);
 						strcpy(out, replace);
 						out+=replace_len;
@@ -272,7 +380,7 @@ linguistics_expand_special(char *str, int mode)
 		}
 		if (match) {
 			found=1;
-			in=next;
+			in+=len;
 		} else {
 			while (len-- > 0) 
 				*out++=*in++;
@@ -309,7 +417,44 @@ linguistics_search(char *str)
 	return 1;
 }
 
+/**
+ * @brief Copy one utf8 encoded char to newly allocated buffer.
+ *
+ * @param s pointer to the beginning of the char.
+ * @return  newly allocated nul-terminated string containing one utf8 encoded character.
+ */
+static char 
+*linguistics_dup_utf8_char(const char *s)
+{
+	char *ret, *next;
+	next=g_utf8_find_next_char(s,NULL);
+	ret=g_new(char, next-s+1);
+	g_strlcpy(ret,s,next-s+1);
+	return ret;
+}
+
 void
 linguistics_init(void)
 {
+	int i;
+
+	casefold_hash=g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
+
+	for (i = 0 ; upperlower[i]; i+=2) {
+		int j,k;
+		for(j=0,k=0;upperlower[i][j] && upperlower[i+1][k];) {
+			char *s1=linguistics_dup_utf8_char(upperlower[i]+j);
+			char *s2=linguistics_dup_utf8_char(upperlower[i+1]+k);
+			g_hash_table_insert(casefold_hash,s1,s2);
+			j+=strlen(s1);
+			k+=strlen(s2);
+		}
+	}
 }
+
+void
+linguistics_free(void)
+{
+	g_hash_table_destroy(casefold_hash);
+}
+
