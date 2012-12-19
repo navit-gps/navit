@@ -163,7 +163,7 @@ struct map_search_priv {
 	struct map_rect_priv *mr;
 	struct map_rect_priv *mr_item;
 	struct item *item;
-	struct attr *search;
+	struct attr search;
 	struct map_selection ms;
 	int partial;
 	int mode;
@@ -1981,8 +1981,11 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
 	struct item *town;
 	
-	msp->search = search;
+	msp->search = *search;
 	msp->partial = partial;
+	if(ATTR_IS_STRING(msp->search.type))
+		msp->search.u.str=linguistics_casefold(search->u.str);
+		
 	/*
      * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
      * please update this comment and the documentation for map_search_new() in map.c
@@ -2057,17 +2060,30 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		default:
 			break;
 	}
+	if(ATTR_IS_STRING(msp->search.type))
+		g_free(msp->search.u.str);
 	g_free(msp);
 	return NULL;
 }
 
+/**
+ * @brief Compare two strings ignoring their case.
+ * @param name Item name string to compare
+ * @param match User query string. Should be linguistics_casefold()ed by by the caller
+ * @return result of comparison, zero if strings are equal
+ */
+
 static int
-ascii_cmp(char *name, char *match, int partial)
+case_cmp(char *name, char *match, int partial)
 {
-	if (partial)
-		return g_ascii_strncasecmp(name, match, strlen(match));
-	else
-		return g_ascii_strcasecmp(name, match);
+	int matchlen=strlen(match);
+	int ret;
+	char *folded=linguistics_casefold(name);
+	if (partial && strlen(folded)>matchlen)
+		folded[matchlen]=0;
+	ret=strcmp(folded, match);
+	g_free(folded);
+	return ret;
 }
 
 struct duplicate
@@ -2135,19 +2151,19 @@ binmap_search_get_item(struct map_search_priv *map_search)
 
 	for (;;) {
 		while ((it  = map_rect_get_item_binfile(map_search->mr))) {
-			switch (map_search->search->type) {
+			switch (map_search->search.type) {
 			case attr_town_name:
 			case attr_district_name:
 			case attr_town_or_district_name:
-				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && map_search->search->type != attr_district_name) {
+				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && map_search->search.type != attr_district_name) {
 					if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
-						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
 							return it;
 					}
 				}
-				if (map_search->mr->tile_depth > 1 && item_is_district(*it) && map_search->search->type != attr_town_name) {
+				if (map_search->mr->tile_depth > 1 && item_is_district(*it) && map_search->search.type != attr_town_name) {
 					if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
-						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
 							return it;
 					}
 				}
@@ -2155,7 +2171,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			case attr_street_name:
 				if (map_search->mode == 1) {
 					if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
-						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
+						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
 							return it;
 						}
 					}
@@ -2170,7 +2186,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						do {
 							for (i = 0 ; i < 3 ; i++) {
 								char *name=linguistics_expand_special(word,i);
-								if (name && !ascii_cmp(name, map_search->search->u.str, map_search->partial))
+								if (name && !case_cmp(name, map_search->search.u.str, map_search->partial))
 									match=1;
 								g_free(name);
 								if (match)
@@ -2199,7 +2215,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					if (binfile_attr_get(it->priv_data, attr_house_number, &at))
 					{
 						// match housenumber to our string
-						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial))
+						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial))
 						{
 							//binfile_attr_get(it->priv_data, attr_street_name, &at);
 							//dbg(0,"hnnn B1 street_name=%s",at.u.str);
@@ -2231,6 +2247,8 @@ binmap_search_destroy(struct map_search_priv *ms)
 {
 	if (ms->search_results)
 		g_hash_table_destroy(ms->search_results);
+	if(ATTR_IS_STRING(ms->search.type))
+		g_free(ms->search.u.str);
 	if (ms->mr_item)
 		map_rect_destroy_binfile(ms->mr_item);
 	if (ms->mr)
