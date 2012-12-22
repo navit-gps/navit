@@ -331,23 +331,23 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 }
 
 static void
-gui_internal_cmd2_setting_layout_new(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+gui_internal_cmd_layout_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr layout,clayout;
 	struct attr_iter *iter;
+	char *document=g_strdup("<html>");
 
-	char *document=g_strdup("<html><a name='Layout' class='clist'><text>Layout</text>\n");
 	navit_get_attr(this->nav, attr_layout, &clayout, NULL);
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_layout, &layout, iter)) {
 		struct attr name;
 		if (!layout_get_attr(layout.u.layout, attr_name, &name, NULL))
 			name.u.str="Unknown";
-		document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.layout=navit.layout[@name==*]\",E(\"%s\"))'>%s</img>\n",layout.u.layout == clayout.u.layout ? "gui_active":"gui_inactive",name.u.str,name.u.str);
+		document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.layout=navit.layout[@name==*]\",E(\"%s\"))'>%s</img>",layout.u.layout == clayout.u.layout ? "gui_active":"gui_inactive",name.u.str,name.u.str);
 	}
 	navit_attr_iter_destroy(iter);
-	document=g_strconcat_printf(document, "</a></html>\n");
-	gui_internal_html_menu(this, document, "Layout");
+	document=g_strconcat_printf(document, "</html>");
+	gui_internal_html_parse_text(this, document);
 	g_free(document);
 }
 
@@ -956,6 +956,7 @@ static struct command_table commands[] = {
 	{"bookmarks",command_cast(gui_internal_cmd2)},
 	{"formerdests",command_cast(gui_internal_cmd2)},
 	{"get_data",command_cast(gui_internal_get_data)},
+	{"layout_page",command_cast(gui_internal_cmd_layout_page)},
 	{"locale",command_cast(gui_internal_cmd2)},
 	{"log",command_cast(gui_internal_cmd_log)},
 	{"menu",command_cast(gui_internal_cmd_menu2)},
