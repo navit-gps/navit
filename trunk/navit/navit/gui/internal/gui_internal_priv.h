@@ -138,6 +138,7 @@ struct gui_priv {
 		char *name;
 		char *href;
 		char *refresh_cond;
+		char *class;
 		int font_size;
 		struct widget *w;
 		struct widget *container;
