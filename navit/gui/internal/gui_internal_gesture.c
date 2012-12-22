@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <stdlib.h>
+#include "config.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #endif
