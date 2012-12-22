@@ -190,8 +190,13 @@ html_image(struct gui_priv *this, const char **names, const char **values)
 	if (!src)
 		return NULL;
 	size=find_attr(names, values, "size");
-	if (!size)
-		size="l";
+	if (!size) {
+		const char *class=find_attr(names, values, "class");
+		if (class && !strcasecmp(class,"centry"))
+			size="xs";
+		else
+			size="l";
+	}
 	if (!strcmp(size,"l"))
 		img=image_new_l(this, src);
 	else if (!strcmp(size,"s"))
@@ -236,6 +241,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 		}
 	}
 	html->tag=tag;
+	html->class=find_attr_dup(names, values, "class");
 	if (!this->html_skip && !html->skip) {
 		switch (tag) {
 		case html_tag_a:
@@ -352,6 +358,7 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 	g_free(html->command);
 	g_free(html->name);
 	g_free(html->href);
+	g_free(html->class);
 	g_free(html->refresh_cond);
 }
 
@@ -413,11 +420,10 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	switch (html->tag) {
 	case html_tag_a:
 		if (html->name && len) {
-#if 0
-			this->html_container=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
-#else
-			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
-#endif
+			if (html->class && !strcasecmp(html->class,"clist"))
+				this->html_container=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+			else
+				this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
 			gui_internal_widget_append(gui_internal_menu(this, _(text_stripped)), this->html_container);
 			gui_internal_menu_data(this)->href=g_strdup(this->href);
 			gui_internal_set_refresh_callback(this, html->refresh_cond);
@@ -433,11 +439,10 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 		break;
 	case html_tag_img:
 		if (len) {
-#if 0
-			w=gui_internal_box_new(this, gravity_left_top|orientation_horizontal|flags_fill);
-#else
-			w=gui_internal_box_new(this, gravity_center|orientation_vertical);
-#endif
+			if (html->class && !strcasecmp(html->class, "centry"))
+				w=gui_internal_box_new(this, gravity_left_top|orientation_horizontal|flags_fill);
+			else
+				w=gui_internal_box_new(this, gravity_center|orientation_vertical);
 			gui_internal_widget_append(w, html->w);
 			gui_internal_widget_append(w, gui_internal_text_new(this, _(text_stripped), gravity_left_top|orientation_vertical|flags_fill));
 			html->w=w;
