@@ -285,6 +285,41 @@ gui_internal_cmd2_setting_rules(struct gui_priv *this, char *function, struct at
 }
 
 static void
+gui_internal_cmd_maps_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr mapset,map;
+	struct attr_iter *iter;
+	char *document=g_strdup("<html>");
+
+	navit_get_attr(this->nav, attr_mapset, &mapset, NULL);
+	iter=mapset_attr_iter_new();
+	while(mapset_get_attr(mapset.u.mapset, attr_map, &map, iter)) {
+		struct attr description,type,data,active;
+		char *attr,*val,*label;
+		if (map_get_attr(map.u.map, attr_description, &description, NULL)) {
+			label=g_strdup(description.u.str);
+			val=description.u.str;
+			attr="description";
+		} else {
+			if (!map_get_attr(map.u.map, attr_type, &type, NULL))
+				type.u.str="";
+			if (!map_get_attr(map.u.map, attr_data, &data, NULL))
+				data.u.str="";
+			val=data.u.str;
+			attr="data";
+			label=g_strdup_printf("%s:%s",type.u.str,data.u.str);
+		}
+		if (!map_get_attr(map.u.map, attr_active, &active, NULL))
+			active.u.num=1;
+		document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.mapset.map[@%s==\\\"%s\\\"].active=*\",%d);redraw_map();refresh()'>%s</img>",active.u.num ? "gui_active":"gui_inactive",attr,val,!active.u.num,label);
+	}
+	mapset_attr_iter_destroy(iter);
+	document=g_strconcat_printf(document, "</html>");
+	gui_internal_html_parse_text(this, document);
+	g_free(document);
+}
+
+static void
 gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr, on, off, description, type, data, url, active;
@@ -836,6 +871,12 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 }
 
 static void
+gui_internal_cmd_redraw_map(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	this->redraw=1;
+}
+
+static void
 gui_internal_cmd2_refresh(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *href=g_strdup(this->href);
@@ -959,9 +1000,11 @@ static struct command_table commands[] = {
 	{"layout_page",command_cast(gui_internal_cmd_layout_page)},
 	{"locale",command_cast(gui_internal_cmd2)},
 	{"log",command_cast(gui_internal_cmd_log)},
+	{"maps_page",command_cast(gui_internal_cmd_maps_page)},
 	{"menu",command_cast(gui_internal_cmd_menu2)},
 	{"position",command_cast(gui_internal_cmd2_position)},
 	{"pois",command_cast(gui_internal_cmd2)},
+	{"redraw_map",command_cast(gui_internal_cmd_redraw_map)},
 	{"refresh",command_cast(gui_internal_cmd2_refresh)},
 	{"route_description",command_cast(gui_internal_cmd2)},
 	{"route_height_profile",command_cast(gui_internal_cmd2)},
