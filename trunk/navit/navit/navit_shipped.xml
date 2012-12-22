@@ -71,12 +71,13 @@ Navigation</text></img>
 			<a name='Settings'><text>Settings</text>
 				<a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a>
 				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
+				<!-- <a href='#Settings Maps'><img src='gui_maps'><text>Maps</text></img></a> -->
 				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
 			</a>
 			<a name='Settings Display'><text>Display</text>
 				<img src='gui_display' onclick='setting_layout()'><text>Layout</text></img>
-				<!-- <a href='#Layout'><img src='gui_display'><text>Layout</text></img></a> -->
+				<!-- <a href='#Settings Layout'><img src='gui_display'><text>Layout</text></img></a> -->
 				<img cond='fullscreen==0' src='gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img>
 				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
 				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
@@ -97,8 +98,11 @@ Waypoint</text></img>
 			<a name='Map Point'><text>Map Point</text>
 				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
 			</a>
-			<a name='Layout' class='clist' refresh_cond='navit.layout'><text>Layout</text>
+			<a name='Settings Layout' class='clist' refresh_cond='navit.layout'><text>Layout</text>
 				<script>layout_page()</script>
+			</a>
+			<a name='Settings Maps' class='clist'><text>Maps</text>
+				<script>maps_page()</script>
 			</a>
 			</html>
 		]]></gui>
