@@ -1,5 +1,6 @@
 struct widget; // defined in gui_internal.c
 struct graphics_image;
+struct gui_priv;
 
 #define STATE_VISIBLE 1
 #define STATE_SELECTED 2
