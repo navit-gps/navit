@@ -1,0 +1,677 @@
+#include <glib.h>
+#include <stdlib.h>
+#include "color.h"
+#include "coord.h"
+#include "point.h"
+#include "callback.h"
+#include "graphics.h"
+#include "debug.h"
+#include "navit.h"
+#include "navit_nls.h"
+#include "item.h"
+#include "map.h"
+#include "mapset.h"
+#include "layout.h"
+#include "transform.h"
+#include "linguistics.h"
+#include "fib.h"
+#include "gui_internal.h"
+#include "gui_internal_widget.h"
+#include "gui_internal_priv.h"
+#include "gui_internal_html.h"
+#include "gui_internal_menu.h"
+#include "gui_internal_keyboard.h"
+#include "gui_internal_poi.h"
+
+
+struct item_data {
+	int dist;
+	char *label;
+	struct item item;
+	struct coord c;
+};
+
+struct selector {
+	char *icon;
+	char *name;
+	enum item_type *types;
+};
+static enum item_type selectors_BankTypes[]={type_poi_bank,type_poi_bank, type_poi_atm,type_poi_atm, type_none};
+static enum item_type selectors_FuelTypes[]={type_poi_fuel,type_poi_fuel,type_none};
+static enum item_type selectors_HotelTypes[]={type_poi_hotel,type_poi_camp_rv,type_poi_camping,type_poi_camping,
+    type_poi_resort,type_poi_resort,type_poi_motel,type_poi_hostel,type_none};
+static enum item_type selectors_RestaurantTypes[]={type_poi_bar,type_poi_picnic,type_poi_burgerking,type_poi_fastfood,
+    type_poi_restaurant,type_poi_restaurant,type_poi_cafe,type_poi_cafe,type_poi_pub,type_poi_pub,type_none};
+static enum item_type selectors_ShoppingTypes[]={type_poi_mall,type_poi_mall,type_poi_shop_grocery,type_poi_shop_grocery,
+    type_poi_shopping,type_poi_shopping,type_poi_shop_butcher,type_poi_shop_baker,type_poi_shop_fruit,
+    type_poi_shop_fruit,type_poi_shop_beverages,type_poi_shop_beverages,type_none};
+static enum item_type selectors_ServiceTypes[]={type_poi_marina,type_poi_marina,type_poi_hospital,type_poi_hospital,
+    type_poi_public_utilities,type_poi_public_utilities,type_poi_police,type_poi_autoservice,type_poi_information,
+    type_poi_information,type_poi_pharmacy,type_poi_pharmacy,type_poi_personal_service,type_poi_repair_service,
+    type_poi_restroom,type_poi_restroom,type_none};
+static enum item_type selectors_ParkingTypes[]={type_poi_car_parking,type_poi_car_parking,type_none};
+static enum item_type selectors_LandFeaturesTypes[]={type_poi_land_feature,type_poi_rock,type_poi_dam,type_poi_dam,
+    type_poi_peak,type_poi_peak,type_none};
+static enum item_type selectors_OtherTypes[]={type_point_unspecified,type_poi_land_feature-1,type_poi_rock+1,type_poi_fuel-1,
+    type_poi_marina+1,type_poi_shopping-1,type_poi_shopping+1,type_poi_car_parking-1,type_poi_car_parking+1,
+    type_poi_bar-1,type_poi_bank+1,type_poi_dam-1,type_poi_dam+1,type_poi_information-1,type_poi_information+1,
+    type_poi_mall-1,type_poi_mall+1,type_poi_personal_service-1,type_poi_pharmacy+1,type_poi_repair_service-1,
+    type_poi_repair_service+1,type_poi_restaurant-1,type_poi_restaurant+1,type_poi_restroom-1,type_poi_restroom+1,
+    type_poi_shop_grocery-1,type_poi_shop_grocery+1,type_poi_peak-1,type_poi_peak+1,type_poi_motel-1,type_poi_hostel+1,
+    type_poi_shop_butcher-1,type_poi_shop_baker+1,type_poi_shop_fruit-1,type_poi_shop_fruit+1,type_poi_shop_beverages-1,
+    type_poi_shop_beverages+1,type_poi_pub-1,type_poi_atm+1,type_line-1,type_none};
+/*static enum item_type selectors_UnknownTypes[]={type_point_unkn,type_point_unkn,type_none};*/
+struct selector selectors[]={
+	{"bank","Bank",selectors_BankTypes},
+	{"fuel","Fuel",selectors_FuelTypes},
+	{"hotel","Hotel",selectors_HotelTypes},
+	{"restaurant","Restaurant",selectors_RestaurantTypes},
+	{"shopping","Shopping",selectors_ShoppingTypes},
+	{"hospital","Service",selectors_ServiceTypes},
+	{"parking","Parking",selectors_ParkingTypes},
+	{"peak","Land Features",selectors_LandFeaturesTypes},
+	{"unknown","Other",selectors_OtherTypes},
+/*	{"unknown","Unknown",selectors_UnknownTypes},*/
+};
+
+static struct graphics_image *
+gui_internal_poi_icon(struct gui_priv *this, enum item_type type)
+{
+	struct attr layout;
+	GList *layer;
+	navit_get_attr(this->nav, attr_layout, &layout, NULL);
+	layer=layout.u.layout->layers;
+	while(layer) {
+		GList *itemgra=((struct layer *)layer->data)->itemgras;
+		while(itemgra) {
+			GList *types=((struct itemgra *)itemgra->data)->type;
+			while(types) {
+				if((long)types->data==type) {
+					GList *element=((struct itemgra *)itemgra->data)->elements;
+					while(element) {
+						struct element * el=element->data;
+						if(el->type==element_icon) {
+							struct graphics_image *img;
+							char *icon=g_strdup(el->u.icon.src);
+							char *dot=g_strrstr(icon,".");
+							dbg(2,"%s %s\n", item_to_name(type),icon);
+							if(dot)
+								*dot=0;
+							img=image_new_xs(this,icon);
+							g_free(icon);
+							if(img) 
+								return img;
+						}
+						element=g_list_next(element);
+					}
+				}
+				types=g_list_next(types);	
+			}
+			itemgra=g_list_next(itemgra);
+		}
+		layer=g_list_next(layer);
+	}
+	return NULL;
+}
+
+
+static void
+get_direction(char *buffer, int angle, int mode)
+{
+	angle=angle%360;
+	switch (mode) {
+	case 0:
+		sprintf(buffer,"%d",angle);
+		break;
+	case 1:
+		if (angle < 69 || angle > 291)
+			*buffer++='N';
+		if (angle > 111 && angle < 249)
+			*buffer++='S';
+		if (angle > 22 && angle < 158)
+			*buffer++='E';
+		if (angle > 202 && angle < 338)
+			*buffer++='W';
+		*buffer++='\0';
+		break;
+	case 2:
+		angle=(angle+15)/30;
+		if (! angle)
+			angle=12;
+		sprintf(buffer,"%d H", angle);
+		break;
+	}
+}
+
+void
+gui_internal_poi_param_free(void *p) 
+{
+	if(((struct poi_param *)p)->filterstr)
+	   g_free(((struct poi_param *)p)->filterstr);
+	if(((struct poi_param *)p)->filter)
+	   g_list_free(((struct poi_param *)p)->filter);
+	g_free(p);
+};
+
+static struct poi_param *
+gui_internal_poi_param_clone(struct poi_param *p) 
+{
+	struct poi_param *r=g_new(struct poi_param,1);
+	GList *l=p->filter;
+	memcpy(r,p,sizeof(struct poi_param));
+	r->filter=NULL;
+	r->filterstr=NULL;
+	if(p->filterstr) {
+		char *last=g_list_last(l)->data;
+		int len=(last - p->filterstr) + strlen(last)+1;
+		r->filterstr=g_memdup(p->filterstr,len);
+	}
+	while(l) {
+		r->filter=g_list_append(r->filter, r->filterstr + ((char*)(l->data) - p->filterstr) );
+		l=g_list_next(l);
+	}
+	return r;
+};
+
+void
+gui_internal_poi_param_set_filter(struct poi_param *param, char *text) 
+{
+	char *s1, *s2;
+	
+	param->filterstr=removecase(text);
+	s1=param->filterstr;
+	do {
+		s2=g_utf8_strchr(s1,-1,' ');
+		if(s2)
+			*s2++=0;
+		param->filter=g_list_append(param->filter,s1);
+		if(s2) {
+			while(*s2==' ')
+				s2++;
+		}
+		s1=s2;
+	} while(s2 && *s2);
+}
+
+static struct widget *
+gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb)
+{
+	struct widget *wl,*wb;
+	int nitems,nrows;
+	int i;
+	//wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal_vertical|flags_fill);
+	wl->background=this->background;
+	wl->w=this->root.w;
+	wl->cols=this->root.w/this->icon_s;
+	nitems=sizeof(selectors)/sizeof(struct selector);
+	nrows=nitems/wl->cols + (nitems%wl->cols>0);
+	wl->h=this->icon_l*nrows;
+	for (i = 0 ; i < nitems ; i++) {
+		struct poi_param *p=g_new0(struct poi_param,1);
+		p->sel = 1;
+		p->selnb = i;
+		p->pagenb = pagenb;
+		p->dist = 0;
+		p->filter=NULL;
+		p->filterstr=NULL;
+		gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
+			image_new_s(this, selectors[i].icon), gravity_left_center|orientation_vertical,
+			gui_internal_cmd_pois, p));
+		wb->c=*c;
+		wb->data_free=gui_internal_poi_param_free;
+		wb->bt=10;
+	}
+
+	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
+			image_new_s(this, "gui_search"), gravity_left_center|orientation_vertical,
+			gui_internal_cmd_pois_filter, NULL));
+	wb->c=*c;
+	wb->bt=10;
+	
+	gui_internal_widget_pack(this,wl);
+	return wl;
+}
+
+struct widget *
+gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char* name)
+{
+	char distbuf[32]="";
+	char dirbuf[32]="";
+	char *type;
+	struct widget *wl;
+	char *text;
+	struct graphics_image *icon;
+
+	if (dist > 10000)
+		sprintf(distbuf,"%d ", dist/1000);
+	else if (dist>0)
+		sprintf(distbuf,"%d.%d ", dist/1000, (dist%1000)/100);
+	if(c) {
+		int len; 		
+		get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
+		len=strlen(dirbuf);
+		dirbuf[len]=' ';
+		dirbuf[len+1]=0;
+	}
+	
+	type=item_to_name(item->type);
+
+	icon=gui_internal_poi_icon(this,item->type);
+	if(!icon) {
+		icon=image_new_xs(this,"gui_inactive");
+		text=g_strdup_printf("%s%s%s %s", distbuf, dirbuf, type, name);
+	} else if(strlen(name)>0)
+		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, name);
+	else 
+		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, type);
+		
+	wl=gui_internal_button_new_with_callback(this, text, icon, gravity_left_center|orientation_horizontal|flags_fill, NULL, NULL);
+	wl->datai=dist;
+	g_free(text);
+	if (name[0]) {
+		wl->name=g_strdup_printf("%s %s",type,name);
+	} else {
+		wl->name=g_strdup(type);
+	}
+	wl->func=gui_internal_cmd_position;
+	wl->data=(void *)9;
+	wl->item=*item;
+	wl->state|= STATE_SENSITIVE;
+	return wl;
+}
+
+char *
+gui_internal_compose_item_address_string(struct item *item)
+{
+	char *s=g_strdup("");
+	struct attr attr;
+	if(item_attr_get(item, attr_house_number, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_street_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_street_name_systematic, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_district_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_town_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_county_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	if(item_attr_get(item, attr_country_name, &attr)) 
+		s=g_strjoin(" ",s,attr.u.str,NULL);
+	
+	if(item_attr_get(item, attr_address, &attr)) 
+		s=g_strjoin(" ",s,"|",attr.u.str,NULL);
+	return s;
+}
+
+static int
+gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
+{
+	enum item_type *types;
+	struct selector *sel = param->sel? &selectors[param->selnb]: NULL;
+	enum item_type type=item->type;
+	struct attr attr;
+	int match=0;
+	if (type >= type_line && param->filter==NULL)
+		return 0;
+	if (! sel || !sel->types) {
+		match=1;
+	} else {
+		types=sel->types;
+		while (*types != type_none) {
+			if (item->type >= types[0] && item->type <= types[1]) {
+				return 1;
+			}
+			types+=2;
+		}
+	}
+	if (param->filter) {
+		char *long_name, *s;
+		GList *f;
+		int i;
+		if (param->isAddressFilter) {
+			s=gui_internal_compose_item_address_string(item);
+		} else if (item_attr_get(item, attr_label, &attr)) {
+			s=g_strdup_printf("%s %s", item_to_name(item->type), attr.u.str);
+		} else {
+			s=g_strdup(item_to_name(item->type));
+		}
+		long_name=removecase(s);
+		g_free(s);
+                item_attr_rewind(item);
+                
+		match=0;
+		for(i=0;i<3 && !match;i++) {
+			char *long_name_exp=linguistics_expand_special(long_name, i);
+			for(s=long_name_exp,f=param->filter;f && s;f=g_list_next(f)) {
+				s=strstr(s,f->data);
+				if(!s) {
+					break;
+				}
+				s=g_utf8_strchr(s,-1,' ');
+			}
+			g_free(long_name_exp);
+			if(!f)
+				match=1;
+		}
+		g_free(long_name);
+	}
+	return match;
+}
+
+static void
+gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *w=g_new0(struct widget,1);
+	w->data=wm->data;
+	w->c=wm->c;
+	w->w=wm->w;
+	wm->data_free=NULL;
+	gui_internal_back(this, NULL, NULL);
+	gui_internal_cmd_pois(this, w, w->data);
+	free(w);
+}
+
+static void
+gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *w=data;
+	struct poi_param *param;
+	
+	if(!w->text)
+		return;
+	
+	if(w->data) {
+		param=gui_internal_poi_param_clone(w->data);
+		param->pagenb=0;
+	} else {
+		param=g_new0(struct poi_param,1);
+	}
+	param->isAddressFilter=strcmp(wm->name,"AddressFilter")==0;
+
+	gui_internal_poi_param_set_filter(param, w->text);
+
+	gui_internal_cmd_pois(this,w,param);
+	gui_internal_poi_param_free(param);
+}
+
+static void
+gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data)
+{
+	if (wm->text && wm->reason==gui_internal_reason_keypress_finish) {
+		gui_internal_cmd_pois_filter_do(this, wm, wm);
+	}
+}
+
+void
+gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *wb, *w, *wr, *wk, *we;
+	int keyboard_mode=2;
+	wb=gui_internal_menu(this,"Filter");
+	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	wr=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+        gui_internal_widget_append(w, wr);
+        we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+        gui_internal_widget_append(wr, we);
+
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
+	wk->state |= STATE_EDIT|STATE_EDITABLE;
+	wk->func=gui_internal_cmd_pois_filter_changed;
+	wk->background=this->background;
+	wk->flags |= flags_expand|flags_fill;
+	wk->name=g_strdup("POIsFilter");
+	wk->c=wm->c;
+	gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wb->state |= STATE_SENSITIVE;
+	wb->func = gui_internal_cmd_pois_filter_do;
+	wb->name=g_strdup("NameFilter");
+	wb->data=wk;
+	gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "post")));
+	wb->state |= STATE_SENSITIVE;
+	wb->name=g_strdup("AddressFilter");
+	wb->func = gui_internal_cmd_pois_filter_do;
+	wb->data=wk;
+	
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
+	gui_internal_menu_render(this);
+
+
+}
+
+void
+gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct map_selection *sel,*selm;
+	struct coord c,center;
+	struct mapset_handle *h;
+	struct map *m;
+	struct map_rect *mr;
+	struct item *item;
+	struct widget *wi,*w,*w2,*wb, *wtable, *row;
+	enum projection pro=wm->c.pro;
+	struct poi_param *param;
+	int param_free=0;
+	int idist,dist;
+	struct selector *isel;
+	int pagenb;
+	int prevdist;
+	// Starting value and increment of count of items to be extracted
+	const int pagesize = 50; 
+	int maxitem, it = 0, i;
+	struct item_data *items;
+	struct fibheap* fh = fh_makekeyheap();
+	int cnt = 0;
+	struct table_data *td;
+	struct widget *wl,*wt;
+	char buffer[32];
+	struct poi_param *paramnew;
+
+	if(data) {
+	  param = data;
+	} else {
+	  param = g_new0(struct poi_param,1);
+	  param_free=1;
+	}
+	
+	dist=10000*(param->dist+1);
+	isel = param->sel? &selectors[param->selnb]: NULL;
+	pagenb = param->pagenb;
+	prevdist=param->dist*10000;
+	maxitem = pagesize*(pagenb+1);
+	items= g_new0( struct item_data, maxitem);
+	
+	
+	dbg(2, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, isAddressFilter= %d\n",
+		param->sel, param->selnb, param->pagenb, param->dist, param->filterstr, param->isAddressFilter);
+
+	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	if (!isel && !param->filter)
+		gui_internal_widget_append(w, gui_internal_cmd_pois_selector(this,&wm->c,pagenb));
+	w2=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, w2);
+
+	sel=map_selection_rect_new(&wm->c,dist*transform_scale(abs(wm->c.y)+dist*1.5),18);
+	center.x=wm->c.x;
+	center.y=wm->c.y;
+	h=mapset_open(navit_get_mapset(this->nav));
+        while ((m=mapset_next(h, 1))) {
+		selm=map_selection_dup_pro(sel, pro, map_projection(m));
+		mr=map_rect_new(m, selm);
+		dbg(2,"mr=%p\n", mr);
+		if (mr) {
+			while ((item=map_rect_get_item(mr))) {
+				if (gui_internal_cmd_pois_item_selected(param, item) &&
+				    item_coord_get_pro(item, &c, 1, pro) &&
+				    coord_rect_contains(&sel->u.c_rect, &c)  &&
+				    (idist=transform_distance(pro, &center, &c)) < dist) {
+					struct item_data *data;
+					struct attr attr;
+					char *label;
+					
+					if (item->type==type_house_number) {
+						label=gui_internal_compose_item_address_string(item);
+					} else if (item_attr_get(item, attr_label, &attr)) {
+						label=g_strdup(attr.u.str);
+						// Buildings which label is equal to addr:housenumber value
+						// are duplicated by item_house_number. Don't include such 
+						// buildings into the list. This is true for OSM maps created with 
+						// maptool patched with #859 latest patch.
+						// FIXME: For non-OSM maps, we probably would better don't skip these items.
+						if(item->type==type_poly_building && item_attr_get(item, attr_house_number, &attr) ) {
+							if(strcmp(label,attr.u.str)==0) {
+								g_free(label);
+								continue;
+							}
+						}
+
+					} else {
+						label=g_strdup("");
+					}
+					
+					if(it>=maxitem) {
+						data = fh_extractmin(fh);
+						g_free(data->label);
+						data->label=NULL;
+					} else {
+						data = &items[it++];
+					}
+					data->label=label;
+					data->item = *item;
+					data->c = c;
+					data->dist = idist;
+					// Key expression is a workaround to fight
+					// probable heap collisions when two objects
+					// are at the same distance. But it destroys
+					// right order of POIs 2048 km away from cener
+					// and if table grows more than 1024 rows.
+					fh_insertkey(fh, -((idist<<10) + cnt++), data);
+					if (it == maxitem)
+						dist = (-fh_minkey(fh))>>10;
+				}
+			}
+			map_rect_destroy(mr);
+		}
+		map_selection_destroy(selm);
+	}
+	map_selection_destroy(sel);
+	mapset_close(h);
+	
+	wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+	td=wtable->data;
+
+	gui_internal_widget_append(w2,wtable);
+
+	// Move items from heap to the table
+	for(i=0;;i++) 
+	{
+		int key = fh_minkey(fh);
+		struct item_data *data = fh_extractmin(fh);
+		if (data == NULL)
+		{
+			dbg(2, "Empty heap: maxitem = %i, it = %i, dist = %i\n", maxitem, it, dist);
+			break;
+		}
+		dbg(2, "dist1: %i, dist2: %i\n", data->dist, (-key)>>10);
+		if(i==(it-pagesize*pagenb) && data->dist>prevdist)
+			prevdist=data->dist;
+		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, data->dist, data->label);
+		wi->c.x=data->c.x;
+		wi->c.y=data->c.y;
+		wi->c.pro=pro;
+		wi->background=this->background;
+		row = gui_internal_widget_table_row_new(this,
+							  gravity_left
+							  | flags_fill
+							  | orientation_horizontal);
+		gui_internal_widget_append(row,wi);
+		row->datai=data->dist;
+		gui_internal_widget_prepend(wtable,row);
+		free(data->label);
+	}
+
+	fh_deleteheap(fh);
+	free(items);
+
+	// Add an entry for more POI
+	row = gui_internal_widget_table_row_new(this,
+						  gravity_left
+						  | flags_fill
+						  | orientation_horizontal);
+	row->datai=100000000; // Really far away for Earth, but won't work for bigger planets.
+	gui_internal_widget_append(wtable,row);
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(row,wl);
+	if (it == maxitem) {
+		paramnew=gui_internal_poi_param_clone(param);
+		paramnew->pagenb++;
+		paramnew->count=it;
+		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (paramnew->pagenb+1)*pagesize);
+		wt=gui_internal_label_new(this, buffer);
+		gui_internal_widget_append(wl, wt);
+		wt->func=gui_internal_cmd_pois_more;
+		wt->data=paramnew;
+		wt->data_free=gui_internal_poi_param_free;
+		wt->state |= STATE_SENSITIVE;
+		wt->c = wm->c;
+	} else {
+		static int dist[]={1,5,10,0};
+		wt=gui_internal_label_new(this, "Set distance to");
+		gui_internal_widget_append(wl, wt);
+		for(i=0;dist[i];i++) {
+			paramnew=gui_internal_poi_param_clone(param);
+			paramnew->dist+=dist[i];
+			paramnew->count=it;
+			snprintf(buffer, sizeof(buffer), " %i ", 10*(paramnew->dist+1));
+			wt=gui_internal_label_new(this, buffer);
+			gui_internal_widget_append(wl, wt);
+			wt->func=gui_internal_cmd_pois_more;
+			wt->data=paramnew;
+			wt->data_free=gui_internal_poi_param_free;
+			wt->state |= STATE_SENSITIVE;
+			wt->c = wm->c;
+		}
+		wt=gui_internal_label_new(this, "km.");
+		gui_internal_widget_append(wl, wt);
+
+	}
+	// Rendering now is needed to have table_data->bottomrow filled in.
+	gui_internal_menu_render(this);
+	td=wtable->data;
+	if(td->bottom_row!=NULL)
+	{
+#if 0
+		while(((struct widget*)td->bottom_row->data)->datai<=prevdist
+				&& (td->next_button->state & STATE_SENSITIVE))
+		{
+			gui_internal_table_button_next(this, td->next_button, NULL);
+		}
+#else
+		int firstrow=g_list_index(wtable->children, td->top_row->data);
+		while(firstrow>=0) {
+			int currow=g_list_index(wtable->children, td->bottom_row->data) - firstrow;
+			if(currow<0) {
+				dbg(0,"Can't find bottom row in children list. Stop paging.\n");
+				break;
+			}
+			if(currow>=param->count)
+				break;
+			if(!(td->next_button->state & STATE_SENSITIVE)) {
+				dbg(0,"Reached last page but item %i not found. Stop paging.\n",param->count);
+				break;
+			}
+			gui_internal_table_button_next(this, td->next_button, NULL);
+		}
+#endif
+	}
+	gui_internal_menu_render(this);
+        if(param_free)
+        	g_free(param);
+}
+
