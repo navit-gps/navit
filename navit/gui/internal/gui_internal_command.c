@@ -1,6 +1,10 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <math.h>
+#include "config.h"
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#endif
 #include "color.h"
 #include "coord.h"
 #include "point.h"
