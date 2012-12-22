@@ -363,6 +363,8 @@ eval_value(struct context *ctx, struct result *res) {
 	}
 	if (op[0] == '"') {
 		do {
+			if (op[0] == '\\' && op[1] == '"')
+				op++;
 			op++;
 		} while (op[0] && op[0] != '"');
 		res->attr.type=attr_type_string_begin;
