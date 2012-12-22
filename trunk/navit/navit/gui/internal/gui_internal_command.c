@@ -24,6 +24,7 @@
 #include "route.h"
 #include "vehicle.h"
 #include "layout.h"
+#include "util.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
@@ -330,6 +331,27 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 }
 
 static void
+gui_internal_cmd2_setting_layout_new(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr layout,clayout;
+	struct attr_iter *iter;
+
+	char *document=g_strdup("<html><a name='Layout' class='clist'><text>Layout</text>\n");
+	navit_get_attr(this->nav, attr_layout, &clayout, NULL);
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(this->nav, attr_layout, &layout, iter)) {
+		struct attr name;
+		if (!layout_get_attr(layout.u.layout, attr_name, &name, NULL))
+			name.u.str="Unknown";
+		document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.layout=navit.layout[@name==*]\",E(\"%s\"))'>%s</img>\n",layout.u.layout == clayout.u.layout ? "gui_active":"gui_inactive",name.u.str,name.u.str);
+	}
+	navit_attr_iter_destroy(iter);
+	document=g_strconcat_printf(document, "</a></html>\n");
+	gui_internal_html_menu(this, document, "Layout");
+	g_free(document);
+}
+
+static void
 gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr;
@@ -350,7 +372,6 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
 	navit_attr_iter_destroy(iter);
 	gui_internal_menu_render(this);
 }
-
 static void
 gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
