@@ -74,6 +74,18 @@ gui_internal_coordinates(struct pcoord *pc, char sep)
 }
 
 static void
+gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && out) {
+		struct attr escaped;
+		escaped.type=in[0]->type;
+		escaped.u.str=g_strdup_printf("\"%s\"",in[0]->u.str);
+		dbg(1,"result %s\n",escaped.u.str);
+		*out=attr_generic_add_attr(*out, attr_dup(&escaped));
+		g_free(escaped.u.str);
+	}
+}
+static void
 gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *menu,*wb,*w;
@@ -916,6 +928,7 @@ gui_internal_cmd2(struct gui_priv *this, char *function, struct attr **in, struc
 }
 
 static struct command_table commands[] = {
+	{"E",command_cast(gui_internal_cmd_escape)},
 	{"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
 	{"back",command_cast(gui_internal_cmd2_back)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
