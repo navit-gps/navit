@@ -44,6 +44,9 @@ void err(char *fmt, ...)
 {
 	va_list ap;
 	char buf[1024];
+#if defined HAVE_API_WIN32_CE
+#define vsnprintf _vsnprintf
+#endif
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
 	va_end(ap);
