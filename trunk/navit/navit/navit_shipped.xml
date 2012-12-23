@@ -111,6 +111,12 @@ Waypoint</text></img>
 			<a name='Settings Vehicle' class='clist'><script>write(name)</script>
 				<script>vehicle_page(name)</script>
 			</a>
+			<a name='Satellite Status' class='clist'><text>Satellite Status</text>
+				<script>satellite_status_page()</script>
+			</a>
+			<a name='NMEA Data' class='clist'><text>NMEA Data</text>
+				<script>nmea_data_page()</script>
+			</a>
 			</html>
 		]]></gui>
 		<!-- for a debug log -->
