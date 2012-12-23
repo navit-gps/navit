@@ -112,12 +112,14 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
   DIRECTIVES d;
   arguments a;
 #ifdef _MSC_VER
+#ifndef _WIN32_WCE
   static int notFirstTime=0;
   if(!notFirstTime) 
     {
       _set_printf_count_output( 1 );
       notFirstTime = 1;
     }
+#endif
 #endif
         
   if (PRINTF_PARSE (format, &d, &a) < 0)
