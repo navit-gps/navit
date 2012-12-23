@@ -263,21 +263,21 @@ gui_internal_cmd_vehicle_page(struct gui_priv *this, char *function, struct attr
 			if (!vehicle_get_attr(vehicle.u.vehicle, attr_profilename, &profilename, NULL))
 				profilename.u.str="Unknown";
 			if (cvehicle.u.vehicle != vehicle.u.vehicle) {
+				document=g_strconcat_printf(document, "<img class='centry' src='gui_active' onclick='set(\"navit.vehicle=navit.vehicle[@name=*]\",E(\"%s\"));refresh()'>%s</img>",name.u.str,_("Set as active"));
 			}	
 			while (navit_get_attr(this->nav, attr_vehicleprofile, &vehicleprofile, iter2)) {
 				if (vehicleprofile_get_attr(vehicleprofile.u.vehicleprofile, attr_name, &name2, NULL)) {
-					document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.vehicle[@name==\\\"%s\\\"].profilename=*\",E(\"%s\"))'>%s</img>",!strcmp(profilename.u.str,name2.u.str) ? "gui_active":"gui_inactive",name.u.str,name2.u.str,name2.u.str);
+					document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.vehicle[@name==\\\"%s\\\"].profilename=*\",E(\"%s\"));refresh()'>%s</img>",!strcmp(profilename.u.str,name2.u.str) ? "gui_active":"gui_inactive",name.u.str,name2.u.str,name2.u.str);
 				}
 			}
 			if (vehicle_get_attr(vehicle.u.vehicle, attr_position_sat_item, &attr, NULL)) {
-				dbg(0,"sat status\n");
+				document=g_strconcat_printf(document, "<a href='#Satellite Status'><img class='centry' src='gui_active'>%s</img></a>",_("Show Satellite status"));
 			}
 		        if (vehicle_get_attr(vehicle.u.vehicle, attr_position_nmea, &attr, NULL)) {
-				dbg(0,"nmea\n");
+				document=g_strconcat_printf(document, "<a href='#NMEA Data'><img class='centry' src='gui_active'>%s</img></a>",_("Show NMEA data"));
 			}
 			navit_attr_iter_destroy(iter2);
 			document=g_strconcat_printf(document, "</html>");
-			dbg(0,"%s\n",document);
 			gui_internal_html_parse_text(this, document);
 			g_free(document);
 			break;
