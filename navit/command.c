@@ -188,7 +188,7 @@ static void
 command_get_attr(struct context *ctx, struct result *res)
 {
 	int result;
-	struct result tmp={};
+	struct result tmp={{0,},};
 	enum attr_type attr_type=command_attr_type(res);
 	result=command_object_get_attr(ctx, &res->attr, attr_type, &tmp.attr);
 	result_free(res);
@@ -496,7 +496,7 @@ command_call_function(struct context *ctx, struct result *res)
 static void
 eval_postfix(struct context *ctx, struct result *res)
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 	const char *op;
 
     	eval_brace(ctx, res);
@@ -578,7 +578,7 @@ eval_unary(struct context *ctx, struct result *res)
 static void
 eval_multiplicative(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 	const char *op;
 
     	eval_unary(ctx, res);
@@ -617,7 +617,7 @@ eval_multiplicative(struct context *ctx, struct result *res)
 static void
 eval_additive(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 	const char *op;
 
     	eval_multiplicative(ctx, res);
@@ -648,7 +648,7 @@ eval_additive(struct context *ctx, struct result *res)
 static void
 eval_equality(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 	const char *op;
 
     	eval_additive(ctx, res);
@@ -713,7 +713,7 @@ eval_equality(struct context *ctx, struct result *res)
 static void
 eval_bitwise_and(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
     	eval_equality(ctx, res);
 	if (ctx->error) return;
@@ -734,7 +734,7 @@ eval_bitwise_and(struct context *ctx, struct result *res)
 static void
 eval_bitwise_xor(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
     	eval_bitwise_and(ctx, res);
 	if (ctx->error) return;
@@ -754,7 +754,7 @@ eval_bitwise_xor(struct context *ctx, struct result *res)
 static void
 eval_bitwise_or(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
     	eval_bitwise_xor(ctx, res);
 	if (ctx->error) return;
@@ -775,7 +775,7 @@ eval_bitwise_or(struct context *ctx, struct result *res)
 static void
 eval_logical_and(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
     	eval_bitwise_or(ctx, res);
 	if (ctx->error) return;
@@ -795,7 +795,7 @@ eval_logical_and(struct context *ctx, struct result *res)
 static void
 eval_logical_or(struct context *ctx, struct result *res) 
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
     	eval_logical_and(ctx, res);
 	if (ctx->error) return;
@@ -815,7 +815,7 @@ eval_logical_or(struct context *ctx, struct result *res)
 static void
 eval_conditional(struct context *ctx, struct result *res)
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 	int cond;
 
     	eval_logical_or(ctx, res);
@@ -855,7 +855,7 @@ eval_conditional(struct context *ctx, struct result *res)
 static void
 eval_assignment(struct context *ctx, struct result *res)
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
     	eval_conditional(ctx, res);
 	if (ctx->error) return;
 	if (!get_op(ctx,0,"=",NULL)) return;
@@ -877,7 +877,7 @@ eval_assignment(struct context *ctx, struct result *res)
 static void
 eval_comma(struct context *ctx, struct result *res)
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
 	eval_assignment(ctx, res);
 	if (ctx->error) return;
@@ -893,7 +893,7 @@ eval_comma(struct context *ctx, struct result *res)
 static struct attr **
 eval_list(struct context *ctx)
 {
-	struct result tmp={};
+	struct result tmp={{0,},};
 
 	struct attr **ret=NULL;
 	for (;;) {
@@ -946,7 +946,7 @@ command_evaluate_to(struct attr *attr, const char *expr, struct context *ctx, st
 enum attr_type
 command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret)
 {
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (ctx.error)
@@ -960,7 +960,7 @@ command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr 
 void
 command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 {
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
@@ -974,7 +974,7 @@ command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 char *
 command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 {
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 	char *ret=NULL;
 
@@ -997,7 +997,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 int
 command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 {
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 	int ret=0;
 
@@ -1020,7 +1020,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 int
 command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 {
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 	int ret=0;
 
@@ -1051,7 +1051,7 @@ int
 command_evaluate_to_length(const char *expr, int *error)
 {
 	struct attr attr;
-	struct result res={};
+	struct result res={{0,},};
 	struct context ctx;
 
 	attr.type=attr_none;
@@ -1073,8 +1073,8 @@ command_evaluate(struct attr *attr, const char *expr)
 	 * subsequent command call. Hence the g_strdup. */
 
 	char *expr_dup;
-	struct result res={};
-	struct context ctx={};
+	struct result res={{0,},};
+	struct context ctx={0,};
 	ctx.attr=attr;
 	ctx.error=0;
 	ctx.expr=expr_dup=g_strdup(expr);
