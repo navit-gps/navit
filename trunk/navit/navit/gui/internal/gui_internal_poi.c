@@ -73,6 +73,13 @@ struct selector selectors[]={
 	{"unknown","Other",selectors_OtherTypes},
 /*	{"unknown","Unknown",selectors_UnknownTypes},*/
 };
+/**
+ * @brief Get icon for given POI type.
+ *
+ * @param this pointer to gui context
+ * @param type POI type
+ * @return  Pointer to graphics_image object, or NULL if no picture available. 
+ */
 
 static struct graphics_image *
 gui_internal_poi_icon(struct gui_priv *this, enum item_type type)
@@ -143,6 +150,12 @@ get_direction(char *buffer, int angle, int mode)
 	}
 }
 
+/**
+ * @brief Free poi_param structure.
+ *
+ * @param p reference to the object to be freed.
+ */
+
 void
 gui_internal_poi_param_free(void *p) 
 {
@@ -152,6 +165,13 @@ gui_internal_poi_param_free(void *p)
 	   g_list_free(((struct poi_param *)p)->filter);
 	g_free(p);
 };
+
+/**
+ * @brief Clone poi_param structure.
+ *
+ * @param p reference to the object to be cloned.
+ * @return  Cloned object reference.
+ */
 
 static struct poi_param *
 gui_internal_poi_param_clone(struct poi_param *p) 
@@ -172,6 +192,12 @@ gui_internal_poi_param_clone(struct poi_param *p)
 	}
 	return r;
 };
+
+/**
+ * @brief Set POIs filter data in poi_param structure.
+ * @param param poi_param structure with unset filter data.
+ * @param text filter text.
+ */
 
 void
 gui_internal_poi_param_set_filter(struct poi_param *param, char *text) 
@@ -233,6 +259,18 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 	return wl;
 }
 
+/**
+ * @brief Widget to display POI item.
+ *
+ * @param this pointer to gui context
+ * @param center reference to the standing point where angle to be counted from
+ * @param item POI item reference
+ * @param c POI coordinates
+ * @param dist precomputed distance to POI (or -1 if it's not to be displayed)
+ * @param name POI name
+ * @return  Pointer to new widget.
+ */
+
 struct widget *
 gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char* name)
 {
@@ -280,6 +318,13 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	wl->state|= STATE_SENSITIVE;
 	return wl;
 }
+
+/**
+ * @brief Get string representation of item address suitable for doing search and for display in POI list.
+ *
+ * @param item reference to item.
+ * @return  Pointer to string representation of address. To be g_free()d after use.
+ */
 
 char *
 gui_internal_compose_item_address_string(struct item *item)
@@ -361,6 +406,13 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 	return match;
 }
 
+/**
+ * @brief Event handler for POIs list "more" element.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data.
+ */
 static void
 gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data) 
 {
@@ -374,6 +426,14 @@ gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data)
 	free(w);
 }
 
+
+/**
+ * @brief Event to apply POIs text filter.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data (pointer to editor widget containg filter text).
+ */
 static void
 gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *data) 
 {
@@ -397,6 +457,12 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 	gui_internal_poi_param_free(param);
 }
 
+/**
+ * @brief POIs filter dialog.
+ * Event to handle '\r' '\n' keys pressed.
+ * 
+ */
+
 static void
 gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -405,6 +471,14 @@ gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, v
 	}
 }
 
+
+/**
+ * @brief POIs filter dialog.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data.
+ */
 void
 gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data) 
 {
@@ -443,6 +517,13 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
 
 }
 
+/**
+ * @brief Do POI search specified by poi_param and display POIs found
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data, reference to poi_param or NULL.
+ */
 void
 gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 {
