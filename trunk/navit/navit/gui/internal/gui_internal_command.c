@@ -23,6 +23,7 @@
 #include "search.h"
 #include "route.h"
 #include "vehicle.h"
+#include "vehicleprofile.h"
 #include "layout.h"
 #include "util.h"
 #include "gui_internal.h"
@@ -77,15 +78,22 @@ gui_internal_coordinates(struct pcoord *pc, char sep)
 static void
 gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && out) {
-		struct attr escaped;
-		escaped.type=in[0]->type;
-		escaped.u.str=g_strdup_printf("\"%s\"",in[0]->u.str);
-		dbg(1,"result %s\n",escaped.u.str);
-		*out=attr_generic_add_attr(*out, attr_dup(&escaped));
-		g_free(escaped.u.str);
+	struct attr escaped;
+	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
+		dbg(0,"first parameter missing or wrong type\n");
+		return;
 	}
+	if (!out) {
+		dbg(0,"output missing\n");
+		return;
+	}
+	escaped.type=in[0]->type;
+	escaped.u.str=g_strdup_printf("\"%s\"",in[0]->u.str);
+	dbg(1,"in %s result %s\n",in[0]->u.str,escaped.u.str);
+	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
+	g_free(escaped.u.str);
 }
+
 static void
 gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -210,6 +218,72 @@ gui_internal_cmd2_town(struct gui_priv *this, char *function, struct attr **in, 
 	if (this->sl)
 		search_list_select(this->sl, attr_country_all, 0, 0);
 	gui_internal_search(this,_("Town"),"Town",1);
+}
+
+static void
+gui_internal_cmd_vehicles_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr vehicle,cvehicle;
+	struct attr_iter *iter;
+	char *document=g_strdup("<html>");
+
+	navit_get_attr(this->nav, attr_vehicle, &cvehicle, NULL);
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(this->nav, attr_vehicle, &vehicle, iter)) {
+		struct attr name;
+		if (!vehicle_get_attr(vehicle.u.vehicle, attr_name, &name, NULL))
+			name.u.str="Unknown";
+		document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='name=\"%s\";menu(\"#Settings Vehicle\")'>%s</img>",vehicle.u.vehicle == cvehicle.u.vehicle ? "gui_active":"gui_inactive",name.u.str,name.u.str);
+	}
+	navit_attr_iter_destroy(iter);
+	document=g_strconcat_printf(document, "</html>");
+	gui_internal_html_parse_text(this, document);
+	g_free(document);
+}
+
+static void
+gui_internal_cmd_vehicle_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr vehicle,cvehicle;
+	struct attr_iter *iter;
+	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type) || !in[0]->u.str) {
+		dbg(0,"first parameter missing or wrong type\n");
+		return;
+	}
+	navit_get_attr(this->nav, attr_vehicle, &cvehicle, NULL);
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(this->nav, attr_vehicle, &vehicle, iter)) {
+		struct attr name;
+		if (!vehicle_get_attr(vehicle.u.vehicle, attr_name, &name, NULL))
+			name.u.str="Unknown";
+		if (!strcmp(name.u.str,in[0]->u.str)) {
+			char *document=g_strdup("<html>");
+			struct attr attr,vehicleprofile,profilename,name2;
+			struct attr_iter *iter2=navit_attr_iter_new();
+			if (!vehicle_get_attr(vehicle.u.vehicle, attr_profilename, &profilename, NULL))
+				profilename.u.str="Unknown";
+			if (cvehicle.u.vehicle != vehicle.u.vehicle) {
+			}	
+			while (navit_get_attr(this->nav, attr_vehicleprofile, &vehicleprofile, iter2)) {
+				if (vehicleprofile_get_attr(vehicleprofile.u.vehicleprofile, attr_name, &name2, NULL)) {
+					document=g_strconcat_printf(document, "<img class='centry' src='%s' onclick='set(\"navit.vehicle[@name==\\\"%s\\\"].profilename=*\",E(\"%s\"))'>%s</img>",!strcmp(profilename.u.str,name2.u.str) ? "gui_active":"gui_inactive",name.u.str,name2.u.str,name2.u.str);
+				}
+			}
+			if (vehicle_get_attr(vehicle.u.vehicle, attr_position_sat_item, &attr, NULL)) {
+				dbg(0,"sat status\n");
+			}
+		        if (vehicle_get_attr(vehicle.u.vehicle, attr_position_nmea, &attr, NULL)) {
+				dbg(0,"nmea\n");
+			}
+			navit_attr_iter_destroy(iter2);
+			document=g_strconcat_printf(document, "</html>");
+			dbg(0,"%s\n",document);
+			gui_internal_html_parse_text(this, document);
+			g_free(document);
+			break;
+		}
+	}
+	navit_attr_iter_destroy(iter);
 }
 
 static void
@@ -366,7 +440,7 @@ gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct att
 }
 
 static void
-gui_internal_cmd_layout_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+gui_internal_cmd_layouts_page(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr layout,clayout;
 	struct attr_iter *iter;
@@ -997,7 +1071,7 @@ static struct command_table commands[] = {
 	{"bookmarks",command_cast(gui_internal_cmd2)},
 	{"formerdests",command_cast(gui_internal_cmd2)},
 	{"get_data",command_cast(gui_internal_get_data)},
-	{"layout_page",command_cast(gui_internal_cmd_layout_page)},
+	{"layouts_page",command_cast(gui_internal_cmd_layouts_page)},
 	{"locale",command_cast(gui_internal_cmd2)},
 	{"log",command_cast(gui_internal_cmd_log)},
 	{"maps_page",command_cast(gui_internal_cmd_maps_page)},
@@ -1016,6 +1090,8 @@ static struct command_table commands[] = {
 	{"town",command_cast(gui_internal_cmd2)},
 	{"enter_coord",command_cast(gui_internal_cmd2)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
+	{"vehicles_page",command_cast(gui_internal_cmd_vehicles_page)},
+	{"vehicle_page",command_cast(gui_internal_cmd_vehicle_page)},
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
