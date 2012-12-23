@@ -39,6 +39,10 @@ typedef struct {
 #define AC_SRC_ALPHA 2
 #endif
 
+#ifndef STRETCH_HALFTONE
+#define STRETCH_HALFTONE 4
+#endif
+
 typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
                                        int nXOriginDest,
                                        int nYOriginDest,
