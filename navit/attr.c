@@ -522,6 +522,8 @@ attr_type_begin(enum attr_type type)
 int
 attr_data_size(struct attr *attr)
 {
+	if (attr->type == attr_none)
+		return 0;
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) 
 		return strlen(attr->u.str)+1;
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
