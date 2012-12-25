@@ -118,7 +118,7 @@ get_op(struct context *ctx, int test, ...)
 	va_start(ap, test);
 	while ((op = va_arg(ap, char *))) {
 		if (!strncmp(ctx->expr, op, strlen(op))) {
-			ret=ctx->expr;
+			ret=op;
 			if (! test)
 				ctx->expr+=strlen(op);
 			break;
@@ -281,7 +281,7 @@ get_double(struct context *ctx, struct result *res)
 
 
 static int
-get_int(struct context *ctx, struct result *res)
+get_int_bool(struct context *ctx, int is_bool, struct result *res)
 {
 	resolve(ctx, res, NULL);
 	if (res->attr.type == attr_none)
@@ -292,14 +292,25 @@ get_int(struct context *ctx, struct result *res)
 	if (res->attr.type >= attr_type_double_begin && res->attr.type <= attr_type_double_end) {
 		return (int) (*res->attr.u.numd);
 	}
+	if (is_bool && ATTR_IS_OBJECT(res->attr.type)) 
+		return res->attr.u.data != NULL;
+	if (is_bool && ATTR_IS_STRING(res->attr.type)) 
+		return res->attr.u.data != NULL;
+	dbg(0,"bool %d %s\n",is_bool,attr_to_name(res->attr.type));
 	ctx->error=wrong_type;
 	return 0;
 }
 
 static int
+get_int(struct context *ctx, struct result *res)
+{
+	return get_int_bool(ctx, 0, res);
+}
+
+static int
 get_bool(struct context *ctx, struct result *res)
 {
-	return !!get_int(ctx, res);
+	return !!get_int_bool(ctx, 1, res);
 }
 
 
@@ -334,24 +345,15 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 		return;
 	switch (op_type) {
 	case op_type_prefix:
-		switch ((op[0] << 8) || op[1]) {
+		switch ((op[0] << 8) | op[1]) {
 		case ('!' << 8):
-			resolve(ctx, inout, NULL);
-			switch (op[1]) {
-			case '\0':
-				set_int(ctx, inout, !get_int(ctx, inout));
-				return;
-			}
-			break;
+			set_int(ctx, inout, !get_bool(ctx, inout));
+			return;
 		case ('~' << 8):
-			resolve(ctx, inout, NULL);
-			switch (op[1]) {
-			case '\0':
-				set_int(ctx, inout, ~get_int(ctx, inout));
-				return;
-			}
-			break;
+			set_int(ctx, inout, ~get_int(ctx, inout));
+			return;
 		}
+		break;
 	case op_type_binary:
 		resolve(ctx, inout, NULL);
 		resolve(ctx, in, NULL);
@@ -411,7 +413,13 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 		case ('+' << 8):
 			if (is_double(inout) || is_double(in)) 
 				set_double(ctx, inout, get_double(ctx, inout) + get_double(ctx, in));
-			else
+			else if (ATTR_IS_STRING(inout->attr.type) && ATTR_IS_STRING(in->attr.type)) {
+				char *str=g_strdup_printf("%s%s",inout->attr.u.str,in->attr.u.str);
+				result_free(inout);
+				inout->attr.type=attr_type_string_begin;
+				inout->attr.u.str=str;
+				inout->allocated=1;
+			} else
 				set_int(ctx, inout, get_int(ctx, inout) + get_int(ctx, in));
 			return;
 		case ('-' << 8):
@@ -1290,6 +1298,8 @@ command_evaluate(struct attr *attr, const char *expr)
 		if (!command_evaluate_single(&ctx))
 			break;
 	}
+	if (ctx.error)
+		dbg(0,"error %d\n",ctx.error);
 	g_free(expr_dup);
 }
 
