@@ -992,23 +992,46 @@ gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, 
 static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	char *str=NULL,*str2=NULL;
+	char *str=NULL;
 	dbg(1,"enter %s %p %p %p\n",function,in,out,valid);
-	if (!in || !in[0])
+	if (!in)
 		return;
-	dbg(1,"%s\n",attr_to_name(in[0]->type));
-	if (ATTR_IS_STRING(in[0]->type)) {
-		str=in[0]->u.str;
-	}
-	if (ATTR_IS_COORD_GEO(in[0]->type)) {
-		str=str2=coordinates_geo(in[0]->u.coord_geo, '\n');
+	while (*in) {
+		dbg(1,"%s\n",attr_to_name((*in)->type));
+		if (ATTR_IS_STRING((*in)->type)) {
+			str=g_strconcat_printf(str,"%s",(*in)->u.str);
+		}
+		if (ATTR_IS_COORD_GEO((*in)->type)) {
+			char *str2=coordinates_geo((*in)->u.coord_geo, '\n');
+			str=g_strconcat_printf(str,"%s",str2);
+			g_free(str2);
+		}
+		in++;
 	}
 	if (str) {
 		str=g_strdup_printf("<html>%s</html>\n",str);
+#if 0
+		dbg(0,"%s\n",str);
+#endif
 		gui_internal_html_parse_text(this, str);
 	}
 	g_free(str);
-	g_free(str2);
+}
+
+static void
+gui_internal_cmd_debug(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *str;
+	dbg(0,"begin\n");
+	if (in) {
+		while (*in) {
+			str=attr_to_text(*in, NULL, 0);
+			dbg(0,"%s:%s\n",attr_to_name((*in)->type),str);
+			in++;
+			g_free(str);
+		}
+	}
+	dbg(0,"done\n");
 }
 
 static void
@@ -1069,6 +1092,7 @@ static struct command_table commands[] = {
 	{"back",command_cast(gui_internal_cmd2_back)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
 	{"bookmarks",command_cast(gui_internal_cmd2)},
+	{"debug",command_cast(gui_internal_cmd_debug)},
 	{"formerdests",command_cast(gui_internal_cmd2)},
 	{"get_data",command_cast(gui_internal_get_data)},
 	{"layouts_page",command_cast(gui_internal_cmd_layouts_page)},
