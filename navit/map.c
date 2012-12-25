@@ -145,6 +145,11 @@ map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct a
 		ret=this_->meth.map_get_attr(this_->priv, type, attr);
 	if (!ret)
 		ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	if (!ret && type == attr_active) {
+		attr->type=type;
+		attr->u.num=1;
+		return 1;
+	}
 	return ret;
 }
 
