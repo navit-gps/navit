@@ -72,7 +72,7 @@ struct command_saved {
 };
 
 enum error {
-	no_error=0, missing_double_quote, missing_opening_parenthesis, missing_closing_parenthesis, missing_closing_brace, missing_colon, missing_semicolon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type, not_ready, internal
+	no_error=0, missing_double_quote, missing_opening_parenthesis, missing_closing_parenthesis, missing_closing_brace, missing_colon, missing_semicolon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type, not_ready, internal, eof_reached
 };
 
 enum op_type {
@@ -379,8 +379,9 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 				set_int(ctx, inout, (!!strcmp(s1,s2)));
 				g_free(s1);
 				g_free(s2);
-			}
-			else
+			} else if (ATTR_IS_OBJECT(inout->attr.type) && ATTR_IS_OBJECT(in->attr.type)) {
+				set_int(ctx, inout, inout->attr.u.data != in->attr.u.data);
+			} else
 				set_int(ctx, inout, (get_int(ctx, inout) != get_int(ctx, in)));
 			return;
 		case ('<' << 8):
@@ -553,7 +554,12 @@ eval_value(struct context *ctx, struct result *res) {
 		ctx->expr=op;
 		return;
 	}
-	ctx->error=illegal_character;
+	if (!*op)
+		ctx->error=eof_reached;
+	else {
+		dbg(0,"illegal character 0x%x\n",*op);
+		ctx->error=illegal_character;
+	}
 }
 
 static int
@@ -1271,10 +1277,9 @@ command_evaluate_single(struct context *ctx)
 		}
 		return 1;
 	case '{':
-		while (command_evaluate_single(ctx));
-		if (!get_op(ctx,0,"}",NULL)) {
-			ctx->error=missing_closing_brace;
-			return 0;
+		while (!get_op(ctx,0,"}",NULL)) {
+			if (!command_evaluate_single(ctx))
+				return 0;
 		}
 		return 1;
 	default:
@@ -1298,8 +1303,12 @@ command_evaluate(struct attr *attr, const char *expr)
 		if (!command_evaluate_single(&ctx))
 			break;
 	}
-	if (ctx.error)
-		dbg(0,"error %d\n",ctx.error);
+	if (ctx.error && ctx.error != eof_reached) {
+		char expr[32];
+		strncpy(expr, ctx.expr, 32);
+		expr[31]='\0';
+		dbg(0,"error %d starting at %s\n",ctx.error,expr);
+	}
 	g_free(expr_dup);
 }
 
