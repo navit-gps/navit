@@ -79,6 +79,8 @@ static void
 gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr escaped;
+	int len;
+	char *src,*dst;
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
 		dbg(0,"first parameter missing or wrong type\n");
 		return;
@@ -87,8 +89,26 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		dbg(0,"output missing\n");
 		return;
 	}
+	src=in[0]->u.str;
+	len=3;
+	while (*src) {
+		if (*src == '"' || *src == '\\')
+			len++;
+		len++;
+		src++;
+	}
 	escaped.type=in[0]->type;
-	escaped.u.str=g_strdup_printf("\"%s\"",in[0]->u.str);
+	src=in[0]->u.str;
+	dst=g_malloc(len);
+	escaped.u.str=dst;
+	*dst++='"';
+	while (*src) {
+		if (*src == '"' || *src == '\\')
+			*dst++='\\';
+		*dst++=*src++;
+	}
+	*dst++='"';
+	*dst++='\0';
 	dbg(1,"in %s result %s\n",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
@@ -984,6 +1004,9 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 			char *str2=coordinates_geo((*in)->u.coord_geo, '\n');
 			str=g_strconcat_printf(str,"%s",str2);
 			g_free(str2);
+		}
+		if (ATTR_IS_INT((*in)->type)) {
+			str=g_strconcat_printf(str,"%d",(*in)->u.num);
 		}
 		in++;
 	}
