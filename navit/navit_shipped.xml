@@ -112,7 +112,27 @@ Waypoint</text></img>
 				</script>
 			</a>
 			<a name='Settings Maps' class='clist'><text>Maps</text>
-				<script>maps_page()</script>
+				<script>
+					foreach(map;navit.mapset.map)
+						if (map.description)
+							write("&lt;img class='centry'",
+								" src='", map.active?"gui_active":"gui_inactive", "'",
+								" onclick='set(", E("navit.mapset.map[@description=="+E(map.description)+"].active=*"), ",", !map.active, ");redraw_map();refresh()'",
+								"&gt;",
+								map.description,
+								"&lt;/img&gt;"
+							);
+						else
+							write("&lt;img class='centry'",
+								" src='", map.active?"gui_active":"gui_inactive", "'",
+								" onclick='set(", E("navit.mapset.map[@data=="+E(map.data)+"].active=*"), ",", !map.active, ");redraw_map();refresh()'",
+								"&gt;",
+								map.type,":",map.data,
+								"&lt;/img&gt;"
+							);
+
+
+				</script>
 			</a>
 			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
 				<script>vehicles_page()</script>
