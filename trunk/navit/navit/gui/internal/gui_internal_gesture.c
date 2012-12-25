@@ -35,7 +35,7 @@ gui_internal_gesture_ring_clear(struct gui_priv *this)
 static struct gesture_elem *
 gui_internal_gesture_ring_get(struct gui_priv *this, int i)
 {
-	int n=(this->gesture_ring_last-i)%GESTURE_RINGSIZE;
+	int n=(this->gesture_ring_last-i+GESTURE_RINGSIZE)%GESTURE_RINGSIZE;
 	if(n==this->gesture_ring_first)
 		return NULL;
 	return this->gesture_ring+n;
