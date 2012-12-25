@@ -72,7 +72,7 @@ struct command_saved {
 };
 
 enum error {
-	no_error=0, missing_double_quote, missing_opening_parenthesis, missing_closing_parenthesis, missing_closing_brace, missing_colon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type, not_ready, internal
+	no_error=0, missing_double_quote, missing_opening_parenthesis, missing_closing_parenthesis, missing_closing_brace, missing_colon, missing_semicolon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type, not_ready, internal
 };
 
 enum op_type {
@@ -364,8 +364,9 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 				set_int(ctx, inout, (!strcmp(s1,s2)));
 				g_free(s1);
 				g_free(s2);
-			}
-			else
+			} else if (ATTR_IS_OBJECT(inout->attr.type) && ATTR_IS_OBJECT(in->attr.type)) {
+				set_int(ctx, inout, inout->attr.u.data == in->attr.u.data);
+			} else
 				set_int(ctx, inout, (get_int(ctx, inout) == get_int(ctx, in)));
 			return;
 		case ('!' << 8)|'=':
@@ -1144,11 +1145,16 @@ command_evaluate_to_length(const char *expr, int *error)
 int
 command_evaluate_single(struct context *ctx)
 {
-	struct result res={{0,},};
-	const char *op;
+	struct result res={{0,},},tmp={{0,},};
+	const char *op,*a1,*a2,*a3,*f,*end;
+	enum attr_type attr_type;
+	void *obj;
+	struct object_func *obj_func;
+	struct attr_iter *iter;
+	struct attr attr;
 	int cond=0;
 	int skip=ctx->skip;
-	if (!(op=get_op(ctx,0,"if","{",NULL))) {
+	if (!(op=get_op(ctx,0,"foreach","if","{",NULL))) {
 		eval_comma(ctx,&res);
 		if (ctx->error)
 			return 0;
@@ -1159,6 +1165,75 @@ command_evaluate_single(struct context *ctx)
 		return get_op(ctx,0,";",NULL) != NULL;
 	}
 	switch (op[0]) {
+	case 'f':
+		if (!get_op(ctx,0,"(",NULL)) {
+			ctx->error=missing_opening_parenthesis;
+			return 0;
+		}
+		ctx->skip=1;
+		a1=ctx->expr;
+    		eval_conditional(ctx, &res);
+		resolve_object(ctx, &res);
+		ctx->skip=skip;
+		if (!get_op(ctx,0,";",NULL)) {
+			ctx->error=missing_semicolon;
+			return 0;
+		}
+		a2=ctx->expr;
+		eval_comma(ctx,&res);
+		attr_type=command_attr_type(&res);
+		obj=res.attr.u.data;
+		obj_func=object_func_lookup(res.attr.type);
+		if (!get_op(ctx,0,")",NULL)) {
+			ctx->error=missing_closing_parenthesis;
+			return 0;
+		}
+		f=ctx->expr;
+		ctx->skip=1;
+		if (!command_evaluate_single(ctx)) {
+			ctx->skip=skip;
+			return 0;
+		}
+		ctx->skip=skip;
+		if (ctx->skip) {
+			result_free(&res);
+			return 1;
+		}
+		end=ctx->expr;
+		if (!obj) {
+			dbg(0,"no object\n");
+			return 0;
+		}
+		if (!obj_func) {
+			dbg(0,"no object func\n");
+			return 0;
+		}
+		if (!obj_func->iter_new || !obj_func->iter_destroy) {
+			dbg(0,"no iter func\n");
+			return 0;
+		}
+		iter = obj_func->iter_new(NULL);
+		while (obj_func->get_attr(obj, attr_type, &attr, iter)) {
+			ctx->expr=a1;
+    			eval_conditional(ctx, &res);
+			resolve_object(ctx, &res);
+			tmp.attr=attr;
+			resolve(ctx, &tmp, NULL);
+			if (ctx->error) {
+				result_free(&tmp);
+				return 0;
+			}
+			command_set_attr(ctx, &res, &tmp);
+			result_free(&tmp);
+			ctx->expr=f;
+			if (!command_evaluate_single(ctx)) {
+				obj_func->iter_destroy(iter);
+				return 0;
+			}
+		}
+		obj_func->iter_destroy(iter);
+		ctx->expr=end;
+		return 1;
 	case 'i':
 		if (!get_op(ctx,0,"(",NULL)) {
 			ctx->error=missing_opening_parenthesis;
