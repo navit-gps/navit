@@ -135,10 +135,39 @@ Waypoint</text></img>
 				</script>
 			</a>
 			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
-				<script>vehicles_page()</script>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						write("&lt;img class='centry'",
+							" src='", navit.vehicle==vehicle?"gui_active":"gui_inactive", "'",
+							" onclick='name=", E(vehicle.name), ";menu(", E("#Settings Vehicle"), ")'",
+							"&gt;",
+							vehicle.name,
+							"&lt;/img&gt;"
+						);
+				</script>
 			</a>
 			<a name='Settings Vehicle' class='clist'><script>write(name)</script>
-				<script>vehicle_page(name)</script>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						if (vehicle.name == name) {
+							if (vehicle!=navit.vehicle)
+								write("&lt;img class='centry'",
+								" src='gui_active' ",
+								" onclick='set(", E("navit.vehicle=navit.vehicle[@name==*]"), ",E(", E(name), "));refresh()'",
+								"&gt;",
+								"Set as active",
+								"&lt;/img&gt;"
+							);
+							foreach(vehicleprofile;navit.vehicleprofile)
+								write("&lt;img class='centry'",
+								" src='", vehicle.profilename==vehicleprofile.name?"gui_active":"gui_inactive", "'",
+								" onclick='set(", E("navit.vehicle[@name=="+E(name)+"].profilename=*"), ",E(", E(vehicleprofile.name), "));refresh()'",
+								"&gt;",
+								vehicleprofile.name,
+								"&lt;/img&gt;"
+								);
+						}
+				</script>
 			</a>
 			<a name='Satellite Status' class='clist'><text>Satellite Status</text>
 				<script>satellite_status_page()</script>
