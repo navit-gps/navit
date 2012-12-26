@@ -168,20 +168,21 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			char text[]={'0'+i,'\0'};
 			KEY(text);
 		}
-		KEY("."); KEY("°"); KEY("'"); KEY("\""); KEY("-"); KEY("+");
-		KEY("*"); KEY("/"); KEY("("); KEY(")"); KEY("="); KEY("?");
-		KEY(":");
+		/* ("8")     ("9")*/KEY("."); KEY("°"); KEY("'"); KEY("\"");KEY("-"); KEY("+");
+		KEY("*"); KEY("/"); KEY("("); KEY(")"); KEY("="); KEY("?"); KEY(":"); SPACER();
 
 		
 
 		if (mode == 16) {
-			for (i = 0 ; i < 5 ; i++) SPACER();
+			SPACER();
 			KEY("-");
 			KEY("'");
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
+			SPACER();
+			SPACER();
 		} else {
-			for (i = 0 ; i < 3 ; i++) SPACER();
+			SPACER();
 			MODE(40);
 			MODE(48);
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
