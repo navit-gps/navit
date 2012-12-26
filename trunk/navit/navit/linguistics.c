@@ -456,5 +456,6 @@ void
 linguistics_free(void)
 {
 	g_hash_table_destroy(casefold_hash);
+	casefold_hash=NULL;
 }
 
