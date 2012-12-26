@@ -79,6 +79,12 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
 		priv->timep=current_to_iso8601();
 		attr->u.str=priv->timep;
 		break;
+       case attr_position_fix_type:
+                attr->u.num = 2;
+                break;
+        case attr_position_sats_used:
+                attr->u.num = 9;
+                break;
 	default:
 		return 0;
 	}
