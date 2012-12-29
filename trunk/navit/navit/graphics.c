@@ -1557,40 +1557,43 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *r)
 		if (code1 & code2)
 			return 0;
 		if (code1 & 1) {
-			p1->y+=(r->lu.x-p1->x)*dy/dx;
-			p1->w+=(r->lu.x-p1->x)*dw/dx;
+			// We must cast to float to avoid integer
+			// overflow (i.e.  undefined behaviour) at high
+			// zoom levels.
+			p1->y+=(((float)r->lu.x)-p1->x)*dy/dx;
+			p1->w+=(((float)r->lu.x)-p1->x)*dw/dx;
 			p1->x=r->lu.x;
 		} else if (code1 & 2) {
-			p1->y+=(r->rl.x-p1->x)*dy/dx;
-			p1->w+=(r->rl.x-p1->x)*dw/dx;
+			p1->y+=(((float)r->rl.x)-p1->x)*dy/dx;
+			p1->w+=(((float)r->rl.x)-p1->x)*dw/dx;
 			p1->x=r->rl.x;
 		} else if (code1 & 4) {
-			p1->x+=(r->lu.y-p1->y)*dx/dy;
-			p1->w+=(r->lu.y-p1->y)*dw/dy;
+			p1->x+=(((float)r->lu.y)-p1->y)*dx/dy;
+			p1->w+=(((float)r->lu.y)-p1->y)*dw/dy;
 			p1->y=r->lu.y;
 		} else if (code1 & 8) {
-			p1->x+=(r->rl.y-p1->y)*dx/dy;
-			p1->w+=(r->rl.y-p1->y)*dw/dy;
+			p1->x+=(((float)r->rl.y)-p1->y)*dx/dy;
+			p1->w+=(((float)r->rl.y)-p1->y)*dw/dy;
 			p1->y=r->rl.y;
 		}
 		code1=clipcode(p1, r);
 		if (code1 & code2)
 			return 0;
 		if (code2 & 1) {
-			p2->y+=(r->lu.x-p2->x)*dy/dx;
-			p2->w+=(r->lu.x-p2->x)*dw/dx;
+			p2->y+=(((float)r->lu.x)-p2->x)*dy/dx;
+			p2->w+=(((float)r->lu.x)-p2->x)*dw/dx;
 			p2->x=r->lu.x;
 		} else if (code2 & 2) {
-			p2->y+=(r->rl.x-p2->x)*dy/dx;
-			p2->w+=(r->rl.x-p2->x)*dw/dx;
+			p2->y+=(((float)r->rl.x)-p2->x)*dy/dx;
+			p2->w+=(((float)r->rl.x)-p2->x)*dw/dx;
 			p2->x=r->rl.x;
 		} else if (code2 & 4) {
-			p2->x+=(r->lu.y-p2->y)*dx/dy;
-			p2->w+=(r->lu.y-p2->y)*dw/dy;
+			p2->x+=(((float)r->lu.y)-p2->y)*dx/dy;
+			p2->w+=(((float)r->lu.y)-p2->y)*dw/dy;
 			p2->y=r->lu.y;
 		} else if (code2 & 8) {
-			p2->x+=(r->rl.y-p2->y)*dx/dy;
-			p2->w+=(r->rl.y-p2->y)*dw/dy;
+			p2->x+=(((float)r->rl.y)-p2->y)*dx/dy;
+			p2->w+=(((float)r->rl.y)-p2->y)*dw/dy;
 			p2->y=r->rl.y;
 		}
 		code2=clipcode(p2, r);
