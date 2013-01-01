@@ -136,8 +136,10 @@ struct size_weight_limit {
 
 struct route_graph_segment_data {
 	struct item *item;
+	/* If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item */
 	int offset;
 	int flags;
+	/* The length of this segment */
 	int len;
 	int maxspeed;
 	struct size_weight_limit size_weight;
@@ -1453,20 +1455,24 @@ route_segment_data_size(int flags)
 
 
 static int
-route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
+route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_point *end, struct route_graph_segment_data *data)
 {
 	struct route_graph_segment *s;
-	s=start->start;
-	while (s) {
-		if (item_is_equal(*data->item, s->data.item)) {
-			if (data->flags & AF_SEGMENTED) {
-				if (RSD_OFFSET(&s->data) == data->offset) {
-					return 1;
-				}
-			} else
-				return 1;
+
+	for(s=start->start;s;s=s->start_next) {
+		if(s->end==end) {
+			/* Compare by flags set, but do not consider AF_SEGMENTED */
+			if((data->flags & ~AF_SEGMENTED) != (s->data.flags & ~AF_SEGMENTED))
+				continue;
+			/* Compare segments by limits that have been set for them */
+			if ((data->flags & AF_SPEED_LIMIT) && RSD_MAXSPEED(&s->data)!=data->maxspeed)
+				continue;
+			if ((data->flags & AF_SIZE_OR_WEIGHT_LIMIT) && memcmp(&RSD_SIZE_WEIGHT(&s->data),&data->size_weight, sizeof(data->size_weight)))
+				continue;
+			if ((data->flags & AF_DANGEROUS_GOODS) && RSD_DANGEROUS_GOODS(&s->data)!=data->dangerous_goods)
+				continue;
+			return 1;
 		}
-		s=s->start_next;
 	} 
 	return 0;
 }
@@ -1480,11 +1486,7 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_g
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param len The length of this segment
- * @param item The item that is represented by this segment
- * @param flags Flags for this segment
- * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
- * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
+ * @param data Segment parameters: access flags, speed and weight limits and so on
  */
 static void
 route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
@@ -2136,7 +2138,7 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 			e_pnt=route_graph_add_point(this,&l);
 			dbg_assert(len >= 0);
 			data.len=len;
-			if (!route_graph_segment_is_duplicate(s_pnt, &data))
+			if (!route_graph_segment_is_duplicate(s_pnt, e_pnt, &data))
 				route_graph_add_segment(this, s_pnt, e_pnt, &data);
 		} else {
 			int isseg,rc;
@@ -2150,7 +2152,7 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 					if (isseg) {
 						e_pnt=route_graph_add_point(this,&l);
 						data.len=len;
-						if (!route_graph_segment_is_duplicate(s_pnt, &data))
+						if (!route_graph_segment_is_duplicate(s_pnt, e_pnt, &data))
 							route_graph_add_segment(this, s_pnt, e_pnt, &data);
 						data.offset++;
 						s_pnt=route_graph_add_point(this,&l);
@@ -2162,7 +2164,7 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 			dbg_assert(len >= 0);
 			sc++;
 			data.len=len;
-			if (!route_graph_segment_is_duplicate(s_pnt, &data))
+			if (!route_graph_segment_is_duplicate(s_pnt, e_pnt, &data))
 				route_graph_add_segment(this, s_pnt, e_pnt, &data);
 		}
 	}
