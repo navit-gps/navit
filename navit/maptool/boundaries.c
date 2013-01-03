@@ -59,7 +59,10 @@ process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin 
 {
 	struct boundary *b=relation_priv;
 	enum geom_poly_segment_type role=(long)member_priv;
-	b->segments=g_list_prepend(b->segments,item_bin_to_poly_segment(member, role));
+	int *dup;
+	dup=item_bin_get_attr(member,attr_duplicate,NULL);
+	if(!dup || *dup==0)
+		b->segments=g_list_prepend(b->segments,item_bin_to_poly_segment(member, role));
 }
 
 static GList *

@@ -1675,6 +1675,8 @@ osm_end_way(struct maptool_osm *osm)
 			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
 		if (maxspeed_attr_value)
 			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+		if(i>0)
+			item_bin_add_attr_int(item_bin, attr_duplicate, 1);
 		item_bin_write(item_bin,osm->ways);
 	}
 	if(osm->line2poi) {
