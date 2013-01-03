@@ -131,8 +131,12 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 	ret=graphics_image_new_scaled(this->gra, full_path, w, h);
 	dbg(1,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
 	g_free(full_path);
-	if (!ret)
+	if (!ret) {
 		dbg(0,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
+		full_path=graphics_icon_path("unknown");
+		ret=graphics_image_new_scaled(this->gra, full_path, w, h);
+		g_free(full_path);
+	}
 	return ret;
 }
 
