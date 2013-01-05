@@ -35,6 +35,8 @@ struct country {
 	char *name;
 };
 
+/* List of all known countries and their codes. 
+ * If you update this list, look at country_table array in maptool/osm.c also. */
 static struct country country[]= {
   { 20,	"AND",	"AD", "AND", /* 020 */ _n("Andorra")},
   {784,	"UAE",	"AE", "ARE", /* 784 */ _n("United Arab Emirates")},
@@ -66,6 +68,7 @@ static struct country country[]= {
   { 60,	NULL,	"BM", "BMU", /* 060 */ _n("Bermuda")},
   { 96,	"BRU",	"BN", "BRN", /* 096 */ _n("Brunei Darussalam")},
   { 68,	"BOL",	"BO", "BOL", /* 068 */ _n("Bolivia")},
+  {535,	NULL,	"BQ", "BES", /* 535 */ _n("Bonaire, Sint Eustatius and Saba")},
   { 76,	"BR",	"BR", "BRA", /* 076 */ _n("Brazil")},
   { 44,	"BS",	"BS", "BHS", /* 044 */ _n("Bahamas")},
   { 64,	"BHT",	"BT", "BTN", /* 064 */ _n("Bhutan")},
@@ -88,6 +91,7 @@ static struct country country[]= {
   {188,	"CR",	"CR", "CRI", /* 188 */ _n("Costa Rica")},
   {192,	"C",	"CU", "CUB", /* 192 */ _n("Cuba")},
   {132,	"CV",	"CV", "CPV", /* 132 */ _n("Cape Verde")},
+  {531,	NULL,	"CW", "CUW", /* 531 */ _n("Curacao")},
   {162,	NULL,	"CX", "CXR", /* 162 */ _n("Christmas Island")},
   {196,	"CY",	"CY", "CYP", /* 196 */ _n("Cyprus")},
   {203,	"CZ",	"CZ", "CZE", /* 203 */ _n("Czech Republic")},
@@ -242,8 +246,10 @@ static struct country country[]= {
   {686,	"SN",	"SN", "SEN", /* 686 */ _n("Senegal")},
   {706,	"SO",	"SO", "SOM", /* 706 */ _n("Somalia")},
   {740,	"SME",	"SR", "SUR", /* 740 */ _n("Suriname")},
+  {728,	NULL,	"SS", "SSD", /* 728 */ _n("South Sudan")},
   {678,	"STP",	"ST", "STP", /* 678 */ _n("Sao Tome and Principe")},
   {222,	"ES",	"SV", "SLV", /* 222 */ _n("El Salvador")},
+  {534,	NULL,	"SX", "SXM", /* 534 */ _n("Sint Maarten (Dutch part)")},
   {760,	"SYR",	"SY", "SYR", /* 760 */ _n("Syrian Arab Republic")},
   {748,	"SD",	"SZ", "SWZ", /* 748 */ _n("Swaziland")},
   {796,	NULL,	"TC", "TCA", /* 796 */ _n("Turks and Caicos Islands")},
