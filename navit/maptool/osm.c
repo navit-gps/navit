@@ -112,6 +112,9 @@ char *osm_types[]={"unknown","node","way","relation"};
 #define REF(c) ((c).y)
 #define SET_REF(c,ref) do { (c).x = 1 << 30; (c).y = ref ; } while(0)
 
+/* Table of country codes with possible is_in spellings. 
+ *  Note: If you update this list, check also country array in country.c 
+ */
 struct country_table {
 	int countryid;
 	char *names;
@@ -272,7 +275,10 @@ struct country_table {
 	{ 524,"Nepal"},
 	{ 528,"Nederland,The Netherlands,Niederlande,NL,Netherlands"},
 	{ 530,"Netherlands Antilles"},
+	{ 531,"Curacao"},
 	{ 533,"Aruba"},
+	{ 534,"Sint Maarten (Dutch part)"},
+	{ 535,"Bonaire, Sint Eustatius and Saba"},
 	{ 540,"New Caledonia"},
 	{ 548,"Vanuatu"},
 	{ 554,"New Zealand"},
@@ -327,6 +333,7 @@ struct country_table {
 	{ 710,"South Africa"},
 	{ 716,"Zimbabwe"},
  	{ 724,"Spain,Espana,España,Reino de Espana,Reino de España"},
+ 	{ 728,"South Sudan"},
 	{ 732,"Western Sahara"},
 	{ 736,"Sudan"},
 	{ 740,"Suriname"},
@@ -1817,7 +1824,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 	while (l) {
 		struct boundary *b=l->data;
 		if (b->country) {
-			if (match) {
+			if (match && match->country->countryid!=b->country->countryid) {
 				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) conflict country ", c->x, c->y);
 				osm_warning("relation",boundary_relid(match),1,"country %d vs ",match->country->countryid);
 				osm_warning("relation",boundary_relid(b),1,"country %d\n",b->country->countryid);
