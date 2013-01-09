@@ -15,6 +15,13 @@ POTFILES  = \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c \
 	$(top_srcdir)/navit/gui/internal/gui_internal.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_bookmark.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_command.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_html.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_menu.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_poi.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_search.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal_widget.c \
 	$(top_srcdir)/navit/osd/core/osd_core.c \
 	$(top_builddir)/navit/navit_shipped.c
 

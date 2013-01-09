@@ -13,6 +13,13 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_action.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_statusbar.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_bookmark.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_command.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_html.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_menu.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_poi.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_search.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_widget.c
       ${PROJECT_SOURCE_DIR}/navit/osd/core/osd_core.c
       ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
 )
