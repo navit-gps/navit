@@ -30,6 +30,7 @@
 #include "plugin.h"
 #include "debug.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "attr.h"
 #include "layout.h"
 #include "navigation.h"

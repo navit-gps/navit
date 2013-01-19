@@ -41,6 +41,7 @@
 #include <sys/time.h>
 #endif /* _MSC_VER */
 #include "item.h"
+#include "xmlconfig.h"
 #include "file.h"
 #include "navit.h"
 #include "navit_nls.h"
@@ -52,7 +53,6 @@
 #include "transform.h"
 #include "color.h"
 #include "map.h"
-#include "layout.h"
 #include "callback.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
@@ -70,7 +70,6 @@
 #include "navigation.h"
 #include "gui_internal.h"
 #include "command.h"
-#include "xmlconfig.h"
 #include "util.h"
 #include "bookmarks.h"
 #include "linguistics.h"

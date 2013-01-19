@@ -25,6 +25,7 @@
 #include "debug.h"
 #include "coord.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "log.h"
 #include "plugin.h"
 #include "transform.h"
@@ -39,17 +40,14 @@
 #include "color.h"
 #include "layout.h"
 #include "vehicle.h"
-#include "xmlconfig.h"
 
 struct vehicle {
-	struct object_func *func;
-	int refcount;
+	NAVIT_OBJECT
 	struct vehicle_methods meth;
 	struct vehicle_priv *priv;
 	struct callback_list *cbl;
 	struct log *nmea_log, *gpx_log;
 	char *gpx_desc;
-	struct attr **attrs;
 
 	// cursor
 	struct cursor *cursor;
@@ -115,7 +113,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	g_free(type);
 	this_ = g_new0(struct vehicle, 1);
 	this_->func=&vehicle_func;
-	this_->refcount = 1;
+	navit_object_ref((struct navit_object *)this_);
 	this_->cbl = callback_list_new();
 	this_->priv = vehicletype_new(&this_->meth, this_->cbl, attrs);
 	if (!this_->priv) {
@@ -167,25 +165,6 @@ vehicle_destroy(struct vehicle *this_)
 	if (this_->gra)
 		graphics_free(this_->gra);
 	g_free(this_);
-}
-
-struct vehicle *
-vehicle_ref(struct vehicle *this_)
-{
-	this_->refcount++;
-	dbg(0,"refcount %d\n",this_->refcount);
-	return this_;
-}
-
-void
-vehicle_unref(struct vehicle *this_)
-{
-	if(!this_)
-		return;
-	this_->refcount--;
-	dbg(0,"refcount %d\n",this_->refcount);
-	if (this_->refcount <= 0)
-		vehicle_destroy(this_);
 }
 
 /**
@@ -731,6 +710,6 @@ struct object_func vehicle_func = {
 	(object_func_init)NULL,
 	(object_func_destroy)vehicle_destroy,
 	(object_func_dup)NULL,
-	(object_func_ref)vehicle_ref,
-	(object_func_unref)vehicle_unref,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };

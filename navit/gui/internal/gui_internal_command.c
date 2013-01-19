@@ -15,6 +15,7 @@
 #include "navit_nls.h"
 #include "command.h"
 #include "attr.h"
+#include "xmlconfig.h"
 #include "event.h"
 #include "config_.h"
 #include "map.h"

@@ -30,6 +30,8 @@
 #include "config.h"
 #include "file.h"
 #include "coord.h"
+#include "item.h"
+#include "xmlconfig.h"
 #include "layout.h"
 #include "mapset.h"
 #include "projection.h"
@@ -50,7 +52,6 @@
 #include "vehicleprofile.h"
 #include "roadprofile.h"
 #include "config_.h"
-#include "xmlconfig.h"
 
 #if (defined __MINGW32__) || (defined _MSC_VER)
 /* This only works if a is a string constant, i.e. "name" */
@@ -254,7 +255,6 @@ static struct object_func object_funcs[] = {
 	{ attr_icon,       NEW(icon_new),     NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_image,      NEW(image_new)},
 	{ attr_itemgra,    NEW(itemgra_new),  NULL, NULL, NULL, NULL, ADD(itemgra_add_attr)},
-	{ attr_layer,      NEW(layer_new),    NULL, NULL, NULL, NULL, ADD(layer_add_attr)},
 	{ attr_log,        NEW(log_new)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
 	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
@@ -273,6 +273,8 @@ object_func_lookup(enum attr_type type)
 {
 	int i;
 	switch (type) {
+	case attr_layer:
+		return &layer_func;
 	case attr_layout:
 		return &layout_func;
 	case attr_map:
@@ -533,6 +535,11 @@ static void initStatic(void) {
 	elements[38].parent="mapset";
 	elements[38].func=NULL;
 	elements[38].type=attr_maps;
+
+	elements[39].name="layer";
+	elements[39].parent="navit";
+	elements[39].func=NULL;
+	elements[39].type=attr_layer;
 }
 
 /**
@@ -1220,3 +1227,21 @@ gboolean config_load(const char *filename, xmlerror **error)
 	return result;
 }
 
+struct navit_object *
+navit_object_ref(struct navit_object *obj)
+{
+	obj->refcount++;
+	dbg(1,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+        return obj;
+}
+
+void
+navit_object_unref(struct navit_object *obj)
+{
+	if (obj) {
+		obj->refcount--;
+		dbg(1,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
+			obj->func->destroy(obj);
+	}
+}

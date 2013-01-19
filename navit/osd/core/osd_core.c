@@ -31,6 +31,7 @@
 #endif
 #include <string.h>
 #include "item.h"
+#include "xmlconfig.h"
 #include "point.h"
 #include "coord.h"
 #include "graphics.h"

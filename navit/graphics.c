@@ -38,6 +38,7 @@
 #include "graphics.h"
 #include "projection.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "map.h"
 #include "coord.h"
 #include "transform.h"
@@ -2105,8 +2106,11 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 	lays=l->layers;
 	while (lays) {
 		lay=lays->data;
-		if (lay->active)
+		if (lay->active) {
+			if (lay->ref)
+				lay=lay->ref;
 			xdisplay_draw_layer(display_list, gra, lay, order);
+		}
 		lays=g_list_next(lays);
 	}
 }
@@ -2124,6 +2128,8 @@ displaylist_update_layers(struct displaylist *displaylist, GList *layers, int or
 {
 	while (layers) {
 		struct layer *layer=layers->data;
+		if (layer->ref)
+			layer=layer->ref;
 		GList *itemgras=layer->itemgras;
 		while (itemgras) {
 			struct itemgra *itemgra=itemgras->data;
