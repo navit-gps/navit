@@ -28,6 +28,7 @@
 #include "navigation.h"
 #include "coord.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "route.h"
 #include "transform.h"
 #include "mapset.h"

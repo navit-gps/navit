@@ -42,9 +42,7 @@
  * This structure holds a complete mapset
  */
 struct mapset {
-	struct object_func *func;
-	int refcount;
-	struct attr **attrs;
+	NAVIT_OBJECT
 	GList *maps; /**< Linked list of all the maps in the mapset */
 };
 
@@ -63,7 +61,7 @@ struct mapset *mapset_new(struct attr *parent, struct attr **attrs)
 
 	ms=g_new0(struct mapset, 1);
 	ms->func=&mapset_func;
-	ms->refcount=1;
+	navit_object_ref((struct navit_object *)ms);
 	ms->attrs=attr_list_dup(attrs);
 
 	return ms;
@@ -158,22 +156,6 @@ void mapset_destroy(struct mapset *ms)
 	g_list_free(ms->maps);
 	attr_list_free(ms->attrs);
 	g_free(ms);
-}
-
-struct mapset *
-mapset_ref(struct mapset* m)
-{
-	m->refcount++;
-	return m;
-}
-
-
-void
-mapset_unref(struct mapset *m)
-{
-	m->refcount--;
-	if (m->refcount <= 0)
-		mapset_destroy(m);
 }
 
 /**
@@ -410,8 +392,8 @@ struct object_func mapset_func = {
 	(object_func_init)NULL,
 	(object_func_destroy)mapset_destroy,
 	(object_func_dup)mapset_dup,
-	(object_func_ref)mapset_ref,
-	(object_func_unref)mapset_unref,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
 
 

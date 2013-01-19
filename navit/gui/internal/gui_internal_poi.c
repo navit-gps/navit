@@ -9,6 +9,7 @@
 #include "navit.h"
 #include "navit_nls.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "map.h"
 #include "mapset.h"
 #include "layout.h"

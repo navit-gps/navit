@@ -22,6 +22,7 @@
 extern "C" {
 #endif
 struct vehicleprofile {
+	NAVIT_OBJECT
 	int mode;				/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
 	int flags_forward_mask;			/**< Flags mask for moving in positive direction */
 	int flags_reverse_mask;			/**< Flags mask for moving in reverse direction */
@@ -37,7 +38,6 @@ struct vehicleprofile {
 	int axle_weight;			/**< Axle Weight of the vehicle in kg */
 	int dangerous_goods;			/**< Flags of dangerous goods present */
 	int through_traffic_penalty;		/**< Penalty when driving on a through traffic limited road */
-	struct attr **attrs;
 	GHashTable *roadprofile_hash;
 };
 
