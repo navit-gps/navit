@@ -386,7 +386,6 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 		}
 		long_name=removecase(s);
 		g_free(s);
-                item_attr_rewind(item);
                 
 		match=0;
 		for(i=0;i<3 && !match;i++) {
