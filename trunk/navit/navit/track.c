@@ -24,6 +24,7 @@
 #include "item.h"
 #include "attr.h"
 #include "track.h"
+#include "xmlconfig.h"
 #include "debug.h"
 #include "transform.h"
 #include "coord.h"
@@ -37,7 +38,6 @@
 #include "roadprofile.h"
 #include "util.h"
 #include "config.h"
-#include "xmlconfig.h"
 #include "callback.h"
 
 struct object_func tracking_func;
@@ -83,9 +83,7 @@ struct cdf_data {
 };
 
 struct tracking {
-	struct object_func *func;
-	int refcount;
-	struct attr *attrs;
+	NAVIT_OBJECT
 	struct callback_list *callback_list;
 	struct mapset *ms;
 	struct route *rt;
@@ -863,23 +861,6 @@ tracking_remove_attr(struct tracking *this_, struct attr *attr)
 	}
 }
 
-struct tracking *
-tracking_ref(struct tracking *this_)
-{
-	this_->refcount++;
-	dbg(1,"refcount %d\n",this_->refcount);
-	return this_;
-}
-
-void
-tracking_unref(struct tracking *this_)
-{
-	this_->refcount--;
-	dbg(1,"refcount %d\n",this_->refcount);
-	if (this_->refcount <= 0)
-		tracking_destroy(this_);
-}
-
 struct object_func tracking_func = {
 	attr_trackingo,
 	(object_func_new)tracking_new,
@@ -892,8 +873,8 @@ struct object_func tracking_func = {
 	(object_func_init)tracking_init,
 	(object_func_destroy)tracking_destroy,
 	(object_func_dup)NULL,
-	(object_func_ref)tracking_ref,
-	(object_func_unref)tracking_unref,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
 
 
@@ -903,7 +884,7 @@ tracking_new(struct attr *parent, struct attr **attrs)
 	struct tracking *this=g_new0(struct tracking, 1);
 	struct attr hist_size;
 	this->func=&tracking_func;
-	this->refcount=1;
+	navit_object_ref((struct navit_object *)this);
 	this->angle_pref=10;
 	this->connected_pref=10;
 	this->nostop_pref=10;

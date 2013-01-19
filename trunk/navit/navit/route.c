@@ -57,6 +57,7 @@
 #include "coord.h"
 #include "projection.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "map.h"
 #include "mapset.h"
 #include "route.h"
@@ -3680,7 +3681,7 @@ route_get_map_helper(struct route *this_, struct map **map, char *type, char *de
 
 	if (! *map) { 
 		*map=map_new(NULL, attrs);
-		map_ref(*map);
+		navit_object_ref((struct navit_object *)*map);
 	}
  
 	return *map;

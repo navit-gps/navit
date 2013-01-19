@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "projection.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "map.h"
 #include "mapset.h"
 #include "coord.h"

@@ -36,6 +36,7 @@
 #include "callback.h"
 #include "gui.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "projection.h"
 #include "map.h"
 #include "mapset.h"
@@ -67,7 +68,6 @@
 #include "vehicleprofile.h"
 #include "sunriset.h"
 #include "bookmarks.h"
-#include "xmlconfig.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include "util.h"
@@ -100,9 +100,7 @@ struct navit_vehicle {
 };
 
 struct navit {
-	struct object_func *func;
-	int refcount;
-	struct attr **attrs;
+	NAVIT_OBJECT
 	struct attr self;
 	GList *mapsets;
 	GList *layouts;
@@ -165,7 +163,6 @@ struct navit {
 	int imperial;
 	int waypoints_flag;
 	struct coord_geo center;
-	struct attr **attr_list;
 };
 
 struct gui *main_loop_gui;
@@ -1386,7 +1383,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	g.lng=11.70;
 
 	this_->func=&navit_func;
-	this_->refcount=1;
+	navit_object_ref((struct navit_object *)this_);
 	this_->attrs=attr_list_dup(attrs);
 	this_->self.type=attr_navit;
 	this_->self.u.navit=this_;
@@ -2683,6 +2680,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.gui=this_->gui;
 		ret=(attr->u.gui != NULL);
 		break;
+	case attr_layer:
+		ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter?(struct attr_iter *)&iter->iter:NULL);
+		break;
 	case attr_layout:
 		if (iter) {
 			if (iter->u.list) {
@@ -2722,7 +2722,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->orientation;
 		break;
 	case attr_osd:
-		ret=attr_generic_get_attr(this_->attr_list, NULL, type, attr, iter?(struct attr_iter *)&iter->iter:NULL);
+		ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter?(struct attr_iter *)&iter->iter:NULL);
 		break;
 	case attr_osd_configuration:
 		attr->u.num=this_->osd_configuration;
@@ -2851,7 +2851,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		ret=navit_set_graphics(this_, attr->u.graphics);
 		break;
 	case attr_layout:
-		ret=navit_add_layout(this_, attr->u.layout);
+		navit_add_layout(this_, attr->u.layout);
 		break;
 	case attr_route:
 		this_->route=attr->u.route;
@@ -2863,7 +2863,6 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		this_->navigation=attr->u.navigation;
 		break;
 	case attr_osd:
-		this_->attr_list=attr_generic_add_attr(this_->attr_list, attr);
 		break;
 	case attr_recent_dest:
 		this_->recentdest_count = attr->u.num;
@@ -2882,6 +2881,8 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		break;
 	case attr_autozoom_min:
 		this_->autozoom_min = attr->u.num;
+		break;
+	case attr_layer:
 		break;
 	default:
 		return 0;
@@ -3436,23 +3437,6 @@ navit_destroy(struct navit *this_)
 	g_free(this_);
 }
 
-struct navit *
-navit_ref(struct navit *this_)
-{
-	this_->refcount++;
-	dbg(1,"refcount %d\n",this_->refcount);
-	return this_;
-}
-
-void
-navit_unref(struct navit *this_)
-{
-	this_->refcount--;
-	dbg(1,"refcount %d\n",this_->refcount);
-	if (this_->refcount <= 0)
-		navit_destroy(this_);
-}
-
 struct object_func navit_func = {
 	attr_navit,
 	(object_func_new)navit_new,
@@ -3465,8 +3449,8 @@ struct object_func navit_func = {
 	(object_func_init)navit_init,
 	(object_func_destroy)navit_destroy,
 	(object_func_dup)NULL,
-	(object_func_ref)navit_ref,
-	(object_func_unref)navit_unref,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
 
 /** @} */

@@ -73,7 +73,7 @@ maps_new(struct attr *parent, struct attr **attrs)
 
 			if (map.u.map) {
 				mapset_add_attr(parent->u.mapset, &map);
-				map_unref(map.u.map);
+				navit_object_unref(map.u.navit_object);
 			}
 			
 		}

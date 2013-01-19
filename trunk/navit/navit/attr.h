@@ -159,6 +159,7 @@ struct attr {
 		struct config *config;
 		struct osd *osd;
 		struct range range;
+		struct navit_object *navit_object;
 		int *dash;
 		enum item_type *item_types;
 		enum attr_type *attr_types;

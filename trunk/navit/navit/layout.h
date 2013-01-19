@@ -75,10 +75,13 @@ struct itemgra {
 };
 
 struct layer { 
+	NAVIT_OBJECT
+	struct navit *navit;
 	char *name;
 	int details;
 	GList *itemgras;
 	int active;
+	struct layer *ref;
 };
 
 struct cursor {
@@ -89,7 +92,19 @@ struct cursor {
 	int interval;
 };
 
-struct layout { char *name; char* dayname; char* nightname; char *font; struct color color; GList *layers; GList *cursors; int order_delta; int active; };
+struct layout {
+	NAVIT_OBJECT
+	struct navit *navit;
+	char *name;
+	char* dayname;
+	char* nightname;
+	char *font;
+	struct color color;
+	GList *layers;
+	GList *cursors;
+	int order_delta;
+	int active;
+};
 
 /* prototypes */
 enum attr_type;

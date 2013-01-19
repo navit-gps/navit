@@ -21,10 +21,10 @@
 #include <string.h>
 #include "item.h"
 #include "attr.h"
+#include "xmlconfig.h"
 #include "layout.h"
 #include "coord.h"
 #include "debug.h"
-#include "xmlconfig.h"
 
 
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
@@ -36,6 +36,8 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
 		return NULL;
 	l = g_new0(struct layout, 1);
+	l->func=&layout_func;
+	navit_object_ref((struct navit_object *)l);
 	l->name = g_strdup(name_attr->u.str);
 	if ((font_attr=attr_search(attrs, NULL, attr_font))) {
 		l->font = g_strdup(font_attr->u.str);
@@ -54,7 +56,18 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 		l->order_delta=order_delta_attr->u.num;
 	if ((active_attr=attr_search(attrs, NULL, attr_active)))
 		l->active = active_attr->u.num;
+	l->navit=parent->u.navit;
 	return l;
+}
+
+void
+layout_destroy(struct layout *layout)
+{
+	attr_list_free(layout->attrs);
+	g_free(layout->font);
+	g_free(layout->dayname);
+	g_free(layout->nightname);
+	g_free(layout);
 }
 
 struct attr_iter {
@@ -123,13 +136,15 @@ layout_add_attr(struct layout *layout, struct attr *attr)
 	switch (attr->type) {
 	case attr_cursor:
 		layout->cursors = g_list_append(layout->cursors, attr->u.cursor);
-		return 1;
+		break;
 	case attr_layer:
 		layout->layers = g_list_append(layout->layers, attr->u.layer);
-		return 1;
+		break;
 	default:
 		return 0;
 	}
+	layout->attrs=attr_generic_add_attr(layout->attrs, attr);
+	return 1;
 }
 
 /**
@@ -222,6 +237,9 @@ cursor_add_attr(struct cursor *this_, struct attr *attr)
 static int
 layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 {
+	struct attr_iter *iter;
+	struct navit_object *obj;
+	struct attr layer;
 	switch (attr->type) {
 	case attr_active:
 		l->active = attr->u.num;
@@ -233,6 +251,18 @@ layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 		g_free(l->name);
 		l->name = g_strdup(attr->u.str);
 		return 1;
+	case attr_ref:
+		navit_object_unref((struct navit_object *)l->ref);
+		l->ref=NULL;
+		obj=(struct navit_object *)l->navit;
+		iter=obj->func->iter_new(obj);
+		while (obj->func->get_attr(obj, attr_layer, &layer, iter)) {
+			if (!strcmp(layer.u.layer->name, attr->u.str)) {
+				l->ref=navit_object_ref(layer.u.navit_object);
+				break;
+			}
+		}
+		obj->func->iter_destroy(iter);
 	default:
 		return 0;
 	}
@@ -245,6 +275,10 @@ struct layer * layer_new(struct attr *parent, struct attr **attrs)
 	struct layer *l;
 
 	l = g_new0(struct layer, 1);
+	if (parent->type == attr_layout) 
+		l->navit=parent->u.layout->navit;
+	l->func=&layer_func;
+	navit_object_ref((struct navit_object *)l);
 	l->active=1;
 	for (;*attrs; attrs++) {
 		layer_set_attr_do(l, *attrs, 1);
@@ -291,6 +325,14 @@ int
 layer_set_attr(struct layer *layer, struct attr *attr)
 {
 	return layer_set_attr_do(layer, attr, 0);
+}
+
+void
+layer_destroy(struct layer *layer)
+{
+	attr_list_free(layer->attrs);
+	g_free(layer->name);
+	g_free(layer);
 }
 
 struct itemgra * itemgra_new(struct attr *parent, struct attr **attrs)
@@ -588,7 +630,23 @@ struct object_func layout_func = {
 	(object_func_init)NULL,
 	(object_func_destroy)NULL,
 	(object_func_dup)NULL,
-	(object_func_ref)NULL,
-	(object_func_unref)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
 
+
+struct object_func layer_func = {
+	attr_layer,
+	(object_func_new)layer_new,
+	(object_func_get_attr)layer_get_attr,
+	(object_func_iter_new)NULL,
+	(object_func_iter_destroy)NULL,
+	(object_func_set_attr)layer_set_attr,
+	(object_func_add_attr)layer_add_attr,
+	(object_func_remove_attr)NULL,
+	(object_func_init)NULL,
+	(object_func_destroy)layer_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};

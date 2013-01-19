@@ -58,9 +58,7 @@
  * This structure holds information about a map.
  */
 struct map {
-	struct object_func *func;			/**< Object functions */
-	int refcount;					/**< Reference count */
-	struct attr **attrs;				/**< Attributes of this map */
+	NAVIT_OBJECT
 	struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
 	struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
 	struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
@@ -110,7 +108,7 @@ map_new(struct attr *parent, struct attr **attrs)
 	m=g_new0(struct map, 1);
 	m->attrs=attr_list_dup(attrs);
 	m->func=&map_func;
-	m->refcount = 1;
+	navit_object_ref((struct navit_object *)m);
 	m->attr_cbl=callback_list_new();
 	m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
 	if (! m->priv) {
@@ -119,14 +117,6 @@ map_new(struct attr *parent, struct attr **attrs)
 	}
 	return m;
 }
-
-struct map *
-map_ref(struct map* m)
-{
-	m->refcount++;
-	return m;
-}
-
 
 /**
  * @brief Gets an attribute from a map
@@ -287,16 +277,6 @@ map_destroy(struct map *m)
 	attr_list_free(m->attrs);
 	callback_list_destroy(m->attr_cbl);
 	g_free(m);
-}
-
-void
-map_unref(struct map *m)
-{
-	if(!m)
-		return;
-	m->refcount--;
-	if (m->refcount <= 0)
-		map_destroy(m);
 }
 
 /**
@@ -733,8 +713,8 @@ struct object_func map_func = {
 	(object_func_init)NULL,
 	(object_func_destroy)map_destroy,
 	(object_func_dup)NULL,
-	(object_func_ref)map_ref,
-	(object_func_unref)map_unref,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
 
 

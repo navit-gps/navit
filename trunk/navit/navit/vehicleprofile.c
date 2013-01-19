@@ -22,9 +22,9 @@
 #include <string.h>
 #include "debug.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "roadprofile.h"
 #include "vehicleprofile.h"
-#include "xmlconfig.h"
 
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
@@ -93,6 +93,8 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs)
 		return NULL;
 	}
 	this_=g_new0(struct vehicleprofile, 1);
+	this_->func=&vehicleprofile_func;
+	navit_object_ref((struct navit_object *)this_);
 	this_->attrs=attr_list_dup(attrs);
 	this_->roadprofile_hash=g_hash_table_new(NULL, NULL);
 	this_->length=-1;
@@ -189,6 +191,6 @@ struct object_func vehicleprofile_func = {
 	(object_func_init)NULL,
 	(object_func_destroy)NULL,
 	(object_func_dup)NULL,
-	(object_func_ref)NULL,
-	(object_func_unref)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
 };
