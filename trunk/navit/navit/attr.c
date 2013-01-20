@@ -462,6 +462,24 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 }
 
 struct attr **
+attr_generic_prepend_attr(struct attr **attrs, struct attr *attr)
+{
+	struct attr **curr=attrs;
+	int i,count=0;
+	while (curr && *curr) {
+		curr++;
+		count++;
+	}
+	curr=g_new0(struct attr *, count+2);
+	for (i = 0 ; i  < count ; i++)
+		curr[i+1]=attrs[i];
+	curr[0]=attr_dup(attr);
+	curr[count+1]=NULL;
+	g_free(attrs);
+	return curr;
+}
+
+struct attr **
 attr_generic_remove_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;

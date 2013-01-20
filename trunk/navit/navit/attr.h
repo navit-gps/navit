@@ -180,6 +180,7 @@ struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type 
 int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct attr **attr_generic_set_attr(struct attr **attrs, struct attr *attr);
 struct attr **attr_generic_add_attr(struct attr **attrs, struct attr *attr);
+struct attr **attr_generic_prepend_attr(struct attr **attrs, struct attr *attr);
 struct attr **attr_generic_remove_attr(struct attr **attrs, struct attr *attr);
 enum attr_type attr_type_begin(enum attr_type type);
 int attr_data_size(struct attr *attr);
