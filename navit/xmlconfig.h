@@ -54,9 +54,9 @@ struct object_func {
 	void *(*unref)(void *);
 };
 
-extern struct object_func map_func, mapset_func, navit_func, tracking_func, vehicle_func, maps_func, layout_func, vehicleprofile_func, layer_func;
+extern struct object_func map_func, mapset_func, navit_func, tracking_func, vehicle_func, maps_func, layout_func, vehicleprofile_func, layer_func, config_func;
 
-#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_vehicleprofile || (x) == attr_layer)
+#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config)
 
 #define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
 struct navit_object {
@@ -65,6 +65,12 @@ struct navit_object {
 
 struct navit_object *navit_object_ref(struct navit_object *obj);
 void navit_object_unref(struct navit_object *obj);
+struct attr_iter * navit_object_attr_iter_new(void);
+void navit_object_attr_iter_destroy(struct attr_iter *iter);
+int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int navit_object_set_attr(struct navit_object *obj, struct attr *attr);
+int navit_object_add_attr(struct navit_object *obj, struct attr *attr);
+int navit_object_remove_attr(struct navit_object *obj, struct attr *attr);
 
 typedef GError xmlerror;
 

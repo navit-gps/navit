@@ -51,6 +51,7 @@
 #include "announcement.h"
 #include "vehicleprofile.h"
 #include "roadprofile.h"
+#include "callback.h"
 #include "config_.h"
 
 #if (defined __MINGW32__) || (defined _MSC_VER)
@@ -246,7 +247,6 @@ static struct object_func object_funcs[] = {
 	{ attr_announcement,NEW(announcement_new),  GET(announcement_get_attr), NULL, NULL, SET(announcement_set_attr), ADD(announcement_add_attr) },
 	{ attr_arrows,     NEW(arrows_new)},
 	{ attr_circle,     NEW(circle_new),   NULL, NULL, NULL, NULL, ADD(element_add_attr)},
-	{ attr_config,     NEW(config_new), GET(config_get_attr), ITERN(config_attr_iter_new), ITERD(config_attr_iter_destroy), SET(config_set_attr), ADD(config_add_attr), REMOVE(config_remove_attr), NULL, DESTROY(config_destroy)},
 	{ attr_coord,      NEW(coord_new_from_attrs)},
 	{ attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
 	{ attr_debug,      NEW(debug_new)},
@@ -273,6 +273,8 @@ object_func_lookup(enum attr_type type)
 {
 	int i;
 	switch (type) {
+	case attr_config:
+		return &config_func;
 	case attr_layer:
 		return &layer_func;
 	case attr_layout:
@@ -1244,4 +1246,74 @@ navit_object_unref(struct navit_object *obj)
 		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
 			obj->func->destroy(obj);
 	}
+}
+
+struct attr_iter {
+	void *last;
+};
+
+struct attr_iter *
+navit_object_attr_iter_new(void)
+{
+	return g_new0(struct attr_iter, 1);
+}
+
+void
+navit_object_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
+}
+
+int
+navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	return attr_generic_get_attr(obj->attrs, NULL, type, attr, iter);
+}
+
+int
+navit_object_set_attr(struct navit_object *obj, struct attr *attr)
+{
+	obj->attrs=attr_generic_set_attr(obj->attrs, attr);
+	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
+		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, 0);
+	return 1;
+}
+
+int
+navit_object_add_attr(struct navit_object *obj, struct attr *attr)
+{
+	if (attr->type == attr_callback) {
+		struct callback_list *cbl;
+		if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) 
+			cbl=obj->attrs[0]->u.callback_list;
+		else {
+			struct attr attr;
+			cbl=callback_list_new();
+			attr.type=attr_callback_list;
+			attr.u.callback_list=cbl;
+			obj->attrs=attr_generic_prepend_attr(obj->attrs, &attr);
+		}
+		callback_list_add(cbl, attr->u.callback);
+		return 1;
+	}
+	obj->attrs=attr_generic_add_attr(obj->attrs, attr);
+	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
+		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, 1);
+	return 1;
+}
+
+int
+navit_object_remove_attr(struct navit_object *obj, struct attr *attr)
+{
+	if (attr->type == attr_callback) {
+		if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) {
+			callback_list_remove(obj->attrs[0]->u.callback_list, attr->u.callback);
+			return 1;
+		} else
+			return 0;
+	}
+	obj->attrs=attr_generic_remove_attr(obj->attrs, attr);
+	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
+		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, -1);
+	return 1;
 }
