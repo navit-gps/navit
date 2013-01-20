@@ -398,7 +398,7 @@ navit_restrict_to_range(int value, int min, int max){
 }
 
 static void
-navit_restrict_map_center_to_visible_area(struct transformation *tr, struct coord *new_center){
+navit_restrict_map_center_to_world_boundingbox(struct transformation *tr, struct coord *new_center){
 	new_center->x = navit_restrict_to_range(new_center->x, WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_X);
 	new_center->y = navit_restrict_to_range(new_center->y, WORLD_BOUNDINGBOX_MIN_Y, WORLD_BOUNDINGBOX_MAX_Y);
 }
@@ -419,12 +419,12 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	center_old=transform_get_center(tr);
 	center_new.x=center_old->x+coord_old.x-coord_new.x;
 	center_new.y=center_old->y+coord_old.y-coord_new.y;
-	navit_restrict_map_center_to_visible_area(tr, &center_new);
+	navit_restrict_map_center_to_world_boundingbox(tr, &center_new);
 	dbg(1,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
 	transform_set_center(tr, &center_new);
 }
 
-void
+static void
 navit_set_timeout(struct navit *this_)
 {
 	struct attr follow;
