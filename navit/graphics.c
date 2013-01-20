@@ -1547,6 +1547,31 @@ relative_pos(struct wpoint *p, struct point_rect *r)
 	return relative_pos;
 }
 
+static void
+clip_line_endoint_to_rect_edge(struct wpoint *p, int rel_pos, int dx, int dy, int dw, struct point_rect *clip_rect)
+{
+	// We must cast to float to avoid integer
+	// overflow (i.e. undefined behaviour) at high
+	// zoom levels.
+	if (rel_pos & LEFT_OF) {
+		p->y+=(((float)clip_rect->lu.x)-p->x)*dy/dx;
+		p->w+=(((float)clip_rect->lu.x)-p->x)*dw/dx;
+		p->x=clip_rect->lu.x;
+	} else if (rel_pos & RIGHT_OF) {
+		p->y+=(((float)clip_rect->rl.x)-p->x)*dy/dx;
+		p->w+=(((float)clip_rect->rl.x)-p->x)*dw/dx;
+		p->x=clip_rect->rl.x;
+	} else if (rel_pos & ABOVE) {
+		p->x+=(((float)clip_rect->lu.y)-p->y)*dx/dy;
+		p->w+=(((float)clip_rect->lu.y)-p->y)*dw/dy;
+		p->y=clip_rect->lu.y;
+	} else if (rel_pos & BELOW) {
+		p->x+=(((float)clip_rect->rl.y)-p->y)*dx/dy;
+		p->w+=(((float)clip_rect->rl.y)-p->y)*dw/dy;
+		p->y=clip_rect->rl.y;
+	}
+}
+
 enum clip_result {
 	CLIPRES_INVISIBLE     = 0,
 	CLIPRES_VISIBLE       = 1,
@@ -1572,46 +1597,11 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect)
 	while ((rel_pos1!=INSIDE) || (rel_pos2!=INSIDE)) {
 		if (rel_pos1 & rel_pos2)
 			return CLIPRES_INVISIBLE;
-		if (rel_pos1 & LEFT_OF) {
-			// We must cast to float to avoid integer
-			// overflow (i.e. undefined behaviour) at high
-			// zoom levels.
-			p1->y+=(((float)clip_rect->lu.x)-p1->x)*dy/dx;
-			p1->w+=(((float)clip_rect->lu.x)-p1->x)*dw/dx;
-			p1->x=clip_rect->lu.x;
-		} else if (rel_pos1 & RIGHT_OF) {
-			p1->y+=(((float)clip_rect->rl.x)-p1->x)*dy/dx;
-			p1->w+=(((float)clip_rect->rl.x)-p1->x)*dw/dx;
-			p1->x=clip_rect->rl.x;
-		} else if (rel_pos1 & ABOVE) {
-			p1->x+=(((float)clip_rect->lu.y)-p1->y)*dx/dy;
-			p1->w+=(((float)clip_rect->lu.y)-p1->y)*dw/dy;
-			p1->y=clip_rect->lu.y;
-		} else if (rel_pos1 & BELOW) {
-			p1->x+=(((float)clip_rect->rl.y)-p1->y)*dx/dy;
-			p1->w+=(((float)clip_rect->rl.y)-p1->y)*dw/dy;
-			p1->y=clip_rect->rl.y;
-		}
+		clip_line_endoint_to_rect_edge(p1, rel_pos1, dx, dy, dw, clip_rect);
 		rel_pos1=relative_pos(p1, clip_rect);
 		if (rel_pos1 & rel_pos2)
 			return CLIPRES_INVISIBLE;
-		if (rel_pos2 & LEFT_OF) {
-			p2->y+=(((float)clip_rect->lu.x)-p2->x)*dy/dx;
-			p2->w+=(((float)clip_rect->lu.x)-p2->x)*dw/dx;
-			p2->x=clip_rect->lu.x;
-		} else if (rel_pos2 & RIGHT_OF) {
-			p2->y+=(((float)clip_rect->rl.x)-p2->x)*dy/dx;
-			p2->w+=(((float)clip_rect->rl.x)-p2->x)*dw/dx;
-			p2->x=clip_rect->rl.x;
-		} else if (rel_pos2 & ABOVE) {
-			p2->x+=(((float)clip_rect->lu.y)-p2->y)*dx/dy;
-			p2->w+=(((float)clip_rect->lu.y)-p2->y)*dw/dy;
-			p2->y=clip_rect->lu.y;
-		} else if (rel_pos2 & BELOW) {
-			p2->x+=(((float)clip_rect->rl.y)-p2->y)*dx/dy;
-			p2->w+=(((float)clip_rect->rl.y)-p2->y)*dw/dy;
-			p2->y=clip_rect->rl.y;
-		}
+		clip_line_endoint_to_rect_edge(p2, rel_pos2, dx, dy, dw, clip_rect);
 		rel_pos2=relative_pos(p2, clip_rect);
 	}
 	return ret;
