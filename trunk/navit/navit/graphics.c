@@ -1524,80 +1524,95 @@ struct wpoint {
 	int x,y,w;
 };
 
+enum relative_pos {
+	INSIDE   = 0,
+	LEFT_OF  = 1,
+	RIGHT_OF = 2,
+	ABOVE    = 4,
+	BELOW    = 8
+};
+
 static int
-clipcode(struct wpoint *p, struct point_rect *r)
+relative_pos(struct wpoint *p, struct point_rect *r)
 {
-	int code=0;
+	int relative_pos=INSIDE;
 	if (p->x < r->lu.x)
-		code=1;
-	if (p->x > r->rl.x)
-		code=2;
+		relative_pos=LEFT_OF;
+	else if (p->x > r->rl.x)
+		relative_pos=RIGHT_OF;
 	if (p->y < r->lu.y)
-		code |=4;
-	if (p->y > r->rl.y)
-		code |=8;
-	return code;
+		relative_pos |=ABOVE;
+	else if (p->y > r->rl.y)
+		relative_pos |=BELOW;
+	return relative_pos;
 }
 
+enum clip_result {
+	CLIPRES_INVISIBLE     = 0,
+	CLIPRES_VISIBLE       = 1,
+	CLIPRES_START_CLIPPED = 2,
+	CLIPRES_END_CLIPPED   = 4,
+};
 
 static int
-clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *r)
+clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect)
 {
-	int code1,code2,ret=1;
+	int rel_pos1,rel_pos2;
+	int ret = CLIPRES_VISIBLE;
 	int dx,dy,dw;
-	code1=clipcode(p1, r);
-	if (code1)
-		ret |= 2;
-	code2=clipcode(p2, r);
-	if (code2)
-		ret |= 4;
+	rel_pos1=relative_pos(p1, clip_rect);
+	if (rel_pos1!=INSIDE)
+		ret |= CLIPRES_START_CLIPPED;
+	rel_pos2=relative_pos(p2, clip_rect);
+	if (rel_pos2!=INSIDE)
+		ret |= CLIPRES_END_CLIPPED;
 	dx=p2->x-p1->x;
 	dy=p2->y-p1->y;
 	dw=p2->w-p1->w;
-	while (code1 || code2) {
-		if (code1 & code2)
-			return 0;
-		if (code1 & 1) {
+	while ((rel_pos1!=INSIDE) || (rel_pos2!=INSIDE)) {
+		if (rel_pos1 & rel_pos2)
+			return CLIPRES_INVISIBLE;
+		if (rel_pos1 & LEFT_OF) {
 			// We must cast to float to avoid integer
-			// overflow (i.e.  undefined behaviour) at high
+			// overflow (i.e. undefined behaviour) at high
 			// zoom levels.
-			p1->y+=(((float)r->lu.x)-p1->x)*dy/dx;
-			p1->w+=(((float)r->lu.x)-p1->x)*dw/dx;
-			p1->x=r->lu.x;
-		} else if (code1 & 2) {
-			p1->y+=(((float)r->rl.x)-p1->x)*dy/dx;
-			p1->w+=(((float)r->rl.x)-p1->x)*dw/dx;
-			p1->x=r->rl.x;
-		} else if (code1 & 4) {
-			p1->x+=(((float)r->lu.y)-p1->y)*dx/dy;
-			p1->w+=(((float)r->lu.y)-p1->y)*dw/dy;
-			p1->y=r->lu.y;
-		} else if (code1 & 8) {
-			p1->x+=(((float)r->rl.y)-p1->y)*dx/dy;
-			p1->w+=(((float)r->rl.y)-p1->y)*dw/dy;
-			p1->y=r->rl.y;
+			p1->y+=(((float)clip_rect->lu.x)-p1->x)*dy/dx;
+			p1->w+=(((float)clip_rect->lu.x)-p1->x)*dw/dx;
+			p1->x=clip_rect->lu.x;
+		} else if (rel_pos1 & RIGHT_OF) {
+			p1->y+=(((float)clip_rect->rl.x)-p1->x)*dy/dx;
+			p1->w+=(((float)clip_rect->rl.x)-p1->x)*dw/dx;
+			p1->x=clip_rect->rl.x;
+		} else if (rel_pos1 & ABOVE) {
+			p1->x+=(((float)clip_rect->lu.y)-p1->y)*dx/dy;
+			p1->w+=(((float)clip_rect->lu.y)-p1->y)*dw/dy;
+			p1->y=clip_rect->lu.y;
+		} else if (rel_pos1 & BELOW) {
+			p1->x+=(((float)clip_rect->rl.y)-p1->y)*dx/dy;
+			p1->w+=(((float)clip_rect->rl.y)-p1->y)*dw/dy;
+			p1->y=clip_rect->rl.y;
 		}
-		code1=clipcode(p1, r);
-		if (code1 & code2)
-			return 0;
-		if (code2 & 1) {
-			p2->y+=(((float)r->lu.x)-p2->x)*dy/dx;
-			p2->w+=(((float)r->lu.x)-p2->x)*dw/dx;
-			p2->x=r->lu.x;
-		} else if (code2 & 2) {
-			p2->y+=(((float)r->rl.x)-p2->x)*dy/dx;
-			p2->w+=(((float)r->rl.x)-p2->x)*dw/dx;
-			p2->x=r->rl.x;
-		} else if (code2 & 4) {
-			p2->x+=(((float)r->lu.y)-p2->y)*dx/dy;
-			p2->w+=(((float)r->lu.y)-p2->y)*dw/dy;
-			p2->y=r->lu.y;
-		} else if (code2 & 8) {
-			p2->x+=(((float)r->rl.y)-p2->y)*dx/dy;
-			p2->w+=(((float)r->rl.y)-p2->y)*dw/dy;
-			p2->y=r->rl.y;
+		rel_pos1=relative_pos(p1, clip_rect);
+		if (rel_pos1 & rel_pos2)
+			return CLIPRES_INVISIBLE;
+		if (rel_pos2 & LEFT_OF) {
+			p2->y+=(((float)clip_rect->lu.x)-p2->x)*dy/dx;
+			p2->w+=(((float)clip_rect->lu.x)-p2->x)*dw/dx;
+			p2->x=clip_rect->lu.x;
+		} else if (rel_pos2 & RIGHT_OF) {
+			p2->y+=(((float)clip_rect->rl.x)-p2->x)*dy/dx;
+			p2->w+=(((float)clip_rect->rl.x)-p2->x)*dw/dx;
+			p2->x=clip_rect->rl.x;
+		} else if (rel_pos2 & ABOVE) {
+			p2->x+=(((float)clip_rect->lu.y)-p2->y)*dx/dy;
+			p2->w+=(((float)clip_rect->lu.y)-p2->y)*dw/dy;
+			p2->y=clip_rect->lu.y;
+		} else if (rel_pos2 & BELOW) {
+			p2->x+=(((float)clip_rect->rl.y)-p2->y)*dx/dy;
+			p2->w+=(((float)clip_rect->rl.y)-p2->y)*dw/dy;
+			p2->y=clip_rect->rl.y;
 		}
-		code2=clipcode(p2, r);
+		rel_pos2=relative_pos(p2, clip_rect);
 	}
 	return ret;
 }
@@ -1605,10 +1620,11 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *r)
 static void
 graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int step, int poly)
 {
-	struct point *p=g_alloca(sizeof(struct point)*(count+1));
+	struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
 	int *w=g_alloca(sizeof(int)*(count*step+1));
-	struct wpoint p1,p2;
-	int i,code,out=0;
+	struct wpoint segment_start,segment_end;
+	int i,points_to_draw_cnt=0;
+	int clip_result;
 	int wmax;
 	struct point_rect r=gra->r;
 
@@ -1625,35 +1641,37 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 	r.lu.y-=wmax;
 	r.rl.x+=wmax;
 	r.rl.y+=wmax;
+	// Iterate over line segments, push them into points_to_draw
+	// until we reach a completely invisible segment...
 	for (i = 0 ; i < count ; i++) {
 		if (i) {
-			p1.x=pa[i-1].x;
-			p1.y=pa[i-1].y;
-			p1.w=width[(i-1)*step];
-			p2.x=pa[i].x;
-			p2.y=pa[i].y;
-			p2.w=width[i*step];
-			/* 0 = invisible, 1 = completely visible, 3 = start point clipped, 5 = end point clipped, 7 both points clipped */
-			code=clip_line(&p1, &p2, &r);
-			if (((code == 1 || code == 5) && i == 1) || (code & 2)) {
-				p[out].x=p1.x;
-				p[out].y=p1.y;
-				w[out*step]=p1.w;
-				out++;
+			segment_start.x=pa[i-1].x;
+			segment_start.y=pa[i-1].y;
+			segment_start.w=width[(i-1)*step];
+			segment_end.x=pa[i].x;
+			segment_end.y=pa[i].y;
+			segment_end.w=width[i*step];
+			clip_result=clip_line(&segment_start, &segment_end, &r);
+			if (clip_result != CLIPRES_INVISIBLE) {
+				if ((i == 1) || (clip_result & CLIPRES_START_CLIPPED)) {
+					points_to_draw[points_to_draw_cnt].x=segment_start.x;
+					points_to_draw[points_to_draw_cnt].y=segment_start.y;
+					w[points_to_draw_cnt*step]=segment_start.w;
+					points_to_draw_cnt++;
+				}
+				points_to_draw[points_to_draw_cnt].x=segment_end.x;
+				points_to_draw[points_to_draw_cnt].y=segment_end.y;
+				w[points_to_draw_cnt*step]=segment_end.w;
+				points_to_draw_cnt++;
 			}
-			if (code) {
-				p[out].x=p2.x;
-				p[out].y=p2.y;
-				w[out*step]=p2.w;
-				out++;
-			}
-			if (i == count-1 || (code & 4)) {
-				if (out > 1) {
+			if ((i == count-1) || (clip_result & CLIPRES_END_CLIPPED)) {
+				// ... then draw the resulting polyline
+				if (points_to_draw_cnt > 1) {
 					if (poly) {
-						graphics_draw_polyline_as_polygon(gra, gc, p, out, w, step);
+						graphics_draw_polyline_as_polygon(gra, gc, points_to_draw, points_to_draw_cnt, w, step);
 					} else
-						gra->meth.draw_lines(gra->priv, gc->priv, p, out);
-					out=0;
+						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
+					points_to_draw_cnt=0;
 				}
 			}
 		}
