@@ -2128,9 +2128,10 @@ displaylist_update_layers(struct displaylist *displaylist, GList *layers, int or
 {
 	while (layers) {
 		struct layer *layer=layers->data;
+		GList *itemgras;
 		if (layer->ref)
 			layer=layer->ref;
-		GList *itemgras=layer->itemgras;
+		itemgras=layer->itemgras;
 		while (itemgras) {
 			struct itemgra *itemgra=itemgras->data;
 			GList *types=itemgra->type;
