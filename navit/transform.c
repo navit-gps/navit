@@ -427,7 +427,6 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	int xcn, ycn; 
 	struct coord_geo g;
 	int xc, yc, zc=0, xco=0, yco=0, zco=0;
-	int xm,ym,zct;
 	int zlimit=t->znear;
 	int visible, visibleo=-1;
 	int i,j = 0,k=0;
@@ -442,21 +441,16 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			xc=c1.x;
 			yc=c1.y;
 		}
-		xm=xc;
-		ym=yc;
 		xc-=t->map_center.x;
 		yc-=t->map_center.y;
 		xc >>= t->scale_shift;
 		yc >>= t->scale_shift;
-		xm=xc;
-		ym=yc;
 
 		xcn=xc*t->m00+yc*t->m01+HOG(*t)*t->m02;
 		ycn=xc*t->m10+yc*t->m11+HOG(*t)*t->m12;
 
 		if (t->ddd) {
 			zc=(xc*t->m20+yc*t->m21+HOG(*t)*t->m22);
-			zct=zc;
 			zc+=t->offz << POST_SHIFT;
 			dbg(1,"zc=%d\n", zc);
 			dbg(1,"zc(%d)=xc(%d)*m20(%d)+yc(%d)*m21(%d)\n", (xc*t->m20+yc*t->m21), xc, t->m20, yc, t->m21);
