@@ -30,6 +30,7 @@
 #include <sys/ioctl.h>
 #include "config.h"
 #include <navit/item.h>
+#include <navit/xmlconfig.h>
 #include <navit/main.h>
 #include <navit/debug.h>
 #include <navit/point.h>
