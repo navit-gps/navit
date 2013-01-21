@@ -424,7 +424,7 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	transform_set_center(tr, &center_new);
 }
 
-static void
+void
 navit_set_timeout(struct navit *this_)
 {
 	struct attr follow;
