@@ -10,6 +10,7 @@
 #include "plugin.h"
 #include "item.h"
 #include "attr.h"
+#include "xmlconfig.h"
 #include "color.h"
 #include "gui.h"
 #include "callback.h"
