@@ -1425,6 +1425,15 @@ request_search_list_destroy(DBusConnection *connection, DBusMessage *message)
 	return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) search_list_destroy);
 }
 
+void
+request_search_list_common(struct search_list_common *slc, DBusMessageIter *iter4)
+{
+	if (slc->postal)
+		encode_dict_string_variant_string(iter4, "postal", slc->postal);
+	if (slc->postal_mask)
+		encode_dict_string_variant_string(iter4, "postal_mask", slc->postal_mask);
+}
+
 static DBusHandlerResult
 request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 {
@@ -1435,6 +1444,7 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 	char *country="country";
 	char *town="town";
 	char *street="street";
+	char *house_number="housenumber";
 
 	search_list = object_get_from_message(message, "search_list");
 	if (! search_list)
@@ -1466,6 +1476,7 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
 		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &town);
 		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		request_search_list_common(&result->town->common,&iter4);
 		if (result->town->common.district_name)
 			encode_dict_string_variant_string(&iter4, "district", result->town->common.district_name);
 		if (result->town->common.town_name)
@@ -1477,8 +1488,18 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
 		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &street);
 		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		request_search_list_common(&result->street->common,&iter4);
 		if (result->street->name)
 			encode_dict_string_variant_string(&iter4, "name", result->street->name);
+		dbus_message_iter_close_container(&iter3, &iter4);
+		dbus_message_iter_close_container(&iter2, &iter3);
+	}
+	if (result->house_number && result->house_number->house_number) {
+		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
+		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &house_number);
+		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		request_search_list_common(&result->house_number->common,&iter4);
+		encode_dict_string_variant_string(&iter4, "name", result->house_number->house_number);
 		dbus_message_iter_close_container(&iter3, &iter4);
 		dbus_message_iter_close_container(&iter2, &iter3);
 	}
