@@ -22,7 +22,7 @@
 #include "debug.h"
 
 
-static char buffer[800000];
+static char buffer[2000000];
 struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
 static struct node_item *node_item=(struct node_item *)(void *)buffer;
 
