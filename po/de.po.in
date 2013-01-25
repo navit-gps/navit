@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-01-25 23:17+0100\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -419,6 +419,10 @@ msgstr "Brunei Darussalam"
 msgid "Bolivia"
 msgstr "Bolivien"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr "Bonaire, Sint Eustatius und Saba"
+
 #. 076
 msgid "Brazil"
 msgstr "Brasilien"
@@ -506,6 +510,10 @@ msgstr "Kuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Kap Verde"
+
+#. 531
+msgid "Curacao"
+msgstr "Curaçao"
 
 #. 162
 msgid "Christmas Island"
@@ -1124,6 +1132,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Suriname"
 
+#. 728
+msgid "South Sudan"
+msgstr "Südsudan"
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "São Tomé und Príncipe"
@@ -1131,6 +1143,10 @@ msgstr "São Tomé und Príncipe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr "Sint Maarten (niederl. Teil)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1292,10 +1308,18 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit Benutzung:\n"
+"navit [Optionen] [Konfigdatei]\n"
+"\t-c <file>: <file> als Konfigdatei benutzen\n"
+"\t-d <n>: Den globalen Debug-Level auf <n> (0-3) setzen. Überschreibt die Einstellung "
+"aus der Konfigurationsdatei.\n"
+"\t-h: Diesen Text ausgeben und das Programm beenden.\n"
+"\t-v: Die Version ausgeben und das Programm beenden.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1309,8 +1333,10 @@ msgstr "Fehler beim Parsen der Konfigurations-Datei '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Benutze Konfigurations-Datei '%s'\n"
 
-msgid "Internal initialization failed, exiting\n"
-msgstr "Interne Initialisierung fehlgeschlagen, Programm wird beendet\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+"Interne Initialisierung fehlgeschlagen, Programm wird beendet. Frühere Fehler beachten.\n"
 
 msgid "unknown street"
 msgstr "unbekannte Straße"
@@ -1318,8 +1344,7 @@ msgstr "unbekannte Straße"
 msgid "Failed to write bookmarks file"
 msgstr "Lesezeichen-Datei konnte nicht geschrieben werden"
 
-#. Strings from navit_shipped.xml
-msgid "Map Point"
+msgid "Map point"
 msgstr "Kartenpunkt"
 
 msgid "Car"
@@ -1509,30 +1534,15 @@ msgstr "Route %4.0fkm    %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km 0+00:00 ETA"
 
-msgid "Back to map"
-msgstr "Zurück zur Karte"
-
-msgid "Main Menu"
-msgstr "Hauptmenü"
-
 msgid "Help"
 msgstr "Hilfe"
 
-msgid "Back"
-msgstr "Zurück"
+#, c-format
+msgid "Waypoint %s"
+msgstr "Wegpunkt %s"
 
-msgid "Add Bookmark"
-msgstr "Lesezeichen hinzufügen"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Lesezeichen-Ordner hinzufügen"
-
-msgid "Rename"
-msgstr "Umbennenen"
-
-msgid "POIs"
-msgstr "Interessante Kartenpunkte"
+msgid "Select waypoint to insert the new one before"
+msgstr "Auswählen, wovor der Wegpunkt eingefügt werden soll"
 
 msgid "View in Browser"
 msgstr "Im Browser anzeigen"
@@ -1549,8 +1559,14 @@ msgstr "Hausnummern"
 msgid "View Attributes"
 msgstr "Attribute anzeigen"
 
+msgid "Visit before..."
+msgstr "Als Wegpunkt setzen vor..."
+
 msgid "Set as position (and deactivate vehicle)"
 msgstr "Als Position setzen (und Fahrzeug deaktivieren)"
+
+msgid "POIs"
+msgstr "Interessante Kartenpunkte"
 
 msgid "View on map"
 msgstr "Auf der Karte zeigen"
@@ -1562,7 +1578,7 @@ msgid "Show results on the map"
 msgstr "Ergebnisse in Karte anzeigen"
 
 msgid "Cut Bookmark"
-msgstr "Lesezeichen entfernen"
+msgstr "Lesezeichen ausschneiden"
 
 msgid "Copy Bookmark"
 msgstr "Lesezeichen kopieren"
@@ -1576,6 +1592,9 @@ msgstr "Lesezeichen einfügen"
 msgid "Delete Bookmark"
 msgstr "Lesezeichen entfernen"
 
+msgid "Delete waypoint"
+msgstr "Wegpunkt löschen"
+
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
@@ -1585,11 +1604,15 @@ msgstr "Lesezeichen als Wegpunkte"
 msgid "Save waypoints"
 msgstr "Wegpunkte abspeichern"
 
-msgid "Replace Waypoints"
-msgstr "Wegpunkte ersetzen"
+msgid "Replace with waypoints"
+msgstr "Durch Wegpunkte ersetzen"
 
 msgid "Delete Folder"
 msgstr "Ordner löschen"
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Lesezeichen-Ordner hinzufügen"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1598,18 +1621,6 @@ msgstr "Lesezeichen einfügen"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Lesezeichen %s"
-
-msgid "Former Destinations"
-msgstr "Vorherige Ziele"
-
-msgid "- No former destinations available -"
-msgstr "- Keine vorherigen Ziele -"
-
-msgid "House number"
-msgstr "Hausnummer"
-
-msgid "Layout"
-msgstr "Erscheinungsbild"
 
 #, c-format
 msgid "Download %s"
@@ -1626,9 +1637,6 @@ msgstr "Download aktiviert"
 
 msgid "Download completely"
 msgstr "Komplett herunterladen"
-
-msgid "Maps"
-msgstr "Karten"
 
 msgid "Show Satellite Status"
 msgstr "Satellitenstatus anzeigen"
@@ -1668,6 +1676,44 @@ msgstr "Satellitenstatus anzeigen"
 msgid "Show NMEA data"
 msgstr "NMEA Daten anzeigen"
 
+msgid "Add Bookmark"
+msgstr "Lesezeichen hinzufügen"
+
+msgid "Rename"
+msgstr "Umbennenen"
+
+msgid "About Navit"
+msgstr "Über Navit"
+
+#. Authors
+msgid "By"
+msgstr "Von"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "Und das ganze Navit Team"
+
+msgid "members and contributors."
+msgstr "Mitglieder und Mitarbeiter"
+
+msgid "Waypoints"
+msgstr "Wegpunkte"
+
+msgid "Enter Coordinates"
+msgstr "Koordinaten eingeben"
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr "Längengrad Breitengrad"
+
+msgid "Enter coordinates, for example:"
+msgstr "Koordinaten eingeben, z.B.:"
+
 msgid "Vehicle"
 msgstr "Fahrzeug"
 
@@ -1686,37 +1732,47 @@ msgstr "Karte folgt Fahrzeug"
 msgid "Plan with Waypoints"
 msgstr "Planung mit Wegpunkten"
 
+msgid "Maps"
+msgstr "Karten"
+
+msgid "Layout"
+msgstr "Erscheinungsbild"
+
+msgid "Height Profile"
+msgstr "Höhenprofil"
+
+msgid "Route Description"
+msgstr "Wegbeschreibung"
+
+msgid "Show Locale"
+msgstr "Lokalisierung anzeigen"
+
+msgid "Former Destinations"
+msgstr "Vorherige Ziele"
+
+msgid "- No former destinations available -"
+msgstr "- Keine vorherigen Ziele -"
+
 msgid "Message"
 msgstr "Benachrichtigung"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Back to map"
+msgstr "Zurück zur Karte"
+
+msgid "Main Menu"
+msgstr "Hauptmenü"
+
+msgid "House number"
+msgstr "Hausnummer"
 
 msgid "Next"
 msgstr "Vor"
 
 msgid "Prev"
 msgstr "Zurück"
-
-msgid "Route Description"
-msgstr "Wegbeschreibung"
-
-msgid "Height Profile"
-msgstr "Höhenprofil"
-
-msgid "Show Locale"
-msgstr "Lokalisierung anzeigen"
-
-msgid "About Navit"
-msgstr "Über Navit"
-
-#. Authors
-msgid "By"
-msgstr "Von"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "Und das ganze Navit Team"
-
-msgid "members and contributors."
-msgstr "Mitglieder und Mitarbeiter"
 
 msgid "Return to route!"
 msgstr "Zurück zur Route!"
@@ -1728,6 +1784,10 @@ msgstr "Achtung Blitzer!"
 #. warning told
 msgid "Please decrease your speed"
 msgstr "Bitte Geschwindigkeit verringern"
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Kartenpunkt"
 
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"
@@ -1800,11 +1860,20 @@ msgstr ""
 "Nächsten Wegpunkt\n"
 "entfernen"
 
+msgid "Satellite Status"
+msgstr "Satellitenstatus"
+
+msgid "NMEA Data"
+msgstr "NMEA Daten"
+
 msgid "car_shortest"
 msgstr "Auto kürzeste"
 
 msgid "car_avoid_tolls"
 msgstr "Auto ohne Maut"
+
+msgid "car_pedantic"
+msgstr "Auto pedantisch"
 
 msgid "horse"
 msgstr "Pferd"
@@ -1833,3 +1902,9 @@ msgstr "Pferd"
 #.
 msgid "Truck"
 msgstr "LKW"
+
+#~ msgid "Internal initialization failed, exiting\n"
+#~ msgstr "Interne Initialisierung fehlgeschlagen, Programm wird beendet\n"
+
+#~ msgid "Replace Waypoints"
+#~ msgstr "Wegpunkte ersetzen"
