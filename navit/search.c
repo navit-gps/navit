@@ -702,7 +702,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 	struct pcoord *ret=g_new(struct pcoord, 1);
 	ret->pro = map_projection(item->map);
 	dbg(1,"%s\n",item_to_name(item->type));
-	if (item->type<type_house_number_interpolation_even || item->type>type_house_number_interpolation_alphabetic) {
+	if (!inter) {
 		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
 			ret->x=c.x;
@@ -746,9 +746,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 			dbg(1,"remaining distance=%d from %d\n",hn_distance,distances[i]);
 			ret->x=(c[i+1].x-c[i].x)*hn_distance/distances[i]+c[i].x;
 			ret->y=(c[i+1].y-c[i].y)*hn_distance/distances[i]+c[i].y;
-			g_free(distances);
 		}
-		g_free(c);
 	}
 	return ret;
 }
