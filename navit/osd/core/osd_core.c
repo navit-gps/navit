@@ -94,6 +94,7 @@ static int b_commandtable_added = 0;
 struct compass {
 	int width;
 	struct graphics_gc *green;
+	struct callback *click_cb;
 };
 
 static void
@@ -1391,6 +1392,8 @@ osd_compass_init(struct osd_priv_common *opc, struct navit *nav)
 	graphics_gc_set_linewidth(opc->osd_item.graphic_fg_white, this->width);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, opc));
+	if (opc->osd_item.command) 
+		navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_std_click), attr_button, &opc->osd_item));
 
 	osd_compass_draw(opc, nav, NULL);
 }
