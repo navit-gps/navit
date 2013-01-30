@@ -82,16 +82,21 @@ int main_real(int argc, const char **argv)
 	main_argc=argc;
 	main_argv=argv;
 
-
+	dbg(0,"at 1\n");
 #ifdef HAVE_GLIB
 	event_glib_init();
 #else
 	_g_slice_thread_init_nomessage();
 #endif
+	dbg(0,"at 2\n");
 	atom_init();
+	dbg(0,"at 3\n");
 	main_init(argv[0]);
+	dbg(0,"at 4\n");
 	main_init_nls();
+	dbg(0,"at 5\n");
 	debug_init(argv[0]);
+	dbg(0,"at 6\n");
 
 	cp = getenv("NAVIT_LOGFILE");
 	if (cp) {
@@ -102,15 +107,23 @@ int main_real(int argc, const char **argv)
 		debug_set_logfile("/Storage Card/navit.log");
 	}
 #endif
+	dbg(0,"at 7\n");
 	file_init();
+	dbg(0,"at 8\n");
 #ifndef USE_PLUGINS
 	builtin_init();
 #endif
+	dbg(0,"at 9\n");
 	route_init();
+	dbg(0,"at 10\n");
 	navigation_init();
+	dbg(0,"at 11\n");
 	tracking_init();
+	dbg(0,"at 12\n");
 	search_init();
+	dbg(0,"at 13\n");
 	linguistics_init();
+	dbg(0,"at 14\n");
 	config_file=NULL;
 #ifdef HAVE_GETOPT_H
 	opterr=0;  //don't bomb out on errors.
@@ -160,6 +173,7 @@ int main_real(int argc, const char **argv)
 		if (optind < argc) config_file = argv[optind];
 	}
 
+	dbg(0,"at 15\n");
 	// if config file is explicitely given only look for it, otherwise try std paths
 	if (config_file) {
 		list = g_list_append(list,g_strdup(config_file));
@@ -179,6 +193,7 @@ int main_real(int argc, const char **argv)
 		list = g_list_append(list,g_strdup("/etc/navit/navit.xml"));
 #endif
 	}
+	dbg(0,"at 16\n");
 	li = list;
 	for (;;) {
 		if (li == NULL) {
@@ -196,11 +211,13 @@ int main_real(int argc, const char **argv)
 		li = g_list_next(li);
 	}
 
+	dbg(0,"at 17 %s\n",config_file);
 	if (!config_load(config_file, &error)) {
 		dbg(0, _("Error parsing config file '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
 		dbg(0, _("Using config file '%s'\n"), config_file);
 	}
+	dbg(0,"at 18\n");
 	while (li) {
 		g_free(li->data);
 		li = g_list_next(li);
