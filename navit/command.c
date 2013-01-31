@@ -645,6 +645,7 @@ command_call_function(struct context *ctx, struct result *res)
 			}
 		} else if (!strcmp(function,"add_attr")) {
 			command_object_add_attr(ctx, &res->attr, list[0]);
+			result_free(list[0]);
 		} else if (!strcmp(function,"remove_attr")) {
 			command_object_remove_attr(ctx, &res->attr, list[0]);
 		} else {
