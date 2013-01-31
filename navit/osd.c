@@ -21,6 +21,7 @@
 #include "debug.h"
 #include "plugin.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "color.h"
 #include "point.h"
 #include "navit.h"
@@ -31,9 +32,9 @@
 
 
 struct osd {
+	NAVIT_OBJECT
 	struct osd_methods meth;
 	struct osd_priv *priv;
-	struct attr** osd_attrs;
 };
 
 struct osd *
@@ -50,27 +51,35 @@ osd_new(struct attr *parent, struct attr **attrs)
                 return NULL;
         o=g_new0(struct osd, 1);
         o->priv=new(parent->u.navit, &o->meth, attrs);
-
-		o->osd_attrs = attr_list_dup(attrs);
-
+	if (o->priv) {
+		o->func=&osd_func;
+		navit_object_ref((struct navit_object *)o);
+		o->attrs=attr_list_dup(attrs);
+	} else {
+		g_free(o);
+		o=NULL;
+	}
         return o;
-}
-
-int
-osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
-{
-	return attr_generic_get_attr(this_->osd_attrs, NULL, type, attr, NULL);
 }
 
 int
 osd_set_attr(struct osd *osd, struct attr* attr)
 {
-	osd->osd_attrs=attr_generic_set_attr(osd->osd_attrs,attr);
 	if(osd && osd->meth.set_attr) {
+		navit_object_set_attr((struct navit_object *)osd, attr);
 		osd->meth.set_attr(osd->priv, attr);
 		return 1;
 	}
 	return 0;
+}
+
+void
+osd_destroy(struct osd *osd)
+{
+	if (osd && osd->meth.destroy) {
+		osd->meth.destroy(osd->priv);
+	}
+	g_free(osd);
 }
 
 void
@@ -368,3 +377,19 @@ osd_std_draw(struct osd_item *item)
 	if (flags & 8) 
 		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
 }
+
+struct object_func osd_func = {
+	attr_osd,
+	(object_func_new)osd_new,
+	(object_func_get_attr)navit_object_get_attr,
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
+	(object_func_set_attr)osd_set_attr,
+	(object_func_add_attr)NULL,
+	(object_func_remove_attr)NULL,
+	(object_func_init)NULL,
+	(object_func_destroy)osd_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};
