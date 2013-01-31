@@ -509,11 +509,12 @@ eval_value(struct context *ctx, struct result *res) {
 		op++;
 	}
 	if ((op[0] >= 'a' && op[0] <= 'z') || (op[0] >= 'A' && op[0] <= 'Z') || op[0] == '_') {
+		const char *s=op;
 		for (;;) {
 			while ((op[0] >= 'a' && op[0] <= 'z') || (op[0] >= 'A' && op[0] <= 'Z') || (op[0] >= '0' && op[0] <= '9') || op[0] == '_') {
 				op++;
 			}
-			if (res->varlen == 3 && !strncmp(res->var,"new",3) && op[0] == ' ') {
+			if (op-s == 3 && !strncmp(s,"new",3) && op[0] == ' ') {
 				op++;
 			} else
 				break;
