@@ -343,7 +343,7 @@ static char *element_fixmes[]={
 };
 
 static void initStatic(void) {
-	elements=g_new0(struct element_func,40); //39 is a number of elements + ending NULL element
+	elements=g_new0(struct element_func,41); //40 is a number of elements + ending NULL element
 
 	elements[0].name="config";
 	elements[0].parent=NULL;
