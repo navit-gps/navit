@@ -26,6 +26,7 @@ struct attr;
 struct osd_methods {
 	void (*osd_destroy)(struct osd_priv *osd);
 	void (*set_attr)(struct osd_priv *osd, struct attr* attr);
+	void (*destroy)(struct osd_priv *osd);
 };
 
 #define osd_draw_cast(x) (void (*)(struct osd_priv *osd, struct navit *navit, struct vehicle *v))(x)

@@ -257,7 +257,6 @@ static struct object_func object_funcs[] = {
 	{ attr_itemgra,    NEW(itemgra_new),  NULL, NULL, NULL, NULL, ADD(itemgra_add_attr)},
 	{ attr_log,        NEW(log_new)},
 	{ attr_navigation, NEW(navigation_new), GET(navigation_get_attr)},
-	{ attr_osd,        NEW(osd_new),  GET(osd_get_attr), NULL, NULL, SET(osd_set_attr) },
 	{ attr_plugins,    NEW(plugins_new),  NULL, NULL, NULL, NULL, NULL, NULL, INIT(plugins_init)},
 	{ attr_plugin,     NEW(plugin_new)},
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
@@ -287,6 +286,8 @@ object_func_lookup(enum attr_type type)
 		return &mapset_func;
 	case attr_navit:
 		return &navit_func;
+	case attr_osd:
+		return &osd_func;
 	case attr_trackingo:
 		return &tracking_func;
 	case attr_vehicle:
@@ -1316,4 +1317,11 @@ navit_object_remove_attr(struct navit_object *obj, struct attr *attr)
 	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
 		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, -1);
 	return 1;
+}
+
+void
+navit_object_destroy(struct navit_object *obj)
+{
+	attr_list_free(obj->attrs);
+	g_free(obj);
 }
