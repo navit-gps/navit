@@ -220,7 +220,7 @@ void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, s
 void item_bin_dump(struct item_bin *ib, FILE *out);
 void dump_itembin(struct item_bin *ib);
 void item_bin_set_type_by_population(struct item_bin *ib, int population);
-void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out);
+void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out);
 int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size);
 
 /* itembin_buffer.c */
@@ -302,7 +302,7 @@ long long item_bin_get_relationid(struct item_bin *ib);
 FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
-void write_countrydir(struct zip_info *zip_info);
+void write_countrydir(struct zip_info *zip_info, int max_index_size);
 void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways);
 void load_countries(void);
 void remove_countryfiles(void);
