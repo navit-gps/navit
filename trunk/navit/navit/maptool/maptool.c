@@ -175,6 +175,7 @@ usage(FILE *f)
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
 	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
+	fprintf(f,"-x (--index-size)                 : set maximum country index size in bytes\n");
 	fprintf(f,"-z (--compression-level) <level>  : set the compression level\n");
 	fprintf(f,"Internal options (undocumented):\n");                                                                      
 	fprintf(f,"-b (--binfile)\n");                                                                                        
@@ -215,6 +216,7 @@ struct maptool_params {
 	int node_table_loaded;
 	int countries_loaded;
 	int tilesdir_loaded;
+	int max_index_size;
 };
 
 static int
@@ -255,13 +257,14 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"ways-only", 0, 0, 'W'},
 		{"slice-size", 1, 0, 'S'},
 		{"unknown-country", 0, 0, 'U'},
+		{"index-size", 0, 0, 'x'},
 		{0, 0, 0, 0}
 	};
 	c = getopt_long (argc, argv, "5:6B:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 				      "d:"
 #endif
-				      "e:hi:knm:p:r:s:t:wu:z:U", long_options, option_index);
+				      "e:hi:knm:p:r:s:t:wu:z:Ux:", long_options, option_index);
 	if (c == -1)
 		return 1;
 	switch (c) {
@@ -387,6 +390,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'u':
 		p->url=optarg;
+		break;
+	case 'x':
+		p->max_index_size=atoi(optarg);
 		break;
 #ifdef HAVE_ZLIB
 	case 'z':
@@ -714,7 +720,7 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		unsigned char md5_data[16];
 		zipnum=zip_get_zipnum(zip_info);
 		add_aux_tiles("auxtiles.txt", zip_info);
-		write_countrydir(zip_info);
+		write_countrydir(zip_info,p->max_index_size);
 		zip_set_zipnum(zip_info, zipnum);
 		write_aux_tiles(zip_info);
 		zip_write_index(zip_info);
@@ -789,6 +795,8 @@ int main(int argc, char **argv)
 	int suffix_start=0;
 	int option_index=0;
 	main_init(argv[0]);
+
+	linguistics_init();
     
 #ifndef HAVE_GLIB
 	_g_slice_thread_init_nomessage();
@@ -804,6 +812,7 @@ int main(int argc, char **argv)
 	p.process_ways=1;
 	p.process_relations=1;
 	p.timestamp=current_to_iso8601();
+	p.max_index_size=65536;
 
 #ifdef HAVE_SBRK
 	start_brk=(long)sbrk(0);
