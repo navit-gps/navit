@@ -470,12 +470,26 @@ item_bin_set_type_by_population(struct item_bin *ib, int population)
 
 
 void
-item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out)
+item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out)
 {
 	char *word=item_bin_get_attr(ib, type, NULL);
 	int i,words=0,len=ib->len;
+	char tilename[32]="";
 	if (!word)
 		return;
+	if(experimental && maxdepth && ib->clen>0) {
+		struct rect r;
+		struct coord *c=(struct coord *)(ib+1);
+		r.l=c[0];
+		r.h=c[0];
+		for (i = 1 ; i < ib->clen/2 ; i++)
+			bbox_extend(&c[i], &r);
+		tile(&r,NULL,tilename,maxdepth,overlap,NULL);
+	}
+	if(experimental && maxdepth) {
+		item_bin_add_attr_string(ib, attr_tile_name, tilename);
+		len=ib->len;
+	}
 	do  {
 		if (linguistics_search(word)) {
 			for (i = 0 ; i < 3 ; i++) {
@@ -501,6 +515,17 @@ item_bin_sort_compare(const void *p1, const void *p2)
 	struct attr_bin *attr1,*attr2;
 	char *s1,*s2;
 	int ret;
+	if(experimental) {
+		attr1=item_bin_get_attr_bin(ib1, attr_tile_name, NULL);
+		attr2=item_bin_get_attr_bin(ib2, attr_tile_name, NULL);
+		if(attr1&&attr2) {
+			s1=(char *)(attr1+1);
+			s2=(char *)(attr2+1);
+			ret=strcmp(s1,s2);
+			if(ret)
+				return ret;
+		}
+	}
 #if 0
 	dbg_assert(ib1->clen==2);
 	dbg_assert(ib2->clen==2);
@@ -521,7 +546,15 @@ item_bin_sort_compare(const void *p1, const void *p2)
 		if (ret)
 			return ret;
 	}
+	if(experimental) {
+		s1=linguistics_casefold(s1);
+		s2=linguistics_casefold(s2);
+	}
 	ret=strcmp(s1, s2);
+	if(experimental) {
+		g_free(s1);
+		g_free(s2);
+	}
 	if (!ret) {
 		int match1=0,match2=0;
 		match1=(attr1->type == attr_town_name_match || attr1->type == attr_district_name_match);

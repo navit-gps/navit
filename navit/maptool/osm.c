@@ -122,6 +122,7 @@ struct country_table {
 	FILE *file;
 	int size;
 	struct rect r;
+	int nparts;
 } country_table[] = {
 	{ 4,"Afghanistan"},
 	{ 8,"Albania"},
@@ -1952,7 +1953,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 					if (attrs[i].type != attr_none)
 						item_bin_add_attr(ib, &attrs[i]);
 				}
-				item_bin_write_match(ib, attr_town_name, attr_town_name_match, result->file);
+				item_bin_write_match(ib, attr_town_name, attr_town_name_match, experimental?5:0, result->file);
 			}
 		}
 	}
@@ -2690,36 +2691,130 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 }
 
 static void
-index_country_add(struct zip_info *info, int country_id, int zipnum)
+index_country_add(struct zip_info *info, int country_id, char*first_key, char *last_key, char *tile, char *filename, int size, FILE *out)
 {
 	struct item_bin *item_bin=init_item(type_countryindex);
+	int num=0, zip_num;
+	char tilename[32];
+
+	do {
+		snprintf(tilename,sizeof(tilename),"%ss%d", tile, num);
+		num++;
+		zip_num=add_aux_tile(info, tilename, filename, size);
+	} while (zip_num == -1);
+	
 	item_bin_add_attr_int(item_bin, attr_country_id, country_id);
-	item_bin_add_attr_int(item_bin, attr_zipfile_ref, zipnum);
-	item_bin_write(item_bin, zip_get_index(info));
+
+	if(first_key)
+		item_bin_add_attr_string(item_bin, attr_first_key, first_key);
+
+	if(last_key)
+		item_bin_add_attr_string(item_bin, attr_last_key, last_key);
+
+	item_bin_add_attr_int(item_bin, attr_zipfile_ref, zip_num);
+	item_bin_write(item_bin, out);
 }
 
 void
-write_countrydir(struct zip_info *zip_info)
+write_countrydir(struct zip_info *zip_info, int max_index_size)
 {
-	int i,zipnum,num;
+	int i;
 	int max=11;
-	char tilename[32];
 	char filename[32];
-	char suffix[32];
 	struct country_table *co;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
-		if (co->size) {
-			num=0;
-			do {
-				tilename[0]='\0';
-				sprintf(suffix,"s%d", num);
-				num++;
-				tile(&co->r, suffix, tilename, max, overlap, NULL);
-				sprintf(filename,"country_%d.tmp", co->countryid);
-				zipnum=add_aux_tile(zip_info, tilename, filename, co->size);
-			} while (zipnum == -1);
-			index_country_add(zip_info,co->countryid,zipnum);
+		if (!experimental && co->size) {
+			char tilename[32]="";
+			snprintf(filename,sizeof(filename),"country_%d.tmp", co->countryid);
+			tile(&co->r, "", tilename, max, overlap, NULL);
+			index_country_add(zip_info,co->countryid,NULL,NULL,tilename,filename, co->size, zip_get_index(zip_info));
+		} else if(co->size) { 
+			FILE *in;
+			char countrypart[32];
+			char partsuffix[32];
+			FILE *out=NULL;
+			char *outname=NULL;
+			int partsize;
+			char buffer[50000];
+			struct item_bin *ib=(struct item_bin*)buffer;
+			int ibsize;
+			char tileco[32]="";
+			char tileprev[32]="";
+			char tilecur[32]="";
+			char *countryindexname;
+			FILE *countryindex;
+			char key[1024]="",first_key[1024]="",last_key[1024]="";
+			
+			tile(&co->r, "", tileco, max, overlap, NULL);
+			
+			snprintf(filename,sizeof(filename),"country_%d.tmp", co->countryid);
+			in=fopen(filename,"rb");
+
+			snprintf(countrypart,sizeof(countrypart),"country_%d_p",co->countryid);
+
+			countryindex=tempfile("0",countrypart,1);
+			countryindexname=tempfile_name("0",countrypart);
+			
+			partsize=0;
+
+			while(1) {
+				int r=item_bin_read(ib,in);
+				struct attr_bin *a;
+				ibsize=r>0?(ib->len+1)*4 : 0;
+				if(ibsize) {
+					g_strlcpy(tileprev,tilecur,sizeof(tileprev));
+					a=item_bin_get_attr_bin(ib, attr_tile_name, NULL);
+					if(a) {
+						g_strlcpy(tilecur,(char *)(a+1),sizeof(tilecur));
+						item_bin_remove_attr(ib,a+1);
+					}
+					else
+						tilecur[0]=0;
+
+					a=item_bin_get_attr_bin_last(ib);
+					if(a && ATTR_IS_STRING(a->type))
+						g_strlcpy(key,(char *)(a+1),sizeof(key));
+				}
+
+				/* If output file is already opened, and:
+				     - we have reached end of input file, or 
+				     - adding new tile would make index part too big, or
+				     - item just read belongs to a different tile than the previous one,
+				    then close existing output file, put reference to the country index tile.*/
+				if(out && (!r || (partsize && ((partsize+ibsize)>max_index_size)) || strcmp(tileprev,tilecur)) ) {
+					partsize=ftell(out);
+					fclose(out);
+					out=NULL;
+					index_country_add(zip_info,co->countryid,first_key,last_key,strlen(tileco)>strlen(tileprev)?tileco:tileprev,outname,partsize,countryindex);
+					g_free(outname);
+					outname=NULL;
+					g_strlcpy(first_key,key,sizeof(first_key));
+				}
+
+				/* No items left, finish this country index. */
+				if(!r)
+					break;
+
+				/* Open new output file. */
+				if(!out) {
+					co->nparts++;
+					snprintf(partsuffix,sizeof(partsuffix),"%d",co->nparts);
+					out=tempfile(partsuffix,countrypart,1);
+					outname=tempfile_name(partsuffix,countrypart);
+					partsize=0;
+				}
+
+				item_bin_write(ib,out);
+				partsize+=ibsize;
+				g_strlcpy(last_key,key,sizeof(last_key));
+			}
+			
+			partsize=ftell(countryindex);
+			if(partsize)
+				index_country_add(zip_info,co->countryid,NULL,NULL,tileco,countryindexname, partsize, zip_get_index(zip_info));
+			fclose(countryindex);
+			g_free(countryindexname);
 		}
 	}
 }
@@ -2761,7 +2856,7 @@ load_countries(void)
 void
 remove_countryfiles(void)
 {
-	int i;
+	int i,j;
 	char filename[32];
 	struct country_table *co;
 
@@ -2770,6 +2865,12 @@ remove_countryfiles(void)
 		if (co->size) {
 			sprintf(filename,"country_%d.tmp", co->countryid);
 			unlink(filename);
+		}
+		for(j=0; j<=co->nparts;j++) {
+			char partsuffix[32];
+			sprintf(filename,"country_%d_p", co->countryid);
+			sprintf(partsuffix,"%d",j);
+			tempfile_unlink(partsuffix,filename);
 		}
 	}
 }
