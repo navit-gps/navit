@@ -3043,6 +3043,38 @@ osd_text_init(struct osd_priv_common *opc, struct navit *nav)
 
 }
 
+int
+osd_text_set_attr(struct osd_priv_common *opc, struct attr* attr)
+{
+	struct osd_text *this_ = (struct osd_text *)opc->data;
+
+	if(NULL==attr || NULL==this_) {
+		return 0;
+	}	
+	if(attr->type == attr_label) {
+		struct navit *nav=opc->osd_item.navit;
+
+		if(this_->text)
+			g_free(this_->text);
+
+		if(attr->u.str)
+			this_->text = g_strdup(attr->u.str);
+		else
+			this_->text=g_strdup("");
+			
+		osd_text_prepare(opc,nav);
+
+		if(navit_get_blocked(nav)&1)
+		        return 1;
+		        
+		osd_text_draw(opc,nav,NULL);
+		navit_draw(opc->osd_item.navit);
+		return 1;
+	}
+	return 0;
+}
+
+
 static struct osd_priv *
 osd_text_new(struct navit *nav, struct osd_methods *meth,
 	    struct attr **attrs)
@@ -3060,6 +3092,7 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
 	meth->set_attr = (void (*)(struct osd_priv *osd, struct attr* attr))set_std_osd_attr;
+	opc->spec_set_attr_func = osd_text_set_attr;
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
 	this->active = -1;
