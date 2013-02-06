@@ -357,7 +357,6 @@ add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size)
 	while (l) {
 		at=l->data;
 		if (!strcmp(at->name, name)) {
-			fprintf(stderr,"exists %s vs %s\n",at->name, name);
 			return -1;
 		}
 		l=g_list_next(l);
@@ -367,6 +366,7 @@ add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size)
 	at->filename=g_strdup(filename);
 	at->size=size;
 	aux_tile_list=g_list_append(aux_tile_list, at);
+	fprintf(stderr,"Adding %s as %s\n",filename, name);
 	return zip_add_member(zip_info);
 }
 
