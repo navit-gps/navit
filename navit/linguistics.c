@@ -231,7 +231,6 @@ static const char *special[][3]={
 
 /* Cyrillic capital */
 {"Ё","Е"},
-{"Й","И"},
 {"І","I"},
 {"Ї","I"},
 {"Ў","У"},
@@ -246,7 +245,6 @@ static const char *special[][3]={
 
 /* Cyrillic small */
 {"ё","е"},
-{"й","и"},
 {"і","i"},
 {"ї","i"},
 {"ў","у"},
