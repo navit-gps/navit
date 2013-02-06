@@ -148,6 +148,7 @@ struct map_rect_priv {
 	char *url;
 	struct attr attrs[8];
 	int status;
+	struct map_search_priv *msp;
 #ifdef DEBUG_SIZE
 	int size;
 #endif
@@ -176,6 +177,7 @@ static void setup_pos(struct map_rect_priv *mr);
 static void map_binfile_close(struct map_priv *m);
 static int map_binfile_open(struct map_priv *m);
 static void map_binfile_destroy(struct map_priv *m);
+static int case_cmp(char *name, char *match, int partial);
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
@@ -1694,6 +1696,24 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 		{
 			if (binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 			{
+				if(mr->msp) {
+					struct attr *attr=&mr->msp->search;
+					if(attr->type==attr_town_name || attr->type==attr_district_name || attr->type==attr_town_or_district_name) {
+						struct attr af, al;
+						if(binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
+							if(case_cmp(af.u.str,attr->u.str,1)>0) {
+								dbg(1,"Skipping index item with first_key='%s'\n", af.u.str);
+								return;
+							}
+						}
+						if(binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
+							if(case_cmp(al.u.str,attr->u.str,1)<0) {
+								dbg(1,"Skipping index item with first_key='%s', last_key='%s'\n", af.u.str, al.u.str);
+								return;
+							}
+						};
+					}
+				}	
 				push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 			}
 		}
@@ -1999,6 +2019,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			if (!map_rec) 
 				break;
 			map_rec->country_id = item->id_lo;
+			map_rec->msp = msp;
 			msp->mr = map_rec;
 			return msp;
 			break;
