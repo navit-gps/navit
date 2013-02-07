@@ -1691,33 +1691,37 @@ static void
 map_parse_country_binfile(struct map_rect_priv *mr)
 {
 	struct attr at;
-	if (binfile_attr_get(mr->item.priv_data, attr_country_id, &at)) {
-		if (at.u.num == mr->country_id)
-		{
-			if (binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
-			{
-				if(mr->msp) {
-					struct attr *attr=&mr->msp->search;
-					if(attr->type==attr_town_name || attr->type==attr_district_name || attr->type==attr_town_or_district_name) {
-						struct attr af, al;
-						if(binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
-							if(case_cmp(af.u.str,attr->u.str,1)>0) {
-								dbg(1,"Skipping index item with first_key='%s'\n", af.u.str);
-								return;
-							}
-						}
-						if(binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
-							if(case_cmp(al.u.str,attr->u.str,1)<0) {
-								dbg(1,"Skipping index item with first_key='%s', last_key='%s'\n", af.u.str, al.u.str);
-								return;
-							}
-						};
-					}
-				}	
-				push_zipfile_tile(mr, at.u.num, 0, 0, 0);
+
+	if (!binfile_attr_get(mr->item.priv_data, attr_country_id, &at))
+		return;
+
+	if( at.u.num != mr->country_id)
+		return;
+
+	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
+		return;
+
+	if(mr->msp) 
+	{
+		struct attr *search=&mr->msp->search;
+		if(search->type==attr_town_name || search->type==attr_district_name || search->type==attr_town_or_district_name) {
+			struct attr af, al;
+			if(binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
+				if(case_cmp(af.u.str,search->u.str,1)>0) {
+					dbg(1,"Skipping index item with first_key='%s'\n", af.u.str);
+					return;
+				}
+			}
+			if(binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
+				if(case_cmp(al.u.str,search->u.str,1)<0) {
+					dbg(1,"Skipping index item with first_key='%s', last_key='%s'\n", af.u.str, al.u.str);
+					return;
+				}
 			}
 		}
-	}
+	}	
+
+	push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 }
 
 static int
