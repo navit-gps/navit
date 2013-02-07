@@ -1576,7 +1576,7 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"admin_level")) {
 		admin_level=atoi(v);
 	} else if (!strcmp(k,"boundary")) {
-		if (!strcmp(v,"administrative") || (experimental && !strcmp(v,"postal_code"))) {
+		if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
 			boundary=1;
 		}
 	} else if (!strcmp(k,"ISO3166-1")) {
@@ -1835,7 +1835,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 		l=g_list_next(l);
 	}
 	if (match) {
-		if (match && match->country && match->country->admin_levels && experimental) {
+		if (match && match->country && match->country->admin_levels) {
 			l=matches;
 			while (l) {
 				struct boundary *b=l->data;
@@ -1953,7 +1953,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 					if (attrs[i].type != attr_none)
 						item_bin_add_attr(ib, &attrs[i]);
 				}
-				item_bin_write_match(ib, attr_town_name, attr_town_name_match, experimental?5:0, result->file);
+				item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, result->file);
 			}
 		}
 	}
@@ -2724,12 +2724,7 @@ write_countrydir(struct zip_info *zip_info, int max_index_size)
 	struct country_table *co;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
-		if (!experimental && co->size) {
-			char tilename[32]="";
-			snprintf(filename,sizeof(filename),"country_%d.tmp", co->countryid);
-			tile(&co->r, "", tilename, max, overlap, NULL);
-			index_country_add(zip_info,co->countryid,NULL,NULL,tilename,filename, co->size, zip_get_index(zip_info));
-		} else if(co->size) { 
+		if(co->size) { 
 			FILE *in;
 			char countrypart[32];
 			char partsuffix[32];

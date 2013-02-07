@@ -477,7 +477,7 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 	char tilename[32]="";
 	if (!word)
 		return;
-	if(experimental && maxdepth && ib->clen>0) {
+	if(maxdepth && ib->clen>0) {
 		struct rect r;
 		struct coord *c=(struct coord *)(ib+1);
 		r.l=c[0];
@@ -487,8 +487,8 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 		tile(&r,NULL,tilename,maxdepth,overlap,NULL);
 	}
 
-	/* insert attr_tile_name attribute before the attribute used as alphabetical key (of type type) */
-	if(experimental && maxdepth) {
+	/* insert attr_tile_name attribute before the attribute used as alphabetical ekey (of type type) */
+	if(maxdepth) {
 		struct attr_bin *a=item_bin_get_attr_bin(ib, type, NULL);
 		char *s=g_strdup((char*)(a+1));
 		item_bin_add_attr_string(ib, attr_tile_name, tilename);
@@ -521,16 +521,15 @@ item_bin_sort_compare(const void *p1, const void *p2)
 	struct attr_bin *attr1,*attr2;
 	char *s1,*s2;
 	int ret;
-	if(experimental) {
-		attr1=item_bin_get_attr_bin(ib1, attr_tile_name, NULL);
-		attr2=item_bin_get_attr_bin(ib2, attr_tile_name, NULL);
-		if(attr1&&attr2) {
-			s1=(char *)(attr1+1);
-			s2=(char *)(attr2+1);
-			ret=strcmp(s1,s2);
-			if(ret)
-				return ret;
-		}
+
+	attr1=item_bin_get_attr_bin(ib1, attr_tile_name, NULL);
+	attr2=item_bin_get_attr_bin(ib2, attr_tile_name, NULL);
+	if(attr1&&attr2) {
+		s1=(char *)(attr1+1);
+		s2=(char *)(attr2+1);
+		ret=strcmp(s1,s2);
+		if(ret)
+			return ret;
 	}
 #if 0
 	dbg_assert(ib1->clen==2);
@@ -552,15 +551,14 @@ item_bin_sort_compare(const void *p1, const void *p2)
 		if (ret)
 			return ret;
 	}
-	if(experimental) {
-		s1=linguistics_casefold(s1);
-		s2=linguistics_casefold(s2);
-	}
+
+	s1=linguistics_casefold(s1);
+	s2=linguistics_casefold(s2);
+
 	ret=strcmp(s1, s2);
-	if(experimental) {
-		g_free(s1);
-		g_free(s2);
-	}
+	g_free(s1);
+	g_free(s2);
+
 	if (!ret) {
 		int match1=0,match2=0;
 		match1=(attr1->type == attr_town_name_match || attr1->type == attr_district_name_match);
