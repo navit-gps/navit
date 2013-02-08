@@ -487,10 +487,11 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 		tile(&r,NULL,tilename,maxdepth,overlap,NULL);
 	}
 
-	/* insert attr_tile_name attribute before the attribute used as alphabetical ekey (of type type) */
+	/* insert attr_tile_name attribute before the attribute used as alphabetical key (of type type) */
 	if(maxdepth) {
 		struct attr_bin *a=item_bin_get_attr_bin(ib, type, NULL);
 		char *s=g_strdup((char*)(a+1));
+		item_bin_remove_attr(ib,a);
 		item_bin_add_attr_string(ib, attr_tile_name, tilename);
 		item_bin_add_attr_string(ib, type, s);
 		g_free(s);
