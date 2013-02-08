@@ -309,7 +309,7 @@ struct country_table {
 	{ 634,"Qatar"},
 	{ 638,"Réunion"},
 	{ 642,"România,Romania,RO"},
-	{ 643,"Россия,Российская Федерация,Russia,Russian Federation"},
+	{ 643,"Россия,Российская Федерация,Russia,Russian Federation","3s5c7m"},
 	{ 646,"Rwanda"},
 	{ 652,"Saint Barthélemy"},
 	{ 654,"Saint Helena, Ascension and Tristan da Cunha"},
