@@ -114,39 +114,72 @@ postal_str(struct search_list_result *res, int level)
 }
 
 static char *
-district_str(struct search_list_result *res, int level)
+get_string_from_attr_list(struct attr **attrs, enum attr_type type, char *dflt)
 {
-	char *ret=NULL;
-	if (res->town->common.district_name)
-		ret=res->town->common.district_name;
+	struct attr attr;
+	if(attr_generic_get_attr(attrs,NULL,type,&attr,NULL))
+		return attr.u.str;
+	else
+		return dflt;
+}
+
+static char *
+district_str(struct search_list_result *res, int level, enum attr_type district, char *dflt)
+{
+	char *ret=dflt;
+
+	ret=get_string_from_attr_list(res->town->common.attrs, district, ret);
 	if (level == 1)
 		return ret;
-	if (res->street->common.district_name)
-		ret=res->street->common.district_name;
+
+	ret=get_string_from_attr_list(res->street->common.attrs, district, ret);
+
 	if (level == 2)
 		return ret;
-	if (res->house_number->common.district_name)
-		ret=res->house_number->common.district_name;
+
+	ret=get_string_from_attr_list(res->house_number->common.attrs, district, ret);
+	
 	return ret;
 }
 
 static char *
 town_str(struct search_list_result *res, int level, int flags)
 {
-	char *town=res->town->common.town_name;
-	char *district=district_str(res, level);
+	char *town=district_str(res, level,attr_town_name,"");
+	char *district=district_str(res, level,attr_district_name,NULL);
 	char *postal=postal_str(res, level);
 	char *postal_sep=" ";
 	char *district_begin=" (";
 	char *district_end=")";
 	char *county_sep = ", Co. ";
 	char *county = res->town->common.county_name;
+	
 	if (!postal)
 		postal_sep=postal="";
 	if (!district || (flags & 1))
 		district_begin=district_end=district="";
 	if (!county)
 		county_sep=county="";
+
+	if(level==1 ) {
+		if(flags & 2) {
+			int n=0;
+			char *s[10]={NULL};
+		
+			s[n]=district_str(res, level, attr_state_name, NULL);
+			if(s[n])
+				n++;
+			s[n]=district_str(res, level, attr_county_name, NULL);
+			if(s[n])
+				n++;
+			s[n]=district_str(res, level, attr_municipality_name, NULL);
+			if(s[n])
+				n++;
+
+			return g_strjoinv(", ",s);
+		}
+		county=county_sep="";
+	}
 
 	return g_strdup_printf("%s%s%s%s%s%s%s%s", postal, postal_sep, town, district_begin, district, district_end, county_sep, county);
 }
@@ -242,6 +275,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		item=&res->town->common.item;
 		name=res->town->common.town_name;
 		text=town_str(res, 1, 0);
+		text2=town_str(res, 1, 2);
 	}
 	if (! strcmp(wm_name,"Street")) {
 		name=res->street->name;
