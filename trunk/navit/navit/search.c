@@ -418,41 +418,80 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 }
 
 static void
+search_list_common_addattr(struct attr* attr,struct search_list_common *common)
+{
+
+	common->attrs=attr_generic_prepend_attr(common->attrs,attr);
+	switch(attr->type) {
+		case attr_town_name:
+			common->town_name=common->attrs[0]->u.str;
+			break;
+		case attr_county_name:
+			common->county_name=common->attrs[0]->u.str;
+			break;
+		case attr_district_name:
+			common->district_name=common->attrs[0]->u.str;
+			break;
+		case attr_postal:
+			common->postal=common->attrs[0]->u.str;
+			break;
+		case attr_town_postal:
+			if(!common->postal)
+				common->postal=common->attrs[0]->u.str;
+			break;
+		case attr_postal_mask:
+			common->postal_mask=common->attrs[0]->u.str;
+			break;
+		default:
+			break;
+	}
+}
+
+static void
 search_list_common_new(struct item *item, struct search_list_common *common)
 {
 	struct attr attr;
-	if (item_attr_get(item, attr_town_name, &attr))
-		common->town_name=map_convert_string(item->map, attr.u.str);
-	else
-		common->town_name=NULL;
-	if (item_attr_get(item, attr_county_name, &attr))
-		common->county_name=map_convert_string(item->map, attr.u.str);
-	else
-		common->county_name=NULL;
-	if (item_attr_get(item, attr_district_name, &attr))
-		common->district_name=map_convert_string(item->map, attr.u.str);
-	else
-		common->district_name=NULL;
-	if (item_attr_get(item, attr_postal, &attr))
-		common->postal=map_convert_string(item->map, attr.u.str);
-	else if (item_attr_get(item, attr_town_postal, &attr))
-		common->postal=map_convert_string(item->map, attr.u.str);
-	else
-		common->postal=NULL;
-	if (item_attr_get(item, attr_postal_mask, &attr))
-		common->postal_mask=map_convert_string(item->map, attr.u.str);
-	else
-		common->postal_mask=NULL;
+	int i;
+	enum attr_type common_attrs[]={
+		attr_state_name, 
+		attr_county_name, 
+		attr_municipality_name, 
+		attr_town_name, 
+		attr_district_name, 
+		attr_postal, 
+		attr_town_postal, 
+		attr_postal_mask,
+		attr_none
+	};
+
+	common->town_name=NULL;
+	common->district_name=NULL;
+	common->county_name=NULL;
+	common->postal=NULL;
+	common->postal_mask=NULL;
+	common->attrs=NULL;
+
+	for(i=0;common_attrs[i];i++) {
+		if (item_attr_get(item, common_attrs[i], &attr)) {
+			struct attr at;
+			at.type=attr.type;
+			at.u.str=map_convert_string(item->map, attr.u.str);
+			search_list_common_addattr(&at,common);
+			map_convert_free(at.u.str);
+		}
+	}
 }
 
 static void
 search_list_common_dup(struct search_list_common *src, struct search_list_common *dst)
 {
-	dst->town_name=map_convert_dup(src->town_name);
-	dst->district_name=map_convert_dup(src->district_name);
-	dst->county_name=map_convert_dup(src->county_name);
-	dst->postal=map_convert_dup(src->postal);
-	dst->postal_mask=map_convert_dup(src->postal_mask);
+	int i;
+
+	if(dst->attrs) {
+		for(i=0;dst->attrs[i];i++)
+			search_list_common_addattr(src->attrs[i],dst);
+	}
+
 	if (src->c) {
 		dst->c=g_new(struct pcoord, 1);
 		*dst->c=*src->c;
@@ -463,19 +502,16 @@ search_list_common_dup(struct search_list_common *src, struct search_list_common
 static void
 search_list_common_destroy(struct search_list_common *common)
 {
-	map_convert_free(common->town_name);
-	map_convert_free(common->district_name);
-	map_convert_free(common->county_name);
-	map_convert_free(common->postal);
-	map_convert_free(common->postal_mask);
-	if (common->c)
-		g_free(common->c);
+	g_free(common->c);
+	attr_list_free(common->attrs);
+
 	common->town_name=NULL;
 	common->district_name=NULL;
 	common->county_name=NULL;
 	common->postal=NULL;
 	common->postal_mask=NULL;
 	common->c=NULL;
+	common->attrs=NULL;
 }
 
 static struct search_list_country *
