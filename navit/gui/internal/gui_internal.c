@@ -1388,7 +1388,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=4|8|16|32|64|128;
 		break;
 	case 3:
-		flags=1|8|16|32|64|128|2048;
+		flags=1|4|8|16|32|64|128|2048;
 		flags &= this->flags_town;
 		break;
 	case 4:
