@@ -102,7 +102,7 @@ struct item_bin_sink {
 };
 
 struct node_item {
-	int id;
+	unsigned int id;
 	char ref_node;
 	char ref_way;
 	char ref_ref;
@@ -114,7 +114,7 @@ struct zip_info;
 
 struct country_table;
 
-typedef long int osmid;
+typedef unsigned long int osmid;
 
 /* boundaries.c */
 
