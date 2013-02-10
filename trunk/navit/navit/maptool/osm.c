@@ -41,7 +41,7 @@
 extern int doway2poi;
 
 static int in_way, in_node, in_relation;
-static int nodeid,wayid;
+osmid nodeid,wayid;
 long long current_id;
 
 static GHashTable *attr_hash,*country_table_hash,*attr_hash;
@@ -1442,7 +1442,7 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 void
 osm_add_way(osmid id)
 {
-	static int wayid_last;
+	static osmid wayid_last;
 
 	in_way=1;
 	wayid=id;
@@ -1456,7 +1456,7 @@ osm_add_way(osmid id)
 	debug_attr_buffer[0]='\0';
 	osmid_attr_value=id;
 	if (wayid < wayid_last && !way_hash) {
-		fprintf(stderr,"INFO: Ways out of sequence (new %d vs old %d), adding hash\n", wayid, wayid_last);
+		fprintf(stderr,"INFO: Ways out of sequence (new %lu vs old %lu), adding hash\n", wayid, wayid_last);
 		way_hash=g_hash_table_new(NULL, NULL);
 	}
 	wayid_last=wayid;
