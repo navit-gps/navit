@@ -502,15 +502,6 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
-{
-}
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
 static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
 }
@@ -767,7 +758,7 @@ static struct graphics_methods graphics_methods = {
 	draw_circle,
 	draw_text,
 	draw_image,
-	draw_image_warp,
+	NULL,
 	draw_restore,
 	draw_drag,
 	font_new,
