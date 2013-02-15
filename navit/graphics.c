@@ -1986,9 +1986,11 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		break;
 	case element_image:
 		dbg(1,"image: '%s'\n", di->label);
-		if (gra->meth.draw_image_warp)
-			gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, di->label);
-		else
+		if (gra->meth.draw_image_warp) {
+			img=graphics_image_new_scaled_rotated(gra, di->label, -1, -1, 0);
+			if (img)
+				gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, img->priv);
+		} else
 			dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
 		break;
 	case element_arrows:
