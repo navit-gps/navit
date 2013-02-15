@@ -106,6 +106,9 @@ struct graphics_image_priv {
 	GdkPixbuf *pixbuf;
 	int w;
 	int h;
+#ifdef HAVE_IMLIB2
+	void *image;
+#endif
 };
 
 static GHashTable *hImageData;   /*hastable for uncompressed image data*/
@@ -119,6 +122,14 @@ graphics_destroy_image(gpointer data)
 
 	if (priv == &image_error)
 		return;
+
+#ifdef HAVE_IMLIB2
+	if (priv->image) {
+		imlib_context_set_image(priv->image);
+		imlib_free_image();
+	}
+
+#endif
 
 	if (priv->pixbuf)
 		g_object_unref(priv->pixbuf);
@@ -502,19 +513,44 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 
 #ifdef HAVE_IMLIB2
 static void
-draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
+draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)
 {
-	void *image;
 	int w,h;
-	dbg(1,"draw_image_warp data=%s\n", data);
-	image = imlib_load_image(data);
-	imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
-	imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
-	imlib_context_set_visual(gdk_x11_visual_get_xvisual(gtk_widget_get_visual(gr->widget)));
-	imlib_context_set_drawable(gdk_x11_drawable_get_xid(gr->drawable));
-	imlib_context_set_image(image);
-	w = imlib_image_get_width();
-	h = imlib_image_get_height();
+	static struct graphics_priv *imlib_gr;
+	dbg(1,"draw_image_warp data=%p\n", img);
+	if (imlib_gr != gr) {
+		imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
+		imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
+		imlib_context_set_visual(gdk_x11_visual_get_xvisual(gtk_widget_get_visual(gr->widget)));
+		imlib_context_set_drawable(gdk_x11_drawable_get_xid(gr->drawable));
+		imlib_gr=gr;
+	}
+	w = img->w;
+	h = img->h;
+	if (!img->image) {
+		int x,y;
+#if 0
+		if (!gdk_pixbuf_get_has_alpha(img->pixbuf)) {
+			img->pixbuf=gdk_pixbuf_add_alpha(img->pixbuf, FALSE, 0, 0, 0);
+		}
+#endif
+		img->image=imlib_create_image(w, h);
+		imlib_context_set_image(img->image);
+		if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_has_alpha(img->pixbuf) || gdk_pixbuf_get_n_channels(img->pixbuf) != 3 || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
+			dbg(0,"implement me\n");
+		} else {
+			for (y=0 ; y < h ; y++) {
+				unsigned int *dst=imlib_image_get_data()+y*w;
+				unsigned char *src=gdk_pixbuf_get_pixels(img->pixbuf)+y*gdk_pixbuf_get_rowstride(img->pixbuf);
+				for (x=0 ; x < w ; x++) {
+					*dst++=0xff000000|(src[0] << 16)|(src[1] << 8)|src[2];
+					src+=3;
+				}
+			}
+		}
+		
+	} else 
+		imlib_context_set_image(img->image);
 	if (count == 3) {
 		/* 0 1
         	   2   */
@@ -531,7 +567,6 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
         	     */
 		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
 	}
-	imlib_free_image();
 }
 #endif
 
