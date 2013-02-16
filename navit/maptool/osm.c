@@ -1820,7 +1820,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 {
 	GList *l,*matches=boundary_find_matches(bl, c);
 	struct boundary *match=NULL;
-
+	
 	l=matches;
 	while (l) {
 		struct boundary *b=l->data;
@@ -1834,17 +1834,27 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 		}
 		l=g_list_next(l);
 	}
+
 	if (match) {
 		if (match && match->country && match->country->admin_levels) {
+			char *nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+			long long node_id;
+			int end=strlen(match->country->admin_levels)+3;
+			int a;
+			int max_adm_level=end;
+
+			if(nodeid)
+				if(sscanf(nodeid,LONGLONG_FMT,&node_id)<1)
+					node_id=0;
+
 			l=matches;
 			while (l) {
 				struct boundary *b=l->data;
 				char *admin_level=osm_tag_value(b->ib, "admin_level");
 				char *postal=osm_tag_value(b->ib, "postal_code");
 				if (admin_level) {
-					int a=atoi(admin_level);
-					int end=strlen(match->country->admin_levels)+3;
 					char *name;
+					a=atoi(admin_level);
 					if (a > 2 && a < end) {
 						enum attr_type attr_type=attr_none;
 						switch(match->country->admin_levels[a-3]) {
@@ -1869,9 +1879,21 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 					attrs[0].type=attr_town_postal;
 					attrs[0].u.str=postal;
 				}
+				if(b->admin_centre && b->admin_centre==node_id) {
+					if(!max_adm_level || max_adm_level<a)
+						max_adm_level=a;
+				}
+				
 				l=g_list_next(l);
 			}
+
+			/* Administrative centres are not to be contained in their own districts. */
+			if(experimental && max_adm_level>0)
+				for(a=end-1;a>max_adm_level;a--)
+					attrs[a-2].type=type_none;
 		}
+		
+				
 		return match->country; 
 	} else
 		return NULL;
