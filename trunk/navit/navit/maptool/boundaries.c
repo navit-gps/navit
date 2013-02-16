@@ -97,10 +97,21 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 				osm_warning("relation",item_bin_get_relationid(ib),0,"Country Boundary doesn't contain an ISO3166-1 tag\n");
 		}
 		while ((member=item_bin_get_attr(ib, attr_osm_member, member))) {
-			long long wayid;
+			long long osm_id;
 			int read=0;
-			if (sscanf(member,"2:"LONGLONG_FMT":%n",&wayid,&read) >= 1) {
-				char *rolestr=member+read;
+			int member_type;
+			char *rolestr;
+
+			if (sscanf(member,"%d:"LONGLONG_FMT":%n",&member_type,&osm_id,&read) < 2)
+				continue;
+				
+			rolestr=member+read;
+			
+			if(member_type==1) {
+					if(!strcmp(rolestr,"admin_centre") || !strcmp(rolestr,"admin_center"))
+						boundary->admin_centre=osm_id;
+				}
+			if(member_type==2) {
 				enum geom_poly_segment_type role;
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave"))
 					role=geom_poly_segment_type_way_outer;
@@ -110,10 +121,10 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 					role=geom_poly_segment_type_way_unknown;
 				else {
 					osm_warning("relation",item_bin_get_relationid(ib),0,"Unknown role %s in member ",rolestr);
-					osm_warning("way",wayid,1,"\n");
+					osm_warning("way",osm_id,1,"\n");
 					role=geom_poly_segment_type_none;
 				}
-				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, wayid);
+				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, osm_id);
 			}
 		}
 		boundary->ib=item_bin_dup(ib);

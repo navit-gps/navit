@@ -125,6 +125,7 @@ struct boundary {
 	GList *segments,*sorted_segments;
 	GList *children;
 	struct rect r;
+	osmid admin_centre;
 };
 
 char *osm_tag_value(struct item_bin *ib, char *key);
