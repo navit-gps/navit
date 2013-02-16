@@ -168,7 +168,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	const char *str=c_str;
 	int args,ret = 0;
 	struct coord_geo g;
-	struct coord c;
+	struct coord c,offset;
 	enum projection str_pro=projection_none;
 
 	dbg(1,"enter('%s',%d,%p)\n", c_str, pro, c_ret);
@@ -188,8 +188,11 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		else if (!strcmp(proj, "geo"))
 			str_pro = projection_none;
 		else {
-			dbg(0, "Unknown projection: %s\n", proj);
-			goto out;
+			str_pro = projection_from_name(proj,&offset);
+			if (str_pro == projection_none) {
+				dbg(0, "Unknown projection: %s\n", proj);
+				goto out;
+			}
 		}
 	}
 	if (! s) {
@@ -240,6 +243,18 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		}
 		dbg(3,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
 		dbg(3,"rest='%s'\n", str+ret);
+	} else if (str_pro == projection_utm || str_pro == projection_gk) {
+		double x,y;
+		args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
+		if (args < 2)
+			goto out;
+		c.x=x+offset.x;
+		c.y=y+offset.y;
+		if (str_pro != pro) {
+			transform_to_geo(str_pro, &c, &g);
+			transform_from_geo(pro, &g, &c);
+		}
+		*c_ret=c;
 	} else {
 		double lng, lat;
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
