@@ -473,10 +473,12 @@ void
 item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out)
 {
 	char *word=item_bin_get_attr(ib, type, NULL);
-	int i,words=0,len=ib->len;
+	int i,words=0,len;
 	char tilename[32]="";
+
 	if (!word)
 		return;
+
 	if(maxdepth && ib->clen>0) {
 		struct rect r;
 		struct coord *c=(struct coord *)(ib+1);
@@ -489,14 +491,12 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 
 	/* insert attr_tile_name attribute before the attribute used as alphabetical key (of type type) */
 	if(maxdepth) {
-		struct attr_bin *a=item_bin_get_attr_bin(ib, type, NULL);
-		char *s=g_strdup((char*)(a+1));
-		item_bin_remove_attr(ib,a);
 		item_bin_add_attr_string(ib, attr_tile_name, tilename);
-		item_bin_add_attr_string(ib, type, s);
-		g_free(s);
-		len=ib->len;
+		item_bin_add_attr_string(ib, type, word);
+		item_bin_remove_attr(ib,word);
+		word=item_bin_get_attr(ib, type, NULL);
 	}
+	len=ib->len;
 	do  {
 		if (linguistics_search(word)) {
 			for (i = 0 ; i < 3 ; i++) {
