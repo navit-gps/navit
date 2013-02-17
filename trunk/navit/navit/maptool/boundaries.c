@@ -108,9 +108,9 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 			rolestr=member+read;
 			
 			if(member_type==1) {
-					if(!strcmp(rolestr,"admin_centre") || !strcmp(rolestr,"admin_center"))
-						boundary->admin_centre=osm_id;
-				}
+				if(!strcmp(rolestr,"admin_centre") || !strcmp(rolestr,"admin_center"))
+					boundary->admin_centre=osm_id;
+			}
 			if(member_type==2) {
 				enum geom_poly_segment_type role;
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave"))
