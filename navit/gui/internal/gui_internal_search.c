@@ -12,6 +12,7 @@
 #include "search.h"
 #include "country.h"
 #include "track.h"
+#include "linguistics.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
@@ -85,6 +86,7 @@ gui_internal_search_cmp(gconstpointer _a, gconstpointer _b)
   sa=removecase(a->text);
   sb=removecase(b->text);
   r=strcmp(sa,sb);
+  dbg(1,"%s %s %d\n",sa,sb,r);
   g_free(sa);
   g_free(sb);
   return r;
@@ -194,7 +196,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	GList *l;
 	static char possible_keys[256]="";
         struct widget *wi=NULL;
-	struct widget *wr;
+	struct widget *wr, *wb;
 
 	res=search_list_get_result(this->sl);
 	if (res) {
@@ -288,59 +290,77 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text=g_strdup_printf("%s %s", res->street->name, name);
 		text2=town_str(res, 3, 0);
 	}
+
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 
-		if (!text2) {
-			wr->text=g_strdup(text);
-			gui_internal_widget_insert_sorted(search_list, wr, gui_internal_search_cmp);
-			gui_internal_widget_append(wr,
-				wc=gui_internal_button_new_with_callback(this, text,
-					image_new_xs(this, res->country->flag),
-					gravity_left_center|orientation_horizontal|flags_fill,
-					gui_internal_cmd_position, param));
-		} else {
-			struct widget *wb;
-			wr->text=g_strdup_printf("%s %s",text,text2);
+	if (!text2)
+		wr->text=g_strdup(text);
+	else
+		wr->text=g_strdup_printf("%s %s",name,text2);
+	
+	if (! strcmp(wm_name,"House number") && !res->street->name) {
+		wr->datai=2048;
+	} else if(name) {
+		int i;
+		wr->datai=1024;
+		char *folded_name=linguistics_casefold(name);
+		char *folded_query=linguistics_casefold(wi->text);
 
-			if (! strcmp(wm_name,"House number") && !res->street->name) {
-				wr->datai=1000;
-			} else if(name) {
-				if(!wi)
-					dbg(0,"search text widget is NULL\n");
-				if(wi && strlen(name)==strlen(wi->text)) {
-					dbg(1,"xact %s %s\n",name, wi->text);
-					wr->datai=-1000;
-				} else {
-					dbg(1,"not xact %s %s\n",name, wi->text);
-					wr->datai=0;
+		for(i=0;wi && i<3 ;i++) {
+			char *exp=linguistics_expand_special(folded_name,i);
+			char *p;
+			if(!exp)
+				continue;
+			if(!strcmp(exp,folded_query)) {
+				dbg(1,"exact match for the whole string %s\n", exp);
+				wr->datai=0;
+				g_free(exp);
+				break;
+			} 
+			if((p=strstr(exp,folded_query))!=NULL) {
+				p+=strlen(folded_query);
+				if(!*p||strchr(" -/()",*p)) {
+					dbg(1,"exact matching word found inside string %s\n",exp);
+					wr->datai=512;
 				}
 			}
-			gui_internal_widget_insert_sorted(search_list, wr, gui_internal_search_cmp);
-			
-			wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-			gui_internal_widget_append(wr, wc);
-			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
-			wb=gui_internal_box_new(this, gravity_left_center|orientation_vertical|flags_fill);
-			gui_internal_widget_append(wc, wb);
-			gui_internal_widget_append(wb, gui_internal_label_new(this, text));
-			gui_internal_widget_append(wb, gui_internal_label_font_new(this, text2, 1));
-			wc->func=gui_internal_cmd_position;
-			wc->data=param;
-			wc->state |= STATE_SENSITIVE;
-			wc->speech=g_strdup(text);
+			g_free(exp);
 		}
-		wc->name=g_strdup(name);
-		if (res->c)
-			wc->c=*res->c;
-		wc->selection_id=res->id;
-		if (item)
-			wc->item=*item;
-		gui_internal_widget_pack(this, search_list);
-		l=g_list_last(this->root.children);
-		graphics_draw_mode(this->gra, draw_mode_begin);
-		gui_internal_widget_render(this, l->data);
-		graphics_draw_mode(this->gra, draw_mode_end);
+		g_free(folded_name);
+		g_free(folded_query);
+	}
+	gui_internal_widget_insert_sorted(search_list, wr, gui_internal_search_cmp);
+	if(text2) {
+		wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+		gui_internal_widget_append(wr, wc);
+			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
+		wb=gui_internal_box_new(this, gravity_left_center|orientation_vertical|flags_fill);
+		gui_internal_widget_append(wc, wb);
+		gui_internal_widget_append(wb, gui_internal_label_new(this, text));
+		gui_internal_widget_append(wb, gui_internal_label_font_new(this, text2, 1));
+		wc->func=gui_internal_cmd_position;
+		wc->data=param;
+		wc->state |= STATE_SENSITIVE;
+		wc->speech=g_strdup(text);
+	} else {
+		gui_internal_widget_append(wr,
+			wc=gui_internal_button_new_with_callback(this, text,
+				image_new_xs(this, res->country->flag),
+				gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_position, param));
+	}
+	wc->name=g_strdup(name);
+	if (res->c)
+		wc->c=*res->c;
+	wc->selection_id=res->id;
+	if (item)
+		wc->item=*item;
+	gui_internal_widget_pack(this, search_list);
+	l=g_list_last(this->root.children);
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	gui_internal_widget_render(this, l->data);
+	graphics_draw_mode(this->gra, draw_mode_end);
 	g_free(text);
 	g_free(text2);
 }
