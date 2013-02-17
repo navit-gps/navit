@@ -27,6 +27,16 @@ typedef struct {
 } navitObject;
 
 static PyObject *
+navit_set_attr_py(navitObject *self, PyObject *args)
+{
+	PyObject *attr;
+	if (!PyArg_ParseTuple(args, "O!", &attr_Type, &attr))
+		return NULL;
+	navit_set_attr(self->navit, attr_py_get(attr));
+	Py_RETURN_NONE;
+}
+
+static PyObject *
 navit_get_attr_py(navitObject *self, PyObject *args)
 {
 	char *name;
@@ -87,6 +97,7 @@ navit_zoom_to_route_py(navitObject *self, PyObject *args)
 
 
 static PyMethodDef navit_methods[] = {
+	{"set_attr",		(PyCFunction) navit_set_attr_py, METH_VARARGS },
 	{"get_attr",		(PyCFunction) navit_get_attr_py, METH_VARARGS },
 	{"set_center",		(PyCFunction) navit_set_center_py, METH_VARARGS },
 	{"set_destination",	(PyCFunction) navit_set_destination_py, METH_VARARGS },
