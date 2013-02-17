@@ -1837,15 +1837,14 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 
 	if (match) {
 		if (match && match->country && match->country->admin_levels) {
-			char *nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
-			long long node_id;
+			long long *nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+			long long node_id=0;
 			int end=strlen(match->country->admin_levels)+3;
 			int a;
-			int max_adm_level=end;
+			int max_adm_level=0;
 
 			if(nodeid)
-				if(sscanf(nodeid,LONGLONG_FMT,&node_id)<1)
-					node_id=0;
+				node_id=*nodeid;
 
 			l=matches;
 			while (l) {
@@ -1889,7 +1888,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 
 			/* Administrative centres are not to be contained in their own districts. */
 			if(experimental && max_adm_level>0)
-				for(a=end-1;a>max_adm_level;a--)
+				for(a=end-1;a>max_adm_level && a>2;a--)
 					attrs[a-2].type=type_none;
 		}
 		
