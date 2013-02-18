@@ -303,9 +303,9 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		wr->datai=2048;
 	} else if(name) {
 		int i;
-		wr->datai=1024;
 		char *folded_name=linguistics_casefold(name);
 		char *folded_query=linguistics_casefold(wi->text);
+		wr->datai=1024;
 
 		for(i=0;wi && i<3 ;i++) {
 			char *exp=linguistics_expand_special(folded_name,i);
