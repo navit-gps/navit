@@ -1761,7 +1761,7 @@ osm_end_node(struct maptool_osm *osm)
 			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 			item_bin_add_attr_string(item_bin, attr_town_postal, postal);
 			item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]);
-			item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
+			item_bin_add_attr_string(item_bin, item_is_district(*item_bin)?attr_district_name:attr_town_name, attr_strings[attr_string_label]);
 			item_bin_write(item_bin, osm->towns);
 		}
 	}
@@ -1974,7 +1974,10 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 					if (attrs[i].type != attr_none)
 						item_bin_add_attr(ib, &attrs[i]);
 				}
-				item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, result->file);
+				if(item_bin_get_attr(ib, attr_district_name, NULL))
+					item_bin_write_match(ib, attr_district_name, attr_district_name_match, 5, result->file);
+				else
+					item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, result->file);
 			}
 		}
 	}
