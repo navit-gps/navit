@@ -968,6 +968,13 @@ struct map_rect_priv {
 	char *str;
 };
 
+static void 
+tracking_map_item_coord_rewind(void *priv_data)
+{
+	struct map_rect_priv *this=priv_data;
+	this->ccount=0;
+}
+
 static int
 tracking_map_item_coord_get(void *priv_data, struct coord *c, int count)
 {
@@ -990,6 +997,14 @@ tracking_map_item_coord_get(void *priv_data, struct coord *c, int count)
 		count--;
 	}
 	return ret;
+}
+
+static void
+tracking_map_item_attr_rewind(void *priv_data)
+{
+	struct map_rect_priv *this_=priv_data;
+	this_->debug_idx=0;
+	this_->attr_next=attr_debug;
 }
 
 static int
@@ -1069,9 +1084,9 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
 }
 
 static struct item_methods tracking_map_item_methods = {
-	NULL,
+	tracking_map_item_coord_rewind,
 	tracking_map_item_coord_get,
-	NULL,
+	tracking_map_item_attr_rewind,
 	tracking_map_item_attr_get,
 };
 
@@ -1154,9 +1169,8 @@ tracking_map_get_item(struct map_rect_priv *priv)
 	else
 		priv->item.type=type_tracking_0;
 	dbg(1,"item %d %d points\n", priv->coord, priv->curr->street->count);
-	priv->ccount=0;
-	priv->attr_next=attr_debug;
-	priv->debug_idx=0;
+	tracking_map_item_coord_rewind(priv);
+	tracking_map_item_attr_rewind(priv);
 	return ret;
 }
 

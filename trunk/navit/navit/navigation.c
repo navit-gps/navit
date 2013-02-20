@@ -2004,6 +2004,13 @@ navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)
 	return 1;
 }
 
+static void
+navigation_map_item_coord_rewind(void *priv_data)
+{
+	struct map_rect_priv *this=priv_data;
+	this->ccount=0;
+}
+
 static int
 navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
@@ -2167,10 +2174,18 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 	}
 }
 
+static void
+navigation_map_item_attr_rewind(void *priv_data)
+{
+	struct map_rect_priv *priv = priv_data;
+	priv->debug_idx=0;
+	priv->attr_next=attr_navigation_short;
+}
+
 static struct item_methods navigation_map_item_methods = {
-	NULL,
+	navigation_map_item_coord_rewind,
 	navigation_map_item_coord_get,
-	NULL,
+	navigation_map_item_attr_rewind,
 	navigation_map_item_attr_get,
 };
 
@@ -2302,9 +2317,8 @@ navigation_map_get_item(struct map_rect_priv *priv)
 			}
 		}
 	}
-	priv->ccount=0;
-	priv->debug_idx=0;
-	priv->attr_next=attr_navigation_short;
+	navigation_map_item_coord_rewind(priv);
+	navigation_map_item_attr_rewind(priv);
 
 	ret->id_lo=priv->itm->dest_count;
 	dbg(1,"type=%d\n", ret->type);
