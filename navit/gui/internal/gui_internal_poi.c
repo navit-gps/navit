@@ -595,7 +595,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 					struct item_data *data;
 					struct attr attr;
 					char *label;
-					
+					item_attr_rewind(item);
 					if (item->type==type_house_number) {
 						label=gui_internal_compose_item_address_string(item);
 					} else if (item_attr_get(item, attr_label, &attr)) {
@@ -674,7 +674,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_widget_append(row,wi);
 		row->datai=data->dist;
 		gui_internal_widget_prepend(wtable,row);
-		free(data->label);
+		g_free(data->label);
 	}
 
 	fh_deleteheap(fh);
