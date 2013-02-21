@@ -1887,7 +1887,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 			}
 
 			/* Administrative centres are not to be contained in their own districts. */
-			if(experimental && max_adm_level>0)
+			if(max_adm_level>0)
 				for(a=end-1;a>max_adm_level && a>2;a--)
 					attrs[a-2].type=type_none;
 		}

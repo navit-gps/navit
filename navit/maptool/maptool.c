@@ -832,7 +832,7 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 0
+#if 1
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
