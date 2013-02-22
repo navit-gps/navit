@@ -482,19 +482,8 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			dbg(1,"zc=%d\n", zc);
 			dbg(1,"xcn %d ycn %d\n", xcn, ycn);
 			dbg(1,"%d,%d %d\n",xc,yc,zc);
-#if 0
-			dbg(0,"%d/%d=%d %d/%d=%d\n",xcn,xc,xcn/xc,ycn,yc,ycn/yc);
-#endif
-#if 1
 			xc=(long long)xcn*t->xscale/zc;
 			yc=(long long)ycn*t->yscale/zc;
-#else
-			xc=xcn/(1000+zc);
-			yc=ycn/(1000+zc);
-#endif
-#if 0
-			dbg(1,"%d,%d %d\n",xc,yc,zc);
-#endif
 		} else {
 			xc=xcn;
 			yc=ycn;
@@ -825,21 +814,6 @@ transform_setup(struct transformation *t, struct pcoord *c, int scale, int yaw)
 	t->scale=scale/16.0;
 	transform_set_yaw(t, yaw);
 }
-
-#if 0
-
-void
-transform_setup_source_rect_limit(struct transformation *t, struct coord *center, int limit)
-{
-	t->center=*center;
-	t->scale=1;
-	t->angle=0;
-	t->r.lu.x=center->x-limit;
-	t->r.rl.x=center->x+limit;
-	t->r.rl.y=center->y-limit;
-	t->r.lu.y=center->y+limit;
-}
-#endif
 
 void
 transform_setup_source_rect(struct transformation *t)
