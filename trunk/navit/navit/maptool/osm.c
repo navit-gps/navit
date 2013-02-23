@@ -94,6 +94,7 @@ enum attr_strings {
 	attr_string_fax,
 	attr_string_email,
 	attr_string_url,
+	attr_string_district_name,
 	attr_string_street_name,
 	attr_string_street_name_systematic,
 	attr_string_house_number,
@@ -1096,6 +1097,10 @@ osm_add_tag(char *k, char *v)
 		attr_strings_save(attr_string_email, v);
 		level=5;
 	}
+	if (! strcmp(k,"addr:suburb")) {
+		attr_strings_save(attr_string_district_name, v);
+		level=5;
+	}
 	if (! strcmp(k,"addr:housenumber")) {
 		attr_strings_save(attr_string_house_number, v);
 		level=5;
@@ -1675,6 +1680,7 @@ osm_end_way(struct maptool_osm *osm)
 				add_flags=1;
 		}
 		item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
+		item_bin_add_attr_string(item_bin, attr_district_name, attr_strings[attr_string_district_name]);
 		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
@@ -1697,6 +1703,7 @@ osm_end_way(struct maptool_osm *osm)
 			item_bin_add_coord(item_bin, coord_buffer, coord_count);
 			item_bin_add_attr_string(item_bin, attr_label, attr_strings[attr_string_label]);
 			item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
+			item_bin_add_attr_string(item_bin, attr_district_name, attr_strings[attr_string_district_name]);
 			item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
 			item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
 			item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
