@@ -113,6 +113,12 @@ cache_new(int id_size, int size)
 	return cache;
 }
 
+void
+cache_resize(struct cache *cache, int size)
+{
+	cache->size=size;
+}
+
 static void
 cache_insert_mru(struct cache *cache, struct cache_entry_list *list, struct cache_entry *entry)
 {

@@ -174,6 +174,7 @@ ATTR(tunnel_extrapolation)
 ATTR(street_count)
 ATTR(min_dist)
 ATTR(max_dist)
+ATTR(cache_size)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*

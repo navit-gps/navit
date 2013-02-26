@@ -26,6 +26,7 @@
 #include "callback.h"
 #include "navit.h"
 #include "config_.h"
+#include "file.h"
 #ifdef HAVE_API_WIN32_CE
 #include "libc.h"
 #endif
@@ -92,6 +93,8 @@ config_set_attr_int(struct config *this_, struct attr *attr)
 	case attr_language:
 		setenv("LANG",attr->u.str,1);
 		return 1;
+	case attr_cache_size:
+		return file_set_cache_size(attr->u.num);
 	default:
 		return 0;
 	}
