@@ -929,6 +929,17 @@ file_get_os_handle(struct file *file)
 	return GINT_TO_POINTER(file->fd);
 }
 
+int
+file_set_cache_size(int cache_size)
+{
+#ifdef CACHE_SIZE
+	cache_resize(file_cache, cache_size);
+	return 1;
+#else
+	return 0;
+#endif
+}
+
 void
 file_init(void)
 {
