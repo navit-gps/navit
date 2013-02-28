@@ -786,8 +786,8 @@ int main(int argc, char **argv)
 	char *suffixes[]={""};
 #endif
 	char *suffix=suffixes[0];
-	char *filenames[10];
-	char *referencenames[10];
+	char *filenames[20];
+	char *referencenames[20];
 	int filename_count=0;
 
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
@@ -832,7 +832,7 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 1
+#if 0
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
@@ -933,6 +933,10 @@ int main(int argc, char **argv)
 		filenames[filename_count]="nodes";
 		referencenames[filename_count++]=NULL;
 		filenames[filename_count]="way2poi_result";
+		referencenames[filename_count++]=NULL;
+	}
+	if(experimental) {
+		filenames[filename_count]="towns_poly";
 		referencenames[filename_count++]=NULL;
 	}
 	for (i = suffix_start ; i < suffix_count ; i++) {

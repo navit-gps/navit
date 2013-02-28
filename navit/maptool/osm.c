@@ -1586,6 +1586,20 @@ relation_add_tag(char *k, char *v)
 		}
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
+	} else if(experimental && !strcmp(k,"place") && item_bin->type==type_none) {
+		if (!strcmp(v,"city")) {
+			item_bin->type=type_poly_place6;
+		} else if (!strcmp(v,"town")) {
+			item_bin->type=type_poly_place5;
+		} else if  (!strcmp(v,"village")) {
+			item_bin->type=type_poly_place3;
+		} else if (!strcmp(v,"hamlet")) {
+			item_bin->type=type_poly_place2;
+		} else if (!strcmp(v,"isolated_dwelling")) {
+			item_bin->type=type_poly_place2;
+		} else if (!strcmp(v,"locality")) {
+			item_bin->type=type_poly_place2;
+		}
 	}
 	if (add_tag) {
 		char *tag;
@@ -1905,6 +1919,36 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 		return NULL;
 }
 
+static void 
+osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly)
+{
+	while(boundaries) {
+		struct boundary *b=boundaries->data;
+		if(item_is_poly_place(*b->ib)) {
+			GList *s=b->sorted_segments;
+			while(s) {
+				struct geom_poly_segment *seg=s->data;
+				if(seg->type==geom_poly_segment_type_way_outer && coord_is_equal(*seg->first,*seg->last)) {
+					struct item_bin *ib=init_item(b->ib->type);
+					void *a;
+					item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
+					a=osm_tag_value(b->ib, "name");
+					if(a)
+						item_bin_add_attr_string(ib,attr_label,a);
+					a=osm_tag_value(b->ib, "osm_relationid");
+					if(a)
+						item_bin_add_attr_longlong(ib,attr_osm_relationid,atol(a));
+					item_bin_write(ib, towns_poly);
+				}
+				s=g_list_next(s);
+			}
+		}
+		osm_town_relations_to_poly(b->children, towns_poly);
+		boundaries=g_list_next(boundaries);
+	}
+}
+
+
 void
 osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 {
@@ -1988,6 +2032,13 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 			}
 		}
 	}
+
+	if(experimental) {
+		FILE *f=tempfile("","towns_poly",1);
+		osm_town_relations_to_poly(bl, f);
+		fclose(f);
+	}
+	
 	g_hash_table_destroy(town_hash);
 	profile(0, "Finished processing towns\n");
 }
