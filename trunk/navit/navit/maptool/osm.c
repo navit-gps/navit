@@ -1471,6 +1471,7 @@ char relation_type[BUFFER_SIZE];
 char iso_code[BUFFER_SIZE];
 int admin_level;
 int boundary;
+int place;
 
 void
 osm_add_relation(osmid id)
@@ -1482,6 +1483,7 @@ osm_add_relation(osmid id)
 	iso_code[0]='\0';
 	admin_level=-1;
 	boundary=0;
+	place=0;
 	item_bin_init(item_bin, type_none);
 	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, current_id);
 }
@@ -1527,7 +1529,7 @@ void
 osm_end_relation(struct maptool_osm *osm)
 {
 	in_relation=0;
-	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && boundary) {
+	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && (boundary || (place&&experimental))) {
 #if 0
 		if (admin_level == 2) {
 			FILE *f;
@@ -1587,6 +1589,7 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
 	} else if(experimental && !strcmp(k,"place") && item_bin->type==type_none) {
+		place=1;
 		if (!strcmp(v,"city")) {
 			item_bin->type=type_poly_place6;
 		} else if (!strcmp(v,"town")) {
