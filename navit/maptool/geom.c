@@ -402,20 +402,7 @@ geom_poly_segments_point_inside(GList *in, struct coord *c)
 	return 0;
 }
 
-struct geom_poly_segment *
-item_bin_to_poly_segment(struct item_bin *ib, int type)
-{
-	struct geom_poly_segment *ret=g_new(struct geom_poly_segment, 1);
-	int count=ib->clen*sizeof(int)/sizeof(struct coord);
-	ret->type=type;
-	ret->first=g_new(struct coord, count);
-	ret->last=ret->first+count-1;
-	geom_coord_copy((struct coord *)(ib+1), ret->first, count, 0);
-	return ret;
-}
-
-
-static int
+int
 clipcode(struct coord *p, struct rect *r)
 {
 	int code=0;
@@ -431,8 +418,8 @@ clipcode(struct coord *p, struct rect *r)
 }
 
 
-static int
-clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
+int
+geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
 {
 	int code1,code2,ret=1;
 	long long dx,dy;
@@ -483,54 +470,8 @@ clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
 	return ret;
 }
 
-void
-clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out)
-{
-	char *buffer=g_alloca(sizeof(char)*(ib->len*4+32));
-	struct item_bin *ib_new=(struct item_bin *)buffer;
-	struct coord *pa=(struct coord *)(ib+1);
-	int count=ib->clen/2;
-	struct coord p1,p2;
-	int i,code;
-	item_bin_init(ib_new, ib->type);
-	for (i = 0 ; i < count ; i++) {
-		if (i) {
-			p1.x=pa[i-1].x;
-			p1.y=pa[i-1].y;
-			p2.x=pa[i].x;
-			p2.y=pa[i].y;
-			/* 0 = invisible, 1 = completely visible, 3 = start point clipped, 5 = end point clipped, 7 both points clipped */
-			code=clip_line_code(&p1, &p2, r);
-#if 1
-			if (((code == 1 || code == 5) && ib_new->clen == 0) || (code & 2)) {
-				item_bin_add_coord(ib_new, &p1, 1);
-			}
-			if (code) {
-				item_bin_add_coord(ib_new, &p2, 1);
-			}
-			if (i == count-1 || (code & 4)) {
-				if (param->attr_to_copy)
-					item_bin_copy_attr(ib_new, ib, param->attr_to_copy);
-				if (ib_new->clen)
-					item_bin_write_clipped(ib_new, param, out);
-				item_bin_init(ib_new, ib->type);
-			}
-#else
-			if (code) {
-				item_bin_init(ib_new, ib->type);
-				item_bin_add_coord(ib_new, &p1, 1);
-				item_bin_add_coord(ib_new, &p2, 1);
-				if (param->attr_to_copy)
-					item_bin_copy_attr(ib_new, ib, param->attr_to_copy);
-				item_bin_write_clipped(ib_new, param, out);
-			}
-#endif
-		}
-	}
-}
-
-static int
-is_inside(struct coord *p, struct rect *r, int edge)
+int
+geom_is_inside(struct coord *p, struct rect *r, int edge)
 {
 	switch(edge) {
 	case 0:
@@ -546,8 +487,8 @@ is_inside(struct coord *p, struct rect *r, int edge)
 	}
 }
 
-static void
-poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret)
+void
+geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret)
 {
 	int dx=p2->x-p1->x;
 	int dy=p2->y-p1->y;
@@ -571,52 +512,3 @@ poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, 
 	}
 }
 
-void
-clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out)
-{
-	int count_in=ib->clen/2;
-	struct coord *pin,*p,*s,pi;
-	char *buffer1=g_alloca(sizeof(char)*(ib->len*4+ib->clen*7+32));
-	struct item_bin *ib1=(struct item_bin *)buffer1;
-	char *buffer2=g_alloca(sizeof(char)*(ib->len*4+ib->clen*7+32));
-	struct item_bin *ib2=(struct item_bin *)buffer2;
-	struct item_bin *ib_in,*ib_out;
-	int edge,i;
-	ib_out=ib1;
-	ib_in=ib;
-	for (edge = 0 ; edge < 4 ; edge++) {
-		count_in=ib_in->clen/2;
-		pin=(struct coord *)(ib_in+1);
-		p=pin;
-		s=pin+count_in-1;
-		item_bin_init(ib_out, ib_in->type);
-		for (i = 0 ; i < count_in ; i++) {
-			if (is_inside(p, r, edge)) {
-				if (! is_inside(s, r, edge)) {
-					poly_intersection(s,p,r,edge,&pi);
-					item_bin_add_coord(ib_out, &pi, 1);
-				}
-				item_bin_add_coord(ib_out, p, 1);
-			} else {
-				if (is_inside(s, r, edge)) {
-					poly_intersection(p,s,r,edge,&pi);
-					item_bin_add_coord(ib_out, &pi, 1);
-				}
-			}
-			s=p;
-			p++;
-		}
-		if (ib_in == ib1) {
-			ib_in=ib2;
-			ib_out=ib1;
-		} else {
-		       ib_in=ib1;
-			ib_out=ib2;
-		}
-	}
-	if (ib_in->clen) {
-		if (param->attr_to_copy)
-			item_bin_copy_attr(ib_in, ib, param->attr_to_copy);
-		item_bin_write_clipped(ib_in, param, out);
-	}
-}
