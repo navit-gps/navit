@@ -188,6 +188,10 @@ int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_
 GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type);
 struct geom_poly_segment *item_bin_to_poly_segment(struct item_bin *ib, int type);
 int geom_poly_segments_point_inside(GList *in, struct coord *c);
+int geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r);
+int geom_is_inside(struct coord *p, struct rect *r, int edge);
+void geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret);
+
 void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
 void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
 
