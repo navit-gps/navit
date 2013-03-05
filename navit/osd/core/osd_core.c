@@ -1471,6 +1471,7 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 		graphics_image_free(opc->osd_item.gr, img);
 	} else {
 		osd_set_std_config(nav, &opc->osd_item);
+		osd_set_keypress(nav, &opc->osd_item);
 		opc->osd_item.gr=gra;
 		opc->osd_item.graphic_bg=graphics_gc_new(opc->osd_item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
