@@ -54,9 +54,9 @@ struct object_func {
 	void *(*unref)(void *);
 };
 
-extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, vehicleprofile_func, layer_func, config_func;
+extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, vehicleprofile_func, layer_func, config_func, profile_option_func;
 
-#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config)
+#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option)
 
 #define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
 struct navit_object {
