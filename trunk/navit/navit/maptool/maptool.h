@@ -21,6 +21,7 @@
 #include "coord.h"
 #include "item.h"
 #include "attr.h"
+#include "geom.h"
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/md5.h>
 #endif
@@ -38,10 +39,6 @@
 
 #define debug_tile(x) 0
 #define debug_itembin(x) 0
-
-struct rect {
-	struct coord l,h;
-};
 
 struct tile_data {
 	char buffer[1024];
@@ -157,44 +154,6 @@ void ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info);
 
 void process_coastlines(FILE *in, FILE *out);
 
-/* geom.c */
-
-enum geom_poly_segment_type {
-	geom_poly_segment_type_none,
-	geom_poly_segment_type_way_inner,
-	geom_poly_segment_type_way_outer,
-	geom_poly_segment_type_way_left_side,
-	geom_poly_segment_type_way_right_side,
-	geom_poly_segment_type_way_unknown,
-
-};
-
-struct geom_poly_segment {
-	enum geom_poly_segment_type type;
-	struct coord *first,*last;
-};
-
-void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse);
-void geom_coord_revert(struct coord *c, int count);
-int geom_line_middle(struct coord *p, int count, struct coord *c);
-long long geom_poly_area(struct coord *c, int count);
-int geom_poly_centroid(struct coord *c, int count, struct coord *r);
-int geom_poly_point_inside(struct coord *cp, int count, struct coord *c);
-int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c);
-GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third);
-void geom_poly_segment_destroy(struct geom_poly_segment *seg);
-GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg);
-int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir);
-GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type);
-struct geom_poly_segment *item_bin_to_poly_segment(struct item_bin *ib, int type);
-int geom_poly_segments_point_inside(GList *in, struct coord *c);
-int geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r);
-int geom_is_inside(struct coord *p, struct rect *r, int edge);
-void geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret);
-
-void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
-void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
-
 /* itembin.c */
 
 int item_bin_read(struct item_bin *ib, FILE *in);
@@ -227,6 +186,9 @@ void dump_itembin(struct item_bin *ib);
 void item_bin_set_type_by_population(struct item_bin *ib, int population);
 void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out);
 int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size);
+void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
+void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out);
+struct geom_poly_segment *item_bin_to_poly_segment(struct item_bin *ib, int type);
 
 /* itembin_buffer.c */
 struct node_item *read_node_item(FILE *in);

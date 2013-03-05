@@ -18,7 +18,7 @@
  */
 #include <string.h>
 #include <math.h>
-#include "maptool.h"
+#include "geom.h"
 
 void
 geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse)
