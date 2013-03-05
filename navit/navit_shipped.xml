@@ -276,6 +276,11 @@ Waypoint</text></img>
 			</roadprofile>
 			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<profile_option name="shortest">
+				<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane,street_2_city,track_paved,street_3_city,street_4_city,highway_city,street_1_land,street_2_land,street_3_land,street_4_land,street_n_lanes,highway_land,ramp,roundabout,ferry" route_weight="60" />
+			</profile_option>
+			<profile_option name="avoid_tolls" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000401" />
+			<profile_option name="pedantic" route_depth="18:25%,18:40000" />
 		</vehicleprofile>
 
 		<vehicleprofile name="car_shortest" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
