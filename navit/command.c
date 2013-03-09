@@ -541,9 +541,13 @@ eval_value(struct context *ctx, struct result *res) {
 		return;
 	}
 	if (op[0] == '"') {
+		int escaped=0;
 		do {
-			if (op[0] == '\\' && op[1] == '"')
-				op++;
+			if (op[0] == '\\') {
+				escaped=1;
+			       	if (op[1] == '"')
+					op++;
+			}
 			op++;
 		} while (op[0] && op[0] != '"');
 		if(!*op) {
@@ -551,7 +555,19 @@ eval_value(struct context *ctx, struct result *res) {
 			return;
 		}
 		op++;
-		result_set(ctx, set_type_string, ctx->expr, op-ctx->expr, res);
+		if (escaped) {
+			char *tmpstr=g_malloc(op-ctx->expr+1),*s=tmpstr;
+			op=ctx->expr;
+			do {
+				if (op[0] == '\\') 
+					op++;
+				*s++=*op++;
+			} while (op[0] != '"');
+			*s++=*op++;
+			result_set(ctx, set_type_string, tmpstr, s-tmpstr, res);
+			g_free(tmpstr);
+		} else
+			result_set(ctx, set_type_string, ctx->expr, op-ctx->expr, res);
 		ctx->expr=op;
 		return;
 	}
