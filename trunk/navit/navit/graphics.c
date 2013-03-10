@@ -1407,7 +1407,7 @@ calc_offsets(int wi, int l, int dx, int dy, struct offset *res)
 }
 
 static void
-graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count, int *width, int step)
+graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count, int *width)
 {
 	int maxpoints=200;
 	struct point *res=g_alloca(sizeof(struct point)*maxpoints);
@@ -1422,7 +1422,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	i=0;
 	for (;;) {
 		wi=*width;
-		width+=step;
+		width++;
 		if (i < count - 1) {
 			int dxs,dys,lscales;
 
@@ -1508,11 +1508,8 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		i++;
 		if (i >= count)
 			break;
-		if (step) {
-			wi=*width;
-			calc_offsets(wi*lscale, l, dx, dy, &oo);
-		} else
-			oo=o;
+		wi=*width;
+		calc_offsets(wi*lscale, l, dx, dy, &oo);
 		dxo = -dx;
 		dyo = -dy;
 		fowo=fow;
@@ -1608,10 +1605,10 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect)
 }
 
 static void
-graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int step, int poly)
+graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int poly)
 {
 	struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
-	int *w=g_alloca(sizeof(int)*(count*step+1));
+	int *w=g_alloca(sizeof(int)*(count+1));
 	struct wpoint segment_start,segment_end;
 	int i,points_to_draw_cnt=0;
 	int clip_result;
@@ -1619,11 +1616,9 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 	struct point_rect r=gra->r;
 
 	wmax=width[0];
-	if (step) {
-		for (i = 1 ; i < count ; i++) {
-			if (width[i*step] > wmax)
-				wmax=width[i*step];
-		}
+	for (i = 1 ; i < count ; i++) {
+		if (width[i] > wmax)
+			wmax=width[i];
 	}
 	if (wmax <= 0)
 		return;
@@ -1637,28 +1632,28 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 		if (i) {
 			segment_start.x=pa[i-1].x;
 			segment_start.y=pa[i-1].y;
-			segment_start.w=width[(i-1)*step];
+			segment_start.w=width[(i-1)];
 			segment_end.x=pa[i].x;
 			segment_end.y=pa[i].y;
-			segment_end.w=width[i*step];
+			segment_end.w=width[i];
 			clip_result=clip_line(&segment_start, &segment_end, &r);
 			if (clip_result != CLIPRES_INVISIBLE) {
 				if ((i == 1) || (clip_result & CLIPRES_START_CLIPPED)) {
 					points_to_draw[points_to_draw_cnt].x=segment_start.x;
 					points_to_draw[points_to_draw_cnt].y=segment_start.y;
-					w[points_to_draw_cnt*step]=segment_start.w;
+					w[points_to_draw_cnt]=segment_start.w;
 					points_to_draw_cnt++;
 				}
 				points_to_draw[points_to_draw_cnt].x=segment_end.x;
 				points_to_draw[points_to_draw_cnt].y=segment_end.y;
-				w[points_to_draw_cnt*step]=segment_end.w;
+				w[points_to_draw_cnt]=segment_end.w;
 				points_to_draw_cnt++;
 			}
 			if ((i == count-1) || (clip_result & CLIPRES_END_CLIPPED)) {
 				// ... then draw the resulting polyline
 				if (points_to_draw_cnt > 1) {
 					if (poly) {
-						graphics_draw_polyline_as_polygon(gra, gc, points_to_draw, points_to_draw_cnt, w, step);
+						graphics_draw_polyline_as_polygon(gra, gc, points_to_draw, points_to_draw_cnt, w);
 					} else
 						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
 					points_to_draw_cnt=0;
@@ -1909,7 +1904,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				if (width[i] < 2)
 					width[i]=2;
 			}
-			graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
+			graphics_draw_polyline_clipped(gra, gc, pa, count, width, e->u.polyline.width > 1);
 		}
 		break;
 	case element_circle:
