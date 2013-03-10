@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 struct roadprofile {
-	struct attr **attrs;
+	NAVIT_OBJECT
         int speed;
         int route_weight;
 	int maxspeed;
