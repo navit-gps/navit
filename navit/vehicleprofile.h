@@ -39,6 +39,7 @@ struct vehicleprofile {
 	int dangerous_goods;			/**< Flags of dangerous goods present */
 	int through_traffic_penalty;		/**< Penalty when driving on a through traffic limited road */
 	GHashTable *roadprofile_hash;
+	struct attr active_callback;
 };
 
 struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs);
