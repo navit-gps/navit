@@ -76,12 +76,53 @@ gui_internal_coordinates(struct pcoord *pc, char sep)
 
 }
 
+enum escape_mode {
+	escape_mode_none=0,
+	escape_mode_string=1,
+	escape_mode_quote=2,
+	escape_mode_html=4,
+	escape_mode_html_quote=8,
+};
+
+static char *
+gui_internal_escape(enum escape_mode mode, char *in)
+{
+	int len=mode & escape_mode_string ? 3:1;
+	char *dst,*out,*src=in;
+	char *quot="&quot;";
+	while (*src) {
+		if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
+			len++;
+		if (*src == '"' && mode == escape_mode_html_quote) 
+			len+=strlen(quot);
+		else
+			len++;
+		src++;
+	}
+	src=in;
+	out=dst=g_malloc(len);
+	if (mode & escape_mode_string)
+		*dst++='"';
+	while (*src) {
+		if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
+			*dst++='\\';
+		if (*src == '"' && mode == escape_mode_html_quote) {
+			strcpy(dst,quot);
+			src++;
+			dst+=strlen(quot);
+		} else
+			*dst++=*src++;
+	}
+	if (mode & escape_mode_string)
+		*dst++='"';
+	*dst++='\0';
+	return out;
+}
+
 static void
 gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr escaped;
-	int len;
-	char *src,*dst;
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
 		dbg(0,"first parameter missing or wrong type\n");
 		return;
@@ -90,26 +131,8 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		dbg(0,"output missing\n");
 		return;
 	}
-	src=in[0]->u.str;
-	len=3;
-	while (*src) {
-		if (*src == '"' || *src == '\\')
-			len++;
-		len++;
-		src++;
-	}
 	escaped.type=in[0]->type;
-	src=in[0]->u.str;
-	dst=g_malloc(len);
-	escaped.u.str=dst;
-	*dst++='"';
-	while (*src) {
-		if (*src == '"' || *src == '\\')
-			*dst++='\\';
-		*dst++=*src++;
-	}
-	*dst++='"';
-	*dst++='\0';
+	escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
 	dbg(1,"in %s result %s\n",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
@@ -888,6 +911,25 @@ gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, 
 	event_main_loop_quit();
 }
 
+static char *
+gui_internal_append_attr(char *str, enum escape_mode mode, char *pre, struct attr *attr, char *post)
+{
+	char *astr=NULL;
+	if (ATTR_IS_STRING(attr->type)) 
+		astr=gui_internal_escape(mode, attr->u.str);
+	else if (ATTR_IS_COORD_GEO(attr->type)) {
+		char *str2=coordinates_geo(attr->u.coord_geo, '\n');
+		astr=gui_internal_escape(mode, str2);
+		g_free(str2);
+	} else if (ATTR_IS_INT(attr->type)) 
+		astr=g_strdup_printf("%d",attr->u.num);
+	else
+		astr=g_strdup_printf("Unsupported type %s",attr_to_name(attr->type));
+	str=g_strconcat_printf(str,"%s%s%s",pre,astr,post);
+	g_free(astr);
+	return str;
+}
+
 static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -896,18 +938,7 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	if (!in)
 		return;
 	while (*in) {
-		dbg(1,"%s\n",attr_to_name((*in)->type));
-		if (ATTR_IS_STRING((*in)->type)) {
-			str=g_strconcat_printf(str,"%s",(*in)->u.str);
-		}
-		if (ATTR_IS_COORD_GEO((*in)->type)) {
-			char *str2=coordinates_geo((*in)->u.coord_geo, '\n');
-			str=g_strconcat_printf(str,"%s",str2);
-			g_free(str2);
-		}
-		if (ATTR_IS_INT((*in)->type)) {
-			str=g_strconcat_printf(str,"%d",(*in)->u.num);
-		}
+		str=gui_internal_append_attr(str, escape_mode_none, "", *in, "");
 		in++;
 	}
 	if (str) {
@@ -918,6 +949,130 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 		gui_internal_html_parse_text(this, str);
 	}
 	g_free(str);
+}
+
+static void
+gui_internal_onclick(struct attr ***in, char **onclick, char *set)
+{
+	struct attr **i=*in;
+	char *c,*str=NULL,*args=NULL,*sep="";
+	
+	if (!*i || !ATTR_IS_STRING((*i)->type) || !(*i)->u.str)
+		goto error;
+	str=g_strdup((*i)->u.str);
+	i++;
+	c=str;
+	while (*c) {
+		if (c[0] == '%' && c[1] == '{') {
+			char format[4],*end=strchr(c+2,'}'),*replacement=NULL,*new_str;
+			int is_arg;
+			if (!end) {
+				dbg(0,"Missing closing brace in format string %s\n",c);
+				goto error;
+			}
+			if (end-c > sizeof(format)) {
+				dbg(0,"Invalid format string %s\n",c);
+				goto error;
+			}
+			strncpy(format, c+2, end-c-2);
+			format[end-c-2]='\0';
+			is_arg=end[1] == '*';
+			c[0]='\0';
+			if (!strcmp(format,"se")) {
+				replacement=gui_internal_append_attr(NULL, escape_mode_string, "", *i++, "");
+				if (is_arg) {
+					char *arg=gui_internal_escape(escape_mode_string, replacement);
+					args=g_strconcat_printf(args, "%s%s", args ? "," : "", arg);
+					g_free(replacement);
+					g_free(arg);
+					replacement=g_strdup("");
+				}
+			}	
+			if (!replacement) {
+				dbg(0,"Unsupported format string %s\n",format);
+				goto error;
+			}
+			new_str=g_strconcat(str, replacement, end+1, NULL);
+			c=new_str+strlen(str)+strlen(replacement);
+			g_free(str);
+			g_free(replacement);
+			str=new_str;
+		}
+		c++;
+	}
+	*in=i;
+	if (*onclick && strlen(*onclick))
+		sep=";";
+	if (str && strlen(str)) {
+		char *old=*onclick;
+		if (set) {
+			char *setstr=gui_internal_escape(escape_mode_string,str);
+			char *argssep="";
+			if (args && strlen(args))
+				argssep=",";
+			*onclick=g_strconcat(old,sep,set,"(",setstr,argssep,args,")",NULL);
+		} else {
+			*onclick=g_strconcat(old,sep,str,NULL);
+		}
+		g_free(old);
+	}
+error:
+	g_free(str);
+	g_free(args);
+	return;
+}
+
+
+static void
+gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *str=g_strdup("<img"),*suffix=NULL,*onclick=g_strdup(""),*html;
+
+	if (ATTR_IS_STRING((*in)->type)) {
+	       	if ((*in)->u.str && strlen((*in)->u.str)) 
+			str=gui_internal_append_attr(str, escape_mode_string|escape_mode_html, " class=", *in, "");
+		in++;
+	} else {
+		dbg(0,"argument error: class argument not string\n");
+		goto error;
+	}
+	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
+	       	if ((*in)->u.str && strlen((*in)->u.str)) {
+			str=gui_internal_append_attr(str, escape_mode_string|escape_mode_html, " src=", *in, "");
+		}
+		in++;
+	} else {
+		dbg(0,"argument error: image argument not string\n");
+		goto error;
+	}
+	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
+	       	if ((*in)->u.str && strlen((*in)->u.str)) {
+			suffix=gui_internal_append_attr(NULL, escape_mode_html, ">", *in, "</img>");
+		} else {
+			suffix=g_strdup("/>");
+		}
+		in++;
+	} else {
+		dbg(0,"argument error: text argument not string\n");
+		goto error;
+	}
+	gui_internal_onclick(&in,&onclick,NULL);
+	gui_internal_onclick(&in,&onclick,"set");
+	gui_internal_onclick(&in,&onclick,NULL);
+	if (strlen(onclick)) {
+		char *tmp=gui_internal_escape(escape_mode_html_quote, onclick);
+		str=g_strconcat_printf(str," onclick=\"%s\"",tmp);
+		g_free(tmp);
+	}
+	g_free(onclick);
+	html=g_strdup_printf("<html>%s%s</html>\n",str,suffix);
+	dbg(1,"return %s",html);
+	gui_internal_html_parse_text(this, html);
+	g_free(html);
+error:
+	g_free(suffix);
+	g_free(str);
+	return;
 }
 
 static void
@@ -997,6 +1152,7 @@ static struct command_table commands[] = {
 	{"debug",command_cast(gui_internal_cmd_debug)},
 	{"formerdests",command_cast(gui_internal_cmd2)},
 	{"get_data",command_cast(gui_internal_get_data)},
+	{"img",command_cast(gui_internal_cmd_img)},
 	{"locale",command_cast(gui_internal_cmd2)},
 	{"log",command_cast(gui_internal_cmd_log)},
 	{"menu",command_cast(gui_internal_cmd_menu2)},
