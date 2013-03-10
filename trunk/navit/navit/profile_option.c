@@ -34,6 +34,7 @@ profile_option_new(struct attr *parent, struct attr **attrs)
 	po->func=&profile_option_func;
 	navit_object_ref((struct navit_object *)po);
 	po->attrs=attr_list_dup(attrs);
+	dbg(0,"return %p\n",po);
 	return po;
 }
 
@@ -48,8 +49,8 @@ struct object_func profile_option_func = {
 	attr_profile_option,
 	(object_func_new)profile_option_new,
 	(object_func_get_attr)navit_object_get_attr,
-	(object_func_iter_new)NULL,
-	(object_func_iter_destroy)NULL,
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
 	(object_func_set_attr)navit_object_set_attr,
 	(object_func_add_attr)navit_object_add_attr,
 	(object_func_remove_attr)navit_object_remove_attr,
