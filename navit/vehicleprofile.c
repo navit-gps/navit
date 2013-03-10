@@ -25,6 +25,7 @@
 #include "xmlconfig.h"
 #include "roadprofile.h"
 #include "vehicleprofile.h"
+#include "callback.h"
 
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
@@ -84,6 +85,27 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	}
 }
 
+static void
+vehicleprofile_clear(struct vehicleprofile *this_)
+{
+	if (this_->roadprofile_hash)
+		g_hash_table_destroy(this_->roadprofile_hash);
+	this_->roadprofile_hash=g_hash_table_new(NULL, NULL);
+	this_->length=-1;
+	this_->width=-1;
+	this_->height=-1;
+	this_->weight=-1;
+	this_->axle_weight=-1;
+	this_->through_traffic_penalty=9000;
+}
+
+static void
+vehicleprofile_update(struct vehicleprofile *this_)
+{
+	dbg(0,"enter\n");
+}
+
+
 struct vehicleprofile *
 vehicleprofile_new(struct attr *parent, struct attr **attrs)
 {
@@ -96,13 +118,9 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs)
 	this_->func=&vehicleprofile_func;
 	navit_object_ref((struct navit_object *)this_);
 	this_->attrs=attr_list_dup(attrs);
-	this_->roadprofile_hash=g_hash_table_new(NULL, NULL);
-	this_->length=-1;
-	this_->width=-1;
-	this_->height=-1;
-	this_->weight=-1;
-	this_->axle_weight=-1;
-	this_->through_traffic_penalty=9000;
+	this_->active_callback.type=attr_callback;
+	this_->active_callback.u.callback=callback_new_attr_1(callback_cast(vehicleprofile_update), attr_active, this_);
+	vehicleprofile_clear(this_);
 	for (attr=attrs;*attr; attr++)
 		vehicleprofile_set_attr_do(this_, *attr);
 	return this_;
@@ -111,7 +129,7 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs)
 struct attr_iter *
 vehicleprofile_attr_iter_new(void)
 {
-	return g_new0(void *,1);
+	return (struct attr_iter *)g_new0(void *,1);
 }
 
 void
@@ -153,6 +171,9 @@ vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)
 				types++;
 			}
 		}
+		break;
+	case attr_profile_option:
+		attr->u.navit_object->func->add_attr(attr->u.navit_object, &this_->active_callback);
 		break;
 	default:
 		break;
