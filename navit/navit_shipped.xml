@@ -102,48 +102,26 @@ Waypoint</text></img>
 			<a name='Settings Layouts' class='clist' refresh_cond='navit.layout'><text>Layout</text>
 				<script>
 					foreach(layout;navit.layout)
-						write("&lt;img class='centry'",
-							" src='", navit.layout==layout?"gui_active":"gui_inactive", "'",
-							" onclick='set(", E("navit.layout=navit.layout[@name==*]"), ",E(",E(layout.name), "))'",
-							"&gt;",
-							layout.name,
-							"&lt;/img&gt;"
-						);
+						img("centry", navit.layout==layout?"gui_active":"gui_inactive", layout.name,
+							"", "navit.layout=navit.layout[@name==%{se}*]", layout.name);
 				</script>
 			</a>
 			<a name='Settings Maps' class='clist'><text>Maps</text>
 				<script>
 					foreach(map;navit.mapset.map)
 						if (map.description)
-							write("&lt;img class='centry'",
-								" src='", map.active?"gui_active":"gui_inactive", "'",
-								" onclick='set(", E("navit.mapset.map[@description=="+E(map.description)+"].active=*"), ",", !map.active, ");redraw_map();refresh()'",
-								"&gt;",
-								map.description,
-								"&lt;/img&gt;"
-							);
+							img("centry",map.active?"gui_active":"gui_inactive", map.description,
+							"","navit.mapset.map[@description==%{se}].active=%{d}*",map.description,!map.active,"redraw_map();refresh();");
 						else
-							write("&lt;img class='centry'",
-								" src='", map.active?"gui_active":"gui_inactive", "'",
-								" onclick='set(", E("navit.mapset.map[@data=="+E(map.data)+"].active=*"), ",", !map.active, ");redraw_map();refresh()'",
-								"&gt;",
-								map.type,":",map.data,
-								"&lt;/img&gt;"
-							);
-
-
+							img("centry",map.active?"gui_active":"gui_inactive", map.type+":"+map.data,
+								"","navit.mapset.map[@data==%{se}].active=%{d}*",map.data,!map.active,"redraw_map();refresh();");
 				</script>
 			</a>
 			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
 				<script>
 					foreach(vehicle;navit.vehicle)
-						write("&lt;img class='centry'",
-							" src='", navit.vehicle==vehicle?"gui_active":"gui_inactive", "'",
-							" onclick='name=", E(vehicle.name), ";menu(", E("#Settings Vehicle"), ")'",
-							"&gt;",
-							vehicle.name,
-							"&lt;/img&gt;"
-						);
+						img("centry",navit.vehicle==vehicle?"gui_active":"gui_inactive",vehicle.name,
+							"name=%{se};menu(\"#Settings Vehicle\")",vehicle.name);
 				</script>
 			</a>
 			<a name='Settings Vehicle' class='clist'><script>write(name)</script>
@@ -151,21 +129,11 @@ Waypoint</text></img>
 					foreach(vehicle;navit.vehicle)
 						if (vehicle.name == name) {
 							if (vehicle!=navit.vehicle)
-								write("&lt;img class='centry'",
-								" src='gui_active' ",
-								" onclick='set(", E("navit.vehicle=navit.vehicle[@name==*]"), ",E(", E(name), "));refresh()'",
-								"&gt;",
-								"Set as active",
-								"&lt;/img&gt;"
-							);
+								img("centry","gui_active","Set as active",
+									"","navit.vehicle=navit.vehicle[@name==%{se}*]",name);
 							foreach(vehicleprofile;navit.vehicleprofile)
-								write("&lt;img class='centry'",
-								" src='", vehicle.profilename==vehicleprofile.name?"gui_active":"gui_inactive", "'",
-								" onclick='set(", E("navit.vehicle[@name=="+E(name)+"].profilename=*"), ",E(", E(vehicleprofile.name), "));refresh()'",
-								"&gt;",
-								vehicleprofile.name,
-								"&lt;/img&gt;"
-								);
+								img("centry",vehicle.profilename==vehicleprofile.name?"gui_active":"gui_inactive",vehicleprofile.name,
+									"","navit.vehicle[@name=%{se}].profilename=%{se}*",name,vehicleprofile.name,"refresh()");
 						}
 				</script>
 			</a>
