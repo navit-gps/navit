@@ -82,7 +82,10 @@ enum escape_mode {
 	escape_mode_quote=2,
 	escape_mode_html=4,
 	escape_mode_html_quote=8,
+	escape_mode_html_apos=16,
 };
+
+/* todo &=&amp;, < = &lt; */
 
 static char *
 gui_internal_escape(enum escape_mode mode, char *in)
@@ -90,11 +93,14 @@ gui_internal_escape(enum escape_mode mode, char *in)
 	int len=mode & escape_mode_string ? 3:1;
 	char *dst,*out,*src=in;
 	char *quot="&quot;";
+	char *apos="&apos;";
 	while (*src) {
 		if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
 			len++;
 		if (*src == '"' && mode == escape_mode_html_quote) 
 			len+=strlen(quot);
+		else if (*src == '\'' && mode == escape_mode_html_apos)
+			len+=strlen(apos);
 		else
 			len++;
 		src++;
@@ -110,6 +116,10 @@ gui_internal_escape(enum escape_mode mode, char *in)
 			strcpy(dst,quot);
 			src++;
 			dst+=strlen(quot);
+		} else if (*src == '\'' && mode == escape_mode_html_apos) {
+			strcpy(dst,apos);
+			src++;
+			dst+=strlen(apos);
 		} else
 			*dst++=*src++;
 	}
@@ -978,6 +988,15 @@ gui_internal_onclick(struct attr ***in, char **onclick, char *set)
 			format[end-c-2]='\0';
 			is_arg=end[1] == '*';
 			c[0]='\0';
+			if (!strcmp(format,"d")) {
+				replacement=gui_internal_append_attr(NULL, escape_mode_string, "", *i++, "");
+				if (is_arg) {
+					args=g_strconcat_printf(args, "%s%s", args ? "," : "", replacement);
+					g_free(replacement);
+					replacement=g_strdup("");
+				}
+
+			}
 			if (!strcmp(format,"se")) {
 				replacement=gui_internal_append_attr(NULL, escape_mode_string, "", *i++, "");
 				if (is_arg) {
@@ -1060,8 +1079,8 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 	gui_internal_onclick(&in,&onclick,"set");
 	gui_internal_onclick(&in,&onclick,NULL);
 	if (strlen(onclick)) {
-		char *tmp=gui_internal_escape(escape_mode_html_quote, onclick);
-		str=g_strconcat_printf(str," onclick=\"%s\"",tmp);
+		char *tmp=gui_internal_escape(escape_mode_html_apos, onclick);
+		str=g_strconcat_printf(str," onclick='%s'",tmp);
 		g_free(tmp);
 	}
 	g_free(onclick);
