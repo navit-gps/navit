@@ -970,8 +970,7 @@ route_calc_selection(struct coord *c, int count, struct vehicleprofile *profile)
 	struct map_selection *ret=NULL;
 	int i;
 	struct coord_rect r;
-	char *str, *tok;
-	struct attr attr;
+	char *depth, *str, *tok;
 
 	if (!count)
 		return NULL;
@@ -980,11 +979,10 @@ route_calc_selection(struct coord *c, int count, struct vehicleprofile *profile)
 	for (i = 1 ; i < count ; i++)
 		coord_rect_extend(&r, &c[i]);
 
-	if(!vehicleprofile_get_attr(profile,attr_route_depth, &attr, NULL) || attr.u.str==NULL) {
-		attr.u.str="4:25%,8:40000,18:10000";
-	}	
-	
-	attr.u.str=str=g_strdup(attr.u.str);
+	depth=profile->route_depth;
+	if (!depth)
+		depth="4:25%,8:40000,18:10000";
+	depth=str=g_strdup(depth);
 	
 	while((tok=strtok(str,","))!=NULL) {
 		int order=0, dist=0;
@@ -998,7 +996,7 @@ route_calc_selection(struct coord *c, int count, struct vehicleprofile *profile)
 		str=NULL;
 	}
 	
-	g_free(attr.u.str);
+	g_free(depth);
 	
 	return ret;
 }
