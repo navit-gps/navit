@@ -1328,7 +1328,7 @@ node_item_get(int id)
 	}
 	if (node_hash) {
 		int i;
-		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
+		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(unsigned int)id));
 		return ni+i;
 	}
 	if (ni[0].id > id)
