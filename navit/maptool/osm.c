@@ -57,6 +57,7 @@ int maxspeed_attr_value;
 char debug_attr_buffer[BUFFER_SIZE];
 
 int flags[4];
+int flagsa[4];
 
 int flags_attr_value;
 
@@ -1019,7 +1020,7 @@ osm_add_tag(char *k, char *v)
 	}
 	if (! strcmp(k,"access")) {
 		if (strcmp(v,"destination")) 
-			flags[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
+			flagsa[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
 		else
 			flags[0] |= AF_THROUGH_TRAFFIC_LIMIT;
 		level=5;
@@ -1458,6 +1459,7 @@ osm_add_way(osmid id)
 	maxspeed_attr_value=0;
 	flags_attr_value = 0;
 	memset(flags, 0, sizeof(flags));
+	memset(flagsa, 0, sizeof(flagsa));
 	debug_attr_buffer[0]='\0';
 	osmid_attr_value=id;
 	if (wayid < wayid_last && !way_hash) {
@@ -1692,7 +1694,7 @@ osm_end_way(struct maptool_osm *osm)
 		nodes_ref_item_bin(item_bin);
 		def_flags=item_get_default_flags(types[i]);
 		if (def_flags) {
-			flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
+			flags_attr_value=((*def_flags & ~flagsa[2]) | flags[0] | flags[1] | flagsa[1]) & ~flags[2];
 			if (flags_attr_value != *def_flags)
 				add_flags=1;
 		}
