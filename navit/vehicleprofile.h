@@ -31,6 +31,7 @@ struct vehicleprofile {
 	int static_speed;			/**< Maximum speed of vehicle to consider it stationary */
 	int static_distance;			/**< Maximum distance of previous position of vehicle to consider it stationary */
 	char *name;				/**< the vehicle profile name */
+	char *route_depth;			/**< the route depth attribute */
 	int width;				/**< Width of the vehicle in cm */
 	int height;				/**< Height of the vehicle in cm */
 	int length;				/**< Length of the vehicle in cm */

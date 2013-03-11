@@ -53,6 +53,11 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 		/* previously used strdupn not available on win32 */
 		this_->name = g_strdup(attr->u.str);
 		break;
+	case attr_route_depth:
+		if(this_->route_depth)
+			g_free(this_->route_depth);
+		this_->route_depth = g_strdup(attr->u.str);
+		break;
 	case attr_vehicle_axle_weight:
 		this_->axle_weight=attr->u.num;
 		break;
@@ -113,6 +118,8 @@ vehicleprofile_clear(struct vehicleprofile *this_)
 	this_->static_distance=0;
 	g_free(this_->name);
 	this_->name=NULL;
+	g_free(this_->route_depth);
+	this_->route_depth=NULL;
 	this_->dangerous_goods=0;
 	this_->length=-1;
 	this_->width=-1;
