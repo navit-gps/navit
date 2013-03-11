@@ -72,6 +72,7 @@ struct default_flags default_flags2[]={
 	{type_steps, AF_PBH},
 	{type_street_pedestrian, AF_PBH},
 	{type_hiking_mountain, AF_PEDESTRIAN},
+	{type_hiking, AF_PEDESTRIAN},
 };
 
 
