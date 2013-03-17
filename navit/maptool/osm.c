@@ -87,7 +87,11 @@ static struct attr_mapping **attr_mapping_way;
 static int attr_mapping_way_count;
 static struct attr_mapping **attr_mapping_way2poi;
 static int attr_mapping_way2poi_count;
+static struct attr_mapping **attr_mapping_rel2poly_place;
+static int attr_mapping_rel2poly_place_count;
 
+static int attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count);
+static void attr_longest_match_clear();
 
 
 enum attr_strings {
@@ -707,6 +711,8 @@ static char *attrmap={
 	"w	piste:type=nordic	piste_nordic\n"
 	"w	place=suburb		poly_place1\n"
 	"w	place=hamlet		poly_place2\n"
+	"w	place=isolated_dwelling	poly_place2\n"
+	"w	place=locality		poly_place2\n"
 	"w	place=village		poly_place3\n"
 	"w	place=municipality	poly_place4\n"
 	"w	place=town		poly_place5\n"
@@ -743,7 +749,6 @@ static char *attrmap={
 	"w	barrier=retaining_wall	retaining_wall\n"
 	"w	barrier=city_wall	city_wall\n"
 };
-
 
 static void
 build_attrmap_line(char *line)
@@ -788,6 +793,10 @@ build_attrmap_line(char *line)
 	if (t[0]== 'w') {
 		attr_mapping_way=g_realloc(attr_mapping_way, sizeof(*attr_mapping_way)*(attr_mapping_way_count+1));
 		attr_mapping_way[attr_mapping_way_count++]=attr_mapping;
+		if(item_is_poly_place(*attr_mapping)) {
+			attr_mapping_rel2poly_place=g_realloc(attr_mapping_rel2poly_place, sizeof(*attr_mapping_rel2poly_place)*(attr_mapping_rel2poly_place_count+1));
+			attr_mapping_rel2poly_place[attr_mapping_rel2poly_place_count++]=attr_mapping;
+		}
 	}
 	if (t[0]== '?' && doway2poi) {
 		attr_mapping_way2poi=g_realloc(attr_mapping_way2poi, sizeof(*attr_mapping_way2poi)*(attr_mapping_way2poi_count+1));
@@ -960,11 +969,13 @@ access_value(char *v)
 	return 3;
 }
 
+static void 
+osm_update_attr_present(char *k, char *v);
+
 void
 osm_add_tag(char *k, char *v)
 {
-	int idx,level=2;
-	char buffer[BUFFER_SIZE*2+2], *p;
+	int level=2;
 	if (in_relation) {
 		relation_add_tag(k,v);
 		return;
@@ -1195,6 +1206,15 @@ osm_add_tag(char *k, char *v)
 	}
 	if (level < 6)
 		node_is_tagged=1;
+
+	osm_update_attr_present(k, v);
+}
+
+static void 
+osm_update_attr_present(char *k, char *v)
+{
+	int idx;
+	char *p, buffer[BUFFER_SIZE*2+2];
 
 	strcpy(buffer,"*=*");
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
@@ -1473,7 +1493,6 @@ char relation_type[BUFFER_SIZE];
 char iso_code[BUFFER_SIZE];
 int admin_level;
 int boundary;
-int place;
 
 void
 osm_add_relation(osmid id)
@@ -1485,7 +1504,6 @@ osm_add_relation(osmid id)
 	iso_code[0]='\0';
 	admin_level=-1;
 	boundary=0;
-	place=0;
 	item_bin_init(item_bin, type_none);
 	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, current_id);
 }
@@ -1530,8 +1548,17 @@ country_from_iso2(char *iso)
 void
 osm_end_relation(struct maptool_osm *osm)
 {
+	enum item_type type;
+
 	in_relation=0;
-	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && (boundary || (place&&experimental))) {
+
+	if(experimental && attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+		item_bin->type=type;
+	}
+	else 
+		type=type_none;
+
+	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && (boundary || type!=type_none)) {
 #if 0
 		if (admin_level == 2) {
 			FILE *f;
@@ -1547,6 +1574,8 @@ osm_end_relation(struct maptool_osm *osm)
 
 	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, osm->turn_restrictions);
+		
+	attr_longest_match_clear();
 }
 
 void
@@ -1590,21 +1619,6 @@ relation_add_tag(char *k, char *v)
 		}
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
-	} else if(experimental && !strcmp(k,"place") && item_bin->type==type_none) {
-		place=1;
-		if (!strcmp(v,"city")) {
-			item_bin->type=type_poly_place6;
-		} else if (!strcmp(v,"town")) {
-			item_bin->type=type_poly_place5;
-		} else if  (!strcmp(v,"village")) {
-			item_bin->type=type_poly_place3;
-		} else if (!strcmp(v,"hamlet")) {
-			item_bin->type=type_poly_place2;
-		} else if (!strcmp(v,"isolated_dwelling")) {
-			item_bin->type=type_poly_place2;
-		} else if (!strcmp(v,"locality")) {
-			item_bin->type=type_poly_place2;
-		}
 	}
 	if (add_tag) {
 		char *tag;
@@ -1612,6 +1626,9 @@ relation_add_tag(char *k, char *v)
 		sprintf(tag,"%s=%s",k,v);
 		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
 	}
+
+	if(experimental)
+		osm_update_attr_present(k,v);
 }
 
 
