@@ -110,6 +110,7 @@ int main_real(int argc, const char **argv)
 	tracking_init();
 	search_init();
 	linguistics_init();
+	geom_init();
 	config_file=NULL;
 #ifdef HAVE_GETOPT_H
 	opterr=0;  //don't bomb out on errors.

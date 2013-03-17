@@ -16,6 +16,13 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#ifndef NAVIT_GEOM_H
+#define NAVIT_GEOM_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <glib.h>
 #include "config.h"
 #include "coord.h"
@@ -41,7 +48,7 @@ struct geom_poly_segment {
 	enum geom_poly_segment_type type;
 	struct coord *first,*last;
 };
-
+/* prototypes */
 void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse);
 void geom_coord_revert(struct coord *c, int count);
 int geom_line_middle(struct coord *p, int count, struct coord *c);
@@ -58,4 +65,11 @@ int geom_poly_segments_point_inside(GList *in, struct coord *c);
 int geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r);
 int geom_is_inside(struct coord *p, struct rect *r, int edge);
 void geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret);
+void geom_init(void);
+/* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 

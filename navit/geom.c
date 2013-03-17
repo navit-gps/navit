@@ -512,3 +512,6 @@ geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int e
 	}
 }
 
+void geom_init()
+{
+}
