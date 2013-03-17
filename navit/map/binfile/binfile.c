@@ -38,6 +38,7 @@
 #include "endianess.h"
 #include "callback.h"
 #include "types.h"
+#include "geom.h"
 
 static int map_id;
 
@@ -166,6 +167,7 @@ struct map_search_priv {
 	struct item *item;
 	struct attr search;
 	struct map_selection ms;
+	GList *boundaries;
 	int partial;
 	int mode;
 	GHashTable *search_results;
@@ -456,13 +458,21 @@ binfile_coord_rewind(void *priv_data)
 	t->pos_coord=t->pos_coord_start;
 }
 
+static inline int
+binfile_coord_left(void *priv_data)
+{
+	struct map_rect_priv *mr=priv_data;
+  	struct tile *t=mr->t;
+	return (t->pos_attr_start-t->pos_coord)/2;
+}
+
 static int
 binfile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	int max,ret=0;
-	max=(t->pos_attr_start-t->pos_coord)/2;
+	max=binfile_coord_left(priv_data);
 	if (count > max)
 		count=max;
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -1879,7 +1889,7 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
 }
 
 static struct map_rect_priv *
-binmap_search_street_by_place(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel)
+binmap_search_street_by_place(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel, GList **boundaries)
 {
 	struct attr town_name, poly_town_name;
 	struct map_rect_priv *map_rec2;
@@ -1898,13 +1908,20 @@ binmap_search_street_by_place(struct map_priv *map, struct item *town, struct co
 		if (item_is_poly_place(*place) &&
 		    item_attr_get(place, attr_label, &poly_town_name) && 
 		    !strcmp(poly_town_name.u.str,town_name.u.str)) {
-				struct coord c[128];
+				struct coord *c;
 				int i,count;
+				struct geom_poly_segment *bnd;
+				count=binfile_coord_left(map_rec2);
+				c=g_new(struct coord,count);
 				found=1;
-				while ((count=item_coord_get(place, c, 128))) {
-					for (i = 0 ; i < count ; i++)
-						coord_rect_extend(&sel->u.c_rect, &c[i]);
-				}
+				item_coord_get(place, c, count);
+				for (i = 0 ; i < count ; i++)
+					coord_rect_extend(&sel->u.c_rect, &c[i]);
+				bnd=g_new(struct geom_poly_segment,1);
+				bnd->first=c;
+				bnd->last=c+count-1;
+				bnd->type=geom_poly_segment_type_way_outer;
+				*boundaries=g_list_prepend(*boundaries,bnd);
 		}
 	}
 	map_rect_destroy_binfile(map_rec2);
@@ -2043,7 +2060,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 					msp->mode = 1;
 				else {
 					if (item_coord_get(town, &c, 1)) {
-						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms))) 
+						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries))) 
 							msp->mode = 2;
 						else {
 							msp->mr=binmap_search_street_by_estimate(map, town, &c, &msp->ms);
@@ -2168,6 +2185,23 @@ duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_ty
 	return 2;
 }
 
+static int 
+item_inside_poly_list(struct item *it, GList *l)
+{
+	while(l) {
+		struct geom_poly_segment *p=l->data;
+		int count=p->last-p->first+1;
+		struct coord c;
+		item_coord_rewind(it);
+		while(item_coord_get(it,&c,1)>0) {
+			if(geom_poly_point_inside(p->first,count,&c))
+				return 1;
+		}
+		l=g_list_next(l);
+	}
+	return 0;
+}
+
 static struct item *
 binmap_search_get_item(struct map_search_priv *map_search)
 {
@@ -2204,10 +2238,19 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				}
 				if (item_is_street(*it)) {
 					struct attr at;
-					if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
+					if (!map_selection_contains_item_rect(map_search->mr->sel, it))
+						break;
+					if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries))
+						break;
+							
+					if(binfile_attr_get(it->priv_data, attr_label, &at)) {
 						int i,match=0;
-						char *str=g_strdup(at.u.str);
-						char *word=str;
+						char *str;
+						char *word;
+						struct coord c[128];
+						
+						str=g_strdup(at.u.str);
+						word=str;
 						do {
 							for (i = 0 ; i < 3 ; i++) {
 								char *name=linguistics_expand_special(word,i);
@@ -2222,6 +2265,9 @@ binmap_search_get_item(struct map_search_priv *map_search)
 							word=linguistics_next_word(word);
 						} while (word);
 						g_free(str);
+						
+						/* Extracting all coords here makes duplicate() not consider them. */
+						while(item_coord_get(it,c,128)>0);
 						if (match && !duplicate(map_search, it, attr_label)) {
 							item_coord_rewind(it);
 							return it;
@@ -2278,6 +2324,10 @@ binmap_search_destroy(struct map_search_priv *ms)
 		map_rect_destroy_binfile(ms->mr_item);
 	if (ms->mr)
 		map_rect_destroy_binfile(ms->mr);
+	while(ms->boundaries) {
+		geom_poly_segment_destroy(ms->boundaries->data);
+		ms->boundaries=g_list_delete_link(ms->boundaries,ms->boundaries);
+	}
 	g_free(ms);
 }
 
