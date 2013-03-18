@@ -1612,20 +1612,22 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 	struct wpoint segment_start,segment_end;
 	int i,points_to_draw_cnt=0;
 	int clip_result;
-	int wmax;
+	int r_width, r_height;
 	struct point_rect r=gra->r;
 
-	wmax=width[0];
-	for (i = 1 ; i < count ; i++) {
-		if (width[i] > wmax)
-			wmax=width[i];
-	}
-	if (wmax <= 0)
-		return;
-	r.lu.x-=wmax;
-	r.lu.y-=wmax;
-	r.rl.x+=wmax;
-	r.rl.y+=wmax;
+	r_width=r.rl.x-r.lu.x;
+	r_height=r.rl.y-r.lu.y;
+
+	// Expand clipping rect by 1/3 so wide, slanted lines do not
+	// partially end before screen border.
+	// Ideally we would expand by the line width here, but in 3D
+	// mode the width is variable and needs clipping itself, so that
+	// would get complicated. Anyway, 1/3 of screen size should be
+	// enough...
+	r.lu.x-=r_width/3;
+	r.lu.y-=r_height/3;
+	r.rl.x+=r_width/3;
+	r.rl.y+=r_height/3;
 	// Iterate over line segments, push them into points_to_draw
 	// until we reach a completely invisible segment...
 	for (i = 0 ; i < count ; i++) {
