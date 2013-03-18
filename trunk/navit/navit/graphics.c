@@ -1689,19 +1689,19 @@ poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int 
 	int dy=p2->y-p1->y;
 	switch(edge) {
 	case 0:
-		ret->y=p1->y+(r->lu.x-p1->x)*dy/dx;
+		ret->y=p1->y+((float)r->lu.x-p1->x)*dy/dx;
 		ret->x=r->lu.x;
 		break;
 	case 1:
-		ret->y=p1->y+(r->rl.x-p1->x)*dy/dx;
+		ret->y=p1->y+((float)r->rl.x-p1->x)*dy/dx;
 		ret->x=r->rl.x;
 		break;
 	case 2:
-		ret->x=p1->x+(r->lu.y-p1->y)*dx/dy;
+		ret->x=p1->x+((float)r->lu.y-p1->y)*dx/dy;
 		ret->y=r->lu.y;
 		break;
 	case 3:
-		ret->x=p1->x+(r->rl.y-p1->y)*dx/dy;
+		ret->x=p1->x+((float)r->rl.y-p1->y)*dx/dy;
 		ret->y=r->rl.y;
 		break;
 	}
