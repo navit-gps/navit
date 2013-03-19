@@ -1638,8 +1638,10 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 			segment_end.x=pa[i].x;
 			segment_end.y=pa[i].y;
 			segment_end.w=width[i];
+			dbg(3, "Segment: [%d, %d] - [%d, %d]...\n", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
 			clip_result=clip_line(&segment_start, &segment_end, &r);
 			if (clip_result != CLIPRES_INVISIBLE) {
+			        dbg(3, "....clipped to [%d, %d] - [%d, %d]\n", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
 				if ((i == 1) || (clip_result & CLIPRES_START_CLIPPED)) {
 					points_to_draw[points_to_draw_cnt].x=segment_start.x;
 					points_to_draw[points_to_draw_cnt].y=segment_start.y;
