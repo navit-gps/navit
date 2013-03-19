@@ -432,6 +432,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	int i,j = 0,k=0;
 	dbg(3,"count=%d\n", count);
 	for (i=0; i < count; i++) {
+		dbg(3, "input coord %d: (%d, %d)\n", i, c[i].x, c[i].y);
 		if (pro == t->pro) {
 			xc=c[i].x;
 			yc=c[i].y;
@@ -452,19 +453,16 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		if (t->ddd) {
 			zc=(xc*t->m20+yc*t->m21+HOG(*t)*t->m22);
 			zc+=t->offz << POST_SHIFT;
-			dbg(1,"zc=%d\n", zc);
-			dbg(1,"zc(%d)=xc(%d)*m20(%d)+yc(%d)*m21(%d)\n", (xc*t->m20+yc*t->m21), xc, t->m20, yc, t->m21);
+			dbg(3,"zc(%d)=xc(%d)*m20(%d)+yc(%d)*m21(%d)\n", zc, xc, t->m20, yc, t->m21);
 			/* visibility */
 			visible=(zc < zlimit ? 0:1);
-			dbg(1,"visible=%d old %d\n", visible, visibleo);
 			if (visible != visibleo && visibleo != -1) { 
-				dbg(1,"clipping (%d,%d,%d)-(%d,%d,%d) (%d,%d,%d)\n", xcn, ycn, zc, xco, yco, zco, xco-xcn, yco-ycn, zco-zc);
 				if (zco != zc) {
 					xcn=xcn+(long long)(xco-xcn)*(zlimit-zc)/(zco-zc);
 					ycn=ycn+(long long)(yco-ycn)*(zlimit-zc)/(zco-zc);
 				}
-				dbg(1,"result (%d,%d,%d) * %d / %d\n", xcn,ycn,zc,zlimit-zc,zco-zc);
 				zc=zlimit;
+				dbg(3,"clip result: (%d,%d,%d)\n", xcn,ycn,zc);
 				xco=xcn;
 				yco=ycn;
 				zco=zc;
@@ -479,9 +477,6 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 				if (! visible)
 					continue;
 			}
-			dbg(1,"zc=%d\n", zc);
-			dbg(1,"xcn %d ycn %d\n", xcn, ycn);
-			dbg(1,"%d,%d %d\n",xc,yc,zc);
 			xc=(long long)xcn*t->xscale/zc;
 			yc=(long long)ycn*t->yscale/zc;
 		} else {
@@ -492,6 +487,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		}
 		xc+=t->offx;
 		yc+=t->offy;
+			dbg(3,"result: (%d, %d)\n", xc, yc);
 
 		if (i != 0 && i != count-1 && mindist) {
 			/* We expect values of mindist to be within 0..5 pixels for nice looking screens. 
