@@ -328,3 +328,23 @@ gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *da
 {
 	gui_internal_keyboard_do(this, key->data, key->datai);
 }
+int
+gui_internal_keyboard_init_mode(void)
+{
+/*
+	Set cyrillic keyboard for Russia, Ukraine, Belarus, Kazakhstan
+*/
+	int ret;
+	char *lang;
+	lang=getenv("LANG");
+	ret=0;
+	if (strstr(lang,"RU"))
+	    ret = 40;
+	if (strstr(lang,"UA"))
+	    ret = 40;
+	if (strstr(lang,"BY"))
+	    ret = 40;
+	if (strstr(lang,"KZ"))
+	    ret = 40;
+	return ret;
+}
