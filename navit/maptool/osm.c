@@ -213,7 +213,7 @@ struct country_table {
 	{ 268,"Georgia"},
 	{ 270,"Gambia"},
 	{ 275,"Palestinian Territory, Occupied"},
-	{ 276,"Germany,Deutschland,Bundesrepublik Deutschland","345c7m"},
+	{ 276,"Germany,Deutschland,Bundesrepublik Deutschland","345c7M"},
 	{ 288,"Ghana"},
 	{ 292,"Gibraltar"},
 	{ 296,"Kiribati"},
@@ -1906,6 +1906,9 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 						case 'c':
 							attr_type=attr_county_name;
 							break;
+						case 'M':
+							if(experimental)
+								b->ib->type=type_poly_place6;
 						case 'm':
 							attr_type=attr_municipality_name;
 							break;
