@@ -1552,7 +1552,7 @@ osm_end_relation(struct maptool_osm *osm)
 
 	in_relation=0;
 
-	if(experimental && attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+	if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
 		item_bin->type=type;
 	}
 	else 
@@ -1627,8 +1627,7 @@ relation_add_tag(char *k, char *v)
 		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
 	}
 
-	if(experimental)
-		osm_update_attr_present(k,v);
+	osm_update_attr_present(k,v);
 }
 
 
@@ -1907,8 +1906,7 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 							attr_type=attr_county_name;
 							break;
 						case 'M':
-							if(experimental)
-								b->ib->type=type_poly_place6;
+							b->ib->type=type_poly_place6;
 						case 'm':
 							attr_type=attr_municipality_name;
 							break;
@@ -1981,6 +1979,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 	GList *bl;
 	GHashTable *town_hash;
 	struct attr attrs[11];
+	FILE *towns_poly;
 
 	profile(0,NULL);
 	bl=process_boundaries(boundaries, ways);
@@ -2058,11 +2057,9 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 		}
 	}
 
-	if(experimental) {
-		FILE *f=tempfile("","towns_poly",1);
-		osm_town_relations_to_poly(bl, f);
-		fclose(f);
-	}
+	towns_poly=tempfile("","towns_poly",1);
+	osm_town_relations_to_poly(bl, towns_poly);
+	fclose(towns_poly);
 	
 	g_hash_table_destroy(town_hash);
 	profile(0, "Finished processing towns\n");
