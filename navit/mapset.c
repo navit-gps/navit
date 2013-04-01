@@ -394,8 +394,7 @@ void
 mapset_search_destroy(struct mapset_search *this_)
 {
 	if (this_) {
-		if(this_->ms)
-			map_search_destroy(this_->ms);
+		map_search_destroy(this_->ms);
 		g_free(this_);
 	}
 }
