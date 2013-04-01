@@ -284,6 +284,7 @@ struct mapset_search {
 	struct item *item;			/**< "Superior" item. */
 	struct attr *search_attr;	/**< Attribute to be searched for. */
 	int partial;				/**< Indicates if one would like to have partial matches */
+	struct mapset *mapset;		/**< reference to current mapset. Set to NULL when all maps are searched */
 };
 
 /**
@@ -313,11 +314,10 @@ mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr
 	this=g_new0(struct mapset_search,1);
 	if(this != NULL && ms!=NULL )
         {
-		this->map=ms->maps;
+		this->mapset=ms;
 		this->item=item;
 		this->search_attr=search_attr;
 		this->partial=partial;
-		this->ms=map_search_new(this->map->data, item, search_attr, partial);
 		return this;
 	}
 	else
@@ -341,14 +341,30 @@ mapset_search_get_item(struct mapset_search *this_)
 {
 	struct item *ret=NULL;
 	struct attr active_attr;
+	int country_search=this_->search_attr->type >= attr_country_all && this_->search_attr->type <= attr_country_name;
 
-	while ((this_) && (!this_->ms || !(ret=map_search_get_item(this_->ms)))) { /* The current map has no more items to be returned */
-		if (this_->search_attr->type >= attr_country_all && this_->search_attr->type <= attr_country_name)
+	while ((this_) && (this_->mapset) && (!this_->ms || !(ret=map_search_get_item(this_->ms)))) { /* The current map has no more items to be returned */
+
+		/* Use only the first map from the mapset to search for country codes. */
+		if (this_->map && country_search)
 			break;
+			
 		for (;;) {
-			this_->map=g_list_next(this_->map);
-			if (! this_->map)
+			if (!this_->map)
+				this_->map=this_->mapset->maps;
+			else
+				this_->map=g_list_next(this_->map);
+			
+			if (!this_->map) {
+				/* No more maps left, mark this mapset_search as finished */
+				this_->mapset=NULL;
 				break;
+			}
+
+			/* Any map can be used for country search, regardless of it's attr_active value */
+			if(country_search)
+				break;
+			
 			if (map_get_attr(this_->map->data, attr_search_active, &active_attr, NULL)) {
 				if (!active_attr.u.num)
 					continue;
@@ -358,9 +374,12 @@ mapset_search_get_item(struct mapset_search *this_)
 			if (active_attr.u.num)
 				break;
 		}
+		if(this_->ms) {
+			map_search_destroy(this_->ms);
+			this_->ms=NULL;
+		}
 		if (! this_->map)
 			break;
-		map_search_destroy(this_->ms);
 		this_->ms=map_search_new(this_->map->data, this_->item, this_->search_attr, this_->partial);
 	}
 	return ret;
@@ -375,7 +394,8 @@ void
 mapset_search_destroy(struct mapset_search *this_)
 {
 	if (this_) {
-		map_search_destroy(this_->ms);
+		if(this_->ms)
+			map_search_destroy(this_->ms);
 		g_free(this_);
 	}
 }
