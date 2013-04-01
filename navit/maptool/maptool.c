@@ -832,7 +832,7 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 0
+#if 1
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
@@ -922,6 +922,8 @@ int main(int argc, char **argv)
 	if (p.process_relations) {
 		filenames[filename_count]="relations";
 		referencenames[filename_count++]=NULL;
+		filenames[filename_count]="towns_poly";
+		referencenames[filename_count++]=NULL;
 	}
 	if (p.process_ways) {
 		filenames[filename_count]="ways_split";
@@ -933,10 +935,6 @@ int main(int argc, char **argv)
 		filenames[filename_count]="nodes";
 		referencenames[filename_count++]=NULL;
 		filenames[filename_count]="way2poi_result";
-		referencenames[filename_count++]=NULL;
-	}
-	if(experimental) {
-		filenames[filename_count]="towns_poly";
 		referencenames[filename_count++]=NULL;
 	}
 	for (i = suffix_start ; i < suffix_count ; i++) {
