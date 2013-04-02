@@ -714,6 +714,7 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		tempfile_unlink(suffix,"boundaries");
 		tempfile_unlink(suffix,"way2poi_result");
 		tempfile_unlink(suffix,"coastline_result");
+		tempfile_unlink(suffix,"towns_poly");
 		unlink("coords.tmp");
 	}
 	if (last) {
@@ -896,7 +897,7 @@ int main(int argc, char **argv)
 		if (towns) {
 			boundaries=tempfile(suffix,"boundaries",0);
 			ways=tempfile(suffix,"ways_split",0);
-			osm_process_towns(towns,boundaries,ways);
+			osm_process_towns(towns,boundaries,ways,suffix);
 			fclose(ways);
 			fclose(boundaries);
 			fclose(towns);
