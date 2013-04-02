@@ -204,7 +204,7 @@ struct country_table {
 	{ 242,"Fiji"},
  	{ 246,"Finland,Suomi"},
 	{ 248,"Åland Islands"},
- 	{ 250,"France,République française,FR"},
+ 	{ 250,"France,République française,FR","3s5c7M"},
 	{ 254,"French Guiana"},
 	{ 258,"French Polynesia"},
 	{ 260,"French Southern Territories"},
