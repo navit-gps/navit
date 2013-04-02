@@ -1973,7 +1973,7 @@ osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly)
 
 
 void
-osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
+osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 {
 	struct item_bin *ib;
 	GList *bl;
@@ -2057,7 +2057,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways)
 		}
 	}
 
-	towns_poly=tempfile("","towns_poly",1);
+	towns_poly=tempfile(suffix,"towns_poly",1);
 	osm_town_relations_to_poly(bl, towns_poly);
 	fclose(towns_poly);
 	
