@@ -330,22 +330,31 @@ gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *da
 	gui_internal_keyboard_do(this, key->data, key->datai);
 }
 int
-gui_internal_keyboard_init_mode(void)
+gui_internal_keyboard_init_mode(char *lang)
 {
-/*
-	Set cyrillic keyboard for Russia, Ukraine, Belarus, Kazakhstan
-*/
-	int ret;
-	char *lang;
-	lang=getenv("LANG");
-	ret=0;
+	int ret=0;
+	/*
+	* Set cyrillic keyboard for countries using Cyrillic alphabet
+	*/
 	if (strstr(lang,"RU"))
 	    ret = 40;
 	if (strstr(lang,"UA"))
 	    ret = 40;
 	if (strstr(lang,"BY"))
 	    ret = 40;
+	if (strstr(lang,"RS"))
+	    ret = 40;
+	if (strstr(lang,"BG"))
+	    ret = 40;
+	if (strstr(lang,"MK"))
+	    ret = 40;
 	if (strstr(lang,"KZ"))
+	    ret = 40;
+	if (strstr(lang,"KG"))
+	    ret = 40;
+	if (strstr(lang,"TJ"))
+	    ret = 40;
+	if (strstr(lang,"MN"))
 	    ret = 40;
 	return ret;
 }
