@@ -1951,7 +1951,7 @@ osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly)
 			GList *s=b->sorted_segments;
 			while(s) {
 				struct geom_poly_segment *seg=s->data;
-				if(seg->type==geom_poly_segment_type_way_outer && coord_is_equal(*seg->first,*seg->last)) {
+				if((seg->type==geom_poly_segment_type_way_outer || seg->type==geom_poly_segment_type_way_unknown) && coord_is_equal(*seg->first,*seg->last)) {
 					struct item_bin *ib=init_item(b->ib->type);
 					void *a;
 					item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
