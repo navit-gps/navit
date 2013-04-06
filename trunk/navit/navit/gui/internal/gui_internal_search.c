@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <stdlib.h>
 #include "config.h"
 #include "color.h"
 #include "coord.h"
@@ -479,8 +480,8 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
 	char *country;
 	int keyboard_mode;
-	keyboard_mode=2+gui_internal_keyboard_init_mode();
 	gui_internal_search_list_new(this);
+	keyboard_mode=2+gui_internal_keyboard_init_mode(this->country_iso2?this->country_iso2:getenv("LANG"));
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
