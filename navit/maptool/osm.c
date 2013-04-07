@@ -717,6 +717,7 @@ static char *attrmap={
 	"w	place=municipality	poly_place4\n"
 	"w	place=town		poly_place5\n"
 	"w	place=city		poly_place6\n"
+	"w	de:place=city		poly_place6\n"
 	"w	power=line		powerline\n"
 	"w	railway=abandoned	rail_abandoned\n"
 	"w	railway=disused		rail_disused\n"
