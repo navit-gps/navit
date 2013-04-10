@@ -10,10 +10,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *
  * Boston, MA  02110-1301, USA.
  */
 
@@ -32,6 +32,7 @@
 #include "search.h"
 #include "country.h"
 #include "linguistics.h"
+#include "geom.h"
 
 #if HAVE_API_ANDROID
 #include "android.h"
@@ -612,7 +613,9 @@ search_list_street_new(struct item *item)
 {
 	struct search_list_street *ret=g_new0(struct search_list_street, 1);
 	struct attr attr;
+	struct coord p[1024];
 	struct coord c;
+	int count;
 
 	ret->common.item=ret->common.unique=*item;
 	if (item_attr_get(item, attr_street_name, &attr))
@@ -620,7 +623,9 @@ search_list_street_new(struct item *item)
 	else
 		ret->name=NULL;
 	search_list_common_new(item, &ret->common);
-	if (item_coord_get(item, &c, 1)) {
+	count=item_coord_get(item, p, sizeof(p)/sizeof(*p));
+	if (count) {
+		geom_line_middle(p,count,&c);
 		ret->common.c=g_new(struct pcoord, 1);
 		ret->common.c->x=c.x;
 		ret->common.c->y=c.y;
