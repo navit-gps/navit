@@ -170,6 +170,8 @@ struct map_search_priv {
 	GList *boundaries;
 	int partial;
 	int mode;
+	struct coord_rect rect_new;
+	char *parent_name;
 	GHashTable *search_results;
 };
 
@@ -2088,8 +2090,13 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				struct coord c;
 				if (item_coord_get(msp->item, &c, 1))
 				{
+					struct attr attr;
 					msp->mr=binmap_search_housenumber_by_estimate(map, &c, &msp->ms);
 					msp->mode = 2;
+					msp->rect_new=msp->ms.u.c_rect;
+					if(item_attr_get(msp->item, attr_street_name, &attr))
+						msp->parent_name=g_strdup(attr.u.str);
+					dbg(0,"pn=%s\n",msp->parent_name);
 				}
 				map_rect_destroy_binfile(msp->mr_item);
 				msp->mr_item=NULL;
@@ -2276,10 +2283,9 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				}
 				break;
 			case attr_house_number:
-				//if (it->type == type_house_number)
-				if ((it->type == type_house_number)||(type_house_number_interpolation_even)
-					||(type_house_number_interpolation_odd)
-					||(type_house_number_interpolation_all)
+				if ((it->type == type_house_number)||(it->type == type_house_number_interpolation_even)
+					||(it->type == type_house_number_interpolation_odd)
+					||(it->type == type_house_number_interpolation_all)
 					)
 				{
 					// is it a housenumber?
@@ -2298,11 +2304,31 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						}
 					} else
 						return it;
+				} else if(map_search->mode==2 && map_search->parent_name && item_is_street(*it) && binfile_attr_get(it->priv_data, attr_street_name, &at) && !strcmp(at.u.str, map_search->parent_name) ) {
+					struct coord c;
+					while(item_coord_get(it,&c,1)) {
+						c.x-=100;
+						c.y-=100;
+						coord_rect_extend(&map_search->rect_new,&c);
+						c.x+=200;
+						c.y+=200;
+						coord_rect_extend(&map_search->rect_new,&c);
+					}
 				}
 				continue;
 			default:
 				return NULL;
 			}
+		}
+		if(map_search->search.type==attr_house_number && map_search->mode==2 && map_search->parent_name) {
+			if(map_search->ms.u.c_rect.lu.x!=map_search->rect_new.lu.x || map_search->ms.u.c_rect.lu.y!=map_search->rect_new.lu.y || 
+				map_search->ms.u.c_rect.rl.x!=map_search->rect_new.rl.x || map_search->ms.u.c_rect.rl.y!=map_search->rect_new.rl.y) {
+					map_search->ms.u.c_rect=map_search->rect_new;
+					map_rect_destroy_binfile(map_search->mr);
+					map_search->mr=map_rect_new_binfile(map_search->map, &map_search->ms);
+					dbg(0,"Extended house number search region to %d x %d, restarting...\n",map_search->ms.u.c_rect.rl.x - map_search->ms.u.c_rect.lu.x, map_search->ms.u.c_rect.lu.y-map_search->ms.u.c_rect.rl.y);
+					continue;
+				}
 		}
 		if (!map_search->mr_item)
 			return NULL;
@@ -2320,6 +2346,8 @@ binmap_search_destroy(struct map_search_priv *ms)
 		g_hash_table_destroy(ms->search_results);
 	if(ATTR_IS_STRING(ms->search.type))
 		g_free(ms->search.u.str);
+	if(ms->parent_name)
+		g_free(ms->parent_name);
 	if (ms->mr_item)
 		map_rect_destroy_binfile(ms->mr_item);
 	if (ms->mr)
