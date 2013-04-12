@@ -153,7 +153,7 @@ config_new(struct attr *parent, struct attr **attrs)
 		config_new_int();
 	config->func=&config_func;
 	navit_object_ref((struct navit_object *)config);
-	config->attrs=attr_list_dup(attrs);
+	config->attrs=attr_generic_add_attr_list(config->attrs, attrs);
 	while (*attrs) {
 		if (!config_set_attr_int(config,*attrs)) {
 			dbg(0,"failed to set attribute '%s'\n",attr_to_name((*attrs)->type));
