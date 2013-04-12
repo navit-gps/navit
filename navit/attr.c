@@ -462,6 +462,16 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 }
 
 struct attr **
+attr_generic_add_attr_list(struct attr **attrs, struct attr **add)
+{
+	while (add && *add) {
+		attrs=attr_generic_add_attr(attrs, *add);
+		add++;
+	}
+	return attrs;
+}
+
+struct attr **
 attr_generic_prepend_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
