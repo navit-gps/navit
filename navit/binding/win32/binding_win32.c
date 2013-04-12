@@ -120,9 +120,9 @@ static void
 win32_main_navit(struct win32_binding_private *this, struct navit *navit, int added)
 {
 	struct attr attr;
-	dbg(0,"enter");
+	dbg(0,"enter\n");
 	if (added==1) {
-		dbg(0,"enter2");
+		dbg(0,"enter2\n");
 		this->navit=navit;
 		command_add_table_attr(commands, sizeof(commands)/sizeof(struct command_table), navit, &attr);
 		navit_add_attr(navit, &attr);
@@ -135,6 +135,7 @@ win32_main_navit(struct win32_binding_private *this, struct navit *navit, int ad
 
 void plugin_init(void)
 {
+	dbg(0,"enter\n");
 	struct attr callback;
 	struct win32_binding_private *this=g_new0(struct win32_binding_private,1);
 	callback.type=attr_callback;
