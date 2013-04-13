@@ -3040,7 +3040,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg=mr->seg;
 	struct route *route=mr->mpriv->route;
-	if (mr->item.type != type_street_route && mr->item.type != type_waypoint)
+	if (mr->item.type != type_street_route && mr->item.type != type_waypoint && mr->item.type != type_route_end)
 		return 0;
 	attr->type=attr_type;
 	switch (attr_type) {
@@ -3100,7 +3100,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 1;
 		case attr_label:
 			mr->attr_next=attr_none;
-			if(mr->item.type==type_waypoint) {
+			if(mr->item.type==type_waypoint || mr->item.type == type_route_end) {
 				if(mr->str)
 					g_free(mr->str);
 				mr->str=g_strdup_printf("%d",route->reached_destinations_count+g_list_position(route->destinations,mr->dest)+1);
@@ -3545,20 +3545,11 @@ rm_get_item(struct map_rect_priv *mr)
 
 	case type_route_start:
 	case type_route_start_reverse:
-	case type_waypoint:
-		mr->item.type=type_waypoint;
 		mr->seg=NULL;
-		if(!mr->dest)
-			mr->dest=mr->mpriv->route->destinations;
-		else 
-			mr->dest=g_list_next(mr->dest);
-
-		if(mr->dest) {
-			id=mr->dest;
-			break;
-		}
-
+		mr->dest=mr->mpriv->route->destinations;
 	default:
+		if (mr->item.type == type_waypoint)
+			mr->dest=g_list_next(mr->dest);
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
 		if (!mr->seg && mr->path && mr->path->next) {
@@ -3571,6 +3562,12 @@ rm_get_item(struct map_rect_priv *mr)
 			mr->seg=mr->path->path;
 			if (p)
 				g_free(p);
+			if (mr->dest) {
+				id=mr->dest;
+				mr->item.type=type_waypoint;
+				mr->seg_next=mr->seg;
+				break;
+			}
 		}
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;

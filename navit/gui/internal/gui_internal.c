@@ -653,7 +653,7 @@ gui_internal_select_waypoint(struct gui_priv *this, char *title, char *hint, str
 	i=0;	
 	while((item = map_rect_get_item(mr))!=NULL) {
 		struct attr attr;
-		if(item->type!=type_waypoint)
+		if(item->type!=type_waypoint && item->type!=type_route_end)
 			continue;
 		if (item_attr_get(item, attr_label, &attr)) {
 			label=map_convert_string(item->map, attr.u.str);
@@ -1052,7 +1052,7 @@ gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void 
 	i=0;
 	while((item=map_rect_get_item(mr))!=NULL) {
 		struct coord c;
-		if(item->type!=type_waypoint)
+		if(item->type!=type_waypoint && item->type!=type_route_end)
 			continue;
 		if(item_is_equal_id(*item,wm->item))
 			continue;
@@ -1341,7 +1341,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->text=g_strdup(wm->text);
 	}
 
-	if (wm && wm->item.type==type_waypoint) {
+	if (wm && (wm->item.type==type_waypoint || wm->item.type==type_route_end)) {
 		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 		gui_internal_widget_append(row,
 			wbc=gui_internal_button_new_with_callback(this, _("Delete waypoint"),
