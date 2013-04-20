@@ -2247,9 +2247,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					struct attr at;
 					if (!map_selection_contains_item_rect(map_search->mr->sel, it))
 						break;
-					if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries))
-						break;
-							
+						
 					if(binfile_attr_get(it->priv_data, attr_label, &at)) {
 						int i,match=0;
 						char *str;
@@ -2276,6 +2274,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						/* Extracting all coords here makes duplicate() not consider them. */
 						while(item_coord_get(it,c,128)>0);
 						if (match && !duplicate(map_search, it, attr_label)) {
+							if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries))
+								break;
 							item_coord_rewind(it);
 							return it;
 						}
