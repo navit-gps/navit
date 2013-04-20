@@ -333,6 +333,8 @@ int
 gui_internal_keyboard_init_mode(char *lang)
 {
 	int ret=0;
+	/* Converting to upper case here is required for Android */
+	lang=g_ascii_strup(lang,-1);
 	/*
 	* Set cyrillic keyboard for countries using Cyrillic alphabet
 	*/
@@ -356,5 +358,6 @@ gui_internal_keyboard_init_mode(char *lang)
 	    ret = 40;
 	if (strstr(lang,"MN"))
 	    ret = 40;
+	g_free(lang);
 	return ret;
 }
