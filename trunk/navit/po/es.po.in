@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-23 20:16+0200\n"
-"PO-Revision-Date: 2012-02-09 00:00+0000\n"
-"Last-Translator: Ricardo Jurado <Unknown>\n"
+"PO-Revision-Date: 2013-04-20 00:00+0000\n"
+"Last-Translator: Mariano Muñoz <turulomio@yahoo.es>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -1290,27 +1290,33 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit uso:\n"
+"navit [opciones] [configfile]\n"
+"\t-c <fichero>: usar <fichero> como fichero de configuración.\n"
+"\t-d <n>: Establecer nivel de depurado a <n> (0-3).\n"
+"\t-h: Muestra esta ayuda y sale.\n"
+"\t-v: Muestra la versión y sale.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "No hay fichero de configuración navit.xml, encontrado navit.xml.local\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Error cargando el fichero de configuración '%s': %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Usando el fichero de configuración '%s'\n"
 
 msgid "Internal initialization failed, exiting\n"
-msgstr ""
+msgstr "Falló el arranque interno, saliendo\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "calle desconocida"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "Error al escribir el fichero de marcadores"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
@@ -1548,10 +1554,10 @@ msgid "View on map"
 msgstr "Ver en el mapa"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Quitar los resultados de búsqueda del mapa"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "Mostrar los resultados en el mapa"
 
 msgid "Cut Bookmark"
 msgstr "Cortar marcador"
@@ -1572,16 +1578,16 @@ msgid "Bookmarks"
 msgstr "Favoritos"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Marcadores como puntos de ruta"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "Guardar puntos de ruta"
 
 msgid "Replace Waypoints"
-msgstr ""
+msgstr "Sustituir puntos de ruta"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Borrar carpeta"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1676,7 +1682,7 @@ msgid "Map follows Vehicle"
 msgstr "El mapa sigue al vehículo"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Plan con puntos de ruta"
 
 msgid "Message"
 msgstr "Mensaje"
@@ -1715,7 +1721,7 @@ msgstr "Vuelva a la ruta"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr "!Atencion! Radar"
+msgstr "!Atención! Radar"
 
 #. warning told
 msgid "Please decrease your speed"
@@ -1781,12 +1787,14 @@ msgstr "Descripción"
 msgid ""
 "Drop last \n"
 "Waypoint"
-msgstr ""
+msgstr "Quitar último \n"
+"Punto de ruta"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
-msgstr ""
+msgstr "Quitar el siguiente \n"
+"Punto de ruta"
 
 msgid "car_shortest"
 msgstr "automovil_ruta_mas_corta"
