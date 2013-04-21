@@ -2156,39 +2156,71 @@ duplicate_equal(gconstpointer a, gconstpointer b)
 }
 
 /**
- * @brief
+ * @brief Test an item if it's duplicate. If it's not a duplicate, return new struct duplicate to be duplicate_insert()'ed.
  * @param msp pointer to private map search data
  * @param item item to check
  * @param attr_type
+ * returns - pointer to new struct duplicate, if this item is not already exist in hash
+ *         - NULL if this item already exists in duplicate hash or doesnt have an attr_type attr;
  */
-static int
-duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
+static struct duplicate*
+duplicate_test(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
 {
 	struct attr attr;
+	int len;
+	char *buffer;
+	struct duplicate *d;
+	
 	if (!msp->search_results)
 		msp->search_results = g_hash_table_new_full(duplicate_hash, duplicate_equal, g_free, NULL);
 	binfile_attr_rewind(item->priv_data);
 	if (!item_attr_get(item, attr_type, &attr))
-		return 1;
-	{
-		int len=sizeof(struct  coord)+strlen(attr.u.str)+1;
-		char *buffer=g_alloca(sizeof(char)*len);
-		struct duplicate *d=(struct duplicate *)buffer;
-		if (!item_coord_get(item, &d->c, 1)) {
-			d->c.x=0;
-			d->c.y=0;
-		}
-		binfile_coord_rewind(item->priv_data);
-		strcpy(d->str, attr.u.str);
-		if (!g_hash_table_lookup(msp->search_results, d)) {
-			struct duplicate *dc=g_malloc(len);
-			memcpy(dc, d, len);
-			g_hash_table_insert(msp->search_results, dc, GINT_TO_POINTER(1));
-			binfile_attr_rewind(item->priv_data);
-			return 0;
-		}
+		return NULL;
+	len=sizeof(struct  coord)+strlen(attr.u.str)+1;
+	buffer=g_alloca(sizeof(char)*len);
+	d=(struct duplicate *)buffer;
+	if (!item_coord_get(item, &d->c, 1)) {
+		d->c.x=0;
+		d->c.y=0;
 	}
-	return 2;
+	strcpy(d->str, attr.u.str);
+	binfile_coord_rewind(item->priv_data);
+	binfile_attr_rewind(item->priv_data);
+	if (!g_hash_table_lookup(msp->search_results, d)) {
+		struct duplicate *dr=g_malloc(len);
+		memcpy(dr, d, len);
+		return dr;
+	}
+	return NULL;
+}
+
+/**
+ * @brief Insert struct duplicate item into the duplicate hash.
+ * @param msp pointer to private map search data
+ * @param duplicate Duplicate info to insert
+ */
+static void
+duplicate_insert(struct map_search_priv *msp, struct duplicate *d)
+{
+	g_hash_table_insert(msp->search_results, d, GINT_TO_POINTER(1));
+}
+
+/**
+ * @brief Check if item is dupicate and update duplicate hash if needed.
+ * @param msp pointer to private map search data
+ * @param item item to check
+ * @param attr_type
+ * @returns 0 if item is not a duplicate
+ * 	    1 if item is duplicate or doesn't have required attr_type attribute
+ */
+static int
+duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
+{
+	struct duplicate *d=duplicate_test(msp, item, attr_type);
+	if(!d)
+		return 1;
+	duplicate_insert(msp,d);
+	return 0;
 }
 
 static int 
@@ -2253,6 +2285,14 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						char *str;
 						char *word;
 						struct coord c[128];
+						struct duplicate *d;
+						
+						/* Extracting all coords here makes duplicate_new() not consider them (we don't want all 
+						 * street segments to be reported as separate streets). */
+						while(item_coord_get(it,c,128)>0);
+						d=duplicate_test(map_search, it, attr_label);
+						if(!d)
+							break;
 						
 						str=g_strdup(at.u.str);
 						word=str;
@@ -2271,14 +2311,22 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						} while (word);
 						g_free(str);
 						
-						/* Extracting all coords here makes duplicate() not consider them. */
-						while(item_coord_get(it,c,128)>0);
-						if (match && !duplicate(map_search, it, attr_label)) {
-							if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries))
-								break;
-							item_coord_rewind(it);
-							return it;
+						if(!match) {
+							/* Remember this non-matching street name in duplicate hash to skip name 
+							  * comparison for its following segments */
+							duplicate_insert(map_search, d);
+							break;
 						}
+							
+						if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries)) {
+							/* Other segments may fit the town poly. Do not update hash for now. */
+							g_free(d);
+							break;
+						}
+
+						duplicate_insert(map_search, d);
+						item_coord_rewind(it);
+						return it;
 					}
 				}
 				break;
