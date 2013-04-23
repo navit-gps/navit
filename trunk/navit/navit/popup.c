@@ -140,17 +140,17 @@ popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore)
 {
 	struct pcoord *dst;
 	char buffer[1024];
-	int i, dstcount;
+	int i, dstcount_new;
 	sprintf(buffer, _("Waypoint %d"), visitbefore+1);
-	dstcount=navit_get_destination_count(nav)+1;
-	dst=g_alloca(dstcount*sizeof(struct pcoord));
-	dstcount=navit_get_destinations(nav,dst,dstcount);
-	for (i=dstcount;i>visitbefore;i--){
+	dstcount_new=navit_get_destination_count(nav)+1;
+	dst=g_alloca(dstcount_new*sizeof(struct pcoord));
+	navit_get_destinations(nav,dst,dstcount_new);
+	for (i=dstcount_new-1;i>visitbefore;i--){
 		dst[i]=dst[i-1];
 	}
 	dst[visitbefore]=*pc;
 	navit_add_destination_description(nav,pc,buffer);
-	navit_set_destinations(nav, dst, dstcount+1, buffer, 1);
+	navit_set_destinations(nav, dst, dstcount_new, buffer, 1);
 }
 
 
