@@ -134,6 +134,27 @@ popup_set_destination(struct navit *nav, struct pcoord *pc)
 	navit_set_destination(nav, pc, buffer, 1);
 }
 
+
+static void
+popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore)
+{
+	struct pcoord *dst;
+	char buffer[1024];
+	int i, dstcount;
+	sprintf(buffer, _("Waypoint %d"), visitbefore+1);
+	dstcount=navit_get_destination_count(nav)+1;
+	dst=g_alloca(dstcount*sizeof(struct pcoord));
+	dstcount=navit_get_destinations(nav,dst,dstcount);
+	for (i=dstcount;i>visitbefore;i--){
+		dst[i]=dst[i-1];
+	}
+	dst[visitbefore]=*pc;
+	navit_add_destination_description(nav,pc,buffer);
+	navit_set_destinations(nav, dst, dstcount+1, buffer, 1);
+}
+
+
+
 static void
 popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 {
@@ -217,6 +238,24 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 	va_end(ap);
 	g_free(str);
 	return ret;
+}
+
+
+
+static void
+popup_show_visitbefore(struct navit *nav,struct pcoord *pc, void *menu)
+{
+	void *menuvisitbefore;
+	char buffer[100];
+	int i, dstcount;
+	dstcount=navit_get_destination_count(nav);
+	if (dstcount>=1){
+		menuvisitbefore=popup_printf(menu, menu_type_submenu, _("Visit before..."));
+		for (i=0;i<dstcount;i++){
+			sprintf(buffer,_("Waypoint %d"),i+1);
+			popup_printf_cb(menuvisitbefore, menu_type_menu, callback_new_3(callback_cast(popup_set_visitbefore), nav, pc,i), buffer);
+		}
+	}
 }
 
 static void
@@ -393,6 +432,7 @@ popup(struct navit *nav, int button, struct point *p)
 	c.y = co.y;
 	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, &c), _("Set as position"));
 	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, &c), _("Set as destination"));
+	popup_show_visitbefore(nav,&c,men);
 	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, &c), _("Add as bookmark"));
 	popup_display(nav, popup, p);
 	menu_popup(popup);
