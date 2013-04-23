@@ -803,7 +803,7 @@ bookmarks_append_destinations(struct map *former_destination_map, char *former_d
 		older=find_destination_in_list(new_dest, former_destinations,0);
 		if(!description && older)
 			description=((struct former_destination *)older->data)->description;
-		new_dest->description = g_strdup(description?description:_("Map point"));
+		new_dest->description = g_strdup(description?description:_("Map Point"));
 
 		former_destinations = find_destination_in_list(new_dest, former_destinations, 1);
 	 	former_destinations = g_list_append(former_destinations, new_dest);
