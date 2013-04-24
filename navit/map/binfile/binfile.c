@@ -2226,15 +2226,32 @@ duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_ty
 static int 
 item_inside_poly_list(struct item *it, GList *l)
 {
+	
 	while(l) {
 		struct geom_poly_segment *p=l->data;
 		int count=p->last-p->first+1;
 		struct coord c;
+		int ccount;
 		item_coord_rewind(it);
-		while(item_coord_get(it,&c,1)>0) {
-			if(geom_poly_point_inside(p->first,count,&c))
-				return 1;
+		ccount=binfile_coord_left(it->priv_data);
+		if(ccount==1)
+			item_coord_get(it,&c,1);
+		else if(ccount==2) {
+			struct coord c2;
+			item_coord_get(it,&c,1);
+			item_coord_get(it,&c2,1);
+			c.x=(c.x+c2.x)/2;
+			c.y=(c.y+c2.y)/2;
+		} else {
+			if(ccount>3)
+				ccount/=2;
+			else 
+				ccount=2;
+			while(--ccount>0)
+				item_coord_get(it,&c,1);
 		}
+		if(geom_poly_point_inside(p->first,count,&c))
+				return 1;
 		l=g_list_next(l);
 	}
 	return 0;
