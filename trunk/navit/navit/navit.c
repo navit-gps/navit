@@ -2902,6 +2902,7 @@ navit_remove_attr(struct navit *this_, struct attr *attr)
 		navit_remove_callback(this_, attr->u.callback);
 		break;
 	case attr_vehicle:
+	case attr_osd:
 		this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
 		return 1;
 	default:
