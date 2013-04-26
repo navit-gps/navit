@@ -649,7 +649,23 @@ command_call_function(struct context *ctx, struct result *res)
 		} else if (!strncmp(function,"new ",4)) {
 			enum attr_type attr_type=attr_from_name(function+4);
 			result_free(res);
-			if (attr_type != attr_none) {
+			if (ATTR_IS_INT(attr_type)) {
+				if (list && list[0] && ATTR_IS_INT(list[0]->type)) {
+					res->attr.type=attr_type;
+					res->attr.u.num=list[0]->u.num;
+					res->allocated=0;
+				} else {
+					dbg(0,"don't know how to create int of args\n");
+				}
+			} else if (ATTR_IS_STRING(attr_type)) {
+				if (list && list[0] && ATTR_IS_STRING(list[0]->type)) {
+					res->attr.type=attr_type;
+					res->attr.u.str=g_strdup(list[0]->u.str);
+					res->allocated=1;
+				} else {
+					dbg(0,"don't know how to create string of args\n");
+				}
+			} else if (ATTR_IS_OBJECT(attr_type)) {
 				struct object_func *func=object_func_lookup(attr_type);
 				if (func && func->create) {
 					res->attr.type=attr_type;
@@ -658,6 +674,8 @@ command_call_function(struct context *ctx, struct result *res)
 					   So created persistent objects should be stored with set_attr_var command. */
 					res->allocated=1;
 				}
+			} else {
+				dbg(0,"don't know how to create %s (%s)\n",attr_to_name(attr_type),function+4);
 			}
 		} else if (!strcmp(function,"add_attr")) {
 			command_object_add_attr(ctx, &res->attr, list[0]);
