@@ -906,6 +906,8 @@ gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, s
 		gui_internal_set(pattern, command);
 		command_evaluate(&this->self, command);
 		g_free(command);
+	} else {
+		gui_internal_set(pattern, NULL);
 	}
 
 }

@@ -1724,7 +1724,8 @@ gui_internal_set(char *remove, char *add)
 			free(line);
 		fclose(fi);
 	}
-	fprintf(fo,"%s;\n",add);
+	if (add)
+		fprintf(fo,"%s;\n",add);
 	fclose(fo);
 	ret=(rename(gui_file_new, gui_file)==0);
 	g_free(gui_file_new);
