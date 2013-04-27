@@ -465,7 +465,7 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		map_collect_data_osm_o5m(p->input_file,&p->osm);
 	else
 		map_collect_data_osm(p->input_file,&p->osm);
-	if (node_buffer.size==0){
+	if (node_buffer.size==0 && !p->map_handles){
 		fprintf(stderr,"No nodes found - looks like an invalid input file.\n");
 		exit(1);
 	}
