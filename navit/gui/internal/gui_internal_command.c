@@ -133,7 +133,7 @@ static void
 gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr escaped;
-	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
+	if (!in || !in[0]) {
 		dbg(0,"first parameter missing or wrong type\n");
 		return;
 	}
@@ -141,8 +141,16 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		dbg(0,"output missing\n");
 		return;
 	}
-	escaped.type=in[0]->type;
-	escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
+	if (ATTR_IS_STRING(in[0]->type)) {
+		escaped.type=in[0]->type;
+		escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
+	} else if (ATTR_IS_INT(in[0]->type)) {
+		escaped.type=attr_type_string_begin;
+		escaped.u.str=g_strdup_printf("%d",in[0]->u.num);
+	} else {
+		dbg(0,"first parameter wrong type\n");
+		return;
+	}
 	dbg(1,"in %s result %s\n",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
