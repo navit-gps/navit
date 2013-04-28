@@ -198,7 +198,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, 
 	s=(*env)->GetStringUTFChars(env, str, NULL);
 	//dbg(0,"*****string=%s\n",s);
 
-	localized_str=gettext(s);
+	localized_str=navit_nls_gettext(s);
 	//dbg(0,"localized string=%s",localized_str);
 
 	// jstring dataStringValue = (jstring) localized_str;
@@ -441,7 +441,7 @@ Java_org_navitproject_navit_NavitGraphics_GetAllCountries( JNIEnv* env, jobject 
 		if (strlen(res->country->iso2)==2)
 		{
 			jstring j_iso2 = (*env)->NewStringUTF(env, res->country->iso2);
-			jstring j_name = (*env)->NewStringUTF(env, gettext(res->country->name));
+			jstring j_name = (*env)->NewStringUTF(env, navit_nls_gettext(res->country->name));
 
 			current_country = (jobjectArray)(*env)->NewObjectArray(env, 2, (*env)->FindClass(env, "java/lang/String"), NULL);
 

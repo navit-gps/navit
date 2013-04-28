@@ -317,7 +317,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 	case attr_label:
-		attr->u.str=gettext(country->name);
+		attr->u.str=navit_nls_gettext(country->name);
 		this_->attr_next=attr_country_id;
 		return 1;
 	case attr_country_id:
@@ -337,7 +337,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		this_->attr_next=attr_country_name;
 		return 1;
 	case attr_country_name:
-		attr->u.str=gettext(country->name);
+		attr->u.str=navit_nls_gettext(country->name);
 		this_->attr_next=attr_none;
 		return 1;
 	default:
@@ -403,7 +403,7 @@ country_search_get_item(struct country_search *this_)
                     match(this_, attr_country_iso3, this_->country->iso3) ||
 		    match(this_, attr_country_iso2, this_->country->iso2) ||
 		    match(this_, attr_country_car, this_->country->car) ||
-		    match(this_, attr_country_name, gettext(this_->country->name))) {
+		    match(this_, attr_country_name, navit_nls_gettext(this_->country->name))) {
 			this_->item.id_lo=this_->country->id;
 			return &this_->item;
 		}

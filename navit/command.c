@@ -643,7 +643,7 @@ command_call_function(struct context *ctx, struct result *res)
 		if (!strcmp(function,"_") && list && list[0] && list[0]->type >= attr_type_string_begin && list[0]->type <= attr_type_string_end) {
 			result_free(res);
 			res->attr.type=list[0]->type;
-			res->attr.u.str=g_strdup(gettext(list[0]->u.str));
+			res->attr.u.str=g_strdup(navit_nls_gettext(list[0]->u.str));
 			res->allocated=1;
 			
 		} else if (!strncmp(function,"new ",4)) {
