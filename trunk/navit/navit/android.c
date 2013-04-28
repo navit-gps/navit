@@ -61,6 +61,18 @@ android_find_method(jclass class, char *name, char *args, jmethodID *ret)
 	return 1;
 }
 
+
+int
+android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
+{
+	*ret = (*jnienv)->GetStaticMethodID(jnienv, class, name, args);
+	if (*ret == NULL) {
+		dbg(0,"Failed to get static Method %s with signature %s\n",name,args);
+		return 0;
+	}
+	return 1;
+}
+
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string, jobject path)
 {
