@@ -421,8 +421,7 @@ main_init_nls(void)
 #define STRINGIFY(x) STRINGIFY2(x)
 	setlocale(LC_MESSAGES,STRINGIFY(FORCE_LOCALE));
 #endif
-	bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
-	bind_textdomain_codeset (PACKAGE, "UTF-8");
+	navit_nls_add_textdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
 	textdomain(PACKAGE);
 #endif
 }
