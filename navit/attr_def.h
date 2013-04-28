@@ -175,6 +175,13 @@ ATTR(street_count)
 ATTR(min_dist)
 ATTR(max_dist)
 ATTR(cache_size)
+ATTR(battery_voltage) /* mV */
+ATTR(battery_current) /* mA */
+ATTR(battery_capacity) /* Wh */
+ATTR(battery_capacity_rel) /* ppm */
+ATTR(battery_charge) /* mAh */
+ATTR(battery_resistance) /* mOhm */
+ATTR(battery_temperature) /* mK */
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
