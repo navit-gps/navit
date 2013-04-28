@@ -63,6 +63,7 @@ struct navit_object {
 	NAVIT_OBJECT
 };
 
+int navit_object_set_methods(void *in, int in_size, void *out, int out_size);
 struct navit_object *navit_object_ref(struct navit_object *obj);
 void navit_object_unref(struct navit_object *obj);
 struct attr_iter * navit_object_attr_iter_new(void);
