@@ -275,7 +275,7 @@ static const char *upperlower[]={
 NULL
 };
 
-static GHashTable *casefold_hash;
+static GHashTable *casefold_hash, *special_hash;
 
 
 /*
@@ -319,6 +319,19 @@ linguistics_casefold(char *in)
 	return ret;
 }
 
+static char** 
+linguistics_get_special(char *str, char *end)
+{
+	char *buf;
+	int len;
+	if(!end)
+		end=g_utf8_find_next_char(str,NULL);
+	len=end-str+1;
+	buf=g_alloca(len);
+	g_strlcpy(buf,str,len);
+	return g_hash_table_lookup(special_hash,buf);
+}
+
 
 /**
  * @brief Replace special characters in string (e.g. umlauts) with plain letters.
@@ -354,25 +367,22 @@ linguistics_expand_special(char *str, int mode)
 		in_rest-=len;
 		
 		if (len > 1) {
-			for (i = 0 ; i < sizeof(special)/sizeof(special[0]); i++) {
-				const char *search=special[i][0];
-				if (!strncmp(in,search,len)) {
-					const char *replace=special[i][mode];
-					if (replace) {
-						int replace_len=strlen(replace);
-						if(out-ret+replace_len+in_rest>ret_len) {
-							char *new_ret;
-							ret_len+=(replace_len-len)*10;
-							new_ret=g_realloc(ret,ret_len+1);
-							out=new_ret+(out-ret);
-							ret=new_ret;
-						}
-						dbg(1,"found %s %s %d %s %d\n",in,search,len,replace,replace_len);
-						strcpy(out, replace);
-						out+=replace_len;
-						match=1;
-						break;
+			char **spc=linguistics_get_special(in, next);
+			if (spc) {
+				const char *replace=spc[mode];
+				if (replace) {
+					int replace_len=strlen(replace);
+					if(out-ret+replace_len+in_rest>ret_len) {
+						char *new_ret;
+						ret_len+=(replace_len-len)*10;
+						new_ret=g_realloc(ret,ret_len+1);
+						out=new_ret+(out-ret);
+						ret=new_ret;
 					}
+					dbg(1,"found %s %s %d %s %d\n",in,spc[0],len,replace,replace_len);
+					strcpy(out, replace);
+					out+=replace_len;
+					match=1;
 				}
 			}
 		}
@@ -448,12 +458,19 @@ linguistics_init(void)
 			k+=strlen(s2);
 		}
 	}
+	
+	special_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	for (i = 0 ; i < sizeof(special)/sizeof(special[0]); i++)
+		g_hash_table_insert(special_hash,(gpointer)special[i][0],special[i]);
+	
 }
 
 void
 linguistics_free(void)
 {
 	g_hash_table_destroy(casefold_hash);
+	g_hash_table_destroy(special_hash);
 	casefold_hash=NULL;
+	special_hash=NULL;
 }
 
