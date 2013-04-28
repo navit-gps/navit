@@ -1242,6 +1242,22 @@ gboolean config_load(const char *filename, xmlerror **error)
 	return result;
 }
 
+int
+navit_object_set_methods(void *in, int in_size, void *out, int out_size)
+{
+	int ret,size=out_size;
+	if (out_size > in_size) {
+		ret=-1;
+		size=in_size;
+		memset((char *)out+in_size, 0, out_size-in_size);
+	} else if (in_size == out_size)
+		ret=0;
+	else
+		ret=1;
+	memcpy(out, in, size);
+	return ret;
+}
+
 struct navit_object *
 navit_object_ref(struct navit_object *obj)
 {
