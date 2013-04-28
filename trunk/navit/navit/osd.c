@@ -37,12 +37,18 @@ struct osd {
 	struct osd_priv *priv;
 };
 
+int
+osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out)
+{
+	return navit_object_set_methods(in, in_size, out, sizeof(struct osd_methods));
+}
+
 struct osd *
 osd_new(struct attr *parent, struct attr **attrs)
 {
 	struct osd *o;
 	struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
-	struct attr *type=attr_search(attrs, NULL, attr_type);
+	struct attr *type=attr_search(attrs, NULL, attr_type),cbl;
 
 	if (! type)
 		return NULL;
@@ -50,27 +56,50 @@ osd_new(struct attr *parent, struct attr **attrs)
         if (! new)
                 return NULL;
         o=g_new0(struct osd, 1);
-        o->priv=new(parent->u.navit, &o->meth, attrs);
+	o->attrs=attr_list_dup(attrs);
+	cbl.type=attr_callback_list;
+	cbl.u.callback_list=callback_list_new();
+	o->attrs=attr_generic_prepend_attr(o->attrs, &cbl);
+
+        o->priv=new(parent->u.navit, &o->meth, o->attrs);
 	if (o->priv) {
 		o->func=&osd_func;
 		navit_object_ref((struct navit_object *)o);
-		o->attrs=attr_list_dup(attrs);
 	} else {
+		attr_list_free(o->attrs);
 		g_free(o);
 		o=NULL;
 	}
+	dbg(0,"new osd %p\n",o);
         return o;
+}
+
+int
+osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	int ret=0;
+	if(osd && osd->meth.get_attr) 
+		/* values for ret: -1: Not possible, 0: Ignored by driver, 1 valid */
+		ret=osd->meth.get_attr(osd->priv, type, attr);
+	if (ret == -1)
+		return 0;
+	if (ret > 0)
+		return 1;
+	return navit_object_get_attr((struct navit_object *)osd, type, attr, iter);
 }
 
 int
 osd_set_attr(struct osd *osd, struct attr* attr)
 {
-	if(osd && osd->meth.set_attr) {
-		navit_object_set_attr((struct navit_object *)osd, attr);
-		osd->meth.set_attr(osd->priv, attr);
+	int ret=0;
+	if(osd && osd->meth.set_attr) 
+		/* values for ret: -1: Not possible, 0: Ignored by driver, 1 set and store, 2 set, don't store */
+		ret=osd->meth.set_attr(osd->priv, attr);
+	if (ret == -1)
+		return 0;
+	if (ret == 2)
 		return 1;
-	}
-	return 0;
+	return navit_object_set_attr((struct navit_object *)osd, attr);
 }
 
 void
@@ -79,6 +108,7 @@ osd_destroy(struct osd *osd)
 	if (osd && osd->meth.destroy) {
 		osd->meth.destroy(osd->priv);
 	}
+	attr_list_free(osd->attrs);
 	g_free(osd);
 }
 
@@ -387,12 +417,12 @@ osd_std_draw(struct osd_item *item)
 struct object_func osd_func = {
 	attr_osd,
 	(object_func_new)osd_new,
-	(object_func_get_attr)navit_object_get_attr,
+	(object_func_get_attr)osd_get_attr,
 	(object_func_iter_new)navit_object_attr_iter_new,
 	(object_func_iter_destroy)navit_object_attr_iter_destroy,
 	(object_func_set_attr)osd_set_attr,
-	(object_func_add_attr)NULL,
-	(object_func_remove_attr)NULL,
+	(object_func_add_attr)navit_object_add_attr,
+	(object_func_remove_attr)navit_object_remove_attr,
 	(object_func_init)NULL,
 	(object_func_destroy)osd_destroy,
 	(object_func_dup)NULL,

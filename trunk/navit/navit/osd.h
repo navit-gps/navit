@@ -25,8 +25,9 @@ struct attr;
 
 struct osd_methods {
 	void (*osd_destroy)(struct osd_priv *osd);
-	void (*set_attr)(struct osd_priv *osd, struct attr* attr);
+	int (*set_attr)(struct osd_priv *osd, struct attr* attr);
 	void (*destroy)(struct osd_priv *osd);
+	int (*get_attr)(struct osd_priv *osd, enum attr_type type, struct attr* attr);
 };
 
 #define osd_draw_cast(x) (void (*)(struct osd_priv *osd, struct navit *navit, struct vehicle *v))(x)
@@ -61,6 +62,7 @@ struct attr;
 struct navit;
 struct osd;
 struct osd *osd_new(struct attr *parent, struct attr **attrs);
+int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out);
 void osd_wrap_point(struct point *p, struct navit *nav);
 void osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p);
 void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags);
