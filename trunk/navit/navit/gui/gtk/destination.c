@@ -148,7 +148,7 @@ static void set_columns(struct search_param *param, int mode)
 	g_list_free(columns_list);
 	while (*column_text) {
 		GtkCellRenderer *cell=gtk_cell_renderer_text_new();
-		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (param->treeview),-1, gettext(*column_text), cell, "text", i, NULL);
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (param->treeview),-1, navit_nls_gettext(*column_text), cell, "text", i, NULL);
 		i++;
 		column_text++;
 	}
