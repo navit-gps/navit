@@ -464,14 +464,14 @@ get_distance(struct navigation *nav, int dist, enum attr_type type, int is_lengt
 	}
 	if (imperial) {
 		if (is_length) 
-			return g_strdup_printf(ngettext("one mile","%d miles", dist/1000), dist/1000);
+			return g_strdup_printf(navit_nls_ngettext("one mile","%d miles", dist/1000), dist/1000);
 		else
-			return g_strdup_printf(ngettext("in one mile","in %d miles", dist/1000), dist/1000);
+			return g_strdup_printf(navit_nls_ngettext("in one mile","in %d miles", dist/1000), dist/1000);
 	} else {
 		if (is_length) 
-			return g_strdup_printf(ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
+			return g_strdup_printf(navit_nls_ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
 		else
-			return g_strdup_printf(ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
+			return g_strdup_printf(navit_nls_ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
 	}
 }
 

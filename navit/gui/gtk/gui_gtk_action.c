@@ -32,10 +32,7 @@
 #include "callback.h"
 #include "debug.h"
 #include "destination.h"
-
-#define gettext_noop(String) String
-#define _(STRING)    gettext(STRING)
-#define _n(STRING)    gettext_noop(STRING)
+#include "navit_nls.h"
 
 struct menu_priv {
 	char *path;
