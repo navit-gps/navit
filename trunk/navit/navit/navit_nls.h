@@ -1,5 +1,7 @@
 #ifndef __NAVIT_NLS_H__
 
+char *navit_nls_add_textdomain(const char *package, const char *dir);
+char *navit_nls_remove_textdomain(const char *package);
 const char *navit_nls_gettext(const char *msgid);
 const char *navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long int n);
 
