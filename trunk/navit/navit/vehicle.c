@@ -40,6 +40,7 @@
 #include "color.h"
 #include "layout.h"
 #include "vehicle.h"
+#include "navit_nls.h"
 
 struct vehicle {
 	NAVIT_OBJECT
@@ -399,7 +400,7 @@ static void vehicle_set_default_name(struct vehicle *this_)
 	struct attr default_name;
 	if (!attr_search(this_->attrs, NULL, attr_name)) {
 		default_name.type=attr_name;
-		default_name.u.str="Unnamed vehicle";
+		default_name.u.str=_("Unnamed vehicle");
 		this_->attrs=attr_generic_set_attr(this_->attrs, &default_name);
 		dbg(0, "Incomplete vehicle definition: missing attribute 'name'. Default name set.\n");
 	}

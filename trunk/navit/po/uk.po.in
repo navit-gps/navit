@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-22 18:30+0200\n"
+"POT-Creation-Date: 2013-04-30 19:57+0200\n"
 "PO-Revision-Date: 2010-05-28 14:54+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -1339,6 +1339,9 @@ msgid ""
 msgstr ""
 
 msgid "unknown street"
+msgstr ""
+
+msgid "Unnamed vehicle"
 msgstr ""
 
 msgid "Failed to write bookmarks file"

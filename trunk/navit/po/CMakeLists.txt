@@ -8,6 +8,7 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/country.c
       ${PROJECT_SOURCE_DIR}/navit/start_real.c
       ${PROJECT_SOURCE_DIR}/navit/route.c
+      ${PROJECT_SOURCE_DIR}/navit/vehicle.c
       ${PROJECT_SOURCE_DIR}/navit/bookmarks.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/destination.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_action.c
