@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-05-24 14:51+0000\n"
 "Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -279,6 +279,13 @@ msgstr "Χρόνος που απομένει"
 msgid "Roadbook"
 msgstr "Οδηγίες Διαδρομής"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Ορισμός ως αφετηρία"
 
@@ -416,6 +423,10 @@ msgstr "Μπρουνέι Νταρουσαλάμ"
 msgid "Bolivia"
 msgstr "Βολιβία"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Βραζιλία"
@@ -503,6 +514,10 @@ msgstr "Κούβα"
 #. 132
 msgid "Cape Verde"
 msgstr "Πράσινο Ακρωτήριο"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1120,6 +1135,10 @@ msgstr "Σομαλία"
 msgid "Suriname"
 msgstr "Σουρινάμ"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Sao Tome και Principe"
@@ -1127,6 +1146,10 @@ msgstr "Sao Tome και Principe"
 #. 222
 msgid "El Salvador"
 msgstr "Ελ Σαλβαδόρ"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1288,7 +1311,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1305,7 +1329,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1503,30 +1528,15 @@ msgstr "Διαδρομή %4.0fχλμ Χρόνος που απομένει %02d:%
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Διαδρομή 0000χλμ Χρόνος που απομένει 0+00:00"
 
-msgid "Back to map"
-msgstr "Πίσω στο χάρτη"
-
-msgid "Main Menu"
-msgstr "Κύριο Μενού"
-
 msgid "Help"
 msgstr "Βοήθεια"
 
-msgid "Back"
-msgstr "Προηγ."
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Προσθήκη σελιδοδείκτη"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Πρόσθεση φακέλου Σελιδοδείκτη"
-
-msgid "Rename"
-msgstr "Μετονομασία"
-
-msgid "POIs"
-msgstr "Σημεία Ενδιαφέροντος"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Επισκόπηση σε Φυλλομετρητή"
@@ -1545,6 +1555,9 @@ msgstr "Προβολή Ιδιοτήτων"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "Σημεία Ενδιαφέροντος"
 
 msgid "View on map"
 msgstr "Προβολή στο χάρτη"
@@ -1570,6 +1583,9 @@ msgstr "Επικόληση Σελιδοδείκτη"
 msgid "Delete Bookmark"
 msgstr "Διαγραφή Σελιδοδείκτη"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Σελιδοδείκτες"
 
@@ -1579,11 +1595,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Πρόσθεση φακέλου Σελιδοδείκτη"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1592,18 +1612,6 @@ msgstr "Επικόληση σελιδοδείκτη"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Σελιδοδείκτης %s"
-
-msgid "Former Destinations"
-msgstr "Προγενέστερες διαδρομές"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Αριθμός σπιτιού"
-
-msgid "Layout"
-msgstr "Διάταξη"
 
 #, c-format
 msgid "Download %s"
@@ -1620,9 +1628,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Χάρτες"
 
 msgid "Show Satellite Status"
 msgstr "Εμφάνιση Κατάστασης Δορυφόρων"
@@ -1662,6 +1667,44 @@ msgstr "Εμφάνιση Κατάστασης Δορυφόρων"
 msgid "Show NMEA data"
 msgstr "Εμφάνιση δεδομένων ΝΜΕΑ"
 
+msgid "Add Bookmark"
+msgstr "Προσθήκη σελιδοδείκτη"
+
+msgid "Rename"
+msgstr "Μετονομασία"
+
+msgid "About Navit"
+msgstr "Περί του Navit"
+
+#. Authors
+msgid "By"
+msgstr "Από"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "Και όλη την ομάδα του Navit"
+
+msgid "members and contributors."
+msgstr "μέλη και συνεισφέροντες"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Όχημα"
 
@@ -1680,37 +1723,47 @@ msgstr "Ο χάρτης ακολουθεί το Όχημα"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Χάρτες"
+
+msgid "Layout"
+msgstr "Διάταξη"
+
+msgid "Height Profile"
+msgstr "Ύψος προφίλ"
+
+msgid "Route Description"
+msgstr "Περιγραφή Διαδρομής"
+
+msgid "Show Locale"
+msgstr "Eμφάνιση Εντοπιότητας"
+
+msgid "Former Destinations"
+msgstr "Προγενέστερες διαδρομές"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Μήνυμα"
+
+msgid "Back"
+msgstr "Προηγ."
+
+msgid "Back to map"
+msgstr "Πίσω στο χάρτη"
+
+msgid "Main Menu"
+msgstr "Κύριο Μενού"
+
+msgid "House number"
+msgstr "Αριθμός σπιτιού"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Περιγραφή Διαδρομής"
-
-msgid "Height Profile"
-msgstr "Ύψος προφίλ"
-
-msgid "Show Locale"
-msgstr "Eμφάνιση Εντοπιότητας"
-
-msgid "About Navit"
-msgstr "Περί του Navit"
-
-#. Authors
-msgid "By"
-msgstr "Από"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "Και όλη την ομάδα του Navit"
-
-msgid "members and contributors."
-msgstr "μέλη και συνεισφέροντες"
 
 msgid "Return to route!"
 msgstr ""
@@ -1786,10 +1839,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

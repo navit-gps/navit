@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-06-12 09:37+0000\n"
 "Last-Translator: igorashu <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -284,6 +284,13 @@ msgstr "Timpul până la destinaţie"
 msgid "Roadbook"
 msgstr "Drum blocat"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Configurează ca poziție"
 
@@ -421,6 +428,10 @@ msgstr "Brunei Darussalam"
 msgid "Bolivia"
 msgstr "Bolivia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brazilia"
@@ -508,6 +519,10 @@ msgstr "Cuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Capul Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1125,6 +1140,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Suriname"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Sao Tome și Principe"
@@ -1132,6 +1151,10 @@ msgstr "Sao Tome și Principe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1293,7 +1316,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1310,7 +1334,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1508,30 +1533,15 @@ msgstr "Rută %4.0f km sosire estimată %02d:%02d"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Rută 0000 km sosire estimată 0+00:00"
 
-msgid "Back to map"
-msgstr "Înapoi la hartă"
-
-msgid "Main Menu"
-msgstr "Meniu principal"
-
 msgid "Help"
 msgstr "Ajutor"
 
-msgid "Back"
-msgstr "Înapoi"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Adaugă semn de carte"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Adaugă director pentru semne de carte"
-
-msgid "Rename"
-msgstr "Redenumește"
-
-msgid "POIs"
-msgstr "Puncte de interes"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Arată în navigator"
@@ -1550,6 +1560,9 @@ msgstr "Arată atributele"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "Puncte de interes"
 
 msgid "View on map"
 msgstr "Arată pe hartă"
@@ -1575,6 +1588,9 @@ msgstr "Lipește semnul de carte"
 msgid "Delete Bookmark"
 msgstr "Șterge semnul de carte"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Semne de carte"
 
@@ -1584,11 +1600,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Adaugă director pentru semne de carte"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1597,18 +1617,6 @@ msgstr "Lipește semn de carte"
 #, c-format
 msgid "Bookmark %s"
 msgstr "%s ca semn de carte"
-
-msgid "Former Destinations"
-msgstr "Destinații anterioare"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Număr casă"
-
-msgid "Layout"
-msgstr "Dispunere"
 
 #, c-format
 msgid "Download %s"
@@ -1625,9 +1633,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Hărți"
 
 msgid "Show Satellite Status"
 msgstr "Arată starea sateliților"
@@ -1667,6 +1672,44 @@ msgstr "Arată starea sateliților"
 msgid "Show NMEA data"
 msgstr "Arată datele NMEA"
 
+msgid "Add Bookmark"
+msgstr "Adaugă semn de carte"
+
+msgid "Rename"
+msgstr "Redenumește"
+
+msgid "About Navit"
+msgstr "Despre Navit"
+
+#. Authors
+msgid "By"
+msgstr "De"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "Și întreaga echipă Navit"
+
+msgid "members and contributors."
+msgstr "membri și colaboratori."
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Vehicul"
 
@@ -1685,37 +1728,47 @@ msgstr "Harta urmează vehiculul"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Hărți"
+
+msgid "Layout"
+msgstr "Dispunere"
+
+msgid "Height Profile"
+msgstr "Profil înălțime"
+
+msgid "Route Description"
+msgstr "Descrerea traseului"
+
+msgid "Show Locale"
+msgstr ""
+
+msgid "Former Destinations"
+msgstr "Destinații anterioare"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Mesaj"
+
+msgid "Back"
+msgstr "Înapoi"
+
+msgid "Back to map"
+msgstr "Înapoi la hartă"
+
+msgid "Main Menu"
+msgstr "Meniu principal"
+
+msgid "House number"
+msgstr "Număr casă"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Descrerea traseului"
-
-msgid "Height Profile"
-msgstr "Profil înălțime"
-
-msgid "Show Locale"
-msgstr ""
-
-msgid "About Navit"
-msgstr "Despre Navit"
-
-#. Authors
-msgid "By"
-msgstr "De"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "Și întreaga echipă Navit"
-
-msgid "members and contributors."
-msgstr "membri și colaboratori."
 
 msgid "Return to route!"
 msgstr ""
@@ -1793,10 +1846,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

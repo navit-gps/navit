@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-25 23:17+0100\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -280,6 +280,13 @@ msgstr "Fahrzeit zum Ziel"
 
 msgid "Roadbook"
 msgstr "Wegbeschreibung"
+
+#, c-format
+msgid "Waypoint %d"
+msgstr "Wegpunkt %d"
+
+msgid "Visit before..."
+msgstr "Als Wegpunkt setzen vor..."
 
 msgid "Set as position"
 msgstr "Als Position setzen"
@@ -1316,8 +1323,8 @@ msgstr ""
 "navit Benutzung:\n"
 "navit [Optionen] [Konfigdatei]\n"
 "\t-c <file>: <file> als Konfigdatei benutzen\n"
-"\t-d <n>: Den globalen Debug-Level auf <n> (0-3) setzen. Überschreibt die Einstellung "
-"aus der Konfigurationsdatei.\n"
+"\t-d <n>: Den globalen Debug-Level auf <n> (0-3) setzen. Überschreibt die "
+"Einstellung aus der Konfigurationsdatei.\n"
 "\t-h: Diesen Text ausgeben und das Programm beenden.\n"
 "\t-v: Die Version ausgeben und das Programm beenden.\n"
 
@@ -1336,7 +1343,8 @@ msgstr "Benutze Konfigurations-Datei '%s'\n"
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
-"Interne Initialisierung fehlgeschlagen, Programm wird beendet. Frühere Fehler beachten.\n"
+"Interne Initialisierung fehlgeschlagen, Programm wird beendet. Frühere "
+"Fehler beachten.\n"
 
 msgid "unknown street"
 msgstr "unbekannte Straße"
@@ -1344,7 +1352,8 @@ msgstr "unbekannte Straße"
 msgid "Failed to write bookmarks file"
 msgstr "Lesezeichen-Datei konnte nicht geschrieben werden"
 
-msgid "Map point"
+#. Strings from navit_shipped.xml
+msgid "Map Point"
 msgstr "Kartenpunkt"
 
 msgid "Car"
@@ -1558,9 +1567,6 @@ msgstr "Hausnummern"
 
 msgid "View Attributes"
 msgstr "Attribute anzeigen"
-
-msgid "Visit before..."
-msgstr "Als Wegpunkt setzen vor..."
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr "Als Position setzen (und Fahrzeug deaktivieren)"
@@ -1785,10 +1791,6 @@ msgstr "Achtung Blitzer!"
 msgid "Please decrease your speed"
 msgstr "Bitte Geschwindigkeit verringern"
 
-#. Strings from navit_shipped.xml
-msgid "Map Point"
-msgstr "Kartenpunkt"
-
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"
 
@@ -1902,9 +1904,3 @@ msgstr "Pferd"
 #.
 msgid "Truck"
 msgstr "LKW"
-
-#~ msgid "Internal initialization failed, exiting\n"
-#~ msgstr "Interne Initialisierung fehlgeschlagen, Programm wird beendet\n"
-
-#~ msgid "Replace Waypoints"
-#~ msgstr "Wegpunkte ersetzen"
