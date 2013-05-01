@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2013-04-20 00:00+0000\n"
 "Last-Translator: Mariano Muñoz <turulomio@yahoo.es>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
@@ -277,6 +277,13 @@ msgstr "Tiempo a destino"
 msgid "Roadbook"
 msgstr "Guía"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Definir como origen"
 
@@ -414,6 +421,10 @@ msgstr "Brunei Darussalam"
 msgid "Bolivia"
 msgstr "Bolivia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brasil"
@@ -501,6 +512,10 @@ msgstr "Cuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Cabo Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1118,6 +1133,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Surinam"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Santo Tomé y Príncipe"
@@ -1125,6 +1144,10 @@ msgstr "Santo Tomé y Príncipe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1286,20 +1309,16 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
-"navit uso:\n"
-"navit [opciones] [configfile]\n"
-"\t-c <fichero>: usar <fichero> como fichero de configuración.\n"
-"\t-d <n>: Establecer nivel de depurado a <n> (0-3).\n"
-"\t-h: Muestra esta ayuda y sale.\n"
-"\t-v: Muestra la versión y sale.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "No hay fichero de configuración navit.xml, encontrado navit.xml.local\n"
+msgstr ""
+"No hay fichero de configuración navit.xml, encontrado navit.xml.local\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
@@ -1309,8 +1328,9 @@ msgstr "Error cargando el fichero de configuración '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Usando el fichero de configuración '%s'\n"
 
-msgid "Internal initialization failed, exiting\n"
-msgstr "Falló el arranque interno, saliendo\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
 
 msgid "unknown street"
 msgstr "calle desconocida"
@@ -1507,30 +1527,15 @@ msgstr "Ruta %4.0fkm    %02d:%02d TEL"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Ruta 0000km  0+00:00 TEL"
 
-msgid "Back to map"
-msgstr "Volver al mapa"
-
-msgid "Main Menu"
-msgstr "Menú principal"
-
 msgid "Help"
 msgstr "Ayuda"
 
-msgid "Back"
-msgstr "Atrás"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Añadir marcador"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Añadir carpeta de marcadores"
-
-msgid "Rename"
-msgstr "Renombrar"
-
-msgid "POIs"
-msgstr "PDIs"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Ver en el navegador"
@@ -1549,6 +1554,9 @@ msgstr "Ver atributos"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr "Definir como origen (y desactivar el vehículo)"
+
+msgid "POIs"
+msgstr "PDIs"
 
 msgid "View on map"
 msgstr "Ver en el mapa"
@@ -1574,6 +1582,9 @@ msgstr "Pegar marcador"
 msgid "Delete Bookmark"
 msgstr "Eliminar marcador"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Favoritos"
 
@@ -1583,11 +1594,15 @@ msgstr "Marcadores como puntos de ruta"
 msgid "Save waypoints"
 msgstr "Guardar puntos de ruta"
 
-msgid "Replace Waypoints"
-msgstr "Sustituir puntos de ruta"
+msgid "Replace with waypoints"
+msgstr ""
 
 msgid "Delete Folder"
 msgstr "Borrar carpeta"
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Añadir carpeta de marcadores"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1596,18 +1611,6 @@ msgstr "Pegar marcador"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Marcador %s"
-
-msgid "Former Destinations"
-msgstr "Destinos anteriores"
-
-msgid "- No former destinations available -"
-msgstr "- No hay destinos anteriores -"
-
-msgid "House number"
-msgstr "Número de portal"
-
-msgid "Layout"
-msgstr "Diseño"
 
 #, c-format
 msgid "Download %s"
@@ -1624,9 +1627,6 @@ msgstr "Derscaga activada"
 
 msgid "Download completely"
 msgstr "Descargar completo"
-
-msgid "Maps"
-msgstr "Mapas"
 
 msgid "Show Satellite Status"
 msgstr "Mostrar estado de satélite"
@@ -1666,6 +1666,44 @@ msgstr "Mostrar estado de satélite"
 msgid "Show NMEA data"
 msgstr "Mostar datos NMEA"
 
+msgid "Add Bookmark"
+msgstr "Añadir marcador"
+
+msgid "Rename"
+msgstr "Renombrar"
+
+msgid "About Navit"
+msgstr "Acerca de Navit"
+
+#. Authors
+msgid "By"
+msgstr "Por"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "Y todo el equipo de Navit"
+
+msgid "members and contributors."
+msgstr "miembros y colaboradores"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Vehículo"
 
@@ -1684,37 +1722,47 @@ msgstr "El mapa sigue al vehículo"
 msgid "Plan with Waypoints"
 msgstr "Plan con puntos de ruta"
 
+msgid "Maps"
+msgstr "Mapas"
+
+msgid "Layout"
+msgstr "Diseño"
+
+msgid "Height Profile"
+msgstr "Perfil de altura"
+
+msgid "Route Description"
+msgstr "Descripción de ruta"
+
+msgid "Show Locale"
+msgstr "Mostrar locale"
+
+msgid "Former Destinations"
+msgstr "Destinos anteriores"
+
+msgid "- No former destinations available -"
+msgstr "- No hay destinos anteriores -"
+
 msgid "Message"
 msgstr "Mensaje"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid "Back to map"
+msgstr "Volver al mapa"
+
+msgid "Main Menu"
+msgstr "Menú principal"
+
+msgid "House number"
+msgstr "Número de portal"
 
 msgid "Next"
 msgstr "Siguiente"
 
 msgid "Prev"
 msgstr "Anterior"
-
-msgid "Route Description"
-msgstr "Descripción de ruta"
-
-msgid "Height Profile"
-msgstr "Perfil de altura"
-
-msgid "Show Locale"
-msgstr "Mostrar locale"
-
-msgid "About Navit"
-msgstr "Acerca de Navit"
-
-#. Authors
-msgid "By"
-msgstr "Por"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "Y todo el equipo de Navit"
-
-msgid "members and contributors."
-msgstr "miembros y colaboradores"
 
 msgid "Return to route!"
 msgstr "Vuelva a la ruta"
@@ -1787,20 +1835,31 @@ msgstr "Descripción"
 msgid ""
 "Drop last \n"
 "Waypoint"
-msgstr "Quitar último \n"
+msgstr ""
+"Quitar último \n"
 "Punto de ruta"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
-msgstr "Quitar el siguiente \n"
+msgstr ""
+"Quitar el siguiente \n"
 "Punto de ruta"
+
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
 
 msgid "car_shortest"
 msgstr "automovil_ruta_mas_corta"
 
 msgid "car_avoid_tolls"
 msgstr "automovil_evitar_peajes"
+
+msgid "car_pedantic"
+msgstr ""
 
 msgid "horse"
 msgstr "caballo"
@@ -1829,3 +1888,24 @@ msgstr "caballo"
 #.
 msgid "Truck"
 msgstr "Camión"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the global debug output level to <n> (0-3).\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "navit uso:\n"
+#~ "navit [opciones] [configfile]\n"
+#~ "\t-c <fichero>: usar <fichero> como fichero de configuración.\n"
+#~ "\t-d <n>: Establecer nivel de depurado a <n> (0-3).\n"
+#~ "\t-h: Muestra esta ayuda y sale.\n"
+#~ "\t-v: Muestra la versión y sale.\n"
+
+#~ msgid "Internal initialization failed, exiting\n"
+#~ msgstr "Falló el arranque interno, saliendo\n"
+
+#~ msgid "Replace Waypoints"
+#~ msgstr "Sustituir puntos de ruta"

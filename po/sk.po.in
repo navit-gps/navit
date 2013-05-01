@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-06-11 09:50+0000\n"
 "Last-Translator: kayle.sk <webmaster@kayle.sk>\n"
 "Language-Team: Slovenčina\n"
@@ -283,6 +283,13 @@ msgstr "Čas k cieľu"
 msgid "Roadbook"
 msgstr "Plán trasy"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Nastaviť ako pozíciu"
 
@@ -420,6 +427,10 @@ msgstr "Brunejský Darussalam"
 msgid "Bolivia"
 msgstr "Bolívia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brazília"
@@ -507,6 +518,10 @@ msgstr "Kuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Cape Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1124,6 +1139,10 @@ msgstr "Somálsko"
 msgid "Suriname"
 msgstr "Surinam"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Svatý Tomáš"
@@ -1131,6 +1150,10 @@ msgstr "Svatý Tomáš"
 #. 222
 msgid "El Salvador"
 msgstr "Salvádor"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1292,7 +1315,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1309,7 +1333,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1507,30 +1532,15 @@ msgstr "Cesta %4.0fkm    čas %02d:%02d"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Cesta 0000km  čas 0+00:00"
 
-msgid "Back to map"
-msgstr "Späť na mapu"
-
-msgid "Main Menu"
-msgstr "Hlavné menu"
-
 msgid "Help"
 msgstr "Pomoc"
 
-msgid "Back"
-msgstr "Späť"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Pridať záložku"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Pridať priečinok pre záložky"
-
-msgid "Rename"
-msgstr "Premenovať"
-
-msgid "POIs"
-msgstr "POI"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Zobraziť v prehliadači"
@@ -1549,6 +1559,9 @@ msgstr "Zobraziť atribúty"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "POI"
 
 msgid "View on map"
 msgstr "Zobraziť na mape"
@@ -1574,6 +1587,9 @@ msgstr "Vložiť záložku"
 msgid "Delete Bookmark"
 msgstr "Odstrániť záložku"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Záložky"
 
@@ -1583,11 +1599,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Pridať priečinok pre záložky"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1596,18 +1616,6 @@ msgstr "Vložiť záložku"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Záložka %s"
-
-msgid "Former Destinations"
-msgstr "Predošlé cieľe"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Číslo domu"
-
-msgid "Layout"
-msgstr "Značenie"
 
 #, c-format
 msgid "Download %s"
@@ -1624,9 +1632,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Mapy"
 
 msgid "Show Satellite Status"
 msgstr "Zobraziť stav satelitov"
@@ -1666,6 +1671,44 @@ msgstr "Zobraziť stav satelitov"
 msgid "Show NMEA data"
 msgstr "Zobraziť NMEA data"
 
+msgid "Add Bookmark"
+msgstr "Pridať záložku"
+
+msgid "Rename"
+msgstr "Premenovať"
+
+msgid "About Navit"
+msgstr "O Navite"
+
+#. Authors
+msgid "By"
+msgstr "Od"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "A všetci členovia týmu Navitu"
+
+msgid "members and contributors."
+msgstr "členovia a prispievatelia"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Vozidlo"
 
@@ -1684,37 +1727,47 @@ msgstr "Mapa sleduje vozidlo"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Mapy"
+
+msgid "Layout"
+msgstr "Značenie"
+
+msgid "Height Profile"
+msgstr "Výškovy Profil"
+
+msgid "Route Description"
+msgstr "Popis trasy"
+
+msgid "Show Locale"
+msgstr "Zobraziť jazyk"
+
+msgid "Former Destinations"
+msgstr "Predošlé cieľe"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Správa"
+
+msgid "Back"
+msgstr "Späť"
+
+msgid "Back to map"
+msgstr "Späť na mapu"
+
+msgid "Main Menu"
+msgstr "Hlavné menu"
+
+msgid "House number"
+msgstr "Číslo domu"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Popis trasy"
-
-msgid "Height Profile"
-msgstr "Výškovy Profil"
-
-msgid "Show Locale"
-msgstr "Zobraziť jazyk"
-
-msgid "About Navit"
-msgstr "O Navite"
-
-#. Authors
-msgid "By"
-msgstr "Od"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "A všetci členovia týmu Navitu"
-
-msgid "members and contributors."
-msgstr "členovia a prispievatelia"
 
 msgid "Return to route!"
 msgstr ""
@@ -1792,10 +1845,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

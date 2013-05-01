@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2009-12-20 21:38+0000\n"
 "Last-Translator: Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
@@ -275,6 +275,13 @@ msgstr "Thời gian tới"
 msgid "Roadbook"
 msgstr "Roadbook"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Thiết lập thành vị trí"
 
@@ -412,6 +419,10 @@ msgstr "Bru nây"
 msgid "Bolivia"
 msgstr "Bolivia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brazil"
@@ -499,6 +510,10 @@ msgstr "Cuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Cape Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1116,6 +1131,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Suriname"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Sao Tome and Principe"
@@ -1123,6 +1142,10 @@ msgstr "Sao Tome and Principe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1284,7 +1307,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1301,7 +1325,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1499,30 +1524,15 @@ msgstr "Tuyến %4.0fkm    %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Tuyến 0000km  0+00:00 ETA"
 
-msgid "Back to map"
-msgstr "Quay lại bản đồ"
-
-msgid "Main Menu"
-msgstr "Trình đơn chính"
-
 msgid "Help"
 msgstr "Trợ giúp"
 
-msgid "Back"
-msgstr "Quay lại"
-
-msgid "Add Bookmark"
+#, c-format
+msgid "Waypoint %s"
 msgstr ""
 
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
+msgid "Select waypoint to insert the new one before"
 msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "POIs"
-msgstr "Điểm hữu ích (POI)"
 
 msgid "View in Browser"
 msgstr "Xem trong trình duyệt"
@@ -1541,6 +1551,9 @@ msgstr "Xem thuộc tính"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "Điểm hữu ích (POI)"
 
 msgid "View on map"
 msgstr "Xem trên bản đồ"
@@ -1566,6 +1579,9 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Đánh dấu"
 
@@ -1575,10 +1591,14 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
+msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
 msgstr ""
 
 #. Pastes the Bookmark
@@ -1588,18 +1608,6 @@ msgstr ""
 #, c-format
 msgid "Bookmark %s"
 msgstr "Đánh dấu %s"
-
-msgid "Former Destinations"
-msgstr "Điểm đến trước"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Số nhà"
-
-msgid "Layout"
-msgstr "Layout"
 
 #, c-format
 msgid "Download %s"
@@ -1616,9 +1624,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Bản đồ"
 
 msgid "Show Satellite Status"
 msgstr "Xem thông tin vệ tinh"
@@ -1658,6 +1663,44 @@ msgstr "Xem thông tin vệ tinh"
 msgid "Show NMEA data"
 msgstr "Xem dữ liệu dạng NMEA"
 
+msgid "Add Bookmark"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "About Navit"
+msgstr ""
+
+#. Authors
+msgid "By"
+msgstr ""
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr ""
+
+msgid "members and contributors."
+msgstr ""
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Phương tiện"
 
@@ -1676,36 +1719,46 @@ msgstr "Dịch bản đồ theo phương tiện khi di chuyển"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Bản đồ"
+
+msgid "Layout"
+msgstr "Layout"
+
+msgid "Height Profile"
+msgstr "Thông tin chiều cao"
+
+msgid "Route Description"
+msgstr ""
+
+msgid "Show Locale"
+msgstr ""
+
+msgid "Former Destinations"
+msgstr "Điểm đến trước"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Thông điệp"
+
+msgid "Back"
+msgstr "Quay lại"
+
+msgid "Back to map"
+msgstr "Quay lại bản đồ"
+
+msgid "Main Menu"
+msgstr "Trình đơn chính"
+
+msgid "House number"
+msgstr "Số nhà"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
-msgstr ""
-
-msgid "Route Description"
-msgstr ""
-
-msgid "Height Profile"
-msgstr "Thông tin chiều cao"
-
-msgid "Show Locale"
-msgstr ""
-
-msgid "About Navit"
-msgstr ""
-
-#. Authors
-msgid "By"
-msgstr ""
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr ""
-
-msgid "members and contributors."
 msgstr ""
 
 msgid "Return to route!"
@@ -1780,10 +1833,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
