@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-11-14 14:11+0000\n"
 "Last-Translator: asghar <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
@@ -280,6 +280,13 @@ msgstr "منزل تک وقت"
 msgid "Roadbook"
 msgstr "روڈ بک"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "بطور موجودہ مقام انتخاب"
 
@@ -417,6 +424,10 @@ msgstr "برونائی دارالسلام"
 msgid "Bolivia"
 msgstr "بولیویا"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "برازیل"
@@ -504,6 +515,10 @@ msgstr "کیوبا"
 #. 132
 msgid "Cape Verde"
 msgstr "کاپے ویردے"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1121,6 +1136,10 @@ msgstr "صومالیہ"
 msgid "Suriname"
 msgstr "سرینیم"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "ساو ٹوم اور پرینسپ"
@@ -1128,6 +1147,10 @@ msgstr "ساو ٹوم اور پرینسپ"
 #. 222
 msgid "El Salvador"
 msgstr "ال سالواڈور"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1289,7 +1312,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1306,7 +1330,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1504,30 +1529,15 @@ msgstr "Route %4.0fكلومیٹر    %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "سفر 0000 کلومیٹر 0+00:00 ETA"
 
-msgid "Back to map"
-msgstr "نقشہ پہ واپس"
-
-msgid "Main Menu"
-msgstr "مین مینو"
-
 msgid "Help"
 msgstr "مدد"
 
-msgid "Back"
-msgstr "واپس"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "بک مارک میں شامل"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "بک مارک فولڈر میں شامل"
-
-msgid "Rename"
-msgstr "تبدیل نام"
-
-msgid "POIs"
-msgstr "پسندیدہ جگہیں"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "براؤزر میں دیکھیں"
@@ -1546,6 +1556,9 @@ msgstr "خصوصیات دیکھں"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "پسندیدہ جگہیں"
 
 msgid "View on map"
 msgstr "نقشہ پہ دیکھیں"
@@ -1571,6 +1584,9 @@ msgstr "بک مارک پیسٹ کریں"
 msgid "Delete Bookmark"
 msgstr "ڈیلیٹ بک مارک"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "بک مارکس"
 
@@ -1580,11 +1596,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "بک مارک فولڈر میں شامل"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1593,18 +1613,6 @@ msgstr "بک مارک پیسٹ کریں"
 #, c-format
 msgid "Bookmark %s"
 msgstr "بک مارک %s"
-
-msgid "Former Destinations"
-msgstr "سابقہ منازل"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "مکان نمبر"
-
-msgid "Layout"
-msgstr "بناوٹ"
 
 #, c-format
 msgid "Download %s"
@@ -1621,9 +1629,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "نقشے"
 
 msgid "Show Satellite Status"
 msgstr "سٹلائٹ کی حالت دیکھیں"
@@ -1663,6 +1668,44 @@ msgstr "سٹلائٹ کی حالت دیکھیں"
 msgid "Show NMEA data"
 msgstr "NMEA ڈیٹا دیکھیں"
 
+msgid "Add Bookmark"
+msgstr "بک مارک میں شامل"
+
+msgid "Rename"
+msgstr "تبدیل نام"
+
+msgid "About Navit"
+msgstr "ناوٹ کے مطعلق"
+
+#. Authors
+msgid "By"
+msgstr "بنانے والے"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "اور ناوٹ کی ساری ٹیم"
+
+msgid "members and contributors."
+msgstr "ممبر اور حصہ دار"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "گاڑی"
 
@@ -1681,37 +1724,47 @@ msgstr "نقشہ گاڑی کا تعاقب کرے"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "نقشے"
+
+msgid "Layout"
+msgstr "بناوٹ"
+
+msgid "Height Profile"
+msgstr "اونچائی کی پروفائل"
+
+msgid "Route Description"
+msgstr "سفر کی تفصیل"
+
+msgid "Show Locale"
+msgstr "مقامی دیکھیں"
+
+msgid "Former Destinations"
+msgstr "سابقہ منازل"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "پیغام"
+
+msgid "Back"
+msgstr "واپس"
+
+msgid "Back to map"
+msgstr "نقشہ پہ واپس"
+
+msgid "Main Menu"
+msgstr "مین مینو"
+
+msgid "House number"
+msgstr "مکان نمبر"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "سفر کی تفصیل"
-
-msgid "Height Profile"
-msgstr "اونچائی کی پروفائل"
-
-msgid "Show Locale"
-msgstr "مقامی دیکھیں"
-
-msgid "About Navit"
-msgstr "ناوٹ کے مطعلق"
-
-#. Authors
-msgid "By"
-msgstr "بنانے والے"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "اور ناوٹ کی ساری ٹیم"
-
-msgid "members and contributors."
-msgstr "ممبر اور حصہ دار"
 
 msgid "Return to route!"
 msgstr ""
@@ -1789,10 +1842,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

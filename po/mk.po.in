@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-04-25 02:12+0000\n"
 "Last-Translator: Robert Mileski <r_mileski@hotmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
@@ -279,6 +279,13 @@ msgstr "Време до целта"
 msgid "Roadbook"
 msgstr "Патна книга"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Зададете како позиција"
 
@@ -416,6 +423,10 @@ msgstr "Брунеи Дар ес Салам"
 msgid "Bolivia"
 msgstr "Боливија"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Бразил"
@@ -503,6 +514,10 @@ msgstr "Куба"
 #. 132
 msgid "Cape Verde"
 msgstr "Кејп Верде"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1120,6 +1135,10 @@ msgstr "Сомалија"
 msgid "Suriname"
 msgstr "Суринам"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Сао Томе и Принципе"
@@ -1127,6 +1146,10 @@ msgstr "Сао Томе и Принципе"
 #. 222
 msgid "El Salvador"
 msgstr "Ел Салвадор"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1288,7 +1311,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1305,7 +1329,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1503,30 +1528,15 @@ msgstr "Рута %4.0fkm %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Рута 0000km 0+00:00 ETA"
 
-msgid "Back to map"
-msgstr "Врати се на картата"
-
-msgid "Main Menu"
-msgstr "Главно мени"
-
 msgid "Help"
 msgstr "Помош"
 
-msgid "Back"
-msgstr "Назад"
-
-msgid "Add Bookmark"
-msgstr "Додај обележувач"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
+#, c-format
+msgid "Waypoint %s"
 msgstr ""
 
-msgid "Rename"
+msgid "Select waypoint to insert the new one before"
 msgstr ""
-
-msgid "POIs"
-msgstr "Интересни точки"
 
 msgid "View in Browser"
 msgstr "Види во пребарувач"
@@ -1545,6 +1555,9 @@ msgstr "Види атрибути"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "Интересни точки"
 
 msgid "View on map"
 msgstr "Види на карта"
@@ -1570,6 +1583,9 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Омилени места"
 
@@ -1579,10 +1595,14 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
+msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
 msgstr ""
 
 #. Pastes the Bookmark
@@ -1592,18 +1612,6 @@ msgstr ""
 #, c-format
 msgid "Bookmark %s"
 msgstr "Интересно место %s"
-
-msgid "Former Destinations"
-msgstr "Претходни одредишта"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Куќен број"
-
-msgid "Layout"
-msgstr "Изглед"
 
 #, c-format
 msgid "Download %s"
@@ -1620,9 +1628,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Изгледи"
 
 msgid "Show Satellite Status"
 msgstr "Покажи статус на сателитите"
@@ -1662,6 +1667,44 @@ msgstr "Покажи статус на сателитите"
 msgid "Show NMEA data"
 msgstr "Покажи NMEA податоци"
 
+msgid "Add Bookmark"
+msgstr "Додај обележувач"
+
+msgid "Rename"
+msgstr ""
+
+msgid "About Navit"
+msgstr "За Navit"
+
+#. Authors
+msgid "By"
+msgstr "Од"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "И целиот Navit тим"
+
+msgid "members and contributors."
+msgstr "членови и придонесувачи"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Возило"
 
@@ -1680,37 +1723,47 @@ msgstr "Картата го следи возилото"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Изгледи"
+
+msgid "Layout"
+msgstr "Изглед"
+
+msgid "Height Profile"
+msgstr "Висински профил"
+
+msgid "Route Description"
+msgstr "Објаснување за патот"
+
+msgid "Show Locale"
+msgstr "Прикажи јазично подесување"
+
+msgid "Former Destinations"
+msgstr "Претходни одредишта"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Порака"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Back to map"
+msgstr "Врати се на картата"
+
+msgid "Main Menu"
+msgstr "Главно мени"
+
+msgid "House number"
+msgstr "Куќен број"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Објаснување за патот"
-
-msgid "Height Profile"
-msgstr "Висински профил"
-
-msgid "Show Locale"
-msgstr "Прикажи јазично подесување"
-
-msgid "About Navit"
-msgstr "За Navit"
-
-#. Authors
-msgid "By"
-msgstr "Од"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "И целиот Navit тим"
-
-msgid "members and contributors."
-msgstr "членови и придонесувачи"
 
 msgid "Return to route!"
 msgstr ""
@@ -1788,10 +1841,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

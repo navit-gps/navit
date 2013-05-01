@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2009-07-02 21:52+0000\n"
 "Last-Translator: mansv68 <mansv68@yahoo.co.th>\n"
 "Language-Team: Thai <th@li.org>\n"
@@ -275,6 +275,13 @@ msgstr "เวลา ถึงที่หมาย"
 msgid "Roadbook"
 msgstr ""
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "กำหนดตำแหน่ง"
 
@@ -412,6 +419,10 @@ msgstr "บรูไนดูรัสซาลาม"
 msgid "Bolivia"
 msgstr "โบลิเวีย"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "บราซิล"
@@ -499,6 +510,10 @@ msgstr "คิวบา"
 #. 132
 msgid "Cape Verde"
 msgstr "แหลมเวอร์ดี"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1116,6 +1131,10 @@ msgstr "โซมาเลีย"
 msgid "Suriname"
 msgstr "ซูรีนามิ"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "ซาวโทม และ พรินซิป"
@@ -1123,6 +1142,10 @@ msgstr "ซาวโทม และ พรินซิป"
 #. 222
 msgid "El Salvador"
 msgstr "เอลซัลวาดอร์"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1284,7 +1307,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1301,7 +1325,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1499,29 +1524,14 @@ msgstr "เส้นทาง %4.0f กม. %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "เส้นทาง 0000km 0+00:00 ETA"
 
-msgid "Back to map"
-msgstr ""
-
-msgid "Main Menu"
-msgstr ""
-
 msgid "Help"
 msgstr ""
 
-msgid "Back"
+#, c-format
+msgid "Waypoint %s"
 msgstr ""
 
-msgid "Add Bookmark"
-msgstr ""
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "POIs"
+msgid "Select waypoint to insert the new one before"
 msgstr ""
 
 msgid "View in Browser"
@@ -1540,6 +1550,9 @@ msgid "View Attributes"
 msgstr ""
 
 msgid "Set as position (and deactivate vehicle)"
+msgstr ""
+
+msgid "POIs"
 msgstr ""
 
 msgid "View on map"
@@ -1566,6 +1579,9 @@ msgstr ""
 msgid "Delete Bookmark"
 msgstr ""
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "บุ๊กมาร์ก"
 
@@ -1575,10 +1591,14 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
+msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
 msgstr ""
 
 #. Pastes the Bookmark
@@ -1588,18 +1608,6 @@ msgstr ""
 #, c-format
 msgid "Bookmark %s"
 msgstr ""
-
-msgid "Former Destinations"
-msgstr "ก่อนถึง ที่หมาย"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr ""
-
-msgid "Layout"
-msgstr "การจัดเรียง"
 
 #, c-format
 msgid "Download %s"
@@ -1615,9 +1623,6 @@ msgid "Download Enabled"
 msgstr ""
 
 msgid "Download completely"
-msgstr ""
-
-msgid "Maps"
 msgstr ""
 
 msgid "Show Satellite Status"
@@ -1658,6 +1663,44 @@ msgstr ""
 msgid "Show NMEA data"
 msgstr ""
 
+msgid "Add Bookmark"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "About Navit"
+msgstr ""
+
+#. Authors
+msgid "By"
+msgstr ""
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr ""
+
+msgid "members and contributors."
+msgstr ""
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "ยานพาหนะ"
 
@@ -1676,36 +1719,46 @@ msgstr ""
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr ""
+
+msgid "Layout"
+msgstr "การจัดเรียง"
+
+msgid "Height Profile"
+msgstr ""
+
+msgid "Route Description"
+msgstr ""
+
+msgid "Show Locale"
+msgstr ""
+
+msgid "Former Destinations"
+msgstr "ก่อนถึง ที่หมาย"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Back to map"
+msgstr ""
+
+msgid "Main Menu"
+msgstr ""
+
+msgid "House number"
 msgstr ""
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
-msgstr ""
-
-msgid "Route Description"
-msgstr ""
-
-msgid "Height Profile"
-msgstr ""
-
-msgid "Show Locale"
-msgstr ""
-
-msgid "About Navit"
-msgstr ""
-
-#. Authors
-msgid "By"
-msgstr ""
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr ""
-
-msgid "members and contributors."
 msgstr ""
 
 msgid "Return to route!"
@@ -1780,10 +1833,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

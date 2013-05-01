@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-06-30 18:26+0000\n"
 "Last-Translator: Denis Chapligin <akashihi@gmail.com>\n"
 "Language-Team: Rustam T. Usmanov\n"
@@ -285,6 +285,13 @@ msgstr "Время до пункта назначения"
 msgid "Roadbook"
 msgstr "Дорожный справочник"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Установить как пункт отправления"
 
@@ -422,6 +429,10 @@ msgstr "Бруней Даруссалам"
 msgid "Bolivia"
 msgstr "Боливия"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Бразилия"
@@ -509,6 +520,10 @@ msgstr "Куба"
 #. 132
 msgid "Cape Verde"
 msgstr "Кабо-Верде"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1126,6 +1141,10 @@ msgstr "Сомали"
 msgid "Suriname"
 msgstr "Суринам"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Сан-Томе и Принсипи"
@@ -1133,6 +1152,10 @@ msgstr "Сан-Томе и Принсипи"
 #. 222
 msgid "El Salvador"
 msgstr "Сальвадор"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1294,7 +1317,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1311,7 +1335,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1509,30 +1534,15 @@ msgstr "Маршрут %4.0fкм    %02d:%02d РВП"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Маршрут 0000км  0+00:00 РВП"
 
-msgid "Back to map"
-msgstr "Назад к карте"
-
-msgid "Main Menu"
-msgstr "Главное меню"
-
 msgid "Help"
 msgstr "Справка"
 
-msgid "Back"
-msgstr "Назад"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Добавить закладку"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Добавить папку закладок"
-
-msgid "Rename"
-msgstr "Переименовать"
-
-msgid "POIs"
-msgstr "POIs"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Просмотреть в браузере"
@@ -1551,6 +1561,9 @@ msgstr "Просмотреть Атрибуты"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "POIs"
 
 msgid "View on map"
 msgstr "Показать на карте"
@@ -1576,6 +1589,9 @@ msgstr "Вставить закладку"
 msgid "Delete Bookmark"
 msgstr "Удалить закладку"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Закладки"
 
@@ -1585,11 +1601,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Добавить папку закладок"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1598,18 +1618,6 @@ msgstr "Вставить закладку"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Закладка %s"
-
-msgid "Former Destinations"
-msgstr "Прошлые пункты назначения"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Номер дома"
-
-msgid "Layout"
-msgstr "Схема"
 
 #, c-format
 msgid "Download %s"
@@ -1626,9 +1634,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Карты"
 
 msgid "Show Satellite Status"
 msgstr "Показать Состояние Спутников"
@@ -1668,6 +1673,44 @@ msgstr "Показать состояние Спутников"
 msgid "Show NMEA data"
 msgstr "Показать данные NMEA"
 
+msgid "Add Bookmark"
+msgstr "Добавить закладку"
+
+msgid "Rename"
+msgstr "Переименовать"
+
+msgid "About Navit"
+msgstr "О Navit"
+
+#. Authors
+msgid "By"
+msgstr "Авторы:"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "И все участники команды Navit"
+
+msgid "members and contributors."
+msgstr "и лица внесшие вклад"
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Т/с"
 
@@ -1686,37 +1729,47 @@ msgstr "Карта следует за машиной"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Карты"
+
+msgid "Layout"
+msgstr "Схема"
+
+msgid "Height Profile"
+msgstr "Профиль высот"
+
+msgid "Route Description"
+msgstr "Описание маршрута"
+
+msgid "Show Locale"
+msgstr "Проверить локализацию"
+
+msgid "Former Destinations"
+msgstr "Прошлые пункты назначения"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Сообщение"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Back to map"
+msgstr "Назад к карте"
+
+msgid "Main Menu"
+msgstr "Главное меню"
+
+msgid "House number"
+msgstr "Номер дома"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Описание маршрута"
-
-msgid "Height Profile"
-msgstr "Профиль высот"
-
-msgid "Show Locale"
-msgstr "Проверить локализацию"
-
-msgid "About Navit"
-msgstr "О Navit"
-
-#. Authors
-msgid "By"
-msgstr "Авторы:"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "И все участники команды Navit"
-
-msgid "members and contributors."
-msgstr "и лица внесшие вклад"
 
 msgid "Return to route!"
 msgstr ""
@@ -1794,10 +1847,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

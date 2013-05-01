@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-05-18 09:27+0000\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italiano\n"
@@ -280,6 +280,13 @@ msgstr "Tempo all'arrivo"
 msgid "Roadbook"
 msgstr "Quaderno di viaggio"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Imposta come posizione"
 
@@ -417,6 +424,10 @@ msgstr "Brunei"
 msgid "Bolivia"
 msgstr "Bolivia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brasile"
@@ -504,6 +515,10 @@ msgstr "Cuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Capo Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1121,6 +1136,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Suriname"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "São Tomé e Príncipe"
@@ -1128,6 +1147,10 @@ msgstr "São Tomé e Príncipe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1289,7 +1312,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1306,7 +1330,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1504,30 +1529,15 @@ msgstr ""
 msgid "Route 0000km  0+00:00 ETA"
 msgstr ""
 
-msgid "Back to map"
-msgstr "Torna alla mappa"
-
-msgid "Main Menu"
-msgstr "Menù principale"
-
 msgid "Help"
 msgstr "Aiuto"
 
-msgid "Back"
-msgstr "Indietro"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Aggiungere un posto"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Aggiungere una cartella di posti"
-
-msgid "Rename"
-msgstr "Rinomina"
-
-msgid "POIs"
-msgstr "Punti d'interesse"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Visualizza nel browser"
@@ -1546,6 +1556,9 @@ msgstr "Visualizza attributi"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "Punti d'interesse"
 
 msgid "View on map"
 msgstr "Visualizza sulla mappa"
@@ -1571,6 +1584,9 @@ msgstr "Incolla posto"
 msgid "Delete Bookmark"
 msgstr "Cancella posto"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Posti"
 
@@ -1580,11 +1596,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Aggiungere una cartella di posti"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1593,18 +1613,6 @@ msgstr "Incolla posto"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Posto %s"
-
-msgid "Former Destinations"
-msgstr "Destinazioni precedenti"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Numero civico"
-
-msgid "Layout"
-msgstr "Layout"
 
 #, c-format
 msgid "Download %s"
@@ -1621,9 +1629,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Mappe"
 
 msgid "Show Satellite Status"
 msgstr "Mostra stato satellite"
@@ -1663,6 +1668,44 @@ msgstr "Mostra stato satellite"
 msgid "Show NMEA data"
 msgstr "Mostra dati NMEA"
 
+msgid "Add Bookmark"
+msgstr "Aggiungere un posto"
+
+msgid "Rename"
+msgstr "Rinomina"
+
+msgid "About Navit"
+msgstr "Info su Navit"
+
+#. Authors
+msgid "By"
+msgstr "di"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "e tutta la squadra Navit"
+
+msgid "members and contributors."
+msgstr "membri e contributori."
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Veicolo"
 
@@ -1681,37 +1724,47 @@ msgstr "La mappa segue il veicolo"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Mappe"
+
+msgid "Layout"
+msgstr "Layout"
+
+msgid "Height Profile"
+msgstr "Altimetria"
+
+msgid "Route Description"
+msgstr "Descrizione del percorso"
+
+msgid "Show Locale"
+msgstr "Mostra la localizzazione"
+
+msgid "Former Destinations"
+msgstr "Destinazioni precedenti"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Messaggio"
+
+msgid "Back"
+msgstr "Indietro"
+
+msgid "Back to map"
+msgstr "Torna alla mappa"
+
+msgid "Main Menu"
+msgstr "Menù principale"
+
+msgid "House number"
+msgstr "Numero civico"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Descrizione del percorso"
-
-msgid "Height Profile"
-msgstr "Altimetria"
-
-msgid "Show Locale"
-msgstr "Mostra la localizzazione"
-
-msgid "About Navit"
-msgstr "Info su Navit"
-
-#. Authors
-msgid "By"
-msgstr "di"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "e tutta la squadra Navit"
-
-msgid "members and contributors."
-msgstr "membri e contributori."
 
 msgid "Return to route!"
 msgstr ""
@@ -1787,10 +1840,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"

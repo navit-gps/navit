@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-23 20:16+0200\n"
+"POT-Creation-Date: 2013-04-22 18:30+0200\n"
 "PO-Revision-Date: 2010-06-08 07:37+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@gmail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -279,6 +279,13 @@ msgstr "Kohde"
 msgid "Roadbook"
 msgstr "Ohjeistaja"
 
+#, c-format
+msgid "Waypoint %d"
+msgstr ""
+
+msgid "Visit before..."
+msgstr ""
+
 msgid "Set as position"
 msgstr "Aseta sijainniksi"
 
@@ -416,6 +423,10 @@ msgstr "Brunei"
 msgid "Bolivia"
 msgstr "Bolivia"
 
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
 #. 076
 msgid "Brazil"
 msgstr "Brasilia"
@@ -503,6 +514,10 @@ msgstr "Kuuba"
 #. 132
 msgid "Cape Verde"
 msgstr "Kap Verde"
+
+#. 531
+msgid "Curacao"
+msgstr ""
 
 #. 162
 msgid "Christmas Island"
@@ -1121,6 +1136,10 @@ msgstr "Somalia"
 msgid "Suriname"
 msgstr "Surinam"
 
+#. 728
+msgid "South Sudan"
+msgstr ""
+
 #. 678
 msgid "Sao Tome and Principe"
 msgstr "Sao Tome ja Principe"
@@ -1128,6 +1147,10 @@ msgstr "Sao Tome ja Principe"
 #. 222
 msgid "El Salvador"
 msgstr "El Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1289,7 +1312,8 @@ msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3).\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
+"from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
@@ -1306,7 +1330,8 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
-msgid "Internal initialization failed, exiting\n"
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
 msgid "unknown street"
@@ -1507,30 +1532,15 @@ msgstr "Reitti %4.0fkm, arvioitu aika %02d:%02d"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Reitti 0000km, arvioitu aika 0+00:00"
 
-msgid "Back to map"
-msgstr "Takaisin karttaan"
-
-msgid "Main Menu"
-msgstr "Päävalikko"
-
 msgid "Help"
 msgstr "Ohje"
 
-msgid "Back"
-msgstr "Takaisin"
+#, c-format
+msgid "Waypoint %s"
+msgstr ""
 
-msgid "Add Bookmark"
-msgstr "Lisää kirjanmerkki"
-
-#. Adds the Bookmark folders
-msgid "Add Bookmark folder"
-msgstr "Lisää kirjanmerkkikansio"
-
-msgid "Rename"
-msgstr "Nimeä uudelleen"
-
-msgid "POIs"
-msgstr "POIt"
+msgid "Select waypoint to insert the new one before"
+msgstr ""
 
 msgid "View in Browser"
 msgstr "Näytä selaimessa"
@@ -1549,6 +1559,9 @@ msgstr "Näytä ominaisuudet"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
+
+msgid "POIs"
+msgstr "POIt"
 
 msgid "View on map"
 msgstr "Näytä kartalla"
@@ -1574,6 +1587,9 @@ msgstr "Liitä kirjanmerkki"
 msgid "Delete Bookmark"
 msgstr "Poista kirjanmerkki"
 
+msgid "Delete waypoint"
+msgstr ""
+
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
@@ -1583,11 +1599,15 @@ msgstr ""
 msgid "Save waypoints"
 msgstr ""
 
-msgid "Replace Waypoints"
+msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
 msgstr ""
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Lisää kirjanmerkkikansio"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1596,18 +1616,6 @@ msgstr "Liitä kirjanmerkki"
 #, c-format
 msgid "Bookmark %s"
 msgstr "Tee kirjanmerkki %s"
-
-msgid "Former Destinations"
-msgstr "Aiemmat kohteet"
-
-msgid "- No former destinations available -"
-msgstr ""
-
-msgid "House number"
-msgstr "Talon numero"
-
-msgid "Layout"
-msgstr "Pohja"
 
 #, c-format
 msgid "Download %s"
@@ -1624,9 +1632,6 @@ msgstr ""
 
 msgid "Download completely"
 msgstr ""
-
-msgid "Maps"
-msgstr "Kartat"
 
 msgid "Show Satellite Status"
 msgstr "Näytä satelliittien tila"
@@ -1666,6 +1671,44 @@ msgstr "Näytä satelliittien tila"
 msgid "Show NMEA data"
 msgstr "Näytä NMEA-tiedot"
 
+msgid "Add Bookmark"
+msgstr "Lisää kirjanmerkki"
+
+msgid "Rename"
+msgstr "Nimeä uudelleen"
+
+msgid "About Navit"
+msgstr "Tietoja - Navit"
+
+#. Authors
+msgid "By"
+msgstr "Tekijä"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "sekä koko Navit-tiimi"
+
+msgid "members and contributors."
+msgstr "jäsenet ja osallistujat."
+
+msgid "Waypoints"
+msgstr ""
+
+msgid "Enter Coordinates"
+msgstr ""
+
+#.
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#.
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Longitude Latitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr ""
+
 msgid "Vehicle"
 msgstr "Kulkuneuvo"
 
@@ -1684,37 +1727,47 @@ msgstr "Kartta seuraa ajoneuvoa"
 msgid "Plan with Waypoints"
 msgstr ""
 
+msgid "Maps"
+msgstr "Kartat"
+
+msgid "Layout"
+msgstr "Pohja"
+
+msgid "Height Profile"
+msgstr "Korkeusprofiili"
+
+msgid "Route Description"
+msgstr "Reitin kuvaus"
+
+msgid "Show Locale"
+msgstr "Näytä maa-asetusto"
+
+msgid "Former Destinations"
+msgstr "Aiemmat kohteet"
+
+msgid "- No former destinations available -"
+msgstr ""
+
 msgid "Message"
 msgstr "Viesti"
+
+msgid "Back"
+msgstr "Takaisin"
+
+msgid "Back to map"
+msgstr "Takaisin karttaan"
+
+msgid "Main Menu"
+msgstr "Päävalikko"
+
+msgid "House number"
+msgstr "Talon numero"
 
 msgid "Next"
 msgstr ""
 
 msgid "Prev"
 msgstr ""
-
-msgid "Route Description"
-msgstr "Reitin kuvaus"
-
-msgid "Height Profile"
-msgstr "Korkeusprofiili"
-
-msgid "Show Locale"
-msgstr "Näytä maa-asetusto"
-
-msgid "About Navit"
-msgstr "Tietoja - Navit"
-
-#. Authors
-msgid "By"
-msgstr "Tekijä"
-
-#. Contributors
-msgid "And all the Navit Team"
-msgstr "sekä koko Navit-tiimi"
-
-msgid "members and contributors."
-msgstr "jäsenet ja osallistujat."
 
 msgid "Return to route!"
 msgstr ""
@@ -1792,10 +1845,19 @@ msgid ""
 "Waypoint"
 msgstr ""
 
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
 msgid "car_shortest"
 msgstr ""
 
 msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
