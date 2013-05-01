@@ -66,6 +66,7 @@ struct vehicle {
 
 struct object_func vehicle_func;
 
+static void vehicle_set_default_name(struct vehicle *this);
 static void vehicle_draw_do(struct vehicle *this_, int lazy);
 static void vehicle_log_nmea(struct vehicle *this_, struct log *log);
 static void vehicle_log_gpx(struct vehicle *this_, struct log *log);
@@ -129,6 +130,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	center.x=0;
 	center.y=0;
 	transform_setup(this_->trans, &center, 16, 0);
+	vehicle_set_default_name(this_);
 
 	dbg(1, "leave\n");
 	this_->log_to_cb=g_hash_table_new(NULL,NULL);
@@ -390,6 +392,17 @@ vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int
 	*angle=this->angle;
 	*speed=this->speed;
 	return 1;
+}
+
+static void vehicle_set_default_name(struct vehicle *this_)
+{
+	struct attr default_name;
+	if (!attr_search(this_->attrs, NULL, attr_name)) {
+		default_name.type=attr_name;
+		default_name.u.str="Unnamed vehicle";
+		this_->attrs=attr_generic_set_attr(this_->attrs, &default_name);
+		dbg(0, "Incomplete vehicle definition: missing attribute 'name'. Default name set.\n");
+	}
 }
 
 
