@@ -159,7 +159,8 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
 		break;
 	case attr_profilename:
 	case attr_source:
-		// Ignore; is always present, but not read by this vehicle.
+	case attr_name:
+		// Ignore; used by Navit's infrastructure, but not relevant for this vehicle.
 		break;
 	default:
 		dbg(0,"unsupported attribute %s\n",attr_to_name(attr->type));
