@@ -42,7 +42,7 @@ if (ANDROID)
                      -D LOWER=1
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
       COMMAND ${CMAKE_COMMAND} 
-                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/*.so"
+                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/lib[b-z]*.so"
 		     -D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
       COMMAND ${CMAKE_COMMAND} 
