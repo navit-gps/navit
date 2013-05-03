@@ -4,6 +4,8 @@
 #include "debug.h"
 #include "linguistics.h"
 
+/* To have linguistics_casefold(linguistics_expand_special(s,i)) equal to linguistics_expand_special(linguistics_casefold(s),i), 
+ * please always specify here lower case expansions for special letters not having case variants (like german ß).*/
 static const char *special[][3]={
 /* Capital Diacritics */
 /* ¨ Diaresis */
@@ -284,10 +286,10 @@ static GHashTable *casefold_hash, *special_hash;
  * @return String prepared for case insensitive search. Result shoud be g_free()d after use.
  */
 char*
-linguistics_casefold(char *in)
+linguistics_casefold(const char *in)
 {
 	int len=strlen(in);
-	char *src=in;
+	const char *src=in;
 	char *ret=g_new(char,len+1);
 	char *dest=ret;
 	char buf[10];
@@ -320,7 +322,7 @@ linguistics_casefold(char *in)
 }
 
 static char** 
-linguistics_get_special(char *str, char *end)
+linguistics_get_special(const char *str, const char *end)
 {
 	char *buf;
 	int len;
@@ -332,6 +334,48 @@ linguistics_get_special(char *str, char *end)
 	return g_hash_table_lookup(special_hash,buf);
 }
 
+/**
+ * @brief Compare two strings, trying to replace special characters (e.g. umlauts) in first string with plain letters.
+ *
+ * @param s1 First string to process, for example, an item name from the map. Will be linguistics_casefold()ed before comparison.
+ * @param s2 Second string to process, usually user supplied search string. Should be linguistics_casefold()ed before calling this function.
+ * @param mode set to composition of linguistics_cmp_mode flags to have s1 linguistics_expand_special()ed, allow matches shorter than whole s1, or 
+ * @param let matches start from any word boundary within s1
+ * @returns 0 when strings are equal
+ */
+int linguistics_compare(const char *s1, const char *s2, enum linguistics_cmp_mode mode)
+{
+	int ret=0;
+	int i;
+	int s2len=strlen(s2);
+	char *s1f;
+	/* Calling linguistics_casefold() before linguistics_expand_special() requires that result is independent of calling order. This seems 
+ 	   to be true at the time of writing this comment. */
+	s1f=linguistics_casefold(s1);
+	for(i=0; i<3; i++) {
+		char *s, *word;
+		if(i>0)
+			s=linguistics_expand_special(s1f,i);
+		else
+			s=s1f;
+		word=s;
+		while(word) {
+			if(mode & linguistics_cmp_partial)
+				ret=strncmp(word,s2,s2len);
+			else
+				ret=strcmp(word,s2);
+			if(!ret || !(mode & linguistics_cmp_words))
+				break;
+			word=linguistics_next_word(word);
+		}
+		if(i>0)
+			g_free(s);
+		if(!ret || !(mode & linguistics_cmp_expand))
+			break;
+	}
+	g_free(s1f);
+	return ret;
+}
 
 /**
  * @brief Replace special characters in string (e.g. umlauts) with plain letters.
@@ -344,9 +388,9 @@ linguistics_get_special(char *str, char *end)
  * @returns copy of string, with characters replaced
  */
 char *
-linguistics_expand_special(char *str, int mode)
+linguistics_expand_special(const char *str, int mode)
 {
-	char *in=str;
+	const char *in=str;
 	char *out,*ret;
 	int found=0;
 	int ret_len=strlen(str);
@@ -356,7 +400,7 @@ linguistics_expand_special(char *str, int mode)
 		return ret;
 	while (*in) {
 		char *next=g_utf8_find_next_char(in, NULL);
-		int i,len;
+		int len;
 		int match=0;
 
 		if(next)
@@ -412,7 +456,7 @@ linguistics_next_word(char *str)
 }
 
 int
-linguistics_search(char *str)
+linguistics_search(const char *str)
 {
 	if (!g_strcasecmp(str,"str"))
 		return 0;
