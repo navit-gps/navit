@@ -1719,13 +1719,13 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 		if(search->type==attr_town_name || search->type==attr_district_name || search->type==attr_town_or_district_name) {
 			struct attr af, al;
 			if(binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
-				if(case_cmp(af.u.str,search->u.str,1)>0) {
+				if(linguistics_compare(af.u.str,search->u.str,linguistics_cmp_partial)>0) {
 					dbg(1,"Skipping index item with first_key='%s'\n", af.u.str);
 					return;
 				}
 			}
 			if(binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
-				if(case_cmp(al.u.str,search->u.str,1)<0) {
+				if(linguistics_compare(al.u.str,search->u.str,linguistics_cmp_partial)<0) {
 					dbg(1,"Skipping index item with first_key='%s', last_key='%s'\n", af.u.str, al.u.str);
 					return;
 				}
@@ -2114,25 +2114,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	return NULL;
 }
 
-/**
- * @brief Compare two strings ignoring their case.
- * @param name Item name string to compare
- * @param match User query string. Should be linguistics_casefold()ed by by the caller
- * @return result of comparison, zero if strings are equal
- */
-
-static int
-case_cmp(char *name, char *match, int partial)
-{
-	int matchlen=strlen(match);
-	int ret;
-	char *folded=linguistics_casefold(name);
-	if (partial && strlen(folded)>matchlen)
-		folded[matchlen]=0;
-	ret=strcmp(folded, match);
-	g_free(folded);
-	return ret;
-}
 
 struct duplicate
 {
@@ -2262,6 +2243,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 {
 	struct item* it;
 	struct attr at;
+	enum linguistics_cmp_mode mode=(map_search->partial?linguistics_cmp_partial:0);
 
 	for (;;) {
 		while ((it  = map_rect_get_item_binfile(map_search->mr))) {
@@ -2272,13 +2254,13 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			case attr_town_or_district_name:
 				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && map_search->search.type != attr_district_name) {
 					if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
-						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name)) 
 							return it;
 					}
 				}
 				if (map_search->mr->tile_depth > 1 && item_is_district(*it) && map_search->search.type != attr_town_name) {
 					if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
-						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name)) 
 							return it;
 					}
 				}
@@ -2286,7 +2268,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			case attr_street_name:
 				if (map_search->mode == 1) {
 					if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
-						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_street_name)) {
 							return it;
 						}
 					}
@@ -2298,9 +2280,6 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						break;
 						
 					if(binfile_attr_get(it->priv_data, attr_label, &at)) {
-						int i,match=0;
-						char *str;
-						char *word;
 						struct coord c[128];
 						struct duplicate *d;
 						
@@ -2310,27 +2289,10 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						d=duplicate_test(map_search, it, attr_label);
 						if(!d)
 							break;
-						
-						str=g_strdup(at.u.str);
-						word=str;
-						do {
-							for (i = 0 ; i < 3 ; i++) {
-								char *name=linguistics_expand_special(word,i);
-								if (name && !case_cmp(name, map_search->search.u.str, map_search->partial))
-									match=1;
-								g_free(name);
-								if (match)
-									break;
-							}
-							if (match)
-								break;
-							word=linguistics_next_word(word);
-						} while (word);
-						g_free(str);
-						
-						if(!match) {
+
+						if(linguistics_compare(at.u.str, map_search->search.u.str, mode|linguistics_cmp_expand|linguistics_cmp_words)) {
 							/* Remember this non-matching street name in duplicate hash to skip name 
-							  * comparison for its following segments */
+							 * comparison for its following segments */
 							duplicate_insert(map_search, d);
 							break;
 						}
@@ -2355,7 +2317,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				{
 					if (has_house_number)
 					{
-						if (!case_cmp(at.u.str, map_search->search.u.str, map_search->partial))
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode))
 						{
 							if (!duplicate(map_search, it, attr_house_number))
 							{
