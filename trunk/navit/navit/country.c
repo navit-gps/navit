@@ -25,6 +25,7 @@
 #include "item.h"
 #include "country.h"
 #include "search.h"
+#include "linguistics.h"
 #include "navit_nls.h"
 
 struct country {
@@ -359,8 +360,9 @@ country_search_new(struct attr *search, int partial)
 {
 	struct country_search *ret=g_new(struct country_search, 1);
 	ret->search=*search;
+	ret->search.u.str=linguistics_casefold(ret->search.u.str);
 	if (search->type != attr_country_id)
-		ret->len=strlen(search->u.str);
+		ret->len=strlen(ret->search.u.str);
 	else
 		ret->len=0;
 	ret->partial=partial;
@@ -383,10 +385,7 @@ match(struct country_search *this_, enum attr_type type, const char *name)
 		return 0;
 	if (this_->search.type != type && this_->search.type != attr_country_all)
 		return 0;
-	if (this_->partial)
-		ret=(g_strncasecmp(this_->search.u.str, name, this_->len) == 0);
-	else
-		ret=(g_strcasecmp(this_->search.u.str, name) == 0);
+	ret=linguistics_compare(name, this_->search.u.str, linguistics_cmp_expand | (this_->partial?linguistics_cmp_partial:0) | linguistics_cmp_words)==0;
 	return ret;
 
 }
@@ -431,5 +430,6 @@ country_default(void)
 void
 country_search_destroy(struct country_search *this_)
 {
+	g_free(this_->search.u.str);
 	g_free(this_);
 }
