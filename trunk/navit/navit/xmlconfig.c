@@ -58,18 +58,31 @@
 #define unsetenv(a) putenv(a "=")
 #endif
 
+#ifndef USE_EZXML
 #ifdef HAVE_GLIB
+#define USE_EZXML 0
+#else
+#define USE_EZXML 1
+#endif
+#endif
+
+#if !USE_EZXML
 #define ATTR_DISTANCE 1
 const int xml_attr_distance=1;
+typedef GMarkupParseContext xml_context;
 #else
 #include "ezxml.h"
 const int xml_attr_distance=2;
 #define ATTR_DISTANCE 2
+#undef G_MARKUP_ERROR
+#undef G_MARKUP_ERROR_INVALID_CONTENT
+#undef G_MARKUP_ERROR_PARSE
+#undef G_MARKUP_ERROR_UNKNOWN_ELEMENT
 #define G_MARKUP_ERROR 0
 #define G_MARKUP_ERROR_INVALID_CONTENT 0
 #define G_MARKUP_ERROR_PARSE 0
 #define G_MARKUP_ERROR_UNKNOWN_ELEMENT 0
-typedef void * GMarkupParseContext;
+typedef void * xml_context;
 #endif
 
 struct xistate {
@@ -570,7 +583,7 @@ static void initStatic(void) {
  * */
 
 static void
-start_element(GMarkupParseContext *context,
+start_element(xml_context *context,
 		const gchar         *element_name,
 		const gchar        **attribute_names,
 		const gchar        **attribute_values,
@@ -688,7 +701,7 @@ start_element(GMarkupParseContext *context,
 
 /* Called for close tags </foo> */
 static void
-end_element (GMarkupParseContext *context,
+end_element (xml_context *context,
 		const gchar         *element_name,
 		gpointer             user_data,
 		xmlerror             **error)
@@ -710,7 +723,7 @@ end_element (GMarkupParseContext *context,
 static gboolean parse_file(struct xmldocument *document, xmlerror **error);
 
 static void
-xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error)
+xinclude(xml_context *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error)
 {
 	struct xmldocument doc_new;
 	struct file_wordexp *we;
@@ -931,7 +944,7 @@ xpointer_match(const char *xpointer, struct xistate *first)
 }
 
 static void
-xi_start_element(GMarkupParseContext *context,
+xi_start_element(xml_context *context,
 		const gchar         *element_name,
 		const gchar        **attribute_names,
 		const gchar        **attribute_values,
@@ -980,7 +993,7 @@ xi_start_element(GMarkupParseContext *context,
  * */
 
 static void
-xi_end_element (GMarkupParseContext *context,
+xi_end_element (xml_context *context,
 		const gchar         *element_name,
 		gpointer             user_data,
 		xmlerror             **error)
@@ -1013,7 +1026,7 @@ xi_end_element (GMarkupParseContext *context,
 /* Called for character data */
 /* text is not nul-terminated */
 static void
-xi_text (GMarkupParseContext *context,
+xi_text (xml_context *context,
 		const gchar            *text,
 		gsize                   text_len,
 		gpointer                user_data,
@@ -1043,7 +1056,7 @@ xi_text (GMarkupParseContext *context,
 	}
 }
 
-#ifndef HAVE_GLIB
+#if USE_EZXML
 static void
 parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *),
 					  void (*end)(void *, const char *, void *, void *),
@@ -1068,9 +1081,9 @@ xml_parse_text(const char *document, void *data, void (*start)(void *, const cha
 			                   void (*end)(void *, const char *, void *, void *),
 			                   void (*text)(void *, const char *, int, void *, void *))
 {
-#ifdef HAVE_GLIB
+#if !USE_EZXML
 	GMarkupParser parser = { start, end, text, NULL, NULL};
-	GMarkupParseContext *context;
+	xml_context *context;
 	gboolean result;
 
 	context = g_markup_parse_context_new (&parser, 0, data, NULL);
@@ -1096,7 +1109,7 @@ xml_parse_text(const char *document, void *data, void (*start)(void *, const cha
 }
 
 
-#ifdef HAVE_GLIB
+#if !USE_EZXML
 
 static const GMarkupParser parser = {
 	xi_start_element,
@@ -1116,7 +1129,7 @@ static const GMarkupParser parser = {
 static gboolean
 parse_file(struct xmldocument *document, xmlerror **error)
 {
-	GMarkupParseContext *context;
+	xml_context *context;
 	gchar *contents, *message;
 	gsize len;
 	gint line, chr;
