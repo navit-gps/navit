@@ -217,7 +217,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	struct html *html=&this->html[this->html_depth];
 	const char *cond, *type, *font_size;
 
-	if (!g_ascii_strcasecmp(tag_name,"text"))
+	if (!g_ascii_strcasecmp(tag_name,"text") || !g_ascii_strcasecmp(tag_name,"p"))
 		return;
 	html->skip=0;
 	html->command=NULL;
@@ -316,7 +316,7 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 	struct html *html;
 	struct html *parent=NULL;
 
-	if (!g_ascii_strcasecmp(tag_name,"text"))
+	if (!g_ascii_strcasecmp(tag_name,"text") || !g_ascii_strcasecmp(tag_name,"p"))
 		return;
 	this->html_depth--;
 	html=&this->html[this->html_depth];
