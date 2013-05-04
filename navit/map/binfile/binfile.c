@@ -2317,7 +2317,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				{
 					if (has_house_number)
 					{
-						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode))
+						struct attr at2;
+						if ( (map_search->mode!=2 || binfile_attr_get(it->priv_data, attr_street_name, &at2)) && !linguistics_compare(at.u.str, map_search->search.u.str, mode))
 						{
 							if (!duplicate(map_search, it, attr_house_number))
 							{
