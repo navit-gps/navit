@@ -3881,17 +3881,25 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_destination_time:
 		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
-
-			attr->u.num=this_->path2->path_time;
+			struct route_path *path=this_->path2;
+			attr->u.num=0;
+			while (path) {
+				attr->u.num+=path->path_time;
+				path=path->next;
+			}
 			dbg(1,"path_time %d\n",attr->u.num);
-		}
-		else
+		} else
 			ret=0;
 		break;
 	case attr_destination_length:
-		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental))
-			attr->u.num=this_->path2->path_len;
-		else
+		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
+			struct route_path *path=this_->path2;
+			attr->u.num=0;
+			while (path) {
+				attr->u.num+=path->path_len;
+				path=path->next;
+			}
+		} else
 			ret=0;
 		break;
 	default:
