@@ -1294,7 +1294,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			} else
 				text=g_strdup(item_to_name(item->type));
 			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
-			gui_internal_widget_append(row,	wc=gui_internal_cmd_pois_item(this, NULL, itemo, NULL, -1, text));
+			gui_internal_widget_append(row,	wc=gui_internal_cmd_pois_item(this, NULL, itemo, NULL, NULL, -1, text));
 			wc->c=pc;
 			g_free(wc->name);
 			wc->name=g_strdup(text);
