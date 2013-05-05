@@ -36,6 +36,11 @@ enum attr_type {
 #undef ATTR
 };
 
+enum attr_format {
+	attr_format_default=0,
+	attr_format_with_units=1,
+};
+
 #define AF_ONEWAY		(1<<0)
 #define AF_ONEWAYREV		(1<<1)
 #define AF_NOPASS		(AF_ONEWAY|AF_ONEWAYREV)
@@ -175,6 +180,7 @@ void attr_destroy_hash(void);
 enum attr_type attr_from_name(const char *name);
 char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);
+char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map);
 char *attr_to_text(struct attr *attr, struct map *map, int pretty);
 struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
 int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter);
