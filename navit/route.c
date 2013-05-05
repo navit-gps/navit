@@ -3586,6 +3586,11 @@ rm_get_item(struct map_rect_priv *mr)
 			id=mr->seg;
 			break;
 		}
+		if (mr->dest && g_list_next(mr->dest)) {
+			id=mr->dest;
+			mr->item.type=type_waypoint;
+			break;
+		}
 		mr->item.type=type_route_end;
 		id=&(mr->mpriv->route->destinations);
 		if (mr->mpriv->route->destinations)
