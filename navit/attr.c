@@ -277,10 +277,13 @@ flags_to_text(int flags)
 }
 
 char *
-attr_to_text(struct attr *attr, struct map *map, int pretty)
+attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map)
 {
 	char *ret;
 	enum attr_type type=attr->type;
+
+	if (!sep)
+		sep="";
 
 	if (type >= attr_type_item_begin && type <= attr_type_item_end) {
 		struct item *item=attr->u.item;
@@ -309,6 +312,30 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	}
 	if (type == attr_flags || type == attr_through_traffic_flags)
 		return flags_to_text(attr->u.num);
+	if (type == attr_destination_length) {
+		if (fmt == attr_format_with_units) {
+			double distance=attr->u.num;
+			if (distance > 10000)
+				return g_strdup_printf("%.0f%skm",distance/1000,sep);
+                	return g_strdup_printf("%.1f%skm",distance/1000,sep);
+		}
+	}
+	if (type == attr_destination_time) {
+		if (fmt == attr_format_with_units) {
+			int seconds=(attr->u.num+5)/10;
+			int minutes=seconds/60;
+			int hours=minutes/60;
+			int days=hours/24;
+			hours%=24;
+			minutes%=60;
+			seconds%=60;
+			if (days)
+				return g_strdup_printf("%d:%02d:%02d:%02d",days,hours,minutes,seconds);
+			if (hours)
+				return g_strdup_printf("%02d:%02d:%02d",hours,minutes,seconds);
+			return g_strdup_printf("%02d:%02d",minutes,seconds);
+		}
+	}
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
 		return g_strdup_printf("%ld", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
@@ -347,7 +374,7 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		char *ret=g_strdup("");
 		char *sep="";
 		while (attr->u.attrs[i].type) {
-			char *val=attr_to_text(&attr->u.attrs[i], map, pretty);
+			char *val=attr_to_text_ext(&attr->u.attrs[i], sep, fmt, def_fmt, map);
 			ret=g_strconcat_printf(ret,"%s%s=%s",sep,attr_to_name(attr->u.attrs[i].type),val);
 			g_free(val);
 			sep=" ";
@@ -359,6 +386,12 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		return g_strdup_printf("0x%ld[%s]",attr->u.num,item_to_name(attr->u.num));
 	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
+}
+
+char *
+attr_to_text(struct attr *attr, struct map *map, int pretty)
+{
+	return attr_to_text_ext(attr, NULL, attr_format_default, attr_format_default, map);
 }
 
 struct attr *
