@@ -42,8 +42,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if 0
 #include <math.h>
+#if 0
 #include <assert.h>
 #include <unistd.h>
 #include <sys/time.h>
@@ -392,6 +392,36 @@ rp_iterator_end(struct route_graph_point_iterator *it) {
 	} else {
 		return 0;
 	}
+}
+
+static void
+route_path_get_distances(struct route_path *path, struct coord *c, int count, int *distances)
+{
+	int i;
+	for (i = 0 ; i < count ; i++)
+		distances[i]=INT_MAX;
+	while (path) {
+		struct route_path_segment *seg=path->path;
+		while (seg) {
+			for (i = 0 ; i < count ; i++) {
+				int dist=transform_distance_polyline_sq(seg->c, seg->ncoords, &c[i], NULL, NULL);
+				if (dist < distances[i]) 
+					distances[i]=dist;
+			}
+			seg=seg->next;
+		}
+		path=path->next;
+	}
+	for (i = 0 ; i < count ; i++) {
+		if (distances[i] != INT_MAX)
+			distances[i]=sqrt(distances[i]);
+	}
+}
+
+void
+route_get_distances(struct route *this, struct coord *c, int count, int *distances)
+{
+	return route_path_get_distances(this->path2, c, count, distances);
 }
 
 /**
