@@ -3202,15 +3202,27 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		}
 	case attr_label:
 		mr->attr_next=attr_street_item;
-		if (mr->item.type != type_rg_point) 
-			return 0;
 		attr->type = attr_label;
 		if (mr->str)
 			g_free(mr->str);
-		if (p->value != INT_MAX)
-			mr->str=g_strdup_printf("%d", p->value);
-		else
-			mr->str=g_strdup("-");
+		if (mr->item.type == type_rg_point) {
+			if (p->value != INT_MAX)
+				mr->str=g_strdup_printf("%d", p->value);
+			else
+				mr->str=g_strdup("-");
+		} else {
+			int len=seg->data.len;
+			int speed=route_seg_speed(route->vehicleprofile, &seg->data, NULL);
+			int time=route_time_seg(route->vehicleprofile, &seg->data, NULL);
+			if (speed)
+				mr->str=g_strdup_printf("%dm %dkm/h %d.%ds",len,speed,time/10,time%10);
+			else if (len)
+				mr->str=g_strdup_printf("%dm",len);
+			else {
+				mr->str=NULL;
+				return 0;
+			}
+		}
 		attr->u.str = mr->str;
 		return 1;
 	case attr_street_item:
