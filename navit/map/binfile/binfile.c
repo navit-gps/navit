@@ -2311,9 +2311,11 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				break;
 			case attr_house_number:
 				has_house_number=binfile_attr_get(it->priv_data, attr_house_number, &at);
-				if (has_house_number || (it->type == type_house_number)
-					|| (it->type == type_house_number_interpolation_even) || (it->type == type_house_number_interpolation_odd) 
-					|| (it->type == type_house_number_interpolation_all) )
+				if (has_house_number || it->type == type_house_number
+					|| it->type == type_house_number_interpolation_even || it->type == type_house_number_interpolation_odd
+					|| it->type == type_house_number_interpolation_all
+					|| (map_search->mode == 0 && item_is_street(*it))
+				   	)
 				{
 					if (has_house_number)
 					{
