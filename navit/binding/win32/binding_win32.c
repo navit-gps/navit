@@ -135,9 +135,9 @@ win32_main_navit(struct win32_binding_private *this, struct navit *navit, int ad
 
 void plugin_init(void)
 {
-	dbg(0,"enter\n");
 	struct attr callback;
 	struct win32_binding_private *this=g_new0(struct win32_binding_private,1);
+	dbg(0,"enter\n");
 	callback.type=attr_callback;
 	callback.u.callback=callback_new_attr_1(callback_cast(win32_main_navit),attr_navit,this);
 	config_add_attr(config, &callback);
