@@ -755,6 +755,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 	} else {
 		int count,max=1024;
 		int hn_pos,hn_length;
+		int step=inter->mode?2:1;
 		struct coord *c=g_alloca(sizeof(struct coord)*max);
 		item_coord_rewind(item);
 		count=item_coord_get(item, c, max);
@@ -779,7 +780,11 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 				dbg(1,"distance[%d]=%d\n",i,distances[i]);
 			}
 			dbg(1,"sum=%d\n",distance_sum);
+#if 0
 			hn_distance=distance_sum*hn_pos/hn_length;
+#else
+			hn_distance=(distance_sum*hn_pos+distance_sum*step/2)/(hn_length+step);
+#endif
 			dbg(1,"hn_distance=%d\n",hn_distance);
 			i=0;
 			while (i < count-1 && hn_distance > distances[i])
