@@ -1820,6 +1820,7 @@ Waypoint</text></img>
 				<itemgra item_types="rg_segment" order="12-">
 					<polyline color="#FF089C" width="1"/>
 					<arrows color="#FF089C" width="1"/>
+					<text text_size="15"/>
 				</itemgra>
 				<itemgra item_types="rg_point" order="12-">
 					<circle color="#FF089C" radius="10" text_size="7"/>
