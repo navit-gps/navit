@@ -180,6 +180,7 @@ GList *gui_internal_widget_table_next_row(GList *row);
 GList *gui_internal_widget_table_prev_row(GList *row);
 GList *gui_internal_widget_table_first_row(GList *row);
 GList *gui_internal_widget_table_top_row(struct gui_priv *this, struct widget *table);
+GList *gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * table, struct widget *row);
 struct widget *gui_internal_widget_table_row_new(struct gui_priv *this, enum flags flags);
 void gui_internal_table_pack(struct gui_priv *this, struct widget *w);
 void gui_internal_table_hide_rows(struct table_data *table_data);
