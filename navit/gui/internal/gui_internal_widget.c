@@ -886,7 +886,7 @@ gui_internal_widget_table_first_row(GList * row)
 
 /**
  * @brief Get GList pointer to the table row drawn on the top of the screen.
- * @returns GList pointer to the first row in the children list, or NULL.
+ * @returns GList pointer to the top row in the children list, or NULL.
  */
 GList *
 gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table)
@@ -898,6 +898,24 @@ gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table)
 	return NULL;
 }
 
+/**
+ * @brief Set internal top row pointer of the table to point to a given row widget.
+ * @returns GList pointer to the top row in the children list of the table.
+ */
+GList *
+gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * table, struct widget *row)
+{
+	if(table && table->type==widget_table) {
+		struct table_data *d=table->data;
+		d->top_row=table->children;
+		while(d->top_row && d->top_row->data!=row)
+			d->top_row=g_list_next(d->top_row);
+		if(!d->top_row)
+			d->top_row=gui_internal_widget_table_first_row(table->children);
+		return d->top_row;
+	}
+	return NULL;
+}
 
 
 /**
