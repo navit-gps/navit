@@ -50,7 +50,7 @@ struct poi_param;
 struct widget;
 void gui_internal_poi_param_free(void *p);
 void gui_internal_poi_param_set_filter(struct poi_param *param, char *text);
-struct widget *gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char *name);
+struct widget *gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, struct route *route, int dist, char *name);
 char *gui_internal_compose_item_address_string(struct item *item);
 void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);

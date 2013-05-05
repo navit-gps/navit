@@ -13,6 +13,7 @@
 #include "map.h"
 #include "mapset.h"
 #include "layout.h"
+#include "route.h"
 #include "transform.h"
 #include "linguistics.h"
 #include "fib.h"
@@ -272,38 +273,51 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
  * @return  Pointer to new widget.
  */
 
+void
+format_dist(int dist, char *distbuf)
+{
+	if (dist > 10000)
+		sprintf(distbuf,"%d ", dist/1000);
+	else if (dist>0)
+		sprintf(distbuf,"%d.%d ", dist/1000, (dist%1000)/100);
+}
+
 struct widget *
-gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char* name)
+gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, struct route *route, int dist, char* name)
 {
 	char distbuf[32]="";
 	char dirbuf[32]="";
+	char routedistbuf[32]="";
 	char *type;
 	struct widget *wl;
 	char *text;
 	struct graphics_image *icon;
 
-	if (dist > 10000)
-		sprintf(distbuf,"%d ", dist/1000);
-	else if (dist>0)
-		sprintf(distbuf,"%d.%d ", dist/1000, (dist%1000)/100);
+	format_dist(dist,distbuf);
 	if(c) {
 		int len; 		
 		get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
 		len=strlen(dirbuf);
 		dirbuf[len]=' ';
 		dirbuf[len+1]=0;
+		if (route) {
+			route_get_distances(route, c, 1, &dist);
+			if (dist != INT_MAX)
+				format_dist(dist, routedistbuf);
+		}
 	}
+
 	
 	type=item_to_name(item->type);
 
 	icon=gui_internal_poi_icon(this,item->type);
 	if(!icon) {
 		icon=image_new_xs(this,"gui_inactive");
-		text=g_strdup_printf("%s%s%s %s", distbuf, dirbuf, type, name);
+		text=g_strdup_printf("%s%s%s%s %s", distbuf, dirbuf, routedistbuf, type, name);
 	} else if(strlen(name)>0)
-		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, name);
+		text=g_strdup_printf("%s%s%s%s", distbuf, dirbuf, routedistbuf, name);
 	else 
-		text=g_strdup_printf("%s%s%s", distbuf, dirbuf, type);
+		text=g_strdup_printf("%s%s%s%s", distbuf, dirbuf, routedistbuf, type);
 		
 	wl=gui_internal_button_new_with_callback(this, text, icon, gravity_left_center|orientation_horizontal|flags_fill, NULL, NULL);
 	wl->datai=dist;
@@ -552,6 +566,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct widget *wl,*wt;
 	char buffer[32];
 	struct poi_param *paramnew;
+	struct attr route;
 
 	if(data) {
 	  param = data;
@@ -559,7 +574,14 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	  param = g_new0(struct poi_param,1);
 	  param_free=1;
 	}
-	
+	if (navit_get_attr(this->nav, attr_route, &route, NULL)) {
+		struct attr route_status;
+		if (!route_get_attr(route.u.route, attr_route_status, &route_status, NULL) || 
+			(route_status.u.num != route_status_path_done_new &&
+			 route_status.u.num != route_status_path_done_incremental))
+			route.u.route=NULL;
+	} else
+		route.u.route=NULL;
 	dist=10000*(param->dist+1);
 	isel = param->sel? &selectors[param->selnb]: NULL;
 	pagenb = param->pagenb;
@@ -663,7 +685,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		dbg(2, "dist1: %i, dist2: %i\n", data->dist, (-key)>>10);
 		if(i==(it-pagesize*pagenb) && data->dist>prevdist)
 			prevdist=data->dist;
-		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, data->dist, data->label);
+		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, route.u.route, data->dist, data->label);
 		wi->c.x=data->c.x;
 		wi->c.y=data->c.y;
 		wi->c.pro=pro;
