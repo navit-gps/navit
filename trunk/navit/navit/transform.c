@@ -42,7 +42,7 @@
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
-	int ddd;
+	int ddd;                /* 3d mode/isometric view active? (0/1) */
  	int m00,m01,m02;	/* 3d transformation matrix */
  	int m10,m11,m12;	
  	int m20,m21,m22;	
@@ -415,11 +415,6 @@ transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int Zone
 	geo->lng=Long;
 }
 
-void
-transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum)
-{
-}
-
 int
 transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return)
 {
@@ -780,15 +775,6 @@ transform_set_screen_center(struct transformation *t, struct point *p)
 {
 	t->screen_center=*p;
 }
-
-#if 0
-void
-transform_set_size(struct transformation *t, int width, int height)
-{
-	t->width=width;
-	t->height=height;
-}
-#endif
 
 void
 transform_get_size(struct transformation *t, int *width, int *height)
