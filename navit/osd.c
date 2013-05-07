@@ -70,7 +70,7 @@ osd_new(struct attr *parent, struct attr **attrs)
 		g_free(o);
 		o=NULL;
 	}
-	dbg(0,"new osd %p\n",o);
+	dbg(3,"new osd %p\n",o);
         return o;
 }
 
