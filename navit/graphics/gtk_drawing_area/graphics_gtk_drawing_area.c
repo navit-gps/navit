@@ -139,17 +139,17 @@ graphics_destroy_image(gpointer data)
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	dbg(0,"enter parent %p\n",gr->parent);
+	dbg(3,"enter parent %p\n",gr->parent);
 	if (!gr->parent) {
-		dbg(0,"enter win %p\n",gr->win);
+		dbg(3,"enter win %p\n",gr->win);
 		if (gr->win)
 			gtk_widget_destroy(gr->win);
-		dbg(0,"widget %p\n",gr->widget);
+		dbg(3,"widget %p\n",gr->widget);
 		if (gr->widget)
 			gtk_widget_destroy(gr->widget);
 		g_free(gr->window_title);
 	}
-	dbg(0,"hImageDataCount %d\n",hImageDataCount);
+	dbg(3,"hImageDataCount %d\n",hImageDataCount);
 	if (!--hImageDataCount)
 		g_hash_table_destroy(hImageData);
 	g_free(gr);
@@ -907,7 +907,7 @@ static gint
 delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
-	dbg(0,"enter this->win=%p\n",this->win);
+	dbg(3,"enter this->win=%p\n",this->win);
 	if (this->delay & 2) {
 		if (this->win) 
 			this->win=NULL;
@@ -983,7 +983,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
 	else
-		dbg(0,"keyval 0x%x\n", event->keyval);
+		dbg(3,"keyval 0x%x\n", event->keyval);
 	
 	return FALSE;
 }
@@ -1087,7 +1087,7 @@ get_data_window(struct graphics_priv *this, unsigned int xid)
 static int
 set_attr(struct graphics_priv *gr, struct attr *attr)
 {
-	dbg(0,"enter\n");
+	dbg(3,"enter\n");
 	switch (attr->type) {
 	case attr_windowid:
 		get_data_window(gr, attr->u.num);
