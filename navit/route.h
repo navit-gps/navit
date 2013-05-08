@@ -96,7 +96,7 @@ struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, 
 void route_set_destinations(struct route *this_, struct pcoord *dst, int count, int async);
 int route_get_destinations(struct route *this_, struct pcoord *pc, int count);
 int route_get_destination_count(struct route *this_);
-void route_get_distances(struct route *this, struct coord *c, int count, int *distances);
+void route_get_distances(struct route *this_, struct coord *c, int count, int *distances);
 void route_set_destination(struct route *this_, struct pcoord *dst, int async);
 void route_append_destination(struct route *this_, struct pcoord *dst, int async);
 void route_remove_nth_waypoint(struct route *this_, int n);
