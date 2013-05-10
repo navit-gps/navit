@@ -1575,6 +1575,9 @@ osm_end_relation(struct maptool_osm *osm)
 
 	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, osm->turn_restrictions);
+
+	if (experimental && !strcmp(relation_type, "associatedStreet") )
+		item_bin_write(item_bin, osm->associated_streets);
 		
 	attr_longest_match_clear();
 }
@@ -2230,6 +2233,107 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 	}
 	return NULL;
 }
+
+struct associated_street {
+	osmid relid;
+	char *name;
+};
+
+static void
+process_associated_street_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+{
+	FILE *out=*(FILE **)func_priv;
+	struct associated_street *rel=relation_priv;
+	if(!out) {
+		/* Pass 1, fill associated street names in relation_priv */
+		char *name;
+		if(!rel->name && item_is_street(*member) && (name=item_bin_get_attr(member,attr_street_name,NULL))!=NULL ) {
+			rel->name=g_strdup(name);
+		}
+	} else {
+		/* Pass 2, add associated street names to relation members which do not have street name attr defined but 
+		   have house number defined or are streets */
+		if(rel->name && !item_bin_get_attr(member,attr_street_name,NULL) && (item_bin_get_attr(member,attr_house_number,NULL) || item_is_street(*member)))
+			item_bin_add_attr_string(member, attr_street_name, rel->name);
+		item_bin_write(member,out);
+	}
+}
+
+static void
+relation_func_writethrough(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+{
+	FILE *out=*(FILE **)func_priv;
+	if(out)
+		item_bin_write(member,out);
+}
+
+
+static void
+process_associated_street_setup(FILE *in, struct relations *relations, FILE **out)
+{
+	struct relation_member relm;
+	long long relid;
+	struct item_bin *ib;
+	struct relations_func *relations_func;
+	int min_count;
+	
+	fseek(in, 0, SEEK_SET);
+	relations_func=relations_func_new(process_associated_street_member, out);
+	while ((ib=read_item(in))) {
+		struct associated_street *rel=g_new0(struct associated_street, 1);
+		relid=item_bin_get_relationid(ib);
+		rel->relid=relid;
+		rel->name=g_strdup(osm_tag_value(ib, "name"));
+		dbg(0,"name=%s\n",rel->name);
+		min_count=0;
+		while(search_relation_member(ib, "street",&relm,&min_count)) {
+			if(relm.type==2)
+				relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+			dbg(0,"street type=%d(should be 2) id=%lld\n",relm.type,relm.id);
+
+		}
+		min_count=0;
+		while(search_relation_member(ib, "house",&relm,&min_count)) {
+			dbg(0,"house type=%d id=%lld\n",relm.type,relm.id);
+			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+		}
+		min_count=0;
+		while(search_relation_member(ib, "addr:houselink",&relm,&min_count)) {
+			dbg(0,"houselink type=%d id=%lld\n",relm.type,relm.id);
+			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+		}
+		min_count=0;
+		while(search_relation_member(ib, "address",&relm,&min_count)) {
+			dbg(0,"address type=%d id=%lld\n",relm.type,relm.id);
+			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+		}
+	}
+	relations_func=relations_func_new(relation_func_writethrough, out);
+	relations_add_func(relations, relations_func, NULL, NULL, -1, 0);
+}
+
+void
+process_associated_street(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out)
+{
+	struct relations *relations=relations_new();
+	FILE *out=NULL;
+	fseek(in, 0, SEEK_SET);
+ 	process_associated_street_setup(in, relations, &out);
+
+	/* Set noname relations names from their street members */
+	fseek(ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, ways_in, NULL);
+
+	/* Set street names on all members */
+	out=ways_out;
+	fseek(ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, ways_in, NULL);
+
+	out=nodes_out;
+	fseek(nodes_in, 0, SEEK_SET);
+	relations_process(relations, NULL, nodes_in, NULL);
+}
+
 
 struct turn_restriction {
 	osmid relid;
