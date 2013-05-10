@@ -190,7 +190,7 @@ town_str(struct search_list_result *res, int level, int flags)
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
-	char *text=NULL,*text2=NULL,*name=NULL;
+	char *text=NULL,*text2=NULL,*name=NULL, *wcname=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
 	struct item *item=NULL;
@@ -288,9 +288,13 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	}
 	if (! strcmp(wm_name,"House number")) {
 		name=res->house_number->house_number;
-		text=g_strdup_printf("%s %s", res->street->name, name);
+		text=g_strdup_printf("%s, %s", name, res->street->name);
 		text2=town_str(res, 3, 0);
+		wcname=g_strdup(text);
 	}
+
+	if(!wcname)
+		wcname=g_strdup(name);
 
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
@@ -351,7 +355,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 				gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, param));
 	}
-	wc->name=g_strdup(name);
+	wc->name=wcname;
 	if (res->c)
 		wc->c=*res->c;
 	wc->selection_id=res->id;
