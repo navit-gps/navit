@@ -237,6 +237,7 @@ void cat(FILE *in, FILE *out);
 struct maptool_osm {
 	FILE *boundaries;
 	FILE *turn_restrictions;
+	FILE *associated_streets;
 	FILE *nodes;
 	FILE *ways;
 	FILE *line2poi;
@@ -258,6 +259,7 @@ void osm_add_nd(osmid ref);
 long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
+void process_associated_street(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void clear_node_item_buffer(void);

@@ -23,6 +23,7 @@
 
 struct relations {
 	GHashTable *member_hash[3];
+	GList *default_members;
 };
 
 struct relations_func {
@@ -54,7 +55,7 @@ relations_member_equal(gconstpointer a, gconstpointer b)
 struct relations *
 relations_new(void)
 {
-	struct relations *ret=g_new(struct relations, 1);
+	struct relations *ret=g_new0(struct relations, 1);
 	int i;
 
 	for (i = 0 ; i < 3 ; i++)
@@ -71,19 +72,40 @@ relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct ite
 	return relations_func;
 }
 
+/*
+ * @brief Add a relation member to relations collection.
+ * @param in rel relations collection to add the new member to.
+ * @param in funct structure defining function to call when this member is read
+ * @param in relation_priv parameter describing relation. Will be passed to funct function
+ * @param in member_priv parameter describing member function. Will be passed to funct function
+ * @param in type This member type: 1 - node, 2 - way, 3 - relation. 
+ * 			Set to -1 to add a default member action which matches any item of any type which is not a member of any relation.
+ * @param in osmid This member id
+ * @param unused relations
+ */
 void
 relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id)
 {
-	GHashTable *member_hash=rel->member_hash[type-1];
 	struct relations_member *memb=g_new(struct relations_member, 1);
-	
+
 	memb->memberid=id;
 	memb->relation_priv=relation_priv;
 	memb->member_priv=member_priv;
 	memb->func=func;
-	g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
+	if(type>0) {
+		GHashTable *member_hash=rel->member_hash[type-1];
+		g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
+	} else
+		rel->default_members=g_list_append(rel->default_members, memb);
 }
 
+/*
+ * @brief Process relations members from the file.
+ * @param in rel struct relations storing pre-processed relations info
+ * @param in nodes file containing nodes in "coords.tmp" format
+ * @param in ways file containing items in item_bin format. This file may contain both nodes, ways, and relations in that format.
+ * @param unused relations
+ */
 void
 relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relations)
 {
@@ -112,14 +134,19 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relation
 	}
 	if (ways) {
 		while ((ib=read_item(ways))) {
-			id=item_bin_get_attr(ib, attr_osm_wayid, NULL);
-			if (id) {
+			l=NULL;
+			if(NULL!=(id=item_bin_get_attr(ib, attr_osm_nodeid, NULL)))
+				l=g_hash_table_lookup(rel->member_hash[0], id);
+			else if(NULL!=(id=item_bin_get_attr(ib, attr_osm_wayid, NULL)))
 				l=g_hash_table_lookup(rel->member_hash[1], id);
-				while (l) {
-					struct relations_member *memb=l->data;
-					memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
-					l=g_list_next(l);
-				}
+			else if(NULL!=(id=item_bin_get_attr(ib, attr_osm_relationid, NULL)))
+				l=g_hash_table_lookup(rel->member_hash[2], id);
+			if(!l)
+				l=rel->default_members;
+			while (l) {
+				struct relations_member *memb=l->data;
+				memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
+				l=g_list_next(l);
 			}
 		}
 	}
