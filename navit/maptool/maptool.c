@@ -437,8 +437,11 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 			p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
 		}
 	}
-	if (p->process_relations)
+	if (p->process_relations) {
 		p->osm.boundaries=tempfile(suffix,"boundaries",1);
+		if(experimental)
+			p->osm.associated_streets=tempfile(suffix,"associated_streets",1);
+	}
 #ifdef HAVE_POSTGRESQL
 	if (p->dbstr)
 		map_collect_data_osm_db(p->dbstr,&p->osm);
@@ -476,6 +479,8 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		fclose(p->osm.nodes);
 	if (p->osm.turn_restrictions)
 		fclose(p->osm.turn_restrictions);
+	if (p->osm.associated_streets)
+		fclose(p->osm.associated_streets);
 	if (p->osm.boundaries)
 		fclose(p->osm.boundaries);
 	if (p->osm.poly2poi)
@@ -833,7 +838,7 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 1
+#if 0
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
@@ -862,6 +867,30 @@ int main(int argc, char **argv)
 		if (start_phase(&p, "collecting data")) {
 			osm_collect_data(&p, suffix);
 			p.node_table_loaded=1;
+		}
+		if (experimental && p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing associated street relations")) {
+			FILE *ways_in=tempfile(suffix,"ways",0);
+			FILE *ways_out=tempfile(suffix,"ways_as",1);
+			FILE *nodes_in=tempfile(suffix,"nodes",0);
+			FILE *nodes_out=tempfile(suffix,"nodes_as",1);
+			
+			p.osm.associated_streets=tempfile(suffix,"associated_streets",0);
+			
+			process_associated_street(p.osm.associated_streets, ways_in, ways_out, nodes_in, nodes_out);
+			fclose(ways_in);
+			fclose(nodes_in);
+			fclose(ways_out);
+			fclose(nodes_out);
+			fclose(p.osm.associated_streets);
+			tempfile_rename(suffix,"ways","ways_pre_as");
+			tempfile_rename(suffix,"nodes","nodes_pre_as");
+			tempfile_rename(suffix,"ways_as","ways");
+			tempfile_rename(suffix,"nodes_as","nodes");
+			if(!p.keep_tmpfiles) {
+				tempfile_unlink(suffix,"ways_pre_as");
+				tempfile_unlink(suffix,"nodes_pre_as");
+				tempfile_unlink(suffix,"associated_streets");
+			}
 		}
 		if (start_phase(&p, "counting references and resolving ways")) {
 			maptool_load_node_table(&p,1);
