@@ -3149,7 +3149,7 @@ gui_internal_populate_route_table(struct gui_priv * this, struct navit * navit)
 			  label->func=gui_internal_cmd_position;
 			  label->state|=STATE_SENSITIVE;
 			  label->data=(void*)2;	  
-			  if(toprow && item->id_hi==topitem.id_hi && item->id_lo==topitem.id_lo)
+			  if(toprow && item->id_hi==topitem.id_hi && item->id_lo==topitem.id_lo && item->map==topitem.map)
 			  	gui_internal_widget_table_set_top_row(this, this->route_data.route_table, row);
 			}
 
