@@ -275,7 +275,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 				}
 			}
 			if (!strcmp(type,"text") || !strcmp(type,"password")) {
-				char *value=find_attr(names, values, "value");
+				const char *value=find_attr(names, values, "value");
 				html->w=gui_internal_label_new(this, value);
 				html->w->background=this->background;
 			        html->w->flags |= div_flags(names, values);

@@ -57,10 +57,10 @@ struct gui_internal_methods {
 
 struct gui_internal_widget_methods {
 	void (*append)(struct widget *parent, struct widget *child);
-	struct widget * (*button_new)(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags);
+	struct widget * (*button_new)(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags);
 	struct widget * (*button_new_with_callback)(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data);
 	struct widget * (*box_new)(struct gui_priv *this, enum flags flags);
-	struct widget * (*label_new)(struct gui_priv *this, char *text);
+	struct widget * (*label_new)(struct gui_priv *this, const char *text);
 	struct widget * (*image_new)(struct gui_priv *this, struct graphics_image *image);
 	struct widget * (*keyboard)(struct gui_priv *this, int mode);
 	struct widget * (*menu)(struct gui_priv *this, const char *label);
