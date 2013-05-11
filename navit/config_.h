@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 extern int main_argc;
-extern char **main_argv;
+extern char * const* main_argv;
 extern struct config *config;
 extern int configured;
 extern int config_empty_ok;

@@ -45,6 +45,7 @@
 #include "navit_nls.h"
 #include "atom.h"
 #include "command.h"
+#include "geom.h"
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
@@ -52,12 +53,12 @@
 
 char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT;
 int main_argc;
-char **main_argv;
+char * const* main_argv;
 
 static void
 print_usage(void)
 {
-	printf(_("navit usage:\n"
+	printf("%s",_("navit usage:\n"
 	"navit [options] [configfile]\n"
 	"\t-c <file>: use <file> as config file\n"
 	"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting from config file.\n"
@@ -70,7 +71,7 @@ print_usage(void)
 extern void builtin_init(void);
 #endif /* USE_PLUGINS*/
 
-int main_real(int argc, const char **argv)
+int main_real(int argc, char * const* argv)
 {
 	xmlerror *error = NULL;
 	char *config_file = NULL, *command=NULL, *startup_file=NULL;
