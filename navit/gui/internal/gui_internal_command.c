@@ -146,7 +146,7 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
 	} else if (ATTR_IS_INT(in[0]->type)) {
 		escaped.type=attr_type_string_begin;
-		escaped.u.str=g_strdup_printf("%d",in[0]->u.num);
+		escaped.u.str=g_strdup_printf("%ld",in[0]->u.num);
 	} else {
 		dbg(0,"first parameter wrong type\n");
 		return;
@@ -942,7 +942,7 @@ gui_internal_append_attr(char *str, enum escape_mode mode, char *pre, struct att
 		astr=gui_internal_escape(mode, str2);
 		g_free(str2);
 	} else if (ATTR_IS_INT(attr->type)) 
-		astr=g_strdup_printf("%d",attr->u.num);
+		astr=g_strdup_printf("%ld",attr->u.num);
 	else
 		astr=g_strdup_printf("Unsupported type %s",attr_to_name(attr->type));
 	str=g_strconcat_printf(str,"%s%s%s",pre,astr,post);
