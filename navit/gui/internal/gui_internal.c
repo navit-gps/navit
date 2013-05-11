@@ -237,7 +237,7 @@ gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *
 }
 
 struct widget *
-gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags flags, struct attr *on, struct attr *off)
+gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on, struct attr *off)
 {
 	struct graphics_image *image=NULL;
 	struct widget *ret;
@@ -260,7 +260,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 }
 
 struct widget *
-gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt)
+gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt)
 {
 	struct graphics_image *image=NULL;
 	struct widget *ret;
@@ -625,7 +625,7 @@ gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm,
  * @returns nothing
  */
 void
-gui_internal_select_waypoint(struct gui_priv *this, char *title, char *hint, struct widget *wm_, void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data)
+gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_, void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data)
 {
 	struct widget *wb,*w,*wtable,*row,*wc;
 	struct map *map;
@@ -1084,7 +1084,7 @@ gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void 
  * TODO define constants for these values
  */
 void
-gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, char *name, int flags)
+gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, const char *name, int flags)
 {
 	struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
 	struct coord_geo g;

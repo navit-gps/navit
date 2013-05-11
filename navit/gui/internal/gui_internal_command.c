@@ -867,7 +867,7 @@ gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, 
 static void
 gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	char *name=_("Position");
+	const char *name=_("Position");
 	int flags=-1;
 
 	dbg(1,"enter\n");

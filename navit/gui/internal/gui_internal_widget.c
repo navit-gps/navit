@@ -25,7 +25,7 @@ gui_internal_background_render(struct gui_priv *this, struct widget *w)
 }
 
 struct widget *
-gui_internal_label_font_new(struct gui_priv *this, char *text, int font)
+gui_internal_label_font_new(struct gui_priv *this, const char *text, int font)
 {
 	struct point p[4];
 	int w=0;
@@ -36,7 +36,7 @@ gui_internal_label_font_new(struct gui_priv *this, char *text, int font)
 	widget->font_idx=font;
 	if (text) {
 		widget->text=g_strdup(text);
-		graphics_get_text_bbox(this->gra, this->fonts[font], text, 0x10000, 0x0, p, 0);
+		graphics_get_text_bbox(this->gra, this->fonts[font], widget->text, 0x10000, 0x0, p, 0);
 		w=p[2].x-p[0].x;
 		h=p[0].y-p[2].y;
 	}
@@ -52,16 +52,17 @@ gui_internal_label_font_new(struct gui_priv *this, char *text, int font)
 }
 	
 struct widget *
-gui_internal_label_new(struct gui_priv *this, char *text)
+gui_internal_label_new(struct gui_priv *this, const char *text)
 {
 	return gui_internal_label_font_new(this, text, 0);
 }
 
 struct widget *
-gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
+gui_internal_label_new_abbrev(struct gui_priv *this, const char *text, int maxwidth)
 {
 	struct widget *ret=NULL;
-	char *tmp=g_malloc(strlen(text)+3), *p;
+	char *tmp=g_malloc(strlen(text)+3);
+	const char *p;
 	p=text+strlen(text);
 	while ((p=g_utf8_find_prev_char(text, p)) >= text) {
 		int i=p-text;
@@ -156,7 +157,7 @@ gui_internal_text_font_new(struct gui_priv *this, const char *text, int font, en
 }
 
 struct widget *
-gui_internal_text_new(struct gui_priv *this, char *text, enum flags flags)
+gui_internal_text_new(struct gui_priv *this, const char *text, enum flags flags)
 {
 	return gui_internal_text_font_new(this, text, 0, flags);
 }
@@ -190,7 +191,7 @@ gui_internal_button_new_with_callback(struct gui_priv *this, const char *text, s
 }
 
 struct widget *
-gui_internal_button_new(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags)
+gui_internal_button_new(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags)
 {
 	return gui_internal_button_new_with_callback(this, text, image, flags, NULL, NULL);
 }
@@ -726,7 +727,7 @@ gui_internal_widget_pack(struct gui_priv *this, struct widget *w)
 }
 
 struct widget *
-gui_internal_button_label(struct gui_priv *this, char *label, int mode)
+gui_internal_button_label(struct gui_priv *this, const char *label, int mode)
 {
 	struct widget *wl,*wlb;
 	struct widget *wb=gui_internal_menu_data(this)->button_bar;

@@ -479,7 +479,7 @@ gui_internal_search_list_destroy(struct gui_priv *this)
 }
 
 void
-gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
+gui_internal_search(struct gui_priv *this, const char *what, const char *type, int flags)
 {
 	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
 	char *country;
