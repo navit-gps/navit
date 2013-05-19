@@ -53,7 +53,7 @@ $(top_builddir)/navit/navit_shipped.c: $(top_srcdir)/navit/navit_shipped.xml
 
 navit.pot: $(POTFILES)
 	$(XGETTEXT) --no-location --default-domain=navit \
-	--add-comments --keyword=_ --keyword=_n $(POTFILES)
+	--add-comments --keyword=_ --keyword=_n --keyword=navit_nls_gettext --keyword=navit_nls_ngettext:1,2 $(POTFILES)
 	if cmp -s navit.po navit.pot; then \
 	    rm -f navit.po; \
 	else \
