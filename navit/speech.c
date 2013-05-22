@@ -80,6 +80,11 @@ speech_say(struct speech *this_, const char *text)
 	return (this_->meth.say)(this_->priv, text);
 }
 
+struct attr *speech_default_attrs[]={
+	ATTR_DEF_INT(active, 1),
+	NULL,
+};
+
 /**
  * @brief Gets an attribute from a speech plugin
  *
@@ -93,13 +98,7 @@ speech_say(struct speech *this_, const char *text)
 int
 speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	int ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
-	if (!ret && type == attr_active) {
-		attr->u.num=1;
-		attr->type=type;
-		ret=1;
-	}
-	return ret;
+	return attr_generic_get_attr(this_->attrs, speech_default_attrs, type, attr, iter);
 }
 
 /**
