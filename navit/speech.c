@@ -93,7 +93,13 @@ speech_say(struct speech *this_, const char *text)
 int
 speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	int ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	if (!ret && type == attr_active) {
+		attr->u.num=1;
+		attr->type=type;
+		ret=1;
+	}
+	return ret;
 }
 
 /**
