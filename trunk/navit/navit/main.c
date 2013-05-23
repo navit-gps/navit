@@ -345,7 +345,7 @@ main_init(const char *program)
 #if !defined _WIN32 && !defined _WIN32_WCE
 	if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo") || file_exists("version.h")) {
 		char buffer[PATH_MAX];
-		printf(_("Running from source directory\n"));
+		printf("%s",_("Running from source directory\n"));
 		getcwd(buffer, PATH_MAX);		/* libc of navit returns "dummy" */
 		setenv("NAVIT_PREFIX", buffer, 0);
 		main_setup_environment(0);
