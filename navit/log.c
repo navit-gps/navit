@@ -36,6 +36,7 @@
 #include "event.h"
 #include "callback.h"
 #include "debug.h"
+#include "xmlconfig.h"
 #include "log.h"
 
 struct log_data {
@@ -45,6 +46,7 @@ struct log_data {
 };
 
 struct log {
+	NAVIT_OBJECT
 	FILE *f;
 	int overwrite;
 	int empty;
@@ -63,7 +65,6 @@ struct log {
 	struct log_data header;
 	struct log_data data;
 	struct log_data trailer;
-	struct attr **attrs;
 };
 
 static void
@@ -240,6 +241,8 @@ log_new(struct attr * parent,struct attr **attrs)
 	char *filename, **wexp_data;
 
 	dbg(1,"enter\n");
+	ret->func=&log_func;
+	navit_object_ref((struct navit_object *)ret);
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
 		return NULL;
@@ -347,6 +350,7 @@ log_printf(struct log *this_, char *fmt, ...)
 void
 log_destroy(struct log *this_)
 {
+	dbg(0,"enter\n");
 	attr_list_free(this_->attrs);
 	callback_destroy(this_->timer_callback);
 	event_remove_timeout(this_->timer);
@@ -354,3 +358,20 @@ log_destroy(struct log *this_)
 	log_close(this_);
 	g_free(this_);
 }
+
+struct object_func log_func = {
+	attr_log,
+	(object_func_new)log_new,
+	(object_func_get_attr)navit_object_get_attr,
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
+	(object_func_set_attr)navit_object_set_attr,
+	(object_func_add_attr)navit_object_add_attr,
+	(object_func_remove_attr)navit_object_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)log_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};
+
