@@ -1427,7 +1427,7 @@ struct osd_button {
 	int use_overlay;
 	struct callback *draw_cb,*navit_init_cb;
 	struct graphics_image *img;
-	char *src;
+	char *src_dir,*src;
 };
 
 static void
@@ -1480,6 +1480,15 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_std_click), attr_button, &opc->osd_item));
 	osd_button_draw(opc,nav);
 }
+
+char *
+osd_button_icon_path(struct osd_button *this_, char *src)
+{
+	char *s,*ret;
+	if (!this_->src_dir)
+		return graphics_icon_path(src);
+	return g_strdup_printf("%s%s%s",this_->src_dir, G_DIR_SEPARATOR_S, src);
+}
  
 int
 osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
@@ -1496,7 +1505,7 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 			g_free(this_->src);
 		}
 		if(attr->u.str) {
-			this_->src = graphics_icon_path(attr->u.str);
+			this_->src = osd_button_icon_path(this_, attr->u.str);
 		}
 		nav = opc->osd_item.navit;
 		gra = navit_get_graphics(nav);
@@ -1556,13 +1565,18 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 		dbg(0, "no command\n");
 		goto error;
 	}
+	attr = attr_search(attrs, NULL, attr_src_dir);
+	if (attr) 
+		this->src_dir=graphics_icon_path(attr->u.str);
+	else
+		this->src_dir=NULL;
 	attr = attr_search(attrs, NULL, attr_src);
 	if (!attr) {
 		dbg(0, "no src\n");
 		goto error;
 	}
 
-	this->src = graphics_icon_path(attr->u.str);
+	this->src = osd_button_icon_path(this, attr->u.str);
 
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_graphics_ready, opc));
 
