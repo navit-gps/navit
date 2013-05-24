@@ -2883,6 +2883,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		this_->autozoom_min = attr->u.num;
 		break;
 	case attr_layer:
+	case attr_script:
 		break;
 	default:
 		return 0;
