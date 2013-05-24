@@ -22,6 +22,7 @@
 #include "debug.h"
 #include "event.h"
 #include "callback.h"
+#include "command.h"
 #include "xmlconfig.h"
 
 struct script
@@ -68,7 +69,7 @@ script_new(struct attr *parent, struct attr **attrs)
 	scr->attrs=attr_list_dup(attrs);
 	attrs=scr->attrs;
 	scr->cb=callback_new_1(callback_cast(script_run), scr);
-	attr_dup_content(parent, &scr->parent);
+	scr->parent=*parent;
 	while (attrs && *attrs) 
 		script_set_attr_int(scr, *attrs++);
 	dbg(0,"return %p\n",scr);
