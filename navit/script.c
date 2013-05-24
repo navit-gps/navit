@@ -27,7 +27,7 @@
 struct script
 {
 	NAVIT_OBJECT
-	char *text;
+	struct attr parent;
 	struct callback *cb;
 	struct event_timeout *timeout;
 };
@@ -36,11 +36,13 @@ static void
 script_run(struct script *scr)
 {
 	struct attr *xml_text=attr_search(scr->attrs, NULL, attr_xml_text);
+	int error;
 	if (!xml_text || !xml_text->u.str) {
 		dbg(0,"no text\n");
 		return;
 	}
 	dbg(0,"running '%s'\n",xml_text->u.str);
+	command_evaluate_to_void(&scr->parent, xml_text->u.str, &error);
 }
 
 static int
@@ -66,6 +68,7 @@ script_new(struct attr *parent, struct attr **attrs)
 	scr->attrs=attr_list_dup(attrs);
 	attrs=scr->attrs;
 	scr->cb=callback_new_1(callback_cast(script_run), scr);
+	attr_dup_content(parent, &scr->parent);
 	while (attrs && *attrs) 
 		script_set_attr_int(scr, *attrs++);
 	dbg(0,"return %p\n",scr);
