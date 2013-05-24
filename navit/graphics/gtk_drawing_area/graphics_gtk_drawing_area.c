@@ -536,9 +536,18 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 #endif
 		img->image=imlib_create_image(w, h);
 		imlib_context_set_image(img->image);
-		if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_has_alpha(img->pixbuf) || gdk_pixbuf_get_n_channels(img->pixbuf) != 3 || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
+		if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
 			dbg(0,"implement me\n");
-		} else {
+		} else if (gdk_pixbuf_get_has_alpha(img->pixbuf) && gdk_pixbuf_get_n_channels(img->pixbuf) == 4) {
+			for (y=0 ; y < h ; y++) {
+				unsigned int *dst=imlib_image_get_data()+y*w;
+				unsigned char *src=gdk_pixbuf_get_pixels(img->pixbuf)+y*gdk_pixbuf_get_rowstride(img->pixbuf);
+				for (x=0 ; x < w ; x++) {
+					*dst++=0xff000000|(src[0] << 16)|(src[1] << 8)|src[2];
+					src+=4;
+				}
+			}
+		} else if (!gdk_pixbuf_get_has_alpha(img->pixbuf) && gdk_pixbuf_get_n_channels(img->pixbuf) == 3) {
 			for (y=0 ; y < h ; y++) {
 				unsigned int *dst=imlib_image_get_data()+y*w;
 				unsigned char *src=gdk_pixbuf_get_pixels(img->pixbuf)+y*gdk_pixbuf_get_rowstride(img->pixbuf);
@@ -547,6 +556,8 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 					src+=3;
 				}
 			}
+		} else {
+			dbg(0,"implement me\n");
 		}
 		
 	} else 
