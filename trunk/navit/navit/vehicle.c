@@ -146,15 +146,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 void
 vehicle_destroy(struct vehicle *this_)
 {
-	/* flush all logfiles on exit to avoid loss of yet unwritten data*/
-	GList *ll, *l;
-	gpointer key;
-	for(ll=l=g_hash_to_list_keys(this_->log_to_cb);l;l=g_list_next(l)) {
-		key=l->data;
-		log_write(key,"",0,log_flag_force_flush);
-	}
-	g_list_free(ll);
-
+	dbg(0,"enter\n");
 	if (this_->animate_callback) {
 		callback_destroy(this_->animate_callback);
 		event_remove_timeout(this_->animate_timer);
@@ -707,10 +699,10 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 	} else if (!strcmp(type_attr.u.str, "binfile")) {
 		cb=callback_new_attr_2(callback_cast(vehicle_log_binfile), attr_position_coord_geo, this_, log);
 	} else
-		return 1;
+		return 0;
 	g_hash_table_insert(this_->log_to_cb, log, cb);
 	callback_list_add(this_->cbl, cb);
-	return 0;
+	return 1;
 }
 
 struct object_func vehicle_func = {
