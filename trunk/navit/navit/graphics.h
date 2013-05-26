@@ -47,6 +47,17 @@ struct graphics_font_methods;
 struct graphics_gc_methods;
 struct graphics_image_methods;
 
+enum graphics_image_type {
+	graphics_image_type_unknown=0,
+};
+
+struct graphics_image_buffer {
+	char magic[8]; /* buffer:\n */
+	enum graphics_image_type type;
+	void *start;
+	int len;
+};
+
 struct graphics_methods {
 	void (*graphics_destroy)(struct graphics_priv *gr);
 	void (*draw_mode)(struct graphics_priv *gr, enum draw_mode_num mode);
