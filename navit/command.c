@@ -63,7 +63,7 @@ struct command_saved {
 	struct callback *idle_cb;
 	struct callback *register_cb;			// Callback to register all the callbacks
 	struct event_idle *register_ev;		// Idle event to register all the callbacks
-	struct attr navit;
+	struct attr context_attr;
 	int num_cbs;
 	struct command_saved_cb *cbs;		// List of callbacks for this saved command
 	struct callback *cb; // Callback that should be called when we re-evaluate
@@ -1420,7 +1420,7 @@ command_saved_evaluate_idle (struct command_saved *cs)
 		cs->idle_ev = NULL;
 	}
 
-	command_evaluate_to(&cs->navit, cs->command, &cs->ctx, &cs->res);
+	command_evaluate_to(&cs->context_attr, cs->command, &cs->ctx, &cs->res);
 
 	if (!cs->ctx.error) {
 		cs->error = 0;
@@ -1497,10 +1497,10 @@ command_register_callbacks(struct command_saved *cs)
 	struct object_func *func;
 	struct callback *cb;
 	
-	attr = cs->navit;
+	attr = cs->context_attr;
 	cs->ctx.expr = cs->command;
 	cs->ctx.attr = &attr;
-	prev = cs->navit;	
+	prev = cs->context_attr;
 
 	while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
 		resolve(&cs->ctx, &cs->res, NULL);
@@ -1519,7 +1519,7 @@ command_register_callbacks(struct command_saved *cs)
 					attr = cs->res.attr;
 				} else if (status == 1) { // This is the final attribute name
 					cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
-					cs->ctx.attr = &cs->navit;
+					cs->ctx.attr = &cs->context_attr;
 				} else {
 					dbg(0, "Error: Strange status returned from get_next_object()\n");
 				}
@@ -1542,7 +1542,7 @@ command_register_callbacks(struct command_saved *cs)
 		if (status == 2) {
 			prev = cs->res.attr;
 		} else {
-			prev = cs->navit;
+			prev = cs->context_attr;
 		}
 	}
 
@@ -1552,14 +1552,13 @@ command_register_callbacks(struct command_saved *cs)
 }
 
 struct command_saved *
-command_saved_new(char *command, struct navit *navit, struct callback *cb, int async)
+command_saved_attr_new(char *command, struct attr *attr, struct callback *cb, int async)
 {
 	struct command_saved *ret;
 
 	ret = g_new0(struct command_saved, 1);
 	ret->command = g_strdup(command);
-	ret->navit.u.navit = navit;
-	ret->navit.type = attr_navit;
+	ret->context_attr = *attr;
 	ret->cb = cb;
 	ret->error = not_ready;
 	ret->async = async;
@@ -1571,6 +1570,13 @@ command_saved_new(char *command, struct navit *navit, struct callback *cb, int a
 	}		
 
 	return ret;
+}
+
+struct command_saved *
+command_saved_new(char *command, struct navit *navit, struct callback *cb, int async)
+{
+	struct attr attr=ATTR_OBJECT(navit, navit);
+	return command_saved_attr_new(command, &attr, cb, async);
 }
 
 void 
