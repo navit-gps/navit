@@ -31,6 +31,7 @@ struct script
 	struct attr parent;
 	struct callback *cb;
 	struct event_timeout *timeout;
+	struct command_saved *cs;
 };
 
 static void
@@ -50,6 +51,12 @@ static int
 script_set_attr_int(struct script *scr, struct attr *attr)
 {
 	switch (attr->type) {
+	case attr_refresh_cond:
+		dbg(0,"refresh_cond\n");
+		if (scr->cs)
+			command_saved_destroy(scr->cs);
+		scr->cs=command_saved_attr_new(attr->u.str, &scr->parent, scr->cb, 0);
+		return 1;
 	case attr_update_period:
 		if (scr->timeout)
 			event_remove_timeout(scr->timeout);
@@ -82,6 +89,8 @@ script_destroy(struct script *scr)
 	dbg(0,"enter %p\n",scr);
 	if (scr->timeout)
 		event_remove_timeout(scr->timeout);
+	if (scr->cs)
+		command_saved_destroy(scr->cs);
 	callback_destroy(scr->cb);
 	attr_list_free(scr->attrs);
 	g_free(scr);
