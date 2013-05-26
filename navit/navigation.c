@@ -142,7 +142,7 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 {
 	struct map_rect *mr;
 	struct item *item;
-	dbg(0,"enter %s\n", attr_to_name(type));
+	dbg(1,"enter %s\n", attr_to_name(type));
 	switch (type) {
 	case attr_map:
 		attr->u.map=this_->map;
