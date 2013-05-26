@@ -2396,10 +2396,10 @@ navigation_init(void)
 struct object_func navigation_func = {
 	attr_navigation,
 	(object_func_new)navigation_new,
-	(object_func_get_attr)navit_object_get_attr,
+	(object_func_get_attr)navigation_get_attr,
 	(object_func_iter_new)navit_object_attr_iter_new,
 	(object_func_iter_destroy)navit_object_attr_iter_destroy,
-	(object_func_set_attr)navit_object_set_attr,
+	(object_func_set_attr)navigation_set_attr,
 	(object_func_add_attr)navit_object_add_attr,
 	(object_func_remove_attr)navit_object_remove_attr,
 	(object_func_init)NULL,
