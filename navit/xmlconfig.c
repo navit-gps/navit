@@ -273,7 +273,6 @@ static struct object_func object_funcs[] = {
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_polyline,   NEW(polyline_new), NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_route,      NEW(route_new), GET(route_get_attr), NULL, NULL, SET(route_set_attr), ADD(route_add_attr), REMOVE(route_remove_attr)},
-	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
 	{ attr_text,       NEW(text_new)},
 };
 
@@ -308,6 +307,8 @@ object_func_lookup(enum attr_type type)
 		return &osd_func;
 	case attr_trackingo:
 		return &tracking_func;
+	case attr_speech:
+		return &speech_func;
 	case attr_vehicle:
 		return &vehicle_func;
 	case attr_vehicleprofile:
@@ -1276,6 +1277,16 @@ navit_object_set_methods(void *in, int in_size, void *out, int out_size)
 	else
 		ret=1;
 	memcpy(out, in, size);
+	return ret;
+}
+
+struct navit_object *
+navit_object_new(struct attr **attrs, struct object_func *func, int size)
+{
+	struct navit_object *ret=g_malloc0(size);
+	ret->func=func;
+	ret->attrs=attr_list_dup(attrs);
+	navit_object_ref(ret);
 	return ret;
 }
 
