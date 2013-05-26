@@ -54,9 +54,9 @@ struct object_func {
 	void *(*unref)(void *);
 };
 
-extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func;
+extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func, speech_func;
 
-#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_roadprofile || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option || (x) == attr_script || (x) == attr_log)
+#define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_roadprofile || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option || (x) == attr_script || (x) == attr_log || (x) == attr_speech)
 
 #define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
 struct navit_object {
@@ -64,6 +64,7 @@ struct navit_object {
 };
 
 int navit_object_set_methods(void *in, int in_size, void *out, int out_size);
+struct navit_object *navit_object_new(struct attr **attrs, struct object_func *func, int size);
 struct navit_object *navit_object_ref(struct navit_object *obj);
 void navit_object_unref(struct navit_object *obj);
 struct attr_iter * navit_object_attr_iter_new(void);

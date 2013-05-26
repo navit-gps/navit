@@ -23,11 +23,12 @@
 #include "item.h"
 #include "speech.h"
 #include "plugin.h"
+#include "xmlconfig.h"
 
 struct speech {
+	NAVIT_OBJECT;
 	struct speech_priv *priv;
 	struct speech_methods meth;
-	struct attr **attrs;
 };
 
 
@@ -50,14 +51,12 @@ speech_new(struct attr *parent, struct attr **attrs)
 		dbg(0,"wrong type '%s'\n", attr->u.str);
 		return NULL;
 	}
-	this_=g_new0(struct speech, 1);
-	this_->priv=speech_new(&this_->meth, attrs, parent);
-	this_->attrs=attr_list_dup(attrs);
+	this_=(struct speech *)navit_object_new(attrs, &speech_func, sizeof(struct speech));
+	this_->priv=speech_new(&this_->meth, this_->attrs, parent);
 	dbg(1, "say=%p\n", this_->meth.say);
 	dbg(1,"priv=%p\n", this_->priv);
 	if (! this_->priv) {
-		attr_list_free(this_->attrs);
-		g_free(this_);
+		speech_destroy(this_);
 		return NULL;
 	}
 	dbg(1,"return %p\n", this_);
@@ -68,9 +67,9 @@ speech_new(struct attr *parent, struct attr **attrs)
 void
 speech_destroy(struct speech *this_)
 {
-	this_->meth.destroy(this_->priv);
-	attr_list_free(this_->attrs);
-	g_free(this_);
+	if (this_->priv)
+		this_->meth.destroy(this_->priv);
+	navit_object_destroy((struct navit_object *)this_);
 }
 
 int
@@ -80,8 +79,9 @@ speech_say(struct speech *this_, const char *text)
 	return (this_->meth.say)(this_->priv, text);
 }
 
+struct attr active=ATTR_INT(active, 1);
 struct attr *speech_default_attrs[]={
-	ATTR_DEF_INT(active, 1),
+	&active,
 	NULL,
 };
 
@@ -146,3 +146,20 @@ speech_set_attr(struct speech *this_, struct attr *attr)
 	//callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 	return 1;
 }
+
+struct object_func speech_func = {
+	attr_speech,
+	(object_func_new)speech_new,
+	(object_func_get_attr)speech_get_attr,
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
+	(object_func_set_attr)speech_set_attr,
+	(object_func_add_attr)navit_object_add_attr,
+	(object_func_remove_attr)navit_object_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)speech_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};
+
