@@ -1332,12 +1332,18 @@ navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr
 	return attr_generic_get_attr(obj->attrs, NULL, type, attr, iter);
 }
 
+void
+navit_object_callbacks(struct navit_object *obj, struct attr *attr)
+{
+	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
+		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, 0);
+}
+
 int
 navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 {
 	obj->attrs=attr_generic_set_attr(obj->attrs, attr);
-	if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
-		callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, 0);
+	navit_object_callbacks(obj, attr);
 	return 1;
 }
 
