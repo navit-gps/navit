@@ -85,6 +85,7 @@ struct navigation {
 	int delay;
 	int curr_delay;
 	int turn_around_count;
+	int flags;
 };
 
 int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
@@ -227,7 +228,9 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	if ((attr=attr_search(attrs, NULL, attr_delay))) {
 		ret->delay = attr->u.num;
 	}
-
+	if ((attr=attr_search(attrs, NULL, attr_flags))) {
+		ret->flags = attr->u.num;
+	}
 	return ret;	
 }
 
@@ -1706,6 +1709,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		} else {
 			ret=g_strdup(_("then you have reached your destination."));
 		}
+		if (type == attr_navigation_speech && (nav->flags & 1))
+			route_set_destination(nav->route, NULL, 0);
+			
 	}
 	g_free(d);
 	return ret;
