@@ -84,6 +84,7 @@ struct navigation {
 	int tell_street_name;
 	int delay;
 	int curr_delay;
+	int turn_around_count;
 };
 
 int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
@@ -141,7 +142,7 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 {
 	struct map_rect *mr;
 	struct item *item;
-	dbg(1,"enter %s\n", attr_to_name(type));
+	dbg(0,"enter %s\n", attr_to_name(type));
 	switch (type) {
 	case attr_map:
 		attr->u.map=this_->map;
@@ -165,11 +166,24 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 		if (!item)
 			return 0;
 		break;
+	case attr_turn_around_count:
+		attr->u.num=this_->turn_around_count;
+		break;
 	default:
 		return navit_object_get_attr((struct navit_object *)this_, type, attr, iter);
 	}
 	attr->type=type;
 	return 1;
+}
+
+static void
+navigation_set_turnaround(struct navigation *this_, int val)
+{
+	if (this_->turn_around_count != val) {
+		struct attr attr=ATTR_INT(turn_around_count, val);
+		this_->turn_around_count=val;
+		navit_object_callbacks((struct navit_object *)this_, &attr);
+	}
 }
 
 int
@@ -1571,8 +1585,11 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	if (type != attr_navigation_long_exact) 
 		distance=round_distance(distance);
 	if (type == attr_navigation_speech) {
-		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
+		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) {
+			navigation_set_turnaround(nav, nav->turn_around_count+1);
 			return g_strdup(_("When possible, please turn around"));
+		}
+		navigation_set_turnaround(nav, 0);
 		if (!connect) {
 			level=navigation_get_announce_level_cmd(nav, itm, cmd, distance-cmd->length);
 		}
