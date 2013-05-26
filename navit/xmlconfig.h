@@ -70,6 +70,7 @@ void navit_object_unref(struct navit_object *obj);
 struct attr_iter * navit_object_attr_iter_new(void);
 void navit_object_attr_iter_destroy(struct attr_iter *iter);
 int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+void navit_object_callbacks(struct navit_object *obj, struct attr *attr);
 int navit_object_set_attr(struct navit_object *obj, struct attr *attr);
 int navit_object_add_attr(struct navit_object *obj, struct attr *attr);
 int navit_object_remove_attr(struct navit_object *obj, struct attr *attr);
