@@ -61,6 +61,7 @@ struct suffix {
 };
 
 struct navigation {
+	NAVIT_OBJECT
 	struct route *route;
 	struct map *map;
 	struct item_hash *hash;
@@ -165,7 +166,7 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 			return 0;
 		break;
 	default:
-		return 0;	
+		return navit_object_get_attr((struct navit_object *)this_, type, attr, iter);
 	}
 	attr->type=type;
 	return 1;
@@ -177,10 +178,11 @@ navigation_set_attr(struct navigation *this_, struct attr *attr)
 	switch (attr->type) {
 	case attr_speech:
 		this_->speech=attr->u.speech;
-		return 1;
+		break;
 	default:
-		return 0;
+		break;
 	}
+	return navit_object_set_attr((struct navit_object *)this_, attr);
 }
 
 
@@ -189,7 +191,7 @@ navigation_new(struct attr *parent, struct attr **attrs)
 {
 	int i,j;
 	struct attr * attr;
-	struct navigation *ret=g_new0(struct navigation, 1);
+	struct navigation *ret=(struct navigation *)navit_object_new(attrs, &navigation_func, sizeof(struct navigation));
 	ret->hash=item_hash_new();
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
@@ -2390,3 +2392,20 @@ navigation_init(void)
 {
 	plugin_register_map_type("navigation", navigation_map_new);
 }
+
+struct object_func navigation_func = {
+	attr_navigation,
+	(object_func_new)navigation_new,
+	(object_func_get_attr)navit_object_get_attr,
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
+	(object_func_set_attr)navit_object_set_attr,
+	(object_func_add_attr)navit_object_add_attr,
+	(object_func_remove_attr)navit_object_remove_attr,
+	(object_func_init)NULL,
+	(object_func_destroy)navigation_destroy,
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};
+
