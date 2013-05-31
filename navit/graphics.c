@@ -688,7 +688,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			newheight=h;
 			
 		name=g_strndup(path,s-path);
-		for (i = 1 ; i < 6 ; i++) {
+		for (i = 1 ; i <= 6 ; i++) {
 			new_name=NULL;
 			switch (i) {
 				case 1:
