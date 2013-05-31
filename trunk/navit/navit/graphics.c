@@ -726,7 +726,8 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			this_->width=newwidth;
 			this_->height=newheight;
 			dbg(2,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
-			this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
+			if (strcmp(new_name,"buffer:"))
+				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
 			if (this_->priv) {
 				dbg(1,"Using image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
 				g_free(new_name);
