@@ -52,7 +52,7 @@ enum graphics_image_type {
 };
 
 struct graphics_image_buffer {
-	char magic[8]; /* buffer:\n */
+	char magic[8]; /* buffer:\0 */
 	enum graphics_image_type type;
 	void *start;
 	int len;
