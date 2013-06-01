@@ -111,17 +111,10 @@ struct graphics_image_priv {
 #endif
 };
 
-static GHashTable *hImageData;   /*hastable for uncompressed image data*/
-static int hImageDataCount;
-static struct graphics_image_priv image_error;
-
 static void
 graphics_destroy_image(gpointer data)
 {
 	struct graphics_image_priv *priv = (struct graphics_image_priv*)data;
-
-	if (priv == &image_error)
-		return;
 
 #ifdef HAVE_IMLIB2
 	if (priv->image) {
@@ -149,9 +142,6 @@ graphics_destroy(struct graphics_priv *gr)
 			gtk_widget_destroy(gr->widget);
 		g_free(gr->window_title);
 	}
-	dbg(3,"hImageDataCount %d\n",hImageDataCount);
-	if (!--hImageDataCount)
-		g_hash_table_destroy(hImageData);
 	g_free(gr);
 }
 
@@ -237,97 +227,75 @@ static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	GdkPixbuf *pixbuf;
+	GInputStream *stream;
 	struct graphics_image_priv *ret;
 	const char *option;
+	
+	if (!strcmp(name,"buffer:")) {
+		struct graphics_image_buffer *buffer=(struct graphics_image_buffer *)name;
+		stream=g_memory_input_stream_new_from_data(buffer->start, buffer->len, NULL);
+		if (!stream)
+			return NULL;
+		if (*w == -1 && *h == -1)
+			pixbuf=gdk_pixbuf_new_from_stream(stream, NULL, NULL);
+		else
+			pixbuf=gdk_pixbuf_new_from_stream_at_scale(stream, *w, *h, TRUE, NULL, NULL);
 
-	char* hash_key = g_strdup_printf("%s_%d_%d_%d",name,*w,*h,rotation);
-
-	//check if image already exists in hashmap
-	struct graphics_image_priv *curr_elem = g_hash_table_lookup(hImageData, hash_key);
-	if(curr_elem == &image_error) {
-		//found but couldn't be loaded
-		g_free(hash_key);
-		return NULL;
-	}
-	else if(curr_elem) {
-		//found and OK -> use hashtable entry
-		g_free(hash_key);
-		*w = curr_elem->w;
-		*h = curr_elem->h;
-		hot->x = curr_elem->w / 2 - 1;
-		hot->y = curr_elem->h / 2 - 1;
-		ret=g_new0(struct graphics_image_priv, 1);
-		*ret = *curr_elem;
-		g_object_ref(ret->pixbuf);
-		return ret;
-	}
-	else {
+	} else {
 		if (*w == -1 && *h == -1)
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 		else
 			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
+	}
 
-		if (!pixbuf) {
-			g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
-			g_free(hash_key);
+	if (!pixbuf)
+		return NULL;
+
+	if (rotation) {
+		GdkPixbuf *tmp;
+		switch (rotation) {
+		case 90:
+			rotation=270;
+			break;
+		case 180:
+			break;
+		case 270:
+			rotation=90;
+			break;
+		default:
 			return NULL;
 		}
 
-		if (rotation) {
-			GdkPixbuf *tmp;
-			switch (rotation) {
-				case 90:
-					rotation=270;
-					break;
-				case 180:
-					break;
-				case 270:
-					rotation=90;
-					break;
-				default:
-					g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
-					g_free(hash_key);
-					return NULL;
-			}
+		tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
 
-			tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
-
-			if (!tmp) {
-				g_hash_table_insert(hImageData, g_strdup(hash_key), &image_error);
-				g_free(hash_key);
-				g_object_unref(pixbuf);
-				return NULL;
-			}
-
+		if (!tmp) {
 			g_object_unref(pixbuf);
-			pixbuf=tmp;
+			return NULL;
 		}
 
-		ret=g_new0(struct graphics_image_priv, 1);
-		ret->pixbuf=pixbuf;
-		ret->w=gdk_pixbuf_get_width(pixbuf);
-		ret->h=gdk_pixbuf_get_height(pixbuf);
-		*w=ret->w;
-		*h=ret->h;
-		if (hot) {
-			option=gdk_pixbuf_get_option(pixbuf, "x_hot");
-			if (option)
-				hot->x=atoi(option);
-			else
-				hot->x=ret->w/2-1;
-			option=gdk_pixbuf_get_option(pixbuf, "y_hot");
-			if (option)
-				hot->y=atoi(option);
-			else
-				hot->y=ret->h/2-1;
-		}
-		struct graphics_image_priv *cached = g_new0(struct graphics_image_priv, 1);
-		*cached = *ret;
-		g_hash_table_insert(hImageData, g_strdup(hash_key), cached);
-		g_object_ref(pixbuf);
-		g_free(hash_key);
-		return ret;
+		g_object_unref(pixbuf);
+		pixbuf=tmp;
 	}
+
+	ret=g_new0(struct graphics_image_priv, 1);
+	ret->pixbuf=pixbuf;
+	ret->w=gdk_pixbuf_get_width(pixbuf);
+	ret->h=gdk_pixbuf_get_height(pixbuf);
+	*w=ret->w;
+	*h=ret->h;
+	if (hot) {
+		option=gdk_pixbuf_get_option(pixbuf, "x_hot");
+		if (option)
+			hot->x=atoi(option);
+		else
+			hot->x=ret->w/2-1;
+		option=gdk_pixbuf_get_option(pixbuf, "y_hot");
+		if (option)
+			hot->y=atoi(option);
+		else
+			hot->y=ret->h/2-1;
+	}
+	return ret;
 }
 
 static void 
@@ -1304,10 +1272,6 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 		this->button_release[i].tv_sec = 0;
 		this->button_release[i].tv_usec = 0;
 	}
-
-	//create hash table for uncompressed image data
-	if (!hImageDataCount++)
-		hImageData = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, graphics_destroy_image);
 
 	return this;
 }
