@@ -74,6 +74,7 @@ struct widget {
 	struct form *form;
 	GList *children;
 	struct widget *parent;
+	struct scroll_buttons *scroll_buttons;
 };
 
 struct scroll_buttons {
