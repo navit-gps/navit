@@ -605,6 +605,71 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 	return graphics_image_new_scaled_rotated(gra, path, w, h, 0);
 }
 
+static void
+image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path, char *name, int width, int height, int rotate, int zip)
+{
+	int i;
+	for (i = 1 ; i <= 6 ; i++) {
+		char *new_name=NULL;
+		switch (i) {
+			case 1:
+				/* The best variant both for cpu usage and quality would be prescaled png of a needed size */
+				if (width != -1 && height != -1) {
+					new_name=g_strdup_printf("%s_%d_%d.png", name, width, height);
+				}
+				break;
+			case 2:
+				/* Try to load image by the exact name given by user. For example, if she wants to
+				  scale some prescaled png variant to a new size given as function params, or have
+				  default png image to be displayed unscaled. */
+				new_name=g_strdup(path);
+				break;
+			case 3:
+				/* Next, try uncompressed and compressed svgs as they should give best quality but 
+				   rendering might take more cpu resources when the image is displayed for the first time */
+				new_name=g_strdup_printf("%s.svg", name);
+				break;
+			case 4:
+				new_name=g_strdup_printf("%s.svgz", name);
+				break;
+			case 5:
+				/* Scaling the default png to the needed size may give some quality loss */
+				new_name=g_strdup_printf("%s.png", name);
+				break;
+			case 6: 
+				/* xpm format is used as a last resort, because its not widely supported and we are moving to svg and png formats */
+				new_name=g_strdup_printf("%s.xpm", name);
+				break;
+		}
+		if (! new_name)
+			continue;
+
+		this_->width=width;
+		this_->height=height;
+		dbg(2,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+		if (zip) {
+			unsigned char *start;
+			int len;
+			if (file_get_contents(new_name, &start, &len)) {
+				struct graphics_image_buffer buffer={"buffer:",graphics_image_type_unknown};
+				buffer.start=start;
+				buffer.len=len;
+				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, (char *)&buffer, &this_->width, &this_->height, &this_->hot, rotate);
+				g_free(start);
+			}
+		} else {
+			if (strcmp(new_name,"buffer:"))
+				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
+		}
+		if (this_->priv) {
+			dbg(1,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+			g_free(new_name);
+			break;
+		}
+		g_free(new_name);
+	}
+}
+
 /**
  * Create a new image from file path scaled to w and h pixels and possibly rotated
  * @param gra the graphics instance
@@ -632,7 +697,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 
 	if(!this_->priv) {
 		char *ext;
-		char *s, *name, *new_name;
+		char *s, *name;
 		int len=strlen(path);
 		int i,k;
 		int newwidth=-1, newheight=-1;
@@ -688,53 +753,12 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			newheight=h;
 			
 		name=g_strndup(path,s-path);
-		for (i = 1 ; i <= 6 ; i++) {
-			new_name=NULL;
-			switch (i) {
-				case 1:
-					/* The best variant both for cpu usage and quality would be prescaled png of a needed size */
-					if (newwidth != -1 && newheight != -1) {
-						new_name=g_strdup_printf("%s_%d_%d.png", name, newwidth, newheight);
-					}
-					break;
-				case 2:
-					/* Try to load image by the exact name given by user. For example, if she wants to
-					  scale some prescaled png variant to a new size given as function params, or have
-					  default png image to be displayed unscaled. */
-					new_name=g_strdup(path);
-					break;
-				case 3:
-					/* Next, try uncompressed and compressed svgs as they should give best quality but 
-					   rendering might take more cpu resources when the image is displayed for the first time */
-					new_name=g_strdup_printf("%s.svg", name);
-					break;
-				case 4:
-					new_name=g_strdup_printf("%s.svgz", name);
-					break;
-				case 5:
-					/* Scaling the default png to the needed size may give some quality loss */
-					new_name=g_strdup_printf("%s.png", name);
-					break;
-				case 6: 
-					/* xpm format is used as a last resort, because its not widely supported and we are moving to svg and png formats */
-					new_name=g_strdup_printf("%s.xpm", name);
-					break;
-			}
-			if (! new_name)
-				continue;
-
-			this_->width=newwidth;
-			this_->height=newheight;
-			dbg(2,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
-			if (strcmp(new_name,"buffer:"))
-				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
-			if (this_->priv) {
-				dbg(1,"Using image '%s' for '%s' at %dx%d\n", new_name, path, newwidth, newheight);
-				g_free(new_name);
-				break;
-			}
-			g_free(new_name);
-		}
+#if 0
+		if (!strstr(name,"test.zip"))
+#endif
+		image_new_helper(gra, this_, path, name, newwidth, newheight, rotate, 0);
+		if (!this_->priv && strstr(path, ".zip/"))
+			image_new_helper(gra, this_, path, name, newwidth, newheight, rotate, 1);
 		g_free(name);
 	}
 
