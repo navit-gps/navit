@@ -41,6 +41,7 @@ enum flags {
 	gravity_right_bottom=gravity_right|gravity_bottom,
 	flags_expand=0x100,
 	flags_fill=0x200,
+	flags_swap=0x400,
 	orientation_horizontal=0x10000,
 	orientation_vertical=0x20000,
 	orientation_horizontal_vertical=0x40000,
