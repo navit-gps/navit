@@ -84,9 +84,10 @@ struct selector selectors[]={
  */
 
 static struct graphics_image *
-gui_internal_poi_icon(struct gui_priv *this, enum item_type type)
+gui_internal_poi_icon(struct gui_priv *this, struct item *item)
 {
 	struct attr layout;
+	struct attr icon_src;
 	GList *layer;
 	navit_get_attr(this->nav, attr_layout, &layout, NULL);
 	layer=layout.u.layout->layers;
@@ -95,15 +96,32 @@ gui_internal_poi_icon(struct gui_priv *this, enum item_type type)
 		while(itemgra) {
 			GList *types=((struct itemgra *)itemgra->data)->type;
 			while(types) {
-				if((long)types->data==type) {
+				if((long)types->data==item->type) {
 					GList *element=((struct itemgra *)itemgra->data)->elements;
 					while(element) {
 						struct element * el=element->data;
 						if(el->type==element_icon) {
+							char *src;
+							char *icon;
 							struct graphics_image *img;
-							char *icon=g_strdup(el->u.icon.src);
+							if(item_is_custom_poi(*item)) {
+								struct map_rect *mr=map_rect_new(item->map, NULL);
+								item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+								if(item_attr_get(item, attr_icon_src, &icon_src)) {
+									src=el->u.icon.src;
+									if(!src || !src[0])
+										src="%s";
+									icon=g_strdup_printf(src,icon_src.u.str);
+								}
+								else {
+									icon=g_strdup(el->u.icon.src);
+								}
+							}
+							else {
+								icon=g_strdup(el->u.icon.src);
+							}
 							char *dot=g_strrstr(icon,".");
-							dbg(2,"%s %s\n", item_to_name(type),icon);
+							dbg(2,"%s %s\n", item_to_name(item->type),icon);
 							if(dot)
 								*dot=0;
 							img=image_new_xs(this,icon);
@@ -310,7 +328,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	
 	type=item_to_name(item->type);
 
-	icon=gui_internal_poi_icon(this,item->type);
+	icon=gui_internal_poi_icon(this,item);
 	if(!icon) {
 		icon=image_new_xs(this,"gui_inactive");
 		text=g_strdup_printf("%s%s%s%s %s", distbuf, dirbuf, routedistbuf, type, name);
