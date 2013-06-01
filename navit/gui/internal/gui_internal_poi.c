@@ -784,11 +784,11 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 			}
 			if(currow>=param->count)
 				break;
-			if(!(td->next_button->state & STATE_SENSITIVE)) {
+			if(!(td->scroll_buttons.next_button->state & STATE_SENSITIVE)) {
 				dbg(0,"Reached last page but item %i not found. Stop paging.\n",param->count);
 				break;
 			}
-			gui_internal_table_button_next(this, td->next_button, NULL);
+			gui_internal_table_button_next(this, td->scroll_buttons.next_button, NULL);
 		}
 #endif
 	}

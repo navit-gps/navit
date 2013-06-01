@@ -750,6 +750,23 @@ gui_internal_button_label(struct gui_priv *this, const char *label, int mode)
 	return wlb;
 }
 
+static void
+gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb)
+{
+	sb->next_button =  gui_internal_button_new_with_callback(this, _("Next"), image_new_xs(this, "gui_arrow_right"),
+		 	gravity_center|orientation_horizontal|flags_swap, gui_internal_table_button_next, widget);
+	sb->prev_button =  gui_internal_button_new_with_callback(this, _("Prev"), image_new_xs(this, "gui_arrow_left"),
+		 	gravity_center|orientation_horizontal, gui_internal_table_button_prev, widget);
+
+	sb->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
+	gui_internal_widget_append(widget, sb->button_box);
+	gui_internal_widget_append(sb->button_box, sb->prev_button);
+	gui_internal_widget_append(sb->button_box, sb->next_button);
+
+	sb->button_box->bl=this->spacing;
+	gui_internal_widget_pack(this,sb->button_box);
+}
+
 /**
  * @brief Creates a new table widget.
  *
@@ -777,22 +794,8 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->background=this->background;
 	data = (struct table_data*)widget->data;
 
-	if (buttons) {
-		data->next_button =  gui_internal_button_new_with_callback(this, _("Next"), image_new_xs(this, "gui_arrow_right"),
-		 	gravity_center|orientation_horizontal|flags_swap, gui_internal_table_button_next, widget);
-		data->prev_button =  gui_internal_button_new_with_callback(this, _("Prev"), image_new_xs(this, "gui_arrow_left"),
-		 	gravity_center|orientation_horizontal, gui_internal_table_button_prev, widget);
-
-		data->this=this;
-
-		data->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
-		gui_internal_widget_append(widget, data->button_box);
-		gui_internal_widget_append(data->button_box, data->prev_button);
-		gui_internal_widget_append(data->button_box, data->next_button);
-
-		data->button_box->bl=this->spacing;
-		gui_internal_widget_pack(this,data->button_box);
-	}
+	if (buttons) 
+		gui_internal_scroll_buttons_init(this, widget, &data->scroll_buttons);
 
 	return widget;
 
@@ -810,7 +813,7 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
 
   iter = table->children;
   while(iter ) {
-	  if(iter->data != table_data->button_box) {
+	  if(iter->data != table_data->scroll_buttons.button_box) {
 		  struct widget * child = (struct widget*)iter->data;
 		  gui_internal_widget_destroy(this,child);
 		  if(table->children == iter) {
@@ -964,7 +967,7 @@ gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w)
 	{
 		cur_row_widget = (struct widget*) cur_row->data;
 		current_desc = column_desc;
-		if(cur_row_widget == table_data->button_box)
+		if(cur_row_widget == table_data->scroll_buttons.button_box)
 		{
 			continue;
 		}
@@ -1050,7 +1053,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 	for(current = column_data; current; current=g_list_next(current))
 	{
-		if(table_data->button_box == current->data )
+		if(table_data->scroll_buttons.button_box == current->data )
 		{
 			continue;
 		}
@@ -1066,7 +1069,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 	for(current=w->children; current; current=g_list_next(current))
 	{
-		if(current->data!= table_data->button_box)
+		if(current->data!= table_data->scroll_buttons.button_box)
 		{
 			count++;
 		}
@@ -1088,9 +1091,9 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		w->h = this->root.h- w->c.y  - height;
 	}
 
-	if (table_data->button_box) 
+	if (table_data->scroll_buttons.button_box) 
 	{
-		gui_internal_widget_pack(this,table_data->button_box);
+		gui_internal_widget_pack(this,table_data->scroll_buttons.button_box);
 	}
 
 
@@ -1158,7 +1161,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	 * Skip rows that are on previous pages.
 	 */
 	cur_row = w->children;
-	if(table_data->top_row && table_data->top_row != w->children && !table_data->button_box_hide)
+	if(table_data->top_row && table_data->top_row != w->children && !table_data->scroll_buttons.button_box_hide)
 	{
 		cur_row = table_data->top_row;
 		is_first_page=0;
@@ -1177,14 +1180,14 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		current_desc = column_desc;
 		cur_row_widget = (struct widget*)cur_row->data;
 		x =w->p.x+this->spacing;
-		if(cur_row_widget == table_data->button_box )
+		if(cur_row_widget == table_data->scroll_buttons.button_box )
 		{
 			continue;
 		}
 		dim = (struct table_column_desc*)current_desc->data;
 
-		if (table_data->button_box && !table_data->button_box_hide)
-			bbox_height=table_data->button_box->h;
+		if (table_data->scroll_buttons.button_box && !table_data->scroll_buttons.button_box_hide)
+			bbox_height=table_data->scroll_buttons.button_box->h;
 
 		if( y + dim->height + bbox_height + this->spacing >= w->p.y + w->h )
 		{
@@ -1229,45 +1232,45 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		table_data->bottom_row=cur_row;
 		current_desc = g_list_next(current_desc);
 	}
-	if(table_data->button_box && (is_skipped || !is_first_page) && !table_data->button_box_hide )
+	if(table_data->scroll_buttons.button_box && (is_skipped || !is_first_page) && !table_data->scroll_buttons.button_box_hide )
 	{
-		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h -
+		table_data->scroll_buttons.button_box->p.y =w->p.y+w->h-table_data->scroll_buttons.button_box->h -
 			this->spacing;
-		if(table_data->button_box->p.y < y )
+		if(table_data->scroll_buttons.button_box->p.y < y )
 		{
-			table_data->button_box->p.y=y;
+			table_data->scroll_buttons.button_box->p.y=y;
 		}
-		table_data->button_box->p.x = w->p.x;
-		table_data->button_box->w = w->w;
+		table_data->scroll_buttons.button_box->p.x = w->p.x;
+		table_data->scroll_buttons.button_box->w = w->w;
 		//    table_data->button_box->h = w->h - y;
 		//    table_data->next_button->h=table_data->button_box->h;
 		//    table_data->prev_button->h=table_data->button_box->h;
 		//    table_data->next_button->c.y=table_data->button_box->c.y;
 		//    table_data->prev_button->c.y=table_data->button_box->c.y;
-		gui_internal_widget_pack(this,table_data->button_box);
-		if(table_data->next_button->p.y > w->p.y + w->h + table_data->next_button->h)
+		gui_internal_widget_pack(this,table_data->scroll_buttons.button_box);
+		if(table_data->scroll_buttons.next_button->p.y > w->p.y + w->h + table_data->scroll_buttons.next_button->h)
 		{
-			table_data->button_box->p.y = w->p.y + w->h -
-				table_data->button_box->h;
+			table_data->scroll_buttons.button_box->p.y = w->p.y + w->h -
+				table_data->scroll_buttons.button_box->h;
 		}
 		if(is_skipped)
 	        {
-			table_data->next_button->state|= STATE_SENSITIVE;
+			table_data->scroll_buttons.next_button->state|= STATE_SENSITIVE;
 		}
 		else
 		{
-			table_data->next_button->state&= ~STATE_SENSITIVE;
+			table_data->scroll_buttons.next_button->state&= ~STATE_SENSITIVE;
 		}
 
 		if(table_data->top_row != w->children)
 		{
-			table_data->prev_button->state|= STATE_SENSITIVE;
+			table_data->scroll_buttons.prev_button->state|= STATE_SENSITIVE;
 		}
 		else
 		{
-			table_data->prev_button->state&= ~STATE_SENSITIVE;
+			table_data->scroll_buttons.prev_button->state&= ~STATE_SENSITIVE;
 		}
-		gui_internal_widget_render(this,table_data->button_box);
+		gui_internal_widget_render(this,table_data->scroll_buttons.button_box);
 	}
 
 	/**
@@ -1343,8 +1346,8 @@ gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void 
 		int n;
 		GList *top=table_data->top_row;
 		struct widget *w=(struct widget*)top->data;
-		if(table_data->button_box->p.y!=0) {
-		    bottomy=table_data->button_box->p.y;
+		if(table_data->scroll_buttons.button_box->p.y!=0) {
+		    bottomy=table_data->scroll_buttons.button_box->p.y;
 		}
 		n=(bottomy-w->p.y)/w->h;
 		while(n-- > 0 && (top=g_list_previous(top))!=NULL);

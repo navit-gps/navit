@@ -76,6 +76,31 @@ struct widget {
 	struct widget *parent;
 };
 
+struct scroll_buttons {
+	/**
+	* Button box should not be displayed if button_box_hide is not zero.
+	*/
+	int button_box_hide;
+	/**
+	* A container box that is the child of the table widget that contains+groups
+	* the next and previous button.
+	*/
+	struct widget * button_box;
+	/**
+	* A button widget to handle 'next page' requests
+	*/
+	struct widget * next_button;
+	/**
+	* A button widget to handle 'previous page' requests.
+	*/
+	struct widget * prev_button;
+	/**
+	* a pointer to the gui context.
+	* This is needed by the free function to destory the buttons.
+	*/
+	struct  gui_priv *  this;
+};
+
 /**
  * @brief A structure to store information about a table.
  *
@@ -98,32 +123,8 @@ struct table_data
    */
   GList * bottom_row;
 
-  /**
-   * A container box that is the child of the table widget that contains+groups
-   * the next and previous button.
-   */
-  struct widget * button_box;
+  struct scroll_buttons scroll_buttons;
 
-  /**
-   * Button box should not be displayed if button_box_hide is not zero.
-   */
-  int button_box_hide;
-  
-  /**
-   * A button widget to handle 'next page' requests
-   */
-  struct widget * next_button;
-  /**
-   * A button widget to handle 'previous page' requests.
-   */
-  struct widget * prev_button;
-
-
-  /**
-   * a pointer to the gui context.
-   * This is needed by the free function to destory the buttons.
-   */
-  struct  gui_priv *  this;
 };
 
 /**
