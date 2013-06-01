@@ -11,6 +11,7 @@
 #include "gui_internal_priv.h"
 #include "gui_internal_menu.h"
 
+static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
 
 static void
 gui_internal_background_render(struct gui_priv *this, struct widget *w)
@@ -331,9 +332,12 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	l=w->children;
 	while (l) {
 		wc=l->data;
-		gui_internal_widget_render(this, wc);
+		if (!(wc->state & STATE_OFFSCREEN))
+			gui_internal_widget_render(this, wc);
 		l=g_list_next(l);
 	}
+	if (w->scroll_buttons) 
+		gui_internal_widget_render(this, w->scroll_buttons->button_box);
 }
 
 
@@ -346,6 +350,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
 	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,expandd=1,count=0,rows=0,cols=w->cols ? w->cols : 0;
+	int hb=w->scroll_buttons?w->scroll_buttons->button_box->h:0;
 	GList *l;
 	int orientation=w->flags & 0xffff0000;
 
@@ -425,8 +430,8 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		}
 		oheight=height;
 		if (expand && w->h) {
-			expandd=w->h-height+expand;
-			oheight=w->h;
+			expandd=w->h-hb-height+expand;
+			oheight=w->h-hb;
 		} else
 			expandd=expand=1;
 		break;
@@ -474,7 +479,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	}
 	if (! w->w && ! w->h) {
 		w->w=w->bl+w->br+width;
-		w->h=w->bt+w->bb+height;
+		w->h=w->bt+w->bb+height+hb;
 		w->packed=1;
 	}
 #if 0
@@ -498,9 +503,9 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	if (w->flags & gravity_top)
 		y=w->p.y+w->bt;
 	if (w->flags & gravity_ycenter)
-		y=w->p.y+w->h/2-oheight/2;
+		y=w->p.y+(w->h-hb)/2-oheight/2;
 	if (w->flags & gravity_bottom)
-		y=w->p.y+w->h-w->bb-oheight;
+		y=w->p.y+(w->h-hb)-w->bb-oheight;
 	l=w->children;
 	switch (orientation) {
 	case orientation_horizontal:
@@ -509,7 +514,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			wc=l->data;
 			wc->p.x=x;
 			if (wc->flags & flags_fill)
-				wc->h=w->h;
+				wc->h=w->h-hb;
 			if (wc->flags & flags_expand) {
 				if (! wc->w)
 					wc->w=1;
@@ -543,6 +548,14 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				wc->p.x=x-wc->w/2;
 			if (w->flags & gravity_right)
 				wc->p.x=x-wc->w;
+#if 0
+			if (w->flags & flags_scrolly)
+				dbg(0,"%d - %d vs %d - %d\n",y,y+wc->h,w->p.y,w->p.y+w->h-hb);
+			if (y+wc->h > w->p.y+w->h-hb || y+wc->h < w->p.y)
+				wc->state |= STATE_OFFSCREEN;
+			else
+				wc->state &= ~STATE_OFFSCREEN;
+#endif
 			y+=wc->h+w->spy;
 			l=g_list_next(l);
 		}
@@ -584,6 +597,17 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		break;
 	default:
 		break;
+	}
+	if ((w->flags & flags_scrolly) && y > w->h+w->p.y && !w->scroll_buttons) {
+		w->scroll_buttons=g_new0(struct scroll_buttons, 1);
+		gui_internal_scroll_buttons_init(this, w, w->scroll_buttons);
+		w->scroll_buttons->button_box->w=w->w;
+		w->scroll_buttons->button_box->p.x=w->p.x;
+		w->scroll_buttons->button_box->p.y=w->p.y+w->h-w->scroll_buttons->button_box->h;
+		gui_internal_widget_pack(this, w->scroll_buttons->button_box);
+		dbg(0,"needs buttons %d vs %d\n",y,w->h);
+		gui_internal_box_pack(this, w);
+		return;
 	}
 	/**
 	 * Call pack again on each child,
@@ -759,7 +783,6 @@ gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, s
 		 	gravity_center|orientation_horizontal, gui_internal_table_button_prev, widget);
 
 	sb->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
-	gui_internal_widget_append(widget, sb->button_box);
 	gui_internal_widget_append(sb->button_box, sb->prev_button);
 	gui_internal_widget_append(sb->button_box, sb->next_button);
 
@@ -794,8 +817,10 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->background=this->background;
 	data = (struct table_data*)widget->data;
 
-	if (buttons) 
+	if (buttons) {
 		gui_internal_scroll_buttons_init(this, widget, &data->scroll_buttons);
+		gui_internal_widget_append(widget, data->scroll_buttons.button_box);
+	}
 
 	return widget;
 

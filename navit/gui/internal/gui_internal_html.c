@@ -428,7 +428,7 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	case html_tag_a:
 		if (html->name && len) {
 			if (html->class && !strcasecmp(html->class,"clist"))
-				this->html_container=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+				this->html_container=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill /* |flags_scrolly */);
 			else
 				this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
 			gui_internal_widget_append(gui_internal_menu(this, _(text_stripped)), this->html_container);

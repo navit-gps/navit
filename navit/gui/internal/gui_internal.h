@@ -10,6 +10,7 @@ struct gui_priv;
 #define STATE_CLEAR 32
 #define STATE_EDITABLE 64
 #define STATE_SCROLLABLE 128
+#define STATE_OFFSCREEN 256
 
 #define GESTURE_RINGSIZE 100
 
@@ -42,6 +43,8 @@ enum flags {
 	flags_expand=0x100,
 	flags_fill=0x200,
 	flags_swap=0x400,
+	flags_scrollx=0x800,
+	flags_scrolly=0x1000,
 	orientation_horizontal=0x10000,
 	orientation_vertical=0x20000,
 	orientation_horizontal_vertical=0x40000,
