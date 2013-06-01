@@ -256,7 +256,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 
 	if(md->search_list && md->search_list->type==widget_table) {
 		struct table_data *td=(struct table_data*)(md->search_list->data);
-		td->button_box_hide=mode<1024;
+		td->scroll_buttons.button_box_hide=mode<1024;
 	}
 
 	if (mode >= 56 && mode < 64) { /* special case for coordinates input screen (enter_coord) */

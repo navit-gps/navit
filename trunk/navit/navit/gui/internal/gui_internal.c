@@ -349,8 +349,8 @@ static void gui_internal_motion_cb(struct gui_priv *this)
 				int y=wt->p.y+wt->h-wr->h;
 				int n;
 
-				if(td->button_box && td->button_box->p.y!=0)
-		    			y=td->button_box->p.y - td->button_box->h;
+				if(td->scroll_buttons.button_box && td->scroll_buttons.button_box->p.y!=0)
+		    			y=td->scroll_buttons.button_box->p.y - td->scroll_buttons.button_box->h;
 
 				if(y>this->current.y)
 					y=this->current.y;
