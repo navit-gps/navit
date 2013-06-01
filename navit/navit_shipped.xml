@@ -77,8 +77,8 @@ Navigation</text></img>
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
 			</a>
 			<a name='Settings Display'><text>Display</text>
-				<img src='gui_display' onclick='setting_layout()'><text>Layout</text></img>
-				<!-- <a href='#Settings Layouts'><img src='gui_display'><text>Layout</text></img></a> -->
+				<!-- <img src='gui_display' onclick='setting_layout()'><text>Layout</text></img> -->
+				<a href='#Settings Layouts'><img src='gui_display'><text>Layout</text></img></a>
 				<img cond='fullscreen==0' src='gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img>
 				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
 				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
