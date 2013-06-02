@@ -23,6 +23,7 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 #include <gdk/gdkkeysyms.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
