@@ -184,7 +184,7 @@ int main_real(int argc, char * const* argv)
 	for (;;) {
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
-			dbg(0,_("No config file navit.xml, navit.xml.local found\n"));
+			dbg(0, "%s", _("No config file navit.xml, navit.xml.local found\n"));
 			return 4;
 		}
         // Try the next config file possibility from the list
@@ -209,7 +209,7 @@ int main_real(int argc, char * const* argv)
 	}
 	g_list_free(list);
 	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
-		dbg(0, _("Internal initialization failed, exiting. Check previous error messages.\n"));
+		dbg(0, "%s", _("Internal initialization failed, exiting. Check previous error messages.\n"));
 		exit(5);
 	}
 	conf.type=attr_config;
