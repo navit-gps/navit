@@ -23,7 +23,6 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <gtk/gtk.h>
-#include <gio/gio.h>
 #include <gdk/gdkkeysyms.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
@@ -228,20 +227,21 @@ static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	GdkPixbuf *pixbuf;
-	GInputStream *stream;
 	struct graphics_image_priv *ret;
 	const char *option;
 	
 	if (!strcmp(name,"buffer:")) {
 		struct graphics_image_buffer *buffer=(struct graphics_image_buffer *)name;
-		stream=g_memory_input_stream_new_from_data(buffer->start, buffer->len, NULL);
-		if (!stream)
+		GdkPixbufLoader *loader=gdk_pixbuf_loader_new();
+		if (!loader)
 			return NULL;
-		if (*w == -1 && *h == -1)
-			pixbuf=gdk_pixbuf_new_from_stream(stream, NULL, NULL);
-		else
-			pixbuf=gdk_pixbuf_new_from_stream_at_scale(stream, *w, *h, TRUE, NULL, NULL);
-
+		if (*w != -1 || *h != -1)
+			gdk_pixbuf_loader_set_size(loader, *w, *h);
+		gdk_pixbuf_loader_write(loader, buffer->start, buffer->len, NULL);
+		gdk_pixbuf_loader_close(loader, NULL);
+		pixbuf=gdk_pixbuf_loader_get_pixbuf(loader);
+		g_object_ref(pixbuf);
+		g_object_unref(loader);
 	} else {
 		if (*w == -1 && *h == -1)
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
