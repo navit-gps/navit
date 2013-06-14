@@ -12,7 +12,7 @@ static GList *textdomains;
 char *
 navit_nls_add_textdomain(const char *package, const char *dir)
 {
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 	char *ret=bindtextdomain(package, dir);
 	bind_textdomain_codeset(package, "UTF-8");
 	textdomains=g_list_append(textdomains, g_strdup(package));
@@ -23,7 +23,7 @@ navit_nls_add_textdomain(const char *package, const char *dir)
 void
 navit_nls_remove_textdomain(const char *package)
 {
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 	GList *i=textdomains;
 	while (i) {
 		if (!strcmp(i->data, package)) {
@@ -39,7 +39,7 @@ navit_nls_remove_textdomain(const char *package)
 const char *
 navit_nls_gettext(const char *msgid)
 {
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 	GList *i=textdomains;
 	while (i) {
 		const char *ret=dgettext(i->data, msgid);
@@ -54,7 +54,7 @@ navit_nls_gettext(const char *msgid)
 const char *
 navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long int n)
 {
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 	GList *i=textdomains;
 	while (i) {
 		const char *ret=dngettext(i->data, msgid, msgid_plural, n);

@@ -9,7 +9,7 @@
 
 G_CONST_RETURN gchar *glib_gettext (const gchar *str);
 
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 
 #include "navit_nls.h"
 #undef _

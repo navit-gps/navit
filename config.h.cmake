@@ -1,4 +1,4 @@
-#cmakedefine ENABLE_NLS 1
+#cmakedefine USE_NATIVE_LANGUAGE_SUPPORT 1
 #cmakedefine HAVE_MALLOC_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
 #cmakedefine HAVE_STDINT_H 1

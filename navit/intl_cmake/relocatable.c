@@ -56,7 +56,7 @@
 #if DEPENDS_ON_LIBICONV && HAVE_ICONV
 # include <iconv.h>
 #endif
-#if DEPENDS_ON_LIBINTL && ENABLE_NLS
+#if DEPENDS_ON_LIBINTL && USE_NATIVE_LANGUAGE_SUPPORT
 # include <libintl.h>
 #endif
 
@@ -152,7 +152,7 @@ set_relocation_prefix (const char *orig_prefix_arg, const char *curr_prefix_arg)
 #if DEPENDS_ON_LIBICONV && HAVE_ICONV && _LIBICONV_VERSION >= 0x0109
   libiconv_set_relocation_prefix (orig_prefix_arg, curr_prefix_arg);
 #endif
-#if DEPENDS_ON_LIBINTL && ENABLE_NLS && defined libintl_set_relocation_prefix
+#if DEPENDS_ON_LIBINTL && USE_NATIVE_LANGUAGE_SUPPORT && defined libintl_set_relocation_prefix
   libintl_set_relocation_prefix (orig_prefix_arg, curr_prefix_arg);
 #endif
 }

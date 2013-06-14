@@ -95,7 +95,7 @@ add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
 add_module(map/garmin "Garmin library not found" FALSE)
-add_feature(ENABLE_NLS "Gettext not found and not on Windows" FALSE)
+add_feature(USE_NATIVE_LANGUAGE_SUPPORT "Gettext not found and not on Windows" FALSE)
 
 INCLUDE (CPack)
 INCLUDE (CheckIncludeFiles)
@@ -353,7 +353,7 @@ if (LIBOSSO_FOUND)
 endif(LIBOSSO_FOUND)
 
 if (GETTEXT_FOUND)
-    set_with_reason(ENABLE_NLS "Gettext found" TRUE)
+    set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
 
 #Independent modules
@@ -488,7 +488,7 @@ if(WIN32 OR WINCE)
        set(HAVE_PRAGMA_PACK 1)
        add_plugin(support/xgetopt "Windows detected" TRUE)
    endif(MSVC)
-   set_with_reason(ENABLE_NLS "Windows detected" TRUE)
+   set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Windows detected" TRUE)
    enable_language(RC)
 
    set(XSLTS "windows;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
@@ -694,6 +694,6 @@ add_subdirectory (navit)
 add_subdirectory (man)
 
 
-if (ENABLE_NLS)
+if (USE_NATIVE_LANGUAGE_SUPPORT)
    add_subdirectory (po)
-endif(ENABLE_NLS)
+endif(USE_NATIVE_LANGUAGE_SUPPORT)

@@ -415,7 +415,7 @@ main_init(const char *program)
 void
 main_init_nls(void)
 {
-#ifdef ENABLE_NLS
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 #ifdef FORCE_LOCALE
 #define STRINGIFY2(x) #x
 #define STRINGIFY(x) STRINGIFY2(x)
