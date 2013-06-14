@@ -1,14 +1,14 @@
 macro(set_feature_switch_default VARIABLE REASON ENABLE)
-   if ((NOT DEFINED ${VARIABLE})              # variable not in cache (first run)
-      OR ((DEFINED ${VARIABLE}_ORIGINAL) AND  # variable in cache -> check for change
-      ((${VARIABLE}_ORIGINAL AND ${VARIABLE}) OR      # poor man's boolean equal
-     (NOT ${VARIABLE}_ORIGINAL AND NOT ${VARIABLE}))))
+   if ((NOT DEFINED ${VARIABLE})                        # variable not in cache (first run)
+      OR ((DEFINED ${VARIABLE}_AUTODETECTED_VALUE) AND  # variable in cache -> different from autodetected value?
+      ((${VARIABLE}_AUTODETECTED_VALUE AND ${VARIABLE}) OR      # poor man's boolean equal
+     (NOT ${VARIABLE}_AUTODETECTED_VALUE AND NOT ${VARIABLE}))))
       set(${VARIABLE}_REASON ${REASON})
       set(${VARIABLE} ${ENABLE} CACHE BOOL "feature switch" FORCE)
    else()
       set(${VARIABLE}_REASON "User defined")
    endif()
-   set(${VARIABLE}_ORIGINAL ${ENABLE} CACHE INTERNAL "original value set by build script")
+   set(${VARIABLE}_AUTODETECTED_VALUE ${ENABLE} CACHE INTERNAL "value autodetected by build script")
 endmacro()
 
 macro(set_with_reason VARIABLE REASON ENABLE)
@@ -20,7 +20,7 @@ macro(set_with_reason VARIABLE REASON ENABLE)
    else()
       message(WARNING "Do not change user defined settings for ${VARIABLE}")
    endif()
-   set(${VARIABLE}_ORIGINAL ${ENABLE} CACHE INTERNAL "original value set by build script")
+   set(${VARIABLE}_AUTODETECTED_VALUE ${ENABLE} CACHE INTERNAL "value autodetected by build script")
 endmacro()
 
 macro(add_feature FEATURE REASON ENABLE)
