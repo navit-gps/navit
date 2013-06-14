@@ -777,7 +777,7 @@ if test "x$enable_nls" = "xyes"; then
 	        LINGUAS="$LINGUAS$lcode "
            done
     fi
-    AC_DEFINE(ENABLE_NLS, [1], [NLS Please])
+    AC_DEFINE(USE_NATIVE_LANGUAGE_SUPPORT, [1], [NLS Please])
     echo "xgettext and gettext() exist; will build i18n support for $LINGUAS"
   else
    LINGUAS=""
@@ -813,7 +813,7 @@ if test x"$LIBINTL" != "x" ;then
 fi
 
 fi
-AM_CONDITIONAL(ENABLE_NLS, [test "x$enable_nls" = "xyes"])
+AM_CONDITIONAL(USE_NATIVE_LANGUAGE_SUPPORT, [test "x$enable_nls" = "xyes"])
 AM_CONDITIONAL(XGETTEXT_GLADE, [test "x$xgettext_glade" = "xyes"])
 AC_CHECK_HEADER(
 	byteswap.h,
