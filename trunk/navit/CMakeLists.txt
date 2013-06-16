@@ -492,6 +492,7 @@ if(WIN32 OR WINCE)
    enable_language(RC)
 
    set(XSLTS "windows;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
+   set(GLIB_USE_OWN_PRINTF 1)
 endif()
 if (WIN32 AND NOT WINCE)
    set(HAVE_PRAGMA_PACK 1)
