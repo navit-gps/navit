@@ -375,7 +375,7 @@ transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int Zone
 	double e1 = (1-sqrt(1-eccSquared))/(1+sqrt(1-eccSquared));
 	double N1, T1, C1, R1, D, M;
 	double LongOrigin;
-	double mu, phi1, phi1Rad;
+	double mu, phi1Rad;
 	double x, y;
 	double rad2deg = 180/M_PI;
 
@@ -395,7 +395,6 @@ transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int Zone
 	phi1Rad = mu	+ (3*e1/2-27*e1*e1*e1/32)*sin(2*mu) 
 				+ (21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu)
 				+(151*e1*e1*e1/96)*sin(6*mu);
-	phi1 = phi1Rad*rad2deg;
 
 	N1 = a/sqrt(1-eccSquared*sin(phi1Rad)*sin(phi1Rad));
 	T1 = tan(phi1Rad)*tan(phi1Rad);
@@ -415,97 +414,162 @@ transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int Zone
 	geo->lng=Long;
 }
 
-int
-transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return)
+static struct coord
+transform_correct_projection(struct transformation *t, enum projection required_projection, struct coord c)
 {
-	struct coord c1;
-	int xcn, ycn; 
+	struct coord result;
 	struct coord_geo g;
-	int xc, yc, zc=0, xco=0, yco=0, zco=0;
+	if (required_projection == t->pro) {
+		result=c;
+	} else {
+		transform_to_geo(required_projection, &c, &g);
+		transform_from_geo(t->pro, &g, &result);
+	}
+	return result;
+}
+
+static struct coord
+transform_shift_by_center_and_scale(struct transformation *t, struct coord c)
+{
+	struct coord result;
+        result.x = c.x - t->map_center.x;
+        result.y = c.y - t->map_center.y;
+        result.x >>= t->scale_shift;
+        result.y >>= t->scale_shift;
+	return result;
+}
+
+struct coord_3d {
+	int x;
+	int y;
+	int z;
+};
+
+
+static struct coord_3d
+transform_rotate(struct transformation *t, struct coord c)
+{
+	struct coord_3d result;
+	result.x=c.x*t->m00+c.y*t->m01+HOG(*t)*t->m02;
+	result.y=c.x*t->m10+c.y*t->m11+HOG(*t)*t->m12;
+	result.z=(c.x*t->m20+c.y*t->m21+HOG(*t)*t->m22);
+	result.z+=t->offz << POST_SHIFT;
+	dbg(3, "result: (%d,%d,%d)\n", result.x,result.y,result.z);
+	return result;
+}
+
+static struct coord_3d
+transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit)
+{
+	struct coord_3d result;
+	float clip_factor = (zlimit-c.z)/(c_old.z-c.z);
+	result.x=c.x+(c_old.x-c.x)*clip_factor;
+	result.y=c.y+(c_old.y-c.y)*clip_factor;
+	result.z=zlimit;
+	dbg(3,"clip result: (%d,%d,%d)\n", result.x, result.y, result.z);
+	return result;
+}
+
+static struct point
+transform_project_onto_view_plane(struct transformation *t, struct coord_3d c)
+{
+	struct point result;
+	result.x = (long long)c.x*t->xscale/c.z;
+	result.y = (long long)c.y*t->yscale/c.z;
+	return result;
+}
+
+static int
+transform_points_too_close(struct point screen_point, struct point screen_point_old, int mindist)
+{
+	if (!mindist){
+		return 0;
+	}
+	// approximation of Euclidean distance
+	return (abs(screen_point.x - screen_point_old.x) +
+	        abs(screen_point.y - screen_point_old.y)) < mindist;
+}
+
+struct z_clip_result{
+	struct coord_3d clipped_coord;
+	int visible;
+	int process_coord_again;
+	int skip_coord;
+};
+
+static struct z_clip_result
+transform_z_clip_if_necessary(struct coord_3d coord, int zlimit, struct z_clip_result clip_result_old)
+{
+	int visibility_changed;
+	struct z_clip_result clip_result={{0,0}, 0, 0, 0};
+	clip_result.visible=(coord.z < zlimit ? 0:1);
+	visibility_changed=(clip_result_old.visible != -1)&&(clip_result.visible != clip_result_old.visible); 
+	if (visibility_changed) {
+		clip_result.clipped_coord=transform_z_clip(coord, clip_result_old.clipped_coord, zlimit);
+	} else {
+		clip_result.clipped_coord=coord;
+	}
+	if (clip_result.visible && visibility_changed){
+		// line was clipped, but current point
+		// is visible -> process it again
+		clip_result.process_coord_again=1;
+	}else if (!clip_result.visible && !visibility_changed){
+		clip_result.skip_coord=1;
+	}
+	return clip_result;
+}
+
+int
+transform(struct transformation *t, enum projection required_projection, struct coord *input,
+    struct point *result, int count, int mindist, int width, int *width_result)
+{
+	struct coord projected_coord, shifted_coord;
+	struct coord_3d rotated_coord;
+	struct point screen_point;
 	int zlimit=t->znear;
-	int visible, visibleo=-1;
-	int i,j = 0,k=0;
+	struct z_clip_result clip_result, clip_result_old={{0,0}, -1, 0, 0};
+	int i,result_idx = 0,result_idx_last=0;
 	dbg(3,"count=%d\n", count);
 	for (i=0; i < count; i++) {
-		dbg(3, "input coord %d: (%d, %d)\n", i, c[i].x, c[i].y);
-		if (pro == t->pro) {
-			xc=c[i].x;
-			yc=c[i].y;
-		} else {
-			transform_to_geo(pro, &c[i], &g);
-			transform_from_geo(t->pro, &g, &c1);
-			xc=c1.x;
-			yc=c1.y;
-		}
-		xc-=t->map_center.x;
-		yc-=t->map_center.y;
-		xc >>= t->scale_shift;
-		yc >>= t->scale_shift;
-
-		xcn=xc*t->m00+yc*t->m01+HOG(*t)*t->m02;
-		ycn=xc*t->m10+yc*t->m11+HOG(*t)*t->m12;
+		dbg(3, "input coord %d: (%d, %d)\n", i, input[i].x, input[i].y);
+		projected_coord = transform_correct_projection(t, required_projection, input[i]);
+		shifted_coord = transform_shift_by_center_and_scale(t, projected_coord);
+		rotated_coord = transform_rotate(t, shifted_coord);
 
 		if (t->ddd) {
-			zc=(xc*t->m20+yc*t->m21+HOG(*t)*t->m22);
-			zc+=t->offz << POST_SHIFT;
-			dbg(3,"zc(%d)=xc(%d)*m20(%d)+yc(%d)*m21(%d)\n", zc, xc, t->m20, yc, t->m21);
-			/* visibility */
-			visible=(zc < zlimit ? 0:1);
-			if (visible != visibleo && visibleo != -1) { 
-				if (zco != zc) {
-					xcn=xcn+(long long)(xco-xcn)*(zlimit-zc)/(zco-zc);
-					ycn=ycn+(long long)(yco-ycn)*(zlimit-zc)/(zco-zc);
-				}
-				zc=zlimit;
-				dbg(3,"clip result: (%d,%d,%d)\n", xcn,ycn,zc);
-				xco=xcn;
-				yco=ycn;
-				zco=zc;
-				if (visible)
-					i--;
-				visibleo=visible;
-			} else {
-				xco=xcn;
-				yco=ycn;
-				zco=zc;
-				visibleo=visible;
-				if (! visible)
-					continue;
-			}
-			xc=(long long)xcn*t->xscale/zc;
-			yc=(long long)ycn*t->yscale/zc;
-		} else {
-			xc=xcn;
-			yc=ycn;
-			xc>>=POST_SHIFT;
-			yc>>=POST_SHIFT;
-		}
-		xc+=t->offx;
-		yc+=t->offy;
-			dbg(3,"result: (%d, %d)\n", xc, yc);
-
-		if (i != 0 && i != count-1 && mindist) {
-			/* We expect values of mindist to be within 0..5 pixels for nice looking screens. 
-			   That gives difference of about 1 pixel in worst case between abs(dx)+abs(dy) and sqrt(dx*dx+dy*dy).
-			   We expect significantly bigger values when drawing map while scrolling it. But it anyway will be ugly.
-			   Should anybody care about that inaccuracy? */
-			if ( (abs(xc - p[k].x) + abs(yc - p[k].y)) < mindist &&
-				(c[i+1].x != c[0].x || c[i+1].y != c[0].y))
+			clip_result=transform_z_clip_if_necessary(rotated_coord, zlimit, clip_result_old);
+			clip_result_old=clip_result;
+			if(clip_result.process_coord_again){
+				i--;
+			} else if (clip_result.skip_coord){
 				continue;
-			k=j;
-		}		
-
-		p[j].x=xc;
-		p[j].y=yc;
-		if (width_return) {
-			if (t->ddd) 
-				width_return[j]=width*t->wscale/zc;
-			else 
-				width_return[j]=width;
+			}
+			screen_point = transform_project_onto_view_plane(t, clip_result.clipped_coord);
+		} else {
+			screen_point.x = rotated_coord.x>>POST_SHIFT;
+			screen_point.y = rotated_coord.y>>POST_SHIFT;
 		}
-		j++;
+		screen_point.x+=t->offx;
+		screen_point.y+=t->offy;
+		dbg(3,"result: (%d, %d)\n", screen_point.x, screen_point.y);
+
+		if (i != 0 && i != count-1 &&
+		    (input[i+1].x != input[0].x || input[i+1].y != input[0].y)) {
+			if (transform_points_too_close(screen_point, result[result_idx_last], mindist)){
+				continue;
+			}
+		}		
+		result[result_idx]=screen_point;
+		if (width_result) {
+			if (t->ddd) 
+				width_result[result_idx]=width*t->wscale/rotated_coord.z;
+			else 
+				width_result[result_idx]=width;
+		}
+		result_idx_last=result_idx;
+		result_idx++;
 	}
-	return j;
+	return result_idx;
 }
 
 static void
