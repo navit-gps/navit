@@ -869,12 +869,12 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 	) {
 
 		if(!(ms=navit_get_mapset(this))) {
-			dbg(1, "Command function map_add_curr_pos(): there is no active mapset\n");
+			dbg(0, "Command function map_add_curr_pos(): there is no active mapset\n");
 			return;
 		}
 
 		if((item_type = item_from_name(in[1]->u.str))==type_none) {
-			dbg(1, "Command function map_add_curr_pos(): unknown item type\n");
+			dbg(0, "Command function map_add_curr_pos(): unknown item type\n");
 			return;
 		}
 
@@ -882,7 +882,7 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 
 		//no map with the given name found
 		if( ! curr_map) {
-			dbg(1, "Command function map_add_curr_pos(): map not found\n");
+			dbg(0, "Command function map_add_curr_pos(): map not found\n");
 			return;
 		}
 	
@@ -891,11 +891,11 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 			if(vehicle_get_attr(this->vehicle->vehicle,attr_position_coord_geo,&pos_attr,NULL)) {
 				transform_from_geo(projection_mg, pos_attr.u.coord_geo, &curr_coord);
 			} else {
-				dbg(1, "Command function map_add_curr_pos(): vehicle position is not accessible\n");
+				dbg(0, "Command function map_add_curr_pos(): vehicle position is not accessible\n");
 				return;
 			}
 		} else {
-			dbg(1, "Command function map_add_curr_pos(): no vehicle\n");
+			dbg(0, "Command function map_add_curr_pos(): no vehicle\n");
 			return;
 		}
 
