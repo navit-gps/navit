@@ -191,13 +191,13 @@ attr_new_from_text(const char *name, const char *value)
 					 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
 				if (strchr(value, '%')) {
 					if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
-						dbg(0, "Relative possibly-relative attribute with invalid value %i\n", ret->u.num);
+						dbg(0, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 					}
 
 					ret->u.num += 0x60000000;
 				} else {
 					if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
-						dbg(0, "Non-relative possibly-relative attribute with invalid value %i\n", ret->u.num);
+						dbg(0, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 					}
 				}
 			} else 	if (attr >= attr_type_boolean_begin) { // also check for yes and no
