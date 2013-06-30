@@ -105,6 +105,7 @@ attr_new_from_text(const char *name, const char *value)
 	struct attr *ret;
 	struct coord_geo *g;
 	struct coord c;
+	enum item_type item_type;
 	char *pos,*type_str,*str,*tok;
 	int min,max,count;
 
@@ -122,9 +123,14 @@ attr_new_from_text(const char *name, const char *value)
 		str=type_str;
 		while ((tok=strtok(str, ","))) {
 			ret->u.item_types=g_realloc(ret->u.item_types, (count+2)*sizeof(enum item_type));
-			ret->u.item_types[count++]=item_from_name(tok);
-			ret->u.item_types[count]=type_none;
-        	        str=NULL;
+			item_type=item_from_name(tok);
+			if (item_type!=type_none) {
+				ret->u.item_types[count++]=item_type;
+				ret->u.item_types[count]=type_none;
+			} else {
+				dbg(0,"Unknown item type '%s' ignored.\n",tok);
+			}
+			str=NULL;
         	}
 		g_free(type_str);
 		break;
