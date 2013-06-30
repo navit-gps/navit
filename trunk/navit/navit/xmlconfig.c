@@ -234,7 +234,11 @@ xmlconfig_announce(struct xmlstate *state)
 	str=type_str;
 	while ((tok=strtok(str, ","))) {
 		itype=item_from_name(tok);
-		navigation_set_announce(state->parent->element_attr.u.data, itype, level);
+		if (itype!=type_none) {
+			navigation_set_announce(state->parent->element_attr.u.data, itype, level);
+		} else {
+			dbg(0, "Invalid type for announcement: %s\n",tok);
+		}
 		str=NULL;
 	}
 	g_free(type_str);
