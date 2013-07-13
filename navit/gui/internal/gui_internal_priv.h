@@ -147,7 +147,7 @@ struct gui_priv {
 /* gestures */	
 
 	struct gesture_elem {
-		int msec;
+		long long msec;
 		struct point p;
 	} gesture_ring[GESTURE_RINGSIZE];
 	int gesture_ring_last, gesture_ring_first;
