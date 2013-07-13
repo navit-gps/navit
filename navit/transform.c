@@ -1106,13 +1106,29 @@ transform_polyline_length(enum projection pro, struct coord *c, int count)
 	return ret;
 }
 
+static int
+transform_overflow_possible_if_squared(int count, ...) {
+	va_list ap;
+	int i, value, result = 0;
+
+	va_start (ap, count);
+	for (i = 0; i < count; i++) {
+		value = va_arg (ap, int);
+		if (abs(value)>32767) {
+			result = 1;
+		}
+	}
+	va_end (ap);
+	return result;
+}
+
 int
 transform_distance_sq(struct coord *c1, struct coord *c2)
 {
 	int dx=c1->x-c2->x;
 	int dy=c1->y-c2->y;
 
-	if (dx > 32767 || dy > 32767 || dx < -32767 || dy < -32767)
+	if (transform_overflow_possible_if_squared(2, dx, dy))
 		return INT_MAX;
 	else
 		return dx*dx+dy*dy;
@@ -1147,6 +1163,10 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 	vy=l1->y-l0->y;
 	wx=ref->x-l0->x;
 	wy=ref->y-l0->y;
+
+	if (transform_overflow_possible_if_squared(4, vx, vy, wx, wy)) {
+		return INT_MAX;
+	}
 
 	c1=vx*wx+vy*wy;
 	if ( c1 <= 0 ) {
