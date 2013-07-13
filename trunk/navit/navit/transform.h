@@ -39,7 +39,7 @@ struct map_selection;
 struct pcoord;
 struct point;
 struct transformation;
-struct transformation *transform_new(void);
+struct transformation *transform_new(struct pcoord *center, int scale, int yaw);
 int transform_get_hog(struct transformation *this_);
 void transform_set_hog(struct transformation *this_, int hog);
 int transform_get_attr(struct transformation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
