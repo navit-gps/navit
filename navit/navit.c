@@ -2933,6 +2933,11 @@ navit_remove_callback(struct navit *this_, struct callback *cb)
 	callback_list_remove(this_->attr_cbl, cb);
 }
 
+static int
+coord_not_set(struct coord c){
+	return !(c.x || c.y);
+}
+
 /**
  * Toggle the cursor update : refresh the map each time the cursor has moved (instead of only when it reaches a border)
  *
@@ -2946,7 +2951,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 	struct point cursor_pnt;
 	enum projection pro;
 
-	if (this_->blocked)
+	if (this_->blocked||coord_not_set(nv->coord))
 		return;
 	if (pnt)
 		cursor_pnt=*pnt;
