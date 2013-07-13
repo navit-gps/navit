@@ -169,21 +169,18 @@ transform_setup_matrix(struct transformation *t)
 }
 
 struct transformation *
-transform_new(void)
+transform_new(struct pcoord *center, int scale, int yaw)
 {
 	struct transformation *this_;
 
 	this_=g_new0(struct transformation, 1);
 	transform_set_screen_dist(this_, 100);
 	this_->order_base=14;
-#if 0
-	this_->pitch=20;
-#endif
-#if 0
-	this_->roll=30;
-	this_->hog=1000;
-#endif
-	transform_setup_matrix(this_);
+	this_->pro=center->pro;
+	this_->map_center.x=center->x;
+	this_->map_center.y=center->y;
+	this_->scale=scale/16.0;
+	transform_set_yaw(this_, yaw);
 	return this_;
 }
 
@@ -849,16 +846,6 @@ transform_get_size(struct transformation *t, int *width, int *height)
 		*width=r->rl.x-r->lu.x;
 		*height=r->rl.y-r->lu.y;
 	}
-}
-
-void
-transform_setup(struct transformation *t, struct pcoord *c, int scale, int yaw)
-{
-	t->pro=c->pro;
-	t->map_center.x=c->x;
-	t->map_center.y=c->y;
-	t->scale=scale/16.0;
-	transform_set_yaw(t, yaw);
 }
 
 void

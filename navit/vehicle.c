@@ -126,11 +126,10 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	}
 	this_->attrs=attr_list_dup(attrs);
 
-	this_->trans=transform_new();
 	center.pro=projection_screen;
 	center.x=0;
 	center.y=0;
-	transform_setup(this_->trans, &center, 16, 0);
+	this_->trans=transform_new(&center, 16, 0);
 	vehicle_set_default_name(this_);
 
 	dbg(1, "leave\n");
