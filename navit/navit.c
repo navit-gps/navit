@@ -1405,15 +1405,12 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->radius = 30;
 	this_->border = 16;
 
-	this_->trans = transform_new();
-	this_->trans_cursor = transform_new();
-	transform_set_projection(this_->trans_cursor, pro);
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
 	center.pro = pro;
-	
-	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
+	this_->trans = transform_new(&center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
+	this_->trans_cursor = transform_new(&center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 
 	this_->bookmarks=bookmarks_new(&this_->self, NULL, this_->trans);
 

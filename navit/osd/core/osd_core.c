@@ -3555,6 +3555,7 @@ osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav)
 	struct graphics *gra;
 	struct attr attr;
 	struct map_selection sel;
+	struct pcoord center={ projection_mg, 0, 0};
 	struct color red={0xffff,0x0,0x0,0xffff};
 
 	this->nav=nav;
@@ -3576,10 +3577,10 @@ osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav)
 	this->red=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->red,&red);
 	graphics_gc_set_linewidth(this->red,3);
-	this->trans=transform_new();
 	memset(&sel, 0, sizeof(sel));
 	sel.u.p_rect.rl.x=opc->osd_item.w;
 	sel.u.p_rect.rl.y=opc->osd_item.h;
+	this->trans=transform_new(&center, 16, 0);
 	transform_set_screen_selection(this->trans, &sel);
         graphics_set_rect(opc->osd_item.gr, &sel.u.p_rect);
 #if 0
