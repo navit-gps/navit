@@ -44,11 +44,11 @@ gui_internal_gesture_ring_get(struct gui_priv *this, int i)
 void
 gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
 {
-	int msec;
+	long long msec;
 #ifndef HAVE_API_WIN32_CE
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
-	msec=tv.tv_sec*1000+tv.tv_usec/1000;
+	msec=((long long)tv.tv_sec)*1000+tv.tv_usec/1000;
 #else
 	msec=GetTickCount();
 #endif
@@ -60,11 +60,11 @@ gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
    	}
 	this->gesture_ring[this->gesture_ring_last].p=*p;
 	this->gesture_ring[this->gesture_ring_last].msec=msec;
-	dbg(2,"msec=%d x=%d y=%d\n",msec,p->x,p->y);
+	dbg(2,"msec=%Ld x=%d y=%d\n",msec,p->x,p->y);
 };
 
 int
-gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p0, int *dx, int *dy)
+gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct point *p0, int *dx, int *dy)
 {
 	struct gesture_elem *g;
 	int x,y,dt;
@@ -88,7 +88,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p
 		*p0=g->p;
 	}
 	msec=g->msec;
-	dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
+	dbg(2,"%Ld %d %d\n",g->msec, g->p.x, g->p.y);
 	for(i=1;(g=gui_internal_gesture_ring_get(this,i))!=NULL;i++) {
 		if( msec-g->msec > 1000 )
 			break;
@@ -98,7 +98,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, int msec, struct point *p
 		if(p0) {
 			*p0=g->p;
 		}
-		dbg(2,"%d %d %d\n",g->msec, g->p.x, g->p.y);
+		dbg(2,"%Ld %d %d\n",g->msec, g->p.x, g->p.y);
 	}
 	return dt;
 }
