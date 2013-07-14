@@ -325,7 +325,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 			} 
 			if((p=strstr(exp,folded_query))!=NULL) {
 				p+=strlen(folded_query);
-				if(!*p||strchr(" -/()",*p)) {
+				if(!*p||strchr(LINGUISTICS_WORD_SEPARATORS_ASCII,*p)) {
 					dbg(1,"exact matching word found inside string %s\n",exp);
 					wr->datai=512;
 				}

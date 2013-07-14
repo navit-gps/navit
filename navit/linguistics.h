@@ -1,6 +1,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#define LINGUISTICS_WORD_SEPARATORS_ASCII " -/()'`"
 char *linguistics_expand_special(const char *str, int mode);
 char *linguistics_next_word(char *str);
 void linguistics_init(void);
