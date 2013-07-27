@@ -295,6 +295,12 @@ vehicleprofile_get_name(struct vehicleprofile *this_)
 	return this_->name;
 }
 
+void
+vehicleprofile_init(struct vehicleprofile *this_)
+{
+	vehicleprofile_update(this_);
+}
+
 struct object_func vehicleprofile_func = {
 	attr_vehicleprofile,
 	(object_func_new)vehicleprofile_new,
@@ -304,7 +310,7 @@ struct object_func vehicleprofile_func = {
 	(object_func_set_attr)vehicleprofile_set_attr,
 	(object_func_add_attr)vehicleprofile_add_attr,
 	(object_func_remove_attr)vehicleprofile_remove_attr,
-	(object_func_init)NULL,
+	(object_func_init)vehicleprofile_init,
 	(object_func_destroy)NULL,
 	(object_func_dup)NULL,
 	(object_func_ref)navit_object_ref,
