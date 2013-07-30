@@ -322,5 +322,34 @@ process_boundaries(FILE *boundaries, FILE *ways)
 
 	boundaries_list=process_boundaries_setup(boundaries, relations);
 	relations_process(relations, NULL, ways, NULL);
+	relations_destroy(relations);
 	return process_boundaries_finish(boundaries_list);
+}
+
+void
+free_boundaries(GList *l)
+{
+	while (l) {
+		struct boundary *boundary=l->data;
+		GList *s=boundary->segments;
+		while (s) {
+			struct geom_poly_segment *seg=s->data;
+			g_free(seg->first);
+			g_free(seg);
+			s=g_list_next(s);
+		};
+		s=boundary->sorted_segments;
+		while (s) {
+			struct geom_poly_segment *seg=s->data;
+			g_free(seg->first);
+			g_free(seg);
+			s=g_list_next(s);
+		};
+		g_list_free(boundary->segments);
+		g_list_free(boundary->sorted_segments);
+		g_free(boundary->ib);
+		free_boundaries(boundary->children);
+		g_free(boundary);
+		l=g_list_next(l);
+	}
 }

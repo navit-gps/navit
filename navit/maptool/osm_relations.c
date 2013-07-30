@@ -151,3 +151,23 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relation
 		}
 	}
 }
+
+void
+relations_destroy_func(void *key, GList *l, void *data)
+{
+	while (l) {
+		g_free(l->data);
+		l=g_list_next(l);
+	}
+}
+
+void
+relations_destroy(struct relations *relations)
+{
+	int i;
+
+	for (i = 0 ; i < 3 ; i++) {
+		g_hash_table_foreach(relations->member_hash[i], (GHFunc)relations_destroy_func, NULL);
+		g_hash_table_destroy(relations->member_hash[i]);
+	}
+}

@@ -91,6 +91,9 @@ progress_memory(void)
 	long mem=(long)sbrk(0)-start_brk;
 	fprintf(stderr," %ld MB",mem/1024/1024);
 #endif
+#if 0
+	system("grep -i VmRSS /proc/$PPID/status");
+#endif
 }
 
 void
