@@ -1939,11 +1939,12 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 				for(a=end-1;a>max_adm_level && a>2;a--)
 					attrs[a-2].type=type_none;
 		}
-		
-				
+		g_list_free(matches);	
 		return match->country; 
-	} else
+	} else {
+		g_list_free(matches);	
 		return NULL;
+	}
 }
 
 static void 
@@ -2066,6 +2067,8 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	fclose(towns_poly);
 	
 	g_hash_table_destroy(town_hash);
+	free_boundaries(bl);
+
 	profile(0, "Finished processing towns\n");
 }
 

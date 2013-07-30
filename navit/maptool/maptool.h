@@ -133,6 +133,8 @@ GList *process_boundaries(FILE *boundaries, FILE *ways);
 
 GList *boundary_find_matches(GList *bl, struct coord *c);
 
+void free_boundaries(GList *l);
+
 /* buffer.c */
 struct buffer {
 	int malloced_step;
@@ -293,6 +295,7 @@ struct relations * relations_new(void);
 struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv), void *func_priv);
 void relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relations);
+void relations_destroy(struct relations *rel);
 
 
 /* osm_xml.c */
