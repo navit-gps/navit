@@ -588,8 +588,7 @@ item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
 			count++;
 			p+=(*((int *)p)+1)*4;
 		}
-		idx=malloc(count*sizeof(void *));
-		dbg_assert(idx != NULL);
+		idx=g_malloc(count*sizeof(void *));
 		p=buffer;
 		for (j = 0 ; j < count ; j++) {
 			idx[j]=p;
@@ -614,6 +613,8 @@ item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
 			}
 		}
 		fclose(f);
+		g_free(idx);
+		g_free(buffer);
 		return 1;
 	}
 	return 0;
