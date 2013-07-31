@@ -1,22 +1,21 @@
 # Polish translations for navit.
 # Copyright (C) 2007, 2008 The Navit Team
 # This file is distributed under the same license as the Navit package.
-# Michael "Mineque" Madej  <mineque@quanteam.pl>, 2007.
+# Michael "Mineque" Madej <mineque@quanteam.pl>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-30 19:57+0200\n"
-"PO-Revision-Date: 2010-06-09 18:10+0000\n"
-"Last-Translator: Lukasz Semler <lukasz_semler@o2.pl>\n"
+"PO-Revision-Date: 2013-07-31 14:19+0100\n"
+"Last-Translator: Robert Wojewódzki <robwoj44@poczta.onet.pl>\n"
 "Language-Team: Translators\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Language: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-Language: Polish\n"
@@ -84,11 +83,11 @@ msgstr "za %d m"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d stopa"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "za %d stóp"
 
 #, c-format
 msgid "%d meters"
@@ -96,15 +95,15 @@ msgstr "%d metrów"
 
 #, c-format
 msgid "in %d meters"
-msgstr "za %d m"
+msgstr "za %d metrów"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d mil"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "za %d.%d mil"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -117,30 +116,30 @@ msgstr "za %d.%d kilometrów"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "jedna mila"
+msgstr[1] "%d mile"
+msgstr[2] "%d mil"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "za jedną milę"
+msgstr[1] "za %d mile"
+msgstr[2] "za %d mil"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "jeden kilometr"
-msgstr[1] "%d kilometr"
-msgstr[2] "%d kilometr"
+msgstr[1] "%d kilometry"
+msgstr[2] "%d kilometrów"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "za kilometr"
-msgstr[1] "%d kilometr"
-msgstr[2] "%d kilometr"
+msgstr[0] "za jeden kilometr"
+msgstr[1] "za %d kilometry"
+msgstr[2] "za %d kilometrów"
 
 msgid "exit"
 msgstr "zjazd"
@@ -156,22 +155,22 @@ msgstr "%s w ulicę %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sw %s%s%s|male form"
+msgstr "%sw %s%s%s|męski rodzaj"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sw %s%s%s|female form"
+msgstr "%sw %s%s%s|żeński rodzaj"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sw %s%s%s|neutral form"
+msgstr "%sw %s%s%s|neutralny rodzaj"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s na / w %s"
+msgstr "%s do %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -206,7 +205,7 @@ msgstr "Wjazd na rondo wkrótce"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Wjazd na rondo %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -218,7 +217,7 @@ msgstr "Zjedź z ronda na %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Jedź tą drogą %s"
+msgstr "Jedź tą drogą do następnego %s"
 
 msgid "soon"
 msgstr "wkrótce"
@@ -226,18 +225,18 @@ msgstr "wkrótce"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr "Jedź %1$s drogą w %2$s"
+msgstr "Jedź drogą %1$s do %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "%i skrzyżowanie"
+msgstr "po drodze %i"
 
 msgid "now"
 msgstr "teraz"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "następnie jedź %1$s drogą w %2$s"
+msgstr "następnie jedź %1$s drogą do %2$s"
 
 msgid "error"
 msgstr "błąd"
@@ -245,7 +244,7 @@ msgstr "błąd"
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Skręć %1$s%2$s %4$s %3$s"
+msgstr "Skręć %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
@@ -288,10 +287,10 @@ msgstr "Szczegóły trasy"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "Punkt trasy %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Odwiedź najpierw..."
 
 msgid "Set as position"
 msgstr "Ustaw jako pozycję"
@@ -432,7 +431,7 @@ msgstr "Boliwia"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius i Saba"
 
 #. 076
 msgid "Brazil"
@@ -524,7 +523,7 @@ msgstr "Republika Zielonego Przylądka"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Curacao"
 
 #. 162
 msgid "Christmas Island"
@@ -1144,7 +1143,7 @@ msgstr "Surinam"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Sudan Południowy"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1156,7 +1155,7 @@ msgstr "Salwador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Sint Maarten (część holenderska)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1311,43 +1310,47 @@ msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "* Nieznane, dodaj tag \"is_in\" dla tych miast"
+msgstr "* Nieznane, dodaj is w tagach dla tych miast"
 
 #, c-format
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
 "\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting from config file.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit użycie:\n"
+"navit [opcje] [plik config]\n"
+"\t-c <plik>: użyje <plik> jako plik config\n"
+"\t-d <n>: ustawi wyjściowy poziom globalnego debugowania na <n> (0-3). Nadpisze ustawienia z pliku config.\n"
+"\t-h: wydrukuje to info użycia i wyjdzie.\n"
+"\t-v: Wydrukuje wersję i wyjdzie.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Brak pliku konfiguracji navit.xml, znaleziony navit.xml.local\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Błąd przetworzenia pliku config '%s': %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Użycie pliku konfiguracji '%s'\n"
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr ""
+msgid "Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr "Nieudana wewnętrzna inicjalizacja, wychodzenie. Sprawdź poprzednie komunikaty błędu.\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "nieznana ulica"
 
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "Nienazwany pojazd"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "Nieudany zapis pliku zakładek"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
@@ -1372,7 +1375,7 @@ msgid "Town"
 msgstr "Miasto"
 
 msgid "District"
-msgstr "Dzielnica/Okręg miejski"
+msgstr "Dzielnica"
 
 msgid "Street"
 msgstr "Ulica"
@@ -1403,94 +1406,94 @@ msgstr "Cel"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Pokaż"
+msgstr "_Wyświetl"
 
 msgid "_Route"
-msgstr "Trasa"
+msgstr "_Trasa"
 
 msgid "_Former Destinations"
-msgstr "Poprzednie cele"
+msgstr "_Poprzednie cele"
 
 msgid "_Bookmarks"
-msgstr "Zakładki"
+msgstr "_Zakładki"
 
 msgid "_Map"
-msgstr "Mapa"
+msgstr "_Mapa"
 
 msgid "_Layout"
-msgstr "Układ kolorów"
+msgstr "_Układ kolorów"
 
 msgid "_Projection"
-msgstr "Odwzorowanie"
+msgstr "_Odwzorowanie"
 
 msgid "_Vehicle"
-msgstr "Pojazd"
+msgstr "_Pojazd"
 
 msgid "Zoom_Out"
 msgstr "Oddal"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Zmniejsz poziom powiększenia"
 
 msgid "Zoom_In"
 msgstr "Zbliż"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Zwiększ poziom powiększenia"
 
 msgid "_Recalculate"
-msgstr "Oblicz ponownie"
+msgstr "_Oblicz ponownie"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Przerysuj mapę"
 
 msgid "_Info"
-msgstr "Info"
+msgstr "_Info"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "Ustaw _cel"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Otwórz okno dialogowe wyszukiwania adresu"
 
 msgid "_Stop Navigation"
-msgstr "Zatrzymaj nawigację"
+msgstr "_Zatrzymaj nawigację"
 
 msgid "Test"
 msgstr "Test"
 
 msgid "_Quit"
-msgstr "Zakończ"
+msgstr "_Zakończ"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Wyjście z aplikacji"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "Pokaż pozycję _kursora"
 
 msgid "_Lock on Road"
-msgstr "Trzymaj się drogi"
+msgstr "_Trzymaj się drogi"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "_Zachowaj orientację na Północ"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Przełącz orientację mapy na północ lub pojazd"
 
 msgid "_Roadbook"
-msgstr "Szczegóły trasy"
+msgstr "_Szczegóły trasy"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Pokaż/ukryj opis drogi"
 
 msgid "_Autozoom"
-msgstr "Automatyczne przybliżenie"
+msgstr "_Automatyczne przybliżenie"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Włącz/wyłącz automatyczną zmianę poziomu powiększenia"
 
 msgid "_Fullscreen"
-msgstr "Pełny ekran"
+msgstr "_Pełny ekran"
 
 msgid "Data"
 msgstr "Dane"
@@ -1523,36 +1526,36 @@ msgid "No"
 msgstr "Nie"
 
 msgid "2D"
-msgstr "2W"
+msgstr "2D"
 
 msgid "3D"
-msgstr "3W"
+msgstr "3D"
 
 msgid "OT"
 msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Trasa %4.0fkm    %02d:%02d ETA"
+msgstr "Trasa %4.0fkm  %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr "Trasa 0000km  0+00:00 ETA"
+msgstr "Trasa 0000km 0+00:00 ETA"
 
 msgid "Help"
 msgstr "Pomoc"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "Punkt trasy %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "Wybierz punkt trasy aby wstawić przed nowy"
 
 msgid "View in Browser"
 msgstr "Zobacz w przeglądarce"
 
 msgid "Item type"
-msgstr ""
+msgstr "Typ pozycji"
 
 msgid "Streets"
 msgstr "Ulice"
@@ -1564,7 +1567,7 @@ msgid "View Attributes"
 msgstr "Zobacz właściwości"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "Ustaw jako pozycję (i deaktywuj pojazd)"
 
 msgid "POIs"
 msgstr "Użyteczne miejsca"
@@ -1573,10 +1576,10 @@ msgid "View on map"
 msgstr "Zobacz na mapie"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Usuń wyniki wyszukiwania z mapy"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "Pokaż wyniki na mapie"
 
 msgid "Cut Bookmark"
 msgstr "Wytnij zakładkę"
@@ -1594,22 +1597,22 @@ msgid "Delete Bookmark"
 msgstr "Usuń zakładkę"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "Usuń punkt trasy"
 
 msgid "Bookmarks"
 msgstr "Zakładki"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Zakładki jako punkty trasy"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "Zapisz punkty trasy"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "Zamień punktami trasy"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Usuń Katalog"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1625,19 +1628,19 @@ msgstr "Zakładka %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Pobieranie %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Pobieranie Mapy"
 
 msgid "Active"
-msgstr ""
+msgstr "Aktywny"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Włączone pobieranie"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Pobieranie kompletne"
 
 msgid "Show Satellite Status"
 msgstr "Pokaż status satelitów"
@@ -1698,10 +1701,10 @@ msgid "members and contributors."
 msgstr "członkowie oraz współtwórcy."
 
 msgid "Waypoints"
-msgstr ""
+msgstr "Punkty trasy"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "Wprowadź współrzędne"
 
 #.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1710,10 +1713,10 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
-msgstr ""
+msgstr "Długość i szerokość geograficzna"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "Wprowadź współrzędne, na przykład:"
 
 msgid "Vehicle"
 msgstr "Pojazd"
@@ -1731,7 +1734,7 @@ msgid "Map follows Vehicle"
 msgstr "Wyśrodkuj mapę"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Plan z punktami trasy"
 
 msgid "Maps"
 msgstr "Mapy"
@@ -1746,13 +1749,13 @@ msgid "Route Description"
 msgstr "Opis trasy"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Pokaż ustawienia regionalne"
 
 msgid "Former Destinations"
 msgstr "Poprzednie cele"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "- Brak dostępnych poprzednich celów -"
 
 msgid "Message"
 msgstr "Wiadomość"
@@ -1770,21 +1773,21 @@ msgid "House number"
 msgstr "Numer domu"
 
 msgid "Next"
-msgstr ""
+msgstr "Następny"
 
 msgid "Prev"
-msgstr ""
+msgstr "Poprzedni"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Powróć do drogi!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Uważaj! Radar!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "Proszę zmniejszyć szybkość"
 
 msgid "Vehicle Position"
 msgstr "Pozycja pojazdu"
@@ -1818,6 +1821,8 @@ msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
+"Poprzednie\n"
+"Cele"
 
 msgid "Quit"
 msgstr "Zakończ"
@@ -1845,26 +1850,30 @@ msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
+"Opuść ostatni \n"
+"Punkt trasy"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
 msgstr ""
+"Opuść następny \n"
+"Punkt trasy"
 
 msgid "Satellite Status"
-msgstr ""
+msgstr "Status satelity"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "Dane NMEA"
 
 msgid "car_shortest"
-msgstr ""
+msgstr "samochód_najkrótsza"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "samochód_unikanie_opłat"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "samochód _pedantyczny"
 
 msgid "horse"
 msgstr "koń"
@@ -1892,13 +1901,12 @@ msgstr "koń"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #.
 msgid "Truck"
-msgstr ""
+msgstr "Ciężarówka"
 
 #~ msgid "In %s, enter the roundabout"
 #~ msgstr "Wjedź na rondo za %s"
-
 #~ msgid "Cursor"
 #~ msgstr "Kursor"
-
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometra"
+
