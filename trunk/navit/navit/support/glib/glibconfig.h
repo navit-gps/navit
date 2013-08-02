@@ -13,6 +13,10 @@
 #include <float.h>
 #include "config.h"
 
+#ifdef HAVE_API_WIN32_BASE
+#include <libintl.h>
+#endif
+
 G_BEGIN_DECLS
 
 #define G_MINFLOAT	FLT_MIN
@@ -244,10 +248,7 @@ union _GSystemThread
 
 #define G_MODULE_SUFFIX "dll"
 
-#ifndef GLIB_USE_OWN_PRINTF
-#	define HAVE_GOOD_PRINTF 
-#endif 
-#define HAVE_ALLOCA
+#define HAVE_GOOD_PRINTF
 #define NO_SYS_SIGLIST_DECL
 #define GLIB_STATIC_COMPILATION
 #define G_DISABLE_CHECKS
