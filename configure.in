@@ -295,10 +295,6 @@ else
 	if test "x${win32}" != "xyes" -a "x${android}" != "xyes"; then
 		GLIB_LIBS="$GLIB_LIBS -lpthread"
 	fi
-	if test "x${win32}" == "xyes"; then
-		glib_use_own_printf=yes; glib_use_own_printf_reason="Win32/WinCE detected"
-		AC_DEFINE(GLIB_USE_OWN_PRINTF, 1, [Undef to make internal glib use system printf implementation.])
-	fi
 fi
 
 # gmodule
@@ -351,7 +347,6 @@ AC_SUBST(LIBNAVIT)
 
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
-AM_CONDITIONAL(GLIB_USE_OWN_PRINTF, [test "x$glib_use_own_printf" = "xyes"])
 AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
 
 AC_CHECK_HEADER([sys/time.h],
