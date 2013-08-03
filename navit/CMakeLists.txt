@@ -156,7 +156,6 @@ endif()
 ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
    ADD_DEPENDENCIES(support_glib intl_cmake)
-   set_property(SOURCE ${PROJECT_SOURCE_DIR}/navit/support/glib/glibconfig.h APPEND PROPERTY OBJECT_DEPENDS "${PROJECT_BINARY_DIR}/navit/intl_cmake/libintl.h")
 endif()
 
 
