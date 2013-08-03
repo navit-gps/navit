@@ -195,7 +195,11 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	fprintf(stderr,"tile %s of size %d\n", tile, *tile_data);
 #endif
 	tile_bbox(tile, &bbox, 0);
-	sorted_segments=geom_poly_segments_sort(tile_data_to_segments(tile_data), geom_poly_segment_type_way_right_side);
+	curr=tile_data_to_segments(tile_data);
+	sorted_segments=geom_poly_segments_sort(curr, geom_poly_segment_type_way_right_side);
+	g_list_foreach(curr,(GFunc)geom_poly_segment_destroy,NULL);
+	g_list_free(curr);
+	
 #if 0
 {
 	GList *sort_segments=sorted_segments;
@@ -303,6 +307,8 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		if (search > 55)
 			break;
 	}
+	g_list_foreach(sorted_segments,(GFunc)geom_poly_segment_destroy,NULL);
+	g_list_free(sorted_segments);
 #endif
 
 #if 0
@@ -355,7 +361,7 @@ ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct item_bin_si
 	char *tile2=g_alloca(sizeof(char)*(len+1));
 	struct rect bbox;
 	struct item_bin *ib;
-	struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
+	struct coastline_tile *ct;
 
 	strcpy(tile2, tile);
 	tile2[len-1]=c;

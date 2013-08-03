@@ -2457,10 +2457,8 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 	fseek(in, 0, SEEK_SET);
 	relations_func=relations_func_new(process_turn_restrictions_member, NULL);
 	while ((ib=read_item(in))) {
-		struct turn_restriction *turn_restriction=g_new0(struct turn_restriction, 1);
+		struct turn_restriction *turn_restriction;
 		relid=item_bin_get_relationid(ib);
-		turn_restriction->relid=relid;
-		turn_restriction->type=ib->type;
 		min_count=0;
 		if (!search_relation_member(ib, "from",&fromm,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
@@ -2503,6 +2501,9 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 			osm_warning(osm_types[viam.type],viam.id,1,"\n");
 			continue;
 		}
+		turn_restriction=g_new0(struct turn_restriction, 1);
+		turn_restriction->relid=relid;
+		turn_restriction->type=ib->type;
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
@@ -2520,6 +2521,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	turn_restrictions=process_turn_restrictions_setup(in, relations);
 	relations_process(relations, coords, ways, NULL);
 	process_turn_restrictions_finish(turn_restrictions, out);
+	relations_destroy(relations);
 }
 
 void

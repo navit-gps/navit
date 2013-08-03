@@ -348,8 +348,10 @@ free_boundaries(GList *l)
 		g_list_free(boundary->segments);
 		g_list_free(boundary->sorted_segments);
 		g_free(boundary->ib);
+		g_free(boundary->iso2);
 		free_boundaries(boundary->children);
 		g_free(boundary);
 		l=g_list_next(l);
 	}
+	g_list_free(l);
 }
