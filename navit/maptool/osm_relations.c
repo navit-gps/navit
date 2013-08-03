@@ -155,10 +155,12 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relation
 void
 relations_destroy_func(void *key, GList *l, void *data)
 {
-	while (l) {
-		g_free(l->data);
-		l=g_list_next(l);
+	GList *ll=l;
+	while (ll) {
+		g_free(ll->data);
+		ll=g_list_next(ll);
 	}
+	g_list_free(l);
 }
 
 void
@@ -170,4 +172,5 @@ relations_destroy(struct relations *relations)
 		g_hash_table_foreach(relations->member_hash[i], (GHFunc)relations_destroy_func, NULL);
 		g_hash_table_destroy(relations->member_hash[i]);
 	}
+	g_free(relations);
 }
