@@ -14,7 +14,7 @@
 #include "config.h"
 
 #ifdef HAVE_API_WIN32_BASE
-#include <libintl.h>
+#include <libgnuintl.h>
 #endif
 
 G_BEGIN_DECLS
