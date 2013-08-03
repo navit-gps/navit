@@ -87,7 +87,7 @@ msgstr ""
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "через %d футов"
 
 #, c-format
 msgid "%d meters"
@@ -99,19 +99,19 @@ msgstr "через %d метров"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d,%d миль"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "через %d,%d миль"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d,%d км."
+msgstr "%d,%d километров"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "через %d,%d км."
+msgstr "через %d,%d километров"
 
 #, c-format
 msgid "one mile"
@@ -205,7 +205,7 @@ msgstr "Скоро круговое движение"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Через %s круговое движение"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -287,10 +287,10 @@ msgstr "Дорожный справочник"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "Точка %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Заехать перед..."
 
 msgid "Set as position"
 msgstr "Установить как пункт отправления"
@@ -431,7 +431,7 @@ msgstr "Боливия"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Бонэйр, Синт-Эстатиус и Саба"
 
 #. 076
 msgid "Brazil"
@@ -523,7 +523,7 @@ msgstr "Кабо-Верде"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Кюрасао"
 
 #. 162
 msgid "Christmas Island"
@@ -1143,7 +1143,7 @@ msgstr "Суринам"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Южный Судан"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1155,7 +1155,7 @@ msgstr "Сальвадор"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Синт-Мартен (Нидерланды)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1408,7 +1408,7 @@ msgid "_Route"
 msgstr "Маршрут"
 
 msgid "_Former Destinations"
-msgstr "Прошлые пункты назначения"
+msgstr "Старые маршруты"
 
 msgid "_Bookmarks"
 msgstr "Закладки"
@@ -1542,10 +1542,10 @@ msgstr "Справка"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "Точка %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "Выберите точку, перед которой вставить новую"
 
 msgid "View in Browser"
 msgstr "Просмотреть в браузере"
@@ -1563,7 +1563,7 @@ msgid "View Attributes"
 msgstr "Просмотреть Атрибуты"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "Задать как текущую позицию и деактивировать ТС"
 
 msgid "POIs"
 msgstr "POIs"
@@ -1572,10 +1572,10 @@ msgid "View on map"
 msgstr "Показать на карте"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Удалить результаты поиска с карты"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "Показать результаты поиска на карте"
 
 msgid "Cut Bookmark"
 msgstr "Вырезать закладку"
@@ -1593,22 +1593,22 @@ msgid "Delete Bookmark"
 msgstr "Удалить закладку"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "Удалить маршрутную точку"
 
 msgid "Bookmarks"
 msgstr "Закладки"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Маршрут по закладкам"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "Сохранить маршрутные точки"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "Заменить маршрутными точками"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Удалить папку"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1624,19 +1624,19 @@ msgstr "Закладка %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Загрузка %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Загрузка карты"
 
 msgid "Active"
-msgstr ""
+msgstr "Активна"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Загрузка разрешена"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Загрузить полностью"
 
 msgid "Show Satellite Status"
 msgstr "Показать Состояние Спутников"
@@ -1697,10 +1697,10 @@ msgid "members and contributors."
 msgstr "и лица внесшие вклад"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "Маршрутные точки"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "Введите координаты"
 
 #.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1709,10 +1709,10 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
-msgstr ""
+msgstr "Долгота Широта"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "Введите координаты, например:"
 
 msgid "Vehicle"
 msgstr "Т/с"
@@ -1730,7 +1730,7 @@ msgid "Map follows Vehicle"
 msgstr "Карта следует за машиной"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Множество точек назначения"
 
 msgid "Maps"
 msgstr "Карты"
@@ -1748,10 +1748,10 @@ msgid "Show Locale"
 msgstr "Проверить локализацию"
 
 msgid "Former Destinations"
-msgstr "Прошлые пункты назначения"
+msgstr "Старые маршруты"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "- Нет старых маршрутов -"
 
 msgid "Message"
 msgstr "Сообщение"
@@ -1775,15 +1775,15 @@ msgid "Prev"
 msgstr ""
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Возвращайтесь на маршрут!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Внимание! Камера!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "Снизьте скорость, пожалуйста"
 
 msgid "Vehicle Position"
 msgstr "Местоположение автомобиля"
@@ -1817,6 +1817,8 @@ msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
+"Старые\n"
+"маршруты"
 
 msgid "Quit"
 msgstr "Выход"
