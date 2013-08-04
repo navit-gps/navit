@@ -1186,9 +1186,11 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 	      struct point * res)
 {
 	int n, a, b;
+	dbg(1,"%d,%d - %d,%d x %d,%d-%d,%d\n",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
 	n = bdy * adx - bdx * ady;
 	a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
 	b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
+	dbg(1,"a %d b %d n %d\n",a,b,n);
 	if (n < 0) {
 		n = -n;
 		a = -a;
@@ -1204,6 +1206,7 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 		return 0;
 	res->x = a1->x + a * adx / n;
 	res->y = a1->y + a * ady / n;
+	dbg(1,"%d,%d\n",res->x,res->y);
 	return 1;
 }
 
@@ -1404,141 +1407,217 @@ int_sqrt(unsigned int n)
 	return p;
 }
 
-struct offset {
-	int px,py,nx,ny;
+#if 0
+static void
+debug_line(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int dx, int dy)
+{
+	struct point p[2];
+	p[0]=p[1]=*pnt;
+	p[1].x+=dx;
+	p[1].y+=dy;
+	gra->meth.draw_lines(gra->priv, gc->priv, p, 2);
+}
+
+static void
+debug_point(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int s)
+{
+	struct point p[4];
+	p[0]=p[1]=p[2]=*pnt;
+	p[0].x-=s;
+	p[0].y+=s;
+	p[1].x+=s;
+	p[1].y+=s;
+	p[2].y-=s;
+	p[3]=p[0];
+	gra->meth.draw_lines(gra->priv, gc->priv, p, 4);
+}
+#endif
+
+struct draw_polyline_shape {
+	int wi;
+	int step;
+	int fow;
+	int dx,dy;
+	int dxw,dyw;
+	int l,lscale;
+};
+struct draw_polyline_context {
+	int prec;
+	int ppos,npos;
+	struct point *res;
+	struct draw_polyline_shape shape;
+	struct draw_polyline_shape prev_shape;
 };
 
 static void
-calc_offsets(int wi, int l, int dx, int dy, struct offset *res)
+draw_shape_update(struct draw_polyline_shape *shape)
 {
-	int x,y;
+	shape->dxw = -(shape->dx * shape->wi * shape->lscale) / shape->l;
+	shape->dyw = (shape->dy * shape->wi * shape->lscale) / shape->l;
+}
 
-	x = (dx * wi) / l;
-	y = (dy * wi) / l;
-	if (x < 0) {
-		res->nx = -x/2;
-		res->px = (x-1)/2;
-	} else {
-		res->nx = -(x+1)/2;
-		res->px = x/2;
+static void
+draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
+{
+	int dxs,dys,lscales;
+	int lscale=16;
+	int l;
+	struct draw_polyline_shape *shape=&ctx->shape;
+	struct draw_polyline_shape *prev=&ctx->prev_shape;
+
+	*prev=*shape;
+	if (prev->wi != wi && prev->l) {
+		prev->wi=wi;
+		draw_shape_update(prev);
 	}
-	if (y < 0) {
-		res->ny = -y/2;
-		res->py = (y-1)/2;
+	shape->wi=wi;
+	shape->dx = (pnt[1].x - pnt[0].x);
+	shape->dy = (pnt[1].y - pnt[0].y);
+	if (wi > 16)
+		shape->step=4;
+	else if (wi > 8)
+		shape->step=8;
+	else
+		shape->step=16;
+#if 0
+	l = int_sqrt(dx * dx * lscale * lscale + dy * dy * lscale * lscale);
+#else
+	dxs=shape->dx*shape->dx;
+	dys=shape->dy*shape->dy;
+	lscales=lscale*lscale;
+	if (dxs + dys > lscales)
+		l = int_sqrt(dxs+dys)*lscale;
+	else
+		l = int_sqrt((dxs+dys)*lscales);
+#endif
+	shape->fow=fowler(-shape->dy, shape->dx);
+	dbg(1,"fow=%d\n",shape->fow);
+	if (! l)
+		l=1;
+	if (wi*lscale > 10000)
+		lscale=10000/wi;
+	dbg_assert(wi*lscale <= 10000);
+	shape->l=l;
+	shape->lscale=lscale;
+	shape->wi=wi;
+	draw_shape_update(shape);
+}
+
+static void
+draw_point(struct draw_polyline_shape *shape, struct point *src, struct point *dst, int pos)
+{
+	if (pos) {
+		dst->x=(src->x*2-shape->dyw)/2;
+		dst->y=(src->y*2-shape->dxw)/2;
 	} else {
-		res->ny = -(y+1)/2;
-		res->py = y/2;
+		dst->x=(src->x*2+shape->dyw)/2;
+		dst->y=(src->y*2+shape->dxw)/2;
 	}
 }
 
 static void
-graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count, int *width)
+draw_begin(struct draw_polyline_context *ctx, struct point *p)
+{
+	struct draw_polyline_shape *shape=&ctx->shape;
+	int i;
+	for (i = 0 ; i <= 32 ; i+=shape->step) {
+		ctx->res[ctx->ppos].x=(p->x*256+(shape->dyw*circle64[i].y)+(shape->dxw*circle64[i].x))/256;
+		ctx->res[ctx->ppos].y=(p->y*256+(shape->dxw*circle64[i].y)-(shape->dyw*circle64[i].x))/256;
+		ctx->ppos++;
+	}
+}
+
+static int
+draw_middle(struct draw_polyline_context *ctx, struct point *p)
+{
+	int delta=ctx->prev_shape.fow-ctx->shape.fow;
+	if (delta > 512)
+		delta-=1024;
+	if (delta < -512)
+		delta+=1024;
+	if (delta < 16 && delta > -16) {
+		draw_point(&ctx->shape, p, &ctx->res[ctx->npos--], 0);
+		draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
+		return 1;
+	}
+	dbg(1,"delta %d\n",delta);
+	if (delta > 0) {
+		struct point pos,poso;
+		draw_point(&ctx->shape, p, &pos, 1);
+		draw_point(&ctx->prev_shape, p, &poso, 1);
+		if (delta >= 256)
+			return 0;
+		if (intersection(&pos, ctx->shape.dx, ctx->shape.dy, &poso, ctx->prev_shape.dx, ctx->prev_shape.dy, &ctx->res[ctx->ppos])) {
+			ctx->ppos++;
+			draw_point(&ctx->prev_shape, p, &ctx->res[ctx->npos--], 0);
+			draw_point(&ctx->shape, p, &ctx->res[ctx->npos--], 0);
+			return 1;
+		}
+	} else {
+		struct point neg,nego;
+		draw_point(&ctx->shape, p, &neg, 0);
+		draw_point(&ctx->prev_shape, p, &nego, 0);
+		if (delta <= -256)
+			return 0;
+		if (intersection(&neg, ctx->shape.dx, ctx->shape.dy, &nego, ctx->prev_shape.dx, ctx->prev_shape.dy, &ctx->res[ctx->npos])) {
+			ctx->npos--;
+			draw_point(&ctx->prev_shape, p, &ctx->res[ctx->ppos++], 1);
+			draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static void
+draw_end(struct draw_polyline_context *ctx, struct point *p)
+{
+	int i;
+	struct draw_polyline_shape *shape=&ctx->prev_shape;
+	for (i = 0 ; i <= 32 ; i+=shape->step) {
+		ctx->res[ctx->npos].x=(p->x*256+(shape->dyw*circle64[i].y)-(shape->dxw*circle64[i].x))/256;
+		ctx->res[ctx->npos].y=(p->y*256+(shape->dxw*circle64[i].y)+(shape->dyw*circle64[i].x))/256;
+		ctx->npos--;
+	}
+}
+
+static void
+draw_init_ctx(struct draw_polyline_context *ctx, int maxpoints)
+{
+	ctx->prec=1;
+	ctx->ppos=maxpoints/2;
+	ctx->npos=maxpoints/2-1;
+}
+
+
+static void
+graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphics_gc_priv *gc_priv, struct point *pnt, int count, int *width,  void (*draw)(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count))
 {
 	int maxpoints=200;
-	struct point *res=g_alloca(sizeof(struct point)*maxpoints);
-	struct point pos, poso, neg, nego;
-	int i, dx=0, dy=0, l=0, dxo=0, dyo=0;
-	struct offset o,oo={0,0,0,0};
-	int fow=0, fowo=0, delta;
-	int wi, ppos = maxpoints/2, npos = maxpoints/2;
-	int state,prec=5;
+	struct draw_polyline_context ctx;
+	int i=0;
 	int max_circle_points=20;
-	int lscale=16;
+	ctx.shape.l=0;
+	ctx.res=g_alloca(sizeof(struct point)*maxpoints);
 	i=0;
-	for (;;) {
-		wi=*width;
-		width++;
-		if (i < count - 1) {
-			int dxs,dys,lscales;
-
-			dx = (pnt[i + 1].x - pnt[i].x);
-			dy = (pnt[i + 1].y - pnt[i].y);
-#if 0
-			l = int_sqrt(dx * dx * lscale * lscale + dy * dy * lscale * lscale);
-#else
-			dxs=dx*dx;
-                       dys=dy*dy;
-                       lscales=lscale*lscale;
-                       if (dxs + dys > lscales)
-                               l = int_sqrt(dxs+dys)*lscale;
-                       else
-                               l = int_sqrt((dxs+dys)*lscales);
-#endif
-			fow=fowler(-dy, dx);
+	draw_init_ctx(&ctx, maxpoints);
+	draw_shape(&ctx, pnt, *width++);
+	draw_begin(&ctx,&pnt[0]);
+	for (i = 1 ; i < count -1 ; i++) {
+		draw_shape(&ctx, pnt+i, *width++);
+		if (ctx.npos < max_circle_points || ctx.ppos >= maxpoints-max_circle_points || !draw_middle(&ctx,&pnt[i])) {
+			struct draw_polyline_shape shape=ctx.shape;
+			draw_end(&ctx,&pnt[i]);
+			ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
+			draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
+			draw_init_ctx(&ctx, maxpoints);
+			draw_begin(&ctx,&pnt[i]);
 		}
-		if (! l)
-			l=1;
-		if (wi*lscale > 10000)
-			lscale=10000/wi;
-		dbg_assert(wi*lscale <= 10000);
-		calc_offsets(wi*lscale, l, dx, dy, &o);
-		pos.x = pnt[i].x + o.ny;
-		pos.y = pnt[i].y + o.px;
-		neg.x = pnt[i].x + o.py;
-		neg.y = pnt[i].y + o.nx;
-		if (! i)
-			state=0;
-		else if (i == count-1)
-			state=2;
-		else if (npos < max_circle_points || ppos >= maxpoints-max_circle_points)
-			state=3;
-		else
-			state=1;
-		switch (state) {
-		case 1:
-		       if (fowo != fow) {
-				poso.x = pnt[i].x + oo.ny;
-				poso.y = pnt[i].y + oo.px;
-				nego.x = pnt[i].x + oo.py;
-				nego.y = pnt[i].y + oo.nx;
-				delta=fowo-fow;
-				if (delta < 0)
-					delta+=1024;
-				if (delta < 512) {
-					if (intersection(&pos, dx, dy, &poso, dxo, dyo, &res[ppos]))
-						ppos++;
-					res[--npos] = nego;
-					--npos;
-					draw_circle(&pnt[i], wi, prec, fowo-512, -delta, res, &npos, -1);
-					res[npos] = neg;
-				} else {
-					res[ppos++] = poso;
-					draw_circle(&pnt[i], wi, prec, fowo, 1024-delta, res, &ppos, 1);
-					res[ppos++] = pos;
-					if (intersection(&neg, dx, dy, &nego, dxo, dyo, &res[npos - 1]))
-						npos--;
-				}
-			}
-			break;
-		case 2:
-		case 3:
-			res[--npos] = neg;
-			--npos;
-			draw_circle(&pnt[i], wi, prec, fow-512, -512, res, &npos, -1);
-			res[npos] = pos;
-			res[ppos++] = pos;
-			dbg_assert(npos > 0);
-			dbg_assert(ppos < maxpoints);
-			gra->meth.draw_polygon(gra->priv, gc->priv, res+npos, ppos-npos);
-			if (state == 2)
-				break;
-			npos=maxpoints/2;
-			ppos=maxpoints/2;
-		case 0:
-			res[ppos++] = neg;
-			draw_circle(&pnt[i], wi, prec, fow+512, 512, res, &ppos, 1);
-			res[ppos++] = pos;
-			break;
-		}
-		i++;
-		if (i >= count)
-			break;
-		wi=*width;
-		calc_offsets(wi*lscale, l, dx, dy, &oo);
-		dxo = -dx;
-		dyo = -dy;
-		fowo=fow;
 	}
+	draw_shape(&ctx, pnt+count-1, *width++);
+	draw_end(&ctx,&pnt[count-1]);
+	ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
+	draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
 }
 
 
@@ -1682,7 +1761,10 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 				// ... then draw the resulting polyline
 				if (points_to_draw_cnt > 1) {
 					if (poly) {
-						graphics_draw_polyline_as_polygon(gra, gc, points_to_draw, points_to_draw_cnt, w);
+						graphics_draw_polyline_as_polygon(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt, w, gra->meth.draw_polygon);
+#if 0
+						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
+#endif
 					} else
 						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
 					points_to_draw_cnt=0;
