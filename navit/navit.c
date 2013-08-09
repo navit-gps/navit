@@ -2740,6 +2740,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_speech:
 	        attr->u.speech=this_->speech;
 	        break;
+	case attr_timeout:
+		attr->u.num=this_->center_timeout;
+		break;
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
 		break;
