@@ -2863,20 +2863,19 @@ graphics_remove_selection(struct graphics *gra, struct item *item, enum item_typ
 		while (curr) {
 			struct item *sitem=curr->data;
 			if (item_is_equal(*item,*sitem)) {
+#if 0 /* FIXME */
 				if (dl) {
 					struct displayitem di;
-					/* Unused Variable
-					GHashTable *h; */
+					GHashTable *h;
 					di.item=*sitem;
 					di.label=NULL;
 					di.count=0;
 					di.item.type=type;
-#if 0 /* FIXME */
 					h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
 					if (h)
 						g_hash_table_remove(h, &di);
-#endif
 				}
+#endif
 				g_free(sitem);
 				gra->selection=g_list_remove(gra->selection, curr->data);
 				found=1;
