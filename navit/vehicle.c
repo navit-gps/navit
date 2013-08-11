@@ -391,7 +391,8 @@ static void vehicle_set_default_name(struct vehicle *this_)
 	struct attr default_name;
 	if (!attr_search(this_->attrs, NULL, attr_name)) {
 		default_name.type=attr_name;
-		default_name.u.str=_("Unnamed vehicle");
+		// Safe cast: attr_generic_set_attr does not modify its parameter.
+		default_name.u.str=(char*)_("Unnamed vehicle");
 		this_->attrs=attr_generic_set_attr(this_->attrs, &default_name);
 		dbg(0, "Incomplete vehicle definition: missing attribute 'name'. Default name set.\n");
 	}
