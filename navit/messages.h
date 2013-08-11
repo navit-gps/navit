@@ -32,7 +32,7 @@ struct message {
 /* Prototypes */
 struct attr;
 
-int message_new(struct messagelist *this_, char *message);
+int message_new(struct messagelist *this_, const char *message);
 int message_delete(struct messagelist *this_, int mid);
 struct messagelist *messagelist_new(struct attr **attrs);
 void messagelist_init(struct messagelist *this_);

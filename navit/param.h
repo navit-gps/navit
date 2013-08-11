@@ -21,14 +21,14 @@
 #define NAVIT_PARAM_H
 
 struct param_list {
-	char *name;
-	char *value;	
+	const char *name;
+	const char *value;
 };
 
-void param_add_string(char *name, char *value, struct param_list **param, int *count);
-void param_add_dec(char *name, unsigned long value, struct param_list **param, int *count);
-void param_add_hex(char *name, unsigned long value, struct param_list **param, int *count);
-void param_add_hex_sig(char *name, long value, struct param_list **param, int *count);
+void param_add_string(const char *name, const char *value, struct param_list **param, int *count);
+void param_add_dec(const char *name, unsigned long value, struct param_list **param, int *count);
+void param_add_hex(const char *name, unsigned long value, struct param_list **param, int *count);
+void param_add_hex_sig(const char *name, long value, struct param_list **param, int *count);
 
 #endif
 

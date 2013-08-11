@@ -127,7 +127,7 @@ gui_popup_new(struct gui *gui)
 }
 
 struct datawindow *
-gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close)
+gui_datawindow_new(struct gui *gui, const char *name, struct callback *click, struct callback *close)
 {
 	struct datawindow *this_;
 	if (! gui->meth.datawindow_new)

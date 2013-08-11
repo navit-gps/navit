@@ -34,7 +34,7 @@ struct messagelist {
 };
 
 int
-message_new(struct messagelist *this_, char *message)
+message_new(struct messagelist *this_, const char *message)
 {
 	struct message *msg;
 
