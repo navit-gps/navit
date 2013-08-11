@@ -409,6 +409,7 @@ ch_close_tempfiles(FILE **files, int count)
 	}
 }
 
+#if 0
 static void
 ch_remove_tempfiles(char *suffix, int count)
 {
@@ -420,6 +421,7 @@ ch_remove_tempfiles(char *suffix, int count)
 		tempfile_unlink(suffix, name);
 	}
 }
+#endif
 
 static void
 ch_copy_to_tiles(char *suffix, int count, struct tile_info *info, FILE *ref)

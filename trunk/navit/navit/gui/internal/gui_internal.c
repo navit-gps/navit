@@ -110,7 +110,6 @@ static struct gui_config_settings config_profiles[]={
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
-static void gui_internal_destroy(struct gui_priv *this);
 
 /*
  * * Display image scaled to specific size
@@ -3307,25 +3306,4 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 void plugin_init(void)
 {
 	plugin_register_gui_type("internal", gui_internal_new);
-}
-
-static void
-gui_internal_destroy(struct gui_priv *this)
-{
-	graphics_font_destroy(this->fonts[0]);
-	graphics_font_destroy(this->fonts[1]);
-	graphics_font_destroy(this->fonts[2]);
-	graphics_gc_destroy(this->background);
-	graphics_gc_destroy(this->background2);
-	graphics_gc_destroy(this->highlight_background);
-	graphics_gc_destroy(this->foreground);
-	graphics_gc_destroy(this->text_background);
-	graphics_gc_destroy(this->text_foreground);
-	attr_free(this->click_coord_geo);
-	attr_free(this->position_coord_geo);
-	g_free(this->country_iso2);
-	g_free(this->href);
-	g_free(this->html_text);
-	g_free(this->on_map_click);
-	g_free(this);
 }

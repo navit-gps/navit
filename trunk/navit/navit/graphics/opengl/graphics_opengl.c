@@ -208,7 +208,9 @@ static struct graphics_priv *graphics_opengl_new_helper(struct
 							*meth);
 static void display(void);
 static void resize_callback(int w, int h);
+#ifdef USE_OPENGLES
 static void click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y);
+#endif
 static void motion_notify_do(struct graphics_priv *priv, int x, int y);
 static void resize_callback_do(struct graphics_priv *priv, int w, int h);
 static void glut_close();
@@ -1488,6 +1490,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 }
 
 
+#ifdef USE_OPENGLES
 static void
 click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y)
 {
@@ -1495,6 +1498,7 @@ click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y)
 	dbg(0,"enter state %d button %d\n",state,button);
 	callback_list_call_attr_3(priv->cbl, attr_button, (void *) state, (void *)button, (void *) &p);
 }
+#endif
 
 static void
 click_notify(int button, int state, int x, int y)
