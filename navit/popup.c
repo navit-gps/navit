@@ -320,7 +320,7 @@ static void
 popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 {
 	struct map_rect *mr;
-	void *menu, *menu_map, *menu_item, *menu_dist;
+	void *menu, *menu_item, *menu_dist;
 	char *label;
 	struct item *item,*diitem;
 	int count;
@@ -368,7 +368,6 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 			}
 		}
 		map_rect_destroy(mr);
-		menu_map=popup_printf(menu, menu_type_submenu, "Map");
 	} else {
 		popup_printf(menu, menu_type_menu, "(No map)");
 	}

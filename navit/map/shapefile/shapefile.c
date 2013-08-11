@@ -367,30 +367,25 @@ static void
 process_fields(struct map_priv *m, int id)
 {
 	int i;
-	char szTitle[12],*pszTypeName,*str;
+	char szTitle[12],*str;
 	int nWidth, nDecimals;
 
 	for (i = 0 ; i < m->nFields ; i++) {
 
 		switch (DBFGetFieldInfo(m->hDBF, i, szTitle, &nWidth, &nDecimals )) {
 		case FTString:
-			pszTypeName = "String";
 			str=g_strdup(DBFReadStringAttribute( m->hDBF, id, i ));
 			break;
 		case FTInteger:
-			pszTypeName = "Integer";
 			str=g_strdup_printf("%d",DBFReadIntegerAttribute( m->hDBF, id, i ));
 			break;
 		case FTDouble:
-			pszTypeName = "Double";
 			str=g_strdup_printf("%lf",DBFReadDoubleAttribute( m->hDBF, id, i ));
 			break;
 		case FTInvalid:
-			pszTypeName = "Invalid";
 			str=NULL;
 			break;
 		default:
-			pszTypeName = "Unknown";
 			str=NULL;
 		}
 		longest_match_add_key_value(m->lm, szTitle, str);

@@ -950,9 +950,8 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
 static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 color, int draw_endpoint)
 {
     Sint32 xx0, yy0, xx1, yy1;
-    int result;
     Uint32 intshift, erracc, erradj;
-    Uint32 erracctmp, wgt, wgtcompmask;
+    Uint32 erracctmp, wgt;
     int dx, dy, tmp, xdir, y0p1, x0pxdir;
 
     /*
@@ -1029,11 +1028,6 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
     }
 
     /*
-     * Line is not horizontal, vertical or diagonal 
-     */
-    result = 0;
-
-    /*
      * Zero accumulator 
      */
     erracc = 0;
@@ -1042,10 +1036,6 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
      * # of bits by which to shift erracc to get intensity level 
      */
     intshift = 32 - AAbits;
-    /*
-     * Mask used to flip all bits in an intensity weighting 
-     */
-    wgtcompmask = AAlevels - 1;
 
     /* Lock surface */
     if (SDL_MUSTLOCK(dst)) {
@@ -1169,7 +1159,6 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
 {
     /* sdl-gfx */
     Sint16 left, right, top, bottom;
-    int result;
     Sint16 x1, y1, x2, y2;
     Sint16 cx = 0;
     Sint16 cy = r;
@@ -1230,7 +1219,6 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
     /*
      * Draw 
      */
-    result = 0;
     do {
 	xpcx = x + cx;
 	xmcx = x - cx;
@@ -1825,7 +1813,6 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
 
        the output is not perfect yet but usually looks better than aliasing
     */
-    int result;
     int i;
     int y, xa, xb;
     int miny, maxy;
@@ -1868,7 +1855,6 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Draw 
      */
-    result = 0;
     for (i = 1; i < n; i++) {
 	raster_aalineColorInt(dst, *px1, *py1, *px2, *py2, color, 0);
 	px1 = px2;
@@ -1945,7 +1931,6 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Draw, scanning y 
      */
-    result = 0;
     for (y = miny; (y <= maxy); y++) {
 	ints = 0;
 	for (i = 0; (i < n); i++) {

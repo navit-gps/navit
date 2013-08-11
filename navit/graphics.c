@@ -1606,7 +1606,6 @@ graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphic
 	for (i = 1 ; i < count -1 ; i++) {
 		draw_shape(&ctx, pnt+i, *width++);
 		if (ctx.npos < max_circle_points || ctx.ppos >= maxpoints-max_circle_points || !draw_middle(&ctx,&pnt[i])) {
-			struct draw_polyline_shape shape=ctx.shape;
 			draw_end(&ctx,&pnt[i]);
 			ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
 			draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);

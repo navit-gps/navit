@@ -209,7 +209,7 @@ void sunpos( double d, double *lon, double *r )
 void sun_RA_dec( double d, double *RA, double *dec, double *r )
 {
   double lon, obl_ecl;
-  double xs, ys, zs;
+  double xs, ys;
   double xe, ye, ze;
   
   /* Compute Sun's ecliptical coordinates */
@@ -218,7 +218,7 @@ void sun_RA_dec( double d, double *RA, double *dec, double *r )
   /* Compute ecliptic rectangular coordinates */
   xs = *r * cosd(lon);
   ys = *r * sind(lon);
-  zs = 0; /* because the Sun is always in the ecliptic plane! */
+  /* No zs, because the Sun is always in the ecliptic plane! */
 
   /* Compute obliquity of ecliptic (inclination of Earth's axis) */
   obl_ecl = 23.4393 - 3.563E-7 * d;
