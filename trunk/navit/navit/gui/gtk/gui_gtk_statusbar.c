@@ -68,7 +68,7 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 }
 #endif
 
-static char *status_fix2str(int type)
+static const char *status_fix2str(int type)
 {
 	switch(type) {
 		case 0: return _("No");
@@ -94,8 +94,8 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	double lng, lat, direction=0, height=0, speed=0, hdop=0;
 	int sats=0, qual=0;
 	int status=0;
-	char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
-	char *dir;
+	const char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
+	const char *dir;
 	int dir_idx;
 
 	if (navit)

@@ -182,7 +182,7 @@ static struct datawindow_methods gui_gtk_datawindow_meth = {
 };
 
 struct datawindow_priv *
-gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth)
+gui_gtk_datawindow_new(struct gui_priv *gui, const char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth)
 {
 	struct datawindow_priv *win;
 
