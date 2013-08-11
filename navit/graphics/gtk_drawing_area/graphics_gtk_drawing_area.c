@@ -735,7 +735,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	       gra->background_ready = 0;
 	}
 #ifndef _WIN32
-	dbg(1,"window=%d\n", GDK_WINDOW_XID(widget->window));
+	dbg(1,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;

@@ -1822,7 +1822,7 @@ navit_say(struct navit *this_, char *text)
 	if(this_->speech) {
 		if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
 			attr.u.num = 1;
-		dbg(1, "this_.speech->active %i\n", attr.u.num);
+		dbg(1, "this_.speech->active %ld\n", attr.u.num);
 		if(attr.u.num)
 			speech_say(this_->speech, text);
 	}
@@ -1869,7 +1869,7 @@ navit_speak(struct navit *this_)
 
     if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
         attr.u.num = 1;
-    dbg(1, "this_.speech->active %i\n", attr.u.num);
+    dbg(1, "this_.speech->active %ld\n", attr.u.num);
     if(!attr.u.num)
         return;
 
@@ -1923,7 +1923,7 @@ navit_window_roadbook_update(struct navit *this_)
 			param[0].name=_("Command");
 
 			item_attr_get(item, attr_length, &attr);
-			dbg(2, "Length=%d\n", attr.u.num);
+			dbg(2, "Length=%ld\n", attr.u.num);
 			param[1].name=_("Length");
 
 			if ( attr.u.num >= 2000 )
@@ -1936,7 +1936,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_time, &attr);
-			dbg(2, "Time=%d\n", attr.u.num);
+			dbg(2, "Time=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[2].name=_("Time");
 			if ( secs >= 3600 )
@@ -1949,7 +1949,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_destination_length, &attr);
-			dbg(2, "Destlength=%d\n", attr.u.num);
+			dbg(2, "Destlength=%ld\n", attr.u.num);
 			param[3].name=_("Destination Length");
 			if ( attr.u.num >= 2000 )
 			{
@@ -1961,7 +1961,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_destination_time, &attr);
-			dbg(2, "Desttime=%d\n", attr.u.num);
+			dbg(2, "Desttime=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[4].name=_("Destination Time");
 			if ( secs >= 3600 )
@@ -2479,7 +2479,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		}
 		break;
 	case attr_osd_configuration:
-		dbg(0,"setting osd_configuration to %d (was %d)\n", attr->u.num, this_->osd_configuration);
+		dbg(0,"setting osd_configuration to %ld (was %d)\n", attr->u.num, this_->osd_configuration);
 		attr_updated=(this_->osd_configuration != attr->u.num);
 		this_->osd_configuration=attr->u.num;
 		break;

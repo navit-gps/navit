@@ -1058,7 +1058,6 @@ street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *att
 			return 0;
 		return item_attr_get(mr->search_item_tmp, attr_type, attr);
 	default:
-		dbg(0,"%p\n",mr->street.name_numbers.dist);
 		dbg(0,"unknown attr %s\n",attr_to_name(attr_type));
 		return 0;
 	}

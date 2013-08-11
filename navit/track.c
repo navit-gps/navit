@@ -687,7 +687,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		static_distance.u.num=10;
 		dbg(1,"Using defaults for static position detection\n");
 	}
-	dbg(2,"Static speed: %u, static distance: %u\n",static_speed.u.num, static_distance.u.num);
+	dbg(2,"Static speed: %ld, static distance: %ld\n",static_speed.u.num, static_distance.u.num);
 	time=iso8601_to_secs(time_attr.u.str);
 	speed=*speed_attr.u.numd;
 	direction=*direction_attr.u.numd;
@@ -720,7 +720,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 			espeed=speed;
 			edirection=direction;
 		}
-		dbg(1,"lag %d speed %f direction %d\n",lag.u.num,espeed,edirection);
+		dbg(1,"lag %ld speed %f direction %d\n",lag.u.num,espeed,edirection);
 		dbg(1,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
 		transform_project(pro, &tr->curr_in, espeed*lag.u.num/36, edirection, &tr->curr_in);
 		dbg(1,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
