@@ -30,10 +30,10 @@
 
 struct country {
 	int id;
-	char *car;
-	char *iso2;
-	char *iso3;
-	char *name;
+	const char *car;
+	const char *iso2;
+	const char *iso3;
+	const char *name;
 };
 
 /* List of all known countries and their codes. 
@@ -317,8 +317,10 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 							return 1;
 			}
 			return 0;
+	// Cast to char* necessary but safe, because our callers know
+	// not to modify attr->u.str (hopefully).
 	case attr_label:
-		attr->u.str=navit_nls_gettext(country->name);
+		attr->u.str=(char*)navit_nls_gettext(country->name);
 		this_->attr_next=attr_country_id;
 		return 1;
 	case attr_country_id:
@@ -326,19 +328,19 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		this_->attr_next=country->car ? attr_country_car : attr_country_iso2;
 		return 1;
 	case attr_country_car:
-		attr->u.str=country->car;
+		attr->u.str=(char*)country->car;
 		this_->attr_next=attr_country_iso2;
 		return attr->u.str ? 1 : 0;
 	case attr_country_iso2:
-		attr->u.str=country->iso2;
+		attr->u.str=(char*)country->iso2;
 		this_->attr_next=attr_country_iso3;
 		return 1;
 	case attr_country_iso3:
-		attr->u.str=country->iso3;
+		attr->u.str=(char*)country->iso3;
 		this_->attr_next=attr_country_name;
 		return 1;
 	case attr_country_name:
-		attr->u.str=navit_nls_gettext(country->name);
+		attr->u.str=(char*)navit_nls_gettext(country->name);
 		this_->attr_next=attr_none;
 		return 1;
 	default:
