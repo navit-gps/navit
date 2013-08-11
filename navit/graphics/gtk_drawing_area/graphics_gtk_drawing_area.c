@@ -112,24 +112,6 @@ struct graphics_image_priv {
 };
 
 static void
-graphics_destroy_image(gpointer data)
-{
-	struct graphics_image_priv *priv = (struct graphics_image_priv*)data;
-
-#ifdef HAVE_IMLIB2
-	if (priv->image) {
-		imlib_context_set_image(priv->image);
-		imlib_free_image();
-	}
-
-#endif
-
-	if (priv->pixbuf)
-		g_object_unref(priv->pixbuf);
-	g_free(priv);
-}
-
-static void
 graphics_destroy(struct graphics_priv *gr)
 {
 	dbg(3,"enter parent %p\n",gr->parent);

@@ -474,6 +474,9 @@ static void quadtree_item_free_do(void *data)
 	g_free(data);
 }
 
+/**
+ * Dump all map data (including deleted items) to the log.
+ */
 static void map_csv_debug_dump(struct map_priv *map)
 {
 	GList *l=g_hash_table_get_values(map->qitem_hash);
@@ -502,12 +505,9 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
 	struct coord_geo rl;
 	struct quadtree_iter *res = NULL;
 	dbg(1,"map_rect_new_csv\n");
-
-#if 0
-	/* Set above value to 1 to have all map data dumped (including deleted items) to the log at each maprect creation */
-	map_csv_debug_dump(map);
-#endif	
-	
+	if(debug_level_get("map_csv")>2) {
+		map_csv_debug_dump(map);
+	}
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->bStarted = 0;
