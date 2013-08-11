@@ -1083,10 +1083,10 @@ parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, co
 #endif
 
 void
-xml_parse_text(const char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *),
-			                   void (*end)(void *, const char *, void *, void *),
-			                   void (*text)(void *, const char *, int, void *, void *))
-{
+xml_parse_text(const char *document, void *data,
+	void (*start)(GMarkupParseContext *, const char *, const char **, const char **, void *, GError **),
+	void (*end)(GMarkupParseContext *, const char *, void *, GError **),
+	void (*text)(GMarkupParseContext*, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
 	GMarkupParser parser = { start, end, text, NULL, NULL};
 	xml_context *context;

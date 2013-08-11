@@ -452,7 +452,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 
 		if ((*w != width || *h != height) && 0 < *w && 0 < *h) {
 			FIBITMAP *image2;
-			image2 = FreeImage_Rescale(image, *w, *h, NULL);
+			image2 = FreeImage_Rescale(image, *w, *h, FILTER_BOX);
 			FreeImage_Unload(image);
 			image = image2;
 			width = *w;
@@ -1186,12 +1186,14 @@ redraw_screen(struct graphics_priv *gr)
 
 #ifndef USE_OPENGLES
 /*filters call to redraw in overlay enabled(map) mode*/
-static void
-redraw_filter(struct graphics_priv *gr)
+static gboolean
+redraw_filter(gpointer data)
 {
+	struct graphics_priv *gr = (struct graphics_priv*) data;
 	if (gr->overlay_enabled && gr->dirty) {
 		redraw_screen(gr);
 	}
+	return 0;
 }
 #endif
 
@@ -1264,7 +1266,7 @@ load_shader(const char *shader_source, GLenum type)
 #endif
 
 static void *
-get_data(struct graphics_priv *this, char *type)
+get_data(struct graphics_priv *this, const char *type)
 {
 	/*TODO initialize gtkglext context when type=="gtk_widget" */
 	if (!strcmp(type, "gtk_widget")) {
@@ -1457,8 +1459,9 @@ graphics_opengl_new_helper(struct graphics_methods *meth)
 	    (struct graphics_font_priv *
 	     (*)(struct graphics_priv *, struct graphics_font_methods *,
 		 char *, int, int)) this->freetype_methods.font_new;
-	meth->get_text_bbox = this->freetype_methods.get_text_bbox;
-
+	meth->get_text_bbox =
+	    (void (*) (struct graphics_priv *, struct graphics_font_priv *,
+	    char *, int, int, struct point*, int)) this->freetype_methods.get_text_bbox;
 	return this;
 }
 
@@ -1739,7 +1742,7 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 static void
 event_opengl_main_loop_run(void)
 {
-	dbg(0, "enter\n");
+	dbg(2, "enter\n");
 }
 
 static void
