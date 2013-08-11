@@ -24,6 +24,7 @@
 	<string name="optionsmenu_toggle_poi">POI ein/aus</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
 	<string name="optionsmenu_exit_navit">Navit beenden</string>
+	<string name="optionsmenu_backup_restore">Sichern / Wiederherstellen</string>
 
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>
@@ -55,5 +56,21 @@
 	<string name="address_search_set_destination">Neues Fahrziel:</string>
 	<string name="address_search_towns">Städte</string>
 	<string name="address_search_streets">Straßen</string>
+	
+	<!--  Backup Restore -->
+	<string name="choose_an_action">Bitte auswählen</string>
+	<string name="please_insert_an_sd_card">Bitte eine SD Karte einlegen</string>
+	<string name="backing_up">Sichern...</string>
+	<string name="failed_to_create_backup_directory">Sicherungsverzeichnis konnte nicht erstellt werden</string>
+	<string name="backup_failed">Sicherung Fehlgeschlagen</string>
+	<string name="no_backup_found">Keine Sicherung gefunden</string>
+	<string name="failed_to_restore">Fehler beim Wiederherstellen</string>
+	<string name="backup_successful">Sicherung erfolgreich</string>
+	<string name="restore_successful_please_restart_navit">Sicherung Erfolgreich\nNavit bitte neustarten</string>
+	<string name="backup_not_found">Backup nicht gefunden</string>
+	<string name="restore_failed">Wiederherstellen fehlgeschlagen</string>
+	<string name="select_backup">Backup auswählen</string>
+	<string name="backup">Sichern</string>
+	<string name="restore">Wiederherstellen</string>
 </resources>
 
