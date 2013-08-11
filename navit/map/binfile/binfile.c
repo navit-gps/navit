@@ -181,7 +181,6 @@ static void setup_pos(struct map_rect_priv *mr);
 static void map_binfile_close(struct map_priv *m);
 static int map_binfile_open(struct map_priv *m);
 static void map_binfile_destroy(struct map_priv *m);
-static int case_cmp(char *name, char *match, int partial);
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
