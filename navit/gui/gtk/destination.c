@@ -453,7 +453,6 @@ int destination_address(struct navit *nav)
 	GtkWidget *label_country;
 	GtkWidget *label_postal, *label_city, *label_district;
 	GtkWidget *label_street, *label_number;
-	GtkWidget *hseparator1,*hseparator2;
 	GtkWidget *button1,*button2,*button3;
 	int i;
 	struct search_param *search=&search_param;
@@ -485,7 +484,6 @@ int destination_address(struct navit *nav)
 	search->entry_district = gtk_entry_new();
 	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_district), FALSE);
 	label_district = gtk_label_new(_("District/Township"));
-	hseparator1 = gtk_vseparator_new();
 	search->entry_street = gtk_entry_new();
 	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), FALSE);
 	label_street = gtk_label_new(_("Street"));
@@ -513,7 +511,6 @@ int destination_address(struct navit *nav)
 
 
 
-	hseparator2 = gtk_vseparator_new();
 	button1 = gtk_button_new_with_label(_("Map"));
 	button2 = gtk_button_new_with_label(_("Bookmark"));
 	button3 = gtk_button_new_with_label(_("Destination"));

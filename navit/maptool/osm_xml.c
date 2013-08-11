@@ -75,16 +75,14 @@ void
 osm_xml_decode_entities(char *buffer)
 {
 	char *pos=buffer;
-	int i,len,found;
+	int i,len;
 
 	while ((pos=strchr(pos, '&'))) {
-		found=0;
 		for (i = 0 ; i < sizeof(entities)/sizeof(struct entity); i++) {
 			len=strlen(entities[i].entity);
 			if (!strncmp(pos, entities[i].entity, len)) {
 				*pos=entities[i].c;
 			 	memmove(pos+1, pos+len, strlen(pos+len)+1);
-				found=1;
 				break;
 			}
 		}

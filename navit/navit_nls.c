@@ -7,7 +7,9 @@
 #else
 #include <libintl.h>
 #endif
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
 static GList *textdomains;
+#endif
 
 char *
 navit_nls_add_textdomain(const char *package, const char *dir)

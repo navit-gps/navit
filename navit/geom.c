@@ -361,13 +361,11 @@ int
 geom_poly_segments_point_inside(GList *in, struct coord *c)
 {
 	int open_matches=0,closed_matches=0;
-	struct coord *cp;
 #if 0
 	fprintf(stderr,"try 0x%x,0x%x:",c->x,c->y);
 #endif
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
-		cp=seg->first;
 		if (geom_poly_point_inside(seg->first, seg->last-seg->first+1, c)) {
 #if 0
 			fprintf(stderr," inside");

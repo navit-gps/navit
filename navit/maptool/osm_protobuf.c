@@ -203,7 +203,7 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 {
 	int i,j=0,has_tags;
 	long long id=0,lat=0,lon=0,changeset=0,timestamp=0;
-	int version,user_sid=0,uid=0;
+	int user_sid=0,uid=0;
 
 	if (!dense)
 		return;
@@ -212,7 +212,6 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 		id+=dense->id[i];
 		lat+=dense->lat[i];
 		lon+=dense->lon[i];
-		version=dense->denseinfo->version[i];
 		changeset+=dense->denseinfo->changeset[i];
 		user_sid+=dense->denseinfo->user_sid[i];
 		uid+=dense->denseinfo->uid[i];
@@ -220,7 +219,7 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 		has_tags=dense->keys_vals && dense->keys_vals[j];
 		osm_add_node(id, lat/latlon_scale,lon/latlon_scale);
 #if 0
-		printf("\t<node id=\"%Ld\" lat=\"%.7f\" lon=\"%.7f\" version=\"%d\" changeset=\"%Ld\"",id,lat/latlon_scale,lon/latlon_scale,version,changeset);
+		printf("\t<node id=\"%Ld\" lat=\"%.7f\" lon=\"%.7f\" version=\"%d\" changeset=\"%Ld\"",id,lat/latlon_scale,lon/latlon_scale,dense->denseinfo->version[i],changeset);
 		process_user(primitive_block, user_sid, uid, 0);
 		process_timestamp(timestamp);
 #endif

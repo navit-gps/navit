@@ -391,8 +391,6 @@ cache_stats(struct cache *cache)
 void
 cache_dump(struct cache *cache)
 {
-	struct cache_entry *first;
-	first=cache->t1.first;
 	cache_stats(cache);
 	cache_list_dump("T1", cache, &cache->t1);
 	cache_list_dump("B1", cache, &cache->b1);

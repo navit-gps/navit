@@ -1195,7 +1195,7 @@ int
 command_evaluate_single(struct context *ctx)
 {
 	struct result res={{0,},},tmp={{0,},};
-	const char *op,*a1,*a2,*a3,*f,*end;
+	const char *op,*a,*f,*end;
 	enum attr_type attr_type;
 	void *obj;
 	struct object_func *obj_func;
@@ -1220,7 +1220,7 @@ command_evaluate_single(struct context *ctx)
 			return 0;
 		}
 		ctx->skip=1;
-		a1=ctx->expr;
+		a=ctx->expr;
     		eval_conditional(ctx, &res);
 		resolve_object(ctx, &res);
 		ctx->skip=skip;
@@ -1228,7 +1228,6 @@ command_evaluate_single(struct context *ctx)
 			ctx->error=missing_semicolon;
 			return 0;
 		}
-		a2=ctx->expr;
 		eval_comma(ctx,&res);
 		attr_type=command_attr_type(&res);
 		obj=res.attr.u.data;
@@ -1263,7 +1262,7 @@ command_evaluate_single(struct context *ctx)
 		}
 		iter = obj_func->iter_new(NULL);
 		while (obj_func->get_attr(obj, attr_type, &attr, iter)) {
-			ctx->expr=a1;
+			ctx->expr=a;
     			eval_conditional(ctx, &res);
 			resolve_object(ctx, &res);
 			tmp.attr=attr;

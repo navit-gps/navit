@@ -1730,7 +1730,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 {
 	struct navigation_command *cur,*prev;
 	int distance=itm->dest_length-cmd->itm->dest_length;
-	int level, dist, i, time;
+	int level, i, time;
 	int speech_time,time2nav;
 	char *ret,*old,*buf,*next;
 
@@ -1772,7 +1772,6 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 			speech_time = 30; // assume 3 seconds
 		}
 
-		dist = prev->itm->dest_length - cur->itm->dest_length;
 		time = navigation_time(prev->itm,cur->itm->prev);
 
 		if (time >= (speech_time + 30)) { // 3 seconds for understanding what has been said
