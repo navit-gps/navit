@@ -19,6 +19,8 @@ navit_nls_add_textdomain(const char *package, const char *dir)
 	bind_textdomain_codeset(package, "UTF-8");
 	textdomains=g_list_append(textdomains, g_strdup(package));
 	return ret;
+#else
+	return NULL;
 #endif
 }
 
