@@ -30,7 +30,7 @@
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 {
-	dbg(1,"%s:%d\n", attr_to_name(attr->type), attr->u.num);
+	dbg(1,"%s:%ld\n", attr_to_name(attr->type), attr->u.num);
 	switch (attr->type) {
 	case attr_flags:
 		this_->flags=attr->u.num;
@@ -200,7 +200,7 @@ vehicleprofile_update(struct vehicleprofile *this_)
 		if (!profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_active, &active, NULL)) 
 			active.u.num=0;
 		if (profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_name, &name, NULL)) 
-			dbg(0,"%p %s %d\n",profile_option.u.navit_object,name.u.str,active.u.num);
+			dbg(0,"%p %s %ld\n",profile_option.u.navit_object,name.u.str,active.u.num);
 		if (active.u.num) 
 			vehicleprofile_apply_attrs(this_, profile_option.u.navit_object, 1);
 	}

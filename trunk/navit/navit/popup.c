@@ -87,7 +87,7 @@ popup_traffic_distortion(struct item *item, char *attr)
 		}
 		else
 		{
-			dbg(0,"could not open file for distortions !!", item);
+			dbg(0,"could not open file for distortions !!");
 
 		} /* else - if (map) */
 		g_free(dist_filename);			/* free the file name */

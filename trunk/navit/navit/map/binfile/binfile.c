@@ -1761,7 +1761,7 @@ map_parse_submap(struct map_rect_priv *mr, int async)
 		return 0;
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 		return 0;
-	dbg(1,"pushing zipfile %d from %d\n", at.u.num, mr->t->zipfile_num);
+	dbg(1,"pushing zipfile %ld from %d\n", at.u.num, mr->t->zipfile_num);
 	return push_zipfile_tile(mr, at.u.num, 0, 0, async);
 }
 

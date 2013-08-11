@@ -3153,7 +3153,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
 			case 2:
 				strength=2;
 				if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_sats_used, &attr, NULL)) {
-					dbg(1,"num=%d\n", attr.u.num);
+					dbg(1,"num=%ld\n", attr.u.num);
 					if (attr.u.num >= 3) 
 						strength=attr.u.num-1;
 					if (strength > 5)
