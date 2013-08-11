@@ -882,15 +882,6 @@ file_wordexp_destroy(struct file_wordexp *wexp)
 
 
 int
-file_get_param(struct file *file, struct param_list *param, int count)
-{
-	int i=count;
-	param_add_string("Filename", file->name, &param, &count);
-	param_add_hex("Size", file->size, &param, &count);
-	return i-count;
-}
-
-int
 file_version(struct file *file, int mode)
 {
 #ifndef HAVE_API_WIN32_BASE

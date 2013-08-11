@@ -35,11 +35,13 @@ osm_tag_value(struct item_bin *ib, char *key)
 	return NULL;
 }
 
+#if 0
 static char *
 osm_tag_name(struct item_bin *ib)
 {
 	return osm_tag_value(ib, "name");
 }
+#endif
 
 osmid
 boundary_relid(struct boundary *b)

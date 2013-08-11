@@ -177,6 +177,7 @@ osm_protobufdb_start_group(struct osm_protobufdb_context *ctx, int groupnum)
 	return 1;
 }
 
+#if 0
 static int
 osm_protobufdb_start_densenode(struct osm_protobufdb_context *ctx)
 {
@@ -204,6 +205,7 @@ osm_protobufdb_write_primitive_group(OSMPBF__PrimitiveGroup *pg, OSMPBF__Primiti
 	pb->primitivegroup=realloc(pb->primitivegroup,(pb->n_primitivegroup+1)*sizeof(OSMPBF__PrimitiveGroup *));
 	pb->primitivegroup[pb->n_primitivegroup++]=pg;
 }
+#endif
 
 
 #define insert(struct, member, pos) {\
@@ -215,6 +217,7 @@ osm_protobufdb_write_primitive_group(OSMPBF__PrimitiveGroup *pg, OSMPBF__Primiti
 	struct->n_##member++;\
 }
 
+#if 0
 static int
 osm_protobufdb_insert_densenode(long long id, OSMPBF__Node *offset, OSMPBF__Info *offseti, OSMPBF__DenseNodes *dn)
 {
@@ -274,6 +277,7 @@ osm_protobufdb_modify_densenode(OSMPBF__Node *node, OSMPBF__Info *info, OSMPBF__
 	dn->denseinfo->user_sid[pos]=info->user_sid-offseti->user_sid;
 	dn->denseinfo->uid[pos]=info->uid-offseti->uid;
 }
+#endif
 
 static int
 osm_protobufdb_insert_node(long long id, OSMPBF__PrimitiveGroup *pg)
