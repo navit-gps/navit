@@ -68,7 +68,11 @@ speech_cmdline_search(GList *l, int suffix_len, const char *s, int decode)
 		if (decode)
 			snd=urldecode(snd);
 		snd_len=strlen(snd)-suffix_len;
-		if (!g_strncasecmp(s, snd, snd_len)) {
+		// TODO: Here we compare UTF-8 text with a filename.
+		// It's unclear how a case-insensitive comparison should
+		// work in general, so for now we only do it for ASCII
+		// text.
+		if (!g_ascii_strncasecmp(s, snd, snd_len)) {
 			const char *ss=s+snd_len;
 			while (*ss == ' ' || *ss == ',')
 				ss++;

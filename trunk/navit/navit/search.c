@@ -33,6 +33,7 @@
 #include "country.h"
 #include "linguistics.h"
 #include "geom.h"
+#include "util.h"
 
 #if HAVE_API_ANDROID
 #include "android.h"
@@ -732,9 +733,9 @@ static int
 search_match(char *str, char *search, int partial)
 {
 	if (!partial)
-		return (!g_strcasecmp(str, search));
+		return (!g_ascii_strcasecmp(str, search));
 	else
-		return (!g_strncasecmp(str, search, strlen(search)));
+		return (!g_ascii_strncasecmp(str, search, strlen(search)));
 }
 
 static struct pcoord *
@@ -1168,15 +1169,7 @@ search_list_get_result(struct search_list *this_)
 
 				if(le->parent && has_street_name) {
 					struct search_list_street *street=this_->levels[level-1].last->data;
-					char *s1,*s2;
-					int cmpres;
-					s1=g_utf8_casefold(street->name,-1);
-					s2=g_utf8_casefold(attr2.u.str,-1);
-					cmpres=strcmp(s1,s2);
-					dbg(1,"Compared %s with %s, got %d\n",s1,s2,cmpres);
-					g_free(s1);
-					g_free(s2);
-					if(cmpres) {
+					if(navit_utf8_strcasecmp(street->name, attr2.u.str)) {
 						search_list_house_number_destroy(p);
 						//this_->item=NULL;
 						continue;
