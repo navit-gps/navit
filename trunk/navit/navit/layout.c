@@ -258,7 +258,7 @@ layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 		iter=obj->func->iter_new(obj);
 		while (obj->func->get_attr(obj, attr_layer, &layer, iter)) {
 			if (!strcmp(layer.u.layer->name, attr->u.str)) {
-				l->ref=navit_object_ref(layer.u.navit_object);
+				l->ref=(struct layer*)navit_object_ref(layer.u.navit_object);
 				break;
 			}
 		}

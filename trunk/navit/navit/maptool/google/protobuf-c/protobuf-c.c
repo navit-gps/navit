@@ -823,7 +823,7 @@ copy_to_little_endian_32 (void *out, const void *in, unsigned N)
   unsigned i;
   const uint32_t *ini = in;
   for (i = 0; i < N; i++)
-    fixed32_pack (ini[i], (uint32_t*)out + i);
+    fixed32_pack (ini[i], (uint8_t*)out + 4*i);
 #endif
 }
 static void
@@ -835,7 +835,7 @@ copy_to_little_endian_64 (void *out, const void *in, unsigned N)
   unsigned i;
   const uint64_t *ini = in;
   for (i = 0; i < N; i++)
-    fixed64_pack (ini[i], (uint64_t*)out + i);
+    fixed64_pack (ini[i], (uint8_t*)out + 8*i);
 #endif
 }
 
