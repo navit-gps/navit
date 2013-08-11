@@ -1484,7 +1484,7 @@ osm_add_way(osmid id)
 	debug_attr_buffer[0]='\0';
 	osmid_attr_value=id;
 	if (wayid < wayid_last && !way_hash) {
-		fprintf(stderr,"INFO: Ways out of sequence (new %lu vs old %lu), adding hash\n", wayid, wayid_last);
+		fprintf(stderr,"INFO: Ways out of sequence (new "OSMID_FMT" vs old "OSMID_FMT"), adding hash\n", wayid, wayid_last);
 		way_hash=g_hash_table_new(NULL, NULL);
 	}
 	wayid_last=wayid;
