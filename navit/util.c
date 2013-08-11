@@ -53,6 +53,19 @@ strtolower(char *dest, const char *src)
 	*dest='\0';
 }
 
+int
+navit_utf8_strcasecmp(const char *s1, const char *s2)
+{
+        char *s1_folded,*s2_folded;
+	int cmpres;
+	s1_folded=g_utf8_casefold(s1,-1);
+	s2_folded=g_utf8_casefold(s2,-1);
+	cmpres=strcmp(s1_folded,s2_folded);
+	dbg(3,"Compared %s with %s, got %d\n",s1_folded,s2_folded,cmpres);
+	g_free(s1_folded);
+	g_free(s2_folded);
+	return cmpres;
+}
 
 static void
 hash_callback(gpointer key, gpointer value, gpointer user_data)

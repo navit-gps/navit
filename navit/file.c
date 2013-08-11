@@ -795,7 +795,7 @@ file_create_caseinsensitive(char *name, struct attr **options)
 	if (d) {
 		*p++='/';
 		while ((filename=file_readdir(d))) {
-			if (!g_strcasecmp(filename, p)) {
+			if (!g_ascii_strcasecmp(filename, p)) {
 				strcpy(p, filename);
 				ret=file_create(dirname, options);
 				if (ret)

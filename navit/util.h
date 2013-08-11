@@ -25,6 +25,7 @@
 
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
+int navit_utf8_strcasecmp(const char *s1, const char *s2);
 GList * g_hash_to_list(GHashTable *h);
 GList * g_hash_to_list_keys(GHashTable *h);
 gchar * g_strconcat_printf(gchar *buffer, gchar *fmt, ...);
