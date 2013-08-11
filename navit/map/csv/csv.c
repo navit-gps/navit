@@ -848,7 +848,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  	fclose(fp);
 	  }
 	  else {
-	  	dbg(0,"Error opening csv map file %d, starting with empty map\n", m->filename);
+		dbg(0,"Error opening csv map file %s, starting with empty map\n", m->filename);
 	  }
 	} else {
 	  	dbg(1,"No data attribute, starting with in-memory map\n");

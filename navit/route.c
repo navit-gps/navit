@@ -3572,8 +3572,6 @@ rm_get_item(struct map_rect_priv *mr)
 	struct route *route=mr->mpriv->route;
 	void *id=0;
 
-	dbg(1,"enter\n", mr->pos);
-
 	switch (mr->item.type) {
 	case type_none:
 		if (route->pos && route->pos->street_direction && route->pos->street_direction != route->pos->dir)
@@ -3887,7 +3885,7 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 				attr->u.num+=path->path_time;
 				path=path->next;
 			}
-			dbg(1,"path_time %d\n",attr->u.num);
+			dbg(1,"path_time %ld\n",attr->u.num);
 		} else
 			ret=0;
 		break;

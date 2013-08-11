@@ -759,7 +759,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		return;
 	}
 
-	dbg(1,"length=%d time=%d speed=%d\n", length.u.num, time.u.num, speed.u.num);
+	dbg(1,"length=%ld time=%ld speed=%ld\n", length.u.num, time.u.num, speed.u.num);
 	itm->length=length.u.num;
 	itm->time=time.u.num;
 	itm->speed=speed.u.num;
@@ -1447,7 +1447,7 @@ navigation_item_destination(struct navigation *nav, struct navigation_itm *itm, 
 	if (!vocabulary2)
 		n2=NULL;
 	if(!n1 && !n2 && itm->way.item.type == type_ramp && vocabulary2) {
-		dbg(1,">> Next is ramp %lx current is %lx \n", itm->way.item.type, next->way.item.type);
+		dbg(1,">> Next is ramp %x current is %x \n", itm->way.item.type, next->way.item.type);
 			 
 		if(next->way.item.type == type_ramp)
 			return NULL;
