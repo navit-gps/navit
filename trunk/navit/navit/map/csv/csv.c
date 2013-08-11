@@ -672,7 +672,6 @@ static struct map_priv *
 map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m = NULL;
-	struct attr *item_type;
 	struct attr *attr_types;
 	struct attr *item_type_attr;
 	struct attr *data;
@@ -688,7 +687,6 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	m->qitem_hash = g_hash_table_new_full(g_int_hash, g_int_equal, g_free, quadtree_item_free_do);
 	m->tree_root = tree_root;
 
-	item_type  = attr_search(attrs, NULL, attr_item_type);
 	attr_types = attr_search(attrs, NULL, attr_attr_types);
 	if(attr_types) {
 		enum attr_type* at = attr_types->u.attr_types; 

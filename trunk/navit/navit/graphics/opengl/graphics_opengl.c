@@ -1155,7 +1155,6 @@ redraw_screen(struct graphics_priv *gr)
 {
 #ifdef USE_OPENGLES
 #else
-	time_t curr_time = time(0);
 	graphics_priv_root->dirty = 0;
 
 	glCallList(gr->DLid);
@@ -1462,26 +1461,11 @@ static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 	    struct point *p, int w, int h, int alpha, int wraparound)
 {
-	int w2, h2;
 	struct graphics_priv *this = graphics_opengl_new_helper(meth);
 	this->p = *p;
 	this->width = w;
 	this->height = h;
 	this->parent = gr;
-
-	/* If either height or width is 0, we set it to 1 to avoid warnings, and
-	 * disable the overlay. */
-	if (h == 0) {
-		h2 = 1;
-	} else {
-		h2 = h;
-	}
-
-	if (w == 0) {
-		w2 = 1;
-	} else {
-		w2 = w;
-	}
 
 	if ((w == 0) || (h == 0)) {
 		this->overlay_autodisabled = 1;

@@ -1484,7 +1484,6 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 char *
 osd_button_icon_path(struct osd_button *this_, char *src)
 {
-	char *s,*ret;
 	if (!this_->src_dir)
 		return graphics_icon_path(src);
 	return g_strdup_printf("%s%s%s",this_->src_dir, G_DIR_SEPARATOR_S, src);

@@ -1830,7 +1830,6 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, G
 {
 	struct country_table *result=NULL, *lookup;
 	char *tok,*dup=g_strdup(is_in),*buf=dup;
-	int conflict;
 
 	int find_town_name = 0;
 
@@ -1850,7 +1849,6 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, G
 			if (result && result->countryid != lookup->countryid) {
 				char *label=item_bin_get_attr(ib, attr_town_name, NULL);
 				osm_warning("node",item_bin_get_nodeid(ib),0,"conflict for %s is_in=%s country %d vs %d\n", label, is_in, lookup->countryid, result->countryid);
-				conflict=1;
 			}
 			result=lookup;
 		}

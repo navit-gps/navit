@@ -39,7 +39,6 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 {
 	FILE *f;
 	long long len;
-	int ret;
 	if (b->base)
 		free(b->base);
 	b->malloced=0;
@@ -48,7 +47,6 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	len=ftell(f);
 	if (offset+size > len) {
 		size=len-offset;
-		ret=1;
 	}
 	b->size=b->malloced=size;
 #if 0
