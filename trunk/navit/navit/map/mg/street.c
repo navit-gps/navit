@@ -128,21 +128,6 @@ street_name_numbers_eod(struct street_name_numbers *name_numbers)
 	return (name_numbers->tmp_data >= name_numbers->aux_data+name_numbers->aux_len);
 }
 
-
-static int
-street_name_numbers_get_byid(struct street_name_numbers *name_numbers, struct street_name *name, int id)
-{
-	unsigned char *p=name->aux_data;
-	unsigned char *end=p+name->aux_len;
-	while (id >= 0) {
-		if (p >= end)
-			return 0;
-		street_name_numbers_get(name_numbers, &p);
-		id--;
-	}
-	return 1;
-}
-
 static void
 street_name_number_get(struct street_name_number *name_number, unsigned char **p)
 {
@@ -156,20 +141,6 @@ street_name_number_get(struct street_name_number *name_number, unsigned char **p
 	name_number->last.suffix=get_string(p);
         name_number->segment=(struct street_name_segment *)p;
 	*p=start+name_number->len;
-}
-
-static int
-street_name_number_get_byid(struct street_name_number *name_number, struct street_name_numbers *name_numbers, int id)
-{
-	unsigned char *p=name_numbers->tmp_data;
-	unsigned char *end=p+name_numbers->tmp_len;
-	while (id >= 0) {
-		if (p >= end)
-			return 0;
-		street_name_number_get(name_number, &p);
-		id--;
-	}
-	return 1;
 }
 
 static void
@@ -592,29 +563,6 @@ street_lookup_housenumber(struct street_priv *street)
 	return 1;
 }
 
-static int
-street_get_housenumber(struct map_rect_priv *mr, struct street_priv *street, struct item *item)
-{
-	int nameid;
-	nameid=street_str_get_nameid(street->str);
-	if (! nameid)
-		return 0;
-	if (! street->name.len)
-		street_name_get_by_id(&street->name,street->name_file,nameid);
-	if (! street->name.aux_len)
-		return 0;
-	if (!street->hn_count)
-		street_lookup_housenumber(street);
-	if (street->housenumber > street->hn_count) 
-		return 0;
-	item->type=type_town_label;
-	item->id_hi = (item->id_hi & 0xffffff) | (street->housenumber*0x10000000+0x1000000);
-	item->meth=&street_housenumber_meth;
-	street->cidx=0;
-	street->housenumber++;
-	return 1;
-}
-
                             /*0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 */
 static unsigned char limit[]={0,0,1,1,1,2,2,4,6,6,12,13,14,20,20,20,20,20,20};
 
@@ -949,18 +897,6 @@ street_name_numbers_attr_get(void *priv_data, enum attr_type attr_type, struct a
 	}
 }
 
-
-
-
-
-static struct item_methods street_name_numbers_meth = {
-	street_name_numbers_coord_rewind,
-	street_name_numbers_coord_get,
-	street_name_numbers_attr_rewind,
-	street_name_numbers_attr_get,
-};
-
-
 static void
 street_name_coord_rewind(void *priv_data)
 {
@@ -1198,17 +1134,6 @@ street_name_numbers_get_next(struct map_rect_priv *mr, struct street_name *name,
 		}
 	}
 	return 0;
-}
-
-
-static struct item *
-street_search_get_item_street_name_district(struct map_rect_priv *mr, int flag)
-{
-	if (street_name_eod(&mr->street.name))
-		return NULL;
-	if (!street_name_numbers_get_next(mr, &mr->street.name, NULL, &mr->street.name.tmp_data, 1, &mr->item.id_hi, &mr->street.name_numbers))
-		return NULL;
-	return &mr->item;
 }
 
 struct item *
