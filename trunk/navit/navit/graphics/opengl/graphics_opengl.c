@@ -104,6 +104,9 @@ typedef GLfixed GLf;
 #define glScalef        glScalex
 #define glColor4f       glColor4x
 #endif
+#ifdef FREEGLUT
+#include <GL/freeglut_ext.h>
+#endif
 
 #define SCREEN_WIDTH 700
 #define SCREEN_HEIGHT 700
@@ -1103,7 +1106,7 @@ handle_mouse_queue()
 {
 #ifdef USE_OPENGLES
 #else
-	static locked = 0;
+	static int locked = 0;
 	if (!locked) {
 		locked = 1;
 	} else {

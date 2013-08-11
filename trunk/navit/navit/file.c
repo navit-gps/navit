@@ -485,7 +485,7 @@ file_data_flush(struct file *file, long long offset, int size)
 }
 
 int
-file_data_write(struct file *file, long long offset, int size, unsigned char *data)
+file_data_write(struct file *file, long long offset, int size, const void *data)
 {
 	file_data_flush(file, offset, size);
 	lseek(file->fd, offset, SEEK_SET);

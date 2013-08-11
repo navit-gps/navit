@@ -50,7 +50,6 @@
 #undef ALPHA
 
 #undef SDL_TTF
-#define SDL_IMAGE
 #undef LINUX_TOUCHSCREEN
 
 #ifdef USE_WEBOS
