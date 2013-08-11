@@ -22,6 +22,9 @@ package org.navitproject.navit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -91,6 +94,46 @@ public class Navit extends Activity
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
+
+	public void removeFileIfExists(String source) {
+		File file = new File(source);
+
+		if (!file.exists())
+			return;
+        
+		file.delete();
+    	}
+
+	public void copyFileIfExists(String source, String destination) throws IOException {
+		File file = new File(source);
+
+		if (!file.exists())
+			return;
+
+		FileInputStream is = null;
+		FileOutputStream os = null;
+
+		try {
+			is = new FileInputStream(source);
+			os = new FileOutputStream(destination);
+
+			int len;
+			byte buffer[] = new byte[1024];
+
+			while ((len = is.read(buffer)) != -1) {
+				os.write(buffer, 0, len);
+			}
+		} finally {
+			/* Close the FileStreams to prevent Resource leaks */
+			if (is != null)
+                		is.close();
+
+			if (os != null)
+                		os.close();
+		}
+		return;
+	}
+
 
 	public static String get_text(String in)
 	{
@@ -418,6 +461,11 @@ public class Navit extends Activity
 		menu.add(1, 6, 500, getString(R.string.optionsmenu_address_search)); //TRANS
 
 		menu.add(1, 99, 900, getString(R.string.optionsmenu_exit_navit)); //TRANS
+		
+		/* Only show the Backup to SD-Card Option if we really have one */
+		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+		    menu.add(1, 7, 700, getString(R.string.optionsmenu_backup_restore)); //TRANS
+		
 		return true;
 	}
 
@@ -500,6 +548,10 @@ public class Navit extends Activity
 				Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
 				this.startActivityForResult(search_intent, NavitAddressSearch_id);
 				break;
+			case 7 :
+			    /* Backup / Restore */
+			    showDialog(NavitDialogs.DIALOG_BACKUP_RESTORE);
+			    break;
 			case 99 :
 				// exit
 				this.onStop();
@@ -550,7 +602,13 @@ public class Navit extends Activity
 		}
 	}
 
-	protected Dialog onCreateDialog(int id)
+	@Override
+    protected void onPrepareDialog(int id, Dialog dialog) {
+	    dialogs.prepareDialog(id, dialog);
+        super.onPrepareDialog(id, dialog);
+    }
+
+    protected Dialog onCreateDialog(int id)
 	{
 		return dialogs.createDialog(id);
 	}

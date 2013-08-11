@@ -28,14 +28,15 @@
 	<string name="optionsmenu_toggle_poi">Toggle POIs</string>
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
 	<string name="optionsmenu_exit_navit">Exit Navit</string>
-
+	<string name="optionsmenu_backup_restore">Backup / Restore</string>
+	
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>
 	<string name="position_popup_drive_here">Route to here</string>
 
 	<!-- MAP DOWNLOAD -->
 	<string name="map_delete">Delete this map?</string>
-	<string name="map_download_title">Map Download</string>
+	<string name="map_download_title">Map download</string>
 	<string name="map_download_downloading">Downloading:</string>
 	<string name="map_download_eta">ETA</string>
 	<string name="map_download_ready">ready</string>
@@ -59,6 +60,26 @@
 	<string name="address_search_set_destination">Setting destination to:</string>
 	<string name="address_search_towns">Towns</string>
 	<string name="address_search_streets">Streets</string>
-
+	
+	<!--  Backup Restore -->
+	<string name="choose_an_action">Choose an action</string>
+	<string name="please_insert_an_sd_card">Please insert an SD Card</string>
+	<string name="backing_up">Backing up...</string>
+	<string name="restoring">Restoring...</string>
+	<string name="failed_to_create_backup_directory">Failed to create backup directory</string>
+	<string name="backup_failed">Backup failed</string>
+	<string name="no_backup_found">No backup found</string>
+	<string name="failed_to_restore">Failed to restore</string>
+	<string name="backup_successful">Backup successful</string>
+	<string name="restore_successful_please_restart_navit">Restore Successful\nPlease restart Navit</string>
+	<string name="backup_not_found">Backup not found</string>
+	<string name="restore_failed">Restore failed</string>
+	<string name="select_backup">Select backup</string>
+	<string name="backup">Backup</string>
+	<string name="restore">Restore</string>
+	<string-array name="dialog_backup_restore_items">
+		<item >@string/backup</item>
+		<item >@string/restore</item>
+	</string-array>
 </resources>
 
