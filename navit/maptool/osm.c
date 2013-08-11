@@ -1282,188 +1282,188 @@ flush_nodes(int final)
 void
 osm_add_node(osmid id, double lat, double lon)
 {
-	in_node=1;
-	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
-		extend_buffer(&node_buffer);
-	attr_strings_clear();
-	node_is_tagged=0;
-	nodeid=id;
-	item.type=type_point_unkn;
-	debug_attr_buffer[0]='\0';
-	is_in_buffer[0]='\0';
-	debug_attr_buffer[0]='\0';
-	osmid_attr.type=attr_osm_nodeid;
-	osmid_attr.len=3;
-	osmid_attr_value=id;
-	if (node_buffer.size + sizeof(struct node_item) > slice_size) {
-		flush_nodes(0);
-	}
-	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
-	ni->id=id;
-	ni->ref_node=0;
-	ni->ref_way=0;
-	ni->ref_ref=0;
-	ni->dummy=0;
-	ni->c.x=lon*6371000.0*M_PI/180;
-	ni->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
-	node_buffer.size+=sizeof(struct node_item);
-	if (! node_hash) {
-		if (ni->id > nodeid_last) {
-			nodeid_last=ni->id;
-		} else {
-			fprintf(stderr,"INFO: Nodes out of sequence (new %d vs old %d), adding hash\n", ni->id, nodeid_last);
-			node_hash=g_hash_table_new(NULL, NULL);
-			node_buffer_to_hash();
-		}
-	} else
-		if (!g_hash_table_lookup(node_hash, (gpointer)(long)(ni->id)))
-			g_hash_table_insert(node_hash, (gpointer)(long)(ni->id), (gpointer)(long)(ni-(struct node_item *)node_buffer.base));
-		else {
-			node_buffer.size-=sizeof(struct node_item);
-			nodeid=0;
-		}
+      in_node=1;
+      if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
+	      extend_buffer(&node_buffer);
+      attr_strings_clear();
+      node_is_tagged=0;
+      nodeid=id;
+      item.type=type_point_unkn;
+      debug_attr_buffer[0]='\0';
+      is_in_buffer[0]='\0';
+      debug_attr_buffer[0]='\0';
+      osmid_attr.type=attr_osm_nodeid;
+      osmid_attr.len=3;
+      osmid_attr_value=id;
+      if (node_buffer.size + sizeof(struct node_item) > slice_size) {
+	      flush_nodes(0);
+      }
+      ni=(struct node_item *)(node_buffer.base+node_buffer.size);
+      ni->id=id;
+      ni->ref_node=0;
+      ni->ref_way=0;
+      ni->ref_ref=0;
+      ni->dummy=0;
+      ni->c.x=lon*6371000.0*M_PI/180;
+      ni->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
+      node_buffer.size+=sizeof(struct node_item);
+      if (! node_hash) {
+	      if (ni->id > nodeid_last) {
+		      nodeid_last=ni->id;
+	      } else {
+		      fprintf(stderr,"INFO: Nodes out of sequence (new %d vs old %d), adding hash\n", ni->id, nodeid_last);
+		      node_hash=g_hash_table_new(NULL, NULL);
+		      node_buffer_to_hash();
+	      }
+      } else
+	      if (!g_hash_table_lookup(node_hash, (gpointer)(long)(ni->id)))
+		      g_hash_table_insert(node_hash, (gpointer)(long)(ni->id), (gpointer)(long)(ni-(struct node_item *)node_buffer.base));
+	      else {
+		      node_buffer.size-=sizeof(struct node_item);
+		      nodeid=0;
+	      }
 
 }
 
 void
 clear_node_item_buffer(void)
 {
-	int j,count=node_buffer.size/sizeof(struct node_item);
-	struct node_item *ni=(struct node_item *)(node_buffer.base);
-	for (j = 0 ; j < count ; j++) {
-		ni[j].ref_way=0;
-	}
+      int j,count=node_buffer.size/sizeof(struct node_item);
+      struct node_item *ni=(struct node_item *)(node_buffer.base);
+      for (j = 0 ; j < count ; j++) {
+	      ni[j].ref_way=0;
+      }
 }
 
 static struct node_item *
 node_item_get(int id)
 {
-	struct node_item *ni=(struct node_item *)(node_buffer.base);
-	int count=node_buffer.size/sizeof(struct node_item);
-	int interval=count/4;
-	int p=count/2;
-	if(interval==0) {
-		// If fewer than 4 nodes defined so far set interval to 1 to
-		// avoid infinite loop
-		interval = 1;
-	}
-	if (node_hash) {
-		int i;
-		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(unsigned int)id));
-		return ni+i;
-	}
-	if (ni[0].id > id)
-		return NULL;
-	if (ni[count-1].id < id)
-		return NULL;
-	while (ni[p].id != id) {
+      struct node_item *ni=(struct node_item *)(node_buffer.base);
+      int count=node_buffer.size/sizeof(struct node_item);
+      int interval=count/4;
+      int p=count/2;
+      if(interval==0) {
+	      // If fewer than 4 nodes defined so far set interval to 1 to
+	      // avoid infinite loop
+	      interval = 1;
+      }
+      if (node_hash) {
+	      int i;
+	      i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(unsigned int)id));
+	      return ni+i;
+      }
+      if (ni[0].id > id)
+	      return NULL;
+      if (ni[count-1].id < id)
+	      return NULL;
+      while (ni[p].id != id) {
 #if 0
-		fprintf(stderr,"p=%d count=%d interval=%d id=%d ni[p].id=%d\n", p, count, interval, id, ni[p].id);
+	      fprintf(stderr,"p=%d count=%d interval=%d id=%d ni[p].id=%d\n", p, count, interval, id, ni[p].id);
 #endif
-		if (ni[p].id < id) {
-			p+=interval;
-			if (interval == 1) {
-				if (p >= count)
-					return NULL;
-				if (ni[p].id > id)
-					return NULL;
-			} else {
-				if (p >= count)
-					p=count-1;
-			}
-		} else {
-			p-=interval;
-			if (interval == 1) {
-				if (p < 0)
-					return NULL;
-				if (ni[p].id < id)
-					return NULL;
-			} else {
-				if (p < 0)
-					p=0;
-			}
-		}
-		if (interval > 1)
-			interval/=2;
-	}
-	return &ni[p];
+	      if (ni[p].id < id) {
+		      p+=interval;
+		      if (interval == 1) {
+			      if (p >= count)
+				      return NULL;
+			      if (ni[p].id > id)
+				      return NULL;
+		      } else {
+			      if (p >= count)
+				      p=count-1;
+		      }
+	      } else {
+		      p-=interval;
+		      if (interval == 1) {
+			      if (p < 0)
+				      return NULL;
+			      if (ni[p].id < id)
+				      return NULL;
+		      } else {
+			      if (p < 0)
+				      p=0;
+		      }
+	      }
+	      if (interval > 1)
+		      interval/=2;
+      }
+      return &ni[p];
 }
 
 static int
 load_node(FILE *coords, int p, struct node_item *ret)
 {
-	fseek(coords, p*sizeof(struct node_item), SEEK_SET);
-	if (fread(ret, sizeof(*ret), 1, coords) != 1) {
-		fprintf(stderr,"read failed\n");
-		return 0;
-	}
-	return 1;
+      fseek(coords, p*sizeof(struct node_item), SEEK_SET);
+      if (fread(ret, sizeof(*ret), 1, coords) != 1) {
+	      fprintf(stderr,"read failed\n");
+	      return 0;
+      }
+      return 1;
 }
 
 static int
 node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 {
-	int count;
-	int interval;
-	int p;
-	if (node_hash) {
-		int i;
-		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
-		fseek(coords, i*sizeof(*ret), SEEK_SET);
-		if (fread(ret, sizeof(*ret), 1, coords) == 1)
-			return 1;
-		else
-			return 0;
-	}
+      int count;
+      int interval;
+      int p;
+      if (node_hash) {
+	      int i;
+	      i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
+	      fseek(coords, i*sizeof(*ret), SEEK_SET);
+	      if (fread(ret, sizeof(*ret), 1, coords) == 1)
+		      return 1;
+	      else
+		      return 0;
+      }
 
-	fseek(coords, 0, SEEK_END);
-	count=ftell(coords)/sizeof(struct node_item);
-	interval=count/4;
-	p=count/2;
-	if(interval==0) {
-		// If fewer than 4 nodes defined so far set interval to 1 to
-		// avoid infinite loop
-		interval = 1;
-	}
-	if (!load_node(coords, p, ret))
-		return 0;
-	for (;;) {
-		if (ret->id == id)
-			return 1;
-		if (ret->id < id) {
-			p+=interval;
-			if (interval == 1) {
-				if (p >= count)
-					return 0;
-				if (!load_node(coords, p, ret))
-					return 0;
-				if (ret->id > id)
-					return 0;
-			} else {
-				if (p >= count)
-					p=count-1;
-				if (!load_node(coords, p, ret))
-					return 0;
-			}
-		} else {
-			p-=interval;
-			if (interval == 1) {
-				if (p < 0)
-					return 0;
-				if (!load_node(coords, p, ret))
-					return 0;
-				if (ret->id < id)
-					return 0;
-			} else {
-				if (p < 0)
-					p=0;
-				if (!load_node(coords, p, ret))
-					return 0;
-			}
-		}
-		if (interval > 1)
-			interval/=2;
-	}
+      fseek(coords, 0, SEEK_END);
+      count=ftell(coords)/sizeof(struct node_item);
+      interval=count/4;
+      p=count/2;
+      if(interval==0) {
+	      // If fewer than 4 nodes defined so far set interval to 1 to
+	      // avoid infinite loop
+	      interval = 1;
+      }
+      if (!load_node(coords, p, ret))
+	      return 0;
+      for (;;) {
+	      if (ret->id == id)
+		      return 1;
+	      if (ret->id < id) {
+		      p+=interval;
+		      if (interval == 1) {
+			      if (p >= count)
+				      return 0;
+			      if (!load_node(coords, p, ret))
+				      return 0;
+			      if (ret->id > id)
+				      return 0;
+		      } else {
+			      if (p >= count)
+				      p=count-1;
+			      if (!load_node(coords, p, ret))
+				      return 0;
+		      }
+	      } else {
+		      p-=interval;
+		      if (interval == 1) {
+			      if (p < 0)
+				      return 0;
+			      if (!load_node(coords, p, ret))
+				      return 0;
+			      if (ret->id < id)
+				      return 0;
+		      } else {
+			      if (p < 0)
+				      p=0;
+			      if (!load_node(coords, p, ret))
+				      return 0;
+		      }
+	      }
+	      if (interval > 1)
+		      interval/=2;
+      }
 }
 
 void
