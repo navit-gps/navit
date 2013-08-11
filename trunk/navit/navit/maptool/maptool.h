@@ -111,7 +111,12 @@ struct zip_info;
 
 struct country_table;
 
-typedef unsigned long int osmid;
+/**
+ * Data type for the ID of an OSM element (node/way/relation).
+ * Must be at least 64 bit wide because IDs will soon exceed 32 bit.
+ */
+typedef unsigned long long int osmid;
+#define OSMID_FMT LONGLONG_FMT
 
 /* boundaries.c */
 
