@@ -40,6 +40,7 @@
 #include "vehicleprofile.h"
 #include "plugin.h"
 #include "navit_nls.h"
+#include "util.h"
 
 /* #define DEBUG */
 
@@ -1407,7 +1408,7 @@ contains_suffix(char *name, char *suffix)
 		return 0;
 	if (strlen(name) < strlen(suffix))
 		return 0;
-	return !g_strcasecmp(name+strlen(name)-strlen(suffix), suffix);
+	return !navit_utf8_strcasecmp(name+strlen(name)-strlen(suffix), suffix);
 }
 
 static char *
