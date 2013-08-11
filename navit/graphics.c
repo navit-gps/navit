@@ -1613,7 +1613,7 @@ graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphic
 			draw_begin(&ctx,&pnt[i]);
 		}
 	}
-	draw_shape(&ctx, pnt+count-1, *width++);
+	ctx.prev_shape=ctx.shape;
 	draw_end(&ctx,&pnt[count-1]);
 	ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
 	draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
