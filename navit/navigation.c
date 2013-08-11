@@ -315,7 +315,7 @@ road_angle(struct coord *c1, struct coord *c2, int dir)
 	return ret;
 }
 
-static char
+static const char
 *get_count_str(int n) 
 {
 	switch (n) {
@@ -339,7 +339,7 @@ static char
 	}
 }
 
-static char
+static const char
 *get_exit_count_str(int n) 
 {
 	switch (n) {
@@ -1525,7 +1525,7 @@ static char *
 show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type, int connect)
 {
 	/* TRANSLATORS: right, as in 'Turn right' */
-	char *dir=_("right"),*strength="";
+	const char *dir=_("right"),*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret=NULL;
 	int delta=cmd->delta;

@@ -1447,7 +1447,7 @@ navit_set_gui(struct navit *this_, struct gui *gui)
 }
 
 void 
-navit_add_message(struct navit *this_, char *message)
+navit_add_message(struct navit *this_, const char *message)
 {
 	message_new(this_->messages, message);
 }
@@ -1816,7 +1816,7 @@ navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *
 }
 
 void
-navit_say(struct navit *this_, char *text)
+navit_say(struct navit *this_, const char *text)
 {
 	struct attr attr;
 	if(this_->speech) {
