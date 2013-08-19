@@ -1330,7 +1330,7 @@ repeated_field_pack_to_buffer (const ProtobufCFieldDescriptor *field,
       buffer->append (buffer, rv, scratch);
       tmp = pack_buffer_packed_payload (field, count, array, buffer);
       if (tmp != payload_len){
-        fprintf (stderr, "Unexpected payload length: %zd (expected: %zd). Aborting.\n", tmp, payload_len);
+        fprintf (stderr, "Unexpected payload length: %zu (expected: %zu). Aborting.\n", tmp, payload_len);
         abort ();
       }
       return rv + payload_len;
