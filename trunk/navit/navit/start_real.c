@@ -90,7 +90,7 @@ int main_real(int argc, char * const* argv)
 #endif
 	atom_init();
 	main_init(argv[0]);
-	main_init_nls();
+	navit_nls_main_init();
 	debug_init(argv[0]);
 
 	cp = getenv("NAVIT_LOGFILE");
