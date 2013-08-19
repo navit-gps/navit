@@ -412,16 +412,3 @@ main_init(const char *program)
 	}
 }
 
-void
-main_init_nls(void)
-{
-#ifdef USE_NATIVE_LANGUAGE_SUPPORT
-#ifdef FORCE_LOCALE
-#define STRINGIFY2(x) #x
-#define STRINGIFY(x) STRINGIFY2(x)
-	setlocale(LC_MESSAGES,STRINGIFY(FORCE_LOCALE));
-#endif
-	navit_nls_add_textdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
-	textdomain(PACKAGE);
-#endif
-}
