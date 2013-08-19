@@ -24,6 +24,33 @@
 extern "C" {
 #endif
 
+#include "config.h"
+
+#ifndef USE_EZXML
+#ifdef HAVE_GLIB
+#define USE_EZXML 0
+#else
+#define USE_EZXML 1
+#endif
+#endif
+
+#if !USE_EZXML
+#define XML_ATTR_DISTANCE 1
+typedef GMarkupParseContext xml_context;
+#else
+#include "ezxml.h"
+#define XML_ATTR_DISTANCE 2
+#undef G_MARKUP_ERROR
+#undef G_MARKUP_ERROR_INVALID_CONTENT
+#undef G_MARKUP_ERROR_PARSE
+#undef G_MARKUP_ERROR_UNKNOWN_ELEMENT
+#define G_MARKUP_ERROR 0
+#define G_MARKUP_ERROR_INVALID_CONTENT 0
+#define G_MARKUP_ERROR_PARSE 0
+#define G_MARKUP_ERROR_UNKNOWN_ELEMENT 0
+typedef void * xml_context;
+#endif
+
 typedef void *(*object_func_new)(struct attr *parent, struct attr **attrs);
 typedef int (*object_func_get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 typedef struct attr_iter *(*object_func_iter_new)(void *);
@@ -78,12 +105,10 @@ void navit_object_destroy(struct navit_object *obj);
 
 typedef GError xmlerror;
 
-extern const int xml_attr_distance;
-
 /* prototypes */
 enum attr_type;
 struct object_func *object_func_lookup(enum attr_type type);
-void xml_parse_text(const char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *), void (*end)(void *, const char *, void *, void *), void (*text)(void *, const char *, int, void *, void *));
+void xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **), void (*text)(xml_context*, const char *, gsize, void *, GError **));
 gboolean config_load(const char *filename, xmlerror **error);
 //static void xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error);
 

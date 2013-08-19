@@ -46,8 +46,8 @@ find_attr(const char **names, const char **values, const char *name)
 	while (*names) {
 		if (!g_ascii_strcasecmp(*names, name))
 			return *values;
-		names+=xml_attr_distance;
-		values+=xml_attr_distance;
+		names+=XML_ATTR_DISTANCE;
+		values+=XML_ATTR_DISTANCE;
 	}
 	return NULL;
 }
@@ -209,7 +209,7 @@ html_image(struct gui_priv *this, const char **names, const char **values)
 }
 
 static void
-gui_internal_html_start(void *dummy, const char *tag_name, const char **names, const char **values, void *data, void *error)
+gui_internal_html_start(xml_context *dummy, const char *tag_name, const char **names, const char **values, void *data, GError **error)
 {
 	struct gui_priv *this=data;
 	int i;
@@ -310,7 +310,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 }
 
 static void
-gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error)
+gui_internal_html_end(xml_context *dummy, const char *tag_name, void *data, GError **error)
 {
 	struct gui_priv *this=data;
 	struct html *html;
@@ -401,7 +401,7 @@ gui_internal_set_refresh_callback(struct gui_priv *this, char *cond)
 }
 
 static void
-gui_internal_html_text(void *dummy, const char *text, int len, void *data, void *error)
+gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *data, GError **error)
 {
 	struct gui_priv *this=data;
 	struct widget *w;
