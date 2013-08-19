@@ -607,7 +607,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha, int wraparound);
 
 static int argc=1;
-static char *argv[]={(char *)"navit",NULL,NULL};
+static char *argv[]={NULL,NULL,NULL};
 
 static int
 fullscreen(struct window *win, int on)
@@ -951,10 +951,13 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	else
 		QApplication::setGraphicsSystem("raster");
 #endif
+	argv[0]=(char*)malloc(255);
+	strcpy(argv[0], "navit");
 	if ((attr=attr_search(attrs, NULL, attr_flags)))
 		ret->flags=attr->u.num;
 	if (ret->flags & 1) {
-		argv[1]="-qws";
+		argv[1]=(char*)malloc(255);
+		strcpy(argv[1], "-qws");
 		argc++;
 	}
 #ifndef QT_QPAINTER_NO_APP
