@@ -1919,16 +1919,16 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 							attrs[a-2].u.str=name;
 						}
 					}
+					if(b->admin_centre && b->admin_centre==node_id) {
+						if(!max_adm_level || max_adm_level<a){
+							max_adm_level=a;
+						}
+					}
 				}
 				if (postal) {
 					attrs[0].type=attr_town_postal;
 					attrs[0].u.str=postal;
 				}
-				if(b->admin_centre && b->admin_centre==node_id) {
-					if(!max_adm_level || max_adm_level<a)
-						max_adm_level=a;
-				}
-				
 				l=g_list_next(l);
 			}
 
