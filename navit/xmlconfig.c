@@ -27,7 +27,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "debug.h"
-#include "config.h"
 #include "file.h"
 #include "coord.h"
 #include "item.h"
@@ -56,33 +55,6 @@
 #if (defined __MINGW32__) || (defined _MSC_VER)
 /* This only works if a is a string constant, i.e. "name" */
 #define unsetenv(a) putenv(a "=")
-#endif
-
-#ifndef USE_EZXML
-#ifdef HAVE_GLIB
-#define USE_EZXML 0
-#else
-#define USE_EZXML 1
-#endif
-#endif
-
-#if !USE_EZXML
-#define ATTR_DISTANCE 1
-const int xml_attr_distance=1;
-typedef GMarkupParseContext xml_context;
-#else
-#include "ezxml.h"
-const int xml_attr_distance=2;
-#define ATTR_DISTANCE 2
-#undef G_MARKUP_ERROR
-#undef G_MARKUP_ERROR_INVALID_CONTENT
-#undef G_MARKUP_ERROR_PARSE
-#undef G_MARKUP_ERROR_UNKNOWN_ELEMENT
-#define G_MARKUP_ERROR 0
-#define G_MARKUP_ERROR_INVALID_CONTENT 0
-#define G_MARKUP_ERROR_PARSE 0
-#define G_MARKUP_ERROR_UNKNOWN_ELEMENT 0
-typedef void * xml_context;
 #endif
 
 struct xistate {
@@ -960,15 +932,15 @@ xi_start_element(xml_context *context,
 	struct xmldocument *doc=user_data;
 	struct xistate *xistate;
 	int i,count=0;
-	while (attribute_names[count++*ATTR_DISTANCE]);
+	while (attribute_names[count++*XML_ATTR_DISTANCE]);
 	xistate=g_new0(struct xistate, 1);
 	xistate->element=element_name;
 	xistate->attribute_names=g_new0(const char *, count);
 	xistate->attribute_values=g_new0(const char *, count);
 	for (i = 0 ; i < count ; i++) {
-		if (attribute_names[i*ATTR_DISTANCE] && attribute_values[i*ATTR_DISTANCE]) {
-			xistate->attribute_names[i]=g_strdup(attribute_names[i*ATTR_DISTANCE]);
-			xistate->attribute_values[i]=g_strdup(attribute_values[i*ATTR_DISTANCE]);
+		if (attribute_names[i*XML_ATTR_DISTANCE] && attribute_values[i*XML_ATTR_DISTANCE]) {
+			xistate->attribute_names[i]=g_strdup(attribute_names[i*XML_ATTR_DISTANCE]);
+			xistate->attribute_values[i]=g_strdup(attribute_values[i*XML_ATTR_DISTANCE]);
 		}
 	}
 	xistate->parent=doc->last;
@@ -1083,10 +1055,10 @@ parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, co
 #endif
 
 void
-xml_parse_text(const char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *),
-			                   void (*end)(void *, const char *, void *, void *),
-			                   void (*text)(void *, const char *, int, void *, void *))
-{
+xml_parse_text(const char *document, void *data,
+	void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+	void (*end)(xml_context *, const char *, void *, GError **),
+	void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
 	GMarkupParser parser = { start, end, text, NULL, NULL};
 	xml_context *context;
