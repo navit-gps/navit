@@ -1,6 +1,10 @@
 #include "config.h"
 #include "debug.h"
 #include <glib.h>
+#include <stdlib.h>
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 #ifdef USE_LIBGNUINTL
 #include <libgnuintl.h>
@@ -72,4 +76,18 @@ navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long in
 	} else {
 		return msgid_plural;
 	}
+}
+
+void
+navit_nls_main_init(void)
+{
+#ifdef USE_NATIVE_LANGUAGE_SUPPORT
+#ifdef FORCE_LOCALE
+#define STRINGIFY2(x) #x
+#define STRINGIFY(x) STRINGIFY2(x)
+	setlocale(LC_MESSAGES,STRINGIFY(FORCE_LOCALE));
+#endif
+	navit_nls_add_textdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
+	textdomain(PACKAGE);
+#endif
 }
