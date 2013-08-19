@@ -184,7 +184,7 @@ static void
 vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data)
 {
 	struct roadprofile *rp=value;
-	dbg(0,"type %s avg %d weight %d max %d\n",item_to_name((int)(long)key),rp->speed,rp->route_weight,rp->maxspeed);
+	dbg(3,"type %s avg %d weight %d max %d\n",item_to_name((int)(long)key),rp->speed,rp->route_weight,rp->maxspeed);
 }
 
 static void
@@ -192,7 +192,7 @@ vehicleprofile_update(struct vehicleprofile *this_)
 {
 	struct attr_iter *iter=vehicleprofile_attr_iter_new();
 	struct attr profile_option;
-	dbg(0,"enter\n");
+	dbg(3,"enter\n");
 	vehicleprofile_clear(this_);
 	vehicleprofile_apply_attrs(this_, (struct navit_object *)this_, 0);
 	while (vehicleprofile_get_attr(this_, attr_profile_option, &profile_option, iter)) {
@@ -200,13 +200,13 @@ vehicleprofile_update(struct vehicleprofile *this_)
 		if (!profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_active, &active, NULL)) 
 			active.u.num=0;
 		if (profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_name, &name, NULL)) 
-			dbg(0,"%p %s %ld\n",profile_option.u.navit_object,name.u.str,active.u.num);
+			dbg(3,"%p %s %ld\n",profile_option.u.navit_object,name.u.str,active.u.num);
 		if (active.u.num) 
 			vehicleprofile_apply_attrs(this_, profile_option.u.navit_object, 1);
 	}
 	vehicleprofile_attr_iter_destroy(iter);
-	dbg(0,"result l %d w %d h %d wg %d awg %d pen %d\n",this_->length,this_->width,this_->height,this_->weight,this_->axle_weight,this_->through_traffic_penalty);
-	dbg(0,"m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d\n",this_->mode,this_->flags_forward_mask,this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling, this_->static_speed, this_->static_distance, this_->dangerous_goods);
+	dbg(3,"result l %d w %d h %d wg %d awg %d pen %d\n",this_->length,this_->width,this_->height,this_->weight,this_->axle_weight,this_->through_traffic_penalty);
+	dbg(3,"m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d\n",this_->mode,this_->flags_forward_mask,this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling, this_->static_speed, this_->static_distance, this_->dangerous_goods);
 	g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 
 }
