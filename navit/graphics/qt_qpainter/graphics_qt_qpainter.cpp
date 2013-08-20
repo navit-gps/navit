@@ -154,6 +154,9 @@ struct graphics_image_priv {
 //##############################################################################################################
 static void graphics_destroy(struct graphics_priv *gr)
 {
+#if QT_QPAINTER_USE_FREETYPE
+	gr->freetype_methods.destroy();
+#endif
 	g_free(gr->window_title);
 	g_free(gr);
 }
