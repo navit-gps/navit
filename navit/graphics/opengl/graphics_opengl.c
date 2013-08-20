@@ -259,6 +259,7 @@ graphics_destroy(struct graphics_priv *gr)
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
+	gc->gr->freetype_methods.destroy();
 	g_free(gc);
 	gc = NULL;
 }

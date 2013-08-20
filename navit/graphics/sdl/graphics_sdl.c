@@ -49,7 +49,6 @@
 #undef SDL_GFX
 #undef ALPHA
 
-#undef SDL_TTF
 #undef LINUX_TOUCHSCREEN
 
 #ifdef USE_WEBOS
@@ -78,13 +77,6 @@
 #include <SDL/SDL_gfxPrimitives.h>
 #endif
 
-#ifdef SDL_TTF
-#include <SDL/SDL_ttf.h>
-#else
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <freetype/ftglyph.h>
-#endif
 #include <event.h>
 
 #ifdef SDL_IMAGE
@@ -145,10 +137,6 @@ struct graphics_priv {
     int32_t ts_hit;
     uint32_t ts_x;
     uint32_t ts_y;
-#endif
-
-#ifndef SDL_TTF
-    FT_Library library;
 #endif
 
 #ifdef PROFILE
@@ -225,16 +213,9 @@ static unsigned int sdl_orientation_count = 2^16;
 static char sdl_next_orientation = 0;
 # endif
 #endif
-unsigned char * ft_buffer = NULL;
-unsigned int    ft_buffer_size = 0;
 
-struct graphics_font_priv {
-#ifdef SDL_TTF
-    TTF_Font *font;
-#else
-    FT_Face face;
-#endif
-};
+unsigned char *ft_buffer = NULL;
+unsigned int ft_buffer_size = 0;
 
 struct graphics_gc_priv {
     struct graphics_priv *gr;
@@ -261,7 +242,7 @@ static int input_ts_exit(struct graphics_priv *gr);
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-    dbg(1, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
+    dbg(0, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
 
     if(gr->overlay_mode)
     {
@@ -271,11 +252,8 @@ graphics_destroy(struct graphics_priv *gr)
     else
     {
 	g_free (ft_buffer);
-#ifdef SDL_TTF
-        TTF_Quit();
-#else
-        FT_Done_FreeType(gr->library);
-#endif
+	gr->freetype_methods.destroy();
+
 #ifdef LINUX_TOUCHSCREEN
         input_ts_exit(gr);
 #endif
@@ -414,67 +392,6 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv * gi)
     SDL_FreeSurface(gi->img);
     g_free(gi);
 #endif
-}
-
-static void
-get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
-{
-    char *p=text;
-    FT_BBox bbox;
-    FT_UInt  glyph_index;
-    FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
-    FT_Glyph glyph;
-    FT_Matrix matrix;
-    FT_Vector pen;
-    pen.x = 0 * 64;
-    pen.y = 0 * 64;
-    matrix.xx = dx;
-    matrix.xy = dy;
-    matrix.yx = -dy;
-    matrix.yy = dx;
-    int n,len,x=0,y=0;
-
-    bbox.xMin = bbox.yMin = 32000;
-    bbox.xMax = bbox.yMax = -32000;
-    FT_Set_Transform( font->face, &matrix, &pen );
-    len=g_utf8_strlen(text, -1);
-    for ( n = 0; n < len; n++ ) {
-	FT_BBox glyph_bbox;
-	glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-	p=g_utf8_next_char(p);
-	FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
-	FT_Get_Glyph(font->face->glyph, &glyph);
-	FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox );
-	FT_Done_Glyph(glyph);
-	glyph_bbox.xMin += x >> 6;
-	glyph_bbox.xMax += x >> 6;
-	glyph_bbox.yMin += y >> 6;
-	glyph_bbox.yMax += y >> 6;
-        x += slot->advance.x;
-        y -= slot->advance.y;
-	if ( glyph_bbox.xMin < bbox.xMin )
-	    bbox.xMin = glyph_bbox.xMin;
-	if ( glyph_bbox.yMin < bbox.yMin )
-	    bbox.yMin = glyph_bbox.yMin;
-	if ( glyph_bbox.xMax > bbox.xMax )
-	    bbox.xMax = glyph_bbox.xMax;
-	if ( glyph_bbox.yMax > bbox.yMax )
-	    bbox.yMax = glyph_bbox.yMax;
-    }
-    if ( bbox.xMin > bbox.xMax ) {
-	bbox.xMin = 0;
-	bbox.yMin = 0;
-	bbox.xMax = 0;
-	bbox.yMax = 0;
-    }
-    ret[0].x=bbox.xMin;
-    ret[0].y=-bbox.yMin;
-    ret[1].x=bbox.xMin;
-    ret[1].y=-bbox.yMax;
-    ret[2].x=bbox.xMax;
-    ret[2].y=-bbox.yMax;
-    ret[3].x=bbox.xMax;
-    ret[3].y=-bbox.yMin;
 }
 
 static void
@@ -1298,21 +1215,23 @@ static struct graphics_methods graphics_methods = {
     draw_lines,
     draw_polygon,
     draw_rectangle,
-    NULL /*draw_circle*/,
+    NULL /* draw_circle */,
     draw_text,
     draw_image,
-    NULL,
+    NULL, /*draw_image_warp */
     draw_restore,
     draw_drag,
-    NULL,
+    NULL, /* font_new */
     gc_new,
     background_gc,
     overlay_new,
     image_new,
     get_data,
     image_free,
-    get_text_bbox,
+    NULL, /* get_text_bbox */
     overlay_disable,
+    NULL, /* overlay_resize */
+    NULL, /* set_attr */
 };
 
 static struct graphics_priv *
@@ -2117,22 +2036,30 @@ static struct graphics_priv *
 graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
+    struct font_priv *(*font_freetype_new) (void *meth);
     struct attr *attr;
     int ret;
     int w=DISPLAY_W,h=DISPLAY_H;
 
-    struct font_priv *(*font_freetype_new) (void *meth);
-    font_freetype_new = plugin_get_font_type ("freetype");
-
-    if (!font_freetype_new)
-      {
-        return NULL;
-      }
-
-    font_freetype_new (&this->freetype_methods);
-
     this->nav = nav;
     this->cbl = cbl;
+
+    /* initialize fonts */
+    font_freetype_new = plugin_get_font_type("freetype");
+
+	if (!font_freetype_new) {
+			g_free(this);
+			return NULL;
+	}
+
+	font_freetype_new(&this->freetype_methods);
+
+	*meth = graphics_methods;
+
+	meth->font_new = (struct graphics_font_priv *
+	(*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+			int)) this->freetype_methods.font_new;
+	meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
 
     dbg(1,"Calling SDL_Init\n");
 #ifdef USE_WEBOS
@@ -2147,6 +2074,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     if(ret < 0)
     {
 	dbg(0,"SDL_Init failed %d\n", ret);
+		this->freetype_methods.destroy();
         g_free(this);
         return NULL;
     }
@@ -2156,7 +2084,8 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     ret = PDL_Init(0);
     if(ret < 0)
     {
-	dbg(0,"PDL_Init failed %d\n", ret);
+    	dbg(0,"PDL_Init failed %d\n", ret);
+		this->freetype_methods.destroy();
         g_free(this);
         return NULL;
     }
@@ -2165,7 +2094,9 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #else
     if (! event_request_system("glib","graphics_sdl_new")) {
 #endif
-	dbg(0,"event_request_system failed");
+    	dbg(0,"event_request_system failed");
+		this->freetype_methods.destroy();
+		g_free(this);
         return NULL;
     }
 
@@ -2196,7 +2127,8 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     if(this->screen == NULL)
     {
-	dbg(0,"SDL_SetVideoMode failed\n");
+    	dbg(0,"SDL_SetVideoMode failed\n");
+		this->freetype_methods.destroy();
         g_free(this);
 #ifdef USE_WEBOS
         PDL_Quit();
@@ -2249,16 +2181,6 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     sge_Update_OFF();
     sge_Lock_ON();
 #endif
-
-    *meth=graphics_methods;
-
-
-    meth->font_new =
-       (struct graphics_font_priv *
-       (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
-        int)) this->freetype_methods.font_new;
-    meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
-
 
 
 #ifdef USE_WEBOS
