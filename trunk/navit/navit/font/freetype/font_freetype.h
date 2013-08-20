@@ -20,6 +20,7 @@ struct font_freetype_font;
 struct font_freetype_glyph;
 
 struct font_freetype_methods {
+    void (*destroy)(void);
 	struct font_freetype_font *(*font_new) (struct graphics_priv * gr,
 						struct
 						graphics_font_methods *

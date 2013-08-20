@@ -75,7 +75,8 @@ static FTC_ImageCache image_cache;
 static FTC_CMapCache charmap_cache;
 static FTC_SBitCache sbit_cache;
 #endif
-static int library_init;
+static int library_init = 0;
+static int library_deinit = 0;
 
 
 static void
@@ -129,14 +130,14 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
 #else
 			FTC_ImageCache_Lookup(image_cache, &font->scaler, glyph_index, &cached_glyph, &anode);
-#endif
+#endif /* HAVE_LOOKUP_SCALER */
 			FT_Glyph_Copy(cached_glyph, &glyph);
 			FT_Glyph_Transform(glyph, &matrix, &pen);
 #else
 			glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
 			FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT);
 			FT_Get_Glyph(font->face->glyph, &glyph);
-#endif
+#endif /* USE_CACHING */
 			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox);
 
 			glyph_bbox.xMin += x >> 6;
@@ -154,11 +155,10 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			if (glyph_bbox.yMax > bbox.yMax)
 				bbox.yMax = glyph_bbox.yMax;
 			p = g_utf8_next_char(p);
+
+			FT_Done_Glyph(glyph);
 #if USE_CACHING
-			FT_Done_Glyph(glyph);
 			FTC_Node_Unref(anode, manager);
-#else
-			FT_Done_Glyph(glyph);
 #endif
 		}
 		if (bbox.xMin > bbox.xMax) {
@@ -776,7 +776,19 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 	return 1;
 }
 
+static void
+font_freetype_destroy(void) {
+	if (!library_deinit) {
+#if USE_CACHING
+			FTC_Manager_Done(manager);
+#endif
+			FT_Done_FreeType(library);
+	}
+	library_deinit = 1;
+}
+
 static struct font_freetype_methods methods = {
+	font_freetype_destroy,
 	font_freetype_font_new,
 	font_freetype_get_text_bbox,
 	font_freetype_text_new,

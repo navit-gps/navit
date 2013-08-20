@@ -115,6 +115,7 @@ static void
 graphics_destroy(struct graphics_priv *gr)
 {
 	dbg(3,"enter parent %p\n",gr->parent);
+	gr->freetype_methods.destroy();
 	if (!gr->parent) {
 		dbg(3,"enter win %p\n",gr->win);
 		if (gr->win)
