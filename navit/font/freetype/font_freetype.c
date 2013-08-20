@@ -779,6 +779,9 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 static void
 font_freetype_destroy(void) {
 	if (!library_deinit) {
+#ifdef HAVE_FONTCONFIG
+			FcFini();
+#endif
 #if USE_CACHING
 			FTC_Manager_Done(manager);
 #endif
