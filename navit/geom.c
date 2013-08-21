@@ -400,7 +400,7 @@ geom_poly_segments_point_inside(GList *in, struct coord *c)
 	return 0;
 }
 
-int
+static int
 clipcode(struct coord *p, struct rect *r)
 {
 	int code=0;

@@ -91,7 +91,7 @@ static struct attr_mapping **attr_mapping_rel2poly_place;
 static int attr_mapping_rel2poly_place_count;
 
 static int attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count);
-static void attr_longest_match_clear();
+static void attr_longest_match_clear(void);
 
 
 enum attr_strings {

@@ -102,7 +102,7 @@ osd_set_attr(struct osd *osd, struct attr* attr)
 	return navit_object_set_attr((struct navit_object *)osd, attr);
 }
 
-void
+static void
 osd_destroy(struct osd *osd)
 {
 	if (osd && osd->meth.destroy) {

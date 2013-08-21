@@ -1481,7 +1481,7 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 	osd_button_draw(opc,nav);
 }
 
-char *
+static char *
 osd_button_icon_path(struct osd_button *this_, char *src)
 {
 	if (!this_->src_dir)
@@ -3058,7 +3058,7 @@ osd_text_init(struct osd_priv_common *opc, struct navit *nav)
 
 }
 
-int
+static int
 osd_text_set_attr(struct osd_priv_common *opc, struct attr* attr)
 {
 	struct osd_text *this_ = (struct osd_text *)opc->data;

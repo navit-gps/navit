@@ -67,7 +67,7 @@ script_set_attr_int(struct script *scr, struct attr *attr)
 	}
 }
 
-struct script *
+static struct script *
 script_new(struct attr *parent, struct attr **attrs)
 {
 	struct script *scr=g_new0(struct script, 1);
@@ -83,7 +83,7 @@ script_new(struct attr *parent, struct attr **attrs)
 	return scr;
 }
 
-void
+static void
 script_destroy(struct script *scr)
 {
 	dbg(0,"enter %p\n",scr);

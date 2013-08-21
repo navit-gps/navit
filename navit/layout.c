@@ -60,16 +60,6 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 	return l;
 }
 
-void
-layout_destroy(struct layout *layout)
-{
-	attr_list_free(layout->attrs);
-	g_free(layout->font);
-	g_free(layout->dayname);
-	g_free(layout->nightname);
-	g_free(layout);
-}
-
 struct attr_iter {
         GList *last;
 };
@@ -327,7 +317,7 @@ layer_set_attr(struct layer *layer, struct attr *attr)
 	return layer_set_attr_do(layer, attr, 0);
 }
 
-void
+static void
 layer_destroy(struct layer *layer)
 {
 	attr_list_free(layer->attrs);

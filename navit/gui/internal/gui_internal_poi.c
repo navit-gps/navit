@@ -291,7 +291,7 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
  * @return  Pointer to new widget.
  */
 
-void
+static void
 format_dist(int dist, char *distbuf)
 {
 	if (dist > 10000)

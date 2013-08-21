@@ -634,7 +634,11 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-add_definitions("-Wall")
+if(CMAKE_COMPILER_IS_GNUCC OR CCMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wcast-align -Wpointer-arith -Wmissing-prototypes ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wcast-align -Wpointer-arith ")
+endif()
+
 if (EXTRA_DEFINES)
 	add_definitions("${EXTRA_DEFINES}")
 endif(EXTRA_DEFINES)
