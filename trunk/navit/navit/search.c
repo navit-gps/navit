@@ -331,7 +331,7 @@ search_address_results_free(struct search_list *this_)
 	tmp=this_->address_results;
 	while (tmp) {
 		struct search_list_result *slr=tmp->data;
-		if (slr->country);
+		if (slr->country)
 			search_list_country_destroy(slr->country);
 		if (slr->town)
 			search_list_town_destroy(slr->town);
