@@ -152,7 +152,7 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relation
 	}
 }
 
-void
+static void
 relations_destroy_func(void *key, GList *l, void *data)
 {
 	GList *ll=l;

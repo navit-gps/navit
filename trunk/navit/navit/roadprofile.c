@@ -96,7 +96,7 @@ roadprofile_attr_iter_destroy(struct attr_iter *iter)
 	g_free(iter);
 }
 
-struct roadprofile *
+static struct roadprofile *
 roadprofile_dup(struct roadprofile *this_)
 {
 	struct roadprofile *ret=g_new(struct roadprofile, 1);
@@ -106,7 +106,7 @@ roadprofile_dup(struct roadprofile *this_)
 	return ret;
 }
 
-void
+static void
 roadprofile_destroy(struct roadprofile *this_)
 {
 	attr_list_free(this_->attrs);
