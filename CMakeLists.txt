@@ -634,9 +634,16 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+# Compile with -Wall -Wextra. We need all the help we can get from the compiler :-).
+# Disabled warnings:
+# -Wno-missing-field-initializers: Used a lot, does not seem problematic.
+# -Wno-unused-parameter: Unfortunately occurs frequently because of
+#                        functions implementing the interface of a plugin.
+# -Wno-sign-compare: We currently just use int almost everywhere.
+#                    Unclear if it's really worth correcting.
 if(CMAKE_COMPILER_IS_GNUCC OR CCMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wcast-align -Wpointer-arith -Wmissing-prototypes ")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wcast-align -Wpointer-arith ")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wcast-align -Wpointer-arith -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-sign-compare -Wmissing-prototypes ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wcast-align -Wpointer-arith -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-sign-compare ")
 endif()
 
 if (EXTRA_DEFINES)
