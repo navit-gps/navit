@@ -213,7 +213,7 @@ static void click_notify_do(struct graphics_priv *priv, int button, int state, i
 #endif
 static void motion_notify_do(struct graphics_priv *priv, int x, int y);
 static void resize_callback_do(struct graphics_priv *priv, int w, int h);
-static void glut_close();
+static void glut_close(void);
 
 #ifdef USE_OPENGLES2
 const char vertex_src [] =
@@ -1105,7 +1105,7 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
-handle_mouse_queue()
+handle_mouse_queue(void)
 {
 #ifdef USE_OPENGLES
 #else
