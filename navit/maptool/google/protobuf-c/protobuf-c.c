@@ -2016,7 +2016,7 @@ parse_member (ScannedMember *scanned_member,
 /* TODO: expose/use this function if desc->message_init==NULL 
    (which occurs for old code, and may be useful for certain
    programatic techniques for generating descriptors). */
-void
+static void
 protobuf_c_message_init_generic (const ProtobufCMessageDescriptor *desc,
                                  ProtobufCMessage *message)
 {

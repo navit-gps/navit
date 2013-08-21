@@ -295,7 +295,7 @@ vehicleprofile_get_name(struct vehicleprofile *this_)
 	return this_->name;
 }
 
-void
+static void
 vehicleprofile_init(struct vehicleprofile *this_)
 {
 	vehicleprofile_update(this_);

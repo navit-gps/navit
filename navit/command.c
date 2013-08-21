@@ -1191,7 +1191,7 @@ command_evaluate_to_length(const char *expr, int *error)
 	return 0;
 }
 
-int
+static int
 command_evaluate_single(struct context *ctx)
 {
 	struct result res={{0,},},tmp={{0,},};

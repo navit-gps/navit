@@ -195,7 +195,7 @@ static GHashTable *hImageData;
 #else
 /*  prototypes */
 void APIENTRY tessBeginCB(GLenum which);
-void APIENTRY tessEndCB();
+void APIENTRY tessEndCB(void);
 void APIENTRY tessErrorCB(GLenum errorCode);
 void APIENTRY tessVertexCB(const GLvoid * data);
 void APIENTRY tessVertexCB2(const GLvoid * data);
@@ -756,7 +756,7 @@ tessBeginCB(GLenum which)
 
 
 void APIENTRY
-tessEndCB()
+tessEndCB(void)
 {
 	dbg(1, "glEnd();\n");
 	draw_array(graphics_priv_root, tess_array, tess_count, tess_type);
