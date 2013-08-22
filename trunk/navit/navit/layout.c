@@ -245,12 +245,19 @@ layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 		navit_object_unref((struct navit_object *)l->ref);
 		l->ref=NULL;
 		obj=(struct navit_object *)l->navit;
+		if (obj==NULL){
+			dbg(0, "Invalid layer reference '%s': Only layers inside a layout can use references.\n", attr->u.str);
+			return 0;
+		}
 		iter=obj->func->iter_new(obj);
 		while (obj->func->get_attr(obj, attr_layer, &layer, iter)) {
 			if (!strcmp(layer.u.layer->name, attr->u.str)) {
 				l->ref=(struct layer*)navit_object_ref(layer.u.navit_object);
 				break;
 			}
+		}
+		if (l->ref==NULL){
+			dbg(0, "Ignoring reference to unknown layer '%s' in layer '%s'.\n", attr->u.str, l->name);
 		}
 		obj->func->iter_destroy(iter);
 	default:
@@ -272,6 +279,11 @@ struct layer * layer_new(struct attr *parent, struct attr **attrs)
 	l->active=1;
 	for (;*attrs; attrs++) {
 		layer_set_attr_do(l, *attrs, 1);
+	}
+	if (l->name==NULL){
+		dbg(0, "Ignoring layer without name.\n");
+		g_free(l);
+		return NULL;
 	}
 	return l;
 }
