@@ -24,7 +24,9 @@
 #include "callback.h"
 
 struct callback {
-	void (*func)();
+	/* func has variable number of arguments, not (void),
+	 * but we must declare something... */
+	void (*func)(void);
 	int pcount;
 	enum attr_type type;
 	void *p[0];
@@ -157,28 +159,36 @@ callback_call(struct callback *cb, int pcount, void **p)
 			pf[i+cb->pcount]=p[i];
 		switch (cb->pcount+pcount) {
 		case 8:
-			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6],pf[7]);
+			((int (*)(void*,void*,void*,void*,void*,void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6],pf[7]);
 			break;
 		case 7:
-			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6]);
+			((int (*)(void*,void*,void*,void*,void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6]);
 			break;
 		case 6:
-			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5]);
+			((int (*)(void*,void*,void*,void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2],pf[3],pf[4],pf[5]);
 			break;
 		case 5:
-			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4]);
+			((int (*)(void*,void*,void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2],pf[3],pf[4]);
 			break;
 		case 4:
-			cb->func(pf[0],pf[1],pf[2],pf[3]);
+			((int (*)(void*,void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2],pf[3]);
 			break;
 		case 3:
-			cb->func(pf[0],pf[1],pf[2]);
+			((int (*)(void*,void*,void*))cb->func)(
+			  pf[0],pf[1],pf[2]);
 			break;
 		case 2:
-			cb->func(pf[0],pf[1]);
+			((int (*)(void*,void*))cb->func)(
+			  pf[0],pf[1]);
 			break;
 		case 1:
-			cb->func(pf[0]);
+			((int (*)(void*))cb->func)(
+			  pf[0]);
 			break;
 		case 0:
 			cb->func();
