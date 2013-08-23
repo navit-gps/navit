@@ -860,6 +860,12 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 			wb->datai=count++;
 			g_free(text);
 		}
+		text=g_strdup_printf("%s:0x%x,0x%x", "ID", item->id_hi, item->id_lo);
+		gui_internal_widget_append(w,
+		wb=gui_internal_button_new(this, text,
+			NULL, gravity_left_center|orientation_horizontal|flags_fill));
+		wb->name=text;
+		wb->item=wm->item;
 	}
 	map_rect_destroy(mr);
 	gui_internal_menu_render(this);
