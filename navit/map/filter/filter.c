@@ -83,7 +83,12 @@ filter_type(struct map_priv *m, struct item *item)
 		}
 		if (old && entry && entry->cond_attr != attr_none) {
 			struct attr attr;
-			if (!item_attr_get(item, entry->cond_attr, &attr)) {
+			if (entry->cond_attr == attr_id) {
+				char idstr[64];
+				sprintf(idstr,"0x%x 0x%x",item->id_hi,item->id_lo);
+				if (strcmp(entry->cond_str, idstr))
+					old=NULL;
+			} else if (!item_attr_get(item, entry->cond_attr, &attr)) {
 				old=NULL;
 			} else {
 				char *wildcard=strchr(entry->cond_str,'*');
