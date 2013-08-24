@@ -7,19 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-30 19:57+0200\n"
+"POT-Creation-Date: 2013-08-24 22:34+0400\n"
 "PO-Revision-Date: 2010-05-24 14:51+0000\n"
 "Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#, c-format
 msgid "Running from source directory\n"
 msgstr "Λειτουργία από τον πηγαίο κατάλογο\n"
 
@@ -252,6 +251,7 @@ msgstr "Φτάσατε στον προορισμό σας %s"
 msgid "then you have reached your destination."
 msgstr "τότε έχετε φτάσει στον προορισμό σας."
 
+#. Android resource: @strings/position_popup_title
 msgid "Position"
 msgstr "Θέση"
 
@@ -1306,7 +1306,6 @@ msgstr "Ζιμπάμπουε"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Άγνωστη, προσθέστε ετικέτες is_in σε αυτές τις πόλεις"
 
-#, c-format
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
@@ -1512,6 +1511,7 @@ msgstr "Δ"
 msgid "NW"
 msgstr "ΒΔ"
 
+#. Android resource: @strings/no
 msgid "No"
 msgstr "Όχι"
 
@@ -1547,6 +1547,7 @@ msgstr "Επισκόπηση σε Φυλλομετρητή"
 msgid "Item type"
 msgstr ""
 
+#. Android resource: @strings/address_search_streets
 msgid "Streets"
 msgstr "Οδοί"
 
@@ -1781,6 +1782,221 @@ msgstr ""
 
 msgid "Vehicle Position"
 msgstr "Θέση Οχήματος"
+
+#. Strings from android/res/values/strings.xml
+#. Android resource: @strings/yes
+msgid "Yes"
+msgstr ""
+
+#. Android resource: @strings/notification_ticker
+msgid "Navit started"
+msgstr ""
+
+#. Android resource: @strings/notification_event_default
+msgid "Navit running"
+msgstr ""
+
+#. Android resource: @strings/initial_info_box_title
+msgid "Welcome to Navit"
+msgstr ""
+
+#. Android resource: @strings/initial_info_box_message
+msgid ""
+"Thank you for installing Navit!\n"
+"\n"
+"To start, select \"Download maps\" from the menu to download a map. Note: "
+"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"\n"
+"Mapdata: (c) OpenStreetMap contributors\n"
+"\n"
+"Enjoy Navit!"
+msgstr ""
+
+#. Android resource: @strings/initial_info_box_OK
+msgid "OK"
+msgstr ""
+
+#. Android resource: @strings/initial_info_box_more_info
+msgid "More info"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_zoom_in
+msgid "Zoom in"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_zoom_out
+msgid "Zoom out"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_download_maps
+msgid "Download maps"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_toggle_poi
+msgid "Toggle POIs"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_exit_navit
+msgid "Exit Navit"
+msgstr ""
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr ""
+
+#. Android resource: @strings/map_delete
+msgid "Delete this map?"
+msgstr ""
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr ""
+
+#. Android resource: @strings/map_download_downloading
+msgid "Downloading:"
+msgstr ""
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr ""
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr ""
+
+#. Android resource: @strings/map_download_download_error
+msgid "Error downloading map."
+msgstr ""
+
+#. Android resource: @strings/map_download_download_aborted
+msgid "Map download aborted"
+msgstr ""
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr ""
+
+#. Android resource: @strings/map_no_fix
+msgid "No location. Reopen after location fix."
+msgstr ""
+
+#. Android resource: @strings/maps_for_current_location
+msgid "Maps containing current location"
+msgstr ""
+
+#. Android resource: @strings/address_search_title
+msgid "Address search"
+msgstr ""
+
+#. Android resource: @strings/address_enter_destination
+msgid "Enter destination"
+msgstr ""
+
+#. Android resource: @strings/address_partial_match
+msgid "Match partial address"
+msgstr ""
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr ""
+
+#. Android resource: @strings/address_search_searching
+msgid "Searching..."
+msgstr ""
+
+#. Android resource: @strings/address_search_not_found
+msgid "Address not found"
+msgstr ""
+
+#. Android resource: @strings/address_search_getting_results
+msgid "Getting search results"
+msgstr ""
+
+#. Android resource: @strings/address_search_loading_results
+msgid "Loading search results"
+msgstr ""
+
+#. Android resource: @strings/address_search_no_results
+msgid "No results found"
+msgstr ""
+
+#. Android resource: @strings/address_search_no_text_entered
+msgid "No text entered"
+msgstr ""
+
+#. Android resource: @strings/address_search_set_destination
+msgid "Setting destination to:"
+msgstr ""
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr ""
+
+#. Android resource: @strings/choose_an_action
+msgid "Choose an action"
+msgstr ""
+
+#. Android resource: @strings/please_insert_an_sd_card
+msgid "Please insert an SD Card"
+msgstr ""
+
+#. Android resource: @strings/backing_up
+msgid "Backing up..."
+msgstr ""
+
+#. Android resource: @strings/restoring
+msgid "Restoring..."
+msgstr ""
+
+#. Android resource: @strings/failed_to_create_backup_directory
+msgid "Failed to create backup directory"
+msgstr ""
+
+#. Android resource: @strings/backup_failed
+msgid "Backup failed"
+msgstr ""
+
+#. Android resource: @strings/no_backup_found
+msgid "No backup found"
+msgstr ""
+
+#. Android resource: @strings/failed_to_restore
+msgid "Failed to restore"
+msgstr ""
+
+#. Android resource: @strings/backup_successful
+msgid "Backup successful"
+msgstr ""
+
+#. Android resource: @strings/restore_successful_please_restart_navit
+msgid ""
+"Restore Successful\n"
+"Please restart Navit"
+msgstr ""
+
+#. Android resource: @strings/backup_not_found
+msgid "Backup not found"
+msgstr ""
+
+#. Android resource: @strings/restore_failed
+msgid "Restore failed"
+msgstr ""
+
+#. Android resource: @strings/select_backup
+msgid "Select backup"
+msgstr ""
+
+#. Android resource: @strings/backup
+msgid "Backup"
+msgstr ""
+
+#. Android resource: @strings/restore
+msgid "Restore"
+msgstr ""
 
 msgid "Main menu"
 msgstr "Κύριο Μενού"
