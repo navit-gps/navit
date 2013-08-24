@@ -558,9 +558,10 @@ transform(struct transformation *t, enum projection required_projection, struct 
 		}		
 		result[result_idx]=screen_point;
 		if (width_result) {
-			if (t->ddd) 
-				width_result[result_idx]=width*t->wscale/rotated_coord.z;
-			else 
+			if (t->ddd) {
+				dbg(3,"width %d * %d / %d\n",width,t->wscale,clip_result.clipped_coord.z);
+				width_result[result_idx]=width*t->wscale/clip_result.clipped_coord.z;
+			} else 
 				width_result[result_idx]=width;
 		}
 		result_idx_last=result_idx;
