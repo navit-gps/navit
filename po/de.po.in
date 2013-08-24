@@ -7,19 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-30 19:57+0200\n"
+"POT-Creation-Date: 2013-08-24 22:34+0400\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#, c-format
 msgid "Running from source directory\n"
 msgstr "Aufruf aus Quellverzeichnis\n"
 
@@ -254,6 +253,7 @@ msgstr "%s haben Sie ihr Ziel erreicht"
 msgid "then you have reached your destination."
 msgstr "dann haben Sie Ihr Ziel erreicht."
 
+#. Android resource: @strings/position_popup_title
 msgid "Position"
 msgstr "Position"
 
@@ -1310,7 +1310,6 @@ msgstr "Simbabwe"
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "*Unbekannt, füge Etikett \"ist in\" zu diesen Städten hinzu"
 
-#, c-format
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
@@ -1527,6 +1526,7 @@ msgstr "W"
 msgid "NW"
 msgstr "NW"
 
+#. Android resource: @strings/no
 msgid "No"
 msgstr "Nein"
 
@@ -1562,6 +1562,7 @@ msgstr "Im Browser anzeigen"
 msgid "Item type"
 msgstr "Elementtyp"
 
+#. Android resource: @strings/address_search_streets
 msgid "Streets"
 msgstr "Straßen"
 
@@ -1796,6 +1797,232 @@ msgstr "Bitte Geschwindigkeit verringern"
 
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"
+
+#. Strings from android/res/values/strings.xml
+#. Android resource: @strings/yes
+msgid "Yes"
+msgstr ""
+
+#. Android resource: @strings/notification_ticker
+msgid "Navit started"
+msgstr "Navit gestartet"
+
+#. Android resource: @strings/notification_event_default
+msgid "Navit running"
+msgstr "Navit läuft"
+
+#. Android resource: @strings/initial_info_box_title
+msgid "Welcome to Navit"
+msgstr "Willkommen bei Navit"
+
+#. Android resource: @strings/initial_info_box_message
+msgid ""
+"Thank you for installing Navit!\n"
+"\n"
+"To start, select \"Download maps\" from the menu to download a map. Note: "
+"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"\n"
+"Mapdata: (c) OpenStreetMap contributors\n"
+"\n"
+"Enjoy Navit!"
+msgstr ""
+"Vielen Dank für die Installation von Navit!\n"
+"\n"
+"Bitte zuerst im Menu \"Karten herunterladen\" auswählen und eine Karte für "
+"die gewünschte Region herunterladen. Die Kartendatei ist sehr groß, bitte "
+"Flatrate oder ähnliches aktivieren!\n"
+"\n"
+"Kartendaten: (c) OpenStreetMap contributors\n"
+"\n"
+"Viel Spaß mit Navit!"
+
+#. Android resource: @strings/initial_info_box_OK
+msgid "OK"
+msgstr ""
+
+#. Android resource: @strings/initial_info_box_more_info
+msgid "More info"
+msgstr "Mehr Infos"
+
+#. Android resource: @strings/optionsmenu_zoom_in
+msgid "Zoom in"
+msgstr "Vergrößern"
+
+#. Android resource: @strings/optionsmenu_zoom_out
+msgid "Zoom out"
+msgstr "Verkleinern"
+
+#. Android resource: @strings/optionsmenu_download_maps
+msgid "Download maps"
+msgstr "Karten herunterladen"
+
+#. Android resource: @strings/optionsmenu_toggle_poi
+msgid "Toggle POIs"
+msgstr "POI ein/aus"
+
+#. Android resource: @strings/optionsmenu_exit_navit
+msgid "Exit Navit"
+msgstr "Navit beenden"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Sichern / Wiederherstellen"
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Ziel setzen"
+
+#. Android resource: @strings/map_delete
+msgid "Delete this map?"
+msgstr "Diese Karte löschen?"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Kartendownload"
+
+#. Android resource: @strings/map_download_downloading
+msgid "Downloading:"
+msgstr "Laden:"
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "Fertig in"
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "Fertig in"
+
+#. Android resource: @strings/map_download_download_error
+msgid "Error downloading map."
+msgstr "Fehler beim Kartendownload"
+
+#. Android resource: @strings/map_download_download_aborted
+msgid "Map download aborted"
+msgstr "Download der Karte abgebrochen"
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "Nicht genug freier Speicher"
+
+#. Android resource: @strings/map_no_fix
+msgid "No location. Reopen after location fix."
+msgstr "Position noch nicht bekannt."
+
+#. Android resource: @strings/maps_for_current_location
+msgid "Maps containing current location"
+msgstr "Karten passend zur aktuellen Position"
+
+#. Android resource: @strings/address_search_title
+msgid "Address search"
+msgstr "Adresse suchen"
+
+#. Android resource: @strings/address_enter_destination
+msgid "Enter destination"
+msgstr "Ziel eingeben"
+
+#. Android resource: @strings/address_partial_match
+msgid "Match partial address"
+msgstr "Ungefähr"
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "Suche"
+
+#. Android resource: @strings/address_search_searching
+msgid "Searching..."
+msgstr "Suche läuft..."
+
+#. Android resource: @strings/address_search_not_found
+msgid "Address not found"
+msgstr "Keine Adresse gefunden"
+
+#. Android resource: @strings/address_search_getting_results
+msgid "Getting search results"
+msgstr "Abrufen von Suchergebnissen"
+
+#. Android resource: @strings/address_search_loading_results
+msgid "Loading search results"
+msgstr "Lädt Suchergebnisse"
+
+#. Android resource: @strings/address_search_no_results
+msgid "No results found"
+msgstr "Suche liefert kein Ergebnis!"
+
+#. Android resource: @strings/address_search_no_text_entered
+msgid "No text entered"
+msgstr "Keine Eingabe"
+
+#. Android resource: @strings/address_search_set_destination
+msgid "Setting destination to:"
+msgstr "Neues Fahrziel:"
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "Städte"
+
+#. Android resource: @strings/choose_an_action
+msgid "Choose an action"
+msgstr "Bitte auswählen"
+
+#. Android resource: @strings/please_insert_an_sd_card
+msgid "Please insert an SD Card"
+msgstr "Bitte eine SD Karte einlegen"
+
+#. Android resource: @strings/backing_up
+msgid "Backing up..."
+msgstr "Sichern..."
+
+#. Android resource: @strings/restoring
+msgid "Restoring..."
+msgstr ""
+
+#. Android resource: @strings/failed_to_create_backup_directory
+msgid "Failed to create backup directory"
+msgstr "Sicherungsverzeichnis konnte nicht erstellt werden"
+
+#. Android resource: @strings/backup_failed
+msgid "Backup failed"
+msgstr "Sicherung Fehlgeschlagen"
+
+#. Android resource: @strings/no_backup_found
+msgid "No backup found"
+msgstr "Keine Sicherung gefunden"
+
+#. Android resource: @strings/failed_to_restore
+msgid "Failed to restore"
+msgstr "Fehler beim Wiederherstellen"
+
+#. Android resource: @strings/backup_successful
+msgid "Backup successful"
+msgstr "Sicherung erfolgreich"
+
+#. Android resource: @strings/restore_successful_please_restart_navit
+msgid ""
+"Restore Successful\n"
+"Please restart Navit"
+msgstr ""
+"Sicherung Erfolgreich\n"
+"Navit bitte neustarten"
+
+#. Android resource: @strings/backup_not_found
+msgid "Backup not found"
+msgstr "Backup nicht gefunden"
+
+#. Android resource: @strings/restore_failed
+msgid "Restore failed"
+msgstr "Wiederherstellen fehlgeschlagen"
+
+#. Android resource: @strings/select_backup
+msgid "Select backup"
+msgstr "Backup auswählen"
+
+#. Android resource: @strings/backup
+msgid "Backup"
+msgstr "Sichern"
+
+#. Android resource: @strings/restore
+msgid "Restore"
+msgstr "Wiederherstellen"
 
 msgid "Main menu"
 msgstr "Hauptmenü"
