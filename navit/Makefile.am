@@ -126,6 +126,8 @@ apkg-all: all android/build.xml navit.xml
 	cp .libs/*.so android/libs/armeabi/libnavit.so
 	for i in */*/.libs/*.so ; do sed 's&lib_data_data_org\.navitproject\.navit_lib_&/data/data/org.navitproject.navit/lib/lib&' <$$i >android/libs/armeabi/$$(basename $$i); done
 
+	for i in $(shell cd $(srcdir)/../po && echo ??_*.po.in ??.po.in); do echo Gnerating strings.xml from $$i ; mkdir -p $(builddir)/android/res/values-$$(echo $$i | sed -e s/\\.po\\.in// -e s/_/-r/) ; @SAXON@ $(srcdir)/android/res/values/strings.xml $(srcdir)/android/po2xml.xslt po_file=$(abs_top_srcdir)/po/$$i >$(builddir)/android/res/values-$$(echo $$i | sed -e s/\\.po\\.in// -e s/_/-r/)/strings.xml ; done
+
 	mkdir -p android/res/drawable-ldpi
 	mkdir -p android/res/drawable-mdpi
 	mkdir -p android/res/drawable-hdpi
