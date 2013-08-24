@@ -39,6 +39,7 @@ static char *vehicle_gpsd_dbus_prefix="gpsd_dbus:";
 struct vehicle_priv {
 	char *source;
 	char *address;
+	int flags;
 	struct callback_list *cbl;
 	DBusConnection *connection;
 	double time, track, speed, altitude;
@@ -92,7 +93,7 @@ vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void 
 			priv->speed=speed;
 		if (!isnan(altitude))
 			priv->altitude=altitude;
-		if (time != priv->time) {
+		if (time != priv->time || (priv->flags & 1)) {
 			priv->time=time;
 			priv->fix_time=time;
 			callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
@@ -198,6 +199,9 @@ vehicle_gpsd_dbus_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int 
 			vehicle_gpsd_dbus_close(priv);
 			vehicle_gpsd_dbus_open(priv);
 		}
+		return 1;
+	case attr_flags:
+		priv->flags=attr->u.num;
 		return 1;
 	default:
 		return 0;
