@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- LANG=en -->
+	<!-- GENERIC -->
+	<string name="app_name">Navit</string>
+	<string name="map_data_copyright">© OpenStreetMap contributors</string>
+	<string name="url_wiki_android">http://wiki.navit-project.org/index.php/Navit_on_Android</string>
+	<string name="url_wiki_main">http://wiki.navit-project.org</string>
+
+	<!-- NOTIFICATION -->
+	<string name="notification_name">@string/app_name</string>
+
+	<!-- OPTIONS MENU -->
+	<string name="optionsmenu_address_search">@string/address_search_title</string>
+	
+	<!--  Backup Restore -->
+	<string-array name="dialog_backup_restore_items">
+		<item >@string/backup</item>
+		<item >@string/restore</item>
+	</string-array>
+</resources>
+
