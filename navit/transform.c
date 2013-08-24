@@ -460,6 +460,7 @@ transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit)
 {
 	struct coord_3d result;
 	float clip_factor = (zlimit-c.z)/(c_old.z-c.z);
+	dbg(3,"in (%d,%d,%d) - (%d,%d,%d)\n", c.x,c.y,c.z, c_old.x,c_old.y,c_old.z);
 	result.x=c.x+(c_old.x-c.x)*clip_factor;
 	result.y=c.y+(c_old.y-c.y)*clip_factor;
 	result.z=zlimit;
@@ -471,6 +472,9 @@ static struct point
 transform_project_onto_view_plane(struct transformation *t, struct coord_3d c)
 {
 	struct point result;
+#if 0
+	dbg(0,"z=%d\n",c.z);
+#endif
 	result.x = (long long)c.x*t->xscale/c.z;
 	result.y = (long long)c.y*t->yscale/c.z;
 	return result;
@@ -529,6 +533,10 @@ transform(struct transformation *t, enum projection required_projection, struct 
 	dbg(3,"count=%d\n", count);
 	for (i=0; i < count; i++) {
 		dbg(3, "input coord %d: (%d, %d)\n", i, input[i].x, input[i].y);
+		if (i && input[i].x == input[0].x && input[i].y == input[0].y && result_idx && !width_result) {
+			result[result_idx++]=result[0];
+			continue;
+		}
 		projected_coord = transform_correct_projection(t, required_projection, input[i]);
 		shifted_coord = transform_shift_by_center_and_scale(t, projected_coord);
 		rotated_coord = transform_rotate(t, shifted_coord);
@@ -541,6 +549,9 @@ transform(struct transformation *t, enum projection required_projection, struct 
 			} else if (clip_result.skip_coord){
 				continue;
 			}
+#if 0
+			clip_result.clipped_coord.z=2000000;
+#endif
 			screen_point = transform_project_onto_view_plane(t, clip_result.clipped_coord);
 		} else {
 			screen_point.x = rotated_coord.x>>POST_SHIFT;
