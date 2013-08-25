@@ -51,8 +51,8 @@ $(top_builddir)/navit/navit_shipped.c: $(top_srcdir)/navit/navit_shipped.xml
 
 # Trick gettext to get translateable strings out of android/strings.xml
 
-$(top_builddir)/navit/strings.c: $(top_srcdir)/navit/android/res/values/strings.xml
-	sed -e "s/\\\\'/'/g" -e 's%.*<string[^>]*name="\(.*\)">\(.*\)</string>%// Android resource: @strings/\1\n_("\2")%g' -e '\%^//%!d'<$(top_srcdir)/navit/android/res/values/strings.xml >$(top_builddir)/navit/strings.c
+$(top_builddir)/navit/strings.c: $(abs_top_srcdir)/navit/android/res/values/strings.xml
+	sed -e "s/\\\\'/'/g" -e 's%.*<string[^>]*name="\(.*\)">\(.*\)</string>%// Android resource: @strings/\1\n_("\2")%g' -e '\%^//%!d'<$(abs_top_srcdir)/navit/android/res/values/strings.xml >$(top_builddir)/navit/strings.c
 
 @POFILES@: navit.pot
 	sed 's/^"Project-Id-Version:.*/"Project-Id-Version: $(PACKAGE_STRING)\\n"/' < $(top_srcdir)/po/$@.in | $(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ - navit.pot
@@ -88,7 +88,7 @@ uninstall-local:
 	done
 
 distclean-local:
-	rm -f $(top_builddir)/navit/navit_shipped.glade $(top_builddir)/navit/navit_shipped.c
+	rm -f $(top_builddir)/navit/navit_shipped.glade $(top_builddir)/navit/navit_shipped.c $(top_builddir)/navit/strings.c
 	for n in $(CATALOGS) __DuMmY ; do \
 		if test "$$n" -a "$$n" != "__DuMmY" ; then \
 			l=`basename $$n .mo`; \
