@@ -175,7 +175,7 @@ static struct country country[]= {
   {440,	"LT",	"LT", "LTU", /* 440 */ _n("Lithuania")},
   {442,	"L",	"LU", "LUX", /* 442 */ _n("Luxembourg")},
   {428,	"LV",	"LV", "LVA", /* 428 */ _n("Latvia")},
-  {434,	"LAR",	"LY", "LBY", /* 434 */ _n("Libyan Arab Jamahiriya")},
+  {434,	"LAR",	"LY", "LBY", /* 434 */ _n("Libya")},
   {504,	"MA",	"MA", "MAR", /* 504 */ _n("Morocco")},
   {492,	"MC",	"MC", "MCO", /* 492 */ _n("Monaco")},
   {498,	"MD",	"MD", "MDA", /* 498 */ _n("Moldova, Republic of")},
