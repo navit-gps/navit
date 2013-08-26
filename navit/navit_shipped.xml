@@ -747,6 +747,12 @@ Waypoint</text></img>
 			<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
 		</mapset>
 
+		<layer name="Found items" order="0-">
+			<itemgra item_types="found_item">
+				<circle color="#008080" radius="24" width="2" text_size="12"/>
+			</itemgra>
+		</layer>
+
 		<layout name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
 
 			<cursor w="26" h="26">
@@ -2467,11 +2473,7 @@ Waypoint</text></img>
 					<circle color="#606060" radius="0" width="0" text_size="10"/>
 				</itemgra>
 			</layer>
-			<layer name="Found items" order="0-">
-				<itemgra item_types="found_item">
-					<circle color="#008080" radius="24" width="2" text_size="12"/>
-				</itemgra>
-			</layer>
+			<layer name="Found items" ref="Found items"/>
 		</layout>
 
 		<layout name="Car-dark" daylayout="Car" color="#011001">
@@ -3909,11 +3911,7 @@ Waypoint</text></img>
 					<circle color="#606060" background_color="#000000" radius="0" width="0" text_size="10"/>
 				</itemgra>
 			</layer>
-			<layer name="Found items" order="0-">
-				<itemgra item_types="found_item">
-					<circle color="#008080" background_color="#000000" radius="24" width="2" text_size="12"/>
-				</itemgra>
-			</layer>
+			<layer name="Found items" ref="Found items"/>
 		</layout>
 
     <layout name="Car-Android" color="#fef9ee" font="Liberation Sans">
@@ -5295,11 +5293,7 @@ Waypoint</text></img>
           text_size="10" />
         </itemgra>
       </layer>
-	<layer name="Found items" order="0-">
-		<itemgra item_types="found_item">
-			<circle color="#008080" radius="24" width="2" text_size="12"/>
-		</itemgra>
-	</layer>
+      <layer name="Found items" ref="Found items"/>
     </layout>
 
 		<layout name="Car-simple" color="#839ea9">
@@ -5428,11 +5422,7 @@ Waypoint</text></img>
 					<circle radius="3" text_size="16" color="#ffffff" background_color="#000000"/>
 				</itemgra>
 			</layer>
-			<layer name="Found items" order="0-">
-				<itemgra item_types="found_item">
-					<circle color="#008080" radius="24" width="2" text_size="12"/>
-				</itemgra>
-			</layer>
+			<layer name="Found items" ref="Found items"/>
 		</layout>
 
 		<layout name="Bike" color="#ffefb7" font="Liberation Sans">
@@ -6459,11 +6449,7 @@ Waypoint</text></img>
 					<circle color="#606060" radius="0" width="0" text_size="10"/>
 				</itemgra>
 			</layer>					
-			<layer name="Found items" order="0-">
-				<itemgra item_types="found_item">
-					<circle color="#008080" radius="24" width="2" text_size="12"/>
-				</itemgra>
-			</layer>
+			<layer name="Found items" ref="Found items"/>
 		</layout>
 
 		<layout name="T@H" font="Liberation Sans">
@@ -7011,11 +6997,7 @@ Waypoint</text></img>
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
 			</layer>
-			<layer name="Found items" order="0-">
-				<itemgra item_types="found_item">
-					<circle color="#008080" radius="24" width="2" text_size="12"/>
-				</itemgra>
-			</layer>
+			<layer name="Found items" ref="Found items"/>
 		</layout>
 		<layout name="Route">
 			<layer name="streets">
