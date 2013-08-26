@@ -322,6 +322,8 @@ search_by_address(struct search_list *this_, char *addr)
 		tmp=g_list_next(tmp);
 	}	
 	g_list_free(phrases);
+	// TODO: Looks like we should g_free(str) here. But this is
+	// currently dead code, so no way to test it.
 }
 
 static void
