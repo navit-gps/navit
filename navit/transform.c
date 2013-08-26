@@ -459,7 +459,7 @@ static struct coord_3d
 transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit)
 {
 	struct coord_3d result;
-	float clip_factor = (zlimit-c.z)/(c_old.z-c.z);
+	float clip_factor = ((float)zlimit-c.z)/(c_old.z-c.z);
 	dbg(3,"in (%d,%d,%d) - (%d,%d,%d)\n", c.x,c.y,c.z, c_old.x,c_old.y,c_old.z);
 	result.x=c.x+(c_old.x-c.x)*clip_factor;
 	result.y=c.y+(c_old.y-c.y)*clip_factor;
@@ -533,10 +533,12 @@ transform(struct transformation *t, enum projection required_projection, struct 
 	dbg(3,"count=%d\n", count);
 	for (i=0; i < count; i++) {
 		dbg(3, "input coord %d: (%d, %d)\n", i, input[i].x, input[i].y);
+#if 0 /* doesn't work as wanted */
 		if (i && input[i].x == input[0].x && input[i].y == input[0].y && result_idx && !width_result) {
 			result[result_idx++]=result[0];
 			continue;
 		}
+#endif
 		projected_coord = transform_correct_projection(t, required_projection, input[i]);
 		shifted_coord = transform_shift_by_center_and_scale(t, projected_coord);
 		rotated_coord = transform_rotate(t, shifted_coord);
