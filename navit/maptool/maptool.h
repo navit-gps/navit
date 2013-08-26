@@ -22,15 +22,9 @@
 #include "item.h"
 #include "attr.h"
 #include "geom.h"
+#include "types.h"
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/md5.h>
-#endif
-
-
-#ifdef HAVE_API_WIN32_BASE
-#define LONGLONG_FMT "%I64d"
-#else
-#define LONGLONG_FMT "%lld"
 #endif
 
 #define sq(x) ((double)(x)*(x))
