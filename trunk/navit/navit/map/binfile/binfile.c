@@ -2084,7 +2084,9 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			msp->map=map;
 			msp->mr_item = map_rect_new_binfile(map, NULL);
 			msp->item = map_rect_get_item_byid_binfile(msp->mr_item, item->id_hi, item->id_lo);
-			if (binmap_search_by_index(map, msp->item, &msp->mr) != 3) {
+			if (binmap_search_by_index(map, msp->item, &msp->mr))
+				msp->mode = 1;
+			else {
 				struct coord c;
 				if (item_coord_get(msp->item, &c, 1))
 				{
@@ -2096,9 +2098,9 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 						msp->parent_name=g_strdup(attr.u.str);
 					dbg(0,"pn=%s\n",msp->parent_name);
 				}
-				map_rect_destroy_binfile(msp->mr_item);
-				msp->mr_item=NULL;
 			}
+			map_rect_destroy_binfile(msp->mr_item);
+			msp->mr_item=NULL;
 			if (!msp->mr)
 			{
 				break;
