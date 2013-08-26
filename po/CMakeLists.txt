@@ -22,6 +22,13 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_search.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_widget.c
       ${PROJECT_SOURCE_DIR}/navit/osd/core/osd_core.c
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitAddressSearchActivity.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitAndroidOverlay.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitDialogs.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitDownloadSelectMapActivity.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitGraphics.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/Navit.java
+      ${PROJECT_SOURCE_DIR}/navit/android/src/org/navitproject/navit/NavitMapDownloader.java
       ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
       ${CMAKE_CURRENT_BINARY_DIR}/strings_xml.c
 )

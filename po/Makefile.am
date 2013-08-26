@@ -23,6 +23,13 @@ POTFILES  = \
 	$(top_srcdir)/navit/gui/internal/gui_internal_search.c \
 	$(top_srcdir)/navit/gui/internal/gui_internal_widget.c \
 	$(top_srcdir)/navit/osd/core/osd_core.c \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitAddressSearchActivity.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitAndroidOverlay.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitDialogs.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitDownloadSelectMapActivity.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitGraphics.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/Navit.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitMapDownloader.java \
 	$(top_builddir)/navit/navit_shipped.c \
 	$(top_builddir)/navit/strings.c
 	

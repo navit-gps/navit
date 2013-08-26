@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:34+0400\n"
+"POT-Creation-Date: 2013-08-26 00:37+0400\n"
 "PO-Revision-Date: 2010-06-18 19:16+0000\n"
 "Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -1341,6 +1341,7 @@ msgstr ""
 msgid "unknown street"
 msgstr ""
 
+#. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
 msgstr "Véhicule sans nom"
 
@@ -1786,6 +1787,421 @@ msgstr "Attention! Radar!"
 msgid "Please decrease your speed"
 msgstr "Veuillez ralentir"
 
+msgid "partial match"
+msgstr ""
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "Chercher"
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "Villes"
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Conduire ici"
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr "Cartes téléchargées"
+
+msgid "Whole Planet"
+msgstr ""
+
+msgid "Africa"
+msgstr ""
+
+msgid "Canary Islands"
+msgstr ""
+
+msgid "Libya"
+msgstr ""
+
+msgid "Asia"
+msgstr ""
+
+msgid "Korea"
+msgstr ""
+
+msgid "Taiwan"
+msgstr ""
+
+msgid "UAE+Other"
+msgstr ""
+
+msgid "Oceania"
+msgstr ""
+
+msgid "Tasmania"
+msgstr ""
+
+msgid "Victoria"
+msgstr ""
+
+msgid "New South Wales"
+msgstr ""
+
+msgid "Europe"
+msgstr ""
+
+msgid "Western Europe"
+msgstr ""
+
+msgid "Azores"
+msgstr ""
+
+msgid "BeNeLux"
+msgstr ""
+
+msgid "Alsace"
+msgstr ""
+
+msgid "Aquitaine"
+msgstr ""
+
+msgid "Auvergne"
+msgstr ""
+
+msgid "Basse-Normandie"
+msgstr ""
+
+msgid "Bourgogne"
+msgstr ""
+
+msgid "Bretagne"
+msgstr ""
+
+msgid "Centre"
+msgstr ""
+
+msgid "Champagne-Ardenne"
+msgstr ""
+
+msgid "Corse"
+msgstr ""
+
+msgid "Franche-Comte"
+msgstr ""
+
+msgid "Haute-Normandie"
+msgstr ""
+
+msgid "Ile-de-France"
+msgstr ""
+
+msgid "Languedoc-Roussillon"
+msgstr ""
+
+msgid "Limousin"
+msgstr ""
+
+msgid "Lorraine"
+msgstr ""
+
+msgid "Midi-Pyrenees"
+msgstr ""
+
+msgid "Nord-pas-de-Calais"
+msgstr ""
+
+msgid "Pays-de-la-Loire"
+msgstr ""
+
+msgid "Picardie"
+msgstr ""
+
+msgid "Poitou-Charentes"
+msgstr ""
+
+msgid "Provence-Alpes-Cote-d-Azur"
+msgstr ""
+
+msgid "Rhone-Alpes"
+msgstr ""
+
+msgid "Baden-Wuerttemberg"
+msgstr ""
+
+msgid "Bayern"
+msgstr ""
+
+msgid "Mittelfranken"
+msgstr ""
+
+msgid "Niederbayern"
+msgstr ""
+
+msgid "Oberbayern"
+msgstr ""
+
+msgid "Oberfranken"
+msgstr ""
+
+msgid "Oberpfalz"
+msgstr ""
+
+msgid "Schwaben"
+msgstr ""
+
+msgid "Unterfranken"
+msgstr ""
+
+msgid "Berlin"
+msgstr ""
+
+msgid "Brandenburg"
+msgstr ""
+
+msgid "Bremen"
+msgstr ""
+
+msgid "Hamburg"
+msgstr ""
+
+msgid "Hessen"
+msgstr ""
+
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+msgid "Niedersachsen"
+msgstr ""
+
+msgid "Nordrhein-westfalen"
+msgstr ""
+
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+msgid "Saarland"
+msgstr ""
+
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+msgid "Sachsen"
+msgstr ""
+
+msgid "Schleswig-Holstein"
+msgstr ""
+
+msgid "Thueringen"
+msgstr ""
+
+msgid "Mallorca"
+msgstr ""
+
+msgid "Galicia"
+msgstr ""
+
+msgid "Scandinavia"
+msgstr ""
+
+msgid "England"
+msgstr ""
+
+msgid "Buckinghamshire"
+msgstr ""
+
+msgid "Cambridgeshire"
+msgstr ""
+
+msgid "Cumbria"
+msgstr ""
+
+msgid "East yorkshire with hull"
+msgstr ""
+
+msgid "Essex"
+msgstr ""
+
+msgid "Herefordshire"
+msgstr ""
+
+msgid "Kent"
+msgstr ""
+
+msgid "Lancashire"
+msgstr ""
+
+msgid "Leicestershire"
+msgstr ""
+
+msgid "Norfolk"
+msgstr ""
+
+msgid "Nottinghamshire"
+msgstr ""
+
+msgid "Oxfordshire"
+msgstr ""
+
+msgid "Shropshire"
+msgstr ""
+
+msgid "Somerset"
+msgstr ""
+
+msgid "South yorkshire"
+msgstr ""
+
+msgid "Suffolk"
+msgstr ""
+
+msgid "Surrey"
+msgstr ""
+
+msgid "Wiltshire"
+msgstr ""
+
+msgid "Scotland"
+msgstr ""
+
+msgid "Wales"
+msgstr ""
+
+msgid "Crete"
+msgstr ""
+
+msgid "North America"
+msgstr ""
+
+msgid "Alaska"
+msgstr ""
+
+msgid "Hawaii"
+msgstr ""
+
+msgid "USA"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+msgid "Midwest"
+msgstr ""
+
+msgid "Michigan"
+msgstr ""
+
+msgid "Ohio"
+msgstr ""
+
+msgid "Northeast"
+msgstr ""
+
+msgid "Massachusetts"
+msgstr ""
+
+msgid "Vermont"
+msgstr ""
+
+msgid "Pacific"
+msgstr ""
+
+msgid "South"
+msgstr ""
+
+msgid "Arkansas"
+msgstr ""
+
+msgid "District of Columbia"
+msgstr ""
+
+msgid "Florida"
+msgstr ""
+
+msgid "Louisiana"
+msgstr ""
+
+msgid "Maryland"
+msgstr ""
+
+msgid "Mississippi"
+msgstr ""
+
+msgid "Oklahoma"
+msgstr ""
+
+msgid "Texas"
+msgstr ""
+
+msgid "Virginia"
+msgstr ""
+
+msgid "West Virginia"
+msgstr ""
+
+msgid "West"
+msgstr ""
+
+msgid "Arizona"
+msgstr ""
+
+msgid "California"
+msgstr ""
+
+msgid "Colorado"
+msgstr ""
+
+msgid "Idaho"
+msgstr ""
+
+msgid "Montana"
+msgstr ""
+
+msgid "New Mexico"
+msgstr ""
+
+msgid "Nevada"
+msgstr ""
+
+msgid "Oregon"
+msgstr ""
+
+msgid "Utah"
+msgstr ""
+
+msgid "Washington State"
+msgstr ""
+
+msgid "South+Middle America"
+msgstr ""
+
+msgid "Guyane Francaise"
+msgstr ""
+
+msgid "downloading"
+msgstr ""
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "prêt"
+
+msgid "Error downloading map!"
+msgstr ""
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "Pas assez d'espace libre"
+
+msgid "Error writing map!"
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "Temps restant"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Carte téléchargement"
+
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
 
@@ -1853,35 +2269,19 @@ msgstr ""
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
-msgstr "Quitter Navit"
+msgstr "Quittez Navit"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Conduire ici"
-
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "Supprimer cette carte?"
 
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "Carte téléchargement"
-
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
 msgstr "Télécharger:"
-
-#. Android resource: @strings/map_download_eta
-msgid "ETA"
-msgstr "Temps restant"
-
-#. Android resource: @strings/map_download_ready
-msgid "ready"
-msgstr "prêt"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -1890,10 +2290,6 @@ msgstr "Erreur de téléchargement carte"
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
 msgstr "Carte télécharger avortée"
-
-#. Android resource: @strings/map_download_not_enough_free_space
-msgid "Not enough free space"
-msgstr "Pas assez d'espace libre"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
@@ -1905,7 +2301,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
-msgstr "Recherche d'adresse"
+msgstr "Cherchez adresse"
 
 #. Android resource: @strings/address_enter_destination
 msgid "Enter destination"
@@ -1914,10 +2310,6 @@ msgstr "Entrez votre destination"
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
 msgstr "Correspondance partielle"
-
-#. Android resource: @strings/address_search_button
-msgid "Search"
-msgstr "Chercher"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
@@ -1946,10 +2338,6 @@ msgstr "Aucun texte entré"
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
 msgstr "Destination fixée à:"
-
-#. Android resource: @strings/address_search_towns
-msgid "Towns"
-msgstr "Villes"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
