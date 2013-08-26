@@ -36,7 +36,7 @@ public class NavitTextTranslations
 		Log.e("NavitTextTranslations", "initializing translated text ...");
 		String k = null;
 		String[] v = null;
-
+/*
 		k = "exit navit";
 		v = new String[]{"en", "Exit Navit", "de", "Navit beenden", "nl", "Navit afsluiten", "fr","Quittez Navit"};
 		p(k, v);
@@ -61,15 +61,15 @@ public class NavitTextTranslations
 		v = new String[]{"en", "downloading"};
 		p(k, v);
 
-		k = "Downloaded Maps";
-		v = new String[]{"en", "Downloaded Maps", "de", "Heruntergeladene Karten", "nl", "Gedownloade kaarten", "fr","Cartes téléchargées" };
+		k = "Downloaded maps";
+		v = new String[]{"en", "Downloaded maps", "de", "Heruntergeladene Karten", "nl", "Gedownloade kaarten", "fr","Cartes téléchargées" };
 		p(k, v);
 
 		k = "ETA";
 		v = new String[]{"en", "ETA", "de", "fertig in"};
 		p(k, v);
 
-		k = "Error downloading map!";
+		k = "Error downloading map";
 		v = new String[]{"en", "Error downloading map!", "de", "Fehler beim Kartendownload"};
 		p(k, v);
 
@@ -132,7 +132,7 @@ public class NavitTextTranslations
 		k = "towns";
 		v = new String[]{"en", "Towns", "de", "Städte"};
 		p(k, v);
-
+*/
 		Log.e("NavitTextTranslations", "... ready");
 	}
 

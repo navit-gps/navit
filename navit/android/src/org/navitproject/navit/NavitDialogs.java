@@ -80,14 +80,14 @@ public class NavitDialogs extends Handler{
 			// change progressbar values
 			mapdownloader_dialog.setMax(msg.getData().getInt("value1"));
 			mapdownloader_dialog.setProgress(msg.getData().getInt("value2"));
-			mapdownloader_dialog.setTitle(msg.getData().getString("title"));
-			mapdownloader_dialog.setMessage(msg.getData().getString("text"));
+			mapdownloader_dialog.setTitle(msg.getData().getString(("title")));
+			mapdownloader_dialog.setMessage(msg.getData().getString(("text")));
 			break;
 		case MSG_TOAST :
-			Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mActivity, msg.getData().getString(("text")), Toast.LENGTH_SHORT).show();
 			break;
 		case MSG_TOAST_LONG :
-			Toast.makeText(mActivity, msg.getData().getString("text"), Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, msg.getData().getString(("text")), Toast.LENGTH_LONG).show();
 			break;
 		case MSG_START_MAP_DOWNLOAD:
 		{
@@ -137,7 +137,7 @@ public class NavitDialogs extends Handler{
 				mapdownloader_dialog.setOnDismissListener(onDismissListener);
 				// show license for OSM maps
 				Toast.makeText(mActivity.getApplicationContext(),
-						Navit.get_text("Map data (c) OpenStreetMap contributors, CC-BY-SA"),
+						Navit._("Map data (c) OpenStreetMap contributors, ODBL"),
 						Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog;
 				

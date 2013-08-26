@@ -136,8 +136,8 @@ public class NavitGraphics
 			super.onCreateContextMenu(menu);
 			
 			menu.setHeaderTitle("Position...");
-			menu.add(1, 1, NONE, Navit.get_text("drive here")).setOnMenuItemClickListener(this);
-//			menu.add(1, 2, NONE, Navit.get_text("Add to contacts")).setOnMenuItemClickListener(this);
+			menu.add(1, 1, NONE, Navit._("Route to here")).setOnMenuItemClickListener(this);
+//			menu.add(1, 2, NONE, Navit._("Add to contacts")).setOnMenuItemClickListener(this);
 		}
 
 		public boolean onMenuItemClick(MenuItem item) {
@@ -731,7 +731,7 @@ public class NavitGraphics
 				case CLB_SET_DESTINATION:
 					String lat = Float.toString(msg.getData().getFloat("lat"));
 					String lon = Float.toString(msg.getData().getFloat("lon"));
-					String q = msg.getData().getString("q");
+					String q = msg.getData().getString(("q"));
 					CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
 					break;
 				case CLB_SET_DISPLAY_DESTINATION:
@@ -740,7 +740,7 @@ public class NavitGraphics
 					CallbackMessageChannel(4, "" + x + "#" + y);
 					break;
 				case CLB_CALL_CMD:
-					String cmd = msg.getData().getString("cmd");
+					String cmd = msg.getData().getString(("cmd"));
 					CallbackMessageChannel(5, cmd);
 					break;
 				case CLB_BUTTON_UP:
@@ -752,14 +752,14 @@ public class NavitGraphics
 				case CLB_COUNTRY_CHOOSER:
 					break;
 				case CLB_LOAD_MAP:
-					CallbackMessageChannel(6, msg.getData().getString("title"));
+					CallbackMessageChannel(6, msg.getData().getString(("title")));
 					break;
 				case CLB_DELETE_MAP:
-					File toDelete = new File( msg.getData().getString("title"));
+					File toDelete = new File( msg.getData().getString(("title")));
 					toDelete.delete();
 				//fallthrough
 				case CLB_UNLOAD_MAP:
-					CallbackMessageChannel(7, msg.getData().getString("title"));
+					CallbackMessageChannel(7, msg.getData().getString(("title")));
 					break;
 				}
 			}

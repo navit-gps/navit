@@ -126,7 +126,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
 		// add already downloaded maps (group and empty child list
 		HashMap<String, String> downloaded_maps_hash = new HashMap<String, String>();
-		downloaded_maps_hash.put("category_name", Navit.get_text("Downloaded Maps"));
+		downloaded_maps_hash.put("category_name", Navit._("Downloaded maps"));
 		resultGroups.add(downloaded_maps_hash);
 		downloaded_maps_childs = new ArrayList<HashMap<String, String>>();
 		resultChilds.add(downloaded_maps_childs);
