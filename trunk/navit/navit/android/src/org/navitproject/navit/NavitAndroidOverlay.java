@@ -227,7 +227,7 @@ public class NavitAndroidOverlay extends ImageView implements Runnable
 			bubble_paint.setTextSize((int) (20 / 1.5f * draw_factor));
 			bubble_paint.setStrokeWidth(3);
 			bubble_paint.setColor(Color.parseColor("#3b3131"));
-			c.drawText(Navit.get_text("drive here"), this.bubble_001.x + dx + inner_dx,
+			c.drawText(Navit._("Route to here"), this.bubble_001.x + dx + inner_dx,
 					this.bubble_001.y + dy + inner_dy, bubble_paint);
 
 		}

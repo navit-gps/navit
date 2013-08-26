@@ -135,7 +135,7 @@ public class Navit extends Activity
 	}
 
 
-	public static String get_text(String in)
+	public static String _(String in)
 	{
 		return NavitTextTranslations.get_text(in);
 	}
@@ -588,7 +588,7 @@ public class Navit extends Activity
 		case NavitAddressSearch_id :
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle destination = data.getExtras();
-				Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + destination.getString("q"), Toast.LENGTH_LONG).show(); //TRANS
+				Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + destination.getString(("q")), Toast.LENGTH_LONG).show(); //TRANS
 
 				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 				msg.setData(destination);
