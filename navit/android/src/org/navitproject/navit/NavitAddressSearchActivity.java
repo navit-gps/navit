@@ -109,7 +109,7 @@ public class NavitAddressSearchActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if ( extras != null )
 		{
-			String search_string = extras.getString("search_string");
+			String search_string = extras.getString(("search_string"));
 			if (search_string != null) {
 				mPartialSearch = true;
 				mAddressString = search_string;
@@ -128,7 +128,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// address: label and text field
 		SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
-		mCountry = settings.getString("DefaultCountry", null);
+		mCountry = settings.getString(("DefaultCountry")	, null);
 
 		if (mCountry == null) {
 			Locale defaultLocale = Locale.getDefault();
@@ -150,14 +150,14 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
-		addr_view.setText(Navit.get_text("Enter Destination")); // TRANS
+		addr_view.setText(Navit._("Enter Destination")); // TRANS
 		addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addr_view.setPadding(4, 4, 4, 4);
 
 		// partial match checkbox
 		final CheckBox checkboxPartialMatch = new CheckBox(this);
-		checkboxPartialMatch.setText(Navit.get_text("partial match")); // TRANS
+		checkboxPartialMatch.setText(Navit._("partial match")); // TRANS
 		checkboxPartialMatch.setChecked(last_address_partial_match);
 		checkboxPartialMatch.setGravity(Gravity.CENTER);
 
@@ -167,7 +167,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// search button
 		final Button btnSearch = new Button(this);
-		btnSearch.setText(Navit.get_text("Search")); // TRANS
+		btnSearch.setText(Navit._("Search")); // TRANS
 		btnSearch.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		btnSearch.setGravity(Gravity.CENTER);
 		btnSearch.setOnClickListener(new OnClickListener() {
@@ -279,8 +279,8 @@ public class NavitAddressSearchActivity extends Activity {
 			break;
 
 		}
-		search_results_wait.setMessage(Navit.get_text("towns") + ":" + search_results_towns + " "
-		        + Navit.get_text("Streets") + ":" + search_results_streets + "/"
+		search_results_wait.setMessage(Navit._("Towns") + ":" + search_results_towns + " "
+		        + Navit._("Streets") + ":" + search_results_streets + "/"
 		        + search_results_streets_hn);
 
 		search_results_wait.setProgress(Addresses_found.size() % (ADDRESS_RESULT_PROGRESS_MAX + 1));
@@ -334,7 +334,7 @@ public class NavitAddressSearchActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		search_results_wait = new ProgressDialog(this);
 		search_results_wait.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		search_results_wait.setTitle("loading search results");
+		search_results_wait.setTitle("Loading search results");
 		search_results_wait.setMessage("--");
 		search_results_wait.setCancelable(true);
 		search_results_wait.setProgress(0);
