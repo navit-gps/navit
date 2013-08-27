@@ -1788,7 +1788,7 @@ msgid "Please decrease your speed"
 msgstr "Снизьте скорость, пожалуйста"
 
 msgid "partial match"
-msgstr ""
+msgstr "нестрогое соответствие"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
@@ -1806,37 +1806,37 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "Загруженные карты"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "Вся планета"
 
 msgid "Africa"
-msgstr ""
+msgstr "Африка"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Канарские острова"
 
 msgid "Libya"
-msgstr ""
+msgstr "Ливия"
 
 msgid "Asia"
-msgstr ""
+msgstr "Азия"
 
 msgid "Korea"
-msgstr ""
+msgstr "Корея"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Тайвань"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "ОАЭ и прилегающие"
 
 msgid "Oceania"
-msgstr ""
+msgstr "Океания"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Тасмания"
 
 msgid "Victoria"
 msgstr ""
@@ -1845,16 +1845,16 @@ msgid "New South Wales"
 msgstr ""
 
 msgid "Europe"
-msgstr ""
+msgstr "Европа"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "Западная Европа"
 
 msgid "Azores"
-msgstr ""
+msgstr "Азорские о-ва"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "Страны Бенелюкса"
 
 msgid "Alsace"
 msgstr ""
@@ -1950,16 +1950,16 @@ msgid "Unterfranken"
 msgstr ""
 
 msgid "Berlin"
-msgstr ""
+msgstr "Берлин"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Бранденбург"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Бремен"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Гамбург"
 
 msgid "Hessen"
 msgstr ""
@@ -2001,7 +2001,7 @@ msgid "Scandinavia"
 msgstr ""
 
 msgid "England"
-msgstr ""
+msgstr "Англия"
 
 msgid "Buckinghamshire"
 msgstr ""
@@ -2022,7 +2022,7 @@ msgid "Herefordshire"
 msgstr ""
 
 msgid "Kent"
-msgstr ""
+msgstr "Кент"
 
 msgid "Lancashire"
 msgstr ""
@@ -2031,7 +2031,7 @@ msgid "Leicestershire"
 msgstr ""
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Норфолк"
 
 msgid "Nottinghamshire"
 msgstr ""
@@ -2061,138 +2061,138 @@ msgid "Scotland"
 msgstr ""
 
 msgid "Wales"
-msgstr ""
+msgstr "Уэльс"
 
 msgid "Crete"
-msgstr ""
+msgstr "Крит"
 
 msgid "North America"
-msgstr ""
+msgstr "Северная Америка"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Аляска"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Гавайи"
 
 msgid "USA"
-msgstr ""
+msgstr "США"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (кроме Аляски и Гавайских о-вов)"
 
 msgid "Midwest"
 msgstr ""
 
 msgid "Michigan"
-msgstr ""
+msgstr "Мичиган"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Охайо"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Северо-восток"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "Массачусетс"
 
 msgid "Vermont"
-msgstr ""
+msgstr "Вермонт"
 
 msgid "Pacific"
-msgstr ""
+msgstr "Тихоокеанское побережье"
 
 msgid "South"
-msgstr ""
+msgstr "Юг"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Арканзас"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "Округ Колумбия"
 
 msgid "Florida"
-msgstr ""
+msgstr "Флорида"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Луизиана"
 
 msgid "Maryland"
-msgstr ""
+msgstr "Мэриленд"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Миссисипи"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Оклахома"
 
 msgid "Texas"
-msgstr ""
+msgstr "Техас"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Вирджиния"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "Западная Вирджиния"
 
 msgid "West"
-msgstr ""
+msgstr "Запад"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Аризона"
 
 msgid "California"
-msgstr ""
+msgstr "Калифорния"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Колорадо"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Айдахо"
 
 msgid "Montana"
-msgstr ""
+msgstr "Монтана"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "Нью-Мексико"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Невада"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Орегон"
 
 msgid "Utah"
-msgstr ""
+msgstr "Юта"
 
 msgid "Washington State"
-msgstr ""
+msgstr "штат Вашингтон"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "Южная и центральная Америка"
 
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "Французская Гвиана"
 
 msgid "downloading"
-msgstr ""
+msgstr "загружаем"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
 msgstr "готово"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Ошибка загрузки карты!"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
 msgstr "Не достаточно места"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Ошибка записи карты!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Загрузка карты отменена!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2474,13 +2474,13 @@ msgid "NMEA Data"
 msgstr ""
 
 msgid "car_shortest"
-msgstr ""
+msgstr "машина (кратчайший путь)"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "машина (избегать платных дорог)"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "машина (педантичный)"
 
 msgid "horse"
 msgstr "лошадь"
@@ -2508,7 +2508,7 @@ msgstr "лошадь"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #.
 msgid "Truck"
-msgstr ""
+msgstr "Грузовик"
 
 #~ msgid "Enter the roundabout soon and leave it at the %s"
 #~ msgstr "Скоро круговое движение, ожидайте съезд на %s"
