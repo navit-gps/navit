@@ -3,7 +3,15 @@ CATALOGS = @MOFILES@
 CLEANFILES = $(CATALOGS) navit.pot
 
 # keep this sorted
-EXTRA_DIST = @POIFILES@
+EXTRA_DIST = @POIFILES@ \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitAddressSearchActivity.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitAndroidOverlay.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitDialogs.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitDownloadSelectMapActivity.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitGraphics.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/Navit.java \
+	$(top_srcdir)/navit/android/src/org/navitproject/navit/NavitMapDownloader.java \
+	$(top_srcdir)/navit/android/res/values/strings.xml
 
 POTFILES  = \
 	$(top_srcdir)/navit/main.c \
