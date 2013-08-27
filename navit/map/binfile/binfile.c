@@ -2021,6 +2021,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
 	struct item *town;
+	int idx;
 	
 	msp->search = *search;
 	msp->partial = partial;
@@ -2084,7 +2085,8 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			msp->map=map;
 			msp->mr_item = map_rect_new_binfile(map, NULL);
 			msp->item = map_rect_get_item_byid_binfile(msp->mr_item, item->id_hi, item->id_lo);
-			if (binmap_search_by_index(map, msp->item, &msp->mr))
+			idx=binmap_search_by_index(map, msp->item, &msp->mr);
+			if (idx)
 				msp->mode = 1;
 			else {
 				struct coord c;
@@ -2099,8 +2101,10 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 					dbg(0,"pn=%s\n",msp->parent_name);
 				}
 			}
-			map_rect_destroy_binfile(msp->mr_item);
-			msp->mr_item=NULL;
+			if (idx != 3) {
+				map_rect_destroy_binfile(msp->mr_item);
+				msp->mr_item=NULL;
+			}
 			if (!msp->mr)
 			{
 				break;
@@ -2315,7 +2319,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				if (has_house_number || it->type == type_house_number
 					|| it->type == type_house_number_interpolation_even || it->type == type_house_number_interpolation_odd
 					|| it->type == type_house_number_interpolation_all
-					|| (map_search->mode == 0 && item_is_street(*it))
+					|| (map_search->mode == 1 && item_is_street(*it))
 				   	)
 				{
 					if (has_house_number)
