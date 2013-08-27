@@ -813,6 +813,7 @@ search_list_house_number_new(struct item *item, struct interpolation *inter, cha
 	if (item_attr_get(item, attr_house_number, &attr))
 		ret->house_number=map_convert_string(item->map, attr.u.str);
 	else {
+		memset(&ret->common.unique, 0, sizeof(ret->common.unique));
 		//if (item_attr_get(item, attr_street_name, &attr))
 		//	dbg(0,"xx2 %s\n",attr.u.str);
 		for (;;) {
@@ -999,9 +1000,16 @@ search_add_result(struct search_list_level *le, struct search_list_common *slc)
 {
 	struct search_list_common *slo;
 	char *merged;
-	slo=g_hash_table_lookup(le->hash, &slc->unique);
+	int unique=0;
+	if (slc->unique.type || slc->unique.id_hi || slc->unique.id_lo)
+		unique=1;
+	if (unique)
+		slo=g_hash_table_lookup(le->hash, &slc->unique);
+	else
+		slo=NULL;
 	if (!slo) {
-		g_hash_table_insert(le->hash, &slc->unique, slc);
+		if (unique)
+			g_hash_table_insert(le->hash, &slc->unique, slc);
 		if (slc->postal && !slc->postal_mask) {
 			slc->postal_mask=g_strdup(slc->postal);
 		}
