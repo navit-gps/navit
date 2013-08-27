@@ -268,6 +268,7 @@ struct route_graph {
 	struct callback *done_cb;			/**< Callback when graph is done */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
    	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
+	struct route_graph_segment *avoid_seg;
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];	/**< A hashtable containing all route_graph_points in this graph */
 };
@@ -1987,7 +1988,7 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	if (from && from->seg == over)
 		return INT_MAX;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
-		route_get_traffic_distortion(over, &dist)) {
+		route_get_traffic_distortion(over, &dist) && dir != 2 && dir != -2) {
 			distp=&dist;
 	}
 	ret=route_time_seg(profile, &over->data, distp);
@@ -1996,6 +1997,45 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	if (!route_through_traffic_allowed(profile, over) && from && route_through_traffic_allowed(profile, from->seg)) 
 		ret+=profile->through_traffic_penalty;
 	return ret;
+}
+
+static int
+route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_segment *s2)
+{
+	if (!s1 || !s2)
+		return 0;
+	return (s1->start->c.x == s2->start->c.x && s1->start->c.y == s2->start->c.y && 
+		s1->end->c.x == s2->end->c.x && s1->end->c.y == s2->end->c.y);
+}
+
+static void
+route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay)
+{
+	struct route_graph_point *start=NULL;
+	struct route_graph_segment *s;
+
+	while ((start=route_graph_get_point_next(this, &seg->start->c, start))) {
+		s=start->start;
+		while (s) {
+			if (route_graph_segment_match(s, seg)) {
+				if (s->data.item.type != type_none && s->data.item.type != type_traffic_distortion && delay) {
+					struct route_graph_segment_data data;
+					struct item item;
+					memset(&data, 0, sizeof(data));
+					memset(&item, 0, sizeof(item));
+					item.type=type_traffic_distortion;
+					data.item=&item;
+					data.len=delay;
+					s->start->flags |= RP_TRAFFIC_DISTORTION;
+					s->end->flags |= RP_TRAFFIC_DISTORTION;
+					route_graph_add_segment(this, s->start, s->end, &data);
+				} else if (s->data.item.type == type_traffic_distortion && !delay) {
+					s->data.item.type = type_none;
+				}
+			}
+			s=s->start_next;
+		}
+	}
 }
 
 /**
@@ -2428,7 +2468,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct route_graph_segment *s=NULL,*s1=NULL,*s2=NULL;
 	struct route_graph_point *start;
 	struct route_info *posinfo, *dstinfo;
-	int segs=0;
+	int segs=0,dir;
 	int val1=INT_MAX,val2=INT_MAX;
 	int val,val1_new,val2_new;
 	struct route_path *ret;
@@ -2441,19 +2481,29 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
 	while ((s=route_graph_get_segment(this, pos->street, s))) {
-		val=route_value_seg(profile, NULL, s, 1);
+		val=route_value_seg(profile, NULL, s, 2);
 		if (val != INT_MAX && s->end->value != INT_MAX) {
 			val=val*(100-pos->percent)/100;
+			dbg(1,"val1 %d\n",val);
+			if (route_graph_segment_match(s,this->avoid_seg) && pos->street_direction < 0)
+				val+=profile->turn_around_penalty;
+			dbg(1,"val1 %d\n",val);
 			val1_new=s->end->value+val;
+			dbg(1,"val1 +%d=%d\n",s->end->value,val1_new);
 			if (val1_new < val1) {
 				val1=val1_new;
 				s1=s;
 			}
 		}
-		val=route_value_seg(profile, NULL, s, -1);
+		val=route_value_seg(profile, NULL, s, -2);
 		if (val != INT_MAX && s->start->value != INT_MAX) {
 			val=val*pos->percent/100;
+			dbg(1,"val2 %d\n",val);
+			if (route_graph_segment_match(s,this->avoid_seg) && pos->street_direction > 0)
+				val+=profile->turn_around_penalty;
+			dbg(1,"val2 %d\n",val);
 			val2_new=s->start->value+val;
+			dbg(1,"val2 +%d=%d\n",s->start->value,val2_new);
 			if (val2_new < val2) {
 				val2=val2_new;
 				s2=s;
@@ -2471,9 +2521,23 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	if (val1 < val2) {
 		start=s1->start;
 		s=s1;
+		dir=1;
 	} else {
 		start=s2->end;
 		s=s2;
+		dir=-1;
+	}
+	if (pos->street_direction && dir != pos->street_direction && profile->turn_around_penalty) {
+		if (!route_graph_segment_match(this->avoid_seg,s)) {
+			dbg(0,"avoid current segment\n");
+			if (this->avoid_seg)
+				route_graph_set_traffic_distortion(this, this->avoid_seg, 0);
+			this->avoid_seg=s;
+			route_graph_set_traffic_distortion(this, this->avoid_seg, profile->turn_around_penalty);
+			route_graph_reset(this);
+			route_graph_flood(this, dst, profile, NULL);
+			return route_path_new(this, oldpath, pos, dst, profile);
+		}
 	}
 	ret=g_new0(struct route_path, 1);
 	ret->in_use=1;
