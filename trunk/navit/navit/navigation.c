@@ -1172,6 +1172,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	char *r=NULL;
 	struct navigation_way *w;
 	int cat,ncat,wcat,maxcat,left=-180,right=180,is_unambigous=0,is_same_street;
+	int curve_limit=25;
 
 	dbg(1,"enter %p %p %p\n",old, new, delta);
 	d=angle_delta(old->angle_end, new->way.angle2);
@@ -1199,6 +1200,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	cat=maneuver_category(old->way.item.type);
 	ncat=maneuver_category(new->way.item.type);
 	if (!r) {
+		int dc=d;
 		/* Check whether the street keeps its name */
 		is_same_street=is_same_street2(old->way.name1, old->way.name2, new->way.name1, new->way.name2);
 		w = new->way.next;
@@ -1208,9 +1210,13 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 			if (dw < 0) {
 				if (dw > left)
 					left=dw;
+				if (dw > -curve_limit && d < 0 && d > -curve_limit)
+					dc=dw;
 			} else {
 				if (dw < right)
 					right=dw;
+				if (dw < curve_limit && d > 0 && d < curve_limit)
+					dc=dw;
 			}
 			wcat=maneuver_category(w->item.type);
 			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
@@ -1240,6 +1246,12 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 			dlim=abs(d)*128/256;
 		if (left < -dlim && right > dlim) 
 			is_unambigous=1;
+		if (dc != d) {
+			dbg(1,"d %d vs dc %d\n",d,dc);
+			d-=(dc+d+1)/2;
+			dbg(1,"result %d\n",d);
+			is_unambigous=0;
+		}
 		if (!is_same_street && is_unambigous < 1) {
 			ret=1;
 			r="yes: not same street or ambigous";
