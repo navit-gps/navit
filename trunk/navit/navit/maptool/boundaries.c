@@ -80,6 +80,8 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		struct boundary *boundary=g_new0(struct boundary, 1);
 		char *admin_level=osm_tag_value(ib, "admin_level");
 		char *iso=osm_tag_value(ib, "ISO3166-1");
+		int has_subrelations=0;
+		int has_outer_ways=0;
 		
 		if(!iso)
 			iso=osm_tag_value(ib, "iso3166-1:alpha2");
@@ -114,8 +116,10 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 			}
 			if(member_type==2) {
 				enum geom_poly_segment_type role;
-				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave"))
+				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave")) {
+					has_outer_ways=1;
 					role=geom_poly_segment_type_way_outer;
+				}
 				else if (!strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
 					role=geom_poly_segment_type_way_inner;
 				else if (!strcmp(rolestr,""))
@@ -127,7 +131,19 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 				}
 				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, osm_id);
 			}
+			if(member_type==3) {
+				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave") || !strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
+					has_subrelations++;
+			}
 		}
+		if(boundary->iso2 && has_subrelations)
+			osm_warning("relation",item_bin_get_relationid(ib),0,"Country boundary '%s' has %d relations as boundary segments. These are not supported yet.\n", boundary->iso2, has_subrelations);
+		if(boundary->iso2 && !has_outer_ways) {
+			osm_warning("relation",item_bin_get_relationid(ib),0,"Skipping country boundary for '%s' because it has no outer ways.\n", boundary->iso2, has_subrelations);
+			g_free(boundary->iso2);
+			boundary->iso2=NULL;
+		}
+
 		boundary->ib=item_bin_dup(ib);
 		boundaries_list=g_list_append(boundaries_list, boundary);
 	}
