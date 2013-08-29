@@ -657,10 +657,13 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 #                        functions implementing the interface of a plugin.
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
+include(CheckCCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCC OR CCMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wcast-align -Wpointer-arith -Wextra -Wno-unused-parameter -Wno-sign-compare -Wmissing-prototypes -Wstrict-prototypes ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wcast-align -Wpointer-arith -Wextra -Wno-unused-parameter -Wno-sign-compare ")
-    if(NOT GCC_IS_OLD)
+    # -Wno-missing-field-initializers does not work with old gcc
+    check_c_compiler_flag(-Wno-missing-field-initializers HAS_NO_MISSING_FIELD_INI)
+    if (HAS_NO_MISSING_FIELD_INI)
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wno-missing-field-initializers ")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers ")
     endif()
