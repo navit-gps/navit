@@ -32,6 +32,7 @@
 #include "country.h"
 #include "file.h"
 #include "profile.h"
+#include "types.h"
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -2290,22 +2291,22 @@ process_associated_street_setup(FILE *in, struct relations *relations, FILE **ou
 		while(search_relation_member(ib, "street",&relm,&min_count)) {
 			if(relm.type==2)
 				relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
-			dbg(0,"street type=%d(should be 2) id=%lld\n",relm.type,relm.id);
+			dbg(0,"street type=%d(should be 2) id="LONGLONG_FMT "\n",relm.type,relm.id);
 
 		}
 		min_count=0;
 		while(search_relation_member(ib, "house",&relm,&min_count)) {
-			dbg(0,"house type=%d id=%lld\n",relm.type,relm.id);
+			dbg(0,"house type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "addr:houselink",&relm,&min_count)) {
-			dbg(0,"houselink type=%d id=%lld\n",relm.type,relm.id);
+			dbg(0,"houselink type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "address",&relm,&min_count)) {
-			dbg(0,"address type=%d id=%lld\n",relm.type,relm.id);
+			dbg(0,"address type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 	}

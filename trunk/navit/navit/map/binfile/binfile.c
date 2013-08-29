@@ -270,7 +270,7 @@ binfile_read_eoc64(struct file *fi)
 			dbg(1,"eoc wrong\n");
 			eoc=NULL;
 		}
-		dbg(1,"eoc64 ok 0x%Lx 0x%Lx\n",eoc->zip64eofst,eoc->zip64ecsz);
+		dbg(1,"eoc64 ok 0x"LONGLONG_HEX_FMT " 0x"LONGLONG_HEX_FMT "\n",eoc->zip64eofst,eoc->zip64ecsz);
 	}
 	file_data_free(fi,(unsigned char *)eocl);
 	return eoc;
@@ -922,7 +922,7 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	char *zipfn;
 	struct file *fi;
 	dbg(1,"enter %p %p %p\n", m, cd, t);
-	dbg(1,"cd->zipofst=0x%Lx\n", binfile_cd_offset(cd));
+	dbg(1,"cd->zipofst=0x"LONGLONG_HEX_FMT "\n", binfile_cd_offset(cd));
 	t->start=NULL;
 	t->mode=1;
 	if (m->fis)

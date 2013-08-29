@@ -14,6 +14,7 @@
 #include "graphics.h"
 #include "debug.h"
 #include "navit.h"
+#include "types.h"
 #include "navit_nls.h"
 #include "event.h"
 #include "search.h"
@@ -60,7 +61,7 @@ gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
    	}
 	this->gesture_ring[this->gesture_ring_last].p=*p;
 	this->gesture_ring[this->gesture_ring_last].msec=msec;
-	dbg(2,"msec=%Ld x=%d y=%d\n",msec,p->x,p->y);
+	dbg(2,"msec="LONGLONG_FMT" x=%d y=%d\n",msec,p->x,p->y);
 };
 
 int
@@ -88,7 +89,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct po
 		*p0=g->p;
 	}
 	msec=g->msec;
-	dbg(2,"%Ld %d %d\n",g->msec, g->p.x, g->p.y);
+	dbg(2,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
 	for(i=1;(g=gui_internal_gesture_ring_get(this,i))!=NULL;i++) {
 		if( msec-g->msec > 1000 )
 			break;
@@ -98,7 +99,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct po
 		if(p0) {
 			*p0=g->p;
 		}
-		dbg(2,"%Ld %d %d\n",g->msec, g->p.x, g->p.y);
+		dbg(2,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
 	}
 	return dt;
 }
