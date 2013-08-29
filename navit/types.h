@@ -30,8 +30,10 @@ typedef uint32_t u32;
 
 #ifdef HAVE_API_WIN32_BASE
 #define LONGLONG_FMT "%I64d"
+#define LONGLONG_HEX_FMT "%I64x"
 #else
 #define LONGLONG_FMT "%lld"
+#define LONGLONG_HEX_FMT "%llx"
 #endif
 
 
