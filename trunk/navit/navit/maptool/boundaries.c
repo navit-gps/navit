@@ -87,7 +87,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 			iso=osm_tag_value(ib, "iso3166-1:alpha2");
 		
 		if (admin_level && !strcmp(admin_level, "2")) {
-			if(!iso && !strcmp(osm_tag_value(ib,"int_name"),"France")) {
+			if(!iso && !g_strcmp0(osm_tag_value(ib,"int_name"),"France")) {
 				iso="FR";
 			}
 			if (iso) {
@@ -142,7 +142,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		if(boundary->iso2 && has_subrelations)
 			osm_warning("relation",item_bin_get_relationid(ib),0,"Country boundary '%s' has %d relations as boundary segments. These are not supported yet.\n", boundary->iso2, has_subrelations);
 		if(boundary->iso2 && !has_outer_ways) {
-			osm_warning("relation",item_bin_get_relationid(ib),0,"Skipping country boundary for '%s' because it has no outer ways.\n", boundary->iso2, has_subrelations);
+			osm_warning("relation",item_bin_get_relationid(ib),0,"Skipping country boundary for '%s' because it has no outer ways.\n", boundary->iso2);
 			g_free(boundary->iso2);
 			boundary->iso2=NULL;
 		}
