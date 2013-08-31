@@ -417,7 +417,7 @@ add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
-set(SUPPORTED_XSLT_PROCESSORS "saxon;saxon8;saxon-xslt;saxonb-xslt;xsltproc;transform.exe")
+set(SUPPORTED_XSLT_PROCESSORS "saxonb-xslt;saxon;saxon8;saxon-xslt;xsltproc;transform.exe")
 find_program(XSLT_PROCESSOR NAMES ${SUPPORTED_XSLT_PROCESSORS})
 if(XSLT_PROCESSOR)
    message(STATUS "Found XSLT processor: ${XSLT_PROCESSOR}")
