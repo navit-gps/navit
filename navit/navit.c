@@ -1570,7 +1570,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 			g_free(destination_file);
 		}
 
-		if (this_->ready == 3)
+		if (this_->ready == 3 && !(this_->flags & 4))
 			navit_draw(this_);
 	}
 }
