@@ -273,6 +273,13 @@ define scaling_rule_template
 	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$$@"
 endef
 
+# template to generate scaling rules for the default PNG size
+define scaling_rule_template_def
+%.png: $(srcdir)/%.$(2)
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$$@" "$(1)" "$(1)"
+endef
+
+
 # png images of the user interface and other, sizes e.g. "8,16,32,48,96"
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
@@ -282,9 +289,12 @@ endif
 
 # png state flags
 if USE_SVG2PNG_SCALES_FLAG
-pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
-# create rules from template
-$(foreach extension,svg svgz, $(foreach size, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@),$(eval $(call scaling_rule_template,$(size),$(extension)))))
+svg2png_scales_flag = $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@)
+pngs += $(addsuffix .png,$(basename $(flag_svgs)))
+pngs += $(foreach scale, $(wordlist 2,100,$(svg2png_scales_flag)), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
+# create rules from templates
+$(foreach extension,svg svgz, $(foreach size, $(wordlist 2,100,$(svg2png_scales_flag)),$(eval $(call scaling_rule_template,$(size),$(extension)))))
+$(foreach extension,svg svgz, $(foreach size, $(firstword $(svg2png_scales_flag)),$(eval $(call scaling_rule_template_def,$(size),$(extension)))))
 endif
 
 # png symbols for navigation
