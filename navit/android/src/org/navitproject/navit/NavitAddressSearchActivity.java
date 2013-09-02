@@ -254,7 +254,7 @@ public class NavitAddressSearchActivity extends Activity {
 				edit_settings.putString("DefaultCountry", mCountry);
 				edit_settings.commit();
 
-				mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_32_32"));
+				mCountryButton.setImageResource(getDrawableID("country_" + mCountry));
 			}
 		});
 

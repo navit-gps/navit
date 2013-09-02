@@ -24,6 +24,8 @@ fi
 
 svgtopng=$1
 png=$2
+w=$3
+h=$4
 case "$png" in
 	*_[1-9]*_[1-9]*.png)
 		svg=${png%_*_*.png};
