@@ -88,6 +88,9 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	case attr_turn_around_penalty:
 		this_->turn_around_penalty=attr->u.num;
 		break;
+	case attr_turn_around_penalty2:
+		this_->turn_around_penalty2=attr->u.num;
+		break;
 	default:
 		break;
 	}
