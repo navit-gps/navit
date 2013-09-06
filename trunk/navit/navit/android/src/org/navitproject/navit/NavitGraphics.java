@@ -507,15 +507,12 @@ public class NavitGraphics
 				{
 					s = java.lang.String.valueOf((char) 14);
 				}
-			}
+			} 
 			else if (i == 10)
 			{
 				s = java.lang.String.valueOf((char) 13);
 			}
-			else
-			{
-				s = java.lang.String.valueOf((char) i);
-			}
+
 			if (s != null)
 			{
 				KeypressCallback(KeypressCallbackID, s);
@@ -602,6 +599,11 @@ public class NavitGraphics
 					}
 				}
 			}
+			else if(i!=10)
+			{
+				s = java.lang.String.valueOf((char) i);
+			} 
+						
 			if (s != null)
 			{
 				KeypressCallback(KeypressCallbackID, s);
@@ -610,6 +612,18 @@ public class NavitGraphics
 
 		}
 
+		@Override
+		public boolean onKeyMultiple (int keyCode, int count, KeyEvent event)
+		{
+			String s = null;
+			if(keyCode == KeyEvent.KEYCODE_UNKNOWN) {
+				s=event.getCharacters();
+				KeypressCallback(KeypressCallbackID, s);
+				return true;
+			}
+			return super.onKeyMultiple(keyCode, count, event);
+		}
+		
 		@Override
 		public boolean onTrackballEvent(MotionEvent event)
 		{
