@@ -2307,7 +2307,13 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
 			val=route_value_seg(profile, p_min, s, -1);
-			if (val != INT_MAX && !item_is_equal(s->data.item,p_min->seg->data.item)) {
+			if (val != INT_MAX && item_is_equal(s->data.item,p_min->seg->data.item)) {
+				if (profile->turn_around_penalty2)
+					val+=profile->turn_around_penalty2;
+				else
+					val=INT_MAX;
+			}
+			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
 					printf("begin %d len %d vs %d (0x%x,0x%x)\n",new,val,s->end->value, s->end->c.x, s->end->c.y);
@@ -2335,7 +2341,13 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		s=p_min->end;
 		while (s) { /* Doing the same as above with the segments leading towards our point */
 			val=route_value_seg(profile, p_min, s, 1);
-			if (val != INT_MAX && !item_is_equal(s->data.item,p_min->seg->data.item)) {
+			if (val != INT_MAX && item_is_equal(s->data.item,p_min->seg->data.item)) {
+				if (profile->turn_around_penalty2)
+					val+=profile->turn_around_penalty2;
+				else
+					val=INT_MAX;
+			}
+			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
 					printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);

@@ -42,6 +42,7 @@ struct vehicleprofile {
 	GHashTable *roadprofile_hash;
 	struct attr active_callback;
 	int turn_around_penalty;		/**< Penalty when turning around */
+	int turn_around_penalty2;		/**< Penalty when turning around, for planned turn arounds */
 };
 
 struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs);
