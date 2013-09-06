@@ -133,6 +133,7 @@ struct navit {
 	int center_timeout;
 	int autozoom_secs;
 	int autozoom_min;
+	int autozoom_max;
 	int autozoom_active;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
@@ -655,14 +656,12 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 	if (abs(new_scale - scale) < 2) { 
 		return; // Smoothing
 	}
-	
-	if (new_scale >= this_->autozoom_min) {
+	if (new_scale > this_->autozoom_max)
+		new_scale=this_->autozoom_max;
+	if (new_scale < this_->autozoom_min)
+		new_scale=this_->autozoom_min;
+	if (new_scale != scale)
 		navit_scale(this_, (long)new_scale, &pc, 0);
-	} else {
-		if (scale != this_->autozoom_min) {
-			navit_scale(this_, this_->autozoom_min, &pc, 0);
-		}
-	}
 }
 
 /**
@@ -1401,6 +1400,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_active = 0;
 	this_->zoom_min = 1;
 	this_->zoom_max = 2097152;
+	this_->autozoom_max = this_->zoom_max;
 	this_->follow_cursor = 1;
 	this_->radius = 30;
 	this_->border = 16;
@@ -2881,6 +2881,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		break;
 	case attr_autozoom_min:
 		this_->autozoom_min = attr->u.num;
+		break;
+	case attr_autozoom_max:
+		this_->autozoom_max = attr->u.num;
 		break;
 	case attr_layer:
 	case attr_script:
