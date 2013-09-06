@@ -185,6 +185,7 @@ ATTR(battery_temperature) /* mK */
 ATTR(turn_around_count)
 ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
+ATTR(autozoom_max)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
