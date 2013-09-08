@@ -139,14 +139,17 @@ speechd_say(struct speech_priv *this, const char *text)
 	
 	if (this->sample_dir && this->sample_suffix)  {
 		argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text, !!(this->flags & 1));
-		dbg(1,"For text: '%s', found %d samples.\n",text,g_list_length(argl));
 		samplesmode=1;
 		listlen=g_list_length(argl);
+		dbg(1,"For text: '%s', found %d samples.\n",text,listlen);
+		if (!listlen){
+			dbg(0,"No matching samples found. Cannot speak text: '%s'\n",text);
+		}
 	} else {
 		listlen=1;
 	}
-	dbg(1,"Speaking text '%s'\n",text);
 	if(listlen>0) {
+		dbg(1,"Speaking text '%s'\n",text);
 		int argc;
 		char**argv;
 		int j;
