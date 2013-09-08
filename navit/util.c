@@ -511,6 +511,7 @@ spawn_process(char **argv)
 		pid_t pid;
 		
 		sigset_t set, old;
+		dbg(1,"spawning process for '%s'\n", argv[0]);
 		sigemptyset(&set);
 		sigaddset(&set,SIGCHLD);
 		spawn_process_sigmask(SIG_BLOCK,&set,&old);
