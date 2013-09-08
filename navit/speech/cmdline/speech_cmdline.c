@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <glib.h>
 #include "config.h"
 #include "debug.h"
@@ -58,43 +59,44 @@ static char *urldecode(char *str)
 }
 
 static GList *
-speech_cmdline_search(GList *l, int suffix_len, const char *s, int decode)
+speech_cmdline_search(GList *samples, int suffix_len, const char *text, int decode)
 {
-	GList *li=l,*ret=NULL,*tmp;
-	int len=0;
-	while (li) {
-		char *snd=li->data;
-		int snd_len;
+	GList *loop_samples=samples,*result=NULL,*recursion_result;
+	int shortest_result_length=INT_MAX;
+	while (loop_samples) {
+		char *sample_name=loop_samples->data;
+		int sample_name_len;
 		if (decode)
-			snd=urldecode(snd);
-		snd_len=strlen(snd)-suffix_len;
+			sample_name=urldecode(sample_name);
+		sample_name_len=strlen(sample_name)-suffix_len;
 		// TODO: Here we compare UTF-8 text with a filename.
-		// It's unclear how a case-insensitive comparison should
-		// work in general, so for now we only do it for ASCII
-		// text.
-		if (!g_ascii_strncasecmp(s, snd, snd_len)) {
-			const char *ss=s+snd_len;
-			while (*ss == ' ' || *ss == ',')
-				ss++;
-			dbg(1,"found %s remaining %s\n",snd,ss);
-			if (*ss) 
-				tmp=speech_cmdline_search(l, suffix_len, ss, decode);
-			else 
-				tmp=NULL;
-			if (!ret || (tmp && g_list_length(tmp) < len)) {
-				len=g_list_length(tmp);
-				g_list_free(ret);
-				ret=tmp;
-				if (!*ss || tmp) 
-					ret=g_list_prepend(ret, li->data);
-			} else
-				g_list_free(tmp);
+		// It's unclear how a case-insensitive comparison should work
+		// in general, so for now we only do it for ASCII text.
+		if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
+			const char *remaining_text=text+sample_name_len;
+			while (*remaining_text == ' ' || *remaining_text == ',')
+				remaining_text++;
+			if (*remaining_text) {
+				recursion_result=speech_cmdline_search(samples, suffix_len, remaining_text, decode);
+				if (recursion_result && g_list_length(recursion_result) < shortest_result_length) {
+					g_list_free(result);
+					result=recursion_result;
+					result=g_list_prepend(result, loop_samples->data);
+					shortest_result_length=g_list_length(result);
+				} else {
+					g_list_free(recursion_result);
+				}
+			} else {
+				g_list_free(result);
+				result=g_list_prepend(NULL, loop_samples->data);
+				break;
+			}
 		}
 		if (decode)
-			g_free(snd);
-		li=g_list_next(li);
+			g_free(sample_name);
+		loop_samples=g_list_next(loop_samples);
 	}
-	return ret;
+	return result;
 }
 #if 0
 
