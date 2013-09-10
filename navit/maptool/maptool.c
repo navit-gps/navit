@@ -871,30 +871,6 @@ int main(int argc, char **argv)
 			osm_collect_data(&p, suffix);
 			p.node_table_loaded=1;
 		}
-		if (experimental && p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing associated street relations")) {
-			FILE *ways_in=tempfile(suffix,"ways",0);
-			FILE *ways_out=tempfile(suffix,"ways_as",1);
-			FILE *nodes_in=tempfile(suffix,"nodes",0);
-			FILE *nodes_out=tempfile(suffix,"nodes_as",1);
-			
-			p.osm.associated_streets=tempfile(suffix,"associated_streets",0);
-			
-			process_associated_street(p.osm.associated_streets, ways_in, ways_out, nodes_in, nodes_out);
-			fclose(ways_in);
-			fclose(nodes_in);
-			fclose(ways_out);
-			fclose(nodes_out);
-			fclose(p.osm.associated_streets);
-			tempfile_rename(suffix,"ways","ways_pre_as");
-			tempfile_rename(suffix,"nodes","nodes_pre_as");
-			tempfile_rename(suffix,"ways_as","ways");
-			tempfile_rename(suffix,"nodes_as","nodes");
-			if(!p.keep_tmpfiles) {
-				tempfile_unlink(suffix,"ways_pre_as");
-				tempfile_unlink(suffix,"nodes_pre_as");
-				tempfile_unlink(suffix,"associated_streets");
-			}
-		}
 		if (start_phase(&p, "counting references and resolving ways")) {
 			maptool_load_node_table(&p,1);
 			osm_count_references(&p, suffix, p.start == phase);
@@ -947,6 +923,42 @@ int main(int argc, char **argv)
 		}
 		if(!p.keep_tmpfiles)
 			tempfile_unlink(suffix,"ways_split_index");
+	}
+	if (experimental && p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing associated street relations")) {
+		FILE *ways_in=tempfile(suffix,"ways_split",0);
+		FILE *ways_out=tempfile(suffix,"ways_split_as",1);
+		FILE *nodes_in=tempfile(suffix,"nodes",0);
+		FILE *nodes_out=tempfile(suffix,"nodes_as",1);
+		FILE *nodes2_in=NULL;
+		FILE *nodes2_out=NULL;
+		if(p.osm.line2poi) {
+			nodes2_in=tempfile(suffix,"way2poi_result",0);
+			nodes2_out=tempfile(suffix,"way2poi_result_as",1);
+		}
+		p.osm.associated_streets=tempfile(suffix,"associated_streets",0);
+		
+		process_associated_streets(p.osm.associated_streets, ways_in, ways_out, nodes_in, nodes_out, nodes2_in, nodes2_out);
+		fclose(ways_in);
+		fclose(nodes_in);
+		fclose(ways_out);
+		fclose(nodes_out);
+		fclose(p.osm.associated_streets);
+		tempfile_rename(suffix,"ways_split","ways_split_pre_as");
+		tempfile_rename(suffix,"nodes","nodes_pre_as");
+		tempfile_rename(suffix,"ways_split_as","ways_split");
+		tempfile_rename(suffix,"nodes_as","nodes");
+		if(p.osm.line2poi) {
+			fclose(nodes2_in);
+			fclose(nodes2_out);
+			tempfile_rename(suffix,"way2poi_result","way2poi_result_pre_as");
+			tempfile_rename(suffix,"way2poi_result_as","way2poi_result");
+		}
+		if(!p.keep_tmpfiles) {
+			tempfile_unlink(suffix,"ways_split__pre_as");
+			tempfile_unlink(suffix,"nodes_pre_as");
+			tempfile_unlink(suffix,"way2poi_result_pre_as");
+			tempfile_unlink(suffix,"associated_streets");
+		}
 	}
 	if (p.output == 1 && start_phase(&p,"dumping")) {
 		maptool_dump(&p, suffix);
