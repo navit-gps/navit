@@ -232,6 +232,7 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
 void process_binfile(FILE *in, FILE *out);
 void add_aux_tiles(char *name, struct zip_info *info);
 void cat(FILE *in, FILE *out);
+int item_order_by_type(enum item_type type);
 
 
 /* osm.c */

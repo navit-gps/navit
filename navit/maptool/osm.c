@@ -2342,12 +2342,14 @@ struct turn_restriction {
 	enum item_type type;
 	struct coord *c[3];
 	int c_count[3];
+	struct rect r;
+	int order;
 };
 
 static void
 process_turn_restrictions_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
 {
-	int count,type=(long)member_priv;
+	int i,count,type=(long)member_priv;
 	struct turn_restriction *turn_restriction=relation_priv;
 	struct coord *c=(struct coord *)(member+1);
 	int ccount=member->clen/2;
@@ -2360,6 +2362,19 @@ process_turn_restrictions_member(void *func_priv, void *relation_priv, struct it
 	turn_restriction->c[type][turn_restriction->c_count[type]++]=c[0];
 	if (count > 1) 
 		turn_restriction->c[type][turn_restriction->c_count[type]++]=c[ccount-1];
+	if(IS_REF(turn_restriction->r.l)) {
+		turn_restriction->r.l=c[0];
+		turn_restriction->r.h=c[0];
+		i=1;
+	} else
+		i=0;
+	for(;i<ccount;i++)
+		bbox_extend(&c[i], &turn_restriction->r);
+
+	i=item_order_by_type(member->type);
+	if(i<turn_restriction->order)
+		turn_restriction->order=i;
+
 }
 
 static void
@@ -2426,12 +2441,20 @@ process_turn_restrictions_finish(GList *tr, FILE *out)
 				fprintf(stderr,"\n");
 			} else {
 				if (t->c_count[1] <= 2) {
+					int order;
+					char tilebuf[20]="";
 					item_bin_init(ib,t->type);
 					item_bin_add_coord(ib, c[0], 1);
 					item_bin_add_coord(ib, c[1], 1);
 					if (t->c_count[1] > 1) 
 						item_bin_add_coord(ib, c[3], 1);
 					item_bin_add_coord(ib, c[2], 1);
+
+					order=tile(&t->r,"",tilebuf,sizeof(tilebuf)-1,overlap,NULL);
+					if(order > t->order)
+						order=t->order;
+					item_bin_add_attr_range(ib,attr_order,0,order);
+					
 					item_bin_write(ib, out);
 				}
 				
@@ -2503,6 +2526,8 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 		turn_restriction=g_new0(struct turn_restriction, 1);
 		turn_restriction->relid=relid;
 		turn_restriction->type=ib->type;
+		turn_restriction->r.l.x=1<<30;
+		turn_restriction->order=255;
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
 		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
