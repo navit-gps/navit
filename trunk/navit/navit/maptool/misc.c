@@ -166,19 +166,11 @@ phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes)
 	}
 }
 
-static void
-phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
+int
+item_order_by_type(enum item_type type)
 {
-	struct item_bin *ib;
-	int max;
-
-	while ((ib=read_item(in))) {
-		if (ib->type < 0x80000000)
-			processed_nodes++;
-		else
-			processed_ways++;
-		max=14;
-		switch (ib->type) {
+	int max=14;
+	switch (type) {
 		case type_town_label_1e7:
 		case type_town_label_5e6:
 		case type_town_label_2e6:
@@ -225,6 +217,28 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 			break;
 		default:
 			break;
+	}
+	return max;
+}
+
+static void
+phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
+{
+	struct item_bin *ib;
+	struct attr_bin *a;
+	int max;
+
+	while ((ib=read_item(in))) {
+		if (ib->type < 0x80000000)
+			processed_nodes++;
+		else
+			processed_ways++;
+		max=item_order_by_type(ib->type);
+		a=item_bin_get_attr_bin(ib, attr_order, NULL);
+		if(a) {
+			int max2=((struct range *)(a+1))->max;
+			if(max>max2)
+				max=max2;
 		}
 		tile_write_item_minmax(info, ib, reference, 0, max);
 	}
