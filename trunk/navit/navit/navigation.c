@@ -152,6 +152,8 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 	case attr_item_type:
 	case attr_length:
 	case attr_navigation_speech:
+	case attr_street_name:
+	case attr_street_name_systematic:
 		mr=map_rect_new(this_->map, NULL);
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type != type_nav_none && item->type != type_nav_position) {
