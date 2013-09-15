@@ -33,6 +33,7 @@
 #include "item.h"
 #include "vehicle.h"
 #include "event.h"
+#include "types.h"
 
 static struct vehicle_priv {
 	char *source;
@@ -70,9 +71,9 @@ static void vehicle_gpsd_io(struct vehicle_priv *priv);
 
 static void
 #ifdef HAVE_LIBGPS19
-vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len)
+vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len)
 #else
-vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
+vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 		      int level)
 #endif
 {
@@ -100,7 +101,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 			}
 		}
 	}	
-	dbg(1,"data->set=0x%x\n", data->set);
+	dbg(1,"data->set="LONGLONG_HEX_FMT"\n", data->set);
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * 3.6;
 		if(!isnan(data->fix.speed))
@@ -317,7 +318,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
                   vehicle_gpsd_open(priv);
                 }
                 else {
-                  char *buf;
+                  const char *buf;
                   buf = gps_data(priv->gps);
   	          vehicle_gpsd_callback(priv->gps,buf,strlen(buf));
                 }
