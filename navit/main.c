@@ -404,8 +404,6 @@ main_init(const char *program)
 	main_setup_environment(2);
 #endif	/* _WIN32 || _WIN32_WCE */
 
-	if (getenv("LC_ALL"))
-		dbg(0,"Warning: LC_ALL is set, this might lead to problems (e.g. strange positions from GPS)\n");
 	s = getenv("NAVIT_WID");
 	if (s) {
 		setenv("SDL_WINDOWID", s, 0);
