@@ -1577,7 +1577,7 @@ osm_end_relation(struct maptool_osm *osm)
 	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, osm->turn_restrictions);
 
-	if (experimental && !strcmp(relation_type, "associatedStreet") )
+	if (!strcmp(relation_type, "associatedStreet") )
 		item_bin_write(item_bin, osm->associated_streets);
 		
 	attr_longest_match_clear();
@@ -2302,27 +2302,21 @@ process_associated_streets_setup(FILE *in, struct relations *relations, struct a
 			rel->name=(char*)(rel+1);
 			g_strlcpy(rel->name,name,namelen);
 		}
-		fprintf(stderr,"name=%s\n",rel->name);
 		min_count=0;
 		while(search_relation_member(ib, "street",&relm,&min_count)) {
 			if(relm.type==2)
 				relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
-			fprintf(stderr,"street type=%d(should be 2) id="LONGLONG_FMT "\n",relm.type,relm.id);
-
 		}
 		min_count=0;
 		while(search_relation_member(ib, "house",&relm,&min_count)) {
-			fprintf(stderr,"house type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "addr:houselink",&relm,&min_count)) {
-			fprintf(stderr,"houselink type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "address",&relm,&min_count)) {
-			fprintf(stderr,"address type=%d id="LONGLONG_FMT"\n",relm.type,relm.id);
 			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 	}
