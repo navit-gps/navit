@@ -442,8 +442,7 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 	}
 	if (p->process_relations) {
 		p->osm.boundaries=tempfile(suffix,"boundaries",1);
-		if(experimental)
-			p->osm.associated_streets=tempfile(suffix,"associated_streets",1);
+		p->osm.associated_streets=tempfile(suffix,"associated_streets",1);
 	}
 #ifdef HAVE_POSTGRESQL
 	if (p->dbstr)
@@ -841,7 +840,7 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 0
+#if 1
 	if (experimental) {
 		fprintf(stderr,"No experimental features available\n");
 		exit(0);
@@ -924,7 +923,7 @@ int main(int argc, char **argv)
 		if(!p.keep_tmpfiles)
 			tempfile_unlink(suffix,"ways_split_index");
 	}
-	if (experimental && p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing associated street relations")) {
+	if (p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing associated street relations")) {
 		FILE *ways_in=tempfile(suffix,"ways_split",0);
 		FILE *ways_out=tempfile(suffix,"ways_split_as",1);
 		FILE *nodes_in=tempfile(suffix,"nodes",0);
@@ -953,10 +952,10 @@ int main(int argc, char **argv)
 			tempfile_rename(suffix,"way2poi_result","way2poi_result_pre_as");
 			tempfile_rename(suffix,"way2poi_result_as","way2poi_result");
 		}
+		tempfile_unlink(suffix,"ways_split_pre_as");
+		tempfile_unlink(suffix,"nodes_pre_as");
+		tempfile_unlink(suffix,"way2poi_result_pre_as");
 		if(!p.keep_tmpfiles) {
-			tempfile_unlink(suffix,"ways_split__pre_as");
-			tempfile_unlink(suffix,"nodes_pre_as");
-			tempfile_unlink(suffix,"way2poi_result_pre_as");
 			tempfile_unlink(suffix,"associated_streets");
 		}
 	}
