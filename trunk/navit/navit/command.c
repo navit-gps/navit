@@ -264,7 +264,7 @@ resolve_object(struct context *ctx, struct result *res)
 }
 
 static void
-resolve(struct context *ctx, struct result *res, struct attr *parent) //FIXME What is that parent for?
+resolve(struct context *ctx, struct result *res)
 {
 	resolve_object(ctx, res);
 	if (res->attrn)
@@ -274,7 +274,7 @@ resolve(struct context *ctx, struct result *res, struct attr *parent) //FIXME Wh
 static double
 get_double(struct context *ctx, struct result *res)
 {
-	resolve(ctx, res, NULL);
+	resolve(ctx, res);
 	return res->val;
 }
 
@@ -283,7 +283,7 @@ get_double(struct context *ctx, struct result *res)
 static int
 get_int_bool(struct context *ctx, int is_bool, struct result *res)
 {
-	resolve(ctx, res, NULL);
+	resolve(ctx, res);
 	if (res->attr.type == attr_none)
 		return 0;
 	if (res->attr.type >= attr_type_int_begin && res->attr.type <= attr_type_int_end) {
@@ -317,7 +317,7 @@ get_bool(struct context *ctx, struct result *res)
 static char *
 get_string(struct context *ctx, struct result *res)
 {
-	resolve(ctx, res, NULL);
+	resolve(ctx, res);
 	return attr_to_text(&res->attr, NULL, 0);
 }
 
@@ -355,8 +355,8 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 		}
 		break;
 	case op_type_binary:
-		resolve(ctx, inout, NULL);
-		resolve(ctx, in, NULL);
+		resolve(ctx, inout);
+		resolve(ctx, in);
 		switch ((op[0] << 8) | op[1]) {
 		case ('=' << 8)|'=':
 			if (inout->attr.type == attr_none || in->attr.type == attr_none) {
@@ -723,7 +723,7 @@ eval_postfix(struct context *ctx, struct result *res)
 		if (op[0] == '.') {
     			eval_brace(ctx, &tmp);
 			if (ctx->error) return;
-			resolve(ctx, res,NULL);
+			resolve(ctx, res);
 			if (ctx->error) return;
 			res->attrn=tmp.var;
 			res->attrnlen=tmp.varlen;
@@ -990,7 +990,7 @@ eval_assignment(struct context *ctx, struct result *res)
 		result_free(&tmp);
 		return;
 	}
-	resolve(ctx, &tmp, NULL);
+	resolve(ctx, &tmp);
 	if (ctx->error) {
 		result_free(&tmp);
 		return;
@@ -1029,7 +1029,7 @@ eval_list(struct context *ctx)
 			attr_list_free(ret);
 			return NULL;
 		}
-		resolve(ctx, &tmp, NULL);
+		resolve(ctx, &tmp);
 		ret=attr_generic_add_attr(ret, &tmp.attr);
 		result_free(&tmp);
 		if (!get_op(ctx,0,",",NULL)) return ret;
@@ -1052,7 +1052,7 @@ void command(struct attr *attr, char *expr)
 	printf("err=%d %s\n", ctx.error, ctx.expr);
 	dump(&res);
 	printf("***\n");
-	resolve(&ctx, &res, NULL);
+	resolve(&ctx, &res);
 	dump(&res);
 	printf("%s\n", get_string(&ctx, &res));
 }
@@ -1090,7 +1090,7 @@ command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 	struct context ctx;
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
-		resolve(&ctx, &res, NULL);
+		resolve(&ctx, &res);
 	if (error)
 		*error=ctx.error;
 	result_free(&res);
@@ -1106,7 +1106,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
-		resolve(&ctx, &res, NULL);
+		resolve(&ctx, &res);
 	if (!ctx.error)
 		ret=get_string(&ctx, &res);
 	if (error)
@@ -1129,7 +1129,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
-		resolve(&ctx, &res, NULL);
+		resolve(&ctx, &res);
 	if (!ctx.error)
 		ret=get_int(&ctx, &res);
 	if (error)
@@ -1152,7 +1152,7 @@ command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
-		resolve(&ctx, &res, NULL);
+		resolve(&ctx, &res);
 	if (!ctx.error) {
 		if (res.attr.type == attr_none)
 			ret=0;
@@ -1207,7 +1207,7 @@ command_evaluate_single(struct context *ctx)
 		eval_comma(ctx,&res);
 		if (ctx->error)
 			return 0;
-		resolve(ctx, &res, NULL);
+		resolve(ctx, &res);
 		result_free(&res);
 		if (ctx->error)
 			return 0;
@@ -1266,7 +1266,7 @@ command_evaluate_single(struct context *ctx)
     			eval_conditional(ctx, &res);
 			resolve_object(ctx, &res);
 			tmp.attr=attr;
-			resolve(ctx, &tmp, NULL);
+			resolve(ctx, &tmp);
 			if (ctx->error) {
 				result_free(&tmp);
 				return 0;
@@ -1502,7 +1502,7 @@ command_register_callbacks(struct command_saved *cs)
 	prev = cs->context_attr;
 
 	while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
-		resolve(&cs->ctx, &cs->res, NULL);
+		resolve(&cs->ctx, &cs->res);
 
 		if (cs->ctx.error || (cs->res.attr.type == attr_none)) {
 			// We could not resolve an object, perhaps because it has not been created
