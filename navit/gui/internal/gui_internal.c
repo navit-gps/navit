@@ -2331,6 +2331,9 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
 	case attr_navit:
 		attr->u.navit=this->nav;
 		break;
+	case attr_fullscreen:
+		attr->u.num=(this->fullscreen > 0);
+		break;
 	default:
 		return 0;
 	}
@@ -2371,7 +2374,7 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 		this->on_map_click=g_strdup(attr->u.str);
 		return 1;
 	default:
-		dbg(2,"%s\n",attr_to_name(attr->type));
+		dbg(0,"Unknown attribute: %s\n",attr_to_name(attr->type));
 		return 1;
 	}
 }
