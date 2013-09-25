@@ -322,7 +322,7 @@ get_string(struct context *ctx, struct result *res)
 }
 
 static void
-set_double(struct context *ctx, struct result *res, double val)
+set_double(struct result *res, double val)
 {
 	result_free(res);
 	res->attr.type=attr_type_double_begin;
@@ -331,7 +331,7 @@ set_double(struct context *ctx, struct result *res, double val)
 }
 
 static void
-set_int(struct context *ctx, struct result *res, int val)
+set_int(struct result *res, int val)
 {
 	result_free(res);
 	res->attr.type=attr_type_int_begin;
@@ -347,10 +347,10 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 	case op_type_prefix:
 		switch ((op[0] << 8) | op[1]) {
 		case ('!' << 8):
-			set_int(ctx, inout, !get_bool(ctx, inout));
+			set_int(inout, !get_bool(ctx, inout));
 			return;
 		case ('~' << 8):
-			set_int(ctx, inout, ~get_int(ctx, inout));
+			set_int(inout, ~get_int(ctx, inout));
 			return;
 		}
 		break;
@@ -360,60 +360,60 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 		switch ((op[0] << 8) | op[1]) {
 		case ('=' << 8)|'=':
 			if (inout->attr.type == attr_none || in->attr.type == attr_none) {
-				set_int(ctx, inout, 0);
+				set_int(inout, 0);
 			} else if (ATTR_IS_STRING(inout->attr.type) && ATTR_IS_STRING(in->attr.type)) {
 				char *s1=get_string(ctx, inout),*s2=get_string(ctx, in);
-				set_int(ctx, inout, (!strcmp(s1,s2)));
+				set_int(inout, (!strcmp(s1,s2)));
 				g_free(s1);
 				g_free(s2);
 			} else if (ATTR_IS_OBJECT(inout->attr.type) && ATTR_IS_OBJECT(in->attr.type)) {
-				set_int(ctx, inout, inout->attr.u.data == in->attr.u.data);
+				set_int(inout, inout->attr.u.data == in->attr.u.data);
 			} else
-				set_int(ctx, inout, (get_int(ctx, inout) == get_int(ctx, in)));
+				set_int(inout, (get_int(ctx, inout) == get_int(ctx, in)));
 			return;
 		case ('!' << 8)|'=':
 			if (inout->attr.type == attr_none || in->attr.type == attr_none) {
-				set_int(ctx, inout, 1);
+				set_int(inout, 1);
 			} else if (ATTR_IS_STRING(inout->attr.type) && ATTR_IS_STRING(in->attr.type)) {
 				char *s1=get_string(ctx, inout),*s2=get_string(ctx, in);
-				set_int(ctx, inout, (!!strcmp(s1,s2)));
+				set_int(inout, (!!strcmp(s1,s2)));
 				g_free(s1);
 				g_free(s2);
 			} else if (ATTR_IS_OBJECT(inout->attr.type) && ATTR_IS_OBJECT(in->attr.type)) {
-				set_int(ctx, inout, inout->attr.u.data != in->attr.u.data);
+				set_int(inout, inout->attr.u.data != in->attr.u.data);
 			} else
-				set_int(ctx, inout, (get_int(ctx, inout) != get_int(ctx, in)));
+				set_int(inout, (get_int(ctx, inout) != get_int(ctx, in)));
 			return;
 		case ('<' << 8):
-			set_int(ctx, inout, (get_int(ctx, inout) < get_int(ctx, in)));
+			set_int(inout, (get_int(ctx, inout) < get_int(ctx, in)));
 			return;
 		case ('<' << 8)|'=':
-			set_int(ctx, inout, (get_int(ctx, inout) <= get_int(ctx, in)));
+			set_int(inout, (get_int(ctx, inout) <= get_int(ctx, in)));
 			return;
 		case ('>' << 8):
-			set_int(ctx, inout, (get_int(ctx, inout) > get_int(ctx, in)));
+			set_int(inout, (get_int(ctx, inout) > get_int(ctx, in)));
 			return;
 		case ('>' << 8)|'=':
-			set_int(ctx, inout, (get_int(ctx, inout) >= get_int(ctx, in)));
+			set_int(inout, (get_int(ctx, inout) >= get_int(ctx, in)));
 			return;
 		case ('*' << 8):
 			if (is_double(inout) || is_double(in)) 
-				set_double(ctx, inout, get_double(ctx, inout) * get_double(ctx, in));
+				set_double(inout, get_double(ctx, inout) * get_double(ctx, in));
 			else
-				set_int(ctx, inout, get_int(ctx, inout) * get_int(ctx, in));
+				set_int(inout, get_int(ctx, inout) * get_int(ctx, in));
 			return;
 		case ('/' << 8):
 			if (is_double(inout) || is_double(in)) 
-				set_double(ctx, inout, get_double(ctx, inout) * get_double(ctx, in));
+				set_double(inout, get_double(ctx, inout) * get_double(ctx, in));
 			else
-				set_int(ctx, inout, get_int(ctx, inout) * get_int(ctx, in));
+				set_int(inout, get_int(ctx, inout) * get_int(ctx, in));
 			return;
 		case ('%' << 8):
-			set_int(ctx, inout, get_int(ctx, inout) % get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) % get_int(ctx, in));
 			return;
 		case ('+' << 8):
 			if (is_double(inout) || is_double(in)) 
-				set_double(ctx, inout, get_double(ctx, inout) + get_double(ctx, in));
+				set_double(inout, get_double(ctx, inout) + get_double(ctx, in));
 			else if (ATTR_IS_STRING(inout->attr.type) && ATTR_IS_STRING(in->attr.type)) {
 				char *str=g_strdup_printf("%s%s",inout->attr.u.str,in->attr.u.str);
 				result_free(inout);
@@ -421,28 +421,28 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 				inout->attr.u.str=str;
 				inout->allocated=1;
 			} else
-				set_int(ctx, inout, get_int(ctx, inout) + get_int(ctx, in));
+				set_int(inout, get_int(ctx, inout) + get_int(ctx, in));
 			return;
 		case ('-' << 8):
 			if (is_double(inout) || is_double(in)) 
-				set_int(ctx, inout, get_int(ctx, inout) - get_int(ctx, in));
+				set_int(inout, get_int(ctx, inout) - get_int(ctx, in));
 			else
-				set_double(ctx, inout, get_double(ctx, inout) - get_double(ctx, in));
+				set_double(inout, get_double(ctx, inout) - get_double(ctx, in));
 			return;
 		case ('&' << 8):
-			set_int(ctx, inout, get_int(ctx, inout) & get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) & get_int(ctx, in));
 			return;
 		case ('^' << 8):
-			set_int(ctx, inout, get_int(ctx, inout) ^ get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) ^ get_int(ctx, in));
 			return;
 		case ('|' << 8):
-			set_int(ctx, inout, get_int(ctx, inout) | get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) | get_int(ctx, in));
 			return;
 		case (('&' << 8) | '&'):
-			set_int(ctx, inout, get_int(ctx, inout) && get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) && get_int(ctx, in));
 			return;
 		case (('|' << 8) | '|'):
-			set_int(ctx, inout, get_int(ctx, inout) || get_int(ctx, in));
+			set_int(inout, get_int(ctx, inout) || get_int(ctx, in));
 			return;
 		default:
 			break;
