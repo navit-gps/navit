@@ -152,7 +152,7 @@ endif()
 
 ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
-   ADD_DEPENDENCIES(support_glib intl_cmake)
+   ADD_DEPENDENCIES(support_glib support_gettext_intl)
 endif()
 
 

@@ -174,7 +174,7 @@ CHECK_FUNCTION_EXISTS(fsync HAVE_FSYNC)
 ### Configure build
 #Required libraries, supplied with navit
 if (NOT HAVE_LIBINTL)
-   add_plugin(intl_cmake "native libintl missing" TRUE)
+   add_plugin(support/gettext_intl "native libintl missing" TRUE)
    set(USE_LIBGNUINTL TRUE)
 else()
    CHECK_LIBRARY_EXISTS(intl libintl_fprintf "" NEEDS_LIBINTL)
