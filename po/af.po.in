@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2009-12-20 20:36+0000\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:39+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Afrikaans <af@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: af\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:20+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -104,7 +104,7 @@ msgstr ""
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d, %d kilometer"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -848,8 +848,8 @@ msgid "Latvia"
 msgstr "Letland"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Libië"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1423,19 +1423,19 @@ msgid "Zoom_Out"
 msgstr "ZoomUit"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Verminder zoom vlak"
 
 msgid "Zoom_In"
 msgstr "ZoomIn"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Vermeerder zoom vlak"
 
 msgid "_Recalculate"
 msgstr "Herbereken"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Teken kaart oor"
 
 msgid "_Info"
 msgstr "Inligting"
@@ -1444,7 +1444,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Toon adres soek skerm"
 
 msgid "_Stop Navigation"
 msgstr "Stop Navigasie"
@@ -1468,19 +1468,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Skakel kaart orientasie na noord of voertuig"
 
 msgid "_Roadbook"
 msgstr "Padkaart"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Toon/verskuil roete beskrywing"
 
 msgid "_Autozoom"
 msgstr "Outozoom"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Skakel Aan/af outomatiese zoom vlak verandering"
 
 msgid "_Fullscreen"
 msgstr "Volskerm"
@@ -1574,19 +1574,19 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Sny Boekmerk"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Kopieer Boekmerk"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Hernoem Boekmerk"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Plaas Boekmerk"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Verwyder Boekmerk"
 
 msgid "Delete waypoint"
 msgstr ""
@@ -1608,11 +1608,11 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Voeg Boekmerk Leger by"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Plaas boekmerk"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1638,10 +1638,10 @@ msgid "Show Satellite Status"
 msgstr "Wys Satelliet Inligting"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Hoogte "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Rigting "
 
 msgid "Show NMEA Data"
 msgstr "Wys NMEA data"
@@ -1673,24 +1673,24 @@ msgid "Show NMEA data"
 msgstr "Wys NMEA data"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Voeg Boekmerk by"
 
 msgid "Rename"
-msgstr ""
+msgstr "Hernoem"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Rakende Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Skrywers"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "En die hele Navit Span"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "lede en bydraers"
 
 msgid "Waypoints"
 msgstr ""
@@ -1698,10 +1698,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1738,10 +1738,10 @@ msgid "Height Profile"
 msgstr "Hoë profiel"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Roete Beskrywing"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Toon Lokalisering"
 
 msgid "Former Destinations"
 msgstr "Voorige bestemmings"
@@ -1809,9 +1809,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2406,7 +2403,7 @@ msgid "Route"
 msgstr "Roete"
 
 msgid "About"
-msgstr ""
+msgstr "Rakende"
 
 msgid "Actions"
 msgstr "Aksies"
@@ -2464,7 +2461,7 @@ msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
-msgstr ""
+msgstr "perd"
 
 #. chr:
 #. flags used for a truck: (first flag number is 0)
@@ -2487,15 +2484,6 @@ msgstr ""
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "In %s, gaan in die sirkel in"
-
-#~ msgid "Cursor"
-#~ msgstr "Plekaanduier"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometer"

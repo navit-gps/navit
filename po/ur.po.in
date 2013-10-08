@@ -7,29 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-11-14 14:11+0000\n"
-"Last-Translator: asghar <Unknown>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:44+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ur\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-21 21:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: ur\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "سورس ڈایرکٹری سے چلا ر ہے ہیں\n"
-
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "ترتیب '%s' سے '%s'\n"
-
-#. TRANSLATORS: the following counts refer to streets
-msgid "zeroth"
-msgstr "صفر سے"
 
 msgid "first"
 msgstr "پہلا"
@@ -76,18 +68,6 @@ msgid "%d m"
 msgstr "%d میٹر"
 
 #, c-format
-msgid "in %d m"
-msgstr "%d میٹر میں"
-
-#, c-format
-msgid "%d feet"
-msgstr ""
-
-#, c-format
-msgid "in %d feet"
-msgstr ""
-
-#, c-format
 msgid "%d meters"
 msgstr "%d میٹر"
 
@@ -96,44 +76,12 @@ msgid "in %d meters"
 msgstr "%d میٹر میں"
 
 #, c-format
-msgid "%d.%d miles"
-msgstr ""
-
-#, c-format
-msgid "in %d.%d miles"
-msgstr ""
-
-#, c-format
 msgid "%d.%d kilometers"
 msgstr "%d.%d کلومیٹر"
 
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d.%d کلومیٹر میں"
-
-#, c-format
-msgid "one mile"
-msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
-
-#, c-format
-msgid "in one mile"
-msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
-
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "ایک کلومیٹر"
-msgstr[1] "%d کلومیٹر"
-
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "ایک کلومیٹر میں"
-msgstr[1] "%d کلومیٹر میں"
 
 msgid "exit"
 msgstr "اخراج"
@@ -193,6 +141,82 @@ msgstr "نا معلوم "
 msgid "When possible, please turn around"
 msgstr "جب ممکن ہو گھومیں"
 
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "%1$s%2$s %3$s%4$s پھر گومیں"
+
+msgid "Set as destination"
+msgstr "بطور منزل انتخاب"
+
+msgid "Enter Destination"
+msgstr "منزل داخل کریں"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
+
+msgid " Elevation "
+msgstr " ارتفاع "
+
+#, c-format
+msgid "Current profile: %s"
+msgstr "موجودہ پروفائل: %s"
+
+msgid "Add Bookmark"
+msgstr "بک مارک میں شامل"
+
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "ترتیب '%s' سے '%s'\n"
+
+#. TRANSLATORS: the following counts refer to streets
+msgid "zeroth"
+msgstr "صفر سے"
+
+#, c-format
+msgid "in %d m"
+msgstr "%d میٹر میں"
+
+#, c-format
+msgid "%d feet"
+msgstr ""
+
+#, c-format
+msgid "in %d feet"
+msgstr ""
+
+#, c-format
+msgid "%d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr ""
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] ""
+msgstr[1] ""
+
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "ایک کلومیٹر"
+msgstr[1] "%d کلومیٹر"
+
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "ایک کلومیٹر میں"
+msgstr[1] "%d کلومیٹر میں"
+
 msgid "Enter the roundabout soon"
 msgstr ""
 
@@ -240,11 +264,6 @@ msgstr "غلطی"
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%1$s%2$s %3$s%4$s گومیں"
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "%1$s%2$s %3$s%4$s پھر گومیں"
-
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "آپ اپنی منزل %s پے پہنچ کئے ہیں"
@@ -289,9 +308,6 @@ msgstr ""
 
 msgid "Set as position"
 msgstr "بطور موجودہ مقام انتخاب"
-
-msgid "Set as destination"
-msgstr "بطور منزل انتخاب"
 
 msgid "Add as bookmark"
 msgstr "بک مارک میں محفوظ کریں"
@@ -849,8 +865,8 @@ msgid "Latvia"
 msgstr "لاتویا"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "لیبیان عرب جمعحیریا"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1374,9 +1390,6 @@ msgstr "سڑک"
 msgid "Number"
 msgstr "نمبر"
 
-msgid "Enter Destination"
-msgstr "منزل داخل کریں"
-
 msgid "Zip Code"
 msgstr "زپ کوڈ"
 
@@ -1479,9 +1492,6 @@ msgstr "دکھیں/نہ دیکھیں سفر کی تفصیل"
 
 msgid "_Autozoom"
 msgstr "خودکار زوم"
-
-msgid "Enable/disable automatic zoom level changing"
-msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
 
 msgid "_Fullscreen"
 msgstr "پوری سکرین"
@@ -1638,9 +1648,6 @@ msgstr ""
 msgid "Show Satellite Status"
 msgstr "سٹلائٹ کی حالت دیکھیں"
 
-msgid " Elevation "
-msgstr " ارتفاع "
-
 msgid " Azimuth "
 msgstr " سمت "
 
@@ -1657,10 +1664,6 @@ msgid "pedestrian"
 msgstr "پیدل"
 
 #, c-format
-msgid "Current profile: %s"
-msgstr "موجودہ پروفائل: %s"
-
-#, c-format
 msgid "Change profile to: %s"
 msgstr "پروفائل کو :%s میں بدلیں"
 
@@ -1672,9 +1675,6 @@ msgstr "سٹلائٹ کی حالت دیکھیں"
 
 msgid "Show NMEA data"
 msgstr "NMEA ڈیٹا دیکھیں"
-
-msgid "Add Bookmark"
-msgstr "بک مارک میں شامل"
 
 msgid "Rename"
 msgstr "تبدیل نام"
@@ -1699,10 +1699,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1810,9 +1810,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2488,12 +2485,6 @@ msgstr "گھوڑا"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "Enter the roundabout soon and leave it at the %s"
-#~ msgstr "گول چوراہے میں  داخل ہوں اور %s سے باہر نکل جایئں"
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "%s کے بعد گول چوراہے میں داخل ہو جایئں"

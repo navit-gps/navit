@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-06-12 09:37+0000\n"
-"Last-Translator: igorashu <Unknown>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:44+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -116,14 +116,12 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -853,8 +851,8 @@ msgid "Latvia"
 msgstr "Letonia"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Jamahiriya Arabă Libiană"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1428,19 +1426,19 @@ msgid "Zoom_Out"
 msgstr "Depărtează"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Scade nivelul de zoom"
 
 msgid "Zoom_In"
 msgstr "Apropie"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Creste nivelul de zoom"
 
 msgid "_Recalculate"
 msgstr "Recalculează"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Reînnoieste harta"
 
 msgid "_Info"
 msgstr "Informații"
@@ -1449,7 +1447,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Deschide căutare adresa"
 
 msgid "_Stop Navigation"
 msgstr "Oprește navigarea"
@@ -1461,7 +1459,7 @@ msgid "_Quit"
 msgstr "_Ieșire"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Ieşire din aplicaţie"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1473,19 +1471,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Schimbă orientarea hărtii spre nord sau la vehicul"
 
 msgid "_Roadbook"
 msgstr "Drum blocat"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Arată/ascunde descrierea rutei"
 
 msgid "_Autozoom"
 msgstr "Autozoom"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Activare/Dezactivare a schimbarii automate al zoomului"
 
 msgid "_Fullscreen"
 msgstr "Pe tot ecranul"
@@ -1643,7 +1641,7 @@ msgid "Show Satellite Status"
 msgstr "Arată starea sateliților"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Înălţime "
 
 msgid " Azimuth "
 msgstr " Azimut "
@@ -1703,10 +1701,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1746,7 +1744,7 @@ msgid "Route Description"
 msgstr "Descrerea traseului"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Setări regionale"
 
 msgid "Former Destinations"
 msgstr "Destinații anterioare"
@@ -1814,9 +1812,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2492,15 +2487,6 @@ msgstr "cal"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "În %s, intrați în sensul giratoriu"
-
-#~ msgid "Cursor"
-#~ msgstr "Cursor"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "kilometrul %d.%d"

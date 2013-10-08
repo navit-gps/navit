@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-05-28 14:54+0000\n"
-"Last-Translator: andygol <Unknown>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:44+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -116,14 +116,12 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -853,8 +851,8 @@ msgid "Latvia"
 msgstr "Латвія"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Лівійська Арабська Джамахірія"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1428,19 +1426,19 @@ msgid "Zoom_Out"
 msgstr "Зменшити"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Зменшити масштаб"
 
 msgid "Zoom_In"
 msgstr "Збільшити"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Збільшити масштаб"
 
 msgid "_Recalculate"
 msgstr "Перерахувати"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Оновити мапу"
 
 msgid "_Info"
 msgstr "Інформація"
@@ -1449,7 +1447,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Відкриває діалог пошуку адреси"
 
 msgid "_Stop Navigation"
 msgstr "Зупинити навігацію"
@@ -1461,7 +1459,7 @@ msgid "_Quit"
 msgstr "_Вийти"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Вийти з програми"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1473,19 +1471,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Переключає орієнтацію мапи на північ або по ходу руху"
 
 msgid "_Roadbook"
 msgstr "Атлас доріг"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Показати/сховати опис маршруту"
 
 msgid "_Autozoom"
 msgstr "Авторозмір"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Ввімкнути/вимкнути автоматичне масштабування"
 
 msgid "_Fullscreen"
 msgstr "На весь екран"
@@ -1703,10 +1701,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1814,9 +1812,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2492,15 +2487,6 @@ msgstr "кінь"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "Через %s виїзд на дорогу з кільцевим рухом"
-
-#~ msgid "Cursor"
-#~ msgstr "Курсор"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d кілометрів"

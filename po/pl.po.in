@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2013-07-31 14:19+0100\n"
-"Last-Translator: Robert Wojewódzki <robwoj44@poczta.onet.pl>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:43+0000\n"
+"Last-Translator: Robert Wojewódzki <Unknown>\n"
 "Language-Team: Translators\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Poedit-Country: POLAND\n"
+"Language: \n"
 "X-Poedit-Language: Polish\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -855,8 +856,8 @@ msgid "Latvia"
 msgstr "Łotwa"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Wielka Arabska Libijska Dżamahirijja Ludowo-Socjalistyczna"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1714,10 +1715,10 @@ msgstr "Punkty trasy"
 msgid "Enter Coordinates"
 msgstr "Wprowadź współrzędne"
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1825,9 +1826,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2509,15 +2507,6 @@ msgstr "koń"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr "Ciężarówka"
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "Wjedź na rondo za %s"
-
-#~ msgid "Cursor"
-#~ msgstr "Kursor"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometra"
