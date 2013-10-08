@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-02-01 17:37+0000\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:39+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:20+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -116,20 +116,12 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
 
 #, c-format
 msgid "one kilometer"
@@ -865,8 +857,8 @@ msgid "Latvia"
 msgstr "لاتفيا"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "الجماهيريّة العربيّة اللّيبيّة"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1440,19 +1432,19 @@ msgid "Zoom_Out"
 msgstr "صغّر الروئية"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "خفض مستوى التكبير"
 
 msgid "Zoom_In"
 msgstr "كبّر الروئية"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "إرفع مستوى التكبير"
 
 msgid "_Recalculate"
 msgstr "إعادة الحساب"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "أرسم الخريطو مجددا"
 
 msgid "_Info"
 msgstr "معلومات"
@@ -1461,7 +1453,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "إفتح حوار البحث عن عنوان"
 
 msgid "_Stop Navigation"
 msgstr "قف الملاحة"
@@ -1473,7 +1465,7 @@ msgid "_Quit"
 msgstr "_إنهاء"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "أنهِ التطبيق"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1485,19 +1477,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "تبديل اتجاه الخريطة إلى الشمال أو إلى السيارة"
 
 msgid "_Roadbook"
 msgstr "سجل خريطة الطريق"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "أعرض/خبئ وصف الطريق"
 
 msgid "_Autozoom"
 msgstr "تكبير/تصغير تلقائي"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "فعل\\عطل تغيير مستوى التقريب تلقائياً"
 
 msgid "_Fullscreen"
 msgstr "ملء الشاشة"
@@ -1591,19 +1583,19 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "قص العلامة"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "انسخ علامة القرائة"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "إعادة تسمية العلامة"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "لصق العلامة"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "إحذف العلامة"
 
 msgid "Delete waypoint"
 msgstr ""
@@ -1625,11 +1617,11 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "إضافة علامة على المجلد"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "لصق العلامة"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1693,21 +1685,21 @@ msgid "Add Bookmark"
 msgstr "أضف إشارة مرجعية"
 
 msgid "Rename"
-msgstr ""
+msgstr "إعادة التسمية"
 
 msgid "About Navit"
-msgstr ""
+msgstr "عن Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "حسب الكُتاب"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "وجميع فريق Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "الأعضاء والمساهمين ."
 
 msgid "Waypoints"
 msgstr ""
@@ -1715,10 +1707,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1826,9 +1818,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2423,7 +2412,7 @@ msgid "Route"
 msgstr "الطريق"
 
 msgid "About"
-msgstr ""
+msgstr "حوْل"
 
 msgid "Actions"
 msgstr "أفعال"
@@ -2502,15 +2491,6 @@ msgstr "خيل/فرس"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "بعد %s ، أدخل المسستديرة"
-
-#~ msgid "Cursor"
-#~ msgstr "المزلاق"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d كلم"

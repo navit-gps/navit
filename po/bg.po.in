@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2009-12-20 20:36+0000\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:39+0000\n"
 "Last-Translator: Alex Stanev <alex@stanev.org>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:20+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: bg\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -104,7 +105,7 @@ msgstr ""
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d километра"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -143,7 +144,7 @@ msgstr "на рампата"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%sпо улица %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
@@ -183,11 +184,11 @@ msgstr "силно "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "наистина силно "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
-msgstr ""
+msgstr "непознат "
 
 msgid "When possible, please turn around"
 msgstr "Когато е възможно обърнете"
@@ -218,7 +219,7 @@ msgstr "скоро"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "Тръгнете по %1$s път към %2$s"
 
 #, c-format
 msgid "after %i roads"
@@ -848,8 +849,8 @@ msgid "Latvia"
 msgstr "Латвия"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Либийска Арабска Джамахирия"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1304,7 +1305,7 @@ msgid "Zimbabwe"
 msgstr "Зимбабве"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "* Неизвестен, добавете is_in осм тагове за тези градове"
 
 msgid ""
 "navit usage:\n"
@@ -1435,7 +1436,7 @@ msgid "_Recalculate"
 msgstr "Преизчисляване"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Опресни картата"
 
 msgid "_Info"
 msgstr "Информация"
@@ -1444,7 +1445,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Отваря прозорец Търсене на адрес"
 
 msgid "_Stop Navigation"
 msgstr "Спри Навигацията"
@@ -1456,7 +1457,7 @@ msgid "_Quit"
 msgstr "_Изход"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Изход от приложението"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1474,13 +1475,13 @@ msgid "_Roadbook"
 msgstr "Пътна книга"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Покажи/скрий детайлите на маршрута"
 
 msgid "_Autozoom"
 msgstr ""
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Разреши/забрани смяната на нивото на увеличение"
 
 msgid "_Fullscreen"
 msgstr "Цял екран"
@@ -1517,20 +1518,20 @@ msgid "No"
 msgstr ""
 
 msgid "2D"
-msgstr ""
+msgstr "2D"
 
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 msgid "OT"
 msgstr ""
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Маршрут %4.0fкм %02d:%02d ОВП"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Маршрут 0000fкм 0+00:00 ОВП"
 
 msgid "Help"
 msgstr "Помощ"
@@ -1638,30 +1639,30 @@ msgid "Show Satellite Status"
 msgstr "Покажи Състояние на Сателити"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Височина "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Азимут "
 
 msgid "Show NMEA Data"
 msgstr "Покажи NMEA Данни"
 
 msgid "car"
-msgstr ""
+msgstr "автомобил"
 
 msgid "bike"
-msgstr ""
+msgstr "колело"
 
 msgid "pedestrian"
-msgstr ""
+msgstr "пешеходец"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "Текущ профил: %s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr ""
+msgstr "Смени профил на: %s"
 
 msgid "Set as active"
 msgstr "Укажи като активен"
@@ -1673,13 +1674,13 @@ msgid "Show NMEA data"
 msgstr "Покажи NMEA Данни"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Добави отметка"
 
 msgid "Rename"
-msgstr ""
+msgstr "Преименувай"
 
 msgid "About Navit"
-msgstr ""
+msgstr "За Navit"
 
 #. Authors
 msgid "By"
@@ -1698,10 +1699,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1717,7 +1718,7 @@ msgid "Rules"
 msgstr "Правила"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "Показвай на пътя"
 
 msgid "Northing"
 msgstr ""
@@ -1735,10 +1736,10 @@ msgid "Layout"
 msgstr "Изглед"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "Височинен профил"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Описание на маршрута"
 
 msgid "Show Locale"
 msgstr ""
@@ -1750,7 +1751,7 @@ msgid "- No former destinations available -"
 msgstr ""
 
 msgid "Message"
-msgstr ""
+msgstr "Съобщение"
 
 msgid "Back"
 msgstr "Назад"
@@ -1809,9 +1810,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2406,7 +2404,7 @@ msgid "Route"
 msgstr "Маршрут"
 
 msgid "About"
-msgstr ""
+msgstr "Относно"
 
 msgid "Actions"
 msgstr "Действия"
@@ -2436,7 +2434,7 @@ msgid "Window Mode"
 msgstr "Режим Прозорец"
 
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 msgid ""
 "Drop last \n"
@@ -2464,7 +2462,7 @@ msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
-msgstr ""
+msgstr "кон"
 
 #. chr:
 #. flags used for a truck: (first flag number is 0)
@@ -2487,15 +2485,6 @@ msgstr ""
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "След %s влезте в кръговото"
-
-#~ msgid "Cursor"
-#~ msgstr "Курсор"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d километра"
