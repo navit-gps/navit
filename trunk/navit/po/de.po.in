@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-06-01 22:09+0000\n"
-"Last-Translator: Achim Behrens <Unknown>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-10-08 10:15+0000\n"
+"Last-Translator: Usul <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -851,8 +851,8 @@ msgid "Latvia"
 msgstr "Lettland"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Libysch-Arabische Dschamahirija"
+msgid "Libya"
+msgstr "Lybien"
 
 #. 504
 msgid "Morocco"
@@ -1713,10 +1713,10 @@ msgstr "Wegpunkte"
 msgid "Enter Coordinates"
 msgstr "Koordinaten eingeben"
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1812,103 +1812,100 @@ msgid "Route to here"
 msgstr "Ziel setzen"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Kartendaten (c) von OpenStreetMap unter ODbL"
 
 msgid "Downloaded maps"
 msgstr "Heruntergeladene Karten"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "Ganze Welt"
 
 msgid "Africa"
-msgstr ""
+msgstr "Afrika"
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
-msgstr ""
+msgstr "Kanarische Inseln"
 
 msgid "Asia"
-msgstr ""
+msgstr "Asien"
 
 msgid "Korea"
-msgstr ""
+msgstr "Korea"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "Vereinigte Arabische Emirate+weitere"
 
 msgid "Oceania"
-msgstr ""
+msgstr "Ozeanien"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmanien"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Victoria"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "New South Wales"
 
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "West-Europa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azoren"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "Beneluxländer"
 
 msgid "Alsace"
-msgstr ""
+msgstr "Elsass"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "Aquitanien"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "Auvergne"
 
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "Basse-Normandie"
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "Burgund"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "Bretagne"
 
 msgid "Centre"
 msgstr ""
 
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "Champagne-Ardenne"
 
 msgid "Corse"
-msgstr ""
+msgstr "Korsika"
 
 msgid "Franche-Comte"
 msgstr ""
 
 msgid "Haute-Normandie"
-msgstr ""
+msgstr "Haute Normandie"
 
 msgid "Ile-de-France"
 msgstr ""
 
 msgid "Languedoc-Roussillon"
-msgstr ""
+msgstr "Languedoc-Roussillon"
 
 msgid "Limousin"
-msgstr ""
+msgstr "Limousin"
 
 msgid "Lorraine"
-msgstr ""
+msgstr "Lothringen"
 
 msgid "Midi-Pyrenees"
 msgstr ""
@@ -1920,10 +1917,10 @@ msgid "Pays-de-la-Loire"
 msgstr ""
 
 msgid "Picardie"
-msgstr ""
+msgstr "Picardie"
 
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "Poitou-Charentes"
 
 msgid "Provence-Alpes-Cote-d-Azur"
 msgstr ""
@@ -1932,259 +1929,259 @@ msgid "Rhone-Alpes"
 msgstr ""
 
 msgid "Baden-Wuerttemberg"
-msgstr ""
+msgstr "Baden-Württemberg"
 
 msgid "Bayern"
-msgstr ""
+msgstr "Bayern"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Mittelfranken"
 
 msgid "Niederbayern"
-msgstr ""
+msgstr "Niederbayern"
 
 msgid "Oberbayern"
-msgstr ""
+msgstr "Oberbayern"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "Oberfranken"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "Oberpfalz"
 
 msgid "Schwaben"
-msgstr ""
+msgstr "Schwaben"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "Unterfranken"
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlin"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburg"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Bremen"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburg"
 
 msgid "Hessen"
-msgstr ""
+msgstr "Hessen"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "Mecklenburg-Vorpommern"
 
 msgid "Niedersachsen"
-msgstr ""
+msgstr "Niedersachsen"
 
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "Nordrhein-Westfalen"
 
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "Rheinland-Pfalz"
 
 msgid "Saarland"
-msgstr ""
+msgstr "Saarland"
 
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "Sachsen-Anhalt"
 
 msgid "Sachsen"
-msgstr ""
+msgstr "Sachsen"
 
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "Schleswig-Holstein"
 
 msgid "Thueringen"
-msgstr ""
+msgstr "Thüringen"
 
 msgid "Mallorca"
-msgstr ""
+msgstr "Mallorca"
 
 msgid "Galicia"
-msgstr ""
+msgstr "Galicien"
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Skandinavien"
 
 msgid "England"
-msgstr ""
+msgstr "England"
 
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "Buckinghamshire"
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "Cambridgeshire"
 
 msgid "Cumbria"
-msgstr ""
+msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
 msgstr ""
 
 msgid "Essex"
-msgstr ""
+msgstr "Essex"
 
 msgid "Herefordshire"
-msgstr ""
+msgstr "Herefordshire"
 
 msgid "Kent"
-msgstr ""
+msgstr "Kent"
 
 msgid "Lancashire"
-msgstr ""
+msgstr "Lancashire"
 
 msgid "Leicestershire"
-msgstr ""
+msgstr "Leicestershire"
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolk"
 
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "Nottinghamshire"
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "Oxfordshire"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "Shropshire"
 
 msgid "Somerset"
-msgstr ""
+msgstr "Somerset"
 
 msgid "South yorkshire"
-msgstr ""
+msgstr "South yorkshire"
 
 msgid "Suffolk"
-msgstr ""
+msgstr "Suffolk"
 
 msgid "Surrey"
-msgstr ""
+msgstr "Surrey"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "Wiltshire"
 
 msgid "Scotland"
-msgstr ""
+msgstr "Schottland"
 
 msgid "Wales"
-msgstr ""
+msgstr "Wales"
 
 msgid "Crete"
-msgstr ""
+msgstr "Kreta"
 
 msgid "North America"
-msgstr ""
+msgstr "Nordamerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Alaska"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Hawaii"
 
 msgid "USA"
-msgstr ""
+msgstr "USA"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (außer Alaska und Hawaii)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "Mittlerer Westen"
 
 msgid "Michigan"
-msgstr ""
+msgstr "Michigan"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Ohio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Nordosten"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "Massachusetts"
 
 msgid "Vermont"
-msgstr ""
+msgstr "Vermont"
 
 msgid "Pacific"
-msgstr ""
+msgstr "Pazifik"
 
 msgid "South"
-msgstr ""
+msgstr "Süd"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkansas"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "District of Columbia"
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Louisiana"
 
 msgid "Maryland"
-msgstr ""
+msgstr "Maryland"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Mississippi"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Texas"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Virginia"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "West Virginia"
 
 msgid "West"
-msgstr ""
+msgstr "West"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Arizona"
 
 msgid "California"
-msgstr ""
+msgstr "Kalifornien"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Colorado"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Idaho"
 
 msgid "Montana"
-msgstr ""
+msgstr "Montana"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "New Mexico"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Oregon"
 
 msgid "Utah"
-msgstr ""
+msgstr "Utah"
 
 msgid "Washington State"
-msgstr ""
+msgstr "Washington State"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "Süd+Mittel-Amerika"
 
 msgid "Guyane Francaise"
 msgstr ""
 
 msgid "downloading"
-msgstr ""
+msgstr "wird heruntergeladen"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
@@ -2198,10 +2195,10 @@ msgid "Not enough free space"
 msgstr "Nicht genug freier Speicher"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Fehler beim speichern der Karte!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Kartendownload abgebrochen!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2217,7 +2214,7 @@ msgstr "Fahrzeugposition"
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
@@ -2254,7 +2251,7 @@ msgstr ""
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
@@ -2362,7 +2359,7 @@ msgstr "Sichern..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr ""
+msgstr "Wiederherstellung läuft …"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2519,6 +2516,6 @@ msgstr "Pferd"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr "LKW"
