@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-05-18 12:19+0000\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:42+0000\n"
 "Last-Translator: Cyberish <kajsten@gmail.com>\n"
 "Language-Team: Faroese <fo@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fo\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: fo\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -848,8 +849,8 @@ msgid "Latvia"
 msgstr "Lettland"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Libyan"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1423,19 +1424,19 @@ msgid "Zoom_Out"
 msgstr "ZoomOut"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Lækka zoom stig"
 
 msgid "Zoom_In"
 msgstr "ZoomIn"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "hækka zoom stig"
 
 msgid "_Recalculate"
 msgstr "Umrokna"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Endurtekna kort"
 
 msgid "_Info"
 msgstr "Info"
@@ -1444,7 +1445,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Opnar bústaðar leiting"
 
 msgid "_Stop Navigation"
 msgstr "Stegga Navigering"
@@ -1456,7 +1457,7 @@ msgid "_Quit"
 msgstr "_Gevst"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Lat forrit aftur"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1474,13 +1475,13 @@ msgid "_Roadbook"
 msgstr "Vegbók"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Sýn/fjal leiða frágreiðing"
 
 msgid "_Autozoom"
 msgstr "Sjálvvirkið zoom"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Gilda/ógilda sjálvvirkandi broyting av surristig"
 
 msgid "_Fullscreen"
 msgstr "Fullur skermur"
@@ -1574,19 +1575,19 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Klipp bókamerki"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Avrita bókamerki"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Nýnevn bókamerki"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Klistra bókamerki"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Strika bókamerki"
 
 msgid "Delete waypoint"
 msgstr ""
@@ -1608,11 +1609,11 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Legg bókamerkjamappu afturat"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Klistra bókamerki"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1638,10 +1639,10 @@ msgid "Show Satellite Status"
 msgstr "Vís Satilit Støðu"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Hædd "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Breidd "
 
 msgid "Show NMEA Data"
 msgstr "Vís NMEA Dáta"
@@ -1676,21 +1677,21 @@ msgid "Add Bookmark"
 msgstr "Legg bókamerki afturat"
 
 msgid "Rename"
-msgstr ""
+msgstr "Nýnevna"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Um Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Av"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Og alt Navit liðið"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "limir og stuðulsveitarir"
 
 msgid "Waypoints"
 msgstr ""
@@ -1698,10 +1699,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1809,9 +1810,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2404,7 +2402,7 @@ msgid "Route"
 msgstr "Ruta"
 
 msgid "About"
-msgstr ""
+msgstr "Um"
 
 msgid "Actions"
 msgstr "Gerðir"
@@ -2483,21 +2481,6 @@ msgstr "hestur"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "um %s verður koyrt inní rundkoyringina"
-
-#~ msgid "Cursor"
-#~ msgstr "Markør"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometur"
-
-#~ msgid " SNR "
-#~ msgstr " SNR "
-
-#~ msgid " PRN "
-#~ msgstr " PRN "

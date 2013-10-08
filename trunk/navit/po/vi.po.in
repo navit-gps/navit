@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2009-12-20 21:38+0000\n"
-"Last-Translator: Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:43+0000\n"
+"Last-Translator: Nguyễn Hào Khôi <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -104,7 +104,7 @@ msgstr ""
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d cây số"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -114,11 +114,13 @@ msgstr "trong %d.%d km"
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
+msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
@@ -844,8 +846,8 @@ msgid "Latvia"
 msgstr "Latvia"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Libyan Arab Jamahiriya"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -1419,19 +1421,19 @@ msgid "Zoom_Out"
 msgstr "Thu nhỏ"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Giảm độ phóng đại"
 
 msgid "Zoom_In"
 msgstr "Phóng to"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Tăng độ phóng đại"
 
 msgid "_Recalculate"
 msgstr "Tính lại"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Vẽ lại bản đồ"
 
 msgid "_Info"
 msgstr "Thông tin"
@@ -1440,7 +1442,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Mở hộp thoại tìm địa chỉ"
 
 msgid "_Stop Navigation"
 msgstr "Dừng dẫn đường"
@@ -1452,7 +1454,7 @@ msgid "_Quit"
 msgstr "_Thoát"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Thoát ứng dụng"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1464,19 +1466,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Hiển thị hướng của bản đồ theo hướng bắc hay hướng của phương tiện"
 
 msgid "_Roadbook"
 msgstr "Roadbook"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Hiển thị/ẩn mô tả về hành trình"
 
 msgid "_Autozoom"
 msgstr "Tự động thu phóng"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Bật/tắt tự động thay đổi độ phóng đại"
 
 msgid "_Fullscreen"
 msgstr "Toàn màn hình"
@@ -1570,19 +1572,19 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Cắt điểm đánh dấu (bookmark)"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Sao chép điểm đánh dấu (bookmark)"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Đổi tên điểm đánh dấu (bookmark)"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Dán điểm đánh dấu (bookmark) từ bộ nhớ"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Xóa điểm đánh dấu (bookmark)"
 
 msgid "Delete waypoint"
 msgstr ""
@@ -1604,11 +1606,11 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Thêm thư mục điểm đánh dấu (Bookmark)"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Dán điểm đánh dấu (bookmark) từ bộ nhớ"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1634,10 +1636,10 @@ msgid "Show Satellite Status"
 msgstr "Xem thông tin vệ tinh"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Cao độ "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Góc phương vị "
 
 msgid "Show NMEA Data"
 msgstr "Xem dữ liệu dạng NMEA"
@@ -1669,24 +1671,24 @@ msgid "Show NMEA data"
 msgstr "Xem dữ liệu dạng NMEA"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Thêm điểm đánh dấu (bookmark)"
 
 msgid "Rename"
-msgstr ""
+msgstr "Đổi tên"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Về Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Bởi"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Và toàn thể Đội Ngũ Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "thành viên và những người đóng góp"
 
 msgid "Waypoints"
 msgstr ""
@@ -1694,10 +1696,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1734,10 +1736,10 @@ msgid "Height Profile"
 msgstr "Thông tin chiều cao"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Mô tả hành trình"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Hiển thị hệ ngôn ngữ"
 
 msgid "Former Destinations"
 msgstr "Điểm đến trước"
@@ -1805,9 +1807,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2400,7 +2399,7 @@ msgid "Route"
 msgstr "Tuyến"
 
 msgid "About"
-msgstr ""
+msgstr "Về"
 
 msgid "Actions"
 msgstr "Thao tác"
@@ -2456,7 +2455,7 @@ msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
-msgstr ""
+msgstr "ngựa"
 
 #. chr:
 #. flags used for a truck: (first flag number is 0)
@@ -2479,15 +2478,6 @@ msgstr ""
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "Còn %s, đi vào đường vòng"
-
-#~ msgid "Cursor"
-#~ msgstr "Con trỏ"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d km"

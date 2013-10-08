@@ -7,29 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:37+0400\n"
-"PO-Revision-Date: 2010-03-21 04:05+0000\n"
-"Last-Translator: klajo <Unknown>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:42+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:20+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Starta iz izvorne mape\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr ""
+msgstr "postavka '%s' na '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr ""
+msgstr "nulti"
 
 msgid "first"
 msgstr "prvi"
@@ -51,7 +51,7 @@ msgstr "šesti"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr ""
+msgstr "nulti izlaz"
 
 msgid "first exit"
 msgstr "prvi izlaz"
@@ -116,14 +116,12 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #, c-format
 msgid "one kilometer"
@@ -143,7 +141,7 @@ msgid "exit"
 msgstr "izlaz"
 
 msgid "into the ramp"
-msgstr ""
+msgstr "na rampu"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -153,17 +151,17 @@ msgstr "%su ulicu %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%su %s%s%s|male form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%su %s%s%s|female form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%su %s%s%s|neutral form"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -195,7 +193,7 @@ msgid "unknown "
 msgstr "nepoznatno "
 
 msgid "When possible, please turn around"
-msgstr ""
+msgstr "Ako je moguće okrenite se"
 
 msgid "Enter the roundabout soon"
 msgstr ""
@@ -207,11 +205,11 @@ msgstr ""
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "onda napustite kružni tok na %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Napustite kružni tok na %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -223,7 +221,7 @@ msgstr "uskoro"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "Vozite cestom %1$s do %2$s"
 
 #, c-format
 msgid "after %i roads"
@@ -234,7 +232,7 @@ msgstr "sada"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "onda krenite na cestu %1$s do %2$s"
 
 msgid "error"
 msgstr "greška"
@@ -251,7 +249,7 @@ msgstr "onda krenite %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr ""
+msgstr "Stigli ste na cilj %s"
 
 msgid "then you have reached your destination."
 msgstr "nakon toga ste stigli do cilja"
@@ -276,13 +274,13 @@ msgid "Time"
 msgstr "Vrijeme"
 
 msgid "Destination Length"
-msgstr ""
+msgstr "Duljina odredišta"
 
 msgid "Destination Time"
 msgstr "Vrijeme dolaska"
 
 msgid "Roadbook"
-msgstr ""
+msgstr "Cestovni dnevnik"
 
 #, c-format
 msgid "Waypoint %d"
@@ -292,21 +290,21 @@ msgid "Visit before..."
 msgstr ""
 
 msgid "Set as position"
-msgstr ""
+msgstr "Namjestite poziciju"
 
 msgid "Set as destination"
-msgstr ""
+msgstr "Namjestite odredište"
 
 msgid "Add as bookmark"
-msgstr ""
+msgstr "Dodajte zabilješku"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Točka 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Koordinate ekrana : %d %d"
 
 #. 020
 msgid "Andorra"
@@ -370,7 +368,7 @@ msgstr "Aruba"
 
 #. 248
 msgid "Aland Islands"
-msgstr ""
+msgstr "Alandski otoci"
 
 #. 031
 msgid "Azerbaijan"
@@ -414,7 +412,7 @@ msgstr "Benin"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Sveti Bartolomej"
 
 #. 060
 msgid "Bermuda"
@@ -422,7 +420,7 @@ msgstr "Bermuda"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunej Darussalam"
 
 #. 068
 msgid "Bolivia"
@@ -442,11 +440,11 @@ msgstr "Bahamas"
 
 #. 064
 msgid "Bhutan"
-msgstr ""
+msgstr "Butan"
 
 #. 074
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Otok Bouvet"
 
 #. 072
 msgid "Botswana"
@@ -458,7 +456,7 @@ msgstr "Bjelorusija"
 
 #. 084
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #. 124
 msgid "Canada"
@@ -470,7 +468,7 @@ msgstr "Kokosovi (Keeling) otoci"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Demokratska republika Kongo"
 
 #. 140
 msgid "Central African Republic"
@@ -486,7 +484,7 @@ msgstr "Švicarska"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Obala Bjelokosti"
 
 #. 184
 msgid "Cook Islands"
@@ -542,7 +540,7 @@ msgstr "Njemačka"
 
 #. 262
 msgid "Djibouti"
-msgstr ""
+msgstr "Džibuti"
 
 #. 208
 msgid "Denmark"
@@ -578,7 +576,7 @@ msgstr "Zapadna Sahara"
 
 #. 232
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritreja"
 
 #. 724
 msgid "Spain"
@@ -598,11 +596,11 @@ msgstr "Fidži"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falklandski otoci (Malvini)"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Mikronezija"
 
 #. 234
 msgid "Faroe Islands"
@@ -630,7 +628,7 @@ msgstr "Gruzija"
 
 #. 254
 msgid "French Guiana"
-msgstr ""
+msgstr "Francuska Gvajana"
 
 #. 831
 msgid "Guernsey"
@@ -658,7 +656,7 @@ msgstr "Gvineja"
 
 #. 312
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Gvadalupa"
 
 #. 226
 msgid "Equatorial Guinea"
@@ -670,7 +668,7 @@ msgstr "Grčka"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Južna Georgija i Južno Sandwich Otočje"
 
 #. 320
 msgid "Guatemala"
@@ -686,7 +684,7 @@ msgstr "Gvineja-Bissau"
 
 #. 328
 msgid "Guyana"
-msgstr ""
+msgstr "Gvajana"
 
 #. 344
 msgid "Hong Kong"
@@ -726,7 +724,7 @@ msgstr "Izrael"
 
 #. 833
 msgid "Isle of Man"
-msgstr ""
+msgstr "Isle of Man"
 
 #. 356
 msgid "India"
@@ -742,7 +740,7 @@ msgstr "Irak"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Iran"
 
 #. 352
 msgid "Iceland"
@@ -782,23 +780,23 @@ msgstr "Kambodža"
 
 #. 296
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "Komori"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Sveti Kitts i Nevis"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "Sjeverna Koreja"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "Južna Koreja"
 
 #. 414
 msgid "Kuwait"
@@ -814,7 +812,7 @@ msgstr "Kazahstan"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laos"
 
 #. 422
 msgid "Lebanon"
@@ -842,7 +840,7 @@ msgstr "Lesoto"
 
 #. 440
 msgid "Lithuania"
-msgstr ""
+msgstr "Litva"
 
 #. 442
 msgid "Luxembourg"
@@ -853,8 +851,8 @@ msgid "Latvia"
 msgstr "Latvija"
 
 #. 434
-msgid "Libyan Arab Jamahiriya"
-msgstr "Libijska Arapska Jamahirija"
+msgid "Libya"
+msgstr ""
 
 #. 504
 msgid "Morocco"
@@ -874,7 +872,7 @@ msgstr "Crna Gora"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (francuski dio)"
 
 #. 450
 msgid "Madagascar"
@@ -894,7 +892,7 @@ msgstr "Mali"
 
 #. 104
 msgid "Myanmar"
-msgstr ""
+msgstr "Mjanmar"
 
 #. 496
 msgid "Mongolia"
@@ -902,23 +900,23 @@ msgstr "Mongolija"
 
 #. 446
 msgid "Macao"
-msgstr ""
+msgstr "Macao"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Sjeverno Marijansko Otočje"
 
 #. 474
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #. 478
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauritanija"
 
 #. 500
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #. 470
 msgid "Malta"
@@ -934,7 +932,7 @@ msgstr "Maledivi"
 
 #. 454
 msgid "Malawi"
-msgstr ""
+msgstr "Malavi"
 
 #. 484
 msgid "Mexico"
@@ -942,7 +940,7 @@ msgstr "Meksiko"
 
 #. 458
 msgid "Malaysia"
-msgstr ""
+msgstr "Malezija"
 
 #. 508
 msgid "Mozambique"
@@ -954,7 +952,7 @@ msgstr "Namibija"
 
 #. 540
 msgid "New Caledonia"
-msgstr ""
+msgstr "Nova Kaledonija"
 
 #. 562
 msgid "Niger"
@@ -962,7 +960,7 @@ msgstr "Niger"
 
 #. 574
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolk Otočje"
 
 #. 566
 msgid "Nigeria"
@@ -986,11 +984,11 @@ msgstr "Nepal"
 
 #. 520
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #. 570
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #. 554
 msgid "New Zealand"
@@ -1014,7 +1012,7 @@ msgstr "Francuska Polinezija"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Nova Gvineja"
 
 #. 608
 msgid "Philippines"
@@ -1030,11 +1028,11 @@ msgstr "Poljska"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Saint Pierre i Miquelon"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairn"
 
 #. 630
 msgid "Puerto Rico"
@@ -1062,7 +1060,7 @@ msgstr "Katar"
 
 #. 638
 msgid "Reunion"
-msgstr ""
+msgstr "Reunion"
 
 #. 642
 msgid "Romania"
@@ -1078,7 +1076,7 @@ msgstr "Ruska Federacija"
 
 #. 646
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #. 682
 msgid "Saudi Arabia"
@@ -1086,11 +1084,11 @@ msgstr "Saudijska Arabija"
 
 #. 090
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Solomonski otoci"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "Sejšeli"
 
 #. 736
 msgid "Sudan"
@@ -1114,7 +1112,7 @@ msgstr "Slovenija"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Svalbard i Jan Mayen"
 
 #. 703
 msgid "Slovakia"
@@ -1122,7 +1120,7 @@ msgstr "Slovačka"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #. 674
 msgid "San Marino"
@@ -1138,7 +1136,7 @@ msgstr "Somalija"
 
 #. 740
 msgid "Suriname"
-msgstr ""
+msgstr "Surinam"
 
 #. 728
 msgid "South Sudan"
@@ -1146,7 +1144,7 @@ msgstr ""
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sv. Toma i Princip"
 
 #. 222
 msgid "El Salvador"
@@ -1162,19 +1160,19 @@ msgstr "Sirijska Arapska Republika"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "Svazi"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks i Caicos Otočje"
 
 #. 148
 msgid "Chad"
-msgstr ""
+msgstr "Čad"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Francuski Južni Teritoriji"
 
 #. 768
 msgid "Togo"
@@ -1186,15 +1184,15 @@ msgstr "Tajland"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadžikistan"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Istočni TImor"
 
 #. 795
 msgid "Turkmenistan"
@@ -1214,7 +1212,7 @@ msgstr "Turska"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad i Tobago"
 
 #. 798
 msgid "Tuvalu"
@@ -1226,7 +1224,7 @@ msgstr "Kineska Pokrajina Tajvan"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tanzanija"
 
 #. 804
 msgid "Ukraine"
@@ -1238,7 +1236,7 @@ msgstr "Uganda"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Sjedinjene države jezera Minor Outlying"
 
 #. 840
 msgid "United States"
@@ -1258,7 +1256,7 @@ msgstr "Vatikan (država Vatikanskog grada)"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Sveti Vincent i Grenadini"
 
 #. 862
 msgid "Venezuela"
@@ -1266,11 +1264,11 @@ msgstr "Venecuela"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Djevičansko Otočje"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Djevičansko otočje, SAD"
 
 #. 704
 msgid "Viet Nam"
@@ -1282,7 +1280,7 @@ msgstr "Vanuatu"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis i Futuna"
 
 #. 882
 msgid "Samoa"
@@ -1294,7 +1292,7 @@ msgstr "Jemen"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "Majote"
 
 #. 710
 msgid "South Africa"
@@ -1302,14 +1300,14 @@ msgstr "Južna Afrika"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "Zambija"
 
 #. 716
 msgid "Zimbabwe"
 msgstr "Zimbabve"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "* Nepoznato, dodajte is_in oznake za te gradove"
 
 msgid ""
 "navit usage:\n"
@@ -1349,7 +1347,7 @@ msgstr ""
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr ""
+msgstr "Točka karte"
 
 msgid "Car"
 msgstr "Auto"
@@ -1388,7 +1386,7 @@ msgid "City"
 msgstr "Grad"
 
 msgid "District/Township"
-msgstr ""
+msgstr "okrug/gradsko područje"
 
 msgid "Map"
 msgstr "Karta"
@@ -1428,19 +1426,19 @@ msgid "Zoom_Out"
 msgstr ""
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Smanji nivo zooma"
 
 msgid "Zoom_In"
 msgstr ""
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Povećaj nivo zooma"
 
 msgid "_Recalculate"
 msgstr "Ponovno izračunaj"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Ponovo nacrtaj kartu"
 
 msgid "_Info"
 msgstr "Info"
@@ -1449,7 +1447,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Otvara dijalog za pretragu adresa"
 
 msgid "_Stop Navigation"
 msgstr "Stop navigaciju"
@@ -1461,7 +1459,7 @@ msgid "_Quit"
 msgstr "_Izlaz"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "Izlaz iz aplikacije"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1473,19 +1471,19 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Mijenja orjentaciju karte prema sjeveru ili vozilu"
 
 msgid "_Roadbook"
 msgstr ""
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "Pokaži/sakrij opis rute"
 
 msgid "_Autozoom"
 msgstr ""
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Omogući/onemogući automatski zoom"
 
 msgid "_Fullscreen"
 msgstr "Cijeli ekran"
@@ -1528,14 +1526,14 @@ msgid "3D"
 msgstr "3D"
 
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Ruta %4.0fkm    %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Ruta 0000km  0+00:00 ETA"
 
 msgid "Help"
 msgstr "Pomoć"
@@ -1548,7 +1546,7 @@ msgid "Select waypoint to insert the new one before"
 msgstr ""
 
 msgid "View in Browser"
-msgstr ""
+msgstr "Vidi u pregledniku"
 
 msgid "Item type"
 msgstr ""
@@ -1561,7 +1559,7 @@ msgid "House numbers"
 msgstr "kućni broja"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "Vidi detalje"
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
@@ -1579,19 +1577,19 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Izreži zabilješku"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Kopiraj zabilješku"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Preimenuj zabilješku"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Zalijepi zabilješku"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Obriši zabilješku"
 
 msgid "Delete waypoint"
 msgstr ""
@@ -1613,15 +1611,15 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Dodaj mapu zabilješki"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Zalijepi zabilješku"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "Zabilješka %s"
 
 #, c-format
 msgid "Download %s"
@@ -1643,13 +1641,13 @@ msgid "Show Satellite Status"
 msgstr "Pokaži status satelita"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Nadmorska visina "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimut "
 
 msgid "Show NMEA Data"
-msgstr ""
+msgstr "Pokaži NMEA podatke"
 
 msgid "car"
 msgstr "auto"
@@ -1669,19 +1667,19 @@ msgid "Change profile to: %s"
 msgstr "Mijenjaj profil na: %s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "Odredi kao aktivno"
 
 msgid "Show Satellite status"
 msgstr "Pokaži status satelita"
 
 msgid "Show NMEA data"
-msgstr ""
+msgstr "Pokaži NMEA podatke"
 
 msgid "Add Bookmark"
 msgstr "Dodaj oznaku"
 
 msgid "Rename"
-msgstr ""
+msgstr "Preimenuj"
 
 msgid "About Navit"
 msgstr "Sve od Navit"
@@ -1692,10 +1690,10 @@ msgstr "Od"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "I sav Navit tim"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "članovi i doprinositelji"
 
 msgid "Waypoints"
 msgstr ""
@@ -1703,10 +1701,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -1722,13 +1720,13 @@ msgid "Rules"
 msgstr "Pravila"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "Drži na cesti"
 
 msgid "Northing"
-msgstr ""
+msgstr "Sjevereno"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "Karta prati vozilo"
 
 msgid "Plan with Waypoints"
 msgstr ""
@@ -1740,13 +1738,13 @@ msgid "Layout"
 msgstr "Izgled"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "Visinski profil"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Opis rute"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Pokaži mjesto"
 
 msgid "Former Destinations"
 msgstr "Nekadašnji odredište"
@@ -1767,7 +1765,7 @@ msgid "Main Menu"
 msgstr "Glavni meni"
 
 msgid "House number"
-msgstr ""
+msgstr "Kućni broj"
 
 msgid "Next"
 msgstr ""
@@ -1814,9 +1812,6 @@ msgid "Africa"
 msgstr ""
 
 msgid "Canary Islands"
-msgstr ""
-
-msgid "Libya"
 msgstr ""
 
 msgid "Asia"
@@ -2405,7 +2400,7 @@ msgid "Settings"
 msgstr "Postavke"
 
 msgid "Tools"
-msgstr ""
+msgstr "Alati"
 
 msgid "Route"
 msgstr "Ruta"
@@ -2438,7 +2433,7 @@ msgid "Fullscreen"
 msgstr "Cijeli ekran"
 
 msgid "Window Mode"
-msgstr ""
+msgstr "Prozorski način"
 
 msgid "Description"
 msgstr "Opis"
@@ -2492,9 +2487,6 @@ msgstr "konj"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr ""
-
-#~ msgid "Cursor"
-#~ msgstr "Kursor"

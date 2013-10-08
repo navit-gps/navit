@@ -7,15 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-29 00:13+0400\n"
-"PO-Revision-Date: 2013-08-30 08:53+0100\n"
-"Last-Translator: lenochod <lenochod@tiscali.cz>\n"
+"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"PO-Revision-Date: 2013-09-28 01:40+0000\n"
+"Last-Translator: lenochod <Unknown>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1601,7 +1603,7 @@ msgid "Delete Bookmark"
 msgstr "Smazat záložku"
 
 msgid "Delete waypoint"
-msgstr "Smazat bod trasy "
+msgstr "Smazat bod trasy"
 
 msgid "Bookmarks"
 msgstr "Záložky"
@@ -1710,10 +1712,10 @@ msgstr "Body trasy"
 msgid "Enter Coordinates"
 msgstr "Zadejte souřadnice"
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
@@ -2082,7 +2084,7 @@ msgid "USA"
 msgstr "USA"
 
 msgid " (except Alaska and Hawaii)"
-msgstr "(mimo Aljašky a Havaje)"
+msgstr " (mimo Aljašky a Havaje)"
 
 msgid "Midwest"
 msgstr ""
@@ -2169,7 +2171,7 @@ msgid "Utah"
 msgstr "Utah"
 
 msgid "Washington State"
-msgstr "Stát Washington "
+msgstr "Stát Washington"
 
 msgid "South+Middle America"
 msgstr "Jižní+Střední Amerika"
@@ -2513,18 +2515,6 @@ msgstr "kůň"
 #. vehicle_length= 70    feet,  2134 cm
 #. vehicle_weight= 80000 lbs,  36287 kg
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
-#.
+#. 
 msgid "Truck"
 msgstr "kamión"
-
-#~ msgid "Libyan Arab Jamahiriya"
-#~ msgstr "Libyjská arabská džamáhíríje"
-
-#~ msgid "In %s, enter the roundabout"
-#~ msgstr "Za %s, najeďte na kruhový objezd"
-
-#~ msgid "Cursor"
-#~ msgstr "Kurzor"
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometrů"
