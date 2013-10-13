@@ -137,17 +137,16 @@ public class NavitGraphics
 			
 			menu.setHeaderTitle("Position...");
 			menu.add(1, 1, NONE, Navit._("Route to here")).setOnMenuItemClickListener(this);
-//			menu.add(1, 2, NONE, Navit._("Add to contacts")).setOnMenuItemClickListener(this);
+			menu.add(1, 2, NONE, Navit._("Cancel")).setOnMenuItemClickListener(this);
 		}
 
+		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			switch(item.getItemId()) {
 			case 1:
 				Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal()
 				   , (int)mPressedPosition.x, (int)mPressedPosition.y);
 				msg.sendToTarget();
-				break;
-			case 2:
 				break;
 			}
 			return false;
