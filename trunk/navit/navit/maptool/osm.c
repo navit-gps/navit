@@ -348,7 +348,7 @@ struct country_table {
 	{ 744,"Svalbard and Jan Mayen"},
 	{ 748,"Swaziland"},
 	{ 752,"Sweden,Sverige,Konungariket Sverige,SE"},
-	{ 756,"Switzerland,Schweiz"},
+	{ 756,"Switzerland,Schweiz","3s5c7M"},
 	{ 760,"Syrian Arab Republic"},
 	{ 762,"Tajikistan"},
 	{ 764,"Thailand"},
