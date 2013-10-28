@@ -1,13 +1,16 @@
-# Lithuanian translation for navit
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Lithuanian (lt)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# laimonas <laimonas.mockus@gmail.com> 2009
-#
+
+# Aidas Kasparas https://launchpad.net/~a-kasparas
+# Rytis Ūsalis https://launchpad.net/~rytis-usalis
+# laimonas https://launchpad.net/~laimonas-mockus
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:44+0000\n"
 "Last-Translator: laimonas <laimonas.mockus@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -16,8 +19,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2408,6 +2411,9 @@ msgstr "Parinkti kelią"
 msgid "About"
 msgstr "Apie"
 
+msgid "Quit"
+msgstr "Išeiti"
+
 msgid "Actions"
 msgstr "Veiksmai"
 
@@ -2416,8 +2422,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Išeiti"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2489,7 +2495,4 @@ msgstr "arklys"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
