@@ -1,13 +1,15 @@
-# English (Australia) translation for navit
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# English (Australia) (en_AU)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Athol Mullen, 2010
-#
+
+# Athol Mullen https://launchpad.net/~athol-mullen
+# KaZeR https://launchpad.net/~kazer
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:41+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: English (Australia) <en_AU@li.org>\n"
@@ -15,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2405,6 +2407,9 @@ msgstr "Route"
 msgid "About"
 msgstr "About"
 
+msgid "Quit"
+msgstr "Quit"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -2413,8 +2418,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Quit"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2487,6 +2492,3 @@ msgstr "horse"
 #. 
 msgid "Truck"
 msgstr ""
-
-msgid "Cancel"
-msgstr "Cancel"
