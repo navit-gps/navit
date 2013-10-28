@@ -1,14 +1,30 @@
-# French translations for navit
-# Copyright (C) 2007, 2008 The Navit Team
+# French (fr)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# 'KaZeR' <kazer altern.org>
-# 'Nekohayo' <nekohayo arobas gmail point com>
-#
+
+# Breizh_Punisher https://launchpad.net/~lemeura
+# Deuchnord https://launchpad.net/~jerome-logiciels-id
+# Elodie https://launchpad.net/~elodie
+# Fred https://launchpad.net/~jelk
+# Jérôme BLUM https://launchpad.net/~jblum
+# KaZeR https://launchpad.net/~kazer
+# Roadrunner IN https://launchpad.net/~online
+# Thibault Lemaitre https://launchpad.net/~thibault.lemaitre
+# alexb38 https://launchpad.net/~alexb38
+# alfred002 https://launchpad.net/~alfred002
+# boism https://launchpad.net/~boism
+# cyp https://launchpad.net/~cyprien-d
+# icaunais https://launchpad.net/~linux4cyril
+# kangooooooo https://launchpad.net/~kangooooooo-deactivatedaccount
+# mercier133 https://launchpad.net/~mercierdamien
+# metehyi https://launchpad.net/~metehyi
+# yannick56 https://launchpad.net/~yleny
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-10-01 22:24+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -16,8 +32,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:49+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2427,6 +2443,9 @@ msgstr "Itinéraire"
 msgid "About"
 msgstr "À propos"
 
+msgid "Quit"
+msgstr "Quitter"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -2437,8 +2456,8 @@ msgstr ""
 "Destinations\n"
 "précédentes"
 
-msgid "Quit"
-msgstr "Quitter"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2515,6 +2534,3 @@ msgstr "cheval"
 #. 
 msgid "Truck"
 msgstr "Camion"
-
-msgid "Cancel"
-msgstr ""
