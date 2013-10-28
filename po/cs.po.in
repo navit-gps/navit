@@ -1,13 +1,25 @@
-# translation of navit_cs.po to Čeština
-# Copyright (C) 2007, 2008 The Navit Team
+# Czech (cs)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Vaclav Cerny <vatoz@seznam.cz>, 2007.
-#
+
+# 72ka https://launchpad.net/~2hp
+# Aleš Janda https://launchpad.net/~kyblicek
+# MMlosh https://launchpad.net/~mmlosh
+# Mike Crash https://launchpad.net/~mike-mikecrash
+# T.lama https://launchpad.net/~klacl
+# Tomas Kukol https://launchpad.net/~tomas-kukol
+# Vaclav Cerny https://launchpad.net/~vatoz
+# Vladimír Burian https://launchpad.net/~vburian
+# Vojtěch Látal https://launchpad.net/~vojtik
+# lenochod https://launchpad.net/~lenochod
+# stritek https://launchpad.net/~stritek
+# talmik https://launchpad.net/~mikatom
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:40+0000\n"
 "Last-Translator: lenochod <Unknown>\n"
 "Language-Team: Čeština\n"
@@ -15,8 +27,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -2430,6 +2442,9 @@ msgstr "Trasa"
 msgid "About"
 msgstr "O programu"
 
+msgid "Quit"
+msgstr "Konec"
+
 msgid "Actions"
 msgstr "Akce"
 
@@ -2440,8 +2455,8 @@ msgstr ""
 "Minulé\n"
 "cíle"
 
-msgid "Quit"
-msgstr "Konec"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2518,6 +2533,3 @@ msgstr "kůň"
 #. 
 msgid "Truck"
 msgstr "kamión"
-
-msgid "Cancel"
-msgstr ""
