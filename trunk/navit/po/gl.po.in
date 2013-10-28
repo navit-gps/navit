@@ -1,13 +1,17 @@
-# Galician translation for navit
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Galician (gl)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Iván Pérez <ivan.perez@keera.es>, 2009.
-#
+
+# Iván Pérez https://launchpad.net/~ivan.perez-keera.es
+# Miguel Anxo Bouzada https://launchpad.net/~mbouzada
+# Xosé https://launchpad.net/~ubuntu-galizaweb
+# andreout https://launchpad.net/~andre-outeiro
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:42+0000\n"
 "Last-Translator: andreout <andre@outeiro.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
@@ -15,8 +19,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: gl\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -2404,6 +2408,9 @@ msgstr "Roteiro"
 msgid "About"
 msgstr ""
 
+msgid "Quit"
+msgstr "Saír"
+
 msgid "Actions"
 msgstr ""
 
@@ -2412,8 +2419,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Saír"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2485,7 +2492,4 @@ msgstr "cabalo"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
