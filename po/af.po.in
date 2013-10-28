@@ -1,13 +1,19 @@
-# Afrikaans translation for navit
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# Afrikaans (af)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# mdhull, 2008.
-#
+
+# Andre Hugo https://launchpad.net/~cortexhugo
+# KaZeR https://launchpad.net/~kazer
+# Kobus https://launchpad.net/~kobuswolf
+# Stephan Wessels https://launchpad.net/~slwessels
+# Wimpie Hall https://launchpad.net/~gotek
+# mdhull https://launchpad.net/~mark-emsafrica
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:39+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Afrikaans <af@li.org>\n"
@@ -15,8 +21,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:20+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2405,6 +2411,9 @@ msgstr "Roete"
 msgid "About"
 msgstr "Rakende"
 
+msgid "Quit"
+msgstr "Verlaat"
+
 msgid "Actions"
 msgstr "Aksies"
 
@@ -2413,8 +2422,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Verlaat"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2486,7 +2495,4 @@ msgstr "perd"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
