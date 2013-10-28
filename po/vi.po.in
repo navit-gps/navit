@@ -1,13 +1,17 @@
-# Vietnamese translation for navit
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Vietnamese (vi)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>, 2009.
-#
+
+# Hoàng Đỗ Can Trực https://launchpad.net/~truc294
+# Le Viet Thanh https://launchpad.net/~lethanhx2k
+# Nguyễn Hào Khôi https://launchpad.net/~nguyenhaokhoi
+# Tada Saki https://launchpad.net/~nhkhoi
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:43+0000\n"
 "Last-Translator: Nguyễn Hào Khôi <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
@@ -15,8 +19,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2401,6 +2405,9 @@ msgstr "Tuyến"
 msgid "About"
 msgstr "Về"
 
+msgid "Quit"
+msgstr "Thoát"
+
 msgid "Actions"
 msgstr "Thao tác"
 
@@ -2409,8 +2416,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Thoát"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2480,7 +2487,4 @@ msgstr "ngựa"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
