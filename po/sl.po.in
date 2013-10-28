@@ -1,13 +1,16 @@
-# Slovenian translation for navit
-# Copyright (c) 2008 The Navit Team
+# Slovenian (sl)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Štefan Baebler <EMAIL@ADDRESS>, 2008.
-#
+
+# Gregor Koporec https://launchpad.net/~gregork8
+# KaZeR https://launchpad.net/~kazer
+# Štefan Baebler https://launchpad.net/~stefanba
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:42+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -16,8 +19,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: sl\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -2409,6 +2412,9 @@ msgstr "Načrt poti"
 msgid "About"
 msgstr ""
 
+msgid "Quit"
+msgstr "Izhod"
+
 msgid "Actions"
 msgstr "Dejanja"
 
@@ -2417,8 +2423,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Izhod"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2488,7 +2494,4 @@ msgstr ""
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
