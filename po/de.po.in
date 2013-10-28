@@ -1,8 +1,37 @@
-# German translations for navit
-# Copyright (C) 2007,2008 The Navit Team
+# German (de)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Martin Schaller <martin-s@sourceforge.net>, 2007.
-#
+
+# Achim Behrens https://launchpad.net/~k1l
+# Bernhard Reiter https://launchpad.net/~ockham-razor
+# Christian Moll https://launchpad.net/~christian-chrmoll
+# Clemens Kiener https://launchpad.net/~clemens-kiener
+# Dennis Gohert https://launchpad.net/~info-degoist
+# Ettore Atalan https://launchpad.net/~atalanttore
+# Fred https://launchpad.net/~jelk
+# Fume https://launchpad.net/~fume
+# KaZeR https://launchpad.net/~kazer
+# Kamikaaze https://launchpad.net/~kamikaazewiesel
+# Keruskerfuerst https://launchpad.net/~arminmohring
+# Konsti K. https://launchpad.net/~konstantin-koehring
+# Lars Hennig https://launchpad.net/~elhennig
+# Lukas Bögelein https://launchpad.net/~lukas-boegelein
+# MUrks https://launchpad.net/~tabstop
+# Martin Schaller https://launchpad.net/~martin-s-sourceforge
+# Roadrunner IN https://launchpad.net/~online
+# Roschkor https://launchpad.net/~bound-one2000
+# S.E. https://launchpad.net/~stephan-evert
+# Stefan Sordon https://launchpad.net/~stefan-sordon
+# Thuttle https://launchpad.net/~archibald-thuttle
+# Tschaka https://launchpad.net/~stuff4tschaka
+# Usul https://launchpad.net/~usul1
+# everyone https://launchpad.net/~anonymus1338
+# lopho https://launchpad.net/~lopho
+# metehyi https://launchpad.net/~metehyi
+# singesang https://launchpad.net/~singesang
+# spaetz https://launchpad.net/~spaetz
+# vsandre https://launchpad.net/~riedel-andre
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
