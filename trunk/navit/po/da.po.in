@@ -1,13 +1,23 @@
-# Danish translation for Navit
-# Copyright (C) 2008 The Navit Team
-# This file is distributed under the same license as the navit  package.
-# Glenn Sommer <glemsom@gmail.com>, 2008.
-#
+# Danish (da)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
+# This file is distributed under the same license as the navit package.
+
+# Fennek https://launchpad.net/~ng-fennek
+# Glenn https://launchpad.net/~glenn-mh-dk
+# Glenn Sommer https://launchpad.net/~glemsom
+# Jørgen Elgaard Larsen https://launchpad.net/~jel-elgaard
+# Kennet https://launchpad.net/~kharpsoe
+# Lasse Luttermann https://launchpad.net/~lasse-luttermann
+# Mads Konradsen https://launchpad.net/~mads-hk
+# Ole Carlsen https://launchpad.net/~ole-carlsen-web
+# Tomas Groth https://launchpad.net/~tomasgroth
+# Uffe Kjems https://launchpad.net/~uffekjems
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:40+0000\n"
 "Last-Translator: Lasse Luttermann <luttermann@silenzio.dk>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
@@ -15,8 +25,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2405,6 +2415,9 @@ msgstr "Rute"
 msgid "About"
 msgstr "Om"
 
+msgid "Quit"
+msgstr "Luk"
+
 msgid "Actions"
 msgstr "Funktioner"
 
@@ -2413,8 +2426,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Luk"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2486,7 +2499,4 @@ msgstr "hest"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
