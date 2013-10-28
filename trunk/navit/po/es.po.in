@@ -1,13 +1,30 @@
-# Spanish translations for navit
-# Copyright (C) 2008 The Navit Team
+# Spanish (es)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Chris Eubank <cteubank@gmail.com> 2007
-# Emilio Gómez Fernández <Unknown> 2008
+
+# Benjamín Valero Espinosa https://launchpad.net/~benjavalero
+# David A Páez https://launchpad.net/~orlsend
+# DiegoJ https://launchpad.net/~diegojromerolopez
+# Emilio Gomez Fernandez https://launchpad.net/~egofer
+# Esteban Dauksis https://launchpad.net/~edauksis
+# Feder Sáiz https://launchpad.net/~federsaiz-deactivatedaccount
+# Inaki Saez https://launchpad.net/~inaki-saez
+# Jonay https://launchpad.net/~jonay-santana
+# KaZeR https://launchpad.net/~kazer
+# Luis Alejandro Rangel Sánchez https://launchpad.net/~xlarsx
+# Mariano Muñoz https://launchpad.net/~turulomio
+# Paco Molinero https://launchpad.net/~franciscomol
+# Ricardo Jurado https://launchpad.net/~ricky131313
+# agerio https://launchpad.net/~agerio
+# juliwoodbcn https://launchpad.net/~julianlozano
+# pataquets https://launchpad.net/~pataquets
+# singesang https://launchpad.net/~singesang
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:42+0000\n"
 "Last-Translator: Mariano Muñoz <Unknown>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
@@ -15,8 +32,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "Language: \n"
 
 msgid "Running from source directory\n"
@@ -2406,6 +2423,9 @@ msgstr "Ruta"
 msgid "About"
 msgstr "Acerca de"
 
+msgid "Quit"
+msgstr "Cerrar"
+
 msgid "Actions"
 msgstr "Acciones"
 
@@ -2416,8 +2436,8 @@ msgstr ""
 "Destinos\n"
 "anteriores"
 
-msgid "Quit"
-msgstr "Cerrar"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2494,6 +2514,3 @@ msgstr "caballo"
 #. 
 msgid "Truck"
 msgstr "Camión"
-
-msgid "Cancel"
-msgstr ""
