@@ -1,13 +1,22 @@
-# Romanian translation for navit
-# Copyright (c) 2008 The Navit Team
+# Romanian (ro)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# Nostriel <nostriel@gmail.com>, 2008.
-#
+
+# Ciprian https://launchpad.net/~c1pr1ancip
+# Eddy Petrisor https://launchpad.net/~eddy-petrisor-gmail
+# KaZeR https://launchpad.net/~kazer
+# Lucian Adrian Grijincu https://launchpad.net/~lucian.grijincu
+# Nostriel https://launchpad.net/~nostriel
+# Ursache Dogariu Daniel https://launchpad.net/~danniel
+# dodobird https://launchpad.net/~dorinnirod
+# fasiol https://launchpad.net/~fasiol2
+# igorashu https://launchpad.net/~ionut-soare
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
+"POT-Creation-Date: 2013-10-10 21:46+0200\n"
 "PO-Revision-Date: 2013-09-28 01:44+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -16,8 +25,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2408,6 +2417,9 @@ msgstr "Traseu"
 msgid "About"
 msgstr "Despre"
 
+msgid "Quit"
+msgstr "Ieși"
+
 msgid "Actions"
 msgstr "Acțiuni"
 
@@ -2416,8 +2428,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Ieși"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2489,7 +2501,4 @@ msgstr "cal"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
