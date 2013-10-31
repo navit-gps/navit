@@ -23,6 +23,7 @@
 # S.E. https://launchpad.net/~stephan-evert
 # Stefan Sordon https://launchpad.net/~stefan-sordon
 # Thuttle https://launchpad.net/~archibald-thuttle
+# Tobias B. https://launchpad.net/~toba
 # Tschaka https://launchpad.net/~stuff4tschaka
 # Usul https://launchpad.net/~usul1
 # everyone https://launchpad.net/~anonymus1338
@@ -36,20 +37,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-10-20 11:52+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"POT-Creation-Date: 2013-10-28 19:29+0100\n"
+"PO-Revision-Date: 2013-10-30 17:12+0000\n"
+"Last-Translator: Tobias B. <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:49+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-10-31 16:52+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr "Aufruf aus Quellverzeichnis\n"
+msgstr "Aus dem Quellverzeichnis starten\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -220,7 +221,7 @@ msgstr "unbekannt "
 
 #
 msgid "When possible, please turn around"
-msgstr "Wenn möglich bitte wenden"
+msgstr "Wenn möglich, bitte wenden"
 
 msgid "Enter the roundabout soon"
 msgstr "Demnächst in den Kreisverkehr einfahren"
@@ -287,7 +288,7 @@ msgid "Position"
 msgstr "Position"
 
 msgid "Command"
-msgstr "Befehl"
+msgstr "Anweisung"
 
 msgid "Length"
 msgstr "Länge"
@@ -318,7 +319,7 @@ msgid "Visit before..."
 msgstr "Als Wegpunkt setzen vor..."
 
 msgid "Set as position"
-msgstr "Als Position setzen"
+msgstr "Als Standort setzen"
 
 msgid "Set as destination"
 msgstr "Als Ziel setzen"
@@ -340,7 +341,7 @@ msgstr "Andorra"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr "Die Vereinigte arabische Emirate"
+msgstr "Vereinigte Arabische Emirate"
 
 #. 004
 msgid "Afghanistan"
@@ -513,7 +514,7 @@ msgstr "Schweiz"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr "Côte d'Ivoire"
+msgstr "Elfenbeinküste"
 
 #. 184
 msgid "Cook Islands"
@@ -545,7 +546,7 @@ msgstr "Kuba"
 
 #. 132
 msgid "Cape Verde"
-msgstr "Kap Verde"
+msgstr "Kapverdische Inseln"
 
 #. 531
 msgid "Curacao"
@@ -645,7 +646,7 @@ msgstr "Gabun"
 
 #. 826
 msgid "United Kingdom"
-msgstr "Grossbritannien"
+msgstr "Vereinigtes Königreich"
 
 #. 308
 msgid "Grenada"
@@ -1630,7 +1631,7 @@ msgid "Paste Bookmark"
 msgstr "Lesezeichen einfügen"
 
 msgid "Delete Bookmark"
-msgstr "Lesezeichen entfernen"
+msgstr "Lesezeichen löschen"
 
 msgid "Delete waypoint"
 msgstr "Wegpunkt löschen"
@@ -1720,7 +1721,7 @@ msgid "Add Bookmark"
 msgstr "Lesezeichen hinzufügen"
 
 msgid "Rename"
-msgstr "Umbennenen"
+msgstr "Umbenennen"
 
 msgid "About Navit"
 msgstr "Über Navit"
@@ -1845,6 +1846,9 @@ msgstr "Kartendaten (c) von OpenStreetMap unter ODbL"
 
 msgid "Downloaded maps"
 msgstr "Heruntergeladene Karten"
+
+msgid "Cancel"
+msgstr "Abbrechen"
 
 msgid "Whole Planet"
 msgstr "Ganze Welt"
@@ -2461,7 +2465,7 @@ msgid "About"
 msgstr "Über"
 
 msgid "Quit"
-msgstr "Ende"
+msgstr "Beenden"
 
 msgid "Actions"
 msgstr "Aktionen"
@@ -2484,10 +2488,10 @@ msgstr ""
 "beenden"
 
 msgid "Display"
-msgstr "Anzeige"
+msgstr "Darstellung"
 
 msgid "Fullscreen"
-msgstr "Vollbild"
+msgstr "Vollbildmodus"
 
 msgid "Window Mode"
 msgstr "Fenstermodus"
