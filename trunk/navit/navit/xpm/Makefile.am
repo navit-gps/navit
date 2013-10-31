@@ -275,8 +275,8 @@ endef
 
 # template to generate scaling rules for the default PNG size
 define scaling_rule_template_def
-%.png: $(srcdir)/%.$(2)
-	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$$@" "$(1)" "$(1)"
+$(basename $(1)).png: $(srcdir)/$(1)
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$$@" "$(2)" "$(2)"
 endef
 
 
@@ -294,7 +294,7 @@ pngs += $(addsuffix .png,$(basename $(flag_svgs)))
 pngs += $(foreach scale, $(wordlist 2,100,$(svg2png_scales_flag)), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 # create rules from templates
 $(foreach extension,svg svgz, $(foreach size, $(wordlist 2,100,$(svg2png_scales_flag)),$(eval $(call scaling_rule_template,$(size),$(extension)))))
-$(foreach extension,svg svgz, $(foreach size, $(firstword $(svg2png_scales_flag)),$(eval $(call scaling_rule_template_def,$(size),$(extension)))))
+$(foreach img,$(flag_svgs), $(foreach size, $(firstword $(svg2png_scales_flag)),$(eval $(call scaling_rule_template_def,$(img),$(size)))))
 endif
 
 # png symbols for navigation
