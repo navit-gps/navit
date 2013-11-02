@@ -625,14 +625,15 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	return 1;
 }
 
+static jclass NavitClass;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen;
+
 static int
 graphics_android_fullscreen(struct window *win, int on)
 {
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_fullscreen, on);
 	return 1;
 }
-
-static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit;
 
 static void
 graphics_android_disable_suspend(struct window *win)
@@ -881,6 +882,9 @@ event_android_new(struct event_methods *meth)
 	Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "exit", "()V");
 	if (Navit_exit == NULL) 
 		return NULL;
+	Navit_fullscreen = (*jnienv)->GetMethodID(jnienv, NavitClass, "fullscreen", "(I)V"); 
+	if (Navit_fullscreen == NULL) 
+		return NULL; 
 	dbg(0,"ok\n");
         *meth=event_android_methods;
         return NULL;
