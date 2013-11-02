@@ -613,6 +613,15 @@ public class Navit extends Activity
 	{
 		return dialogs.createDialog(id);
 	}
+	
+	@Override
+	public boolean onSearchRequested() {
+		/* Launch the internal Search Activity */
+        Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
+        this.startActivityForResult(search_intent, NavitAddressSearch_id);
+        
+		return true;
+	}
 
 	@Override
 	public void onDestroy()
