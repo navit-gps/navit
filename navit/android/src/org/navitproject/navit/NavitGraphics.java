@@ -439,6 +439,10 @@ public class NavitGraphics
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH)
 				{
+					/* Handle event in Main Activity if map is shown */
+					if(in_map)
+						return false;
+					
 					s = java.lang.String.valueOf((char) 19);
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_BACK)
@@ -560,6 +564,11 @@ public class NavitGraphics
 						handled = false;
 						return handled;
 					}
+				}
+				else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH) {
+					/* Handle event in Main Activity if map is shown */
+					if(in_map)
+						return false;
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_BACK)
 				{
