@@ -59,6 +59,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -622,6 +623,17 @@ public class Navit extends Activity
 		// properly restarted and no resources are wasted with navit in background. Remove this call after 
 		// code review
 		NavitDestroy();
+	}
+	
+	public void fullscreen(int fullscreen) {
+		if(fullscreen != 0) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		}
+		else {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 	}
 
 	public void disableSuspend()
