@@ -24,16 +24,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:42+0000\n"
-"Last-Translator: Mariano Muñoz <Unknown>\n"
+"POT-Creation-Date: 2013-11-01 19:46+0100\n"
+"PO-Revision-Date: 2013-11-04 09:29+0000\n"
+"Last-Translator: juliwoodbcn <Unknown>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-11-05 19:01+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 "Language: \n"
 
 msgid "Running from source directory\n"
@@ -534,7 +534,7 @@ msgstr "Cabo Verde"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Curaçao"
 
 #. 162
 msgid "Christmas Island"
@@ -866,7 +866,7 @@ msgstr "Letonia"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Libia"
 
 #. 504
 msgid "Morocco"
@@ -1154,7 +1154,7 @@ msgstr "Surinam"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Sudán del Sur"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1166,7 +1166,7 @@ msgstr "El Salvador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "San Martín (parte holandesa)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1332,6 +1332,13 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"Uso de navit:\n"
+"navit[opciones][archivo de configuración]\n"
+"\t-c <archivo>: usa <archivo> como archivo de configuración.\n"
+"\t-d <n>: configura en nivel de debug a <n> (0-3). Sobreescribe lo indicado "
+"en el archivo de configuracion.\n"
+"\t-h: muestra esta informacion de uso y sale.\n"
+"\t-v: Muestra la version y sale..\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1818,6 +1825,9 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Whole Planet"
