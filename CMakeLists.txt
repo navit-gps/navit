@@ -134,7 +134,11 @@ if(PKG_CONFIG_FOUND)
    pkg_check_modules(QUESOGLC quesoglc)
    pkg_check_modules(LIBLOCATION liblocation)
    pkg_check_modules(LIBOSSO libosso)
-   pkg_check_modules(LIBGPS libgps>=3.1) # libgpsd<V3.1 is buggy if LC_ALL is set.
+   # Accept even old versions of libgps, because N810 uses an old version (see #1179).
+   pkg_check_modules(LIBGPS libgps)
+   pkg_check_modules(LIBGPS19 libgps>=2.90)
+   # libgpsd<V3.1 is buggy if LC_ALL is set.
+   pkg_check_modules(LIBGPS_NEW libgps>=3.1)
    pkg_check_modules(LIBGARMIN libgarmin)
    pkg_check_modules(IMLIB2 imlib2)
    if(IMLIB2_FOUND)
@@ -316,7 +320,12 @@ if(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
 endif(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
 
 if (LIBGPS_FOUND)
-   set_with_reason(vehicle/gpsd "gpsd lib found" TRUE ${LIBGPS_LDFLAGS})
+   if (LIBGPS_NEW_FOUND)
+      set(VEHICLE_GPSD_REASON "gpsd lib found")
+   else(LIBGPS_NEW_FOUND)
+     set(VEHICLE_GPSD_REASON "WARNING: old gpsd lib found, buggy if LC_ALL is set")
+   endif(LIBGPS_NEW_FOUND)
+   set_with_reason(vehicle/gpsd ${VEHICLE_GPSD_REASON} TRUE ${LIBGPS_LDFLAGS})
 endif(LIBGPS_FOUND)
 
 if (GYPSY_FOUND)
