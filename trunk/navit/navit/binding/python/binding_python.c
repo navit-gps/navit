@@ -17,9 +17,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "common.h"
 #include "config.h"
 #include <glib.h>
-#include "common.h"
 #include <fcntl.h>
 #include "coord.h"
 #include "projection.h"
