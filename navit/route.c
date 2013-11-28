@@ -1768,11 +1768,11 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		if (dir > 0) {
 			c=dst->street->c;
 			ccnt=dst->pos+1;
-			len=dst->lenpos;
+			len=dst->lenneg;
 		} else {
 			c=dst->street->c+dst->pos+1;
 			ccnt=dst->street->count-dst->pos-1;
-			len=dst->lenneg;
+			len=dst->lenpos;
 		}
 	} else {
 		ccnt=get_item_seg_coords(&rgs->data.item, ca, 2047, &rgs->start->c, &rgs->end->c);
