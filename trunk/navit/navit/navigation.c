@@ -213,7 +213,7 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	ret->hash=item_hash_new();
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
-	ret->level_last=-2;
+	ret->level_last=4;
 	ret->distance_turn=50;
 	ret->turn_around_limit=3;
 	ret->navit=parent->u.navit;
