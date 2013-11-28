@@ -1653,7 +1653,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		break;
 	case 0:
 		skip_roads = count_possible_turns(nav,cmd->prev?cmd->prev->itm:nav->first,cmd->itm,cmd->delta);
-		if (skip_roads > 0) {
+		if (skip_roads > 0 && cmd->itm->next) {
 			if (get_count_str(skip_roads+1)) {
 				/* TRANSLATORS: First argument is the how manieth street to take, second the direction */ 
 				ret = g_strdup_printf(_("Take the %1$s road to the %2$s"), get_count_str(skip_roads+1), dir);
