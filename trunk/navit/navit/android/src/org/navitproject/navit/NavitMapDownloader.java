@@ -244,6 +244,7 @@ public class NavitMapDownloader extends Thread
 		new osm_map_values(Navit._("Lithuania"),"20.9","53.8","26.9","56.5", 77228922L, 1),
 		new osm_map_values(Navit._("Poland"),"13.6","48.8","24.5","55.0", 331299544L, 1),
 		new osm_map_values(Navit._("Romania"),"20.3","43.5","29.9","48.4", 150011857L, 1),
+		new osm_map_values(Navit._("Ukraine"),"22.0","44.3","40.4","52.4", 372000000L, 1),
 		new osm_map_values(Navit._("North America"),"-178.1","6.5","-10.4","84.0", 2738147321L, 0),
 		new osm_map_values(Navit._("Alaska"),"-179.5","49.5","-129","71.6", 72413728L, 1),
 		new osm_map_values(Navit._("Canada"),"-141.3","41.5","-52.2","70.2", 1125713287L, 1),
