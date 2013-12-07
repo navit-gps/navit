@@ -64,12 +64,10 @@ read_header(FILE *f)
 
 
 static OSMPBF__Blob *
-read_blob(OSMPBF__BlobHeader *header, FILE *f)
+read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned char *buffer)
 {
-	unsigned char *buffer;
 	int len=header->datasize;
 	SANITY_CHECK_LENGTH(len, MAX_BLOB_LENGTH)
-	buffer=alloca(len);
 	if (fread(buffer, len, 1, f) != 1)
 		return NULL;
 	return osmpbf__blob__unpack(&protobuf_c_system_allocator, len, buffer);
@@ -357,12 +355,14 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 	OSMPBF__BlobHeader *header;
 	OSMPBF__Blob *blob;
 	unsigned char *data;
+	unsigned char *buffer=malloc(MAX_BLOB_LENGTH);
+
 #if 0
 	printf("<?xml version='1.0' encoding='UTF-8'?>\n");
 	printf("<osm version=\"0.6\" generator=\"pbf2osm\">\n");
 #endif
 	while ((header=read_header(in))) {
-		blob=read_blob(header, in);
+		blob=read_blob(header, in, buffer);
 		data=uncompress_blob(blob);
 		if (!strcmp(header->type,"OSMHeader")) {
 			process_osmheader(blob, data);
@@ -370,12 +370,14 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 			process_osmdata(blob, data, osm);
 		} else {
 			printf("skipping fileblock of unknown type '%s'\n", header->type);
+			free(buffer);
 			return 0;
 		}
 		free(data);
 		osmpbf__blob__free_unpacked(blob, &protobuf_c_system_allocator);
 		osmpbf__blob_header__free_unpacked(header, &protobuf_c_system_allocator);
 	}
+	free(buffer);
 #if 0
 	printf("</osm>\n");
 #endif
