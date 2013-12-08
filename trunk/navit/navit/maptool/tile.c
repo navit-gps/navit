@@ -80,28 +80,48 @@ tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect 
 	int y0,y2,y4;
 	int xo,yo;
 	int i;
+	struct rect rr=*r;
+
 	x0=world_bbox.l.x;
 	y0=world_bbox.l.y;
 	x4=world_bbox.h.x;
 	y4=world_bbox.h.y;
+
+	if(rr.l.x<x0)
+		rr.l.x=x0;
+	if(rr.h.x<x0)
+		rr.h.x=x0;
+	if(rr.l.y<y0)
+		rr.l.y=y0;
+	if(rr.h.y<y0)
+		rr.h.y=y0;
+	if(rr.l.x>x4)
+		rr.l.x=x4;
+	if(rr.h.x>x4)
+		rr.h.x=x4;
+	if(rr.l.y>y4)
+		rr.l.y=y4;
+	if(rr.h.y>y4)
+		rr.h.y=y4;
+	
 	for (i = 0 ; i < max ; i++) {
 		x2=(x0+x4)/2;
 		y2=(y0+y4)/2;
 		xo=(x4-x0)*overlap/100;
 		yo=(y4-y0)*overlap/100;
-		if (     contains_bbox(x0,y0,x2+xo,y2+yo,r)) {
+		if (     contains_bbox(x0,y0,x2+xo,y2+yo,&rr)) {
 			strcat(ret,"d");
 			x4=x2+xo;
 			y4=y2+yo;
-		} else if (contains_bbox(x2-xo,y0,x4,y2+yo,r)) {
+		} else if (contains_bbox(x2-xo,y0,x4,y2+yo,&rr)) {
 			strcat(ret,"c");
 			x0=x2-xo;
 			y4=y2+yo;
-		} else if (contains_bbox(x0,y2-yo,x2+xo,y4,r)) {
+		} else if (contains_bbox(x0,y2-yo,x2+xo,y4,&rr)) {
 			strcat(ret,"b");
 			x4=x2+xo;
 			y0=y2-yo;
-		} else if (contains_bbox(x2-xo,y2-yo,x4,y4,r)) {
+		} else if (contains_bbox(x2-xo,y2-yo,x4,y4,&rr)) {
 			strcat(ret,"a");
 			x0=x2-xo;
 			y0=y2-yo;
