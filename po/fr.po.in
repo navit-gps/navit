@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
 
+# Arnaud https://launchpad.net/~arnaud-lemeur
 # Breizh_Punisher https://launchpad.net/~lemeura
 # Deuchnord https://launchpad.net/~jerome-logiciels-id
 # Elodie https://launchpad.net/~elodie
@@ -26,16 +27,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 20:48+0100\n"
-"PO-Revision-Date: 2013-11-05 22:52+0000\n"
-"Last-Translator: Deuchnord <Unknown>\n"
+"POT-Creation-Date: 2013-12-10 01:22+0000\n"
+"PO-Revision-Date: 2013-11-14 16:53+0000\n"
+"Last-Translator: Arnaud <arnaud.lemeur@gmail.com>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2013-11-10 02:25+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-12-10 01:41+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 "Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -2367,7 +2368,7 @@ msgstr "Destination fixée à:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr ""
+msgstr "Choisir une action"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
@@ -2383,11 +2384,11 @@ msgstr ""
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr ""
+msgstr "Impossible de créer le dossier de sauvegarde"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "Échec de la sauvegarde"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
@@ -2395,7 +2396,7 @@ msgstr ""
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "Échec de la restauration"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
@@ -2417,7 +2418,7 @@ msgstr ""
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "Sélectionner la sauvegarde"
 
 #. Android resource: @strings/backup
 msgid "Backup"
