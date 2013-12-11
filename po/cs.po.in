@@ -4,6 +4,7 @@
 
 # 72ka https://launchpad.net/~2hp
 # Aleš Janda https://launchpad.net/~kyblicek
+# Ivan Kološ https://launchpad.net/~ivan-kolos
 # MMlosh https://launchpad.net/~mmlosh
 # Mike Crash https://launchpad.net/~mike-mikecrash
 # T.lama https://launchpad.net/~klacl
@@ -19,16 +20,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:40+0000\n"
-"Last-Translator: lenochod <Unknown>\n"
+"POT-Creation-Date: 2013-12-10 01:22+0000\n"
+"PO-Revision-Date: 2013-12-09 13:46+0000\n"
+"Last-Translator: MMlosh <Unknown>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-12-10 01:41+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 "Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -63,25 +64,25 @@ msgstr "šestý"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr "nultý exit"
+msgstr "nultý výjezd"
 
 msgid "first exit"
-msgstr "první exit"
+msgstr "první výjezd"
 
 msgid "second exit"
-msgstr "druhý exit"
+msgstr "druhý výjezd"
 
 msgid "third exit"
-msgstr "třetí exit"
+msgstr "třetí výjezd"
 
 msgid "fourth exit"
-msgstr "čtvrtý exit"
+msgstr "čtvrtý výjezd"
 
 msgid "fifth exit"
-msgstr "pátý exit"
+msgstr "pátý výjezd"
 
 msgid "sixth exit"
-msgstr "šestý exit"
+msgstr "šestý výjezd"
 
 #, c-format
 msgid "%d m"
@@ -152,7 +153,7 @@ msgstr[1] "za %d  kilometry"
 msgstr[2] "za %d kilometrů"
 
 msgid "exit"
-msgstr "konec"
+msgstr "ukončit"
 
 msgid "into the ramp"
 msgstr "na přivadeč"
@@ -160,22 +161,22 @@ msgstr "na přivadeč"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%s do ulice %s%s%s"
+msgstr "%sdo ulice %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%s o%s%s%s"
+msgstr "%s do %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%s do %s%s%s"
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%s do %s%s%s"
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -219,15 +220,15 @@ msgstr "Najeďte na kruhový objezd %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr "pak opusťte kruhový objezd na výjezdu %s"
+msgstr "pak sjeďte na %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr "Opusťte kruhový objezd na výjezdu %s"
+msgstr "Sjeďte na %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Pokračujte po další %s"
+msgstr "Pokračujte po cestě dalších %s"
 
 msgid "soon"
 msgstr "brzy"
@@ -1594,7 +1595,7 @@ msgid "View on map"
 msgstr "Zobrazit na mapě"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Odstranit výsledky hledání z mapy"
 
 msgid "Show results on the map"
 msgstr "Zobrazit výsledky na mapě"
@@ -1627,10 +1628,10 @@ msgid "Save waypoints"
 msgstr "Uložit body trasy"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "Nahradit body na trase"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Smazat složku"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1646,16 +1647,16 @@ msgstr "Záložka %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Stáhnout %s"
 
 msgid "Map Download"
 msgstr "Mapa ke stažení"
 
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Stahování povoleno"
 
 msgid "Download completely"
 msgstr "Stáhnuto kompletní"
@@ -1761,7 +1762,7 @@ msgid "Layout"
 msgstr "Rozvržení"
 
 msgid "Height Profile"
-msgstr "Výška profilu"
+msgstr "Výškový profil"
 
 msgid "Route Description"
 msgstr "Popis trasy"
@@ -1828,6 +1829,9 @@ msgstr "Mapová data (c) přispěvatelé OpenStreetMap, ODBL"
 msgid "Downloaded maps"
 msgstr "Stažené mapy"
 
+msgid "Cancel"
+msgstr "Storno"
+
 msgid "Whole Planet"
 msgstr "Celá planeta"
 
@@ -1892,7 +1896,7 @@ msgid "Bretagne"
 msgstr "Bretaň"
 
 msgid "Centre"
-msgstr ""
+msgstr "Střed"
 
 msgid "Champagne-Ardenne"
 msgstr "Champagne-Ardennes"
@@ -2030,7 +2034,7 @@ msgid "Cumbria"
 msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "Východní Yorkshire a Hull"
 
 msgid "Essex"
 msgstr "Essex"
@@ -2099,7 +2103,7 @@ msgid " (except Alaska and Hawaii)"
 msgstr " (mimo Aljašky a Havaje)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "Středozápad"
 
 msgid "Michigan"
 msgstr "Michigan"
@@ -2108,7 +2112,7 @@ msgid "Ohio"
 msgstr "Ohio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Severovýchod"
 
 msgid "Massachusetts"
 msgstr "Massachusetts"
@@ -2120,7 +2124,7 @@ msgid "Pacific"
 msgstr "Tichý oceán"
 
 msgid "South"
-msgstr ""
+msgstr "Jih"
 
 msgid "Arkansas"
 msgstr "Arkansas"
@@ -2153,7 +2157,7 @@ msgid "West Virginia"
 msgstr "Západní Virginie"
 
 msgid "West"
-msgstr ""
+msgstr "Západ"
 
 msgid "Arizona"
 msgstr "Arizona"
@@ -2266,7 +2270,7 @@ msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr ""
+msgstr "Další informace"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
@@ -2282,7 +2286,7 @@ msgstr "Stáhnout mapy"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr ""
+msgstr "Přepnout Body zájmu (POIs = Points of Interest)"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
@@ -2456,7 +2460,7 @@ msgstr ""
 "cíle"
 
 msgid "Coordinates"
-msgstr ""
+msgstr "Souřadnice"
 
 msgid ""
 "Stop\n"
