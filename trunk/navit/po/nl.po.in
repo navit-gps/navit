@@ -22,16 +22,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:44+0000\n"
-"Last-Translator: Christ van Willegen <cvwillegen+launchpad@gmail.com>\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-12-11 23:38+0000\n"
+"Last-Translator: Ed Kapitein <Unknown>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:20+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "soon"
@@ -98,11 +98,11 @@ msgstr "na %d meter"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d voet"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "na %d voet"
 
 #, c-format
 msgid "%d meters"
@@ -114,11 +114,11 @@ msgstr "na %d meter"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d. mijl"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "na %d.%d mijl"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -131,14 +131,14 @@ msgstr "na %d,%d kilometer"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d mijl"
+msgstr[1] "%d mijl"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "na %d mijl"
+msgstr[1] "na %d mijl"
 
 #, c-format
 msgid "one kilometer"
@@ -216,7 +216,7 @@ msgstr "U rijdt zodadelijk de rotonde op"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "neem de rotonde over %s meter"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -297,10 +297,10 @@ msgstr "route beschrijving"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "route punt %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "bezoek voor"
 
 msgid "Set as position"
 msgstr "Zet als positie"
@@ -441,7 +441,7 @@ msgstr "Bolivia"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius en Saba"
 
 #. 076
 msgid "Brazil"
@@ -533,7 +533,7 @@ msgstr "Kaap Verdië"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Curacao"
 
 #. 162
 msgid "Christmas Island"
@@ -865,7 +865,7 @@ msgstr "Letland"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Libië"
 
 #. 504
 msgid "Morocco"
@@ -1154,7 +1154,7 @@ msgstr "Suriname"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Zuid-Soedan"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1166,7 +1166,7 @@ msgstr "El Salvador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Sint Maarten (Nederlands deel)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1332,6 +1332,13 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit gebruik:\n"
+"navit [opties] [configuratiebestand]\n"
+"\t -c <bestand>: gebruik <bestand> als configuratie bestand.\n"
+"\t -d <n>: zet het foutmeldingen niveau op <n> (0-3). Dit gaat boven de "
+"instellingen van het configuratie bestand.\n"
+"\t -h toon deze gebruiks informatie en sluit af.\n"
+"\t -v toon de versie en sluit af.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1339,25 +1346,27 @@ msgstr ""
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Foutieve waarde in het configuratie bestand '%s': %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Gebruikte configuratie bestand: '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Interne initialisatie is mislukt, programma wordt afgesloten. Controleer de "
+"vorafgaande foutmeldingen.\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "onbekende weg"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "naamloos voertuig"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "opslaan van het bladwijzer bestand is mislukt."
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
@@ -1461,7 +1470,7 @@ msgid "_Info"
 msgstr "Info"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "stel bestemming in"
 
 msgid "Opens address search dialog"
 msgstr "Opent het venster om adressen te zoeken"
@@ -1479,13 +1488,13 @@ msgid "Quit the application"
 msgstr "Het programma afsluiten"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "laat positie zien"
 
 msgid "_Lock on Road"
 msgstr "Huidige locatie altijd op de weg"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "houd het kaart noorden boven"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr "Schakelt kaartoriëntatie naar het noorden of het voertuig"
@@ -1557,16 +1566,16 @@ msgstr "Hulp"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "route punt %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "selecteer een routepunt om in te voegen voor de nieuwe"
 
 msgid "View in Browser"
 msgstr "Bekijk in browser"
 
 msgid "Item type"
-msgstr ""
+msgstr "Item type"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
@@ -1579,7 +1588,7 @@ msgid "View Attributes"
 msgstr "Bekijk eigenschappen"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "zet positie en deactiveer voertuig"
 
 msgid "POIs"
 msgstr "bezienswaardigheden"
@@ -1588,10 +1597,10 @@ msgid "View on map"
 msgstr "Bekijk op de kaart"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Verwijder zoek resultaten van de kaart"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "laat de resultaten op de kaart zien"
 
 msgid "Cut Bookmark"
 msgstr "Bladwijzer knippen"
@@ -1609,7 +1618,7 @@ msgid "Delete Bookmark"
 msgstr "Verwijder Bladwijzer"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "verwijder route punt"
 
 msgid "Bookmarks"
 msgstr "Favorieten"
@@ -1618,13 +1627,13 @@ msgid "Bookmarks as waypoints"
 msgstr ""
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "sla bladwijzers op"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "vervang door route punten"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Map verwijderen"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1640,19 +1649,19 @@ msgstr "Favoriet %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Download %s"
 
 msgid "Map Download"
 msgstr ""
 
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Download ingeschakeld"
 
 msgid "Download completely"
-msgstr ""
+msgstr "in zijn geheel ophalen"
 
 msgid "Show Satellite Status"
 msgstr "Toon satellietstatus"
@@ -1713,10 +1722,10 @@ msgid "members and contributors."
 msgstr "leden en bijdragers"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "route punten"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "voer coordinaten in"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1725,10 +1734,10 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
-msgstr ""
+msgstr "Noorderbreedte Oosterlengte"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "voer coordinaat in, bijvorbeeld:"
 
 msgid "Vehicle"
 msgstr "Voertuig"
@@ -1746,7 +1755,7 @@ msgid "Map follows Vehicle"
 msgstr "Kaart volgt voertuig"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Plan met route punten"
 
 msgid "Maps"
 msgstr "Kaarten"
@@ -1785,7 +1794,7 @@ msgid "House number"
 msgstr "Huisnummer"
 
 msgid "Next"
-msgstr ""
+msgstr "Volgende"
 
 msgid "Prev"
 msgstr ""
@@ -1795,14 +1804,14 @@ msgstr ""
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Pas op! Camera!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "Verminder snelheid"
 
 msgid "partial match"
-msgstr ""
+msgstr "gedeeltelijke overeenkomst"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
@@ -1814,25 +1823,28 @@ msgstr "Steden"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "route hiernaartoe"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "kaart gegevens (c) OpenStreetMap contributeurs, ODBL"
 
 msgid "Downloaded maps"
 msgstr "Gedownloade kaarten"
 
+msgid "Cancel"
+msgstr "Annuleer"
+
 msgid "Whole Planet"
-msgstr ""
+msgstr "de hele aarde"
 
 msgid "Africa"
-msgstr ""
+msgstr "Afrika"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Canarische Eilanden"
 
 msgid "Asia"
-msgstr ""
+msgstr "Azië"
 
 msgid "Korea"
 msgstr ""
