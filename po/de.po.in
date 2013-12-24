@@ -23,7 +23,7 @@
 # S.E. https://launchpad.net/~stephan-evert
 # Stefan Sordon https://launchpad.net/~stefan-sordon
 # Thuttle https://launchpad.net/~archibald-thuttle
-# Tobias B. https://launchpad.net/~toba
+# Tobias Bannert https://launchpad.net/~toba
 # Tschaka https://launchpad.net/~stuff4tschaka
 # Usul https://launchpad.net/~usul1
 # everyone https://launchpad.net/~anonymus1338
@@ -37,16 +37,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 20:48+0100\n"
-"PO-Revision-Date: 2013-11-10 01:28+0000\n"
-"Last-Translator: metehyi <Unknown>\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-12-12 16:07+0000\n"
+"Last-Translator: Martin Schaller <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-11-10 02:26+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -156,7 +156,7 @@ msgstr[1] "in %d Meilen"
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "einen Kilometer"
-msgstr[1] "%d Kilometern"
+msgstr[1] "%d Kilometer"
 
 #, c-format
 msgid "in one kilometer"
