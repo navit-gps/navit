@@ -19,16 +19,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-10-20 01:50+0000\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-12-01 01:04+0000\n"
 "Last-Translator: Sérgio Marques <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:49+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "Language: pt\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -89,7 +89,7 @@ msgstr "%d m"
 
 #, c-format
 msgid "in %d m"
-msgstr "em %d m"
+msgstr "a %d m"
 
 #, c-format
 msgid "%d feet"
@@ -97,7 +97,7 @@ msgstr "%d pés"
 
 #, c-format
 msgid "in %d feet"
-msgstr "em %d pés"
+msgstr "a %d pés"
 
 #, c-format
 msgid "%d meters"
@@ -105,7 +105,7 @@ msgstr "%d metros"
 
 #, c-format
 msgid "in %d meters"
-msgstr "em %d metros"
+msgstr "a %d metros"
 
 #, c-format
 msgid "%d.%d miles"
@@ -113,7 +113,7 @@ msgstr "%d.%d milhas"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "em %d.%d milhas"
+msgstr "a %d.%d milhas"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -121,7 +121,7 @@ msgstr "%d.%d quilómetro"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "em %d.%d quilómetros"
+msgstr "a %d.%d quilómetros"
 
 #, c-format
 msgid "one mile"
@@ -132,8 +132,8 @@ msgstr[1] "%d milhas"
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "em uma milha"
-msgstr[1] "em %d milhas"
+msgstr[0] "a uma milha"
+msgstr[1] "a %d milhas"
 
 #, c-format
 msgid "one kilometer"
@@ -144,8 +144,8 @@ msgstr[1] "%d quilómetros"
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "em um quilómetro"
-msgstr[1] "em %d quilómetros"
+msgstr[0] "a um quilómetro"
+msgstr[1] "a %d quilómetros"
 
 msgid "exit"
 msgstr "sair"
@@ -156,27 +156,27 @@ msgstr "na subida"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%spara a rua %s%s%s"
+msgstr "%s para a rua %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sno %s%s%s"
+msgstr "%s no %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sna %s%s%s"
+msgstr "%s na %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sna %s%s%s"
+msgstr "%s na %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%sna %s"
+msgstr "%s na %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -259,7 +259,7 @@ msgstr "depois vire %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Você chegou ao seu destino %s"
+msgstr "Chega ao seu destino em %s"
 
 msgid "then you have reached your destination."
 msgstr "depois chegou ao seu destino."
@@ -862,7 +862,7 @@ msgstr "Letónia"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Líbia"
 
 #. 504
 msgid "Morocco"
@@ -1150,7 +1150,7 @@ msgstr "Suriname"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Sudão do Sul"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1822,6 +1822,9 @@ msgstr "Dados do mapa (c) Colaboradores OpenStreetMap, ODBL"
 msgid "Downloaded maps"
 msgstr "Mapas transferidos"
 
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgid "Whole Planet"
 msgstr "Planeta"
 
@@ -1832,13 +1835,13 @@ msgid "Canary Islands"
 msgstr "Ilhas Canárias"
 
 msgid "Asia"
-msgstr ""
+msgstr "Ásia"
 
 msgid "Korea"
 msgstr "Coreia"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 msgid "UAE+Other"
 msgstr "EAU e outros"
@@ -1853,7 +1856,7 @@ msgid "Victoria"
 msgstr "Vitória"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "Nova Gales do Sul"
 
 msgid "Europe"
 msgstr "Europa"
@@ -1946,19 +1949,19 @@ msgid "Niederbayern"
 msgstr "Niederbayern"
 
 msgid "Oberbayern"
-msgstr ""
+msgstr "Oberbayern"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "Oberfranken"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "Oberpfalz"
 
 msgid "Schwaben"
-msgstr ""
+msgstr "Schwaben"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "Unterfranken"
 
 msgid "Berlin"
 msgstr "Berlim"
@@ -1994,13 +1997,13 @@ msgid "Sachsen-Anhalt"
 msgstr "Sachsen-Anhalt"
 
 msgid "Sachsen"
-msgstr ""
+msgstr "Sachsen"
 
 msgid "Schleswig-Holstein"
 msgstr "Schleswig-Holstein"
 
 msgid "Thueringen"
-msgstr ""
+msgstr "Thueringen"
 
 msgid "Mallorca"
 msgstr "Maiorca"
@@ -2168,7 +2171,7 @@ msgid "New Mexico"
 msgstr "Novo México"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
 msgstr "Oregon"
@@ -2180,7 +2183,7 @@ msgid "Washington State"
 msgstr "Washington"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "América Central e América do Sul"
 
 msgid "Guyane Francaise"
 msgstr "Guiana Francesa"
@@ -2487,16 +2490,16 @@ msgstr ""
 "próximo ponto"
 
 msgid "Satellite Status"
-msgstr ""
+msgstr "Estado do satélite"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "Dados NMEA"
 
 msgid "car_shortest"
-msgstr ""
+msgstr "carro_mais_curto"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "carro_evitar_portagens"
 
 msgid "car_pedantic"
 msgstr ""
@@ -2527,4 +2530,4 @@ msgstr "cavalo"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
+msgstr "Camião"
