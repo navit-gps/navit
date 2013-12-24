@@ -4,6 +4,7 @@
 
 # György Balló https://launchpad.net/~ballogy
 # KaZeR https://launchpad.net/~kazer
+# Nagy Attila https://launchpad.net/~tylla-at-launchpad-net
 # WintermuteHun https://launchpad.net/~wintermute-valodi
 # dandor https://launchpad.net/~dandorfs
 # kalmarzs https://launchpad.net/~kalmarzs
@@ -12,16 +13,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:43+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-11-18 10:31+0000\n"
+"Last-Translator: Nagy Attila <tylla_at_launchpad.net@tylla.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -85,11 +86,11 @@ msgstr "%d m után"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d láb"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "%d láb múlva"
 
 #, c-format
 msgid "%d meters"
@@ -101,11 +102,11 @@ msgstr "%d méter után"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d mérföld"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "%d.%d mérföld múlva"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -118,14 +119,14 @@ msgstr "%d,%d kilométer után"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "egy mérföld"
+msgstr[1] "%d mérföld"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "egy mérföld múlva"
+msgstr[1] "%d mérföld múlva"
 
 #, c-format
 msgid "one kilometer"
@@ -203,7 +204,7 @@ msgstr "Hajtson be a körforgalomba hamarosan."
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Hajtson be a körforgalomba %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -286,10 +287,10 @@ msgstr "Útikalauz"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "Útvonalpont %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Meglátogatás ez előtt..."
 
 msgid "Set as position"
 msgstr "Beállítás pozícióként"
@@ -854,7 +855,7 @@ msgstr "Lettország"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Líbia"
 
 #. 504
 msgid "Morocco"
@@ -1142,7 +1143,7 @@ msgstr "Suriname"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Dél-Szudán"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1320,32 +1321,41 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit használata:\n"
+"navit [opciók] [konfigurációs állomány]\n"
+"\t-c <file>: használja a <file>-t mint konfigurációs állomány\n"
+"\t-d <n>: a globális hibakeresési kimeneti szintet <n>-re állítja (0-3). "
+"Felülbírálja a konfigurációs állomány beállításait.\n"
+"\t-h: kinyomtatja ezt a használati útmutatót és kilép.\n"
+"\t-v: kinyomtatja a verzióinformációt és kilép.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Nem található konfigurációs állomány (navit.xml, navit.xml.local)\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "A konfigurációs állomány '%s' elemzése közben hiba történt: %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "A következő konfigurációs állomány használata: %s\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Belső inicializálás sikertelen, kilépés. Ellenőrizze az előző "
+"hibaüzeneteket.\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "ismeretlen utca"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "Névtelen jármű"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "Hiba történt a könyvjelző állomány írása közben"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
@@ -1542,16 +1552,16 @@ msgstr "Súgó"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "Útvonalpont %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "Válassza ki az útvonalpontot amely elé beszúrja az újat"
 
 msgid "View in Browser"
 msgstr "Megtekintés böngészőben"
 
 msgid "Item type"
-msgstr ""
+msgstr "Elem típusa"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
@@ -1564,7 +1574,7 @@ msgid "View Attributes"
 msgstr "Attribútumok megjelenítése"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "Beállítás pozícióként (és jármű kikapcsolása)"
 
 msgid "POIs"
 msgstr "POI-k"
@@ -1573,10 +1583,10 @@ msgid "View on map"
 msgstr "Megtekintés térképen"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Keresési találatok eltávolítása a térképről"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "Keresési találatok mutatása a térképen"
 
 msgid "Cut Bookmark"
 msgstr "Könyvjelző kivágása"
@@ -1594,22 +1604,22 @@ msgid "Delete Bookmark"
 msgstr "Könyvjelző törlése"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "Útvonalpont törlése"
 
 msgid "Bookmarks"
 msgstr "Könyvjelzők"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Könyvjelzők mint útvonalpontok"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "Útvonalpontok mentése"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "Helyettesítés útvonalpontokkal"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Mappa törlése"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1625,19 +1635,19 @@ msgstr "%s hozzáadása a könyvjelzőkhöz"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Letöltés %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Térkép letöltés"
 
 msgid "Active"
-msgstr ""
+msgstr "Aktív"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Letöltés engedélyezve"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Teljes letöltés"
 
 msgid "Show Satellite Status"
 msgstr "Műhold státusz"
@@ -1698,10 +1708,10 @@ msgid "members and contributors."
 msgstr "tagok és hozzájárulók"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "Útvonalpontok"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "Koordináták megadása"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1710,10 +1720,10 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Longitude Latitude"
-msgstr ""
+msgstr "Hosszúság Szélesség"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "Koordináták megadása, pl:"
 
 msgid "Vehicle"
 msgstr "Jármű"
@@ -1731,7 +1741,7 @@ msgid "Map follows Vehicle"
 msgstr "A térkép követi a járművet"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Tervezés útvonalpontokkal"
 
 msgid "Maps"
 msgstr "Térképek"
@@ -1752,7 +1762,7 @@ msgid "Former Destinations"
 msgstr "Korábbi úticélok"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "- Nincsenek előző célpontok -"
 
 msgid "Message"
 msgstr "Üzenet"
@@ -1770,13 +1780,13 @@ msgid "House number"
 msgstr "Házszám"
 
 msgid "Next"
-msgstr ""
+msgstr "Következő"
 
 msgid "Prev"
-msgstr ""
+msgstr "Előző"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Vissza az útvonalra!"
 
 #. warning told
 msgid "Look out! Camera!"
@@ -1787,70 +1797,73 @@ msgid "Please decrease your speed"
 msgstr "Lassíts!"
 
 msgid "partial match"
-msgstr ""
+msgstr "részleges egyezés"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "Keres"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
+msgstr "Városok"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "Útvonal ide"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Térkép adatok (c) OpenStreeMap közreműködők, ODBL"
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "Letöltött térképek"
+
+msgid "Cancel"
+msgstr "Mégse"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "Teljes bolygó"
 
 msgid "Africa"
-msgstr ""
+msgstr "Afrika"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Kanári-szigetek"
 
 msgid "Asia"
-msgstr ""
+msgstr "Ázsia"
 
 msgid "Korea"
-msgstr ""
+msgstr "Korea"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Tajvan"
 
 msgid "UAE+Other"
 msgstr ""
 
 msgid "Oceania"
-msgstr ""
+msgstr "Óceánia"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmánia"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Viktória"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "Új-Dél-Wales"
 
 msgid "Europe"
-msgstr ""
+msgstr "Európa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "Nyugat-Európa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azori-szigetek"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "BeneLux"
 
 msgid "Alsace"
 msgstr ""
@@ -1871,13 +1884,13 @@ msgid "Bretagne"
 msgstr ""
 
 msgid "Centre"
-msgstr ""
+msgstr "Közép"
 
 msgid "Champagne-Ardenne"
 msgstr ""
 
 msgid "Corse"
-msgstr ""
+msgstr "Korzika"
 
 msgid "Franche-Comte"
 msgstr ""
@@ -1922,7 +1935,7 @@ msgid "Baden-Wuerttemberg"
 msgstr ""
 
 msgid "Bayern"
-msgstr ""
+msgstr "Bajorország"
 
 msgid "Mittelfranken"
 msgstr ""
@@ -1946,16 +1959,16 @@ msgid "Unterfranken"
 msgstr ""
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlin"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburg"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Bréma"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburg"
 
 msgid "Hessen"
 msgstr ""
@@ -1964,7 +1977,7 @@ msgid "Mecklenburg-Vorpommern"
 msgstr ""
 
 msgid "Niedersachsen"
-msgstr ""
+msgstr "Alsó-Szászország"
 
 msgid "Nordrhein-westfalen"
 msgstr ""
@@ -1973,19 +1986,19 @@ msgid "Rheinland-Pfalz"
 msgstr ""
 
 msgid "Saarland"
-msgstr ""
+msgstr "Saar-vidék"
 
 msgid "Sachsen-Anhalt"
 msgstr ""
 
 msgid "Sachsen"
-msgstr ""
+msgstr "Szászország"
 
 msgid "Schleswig-Holstein"
 msgstr ""
 
 msgid "Thueringen"
-msgstr ""
+msgstr "Türingia"
 
 msgid "Mallorca"
 msgstr ""
@@ -1994,10 +2007,10 @@ msgid "Galicia"
 msgstr ""
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Skandinávia"
 
 msgid "England"
-msgstr ""
+msgstr "Anglia"
 
 msgid "Buckinghamshire"
 msgstr ""
@@ -2063,19 +2076,19 @@ msgid "Crete"
 msgstr ""
 
 msgid "North America"
-msgstr ""
+msgstr "Észak-Amerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Alaszka"
 
 msgid "Hawaii"
 msgstr ""
 
 msgid "USA"
-msgstr ""
+msgstr "Amerikai Egyesült Államok"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (kivéve Alaszka és Hawaii)"
 
 msgid "Midwest"
 msgstr ""
@@ -2165,38 +2178,38 @@ msgid "Washington State"
 msgstr ""
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "Dél és Közép-Amerika"
 
 msgid "Guyane Francaise"
 msgstr ""
 
 msgid "downloading"
-msgstr ""
+msgstr "letöltés"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr ""
+msgstr "kész"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Hiba térképletöltés közben!"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
-msgstr ""
+msgstr "Kevés a szabad terület"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Hiba a térkép mentése közben!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Térképletöltés megszakítva!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr ""
+msgstr "Becsült hátralévő idő"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr ""
+msgstr "Térképletöltés"
 
 msgid "Vehicle Position"
 msgstr "Jármű helyzete"
@@ -2204,19 +2217,19 @@ msgstr "Jármű helyzete"
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr ""
+msgstr "Igen"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
-msgstr ""
+msgstr "Navit elindult"
 
 #. Android resource: @strings/notification_event_default
 msgid "Navit running"
-msgstr ""
+msgstr "Navit fut"
 
 #. Android resource: @strings/initial_info_box_title
 msgid "Welcome to Navit"
-msgstr ""
+msgstr "Üdvözli önt a Navit"
 
 #. Android resource: @strings/initial_info_box_message
 msgid ""
@@ -2229,26 +2242,34 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
+"Köszönjük hogy feltelepítette a Navit-ot!\n"
+"\n"
+"Kezdésnek válassza a \"Térképletöltés\"-t a menüből térkép letöltéséhez. "
+"Megj: a térkép mérete nagy lehet (> 50 MB) - WiFi kapcsolat javasolt.\n"
+"\n"
+"Térképadatok: (c) OpenStreeMap közreműködők\n"
+"\n"
+"Használja élvezettel, Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr ""
+msgstr "További információ"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr ""
+msgstr "Nagyítás"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr ""
+msgstr "Kicsinyítés"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
-msgstr ""
+msgstr "Térképletöltés"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
@@ -2256,137 +2277,139 @@ msgstr ""
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
-msgstr ""
+msgstr "Kilépés"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr ""
+msgstr "Mentés / Visszaállítás"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
-msgstr ""
+msgstr "Töröljük ezt a térképet?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr ""
+msgstr "Letöltés:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
-msgstr ""
+msgstr "Hiba történt a térképletöltés közben."
 
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
-msgstr ""
+msgstr "Térképletöltés megszabítva"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
-msgstr ""
+msgstr "Nincs helymeghatározás. Indítsa újra sikeres helymeghatározás után."
 
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
-msgstr ""
+msgstr "Térképek az aktuális helyzettel"
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
-msgstr ""
+msgstr "Címkeresés"
 
 #. Android resource: @strings/address_enter_destination
 msgid "Enter destination"
-msgstr ""
+msgstr "Célbevitel"
 
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
-msgstr ""
+msgstr "Cím részleges egyezés"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr ""
+msgstr "Keresés..."
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
-msgstr ""
+msgstr "Cím nem található"
 
 #. Android resource: @strings/address_search_getting_results
 msgid "Getting search results"
-msgstr ""
+msgstr "Keresési találatok lekérése"
 
 #. Android resource: @strings/address_search_loading_results
 msgid "Loading search results"
-msgstr ""
+msgstr "Keresési találatok betöltése"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr ""
+msgstr "Nincs találat"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
-msgstr ""
+msgstr "Nincs keresési kifejezés"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
-msgstr ""
+msgstr "Cél beállítása:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr ""
+msgstr "Válasszon műveletet."
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr ""
+msgstr "Kérem helyezzen be egy SD kártyát"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr ""
+msgstr "Biztonsági mentés..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr ""
+msgstr "Visszaállítás..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr ""
+msgstr "Nem sikerült a biztonsági mentés könyvtárát létrehozni"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "A mentés sikertelen"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr ""
+msgstr "Nem található biztonsági mentés"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "Sikertelen visszaállítás"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr ""
+msgstr "A mentés sikeres"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
+"Visszaállítás sikeres\n"
+"Kérem indítsa újra a Navit-ot"
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr ""
+msgstr "Biztonsági mentés nem található"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "A visszaállítás sikertelen"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "Biztonsági mentés kiválasztása"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "Biztonsági mentés"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "Visszaállítás"
 
 msgid "Main menu"
 msgstr "Főmenü"
@@ -2422,7 +2445,7 @@ msgid ""
 msgstr ""
 
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordináták"
 
 msgid ""
 "Stop\n"
@@ -2454,10 +2477,10 @@ msgid ""
 msgstr ""
 
 msgid "Satellite Status"
-msgstr ""
+msgstr "Műhold állapot"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "NMEA adat"
 
 msgid "car_shortest"
 msgstr ""
