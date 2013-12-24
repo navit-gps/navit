@@ -1,22 +1,27 @@
-# Macedonian translation for navit
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Macedonian (mk)  translations for navit
+# Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
-# goran.cvetkovski <goran.cvetkovski@gmail.com> 2009
-#
+
+# Dejan Angelov https://launchpad.net/~dejanangelov
+# Naum Spaseski https://launchpad.net/~naum-spaseski-gmail
+# Robert Mileski https://launchpad.net/~mileski
+# goran.cvetkovski https://launchpad.net/~goran-cvetkovski
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 04:21+0200\n"
-"PO-Revision-Date: 2013-09-28 01:43+0000\n"
-"Last-Translator: Robert Mileski <r_mileski@hotmail.com>\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-12-10 00:53+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"X-Launchpad-Export-Date: 2013-10-08 16:21+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
+"Language: mk\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -80,11 +85,11 @@ msgstr "после %d м"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d стапки"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "за %d стапки"
 
 #, c-format
 msgid "%d meters"
@@ -96,11 +101,11 @@ msgstr "после %d метра"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d милји"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "за %d.%d милји"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -114,13 +119,13 @@ msgstr "после %d.%d километри"
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "%d милји"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "за %d милји"
 
 #, c-format
 msgid "one kilometer"
@@ -284,7 +289,7 @@ msgid "Waypoint %d"
 msgstr ""
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Посети пред..."
 
 msgid "Set as position"
 msgstr "Зададете како позиција"
@@ -425,7 +430,7 @@ msgstr "Боливија"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Бониаре, Св. Еустатиус и Саба"
 
 #. 076
 msgid "Brazil"
@@ -849,7 +854,7 @@ msgstr "Латвија"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Либија"
 
 #. 504
 msgid "Morocco"
@@ -1137,7 +1142,7 @@ msgstr "Суринам"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Јужен судан"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1149,7 +1154,7 @@ msgstr "Ел Салвадор"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Свети Мартин (Холандиски дел)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1319,25 +1324,28 @@ msgstr ""
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
 msgstr ""
+"Не е пронајден документ за конфигурација navit.xml, navit.xml.local\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Грешка при читањето на документот за конфигурирање '%s':%s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Користи документ за конфигурирање '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Внатрешното иницирање не успеа, исклучувам. Проверете ги предходните пораки "
+"за грешки.\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "непозната улица"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "Неименувано возило"
 
 msgid "Failed to write bookmarks file"
 msgstr ""
@@ -1423,19 +1431,19 @@ msgid "Zoom_Out"
 msgstr "Намали"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Намали го зум нивото"
 
 msgid "Zoom_In"
 msgstr "Зголеми"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Зголеми го зум нивото"
 
 msgid "_Recalculate"
 msgstr "Повторно пресметај"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Прецртај ја мапата"
 
 msgid "_Info"
 msgstr "Инфо"
@@ -1444,7 +1452,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Го отвара прозорот за барање на адреса"
 
 msgid "_Stop Navigation"
 msgstr "Запирање на навигација"
@@ -1800,6 +1808,9 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Whole Planet"
@@ -2405,6 +2416,9 @@ msgstr "Рута"
 msgid "About"
 msgstr "За"
 
+msgid "Quit"
+msgstr "Напушти"
+
 msgid "Actions"
 msgstr "Акции"
 
@@ -2413,8 +2427,8 @@ msgid ""
 "Destinations"
 msgstr ""
 
-msgid "Quit"
-msgstr "Напушти"
+msgid "Coordinates"
+msgstr ""
 
 msgid ""
 "Stop\n"
@@ -2486,7 +2500,4 @@ msgstr "коњ"
 #. vehicle_axle_weight= 34000 lbs,  15422 kg
 #. 
 msgid "Truck"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
