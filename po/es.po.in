@@ -16,6 +16,7 @@
 # Paco Molinero https://launchpad.net/~franciscomol
 # Ricardo Jurado https://launchpad.net/~ricky131313
 # agerio https://launchpad.net/~agerio
+# iceman75 https://launchpad.net/~javier-orejarena
 # juliwoodbcn https://launchpad.net/~julianlozano
 # marZiano https://launchpad.net/~m3marte
 # pataquets https://launchpad.net/~pataquets
@@ -25,16 +26,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-10 01:22+0000\n"
-"PO-Revision-Date: 2013-11-24 01:03+0000\n"
-"Last-Translator: marZiano <m3marte@gmail.com>\n"
+"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"PO-Revision-Date: 2013-12-18 16:54+0000\n"
+"Last-Translator: iceman75 <Unknown>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-12-10 01:41+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "Language: \n"
 
 msgid "Running from source directory\n"
@@ -1565,10 +1566,10 @@ msgstr "Ayuda"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "Punto de destino %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "Escoja el punto de destino para insertar antes el nuevo"
 
 msgid "View in Browser"
 msgstr "Ver en el navegador"
@@ -1825,7 +1826,7 @@ msgid "Route to here"
 msgstr "Ruta hasta aquí"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Datos de Mapa (c) contribuyentes de OpenStreetMap,  ODBL"
 
 msgid "Downloaded maps"
 msgstr "Mapas descargados"
@@ -1837,7 +1838,7 @@ msgid "Whole Planet"
 msgstr "Todo el Planeta"
 
 msgid "Africa"
-msgstr ""
+msgstr "África"
 
 msgid "Canary Islands"
 msgstr "Islas Canarias"
@@ -1906,19 +1907,19 @@ msgid "Corse"
 msgstr "Córcega"
 
 msgid "Franche-Comte"
-msgstr ""
+msgstr "Franco Condado"
 
 msgid "Haute-Normandie"
 msgstr "Alta Normandía"
 
 msgid "Ile-de-France"
-msgstr ""
+msgstr "Isla de Francia"
 
 msgid "Languedoc-Roussillon"
 msgstr "Languedoc - Rosellón"
 
 msgid "Limousin"
-msgstr ""
+msgstr "Limusina"
 
 msgid "Lorraine"
 msgstr "Lorena"
@@ -1930,13 +1931,13 @@ msgid "Nord-pas-de-Calais"
 msgstr "Paso Norte de Calais"
 
 msgid "Pays-de-la-Loire"
-msgstr ""
+msgstr "Países del Loira"
 
 msgid "Picardie"
 msgstr "Paradía"
 
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "Poitou-Charentes"
 
 msgid "Provence-Alpes-Cote-d-Azur"
 msgstr "Alpes - Costa Azul"
@@ -1951,7 +1952,7 @@ msgid "Bayern"
 msgstr "Bayern"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Franconia Media"
 
 msgid "Niederbayern"
 msgstr "Bajo Bayern"
@@ -1960,16 +1961,16 @@ msgid "Oberbayern"
 msgstr "Alto Bayern"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "Alta Franconia"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "Alto Palatinado"
 
 msgid "Schwaben"
 msgstr "Schawben"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "Baja Franconia"
 
 msgid "Berlin"
 msgstr "Berlín"
@@ -1987,22 +1988,22 @@ msgid "Hessen"
 msgstr "Hessen"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "Mecklemburgo-Pomerania"
 
 msgid "Niedersachsen"
 msgstr "Niedersachsen"
 
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "Renania del Norte-Westfalia"
 
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "Renania del Norte-Westfalia"
 
 msgid "Saarland"
 msgstr "Sarre"
 
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "Sajonia-Anhalt"
 
 msgid "Sachsen"
 msgstr "Sachsen"
@@ -2035,7 +2036,7 @@ msgid "Cumbria"
 msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "Yorkshire Este con Hull"
 
 msgid "Essex"
 msgstr "Essex"
@@ -2062,13 +2063,13 @@ msgid "Oxfordshire"
 msgstr "Oxfordshire"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "Shropshire"
 
 msgid "Somerset"
 msgstr "Somerset"
 
 msgid "South yorkshire"
-msgstr ""
+msgstr "Yorkshire Sur"
 
 msgid "Suffolk"
 msgstr "Suffolk"
@@ -2104,7 +2105,7 @@ msgid " (except Alaska and Hawaii)"
 msgstr " (excepto Alaska y Hawái)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "Medio-Oeste"
 
 msgid "Michigan"
 msgstr "Michigan"
@@ -2113,7 +2114,7 @@ msgid "Ohio"
 msgstr "Ohio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Noreste"
 
 msgid "Massachusetts"
 msgstr "Massachusetts"
@@ -2509,7 +2510,7 @@ msgid "car_avoid_tolls"
 msgstr "automovil_evitar_peajes"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "Carro_sabelotodo"
 
 msgid "horse"
 msgstr "caballo"
