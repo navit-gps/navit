@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2013 The Navit Team
 # This file is distributed under the same license as the navit package.
 
+# Ferran Roig https://launchpad.net/~ferro9
 # Frans https://launchpad.net/~francesc-galbany
 # KaZeR https://launchpad.net/~kazer
 # Marc Coll Carrillo https://launchpad.net/~marc-coll-carrillo
@@ -16,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:39+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2013-12-28 11:16+0100\n"
+"PO-Revision-Date: 2014-01-07 12:07+0000\n"
+"Last-Translator: Ferran Roig <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2014-01-07 17:41+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -89,11 +90,11 @@ msgstr "d'aquí a %d m"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d peus"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "en %d peus"
 
 #, c-format
 msgid "%d meters"
@@ -105,11 +106,11 @@ msgstr "d'aquí a %d metres"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d milles"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "en %d.%d milles"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -122,14 +123,14 @@ msgstr "d'aquí a %d,%d quilòmetres"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "una milla"
+msgstr[1] "%d milles"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "en una milla"
+msgstr[1] "en %d milles"
 
 #, c-format
 msgid "one kilometer"
@@ -202,7 +203,7 @@ msgid "When possible, please turn around"
 msgstr "Quan sigui possible, doneu mitja volta"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "Entreu a la rotonda vinent"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
@@ -858,7 +859,7 @@ msgstr "Letònia"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Líbia"
 
 #. 504
 msgid "Morocco"
@@ -1146,7 +1147,7 @@ msgstr "Surinam"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Sudan del Sud"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1809,6 +1810,9 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Whole Planet"
