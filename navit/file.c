@@ -938,5 +938,7 @@ file_init(void)
 	file_name_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	file_cache=cache_new(sizeof(struct file_cache_id), CACHE_SIZE);
 #endif
+	if(sizeof(off_t)<8)
+		dbg(0,"Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%d\n",sizeof(off_t));
 }
 
