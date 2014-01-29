@@ -32,7 +32,7 @@
 #if USE_FRIBIDI
 #include <fribidi.h>
 #endif
-#include <freetype/ftglyph.h>
+#include FT_GLYPH_H
 #include "point.h"
 #include "graphics.h"
 #include "debug.h"
