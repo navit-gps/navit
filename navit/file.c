@@ -17,23 +17,16 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#define _FILE_OFFSET_BITS 64
-#define _LARGEFILE_SOURCE
-#define _LARGEFILE64_SOURCE
 #include "config.h"
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+#include "navit_lfs.h"
 #ifdef _MSC_VER
 #include <windows.h>
 #else
 #include <dirent.h>
 #endif /* _MSC_VER */
 #include <string.h>
-#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <wordexp.h>
 #include <glib.h>
@@ -59,18 +52,6 @@ extern char *version;
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-#endif
-
-#ifdef HAVE_API_ANDROID
-#define lseek lseek64
-#endif
-
-#ifndef O_LARGEFILE
-#define O_LARGEFILE 0
-#endif
-
-#ifndef O_BINARY
-#define O_BINARY 0
 #endif
 
 #ifdef CACHE_SIZE
