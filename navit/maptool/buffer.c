@@ -16,6 +16,7 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#include "navit_lfs.h"
 #include <stdlib.h>
 #include "maptool.h"
 #include "debug.h"
@@ -29,7 +30,7 @@ save_buffer(char *filename, struct buffer *b, long long offset)
 		f=fopen(filename,"wb+");
 		
 	dbg_assert(f != NULL);
-	fseek(f, offset, SEEK_SET);
+	fseeko(f, offset, SEEK_SET);
 	fwrite(b->base, b->size, 1, f);
 	fclose(f);
 }
@@ -39,20 +40,24 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 {
 	FILE *f;
 	long long len;
+	dbg_assert(size>=0);
+	dbg_assert(offset>=0);
 	if (b->base)
 		free(b->base);
 	b->malloced=0;
 	f=fopen(filename,"rb");
-	fseek(f, 0, SEEK_END);
-	len=ftell(f);
+	fseeko(f, 0, SEEK_END);
+	len=ftello(f);
+	dbg_assert(len>=0);
 	if (offset+size > len) {
 		size=len-offset;
 	}
 	b->size=b->malloced=size;
+	dbg_assert(b->size>0);
 #if 0
-	fprintf(stderr,"reading "LONGLONG_FMT" bytes from %s at "LONGLONG_FMT"\n", b->size, filename, offset);
+	fprintf(stderr,"reading "LONGLONG_FMT" bytes from %s of "LONGLONG_FMT" bytes at "LONGLONG_FMT"\n", b->size, filename, len, offset);
 #endif
-	fseek(f, offset, SEEK_SET);
+	fseeko(f, offset, SEEK_SET);
 	b->base=malloc(b->size);
 	dbg_assert(b->base != NULL);
 	fread(b->base, b->size, 1, f);
@@ -64,8 +69,9 @@ sizeof_buffer(char *filename)
 {
 	long long ret;
 	FILE *f=fopen(filename,"rb");
-	fseek(f, 0, SEEK_END);
-	ret=ftell(f);
+	fseeko(f, 0, SEEK_END);
+	ret=ftello(f);
+	fprintf(stderr,"File %s size is "LONGLONG_FMT" bytes off_t is %d bytes\n",filename,ret, sizeof(off_t));
 	fclose(f);
 	return ret;
 }

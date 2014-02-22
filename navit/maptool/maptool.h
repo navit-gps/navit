@@ -16,8 +16,8 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include <glib.h>
 #include "config.h"
+#include <glib.h>
 #include "coord.h"
 #include "item.h"
 #include "attr.h"
@@ -247,8 +247,8 @@ struct maptool_osm {
 	FILE *towns;
 };
 
-void osm_warning(char *type, long long id, int cont, char *fmt, ...);
-void osm_info(char *type, long long id, int cont, char *fmt, ...);
+void osm_warning(char *type, osmid id, int cont, char *fmt, ...);
+void osm_info(char *type, osmid id, int cont, char *fmt, ...);
 void osm_add_tag(char *k, char *v);
 void osm_add_node(osmid id, double lat, double lon);
 void osm_add_way(osmid id);
@@ -258,7 +258,7 @@ void osm_add_member(int type, osmid ref, char *role);
 void osm_end_way(struct maptool_osm *osm);
 void osm_end_node(struct maptool_osm *osm);
 void osm_add_nd(osmid ref);
-long long item_bin_get_id(struct item_bin *ib);
+osmid item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out);
@@ -267,9 +267,9 @@ void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *way
 void clear_node_item_buffer(void);
 void ref_ways(FILE *in);
 void resolve_ways(FILE *in, FILE *out);
-long long item_bin_get_nodeid(struct item_bin *ib);
-long long item_bin_get_wayid(struct item_bin *ib);
-long long item_bin_get_relationid(struct item_bin *ib);
+unsigned long long item_bin_get_nodeid(struct item_bin *ib);
+unsigned long long item_bin_get_wayid(struct item_bin *ib);
+unsigned long long item_bin_get_relationid(struct item_bin *ib);
 FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);

@@ -31,7 +31,7 @@
 #define _LARGEFILE_SOURCE
 #define _FILE_OFFSET_BITS 64
 #ifdef __MSVCRT__
-#define __USE_MINGW_FSEEK_
+#define __USE_MINGW_FSEEK
 #endif
 
 #include <stdio.h>
