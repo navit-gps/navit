@@ -250,7 +250,7 @@ gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr 
 
         we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
         gui_internal_widget_append(w, we);*/
-        gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Longitude Latitude")));
+        gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Latitude Longitude")));
         wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
         wk->background=this->background;
         wk->flags |= flags_expand|flags_fill;
