@@ -17,10 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-
-#define _FILE_OFFSET_BITS 64
-#define _LARGEFILE_SOURCE
-#define _LARGEFILE64_SOURCE
+#include "config.h"
+#include "navit_lfs.h"
 #include <stdlib.h>
 #include <glib.h>
 #include <assert.h>
@@ -43,7 +41,6 @@
 #include "item.h"
 #include "map.h"
 #include "main.h"
-#include "config.h"
 #include "zipfile.h"
 #include "linguistics.h"
 #include "plugin.h"
@@ -470,6 +467,7 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		map_collect_data_osm_o5m(p->input_file,&p->osm);
 	else
 		map_collect_data_osm(p->input_file,&p->osm);
+
 	if (node_buffer.size==0 && !p->map_handles){
 		fprintf(stderr,"No nodes found - looks like an invalid input file.\n");
 		exit(1);
@@ -754,7 +752,8 @@ static void
 maptool_load_node_table(struct maptool_params *p, int last)
 {
 	if (!p->node_table_loaded) {
-		slices=(sizeof_buffer("coords.tmp")+slice_size-1)/slice_size;
+		slices=(sizeof_buffer("coords.tmp")+(long long)slice_size-(long long)1)/(long long)slice_size;
+		assert(slices>0);
 		load_buffer("coords.tmp",&node_buffer,last?(slices-1)*slice_size:0, slice_size);
 		p->node_table_loaded=1;
 	}
@@ -803,12 +802,11 @@ int main(int argc, char **argv)
 	int suffix_start=0;
 	int option_index=0;
 	main_init(argv[0]);
-
-	linguistics_init();
-    
 #ifndef HAVE_GLIB
 	_g_slice_thread_init_nomessage();
 #endif
+	linguistics_init();
+
 	memset(&p, 0, sizeof(p));
 #ifdef HAVE_ZLIB
 	p.compression_level=9;
