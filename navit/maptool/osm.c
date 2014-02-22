@@ -16,6 +16,7 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#include "navit_lfs.h"
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
 #define snprintf _snprintf
@@ -116,7 +117,7 @@ char *attr_strings[attr_string_last];
 char *osm_types[]={"unknown","node","way","relation"};
 
 #define IS_REF(c) ((c).x >= (1 << 30))
-#define REF(c) ((c).y)
+#define REF(c) ((unsigned)(c).y)
 #define SET_REF(c,ref) do { (c).x = 1 << 30; (c).y = ref ; } while(0)
 
 /* Table of country codes with possible is_in spellings. 
@@ -863,25 +864,25 @@ build_countrytable(void)
 }
 
 void
-osm_warning(char *type, long long id, int cont, char *fmt, ...)
+osm_warning(char *type, osmid id, int cont, char *fmt, ...)
 {
 	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(str, sizeof(str), fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"LONGLONG_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
+	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
 void
-osm_info(char *type, long long id, int cont, char *fmt, ...)
+osm_info(char *type, osmid id, int cont, char *fmt, ...)
 {
 	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(str, sizeof(str), fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"LONGLONG_FMT" %s",cont ? "":"OSM Info:",type,id,str);
+	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Info:",type,id,str);
 }
 
 static void
@@ -899,16 +900,16 @@ attr_strings_save(enum attr_strings id, char *str)
 	attr_strings_buffer_len+=strlen(str)+1;
 }
 
-long long
+osmid
 item_bin_get_nodeid(struct item_bin *ib)
 {
-	long long *ret=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+	unsigned long long *ret=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
 	if (ret)
 		return *ret;
 	return 0;
 }
 
-long long
+osmid
 item_bin_get_wayid(struct item_bin *ib)
 {
 	long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
@@ -917,19 +918,19 @@ item_bin_get_wayid(struct item_bin *ib)
 	return 0;
 }
 
-long long
+osmid
 item_bin_get_relationid(struct item_bin *ib)
 {
-	long long *ret=item_bin_get_attr(ib, attr_osm_relationid, NULL);
+	unsigned long long *ret=item_bin_get_attr(ib, attr_osm_relationid, NULL);
 	if (ret)
 		return *ret;
 	return 0;
 }
 
-long long
+osmid
 item_bin_get_id(struct item_bin *ib)
 {
-	long long ret;
+	osmid ret;
 	if (ib->type < 0x80000000)
 		return item_bin_get_nodeid(ib);
 	ret=item_bin_get_wayid(ib);
@@ -1255,7 +1256,7 @@ extend_buffer(struct buffer *b)
 
 }
 
-int nodeid_last;
+osmid nodeid_last;
 GHashTable *node_hash,*way_hash;
 
 static void
@@ -1284,6 +1285,7 @@ void
 osm_add_node(osmid id, double lat, double lon)
 {
       in_node=1;
+      fprintf(stderr,LONGLONG_FMT "\n",node_buffer.size);
       if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
 	      extend_buffer(&node_buffer);
       attr_strings_clear();
@@ -1312,7 +1314,7 @@ osm_add_node(osmid id, double lat, double lon)
 	      if (ni->id > nodeid_last) {
 		      nodeid_last=ni->id;
 	      } else {
-		      fprintf(stderr,"INFO: Nodes out of sequence (new %d vs old %d), adding hash\n", ni->id, nodeid_last);
+		      fprintf(stderr,"INFO: Nodes out of sequence (new " OSMID_FMT " vs old " OSMID_FMT "), adding hash\n", (osmid)ni->id, nodeid_last);
 		      node_hash=g_hash_table_new(NULL, NULL);
 		      node_buffer_to_hash();
 	      }
@@ -1337,7 +1339,7 @@ clear_node_item_buffer(void)
 }
 
 static struct node_item *
-node_item_get(int id)
+node_item_get(osmid id)
 {
       struct node_item *ni=(struct node_item *)(node_buffer.base);
       int count=node_buffer.size/sizeof(struct node_item);
@@ -1350,7 +1352,7 @@ node_item_get(int id)
       }
       if (node_hash) {
 	      int i;
-	      i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(unsigned int)id));
+	      i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(id)));
 	      return ni+i;
       }
       if (ni[0].id > id)
@@ -1389,7 +1391,7 @@ node_item_get(int id)
       }
       return &ni[p];
 }
-
+#if 0
 static int
 load_node(FILE *coords, int p, struct node_item *ret)
 {
@@ -1400,9 +1402,11 @@ load_node(FILE *coords, int p, struct node_item *ret)
       }
       return 1;
 }
+#endif
 
+#if 0
 static int
-node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
+node_item_get_from_file(FILE *coords, osmid id, struct node_item *ret)
 {
       int count;
       int interval;
@@ -1418,7 +1422,7 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
       }
 
       fseek(coords, 0, SEEK_END);
-      count=ftell(coords)/sizeof(struct node_item);
+      count=ftello(coords)/sizeof(struct node_item);
       interval=count/4;
       p=count/2;
       if(interval==0) {
@@ -1466,7 +1470,7 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 		      interval/=2;
       }
 }
-
+#endif 
 void
 osm_add_way(osmid id)
 {
@@ -2127,6 +2131,7 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 	return 0;
 }
 
+#if 0
 static int
 load_way_index(FILE *ways_index, int p, long long *idx)
 {
@@ -2138,10 +2143,11 @@ load_way_index(FILE *ways_index, int p, long long *idx)
 	}
 	return 1;
 }
+#endif
 
-
+#if 0
 static int
-seek_to_way(FILE *way, FILE *ways_index, long long wayid)
+seek_to_way(FILE *way, FILE *ways_index, osmid wayid)
 {
 	long offset;
 	long long idx[2];
@@ -2153,7 +2159,7 @@ seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 		return 1;
 	}
 	fseek(ways_index, 0, SEEK_END);
-	count=ftell(ways_index)/sizeof(idx);
+	count=ftello(ways_index)/sizeof(idx);
 	interval=count/4;
 	p=count/2;
 	if(interval==0) {
@@ -2203,8 +2209,9 @@ seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 			interval/=2;
 	}
 }
+#endif
 
-
+#if 0
 static struct coord *
 get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct item_bin *ret, int debug)
 {
@@ -2235,6 +2242,7 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 	}
 	return NULL;
 }
+#endif
 
 struct associated_street {
 	osmid relid;
@@ -2567,7 +2575,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	process_turn_restrictions_finish(turn_restrictions, out);
 	relations_destroy(relations);
 }
-
+#if 0
 void
 process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
 {
@@ -2682,6 +2690,7 @@ process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_ind
 		item_bin_write(item_bin, out);
 	}
 }
+#endif
 
 #if 0
 static void
@@ -2778,9 +2787,9 @@ write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *or
 	new.clen=(last-first+1)*2;
 	new.len=new.clen+attr_len+2;
 	if (out_index) {
-		long long idx[2];
+		osmid idx[2];
 		idx[0]=item_bin_get_wayid(orig);
-		idx[1]=ftell(out);
+		idx[1]=ftello(out);
 		if (way_hash) {
 			if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
 				g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
@@ -3036,7 +3045,7 @@ write_countrydir(struct zip_info *zip_info, int max_index_size)
 				     - item just read belongs to a different tile than the previous one,
 				    then close existing output file, put reference to the country index tile.*/
 				if(out && (!r || (partsize && ((partsize+ibsize)>max_index_size)) || strcmp(tileprev,tilecur)) ) {
-					partsize=ftell(out);
+					partsize=ftello(out);
 					fclose(out);
 					out=NULL;
 					index_country_add(zip_info,co->countryid,first_key,last_key,strlen(tileco)>strlen(tileprev)?tileco:tileprev,outname,partsize,countryindex);
@@ -3063,7 +3072,7 @@ write_countrydir(struct zip_info *zip_info, int max_index_size)
 				g_strlcpy(last_key,key,sizeof(last_key));
 			}
 			
-			partsize=ftell(countryindex);
+			partsize=ftello(countryindex);
 			if(partsize)
 				index_country_add(zip_info,co->countryid,NULL,NULL,tileco,countryindexname, partsize, zip_get_index(zip_info));
 			fclose(countryindex);
@@ -3100,7 +3109,7 @@ load_countries(void)
 				}
 			}
 			fseek(f, 0, SEEK_END);
-			co->size=ftell(f);
+			co->size=ftello(f);
 			fclose(f);
 		}
 	}
