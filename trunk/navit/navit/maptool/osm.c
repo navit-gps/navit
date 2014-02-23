@@ -1285,7 +1285,6 @@ void
 osm_add_node(osmid id, double lat, double lon)
 {
       in_node=1;
-      fprintf(stderr,LONGLONG_FMT "\n",node_buffer.size);
       if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
 	      extend_buffer(&node_buffer);
       attr_strings_clear();
