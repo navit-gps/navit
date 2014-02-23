@@ -71,7 +71,6 @@ sizeof_buffer(char *filename)
 	FILE *f=fopen(filename,"rb");
 	fseeko(f, 0, SEEK_END);
 	ret=ftello(f);
-	fprintf(stderr,"File %s size is "LONGLONG_FMT" bytes off_t is %d bytes\n",filename,ret, sizeof(off_t));
 	fclose(f);
 	return ret;
 }
