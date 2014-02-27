@@ -594,7 +594,7 @@ sint64_pack (int64_t value, uint8_t *out)
 static inline size_t
 fixed32_pack (uint32_t value, uint8_t *out)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   memcpy (out, &value, 4);
 #else
   out[0] = value;
@@ -613,7 +613,7 @@ fixed32_pack (uint32_t value, uint8_t *out)
 static inline size_t
 fixed64_pack (uint64_t value, uint8_t *out)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   memcpy (out, &value, 8);
 #else
   fixed32_pack (value, out);
@@ -817,7 +817,7 @@ sizeof_elt_in_repeated_array (ProtobufCType type)
 static void
 copy_to_little_endian_32 (void *out, const void *in, unsigned N)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   memcpy (out, in, N * 4);
 #else
   unsigned i;
@@ -829,7 +829,7 @@ copy_to_little_endian_32 (void *out, const void *in, unsigned N)
 static void
 copy_to_little_endian_64 (void *out, const void *in, unsigned N)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   memcpy (out, in, N * 8);
 #else
   unsigned i;
@@ -1219,7 +1219,7 @@ pack_buffer_packed_payload (const ProtobufCFieldDescriptor *field,
       case PROTOBUF_C_TYPE_SFIXED32:
       case PROTOBUF_C_TYPE_FIXED32:
       case PROTOBUF_C_TYPE_FLOAT:
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
         rv = count * 4;
         goto no_packing_needed;
 #else
@@ -1234,7 +1234,7 @@ pack_buffer_packed_payload (const ProtobufCFieldDescriptor *field,
       case PROTOBUF_C_TYPE_SFIXED64:
       case PROTOBUF_C_TYPE_FIXED64:
       case PROTOBUF_C_TYPE_DOUBLE:
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
         rv = count * 8;
         goto no_packing_needed;
 #else
@@ -1303,7 +1303,7 @@ pack_buffer_packed_payload (const ProtobufCFieldDescriptor *field,
     }
   return rv;
 
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
 no_packing_needed:
   buffer->append (buffer, rv, array);
   return rv;
@@ -1613,7 +1613,7 @@ unzigzag32 (uint32_t v)
 static inline uint32_t
 parse_fixed_uint32 (const uint8_t *data)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   uint32_t t;
   memcpy (&t, data, 4);
   return t;
@@ -1650,7 +1650,7 @@ unzigzag64 (uint64_t v)
 static inline uint64_t
 parse_fixed_uint64 (const uint8_t *data)
 {
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
   uint64_t t;
   memcpy (&t, data, 8);
   return t;
@@ -1853,7 +1853,7 @@ parse_packed_repeated_member (ScannedMember *scanned_member,
       case PROTOBUF_C_TYPE_FIXED32:
       case PROTOBUF_C_TYPE_FLOAT:
         count = (scanned_member->len - scanned_member->length_prefix_len) / 4;
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
         goto no_unpacking_needed;
 #else
         for (i = 0; i < count; i++)
@@ -1867,7 +1867,7 @@ parse_packed_repeated_member (ScannedMember *scanned_member,
       case PROTOBUF_C_TYPE_FIXED64:
       case PROTOBUF_C_TYPE_DOUBLE:
         count = (scanned_member->len - scanned_member->length_prefix_len) / 8;
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
         goto no_unpacking_needed;
 #else
         for (i = 0; i < count; i++)
@@ -1969,7 +1969,7 @@ parse_packed_repeated_member (ScannedMember *scanned_member,
   *p_n += count;
   return TRUE;
 
-#if IS_LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
 no_unpacking_needed:
   memcpy (array, at, count * siz);
   *p_n += count;

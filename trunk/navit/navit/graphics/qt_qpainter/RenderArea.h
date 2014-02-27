@@ -39,7 +39,7 @@ class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
      struct callback_list *cbl;
      struct graphics_priv *gra;
 
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
      GHashTable *timer_type;
      GHashTable *timer_callback;
      GHashTable *watches;
@@ -59,7 +59,7 @@ protected:
      void keyPressEvent(QKeyEvent *event);
      void closeEvent(QCloseEvent *event);
      bool event(QEvent *event);
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
      void timerEvent(QTimerEvent *event);
 #endif
  protected slots:

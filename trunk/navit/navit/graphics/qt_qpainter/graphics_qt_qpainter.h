@@ -41,7 +41,7 @@
 #define QT_QPAINTER_USE_FREETYPE 1
 #endif
 
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 #include "navit/font/freetype/font_freetype.h"
 #endif
 
@@ -94,7 +94,7 @@
 
 #endif
 
-#if QT_QPAINTER_USE_EMBEDDING
+#ifdef QT_QPAINTER_USE_EMBEDDING
 #include <QX11EmbedWidget>
 #endif
 
@@ -136,7 +136,7 @@ struct graphics_priv {
 	int cleanup;
 	int overlay_disable;
 	int wraparound;
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
 #endif
