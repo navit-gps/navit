@@ -35,7 +35,7 @@
 #include "geom.h"
 #include "util.h"
 
-#if HAVE_API_ANDROID
+#ifdef HAVE_API_ANDROID
 #include "android.h"
 #endif
 #include "layout.h"
@@ -528,7 +528,7 @@ search_list_country_new(struct item *item)
 	if (item_attr_get(item, attr_country_car, &attr))
 		ret->car=g_strdup(attr.u.str);
 	if (item_attr_get(item, attr_country_iso2, &attr)) {
-#if HAVE_API_ANDROID
+#ifdef HAVE_API_ANDROID
 		ret->iso2=g_malloc(strlen(attr.u.str)+1);
 		strtolower(ret->iso2, attr.u.str);
 #else

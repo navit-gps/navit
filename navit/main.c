@@ -50,7 +50,7 @@
 #include "callback.h"
 #include "navit_nls.h"
 #include "util.h"
-#if HAVE_API_WIN32_BASE
+#ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include <winbase.h>
 #endif
