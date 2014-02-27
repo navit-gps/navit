@@ -29,7 +29,7 @@
 #if USE_CACHING
 #include FT_CACHE_H
 #endif
-#if USE_FRIBIDI
+#ifdef USE_FRIBIDI
 #include <fribidi.h>
 #endif
 #include FT_GLYPH_H
@@ -215,7 +215,7 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 	FT_Set_Transform(font->face, &matrix, &pen);
 #endif
 
-#if USE_FRIBIDI
+#ifdef USE_FRIBIDI
     // Need to use fribidi to handle the string properly
     char visual_text[len*4+1];
     {

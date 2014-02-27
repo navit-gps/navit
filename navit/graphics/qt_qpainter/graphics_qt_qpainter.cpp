@@ -154,7 +154,7 @@ struct graphics_image_priv {
 //##############################################################################################################
 static void graphics_destroy(struct graphics_priv *gr)
 {
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 	gr->freetype_methods.destroy();
 #endif
 	g_free(gr->window_title);
@@ -404,7 +404,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	QPainter *painter=gr->painter;
-#if !QT_QPAINTER_USE_FREETYPE
+#ifndef QT_QPAINTER_USE_FREETYPE
 	QString tmp=QString::fromUtf8(text);
 #ifndef QT_NO_TRANSFORMATIONS
 #if QT_VERSION >= 0x040000
@@ -787,7 +787,7 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 {
 	*meth=graphics_methods;
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 	if (gr->font_freetype_new) {
 		ret->font_freetype_new=gr->font_freetype_new;
         	gr->font_freetype_new(&ret->freetype_methods);
@@ -808,7 +808,7 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 	return ret;
 }
 
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 
 
 static struct graphics_priv *event_gr;
@@ -921,17 +921,17 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct attr *attr;
 
 	dbg(0,"enter\n");
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
 	if (! event_request_system("qt","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
-#if QT_QPAINTER_USE_EVENT_GLIB
+#ifdef QT_QPAINTER_USE_EVENT_GLIB
 	if (! event_request_system("glib","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
 	if (!font_freetype_new) {
 		dbg(0,"no freetype\n");
@@ -941,14 +941,14 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
 	ret->nav=nav;
-#if QT_QPAINTER_USE_FREETYPE
+#ifdef QT_QPAINTER_USE_FREETYPE
 	ret->font_freetype_new=font_freetype_new;
 	font_freetype_new(&ret->freetype_methods);
 	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
 	meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
 #endif
 
-#if QT_QPAINTER_USE_EMBEDDING && QT_VERSION >= 0x040500
+#if defined QT_QPAINTER_USE_EMBEDDING && QT_VERSION >= 0x040500
 	if ((attr=attr_search(attrs, NULL, attr_gc_type)))
 		QApplication::setGraphicsSystem(attr->u.str);
 	else
@@ -973,7 +973,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
 	ret->painter = new QPainter;
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	event_gr=ret;
 #endif
 	ret->w=800;
@@ -1000,7 +1000,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 void plugin_init(void)
 {
         plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
         plugin_register_event_type("qt", event_qt_new);
 #endif
 }

@@ -67,7 +67,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 #endif
 	is_overlay=overlay;
 	gra=priv;
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	timer_type=g_hash_table_new(NULL, NULL);
 	timer_callback=g_hash_table_new(NULL, NULL);
 	watches=g_hash_table_new(NULL, NULL);
@@ -303,7 +303,7 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 
 void RenderArea::watchEvent(int fd)
 {
-#if QT_QPAINTER_USE_EVENT_QT
+#ifdef QT_QPAINTER_USE_EVENT_QT
 	struct event_watch *ev=(struct event_watch *)g_hash_table_lookup(watches, (void *)fd);
 	dbg(1,"fd=%d ev=%p cb=%p\n", fd, ev, ev->cb);
 	callback_call_0(ev->cb);

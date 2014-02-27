@@ -498,7 +498,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 		wnext->func=gui_internal_search_town;
 	} else if (!strcmp(type,"Town")) {
 		if (this->country_iso2) {
-#if HAVE_API_ANDROID
+#ifdef HAVE_API_ANDROID
 			char country_iso2[strlen(this->country_iso2)+1];
 			strtolower(country_iso2, this->country_iso2);
 			country=g_strdup_printf("country_%s", country_iso2);
