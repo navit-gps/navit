@@ -1698,7 +1698,7 @@ osm_end_way(struct maptool_osm *osm)
 		types[0]=type_street_unkn;
 	}
 	if (count >= 10) {
-		fprintf(stderr,"way id %ld\n",osmid_attr_value);
+		fprintf(stderr,"way id "OSMID_FMT"\n",osmid_attr_value);
 		dbg_assert(count < 10);
 	}
 	for (i = 0 ; i < count ; i++) {
@@ -1776,7 +1776,10 @@ osm_end_node(struct maptool_osm *osm)
 		types[0]=type_point_unkn;
 		count=1;
 	}
-	dbg_assert(count < 10);
+	if (count >= 10) {
+		fprintf(stderr,"node id "OSMID_FMT"\n",osmid_attr_value);
+		dbg_assert(count < 10);
+	}
 	for (i = 0 ; i < count ; i++) {
 		if (types[i] == type_none)
 			continue;
