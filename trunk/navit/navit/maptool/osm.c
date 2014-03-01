@@ -894,9 +894,11 @@ attr_strings_clear(void)
 static void
 attr_strings_save(enum attr_strings id, char *str)
 {
+	int len=strlen(str)+1;
+	dbg_assert(attr_strings_buffer_len+len+1<sizeof(attr_strings_buffer));
 	attr_strings[id]=attr_strings_buffer+attr_strings_buffer_len;
-	strcpy(attr_strings[id], str);
-	attr_strings_buffer_len+=strlen(str)+1;
+	g_strlcpy(attr_strings[id], str, len+1);
+	attr_strings_buffer_len+=len+1;
 }
 
 osmid
@@ -1158,12 +1160,12 @@ osm_add_tag(char *k, char *v)
 	}
 	if (! strcmp(k,"openGeoDB:is_in")) { 
 		if (!is_in_buffer[0]) 
-			strcpy(is_in_buffer, v); 
-			level=5; 
+			g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer)); 
+		level=5; 
 	} 
 	if (! strcmp(k,"is_in")) {
 		if (!is_in_buffer[0])
-			strcpy(is_in_buffer, v);
+			g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
 		level=5;
 	}
 	if (! strcmp(k,"is_in:country")) {
@@ -1171,7 +1173,7 @@ osm_add_tag(char *k, char *v)
 		* Sometimes there is no is_in tag, only is_in:country.
 		* I put this here so it can be overwritten by the previous if clause if there IS an is_in tag.
 		*/
-		strcpy(is_in_buffer, v);
+		g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
 		level=5;
 	}
 	if (! strcmp(k,"place_county")) {
@@ -1182,7 +1184,7 @@ osm_add_tag(char *k, char *v)
 		* The tag is processed as Moycullen; Galway; Ireland
 		* where Galway is the county
 		*/
-		strcpy(is_in_buffer, "Ireland");
+		g_strlcpy(is_in_buffer, "Ireland", sizeof(is_in_buffer));
 		attr_strings_save(attr_string_county_name, v);
 		level=5;
 	}
@@ -1191,7 +1193,7 @@ osm_add_tag(char *k, char *v)
 			http://en.wikipedia.org/wiki/Geographic_Names_Information_System
 			many US towns do not have is_in tags
 		*/
-		strcpy(is_in_buffer, "USA");
+		g_strlcpy(is_in_buffer, "USA", sizeof(is_in_buffer));
 		level=5;
 	}
 	if (! strcmp(k,"lanes")) {
@@ -1219,7 +1221,7 @@ osm_update_attr_present(char *k, char *v)
 	int idx;
 	char *p, buffer[bufsize];
 
-	strncpy(buffer,"*=*", bufsize);
+	g_strlcpy(buffer,"*=*", bufsize);
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
 		dbg_assert(idx<attr_present_count);
 		attr_present[idx]=1;
@@ -1614,7 +1616,7 @@ relation_add_tag(char *k, char *v)
 	fprintf(stderr,"add tag %s %s\n",k,v);
 #endif
 	if (!strcmp(k,"type")) {
-		strcpy(relation_type, v);
+		g_strlcpy(relation_type, v, sizeof(relation_type));
 		add_tag=0;
 	}
 	else if (!strcmp(k,"restriction")) {
@@ -1635,7 +1637,7 @@ relation_add_tag(char *k, char *v)
 			boundary=1;
 		}
 	} else if (!strcmp(k,"ISO3166-1")) {
-		strcpy(iso_code, v);
+		g_strlcpy(iso_code, v, sizeof(iso_code));
 	}
 	if (add_tag) {
 		char *tag;
