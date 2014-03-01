@@ -44,7 +44,6 @@ extern int doway2poi;
 
 static int in_way, in_node, in_relation;
 osmid nodeid,wayid;
-long long current_id;
 
 static GHashTable *attr_hash,*country_table_hash,*attr_hash;
 
@@ -64,7 +63,7 @@ int flagsa[4];
 int flags_attr_value;
 
 struct attr_bin osmid_attr;
-long int osmid_attr_value;
+long long osmid_attr_value;
 
 char is_in_buffer[BUFFER_SIZE];
 
@@ -1502,7 +1501,7 @@ int boundary;
 void
 osm_add_relation(osmid id)
 {
-	current_id=id;
+	osmid_attr_value=id;
 	in_relation=1;
 	debug_attr_buffer[0]='\0';
 	relation_type[0]='\0';
@@ -1510,7 +1509,7 @@ osm_add_relation(osmid id)
 	admin_level=-1;
 	boundary=0;
 	item_bin_init(item_bin, type_none);
-	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, current_id);
+	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, osmid_attr_value);
 }
 
 static int
@@ -1617,7 +1616,7 @@ relation_add_tag(char *k, char *v)
 			add_tag=0;
 		} else {
 			item_bin->type=type_none;
-			osm_warning("relation", current_id, 0, "Unknown restriction %s\n",v);
+			osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
 		}
 	} else if (!strcmp(k,"admin_level")) {
 		admin_level=atoi(v);
