@@ -1215,30 +1215,39 @@ osm_add_tag(char *k, char *v)
 static void 
 osm_update_attr_present(char *k, char *v)
 {
+	const int bufsize=BUFFER_SIZE*2+2;
 	int idx;
-	char *p, buffer[BUFFER_SIZE*2+2];
+	char *p, buffer[bufsize];
 
-	strcpy(buffer,"*=*");
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+	strncpy(buffer,"*=*", bufsize);
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
+		dbg_assert(idx<attr_present_count);
 		attr_present[idx]=1;
+	}
 
-	sprintf(buffer,"%s=*", k);
+	snprintf(buffer,bufsize,"%s=*", k);
 	for(p=buffer;*p;p++)
 		if(isspace(*p))	*p='_';
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
+		dbg_assert(idx<attr_present_count);
 		attr_present[idx]=2;
+	}
 
-	sprintf(buffer,"*=%s", v);
+	snprintf(buffer,bufsize,"*=%s", v);
 	for(p=buffer;*p;p++)
 		if(isspace(*p))	*p='_';
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
+		dbg_assert(idx<attr_present_count);
 		attr_present[idx]=2;
+	}
 
-	sprintf(buffer,"%s=%s", k, v);
+	snprintf(buffer,bufsize,"%s=%s", k, v);
 	for(p=buffer;*p;p++)
 		if(isspace(*p))	*p='_';
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
+		dbg_assert(idx<attr_present_count);
 		attr_present[idx]=4;
+	}
 }
 
 int coord_count;
@@ -1588,10 +1597,11 @@ osm_end_relation(struct maptool_osm *osm)
 void
 osm_add_member(int type, osmid ref, char *role)
 {
-	char member_buffer[BUFFER_SIZE*3+3];
+	const int bufsize=BUFFER_SIZE*3+3;
+	char member_buffer[bufsize];
 	struct attr memberattr = { attr_osm_member };
 
-	sprintf(member_buffer,"%d:"LONGLONG_FMT":%s", type, (long long) ref, role);
+	snprintf(member_buffer,bufsize,"%d:"LONGLONG_FMT":%s", type, (long long) ref, role);
 	memberattr.u.str=member_buffer;
 	item_bin_add_attr(item_bin, &memberattr);
 }
