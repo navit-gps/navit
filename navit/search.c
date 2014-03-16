@@ -362,6 +362,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 {
 	struct search_list_level *le;
 	int level;
+	dbg(2,"Starting search for '=%s' of type %s\n", search_attr->u.str, attr_to_name(search_attr->type));
 	search_address_results_free(this_);
 	if (search_attr->type == attr_address) {
 		search_by_address(this_, search_attr->u.str);
@@ -372,7 +373,6 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	level=search_list_level(search_attr->type);
 	this_->item=NULL;
 	interpolation_clear(&this_->inter);
-	//dbg(0,"level=%d\n", level);
 	if (level != -1) {
 		this_->result.id=0;
 		this_->level=level;
@@ -384,7 +384,6 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 			le=&this_->levels[level-1];
 			le->curr=le->list;
 		}
-		//dbg(0,"le=%p partial=%d\n", le, partial);
 	} else if (search_attr->type == attr_postal) {
 		g_free(this_->postal);
 		this_->postal=g_strdup(search_attr->u.str);
