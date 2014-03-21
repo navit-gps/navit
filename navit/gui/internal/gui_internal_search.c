@@ -188,6 +188,34 @@ town_str(struct search_list_result *res, int level, int flags)
 }
 
 static void
+gui_internal_find_next_possible_key(struct widget *wi, char *wm_name, struct search_list_result *res, char *possible_keys, char *name)
+{
+	gchar* trunk_name = NULL;
+	if (! strcmp(wm_name,"Town"))
+		trunk_name = g_strrstr(res->town->common.town_name, wi->text);
+	if (! strcmp(wm_name,"Street"))
+	{
+		name=res->street->name;
+		if (name)
+			trunk_name = g_strrstr(name, wi->text);
+		else
+			trunk_name = NULL;
+	}
+
+	if (trunk_name) {
+		char next_char = trunk_name[strlen(wi->text)];
+		int i;
+		int len = strlen(possible_keys);
+		for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
+		if (i==len || !len) {
+			possible_keys[len]=trunk_name[strlen(wi->text)];
+			possible_keys[len+1]='\0';
+		}
+		dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
+	}
+}
+
+static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
 	char *text=NULL,*text2=NULL,*name=NULL, *wcname=NULL;
@@ -201,40 +229,11 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 
 	res=search_list_get_result(this->sl);
 	if (res) {
-		gchar* trunk_name = NULL;
-
 		struct widget *menu=g_list_last(this->root.children)->data;
 		wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
-
-		if (wi) {
-			if (! strcmp(wm_name,"Town"))
-				trunk_name = g_strrstr(res->town->common.town_name, wi->text);
-			if (! strcmp(wm_name,"Street"))
-			{
-				name=res->street->name;
-				if (name)
-					trunk_name = g_strrstr(name, wi->text);
-				else
-					trunk_name = NULL;
-			}
-
-			if (trunk_name) {
-				char next_char = trunk_name[strlen(wi->text)];
-				int i;
-				int len = strlen(possible_keys);
-				for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
-				if (i==len || !len) {
-					possible_keys[len]=trunk_name[strlen(wi->text)];
-					possible_keys[len+1]='\0';
-				}
-				dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
-			}
-		} else {
-			dbg(0, "Unable to find widget");
-		}
-	}
-
-	if (! res) {
+		dbg_assert(wi);
+		gui_internal_find_next_possible_key(wi, wm_name, res, possible_keys, name);
+	} else {
 		struct menu_data *md;
 		gui_internal_search_idle_end(this);
 
