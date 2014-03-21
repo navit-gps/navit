@@ -188,37 +188,30 @@ town_str(struct search_list_result *res, int level, int flags)
 }
 
 static void
-gui_internal_find_next_possible_key(struct widget *wi, char *wm_name, struct search_list_result *res, char *possible_keys, char *name)
+gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *possible_keys, char *item_name)
 {
-	gchar* trunk_name = NULL;
-	if (! strcmp(wm_name,"Town"))
-		trunk_name = g_strrstr(res->town->common.town_name, wi->text);
-	if (! strcmp(wm_name,"Street"))
+	gchar* trunk_name;
+	if (((! strcmp(wm_name,"Town")) || (! strcmp(wm_name,"Street"))) && item_name)
 	{
-		name=res->street->name;
-		if (name)
-			trunk_name = g_strrstr(name, wi->text);
-		else
-			trunk_name = NULL;
-	}
-
-	if (trunk_name) {
-		char next_char = trunk_name[strlen(wi->text)];
-		int i;
-		int len = strlen(possible_keys);
-		for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
-		if (i==len || !len) {
-			possible_keys[len]=trunk_name[strlen(wi->text)];
-			possible_keys[len+1]='\0';
+		trunk_name = g_strrstr(item_name, search_text);
+		if (trunk_name) {
+			char next_char = trunk_name[strlen(search_text)];
+			int i;
+			int len = strlen(possible_keys);
+			for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
+			if (i==len || !len) {
+				possible_keys[len]=trunk_name[strlen(search_text)];
+				possible_keys[len+1]='\0';
+			}
+			dbg(2,"searching for %s, found: %s, currently possible_keys: %s \n", search_text, item_name, possible_keys);
 		}
-		dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
 	}
 }
 
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
-	char *text=NULL,*text2=NULL,*name=NULL, *wcname=NULL;
+	char *text=NULL,*text2=NULL,*item_name=NULL, *wcname=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
 	struct item *item=NULL;
@@ -229,10 +222,39 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 
 	res=search_list_get_result(this->sl);
 	if (res) {
+		if (! strcmp(wm_name,"Country")) {
+			item_name=res->country->name;
+			item=&res->country->common.item;
+			text=g_strdup_printf("%s", res->country->name);
+		}
+		if (! strcmp(wm_name,"Town")) {
+			item=&res->town->common.item;
+			item_name=res->town->common.town_name;
+			text=town_str(res, 1, 0);
+			text2=town_str(res, 1, 2);
+		}
+		if (! strcmp(wm_name,"Street")) {
+			item_name=res->street->name;
+			item=&res->street->common.item;
+			text=g_strdup(res->street->name);
+			text2=town_str(res, 2, 1);
+		}
+		if (! strcmp(wm_name,"House number")) {
+			item_name=res->house_number->house_number;
+			text=g_strdup_printf("%s, %s", item_name, res->street->name);
+			text2=town_str(res, 3, 0);
+			wcname=g_strdup(text);
+		}
+
+		if(!wcname)
+			wcname=g_strdup(item_name);
+
+		dbg(1,"res->country->flag=%s\n", res->country->flag);
+
 		struct widget *menu=g_list_last(this->root.children)->data;
 		wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 		dbg_assert(wi);
-		gui_internal_find_next_possible_key(wi, wm_name, res, possible_keys, name);
+		gui_internal_find_next_possible_key(wi->text, wm_name, possible_keys, item_name);
 	} else {
 		struct menu_data *md;
 		gui_internal_search_idle_end(this);
@@ -268,46 +290,18 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		return;
 	}
 
-	if (! strcmp(wm_name,"Country")) {
-		name=res->country->name;
-		item=&res->country->common.item;
-		text=g_strdup_printf("%s", res->country->name);
-	}
-	if (! strcmp(wm_name,"Town")) {
-		item=&res->town->common.item;
-		name=res->town->common.town_name;
-		text=town_str(res, 1, 0);
-		text2=town_str(res, 1, 2);
-	}
-	if (! strcmp(wm_name,"Street")) {
-		name=res->street->name;
-		item=&res->street->common.item;
-		text=g_strdup(res->street->name);
-		text2=town_str(res, 2, 1);
-	}
-	if (! strcmp(wm_name,"House number")) {
-		name=res->house_number->house_number;
-		text=g_strdup_printf("%s, %s", name, res->street->name);
-		text2=town_str(res, 3, 0);
-		wcname=g_strdup(text);
-	}
-
-	if(!wcname)
-		wcname=g_strdup(name);
-
-	dbg(1,"res->country->flag=%s\n", res->country->flag);
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 
 	if (!text2)
 		wr->text=g_strdup(text);
 	else
-		wr->text=g_strdup_printf("%s %s",name,text2);
+		wr->text=g_strdup_printf("%s %s",item_name,text2);
 	
 	if (! strcmp(wm_name,"House number") && !res->street->name) {
 		wr->datai=2048;
-	} else if(name) {
+	} else if(item_name) {
 		int i;
-		char *folded_name=linguistics_casefold(name);
+		char *folded_name=linguistics_casefold(item_name);
 		char *folded_query=linguistics_casefold(wi->text);
 		wr->datai=1024;
 
