@@ -191,8 +191,7 @@ static void
 gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *possible_keys, char *item_name)
 {
 	gchar* trunk_name;
-	if (((! strcmp(wm_name,"Town")) || (! strcmp(wm_name,"Street"))) && item_name)
-	{
+	if (item_name) {
 		trunk_name = g_strrstr(item_name, search_text);
 		if (trunk_name) {
 			char next_char = trunk_name[strlen(search_text)];
