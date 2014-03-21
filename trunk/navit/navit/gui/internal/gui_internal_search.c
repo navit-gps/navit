@@ -221,41 +221,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	struct widget *wr, *wb;
 
 	res=search_list_get_result(this->sl);
-	if (res) {
-		if (! strcmp(wm_name,"Country")) {
-			item_name=res->country->name;
-			item=&res->country->common.item;
-			text=g_strdup_printf("%s", res->country->name);
-		}
-		if (! strcmp(wm_name,"Town")) {
-			item=&res->town->common.item;
-			item_name=res->town->common.town_name;
-			text=town_str(res, 1, 0);
-			text2=town_str(res, 1, 2);
-		}
-		if (! strcmp(wm_name,"Street")) {
-			item_name=res->street->name;
-			item=&res->street->common.item;
-			text=g_strdup(res->street->name);
-			text2=town_str(res, 2, 1);
-		}
-		if (! strcmp(wm_name,"House number")) {
-			item_name=res->house_number->house_number;
-			text=g_strdup_printf("%s, %s", item_name, res->street->name);
-			text2=town_str(res, 3, 0);
-			wcname=g_strdup(text);
-		}
-
-		if(!wcname)
-			wcname=g_strdup(item_name);
-
-		dbg(1,"res->country->flag=%s\n", res->country->flag);
-
-		struct widget *menu=g_list_last(this->root.children)->data;
-		wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
-		dbg_assert(wi);
-		gui_internal_find_next_possible_key(wi->text, wm_name, possible_keys, item_name);
-	} else {
+	if (!res) {
 		struct menu_data *md;
 		gui_internal_search_idle_end(this);
 
@@ -289,6 +255,40 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		possible_keys[0]='\0';
 		return;
 	}
+
+	if (! strcmp(wm_name,"Country")) {
+		item_name=res->country->name;
+		item=&res->country->common.item;
+		text=g_strdup_printf("%s", res->country->name);
+	}
+	if (! strcmp(wm_name,"Town")) {
+		item=&res->town->common.item;
+		item_name=res->town->common.town_name;
+		text=town_str(res, 1, 0);
+		text2=town_str(res, 1, 2);
+	}
+	if (! strcmp(wm_name,"Street")) {
+		item_name=res->street->name;
+		item=&res->street->common.item;
+		text=g_strdup(res->street->name);
+		text2=town_str(res, 2, 1);
+	}
+	if (! strcmp(wm_name,"House number")) {
+		item_name=res->house_number->house_number;
+		text=g_strdup_printf("%s, %s", item_name, res->street->name);
+		text2=town_str(res, 3, 0);
+		wcname=g_strdup(text);
+	}
+
+	if(!wcname)
+		wcname=g_strdup(item_name);
+
+	dbg(1,"res->country->flag=%s\n", res->country->flag);
+
+	struct widget *menu=g_list_last(this->root.children)->data;
+	wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
+	dbg_assert(wi);
+	gui_internal_find_next_possible_key(wi->text, wm_name, possible_keys, item_name);
 
 	wr=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 
