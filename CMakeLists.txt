@@ -527,6 +527,8 @@ if(WINCE)
    add_plugin(support/libc "wince detected" TRUE)
    set(HAVE_API_WIN32_CE 1)
    set(BUILD_MAPTOOL FALSE)
+   # mingw32ce since gcc 4.7.0 needs HAVE_PRAGMA_PACK as __attribute__((packed)) is broken, see gcc bug 52991
+   set(HAVE_PRAGMA_PACK 1)
    set_with_reason(vehicle/file "wince: currently broken" FALSE)
    set_with_reason(vehicle/wince "wince detected" TRUE)
 endif()
