@@ -111,7 +111,7 @@ gui_internal_poi_icon(struct gui_priv *this, struct item *item)
 									src=el->u.icon.src;
 									if(!src || !src[0])
 										src="%s";
-									icon=g_strdup_printf(src,icon_src.u.str);
+									icon=g_strdup_printf(src,map_convert_string_tmp(item->map,icon_src.u.str));
 								}
 								else {
 									icon=g_strdup(el->u.icon.src);
@@ -365,22 +365,22 @@ gui_internal_compose_item_address_string(struct item *item)
 	char *s=g_strdup("");
 	struct attr attr;
 	if(item_attr_get(item, attr_house_number, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_street_name, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_street_name_systematic, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_district_name, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_town_name, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_county_name, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	if(item_attr_get(item, attr_country_name, &attr)) 
-		s=g_strjoin(" ",s,attr.u.str,NULL);
+		s=g_strjoin(" ",s,map_convert_string_tmp(item->map,attr.u.str),NULL);
 	
 	if(item_attr_get(item, attr_address, &attr)) 
-		s=g_strjoin(" ",s,"|",attr.u.str,NULL);
+		s=g_strjoin(" ",s,"|",map_convert_string_tmp(item->map,attr.u.str),NULL);
 	return s;
 }
 
@@ -412,7 +412,7 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 		if (param->isAddressFilter) {
 			s=gui_internal_compose_item_address_string(item);
 		} else if (item_attr_get(item, attr_label, &attr)) {
-			s=g_strdup_printf("%s %s", item_to_name(item->type), attr.u.str);
+			s=g_strdup_printf("%s %s", item_to_name(item->type), map_convert_string_tmp(item->map,attr.u.str));
 		} else {
 			s=g_strdup(item_to_name(item->type));
 		}
@@ -640,14 +640,14 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 					if (item->type==type_house_number) {
 						label=gui_internal_compose_item_address_string(item);
 					} else if (item_attr_get(item, attr_label, &attr)) {
-						label=g_strdup(attr.u.str);
+						label=map_convert_string(item->map,attr.u.str);
 						// Buildings which label is equal to addr:housenumber value
 						// are duplicated by item_house_number. Don't include such 
 						// buildings into the list. This is true for OSM maps created with 
 						// maptool patched with #859 latest patch.
 						// FIXME: For non-OSM maps, we probably would better don't skip these items.
 						if(item->type==type_poly_building && item_attr_get(item, attr_house_number, &attr) ) {
-							if(strcmp(label,attr.u.str)==0) {
+							if(strcmp(label,map_convert_string_tmp(item->map,attr.u.str))==0) {
 								g_free(label);
 								continue;
 							}
