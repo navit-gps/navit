@@ -207,6 +207,32 @@ map_requires_conversion(struct map *this_)
 	return (this_->meth.charset != NULL && strcmp(this_->meth.charset, "utf-8"));
 }
 
+char *map_converted_string_tmp=NULL;
+
+/**
+ * @brief Converts a string from a map into a temporary allocated buffer. Conversion is not performed and original string is returned 
+ * if map doesn't require conversion. So lifetime of returned value is very limited. 
+ *
+ * @param this_ The map the string to be converted is from
+ * @param str The string to be converted
+ * @return The converted string. Don't care about it after use.
+ */
+char *
+map_convert_string_tmp(struct map *this_, char *str)
+{
+	if(map_converted_string_tmp!=NULL)
+		g_free(map_converted_string_tmp);
+	map_converted_string_tmp=NULL;
+	if(!this_ || !this_->meth.charset || !strcmp(this_->meth.charset, "utf-8"))
+		return str;
+	map_converted_string_tmp=g_convert(str, -1, "utf-8", this_->meth.charset, NULL, NULL, NULL);
+	if(!map_converted_string_tmp) {
+		dbg(0,"Error converting '%s' from %s to utf-8\n", str, this_->meth.charset);
+		return str;
+	}	
+	return map_converted_string_tmp;
+}
+
 /**
  * @brief Converts a string from a map
  *
@@ -217,12 +243,17 @@ map_requires_conversion(struct map *this_)
 char *
 map_convert_string(struct map *this_, char *str)
 {
-	return g_convert(str, -1,"utf-8",this_->meth.charset,NULL,NULL,NULL);
+	return map_convert_dup(map_convert_string_tmp(this_,str));
 }
+
 
 char *
 map_convert_dup(char *str)
 {
+	if(map_converted_string_tmp==str) {
+		map_converted_string_tmp=NULL;
+		return str;
+	}
 	return g_strdup(str);
 }
 
