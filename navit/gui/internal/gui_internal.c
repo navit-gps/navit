@@ -630,7 +630,7 @@ gui_internal_select_waypoint(struct gui_priv *this, const char *title, const cha
 	struct map *map;
 	struct map_rect *mr;
 	struct item *item;
-	char *label,*text;
+	char *text;
 	int i;
 	int dstcount=navit_get_destination_count(this->nav)+1;
 
@@ -655,9 +655,7 @@ gui_internal_select_waypoint(struct gui_priv *this, const char *title, const cha
 		if(item->type!=type_waypoint && item->type!=type_route_end)
 			continue;
 		if (item_attr_get(item, attr_label, &attr)) {
-			label=map_convert_string(item->map, attr.u.str);
-			text=g_strdup_printf(_("Waypoint %s"), label);
-			map_convert_free(label);
+			text=g_strdup_printf(_("Waypoint %s"), map_convert_string_tmp(item->map, attr.u.str));
 		} else
 			continue;
 		gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
@@ -887,7 +885,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 		if (item) {
 			while(item_attr_get(item, attr_url_local, &attr)) {
 				if (! cmd)
-					cmd=g_strdup_printf("navit-browser.sh '%s' &",attr.u.str);
+					cmd=g_strdup_printf("navit-browser.sh '%s' &",map_convert_string_tmp(item->map,attr.u.str));
 			}
 		}
 		map_rect_destroy(mr);
@@ -1150,7 +1148,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
 		if (item) {
 			if (item_attr_get(item, attr_description, &attr))
-				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
+				gui_internal_widget_append(w, gui_internal_label_new(this, map_convert_string_tmp(item->map,attr.u.str)));
 			if (item_attr_get(item, attr_url_local, &attr)) {
 				gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
 				gui_internal_widget_append(row,
@@ -1264,7 +1262,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		struct point p;
 		struct transformation *trans;
 		
-		char *text, *label;
+		char *text;
 		struct map_selection *sel;
 		GList *l, *ll;
 		
@@ -1293,9 +1291,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				continue;
 			}
 			if (item_attr_get(itemo, attr_label, &attr)) {
-				label=map_convert_string(itemo->map, attr.u.str);
-				text=g_strdup(label);
-				map_convert_free(label);
+				text=g_strdup(map_convert_string_tmp(itemo->map, attr.u.str));
 			} else
 				text=g_strdup(item_to_name(item->type));
 			gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,gravity_left|orientation_horizontal|flags_fill));
@@ -1547,7 +1543,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
-			label_full=attr.u.str;
+			label_full=map_convert_string_tmp(item->map,attr.u.str);
 			dbg(2,"full_labled: %s\n",label_full);
 			
 			// hassub == 1 if the item type is a sub-folder
@@ -3145,7 +3141,7 @@ gui_internal_populate_route_table(struct gui_priv * this, struct navit * navit)
 								  | orientation_horizontal);
 			  gui_internal_widget_append(this->route_data.route_table,row);
 
-			  label = gui_internal_label_new(this,attr.u.str);
+			  label = gui_internal_label_new(this,map_convert_string_tmp(item->map,attr.u.str));
 			  gui_internal_widget_append(row,label);
 
 			  label->item=*item;
