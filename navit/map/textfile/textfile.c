@@ -340,7 +340,7 @@ map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 
 static struct map_methods map_methods_textfile = {
 	projection_mg,
-	"iso8859-1",
+	"utf-8",
 	map_destroy_textfile,
 	map_rect_new_textfile,
 	map_rect_destroy_textfile,
