@@ -145,10 +145,20 @@ save_map_csv(struct map_priv *m)
 				}
 				++at;
 			}
-			if(fprintf(fp,"%s\n", csv_line)<0) {
+
+			if(m->charset) {
+				tmpstr=g_convert(csv_line, -1,m->charset,"utf-8",NULL,NULL,NULL);
+				if(!tmpstr)
+					dbg(0,"Error converting '%s' to %s\n",csv_line, m->charset);
+			} else
+				tmpstr=csv_line;
+				
+			if(tmpstr && fprintf(fp,"%s\n", tmpstr)<0) {
 				ferr = 1;
 			}
 			g_free(csv_line);
+			if(m->charset)
+				g_free(tmpstr);
 		}
 
 		if(fclose(fp)) {
@@ -655,7 +665,7 @@ csv_create_item(struct map_rect_priv *mr, enum item_type it_type)
 
 static struct map_methods map_methods_csv = {
 	projection_mg,
-	"iso8859-1",
+	"utf-8",
 	map_destroy_csv,
 	map_rect_new_csv,
 	map_rect_destroy_csv,
@@ -734,7 +744,6 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 		m->flags=flags->u.num;
 
 	*meth = map_methods_csv;
-	meth->charset=m->charset;
 
 	data=attr_search(attrs, NULL, attr_data);
 
@@ -752,14 +761,18 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  /*if column number is wrong skip*/
 	  if((fp=fopen(m->filename,"rt"))) {
 		const int max_line_len = 256;
-		char *line=g_alloca(sizeof(char)*max_line_len);
+		char *linebuf=g_alloca(sizeof(char)*max_line_len);
 	  	while(!feof(fp)) {
-			if(fgets(line,max_line_len,fp)) {
-				char*line2;
-				char* delim = ",";
+			if(fgets(linebuf,max_line_len,fp)) {
+				char *line=g_convert(linebuf, -1,"utf-8",m->charset,NULL,NULL,NULL);
+				char *line2=NULL;
+				char *delim = ",";
 				int col_cnt=0;
-				char*tok;
-				
+				char *tok;
+				if(!line) {
+					dbg(0,"Error converting '%s' to utf-8 from %s\n",linebuf, m->charset);
+					continue;
+				}
 				if(line[strlen(line)-1]=='\n' || line[strlen(line)-1]=='\r') {
 					line[strlen(line)-1] = '\0';
 				}
@@ -840,6 +853,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 				else {
 	  				dbg(0,"ERROR: Non-matching attr count and column count: %d %d  SKIPPING line: %s\n",col_cnt, attr_cnt,line);
 				}
+				g_free(line);
 				g_free(line2);
 			}
 		}
