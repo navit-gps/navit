@@ -519,6 +519,7 @@ load_tilesdir(FILE *in)
 			printf("syntax error\n");
 		}
 	}
+	*last=NULL;
 }
 
 void
