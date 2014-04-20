@@ -824,12 +824,14 @@ public class NavitGraphics
 	protected void draw_polyline(Paint paint, int c[])
 	{
 		//	Log.e("NavitGraphics","draw_polyline");
+		paint.setStrokeWidth(c[0]);
+		paint.setARGB(c[1],c[2],c[3],c[4]);
 		paint.setStyle(Paint.Style.STROKE);
 		//paint.setAntiAlias(true);
 		//paint.setStrokeWidth(0);
 		Path path = new Path();
-		path.moveTo(c[0], c[1]);
-		for (int i = 2; i < c.length; i += 2)
+		path.moveTo(c[5], c[6]);
+		for (int i = 7; i < c.length; i += 2)
 		{
 			path.lineTo(c[i], c[i + 1]);
 		}
@@ -840,12 +842,14 @@ public class NavitGraphics
 	protected void draw_polygon(Paint paint, int c[])
 	{
 		//Log.e("NavitGraphics","draw_polygon");
+		paint.setStrokeWidth(c[0]);
+		paint.setARGB(c[1],c[2],c[3],c[4]);
 		paint.setStyle(Paint.Style.FILL);
 		//paint.setAntiAlias(true);
 		//paint.setStrokeWidth(0);
 		Path path = new Path();
-		path.moveTo(c[0], c[1]);
-		for (int i = 2; i < c.length; i += 2)
+		path.moveTo(c[5], c[6]);
+		for (int i = 7; i < c.length; i += 2)
 		{
 			path.lineTo(c[i], c[i + 1]);
 		}

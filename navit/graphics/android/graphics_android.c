@@ -267,18 +267,23 @@ static void initPaint(struct graphics_priv *gra, struct graphics_gc_priv *gc)
 static void
 draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	jint pc[count*2];
+	int arrsize=1+4+count*2;
+	jint pc[arrsize];
 	int i;
 	jintArray points;
 	if (count <= 0)
 		return;
-	points = (*jnienv)->NewIntArray(jnienv,count*2);
+	points = (*jnienv)->NewIntArray(jnienv,arrsize);
 	for (i = 0 ; i < count ; i++) {
-		pc[i*2]=p[i].x;
-		pc[i*2+1]=p[i].y;
+		pc[5+i*2]=p[i].x;
+		pc[5+i*2+1]=p[i].y;
 	}
-	initPaint(gra, gc);
-	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, count*2, pc);
+	pc[0]=gc->linewidth;
+	pc[1]=gc->a;
+	pc[2]=gc->r;
+	pc[3]=gc->g;
+	pc[4]=gc->b;
+	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, arrsize, pc);
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polyline, gc->gra->Paint, points);
 	(*jnienv)->DeleteLocalRef(jnienv, points);
 }
@@ -286,18 +291,23 @@ draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point 
 static void
 draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	jint pc[count*2];
+	int arrsize=1+4+count*2;
+	jint pc[arrsize];
 	int i;
 	jintArray points;
 	if (count <= 0)
 		return;
-	points = (*jnienv)->NewIntArray(jnienv,count*2);
+	points = (*jnienv)->NewIntArray(jnienv,arrsize);
 	for (i = 0 ; i < count ; i++) {
-		pc[i*2]=p[i].x;
-		pc[i*2+1]=p[i].y;
+		pc[5+i*2]=p[i].x;
+		pc[5+i*2+1]=p[i].y;
 	}
-	initPaint(gra, gc);
-	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, count*2, pc);
+	pc[0]=gc->linewidth;
+	pc[1]=gc->a;
+	pc[2]=gc->r;
+	pc[3]=gc->g;
+	pc[4]=gc->b;
+	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, arrsize, pc);
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polygon, gc->gra->Paint, points);
 	(*jnienv)->DeleteLocalRef(jnienv, points);
 }
