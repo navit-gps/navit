@@ -955,6 +955,8 @@ xi_start_element(xml_context *context,
 			xinclude(context, xistate->attribute_names, xistate->attribute_values, doc, error);
 			return;
 		}
+		if(!g_ascii_strcasecmp("xfragment", element_name))
+			return;
 		start_element(context, element_name, xistate->attribute_names, xistate->attribute_values, doc->user_data, error);
 		doc->active++;
 	}
@@ -985,7 +987,7 @@ xi_end_element (xml_context *context,
 	else
 		doc->last->child=NULL;
 	if (doc->active > 0) {
-		if(!g_ascii_strcasecmp("xi:include", element_name)) {
+		if(!g_ascii_strcasecmp("xi:include", element_name) || !g_ascii_strcasecmp("xfragment", element_name)) {
 			return;
 		}
 		end_element(context, element_name, doc->user_data, error);
