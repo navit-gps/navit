@@ -565,7 +565,7 @@ navit_handle_motion(struct navit *this_, struct point *p)
 			if (! this_->motion_timeout_callback)
 				this_->motion_timeout_callback=callback_new_1(callback_cast(navit_motion_timeout), this_);
 			if (! this_->motion_timeout)
-				this_->motion_timeout=event_add_timeout(100, 0, this_->motion_timeout_callback);
+				this_->motion_timeout=event_add_timeout(this_->drag_bitmap?10:100, 0, this_->motion_timeout_callback);
 		}
 	}
 }
