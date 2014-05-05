@@ -874,25 +874,40 @@ public class NavitGraphics
 		paint.setStyle(Paint.Style.STROKE);
 		draw_canvas.drawCircle(x, y, r / 2, paint);
 	}
-	protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy)
+	protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy, int bgcolor)
 	{
-		//		float fx = x;
-		//		float fy = y;
-		//Log.e("NavitGraphics","Text size "+size + " vs " + paint.getTextSize());
+		int oldcolor=paint.getColor();
+		Path path=null;
+	
 		paint.setTextSize(size / 15);
 		paint.setStyle(Paint.Style.FILL);
-		if (dx == 0x10000 && dy == 0)
-		{
-			draw_canvas.drawText(text, x, y, paint);
-		}
-		else
-		{
-			Path path = new Path();
+
+		if (dx != 0x10000 || dy != 0) {
+			path = new Path();
 			path.moveTo(x, y);
 			path.rLineTo(dx, dy);
 			paint.setTextAlign(android.graphics.Paint.Align.LEFT);
+		}
+
+		if(bgcolor!=0) {
+			paint.setStrokeWidth(3);
+			paint.setColor(bgcolor);
+			paint.setStyle(Paint.Style.STROKE);
+			if(path==null) {
+				draw_canvas.drawText(text, x, y, paint);
+			} else {
+				draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
+			}
+			paint.setStyle(Paint.Style.FILL);
+			paint.setColor(oldcolor);
+		}
+
+		if(path==null) {
+			draw_canvas.drawText(text, x, y, paint);
+		} else {
 			draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
 		}
+		paint.clearShadowLayer();
 	}
 	protected void draw_image(Paint paint, int x, int y, Bitmap bitmap)
 	{
