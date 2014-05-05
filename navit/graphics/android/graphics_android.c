@@ -330,10 +330,13 @@ draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point
 static void
 draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
+	int bgcolor=0;
 	dbg(1,"enter %s\n", text);
 	initPaint(gra, fg);
+	if(bg)
+		bgcolor=(bg->a<<24)| (bg->r<<16) | (bg->g<<8) | bg->b;
 	jstring string = (*jnienv)->NewStringUTF(jnienv, text);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string, font->size, dx, dy);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string, font->size, dx, dy, bgcolor);
 	(*jnienv)->DeleteLocalRef(jnienv, string);
 }
 
@@ -615,7 +618,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_circle", "(Landroid/graphics/Paint;III)V", &ret->NavitGraphics_draw_circle))
 		return 0;
-	if (!find_method(ret->NavitGraphicsClass, "draw_text", "(Landroid/graphics/Paint;IILjava/lang/String;III)V", &ret->NavitGraphics_draw_text))
+	if (!find_method(ret->NavitGraphicsClass, "draw_text", "(Landroid/graphics/Paint;IILjava/lang/String;IIII)V", &ret->NavitGraphics_draw_text))
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_image", "(Landroid/graphics/Paint;IILandroid/graphics/Bitmap;)V", &ret->NavitGraphics_draw_image))
 		return 0;
