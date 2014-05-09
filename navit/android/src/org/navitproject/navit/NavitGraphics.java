@@ -823,20 +823,34 @@ public class NavitGraphics
 
 	protected void draw_polyline(Paint paint, int c[])
 	{
+		int i, ndashes;
+		float [] intervals;
 		//	Log.e("NavitGraphics","draw_polyline");
 		paint.setStrokeWidth(c[0]);
 		paint.setARGB(c[1],c[2],c[3],c[4]);
 		paint.setStyle(Paint.Style.STROKE);
 		//paint.setAntiAlias(true);
 		//paint.setStrokeWidth(0);
+		ndashes=c[5];
+		intervals=new float[ndashes+(ndashes%2)];
+		for (i = 0; i < ndashes; i++)
+			intervals[i]=c[6+i];
+
+		if((ndashes%2)==1)
+			intervals[ndashes]=intervals[ndashes-1];
+			
+		if(ndashes>0)
+			paint.setPathEffect(new android.graphics.DashPathEffect(intervals,0.0f));
+			
 		Path path = new Path();
-		path.moveTo(c[5], c[6]);
-		for (int i = 7; i < c.length; i += 2)
+		path.moveTo(c[6+ndashes], c[7+ndashes]);
+		for (i = 8+ndashes; i < c.length; i += 2)
 		{
 			path.lineTo(c[i], c[i + 1]);
 		}
 		//global_path.close();
 		draw_canvas.drawPath(path, paint);
+		paint.setPathEffect(null);
 	}
 
 	protected void draw_polygon(Paint paint, int c[])
