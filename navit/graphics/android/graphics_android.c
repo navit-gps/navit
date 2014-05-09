@@ -71,6 +71,8 @@ struct graphics_gc_priv {
 	int linewidth;
 	enum draw_mode_num mode;
 	int a,r,g,b;
+	unsigned char *dashes;
+	int ndashes;
 };
 
 struct graphics_image_priv {
@@ -142,6 +144,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
+	g_free(gc->dashes);
 	g_free(gc);
 }
 
@@ -154,6 +157,14 @@ gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 static void
 gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
+	g_free(gc->dashes);
+	gc->ndashes=n;
+	if(n) {
+		gc->dashes=g_malloc(n);
+		memcpy(gc->dashes, dash_list, n);
+	} else {
+		gc->dashes=NULL;
+	}
 }
 
 static void
@@ -267,22 +278,26 @@ static void initPaint(struct graphics_priv *gra, struct graphics_gc_priv *gc)
 static void
 draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	int arrsize=1+4+count*2;
+	int arrsize=1+4+1+gc->ndashes+count*2;
 	jint pc[arrsize];
 	int i;
 	jintArray points;
 	if (count <= 0)
 		return;
 	points = (*jnienv)->NewIntArray(jnienv,arrsize);
-	for (i = 0 ; i < count ; i++) {
-		pc[5+i*2]=p[i].x;
-		pc[5+i*2+1]=p[i].y;
-	}
 	pc[0]=gc->linewidth;
 	pc[1]=gc->a;
 	pc[2]=gc->r;
 	pc[3]=gc->g;
 	pc[4]=gc->b;
+	pc[5]=gc->ndashes;
+	for (i = 0 ; i < gc->ndashes ; i++) {
+		pc[6+i] = gc->dashes[i];
+	}
+	for (i = 0 ; i < count ; i++) {
+		pc[6+gc->ndashes+i*2]=p[i].x;
+		pc[6+gc->ndashes+i*2+1]=p[i].y;
+	}
 	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, arrsize, pc);
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polyline, gc->gra->Paint, points);
 	(*jnienv)->DeleteLocalRef(jnienv, points);
