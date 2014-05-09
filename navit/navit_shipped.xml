@@ -1111,16 +1111,16 @@ Waypoint</text></img>
 					<polyline color="#800000" width="1" dash="3,6"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled,track_grass" order="13-14">
-					<polyline color="#ffffff" width="4" dash="4,8"/>
-					<polyline color="#800000" width="2" dash="4,8"/>
+					<polyline color="#ffffff" width="4"/>
+					<polyline color="#800000" width="1" dash="4,8"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled,track_grass" order="15-16">
-					<polyline color="#ffffff" width="5" dash="5,10"/>
-					<polyline color="#800000" width="3" dash="5,10"/>
+					<polyline color="#ffffff" width="5"/>
+					<polyline color="#800000" width="1" dash="5,10"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled,track_grass" order="17-">
-					<polyline color="#ffffff" width="7" dash="7,15"/>
-					<polyline color="#800000" width="5" dash="7,15"/>
+					<polyline color="#ffffff" width="7"/>
+					<polyline color="#800000" width="1" dash="7,15"/>
 				</itemgra>
 				<itemgra item_types="track_unpaved,track_ground,path,hiking,hiking_mountain,hiking_mountain_demanding,hiking_alpine,hiking_alpine_demanding,hiking_alpine_difficult" order="10-">
 					<polyline color="#000000" width="1"/>
@@ -1216,50 +1216,50 @@ Waypoint</text></img>
 					<polyline color="#0000ff" width="1" dash="3,6" offset="4"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="13-14">
-					<polyline color="#ffffff" width="4" dash="4,8" offset="6"/>
-					<polyline color="#0000ff" width="2" dash="4,8" offset="6"/>
+					<polyline color="#ffffff" width="4" offset="6"/>
+					<polyline color="#0000ff" width="1" dash="4,8" offset="6"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="15-16">
-					<polyline color="#ffffff" width="5" dash="5,10" offset="7"/>
-					<polyline color="#0000ff" width="3" dash="5,10" offset="7"/>
+					<polyline color="#ffffff" width="5" offset="7"/>
+					<polyline color="#0000ff" width="1" dash="5,10" offset="7"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="17-">
-					<polyline color="#ffffff" width="7" dash="7,15" offset="10"/>
-					<polyline color="#0000ff" width="5" dash="7,15" offset="10"/>
+					<polyline color="#ffffff" width="7" offset="10"/>
+					<polyline color="#0000ff" width="1" dash="7,15" offset="10"/>
 				</itemgra>
 				<itemgra item_types="footway_and_piste_nordic" order="10-12">
 					<polyline color="#ff0000" width="1" dash="3,15"/>
 					<polyline color="#0000ff" width="1" dash="3,15" offset="9"/>
 				</itemgra>
 				<itemgra item_types="footway_and_piste_nordic" order="13-14">
-					<polyline color="#ffffff" width="4" dash="4,8"/>
-					<polyline color="#ff0000" width="2" dash="4,20"/>
-					<polyline color="#0000ff" width="2" dash="4,20" offset="12"/>
+					<polyline color="#ffffff" width="4"/>
+					<polyline color="#ff0000" width="2"/>
+					<polyline color="#0000ff" width="1" dash="4,20" offset="12"/>
 				</itemgra>
 				<itemgra item_types="footway_and_piste_nordic" order="15-16">
-					<polyline color="#ffffff" width="5" dash="5,10"/>
-					<polyline color="#ff0000" width="3" dash="5,25"/>
-					<polyline color="#0000ff" width="3" dash="5,25" offset="15"/>
+					<polyline color="#ffffff" width="5"/>
+					<polyline color="#ff0000" width="3"/>
+					<polyline color="#0000ff" width="1" dash="5,25" offset="15"/>
 				</itemgra>
 				<itemgra item_types="footway_and_piste_nordic" order="17-">
-					<polyline color="#ffffff" width="7" dash="7,15"/>
-					<polyline color="#ff0000" width="5" dash="7,37"/>
-					<polyline color="#0000ff" width="5" dash="7,37" offset="22"/>
+					<polyline color="#ffffff" width="7"/>
+					<polyline color="#ff0000" width="5"/>
+					<polyline color="#0000ff" width="1" dash="7,37" offset="22"/>
 				</itemgra>
 				<itemgra item_types="footway" order="10-12">
 					<polyline color="#ff0000" width="1" dash="3,6"/>
 				</itemgra>
 				<itemgra item_types="footway" order="13-14">
-					<polyline color="#ffffff" width="4" dash="4,8"/>
-					<polyline color="#ff0000" width="2" dash="4,8"/>
+					<polyline color="#ffffff" width="4"/>
+					<polyline color="#ff0000" width="1" dash="4,8"/>
 				</itemgra>
 				<itemgra item_types="footway" order="15-16">
-					<polyline color="#ffffff" width="5" dash="5,10"/>
-					<polyline color="#ff0000" width="3" dash="5,10"/>
+					<polyline color="#ffffff" width="5"/>
+					<polyline color="#ff0000" width="1" dash="5,10"/>
 				</itemgra>
 				<itemgra item_types="footway" order="17-">
-					<polyline color="#ffffff" width="7" dash="7,15"/>
-					<polyline color="#ff0000" width="5" dash="7,15"/>
+					<polyline color="#ffffff" width="7"/>
+					<polyline color="#ff0000" width="1" dash="7,15"/>
 				</itemgra>
 				<itemgra item_types="steps" order="10-">
 					<polyline color="#000000" width="1"/>
@@ -2690,11 +2690,11 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="rail" order="6-8">
 					<polyline color="#282828" width="2"/>
-					<polyline color="#3d3d3d" dash="1,5" width="2"/>
+					<polyline color="#3d3d3d" dash="1,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail" order="9-">
 					<polyline color="#282828" width="3"/>
-					<polyline color="#3d3d3d" dash="1,5" width="2"/>
+					<polyline color="#3d3d3d" dash="1,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="ferry" order="5-">
 					<polyline color="#113111" width="1" dash="10"/>
@@ -2762,16 +2762,16 @@ Waypoint</text></img>
 					<polyline color="#800000" width="1" dash="3,6"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled" order="13-14">
-					<polyline color="#3d3d3d" width="4" dash="4,8"/>
-					<polyline color="#800000" width="2" dash="4,8"/>
+					<polyline color="#3d3d3d" width="4"/>
+					<polyline color="#800000" width="1" dash="4,8"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled" order="15-16">
-					<polyline color="#3d3d3d" width="5" dash="5,10"/>
-					<polyline color="#800000" width="3" dash="5,10"/>
+					<polyline color="#3d3d3d" width="5"/>
+					<polyline color="#800000" width="1" dash="5,10"/>
 				</itemgra>
 				<itemgra item_types="track_gravelled" order="17-">
-					<polyline color="#3d3d3d" width="7" dash="7,15"/>
-					<polyline color="#800000" width="5" dash="7,15"/>
+					<polyline color="#3d3d3d" width="7"/>
+					<polyline color="#800000" width="1" dash="7,15"/>
 				</itemgra>
 				<itemgra item_types="track_unpaved" order="10-">
 					<polyline color="#000000" width="1"/>
@@ -2867,25 +2867,31 @@ Waypoint</text></img>
 					<polyline color="#0000ff" width="1" dash="3,6"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="13-14">
-					<polyline color="#0000ff" width="2" dash="4,8"/>
+					<polyline color="#0000ff" width="2"/>
+					<polyline color="#000000" width="1" dash="4,8"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="15-16">
-					<polyline color="#0000ff" width="3" dash="5,10"/>
+					<polyline color="#0000ff" width="3"/>
+					<polyline color="#000000" width="1" dash="5,10"/>
 				</itemgra>
 				<itemgra item_types="piste_nordic" order="17-">
-					<polyline color="#0000ff" width="5" dash="7,15"/>
+					<polyline color="#0000ff" width="5"/>
+					<polyline color="#000000" width="1" dash="7,15"/>
 				</itemgra>
 				<itemgra item_types="footway" order="11-12">
 					<polyline color="#4e0000" width="1" dash="3,6"/>
 				</itemgra>
 				<itemgra item_types="footway" order="13-14">
-					<polyline color="#4e0000" width="2" dash="4,8"/>
+					<polyline color="#4e0000" width="2"/>
+					<polyline color="#000000" width="1" dash="4,8"/>
 				</itemgra>
 				<itemgra item_types="footway" order="15-16">
-					<polyline color="#4e0000" width="3" dash="5,10"/>
+					<polyline color="#4e0000" width="3"/>
+					<polyline color="#000000" width="1" dash="5,10"/>
 				</itemgra>
 				<itemgra item_types="footway" order="17-">
-					<polyline color="#4e0000" width="5" dash="7,15"/>
+					<polyline color="#4e0000" width="5"/>
+					<polyline color="#000000" width="1" dash="7,15"/>
 				</itemgra>
 				<itemgra item_types="steps" order="14-15">
 					<polyline color="#4d4e11" width="1"/>
@@ -4168,16 +4174,16 @@ Waypoint</text></img>
           <polyline color="#000000" width="1" />
         </itemgra>
         <itemgra item_types="track_gravelled" order="14">
-          <polyline color="#ffffff" width="4" dash="4,8" />
-          <polyline color="#800000" width="2" dash="4,8" />
+          <polyline color="#ffffff" width="4"/>
+          <polyline color="#800000" width="1" dash="4,8" />
         </itemgra>
         <itemgra item_types="track_gravelled" order="15-16">
-          <polyline color="#ffffff" width="5" dash="5,10" />
-          <polyline color="#800000" width="3" dash="5,10" />
+          <polyline color="#ffffff" width="5"/>
+          <polyline color="#800000" width="1" dash="5,10" />
         </itemgra>
         <itemgra item_types="track_gravelled" order="17-">
-          <polyline color="#ffffff" width="7" dash="7,15" />
-          <polyline color="#800000" width="5" dash="7,15" />
+          <polyline color="#ffffff" width="7"/>
+          <polyline color="#800000" width="1" dash="7,15" />
         </itemgra>
         <itemgra item_types="track_unpaved" order="14-">
           <polyline color="#000000" width="1" />
@@ -4198,12 +4204,12 @@ Waypoint</text></img>
           <polyline color="#696969" width="1" dash="5" />
         </itemgra>
         <itemgra item_types="footway" order="15-16">
-          <polyline color="#ffffff" width="5" dash="5,10" />
-          <polyline color="#ff0000" width="3" dash="5,10" />
+          <polyline color="#ffffff" width="5"/>
+          <polyline color="#ff0000" width="1" dash="5,10" />
         </itemgra>
         <itemgra item_types="footway" order="17-">
-          <polyline color="#ffffff" width="7" dash="7,15" />
-          <polyline color="#ff0000" width="5" dash="7,15" />
+          <polyline color="#ffffff" width="7"/>
+          <polyline color="#ff0000" width="1" dash="7,15" />
         </itemgra>
         <itemgra item_types="steps" order="15-">
           <polyline color="#000000" width="1" />
@@ -5618,22 +5624,28 @@ Waypoint</text></img>
 			</layer>
 			<layer name="Borders">
 				<itemgra item_types="border_state" order="0-5">
-					<polyline color="#778899" dash="3,2,1,3" width="3"/>
+					<polyline color="#778899" width="3"/>
+					<polyline color="#ffefb7" dash="3,2,1,3" width="1"/>
 				</itemgra>
 				<itemgra item_types="border_country" order="0-5">
-					<polyline color="#778899" dash="3,2,1,3" width="2"/>
+					<polyline color="#778899" width="2"/>
+					<polyline color="#ffefb7" dash="3,2,1,3" width="1"/>
 				</itemgra>
 				<itemgra item_types="border_state" order="6-11">
-					<polyline color="#778899" dash="6,6,1,6" width="3"/>
+					<polyline color="#778899" width="3"/>
+					<polyline color="#ffefb7" dash="6,6,1,6" width="1"/>
 				</itemgra>
 				<itemgra item_types="border_country" order="6-11">
-					<polyline color="#778899" dash="6,6,1,6" width="2"/>
+					<polyline color="#778899" width="2"/>
+					<polyline color="#ffefb7" dash="6,6,1,6" width="1"/>
 				</itemgra>
 				<itemgra item_types="border_state" order="12-20">
-					<polyline color="#778899" dash="10,10,2,10" width="3"/>
+					<polyline color="#778899" width="3"/>
+					<polyline color="#ffefb7" dash="10,10,2,10" width="1"/>
 				</itemgra>
 				<itemgra item_types="border_country" order="12-20">
-					<polyline color="#778899" dash="10,10,2,10" width="2"/>
+					<polyline color="#778899" width="2"/>
+					<polyline color="#ffefb7" dash="10,10,2,10" width="1"/>
 				</itemgra>
 			</layer>
 			<layer name="Current Route">
@@ -5698,11 +5710,12 @@ Waypoint</text></img>
 					<polyline color="#fefefe" width="1"/>
 				</itemgra>
 				<itemgra item_types="track_ground" order="11-">
-					<polyline color="#d2d2d2" width="3" dash="6,6"/>
+					<polyline color="#d2d2d2" width="3"/>
 					<polyline color="#fefefe" width="1" dash="6,6"/>
 				</itemgra>
 				<itemgra item_types="track_grass" order="12-">
-					<polyline color="#fefefe" width="2" dash="6,6"/>
+					<polyline color="#fefefe" width="2"/>
+					<polyline color="#ffefb7" width="1" dash="6,6"/>
 				</itemgra>
 				<itemgra item_types="bridleway" order="10-">
 					<polyline color="#8b4513" width="3"/>
@@ -5721,16 +5734,20 @@ Waypoint</text></img>
 					<polyline color="#F4A460" width="1" dash="6,4"/>
 				</itemgra>
 				<itemgra item_types="path" order="11-">
-					<polyline color="#8b4513" width="3" dash="2,4"/>
+					<polyline color="#8b4513" width="3"/>
+					<polyline color="#ffefb7" width="1" dash="2,4"/>
 				</itemgra>
 				<itemgra item_types="hiking" order="11-">
-					<polyline color="#8b4513" width="2" dash="4,4"/>
+					<polyline color="#8b4513" width="2"/>
+					<polyline color="#ffefb7" width="1" dash="4,4"/>
 				</itemgra>
 				<itemgra item_types="hiking_mountain" order="11-">
-					<polyline color="#8b4513" width="2" dash="6,4"/>
+					<polyline color="#8b4513" width="2"/>
+					<polyline color="#ffefb7" width="1" dash="6,4"/>
 				</itemgra>
 				<itemgra item_types="hiking_mountain_demanding" order="13-">
-					<polyline color="#8b4513" width="2" dash="8,4"/>
+					<polyline color="#8b4513" width="2"/>
+					<polyline color="#ffefb7" width="1" dash="8,4"/>
 				</itemgra>
 				<itemgra item_types="hiking_alpine" order="13-">
 					<polyline color="#8b4513" width="1" dash="10,4"/>
@@ -6170,39 +6187,39 @@ Waypoint</text></img>
 			<layer name="Railways">
 				<itemgra item_types="rail" order="6-9">
 					<polyline color="#696969" width="4"/>
-					<polyline color="#FFFFFF" dash="2,5" width="2"/>
+					<polyline color="#FFFFFF" dash="2,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_narrow_gauge" order="6-9">
 					<polyline color="#696969" width="4"/>
-					<polyline color="#FFFFFF" dash="2,5" width="2"/>
+					<polyline color="#FFFFFF" dash="2,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail" order="10-13">
 					<polyline color="#696969" width="6"/>
-					<polyline color="#FFFFFF" dash="3,8" width="3"/>
+					<polyline color="#FFFFFF" dash="3,8" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_narrow_gauge" order="10-13">
 					<polyline color="#696969" width="6"/>
-					<polyline color="#FFFFFF" dash="3,8" width="3"/>
+					<polyline color="#FFFFFF" dash="3,8" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail" order="14-18">
 					<polyline color="#696969" width="8"/>
-					<polyline color="#FFFFFF" dash="4,12" width="5"/>
+					<polyline color="#FFFFFF" dash="4,12" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_narrow_gauge" order="14-18">
 					<polyline color="#696969" width="8"/>
-					<polyline color="#FFFFFF" dash="4,12" width="5"/>
+					<polyline color="#FFFFFF" dash="4,12" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_light" order="10-13">
 					<polyline color="#696969" width="4"/>
-					<polyline color="#FFFFFF" dash="2,5" width="2"/>
+					<polyline color="#FFFFFF" dash="2,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_light" order="14-18">
 					<polyline color="#696969" width="6"/>
-					<polyline color="#FFFFFF" dash="4,8" width="4"/>
+					<polyline color="#FFFFFF" dash="4,8" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_subway" order="8-">
 					<polyline color="#696969" width="2"/>
-					<polyline color="#FFFFFF" dash="5,5" width="2"/>
+					<polyline color="#FFFFFF" dash="5,5" width="1"/>
 				</itemgra>
 				<itemgra item_types="rail_mono" order="10-">
 					<polyline color="#696969" width="2"/>
@@ -6220,19 +6237,20 @@ Waypoint</text></img>
 					<polyline color="#f5f5f5" width="1" dash="10"/>
 				</itemgra>
 				<itemgra item_types="lift_cable_car" order="10-">
-					<polyline color="#778899" width="1"/>
-					<polyline color="#778899" dash="1,40" width="5"/>
+					<polyline color="#778899" width="5"/>
+					<polyline color="#ffefb7" dash="1,40" width="1"/>
 				</itemgra>
 				<itemgra item_types="lift_chair" order="10-">
-					<polyline color="#778899" width="1"/>
-					<polyline color="#778899" dash="1,40" width="5"/>
+					<polyline color="#778899" width="5"/>
+					<polyline color="#ffefb7" dash="1,40" width="1"/>
 				</itemgra>
 				<itemgra item_types="lift_drag" order="10-">
-					<polyline color="#778899" width="1"/>
-					<polyline color="#778899" dash="1,40" width="5"/>
+					<polyline color="#778899" width="5"/>
+					<polyline color="#ffefb7" dash="1,40" width="1"/>
 				</itemgra>
 				<itemgra item_types="ferry" order="5-">
-					<polyline color="#000000" width="3" dash="5"/>
+					<polyline color="#000000" width="3"/>
+					<polyline color="#ffefb7"  width="1" dash="5"/>
 				</itemgra>
 				<itemgra item_types="track" order="3-">
 					<polyline color="#3f3f3f" width="1"/>
