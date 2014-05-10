@@ -242,6 +242,7 @@ struct graphics_gc_priv
     COLORREF    fg_color;
     int         fg_alpha;
     COLORREF    bg_color;
+    int		dashed;
     HPEN hpen;
     HBRUSH hbrush;
     struct graphics_priv *gr;
@@ -767,11 +768,14 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
     DeleteObject (gc->hpen);
     gc->line_width = w;
-    gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
+    gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
 }
 
 static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n)
 {
+	gc->dashed=n>0;
+	DeleteObject (gc->hpen);
+	gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
 //	gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
 //	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 }
@@ -784,7 +788,7 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 
     DeleteObject (gc->hpen);
     DeleteObject (gc->hbrush);
-    gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
+    gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
 	if ( gc->gr && c->a < 0xFFFF )
     {
@@ -819,6 +823,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     gc->line_width = 1;
     gc->fg_color = RGB( 0,0,0 );
     gc->bg_color = RGB( 255,255,255 );
+    gc->dashed=0;
     gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
     gc->gr = gr;
@@ -831,6 +836,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
     int i;
 
     HPEN hpenold = SelectObject( gr->hMemDC, gc->hpen );
+    int oldbkmode=SetBkMode( gr->hMemDC, TRANSPARENT);
 
     int first = 1;
     for ( i = 0; i< count; i++ )
@@ -845,7 +851,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
             LineTo( gr->hMemDC, p[i].x, p[i].y );
         }
     }
-
+    SetBkMode( gr->hMemDC, oldbkmode);
     SelectObject( gr->hMemDC, hpenold);
 }
 
