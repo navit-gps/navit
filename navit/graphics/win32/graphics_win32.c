@@ -241,6 +241,7 @@ struct graphics_gc_priv
     int         line_width;
     COLORREF    fg_color;
     int         fg_alpha;
+    int         bg_alpha;
     COLORREF    bg_color;
     int		dashed;
     HPEN hpen;
@@ -800,6 +801,7 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
     gc->bg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
+    gc->bg_alpha = c->a;
     if ( gc->gr && gc->gr->hMemDC )
         SetBkColor( gc->gr->hMemDC, gc->bg_color );
 
@@ -823,6 +825,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     gc->line_width = 1;
     gc->fg_color = RGB( 0,0,0 );
     gc->bg_color = RGB( 255,255,255 );
+    gc->fg_alpha = 65535;
+    gc->bg_alpha = 0;
     gc->dashed=0;
     gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
@@ -1026,7 +1030,6 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
     GetClientRect( gr->wnd_handle, &rcClient );
 
-    SetTextColor(gr->hMemDC, fg->fg_color);
     prevBkMode = SetBkMode( gr->hMemDC, TRANSPARENT );
 
     if ( NULL == font->hfont )
@@ -1062,8 +1065,20 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
                                &utf16p, utf16p+sizeof(utf16),
                                lenientConversion) == conversionOK)
         {
+	    if(bg->fg_alpha) {
+	    	SetTextColor(gr->hMemDC, bg->fg_color);
+	        ExtTextOutW(gr->hMemDC, -1, -1, 0, NULL,
+        	            utf16, (wchar_t*) utf16p - utf16, NULL);
+            	ExtTextOutW(gr->hMemDC, 1, 1, 0, NULL,
+                	    utf16, (wchar_t*) utf16p - utf16, NULL);
+	        ExtTextOutW(gr->hMemDC, -1, 1, 0, NULL,
+        	            utf16, (wchar_t*) utf16p - utf16, NULL);
+            	ExtTextOutW(gr->hMemDC, 1, -1, 0, NULL,
+                	    utf16, (wchar_t*) utf16p - utf16, NULL);
+            }
+    	    SetTextColor(gr->hMemDC, fg->fg_color);
             ExtTextOutW(gr->hMemDC, 0, 0, 0, NULL,
-                        utf16, (wchar_t*) utf16p - utf16, NULL);
+                	    utf16, (wchar_t*) utf16p - utf16, NULL);
         }
     }
 
