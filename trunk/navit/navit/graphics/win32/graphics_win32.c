@@ -1065,7 +1065,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
                                &utf16p, utf16p+sizeof(utf16),
                                lenientConversion) == conversionOK)
         {
-	    if(bg->fg_alpha) {
+	    if(bg && bg->fg_alpha) {
 	    	SetTextColor(gr->hMemDC, bg->fg_color);
 	        ExtTextOutW(gr->hMemDC, -1, -1, 0, NULL,
         	            utf16, (wchar_t*) utf16p - utf16, NULL);
