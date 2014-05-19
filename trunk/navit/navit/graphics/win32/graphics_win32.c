@@ -63,8 +63,11 @@ struct graphics_priv
     struct navit *nav;
     struct window window;
     struct point p;
+    int x;
+    int y;
     int width;
     int height;
+    int frame;
     int disabled;
     HANDLE wnd_parent_handle;
     HANDLE wnd_handle;
@@ -690,11 +693,16 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
         return NULL;
     }
 
-    if ( hMenu )
+    if(gr->frame)
     {
-        wStyle = WS_CHILD;
-	} else {
-        wStyle = WS_OVERLAPPED|WS_VISIBLE;
+        if ( hMenu )
+        {
+            wStyle = WS_CHILD;
+        } else {
+            wStyle = WS_OVERLAPPED|WS_VISIBLE;
+        }
+    } else {
+            wStyle = WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
     }
 
 #ifdef HAVE_API_WIN32_CE
@@ -713,8 +721,8 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
     g_hwnd = hwnd = CreateWindow(g_szClassName,
                                  TEXT("Navit"),
                                  wStyle,
-                                 0,
-                                 0,
+                                 gr->x,
+                                 gr->y,
                                  gr->width,
                                  gr->height,
                                  gr->wnd_parent_handle,
@@ -1644,6 +1652,15 @@ static struct graphics_priv*
         return NULL;
     this_=graphics_win32_new_helper(meth);
     this_->nav=nav;
+    this_->frame=1;
+    if ((attr=attr_search(attrs, NULL, attr_frame)))
+        this_->frame=attr->u.num;
+    this_->x=0;
+    if ((attr=attr_search(attrs, NULL, attr_x)))
+        this_->x=attr->u.num;
+    this_->y=0;
+    if ((attr=attr_search(attrs, NULL, attr_y)))
+        this_->y=attr->u.num;
     this_->width=792;
     if ((attr=attr_search(attrs, NULL, attr_w)))
         this_->width=attr->u.num;
