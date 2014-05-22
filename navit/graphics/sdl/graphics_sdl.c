@@ -49,6 +49,7 @@
 #undef SDL_GFX
 #undef ALPHA
 
+#define SDL_IMAGE
 #undef LINUX_TOUCHSCREEN
 
 #ifdef USE_WEBOS
@@ -887,7 +888,7 @@ display_text_draw(struct font_freetype_text *text,
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
-    struct color black = { fg->fore_r * 255, fg->fore_g * 255, 
+    struct color black = { fg->fore_r * 255, fg->fore_g * 255,
 	fg->fore_b * 255, fg->fore_a * 255 };
     struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
 
