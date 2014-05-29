@@ -56,6 +56,10 @@ int slices;
 int unknown_country;
 int doway2poi=1;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
+/** Textual description of available experimental features, or NULL (=none available). */
+char* experimental_feature_description = NULL; /* add description here */
+/** Indicates if experimental features (if available) were enabled. */
+int experimental;
 
 struct buffer node_buffer = {
 	64*1024*1024,
@@ -157,6 +161,8 @@ usage(FILE *f)
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
+	fprintf(f,"-E (--experimental)               : Enable experimental features (%s)\n",
+		experimental_feature_description ? experimental_feature_description : "-not available in this version-");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
@@ -235,6 +241,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"dump", 0, 0, 'D'},
 		{"dump-coordinates", 0, 0, 'c'},
 		{"end", 1, 0, 'e'},
+		{"experimental", 0, 0, 'E'},
 		{"help", 0, 0, 'h'},
 		{"keep-tmpfiles", 0, 0, 'k'},
 		{"nodes-only", 0, 0, 'N'},
@@ -273,6 +280,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'D':
 		p->output=1;
+		break;
+	case 'E':
+		experimental=1;
 		break;
 	case 'M':
 		p->o5m=1;
@@ -819,6 +829,10 @@ int main(int argc, char **argv)
 			usage(stdout);
 			exit(0);
 		}
+	}
+	if (experimental && (!experimental_feature_description )) {
+		fprintf(stderr,"No experimental features available in this version, aborting. \n");
+		exit(1);
 	}
 	if (optind != argc-(p.output == 1 ? 0:1))
 		usage(stderr);
