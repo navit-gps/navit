@@ -70,8 +70,8 @@ char is_in_buffer[BUFFER_SIZE];
 char attr_strings_buffer[BUFFER_SIZE*16];
 int attr_strings_buffer_len;
 
-
-struct coord coord_buffer[65536];
+#define MAX_COORD_COUNT 65536
+struct coord coord_buffer[MAX_COORD_COUNT];
 
 struct attr_mapping {
 	enum item_type type;
@@ -115,9 +115,10 @@ char *attr_strings[attr_string_last];
 
 char *osm_types[]={"unknown","node","way","relation"};
 
-#define IS_REF(c) ((c).x >= (1 << 30))
-#define REF(c) ((unsigned)(c).y)
-#define SET_REF(c,ref) do { (c).x = 1 << 30; (c).y = ref ; } while(0)
+#define REF_MARKER (1 << 30)
+#define IS_REF(c) ((c).x == REF_MARKER)
+#define GET_REF(c) ((unsigned)(c).y)
+#define SET_REF(c,ref) do { (c).x = REF_MARKER; (c).y = ref ; } while(0)
 
 /* Table of country codes with possible is_in spellings. 
  *  Note: If you update this list, check also country array in country.c 
@@ -2773,7 +2774,7 @@ nodes_ref_item_bin(struct item_bin *ib)
 	int i;
 	struct coord *c=(struct coord *)(ib+1);
 	for (i = 0 ; i < ib->clen/2 ; i++) 
-		node_ref_way(REF(c[i]));
+		node_ref_way(GET_REF(c[i]));
 }
 
 
@@ -2782,8 +2783,8 @@ osm_add_nd(osmid ref)
 {
 	SET_REF(coord_buffer[coord_count], ref);
 	coord_count++;
-	if (coord_count > 65536) {
-		fprintf(stderr,"ERROR: Overflow\n");
+	if (coord_count > MAX_COORD_COUNT) {
+		fprintf(stderr,"ERROR: Overflow - more than %d coordinates in one way.\n", MAX_COORD_COUNT);
 		exit(1);
 	}
 }
@@ -2851,7 +2852,7 @@ resolve_ways(FILE *in, FILE *out)
 		for (i = 0 ; i < ib->clen/2 ; i++) {
 			if(!IS_REF(c[i]))
 				continue;
-			ni=node_item_get(REF(c[i]));
+			ni=node_item_get(GET_REF(c[i]));
 			if(ni) {
 				c[i].x=ni->c.x;
 				c[i].y=ni->c.y;
@@ -2938,7 +2939,7 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 		last=0;
 		for (i = 0 ; i < ccount ; i++) {
 			if (IS_REF(c[i])) {
-				ndref=REF(c[i]);
+				ndref=GET_REF(c[i]);
 				ni=node_item_get(ndref);
 				if (ni) {
 					c[i]=ni->c;
