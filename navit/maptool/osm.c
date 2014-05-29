@@ -68,7 +68,7 @@ long long osmid_attr_value;
 char is_in_buffer[BUFFER_SIZE];
 
 char attr_strings_buffer[BUFFER_SIZE*16];
-int attr_strings_buffer_len;
+int attr_strings_buffer_free_offset;
 
 #define MAX_COORD_COUNT 65536
 struct coord coord_buffer[MAX_COORD_COUNT];
@@ -95,7 +95,7 @@ static int attr_longest_match(struct attr_mapping **mapping, int mapping_count, 
 static void attr_longest_match_clear(void);
 
 
-enum attr_strings {
+enum attr_strings_type {
 	attr_string_phone,
 	attr_string_fax,
 	attr_string_email,
@@ -888,18 +888,18 @@ osm_info(char *type, osmid id, int cont, char *fmt, ...)
 static void
 attr_strings_clear(void)
 {
-	attr_strings_buffer_len=0;
+	attr_strings_buffer_free_offset=0;
 	memset(attr_strings, 0, sizeof(attr_strings));
 }
 
 static void
-attr_strings_save(enum attr_strings id, char *str)
+attr_strings_save(enum attr_strings_type id, char *str)
 {
-	int len=strlen(str)+1;
-	dbg_assert(attr_strings_buffer_len+len+1<sizeof(attr_strings_buffer));
-	attr_strings[id]=attr_strings_buffer+attr_strings_buffer_len;
-	g_strlcpy(attr_strings[id], str, len+1);
-	attr_strings_buffer_len+=len+1;
+	int str_size=strlen(str)+1;
+	dbg_assert(attr_strings_buffer_free_offset+str_size<sizeof(attr_strings_buffer));
+	attr_strings[id]=attr_strings_buffer+attr_strings_buffer_free_offset;
+	g_strlcpy(attr_strings[id], str, str_size);
+	attr_strings_buffer_free_offset+=str_size;
 }
 
 osmid
