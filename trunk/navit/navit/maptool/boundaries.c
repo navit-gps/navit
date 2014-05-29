@@ -268,7 +268,7 @@ process_boundaries_finish(GList *boundaries_list)
 				c++;
 			}
 			if (f) {
-				struct item_bin *ib=item_bin;
+				struct item_bin *ib=tmp_item_bin;
 				item_bin_init(ib, type_selected_line);
 				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
 				item_bin_write(ib, f);
@@ -281,7 +281,7 @@ process_boundaries_finish(GList *boundaries_list)
 						fu=tempfile("",name,1);
 						g_free(name);
 					}
-					ib=item_bin;
+					ib=tmp_item_bin;
 					item_bin_init(ib, type_selected_point);
 					item_bin_add_coord(ib, gs->first, 1);
 					item_bin_write(ib, fu);
@@ -344,7 +344,7 @@ process_boundaries(FILE *boundaries, FILE *ways)
 	struct relations *relations=relations_new();
 
 	boundaries_list=process_boundaries_setup(boundaries, relations);
-	relations_process(relations, NULL, ways, NULL);
+	relations_process(relations, NULL, ways);
 	relations_destroy(relations);
 	return process_boundaries_finish(boundaries_list);
 }

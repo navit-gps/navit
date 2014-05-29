@@ -214,6 +214,7 @@ struct node_item *read_node_item(FILE *in);
 struct item_bin *read_item(FILE *in);
 struct item_bin *read_item_range(FILE *in, int *min, int *max);
 struct item_bin *init_item(enum item_type type);
+extern struct item_bin *tmp_item_bin;
 
 /* maptool.c */
 
@@ -225,7 +226,6 @@ extern GHashTable *dedupe_ways_hash;
 extern int slices;
 extern struct buffer node_buffer;
 extern int processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles;
-extern struct item_bin *item_bin;
 extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
@@ -312,7 +312,7 @@ int osm_protobufdb_load(FILE *in, char *dir);
 struct relations * relations_new(void);
 struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv), void *func_priv);
 void relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
-void relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relations);
+void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
 
 
