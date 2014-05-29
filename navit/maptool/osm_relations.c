@@ -104,10 +104,9 @@ relations_add_func(struct relations *rel, struct relations_func *func, void *rel
  * @param in rel struct relations storing pre-processed relations info
  * @param in nodes file containing nodes in "coords.tmp" format
  * @param in ways file containing items in item_bin format. This file may contain both nodes, ways, and relations in that format.
- * @param unused relations
  */
 void
-relations_process(struct relations *rel, FILE *nodes, FILE *ways, FILE *relations)
+relations_process(struct relations *rel, FILE *nodes, FILE *ways)
 {
 	char buffer[128];
 	struct item_bin *ib=(struct item_bin *)buffer;
