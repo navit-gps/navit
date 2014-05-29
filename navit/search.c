@@ -57,8 +57,8 @@ struct search_list_level {
 	GList *list,*curr,*last;
 };
 
-struct interpolation {
-	int side, mode, rev;
+struct house_number_interpolation {
+	int side, increment, rev;
 	char *first, *last, *curr;
 };
 
@@ -71,7 +71,7 @@ struct search_list {
 	struct search_list_result last_result;
 	int last_result_valid;
 	char *postal;
-	struct interpolation inter;
+	struct house_number_interpolation inter;
 	int use_address_results;
 	GList *address_results,*address_results_pos;
 };
@@ -148,9 +148,9 @@ search_list_level(enum attr_type attr_type)
 }
 
 static void
-interpolation_clear(struct interpolation *inter)
+house_number_interpolation_clear(struct house_number_interpolation *inter)
 {
-	inter->mode=inter->side=0;
+	inter->increment=inter->side=0;
 	g_free(inter->first);
 	g_free(inter->last);
 	g_free(inter->curr);
@@ -372,7 +372,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	this_->use_address_results=0;
 	level=search_list_level(search_attr->type);
 	this_->item=NULL;
-	interpolation_clear(&this_->inter);
+	house_number_interpolation_clear(&this_->inter);
 	if (level != -1) {
 		this_->result.id=0;
 		this_->level=level;
@@ -654,7 +654,7 @@ search_list_street_destroy(struct search_list_street *this_)
 }
 
 static char *
-search_interpolate(struct interpolation *inter)
+search_interpolate(struct house_number_interpolation *inter)
 {
 	dbg(1,"interpolate %s-%s %s\n",inter->first,inter->last,inter->curr);
 	if (!inter->first || !inter->last)
@@ -663,7 +663,7 @@ search_interpolate(struct interpolation *inter)
 		inter->curr=g_strdup(inter->first);
 	else {
 		if (strcmp(inter->curr, inter->last)) {
-			int next=atoi(inter->curr)+(inter->mode?2:1);
+			int next=atoi(inter->curr)+(inter->increment);
 			g_free(inter->curr);
 			if (next == atoi(inter->last))
 				inter->curr=g_strdup(inter->last);
@@ -679,7 +679,7 @@ search_interpolate(struct interpolation *inter)
 }
 
 static void
-search_interpolation_split(char *str, struct interpolation *inter)
+search_house_number_interpolation_split(char *str, struct house_number_interpolation *inter)
 {
 	char *pos=strchr(str,'-');
 	char *first,*last;
@@ -708,7 +708,8 @@ search_interpolation_split(char *str, struct interpolation *inter)
 }
 
 static int
-search_setup_interpolation(struct item *item, enum attr_type i0, enum attr_type i1, enum attr_type i2, struct interpolation *inter)
+search_setup_house_number_interpolation(struct item *item, enum attr_type i0, enum attr_type i1, enum attr_type i2, 
+	struct house_number_interpolation *inter)
 {
 	struct attr attr;
 	g_free(inter->first);
@@ -717,14 +718,14 @@ search_setup_interpolation(struct item *item, enum attr_type i0, enum attr_type 
 	inter->first=inter->last=inter->curr=NULL;
 	dbg(1,"setup %s\n",attr_to_name(i0));
 	if (item_attr_get(item, i0, &attr)) {
-		search_interpolation_split(attr.u.str, inter);
-		inter->mode=0;
+		search_house_number_interpolation_split(attr.u.str, inter);
+		inter->increment=1;
 	} else if (item_attr_get(item, i1, &attr)) {
-		search_interpolation_split(attr.u.str, inter);
-		inter->mode=1;
+		search_house_number_interpolation_split(attr.u.str, inter);
+		inter->increment=2;
 	} else if (item_attr_get(item, i2, &attr)) {
-		search_interpolation_split(attr.u.str, inter);
-		inter->mode=2;
+		search_house_number_interpolation_split(attr.u.str, inter);
+		inter->increment=2;
 	} else
 		return 0;
 	return 1;
@@ -740,7 +741,7 @@ search_match(char *str, char *search, int partial)
 }
 
 static struct pcoord *
-search_house_number_coordinate(struct item *item, struct interpolation *inter)
+search_house_number_coordinate(struct item *item, struct house_number_interpolation *inter)
 {
 	struct pcoord *ret=g_new(struct pcoord, 1);
 	ret->pro = map_projection(item->map);
@@ -757,7 +758,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 	} else {
 		int count,max=1024;
 		int hn_pos,hn_length;
-		int step=inter->mode?2:1;
+		int inter_increment=inter->increment;
 		struct coord *c=g_alloca(sizeof(struct coord)*max);
 		item_coord_rewind(item);
 		count=item_coord_get(item, c, max);
@@ -785,7 +786,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 #if 0
 			hn_distance=distance_sum*hn_pos/hn_length;
 #else
-			hn_distance=(distance_sum*hn_pos+distance_sum*step/2)/(hn_length+step);
+			hn_distance=(distance_sum*hn_pos+distance_sum*inter_increment/2)/(hn_length+inter_increment);
 #endif
 			dbg(1,"hn_distance=%d\n",hn_distance);
 			i=0;
@@ -800,7 +801,7 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 }
 
 static struct search_list_house_number *
-search_list_house_number_new(struct item *item, struct interpolation *inter, char *inter_match, int inter_partial)
+search_list_house_number_new(struct item *item, struct house_number_interpolation *inter, char *inter_match, int inter_partial)
 {
 	struct search_list_house_number *ret=g_new0(struct search_list_house_number, 1);
 	struct attr attr;
@@ -817,18 +818,18 @@ search_list_house_number_new(struct item *item, struct interpolation *inter, cha
 		//	dbg(0,"xx2 %s\n",attr.u.str);
 		for (;;) {
 			//dbg(0,"interpolate 11");
-			ret->interpolation=1;
+			ret->house_number_interpolation=1;
 			switch(inter->side) {
 			case 0:
 				//dbg(0,"interpolate 11 0");
 				inter->side=-1;
-				search_setup_interpolation(item, attr_house_number_left, attr_house_number_left_odd, attr_house_number_left_even, inter);
+				search_setup_house_number_interpolation(item, attr_house_number_left, attr_house_number_left_odd, attr_house_number_left_even, inter);
 			case -1:
 				//dbg(0,"interpolate 11 -1");
 				if ((hn=search_interpolate(inter)))
 					break;
 				inter->side=1;
-				search_setup_interpolation(item, attr_house_number_right, attr_house_number_right_odd, attr_house_number_right_even, inter);
+				search_setup_house_number_interpolation(item, attr_house_number_right, attr_house_number_right_odd, attr_house_number_right_even, inter);
 			case 1:
 				//dbg(0,"interpolate 11 1");
 				if ((hn=search_interpolate(inter)))
@@ -849,7 +850,7 @@ search_list_house_number_new(struct item *item, struct interpolation *inter, cha
 	}
 	//dbg(0,"interpolate 33");
 	search_list_common_new(item, &ret->common);
-	ret->common.c=search_house_number_coordinate(item, ret->interpolation?inter:NULL);
+	ret->common.c=search_house_number_coordinate(item, ret->house_number_interpolation?inter:NULL);
 	//dbg(0,"interpolate 44");
 	return ret;
 }
@@ -1163,13 +1164,13 @@ search_list_get_result(struct search_list *this_)
 				p=search_list_house_number_new(this_->item, &this_->inter, le->attr->u.str, le->partial);
 				if (!p)
 				{
-					interpolation_clear(&this_->inter);
+					house_number_interpolation_clear(&this_->inter);
 					this_->item=NULL;
 					continue;
 				}
 
 				this_->result.house_number=p;
-				if (!this_->result.house_number->interpolation)
+				if (!this_->result.house_number->house_number_interpolation)
 				{
 					this_->item=NULL;
 				} else {
