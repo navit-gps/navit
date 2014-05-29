@@ -59,7 +59,7 @@ relations_new(void)
 	int i;
 
 	for (i = 0 ; i < 3 ; i++)
-		ret->member_hash[i]=g_hash_table_new_full(relations_member_hash, relations_member_equal, NULL, NULL);
+		ret->member_hash[i]=g_hash_table_new(relations_member_hash, relations_member_equal);
 	return ret;
 }
 
