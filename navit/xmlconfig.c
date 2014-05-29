@@ -247,7 +247,6 @@ static struct object_func object_funcs[] = {
 	{ attr_plugin,     NEW(plugin_new)},
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_polyline,   NEW(polyline_new), NULL, NULL, NULL, NULL, ADD(element_add_attr)},
-	{ attr_route,      NEW(route_new), GET(route_get_attr), NULL, NULL, SET(route_set_attr), ADD(route_add_attr), REMOVE(route_remove_attr)},
 	{ attr_text,       NEW(text_new)},
 };
 
@@ -278,6 +277,8 @@ object_func_lookup(enum attr_type type)
 		return &profile_option_func;
 	case attr_roadprofile:
 		return &roadprofile_func;
+	case attr_route:
+		return &route_func;
 	case attr_script:
 		return &script_func;
 	case attr_osd:

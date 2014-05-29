@@ -78,6 +78,13 @@ struct map_priv {
 
 int debug_route=0;
 
+enum route_path_flags {
+	route_path_flag_none=0,
+	route_path_flag_cancel=1,
+	route_path_flag_async=2,
+	route_path_flag_no_rebuild=4,
+};
+
 /**
  * @brief A point in the route graph
  *
@@ -230,6 +237,7 @@ struct route_path {
  * This struct holds all information about a route.
  */
 struct route {
+	NAVIT_OBJECT
 	struct mapset *ms;			/**< The mapset this route is built upon */
 	unsigned flags;
 	struct route_info *pos;		/**< Current position within this route */
@@ -468,12 +476,36 @@ route_new(struct attr *parent, struct attr **attrs)
 	struct route *this=g_new0(struct route, 1);
 	struct attr dest_attr;
 
+	this->func=&route_func;
+        navit_object_ref((struct navit_object *)this);
+
 	if (attr_generic_get_attr(attrs, NULL, attr_destination_distance, &dest_attr, NULL)) {
 		this->destination_distance = dest_attr.u.num;
 	} else {
 		this->destination_distance = 50; // Default value
 	}
 	this->cbl2=callback_list_new();
+
+	return this;
+}
+
+/**
+ * @brief Duplicates a route object
+ *
+ * @return The duplicated route
+ */
+
+struct route *
+route_dup(struct route *orig)
+{
+	struct route *this=g_new0(struct route, 1);
+	this->func=&route_func;
+        navit_object_ref((struct navit_object *)this);
+	this->cbl2=callback_list_new();
+	this->destination_distance=orig->destination_distance;
+	this->ms=orig->ms;
+	this->flags=orig->flags;
+	this->vehicleprofile=orig->vehicleprofile;
 
 	return this;
 }
@@ -800,16 +832,16 @@ route_path_update_done(struct route *this, int new_graph)
  * @param this The route to update
  */
 static void
-route_path_update(struct route *this, int cancel, int async)
+route_path_update_flags(struct route *this, enum route_path_flags flags)
 {
-	dbg(1,"enter %d\n", cancel);
+	dbg(1,"enter %d\n", flags);
 	if (! this->pos || ! this->destinations) {
 		dbg(1,"destroy\n");
 		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 		return;
 	}
-	if (cancel) {
+	if (flags & route_path_flag_cancel) {
 		route_graph_destroy(this->graph);
 		this->graph=NULL;
 	}
@@ -826,14 +858,22 @@ route_path_update(struct route *this, int cancel, int async)
 		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 	}
-	if (!this->graph || !this->path2) {
-		dbg(1,"rebuild graph\n");
+	if (!this->graph || (!this->path2 && !(flags & route_path_flag_no_rebuild))) {
+		dbg(0,"rebuild graph %p %p\n",this->graph,this->path2);
 		if (! this->route_graph_flood_done_cb)
 			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, (long)1);
 		dbg(1,"route_graph_update\n");
-		route_graph_update(this, this->route_graph_flood_done_cb, async);
+		route_graph_update(this, this->route_graph_flood_done_cb, !!(flags & route_path_flag_async));
 	}
 }
+
+static void
+route_path_update(struct route *this, int cancel, int async)
+{
+	enum route_path_flags flags=(cancel ? route_path_flag_cancel:0)|(async ? route_path_flag_async:0);
+	route_path_update_flags(this, flags);
+}
+
 
 /** 
  * @brief This will calculate all the distances stored in a route_info
@@ -864,9 +904,11 @@ route_info_distances(struct route_info *ri, enum projection pro)
  *
  * @param this The route to set the position of
  * @param pos Coordinates to set as position
+ * @param flags Flags to use for building the graph
  */
-void
-route_set_position(struct route *this, struct pcoord *pos)
+
+static int
+route_set_position_flags(struct route *this, struct pcoord *pos, enum route_path_flags flags)
 {
 	if (this->pos)
 		route_info_free(this->pos);
@@ -874,12 +916,28 @@ route_set_position(struct route *this, struct pcoord *pos)
 	this->pos=route_find_nearest_street(this->vehicleprofile, this->ms, pos);
 
 	// If there is no nearest street, bail out.
-	if (!this->pos) return;
+	if (!this->pos) return 0;
 
 	this->pos->street_direction=0;
 	dbg(1,"this->pos=%p\n", this->pos);
 	route_info_distances(this->pos, pos->pro);
-	route_path_update(this, 0, 1);
+	route_path_update_flags(this, flags);
+	return 1;
+}
+
+/**
+ * @brief This sets the current position of the route passed
+ *
+ * This will set the current position of the route passed to the street that is nearest to the
+ * passed coordinates. It also automatically updates the route.
+ *
+ * @param this The route to set the position of
+ * @param pos Coordinates to set as position
+ */
+void
+route_set_position(struct route *this, struct pcoord *pos)
+{
+	route_set_position_flags(this, pos, route_path_flag_async);
 }
 
 /**
@@ -3854,8 +3912,10 @@ route_set_attr(struct route *this_, struct attr *attr)
 		route_set_destination(this_, attr->u.pcoord, 1);
 		return 1;
 	case attr_position:
-		route_set_position(this_, attr->u.pcoord);
+		route_set_position_flags(this_, attr->u.pcoord, route_path_flag_async);
 		return 1;
+	case attr_position_test:
+		return route_set_position_flags(this_, attr->u.pcoord, route_path_flag_no_rebuild);
 	case attr_vehicle:
 		attr_updated = (this_->v != attr->u.vehicle);
 		this_->v=attr->u.vehicle;
@@ -4005,6 +4065,7 @@ route_init(void)
 void
 route_destroy(struct route *this_)
 {
+	this_->refcount++; /* avoid recursion */
 	route_path_destroy(this_->path2,1);
 	route_graph_destroy(this_->graph);
 	route_clear_destinations(this_);
@@ -4013,3 +4074,19 @@ route_destroy(struct route *this_)
 	map_destroy(this_->graph_map);
 	g_free(this_);
 }
+
+struct object_func route_func = {
+        attr_route,
+        (object_func_new)route_new,
+        (object_func_get_attr)route_get_attr,
+        (object_func_iter_new)NULL,
+        (object_func_iter_destroy)NULL,
+        (object_func_set_attr)route_set_attr,
+        (object_func_add_attr)route_add_attr,
+        (object_func_remove_attr)route_remove_attr,
+        (object_func_init)NULL,
+        (object_func_destroy)route_destroy,
+        (object_func_dup)route_dup,
+        (object_func_ref)navit_object_ref,
+        (object_func_unref)navit_object_unref,
+};
