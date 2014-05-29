@@ -89,13 +89,16 @@ struct item_id {
 #define ITEM_ID_FMT "(0x%x,0x%x)"
 #define ITEM_ID_ARGS(x) (x).id_hi,(x).id_lo
 
+/**
+ * Represents an object on a map, such as a POI, a building, a way or a boundary.
+ */
 struct item {
-	enum item_type type;
-	int id_hi;
-	int id_lo;
-	struct map *map;
-	struct item_methods *meth;
-	void *priv_data;
+	enum item_type type; /**< Type of the item.*/
+	int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
+	int id_lo; /**< Second part of the ID of the item.*/
+	struct map *map; /**< The map this items belongs to.*/
+	struct item_methods *meth; /**< Methods to manipulate this item.*/
+	void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
 };
 
 extern struct item_range {
