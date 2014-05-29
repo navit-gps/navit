@@ -56,7 +56,6 @@ int slices;
 int unknown_country;
 int doway2poi=1;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
-int experimental;
 
 struct buffer node_buffer = {
 	64*1024*1024,
@@ -87,9 +86,6 @@ progress_memory(void)
 #ifdef HAVE_SBRK
 	long mem=(long)sbrk(0)-start_brk;
 	fprintf(stderr," %ld MB",mem/1024/1024);
-#endif
-#if 0
-	system("grep -i VmRSS /proc/$PPID/status");
 #endif
 }
 
@@ -161,7 +157,6 @@ usage(FILE *f)
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
-	fprintf(f,"-E (--experimental)               : Enable experimental features\n");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
@@ -240,7 +235,6 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"dump", 0, 0, 'D'},
 		{"dump-coordinates", 0, 0, 'c'},
 		{"end", 1, 0, 'e'},
-		{"experimental", 0, 0, 'E'},
 		{"help", 0, 0, 'h'},
 		{"keep-tmpfiles", 0, 0, 'k'},
 		{"nodes-only", 0, 0, 'N'},
@@ -279,9 +273,6 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'D':
 		p->output=1;
-		break;
-	case 'E':
-		experimental=1;
 		break;
 	case 'M':
 		p->o5m=1;
@@ -781,17 +772,8 @@ maptool_load_tilesdir(struct maptool_params *p, char *suffix)
 
 int main(int argc, char **argv)
 {
-#if 0
-	FILE *files[10];
-	FILE *references[10];
-#endif
 	struct maptool_params p;
-#if 0
-	char *suffixes[]={"m0l0", "m0l1","m0l2","m0l3","m0l4","m0l5","m0l6"};
-	char *suffixes[]={"m","r"};
-#else
 	char *suffixes[]={""};
-#endif
 	char *suffix=suffixes[0];
 	char *filenames[20];
 	char *referencenames[20];
@@ -838,12 +820,6 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 	}
-#if 1
-	if (experimental) {
-		fprintf(stderr,"No experimental features available\n");
-		exit(0);
-	}
-#endif
 	if (optind != argc-(p.output == 1 ? 0:1))
 		usage(stderr);
 	p.result=argv[optind];
