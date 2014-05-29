@@ -145,7 +145,7 @@ event_glib_add_idle(int priority, struct callback *cb)
 {
 	struct event_idle *ret=g_new0(struct event_idle, 1);
 	ret->cb=cb;
-	ret->source = g_idle_add_full(priority+100, (GSourceFunc)event_glib_call_idle, (gpointer)ret, NULL);
+	ret->source = g_idle_add_full(G_PRIORITY_HIGH_IDLE+priority, (GSourceFunc)event_glib_call_idle, (gpointer)ret, NULL);
 	return ret;
 }
 
