@@ -600,6 +600,35 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 			return ret;
 		}
 	}
+	if(attr->type >= attr_type_pcoord_begin && attr->type <= attr_type_pcoord_end) {
+		int i;
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
+			attr->u.pcoord=g_new(typeof(*attr->u.pcoord),1);
+			dbus_message_iter_recurse(&iterattr, &iterstruct);
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_INT32) {
+				dbus_message_iter_get_basic(&iterstruct, &i);
+				dbus_message_iter_next(&iterstruct);
+				attr->u.pcoord->pro=i;
+			} else
+				ret=0;
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_INT32) {
+				dbus_message_iter_get_basic(&iterstruct, &i);
+				dbus_message_iter_next(&iterstruct);
+				attr->u.pcoord->x=i;
+			} else
+				ret=0;
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_INT32) {
+				dbus_message_iter_get_basic(&iterstruct, &i);
+				attr->u.pcoord->y=i;
+			} else
+				ret=0;
+			if (!ret) {
+				g_free(attr->u.pcoord);
+				attr->u.pcoord=NULL;
+			}
+			return ret;
+		}
+	}
 	if (attr->type == attr_callback) {
 		struct dbus_callback *callback=object_get_from_message_arg(&iterattr, "callback");
 		if (callback) {
@@ -683,6 +712,27 @@ request_destroy(DBusConnection *connection, DBusMessage *message, char *type, vo
 	func(data);
 
 	return empty_reply(connection, message);
+}
+
+
+static DBusHandlerResult
+request_dup(DBusConnection *connection, DBusMessage *message, char *type, void *data, void *(*func)(void *))
+{
+	DBusMessage *reply;
+	char *opath;
+	void *obj;
+	if (!data)
+		data=object_get_from_message(message, type);
+	if (!data)
+		return dbus_error_invalid_object_path(connection, message);
+	obj=func(data);
+	opath=object_new(type,obj);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
 }
 
 
@@ -1026,6 +1076,18 @@ static DBusHandlerResult
 request_route_remove_attr(DBusConnection *connection, DBusMessage *message)
 {
 	return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_remove_attr);
+}
+
+static DBusHandlerResult
+request_route_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_destroy(connection, message, "route", NULL, (void (*)(void *)) route_destroy);
+}
+
+static DBusHandlerResult
+request_route_dup(DBusConnection *connection, DBusMessage *message)
+{
+	return request_dup(connection, message, "route", NULL, (void *(*)(void *)) route_dup);
 }
 
 
@@ -1704,6 +1766,10 @@ struct dbus_method {
 	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
 	{".route",    "add_attr",          "sv",      "attribute,value",                         "",    "",  request_route_add_attr},
 	{".route",    "remove_attr",       "sv",      "attribute,value",                         "",    "",  request_route_remove_attr},
+	{".route",    "destroy",           "",        "",                                        "",    "",  request_route_destroy},
+	{".route",    "dup",               "",        "",                                        "",    "",  request_route_dup},
+	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
+	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
 	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
 	{".search_list","get_result",      "",        "",                                        "i(iii)a{sa{sv}}",   "id,coord,dict",      request_search_list_get_result},
 	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
