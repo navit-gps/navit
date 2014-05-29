@@ -161,14 +161,14 @@ struct map_rect_priv {
  * when starting a search, and is used for retrieving results.
  */
 struct map_search_priv {
-	struct map_priv *map;
-	struct map_rect_priv *mr;
+	struct map_priv *map; /**< Map to search in. */
+	struct map_rect_priv *mr; /**< Map rectangle to search inside. */
 	struct map_rect_priv *mr_item;
 	struct item *item;
-	struct attr search;
+	struct attr search; /**< Attribute specifying what to search for. */
 	struct map_selection ms;
 	GList *boundaries;
-	int partial;
+	int partial; /**< Find partial matches? */
 	int mode;
 	struct coord_rect rect_new;
 	char *parent_name;
