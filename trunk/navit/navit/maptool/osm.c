@@ -1351,59 +1351,64 @@ clear_node_item_buffer(void)
       }
 }
 
+static int
+node_item_find_index_in_ordered_list(osmid id)
+{
+      struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
+      int node_count=node_buffer.size/sizeof(struct node_item);
+      int search_step=node_count>4 ? node_count/4 : 1;
+      int search_index=node_count/2;
+      if (node_buffer_base[0].id > id)
+	      return -1;
+      if (node_buffer_base[node_count-1].id < id)
+	      return -1;
+      while (node_buffer_base[search_index].id != id) {
+#if 0
+	      fprintf(stderr,"search_index=%d node_count=%d search_step=%d id=%d node_buffer_base[search_index].id=%d\n",
+		  search_index, node_count, search_step, id, node_buffer_base[search_index].id);
+#endif
+	      if (node_buffer_base[search_index].id < id) {
+		      search_index+=search_step;
+		      if (search_step == 1) {
+			      if (search_index >= node_count)
+				      return -1;
+			      if (node_buffer_base[search_index].id > id)
+				      return -1;
+		      } else {
+			      if (search_index >= node_count)
+				      search_index=node_count-1;
+		      }
+	      } else {
+		      search_index-=search_step;
+		      if (search_step == 1) {
+			      if (search_index < 0)
+				      return -1;
+			      if (node_buffer_base[search_index].id < id)
+				      return -1;
+		      } else {
+			      if (search_index < 0)
+				      search_index=0;
+		      }
+	      }
+	      if (search_step > 1)
+		      search_step/=2;
+      }
+      return search_index;
+}
+
 static struct node_item *
 node_item_get(osmid id)
 {
-      struct node_item *ni=(struct node_item *)(node_buffer.base);
-      int count=node_buffer.size/sizeof(struct node_item);
-      int interval=count/4;
-      int p=count/2;
-      if(interval==0) {
-	      // If fewer than 4 nodes defined so far set interval to 1 to
-	      // avoid infinite loop
-	      interval = 1;
-      }
+      struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
+      int result_index;
       if (node_hash) {
-	      int i;
-	      i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(id)));
-	      return ni+i;
+	      result_index=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(id)));
+      } else {
+	      result_index=node_item_find_index_in_ordered_list(id);
       }
-      if (ni[0].id > id)
-	      return NULL;
-      if (ni[count-1].id < id)
-	      return NULL;
-      while (ni[p].id != id) {
-#if 0
-	      fprintf(stderr,"p=%d count=%d interval=%d id=%d ni[p].id=%d\n", p, count, interval, id, ni[p].id);
-#endif
-	      if (ni[p].id < id) {
-		      p+=interval;
-		      if (interval == 1) {
-			      if (p >= count)
-				      return NULL;
-			      if (ni[p].id > id)
-				      return NULL;
-		      } else {
-			      if (p >= count)
-				      p=count-1;
-		      }
-	      } else {
-		      p-=interval;
-		      if (interval == 1) {
-			      if (p < 0)
-				      return NULL;
-			      if (ni[p].id < id)
-				      return NULL;
-		      } else {
-			      if (p < 0)
-				      p=0;
-		      }
-	      }
-	      if (interval > 1)
-		      interval/=2;
-      }
-      return &ni[p];
+      return result_index!=-1 ? node_buffer_base+result_index : NULL;
 }
+
 #if 0
 static int
 load_node(FILE *coords, int p, struct node_item *ret)
