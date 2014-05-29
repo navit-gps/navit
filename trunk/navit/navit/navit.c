@@ -3136,9 +3136,7 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 {
 	struct attr attr;
 	this_->vehicle=nv;
-	if (!nv)
-		return;
-	if (vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
+	if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
 		if (navit_set_vehicleprofile_name(this_, attr.u.str))
 			return;
 	}
