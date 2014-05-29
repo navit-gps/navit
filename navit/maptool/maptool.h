@@ -69,10 +69,22 @@ extern struct tile_head {
 } *tile_head_root;
 
 
-
+/**
+ * A map item (street, POI, border etc.) as it is stored in a Navit binfile.
+ * Note that this struct only has fields for the header of the item. The
+ * actual data (coordinates and attributes) is stored in memory after
+ * this struct as two arrays of type struct coord and struct attr_bin
+ * respectively.
+ * See also http://wiki.navit-project.org/index.php/Navit%27s_binary_map_driver .
+ * @see struct coord
+ * @see struct attr_bin
+ */
 struct item_bin {
+	/** Length of this item (not including this length field) in 32-bit ints. */
 	int len;
+	/** Item type. */
 	enum item_type type;
+	/** Length of the following coordinate array in 32-bit ints. */
 	int clen;
 };
 
@@ -135,10 +147,16 @@ GList *boundary_find_matches(GList *bl, struct coord *c);
 void free_boundaries(GList *l);
 
 /* buffer.c */
+
+/** A buffer that can be grown as needed. */
 struct buffer {
+	/** Number of bytes to extend the buffer by when it must grow. */
 	int malloced_step;
+	/** Current allocated size (bytes). */
 	long long malloced;
+	/** Base address of this buffer. */
 	unsigned char *base;
+	/** Size of currently used part of the buffer. */
 	long long size;
 };
 
