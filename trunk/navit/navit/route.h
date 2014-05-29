@@ -82,6 +82,7 @@ struct street_data;
 struct tracking;
 struct vehicleprofile;
 struct route *route_new(struct attr *parent, struct attr **attrs);
+struct route *route_dup(struct route *orig);
 void route_set_mapset(struct route *this_, struct mapset *ms);
 void route_set_profile(struct route *this_, struct vehicleprofile *prof);
 struct mapset *route_get_mapset(struct route *this_);
