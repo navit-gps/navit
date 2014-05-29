@@ -1267,7 +1267,10 @@ extend_buffer(struct buffer *b)
 
 }
 
-osmid nodeid_last;
+/** The node currently being processed. */
+static struct node_item *current_node;
+/** ID of the last node processed. */
+osmid id_last_node;
 GHashTable *node_hash,*way_hash;
 
 static void
@@ -1278,8 +1281,6 @@ node_buffer_to_hash(void)
 	for (i = 0 ; i < count ; i++)
 		g_hash_table_insert(node_hash, (gpointer)(long)(ni[i].id), (gpointer)(long)i);
 }
-
-static struct node_item *ni;
 
 void
 flush_nodes(int final)
@@ -1311,26 +1312,28 @@ osm_add_node(osmid id, double lat, double lon)
       if (node_buffer.size + sizeof(struct node_item) > slice_size) {
 	      flush_nodes(0);
       }
-      ni=(struct node_item *)(node_buffer.base+node_buffer.size);
-      ni->id=id;
-      ni->ref_node=0;
-      ni->ref_way=0;
-      ni->ref_ref=0;
-      ni->dummy=0;
-      ni->c.x=lon*6371000.0*M_PI/180;
-      ni->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
+      current_node=(struct node_item *)(node_buffer.base+node_buffer.size);
+      current_node->id=id;
+      current_node->ref_node=0;
+      current_node->ref_way=0;
+      current_node->ref_ref=0;
+      current_node->dummy=0;
+      current_node->c.x=lon*6371000.0*M_PI/180;
+      current_node->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
       node_buffer.size+=sizeof(struct node_item);
       if (! node_hash) {
-	      if (ni->id > nodeid_last) {
-		      nodeid_last=ni->id;
+	      if (current_node->id > id_last_node) {
+		      id_last_node=current_node->id;
 	      } else {
-		      fprintf(stderr,"INFO: Nodes out of sequence (new " OSMID_FMT " vs old " OSMID_FMT "), adding hash\n", (osmid)ni->id, nodeid_last);
+		      fprintf(stderr,"INFO: Nodes out of sequence (new " OSMID_FMT " vs old " OSMID_FMT "), adding hash\n",
+			(osmid)current_node->id, id_last_node);
 		      node_hash=g_hash_table_new(NULL, NULL);
 		      node_buffer_to_hash();
 	      }
       } else
-	      if (!g_hash_table_lookup(node_hash, (gpointer)(long)(ni->id)))
-		      g_hash_table_insert(node_hash, (gpointer)(long)(ni->id), (gpointer)(long)(ni-(struct node_item *)node_buffer.base));
+	      if (!g_hash_table_lookup(node_hash, (gpointer)(long)(current_node->id)))
+		      g_hash_table_insert(node_hash, (gpointer)(long)(current_node->id),
+			  (gpointer)(long)(current_node-(struct node_item *)node_buffer.base));
 	      else {
 		      node_buffer.size-=sizeof(struct node_item);
 		      nodeid=0;
@@ -1520,8 +1523,8 @@ osm_add_relation(osmid id)
 	iso_code[0]='\0';
 	admin_level=-1;
 	boundary=0;
-	item_bin_init(item_bin, type_none);
-	item_bin_add_attr_longlong(item_bin, attr_osm_relationid, osmid_attr_value);
+	item_bin_init(tmp_item_bin, type_none);
+	item_bin_add_attr_longlong(tmp_item_bin, attr_osm_relationid, osmid_attr_value);
 }
 
 static int
@@ -1569,7 +1572,7 @@ osm_end_relation(struct maptool_osm *osm)
 	in_relation=0;
 
 	if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
-		item_bin->type=type;
+		tmp_item_bin->type=type;
 	}
 	else 
 		type=type_none;
@@ -1581,18 +1584,18 @@ osm_end_relation(struct maptool_osm *osm)
 			fprintf(stderr,"Multipolygon for %s\n", iso_code);
 			char *name=g_strdup_printf("country_%s.tmp",iso_code);
 			f=fopen(name,"w");
-			item_bin_write(item_bin, f);
+			item_bin_write(tmp_item_bin, f);
 			fclose(f);
 		}
 #endif
-		item_bin_write(item_bin, osm->boundaries);
+		item_bin_write(tmp_item_bin, osm->boundaries);
 	}
 
-	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
-		item_bin_write(item_bin, osm->turn_restrictions);
+	if (!strcmp(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no || tmp_item_bin->type == type_street_turn_restriction_only))
+		item_bin_write(tmp_item_bin, osm->turn_restrictions);
 
 	if (!strcmp(relation_type, "associatedStreet") )
-		item_bin_write(item_bin, osm->associated_streets);
+		item_bin_write(tmp_item_bin, osm->associated_streets);
 		
 	attr_longest_match_clear();
 }
@@ -1606,7 +1609,7 @@ osm_add_member(int type, osmid ref, char *role)
 
 	snprintf(member_buffer,bufsize,"%d:"LONGLONG_FMT":%s", type, (long long) ref, role);
 	memberattr.u.str=member_buffer;
-	item_bin_add_attr(item_bin, &memberattr);
+	item_bin_add_attr(tmp_item_bin, &memberattr);
 }
 
 static void
@@ -1622,13 +1625,13 @@ relation_add_tag(char *k, char *v)
 	}
 	else if (!strcmp(k,"restriction")) {
 		if (!strncmp(v,"no_",3)) {
-			item_bin->type=type_street_turn_restriction_no;
+			tmp_item_bin->type=type_street_turn_restriction_no;
 			add_tag=0;
 		} else if (!strncmp(v,"only_",5)) {
-			item_bin->type=type_street_turn_restriction_only;
+			tmp_item_bin->type=type_street_turn_restriction_only;
 			add_tag=0;
 		} else {
-			item_bin->type=type_none;
+			tmp_item_bin->type=type_none;
 			osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
 		}
 	} else if (!strcmp(k,"admin_level")) {
@@ -1644,7 +1647,7 @@ relation_add_tag(char *k, char *v)
 		char *tag;
 		tag=g_alloca(strlen(k)+strlen(v)+2);
 		sprintf(tag,"%s=%s",k,v);
-		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
+		item_bin_add_attr_string(tmp_item_bin, attr_osm_tag, tag);
 	}
 
 	osm_update_attr_present(k,v);
@@ -1800,7 +1803,7 @@ osm_end_node(struct maptool_osm *osm)
 		item_bin=init_item(types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population])
 			item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
-		item_bin_add_coord(item_bin, &ni->c, 1);
+		item_bin_add_coord(item_bin, &current_node->c, 1);
 		item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
 		item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
 		item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
@@ -1821,7 +1824,7 @@ osm_end_node(struct maptool_osm *osm)
 		item_bin_write(item_bin,osm->nodes);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_label] && osm->towns) {
 			item_bin=init_item(item_bin->type);
-			item_bin_add_coord(item_bin, &ni->c, 1);
+			item_bin_add_coord(item_bin, &current_node->c, 1);
 			item_bin_add_attr_string(item_bin, attr_osm_is_in, is_in_buffer);
 			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 			item_bin_add_attr_string(item_bin, attr_town_postal, postal);
@@ -2118,13 +2121,12 @@ struct relation_member {
 	char *role;
 };
 
-static int
-get_relation_member(char *str, struct relation_member *memb)
+static void
+parse_relation_member_string(char *relation_member_string, struct relation_member *memb)
 {
 	int len;
-	sscanf(str,"%d:"LONGLONG_FMT":%n",&memb->type,&memb->id,&len);
-	memb->role=str+len;
-	return 1;
+	sscanf(relation_member_string,"%d:"LONGLONG_FMT":%n",&memb->type,&memb->id,&len);
+	memb->role=relation_member_string+len;
 }
 
 static int
@@ -2133,8 +2135,7 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 	char *str=NULL;
 	int count=0;
 	while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
-		if (!get_relation_member(str, memb))
-			return 0;
+		parse_relation_member_string(str, memb);
 		count++;
 	 	if (!strcmp(memb->role, role) && (!min_count || *min_count < count)) {
 			if (min_count)
@@ -2356,21 +2357,21 @@ process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_
 
 	/* Set noname relations names from their street members */
 	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in, NULL);
+	relations_process(relations, NULL, ways_in);
 
 	/* Set street names on all members */
 	fp.out=ways_out;
 	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in, NULL);
+	relations_process(relations, NULL, ways_in);
 
 	fp.out=nodes_out;
 	fseek(nodes_in, 0, SEEK_SET);
-	relations_process(relations, NULL, nodes_in, NULL);
+	relations_process(relations, NULL, nodes_in);
 
 	if(nodes2_in) {
 		fp.out=nodes2_out;
 		fseek(nodes2_in, 0, SEEK_SET);
-		relations_process(relations, NULL, nodes2_in, NULL);
+		relations_process(relations, NULL, nodes2_in);
 	}
 
 	relations_destroy(relations);
@@ -2455,7 +2456,7 @@ process_turn_restrictions_finish(GList *tr, FILE *out)
 	while (l) {
 		struct turn_restriction *t=l->data;
 		struct coord *c[4];
-		struct item_bin *ib=item_bin;
+		struct item_bin *ib=tmp_item_bin;
 
 		if (!t->c_count[0]) {
 			osm_warning("relation",t->relid,0,"turn restriction: from member not found\n");
@@ -2585,7 +2586,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	GList *turn_restrictions;
 	fseek(in, 0, SEEK_SET);
 	turn_restrictions=process_turn_restrictions_setup(in, relations);
-	relations_process(relations, coords, ways, NULL);
+	relations_process(relations, coords, ways);
 	process_turn_restrictions_finish(turn_restrictions, out);
 	relations_destroy(relations);
 }
@@ -2720,7 +2721,7 @@ process_countries(FILE *way, FILE *ways_index)
 		char *str=NULL;
 		struct relation_member member;
 		while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
-			if (!get_relation_member(str, &member))
+			if (!parse_relation_member_string(str, &member))
 				break;
 			if (member.type == 2) {
 				if (!seek_to_way(way, ways_index, member.id)) {

@@ -22,28 +22,31 @@
 #include "debug.h"
 
 
-static char buffer[2000000];
-struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
-static struct node_item *node_item=(struct node_item *)(void *)buffer;
+/** Buffer for temporarily storing an item. */
+static char misc_item_buffer[2000000];
+/** An item_bin for temporary use. */
+struct item_bin *tmp_item_bin=(struct item_bin *)(void *)misc_item_buffer;
+/** A node_item for temporary use. */
+static struct node_item *tmp_node_item=(struct node_item *)(void *)misc_item_buffer;
 
 struct node_item *
 read_node_item(FILE *in)
 {
-	if (fread(node_item, sizeof(struct node_item), 1, in) != 1)
+	if (fread(tmp_node_item, sizeof(struct node_item), 1, in) != 1)
 		return NULL;
-	return node_item;
+	return tmp_node_item;
 }
 
 struct item_bin *
 read_item(FILE *in)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
+	struct item_bin *ib=(struct item_bin *) misc_item_buffer;
 	for (;;) {
 		switch (item_bin_read(ib, in)) {
 		case 0:
 			return NULL;
 		case 2:
-			dbg_assert((ib->len+1)*4 < sizeof(buffer));
+			dbg_assert((ib->len+1)*4 < sizeof(misc_item_buffer));
 			bytes_read+=(ib->len+1)*sizeof(int);
 			return ib;
 		default:
@@ -67,7 +70,7 @@ read_item_range(FILE *in, int *min, int *max)
 struct item_bin *
 init_item(enum item_type type)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
+	struct item_bin *ib=(struct item_bin *) misc_item_buffer;
 
 	item_bin_init(ib, type);
 	return ib;

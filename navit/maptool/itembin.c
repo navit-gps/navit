@@ -55,11 +55,11 @@ item_bin_init(struct item_bin *ib, enum item_type type)
 
 
 void
-item_bin_add_coord(struct item_bin *ib, struct coord *c, int count)
+item_bin_add_coord(struct item_bin *ib, struct coord *coords_to_add, int count)
 {
-	struct coord *c2=(struct coord *)(ib+1);
-	c2+=ib->clen/2;
-	memcpy(c2, c, count*sizeof(struct coord));
+	struct coord *coord_list=(struct coord *)(ib+1);
+	coord_list+=ib->clen/2;
+	memcpy(coord_list, coords_to_add, count*sizeof(struct coord));
 	ib->clen+=count*2;
 	ib->len+=count*2;
 }
