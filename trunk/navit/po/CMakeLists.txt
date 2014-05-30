@@ -32,9 +32,6 @@ set(POTFILES
       ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
       ${CMAKE_CURRENT_BINARY_DIR}/strings_xml.c
 )
-if (XGETTEXT_GLADE)
-      list(APPEND POTFILES ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade)
-endif()
 
 # Trick gettext to get translateable strings out of navit_shipped.xml
 
@@ -43,13 +40,6 @@ ADD_CUSTOM_COMMAND(
    DEPENDS ${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml
    COMMAND ${CMAKE_COMMAND} -D SRC=${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml -D DST=${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
                      -P ${PROJECT_SOURCE_DIR}/cmake/navit_xml_parser.cmake
-)
-
-ADD_CUSTOM_COMMAND(
-   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade
-   DEPENDS ${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml
-   COMMAND ${CMAKE_COMMAND} -D SRC=${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml -D DST=${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade
-                     -P ${PROJECT_SOURCE_DIR}/cmake/navit_xml_parser_glade.cmake
 )
 
 # Trick gettext to get translateable strings out of android strings.xml
