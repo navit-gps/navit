@@ -5,7 +5,7 @@ project(navit C)
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
 if(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$")
   set(CMAKE_CXX_COMPILER CMAKE_CXX_COMPILER-NOTFOUND)
-endif(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$") 
+endif(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$")
 if (NOT DISABLE_CXX)
   enable_language(CXX OPTIONAL)
 endif(NOT DISABLE_CXX)
@@ -52,7 +52,7 @@ ELSE (UNIX AND NOT ANDROID AND NOT APPLE)
     SET(LIB_DIR lib)
 ENDIF (UNIX AND NOT ANDROID AND NOT APPLE)
 
-foreach(EXTRA_MODULE ${EXTRA_MODULES}) 
+foreach(EXTRA_MODULE ${EXTRA_MODULES})
    add_module(${EXTRA_MODULE} "extra module specified" TRUE)
 endforeach()
 
@@ -114,6 +114,7 @@ find_package(SDL_image)
 find_package(OpenGL)
 find_package(GLUT)
 find_package(GTK2 2.6 COMPONENTS gtk)
+find_package(Gettext)
 find_package(PNG)
 find_package(DBusGLib)
 find_package(PythonLibs)
@@ -172,7 +173,7 @@ CHECK_SYMBOL_EXISTS(stpcpy string.h HAVE_STPCPY)
 CHECK_FUNCTION_EXISTS(sbrk HAVE_SBRK)
 CHECK_FUNCTION_EXISTS(getdelim HAVE_GETDELIM)
 CHECK_FUNCTION_EXISTS(getline HAVE_GETLINE)
-CHECK_FUNCTION_EXISTS(fsync HAVE_FSYNC) 
+CHECK_FUNCTION_EXISTS(fsync HAVE_FSYNC)
 
 
 ### Configure build
@@ -258,7 +259,7 @@ if (QT_FOUND)
       set_with_reason(graphics/qt_qpainter "Qt libraries found" TRUE ${QT_LIBRARIES})
 
       if (QT_QTDECLARATIVE_FOUND AND QT_QTXML_FOUND)
-         set_with_reason(gui/qml "Qt Declarative found" TRUE ${QT_LIBRARIES}) 
+         set_with_reason(gui/qml "Qt Declarative found" TRUE ${QT_LIBRARIES})
       endif()
 
       if (QT_QTSVG_FOUND)
@@ -488,7 +489,7 @@ if(WIN32 OR WINCE)
    set(LOCALE_DIR locale)
    set(IMAGE_DIR xpm)
 
-   
+
    if(HAVE_GTK2 AND NOT MSVC)
       #GTK requires special compile flags
       add_definitions("-mms-bitfields")
@@ -556,7 +557,7 @@ endif(SAMPLE_MAP)
 if(ANDROID)
    # for android API 3 compatiblity
    SET(CMAKE_SHARED_LIBRARY_SONAME_C_FLAG "-Wl,-soname,/data/data/org.navitproject.navit/lib/")
-   
+
    find_program(ANDROID_LOCATION NAMES android android.bat)
    find_program(ANT_LOCATION NAMES ant)
    if (NOT ANT_LOCATION)
@@ -578,7 +579,7 @@ if(ANDROID)
    set_with_reason(vehicle/android "Android detected" TRUE)
    set_with_reason(plugin/pedestrian "Android detected" TRUE)
    cfg_feature(SHARED_LIBNAVIT "Android detected" TRUE)
-   
+
    add_feature(XPM2PNG "Android detected" TRUE)
    set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
 
@@ -716,7 +717,7 @@ if (NOT NAVIT_DEPENDENCY_ERROR)
          message("Disabled  ${FEATURE} ( ${${FEATURE}_REASON} )")
       endif()
    endforeach()
-   
+
    if (XSL_PROCESSING)
       if (XSLTS)
          message("\nProcessing XSLT files: ${XSLTS}")
@@ -726,7 +727,7 @@ if (NOT NAVIT_DEPENDENCY_ERROR)
       message("See navit/xslt for available XSLT files, and put them into "
 	      "cache variable 'XSLTS' (without extension .xslt).")
    endif(XSL_PROCESSING)
-   
+
    message("\nTo configure your build use 'cmake -L' to find changeable variables and run cmake again with 'cmake -D <var-name>=<your value> ...'.")
 endif(NOT NAVIT_DEPENDENCY_ERROR)
 
