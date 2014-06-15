@@ -2508,6 +2508,9 @@ process_turn_restrictions_finish(GList *tr, FILE *out)
 				
 			}
 		}
+		g_free(t->c[0]);
+		g_free(t->c[1]);
+		g_free(t->c[2]);
 		g_free(t);
 		l=g_list_next(l);
 	}
