@@ -54,6 +54,7 @@ struct gui_priv {
 	struct color background_color, background2_color, text_foreground_color, text_background_color;
 	int spacing;
 	int font_size;
+	char *font_name;
 	int fullscreen;
 	struct graphics_font *fonts[3];
 	/**
