@@ -418,7 +418,8 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		return;
 	}
 #endif
-
+	if (!bg->c.a)
+		bg=NULL;
 	if (bg) {
 		if (COLOR_IS_BLACK(fg->c) && COLOR_IS_WHITE(bg->c)) {
 			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
