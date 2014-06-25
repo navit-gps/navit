@@ -208,9 +208,10 @@ gui_internal_top_bar(struct gui_priv *this)
 	512:Set osd_configuration and zoom to route when setting position
 	1024:Don't show back button
 	2048:No highlighting of keyboard
+	4096:Center menu title
 */
 
-	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|(this->flags & 1 ? 0:flags_fill));
+	w=gui_internal_box_new(this, (this->flags & 4096 ? gravity_center : gravity_left_center)|orientation_horizontal|(this->flags & 1 ? 0:flags_fill));
 	w->bl=this->spacing;
 	w->spx=this->spacing;
 	w->background=this->background2;

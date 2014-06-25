@@ -561,9 +561,13 @@ gui_internal_apply_config(struct gui_priv *this)
     this->spacing = current_config->spacing;
   }
   if (!this->fonts[0]) {
-    this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
-    this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
-    this->fonts[2]=graphics_font_new(this->gra,this->font_size*50/100,1);
+    int i,sizes[]={100,66,50};
+    for (i = 0 ; i < 3 ; i++) {
+       if (this->font_name) 
+          this->fonts[i]=graphics_named_font_new(this->gra,this->font_name,this->font_size*sizes[i]/100,1);
+       else
+          this->fonts[i]=graphics_font_new(this->gra,this->font_size*sizes[i]/100,1);
+    }
   }
 
 }
@@ -3269,7 +3273,10 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->text_foreground_color=*attr->u.color;
 	else
 	      this->text_foreground_color=color_white;
-	this->text_background_color=color_black;
+	if( (attr=attr_search(attrs,NULL,attr_text_background)))
+	      this->text_background_color=*attr->u.color;
+	else
+	      this->text_background_color=color_black;
 	if( (attr=attr_search(attrs,NULL,attr_columns)))
 	      this->cols=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
@@ -3295,6 +3302,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->radius=attr->u.num;
 	else
 		this->radius=10;
+	if( (attr=attr_search(attrs,NULL,attr_font)))
+		this->font_name=g_strdup(attr->u.str);
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;
