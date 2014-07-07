@@ -276,6 +276,14 @@ struct maptool_osm {
 	FILE *towns;
 };
 
+/** Type of a relation member. */
+enum relation_member_type {
+	UNUSED,
+	rel_member_node,
+	rel_member_way,
+	rel_member_relation,
+};
+
 void osm_warning(char *type, osmid id, int cont, char *fmt, ...);
 void osm_info(char *type, osmid id, int cont, char *fmt, ...);
 void osm_add_tag(char *k, char *v);
@@ -283,7 +291,7 @@ void osm_add_node(osmid id, double lat, double lon);
 void osm_add_way(osmid id);
 void osm_add_relation(osmid id);
 void osm_end_relation(struct maptool_osm *osm);
-void osm_add_member(int type, osmid ref, char *role);
+void osm_add_member(enum relation_member_type type, osmid ref, char *role);
 void osm_end_way(struct maptool_osm *osm);
 void osm_end_node(struct maptool_osm *osm);
 void osm_add_nd(osmid ref);
@@ -323,7 +331,8 @@ int osm_protobufdb_load(FILE *in, char *dir);
 /* osm_relations.c */
 struct relations * relations_new(void);
 struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv), void *func_priv);
-void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
+void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, enum relation_member_type type, osmid id);
+void relations_add_relation_default_entry(struct relations *rel, struct relations_func *func);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
 

@@ -148,7 +148,7 @@ parse_member(char *p)
 	char type_buffer[BUFFER_SIZE];
 	char ref_buffer[BUFFER_SIZE];
 	char role_buffer[BUFFER_SIZE];
-	int type;
+	enum relation_member_type type;
 	if (!osm_xml_get_attribute(p, "type", type_buffer, BUFFER_SIZE))
 		return 0;
 	if (!osm_xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
@@ -156,14 +156,14 @@ parse_member(char *p)
 	if (!osm_xml_get_attribute(p, "role", role_buffer, BUFFER_SIZE))
 		return 0;
 	if (!strcmp(type_buffer,"node")) 
-		type=1;
+		type=rel_member_node;
 	else if (!strcmp(type_buffer,"way")) 
-		type=2;
+		type=rel_member_way;
 	else if (!strcmp(type_buffer,"relation")) 
-		type=3;
+		type=rel_member_relation;
 	else {
-		fprintf(stderr,"Unknown type %s\n",type_buffer);
-		type=0;
+		fprintf(stderr,"Unknown type '%s'\n",type_buffer);
+		return 0;
 	}
 	osm_add_member(type, atoll(ref_buffer), role_buffer);
 	

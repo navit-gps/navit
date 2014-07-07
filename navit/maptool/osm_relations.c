@@ -72,6 +72,16 @@ relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct ite
 	return relations_func;
 }
 
+static struct relations_member *
+relations_member_new(struct relations_func *func, void *relation_priv, void *member_priv, osmid id)
+{
+	struct relations_member *memb=g_new(struct relations_member, 1);
+	memb->memberid=id;
+	memb->relation_priv=relation_priv;
+	memb->member_priv=member_priv;
+	memb->func=func;
+	return memb;
+}
 /*
  * @brief Add an entry for a relation member to the relations collection.
  * This function fills the relations collection, which is then passed to relations_process for
@@ -80,27 +90,33 @@ relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct ite
  * @param in func structure defining function to call when this member is read
  * @param in relation_priv parameter describing relation, or NULL. Will be passed to func function.
  * @param in member_priv parameter describing relation member, or NULL. Will be passed to func function.
- * @param in type This member type: 1 - node, 2 - way, 3 - relation.
- * 			Set to -1 to add a default member entry which matches any map item of any type which
- * 			is not a member of any relation.
+ * @param in type Type of this member (node, way etc.).
  * @param in id OSM ID of relation member.
  */
 void
 relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void
-    *relation_priv, void *member_priv, int type, osmid id)
+    *relation_priv, void *member_priv, enum relation_member_type type, osmid id)
 {
-	struct relations_member *memb=g_new(struct relations_member, 1);
-
-	memb->memberid=id;
-	memb->relation_priv=relation_priv;
-	memb->member_priv=member_priv;
-	memb->func=func;
-	if(type>0) {
-		GHashTable *member_hash=rel->member_hash[type-1];
-		g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
-	} else
-		rel->default_members=g_list_append(rel->default_members, memb);
+	struct relations_member *memb=relations_member_new(func, relation_priv, member_priv, id);
+	GHashTable *member_hash=rel->member_hash[type-1];
+	g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
 }
+
+/*
+ * @brief Add a default entry to the relations collection.
+ * Put a default entry into the relations collection, which is then passed to
+ * relations_process for processing. The default entry is used for map items which are not a
+ * member of any relation.
+ * @param in rel relations collection to add the new member to
+ * @param in func structure defining function to call when this member is read
+ */
+void
+relations_add_relation_default_entry(struct relations *rel, struct relations_func *func)
+{
+	struct relations_member *memb=relations_member_new(func, NULL, NULL, 0);
+	rel->default_members=g_list_append(rel->default_members, memb);
+}
+
 
 /*
  * @brief The actual relations processing: Loop through raw data and process any relations members.
