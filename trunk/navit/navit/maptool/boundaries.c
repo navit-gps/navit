@@ -134,7 +134,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 					osm_warning("way",osm_id,1,"\n");
 					role=geom_poly_segment_type_none;
 				}
-				relations_add_func(relations, relations_func, boundary, (gpointer)role, 2, osm_id);
+				relations_add_relation_member_entry(relations, relations_func, boundary, (gpointer)role, 2, osm_id);
 			}
 			if(member_type==3) {
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave") || !strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
