@@ -47,7 +47,8 @@
 #include "util.h"
 #include "maptool.h"
 
-long long slice_size=1024*1024*1024;
+#define SLIZE_SIZE_DEFAULT_GB 1
+long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
 int attr_debug_level=1;
 int ignore_unkown = 0;
 GHashTable *dedupe_ways_hash;
@@ -171,7 +172,7 @@ usage(FILE *f)
 	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
 	fprintf(f,"-r (--rule-file) <file>           : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
-	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is 1GB\n");
+	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is %dGB\n", SLIZE_SIZE_DEFAULT_GB);
 	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
