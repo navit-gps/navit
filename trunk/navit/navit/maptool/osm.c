@@ -1612,13 +1612,13 @@ osm_end_relation(struct maptool_osm *osm)
 }
 
 void
-osm_add_member(int type, osmid ref, char *role)
+osm_add_member(enum relation_member_type type, osmid ref, char *role)
 {
 	const int bufsize=BUFFER_SIZE*3+3;
 	char member_buffer[bufsize];
 	struct attr memberattr = { attr_osm_member };
 
-	snprintf(member_buffer,bufsize,"%d:"LONGLONG_FMT":%s", type, (long long) ref, role);
+	snprintf(member_buffer,bufsize,"%d:"LONGLONG_FMT":%s", (int)type, (long long) ref, role);
 	memberattr.u.str=member_buffer;
 	item_bin_add_attr(tmp_item_bin, &memberattr);
 }
@@ -2135,7 +2135,7 @@ sort_countries(int keep_tmpfiles)
 }
 
 struct relation_member {
-	int type;
+	enum relation_member_type type;
 	long long id;
 	char *role;
 };
@@ -2144,7 +2144,9 @@ static void
 parse_relation_member_string(char *relation_member_string, struct relation_member *memb)
 {
 	int len;
-	sscanf(relation_member_string,"%d:"LONGLONG_FMT":%n",&memb->type,&memb->id,&len);
+	int type_numeric;
+	sscanf(relation_member_string,"%d:"LONGLONG_FMT":%n",&type_numeric,&memb->id,&len);
+	memb->type=(enum relation_member_type)type_numeric;
 	memb->role=relation_member_string+len;
 }
 
@@ -2406,7 +2408,7 @@ process_associated_streets_setup(FILE *in, struct relations *relations, struct p
 		}
 		min_count=0;
 		while(search_relation_member(ib, "street",&relm,&min_count)) {
-			if(relm.type==2)
+			if(relm.type==rel_member_way)
 				relations_add_relation_member_entry(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
@@ -2423,7 +2425,7 @@ process_associated_streets_setup(FILE *in, struct relations *relations, struct p
 		}
 	}
 	relations_func=relations_func_new(relation_func_writethrough, &fp->out);
-	relations_add_relation_member_entry(relations, relations_func, NULL, NULL, -1, 0);
+	relations_add_relation_default_entry(relations, relations_func);
 }
 
 void
@@ -2472,11 +2474,11 @@ process_house_number_interpolations_setup(FILE *in, struct relations *relations,
 		hn_interpol->nodeid_first_node=item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_first_node);
 		hn_interpol->nodeid_last_node=item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_last_node);
 		dbg_assert(hn_interpol->wayid && hn_interpol->nodeid_first_node && hn_interpol->nodeid_last_node);
-		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_first_node);
-		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_last_node);
-		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 2, hn_interpol->wayid);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, rel_member_node, hn_interpol->nodeid_first_node);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, rel_member_node, hn_interpol->nodeid_last_node);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, rel_member_way, hn_interpol->wayid);
 	}
-	relations_add_relation_member_entry(relations, relations_func_new(relation_func_writethrough, &fp->out), NULL, NULL, -1, 0);
+	relations_add_relation_default_entry(relations, relations_func_new(relation_func_writethrough, &fp->out));
 }
 
 void
@@ -2687,17 +2689,17 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 			osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
 			continue;
 		}
-		if (fromm.type != 2) {
+		if (fromm.type != rel_member_way) {
 			osm_warning("relation",relid,0,"turn restriction: wrong type for from member ");
 			osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
 			continue;
 		}
-		if (tom.type != 2) {
+		if (tom.type != rel_member_way) {
 			osm_warning("relation",relid,0,"turn restriction: wrong type for to member ");
 			osm_warning(osm_types[tom.type],tom.id,1,"\n");
 			continue;
 		}
-		if (viam.type != 1 && viam.type != 2) {
+		if (viam.type != rel_member_node && viam.type != rel_member_way) {
 			osm_warning("relation",relid,0,"turn restriction: wrong type for via member ");
 			osm_warning(osm_types[viam.type],viam.id,1,"\n");
 			continue;
