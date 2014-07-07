@@ -323,7 +323,7 @@ int osm_protobufdb_load(FILE *in, char *dir);
 /* osm_relations.c */
 struct relations * relations_new(void);
 struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv), void *func_priv);
-void relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
+void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
 

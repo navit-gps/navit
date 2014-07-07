@@ -73,18 +73,21 @@ relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct ite
 }
 
 /*
- * @brief Add a relation member to relations collection.
- * @param in rel relations collection to add the new member to.
- * @param in funct structure defining function to call when this member is read
- * @param in relation_priv parameter describing relation. Will be passed to funct function
- * @param in member_priv parameter describing member function. Will be passed to funct function
- * @param in type This member type: 1 - node, 2 - way, 3 - relation. 
- * 			Set to -1 to add a default member action which matches any item of any type which is not a member of any relation.
- * @param in osmid This member id
- * @param unused relations
+ * @brief Add an entry for a relation member to the relations collection.
+ * This function fills the relations collection, which is then passed to relations_process for
+ * processing.
+ * @param in rel relations collection to add the new member to
+ * @param in func structure defining function to call when this member is read
+ * @param in relation_priv parameter describing relation, or NULL. Will be passed to func function.
+ * @param in member_priv parameter describing relation member, or NULL. Will be passed to func function.
+ * @param in type This member type: 1 - node, 2 - way, 3 - relation.
+ * 			Set to -1 to add a default member entry which matches any map item of any type which
+ * 			is not a member of any relation.
+ * @param in id OSM ID of relation member.
  */
 void
-relations_add_func(struct relations *rel, struct relations_func *func, void *relation_priv, void *member_priv, int type, osmid id)
+relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void
+    *relation_priv, void *member_priv, int type, osmid id)
 {
 	struct relations_member *memb=g_new(struct relations_member, 1);
 
@@ -100,8 +103,10 @@ relations_add_func(struct relations *rel, struct relations_func *func, void *rel
 }
 
 /*
- * @brief Process relations members from the file.
- * @param in rel struct relations storing pre-processed relations info
+ * @brief The actual relations processing: Loop through raw data and process any relations members.
+ * This function reads through all nodes and ways passed in, and looks up each item in the
+ * relations collection. For each relation member found, its processing function is called.
+ * @param in rel relations collection storing pre-processed relations. Built using relations_add_relation_member_entry.
  * @param in nodes file containing nodes in "coords.tmp" format
  * @param in ways file containing items in item_bin format. This file may contain both nodes, ways, and relations in that format.
  */

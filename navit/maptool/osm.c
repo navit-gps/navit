@@ -2289,7 +2289,7 @@ struct process_relation_member_func_priv {
 };
 
 static void
-process_associated_street_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+process_associated_street_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv_unused)
 {
 	struct process_relation_member_func_priv *fp=func_priv;
 	struct associated_street *rel=relation_priv;
@@ -2324,7 +2324,7 @@ struct house_number_interpolation {
 };
 
 static void
-process_house_number_interpolation_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+process_house_number_interpolation_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv_unused)
 {
 	struct process_relation_member_func_priv *fp=func_priv;
 	struct house_number_interpolation *rel=relation_priv;
@@ -2375,7 +2375,7 @@ process_house_number_interpolation_member(void *func_priv, void *relation_priv, 
 }
 
 static void
-relation_func_writethrough(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv)
+relation_func_writethrough(void *func_priv, void *relation_priv_unused, struct item_bin *member, void *member_priv_unused)
 {
 	FILE *out=*(FILE **)func_priv;
 	if(out)
@@ -2407,23 +2407,23 @@ process_associated_streets_setup(FILE *in, struct relations *relations, struct p
 		min_count=0;
 		while(search_relation_member(ib, "street",&relm,&min_count)) {
 			if(relm.type==2)
-				relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+				relations_add_relation_member_entry(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "house",&relm,&min_count)) {
-			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+			relations_add_relation_member_entry(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "addr:houselink",&relm,&min_count)) {
-			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+			relations_add_relation_member_entry(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 		min_count=0;
 		while(search_relation_member(ib, "address",&relm,&min_count)) {
-			relations_add_func(relations, relations_func, rel, NULL, relm.type, relm.id);
+			relations_add_relation_member_entry(relations, relations_func, rel, NULL, relm.type, relm.id);
 		}
 	}
 	relations_func=relations_func_new(relation_func_writethrough, &fp->out);
-	relations_add_func(relations, relations_func, NULL, NULL, -1, 0);
+	relations_add_relation_member_entry(relations, relations_func, NULL, NULL, -1, 0);
 }
 
 void
@@ -2472,11 +2472,11 @@ process_house_number_interpolations_setup(FILE *in, struct relations *relations,
 		hn_interpol->nodeid_first_node=item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_first_node);
 		hn_interpol->nodeid_last_node=item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_last_node);
 		dbg_assert(hn_interpol->wayid && hn_interpol->nodeid_first_node && hn_interpol->nodeid_last_node);
-		relations_add_func(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_first_node);
-		relations_add_func(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_last_node);
-		relations_add_func(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 2, hn_interpol->wayid);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_first_node);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 1, hn_interpol->nodeid_last_node);
+		relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL, 2, hn_interpol->wayid);
 	}
-	relations_add_func(relations, relations_func_new(relation_func_writethrough, &fp->out), NULL, NULL, -1, 0);
+	relations_add_relation_member_entry(relations, relations_func_new(relation_func_writethrough, &fp->out), NULL, NULL, -1, 0);
 }
 
 void
@@ -2707,9 +2707,9 @@ process_turn_restrictions_setup(FILE *in, struct relations *relations)
 		turn_restriction->type=ib->type;
 		turn_restriction->r.l.x=1<<30;
 		turn_restriction->order=255;
-		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
-		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
-		relations_add_func(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
+		relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
+		relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
+		relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
 		turn_restrictions=g_list_append(turn_restrictions, turn_restriction);
 	}
 	return turn_restrictions;
