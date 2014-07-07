@@ -346,6 +346,8 @@ ATTR(log_gpx_desc)
 ATTR(map_pass)
 ATTR(validity_period)
 ATTR(socket)
+/* These attributes for house number interpolation are only written by
+ * martin-s' (unpublished) GDF converter. */
 ATTR(house_number_left)
 ATTR(house_number_left_odd)
 ATTR(house_number_left_even)
@@ -376,6 +378,10 @@ ATTR(first_key)
 ATTR(last_key)
 ATTR(src_dir)
 ATTR(refresh_cond)
+/* House number interpolation information from OSM. For OSM data, the interpolation must
+ * exclude the end nodes, because these are imported as separate nodes. */
+ATTR(house_number_interpolation_no_ends_incrmt_1)
+ATTR(house_number_interpolation_no_ends_incrmt_2)
 ATTR2(0x0003ffff,type_string_end)
 ATTR2(0x00040000,type_special_begin)
 ATTR(order)
