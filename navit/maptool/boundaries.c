@@ -107,19 +107,21 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		while ((member=item_bin_get_attr(ib, attr_osm_member, member))) {
 			long long osm_id;
 			int read=0;
-			int member_type;
+			enum relation_member_type member_type;
+			int member_type_numeric;
 			char *rolestr;
 
-			if (sscanf(member,"%d:"LONGLONG_FMT":%n",&member_type,&osm_id,&read) < 2)
+			if (sscanf(member,"%d:"LONGLONG_FMT":%n",&member_type_numeric,&osm_id,&read) < 2)
 				continue;
 				
+			member_type=(enum relation_member_type)member_type_numeric;
 			rolestr=member+read;
 			
-			if(member_type==1) {
+			if(member_type==rel_member_node) {
 				if(!strcmp(rolestr,"admin_centre") || !strcmp(rolestr,"admin_center"))
 					boundary->admin_centre=osm_id;
 			}
-			if(member_type==2) {
+			if(member_type==rel_member_way) {
 				enum geom_poly_segment_type role;
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave")) {
 					has_outer_ways=1;
@@ -134,9 +136,9 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 					osm_warning("way",osm_id,1,"\n");
 					role=geom_poly_segment_type_none;
 				}
-				relations_add_relation_member_entry(relations, relations_func, boundary, (gpointer)role, 2, osm_id);
+				relations_add_relation_member_entry(relations, relations_func, boundary, (gpointer)role, rel_member_way, osm_id);
 			}
-			if(member_type==3) {
+			if(member_type==rel_member_relation) {
 				if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave") || !strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
 					has_subrelations++;
 			}
