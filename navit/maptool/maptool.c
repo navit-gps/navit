@@ -959,6 +959,7 @@ int main(int argc, char **argv)
 		}
 	}
 	if (p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing house number interpolations")) {
+		// OSM house number interpolations are handled like a relation.
 		struct files_relation_processing *files_relproc = files_relation_processing_new(p.osm.line2poi, suffix); 
 		p.osm.house_number_interpolations=tempfile(suffix,"house_number_interpolations",0);
 
