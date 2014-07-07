@@ -808,50 +808,37 @@ search_list_house_number_new(struct item *item, struct house_number_interpolatio
 	char *hn;
 
 	ret->common.item=ret->common.unique=*item;
-	//if (item_attr_get(item, attr_street_name, &attr))
-	//	dbg(0,"xx1 %s\n",attr.u.str);
 	if (item_attr_get(item, attr_house_number, &attr))
 		ret->house_number=map_convert_string(item->map, attr.u.str);
 	else {
 		memset(&ret->common.unique, 0, sizeof(ret->common.unique));
-		//if (item_attr_get(item, attr_street_name, &attr))
-		//	dbg(0,"xx2 %s\n",attr.u.str);
 		for (;;) {
-			//dbg(0,"interpolate 11");
 			ret->house_number_interpolation=1;
 			switch(inter->side) {
 			case 0:
-				//dbg(0,"interpolate 11 0");
 				inter->side=-1;
 				search_setup_house_number_interpolation(item, attr_house_number_left, attr_house_number_left_odd, attr_house_number_left_even, inter);
 			case -1:
-				//dbg(0,"interpolate 11 -1");
 				if ((hn=search_interpolate(inter)))
 					break;
 				inter->side=1;
 				search_setup_house_number_interpolation(item, attr_house_number_right, attr_house_number_right_odd, attr_house_number_right_even, inter);
 			case 1:
-				//dbg(0,"interpolate 11 1");
 				if ((hn=search_interpolate(inter)))
 					break;
 			default:
-				//dbg(0,"interpolate 11 default");
 				g_free(ret);
 				return NULL;
 			}
 			if (search_match(hn, inter_match, inter_partial))
 			{
-				//dbg(0,"interpolate 22");
-				//dbg(0,"match %s %s-%s\n",hn, inter->first, inter->last);
 				ret->house_number=map_convert_string(item->map, hn);
 				break;
 			}
 		}
 	}
-	//dbg(0,"interpolate 33");
 	search_list_common_new(item, &ret->common);
 	ret->common.c=search_house_number_coordinate(item, ret->house_number_interpolation?inter:NULL);
-	//dbg(0,"interpolate 44");
 	return ret;
 }
 
