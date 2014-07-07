@@ -57,10 +57,15 @@ struct search_list_level {
 	GList *list,*curr,*last;
 };
 
+enum include_end_nodes {
+	end_nodes_yes,
+	end_nodes_no,
+};
 
 struct hn_interpol_attr {
 	enum attr_type house_number_interpol_attr;
 	int interpol_increment;
+	enum include_end_nodes include_end_nodes;
 };
 
 #define house_number_interpol_attr_END -1
@@ -69,13 +74,15 @@ struct hn_interpol_attr {
  * along with interpolation information.
  */
 struct hn_interpol_attr house_number_interpol_attrs[] = {
-	{ attr_house_number_left, 1 },
-	{ attr_house_number_left_odd, 2 },
-	{ attr_house_number_left_even, 2 },
-	{ attr_house_number_right, 1 },
-	{ attr_house_number_right_odd, 2 },
-	{ attr_house_number_right_even, 2 },
-	{ house_number_interpol_attr_END, -1 },
+	{ attr_house_number_left,       1, end_nodes_yes },
+	{ attr_house_number_left_odd,   2, end_nodes_yes },
+	{ attr_house_number_left_even,  2, end_nodes_yes },
+	{ attr_house_number_right,      1, end_nodes_yes },
+	{ attr_house_number_right_odd,  2, end_nodes_yes },
+	{ attr_house_number_right_even, 2, end_nodes_yes },
+	{ attr_house_number_interpolation_no_ends_incrmt_1, 1, end_nodes_no },
+	{ attr_house_number_interpolation_no_ends_incrmt_2, 2, end_nodes_no },
+	{ house_number_interpol_attr_END, -1, -1 },
 };
 
 /** Data for a house number interpolation. */
@@ -90,6 +97,8 @@ struct house_number_interpolation {
 	char *first;
 	/** Last number. */
         char *last;
+	/** Include first and last node in interpolation results? */
+	enum include_end_nodes include_end_nodes;
 	/** Current number in running interpolation. */
         char *curr;
 };
@@ -186,12 +195,13 @@ house_number_interpolation_clear_current(struct house_number_interpolation *inte
 	g_free(inter->last);
 	g_free(inter->curr);
 	inter->first=inter->last=inter->curr=NULL;
+	inter->increment=inter->include_end_nodes=-1;
 }
 
 static void
 house_number_interpolation_clear_all(struct house_number_interpolation *inter)
 {
-	inter->increment=inter->curr_interpol_attr_idx=0;
+	inter->curr_interpol_attr_idx=0;
 	house_number_interpolation_clear_current(inter);
 }
 
@@ -692,7 +702,7 @@ search_list_street_destroy(struct search_list_street *this_)
 }
 
 static char *
-search_next_house_number_curr_interpol(struct house_number_interpolation *inter)
+search_next_house_number_curr_interpol_with_ends(struct house_number_interpolation *inter)
 {
 	dbg(1,"interpolate %s-%s %s\n",inter->first,inter->last,inter->curr);
 	if (!inter->first || !inter->last)
@@ -714,6 +724,29 @@ search_next_house_number_curr_interpol(struct house_number_interpolation *inter)
 	}
 	dbg(1,"interpolate result %s\n",inter->curr);
 	return inter->curr;
+}
+
+static int
+house_number_is_end_number(char* house_number, struct house_number_interpolation *inter) {
+	return ( (!strcmp(house_number, inter->first))
+		|| (!strcmp(house_number, inter->last)) );
+}
+
+static char *
+search_next_house_number_curr_interpol(struct house_number_interpolation *inter)
+{
+	char* hn=NULL;
+	switch (inter->include_end_nodes) {
+		case end_nodes_yes:
+			hn=search_next_house_number_curr_interpol_with_ends(inter);
+			break;
+		case end_nodes_no:
+			do {
+				hn=search_next_house_number_curr_interpol_with_ends(inter);
+			} while (hn!=NULL && house_number_is_end_number(hn, inter));
+			break;
+	}
+	return hn;
 }
 
 static void
@@ -835,6 +868,7 @@ search_next_interpolated_house_number(struct item *item, struct house_number_int
 		if (item_attr_get(item, curr_interpol_attr.house_number_interpol_attr, &attr)) {
 			search_house_number_interpolation_split(attr.u.str, inter);
 			inter->increment=curr_interpol_attr.interpol_increment;
+			inter->include_end_nodes=curr_interpol_attr.include_end_nodes;
 		}
 		inter->curr_interpol_attr_idx++;
 	}
