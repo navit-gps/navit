@@ -258,6 +258,7 @@ struct maptool_osm {
 	FILE *boundaries;
 	FILE *turn_restrictions;
 	FILE *associated_streets;
+	FILE *house_number_interpolations;
 	FILE *nodes;
 	FILE *ways;
 	FILE *line2poi;
