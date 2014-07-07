@@ -124,6 +124,16 @@ struct country_table;
 typedef unsigned long long int osmid;
 #define OSMID_FMT LONGLONG_FMT
 
+/** Files needed for processing a relation. */
+struct files_relation_processing {
+	FILE *ways_in;
+	FILE *ways_out;
+	FILE *nodes_in;
+	FILE *nodes_out;
+	FILE *nodes2_in;
+	FILE *nodes2_out;
+};
+
 /* boundaries.c */
 
 struct boundary {
@@ -280,8 +290,8 @@ void osm_add_nd(osmid ref);
 osmid item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
-void process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out);
-void process_house_number_interpolations(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out);
+void process_associated_streets(FILE *in, struct files_relation_processing *files_relproc);
+void process_house_number_interpolations(FILE *in, struct files_relation_processing *files_relproc);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void clear_node_item_buffer(void);
