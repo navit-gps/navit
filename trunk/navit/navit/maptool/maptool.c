@@ -951,6 +951,43 @@ int main(int argc, char **argv)
 			tempfile_unlink(suffix,"associated_streets");
 		}
 	}
+	// FIXME: c&p
+	if (p.process_relations && p.process_ways && p.process_nodes && start_phase(&p,"processing house number interpolations")) {
+		FILE *ways_in=tempfile(suffix,"ways_split",0);
+		FILE *ways_out=tempfile(suffix,"ways_split_hn_interpol",1);
+		FILE *nodes_in=tempfile(suffix,"nodes",0);
+		FILE *nodes_out=tempfile(suffix,"nodes_hn_interpol",1);
+		FILE *nodes2_in=NULL;
+		FILE *nodes2_out=NULL;
+		if(p.osm.line2poi) {
+			nodes2_in=tempfile(suffix,"way2poi_result",0);
+			nodes2_out=tempfile(suffix,"way2poi_result_hn_interpol",1);
+		}
+		p.osm.house_number_interpolations=tempfile(suffix,"house_number_interpolations",0);
+
+		process_house_number_interpolations(p.osm.house_number_interpolations, ways_in, ways_out, nodes_in, nodes_out, nodes2_in, nodes2_out);
+		fclose(ways_in);
+		fclose(nodes_in);
+		fclose(ways_out);
+		fclose(nodes_out);
+		fclose(p.osm.house_number_interpolations);
+		tempfile_rename(suffix,"ways_split","ways_split_pre_hn_interpol");
+		tempfile_rename(suffix,"nodes","nodes_pre_hn_interpol");
+		tempfile_rename(suffix,"ways_split_hn_interpol","ways_split");
+		tempfile_rename(suffix,"nodes_hn_interpol","nodes");
+		if(p.osm.line2poi) {
+			fclose(nodes2_in);
+			fclose(nodes2_out);
+			tempfile_rename(suffix,"way2poi_result","way2poi_result_pre_hn_interpol");
+			tempfile_rename(suffix,"way2poi_result_hn_interpol","way2poi_result");
+		}
+		tempfile_unlink(suffix,"ways_split_pre_hn_interpol");
+		tempfile_unlink(suffix,"nodes_pre_hn_interpol");
+		tempfile_unlink(suffix,"way2poi_result_pre_hn_interpol");
+		if(!p.keep_tmpfiles) {
+			tempfile_unlink(suffix,"house_number_interpolations");
+		}
+	}
 	if (p.output == 1 && start_phase(&p,"dumping")) {
 		maptool_dump(&p, suffix);
 		exit(0);
