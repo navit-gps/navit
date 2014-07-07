@@ -281,6 +281,7 @@ osmid item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out);
+void process_house_number_interpolations(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 void clear_node_item_buffer(void);
