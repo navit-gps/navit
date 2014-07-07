@@ -442,6 +442,7 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 	if (p->process_relations) {
 		p->osm.boundaries=tempfile(suffix,"boundaries",1);
 		p->osm.associated_streets=tempfile(suffix,"associated_streets",1);
+		p->osm.house_number_interpolations=tempfile(suffix,"house_number_interpolations",1);
 	}
 #ifdef HAVE_POSTGRESQL
 	if (p->dbstr)
@@ -483,6 +484,8 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 		fclose(p->osm.turn_restrictions);
 	if (p->osm.associated_streets)
 		fclose(p->osm.associated_streets);
+	if (p->osm.house_number_interpolations)
+		fclose(p->osm.house_number_interpolations);
 	if (p->osm.boundaries)
 		fclose(p->osm.boundaries);
 	if (p->osm.poly2poi)
