@@ -2427,7 +2427,7 @@ process_associated_streets_setup(FILE *in, struct relations *relations, struct p
 }
 
 void
-process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out)
+process_associated_streets(FILE *in, struct files_relation_processing *files_relproc)
 {
 	struct relations *relations=relations_new();
 	struct process_relation_member_func_priv fp={NULL,NULL};
@@ -2435,22 +2435,22 @@ process_associated_streets(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_
  	process_associated_streets_setup(in, relations, &fp);
 
 	/* Set noname relations names from their street members */
-	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in);
+	fseek(files_relproc->ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->ways_in);
 
 	/* Set street names on all members */
-	fp.out=ways_out;
-	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in);
+	fp.out=files_relproc->ways_out;
+	fseek(files_relproc->ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->ways_in);
 
-	fp.out=nodes_out;
-	fseek(nodes_in, 0, SEEK_SET);
-	relations_process(relations, NULL, nodes_in);
+	fp.out=files_relproc->nodes_out;
+	fseek(files_relproc->nodes_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->nodes_in);
 
-	if(nodes2_in) {
-		fp.out=nodes2_out;
-		fseek(nodes2_in, 0, SEEK_SET);
-		relations_process(relations, NULL, nodes2_in);
+	if(files_relproc->nodes2_in) {
+		fp.out=files_relproc->nodes2_out;
+		fseek(files_relproc->nodes2_in, 0, SEEK_SET);
+		relations_process(relations, NULL, files_relproc->nodes2_in);
 	}
 
 	relations_destroy(relations);
@@ -2480,33 +2480,32 @@ process_house_number_interpolations_setup(FILE *in, struct relations *relations,
 }
 
 void
-process_house_number_interpolations(FILE *in, FILE *ways_in, FILE *ways_out, FILE *nodes_in, FILE *nodes_out, FILE *nodes2_in, FILE *nodes2_out)
-{
+process_house_number_interpolations(FILE *in, struct files_relation_processing *files_relproc) {
 	struct relations *relations=relations_new();
 	struct process_relation_member_func_priv fp={NULL,NULL};
 	fseek(in, 0, SEEK_SET);
 	process_house_number_interpolations_setup(in, relations, &fp);
 
 	/* Copy house numbers & street names from first/last node to interpolation way. */
-	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in);
+	fseek(files_relproc->ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->ways_in);
 
-	fseek(nodes_in, 0, SEEK_SET);
-	relations_process(relations, NULL, nodes_in);
+	fseek(files_relproc->nodes_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->nodes_in);
 
 	/* Set street names on all members */
-	fp.out=ways_out;
-	fseek(ways_in, 0, SEEK_SET);
-	relations_process(relations, NULL, ways_in);
+	fp.out=files_relproc->ways_out;
+	fseek(files_relproc->ways_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->ways_in);
 
-	fp.out=nodes_out;
-	fseek(nodes_in, 0, SEEK_SET);
-	relations_process(relations, NULL, nodes_in);
+	fp.out=files_relproc->nodes_out;
+	fseek(files_relproc->nodes_in, 0, SEEK_SET);
+	relations_process(relations, NULL, files_relproc->nodes_in);
 
-	if(nodes2_in) {
-		fp.out=nodes2_out;
-		fseek(nodes2_in, 0, SEEK_SET);
-		relations_process(relations, NULL, nodes2_in);
+	if(files_relproc->nodes2_in) {
+		fp.out=files_relproc->nodes2_out;
+		fseek(files_relproc->nodes2_in, 0, SEEK_SET);
+		relations_process(relations, NULL, files_relproc->nodes2_in);
 	}
 
 	relations_destroy(relations);
