@@ -1755,6 +1755,14 @@ osm_end_way(struct maptool_osm *osm)
 		if(i>0)
 			item_bin_add_attr_int(item_bin, attr_duplicate, 1);
 		item_bin_write(item_bin,osm->ways);
+
+		if (types[i]>=type_house_number_interpolation_even && types[i]<=type_house_number_interpolation_alphabetic){
+			struct item_bin *item_bin_interpolation_way=init_item(types[i]);
+			item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
+			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid_first_node, GET_REF(coord_buffer[0]));
+			item_bin_add_attr_longlong(item_bin, attr_osm_nodeid_last_node, GET_REF(coord_buffer[coord_count-1]));
+			item_bin_write(item_bin_interpolation_way, osm->house_number_interpolations);
+		}
 	}
 	if(osm->line2poi) {
 		count=attr_longest_match(attr_mapping_way2poi, attr_mapping_way2poi_count, types, sizeof(types)/sizeof(enum item_type));
