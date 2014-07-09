@@ -51,13 +51,14 @@ EXTRA_DIST = navit_shipped.xml navit.dtd
 lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c \
 	event.c event_glib.h file.c geom.c graphics.c gui.c item.c layout.c log.c main.c map.c maps.c \
 	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c bookmarks.h navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
-	profile.c profile_option.c projection.c roadprofile.c route.c routech.c search.c script.c speech.c start_real.c transform.c track.c \
-	util.c vehicle.c vehicleprofile.c xmlconfig.c announcement.h atom.h attr.h attr_def.h cache.h callback.h color.h command.h compass.h config_.h coord.h country.h \
+	profile.c profile_option.c projection.c roadprofile.c route.c routech.c search.c search_houseno_interpol.c script.c speech.c start_real.c \
+	transform.c track.c util.c vehicle.c vehicleprofile.c xmlconfig.c \
+	announcement.h atom.h attr.h attr_def.h cache.h callback.h color.h command.h compass.h config_.h coord.h country.h \
 	android.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h endianess.h event.h \
 	file.h geom.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h linguistics.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h messages.h navigation.h navit.h osd.h \
-	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h roadprofile.h search.h speech.h start_real.h \
-	transform.h track.h types.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
+	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h roadprofile.h search.h search_houseno_interpol.h \
+	speech.h start_real.h transform.h track.h types.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
 	navit_lfs.h navit_nls.c navit_nls.h sunriset.c sunriset.h glib_slice.h
 
 XSLTS=@XSLTS@
