@@ -310,7 +310,7 @@ unsigned long long item_bin_get_wayid(struct item_bin *ib);
 unsigned long long item_bin_get_relationid(struct item_bin *ib);
 FILE *resolve_ways_file(FILE *in, char *suffix, char *filename);
 void process_way2poi(FILE *in, FILE *out, int type);
-int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
+int map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info, int max_index_size);
 void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix);
 void load_countries(void);
