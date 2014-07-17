@@ -21,8 +21,11 @@
 #include "maptool.h"
 #include "attr.h"
 
+/** Information about all members of a relation type and how to process them. */
 struct relations {
+        /** Hashes for nodes, ways and relations which are members. */
 	GHashTable *member_hash[3];
+        /** Default entries for processing items which are not a member of any relation. */
 	GList *default_members;
 };
 
@@ -99,6 +102,7 @@ relations_add_relation_member_entry(struct relations *rel, struct relations_func
 {
 	struct relations_member *memb=relations_member_new(func, relation_priv, member_priv, id);
 	GHashTable *member_hash=rel->member_hash[type-1];
+        // The real key is the OSM ID, but we recycle "memb" as key to avoid a second allocating for the key.
 	g_hash_table_insert(member_hash, memb, g_list_append(g_hash_table_lookup(member_hash, memb), memb));
 }
 
