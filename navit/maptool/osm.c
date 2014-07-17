@@ -1297,12 +1297,28 @@ flush_nodes(int final)
 	slices++;
 }
 
+static struct node_item*
+allocate_node_item_in_buffer(void) {
+      struct node_item* new_node;
+      if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
+	      extend_buffer(&node_buffer);
+      if (node_buffer.size + sizeof(struct node_item) > slice_size) {
+	      flush_nodes(0);
+      }
+      new_node=(struct node_item *)(node_buffer.base+node_buffer.size);
+      node_buffer.size+=sizeof(struct node_item);
+      return new_node;
+}
+
+static void
+remove_last_node_item_from_buffer(void) {
+      node_buffer.size-=sizeof(struct node_item);
+}
+
 void
 osm_add_node(osmid id, double lat, double lon)
 {
       in_node=1;
-      if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
-	      extend_buffer(&node_buffer);
       attr_strings_clear();
       node_is_tagged=0;
       nodeid=id;
@@ -1313,10 +1329,8 @@ osm_add_node(osmid id, double lat, double lon)
       osmid_attr.type=attr_osm_nodeid;
       osmid_attr.len=3;
       osmid_attr_value=id;
-      if (node_buffer.size + sizeof(struct node_item) > slice_size) {
-	      flush_nodes(0);
-      }
-      current_node=(struct node_item *)(node_buffer.base+node_buffer.size);
+
+      current_node=allocate_node_item_in_buffer();
       current_node->id=id;
       current_node->ref_way=0;
       current_node->dummy1=0;
@@ -1324,7 +1338,6 @@ osm_add_node(osmid id, double lat, double lon)
       current_node->dummy3=0;
       current_node->c.x=lon*6371000.0*M_PI/180;
       current_node->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
-      node_buffer.size+=sizeof(struct node_item);
       if (! node_hash) {
 	      if (current_node->id > id_last_node) {
 		      id_last_node=current_node->id;
@@ -1339,7 +1352,7 @@ osm_add_node(osmid id, double lat, double lon)
 		      g_hash_table_insert(node_hash, (gpointer)(long)(current_node->id),
 			  (gpointer)(long)(current_node-(struct node_item *)node_buffer.base));
 	      else {
-		      node_buffer.size-=sizeof(struct node_item);
+                      remove_last_node_item_from_buffer();
 		      nodeid=0;
 	      }
 
