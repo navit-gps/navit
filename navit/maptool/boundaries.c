@@ -111,7 +111,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 			int member_type_numeric;
 			char *rolestr;
 
-			if (sscanf(member,"%d:"LONGLONG_FMT":%n",&member_type_numeric,&osm_id,&read) < 2)
+			if (sscanf(member,RELATION_MEMBER_PARSE_FORMAT,&member_type_numeric,&osm_id,&read) < 2)
 				continue;
 				
 			member_type=(enum relation_member_type)member_type_numeric;

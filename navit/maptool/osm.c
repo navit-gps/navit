@@ -1616,7 +1616,7 @@ osm_add_member(enum relation_member_type type, osmid ref, char *role)
 	char member_buffer[bufsize];
 	struct attr memberattr = { attr_osm_member };
 
-	snprintf(member_buffer,bufsize,"%d:"LONGLONG_FMT":%s", (int)type, (long long) ref, role);
+	snprintf(member_buffer,bufsize, RELATION_MEMBER_PRINT_FORMAT, (int)type, (long long) ref, role);
 	memberattr.u.str=member_buffer;
 	item_bin_add_attr(tmp_item_bin, &memberattr);
 }
@@ -2143,7 +2143,7 @@ parse_relation_member_string(char *relation_member_string, struct relation_membe
 {
 	int len;
 	int type_numeric;
-	sscanf(relation_member_string,"%d:"LONGLONG_FMT":%n",&type_numeric,&memb->id,&len);
+	sscanf(relation_member_string,RELATION_MEMBER_PARSE_FORMAT,&type_numeric,&memb->id,&len);
 	memb->type=(enum relation_member_type)type_numeric;
 	memb->role=relation_member_string+len;
 }
