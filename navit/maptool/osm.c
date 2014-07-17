@@ -2927,7 +2927,7 @@ osm_add_nd(osmid ref)
 }
 
 static void
-write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
+write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
 {
 	struct item_bin new;
 	struct coord *c=(struct coord *)(orig+1);
@@ -3047,14 +3047,14 @@ process_way2poi(FILE *in, FILE *out, int type)
 				geom_line_middle(c,count,&c1);
 				c[0]=c1;
 			}
-			write_item_part(out, NULL, NULL, ib, 0, 0, NULL);
+			write_item_way_subsection(out, NULL, NULL, ib, 0, 0, NULL);
 		}
 	}
 }
 
 
 int
-map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
+map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
 {
 	struct coord *c;
 	int i,ccount,last,remaining;
@@ -3081,7 +3081,7 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 				if (ni) {
 					c[i]=ni->c;
 					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
-						write_item_part(out, out_index, out_graph, ib, last, i, &last_id);
+						write_item_way_subsection(out, out_index, out_graph, ib, last, i, &last_id);
 						last=i;
 					}
 				} else if (final) {
@@ -3097,9 +3097,9 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 			}
 		}
 		if (ccount) {
-			write_item_part(out, out_index, out_graph, ib, last, ccount-1, &last_id);
+			write_item_way_subsection(out, out_index, out_graph, ib, last, ccount-1, &last_id);
 			if (final && ib->type == type_water_line && out_coastline) {
-				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1, NULL);
+				write_item_way_subsection(out_coastline, NULL, NULL, ib, last, ccount-1, NULL);
 			}
 		}
 	}

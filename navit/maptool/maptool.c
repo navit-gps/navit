@@ -453,7 +453,7 @@ start_phase(struct maptool_params *p, char *str)
 }
 
 static void
-osm_collect_data(struct maptool_params *p, char *suffix)
+osm_read_input_data(struct maptool_params *p, char *suffix)
 {
 	unlink("coords.tmp");
 	if (p->process_ways)
@@ -563,7 +563,7 @@ osm_count_references(struct maptool_params *p, char *suffix, int clear)
 
 
 static void
-osm_find_intersections(struct maptool_params *p, char *suffix)
+osm_resolve_coords_and_split_at_intersections(struct maptool_params *p, char *suffix)
 {
 	FILE *ways, *ways_split, *ways_split_index, *graph, *coastline;
 	int i;
@@ -577,7 +577,7 @@ osm_find_intersections(struct maptool_params *p, char *suffix)
 		coastline=tempfile(suffix,"coastline",1);
 		if (i)
 			load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-		map_find_intersections(ways,ways_split,ways_split_index,graph,coastline,final);
+		map_resolve_coords_and_split_at_intersections(ways,ways_split,ways_split_index,graph,coastline,final);
 		fclose(ways_split);
 		if (ways_split_index)
 			fclose(ways_split_index);
@@ -884,8 +884,8 @@ int main(int argc, char **argv)
 
 	// input from an OSM file
 	if (p.input == 0) {
-		if (start_phase(&p, "collecting data")) {
-			osm_collect_data(&p, suffix);
+		if (start_phase(&p, "reading input data")) {
+			osm_read_input_data(&p, suffix);
 			p.node_table_loaded=1;
 		}
 		if (start_phase(&p, "counting references and resolving ways")) {
@@ -895,10 +895,10 @@ int main(int argc, char **argv)
 		if (start_phase(&p,"converting ways to pois")) {
 			osm_process_way2poi(&p, suffix);
 		}
-		if (start_phase(&p,"finding intersections")) {
+		if (start_phase(&p,"splitting at intersections")) {
 			if (p.process_ways) {
 				maptool_load_node_table(&p,0);
-				osm_find_intersections(&p, suffix);
+				osm_resolve_coords_and_split_at_intersections(&p, suffix);
 			}
 		}
 		free(node_buffer.base);
