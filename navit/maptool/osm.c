@@ -2999,19 +2999,6 @@ resolve_ways(FILE *in, FILE *out)
 	}
 }
 
-FILE *
-resolve_ways_file(FILE *in, char *suffix, char *filename)
-{
-	char *newfilename=g_strdup_printf("%s_new",filename);
-	FILE *new=tempfile(suffix,newfilename,1);
-	resolve_ways(in, new);
-	fclose(in);
-	fclose(new);
-	tempfile_rename(suffix,newfilename,filename);
-	g_free(newfilename);
-	return tempfile(suffix,filename,0);
-}
-
 /**
   * Get POI coordinates from area/line coordinates.
   * @param in *in input file with area/line coordinates.
