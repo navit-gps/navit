@@ -40,8 +40,6 @@
 #define M_PI_4     0.785398163397448309616
 #endif
 
-extern int doway2poi;
-
 static int in_way, in_node, in_relation;
 osmid nodeid,wayid;
 
@@ -801,7 +799,7 @@ build_attrmap_line(char *line)
 			attr_mapping_rel2poly_place[attr_mapping_rel2poly_place_count++]=attr_mapping;
 		}
 	}
-	if (t[0]== '?' && doway2poi) {
+	if (t[0]== '?') {
 		attr_mapping_way2poi=g_realloc(attr_mapping_way2poi, sizeof(*attr_mapping_way2poi)*(attr_mapping_way2poi_count+1));
 		attr_mapping_way2poi[attr_mapping_way2poi_count++]=attr_mapping;
 	}

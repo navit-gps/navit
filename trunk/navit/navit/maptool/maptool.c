@@ -55,7 +55,6 @@ GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
 int unknown_country;
-int doway2poi=1;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
 /** Textual description of available experimental features, or NULL (=none available). */
 char* experimental_feature_description = NULL; /* add description here */
@@ -465,10 +464,8 @@ osm_collect_data(struct maptool_params *p, char *suffix)
 	}
 	if (p->process_ways && p->process_nodes) {
 		p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",1);
-		if(doway2poi) {
-			p->osm.line2poi=tempfile(suffix,"line2poi",1);
-			p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
-		}
+		p->osm.line2poi=tempfile(suffix,"line2poi",1);
+		p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
 	}
 	if (p->process_relations) {
 		p->osm.boundaries=tempfile(suffix,"boundaries",1);
@@ -544,23 +541,21 @@ osm_count_references(struct maptool_params *p, char *suffix, int clear)
 			save_buffer("coords.tmp",&node_buffer, i*slice_size);
 			fclose(ways);
 		}
-		if(doway2poi) {
-			FILE *poly2poi=tempfile(suffix,first?"poly2poi":"poly2poi_resolved",0);
-			FILE *poly2poinew=tempfile(suffix,"poly2poi_resolved_new",1);
-			FILE *line2poi=tempfile(suffix,first?"line2poi":"line2poi_resolved",0);
-			FILE *line2poinew=tempfile(suffix,"line2poi_resolved_new",1);
-			resolve_ways(poly2poi, poly2poinew);
-			resolve_ways(line2poi, line2poinew);
-			fclose(poly2poi);
-			fclose(poly2poinew);
-			fclose(line2poi);
-			fclose(line2poinew);
-			tempfile_rename(suffix,"poly2poi_resolved_new","poly2poi_resolved");
-			tempfile_rename(suffix,"line2poi_resolved_new","line2poi_resolved");
-			if (first && !p->keep_tmpfiles) {
-				tempfile_unlink(suffix,"poly2poi");
-				tempfile_unlink(suffix,"line2poi");
-			}
+		FILE *poly2poi=tempfile(suffix,first?"poly2poi":"poly2poi_resolved",0);
+		FILE *poly2poinew=tempfile(suffix,"poly2poi_resolved_new",1);
+		FILE *line2poi=tempfile(suffix,first?"line2poi":"line2poi_resolved",0);
+		FILE *line2poinew=tempfile(suffix,"line2poi_resolved_new",1);
+		resolve_ways(poly2poi, poly2poinew);
+		resolve_ways(line2poi, line2poinew);
+		fclose(poly2poi);
+		fclose(poly2poinew);
+		fclose(line2poi);
+		fclose(line2poinew);
+		tempfile_rename(suffix,"poly2poi_resolved_new","poly2poi_resolved");
+		tempfile_rename(suffix,"line2poi_resolved_new","line2poi_resolved");
+		if (first && !p->keep_tmpfiles) {
+			tempfile_unlink(suffix,"poly2poi");
+			tempfile_unlink(suffix,"line2poi");
 		}
 		first=0;
 	}
