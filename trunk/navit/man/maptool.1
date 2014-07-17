@@ -4,12 +4,13 @@ maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
 .B For OSM XML data:
 .B bzcat planet.osm.bz2 | maptool mymap.bin
-[\-h] [\-2] [\-5 <file>] [\-6] [\-a <level>] [\-c] -[\-d <connect string] 
+[\-h] [\-5 <file>] [\-6] [\-a <level>] [\-c] -[\-d <connect string]
 [\-e <phase>] [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-r <file>] [\-s <phase>]
 [\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
+
 .B For OSM Protobuf/PBF data:
 .B maptool \-\-protobuf \-i planet.osm.pbf planet.bin
-[\-h] [\-2] [\-5 <file>] [\-6] [\-a <level>] [\-c] [\-e <phase>] 
+[\-h] [\-5 <file>] [\-6] [\-a <level>] [\-c] [\-e <phase>]
 [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
 [\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 .SH DESCRIPTION
@@ -18,9 +19,6 @@ maptool parses osm textfile and converts it to Navit binfile format
 .TP
 \-h (\-\-help)
 display a short help message
-.TP
-\-2 (\-\-dowai2poi)
-convert ways and polygons to POIs when applicable
 .TP
 \-4 (\-\-md5)
 set file where to write md5 sum
@@ -50,8 +48,8 @@ do not delete tmp files after processing. useful to reuse them
 process only nodes
 .TP
 \-o (\-\-coverage)
-converts every street to street_converage, resulting in a big fat black line. 
-You can overlay this map with another vector map or image map, and every street 
+converts every street to street_coverage, resulting in a big fat black line.
+You can overlay this map with another vector map or image map, and every street
 you will still see is missing in the \-o map
 .TP
 \-P (\-\-protobuf)
@@ -64,7 +62,8 @@ read mapping rules from specified file
 start at specified phase
 .TP
 \-S (\-\-slice-size) <phrase>
-defines the amount of memory to use, in bytes. Default is 1GB
+limit memory to use for some large internal buffers, in bytes. Default is 1 GB.
+Smaller slices reduce peak memory usage, at the cost of increased processing time.
 .TP
 \-w (\-\-dedupe-ways)
 ensure no duplicate ways or nodes. useful when using several input files
