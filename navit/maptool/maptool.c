@@ -195,14 +195,14 @@ usage(FILE *f)
 	fprintf(f,"-E (--experimental)               : Enable experimental features (%s)\n",
 		experimental_feature_description ? experimental_feature_description : "-not available in this version-");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
-	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n");
 	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
 	fprintf(f,"-N (--nodes-only)                 : process only nodes\n");
 	fprintf(f,"-o (--coverage)                   : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
 	fprintf(f,"-r (--rule-file) <file>           : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
-	fprintf(f,"-S (--slice-size) <size>          : defines the amount of memory to use, in bytes. Default is %dGB\n", SLIZE_SIZE_DEFAULT_GB);
+	fprintf(f,"-S (--slice-size) <size>          : limit memory to use for some large internal buffers, in bytes. Default is %dGB.\n", SLIZE_SIZE_DEFAULT_GB);
 	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
