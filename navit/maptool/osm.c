@@ -1419,7 +1419,12 @@ node_item_get(osmid id)
       struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
       int result_index;
       if (node_hash) {
-	      result_index=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)(id)));
+            // Use g_hash_table_lookup_extended instead of g_hash_table_lookup
+            // to distinguish a key with a value 0 from a missing key.
+            if (!g_hash_table_lookup_extended (node_hash, (gpointer)(long)(id), NULL,
+                                           (gpointer)&result_index)) {
+                  result_index=-1;
+            }
       } else {
 	      result_index=node_item_find_index_in_ordered_list(id);
       }
