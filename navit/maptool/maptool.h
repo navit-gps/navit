@@ -34,6 +34,9 @@
 #define debug_tile(x) 0
 #define debug_itembin(x) 0
 
+#define RELATION_MEMBER_PRINT_FORMAT "%d:"LONGLONG_FMT":%s"
+#define RELATION_MEMBER_PARSE_FORMAT "%d:"LONGLONG_FMT":%n"
+
 struct tile_data {
 	char buffer[1024];
 	int tile_depth;
