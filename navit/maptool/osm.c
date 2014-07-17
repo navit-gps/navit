@@ -1318,10 +1318,10 @@ osm_add_node(osmid id, double lat, double lon)
       }
       current_node=(struct node_item *)(node_buffer.base+node_buffer.size);
       current_node->id=id;
-      current_node->ref_node=0;
       current_node->ref_way=0;
-      current_node->ref_ref=0;
-      current_node->dummy=0;
+      current_node->dummy1=0;
+      current_node->dummy2=0;
+      current_node->dummy3=0;
       current_node->c.x=lon*6371000.0*M_PI/180;
       current_node->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
       node_buffer.size+=sizeof(struct node_item);
