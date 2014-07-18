@@ -799,6 +799,7 @@ static void
 gui_internal_cmd2_back_to_map(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	gui_internal_prune_menu(this, NULL);
+	gui_internal_check_exit(this);
 }
 
 
