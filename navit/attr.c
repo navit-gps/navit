@@ -40,10 +40,17 @@ struct attr_name {
 };
 
 
+/** List of attr_types with their names as strings. */
 static struct attr_name attr_names[]={
 #define ATTR2(x,y) ATTR(y)
 #define ATTR(x) { attr_##x, #x },
+
+#define ATTR_UNUSED /* Unused attr_types not needed here.*/
+
 #include "attr_def.h"
+
+#undef ATTR_UNUSED
+
 #undef ATTR2
 #undef ATTR
 };

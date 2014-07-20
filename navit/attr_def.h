@@ -26,21 +26,21 @@ ATTR(any_xml)
 
 ATTR2(0x00010000,type_item_begin)
 ATTR(town_streets_item)
-ATTR(street_name_item)
-ATTR(street_name_numbers_item)
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(street_item)
-ATTR(street_number_item)
+ATTR_UNUSED
 ATTR(position_sat_item)
 ATTR(current_item)
 ATTR2(0x0001ffff,type_item_end)
 
 ATTR2(0x00020000,type_int_begin)
-ATTR(h_remove)
+ATTR_UNUSED
 ATTR(id)
 ATTR(flags)
-ATTR(w_remove)
-ATTR(x_remove)
-ATTR(y_remove)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(flush_size)
 ATTR(flush_time)
 ATTR(zipfile_ref)
@@ -63,11 +63,11 @@ ATTR(offroad)
 ATTR(vocabulary_name)
 ATTR(vocabulary_name_systematic)
 ATTR(vocabulary_distances)
-ATTR(announce_name_systematic_first)
+ATTR_UNUSED
 ATTR(antialias)
 ATTR(order_delta)
 ATTR(baudrate)
-ATTR(font_size_remove)
+ATTR_UNUSED
 ATTR(icon_xs)
 ATTR(icon_l)
 ATTR(icon_s)
@@ -92,7 +92,7 @@ ATTR(orientation)
 ATTR(keyboard)
 ATTR(position_sats_signal)
 ATTR(cps)
-ATTR(fast)
+ATTR_UNUSED
 ATTR(osd_configuration)
 ATTR(columns)
 ATTR(align)
@@ -108,18 +108,16 @@ ATTR(cdf_histsize)
 ATTR(message_maxage)
 ATTR(message_maxnum)
 ATTR(pitch)
-ATTR(roll)
-ATTR(yaw)
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(route_status)
 ATTR(route_weight)
-ATTR(distance_metric)
+ATTR_UNUSED
 ATTR(route_mode)
 ATTR(maxspeed_handling)
 ATTR(flags_forward_mask)
 ATTR(flags_reverse_mask)
-ATTR(house_number_interpolation)
-ATTR(house_number_left_interpolation)
-ATTR(house_number_right_interpolation)
+ATTR_UNUSED
 ATTR(delay)
 ATTR(lag)
 ATTR(bpp)
@@ -137,9 +135,9 @@ ATTR(gamma)
 ATTR(brightness)
 ATTR(contrast)
 ATTR(height)
-ATTR(minspeed)
-ATTR(recspeed)
-ATTR(speed_cond)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(shmkey)
 ATTR(vehicle_width)
 ATTR(vehicle_length)
@@ -149,7 +147,7 @@ ATTR(vehicle_axle_weight)
 ATTR(vehicle_dangerous_goods)
 ATTR(shmsize)
 ATTR(shmoffset)
-ATTR(speed_category)
+ATTR_UNUSED
 ATTR(static_speed)
 ATTR(static_distance)
 ATTR(through_traffic_penalty)
@@ -175,13 +173,13 @@ ATTR(street_count)
 ATTR(min_dist)
 ATTR(max_dist)
 ATTR(cache_size)
-ATTR(battery_voltage) /* mV */
-ATTR(battery_current) /* mA */
-ATTR(battery_capacity) /* Wh */
-ATTR(battery_capacity_rel) /* ppm */
-ATTR(battery_charge) /* mAh */
-ATTR(battery_resistance) /* mOhm */
-ATTR(battery_temperature) /* mK */
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(turn_around_count)
 ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
@@ -205,7 +203,7 @@ ATTR2(0x00028000,type_boolean_begin)
 ATTR(overwrite)
 ATTR(active)
 ATTR(follow_cursor)
-ATTR(orientation_removeme)
+ATTR_UNUSED
 ATTR(tracking)
 ATTR(menubar)
 ATTR(statusbar)
@@ -219,17 +217,17 @@ ATTR(button)
 ATTR(ondemand)
 ATTR(menu_on_map_click)
 ATTR(direction)
-ATTR(route_follow_straight_REMOVE) // This is to be removed with the next version
+ATTR_UNUSED
 ATTR(gui_speech)
 ATTR(town_id) /* fixme? */
 ATTR(street_id) /* fixme? */
 ATTR(district_id) /* fixme? */
 ATTR(drag_bitmap)
 ATTR(use_mousewheel)
-ATTR(fullscreen_old)
+ATTR_UNUSED
 ATTR(position_magnetic_direction)
 ATTR(use_overlay)
-ATTR(night_mode)
+ATTR_UNUSED
 ATTR(autozoom_active)
 ATTR(position_valid)
 ATTR(frame)
@@ -265,21 +263,21 @@ ATTR(town_postal)
 ATTR(district_name)
 ATTR(street_name)
 ATTR(street_name_systematic)
-ATTR(street_number)
+ATTR_UNUSED
 ATTR(debug)
 ATTR(address)
 ATTR(phone)
 ATTR(entry_fee)
 ATTR(open_hours)
 ATTR(skin)
-ATTR(fullscreen_removeme)
-ATTR(view_mode)
-ATTR(tilt)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(window_title)
-ATTR(media_cmd)
-ATTR(image_codec)
+ATTR_UNUSED
+ATTR_UNUSED
 /* poi */
-ATTR(icono)
+ATTR_UNUSED
 ATTR(info_html)
 ATTR(price_html)
 /* navigation */
@@ -292,7 +290,7 @@ ATTR(cursorname)
 ATTR(source)
 ATTR(description)
 ATTR(gc_type)
-ATTR(layout_removeme)
+ATTR_UNUSED
 ATTR(position_nmea)
 ATTR(gpsd_query)
 ATTR(on_eof)
@@ -301,9 +299,9 @@ ATTR(src)
 ATTR(path)
 ATTR(font)
 ATTR(url_local)
-ATTR(gc_size)
-ATTR(gc_difficulty)
-ATTR(gc_terrain)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(icon_src)
 ATTR(position_time_iso8601)
 ATTR(house_number)
@@ -313,7 +311,7 @@ ATTR(municipality_name)
 ATTR(county_name)
 ATTR(state_name)
 ATTR(message)
-ATTR(callbacks)
+ATTR_UNUSED
 ATTR(enable_expression)
 ATTR(fax)
 ATTR(email)
@@ -323,12 +321,12 @@ ATTR(projectionname)
 ATTR(town_or_district_name)
 ATTR(postal)
 ATTR(postal_mask)
-ATTR(house_number_first)
-ATTR(house_number_last)
-ATTR(house_number_left_first)
-ATTR(house_number_left_last)
-ATTR(house_number_right_first)
-ATTR(house_number_right_last)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(town_name_match)
 ATTR(district_name_match)
 ATTR(street_name_match)
@@ -339,12 +337,12 @@ ATTR(daylayout)
 ATTR(nightlayout)
 ATTR(xml_text)
 ATTR(layout_name)
-ATTR(user_name)
-ATTR(user_pass)
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(status_text)
 ATTR(log_gpx_desc)
 ATTR(map_pass)
-ATTR(validity_period)
+ATTR_UNUSED
 ATTR(socket)
 /* These attributes for house number interpolation are only written by
  * martin-s' (unpublished) GDF converter. */
@@ -414,7 +412,7 @@ ATTR(click_coord_geo)
 ATTR2(0x0006ffff,type_coord_geo_end)
 ATTR2(0x00070000,type_color_begin)
 ATTR(color)
-ATTR(color2)
+ATTR_UNUSED
 ATTR(background_color)
 ATTR(text_color)
 ATTR(idle_color)
@@ -490,8 +488,6 @@ ATTR(osm_nodeid_first_node)
 ATTR(osm_nodeid_last_node)
 ATTR2(0x000cffff,type_int64_end)
 ATTR2(0x000d0000,type_group_begin)
-ATTR(speed_dep)
 ATTR2(0x000dffff,type_group_end)
 ATTR2(0x000e0000,type_item_type_begin)
-ATTR(alt_item_type)
 ATTR2(0x000effff,type_item_type_end)
