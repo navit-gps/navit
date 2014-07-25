@@ -203,12 +203,15 @@ int main_real(int argc, char * const* argv)
 	} else {
 		dbg(0, _("Using config file '%s'\n"), config_file);
 	}
+	if (! config) {
+		dbg(0, _("Error: No configuration found in config file '%s'\n"), config_file);
+        }
 	while (li) {
 		g_free(li->data);
 		li = g_list_next(li);
 	}
 	g_list_free(list);
-	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
+	if (! (config && config_get_attr(config, attr_navit, &navit, NULL))) {
 		dbg(0, "%s", _("Internal initialization failed, exiting. Check previous error messages.\n"));
 		exit(5);
 	}
