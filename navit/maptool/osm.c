@@ -1537,7 +1537,6 @@ osm_add_way(osmid id)
 
 char relation_type[BUFFER_SIZE];
 char iso_code[BUFFER_SIZE];
-int admin_level;
 int boundary;
 
 void
@@ -1548,7 +1547,6 @@ osm_add_relation(osmid id)
 	debug_attr_buffer[0]='\0';
 	relation_type[0]='\0';
 	iso_code[0]='\0';
-	admin_level=-1;
 	boundary=0;
 	item_bin_init(tmp_item_bin, type_none);
 	item_bin_add_attr_longlong(tmp_item_bin, attr_osm_relationid, osmid_attr_value);
@@ -1605,16 +1603,6 @@ osm_end_relation(struct maptool_osm *osm)
 		type=type_none;
 
 	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && (boundary || type!=type_none)) {
-#if 0
-		if (admin_level == 2) {
-			FILE *f;
-			fprintf(stderr,"Multipolygon for %s\n", iso_code);
-			char *name=g_strdup_printf("country_%s.tmp",iso_code);
-			f=fopen(name,"w");
-			item_bin_write(tmp_item_bin, f);
-			fclose(f);
-		}
-#endif
 		item_bin_write(tmp_item_bin, osm->boundaries);
 	}
 
@@ -1661,8 +1649,6 @@ relation_add_tag(char *k, char *v)
 			tmp_item_bin->type=type_none;
 			osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
 		}
-	} else if (!strcmp(k,"admin_level")) {
-		admin_level=atoi(v);
 	} else if (!strcmp(k,"boundary")) {
 		if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
 			boundary=1;
@@ -1950,11 +1936,11 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 			l=matches;
 			while (l) {
 				struct boundary *b=l->data;
-				char *admin_level=osm_tag_value(b->ib, "admin_level");
+				char *boundary_admin_level_string=osm_tag_value(b->ib, "admin_level");
 				char *postal=osm_tag_value(b->ib, "postal_code");
-				if (admin_level) {
+				if (boundary_admin_level_string) {
 					char *name;
-					a=atoi(admin_level);
+					a=atoi(boundary_admin_level_string);
 					if (a > 2 && a < end) {
 						enum attr_type attr_type=attr_none;
 						switch(match->country->admin_levels[a-3]) {
