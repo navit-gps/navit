@@ -91,8 +91,17 @@ struct item_bin {
 	int clen;
 };
 
+/**
+ * An attribute for an item_bin as it is stored in a Navit binfile.
+ * Note that this struct only has fields for the header of the attribute.
+ * The attribute value is stored in memory after this struct. The type of the value
+ * (string, number, ...) depends on the attribute type.
+ * @see struct item_bin
+ */
 struct attr_bin {
+	/** Length of this attribute (not including this length field) in 32-bit ints. */
 	int len;
+	/** Attribute type. */
 	enum attr_type type;
 };
 
