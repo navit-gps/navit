@@ -220,7 +220,6 @@ void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min
 void item_bin_remove_attr(struct item_bin *ib, void *ptr);
 void item_bin_write(struct item_bin *ib, FILE *out);
 struct item_bin *item_bin_dup(struct item_bin *ib);
-void item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max);
 void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out);
 void item_bin_dump(struct item_bin *ib, FILE *out);
 void dump_itembin(struct item_bin *ib);

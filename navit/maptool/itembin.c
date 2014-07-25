@@ -283,18 +283,6 @@ item_bin_dup(struct item_bin *ib)
 }
 
 void
-item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max)
-{
-	struct range r;
-
-	r.min=min;
-	r.max=max;
-	fwrite(&r, sizeof(r), 1, out);
-	item_bin_write(ib, out);
-}
-
-
-void
 item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out)
 {
 	struct tile_data tile_data;
