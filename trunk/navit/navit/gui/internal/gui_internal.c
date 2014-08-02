@@ -1624,8 +1624,8 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 			dbg(1,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
-				wi->text[len]=' ';
-				text=g_strdup_printf("%s ", wi->text);
+				wi->text[len]='\0';
+				text=g_strdup(wi->text);
 			}
 		} else {
 			if (wi->state & STATE_CLEAR) {
@@ -1639,10 +1639,6 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 		}
 		g_free(wi->text);
 		wi->text=text;
-		if (*key == NAVIT_KEY_BACKSPACE && wi->text) {
-			gui_internal_widget_render(this, wi);
-			wi->text[len]='\0';
-		}
 		if (wi->func) {
 			wi->reason=gui_internal_reason_keypress;
 			wi->func(this, wi, wi->data);
