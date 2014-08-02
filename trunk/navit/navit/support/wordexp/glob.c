@@ -62,9 +62,8 @@ int glob(const char *pattern, int flags,
 		return 1;
 	}
 	/* store the path information */
-	if (NULL == (pathend = max (strrchr (pattern, '\\'), strrchr (pattern, '/'))))
-			pathend = (char *) pattern;
-	pathlen = pathend - pattern + 1;
+	pathend = max (strrchr (pattern, '\\'), strrchr (pattern, '/'));
+	pathlen = pathend ? (pathend - pattern + 1) : 0;
 
 	/* glob */
 	pglob->gl_pathc = 0;    /* number of founded files */
