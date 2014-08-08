@@ -1,18 +1,19 @@
-# Estonian (et)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Estonian translation for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Andres Kaaber https://launchpad.net/~imapi
 # Jalakas https://launchpad.net/~jalakas
 # Manuel Hohmann https://launchpad.net/~mhohmann
 # lyyser https://launchpad.net/~lyyser
 # thucar https://launchpad.net/~rait
 
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-10 01:22+0000\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-12-05 21:25+0000\n"
 "Last-Translator: Jalakas <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
@@ -20,8 +21,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-12-10 01:41+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1340,6 +1341,10 @@ msgstr "Viga seadistusfaili lugemisel '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Kasutame seadistusfaili: '%s'\n"
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1718,8 +1723,8 @@ msgstr "Sisesta koordinaadid"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "Pikkuskraad Laiuskraad"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "Sisesta koordinaadid, näiteks:"
@@ -2213,6 +2218,98 @@ msgstr "Kaardi allaladimine"
 msgid "Vehicle Position"
 msgstr "Sõiduki asukoht"
 
+msgid "Main menu"
+msgstr "Põhimenüü"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Näita\n"
+"Kaarti"
+
+msgid "Settings"
+msgstr "Seaded"
+
+msgid "Tools"
+msgstr "Tööriistad"
+
+msgid "Route"
+msgstr "Teekond"
+
+msgid "About"
+msgstr "Programmist"
+
+msgid "Quit"
+msgstr "Välju"
+
+msgid "Actions"
+msgstr "Tegevused"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Eelnevad\n"
+"Sihtpunktid"
+
+msgid "Coordinates"
+msgstr "Koordinaadid"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Peata\n"
+"Navigeerimine"
+
+msgid "Display"
+msgstr "Ekraan"
+
+msgid "Fullscreen"
+msgstr "Täisekraan"
+
+msgid "Window Mode"
+msgstr "Aknarežiim"
+
+msgid "Description"
+msgstr "Kirjeldus"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+"Eemalda eelmine\n"
+"teekonnapunkt"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Eemalda järgmine\n"
+"teekonnapunkt"
+
+msgid "Satellite Status"
+msgstr "Satelliidi olek"
+
+msgid "NMEA Data"
+msgstr "NMEA Andmed"
+
+msgid "car_shortest"
+msgstr "Auto - Lühim tee"
+
+msgid "car_avoid_tolls"
+msgstr "Auto - Tollide vältimine"
+
+msgid "car_pedantic"
+msgstr "Auto - Pedantne"
+
+msgid "horse"
+msgstr "Hobune"
+
+msgid "Truck"
+msgstr "Veok"
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2409,117 +2506,3 @@ msgstr "Varundamine"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Taasta"
-
-msgid "Main menu"
-msgstr "Põhimenüü"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Näita\n"
-"Kaarti"
-
-msgid "Settings"
-msgstr "Seaded"
-
-msgid "Tools"
-msgstr "Tööriistad"
-
-msgid "Route"
-msgstr "Teekond"
-
-msgid "About"
-msgstr "Programmist"
-
-msgid "Quit"
-msgstr "Välju"
-
-msgid "Actions"
-msgstr "Tegevused"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"Eelnevad\n"
-"Sihtpunktid"
-
-msgid "Coordinates"
-msgstr "Koordinaadid"
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Peata\n"
-"Navigeerimine"
-
-msgid "Display"
-msgstr "Ekraan"
-
-msgid "Fullscreen"
-msgstr "Täisekraan"
-
-msgid "Window Mode"
-msgstr "Aknarežiim"
-
-msgid "Description"
-msgstr "Kirjeldus"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-"Eemalda eelmine\n"
-"teekonnapunkt"
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-"Eemalda järgmine\n"
-"teekonnapunkt"
-
-msgid "Satellite Status"
-msgstr "Satelliidi olek"
-
-msgid "NMEA Data"
-msgstr "NMEA Andmed"
-
-msgid "car_shortest"
-msgstr "Auto - Lühim tee"
-
-msgid "car_avoid_tolls"
-msgstr "Auto - Tollide vältimine"
-
-msgid "car_pedantic"
-msgstr "Auto - Pedantne"
-
-msgid "horse"
-msgstr "Hobune"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr "Veok"

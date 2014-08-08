@@ -1,7 +1,7 @@
-# Hebrew (he)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Hebrew translation for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Evgeniy Ginzburg https://launchpad.net/~nad-oby
 # KaZeR https://launchpad.net/~kazer
 # Liel Fridman https://launchpad.net/~lielft
@@ -9,20 +9,21 @@
 # Yaron https://launchpad.net/~sh-yaron
 # rintintin https://launchpad.net/~yonatanhak-gmail
 
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:42+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
+"PO-Revision-Date: 2014-05-26 10:31+0000\n"
+"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -86,11 +87,11 @@ msgstr "בעוד %d מ'"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d רגל"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "בעוד %d רגל"
 
 #, c-format
 msgid "%d meters"
@@ -102,11 +103,11 @@ msgstr "בעוד %d מטרים"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d מיילים"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "בעוד %d.%d מיילים"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -119,14 +120,14 @@ msgstr "בעוד  %d.%d קילומטרים"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "מייל אחד"
+msgstr[1] "%d מיילים"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "בעוד מייל אחד"
+msgstr[1] "בעוד %d מיילם"
 
 #, c-format
 msgid "one kilometer"
@@ -855,7 +856,7 @@ msgstr "לטביה"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "לוב"
 
 #. 504
 msgid "Morocco"
@@ -1143,7 +1144,7 @@ msgstr "סורינאם"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "דרום סודן"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1334,6 +1335,10 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1429,13 +1434,13 @@ msgid "Zoom_Out"
 msgstr "התרחק"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "התרחקות"
 
 msgid "Zoom_In"
 msgstr "התקרב"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "התקרבות"
 
 msgid "_Recalculate"
 msgstr "חשב מחדש"
@@ -1447,7 +1452,7 @@ msgid "_Info"
 msgstr "מידע"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "הגדרת י_עד"
 
 msgid "Opens address search dialog"
 msgstr ""
@@ -1465,28 +1470,28 @@ msgid "Quit the application"
 msgstr "סגור יישום"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "הצגת _סמן המיקום"
 
 msgid "_Lock on Road"
 msgstr "הנעל על הדרך"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "קיבוע הכיוון ל_צפון"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "החלפת כיווניות המפה לצפון או לפי כיוון הרכב"
 
 msgid "_Roadbook"
 msgstr "הוראות נסיעה"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "הצגה/הסתרה של תיאור המסלול"
 
 msgid "_Autozoom"
 msgstr "זום אוטומטי"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "הפעלה/נטרול של שינוי אוטומטי של רמת תקריב"
 
 msgid "_Fullscreen"
 msgstr "מסך מלא"
@@ -1552,7 +1557,7 @@ msgid "View in Browser"
 msgstr "צפה בדפדפן אינטרנט"
 
 msgid "Item type"
-msgstr ""
+msgstr "סוג הפריט"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
@@ -1565,7 +1570,7 @@ msgid "View Attributes"
 msgstr "צפה בתכונות"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "הגדרה כמיקום (ונטרול הרכב)"
 
 msgid "POIs"
 msgstr "נ\"צ"
@@ -1574,10 +1579,10 @@ msgid "View on map"
 msgstr "צפה במפה"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "הסרת תוצאות החיפוש מהמפה"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "הצגת תוצאות במפה"
 
 msgid "Cut Bookmark"
 msgstr "גזור סימניה"
@@ -1610,11 +1615,11 @@ msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "מחיקת תיקייה"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "הוספת תיקיית סימניות"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1629,7 +1634,7 @@ msgid "Download %s"
 msgstr ""
 
 msgid "Map Download"
-msgstr ""
+msgstr "הורדת מפה"
 
 msgid "Active"
 msgstr ""
@@ -1693,16 +1698,16 @@ msgstr ""
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "וכל הצוות של Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "חברים ותורמים."
 
 msgid "Waypoints"
 msgstr ""
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "נא להזין נקודות ציון"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1710,7 +1715,7 @@ msgstr ""
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
+msgid "Latitude Longitude"
 msgstr ""
 
 msgid "Enter coordinates, for example:"
@@ -1806,6 +1811,9 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Whole Planet"
@@ -2202,6 +2210,92 @@ msgstr ""
 msgid "Vehicle Position"
 msgstr "מיקום רכב"
 
+msgid "Main menu"
+msgstr "תפריט ראשי"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"הצגת\n"
+"מפה"
+
+msgid "Settings"
+msgstr "הגדרות"
+
+msgid "Tools"
+msgstr "כלים"
+
+msgid "Route"
+msgstr "מסלול"
+
+msgid "About"
+msgstr "אודות"
+
+msgid "Quit"
+msgstr "יציאה"
+
+msgid "Actions"
+msgstr "פעולות"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+
+msgid "Coordinates"
+msgstr ""
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"עצור\n"
+"ניווט"
+
+msgid "Display"
+msgstr "תצוגה"
+
+msgid "Fullscreen"
+msgstr "מסך מלא"
+
+msgid "Window Mode"
+msgstr "מצב חלון"
+
+msgid "Description"
+msgstr "תיאור"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
+msgstr ""
+
+msgid "horse"
+msgstr ""
+
+msgid "Truck"
+msgstr ""
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2387,112 +2481,4 @@ msgstr ""
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
-
-msgid "Main menu"
-msgstr "תפריט ראשי"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"הצגת\n"
-"מפה"
-
-msgid "Settings"
-msgstr "הגדרות"
-
-msgid "Tools"
-msgstr "כלים"
-
-msgid "Route"
-msgstr "מסלול"
-
-msgid "About"
-msgstr "אודות"
-
-msgid "Quit"
-msgstr "יציאה"
-
-msgid "Actions"
-msgstr "פעולות"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-
-msgid "Coordinates"
-msgstr ""
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"עצור\n"
-"ניווט"
-
-msgid "Display"
-msgstr "תצוגה"
-
-msgid "Fullscreen"
-msgstr "מסך מלא"
-
-msgid "Window Mode"
-msgstr "מצב חלון"
-
-msgid "Description"
-msgstr "תיאור"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-
-msgid "Satellite Status"
-msgstr ""
-
-msgid "NMEA Data"
-msgstr ""
-
-msgid "car_shortest"
-msgstr ""
-
-msgid "car_avoid_tolls"
-msgstr ""
-
-msgid "car_pedantic"
-msgstr ""
-
-msgid "horse"
-msgstr ""
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
 msgstr ""
