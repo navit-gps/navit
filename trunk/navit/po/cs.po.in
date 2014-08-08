@@ -1,7 +1,7 @@
-# Czech (cs)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# translation of navit_cs.po to Čeština
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # 72ka https://launchpad.net/~2hp
 # Aleš Janda https://launchpad.net/~kyblicek
 # Ivan Kološ https://launchpad.net/~ivan-kolos
@@ -12,15 +12,15 @@
 # Vaclav Cerny https://launchpad.net/~vatoz
 # Vladimír Burian https://launchpad.net/~vburian
 # Vojtěch Látal https://launchpad.net/~vojtik
-# lenochod https://launchpad.net/~lenochod
 # stritek https://launchpad.net/~stritek
 # talmik https://launchpad.net/~mikatom
+
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-10 01:22+0000\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-12-09 13:46+0000\n"
 "Last-Translator: MMlosh <Unknown>\n"
 "Language-Team: Čeština\n"
@@ -28,8 +28,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-12-10 01:41+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1353,6 +1353,10 @@ msgstr "Chyba při zpracování konfiguračního souboru '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Používáte konfigurační soubor '% s'\n"
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1731,8 +1735,8 @@ msgstr "Zadejte souřadnice"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "Zeměpisná délka Zeměpisná šířka"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "Zadejte souřadnice, například:"
@@ -2226,6 +2230,98 @@ msgstr "Mapa ke stažení"
 msgid "Vehicle Position"
 msgstr "Poloha vozidla"
 
+msgid "Main menu"
+msgstr "Hlavní menu"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Ukázat\n"
+"mapu"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Tools"
+msgstr "Nástroje"
+
+msgid "Route"
+msgstr "Trasa"
+
+msgid "About"
+msgstr "O programu"
+
+msgid "Quit"
+msgstr "Konec"
+
+msgid "Actions"
+msgstr "Akce"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Minulé\n"
+"cíle"
+
+msgid "Coordinates"
+msgstr "Souřadnice"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Ukonči\n"
+"Navigaci"
+
+msgid "Display"
+msgstr "Zobrazit"
+
+msgid "Fullscreen"
+msgstr "Celá obrazovka"
+
+msgid "Window Mode"
+msgstr "V okně"
+
+msgid "Description"
+msgstr "Popis"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+"Zrušit minulý \n"
+"bod trasy"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Zrušit příští \n"
+" bod trasy"
+
+msgid "Satellite Status"
+msgstr "Stav satelitu"
+
+msgid "NMEA Data"
+msgstr "NMEA Data"
+
+msgid "car_shortest"
+msgstr "auto nejkratší"
+
+msgid "car_avoid_tolls"
+msgstr "auto bez mýtného"
+
+msgid "car_pedantic"
+msgstr "auto puntičkářské"
+
+msgid "horse"
+msgstr "kůň"
+
+msgid "Truck"
+msgstr "kamión"
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2423,117 +2519,3 @@ msgstr "Zálohování"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Obnova"
-
-msgid "Main menu"
-msgstr "Hlavní menu"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Ukázat\n"
-"mapu"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Tools"
-msgstr "Nástroje"
-
-msgid "Route"
-msgstr "Trasa"
-
-msgid "About"
-msgstr "O programu"
-
-msgid "Quit"
-msgstr "Konec"
-
-msgid "Actions"
-msgstr "Akce"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"Minulé\n"
-"cíle"
-
-msgid "Coordinates"
-msgstr "Souřadnice"
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Ukonči\n"
-"Navigaci"
-
-msgid "Display"
-msgstr "Zobrazit"
-
-msgid "Fullscreen"
-msgstr "Celá obrazovka"
-
-msgid "Window Mode"
-msgstr "V okně"
-
-msgid "Description"
-msgstr "Popis"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-"Zrušit minulý \n"
-"bod trasy"
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-"Zrušit příští \n"
-" bod trasy"
-
-msgid "Satellite Status"
-msgstr "Stav satelitu"
-
-msgid "NMEA Data"
-msgstr "NMEA Data"
-
-msgid "car_shortest"
-msgstr "auto nejkratší"
-
-msgid "car_avoid_tolls"
-msgstr "auto bez mýtného"
-
-msgid "car_pedantic"
-msgstr "auto puntičkářské"
-
-msgid "horse"
-msgstr "kůň"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr "kamión"

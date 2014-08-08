@@ -1,15 +1,16 @@
-# Basque (eu)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Basque translation for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Inaki Saez https://launchpad.net/~inaki-saez
 # mikel https://launchpad.net/~mikel85
+
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-09-28 01:42+0000\n"
 "Last-Translator: Inaki Saez <Inaki.Saez@gmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
@@ -17,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1330,6 +1331,10 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1706,7 +1711,7 @@ msgstr ""
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
+msgid "Latitude Longitude"
 msgstr ""
 
 msgid "Enter coordinates, for example:"
@@ -1802,6 +1807,9 @@ msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
 msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Whole Planet"
@@ -2198,6 +2206,92 @@ msgstr ""
 msgid "Vehicle Position"
 msgstr "Berebilaren kokalekua"
 
+msgid "Main menu"
+msgstr "Menu nagusia"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Mapa\n"
+"Erakutsi"
+
+msgid "Settings"
+msgstr "Ezarpenak"
+
+msgid "Tools"
+msgstr "Tresnak"
+
+msgid "Route"
+msgstr "Ibilbidea"
+
+msgid "About"
+msgstr "Honi buruz"
+
+msgid "Quit"
+msgstr "Irten"
+
+msgid "Actions"
+msgstr "Ekintzak"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+
+msgid "Coordinates"
+msgstr ""
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Nabigazioa\n"
+"Gelditu"
+
+msgid "Display"
+msgstr "Bistaratzea"
+
+msgid "Fullscreen"
+msgstr "Pantaila osoa"
+
+msgid "Window Mode"
+msgstr "Lehio modua"
+
+msgid "Description"
+msgstr "Zehazketa"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+msgid "Satellite Status"
+msgstr ""
+
+msgid "NMEA Data"
+msgstr ""
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
+msgstr ""
+
+msgid "horse"
+msgstr "zaldia"
+
+msgid "Truck"
+msgstr ""
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2383,112 +2477,4 @@ msgstr ""
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
-
-msgid "Main menu"
-msgstr "Menu nagusia"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Mapa\n"
-"Erakutsi"
-
-msgid "Settings"
-msgstr "Ezarpenak"
-
-msgid "Tools"
-msgstr "Tresnak"
-
-msgid "Route"
-msgstr "Ibilbidea"
-
-msgid "About"
-msgstr "Honi buruz"
-
-msgid "Quit"
-msgstr "Irten"
-
-msgid "Actions"
-msgstr "Ekintzak"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-
-msgid "Coordinates"
-msgstr ""
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Nabigazioa\n"
-"Gelditu"
-
-msgid "Display"
-msgstr "Bistaratzea"
-
-msgid "Fullscreen"
-msgstr "Pantaila osoa"
-
-msgid "Window Mode"
-msgstr "Lehio modua"
-
-msgid "Description"
-msgstr "Zehazketa"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-
-msgid "Satellite Status"
-msgstr ""
-
-msgid "NMEA Data"
-msgstr ""
-
-msgid "car_shortest"
-msgstr ""
-
-msgid "car_avoid_tolls"
-msgstr ""
-
-msgid "car_pedantic"
-msgstr ""
-
-msgid "horse"
-msgstr "zaldia"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
 msgstr ""

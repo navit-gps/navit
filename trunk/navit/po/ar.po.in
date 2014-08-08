@@ -1,17 +1,18 @@
-# Arabic (ar)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Arabic translation for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
 # Magd Addin M. Almuntaser https://launchpad.net/~ttmtt-team
 # drsaudi https://launchpad.net/~mon7b6
 # metehyi https://launchpad.net/~metehyi
 
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 20:48+0100\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-11-10 01:24+0000\n"
 "Last-Translator: metehyi <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -20,8 +21,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2013-11-10 02:26+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1349,6 +1350,10 @@ msgstr ""
 msgid "Using config file '%s'\n"
 msgstr ""
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1725,8 +1730,8 @@ msgstr "أدخل الإحداثيات"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "خط الطول خط العرض"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "أدخل الإحداثيات، مثلا:"
@@ -2220,6 +2225,92 @@ msgstr "تنزيل الخريطة"
 msgid "Vehicle Position"
 msgstr "موقع وسيلة التنقل"
 
+msgid "Main menu"
+msgstr "اللائحة الرئيسية"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"أعرض\n"
+"الخريطة"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Tools"
+msgstr "العدة"
+
+msgid "Route"
+msgstr "الطريق"
+
+msgid "About"
+msgstr "حوْل"
+
+msgid "Quit"
+msgstr "أخرج"
+
+msgid "Actions"
+msgstr "أفعال"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"الأهداف\n"
+"السابقة"
+
+msgid "Coordinates"
+msgstr "الإحداثيات"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr "قفّ"
+
+msgid "Display"
+msgstr "المظهار"
+
+msgid "Fullscreen"
+msgstr "ملء الشاشة"
+
+msgid "Window Mode"
+msgstr "نمط النافذة"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+msgid "Satellite Status"
+msgstr "حالة القمر الأصطناعي"
+
+msgid "NMEA Data"
+msgstr ""
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
+msgstr ""
+
+msgid "horse"
+msgstr "خيل/فرس"
+
+msgid "Truck"
+msgstr ""
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2406,111 +2497,3 @@ msgstr "حفظ احتياطي"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "استعادة"
-
-msgid "Main menu"
-msgstr "اللائحة الرئيسية"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"أعرض\n"
-"الخريطة"
-
-msgid "Settings"
-msgstr "الإعدادات"
-
-msgid "Tools"
-msgstr "العدة"
-
-msgid "Route"
-msgstr "الطريق"
-
-msgid "About"
-msgstr "حوْل"
-
-msgid "Quit"
-msgstr "أخرج"
-
-msgid "Actions"
-msgstr "أفعال"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"الأهداف\n"
-"السابقة"
-
-msgid "Coordinates"
-msgstr "الإحداثيات"
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr "قفّ"
-
-msgid "Display"
-msgstr "المظهار"
-
-msgid "Fullscreen"
-msgstr "ملء الشاشة"
-
-msgid "Window Mode"
-msgstr "نمط النافذة"
-
-msgid "Description"
-msgstr "الوصف"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-
-msgid "Satellite Status"
-msgstr "حالة القمر الأصطناعي"
-
-msgid "NMEA Data"
-msgstr ""
-
-msgid "car_shortest"
-msgstr ""
-
-msgid "car_avoid_tolls"
-msgstr ""
-
-msgid "car_pedantic"
-msgstr ""
-
-msgid "horse"
-msgstr "خيل/فرس"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr ""

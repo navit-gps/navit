@@ -1,18 +1,16 @@
-# Spanish (es)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Spanish translations for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Benjamín Valero Espinosa https://launchpad.net/~benjavalero
 # David A Páez https://launchpad.net/~orlsend
 # DiegoJ https://launchpad.net/~diegojromerolopez
 # Emilio Gomez Fernandez https://launchpad.net/~egofer
-# Esteban Dauksis https://launchpad.net/~edauksis
 # Feder Sáiz https://launchpad.net/~federsaiz-deactivatedaccount
 # Inaki Saez https://launchpad.net/~inaki-saez
 # Jonay https://launchpad.net/~jonay-santana
 # KaZeR https://launchpad.net/~kazer
 # Luis Alejandro Rangel Sánchez https://launchpad.net/~xlarsx
-# Mariano Muñoz https://launchpad.net/~turulomio
 # Paco Molinero https://launchpad.net/~franciscomol
 # Ricardo Jurado https://launchpad.net/~ricky131313
 # agerio https://launchpad.net/~agerio
@@ -22,11 +20,12 @@
 # pataquets https://launchpad.net/~pataquets
 # singesang https://launchpad.net/~singesang
 
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-12-18 16:54+0000\n"
 "Last-Translator: iceman75 <Unknown>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
@@ -34,8 +33,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: \n"
 
 msgid "Running from source directory\n"
@@ -1355,6 +1354,10 @@ msgstr "Error cargando el fichero de configuración '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Usando el fichero de configuración '%s'\n"
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
@@ -1733,8 +1736,8 @@ msgstr "Introduzca coordenadas"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "Longitud Latitud"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "Introduzca coordenadas, por ejemplo:"
@@ -2228,6 +2231,98 @@ msgstr "Mapa descargado"
 msgid "Vehicle Position"
 msgstr "Posición del vehículo"
 
+msgid "Main menu"
+msgstr "Menú principal"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Mostrar\n"
+"Mapa"
+
+msgid "Settings"
+msgstr "Configuración"
+
+msgid "Tools"
+msgstr "Herramientas"
+
+msgid "Route"
+msgstr "Ruta"
+
+msgid "About"
+msgstr "Acerca de"
+
+msgid "Quit"
+msgstr "Salir"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Destinos\n"
+"anteriores"
+
+msgid "Coordinates"
+msgstr "Coordenadas"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Parar\n"
+"Navegación"
+
+msgid "Display"
+msgstr "Visualizar"
+
+msgid "Fullscreen"
+msgstr "Pantalla completa"
+
+msgid "Window Mode"
+msgstr "Modo ventana"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+"Quitar último \n"
+"Punto de ruta"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Quitar el siguiente \n"
+"Punto de ruta"
+
+msgid "Satellite Status"
+msgstr "Estado Satélites"
+
+msgid "NMEA Data"
+msgstr "Datos NMEA"
+
+msgid "car_shortest"
+msgstr "automovil_ruta_mas_corta"
+
+msgid "car_avoid_tolls"
+msgstr "automovil_evitar_peajes"
+
+msgid "car_pedantic"
+msgstr "Carro_sabelotodo"
+
+msgid "horse"
+msgstr "caballo"
+
+msgid "Truck"
+msgstr "Camión"
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2425,117 +2520,3 @@ msgstr "Copia de seguridad"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Restaurar"
-
-msgid "Main menu"
-msgstr "Menú principal"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Mostrar\n"
-"Mapa"
-
-msgid "Settings"
-msgstr "Configuración"
-
-msgid "Tools"
-msgstr "Herramientas"
-
-msgid "Route"
-msgstr "Ruta"
-
-msgid "About"
-msgstr "Acerca de"
-
-msgid "Quit"
-msgstr "Salir"
-
-msgid "Actions"
-msgstr "Acciones"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"Destinos\n"
-"anteriores"
-
-msgid "Coordinates"
-msgstr "Coordenadas"
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Parar\n"
-"Navegación"
-
-msgid "Display"
-msgstr "Visualizar"
-
-msgid "Fullscreen"
-msgstr "Pantalla completa"
-
-msgid "Window Mode"
-msgstr "Modo ventana"
-
-msgid "Description"
-msgstr "Descripción"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-"Quitar último \n"
-"Punto de ruta"
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-"Quitar el siguiente \n"
-"Punto de ruta"
-
-msgid "Satellite Status"
-msgstr "Estado Satélites"
-
-msgid "NMEA Data"
-msgstr "Datos NMEA"
-
-msgid "car_shortest"
-msgstr "automovil_ruta_mas_corta"
-
-msgid "car_avoid_tolls"
-msgstr "automovil_evitar_peajes"
-
-msgid "car_pedantic"
-msgstr "Carro_sabelotodo"
-
-msgid "horse"
-msgstr "caballo"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr "Camión"

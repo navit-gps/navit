@@ -1,7 +1,7 @@
-# Portuguese (pt)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Portuguese translation for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # CaioNavas https://launchpad.net/~webmaster-caiomnavas
 # Carla Pita https://launchpad.net/~carla-pita
 # Diogo Lavareda https://launchpad.net/~diogolavareda
@@ -15,11 +15,12 @@
 # eSkiSo https://launchpad.net/~wise-gdr
 # lezurdis https://launchpad.net/~f-dos-santos
 
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 23:50+0100\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-12-01 01:04+0000\n"
 "Last-Translator: Sérgio Marques <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -27,8 +28,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-12-24 22:21+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: pt\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1348,6 +1349,10 @@ msgstr "Erro ao processar o ficheiro '%s': %s\n"
 msgid "Using config file '%s'\n"
 msgstr "Utilizando o ficheiro '%s'\n"
 
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr "Erro ao iniciar a aplicação. Verifique as mensagens de erro.\n"
@@ -1724,8 +1729,8 @@ msgstr "Introduzir coordenadas"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "Longitude Latitude"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "Introduza as coordenadas. Por exemplo:"
@@ -2219,6 +2224,98 @@ msgstr "TransferÊncia de mapa"
 msgid "Vehicle Position"
 msgstr "Posição do veículo"
 
+msgid "Main menu"
+msgstr "Menu principal"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Mostrar\n"
+"mapa"
+
+msgid "Settings"
+msgstr "Definições"
+
+msgid "Tools"
+msgstr "Ferramentas"
+
+msgid "Route"
+msgstr "Rota"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "Quit"
+msgstr "Sair"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Destinos\n"
+"anteriores"
+
+msgid "Coordinates"
+msgstr "Coordenadas"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Parar\n"
+"navegação"
+
+msgid "Display"
+msgstr "Mostrar"
+
+msgid "Fullscreen"
+msgstr "Ecrã completo"
+
+msgid "Window Mode"
+msgstr "Modo de janela"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+"Descartar\n"
+"ponto anterior"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Descartar\n"
+"próximo ponto"
+
+msgid "Satellite Status"
+msgstr "Estado do satélite"
+
+msgid "NMEA Data"
+msgstr "Dados NMEA"
+
+msgid "car_shortest"
+msgstr "carro_mais_curto"
+
+msgid "car_avoid_tolls"
+msgstr "carro_evitar_portagens"
+
+msgid "car_pedantic"
+msgstr ""
+
+msgid "horse"
+msgstr "cavalo"
+
+msgid "Truck"
+msgstr "Camião"
+
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
@@ -2417,117 +2514,3 @@ msgstr "Backup"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Restauro"
-
-msgid "Main menu"
-msgstr "Menu principal"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Mostrar\n"
-"mapa"
-
-msgid "Settings"
-msgstr "Definições"
-
-msgid "Tools"
-msgstr "Ferramentas"
-
-msgid "Route"
-msgstr "Rota"
-
-msgid "About"
-msgstr "Sobre"
-
-msgid "Quit"
-msgstr "Sair"
-
-msgid "Actions"
-msgstr "Ações"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"Destinos\n"
-"anteriores"
-
-msgid "Coordinates"
-msgstr "Coordenadas"
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Parar\n"
-"navegação"
-
-msgid "Display"
-msgstr "Mostrar"
-
-msgid "Fullscreen"
-msgstr "Ecrã completo"
-
-msgid "Window Mode"
-msgstr "Modo de janela"
-
-msgid "Description"
-msgstr "Descrição"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-"Descartar\n"
-"ponto anterior"
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-"Descartar\n"
-"próximo ponto"
-
-msgid "Satellite Status"
-msgstr "Estado do satélite"
-
-msgid "NMEA Data"
-msgstr "Dados NMEA"
-
-msgid "car_shortest"
-msgstr "carro_mais_curto"
-
-msgid "car_avoid_tolls"
-msgstr "carro_evitar_portagens"
-
-msgid "car_pedantic"
-msgstr ""
-
-msgid "horse"
-msgstr "cavalo"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr "Camião"
