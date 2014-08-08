@@ -1,7 +1,7 @@
-# Dutch (nl)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Dutch translations for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Bert de Bruijn https://launchpad.net/~lpdebruijn
 # Blalien https://launchpad.net/~blalien
 # Christ van Willegen https://launchpad.net/~cvwillegen+launchpad
@@ -15,34 +15,37 @@
 # Sander Deryckere https://launchpad.net/~sanderd17
 # Sybren Stüvel https://launchpad.net/~sybren-stuvel
 # Willem Sonke https://launchpad.net/~willem-sonke
+# bafplus https://launchpad.net/~bart-cockheyt
+# jan https://launchpad.net/~jandegr1
 # rob https://launchpad.net/~rvdb
 # worldcitizen https://launchpad.net/~joop-boonen
+
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 23:50+0100\n"
-"PO-Revision-Date: 2013-12-11 23:38+0000\n"
-"Last-Translator: Ed Kapitein <Unknown>\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
+"PO-Revision-Date: 2014-08-08 15:23+0000\n"
+"Last-Translator: jan <jandegr1@hotmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-12-24 22:20+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "soon"
 msgstr "straks"
 
 msgid "Running from source directory\n"
-msgstr "Gestart vanuit de brondirectory\n"
+msgstr "Gestart vanuit de bronmap\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "Instelling '%s' naar '%s'\n"
+msgstr "'%s' instellen op '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -216,7 +219,7 @@ msgstr "U rijdt zodadelijk de rotonde op"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "neem de rotonde over %s meter"
+msgstr "neem de rotonde %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
@@ -228,7 +231,7 @@ msgstr "Verlaat de rotonde bij de %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Volg de weg voor de volgende %s"
+msgstr "Volg de weg gedurende %s"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
@@ -259,13 +262,12 @@ msgstr "Ga %3$s %1$s naar %2$s %4$s"
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "daarna, ga na %3$s wegen %1$s %2$s naar %4$s"
 
-# over 200 meter links aanhouden
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "%s bestemming bereikt"
+msgstr "Bestemming %s bereikt"
 
 msgid "then you have reached your destination."
-msgstr "dan heeft u uw bestemming bereikt."
+msgstr "daarna heeft u uw bestemming bereikt."
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -275,7 +277,7 @@ msgid "Command"
 msgstr "Opdracht"
 
 msgid "Length"
-msgstr "Duur"
+msgstr "Afstand"
 
 msgid "km"
 msgstr "km"
@@ -303,10 +305,10 @@ msgid "Visit before..."
 msgstr "bezoek voor"
 
 msgid "Set as position"
-msgstr "Zet als positie"
+msgstr "Als positie instellen"
 
 msgid "Set as destination"
-msgstr "Gebruik als bestemming"
+msgstr "Als bestemming instellen"
 
 msgid "Add as bookmark"
 msgstr "Opnemen als favoriet"
@@ -641,7 +643,7 @@ msgstr "Georgië"
 
 #. 254
 msgid "French Guiana"
-msgstr "Frans Guiana"
+msgstr "Frans Guyana"
 
 #. 831
 msgid "Guernsey"
@@ -737,7 +739,7 @@ msgstr "Israël"
 
 #. 833
 msgid "Isle of Man"
-msgstr "Eiland van Man"
+msgstr "Eiland Man"
 
 #. 356
 msgid "India"
@@ -1025,7 +1027,7 @@ msgstr "Frans Polynesië"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr "Papua Nieuw Guinea"
+msgstr "Papoea-Nieuw-Guinea"
 
 #. 608
 msgid "Philippines"
@@ -1342,7 +1344,7 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Geen configuratiebestand navit.xml of navit.xml.local gevonden\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
@@ -1351,6 +1353,10 @@ msgstr "Foutieve waarde in het configuratie bestand '%s': %s\n"
 #, c-format
 msgid "Using config file '%s'\n"
 msgstr "Gebruikte configuratie bestand: '%s'\n"
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr "Fout: Geen configuratie gevonden in configuratiebestand '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1401,9 +1407,8 @@ msgstr "Straat"
 msgid "Number"
 msgstr "Nummer"
 
-#
 msgid "Enter Destination"
-msgstr "Bestemming"
+msgstr "voer bestemming in"
 
 msgid "Zip Code"
 msgstr "Postcode"
@@ -1582,7 +1587,7 @@ msgid "Streets"
 msgstr "Straten"
 
 msgid "House numbers"
-msgstr "huisnummers"
+msgstr "Huisnummers"
 
 msgid "View Attributes"
 msgstr "Bekijk eigenschappen"
@@ -1624,7 +1629,7 @@ msgid "Bookmarks"
 msgstr "Favorieten"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Bladwijzers als routepunten"
 
 msgid "Save waypoints"
 msgstr "sla bladwijzers op"
@@ -1652,7 +1657,7 @@ msgid "Download %s"
 msgstr "Download %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Kaart downloaden"
 
 msgid "Active"
 msgstr "Actief"
@@ -1733,8 +1738,8 @@ msgstr "voer coordinaten in"
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
-msgstr "Noorderbreedte Oosterlengte"
+msgid "Latitude Longitude"
+msgstr ""
 
 msgid "Enter coordinates, for example:"
 msgstr "voer coordinaat in, bijvorbeeld:"
@@ -1797,10 +1802,10 @@ msgid "Next"
 msgstr "Volgende"
 
 msgid "Prev"
-msgstr ""
+msgstr "Vorige"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Terugkeren naar route!"
 
 #. warning told
 msgid "Look out! Camera!"
@@ -1847,375 +1852,375 @@ msgid "Asia"
 msgstr "Azië"
 
 msgid "Korea"
-msgstr ""
+msgstr "Korea"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "Verenigde Arabische Emiraten + andere"
 
 msgid "Oceania"
-msgstr ""
+msgstr "Oceanië"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmanië"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Victoria"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "Nieuw-Zuid-Wales"
 
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "West-Europa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azoren"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "Benelux"
 
 msgid "Alsace"
-msgstr ""
+msgstr "Elzas"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "Aquitanië"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "Auvergne"
 
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "Basse-Normandie"
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "Bourgondië"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "Bretagne"
 
 msgid "Centre"
-msgstr ""
+msgstr "Midden-Frankrijk"
 
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "Champagne-Ardenne"
 
 msgid "Corse"
-msgstr ""
+msgstr "Corsica"
 
 msgid "Franche-Comte"
-msgstr ""
+msgstr "Franche-Comté"
 
 msgid "Haute-Normandie"
-msgstr ""
+msgstr "Haute-Normandie"
 
 msgid "Ile-de-France"
-msgstr ""
+msgstr "Île-de-France"
 
 msgid "Languedoc-Roussillon"
-msgstr ""
+msgstr "Languedoc-Roussillon"
 
 msgid "Limousin"
-msgstr ""
+msgstr "Limousin"
 
 msgid "Lorraine"
-msgstr ""
+msgstr "Lotharingen"
 
 msgid "Midi-Pyrenees"
-msgstr ""
+msgstr "Midi-Pyrénées"
 
 msgid "Nord-pas-de-Calais"
-msgstr ""
+msgstr "Nord-Pas-de-Calais"
 
 msgid "Pays-de-la-Loire"
-msgstr ""
+msgstr "Pays de la Loire"
 
 msgid "Picardie"
-msgstr ""
+msgstr "Picardië"
 
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "Poitou-Charentes"
 
 msgid "Provence-Alpes-Cote-d-Azur"
-msgstr ""
+msgstr "Provence-Alpes-Côte d'Azur"
 
 msgid "Rhone-Alpes"
-msgstr ""
+msgstr "Rhône-Alpes"
 
 msgid "Baden-Wuerttemberg"
-msgstr ""
+msgstr "Baden-Württemberg"
 
 msgid "Bayern"
-msgstr ""
+msgstr "Beieren"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Mittelfranken"
 
 msgid "Niederbayern"
-msgstr ""
+msgstr "Niederbayern"
 
 msgid "Oberbayern"
-msgstr ""
+msgstr "Oberbayern"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "Oberfranken"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "Oberpfalz"
 
 msgid "Schwaben"
-msgstr ""
+msgstr "Schwaben"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "Unterfranken"
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlijn"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburg"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Bremen"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburg"
 
 msgid "Hessen"
-msgstr ""
+msgstr "Hessen"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "Mecklenburg-Voor-Pommeren"
 
 msgid "Niedersachsen"
-msgstr ""
+msgstr "Nedersaksen"
 
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "Noordrijn-Westfalen"
 
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "Rijnland-Palts"
 
 msgid "Saarland"
-msgstr ""
+msgstr "Saarland"
 
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "Saksen-Anhalt"
 
 msgid "Sachsen"
-msgstr ""
+msgstr "Saksen"
 
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "Sleeswijk-Holstein"
 
 msgid "Thueringen"
-msgstr ""
+msgstr "Thüringen"
 
 msgid "Mallorca"
-msgstr ""
+msgstr "Mallorca"
 
 msgid "Galicia"
-msgstr ""
+msgstr "Galicië"
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Scandinavië"
 
 msgid "England"
-msgstr ""
+msgstr "Engeland"
 
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "Buckinghamshire"
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "Cambridgeshire"
 
 msgid "Cumbria"
-msgstr ""
+msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "East Yorkshire en Hull"
 
 msgid "Essex"
-msgstr ""
+msgstr "Essex"
 
 msgid "Herefordshire"
-msgstr ""
+msgstr "Herefordshire"
 
 msgid "Kent"
-msgstr ""
+msgstr "Kent"
 
 msgid "Lancashire"
-msgstr ""
+msgstr "Lancashire"
 
 msgid "Leicestershire"
-msgstr ""
+msgstr "Leicestershire"
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolk"
 
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "Nottinghamshire"
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "Oxfordshire"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "Shropshire"
 
 msgid "Somerset"
-msgstr ""
+msgstr "Somerset"
 
 msgid "South yorkshire"
-msgstr ""
+msgstr "South Yorkshire"
 
 msgid "Suffolk"
-msgstr ""
+msgstr "Suffolk"
 
 msgid "Surrey"
-msgstr ""
+msgstr "Surrey"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "Wiltshire"
 
 msgid "Scotland"
-msgstr ""
+msgstr "Schotland"
 
 msgid "Wales"
-msgstr ""
+msgstr "Wales"
 
 msgid "Crete"
-msgstr ""
+msgstr "Kreta"
 
 msgid "North America"
-msgstr ""
+msgstr "Noord-Amerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Alaska"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Hawaï"
 
 msgid "USA"
-msgstr ""
+msgstr "VS"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (behalve Alaska en Hawaï)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "Midwest"
 
 msgid "Michigan"
-msgstr ""
+msgstr "Michigan"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Ohio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Northeast"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "Massachusetts"
 
 msgid "Vermont"
-msgstr ""
+msgstr "Vermont"
 
 msgid "Pacific"
-msgstr ""
+msgstr "Pacific"
 
 msgid "South"
-msgstr ""
+msgstr "South"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkansas"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "District Columbia"
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Louisiana"
 
 msgid "Maryland"
-msgstr ""
+msgstr "Maryland"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Mississippi"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Texas"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Virginia"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "West Virginia"
 
 msgid "West"
-msgstr ""
+msgstr "West"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Arizona"
 
 msgid "California"
-msgstr ""
+msgstr "Californië"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Colorado"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Idaho"
 
 msgid "Montana"
-msgstr ""
+msgstr "Montana"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "Nieuw-Mexico"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Oregon"
 
 msgid "Utah"
-msgstr ""
+msgstr "Utah"
 
 msgid "Washington State"
-msgstr ""
+msgstr "Washington State"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "Zuid- en Midden-Amerika"
 
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "Frans Guyana"
 
 msgid "downloading"
-msgstr ""
+msgstr "aan het downloaden"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
 msgstr "klaar"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Kaart downloaden mislukt!"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
 msgstr "Niet genoeg vrije ruimte"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Wegschrijven van kaart mislukt!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Kaart-download afgebroken!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2227,6 +2232,98 @@ msgstr "Kaart downloaden"
 
 msgid "Vehicle Position"
 msgstr "Voertuigpositie"
+
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Kaart\n"
+"Weergeven"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Tools"
+msgstr "Gereedschappen"
+
+msgid "Route"
+msgstr "Route"
+
+msgid "About"
+msgstr "Info"
+
+msgid "Quit"
+msgstr "Afsluiten"
+
+msgid "Actions"
+msgstr "Acties"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+"Vorige\n"
+"bestemmingen"
+
+msgid "Coordinates"
+msgstr "Coördinaten"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Stop\n"
+"navigatie"
+
+msgid "Display"
+msgstr "Tonen"
+
+msgid "Fullscreen"
+msgstr "Beeldvullend"
+
+msgid "Window Mode"
+msgstr "Venstermodus"
+
+msgid "Description"
+msgstr "Beschrijving"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+"Laatste routepunt \n"
+"verwijderen"
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+"Volgende routepunt \n"
+"verwijderen"
+
+msgid "Satellite Status"
+msgstr "GPS-status"
+
+msgid "NMEA Data"
+msgstr "NMEA-gegevens"
+
+msgid "car_shortest"
+msgstr "auto_kortste_weg"
+
+msgid "car_avoid_tolls"
+msgstr "auto_vermijd_tolwegen"
+
+msgid "car_pedantic"
+msgstr "auto (incl. kleine wegen)"
+
+msgid "horse"
+msgstr "paard"
+
+msgid "Truck"
+msgstr "Vrachtwagen"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
@@ -2268,7 +2365,7 @@ msgstr ""
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
@@ -2276,7 +2373,7 @@ msgstr "Meer info"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr "Inzoomen"
+msgstr "Zoom in"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
@@ -2296,7 +2393,7 @@ msgstr "Verlaat Navit"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr ""
+msgstr "Back-up maken / terugzetten"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2316,11 +2413,11 @@ msgstr "Kaart downloaden afgebroken"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
-msgstr ""
+msgstr "Geen locatie. Heropen nadat er een locatie-fix is."
 
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
-msgstr ""
+msgstr "Kaarten die de huidige locatie bevatten"
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2364,172 +2461,64 @@ msgstr "Bestemming ingesteld:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr ""
+msgstr "Kies een actie"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr ""
+msgstr "Voer een SD-kaart in"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr ""
+msgstr "Back-up maken..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr ""
+msgstr "Terugzetten..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr ""
+msgstr "Aanmaken back-up-map mislukt"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "Back-up mislukt"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr ""
+msgstr "Geen back-up gevonden"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "Terugzetten mislukt"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr ""
+msgstr "Back-up succesvol"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
+"De back-up is succesvol teruggezet.\n"
+"Herstart nu Navit."
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr ""
+msgstr "Back-up niet gevonden"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "Terugzetten mislukt"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "Selecteer een back-up"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "Back-up"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
-
-msgid "Main menu"
-msgstr "Hoofdmenu"
-
-msgid ""
-"Show\n"
-"Map"
-msgstr ""
-"Kaart\n"
-"Weergeven"
-
-msgid "Settings"
-msgstr "Instellingen"
-
-msgid "Tools"
-msgstr "Gereedschappen"
-
-msgid "Route"
-msgstr "Route"
-
-msgid "About"
-msgstr "Info"
-
-msgid "Quit"
-msgstr "Afsluiten"
-
-msgid "Actions"
-msgstr "Acties"
-
-msgid ""
-"Former\n"
-"Destinations"
-msgstr ""
-"Vorige\n"
-"bestemmingen"
-
-msgid "Coordinates"
-msgstr ""
-
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Stop\n"
-"navigatie"
-
-msgid "Display"
-msgstr "Tonen"
-
-msgid "Fullscreen"
-msgstr "Beeldvullend"
-
-msgid "Window Mode"
-msgstr "Venstermodus"
-
-msgid "Description"
-msgstr "Beschrijving"
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-
-msgid "Satellite Status"
-msgstr ""
-
-msgid "NMEA Data"
-msgstr ""
-
-msgid "car_shortest"
-msgstr ""
-
-msgid "car_avoid_tolls"
-msgstr ""
-
-msgid "car_pedantic"
-msgstr ""
-
-msgid "horse"
-msgstr "paard"
-
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
-msgid "Truck"
-msgstr ""
+msgstr "Terugzetten"
