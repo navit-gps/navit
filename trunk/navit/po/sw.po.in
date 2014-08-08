@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
+"X-Launchpad-Export-Date: 2014-08-08 22:21+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
 
 msgid "Running from source directory\n"
@@ -125,15 +125,15 @@ msgstr[1] ""
 
 #, c-format
 msgid "one kilometer"
-msgid_plural ""
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "%d kilometers"
+msgstr[0] "kilomita %d"
+msgstr[1] "kilomita %d"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "baada ya kilomita %d"
+msgstr[1] "baada ya kilomita %d"
 
 msgid "exit"
 msgstr "ondoka"
