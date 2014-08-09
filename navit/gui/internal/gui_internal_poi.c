@@ -405,6 +405,8 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item)
 			types+=2;
 		}
 	}
+	if(type == type_house_number && !param->filter)
+		return 0;
 	if (param->filter) {
 		char *long_name, *s;
 		GList *f;
