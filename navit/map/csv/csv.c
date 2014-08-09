@@ -278,16 +278,21 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 static int
 csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 {
-	struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
-	struct map_priv* m = mr->m;
-	int i, bFound = 0;
+	struct map_rect_priv* mr;
+	struct map_priv* m;
+	int i, bFound;
 	struct attr *attr_new;
 	GList *attr_list, *curr_attr_list;
-	enum attr_type *at = m->attr_types;
+	enum attr_type *at;
 
-	if(!mr || !mr->qitem) {
+        mr = (struct map_rect_priv*)priv_data;
+        if(!mr || !mr->qitem) {
 		return 0;
 	}
+
+	m = mr->m;
+	bFound = 0;
+	at = m->attr_types;
 
 	/*if attribute is not supported by this csv map return 0*/
 	for(i=0;i<m->attr_cnt;++i) {
