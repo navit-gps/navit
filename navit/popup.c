@@ -135,7 +135,7 @@ popup_set_destination(struct navit *nav, struct pcoord *pc)
 }
 
 
-static void
+void
 popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore)
 {
 	struct pcoord *dst;
