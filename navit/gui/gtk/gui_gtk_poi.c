@@ -34,6 +34,7 @@
 #include "transform.h"
 #include "attr.h"
 #include "vehicle.h"
+#include "util.h"
 
 static struct gtk_poi_search{
 	GtkWidget *entry_distance;
@@ -98,34 +99,6 @@ category_list_model(struct gtk_poi_search *search)
 	return GTK_TREE_MODEL (search->store_cat_sorted);
 }
 
-/*Copied from gui_internal_poi.c. I didn't know how to reference it. Gets the cardinal direction from the angle*/
-static void
-get_direction(char *buffer, int angle, int mode)
-{
-	angle=angle%360;
-	switch (mode) {
-	case 0:
-		sprintf(buffer,"%d",angle);
-		break;
-	case 1:
-		if (angle < 69 || angle > 291)
-			*buffer++='N';
-		if (angle > 111 && angle < 249)
-			*buffer++='S';
-		if (angle > 22 && angle < 158)
-			*buffer++='E';
-		if (angle > 202 && angle < 338)
-			*buffer++='W';
-		*buffer++='\0';
-		break;
-	case 2:
-		angle=(angle+15)/30;
-		if (! angle)
-			angle=12;
-		sprintf(buffer,"%d H", angle);
-		break;
-	}
-}
 
 /** Construct model of POIs from map information. */
 static GtkTreeModel *
