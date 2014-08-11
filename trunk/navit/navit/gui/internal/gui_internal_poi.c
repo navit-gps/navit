@@ -286,7 +286,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	format_dist(dist,distbuf);
 	if(c) {
 		int len; 		
-		get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
+		get_compass_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
 		len=strlen(dirbuf);
 		dirbuf[len]=' ';
 		dirbuf[len+1]=0;
