@@ -157,7 +157,7 @@ model_poi (struct gtk_poi_search *search)
 				if (item->type==selected && idist<=search_distance_meters){
 					char direction[5];
 					gtk_list_store_append(search->store_poi, &iter);
-					get_direction(direction,transform_get_angle_delta(&center,&coord_item,0),1);
+					get_compass_direction(direction,transform_get_angle_delta(&center,&coord_item,0),1);
 					gtk_list_store_set(search->store_poi, &iter, 0,direction, 1,idist,
 						2,g_strdup(label_attr.u.str), 3,coord_item.x, 4,coord_item.y ,-1);
 				}

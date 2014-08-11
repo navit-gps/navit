@@ -57,4 +57,4 @@ void spawn_process_init(void);
 
 #endif
 
-void get_direction(char *buffer, int angle, int mode);
+void get_compass_direction(char *buffer, int angle, int mode);

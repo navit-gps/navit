@@ -713,7 +713,7 @@ void spawn_process_init()
 
 /** Get printable compass direction from an angle. */
 void
-get_direction(char *buffer, int angle, int mode)
+get_compass_direction(char *buffer, int angle, int mode)
 {
 	angle=angle%360;
 	switch (mode) {
