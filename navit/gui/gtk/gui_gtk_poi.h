@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2013 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -17,12 +17,12 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#ifndef NAVIT_POPUP_H
-#define NAVIT_POPUP_H
+#ifndef NAVIT_GTK_POI_H
+#define NAVIT_GTK_POI_H
 
 struct navit;
-struct point;
 struct pcoord;
-void popup(struct navit *nav, int button, struct point *p);
-void popup_set_visitbefore(struct navit *nav, struct pcoord *pc, int visitbefore);
+void gtk_gui_poi(struct navit *nav);
+
 #endif
+

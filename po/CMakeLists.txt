@@ -12,6 +12,7 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/bookmarks.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/destination.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_action.c
+      ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_poi.c
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_statusbar.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal_bookmark.c
