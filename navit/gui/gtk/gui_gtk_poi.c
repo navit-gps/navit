@@ -153,13 +153,11 @@ model_poi (struct gtk_poi_search *search)
 	if (!v || (attr.u.coord_geo->lng==0.0f && attr.u.coord_geo->lat==0.0f)){
 		p.x=navit_get_width(search->nav)/2;
 		p.y=navit_get_height(search->nav)/2;
-		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from center screen (Km)"));
+		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
 	}else{
-		printf("%f\n",attr.u.coord_geo->lng);
-		
 		p.x=navit_get_width(search->nav)/2;
 		p.y=navit_get_height(search->nav)*4/5;
-		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from vehicle cursor (Km)"));
+		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from vehicle cursor (km)"));
 	}
 
 	transform_reverse(navit_get_trans(search->nav), &p, &center);
@@ -329,14 +327,14 @@ void gtk_gui_poi(struct navit *nav)
 	search->nav=nav;
 
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window2),_("Search of POI's"));
+	gtk_window_set_title(GTK_WINDOW(window2),_("POI search"));
 	gtk_window_set_wmclass (GTK_WINDOW (window2), "navit", "Navit");
 	gtk_window_set_default_size (GTK_WINDOW (window2),700,550);
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(4, 4, FALSE);
 
 	label_category = gtk_label_new(_("Select a category"));
-	search->label_distance = gtk_label_new(_("Select a distance to look for (Km)"));
+	search->label_distance = gtk_label_new(_("Select a distance to look for (km)"));
 	label_poi=gtk_label_new(_("Select a POI"));
 
 	search->entry_distance=gtk_entry_new_with_max_length(2);
@@ -361,9 +359,9 @@ void gtk_gui_poi(struct navit *nav)
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(listbox_poi),search->treeview_poi);
 	search->store_poi = gtk_list_store_new (5, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_LONG, G_TYPE_LONG); 
 	renderer=gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (search->treeview_poi),-1, " ", renderer, "text",0,NULL);
+	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (search->treeview_poi),-1, _("Direction"), renderer, "text",0,NULL);
 	renderer=gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (search->treeview_poi),-1, _("Meters"), renderer, "text", 1, NULL);
+	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (search->treeview_poi),-1, _("Distance(m)"), renderer, "text", 1, NULL);
 	renderer=gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (search->treeview_poi),-1, _("Name"), renderer, "text", 2, NULL);
 	search->store_poi_sorted=NULL;
