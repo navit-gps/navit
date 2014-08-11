@@ -26,14 +26,14 @@ msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2014-08-08 15:23+0000\n"
-"Last-Translator: jan <jandegr1@hotmail.com>\n"
+"PO-Revision-Date: 2014-08-10 18:00+0000\n"
+"Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
+"X-Launchpad-Export-Date: 2014-08-11 17:44+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -45,7 +45,7 @@ msgstr "Gestart vanuit de bronmap\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "'%s' instellen op '%s'\n"
+msgstr "'%s' instellen als '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -383,11 +383,11 @@ msgstr "Aruba"
 
 #. 248
 msgid "Aland Islands"
-msgstr "Färöer eilanden"
+msgstr "Aland Eilanden"
 
 #. 031
 msgid "Azerbaijan"
-msgstr "Azerbeidjan"
+msgstr "Azerbeidzjan"
 
 #. 070
 msgid "Bosnia and Herzegovina"
@@ -719,7 +719,7 @@ msgstr "Kroatië"
 
 #. 332
 msgid "Haiti"
-msgstr "Haiti"
+msgstr "Haïti"
 
 #. 348
 msgid "Hungary"
@@ -1031,7 +1031,7 @@ msgstr "Papoea-Nieuw-Guinea"
 
 #. 608
 msgid "Philippines"
-msgstr "Philippijnen"
+msgstr "Filipijnen"
 
 #. 586
 msgid "Pakistan"
@@ -1128,7 +1128,7 @@ msgstr "Slovenië"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard und Jan Mayen"
+msgstr "Spitsbergen en Jan Mayen"
 
 #. 703
 msgid "Slovakia"
@@ -1264,7 +1264,7 @@ msgstr "Uruguay"
 
 #. 860
 msgid "Uzbekistan"
-msgstr "Uzbekistan"
+msgstr "Oezbekistan"
 
 #. 336
 msgid "Holy See (Vatican City State)"
@@ -1430,7 +1430,7 @@ msgstr "Bestemming"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Tonen"
+msgstr "Display"
 
 msgid "_Route"
 msgstr "Route"
@@ -1596,7 +1596,7 @@ msgid "Set as position (and deactivate vehicle)"
 msgstr "zet positie en deactiveer voertuig"
 
 msgid "POIs"
-msgstr "bezienswaardigheden"
+msgstr "Nuttige punten"
 
 msgid "View on map"
 msgstr "Bekijk op de kaart"
@@ -1608,19 +1608,19 @@ msgid "Show results on the map"
 msgstr "laat de resultaten op de kaart zien"
 
 msgid "Cut Bookmark"
-msgstr "Bladwijzer knippen"
+msgstr "Favoriet knippen"
 
 msgid "Copy Bookmark"
-msgstr "Bladwijzer kopiëren"
+msgstr "Favoriet kopiëren"
 
 msgid "Rename Bookmark"
-msgstr "Bladwijzer hernoemen"
+msgstr "Favoriet hernoemen"
 
 msgid "Paste Bookmark"
-msgstr "Plak Bladwijzer"
+msgstr "Plak Favoriet"
 
 msgid "Delete Bookmark"
-msgstr "Verwijder Bladwijzer"
+msgstr "Verwijder favoriet"
 
 msgid "Delete waypoint"
 msgstr "verwijder route punt"
@@ -1629,10 +1629,10 @@ msgid "Bookmarks"
 msgstr "Favorieten"
 
 msgid "Bookmarks as waypoints"
-msgstr "Bladwijzers als routepunten"
+msgstr "Favoriet(en) als routepunten"
 
 msgid "Save waypoints"
-msgstr "sla bladwijzers op"
+msgstr "sla op als favoriet"
 
 msgid "Replace with waypoints"
 msgstr "vervang door route punten"
@@ -1642,11 +1642,11 @@ msgstr "Map verwijderen"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr "Bladwijzermap toevoegen"
+msgstr "Favirietenmap toevoegen"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr "Plak Bladwijzer"
+msgstr "Plak favoriet"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1669,7 +1669,7 @@ msgid "Download completely"
 msgstr "in zijn geheel ophalen"
 
 msgid "Show Satellite Status"
-msgstr "Toon satellietstatus"
+msgstr "Satellietstatus weergeven"
 
 msgid " Elevation "
 msgstr " Hoogte "
@@ -1678,7 +1678,7 @@ msgid " Azimuth "
 msgstr " Azimuth "
 
 msgid "Show NMEA Data"
-msgstr "Toon NMEA gegevens"
+msgstr "NMEA-gegevens weergeven"
 
 msgid "car"
 msgstr "auto"
@@ -1695,7 +1695,7 @@ msgstr "Huidig profiel: %s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr "profiel veranderen naar: % s"
+msgstr "Profiel veranderen naar: % s"
 
 msgid "Set as active"
 msgstr "Activeren"
@@ -1707,7 +1707,7 @@ msgid "Show NMEA data"
 msgstr "Toon NMEA-gegevens"
 
 msgid "Add Bookmark"
-msgstr "Bladwijzer Toevoegen"
+msgstr "faviriet Toevoegen"
 
 msgid "Rename"
 msgstr "Hernoem"
@@ -1751,7 +1751,7 @@ msgid "Rules"
 msgstr "Voorschrift"
 
 msgid "Lock on road"
-msgstr "Op weg plaatsen"
+msgstr "Op weg houden"
 
 msgid "Northing"
 msgstr "Noord boven"
@@ -2259,7 +2259,7 @@ msgid "Quit"
 msgstr "Afsluiten"
 
 msgid "Actions"
-msgstr "Acties"
+msgstr "Navigatieopties"
 
 msgid ""
 "Former\n"
@@ -2279,7 +2279,7 @@ msgstr ""
 "navigatie"
 
 msgid "Display"
-msgstr "Tonen"
+msgstr "Display"
 
 msgid "Fullscreen"
 msgstr "Beeldvullend"
@@ -2429,7 +2429,7 @@ msgstr "Uwe bestemming"
 
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
-msgstr "Partieel"
+msgstr "gedeelte van adres"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
