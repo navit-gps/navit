@@ -34,6 +34,9 @@
 #include <glib.h>
 #include <time.h>
 #include "config.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #endif
@@ -1728,6 +1731,7 @@ gui_internal_set(char *remove, char *add)
 	if (add)
 		fprintf(fo,"%s;\n",add);
 	fclose(fo);
+	unlink(gui_file);
 	ret=(rename(gui_file_new, gui_file)==0);
 	g_free(gui_file_new);
 	g_free(gui_file);
