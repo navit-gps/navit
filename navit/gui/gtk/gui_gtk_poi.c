@@ -56,6 +56,9 @@ geticon(const char *name){
 	GdkPixbuf *icon=NULL;
 	GError *error=NULL;
 	icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
+	if (error) {
+		dbg(0, "failed to load icon '%s': %s\n", name, error->message);
+	}
 	return icon;
 }
 
