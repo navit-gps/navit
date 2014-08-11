@@ -141,19 +141,16 @@ model_poi (struct gtk_poi_search *search)
 	struct item *item;
 	struct point p;//Cursor position in screen
 	struct attr attr, vehicle_attr;
-	struct vehicle *v;
+	struct vehicle *v=NULL;
 	enum item_type selected;
 
 	//distance in meters
 	dist=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
 
-	//Searches if vehicle has coord_geo to show distance from vehicle.
-	//If vehicle hasn't coord_geo show distance from center of screen
-	navit_get_attr(search->nav,attr_vehicle, &vehicle_attr,NULL);
-	v=vehicle_attr.u.vehicle;
-
-	vehicle_get_attr(v,attr_position_coord_geo, &attr, NULL);
-	if (attr.u.coord_geo->lng==0.0f && attr.u.coord_geo->lat==0.0f){
+	if(navit_get_attr(search->nav,attr_vehicle, &vehicle_attr,NULL) && (v=vehicle_attr.u.vehicle)) {
+		vehicle_get_attr(v,attr_position_coord_geo, &attr, NULL);
+	}
+	if (!v || (attr.u.coord_geo->lng==0.0f && attr.u.coord_geo->lat==0.0f)){
 		p.x=navit_get_width(search->nav)/2;
 		p.y=navit_get_height(search->nav)/2;
 		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from center screen (Km)"));
