@@ -118,10 +118,7 @@ struct item_bin_sink {
 
 struct node_item {
 	unsigned int id;
-	char dummy1;
 	char ref_way;
-	char dummy2;
-	char dummy3;
 	struct coord c;
 };
 
