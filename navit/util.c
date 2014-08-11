@@ -24,6 +24,7 @@
 #include <time.h>
 #include <limits.h>
 #include <string.h>
+#include <stdio.h>
 
 #ifdef _POSIX_C_SOURCE
 #include <unistd.h>
@@ -131,7 +132,6 @@ g_utf8_strlen_force_link(gchar *buffer, int max)
 #endif
 
 #if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__) || defined(HAVE_API_ANDROID)
-#include <stdio.h>
 char *stristr(const char *String, const char *Pattern)
 {
       char *pptr, *sptr, *start;
@@ -711,4 +711,31 @@ void spawn_process_init()
 	return;
 }
 
-
+/** Get printable compass direction from an angle. */
+void
+get_direction(char *buffer, int angle, int mode)
+{
+	angle=angle%360;
+	switch (mode) {
+	case 0:
+		sprintf(buffer,"%d",angle);
+		break;
+	case 1:
+		if (angle < 69 || angle > 291)
+			*buffer++='N';
+		if (angle > 111 && angle < 249)
+			*buffer++='S';
+		if (angle > 22 && angle < 158)
+			*buffer++='E';
+		if (angle > 202 && angle < 338)
+			*buffer++='W';
+		*buffer++='\0';
+		break;
+	case 2:
+		angle=(angle+15)/30;
+		if (! angle)
+			angle=12;
+		sprintf(buffer,"%d H", angle);
+		break;
+	}
+}
