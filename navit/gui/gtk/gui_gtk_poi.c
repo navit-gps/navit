@@ -33,7 +33,6 @@
 #include "mapset.h"
 #include "transform.h"
 #include "attr.h"
-#include "vehicle.h"
 #include "util.h"
 
 static struct gtk_poi_search{
@@ -114,24 +113,13 @@ model_poi (struct gtk_poi_search *search)
 	struct map_rect *mr;
 	struct item *item;
 	struct point cursor_position;
-	struct attr attr, vehicle_attr;
-	struct vehicle *v=NULL;
 	enum item_type selected;
 
 	search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
 
-	if(navit_get_attr(search->nav,attr_vehicle, &vehicle_attr,NULL) && (v=vehicle_attr.u.vehicle)) {
-		vehicle_get_attr(v,attr_position_coord_geo, &attr, NULL);
-	}
-	if (!v || (attr.u.coord_geo->lng==0.0f && attr.u.coord_geo->lat==0.0f)){
-		cursor_position.x=navit_get_width(search->nav)/2;
-		cursor_position.y=navit_get_height(search->nav)/2;
-		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
-	}else{
-		cursor_position.x=navit_get_width(search->nav)/2;
-		cursor_position.y=navit_get_height(search->nav)*4/5;
-		gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from vehicle cursor (km)"));
-	}
+	cursor_position.x=navit_get_width(search->nav)/2;
+	cursor_position.y=navit_get_height(search->nav)/2;
+	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
 
 	transform_reverse(navit_get_trans(search->nav), &cursor_position, &center);
 	pc.pro = transform_get_projection(navit_get_trans(search->nav));
