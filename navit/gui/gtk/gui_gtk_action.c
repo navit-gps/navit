@@ -181,9 +181,8 @@ route_clear_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	navit_set_destination(gui->nav, NULL, NULL, 0);
 }
 
-/*Action that shows search poi window*/
 static void
-poi_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
+poi_search_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	gtk_gui_poi(gui->nav);
 }
@@ -221,7 +220,7 @@ static GtkActionEntry entries[] =
 	{ "InfoAction", NULL, _n("_Info"), NULL, NULL, G_CALLBACK(info_action) },
 #endif /*GTK_STOCK_INFO*/
 	{ "DestinationAction", "flag_icon", _n("Set _destination"), "<control>D", _n("Opens address search dialog"), G_CALLBACK(destination_action) },
-	{ "POIAction", "flag_icon", _n("_POI search"), "<control>P", _n("Opens POI search dialog"), G_CALLBACK(poi_action) },
+	{ "POIAction", "flag_icon", _n("_POI search"), "<control>P", _n("Opens POI search dialog"), G_CALLBACK(poi_search_action) },
 	{ "RouteClearAction", NULL, _n("_Stop Navigation"), "<control>S", NULL, G_CALLBACK(route_clear_action) },
 	{ "Test", NULL, _n("Test"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",_n("Quit the application"), G_CALLBACK (quit_action) }
