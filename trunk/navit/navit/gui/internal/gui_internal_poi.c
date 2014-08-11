@@ -17,6 +17,7 @@
 #include "transform.h"
 #include "linguistics.h"
 #include "fib.h"
+#include "util.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
@@ -139,35 +140,6 @@ gui_internal_poi_icon(struct gui_priv *this, struct item *item)
 		layer=g_list_next(layer);
 	}
 	return NULL;
-}
-
-
-static void
-get_direction(char *buffer, int angle, int mode)
-{
-	angle=angle%360;
-	switch (mode) {
-	case 0:
-		sprintf(buffer,"%d",angle);
-		break;
-	case 1:
-		if (angle < 69 || angle > 291)
-			*buffer++='N';
-		if (angle > 111 && angle < 249)
-			*buffer++='S';
-		if (angle > 22 && angle < 158)
-			*buffer++='E';
-		if (angle > 202 && angle < 338)
-			*buffer++='W';
-		*buffer++='\0';
-		break;
-	case 2:
-		angle=(angle+15)/30;
-		if (! angle)
-			angle=12;
-		sprintf(buffer,"%d H", angle);
-		break;
-	}
 }
 
 /**
