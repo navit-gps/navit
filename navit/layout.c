@@ -112,7 +112,13 @@ layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, s
 		break;
 	case attr_active:
 		attr->u.num=layout->active;
-		break;
+		return 1;
+	case attr_nightlayout:
+		attr->u.str=layout->nightname;
+		return 1;
+	case attr_daylayout:
+		attr->u.str=layout->dayname;
+		return 1;
 	default:
 		break;
 	}
