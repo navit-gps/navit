@@ -2429,6 +2429,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->vehicle->follow_curr = attr->u.num;
 		break;
 	case attr_layout:
+		if(!attr->u.layout)
+			return 0;
 		if(this_->layout_current!=attr->u.layout) {
 			this_->layout_current=attr->u.layout;
 			graphics_font_destroy_all(this_->gra);
@@ -2439,6 +2441,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		}
 		break;
 	case attr_layout_name:
+		if(!attr->u.str)
+			return 0;
 		l=this_->layouts;
 		while (l) {
 			lay=l->data;
