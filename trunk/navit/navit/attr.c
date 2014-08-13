@@ -599,7 +599,7 @@ attr_data_size(struct attr *attr)
 	if (attr->type == attr_none)
 		return 0;
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) 
-		return strlen(attr->u.str)+1;
+		return attr->u.str?strlen(attr->u.str)+1:0;
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		return sizeof(attr->u.num);
 	if (attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) 
