@@ -135,7 +135,7 @@ public class NavitGraphics
 		protected void onCreateContextMenu(ContextMenu menu) {
 			super.onCreateContextMenu(menu);
 			
-			menu.setHeaderTitle("Position...");
+			menu.setHeaderTitle(Navit._("Position")+"..");
 			menu.add(1, 1, NONE, Navit._("Route to here")).setOnMenuItemClickListener(this);
 			menu.add(1, 2, NONE, Navit._("Cancel")).setOnMenuItemClickListener(this);
 		}
