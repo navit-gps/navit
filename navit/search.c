@@ -379,16 +379,21 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 struct search_list_common *
 search_list_select(struct search_list *this_, enum attr_type attr_type, int id, int mode)
 {
-	int level=search_list_level(attr_type);
-	int num=0;
+	int level;
+	int num;
 	struct search_list_level *le;
 	struct search_list_common *slc;
 	GList *curr;
+
+        level = search_list_level(attr_type);
+        if (level < 0)
+		return NULL;
 	le=&this_->levels[level];
 	curr=le->list;
 	if (mode > 0 || !id)
 		le->selected=mode;
 	//dbg(0,"enter level=%d %d %d %p\n", level, id, mode, curr);
+	num = 0;
 	while (curr) {
 		num++;
 		if (! id || num == id) {
