@@ -196,7 +196,7 @@ static void lfh_to_cpu(struct zip_lfh *lfh) {
 		lfh->zipuncmp  = le32_to_cpu(lfh->zipuncmp);
 		lfh->zipfnln   = le16_to_cpu(lfh->zipfnln);
 		lfh->zipxtraln = le16_to_cpu(lfh->zipxtraln);
-	}	
+	}
 }
 
 static void cd_to_cpu(struct zip_cd *zcd) {
@@ -410,8 +410,8 @@ binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int s
 #endif
 	while (offset < end) {
 		cd=(struct zip_cd *)(m->search_data+offset-m->search_offset);
-		if (! m->search_data || 
-		      m->search_offset > offset || 
+		if (! m->search_data ||
+		      m->search_offset > offset ||
 		      offset-m->search_offset+sizeof(*cd) > m->search_size ||
 		      offset-m->search_offset+sizeof(*cd)+cd->zipcfnl+cd->zipcxtl > m->search_size
 		   ) {
@@ -431,9 +431,9 @@ binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int s
 		dbg(0,"offset=%d search_offset=%d search_size=%d search_data=%p cd=%p\n", offset, m->search_offset, m->search_size, m->search_data, cd);
 		dbg(0,"offset=%d fn='%s'\n",offset,cd->zipcfn);
 #endif
-		if (!skip && 
+		if (!skip &&
 		    (partial || cd->zipcfnl == len) &&
-		    !strncmp(cd->zipcfn, name, len)) 
+		    !strncmp(cd->zipcfn, name, len))
 			return offset;
 		skip=0;
 		offset+=sizeof(*cd)+cd->zipcfnl+cd->zipcxtl+cd->zipccml;
@@ -507,7 +507,7 @@ binfile_attr_rewind(void *priv_data)
 	t->pos_attr=t->pos_attr_start;
 	mr->label=0;
 	memset(mr->label_attr, 0, sizeof(mr->label_attr));
-	
+
 }
 
 static char *
@@ -553,13 +553,13 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial)
 		if (! partial)
 			break;
 	}
-	
+
 	return g_strdup_printf("%s/%s",dir,filename);
 }
 
 static int
 binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
-{	
+{
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	enum attr_type type;
@@ -572,7 +572,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	while (t->pos_attr < t->pos_next) {
 		size=le32_to_cpu(*(t->pos_attr++));
 		type=le32_to_cpu(t->pos_attr[0]);
-		if (type == attr_label) 
+		if (type == attr_label)
 			mr->label=1;
 		if (type == attr_house_number)
 			mr->label_attr[0]=t->pos_attr;
@@ -588,7 +588,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			if (attr_type == attr_any) {
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
 			}
-			attr->type=type;			
+			attr->type=type;
 			if (ATTR_IS_GROUP(type)) {
 				int i=0;
 				int *subpos=t->pos_attr+1;
@@ -607,13 +607,13 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				mr->attrs[i].u.data=NULL;
 				attr->u.attrs=mr->attrs;
 			} else {
-				attr_data_set_le(attr, t->pos_attr+1); 
+				attr_data_set_le(attr, t->pos_attr+1);
 				if (type == attr_url_local) {
 					g_free(mr->url);
 					mr->url=binfile_extract(mr->m, mr->m->cachedir, attr->u.str, 1);
 					attr->u.str=mr->url;
 				}
-				if (type == attr_flags && mr->m->map_version < 1) 
+				if (type == attr_flags && mr->m->map_version < 1)
 					attr->u.num |= AF_CAR;
 			}
 			t->pos_attr+=size;
@@ -665,9 +665,9 @@ binfile_item_dup(struct map_priv *m, struct item *item, struct tile *t, int exte
 	entry->id.id_lo=item->id_lo;
 	entry->flags=1;
 	dbg(0,"id 0x%x,0x%x\n",entry->id.id_hi,entry->id.id_lo);
-	
+
 	memcpy(ret, t->pos, (size+1)*sizeof(int));
-	if (!m->changes) 
+	if (!m->changes)
 		m->changes=g_hash_table_new_full(binfile_hash_entry_hash, binfile_hash_entry_equal, g_free, NULL);
 	g_hash_table_replace(m->changes, entry, entry);
 	dbg(0,"ret %p\n",ret);
@@ -686,9 +686,9 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 	{
 		int *i=t->pos,j=0;
 		dbg(0,"Before: pos_coord=%d\n",t->pos_coord-i);
-		while (i < t->pos_next) 
+		while (i < t->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
-		
+
 	}
 	aoffset=t->pos_attr-t->pos_attr_start;
 	coffset=t->pos_coord-t->pos_coord_start-2;
@@ -747,7 +747,7 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 	{
 		int *i=tn->pos,j=0;
 		dbg(0,"After move: pos_coord=%d\n",tn->pos_coord-i);
-		while (i < tn->pos_next) 
+		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	if (mode != change_mode_append)
@@ -758,12 +758,12 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 			tn->pos_coord_start[write_offset++]=c[i].x;
 			tn->pos_coord_start[write_offset++]=c[i].y;
 		}
-			
+
 	}
 	{
 		int *i=tn->pos,j=0;
 		dbg(0,"After: pos_coord=%d\n",tn->pos_coord-i);
-		while (i < tn->pos_next) 
+		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	return 1;
@@ -782,12 +782,12 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	{
 		int *i=t->pos,j=0;
 		dbg(0,"Before: pos_attr=%d\n",t->pos_attr-i);
-		while (i < t->pos_next) 
+		while (i < t->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
-		
+
 	}
 
-	write_offset=0;	
+	write_offset=0;
 	naoffset=t->pos_attr-t->pos_attr_start;
 	coffset=t->pos_coord-t->pos_coord_start;
 	offset=0;
@@ -831,7 +831,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	default:
 		return 0;
 	}
-	if (mode == change_mode_delete || mode == change_mode_modify) 
+	if (mode == change_mode_delete || mode == change_mode_modify)
 		delta=nattr_len-oattr_len;
 	else
 		delta=nattr_len;
@@ -854,7 +854,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	{
 		int *i=tn->pos,j=0;
 		dbg(0,"After move: pos_attr=%d\n",tn->pos_attr-i);
-		while (i < tn->pos_next) 
+		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	if (nattr_len) {
@@ -868,7 +868,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	{
 		int *i=tn->pos,j=0;
 		dbg(0,"After: pos_attr=%d\n",tn->pos_attr-i);
-		while (i < tn->pos_next) 
+		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	return 1;
@@ -893,7 +893,7 @@ push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length)
 	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
 	if (length == -1)
 		length=le32_to_cpu(mr->t->pos[0])+1;
-	if (length > 0) 
+	if (length > 0)
 		mr->t->end=mr->t->pos+length;
 }
 
@@ -951,7 +951,7 @@ map_binfile_handle_redirect(struct map_priv *m)
 		m->redirect=0;
 		return 0;
 	}
-	if (m->redirect) 
+	if (m->redirect)
 		return 0;
 	m->redirect=1;
 	dbg(0,"redirected from %s to %s\n",m->url,location);
@@ -998,10 +998,10 @@ map_binfile_download_size(struct map_priv *m)
 		map_binfile_http_request(m, attrs);
 		data=file_data_read_special(m->http, 0, &size_ret);
 		g_free(data);
-		if (size_ret < 0) 
+		if (size_ret < 0)
 			return 0;
 	} while (map_binfile_handle_redirect(m));
-	
+
 	ret=file_size(m->http);
 	dbg(1,"file size "LONGLONG_FMT"\n",ret);
 	return ret;
@@ -1027,7 +1027,7 @@ map_binfile_http_range(struct map_priv *m, long long offset, int size)
 	struct attr http_header={attr_http_header};
 	struct attr persistent={attr_persistent};
 
-	persistent.u.num=1;	
+	persistent.u.num=1;
 	attrs[0]=&url;
 	attrs[1]=&http_header;
 	attrs[2]=&persistent;
@@ -1307,7 +1307,7 @@ push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, i
 	mr->size+=cd->zipcunc;
 #endif
 	t.zipfile_num=zipfile;
-	if (zipfile_to_tile(m, cd, &t)) 
+	if (zipfile_to_tile(m, cd, &t))
 		push_tile(mr, &t, offset, length);
 	file_data_free(f, (unsigned char *)cd);
 }
@@ -1349,7 +1349,7 @@ download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zi
 	if (async == 1) {
 		m->download=download;
 		g_free(m->progress);
-		if (download->mr) 
+		if (download->mr)
 			m->progress=g_strdup_printf("Download Tile %d 0%%",download->zipfile);
 		else
 			m->progress=g_strdup_printf("Download Map Information 0%%");
@@ -1369,7 +1369,7 @@ download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zi
 				download->state=0;
 			break;
 		case 2:
-			if (download_download(download)) 
+			if (download_download(download))
 				download->state=3;
 			else {
 				g_free(m->progress);
@@ -1553,7 +1553,7 @@ map_download_selection(struct map_priv *m, struct map_rect_priv *mr, struct map_
 	struct zip_cd *cd;
 	for (i = 0 ; i < m->zip_members ; i++) {
 		cd=binfile_read_cd(m, m->cde_size*i, -1);
-		if (map_download_selection_check(cd, sel)) 
+		if (map_download_selection_check(cd, sel))
 			download(m, mr, cd, i, 0, 0, 0);
 		file_data_free(m->fi, (unsigned char *)cd);
 	}
@@ -1712,7 +1712,7 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 		return;
 
-	if(mr->msp) 
+	if(mr->msp)
 	{
 		struct attr *search=&mr->msp->search;
 		if(search->type==attr_town_name || search->type==attr_district_name || search->type==attr_town_or_district_name) {
@@ -1730,7 +1730,7 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 				}
 			}
 		}
-	}	
+	}
 
 	push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 }
@@ -1907,7 +1907,7 @@ binmap_search_street_by_place(struct map_priv *map, struct item *town, struct co
 	map_rec2=map_rect_new_binfile(map, sel);
 	while ((place=map_rect_get_item_binfile(map_rec2))) {
 		if (item_is_poly_place(*place) &&
-		    item_attr_get(place, attr_label, &poly_town_name) && 
+		    item_attr_get(place, attr_label, &poly_town_name) &&
 		    !strcmp(poly_town_name.u.str,town_name.u.str)) {
 				struct coord *c;
 				int i,count;
@@ -2022,12 +2022,12 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
 	struct item *town;
 	int idx;
-	
+
 	msp->search = *search;
 	msp->partial = partial;
 	if(ATTR_IS_STRING(msp->search.type))
 		msp->search.u.str=linguistics_casefold(search->u.str);
-		
+
 	/*
      * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
      * please update this comment and the documentation for map_search_new() in map.c
@@ -2038,7 +2038,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		case attr_town_name:
 		case attr_town_or_district_name:
 			map_rec = map_rect_new_binfile(map, NULL);
-			if (!map_rec) 
+			if (!map_rec)
 				break;
 			map_rec->country_id = item->id_lo;
 			map_rec->msp = msp;
@@ -2061,12 +2061,12 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 					msp->mode = 1;
 				else {
 					if (item_coord_get(town, &c, 1)) {
-						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries))) 
+						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries)))
 							msp->mode = 2;
 						else {
 							msp->mr=binmap_search_street_by_estimate(map, town, &c, &msp->ms);
 							msp->mode = 3;
-						}	
+						}
 					}
 				}
 				map_rect_destroy_binfile(map_rec);
@@ -2156,7 +2156,7 @@ duplicate_test(struct map_search_priv *msp, struct item *item, enum attr_type at
 	int len;
 	char *buffer;
 	struct duplicate *d;
-	
+
 	if (!msp->search_results)
 		msp->search_results = g_hash_table_new_full(duplicate_hash, duplicate_equal, g_free, NULL);
 	binfile_attr_rewind(item->priv_data);
@@ -2209,10 +2209,10 @@ duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_ty
 	return 0;
 }
 
-static int 
+static int
 item_inside_poly_list(struct item *it, GList *l)
 {
-	
+
 	while(l) {
 		struct geom_poly_segment *p=l->data;
 		int count=p->last-p->first+1;
@@ -2231,7 +2231,7 @@ item_inside_poly_list(struct item *it, GList *l)
 		} else {
 			if(ccount>3)
 				ccount/=2;
-			else 
+			else
 				ccount=2;
 			while(--ccount>0)
 				item_coord_get(it,&c,1);
@@ -2259,13 +2259,13 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			case attr_town_or_district_name:
 				if (map_search->mr->tile_depth > 1 && item_is_town(*it) && map_search->search.type != attr_district_name) {
 					if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
-						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name)) 
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name))
 							return it;
 					}
 				}
 				if (map_search->mr->tile_depth > 1 && item_is_district(*it) && map_search->search.type != attr_town_name) {
 					if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
-						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name)) 
+						if (!linguistics_compare(at.u.str, map_search->search.u.str, mode) && !duplicate(map_search, it, attr_town_name))
 							return it;
 					}
 				}
@@ -2283,12 +2283,12 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					struct attr at;
 					if (!map_selection_contains_item_rect(map_search->mr->sel, it))
 						break;
-						
+
 					if(binfile_attr_get(it->priv_data, attr_label, &at)) {
 						struct coord c[128];
 						struct duplicate *d;
-						
-						/* Extracting all coords here makes duplicate_new() not consider them (we don't want all 
+
+						/* Extracting all coords here makes duplicate_new() not consider them (we don't want all
 						 * street segments to be reported as separate streets). */
 						while(item_coord_get(it,c,128)>0);
 						d=duplicate_test(map_search, it, attr_label);
@@ -2296,12 +2296,12 @@ binmap_search_get_item(struct map_search_priv *map_search)
 							break;
 
 						if(linguistics_compare(at.u.str, map_search->search.u.str, mode|linguistics_cmp_expand|linguistics_cmp_words)) {
-							/* Remember this non-matching street name in duplicate hash to skip name 
+							/* Remember this non-matching street name in duplicate hash to skip name
 							 * comparison for its following segments */
 							duplicate_insert(map_search, d);
 							break;
 						}
-							
+
 						if(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries)) {
 							/* Other segments may fit the town poly. Do not update hash for now. */
 							g_free(d);
@@ -2354,7 +2354,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 		}
 		if(map_search->search.type==attr_house_number && map_search->mode==2 && map_search->parent_name) {
 			/* For unindexed house number search, check if street segments extending possible housenumber locations were found */
-			if(map_search->ms.u.c_rect.lu.x!=map_search->rect_new.lu.x || map_search->ms.u.c_rect.lu.y!=map_search->rect_new.lu.y || 
+			if(map_search->ms.u.c_rect.lu.x!=map_search->rect_new.lu.x || map_search->ms.u.c_rect.lu.y!=map_search->rect_new.lu.y ||
 				map_search->ms.u.c_rect.rl.x!=map_search->rect_new.rl.x || map_search->ms.u.c_rect.rl.y!=map_search->rect_new.rl.y) {
 					map_search->ms.u.c_rect=map_search->rect_new;
 					map_rect_destroy_binfile(map_search->mr);
@@ -2453,7 +2453,7 @@ binfile_get_index(struct map_priv *m)
 
 	len = strlen("index");
 	cde_index_size = sizeof(struct zip_cd)+len;
-	if (m->eoc64) 
+	if (m->eoc64)
 		offset = m->eoc64->zip64ecsz-cde_index_size;
 	else
 		offset = m->eoc->zipecsz-cde_index_size;
@@ -2562,7 +2562,7 @@ map_binfile_download_initial(struct map_priv *m)
 	m->fi=download->file;
 	g_free(download);
 	return 1;
-	
+
 
 		cd1size=sizeof(*cd1);
 		cd1offset=zip64_eoc->zip64eofst;
@@ -2572,7 +2572,7 @@ map_binfile_download_initial(struct map_priv *m)
 		cd1size=sizeof(*cd1)+binfile_cd_extra(cd1);
 		g_free(cd1);
 		cd1=(struct zip_cd *)map_binfile_download_range(m, cd1offset, cd1size);
-		if (!cd1) 
+		if (!cd1)
 			return 0;
 		cd1->zipcunc=0;
 		cdisize=sizeof(*cdi)+strlen("index")+cd1->zipcxtl;
@@ -2663,7 +2663,7 @@ map_binfile_open(struct map_priv *m)
 				m->map_release=g_strdup(attr.u.str);
 			if (m->url && binfile_attr_get(item->priv_data, attr_url, &attr)) {
 				dbg(0,"url config %s map %s\n",m->url,attr.u.str);
-				if (strcmp(m->url, attr.u.str)) 
+				if (strcmp(m->url, attr.u.str))
 					m->update_available=1;
 				g_free(m->url);
 				m->url=g_strdup(attr.u.str);
@@ -2711,7 +2711,7 @@ binfile_check_version(struct map_priv *m)
 	int version=-1;
 	if (!m->check_version)
 		return;
-	if (m->fi) 
+	if (m->fi)
 		version=file_version(m->fi, m->check_version);
 	if (version != m->version) {
 		if (m->fi)
@@ -2734,7 +2734,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 
 	wexp=file_wordexp_new(data->u.str);
 	wexp_data=file_wordexp_get_array(wexp);
-	dbg(1,"map_new_binfile %s\n", data->u.str);	
+	dbg(1,"map_new_binfile %s\n", data->u.str);
 	*meth=map_methods_binfile;
 
 	m=g_new0(struct map_priv, 1);
@@ -2743,7 +2743,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 	m->filename=g_strdup(wexp_data[0]);
 	file_wordexp_destroy(wexp);
 	check_version=attr_search(attrs, NULL, attr_check_version);
-	if (check_version) 
+	if (check_version)
 		m->check_version=check_version->u.num;
 	map_pass=attr_search(attrs, NULL, attr_map_pass);
 	if (map_pass)
