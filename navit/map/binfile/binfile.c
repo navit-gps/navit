@@ -2138,7 +2138,7 @@ duplicate_equal(gconstpointer a, gconstpointer b)
 {
 	const struct duplicate *da=a;
 	const struct duplicate *db=b;
-	return (da->c.x == db->c.x && da->c.y == da->c.y && g_str_equal(da->str,db->str));
+	return (da->c.x == db->c.x && da->c.y == db->c.y && g_str_equal(da->str,db->str));
 }
 
 /**
