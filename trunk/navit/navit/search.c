@@ -195,7 +195,7 @@ search_split_phrases(char *str)
 				struct phrase *phrase=g_new(struct phrase, 1);
 				phrase->start=s;
 				phrase->end=d;
-				phrase->wordcount=++wordcount;	
+				phrase->wordcount=++wordcount;
 				ret=g_list_append(ret, phrase);
 			}
 		} while (*d != '\0');
@@ -306,7 +306,7 @@ search_by_address(struct search_list *this_, char *addr)
 	while (tmp) {
 		g_free(tmp->data);
 		tmp=g_list_next(tmp);
-	}	
+	}
 	g_list_free(phrases);
 	// TODO: Looks like we should g_free(str) here. But this is
 	// currently dead code, so no way to test it.
@@ -353,7 +353,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	if (search_attr->type == attr_address) {
 		search_by_address(this_, search_attr->u.str);
 		this_->use_address_results=1;
-		return;	
+		return;
 	}
 	this_->use_address_results=0;
 	level=search_list_level(search_attr->type);
@@ -442,13 +442,13 @@ search_list_common_new(struct item *item, struct search_list_common *common)
 	struct attr attr;
 	int i;
 	enum attr_type common_attrs[]={
-		attr_state_name, 
-		attr_county_name, 
-		attr_municipality_name, 
-		attr_town_name, 
-		attr_district_name, 
-		attr_postal, 
-		attr_town_postal, 
+		attr_state_name,
+		attr_county_name,
+		attr_municipality_name,
+		attr_town_name,
+		attr_district_name,
+		attr_postal,
+		attr_town_postal,
 		attr_postal_mask,
 		attr_none
 	};
@@ -709,7 +709,7 @@ search_list_result_dup(struct search_list_result *slr)
 		ret->c=g_new(struct pcoord, 1);
 		*ret->c=*slr->c;
 	}
-	if (slr->country) 
+	if (slr->country)
 		ret->country=search_list_country_dup(slr->country);
 	if (slr->town)
 		ret->town=search_list_town_dup(slr->town);
@@ -717,7 +717,7 @@ search_list_result_dup(struct search_list_result *slr)
 		ret->street=search_list_street_dup(slr->street);
 	if (slr->house_number)
 		ret->house_number=search_list_house_number_dup(slr->house_number);
-	return ret;	
+	return ret;
 }
 
 static void
