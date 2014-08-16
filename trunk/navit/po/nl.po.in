@@ -26,15 +26,16 @@ msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2014-08-10 18:00+0000\n"
-"Last-Translator: rob <linuxned@gmail.com>\n"
+"PO-Revision-Date: 2014-08-16 06:43+0000\n"
+"Last-Translator: Christopher <cstandaert@srs.be>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-11 17:44+0000\n"
+"X-Launchpad-Export-Date: 2014-08-16 19:48+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
+"Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "soon"
@@ -260,7 +261,7 @@ msgstr "Ga %3$s %1$s naar %2$s %4$s"
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "daarna, ga na %3$s wegen %1$s %2$s naar %4$s"
+msgstr "daarna, ga na %3$s wegen %1$s%2$s naar %4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -1642,7 +1643,7 @@ msgstr "Map verwijderen"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr "Favirietenmap toevoegen"
+msgstr "Favorietenmap toevoegen"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1707,7 +1708,7 @@ msgid "Show NMEA data"
 msgstr "Toon NMEA-gegevens"
 
 msgid "Add Bookmark"
-msgstr "faviriet Toevoegen"
+msgstr "Favoriet toevoegen"
 
 msgid "Rename"
 msgstr "Hernoem"
