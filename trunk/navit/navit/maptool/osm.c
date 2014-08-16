@@ -3216,6 +3216,7 @@ write_countrydir(struct zip_info *zip_info, int max_index_size)
 				index_country_add(zip_info,co->countryid,NULL,NULL,tileco,countryindexname, partsize, zip_get_index(zip_info));
 			fclose(countryindex);
 			g_free(countryindexname);
+			fclose(in);
 		}
 	}
 }
