@@ -338,18 +338,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
     {
         x = (Sint16)p[i].x;
         y = (Sint16)p[i].y;
-
-#if 0
-        if(x < 0)
-        {
-            x = 0;
-        }
-        if(y < 0)
-        {
-            y = 0;
-        }
-#endif
-
         vx[i] = x;
         vy[i] = y;
 
@@ -415,14 +403,6 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
       	return;
     }
 
-#if 0
-    if(gc->fore_a != 0xff)
-    {
-        dbg(0, "%d %d %d %u %u:%u:%u:%u\n", p->x, p->y, r, gc->linewidth,
-            	gc->fore_a, gc->fore_r, gc->fore_g, gc->fore_b);
-    }
-#endif
-
     /* FIXME: does not quite match gtk */
 
     /* hack for osd compass.. why is this needed!? */
@@ -465,52 +445,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
        and even worse, we have to calculate their parameters!
        go dust off your trigonometry hat.
        */
-#if 0
-    int i, l, x_inc, y_inc, lw;
-
-    lw = gc->linewidth;
-
-    for(i = 0; i < count-1; i++)
-    {
-#ifdef DEBUG
-        printf("draw_lines: %p %d %d,%d->%d,%d %d\n", gc, i, p[i].x, p[i].y, p[i+1].x, p[i+1].y, gc->linewidth);
-#endif
-        for(l = 0; l < lw; l++)
-        {
-            /* FIXME: center? */
-#if 1
-            if(p[i].x != p[i+1].x)
-            {
-                x_inc = l - (lw/2);
-            }
-            else
-            {
-                x_inc = 0;
-            }
-
-            if(p[i].y != p[i+1].y)
-            {
-                y_inc = l - (lw/2);
-            }
-            else
-            {
-                y_inc = 0;
-            }
-#else
-            x_inc = 0;
-            y_inc = 0;
-#endif
-
-#ifdef ANTI_ALIAS
-            aalineRGBA(gr->screen, p[i].x + x_inc, p[i].y + y_inc, p[i+1].x + x_inc, p[i+1].y + y_inc,
-                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#else
-            lineRGBA(gr->screen, p[i].x + x_inc, p[i].y + y_inc, p[i+1].x + x_inc, p[i+1].y + y_inc,
-                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#endif
-        }
-    }
-#else
     /* sort of based on graphics_opengl.c::draw_lines */
     /* FIXME: should honor ./configure flag for no fp.
        this could be 100% integer code pretty easily,
@@ -525,12 +459,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     {
 	float dx=p[i+1].x-p[i].x;
 	float dy=p[i+1].y-p[i].y;
-
-#if 0
-	float cx=(p[i+1].x+p[i].x)/2;
-	float cy=(p[i+1].y+p[i].y)/2;
-#endif
-
         float angle;
 
         int x_lw_adj, y_lw_adj;
@@ -597,16 +525,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                 y_lw_adj = -y_lw_adj;
             }
 
-#if 0
-            if(((y_lw_adj*y_lw_adj)+(x_lw_adj*x_lw_adj)) != (lw/2)*(lw/2))
-            {
-                printf("i=%d\n", i);
-                printf("   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
-                printf("   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
-                printf("   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
-            }
-#endif
-
             /* FIXME: draw a circle/square if p[i]==p[i+1]? */
             /* FIXME: clipping, check for neg values. hoping sdl-gfx does this */
             vert[0].x = p[i].x + x_lw_adj;
@@ -639,7 +557,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
             }
         }
     }
-#endif
 }
 
 
