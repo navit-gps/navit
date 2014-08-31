@@ -858,7 +858,7 @@ street_search_get_item_street_name(struct map_rect_priv *mr)
 		block_get_byindex(mr->m->file[file_strname_stn], mr->search_block, &mr->b);
 		mr->b.p=mr->b.block_start+12;
 	}
-	dbg(1,"name id 0x%x\n", mr->b.p-mr->m->file[file_strname_stn]->begin);
+	dbg(1,"name id %td\n", mr->b.p-mr->m->file[file_strname_stn]->begin);
 	if (! mr->search_blk_count)
 		return NULL;
 	for (;;) {
