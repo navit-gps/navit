@@ -150,7 +150,7 @@ add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes)
 		*ct=*c;
 		fwrite(c, sizeof(*c), 1, idx);
 		(*nodes)++;
-		g_hash_table_insert(hash, ct, (void *)(*nodes));
+		g_hash_table_insert(hash, ct, GINT_TO_POINTER(*nodes));
 	}
 
 }
