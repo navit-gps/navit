@@ -67,7 +67,6 @@ navit/binding/python/binding_python.c
 navit/binding/dbus/binding_dbus.c
 navit/country.c
 navit/track.c
-navit/compass.c
 navit/util.c
 navit/debug.c
 navit/route.c
@@ -112,7 +111,6 @@ GNU Library General Public License (see LGPL):
 navit/callback.h
 navit/country.h
 navit/track.h
-navit/compass.h
 navit/item_def.h
 navit/util.h
 navit/debug.h
