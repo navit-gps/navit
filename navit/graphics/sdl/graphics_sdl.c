@@ -44,13 +44,6 @@
 # define USE_WEBOS_ACCELEROMETER
 #endif
 
-#define RASTER
-#undef SDL_SGE
-#undef SDL_GFX
-#undef ALPHA
-
-#define SDL_IMAGE
-
 #ifdef USE_WEBOS
 #define DISPLAY_W 0
 #define DISPLAY_H 0
@@ -61,35 +54,14 @@
 
 
 #undef DEBUG
-#undef PROFILE
 
 #define OVERLAY_MAX 32
 
-#ifdef RASTER
 #include "raster.h"
-#endif
-
-#ifdef SDL_SGE
-#include <SDL/sge.h>
-#endif
-
-#ifdef SDL_GFX
-#include <SDL/SDL_gfxPrimitives.h>
-#endif
 
 #include <event.h>
-
-#ifdef SDL_IMAGE
 #include <SDL/SDL_image.h>
-#endif
-
 #include <alloca.h>
-
-#ifdef PROFILE
-#include <sys/time.h>
-#include <time.h>
-#endif
-
 
 /* TODO: union overlay + non-overlay to reduce size */
 struct graphics_priv;
@@ -124,10 +96,6 @@ struct graphics_priv {
     int real_w, real_h;
 #endif
 
-#ifdef PROFILE
-    struct timeval draw_begin_tv;
-    unsigned long draw_time_peak;
-#endif
     struct font_freetype_methods freetype_methods;
     /* </main> */
 };
@@ -312,26 +280,10 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-#if 0 /* unused by core? */
-static void image_destroy(struct graphics_image_priv *gi)
-{
-#ifdef SDL_IMAGE
-    SDL_FreeSurface(gi->img);
-    g_free(gi);
-#endif
-}
-
-static struct graphics_image_methods gi_methods =
-{
-    image_destroy
-};
-#endif
-
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h,
         struct point *hot, int rotation)
 {
-#ifdef SDL_IMAGE
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
@@ -358,18 +310,13 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     }
 
     return gi;
-#else
-    return NULL;
-#endif
 }
 
 static void
 image_free(struct graphics_priv *gr, struct graphics_image_priv * gi)
 {
-#ifdef SDL_IMAGE
     SDL_FreeSurface(gi->img);
     g_free(gi);
-#endif
 }
 
 static void
@@ -411,7 +358,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 #endif
     }
 
-#ifdef RASTER
     if(gr->aa)
     {
         raster_aapolygon(gr->screen, count, vx, vy,
@@ -430,38 +376,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
                     gc->fore_b,
                     gc->fore_a));
     }
-#else
-# ifdef SDL_SGE
-#  ifdef ALPHA
-    sge_FilledPolygonAlpha(gr->screen, count, vx, vy,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b),
-            gc->fore_a);
-#  else
-#   ifdef ANTI_ALIAS
-    sge_AAFilledPolygon(gr->screen, count, vx, vy,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b));
-#   else
-    sge_FilledPolygon(gr->screen, count, vx, vy,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b));
-#   endif
-#  endif
-# else
-    filledPolygonRGBA(gr->screen, vx, vy, count,
-            gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-# endif
-#endif
 }
-
-
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
@@ -484,36 +399,12 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
         h = gr->screen->h;
     }
 
-#ifdef RASTER
     raster_rect(gr->screen, p->x, p->y, w, h,
             SDL_MapRGBA(gr->screen->format,
                 gc->fore_r,
                 gc->fore_g,
                 gc->fore_b,
                 gc->fore_a));
-#else
-# ifdef SDL_SGE
-#  ifdef ALPHA
-    sge_FilledRectAlpha(gr->screen, p->x, p->y, p->x + w, p->y + h,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b),
-            gc->fore_a);
-#  else
-    /* no AA -- should use poly instead for that */
-    sge_FilledRect(gr->screen, p->x, p->y, p->x + w, p->y + h,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b));
-#  endif
-# else
-    boxRGBA(gr->screen, p->x, p->y, p->x + w, p->y + h,
-            gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-# endif
-#endif
-
 }
 
 static void
@@ -540,7 +431,6 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
         r = r / 2;
     }
 
-#ifdef RASTER
     if(gr->aa)
     {
         raster_aacircle(gr->screen, p->x, p->y, r,
@@ -559,34 +449,6 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
                     gc->fore_b,
                     gc->fore_a));
     }
-#else
-# ifdef SDL_SGE
-#  ifdef ALPHA
-    sge_FilledCircleAlpha(gr->screen, p->x, p->y, r,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r, gc->fore_g, gc->fore_b),
-            gc->fore_a);
-#  else
-#   ifdef ANTI_ALIAS
-    sge_AAFilledCircle(gr->screen, p->x, p->y, r,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r, gc->fore_g, gc->fore_b));
-#   else
-    sge_FilledCircle(gr->screen, p->x, p->y, r,
-            SDL_MapRGB(gr->screen->format,
-                gc->fore_r, gc->fore_g, gc->fore_b));
-#   endif
-#  endif
-# else
-#  ifdef ANTI_ALIAS
-    aacircleRGBA(gr->screen, p->x, p->y, r,
-            gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#  else
-    filledCircleRGBA(gr->screen, p->x, p->y, r,
-            gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#  endif
-# endif
-#endif
 }
 
 
@@ -675,7 +537,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 
         if(lw == 1)
         {
-#ifdef RASTER
             if(gr->aa)
             {
                 raster_aaline(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
@@ -694,34 +555,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                             gc->fore_b,
                             gc->fore_a));
             }
-#else
-# ifdef SDL_SGE
-#  ifdef ALPHA
-            sge_LineAlpha(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                    SDL_MapRGB(gr->screen->format,
-                        gc->fore_r, gc->fore_g, gc->fore_b),
-                    gc->fore_a);
-#  else
-#   ifdef ANTI_ALIAS
-            sge_AALine(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                    SDL_MapRGB(gr->screen->format,
-                        gc->fore_r, gc->fore_g, gc->fore_b));
-#   else
-            sge_Line(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                    SDL_MapRGB(gr->screen->format,
-                        gc->fore_r, gc->fore_g, gc->fore_b));
-#   endif
-#  endif
-# else
-#  ifdef ANTI_ALIAS
-            aalineRGBA(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#  else
-            lineRGBA(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#  endif
-# endif
-#endif
         }
         else
         {
@@ -1033,7 +866,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
       	return;
     }
 
-#ifdef SDL_IMAGE
     SDL_Rect r;
 
     r.x = p->x;
@@ -1042,7 +874,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
     r.h = img->img->h;
 
     SDL_BlitSurface(img->img, NULL, gr->screen, &r);
-#endif
 }
 
 static void
@@ -1065,10 +896,6 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-#ifdef PROFILE
-    struct timeval now;
-    unsigned long elapsed;
-#endif
     struct graphics_priv *ov;
     SDL_Rect rect;
     int i;
@@ -1081,13 +908,6 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     {
 #ifdef DEBUG
         printf("draw_mode: %d\n", mode);
-#endif
-
-#ifdef PROFILE
-        if(mode == draw_mode_begin)
-        {
-            gettimeofday(&gr->draw_begin_tv, NULL);
-        }
 #endif
 
         if(mode == draw_mode_end)
@@ -1112,17 +932,6 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
             }
 
             SDL_Flip(gr->screen);
-
-#ifdef PROFILE
-            gettimeofday(&now, NULL);
-            elapsed = 1000000 * (now.tv_sec - gr->draw_begin_tv.tv_sec);
-            elapsed += (now.tv_usec - gr->draw_begin_tv.tv_usec);
-            if(elapsed >= gr->draw_time_peak)
-            {
-               dbg(0, "draw elapsed %u usec\n", elapsed);
-               gr->draw_time_peak = elapsed;
-            }
-#endif
         }
 
         gr->draw_mode = mode;
@@ -1834,12 +1643,6 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     SDL_EnableUNICODE(1);
     SDL_WM_SetCaption("navit", NULL);
-
-#ifdef SDL_SGE
-    sge_Update_OFF();
-    sge_Lock_ON();
-#endif
-
 
 #ifdef USE_WEBOS
     if(the_graphics!=NULL) {
