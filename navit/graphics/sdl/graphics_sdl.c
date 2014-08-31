@@ -865,7 +865,7 @@ static int window_fullscreen(struct window *win, int on)
 	navit_destroy(gr->nav);
     }
     else {
-	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+	callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
     }
     return 1;
 }
@@ -1046,7 +1046,7 @@ static gboolean graphics_sdl_idle(void *data)
        */
     if(gr->resize_callback_initial != 0)
     {
-        callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+	callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
         gr->resize_callback_initial = 0;
     }
 
@@ -1261,7 +1261,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 		    p.x = ev.button.x;
 		    p.y = ev.button.y;
-		    callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p);
+		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
 		    break;
 		}
 
@@ -1276,7 +1276,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 		    p.x = ev.button.x;
 		    p.y = ev.button.y;
-		    callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p);
+		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
 		    break;
 		}
 
@@ -1299,7 +1299,7 @@ static gboolean graphics_sdl_idle(void *data)
 		    }
 		    else
 		    {
-			callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+			callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
 		    }
 
 		    break;
