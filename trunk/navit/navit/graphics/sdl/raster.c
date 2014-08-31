@@ -886,7 +886,7 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	y = 0;
 	switch (dst->format->BytesPerPixel) {
 	case 1:
-	    for (; x < dx; x++, pixel=(Uint8 *)+pixx) {
+	    for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
 		*(Uint8 *)pixel = color;
 		y += dy;
 		if (y >= dx) {
