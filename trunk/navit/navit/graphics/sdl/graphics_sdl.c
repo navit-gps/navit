@@ -5,7 +5,6 @@
 
    TODO:
    - dashed lines
-   - ifdef DEBUG -> dbg()
    - proper image transparency (libsdl-image xpm does not work)
    - valgrind
 
@@ -51,9 +50,6 @@
 #define DISPLAY_W 800
 #define DISPLAY_H 600
 #endif
-
-
-#undef DEBUG
 
 #define OVERLAY_MAX 32
 
@@ -226,9 +222,7 @@ gc_destroy(struct graphics_gc_priv *gc)
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-#ifdef DEBUG
-    printf("gc_set_linewidth %p %d\n", gc, w);
-#endif
+    dbg(1, "gc_set_linewidth %p %d\n", gc, w);
     gc->linewidth = w;
 }
 
@@ -241,9 +235,7 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-#ifdef DEBUG
-    printf("gc_set_foreground: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
-#endif
+    dbg(1, "gc_set_foreground: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
     gc->fore_r = c->r/256;
     gc->fore_g = c->g/256;
     gc->fore_b = c->b/256;
@@ -253,9 +245,7 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 static void
 gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
-#ifdef DEBUG
-    printf("gc_set_background: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
-#endif
+    dbg(1, "gc_set_background: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
     gc->back_r = c->r/256;
     gc->back_g = c->g/256;
     gc->back_b = c->b/256;
@@ -341,9 +331,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
         vx[i] = x;
         vy[i] = y;
 
-#ifdef DEBUG
-        printf("draw_polygon: %p %i %d,%d\n", gc, i, p[i].x, p[i].y);
-#endif
+        dbg(1, "draw_polygon: %p %i %d,%d\n", gc, i, p[i].x, p[i].y);
     }
 
     if(gr->aa)
@@ -374,10 +362,8 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
       	return;
     }
 
-#ifdef DEBUG
-    printf("draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
+    dbg(1, "draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
             gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-#endif
     if(w > gr->screen->w)
     {
         w = gr->screen->w;
@@ -509,10 +495,10 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                 y_lw_adj = round(cos(angle)*(float)lw/2.0);
                 if((x_lw_adj < 0) || (y_lw_adj < 0))
                 {
-                    printf("i=%d\n", i);
-                    printf("   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
-                    printf("   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
-                    printf("   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
+                    dbg(1, "i=%d\n", i);
+                    dbg(1, "   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
+                    dbg(1, "   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
+                    dbg(1, "   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
                 }
             }
 
@@ -796,17 +782,13 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 static void
 draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
-#ifdef DEBUG
-    printf("draw_restore\n");
-#endif
+    dbg(1, "draw_restore\n");
 }
 
 static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
-#ifdef DEBUG
-    printf("background_gc\n");
-#endif
+    dbg(1, "background_gc\n");
 }
 
 
@@ -823,9 +805,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     }
     else
     {
-#ifdef DEBUG
-        printf("draw_mode: %d\n", mode);
-#endif
+        dbg(1, "draw_mode: %d\n", mode);
 
         if(mode == draw_mode_end)
         {
@@ -1272,14 +1252,12 @@ static gboolean graphics_sdl_idle(void *data)
 
 	    case SDL_MOUSEBUTTONDOWN:
 		{
-#ifdef DEBUG
-		    printf("SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
+		    dbg(1, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
 			    ev.button.which,
 			    ev.button.button,
 			    ev.button.state,
 			    ev.button.x,
 			    ev.button.y);
-#endif
 
 		    p.x = ev.button.x;
 		    p.y = ev.button.y;
@@ -1289,14 +1267,12 @@ static gboolean graphics_sdl_idle(void *data)
 
 	    case SDL_MOUSEBUTTONUP:
 		{
-#ifdef DEBUG
-		    printf("SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
+		    dbg(1, "SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
 			    ev.button.which,
 			    ev.button.button,
 			    ev.button.state,
 			    ev.button.x,
 			    ev.button.y);
-#endif
 
 		    p.x = ev.button.x;
 		    p.y = ev.button.y;
@@ -1404,9 +1380,7 @@ static gboolean graphics_sdl_idle(void *data)
 #endif
 	    default:
 		{
-#ifdef DEBUG
-		    printf("SDL_Event %d\n", ev.type);
-#endif
+		    dbg(1, "SDL_Event %d\n", ev.type);
 		    break;
 		}
 	}
