@@ -234,7 +234,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 #endif
 	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
 	priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
-	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
+	priv->evwatch = event_add_watch(priv->gps->gps_fd, event_watch_cond_read, priv->cb);
 	if (!priv->gps->gps_fd) {
 		dbg(0,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
 	}

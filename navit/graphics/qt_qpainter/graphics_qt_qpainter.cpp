@@ -826,14 +826,14 @@ static void event_qt_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_qt_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
+event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
 	dbg(1,"enter fd=%d\n",(int)(long)fd);
 	struct event_watch *ret=g_new0(struct event_watch, 1);
 	ret->fd=fd;
 	ret->cb=cb;
-	g_hash_table_insert(event_gr->widget->watches, fd, ret);
-	ret->sn=new QSocketNotifier((int)(long)fd, QSocketNotifier::Read, event_gr->widget);
+	g_hash_table_insert(event_gr->widget->watches, GINT_TO_POINTER(fd), ret);
+	ret->sn=new QSocketNotifier(fd, QSocketNotifier::Read, event_gr->widget);
 	QObject::connect(ret->sn, SIGNAL(activated(int)), event_gr->widget, SLOT(watchEvent(int)));
 	return ret;
 }
@@ -841,7 +841,7 @@ event_qt_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 static void
 event_qt_remove_watch(struct event_watch *ev)
 {
-	g_hash_table_remove(event_gr->widget->watches, ev->fd);
+	g_hash_table_remove(event_gr->widget->watches, GINT_TO_POINTER(ev->fd));
 	delete(ev->sn);
 	g_free(ev);
 

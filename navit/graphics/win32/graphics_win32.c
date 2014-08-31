@@ -1714,7 +1714,7 @@ static void event_win32_main_loop_quit(void)
 }
 
 static struct event_watch *
-            event_win32_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+            event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
     dbg(0,"enter\n");
     return NULL;

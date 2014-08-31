@@ -289,7 +289,7 @@ static void event_null_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_null_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+event_null_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
         dbg(0,"enter\n");
         return NULL;

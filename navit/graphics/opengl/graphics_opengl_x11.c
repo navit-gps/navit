@@ -129,7 +129,7 @@ graphics_opengl_x11_new(void *displayname, int w, int h, int depth, struct graph
 		dbg(0,"failed to open display\n");
 		goto error;
 	}
-	ret->watch=event_add_watch((void *)(long)ConnectionNumber(ret->display), event_watch_cond_read, ret->cb);
+	ret->watch=event_add_watch(ConnectionNumber(ret->display), event_watch_cond_read, ret->cb);
 	ret->screen=XDefaultScreen(ret->display);
 	ret->root_window=RootWindow(ret->display, ret->screen);
 	if (!XMatchVisualInfo(ret->display, ret->screen, depth, TrueColor, &ret->visual)) {
