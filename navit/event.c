@@ -52,7 +52,7 @@ event_main_loop_has_quit(void)
 }
 
 struct event_watch *
-event_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
+event_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
 	return event_methods.add_watch(fd, cond, cb);
 }

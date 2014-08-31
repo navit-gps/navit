@@ -1103,7 +1103,7 @@ pedestrian_setup_tilt(struct navit *nav)
 	ioctl(fd, FIONBIO, &on);
 	cb=callback_new_3(callback_cast(pedestrian_read_tilt), fd, nav, data);
 	cbt=callback_new_2(callback_cast(pedestrian_write_tilt_timer), fd, data);
-	event_add_watch((void *)fd, event_watch_cond_read, cb);
+	event_add_watch(fd, event_watch_cond_read, cb);
 	event_add_timeout(300, 1, cbt);
 	read(fd, buffer, 32);
 #if 0

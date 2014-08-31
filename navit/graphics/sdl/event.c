@@ -26,7 +26,7 @@ struct event_watch {
 static void event_sdl_watch_thread(GPtrArray *);
 static void event_sdl_watch_startthread(GPtrArray *watch_list);
 static void event_sdl_watch_stopthread(void);
-static struct event_watch *event_sdl_add_watch(void *, enum event_watch_cond,
+static struct event_watch *event_sdl_add_watch(int, enum event_watch_cond,
 		struct callback *);
 static void event_sdl_remove_watch(struct event_watch *);
 static struct event_timeout *event_sdl_add_timeout(int, int, struct callback *);
@@ -216,7 +216,7 @@ static void event_sdl_watch_stopthread() {
 }
 
 static struct event_watch *
-event_sdl_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb) {
+event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
 	dbg(1, "fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
 
 	event_sdl_watch_stopthread();
@@ -227,7 +227,7 @@ event_sdl_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb) {
 	struct event_watch *new_ew = g_new0 (struct event_watch, 1);
 	struct pollfd *pfd = g_new0 (struct pollfd, 1);
 
-	pfd->fd = (int) fd;
+	pfd->fd = fd;
 
 	/* Modify watchlist here */
 	switch (cond) {

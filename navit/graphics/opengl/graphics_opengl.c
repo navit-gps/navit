@@ -1753,7 +1753,7 @@ event_opengl_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_opengl_add_watch(void *h, enum event_watch_cond cond,
+event_opengl_add_watch(int fd, enum event_watch_cond cond,
 		       struct callback *cb)
 {
 	dbg(0, "enter\n");
