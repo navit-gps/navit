@@ -50,7 +50,6 @@
 #undef ALPHA
 
 #define SDL_IMAGE
-#undef LINUX_TOUCHSCREEN
 
 #ifdef USE_WEBOS
 #define DISPLAY_W 0
@@ -82,14 +81,6 @@
 
 #ifdef SDL_IMAGE
 #include <SDL/SDL_image.h>
-#endif
-
-#ifdef LINUX_TOUCHSCREEN
-/* we use Linux evdev directly for the touchscreen.  */
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <linux/input.h>
 #endif
 
 #include <alloca.h>
@@ -131,13 +122,6 @@ struct graphics_priv {
     SDL_Joystick *accelerometer;
     char orientation;
     int real_w, real_h;
-#endif
-
-#ifdef LINUX_TOUCHSCREEN
-    int ts_fd;
-    int32_t ts_hit;
-    uint32_t ts_x;
-    uint32_t ts_y;
 #endif
 
 #ifdef PROFILE
@@ -236,10 +220,6 @@ struct graphics_image_priv {
 };
 
 
-#ifdef LINUX_TOUCHSCREEN
-static int input_ts_exit(struct graphics_priv *gr);
-#endif
-
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
@@ -255,9 +235,6 @@ graphics_destroy(struct graphics_priv *gr)
 	g_free (ft_buffer);
 	gr->freetype_methods.destroy();
 
-#ifdef LINUX_TOUCHSCREEN
-        input_ts_exit(gr);
-#endif
 #ifdef USE_WEBOS_ACCELEROMETER
 	SDL_JoystickClose(gr->accelerometer);
 #endif
@@ -1334,232 +1311,11 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     return ov;
 }
 
-
-#ifdef LINUX_TOUCHSCREEN
-
-#define EVFN "/dev/input/eventX"
-
-static int input_ts_init(struct graphics_priv *gr)
-{
-    struct input_id ii;
-    char fn[32];
-#if 0
-    char name[64];
-#endif
-    int n, fd, ret;
-
-    gr->ts_fd = -1;
-    gr->ts_hit = -1;
-    gr->ts_x = 0;
-    gr->ts_y = 0;
-
-    strcpy(fn, EVFN);
-    n = 0;
-    while(1)
-    {
-        fn[sizeof(EVFN)-2] = '0' + n;
-
-        fd = open(fn, O_RDONLY);
-        if(fd >= 0)
-        {
-#if 0
-            ret = ioctl(fd, EVIOCGNAME(64), (void *)name);
-            if(ret > 0)
-            {
-                printf("input_ts: %s\n", name);
-            }
-#endif
-
-            ret = ioctl(fd, EVIOCGID, (void *)&ii);
-            if(ret == 0)
-            {
-#if 1
-                printf("bustype %04x vendor %04x product %04x version %04x\n",
-                       	ii.bustype,
-                       	ii.vendor,
-                       	ii.product,
-                       	ii.version);
-#endif
-
-                if((ii.bustype == BUS_USB) &&
-                   	(ii.vendor == 0x0eef) &&
-                   	(ii.product == 0x0001))
-                {
-                    ret = fcntl(fd, F_SETFL, O_NONBLOCK);
-                    if(ret == 0)
-                    {
-                        gr->ts_fd = fd;
-                    }
-                    else
-                    {
-                        close(fd);
-                    }
-
-                    break;
-                }
-            }
-
-            close(fd);
-        }
-
-        n = n + 1;
-
-        /* FIXME: should check all 32 minors */
-        if(n == 10)
-        {
-            /* not found */
-            ret = -1;
-            break;
-        }
-    }
-
-    return ret;
-}
-
-
-/* returns 0-based display coordinate for the given ts coord */
-static void input_ts_map(int *disp_x, int *disp_y,
-                         uint32_t ts_x, uint32_t ts_y)
-{
-    /* Dynamix 7" (eGalax TS)
-       top left  = 1986,103
-       top right =   61,114
-       bot left  = 1986,1897
-       bot right =   63,1872
-
-       calibrate your TS using input_event_dump
-       and touching all four corners. use the most extreme values.
-       */
-
-#define INPUT_TS_LEFT 1978
-#define INPUT_TS_RIGHT  48
-#define INPUT_TS_TOP   115
-#define INPUT_TS_BOT  1870
-
-    /* clamp first */
-    if(ts_x > INPUT_TS_LEFT)
-    {
-        ts_x = INPUT_TS_LEFT;
-    }
-    if(ts_x < INPUT_TS_RIGHT)
-    {
-        ts_x = INPUT_TS_RIGHT;
-    }
-
-    ts_x = ts_x - INPUT_TS_RIGHT;
-
-    *disp_x = ((DISPLAY_W-1) * ts_x) / (INPUT_TS_LEFT - INPUT_TS_RIGHT);
-    *disp_x = (DISPLAY_W-1) - *disp_x;
-
-
-    if(ts_y > INPUT_TS_BOT)
-    {
-        ts_y = INPUT_TS_BOT;
-    }
-    if(ts_y < INPUT_TS_TOP)
-    {
-        ts_y = INPUT_TS_TOP;
-    }
-
-    ts_y = ts_y - INPUT_TS_TOP;
-
-    *disp_y = ((DISPLAY_H-1) * ts_y) / (INPUT_TS_BOT - INPUT_TS_TOP);
-/*    *disp_y = (DISPLAY_H-1) - *disp_y; */
-}
-
-#if 0
-static void input_event_dump(struct input_event *ie)
-{
-    printf("input_event:\n"
-           "\ttv_sec\t%u\n"
-           "\ttv_usec\t%lu\n"
-           "\ttype\t%u\n"
-           "\tcode\t%u\n"
-           "\tvalue\t%d\n",
-           (unsigned int)ie->time.tv_sec,
-           ie->time.tv_usec,
-           ie->type,
-           ie->code,
-           ie->value);
-}
-#endif
-
-static int input_ts_exit(struct graphics_priv *gr)
-{
-    close(gr->ts_fd);
-    gr->ts_fd = -1;
-
-    return 0;
-}
-#endif
-
-#ifdef USE_WEBOS_ACCELEROMETER
-static void
-sdl_accelerometer_handler(void* param)
-{
-    struct graphics_priv *gr = (struct graphics_priv *)param;
-    int xAxis = SDL_JoystickGetAxis(gr->accelerometer, 0);
-    int yAxis = SDL_JoystickGetAxis(gr->accelerometer, 1);
-    int zAxis = SDL_JoystickGetAxis(gr->accelerometer, 2);
-    unsigned char new_orientation;
-
-    dbg(2,"x(%d) y(%d) z(%d) c(%d)\n",xAxis, yAxis, zAxis, sdl_orientation_count);
-
-    if (zAxis > -30000) {
-	if (xAxis < -15000 && yAxis > -5000 && yAxis < 5000)
-	    new_orientation = WEBOS_ORIENTATION_LANDSCAPE;
-	else if (yAxis > 15000 && xAxis > -5000 && xAxis < 5000)
-	    new_orientation = WEBOS_ORIENTATION_PORTRAIT;
-	else
-	    return;
-    }
-    else
-	return;
-
-    if (new_orientation == sdl_next_orientation) {
-	if (sdl_orientation_count < 3) sdl_orientation_count++;
-    }
-    else {
-	sdl_orientation_count = 0;
-	sdl_next_orientation = new_orientation;
-	return;
-    }
-
-
-    if (sdl_orientation_count == 3 || sdl_next_orientation == 0)
-    {
-	sdl_orientation_count++;
-
-	if (new_orientation != gr->orientation) {
-	    dbg(1,"x(%d) y(%d) z(%d) o(%d)\n",xAxis, yAxis, zAxis, new_orientation);
-	    gr->orientation = new_orientation;
-
-	    SDL_Event event;
-	    SDL_UserEvent userevent;
-
-	    userevent.type = SDL_USEREVENT;
-	    userevent.code = SDL_USEREVENT_CODE_ROTATE;
-	    userevent.data1 = NULL;
-	    userevent.data2 = NULL;
-
-	    event.type = SDL_USEREVENT;
-	    event.user = userevent;
-
-	    SDL_PushEvent (&event);
-	}
-    }
-}
-#endif
-
 static gboolean graphics_sdl_idle(void *data)
 {
     struct graphics_priv *gr = (struct graphics_priv *)data;
     struct point p;
     SDL_Event ev;
-#ifdef LINUX_TOUCHSCREEN
-    struct input_event ie;
-    ssize_t ss;
-#endif
     int ret;
     char key_mod = 0;
     char keybuf[8];
@@ -1587,94 +1343,6 @@ static gboolean graphics_sdl_idle(void *data)
         callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
         gr->resize_callback_initial = 0;
     }
-
-#ifdef LINUX_TOUCHSCREEN
-    if(gr->ts_fd >= 0)
-    {
-        ss = read(gr->ts_fd, (void *)&ie, sizeof(ie));
-        if(ss == sizeof(ie))
-        {
-            /* we (usually) get three events on a touchscreen hit:
-    	       1: type =EV_KEY
-    	       code =330 [BTN_TOUCH]
-    	       value=1
-
-    	       2: type =EV_ABS
-    	       code =0 [X]
-    	       value=X pos
-
-    	       3: type =EV_ABS
-    	       code =1 [Y]
-    	       value=Y pos
-
-    	       4: type =EV_SYN
-
-    	       once hit, if the contact point changes, we'll get more
-    	       EV_ABS (for 1 or both axes), followed by an EV_SYN.
-
-    	       and, on a lift:
-
-    	       5: type =EV_KEY
-    	       code =330 [BTN_TOUCH]
-    	       value=0
-
-    	       6: type =EV_SYN
-    	    */
-            switch(ie.type)
-            {
-                case EV_KEY:
-                    {
-                    	if(ie.code == BTN_TOUCH)
-                    	{
-                            gr->ts_hit = ie.value;
-                    	}
-
-                    	break;
-                    }
-
-                case EV_ABS:
-                    {
-                    	if(ie.code == 0)
-                    	{
-                            gr->ts_x = ie.value;
-                    	}
-                    	else if(ie.code == 1)
-                    	{
-                            gr->ts_y = ie.value;
-                    	}
-
-                    	break;
-                    }
-
-                case EV_SYN:
-                    {
-                    	input_ts_map(&p.x, &p.y, gr->ts_x, gr->ts_y);
-
-                    	/* always send MOUSE_MOTION (first) */
-		    	callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
-                    	if(gr->ts_hit > 0)
-                    	{
-		            callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)SDL_BUTTON_LEFT, (void *)&p);
-                    	}
-                    	else if(gr->ts_hit == 0)
-                    	{
-		            callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)SDL_BUTTON_LEFT, (void *)&p);
-                    	}
-
-                    	/* reset ts_hit */
-                    	gr->ts_hit = -1;
-
-                    	break;
-                    }
-
-                default:
-                    {
-                    	break;
-                    }
-            }
-        }
-    }
-#endif
 
 #ifdef USE_WEBOS_ACCELEROMETER
     struct callback* accel_cb = NULL;
@@ -2166,17 +1834,6 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     SDL_EnableUNICODE(1);
     SDL_WM_SetCaption("navit", NULL);
-
-#ifdef LINUX_TOUCHSCREEN
-    input_ts_init(this);
-    if(this->ts_fd >= 0)
-    {
-        /* mouse cursor does not always display correctly in Linux FB.
-           anyway, it is unnecessary w/ a touch screen
-        */
-        SDL_ShowCursor(0);
-    }
-#endif
 
 #ifdef SDL_SGE
     sge_Update_OFF();
