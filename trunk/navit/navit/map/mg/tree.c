@@ -83,7 +83,7 @@ tree_search_h(struct file *file, unsigned int search)
 		thdr=(struct tree_hdr_h *)p;
 		p+=sizeof(*thdr);
 		end=p+tree_hdr_h_get_size(thdr);
-		dbg(1,"@0x%x\n", p-file->begin);
+		dbg(1,"@%td\n", p-file->begin);
 		last=0;
 		while (p < end) {
 			tleaf=(struct tree_leaf_h *)p;
@@ -119,7 +119,7 @@ tree_search_v(struct file *file, int offset, int search)
 		thdr=(struct tree_hdr_v *)p;
 		p+=sizeof(*thdr);
 		count=tree_hdr_v_get_count(thdr);
-		dbg(1,"offset=0x%x count=0x%x\n", p-file->begin, count);
+		dbg(1,"offset=%td count=0x%x\n", p-file->begin, count);
 		while (count--) {
 			tleaf=(struct tree_leaf_v *)p;
 			p+=sizeof(*tleaf);
@@ -183,7 +183,7 @@ tree_search_enter(struct tree_search *ts, int offset)
 	tsn->end=p+tree_hdr_get_size(tsn->hdr);
 	tsn->low=tree_hdr_get_low(tsn->hdr);
 	tsn->high=tree_hdr_get_low(tsn->hdr);
-	dbg(1,"pos 0x%x addr 0x%x size 0x%x low 0x%x end 0x%x\n", p-ts->f->begin, tree_hdr_get_addr(tsn->hdr), tree_hdr_get_size(tsn->hdr), tree_hdr_get_low(tsn->hdr), tsn->end-ts->f->begin);
+	dbg(1,"pos %td addr 0x%ux size 0x%ux low 0x%ux end %tu\n", p-ts->f->begin, tree_hdr_get_addr(tsn->hdr), tree_hdr_get_size(tsn->hdr), tree_hdr_get_low(tsn->hdr), tsn->end-ts->f->begin);
 	return tsn;
 }
 
@@ -202,7 +202,7 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 			*p=tsn->p;
 			tsn->high=get_u32(p);
 			ts->last_node=ts->curr_node;
-			dbg(1,"saving last2 %d 0x%x\n", ts->curr_node, tsn->last-ts->f->begin);
+			dbg(1,"saving last2 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
 			dbg(1,"high2=0x%x\n", tsn->high);
 			return 0;
 		}
@@ -221,7 +221,7 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 		*p=tsn->p;
 		tsn->high=get_u32_unal(p);
 		ts->last_node=ts->curr_node;
-		dbg(1,"saving last4 %d 0x%x\n", ts->curr_node, tsn->last-ts->f->begin);
+		dbg(1,"saving last4 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
 		dbg(1,"high4=0x%x\n", tsn->high);
 		return 0;
 	}
@@ -233,7 +233,7 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p)
 	struct tree_search_node *tsn=&ts->nodes[ts->curr_node];
 	int high;
 	
-	dbg(1,"pos=%d 0x%x\n", ts->curr_node, *p-ts->f->begin);
+	dbg(1,"pos=%d %td\n", ts->curr_node, *p-ts->f->begin);
 	if (*p)
 		ts->nodes[ts->last_node].last=*p;
 	*p=tsn->last;
@@ -248,7 +248,7 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p)
 			}
 			return 1;
 		}
-		dbg(1,"eon %d 0x%x 0x%x\n", ts->curr_node, *p-ts->f->begin, tsn->end-ts->f->begin);
+		dbg(1,"eon %d %td %td\n", ts->curr_node, *p-ts->f->begin, tsn->end-ts->f->begin);
 		if (! ts->curr_node)
 			break;
 		ts->curr_node--;

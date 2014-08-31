@@ -427,7 +427,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 			dbg(1,"checking header\n");
 			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				dbg(1,"found %s (%d bytes)\n",file->buffer,sizeof(file->buffer));
+				dbg(1,"found %s\n",file->buffer);
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
@@ -920,6 +920,6 @@ file_init(void)
 	file_cache=cache_new(sizeof(struct file_cache_id), CACHE_SIZE);
 #endif
 	if(sizeof(off_t)<8)
-		dbg(0,"Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%d\n",sizeof(off_t));
+		dbg(0,"Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%zu\n",sizeof(off_t));
 }
 
