@@ -763,11 +763,11 @@ static void do_poll(JNIEnv *env, int fd, int cond)
 }
 
 static struct event_watch *
-event_android_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
 	jobject ret;
-	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, (int) h, (int) cond, (int)cb);
-	dbg(0,"result for %p,%d,%p=%p\n",h,cond,cb,ret);
+	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, h, (int) cond, (int)cb);
+	dbg(0,"result for %d,%d,%p=%p\n",h,cond,cb,ret);
 	if (ret)
 		ret = (*jnienv)->NewGlobalRef(jnienv, ret);
 	return (struct event_watch *)ret;

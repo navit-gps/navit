@@ -149,7 +149,7 @@ void qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev);
 struct event_watch {
 	        QSocketNotifier *sn;
 		        struct callback *cb;
-			        void *fd;
+			        int fd;
 };
 
 void event_qt_remove_timeout(struct event_timeout *ev);

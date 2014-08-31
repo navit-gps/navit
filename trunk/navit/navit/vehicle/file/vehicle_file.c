@@ -708,7 +708,7 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 #endif
     {
 	if (! priv->watch)
-		priv->watch = event_add_watch((void *)priv->fd, event_watch_cond_read, priv->cb);
+		priv->watch = event_add_watch(priv->fd, event_watch_cond_read, priv->cb);
     }
 }
 
