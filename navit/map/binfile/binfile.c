@@ -295,7 +295,7 @@ binfile_read_cd(struct map_priv *m, int offset, int len)
 	}
 	cd=(struct zip_cd *)file_data_read(m->fi,cdoffset+offset, sizeof(*cd)+len);
 	if (cd) {
-		dbg(1,"cd at "LONGLONG_FMT" %d bytes\n",cdoffset+offset, sizeof(*cd)+len);
+		dbg(1,"cd at "LONGLONG_FMT" %zu bytes\n",cdoffset+offset, sizeof(*cd)+len);
 		cd_to_cpu(cd);
 		dbg(1,"sig 0x%x\n", cd->zipcensig);
 		if (cd->zipcensig != zip_cd_sig) {
@@ -685,7 +685,7 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 
 	{
 		int *i=t->pos,j=0;
-		dbg(0,"Before: pos_coord=%d\n",t->pos_coord-i);
+		dbg(0,"Before: pos_coord=%td\n",t->pos_coord-i);
 		while (i < t->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 
@@ -742,18 +742,18 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 	tn=mr->t;
 	tn->pos_coord=tn->pos_coord_start+coffset;
 	tn->pos_attr=tn->pos_attr_start+aoffset;
-	dbg(0,"moving %d ints from offset %d to %d\n",move_len,tn->pos_coord_start+move_offset-data,tn->pos_coord_start+move_offset+delta-data);
+	dbg(0,"moving %d ints from offset %td to %td\n",move_len,tn->pos_coord_start+move_offset-data,tn->pos_coord_start+move_offset+delta-data);
 	memmove(tn->pos_coord_start+move_offset+delta, tn->pos_coord_start+move_offset, move_len*4);
 	{
 		int *i=tn->pos,j=0;
-		dbg(0,"After move: pos_coord=%d\n",tn->pos_coord-i);
+		dbg(0,"After move: pos_coord=%td\n",tn->pos_coord-i);
 		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	if (mode != change_mode_append)
 		tn->pos_coord+=move_offset;
 	if (mode != change_mode_delete) {
-		dbg(0,"writing %d ints at offset %d\n",count*2,write_offset+tn->pos_coord_start-data);
+		dbg(0,"writing %d ints at offset %td\n",count*2,write_offset+tn->pos_coord_start-data);
 		for (i = 0 ; i < count ; i++) {
 			tn->pos_coord_start[write_offset++]=c[i].x;
 			tn->pos_coord_start[write_offset++]=c[i].y;
@@ -762,7 +762,7 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 	}
 	{
 		int *i=tn->pos,j=0;
-		dbg(0,"After: pos_coord=%d\n",tn->pos_coord-i);
+		dbg(0,"After: pos_coord=%td\n",tn->pos_coord-i);
 		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
@@ -781,7 +781,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 
 	{
 		int *i=t->pos,j=0;
-		dbg(0,"Before: pos_attr=%d\n",t->pos_attr-i);
+		dbg(0,"Before: pos_attr=%td\n",t->pos_attr-i);
 		while (i < t->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 
@@ -846,20 +846,20 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	tn=mr->t;
 	tn->pos_coord=tn->pos_coord_start+coffset;
 	tn->pos_attr=tn->pos_attr_start+offset;
-	dbg(0,"attr start %d offset %d\n",tn->pos_attr_start-data,offset);
-	dbg(0,"moving %d ints from offset %d to %d\n",move_len,tn->pos_attr_start+move_offset-data,tn->pos_attr_start+move_offset+delta-data);
+	dbg(0,"attr start %td offset %d\n",tn->pos_attr_start-data,offset);
+	dbg(0,"moving %d ints from offset %td to %td\n",move_len,tn->pos_attr_start+move_offset-data,tn->pos_attr_start+move_offset+delta-data);
 	memmove(tn->pos_attr_start+move_offset+delta, tn->pos_attr_start+move_offset, move_len*4);
 	if (mode != change_mode_append)
 		tn->pos_attr+=delta;
 	{
 		int *i=tn->pos,j=0;
-		dbg(0,"After move: pos_attr=%d\n",tn->pos_attr-i);
+		dbg(0,"After move: pos_attr=%td\n",tn->pos_attr-i);
 		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
 	if (nattr_len) {
 		int *nattr=tn->pos_attr_start+write_offset;
-		dbg(0,"writing %d ints at %d\n",nattr_len,nattr-data);
+		dbg(0,"writing %d ints at %td\n",nattr_len,nattr-data);
 		nattr[0]=cpu_to_le32(nattr_len-1);
 		nattr[1]=cpu_to_le32(attr->type);
 		memcpy(nattr+2, attr_data_get(attr), nattr_size);
@@ -867,7 +867,9 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	}
 	{
 		int *i=tn->pos,j=0;
-		dbg(0,"After: pos_attr=%d\n",tn->pos_attr-i);
+		dbg(0,"After: pos_attr=%td\n",tn->pos_attr-i);
+		while (i < tn->pos_next)
+		dbg(0,"After: pos_attr=%td\n",tn->pos_attr-i);
 		while (i < tn->pos_next)
 			dbg(0,"%d:0x%x\n",j++,*i++);
 	}
@@ -936,7 +938,6 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	t->start=(int *)binfile_read_content(m, fi, binfile_cd_offset(cd), lfh);
 	t->end=t->start+lfh->zipuncmp/4;
 	t->fi=fi;
-	dbg(1,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
 	file_data_free(fi, (unsigned char *)zipfn);
 	file_data_free(fi, (unsigned char *)lfh);
 	return t->start != NULL;
@@ -1241,7 +1242,7 @@ download_directory_do(struct map_download *download)
 		if (!size_ret)
 			return 0;
 		if (size_ret != sizeof(*cd) || cd->zipcensig != zip_cd_sig) {
-			dbg(0,"error1 size=%d vs %d\n",size_ret, sizeof(*cd));
+			dbg(0,"error1 size=%d vs %zu\n",size_ret, sizeof(*cd));
 			return 0;
 		}
 		file_data_write(download->file, download->offset, sizeof(*cd), (unsigned char *)cd);
@@ -2772,7 +2773,7 @@ plugin_init(void)
 {
 	dbg(1,"binfile: plugin_init\n");
 	if (sizeof(struct zip_cd) != 46) {
-		dbg(0,"error: sizeof(struct zip_cd)=%d\n",sizeof(struct zip_cd));
+		dbg(0,"error: sizeof(struct zip_cd)=%zu\n",sizeof(struct zip_cd));
 	}
 	plugin_register_map_type("binfile", map_new_binfile);
 }
