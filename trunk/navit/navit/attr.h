@@ -123,10 +123,6 @@ enum attr_position_valid {
 
 #define ATTR_INT(x,y) ((struct attr){attr_##x,{.num=y}})
 #define ATTR_OBJECT(x,y) ((struct attr){attr_##x,{.navit=y}})
-#define ATTR_DEF_STR(x,y) (&(struct attr){attr_##x,{y}})
-#define ATTR_DEF_INT(x,y) (&(struct attr){attr_##x,{(char *)(y)}})
-#define ATTR_DEF_ITEMS(x,...) (&(struct attr){attr_##x,{(char *)((enum item_type[]){__VA_ARGS__ , type_none})}})
-#define ATTR_LIST(...) (struct attr *[]) { __VA_ARGS__, NULL}
 
 struct range {
 	short min, max;
