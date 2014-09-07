@@ -1365,13 +1365,13 @@ clear_node_item_buffer(void)
       }
 }
 
-static int
+static long long
 node_item_find_index_in_ordered_list(osmid id)
 {
       struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
-      int node_count=node_buffer.size/sizeof(struct node_item);
-      int search_step=node_count>4 ? node_count/4 : 1;
-      int search_index=node_count/2;
+      long long node_count=node_buffer.size/sizeof(struct node_item);
+      long long search_step=node_count>4 ? node_count/4 : 1;
+      long long search_index=node_count/2;
       if (node_buffer_base[0].id > id)
 	      return -1;
       if (node_buffer_base[node_count-1].id < id)
@@ -1414,7 +1414,7 @@ static struct node_item *
 node_item_get(osmid id)
 {
       struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
-      int result_index;
+      long long result_index;
       if (node_hash) {
             // Use g_hash_table_lookup_extended instead of g_hash_table_lookup
             // to distinguish a key with a value 0 from a missing key.
