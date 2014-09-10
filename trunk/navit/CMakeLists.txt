@@ -657,16 +657,15 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 #                        functions implementing the interface of a plugin.
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
-include(CheckCCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCC OR CCMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -Wundef -Wcast-align -Wpointer-arith -Wextra -Wno-unused-parameter -Wno-sign-compare -Wmissing-prototypes -Wstrict-prototypes ")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wundef -Wcast-align -Wpointer-arith -Wextra -Wno-unused-parameter -Wno-sign-compare ")
-    # -Wno-missing-field-initializers does not work with old gcc
-    check_c_compiler_flag(-Wno-missing-field-initializers HAS_NO_MISSING_FIELD_INI)
-    if (HAS_NO_MISSING_FIELD_INI)
-        set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wno-missing-field-initializers ")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers ")
-    endif()
+   set(COMMON_COMPILER_FLAGS "-Wall -Wundef -Wcast-align -Wpointer-arith -Wno-unused-parameter -Wno-sign-compare")
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${COMMON_COMPILER_FLAGS}")
+   set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_COMPILER_FLAGS}")
+   # flags not available in old GCC versions, or not for both C and C++
+   add_compiler_flag_if_available("-Wno-missing-field-initializers")
+   add_compiler_flag_if_available("-Wextra")
+   add_compiler_flag_if_available("-Wmissing-prototypes")
+   add_compiler_flag_if_available("-Wstrict-prototypes ")
 endif()
 
 if (EXTRA_DEFINES)
