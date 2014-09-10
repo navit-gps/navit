@@ -335,24 +335,25 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		item_name=res->country->name;
 		item=&res->country->common.item;
 		result_main_label=g_strdup_printf("%s", res->country->name);
-	}
-	if (! strcmp(wm_name,"Town")) {
+	} else if (! strcmp(wm_name,"Town")) {
 		item=&res->town->common.item;
 		item_name=res->town->common.town_name;
 		result_main_label=town_display_label(res, 1, 0);
 		result_sublabel=town_display_label(res, 1, 2);
-	}
-	if (! strcmp(wm_name,"Street")) {
+	} else if (! strcmp(wm_name,"Street")) {
 		item_name=res->street->name;
 		item=&res->street->common.item;
 		result_main_label=g_strdup(res->street->name);
 		result_sublabel=town_display_label(res, 2, 1);
-	}
-	if (! strcmp(wm_name,"House number")) {
+	} else if (! strcmp(wm_name,"House number")) {
 		item_name=res->house_number->house_number;
 		result_main_label=g_strdup_printf("%s, %s", item_name, res->street->name);
 		result_sublabel=town_display_label(res, 3, 0);
 		widget_name=g_strdup(result_main_label);
+	}
+	if(!item_name) {
+		dbg(0, "Skipping nameless item in search (search type: %s). Please report this as a bug.\n", wm_name);
+		return;
 	}
 
 	if(!widget_name)
