@@ -137,7 +137,7 @@ void RenderArea::do_resize(QSize size)
 	painter.fillRect(0, 0, size.width(), size.height(), brush);
 	dbg(0,"size %dx%d\n", size.width(), size.height());
 	dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
-	callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
+	callback_list_call_attr_2(this->cbl, attr_resize, GINT_TO_POINTER(size.width()), GINT_TO_POINTER(size.height()));
 }
 
 //##############################################################################################################
@@ -164,13 +164,13 @@ void RenderArea::mouseEvent(int pressed, QMouseEvent *event)
 	p.y=event->y();
 	switch (event->button()) {
 	case Qt::LeftButton:
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)1, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(1), GINT_TO_POINTER(&p));
 		break;
 	case Qt::MidButton:
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)2, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(2), GINT_TO_POINTER(&p));
 		break;
 	case Qt::RightButton:
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)3, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(3), GINT_TO_POINTER(&p));
 		break;
 	default:
 		break;
@@ -222,8 +222,8 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 		button=-1;
 	
 	if (button != -1) {
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)button, (void *)&p);
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)button, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
 	}
 	
 	event->accept();
@@ -240,7 +240,7 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 #else
 	const char *text=str.toUtf8().constData();
 #endif
-	dbg(0,"enter text='%s' 0x%x (%d) key=%d\n", text, text[0], strlen(text), event->key());
+	dbg(0,"enter text='%s' 0x%x (%zu) key=%d\n", text, text[0], strlen(text), event->key());
 	if (!text || !text[0] || text[0] == 0x7f) {
 		dbg(0,"special key\n");
 		switch (event->key()) {
