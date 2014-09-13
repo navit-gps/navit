@@ -30,7 +30,11 @@
 #include FT_CACHE_H
 #endif
 #ifdef USE_FRIBIDI
+#pragma GCC diagnostic push
+// fribidi.h is a bit misbehaved...
+#pragma GCC diagnostic ignored "-Wundef"
 #include <fribidi.h>
+#pragma GCC diagnostic pop
 #endif
 #include FT_GLYPH_H
 #include "point.h"
