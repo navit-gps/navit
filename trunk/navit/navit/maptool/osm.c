@@ -307,7 +307,7 @@ struct country_table {
 	{ 604,"Peru"},
 	{ 608,"Philippines"},
 	{ 612,"Pitcairn"},
-	{ 616,"Poland,Polska,PL"},
+	{ 616,"Poland,Polska,PL","3s5cmT"},
 	{ 620,"Portugal"},
 	{ 624,"Guinea-Bissau"},
 	{ 626,"Timor-Leste"},
@@ -1951,6 +1951,9 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 							b->ib->type=type_poly_place6;
 						case 'm':
 							attr_type=attr_municipality_name;
+							break;
+						case 'T':
+							b->ib->type=type_poly_place6;
 							break;
 						}
 						name=osm_tag_value(b->ib, "name");
