@@ -274,7 +274,7 @@ static void create_memory_dc(struct graphics_priv *gr)
     hdc = GetDC( gr->wnd_handle );
     // Creates memory DC
     gr->hMemDC = CreateCompatibleDC(hdc);
-    dbg(0, "resize memDC to: %d %d \n", gr->width, gr->height );
+    dbg(1, "resize memDC to: %d %d \n", gr->width, gr->height );
 
 
 #ifndef  FAST_TRANSPARENCY
