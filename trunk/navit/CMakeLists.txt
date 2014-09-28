@@ -1,5 +1,6 @@
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
+message(STATUS "Building with CMake V${CMAKE_VERSION}")
 project(navit C)
 
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
