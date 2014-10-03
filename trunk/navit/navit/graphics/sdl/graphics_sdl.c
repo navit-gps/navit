@@ -1276,7 +1276,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 		    p.x = ev.button.x;
 		    p.y = ev.button.y;
-		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
+		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
 		    break;
 		}
 
