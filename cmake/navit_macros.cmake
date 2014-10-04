@@ -95,7 +95,7 @@ function(add_compiler_flag_if_available FLAG)
    if (${${VAR_FLAG_AVAILABLE_C}})
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FLAG} ")
    endif()
-   if(CMAKE_CXX_COMPILER) # C++ compiler is optional
+   if(CMAKE_CXX_COMPILER_LOADED) # C++ compiler is optional
       set(VAR_FLAG_AVAILABLE_CXX "FLAG_AVAILABLE_CXX_${FLAG}")
       check_cxx_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_CXX})
       if (${${VAR_FLAG_AVAILABLE_CXX}})
