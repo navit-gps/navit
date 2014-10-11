@@ -51,8 +51,15 @@ utmref_letter(char l)
 	return -1;
 }
 
+/**
+ * Look up a projection by name.
+ *
+ * @param name name of projection to look up (values from projection_names, and UTM projections)
+ * @utm_offset Only for UTM projections: Used to return the offset for the UTM projection
+ * @returns projection, or projection_none if no projection could be determined
+ */
 enum projection
-projection_from_name(const char *name, struct coord *offset)
+projection_from_name(const char *name, struct coord *utm_offset)
 {
 	int i;
 	int zone,baserow;
@@ -62,10 +69,10 @@ projection_from_name(const char *name, struct coord *offset)
 		if (! strcmp(projection_names[i].name, name))
 			return projection_names[i].projection;
 	}
-	if (offset) {
+	if (utm_offset) {
 		if (sscanf(name,"utm%d%c",&zone,&ns) == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's')) {
-                	offset->x=zone*1000000;
-			offset->y=(ns == 's' ? -10000000:0);
+			utm_offset->x=zone*1000000;
+			utm_offset->y=(ns == 's' ? -10000000:0);
 			return projection_utm;
 		}
 		if (sscanf(name,"utmref%d%c%c%c",&zone,&zone_field,&square_x,&square_y)) {
@@ -77,16 +84,16 @@ projection_from_name(const char *name, struct coord *offset)
 			i-=12;
 			dbg(1,"zone_field %d\n",i);
 			baserow=i*887.6/100;
-                	offset->x=zone*1000000;
+			utm_offset->x=zone*1000000;
 			i=utmref_letter(square_x);
-			offset->x+=((i%8)+1)*100000;
+			utm_offset->x+=((i%8)+1)*100000;
 			i=utmref_letter(square_y);
 			dbg(1,"baserow %d\n",baserow);
 			if (!(zone % 2))
 				i-=5;
 			dbg(1,"i=%d\n",i);
 			i=(i-baserow+100)%20+baserow;
-			offset->y=i*100000;
+			utm_offset->y=i*100000;
 			return projection_utm;
 		}
 	}
