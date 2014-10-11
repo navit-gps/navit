@@ -34,7 +34,6 @@ struct projection_name projection_names[]={
 	{projection_mg, "mg"},
 	{projection_garmin, "garmin"},
 	{projection_utm, "utm"},
-	{projection_gk, "gk"},
 };
 
 static int
