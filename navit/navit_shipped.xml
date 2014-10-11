@@ -25,13 +25,13 @@
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
 
-	<!-- This line defines which location on the map navit will show after startup.
-		It makes sense to set it to your home coordinates.
-		Center coordinates format:
-		[D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
-		[-][D]D.d[d]... [-][D][D]D.d[d]... 
-		[-]0xX [-]0xX -->
-	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="250">
+	<!-- center= defines which map location Navit will show after first start.
+		It will only be used for the first start; subsequent starts will remember the
+		last position (in center.txt).
+		Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
+		For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
+		-->
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
 		     On windows systems, use win32 -->
 		<graphics type="gtk_drawing_area"/>
