@@ -239,7 +239,7 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		}
 		dbg(3,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
 		dbg(3,"rest='%s'\n", str+ret);
-	} else if (str_pro == projection_utm || str_pro == projection_gk) {
+	} else if (str_pro == projection_utm) {
 		double x,y;
 		args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
 		if (args < 2)
