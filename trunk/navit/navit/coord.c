@@ -146,17 +146,18 @@ coord_rect_extend(struct coord_rect *r, struct coord *c)
 }
 
 /**
- * Parses \c char \a *c_str and writes back the coordinates to \c coord \a *c_ret. Uses \c projection \a pro if no projection is given in \c char \a *c_str.
+ * Parses \c char \a *c_str and writes back the coordinates to \c coord \a *c_ret, using \c projection \a pro.
+ * \a *c_str may specify its projection at the beginning.
  * The format for \a *c_str can be: 
- * 	\li [Proj:]-0xX [-]0xX 
- * 	    - where Proj can be mg/garmin, defaults to mg
- * 	\li [Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W
- * 	\li [Proj:][-][D]D.d[d]... [-][D][D]D.d[d]
- * 	    - where Proj can be geo
+ * 	\li [Proj:][-]0xXX.... [-]0xXX... - Mercator coordinates, hex integers (XX), Proj can be "mg" or "garmin", defaults to mg
+ * 	\li [Proj:][D][D]Dmm.mm.. N/S [D][D]DMM.mm... E/W - lat/long (WGS 84), integer degrees (DD) and minutes as decimal fraction (MM), Proj must be "geo" or absent
+ * 	\li [Proj:][-][D]D.d[d]... [-][D][D]D.d[d] - long/lat (WGS 84, note order!), degrees as decimal fraction, Proj does not matter
+ * 	\li utm[zoneinfo]:[-][D]D.d[d]... [-][D][D]D.d[d] - UTM coordinates, as decimal fraction, with optional zone information (?)
+ * Note that the spaces are relevant for parsing.
  *
  * @param *c_str String to be parsed
- * @param pro Projection of the string
- * @param *pc_ret Where the \a pcoord should get stored
+ * @param pro Desired projection of the result
+ * @param *c_ret For returning result
  * @returns The lenght of the parsed string
  */
 
@@ -279,11 +280,8 @@ out:
 }
 
 /**
- * A wrapper for pcoord_parse that also return the projection
- * @param *c_str String to be parsed
- * @param pro Projection of the string
- * @param *pc_ret Where the \a pcoord should get stored
- * @returns The lenght of the parsed string
+ * A wrapper for coord_parse that also returns the projection.
+ * For parameters see coord_parse.
  */
 
 int
