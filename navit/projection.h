@@ -21,7 +21,7 @@
 #define NAVIT_PROJECTION_H
 
 enum projection {
-	projection_none, projection_mg, projection_garmin, projection_screen, projection_utm, projection_gk
+	projection_none, projection_mg, projection_garmin, projection_screen, projection_utm
 };
 
 enum map_datum {
