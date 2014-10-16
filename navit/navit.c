@@ -1855,7 +1855,7 @@ navit_cmd_announcer_toggle(struct navit *this_)
         return;
 
     // announce that the speech attribute has changed
-    callback_list_call_attr_0(this_->attr_cbl, attr_speech);
+    callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
 }
 
 void
