@@ -1435,12 +1435,42 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_button *this = (struct osd_button *)opc->data;
 
-	struct point bp = opc->osd_item.p;
-	if (!opc->osd_item.configured)
-		return;
-	osd_wrap_point(&bp, nav);
-	if(this->img)
-		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &bp, this->img);
+	// FIXME: Do we need this check?
+	if(navit_get_blocked(nav)&1)
+	        return;
+
+	struct point p;
+
+	if (this->use_overlay) {
+		struct graphics_image *img;
+		img=graphics_image_new(opc->osd_item.gr, this->src);
+		p.x=(opc->osd_item.w-img->width)/2;
+		p.y=(opc->osd_item.h-img->height)/2;
+		osd_std_draw(&opc->osd_item);
+		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
+		graphics_image_free(opc->osd_item.gr, img);
+	} else {
+		struct graphics *gra;
+		gra = navit_get_graphics(nav);
+		this->img = graphics_image_new(gra, this->src);
+		if (!this->img) {
+			dbg(1, "failed to load '%s'\n", this->src);
+			return;
+		}
+
+		osd_std_calculate_sizes(&opc->osd_item, navit_get_width(nav), navit_get_height(nav));
+
+		p = opc->osd_item.p;
+		p.x+=(opc->osd_item.w-this->img->width)/2;
+		p.y+=(opc->osd_item.h-this->img->height)/2;
+
+		if (!opc->osd_item.configured)
+			return;
+		osd_wrap_point(&p, nav);
+
+		if(this->img)
+			graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, this->img);
+	}
 }
 
 static void
@@ -1521,16 +1551,6 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 		if(navit_get_blocked(nav)&1)
 		        return 1;
 
-		if (this_->use_overlay) {
-			struct graphics_image *img;
-			struct point p;
-			img=graphics_image_new(opc->osd_item.gr, this_->src);
-			p.x=(opc->osd_item.w-this_->img->width)/2;
-			p.y=(opc->osd_item.h-this_->img->height)/2;
-			osd_std_draw(&opc->osd_item);
-			graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
-			graphics_image_free(opc->osd_item.gr, img);
-		} 
 		osd_button_draw(opc,nav);
 		navit_draw(opc->osd_item.navit);
 		return 1;
@@ -1678,7 +1698,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 	struct nav_next_turn *this = (struct nav_next_turn *)opc->data;
 
 	struct point p;
-	int do_draw = 0;
+	int do_draw = opc->osd_item.do_draw;
 	struct navigation *nav = NULL;
 	struct map *map = NULL;
 	struct map_rect *mr = NULL;
@@ -1831,20 +1851,16 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
 	struct nav_toggle_announcer *this = (struct nav_toggle_announcer *)opc->data;
 
 	struct point p;
-	int do_draw = 0;
+	int do_draw = opc->osd_item.do_draw;
 	struct graphics_image *gr_image;
 	char *path;
 	char *gui_sound_off = "gui_sound_off";
 	char *gui_sound_on = "gui_sound";
     struct attr attr, speechattr;
 
-    if (this->last_state == -1)
-    {
-        if (!navit_get_attr(navit, attr_speech, &speechattr, NULL) || !speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
-            attr.u.num = 1;
-        this->active = attr.u.num;
-    } else
-        this->active = !this->active;
+    if (!navit_get_attr(navit, attr_speech, &speechattr, NULL) || !speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
+        attr.u.num = 1;
+    this->active = attr.u.num;
 
     if(this->active != this->last_state)
     {
@@ -2704,7 +2720,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 	struct osd_text *this = (struct osd_text *)opc->data;
 	struct point p, p2[4];
 	char *str,*last,*next,*value,*absbegin;
-	int do_draw = 0;
+	int do_draw = opc->osd_item.do_draw;
 	struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
 	struct navigation *nav = NULL;
 	struct tracking *tracking = NULL;
@@ -2838,9 +2854,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 		oti=oti->next;
 	}
 
-	if ( this->last && str && !strcmp(this->last, str) ) {
-		do_draw=0;
-	} else {
+	if ( !this->last || !str || strcmp(this->last, str) ) {
 		do_draw=1;
 		if (this->last)
 			g_free(this->last);
@@ -3139,7 +3153,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
 	struct gps_status *this = (struct gps_status *)opc->data;
 
 	struct point p;
-	int do_draw = 0;
+	int do_draw = opc->osd_item.do_draw;
 	struct graphics_image *gr_image;
 	char *image;
 	struct attr attr, vehicle_attr;
@@ -3532,6 +3546,17 @@ osd_auxmap_draw(struct osd_priv_common *opc)
 		return;
 	p.x=opc->osd_item.w/2;
 	p.y=opc->osd_item.h/2;
+
+	if (opc->osd_item.rel_h || opc->osd_item.rel_w) {
+		struct map_selection sel;
+		memset(&sel, 0, sizeof(sel));
+		sel.u.p_rect.rl.x=opc->osd_item.w;
+		sel.u.p_rect.rl.y=opc->osd_item.h;
+		dbg(1,"osd_auxmap_draw: sel.u.p_rect.rl=(%d, %d)\n", opc->osd_item.w, opc->osd_item.h);
+		transform_set_screen_selection(this->trans, &sel);
+		graphics_set_rect(opc->osd_item.gr, &sel.u.p_rect);
+	}
+
 	transform_set_center(this->trans, transform_get_center(this->ntrans));
 	transform_set_scale(this->trans, 64);
 	transform_set_yaw(this->trans, transform_get_yaw(this->ntrans));
