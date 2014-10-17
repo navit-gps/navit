@@ -1185,7 +1185,42 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
 		r="no: Only ramp";
 	}
+	if (!r) {
+		if (new->way.item.type == type_ramp) {
+			/* If new is a ramp, ANNOUNCE */
+			r="yes: entering ramp";
+			ret=1;
+		} else if ((old->way.item.type == type_highway_land) || (old->way.item.type == type_highway_city)  || ((old->way.item.type == type_street_n_lanes) && (old->way.flags & AF_ONEWAYMASK))) {
+			/* If we are at a motorway interchange, ANNOUNCE
+			 * We are assuming a motorway interchange when old way and at least
+			 * two possible ways are motorway-like and allowed.
+			 * Motorway-like means one of the following:
+			 * - item type is highway_land or highway_city
+			 * - item type is street_n_lanes (trunk in OSM) and way is one-way
+			 * If any of the possible ways is neither motorway-like nor a ramp,
+			 * we are probably on a trunk road with level crossings and not
+			 * at a motorway interchange.
+			 */
+			// FIXME: motorway junctions could have service roads
+			int num_new_motorways = 0;
+			int num_other = 0;
+			struct navigation_way *cur_itm = &(new->way);
+			while (cur_itm) {
+				if (((cur_itm->item.type == type_highway_land) || (cur_itm->item.type == type_highway_city) || ((cur_itm->item.type == type_street_n_lanes) && (cur_itm->flags & AF_ONEWAYMASK))) && is_way_allowed(nav,cur_itm,1)) {
+					num_new_motorways++;
+				} else if (cur_itm->item.type != type_ramp) {
+					num_other++;
+				}
+				cur_itm = cur_itm->next;
+			}
+			if ((num_other == 0) && (num_new_motorways > 1)) {
+				r="yes: motorway interchange";
+				ret=1;
+			}
+		}
+	}
 	if (! r) {
+		/* Announce exit from roundabout, but not entry or staying in it */
 		if ((old->way.flags & AF_ROUNDABOUT) && ! (new->way.flags & AF_ROUNDABOUT)) {
 			r="yes: leaving roundabout";
 			ret=1;
@@ -1194,12 +1229,35 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		} else if ((old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) 
 			r="no: staying in roundabout";
 	}
+	cat=maneuver_category(old->way.item.type);
 	if (!r && abs(d) > 75) {
 		/* always make an announcement if you have to make a sharp turn */
 		r="yes: delta over 75";
 		ret=1;
+	} else if (!r && abs(d) > 22) {
+		/* When coming from street_2_* or higher category road, check if
+		 * - we have multiple options of the same category and
+		 * - we have to make a considerable turn (more than 22 degrees)
+		 * If both is the case, ANNOUNCE.
+		 * Note: 22.5 degrees is the threshold because anything higher is
+		 * closer to 45 than to 0 degrees.
+		 */
+		if (cat >= maneuver_category(type_street_2_city)) {
+			int num_similar = 0;
+			struct navigation_way *cur_itm = &(new->way);
+			while (cur_itm) {
+				if (maneuver_category(cur_itm->item.type) == cat) {
+					// TODO: decide if a maneuver_category difference of 1 is still similar
+					num_similar++;
+				}
+				cur_itm = cur_itm->next;
+			}
+			if (num_similar > 1) {
+				ret=1;
+				r="yes: more than one similar road and delta over 22";
+			}
+		}
 	}
-	cat=maneuver_category(old->way.item.type);
 	ncat=maneuver_category(new->way.item.type);
 	if (!r) {
 		int dc=d;
