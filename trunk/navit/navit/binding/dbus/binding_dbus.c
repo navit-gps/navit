@@ -1290,6 +1290,77 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
+{
+	char * filename;
+	struct point p, *pp=NULL;
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+
+	dbus_message_iter_get_basic(&iter, &filename);
+
+	if (dbus_message_iter_has_next(&iter))
+	{
+		dbus_message_iter_next(&iter);
+		if (!point_get_from_message(message, &iter, &p))
+			return dbus_error_invalid_parameter(connection, message);
+		pp=&p;
+	}
+
+	dbg(1,"Dumping route from dbus to %s\n", filename);
+
+	struct map * map=NULL;
+	struct navigation * nav = NULL;
+	struct map_rect * mr=NULL;
+	struct item * item =NULL;
+	struct attr attr,route;
+	struct coord c;
+	struct coord_geo g;
+	struct transformation *trans;
+	
+        char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
+                        "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
+                        "     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
+                        "     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
+                        "     xmlns='http://www.topografix.com/GPX/1/1'\n"
+                        "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n"
+                        "<rte>\n";
+        char *trailer = "</rte>\n</gpx>\n";
+
+        nav = navit_get_navigation(navit);
+        if(!nav) {
+                return;
+        }
+        map = navigation_get_map(nav);
+        if(map)
+          mr = map_rect_new(map,NULL);
+  	trans = navit_get_trans (nav);
+
+        FILE *fp;
+        fp = fopen(filename,"w");
+        fprintf(fp, "%s", header);
+
+	while((item = map_rect_get_item(mr))) {
+		if(item_attr_get(item,attr_navigation_long,&attr)) {
+			item_coord_get(item, &c, 1);
+			transform_to_geo (projection_mg, &c, &g);
+			fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'><name>%s</name></rtept>\n",g.lng, g.lat, map_convert_string_tmp(item->map,attr.u.str));
+		}
+	}
+	fprintf(fp,"%s",trailer);
+	
+         fclose(fp);
+
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
 request_navit_block(DBusConnection *connection, DBusMessage *message)
 {
 	int mode;
@@ -1730,6 +1801,7 @@ struct dbus_method {
 	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
+	{".navit",  "export_as_gpx",       "s",       "filename",                                "",   "",      request_navit_route_export_gpx},
 	{".navit",  "block",               "i",       "mode",                                    "",   "",      request_navit_block},
 	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
 	{".navit",  "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_navit_attr_iter},
