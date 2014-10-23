@@ -1156,6 +1156,30 @@ is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode)
 }
 
 /**
+ * @brief Checks whether a way has motorway-like characteristics
+ *
+ * Motorway-like means one of the following:
+ * <ul>
+ * <li>
+ * item type is {@code highway_land} or {@code highway_city} (OSM: {@code highway=motorway})
+ * </li>
+ * <li>
+ * item type is {@code street_n_lanes} (OSM: {@code highway=trunk}) and way is one-way
+ * </li>
+ * </ul>
+ *
+ * @param way The way to examine
+ * @return True for motorway-like, false otherwise
+ */
+static int
+is_motorway_like(struct navigation_way *way)
+{
+	if ((way->item.type == type_highway_land) || (way->item.type == type_highway_city)  || ((way->item.type == type_street_n_lanes) && (way->flags & AF_ONEWAYMASK)))
+		return 1;
+	return 0;
+}
+
+/**
  * @brief Checks if navit has to create a maneuver to drive from old to new
  *
  * This function checks if it has to create a "maneuver" - i.e. guide the user - to drive 
@@ -1185,18 +1209,28 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
 		r="no: Only ramp";
 	}
+	if (! r) {
+		/* Announce exit from roundabout, but not entry or staying in it */
+		if ((old->way.flags & AF_ROUNDABOUT) && ! (new->way.flags & AF_ROUNDABOUT)) {
+			r="yes: leaving roundabout";
+			ret=1;
+		} else 	if (!new->way.next->next && !(old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT) && (new->way.next->flags & AF_ROUNDABOUT)) {
+			/* this rather complicated construct makes sure we suppress announcements
+			 * only when we're entering a roundabout AND there are no other options */
+			r="no: entering roundabout";
+		} else if ((old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) {
+			r="no: staying in roundabout";
+		}
+	}
 	if (!r) {
 		if (new->way.item.type == type_ramp) {
 			/* If new is a ramp, ANNOUNCE */
 			r="yes: entering ramp";
 			ret=1;
-		} else if ((old->way.item.type == type_highway_land) || (old->way.item.type == type_highway_city)  || ((old->way.item.type == type_street_n_lanes) && (old->way.flags & AF_ONEWAYMASK))) {
+		} else if (is_motorway_like(&(old->way))) {
 			/* If we are at a motorway interchange, ANNOUNCE
 			 * We are assuming a motorway interchange when old way and at least
 			 * two possible ways are motorway-like and allowed.
-			 * Motorway-like means one of the following:
-			 * - item type is highway_land or highway_city
-			 * - item type is street_n_lanes (trunk in OSM) and way is one-way
 			 * If any of the possible ways is neither motorway-like nor a ramp,
 			 * we are probably on a trunk road with level crossings and not
 			 * at a motorway interchange.
@@ -1206,7 +1240,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 			int num_other = 0;
 			struct navigation_way *cur_itm = &(new->way);
 			while (cur_itm) {
-				if (((cur_itm->item.type == type_highway_land) || (cur_itm->item.type == type_highway_city) || ((cur_itm->item.type == type_street_n_lanes) && (cur_itm->flags & AF_ONEWAYMASK))) && is_way_allowed(nav,cur_itm,1)) {
+				if ((is_motorway_like(cur_itm)) && is_way_allowed(nav,cur_itm,1)) {
 					num_new_motorways++;
 				} else if (cur_itm->item.type != type_ramp) {
 					num_other++;
@@ -1218,16 +1252,6 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 				ret=1;
 			}
 		}
-	}
-	if (! r) {
-		/* Announce exit from roundabout, but not entry or staying in it */
-		if ((old->way.flags & AF_ROUNDABOUT) && ! (new->way.flags & AF_ROUNDABOUT)) {
-			r="yes: leaving roundabout";
-			ret=1;
-		} else 	if (!(old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) {
-			r="no: entering roundabout";
-		} else if ((old->way.flags & AF_ROUNDABOUT) && (new->way.flags & AF_ROUNDABOUT)) 
-			r="no: staying in roundabout";
 	}
 	cat=maneuver_category(old->way.item.type);
 	if (!r && abs(d) > 75) {
@@ -1279,12 +1303,15 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 					dc=dw;
 			}
 			wcat=maneuver_category(w->item.type);
-			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
-			   we can't use the same name criterium  */
-			if (is_same_street && is_same_street2(old->way.name1, old->way.name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(nav,w,2))
-				is_same_street=0;
-			/* Even if the ramp has the same name, announce it */
-			if (new->way.item.type == type_ramp && old->way.item.type != type_ramp)
+			/* If any other street has the same name, we can't use the same name criterion.
+			 * Exceptions apply if we're coming from a motorway-like road and:
+			 * - the other road is motorway-like (a motorway might split up temporarily) or
+			 * - the other road is a ramp (they are sometimes tagged with the name of the motorway)
+			 * The second one is really a workaround for bad tagging practice in OSM. Since entering
+			 * a ramp always creates a maneuver, we don't expect the workaround to have any unwanted
+			 * side effects.
+			 */
+			if (is_same_street && is_same_street2(old->way.name1, old->way.name2, w->name1, w->name2) && (!is_motorway_like(&(old->way)) || (!is_motorway_like(w) && w->item.type != type_ramp)) && is_way_allowed(nav,w,2))
 				is_same_street=0;
 			/* Mark if the street has a higher or the same category */
 			if (wcat > maxcat)
