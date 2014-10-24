@@ -13,7 +13,7 @@ svgtopng()
 		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$BUILDDIR/$4 $3
 		;;
 	*convert)
-		$svgtopng $3 -resize $1x$2 $4
+		$svgtopng -alpha on -background none $3 -resize $1x$2 $4
 		;;
 	esac
 }
