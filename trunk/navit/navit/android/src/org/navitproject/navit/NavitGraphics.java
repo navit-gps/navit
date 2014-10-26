@@ -965,11 +965,16 @@ public class NavitGraphics
 		}
 	}
 
-	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparond)
+	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparound)
 	{
 		//Log.e("NavitGraphics","overlay_resize");
+		draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		bitmap_w = w;
+		bitmap_h = h;
 		pos_x = x;
 		pos_y = y;
+		pos_wraparound = wraparound;
+		draw_canvas.setBitmap(draw_bitmap);
 	}
 
 	public static String getLocalizedString(String text)
