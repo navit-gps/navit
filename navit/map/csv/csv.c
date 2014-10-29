@@ -489,28 +489,27 @@ static void quadtree_item_free_do(void *data)
 	g_free(data);
 }
 
+static void map_csv_debug_dump_hash_item(gpointer key, gpointer value, gpointer user_data)
+{
+	struct quadtree_item *qi=value;
+	GList *attrs;
+	dbg(3,"%p del=%d ref=%d\n", qi,qi->deleted, qi->ref_count);
+	attrs=((struct quadtree_data *)qi->data)->attr_list;
+	while(attrs) {
+		if(((struct attr*)attrs->data)->type==attr_label)
+			dbg(3,"... %s\n",((struct attr*)attrs->data)->u.str);
+		attrs=g_list_next(attrs);
+	}
+}
+
 /**
  * Dump all map data (including deleted items) to the log.
  */
 static void map_csv_debug_dump(struct map_priv *map)
 {
-	GList *l=g_hash_table_get_values(map->qitem_hash);
-	GList *ll=l;
-	while(ll) {
-		struct quadtree_item *qi;
-		GList *attrs;
-		qi=ll->data;
-		dbg(0,"%p del=%d ref=%d\n", qi,qi->deleted, qi->ref_count);
-		attrs=((struct quadtree_data *)qi->data)->attr_list;
-		while(attrs) {
-			if(((struct attr*)attrs->data)->type==attr_label)
-				dbg(0,"... %s\n",((struct attr*)attrs->data)->u.str);
-			attrs=g_list_next(attrs);
-		}
-		ll=g_list_next(ll);
-	}
-	g_list_free(l);
+	g_hash_table_foreach(map->qitem_hash, map_csv_debug_dump_hash_item, NULL);
 }
+
 
 static struct map_rect_priv *
 map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
