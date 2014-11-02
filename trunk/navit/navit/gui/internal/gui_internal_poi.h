@@ -25,9 +25,9 @@ struct poi_param {
 		unsigned char dist;
 		/**
  		 * Should filter phrase be compared to postal address of the POI.
- 		 * =1 - address filter, =0 - name filter
+ 		 * =0 - name filter, =1 - address filter, =2 - address filter, including postal code
 		 */		
-		unsigned char isAddressFilter;
+		unsigned char AddressFilterType;
 		/**
  		 * Filter string, casefold()ed and divided into substrings at the spaces, which are replaced by ASCII 0*.
 		 */		
@@ -51,7 +51,7 @@ struct widget;
 void gui_internal_poi_param_free(void *p);
 void gui_internal_poi_param_set_filter(struct poi_param *param, char *text);
 struct widget *gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, struct route *route, int dist, char *name);
-char *gui_internal_compose_item_address_string(struct item *item);
+char *gui_internal_compose_item_address_string(struct item *item, int prependPostal);
 void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);
 /* end of prototypes */
