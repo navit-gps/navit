@@ -642,7 +642,7 @@ gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, 
 	if (in[1] && ATTR_IS_STRING(in[1]->type)) {
 		gui_internal_poi_param_set_filter(param, in[1]->u.str);
 		if (in[2] && ATTR_IS_INT(in[2]->type))
-			param->isAddressFilter=in[2]->u.num;
+			param->AddressFilterType=in[2]->u.num;
 	}
 	
 	transform_from_geo(pro.u.projection,in[0]->u.coord_geo,&c);
