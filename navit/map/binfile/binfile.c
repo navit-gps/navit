@@ -131,6 +131,8 @@ struct map_priv {
 	struct map_download *download;
 	int redirect;
 	long download_enabled;
+	int last_searched_town_id_hi;	
+	int last_searched_town_id_lo;
 };
 
 struct map_rect_priv {
@@ -1932,25 +1934,11 @@ binmap_search_street_by_place(struct map_priv *map, struct item *town, struct co
 	return NULL;
 }
 
-static struct map_rect_priv *
-binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel)
+static int
+binmap_get_estimated_town_size(struct item *town)
 {
 	int size = 10000;
 	switch (town->type) {
-		case type_town_label_1e7:
-		case type_town_label_5e6:
-		case type_town_label_2e6:
-		case type_town_label_1e6:
-		case type_town_label_5e5:
-		case type_town_label_2e5:
-		case type_district_label_1e7:
-		case type_district_label_5e6:
-		case type_district_label_2e6:
-		case type_district_label_1e6:
-		case type_district_label_5e5:
-		case type_district_label_2e5:
-			size = 10000;
-			break;
 		case type_town_label_1e5:
 		case type_town_label_5e4:
 		case type_town_label_2e4:
@@ -1994,6 +1982,14 @@ binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct
 		default:
 			break;
 	}
+	return size;
+}
+
+static struct map_rect_priv *
+binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel)
+{
+	int size = binmap_get_estimated_town_size(town);
+
 	sel->u.c_rect.lu.x = c->x-size;
 	sel->u.c_rect.lu.y = c->y+size;
 	sel->u.c_rect.rl.x = c->x+size;
@@ -2014,6 +2010,38 @@ binmap_search_housenumber_by_estimate(struct map_priv *map, struct coord *c, str
 	sel->order = 18;
 
 	return map_rect_new_binfile(map, sel);
+}
+
+
+static int
+binmap_get_estimated_boundaries (struct item *town, GList **boundaries)
+{
+	int size = binmap_get_estimated_town_size(town);
+	struct coord tc;
+
+	if (item_coord_get(town, &tc, 1))
+	{
+		struct geom_poly_segment *bnd;
+		struct coord *c;
+		c=g_new(struct coord,5);
+		bnd=g_new(struct geom_poly_segment,1);
+		c[0].x = tc.x + size;
+		c[0].y = tc.y - size;
+		c[1].x = tc.x - size;
+		c[1].y = tc.y - size;
+		c[2].x = tc.x - size;
+		c[2].y = tc.y + size;
+		c[3].x = tc.x + size;
+		c[3].y = tc.y + size;
+		c[4].x = c[0].x;
+		c[4].y = c[0].y;
+		bnd->first=&c[0];
+		bnd->last=&c[4];
+		bnd->type=geom_poly_segment_type_way_outer;
+		*boundaries=g_list_prepend(*boundaries,bnd);
+		return 1;
+	}
+	return 0;
 }
 
 static struct map_search_priv *
@@ -2061,6 +2089,8 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				if (binmap_search_by_index(map, town, &msp->mr))
 					msp->mode = 1;
 				else {
+					map->last_searched_town_id_hi = town->id_hi;
+					map->last_searched_town_id_lo = town->id_lo;
 					if (item_coord_get(town, &c, 1)) {
 						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries)))
 							msp->mode = 2;
@@ -2089,11 +2119,26 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			idx=binmap_search_by_index(map, msp->item, &msp->mr);
 			if (idx)
 				msp->mode = 1;
-			else {
+			else
+			{
 				struct coord c;
 				if (item_coord_get(msp->item, &c, 1))
 				{
 					struct attr attr;
+					map_rec = map_rect_new_binfile(map, NULL);
+					town = map_rect_get_item_byid_binfile(map_rec, map->last_searched_town_id_hi, map->last_searched_town_id_lo);
+					if (town)
+						msp->mr = binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries);
+					map_rect_destroy_binfile(map_rec);
+					if (msp->boundaries)
+						dbg(0, "using map town boundaries\n");
+					if (!msp->boundaries && town)
+						{
+							binmap_get_estimated_boundaries(town, &msp->boundaries);
+							if (msp->boundaries)
+								dbg(0, "using estimated boundaries\n");
+						}
+					/* start searching in area around the street segment even if town boundaries are available */
 					msp->mr=binmap_search_housenumber_by_estimate(map, &c, &msp->ms);
 					msp->mode = 2;
 					msp->rect_new=msp->ms.u.c_rect;
@@ -2317,37 +2362,64 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				break;
 			case attr_house_number:
 				has_house_number=binfile_attr_get(it->priv_data, attr_house_number, &at);
-				if (has_house_number || it->type == type_house_number
+				if ((has_house_number
 					|| it->type == type_house_number_interpolation_even || it->type == type_house_number_interpolation_odd
 					|| it->type == type_house_number_interpolation_all
-					|| (map_search->mode == 1 && item_is_street(*it))
-				   	)
+					|| (map_search->mode == 1 && item_is_street(*it))|| it->type == type_house_number)
+				   	 && !(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries)))
 				{
 					if (has_house_number)
 					{
 						struct attr at2;
-						if ( (map_search->mode!=2 || binfile_attr_get(it->priv_data, attr_street_name, &at2)) && !linguistics_compare(at.u.str, map_search->search.u.str, mode))
+						if ((binfile_attr_get(it->priv_data, attr_street_name, &at2) || map_search->mode!=2) && !linguistics_compare(at.u.str, map_search->search.u.str, mode)
+								&& !strcmp(at2.u.str, map_search->parent_name))
+							{
+								if (!duplicate(map_search, it, attr_house_number))
+								{
+									binfile_attr_rewind(it->priv_data);
+									return it;
+								}
+							}
+					}
+					else
+					{
+						struct attr at2;
+						if ((binfile_attr_get(it->priv_data, attr_street_name, &at2) || map_search->mode!=2) && !strcmp(at2.u.str, map_search->parent_name))
 						{
-							if (!duplicate(map_search, it, attr_house_number))
+							if (!duplicate(map_search, it, attr_house_number_interpolation_no_ends_incrmt_2))
 							{
 								binfile_attr_rewind(it->priv_data);
 								return it;
 							}
+							else if (!duplicate(map_search, it, attr_house_number_interpolation_no_ends_incrmt_1))
+							{
+								binfile_attr_rewind(it->priv_data);
+								return it;
+							}
+						} else {
+							if (!( it->type == type_house_number_interpolation_even || it->type == type_house_number_interpolation_odd
+									|| it->type == type_house_number_interpolation_all))
+								return it;
 						}
-					} else
-						return it;
-				} else if(map_search->mode==2 && map_search->parent_name && item_is_street(*it) && binfile_attr_get(it->priv_data, attr_street_name, &at) && !strcmp(at.u.str, map_search->parent_name) ) {
-					/* If matching street segment found, prepare to expand house number search region +100m around each way point */
-					struct coord c;
-					while(item_coord_get(it,&c,1)) {
-						c.x-=100;
-						c.y-=100;
-						coord_rect_extend(&map_search->rect_new,&c);
-						c.x+=200;
-						c.y+=200;
-						coord_rect_extend(&map_search->rect_new,&c);
+
 					}
-				}
+				} else if( item_is_street(*it) && map_search->mode==2 && map_search->parent_name && binfile_attr_get(it->priv_data, attr_street_name, &at) && !strcmp(at.u.str, map_search->parent_name) )
+						{
+						/* If matching street segment found, prepare to expand house number search region +100m around each way point */
+							if (!(map_search->boundaries && !item_inside_poly_list(it,map_search->boundaries)))
+							{
+								struct coord c;
+								while(item_coord_get(it,&c,1))
+								{
+									c.x-=100;
+									c.y-=100;
+									coord_rect_extend(&map_search->rect_new,&c);
+									c.x+=200;
+									c.y+=200;
+									coord_rect_extend(&map_search->rect_new,&c);
+								}
+							}
+						}
 				continue;
 			default:
 				return NULL;
