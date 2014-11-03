@@ -154,7 +154,7 @@ town_display_label(struct search_list_result *res, int level, int flags)
 	char *postal_sep=" ";
 	char *district_begin=" (";
 	char *district_end=")";
-	char *county_sep = ", Co. ";
+	char *county_sep = ", ";
 	char *county = res->town->common.county_name;
 	
 	if (!postal)
