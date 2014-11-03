@@ -161,7 +161,7 @@ town_display_label(struct search_list_result *res, int level, int flags)
 		postal_sep=postal="";
 	if (!district || (flags & 1))
 		district_begin=district_end=district="";
-	if (!county)
+	if (!county || !strcmp(county, town))
 		county_sep=county="";
 
 	if(level==1 ) {
