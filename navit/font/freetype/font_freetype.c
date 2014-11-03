@@ -782,14 +782,13 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 
 static void
 font_freetype_destroy(void) {
+	// Do not call FcFini here: GdkPixbuf also (indirectly) uses fontconfig (for SVGs with
+	// text), but does not properly deallocate all objects, so FcFini assert()s.
 	if (!library_deinit) {
-#ifdef HAVE_FONTCONFIG
-			FcFini();
-#endif
 #if USE_CACHING
-			FTC_Manager_Done(manager);
+		FTC_Manager_Done(manager);
 #endif
-			FT_Done_FreeType(library);
+		FT_Done_FreeType(library);
 	}
 	library_deinit = 1;
 }
