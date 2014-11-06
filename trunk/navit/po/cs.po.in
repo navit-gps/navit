@@ -1,4 +1,4 @@
-# translation of navit_cs.po to Čeština
+# # translation of navit_cs.po to Čeština translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -15,7 +15,6 @@
 # stritek https://launchpad.net/~stritek
 # talmik https://launchpad.net/~mikatom
 
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
@@ -28,8 +27,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 

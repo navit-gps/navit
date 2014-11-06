@@ -1,4 +1,4 @@
-# Polish translations for navit.
+# Polish. translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -6,16 +6,15 @@
 # DarkAlexis https://launchpad.net/~alex-ludyga
 # Jarosław Ogrodnik https://launchpad.net/~goz
 # KaZeR https://launchpad.net/~kazer
-# LeadMan https://launchpad.net/~leadman
 # Marcin Ostajewski (panszpik) https://launchpad.net/~panszpik
 # Mineque https://launchpad.net/~mineque
+# Patryk Benderz &quot;LeadMan&quot; https://launchpad.net/~leadman
 # S0Cool https://launchpad.net/~mareksok
 # TSr https://launchpad.net/~tsr
 # Wojtek https://launchpad.net/~wojtek-pol
 # linek10 https://launchpad.net/~zbyszekm
 # skrzat https://launchpad.net/~skrzat
 # Łukasz Semler https://launchpad.net/~lukasz-semler
-
 
 msgid ""
 msgstr ""
@@ -30,8 +29,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Poedit-Country: POLAND\n"
 "Language: \n"
 "X-Poedit-Language: Polish\n"

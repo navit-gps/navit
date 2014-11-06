@@ -1,4 +1,4 @@
-# Romanian translation for navit
+# Romanian translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -11,7 +11,6 @@
 # dodobird https://launchpad.net/~dorinnirod
 # fasiol https://launchpad.net/~fasiol2
 # igorashu https://launchpad.net/~ionut-soare
-
 
 msgid ""
 msgstr ""
@@ -26,8 +25,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
