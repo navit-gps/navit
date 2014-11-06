@@ -1,16 +1,15 @@
-# Welsh translation for navit
+# Welsh translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Simon Hewison https://launchpad.net/~simon-hewison-6
 
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2013-02-19 14:30+0000\n"
+"PO-Revision-Date: 2014-08-08 23:15+0000\n"
 "Last-Translator: Simon Hewison <simon.hewison@zymurgy.org>\n"
 "Language-Team: Welsh <cy@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,8 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : (n != 8 && n != 11) ? "
 "2 : 3;\n"
-"X-Launchpad-Export-Date: 2014-08-08 22:21+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Language: cy\n"
 
 msgid "Running from source directory\n"
 msgstr ""
@@ -137,8 +135,6 @@ msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 msgid "exit"
 msgstr "allanfa"

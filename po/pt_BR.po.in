@@ -1,4 +1,4 @@
-# Brazilian Portuguese translation for navit
+# Brazilian Portuguese translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -18,21 +18,18 @@
 # hvera https://launchpad.net/~hamilton-listas
 # paulohm https://launchpad.net/~paulohm
 
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2014-05-29 03:28+0000\n"
-"Last-Translator: Jairo Roberto Duarte <Unknown>\n"
+"PO-Revision-Date: 2014-10-24 18:17+0000\n"
+"Last-Translator: Helder Santana <helder.bs.santana@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1354,7 +1351,7 @@ msgstr "Utilizando arquivo de configuração '%s'\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Erro: Nenhuma configuração encontrada no arquivo '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"

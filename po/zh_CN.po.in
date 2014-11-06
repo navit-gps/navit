@@ -1,4 +1,4 @@
-# Simplified Chinese translation for navit
+# Simplified Chinese translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -8,7 +8,6 @@
 # Lele Long https://launchpad.net/~schemacs
 # Li Jin https://launchpad.net/~lijin
 # kelvin https://launchpad.net/~kelvinz
-
 
 msgid ""
 msgstr ""
@@ -22,8 +21,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"

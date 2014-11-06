@@ -10,10 +10,9 @@
 # ViZiT https://launchpad.net/~vizit
 # dentist76 https://launchpad.net/~pilatin
 # eMVP https://launchpad.net/~ercan-i
-# lanetherif https://launchpad.net/~lanetherif
 # seqizz (gurkanGur) https://launchpad.net/~seqizz
 # tinyos https://launchpad.net/~eygu-mindikoglu
-
+# Şahin Alp Taşkaya https://launchpad.net/~sahin
 
 msgid ""
 msgstr ""
@@ -27,8 +26,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "Language: tr\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 

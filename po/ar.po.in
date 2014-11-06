@@ -1,4 +1,4 @@
-# Arabic translation for navit
+# Arabic translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -6,7 +6,6 @@
 # Magd Addin M. Almuntaser https://launchpad.net/~ttmtt-team
 # drsaudi https://launchpad.net/~mon7b6
 # metehyi https://launchpad.net/~metehyi
-
 
 msgid ""
 msgstr ""
@@ -21,8 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
