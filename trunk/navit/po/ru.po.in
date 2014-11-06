@@ -136,14 +136,14 @@ msgstr "через %d,%d километров"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "одна миля"
+msgstr[0] "%d мили"
 msgstr[1] "%d мили"
 msgstr[2] "%d миль"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "через одну милю"
+msgstr[0] "через %d мили"
 msgstr[1] "через %d мили"
 msgstr[2] "через %d миль"
 
