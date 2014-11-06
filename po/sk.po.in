@@ -120,14 +120,14 @@ msgstr "o %d.%d kilometrov"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "jedna míľa"
+msgstr[0] "%d míľa"
 msgstr[1] "%d míle"
 msgstr[2] "%d míľ"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "o jednu míľu"
+msgstr[0] "o %d míľu"
 msgstr[1] "o %d míle"
 msgstr[2] "o %d míľ"
 
