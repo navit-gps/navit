@@ -1,33 +1,32 @@
-# Latvian (lv)  translations for navit
-# Copyright (C) 2006-2013 The Navit Team
+# Latvian translations for navit
+# Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
-
+# Many thanks to the contributors of this translation:
 # Janis https://launchpad.net/~janis-zl
 # KaZeR https://launchpad.net/~kazer
+# Stendec https://launchpad.net/~stendec
 # sieks https://launchpad.net/~sieks
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-10 21:46+0200\n"
-"PO-Revision-Date: 2013-09-28 01:43+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2014-08-05 11:04-0700\n"
+"PO-Revision-Date: 2014-06-26 14:03+0000\n"
+"Last-Translator: Stendec <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-10-26 21:48+0000\n"
-"X-Generator: Launchpad (build 16810)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Darbojas no saknes mapes\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr ""
+msgstr "iestata '%s' uz '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -62,7 +61,7 @@ msgid "second exit"
 msgstr "otrā izeja"
 
 msgid "third exit"
-msgstr "trešā izbrauktuve"
+msgstr "trešā izeja"
 
 msgid "fourth exit"
 msgstr "ceturtā izeja"
@@ -83,11 +82,11 @@ msgstr "pēc %d m"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d pēdas"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "pēc %d pēdām"
 
 #, c-format
 msgid "%d meters"
@@ -99,11 +98,11 @@ msgstr "pēc %d metriem"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d jūdzes"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "pēc %d.%d jūdzēm"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -116,21 +115,23 @@ msgstr "pēc %d.%d kilometr(a,iem"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "viena jūdze"
+msgstr[1] "%d jūdzes"
+msgstr[2] "%d jūdzes"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "pēc vienas jūdzes"
+msgstr[1] "pēc %d jūdzēm"
+msgstr[2] "pēc %d jūdzēm"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "%d kilometrs"
-msgstr[1] "%d kilometrs"
-msgstr[2] "%d kilometrs"
+msgstr[0] "kilometru"
+msgstr[1] "%d kilometrus"
+msgstr[2] "%d kilometri"
 
 #, c-format
 msgid "in one kilometer"
@@ -148,27 +149,27 @@ msgstr "uz rampas"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%suz ielu %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%suz %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%suz %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%suz %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "Uz %spagriezties pa %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -180,15 +181,15 @@ msgstr "pa kreisi"
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "easily "
-msgstr "vienkāršs "
+msgstr "nedaudz "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr ""
+msgstr "strauji "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "nepārāk strauji "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -198,24 +199,24 @@ msgid "When possible, please turn around"
 msgstr "Kad iespējams apgriezieties"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "Drīzumā uzbraukt uz apļa"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Uzbraukt uz apļa pēc %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "pēc tam izbraukt no apļa pa %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Nobraukt no apļa pa %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Turpiniet pa šo ceļu nākošos %s"
+msgstr "Turpiniet pa šo ceļu %s"
 
 msgid "soon"
 msgstr "drīz"
@@ -223,18 +224,18 @@ msgstr "drīz"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "Pagriežaties %1$s ceļā pa %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "pēc %i ceļiem"
 
 msgid "now"
 msgstr "tagad"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "pēc tam %1$s ceļā pa %2$s"
 
 msgid "error"
 msgstr "kļūda"
@@ -242,12 +243,12 @@ msgstr "kļūda"
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Pagrieziens %1$s%2$s %3$s%4$s"
+msgstr "Pagriezties %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "pēc tam griežaties %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -276,37 +277,37 @@ msgid "Time"
 msgstr "Laiks"
 
 msgid "Destination Length"
-msgstr ""
+msgstr "Ceļš līdz galamērķim"
 
 msgid "Destination Time"
 msgstr "Ierašanās laiks"
 
 msgid "Roadbook"
-msgstr ""
+msgstr "Ceļa grāmata"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "Pieturvieta %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Doties caur..."
 
 msgid "Set as position"
-msgstr ""
+msgstr "Uzstādīt kā atrašanos"
 
 msgid "Set as destination"
-msgstr ""
+msgstr "Iestatīt kā galamēķi"
 
 msgid "Add as bookmark"
 msgstr "Pievienot grāmatzīmi"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Punkts 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Ekrāna koordinātas: %d %d"
 
 #. 020
 msgid "Andorra"
@@ -322,11 +323,11 @@ msgstr "Afganistāna"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigva un Barbuda"
 
 #. 660
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguila"
 
 #. 008
 msgid "Albania"
@@ -346,7 +347,7 @@ msgstr "Angola"
 
 #. 010
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktīda"
 
 #. 032
 msgid "Argentina"
@@ -354,7 +355,7 @@ msgstr "Argentīna"
 
 #. 016
 msgid "American Samoa"
-msgstr ""
+msgstr "Austrumsamoa"
 
 #. 040
 msgid "Austria"
@@ -374,7 +375,7 @@ msgstr "Ālandu salas"
 
 #. 031
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaidžāna"
 
 #. 070
 msgid "Bosnia and Herzegovina"
@@ -394,7 +395,7 @@ msgstr "Beļģija"
 
 #. 854
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #. 100
 msgid "Bulgaria"
@@ -402,27 +403,27 @@ msgstr "Bulgārija"
 
 #. 048
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahreina"
 
 #. 108
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #. 204
 msgid "Benin"
-msgstr ""
+msgstr "Benina"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Svētā Bartalameja sala"
 
 #. 060
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Bruneja Darusalama"
 
 #. 068
 msgid "Bolivia"
@@ -442,15 +443,15 @@ msgstr "Bahamas"
 
 #. 064
 msgid "Bhutan"
-msgstr ""
+msgstr "Butāna"
 
 #. 074
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Buvē Sala"
 
 #. 072
 msgid "Botswana"
-msgstr ""
+msgstr "Botsvāna"
 
 #. 112
 msgid "Belarus"
@@ -458,7 +459,7 @@ msgstr "Baltkrievija"
 
 #. 084
 msgid "Belize"
-msgstr ""
+msgstr "Beliza"
 
 #. 124
 msgid "Canada"
@@ -466,7 +467,7 @@ msgstr "Kanāda"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Kokosu (Kīlinga) salas"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
@@ -474,7 +475,7 @@ msgstr "Kongo Demokrātiskā Republika"
 
 #. 140
 msgid "Central African Republic"
-msgstr ""
+msgstr "Centrālāfrikas Republika"
 
 #. 178
 msgid "Congo"
@@ -482,15 +483,15 @@ msgstr "Kongo"
 
 #. 756
 msgid "Switzerland"
-msgstr ""
+msgstr "Šveice"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Kotdivuāra (Ziloņkaula krasts)"
 
 #. 184
 msgid "Cook Islands"
-msgstr ""
+msgstr "Kuka salas"
 
 #. 152
 msgid "Chile"
@@ -518,15 +519,15 @@ msgstr "Kuba"
 
 #. 132
 msgid "Cape Verde"
-msgstr ""
+msgstr "Kaboverde"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Kurakao"
 
 #. 162
 msgid "Christmas Island"
-msgstr ""
+msgstr "Ziemsvētku Sala"
 
 #. 196
 msgid "Cyprus"
@@ -542,7 +543,7 @@ msgstr "Vācija"
 
 #. 262
 msgid "Djibouti"
-msgstr ""
+msgstr "Džibuti"
 
 #. 208
 msgid "Denmark"
@@ -554,15 +555,15 @@ msgstr "Dominika"
 
 #. 214
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikānas Republika"
 
 #. 012
 msgid "Algeria"
-msgstr ""
+msgstr "Alžīrija"
 
 #. 218
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekvadora"
 
 #. 233
 msgid "Estonia"
@@ -574,11 +575,11 @@ msgstr "Ēģipte"
 
 #. 732
 msgid "Western Sahara"
-msgstr ""
+msgstr "Rietumu Sahāra"
 
 #. 232
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritreja"
 
 #. 724
 msgid "Spain"
@@ -590,23 +591,23 @@ msgstr "Etiopija"
 
 #. 246
 msgid "Finland"
-msgstr ""
+msgstr "Somija"
 
 #. 242
 msgid "Fiji"
-msgstr ""
+msgstr "Fidži"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Folklenda (Malvinu) salas"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Mikronēzijas Federatīvās Valstis"
 
 #. 234
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Fēru salas"
 
 #. 250
 msgid "France"
@@ -614,7 +615,7 @@ msgstr "Francija"
 
 #. 266
 msgid "Gabon"
-msgstr ""
+msgstr "Gabona"
 
 #. 826
 msgid "United Kingdom"
@@ -622,23 +623,23 @@ msgstr "Lielbritānija"
 
 #. 308
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #. 268
 msgid "Georgia"
-msgstr ""
+msgstr "Gruzija"
 
 #. 254
 msgid "French Guiana"
-msgstr ""
+msgstr "Franču Gviāna"
 
 #. 831
 msgid "Guernsey"
-msgstr ""
+msgstr "Gērnsija"
 
 #. 288
 msgid "Ghana"
-msgstr ""
+msgstr "Gana"
 
 #. 292
 msgid "Gibraltar"
@@ -646,7 +647,7 @@ msgstr "Gibraltārs"
 
 #. 304
 msgid "Greenland"
-msgstr ""
+msgstr "Grenlande"
 
 #. 270
 msgid "Gambia"
@@ -658,11 +659,11 @@ msgstr "Gvineja"
 
 #. 312
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Gvadelupa"
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Ekvatoriālā Gvineja"
 
 #. 300
 msgid "Greece"
@@ -670,35 +671,35 @@ msgstr "Grieķija"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Dienviddžordžija un Dienvidsendviču salas"
 
 #. 320
 msgid "Guatemala"
-msgstr ""
+msgstr "Gvatemala"
 
 #. 316
 msgid "Guam"
-msgstr ""
+msgstr "Guama"
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Gvineja-Bisau"
 
 #. 328
 msgid "Guyana"
-msgstr ""
+msgstr "Gajāna"
 
 #. 344
 msgid "Hong Kong"
-msgstr ""
+msgstr "Honkonga"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Hērda un Makdonalda salas"
 
 #. 340
 msgid "Honduras"
-msgstr ""
+msgstr "Hondurasa"
 
 #. 191
 msgid "Croatia"
@@ -718,7 +719,7 @@ msgstr "Indonēzija"
 
 #. 372
 msgid "Ireland"
-msgstr ""
+msgstr "Īrija"
 
 #. 376
 msgid "Israel"
@@ -726,7 +727,7 @@ msgstr "Izraēla"
 
 #. 833
 msgid "Isle of Man"
-msgstr ""
+msgstr "Menas sala"
 
 #. 356
 msgid "India"
@@ -734,7 +735,7 @@ msgstr "Indija"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Indijas Okeāna Britu Teritorija"
 
 #. 368
 msgid "Iraq"
@@ -742,11 +743,11 @@ msgstr "Irāka"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Irāna"
 
 #. 352
 msgid "Iceland"
-msgstr ""
+msgstr "Īslande"
 
 #. 380
 msgid "Italy"
@@ -754,7 +755,7 @@ msgstr "Itālija"
 
 #. 832
 msgid "Jersey"
-msgstr ""
+msgstr "Džersija"
 
 #. 388
 msgid "Jamaica"
@@ -762,7 +763,7 @@ msgstr "Jamaika"
 
 #. 400
 msgid "Jordan"
-msgstr ""
+msgstr "Jordāna"
 
 #. 392
 msgid "Japan"
@@ -774,31 +775,31 @@ msgstr "Kenija"
 
 #. 417
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgizstāna"
 
 #. 116
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodža"
 
 #. 296
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "Komoras"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Sentkitsa un Nevisa"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "Ziemeļkoreja"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "Dienvidkoreja"
 
 #. 414
 msgid "Kuwait"
@@ -814,15 +815,15 @@ msgstr "Kazahstāna"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laosa"
 
 #. 422
 msgid "Lebanon"
-msgstr ""
+msgstr "Libāna"
 
 #. 662
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Sentlūsija"
 
 #. 438
 msgid "Liechtenstein"
@@ -854,7 +855,7 @@ msgstr "Latvija"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Lībija"
 
 #. 504
 msgid "Morocco"
@@ -866,59 +867,59 @@ msgstr "Monako"
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "Moldova"
 
 #. 499
 msgid "Montenegro"
-msgstr ""
+msgstr "Melnkalne"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Senmartēna"
 
 #. 450
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskara"
 
 #. 584
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Māršala salas"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "Maķedonija"
 
 #. 466
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #. 104
 msgid "Myanmar"
-msgstr ""
+msgstr "Mjanma"
 
 #. 496
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolija"
 
 #. 446
 msgid "Macao"
-msgstr ""
+msgstr "Makao"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Ziemeļu Marianas salas"
 
 #. 474
 msgid "Martinique"
-msgstr ""
+msgstr "Martinika"
 
 #. 478
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauritānija"
 
 #. 500
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserata"
 
 #. 470
 msgid "Malta"
@@ -926,15 +927,15 @@ msgstr "Malta"
 
 #. 480
 msgid "Mauritius"
-msgstr ""
+msgstr "Maurīcija"
 
 #. 462
 msgid "Maldives"
-msgstr ""
+msgstr "Maldīvu salas"
 
 #. 454
 msgid "Malawi"
-msgstr ""
+msgstr "Malāvija"
 
 #. 484
 msgid "Mexico"
@@ -946,7 +947,7 @@ msgstr "Malaizija"
 
 #. 508
 msgid "Mozambique"
-msgstr ""
+msgstr "Mozambika"
 
 #. 516
 msgid "Namibia"
@@ -954,15 +955,15 @@ msgstr "Namībija"
 
 #. 540
 msgid "New Caledonia"
-msgstr ""
+msgstr "Jaunkaledonija"
 
 #. 562
 msgid "Niger"
-msgstr ""
+msgstr "Nigēra"
 
 #. 574
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolkas sala"
 
 #. 566
 msgid "Nigeria"
@@ -970,7 +971,7 @@ msgstr "Nigērija"
 
 #. 558
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nikaragva"
 
 #. 528
 msgid "Netherlands"
@@ -986,19 +987,19 @@ msgstr "Nepāla"
 
 #. 520
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #. 570
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #. 554
 msgid "New Zealand"
-msgstr ""
+msgstr "Jaunzēlande"
 
 #. 512
 msgid "Oman"
-msgstr ""
+msgstr "Omāna"
 
 #. 591
 msgid "Panama"
@@ -1010,11 +1011,11 @@ msgstr "Peru"
 
 #. 258
 msgid "French Polynesia"
-msgstr ""
+msgstr "Franču Polinēzija"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Jaungvineja"
 
 #. 608
 msgid "Philippines"
@@ -1030,19 +1031,19 @@ msgstr "Polija"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Senpjēra un Mikelona"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitkērna"
 
 #. 630
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Porto Riko"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "Palestīna"
 
 #. 620
 msgid "Portugal"
@@ -1050,7 +1051,7 @@ msgstr "Portugāle"
 
 #. 585
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #. 600
 msgid "Paraguay"
@@ -1058,11 +1059,11 @@ msgstr "Paragvaja"
 
 #. 634
 msgid "Qatar"
-msgstr ""
+msgstr "Katara"
 
 #. 638
 msgid "Reunion"
-msgstr ""
+msgstr "Reinjona"
 
 #. 642
 msgid "Romania"
@@ -1078,11 +1079,11 @@ msgstr "Krievija"
 
 #. 646
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Saūda Arābija"
 
 #. 090
 msgid "Solomon Islands"
@@ -1090,7 +1091,7 @@ msgstr "Zālamana salas"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "Seišelas"
 
 #. 736
 msgid "Sudan"
@@ -1098,7 +1099,7 @@ msgstr "Sudāna"
 
 #. 752
 msgid "Sweden"
-msgstr ""
+msgstr "Zviedrija"
 
 #. 702
 msgid "Singapore"
@@ -1106,7 +1107,7 @@ msgstr "Singapūra"
 
 #. 654
 msgid "Saint Helena"
-msgstr ""
+msgstr "Svētās Helēnas Sala"
 
 #. 705
 msgid "Slovenia"
@@ -1114,7 +1115,7 @@ msgstr "Slovēnija"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Svalbāra un Jana Majena sala"
 
 #. 703
 msgid "Slovakia"
@@ -1122,11 +1123,11 @@ msgstr "Slovākija"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sjerraleone"
 
 #. 674
 msgid "San Marino"
-msgstr ""
+msgstr "Sanmarīno"
 
 #. 686
 msgid "Senegal"
@@ -1138,35 +1139,35 @@ msgstr "Somālija"
 
 #. 740
 msgid "Suriname"
-msgstr ""
+msgstr "Surinama"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Dienvidsudāna"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Santome un Prinsipi"
 
 #. 222
 msgid "El Salvador"
-msgstr ""
+msgstr "Salvadora"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Sintmartēna"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Sīrija"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "Svazilenda"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Tērksas un Kaikosas"
 
 #. 148
 msgid "Chad"
@@ -1174,11 +1175,11 @@ msgstr "Čada"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Francijas Dienvidjūru Zemes"
 
 #. 768
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. 764
 msgid "Thailand"
@@ -1186,19 +1187,19 @@ msgstr "Taizeme"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadžikistāna"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Austrumtimora"
 
 #. 795
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistāna"
 
 #. 788
 msgid "Tunisia"
@@ -1206,7 +1207,7 @@ msgstr "Tunisija"
 
 #. 776
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #. 792
 msgid "Turkey"
@@ -1214,19 +1215,19 @@ msgstr "Turcija"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidada un Tobago"
 
 #. 798
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "Taivāna"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tanzānija"
 
 #. 804
 msgid "Ukraine"
@@ -1238,7 +1239,7 @@ msgstr "Uganda"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "ASV Mazās Aizjūras Salas"
 
 #. 840
 msgid "United States"
@@ -1250,66 +1251,66 @@ msgstr "Urugvaja"
 
 #. 860
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistāna"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikāns"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Sentvinsenta un Grenadīnas"
 
 #. 862
 msgid "Venezuela"
-msgstr ""
+msgstr "Venecuēla"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Virdžīnas Salas, Britu"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Virdžīnu salas, ASV"
 
 #. 704
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vjetnama"
 
 #. 548
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Volisa un Futuna"
 
 #. 882
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #. 887
 msgid "Yemen"
-msgstr ""
+msgstr "Jemena"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "Majota"
 
 #. 710
 msgid "South Africa"
-msgstr ""
+msgstr "Dienvidāfrika"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "Zambija"
 
 #. 716
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabve"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "* Nezināms, pievienot is_in tagus šīm pilsētām"
 
 msgid ""
 "navit usage:\n"
@@ -1320,36 +1321,49 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: Print the version and exit.\n"
 msgstr ""
+"navit lietošana:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: lietot <file> kā konfigurācijas failu\n"
+"\t-d <n>: iestatīt globālo atkļūdošanas izvadi uz <n> (0-3). Ignorēt "
+"uzstādijumus konfigurācijas failā.\n"
+"\t-h: pdrukāt lietošanas informāciju un iziet.\n"
+"\t-v: Drukāt versiju un iziet.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Nav atrasti konfigurācijas faili - navit.xml, navit.xml.local\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Kļūdu analīzes iestatijumu fails '%s': %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
+msgstr "Izmanto '%s' iestatījumu failu\n"
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
 msgstr ""
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Iekšējā inicializācija neizdevās, beidzē. Skatiet iepriekšējos kļūdu "
+"ziņojumus.\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "nezināma iela"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "Nosnosaukts transporta līdzeklis"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "Neizdevās atjaunināt grāmatzīmju failu"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr ""
+msgstr "Punkts uz Kartes"
 
 msgid "Car"
 msgstr "Automašīna"
@@ -1364,19 +1378,19 @@ msgid "Country"
 msgstr "Valsts"
 
 msgid "Postal"
-msgstr ""
+msgstr "Pasta"
 
 msgid "Town"
 msgstr "Pilsēta"
 
 msgid "District"
-msgstr ""
+msgstr "Rajons"
 
 msgid "Street"
 msgstr "Iela"
 
 msgid "Number"
-msgstr ""
+msgstr "Numurs"
 
 msgid "Enter Destination"
 msgstr "Izvēlies galamērķi"
@@ -1388,7 +1402,7 @@ msgid "City"
 msgstr "Pilsēta"
 
 msgid "District/Township"
-msgstr ""
+msgstr "Rajons/Pārvaldes rajons"
 
 msgid "Map"
 msgstr "Karte"
@@ -1401,58 +1415,58 @@ msgstr "Galamērķis"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr ""
+msgstr "_Ekrāns"
 
 msgid "_Route"
-msgstr ""
+msgstr "_Maršruts"
 
 msgid "_Former Destinations"
-msgstr ""
+msgstr "_Nesenais Galamērķis"
 
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Grāmatzīmes"
 
 msgid "_Map"
-msgstr ""
+msgstr "_Karte"
 
 msgid "_Layout"
-msgstr ""
+msgstr "_Izklājums"
 
 msgid "_Projection"
-msgstr ""
+msgstr "_Projekcija"
 
 msgid "_Vehicle"
-msgstr ""
+msgstr "_Transporta līdzeklis"
 
 msgid "Zoom_Out"
-msgstr ""
+msgstr "_Attālināt"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "Samazināt tuvinājumu"
 
 msgid "Zoom_In"
-msgstr ""
+msgstr "_Pietuviāt"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "Palielināt tuvinājumu"
 
 msgid "_Recalculate"
-msgstr ""
+msgstr "_Pārrēķināt"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Pārzīmēt karti"
 
 msgid "_Info"
-msgstr ""
+msgstr "_Informācija"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "Iestatīt _galamēķi"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Atvērt adreses meklēšanas dialogu"
 
 msgid "_Stop Navigation"
-msgstr ""
+msgstr "_Apturēt Navigāciju"
 
 msgid "Test"
 msgstr "Tests"
@@ -1464,58 +1478,58 @@ msgid "Quit the application"
 msgstr "Iziet no aplikācijas"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "Rādīt atrašanās _kursoru"
 
 msgid "_Lock on Road"
-msgstr ""
+msgstr "_Piesaistīt Ceļam"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "_Saglabāt orientāciju uz Ziemeļiem"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Mainīt kartes orientāciju uz ziemeļiem vai transportlīdzekli"
 
 msgid "_Roadbook"
-msgstr ""
+msgstr "_Ceļagrāmata"
 
 msgid "Show/hide route description"
 msgstr "Rādīt/slēpt maršruta aprakstu"
 
 msgid "_Autozoom"
-msgstr ""
+msgstr "_Autotālummiņa"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "Ieslēgt/izslēgt automātisku tālummaiņu"
 
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_Pilnekrāns"
 
 msgid "Data"
 msgstr "Dati"
 
 msgid "N"
-msgstr ""
+msgstr "Z"
 
 msgid "NE"
-msgstr ""
+msgstr "ZA"
 
 msgid "E"
-msgstr ""
+msgstr "A"
 
 msgid "SE"
-msgstr ""
+msgstr "DA"
 
 msgid "S"
-msgstr ""
+msgstr "D"
 
 msgid "SW"
-msgstr ""
+msgstr "DR"
 
 msgid "W"
-msgstr ""
+msgstr "R"
 
 msgid "NW"
-msgstr ""
+msgstr "ZR"
 
 #. Android resource: @strings/no
 msgid "No"
@@ -1532,26 +1546,26 @@ msgstr ""
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Ceļš %4.0fkm    %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Ceļš 0000km  0+00:00 ETA"
 
 msgid "Help"
 msgstr "Palīdzība"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "Pieturpunkti %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "Izvēlaties pieturpunktu lai ievietotu kā jaunu"
 
 msgid "View in Browser"
-msgstr ""
+msgstr "Rādīt pārlūkā"
 
 msgid "Item type"
-msgstr ""
+msgstr "Vienības veids"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
@@ -1561,25 +1575,25 @@ msgid "House numbers"
 msgstr "Mājas numuri"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "Rādīt Atribūtus"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "Iestatīt kā atrašanos (un atspējot Tr. Līdzekli)"
 
 msgid "POIs"
-msgstr ""
+msgstr "IP"
 
 msgid "View on map"
 msgstr "Apskatīties kartē"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "Noņem meklētos rezultātus no kartes"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "Rādīt rezultātus uz kartes"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "izgriezt grāmatzīmi"
 
 msgid "Copy Bookmark"
 msgstr "Kopēt grāmatzīmi"
@@ -1594,26 +1608,26 @@ msgid "Delete Bookmark"
 msgstr "Dzēst grāmatzīmi"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "Dzēst pieturvietu"
 
 msgid "Bookmarks"
 msgstr "Grāmatzīmes"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "Grāmatzīmes kā pieturvietas"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "Saglabāt pieturvietas"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "Aizvietot ar pieturvietām"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Dzēst mapi"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Pievienot grāmatzīmju mapi"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
@@ -1625,28 +1639,28 @@ msgstr "Grāmatzīmes %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Lejuplādē %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Karšu lejuplāde"
 
 msgid "Active"
-msgstr ""
+msgstr "Aktīvs"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Lejupielāde aktivizēta"
 
 msgid "Download completely"
-msgstr ""
+msgstr "Lejupielāde pabeigta"
 
 msgid "Show Satellite Status"
 msgstr "Rādit satelītu informāciju"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Augstums "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimuts "
 
 msgid "Show NMEA Data"
 msgstr "Rādit NMEA informāciju"
@@ -1666,16 +1680,16 @@ msgstr "Pašreizējais profils: %s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr ""
+msgstr "Mainīt profilu uz: %s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "Iestatīt kā aktīvu"
 
 msgid "Show Satellite status"
 msgstr "Rādīt saelītu statusu"
 
 msgid "Show NMEA data"
-msgstr ""
+msgstr "Rādīt NMEA datus"
 
 msgid "Add Bookmark"
 msgstr "Pievienot grāmatzīmi"
@@ -1688,20 +1702,20 @@ msgstr "Par Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Autori:"
 
 #. Contributors
 msgid "And all the Navit Team"
 msgstr "Un visa Navit komanda"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "biedri un atbalstītāji"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "Pieturpunkti"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "Ievadiet Koordinātes"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1709,20 +1723,20 @@ msgstr ""
 #. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
-msgid "Longitude Latitude"
+msgid "Latitude Longitude"
 msgstr ""
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "Ievadiet koordinātes, piemēram:"
 
 msgid "Vehicle"
-msgstr ""
+msgstr "Transportlīdzeklis"
 
 msgid "Rules"
 msgstr "Noteikumi"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "Piesaistīt ceļam"
 
 msgid "Northing"
 msgstr "Uz ziemeīem"
@@ -1731,13 +1745,13 @@ msgid "Map follows Vehicle"
 msgstr "Karte seko mašīnai"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "Plānot ar pieturvietām"
 
 msgid "Maps"
 msgstr "Kartes"
 
 msgid "Layout"
-msgstr ""
+msgstr "Izklājums"
 
 msgid "Height Profile"
 msgstr "Augstuma profils"
@@ -1746,13 +1760,13 @@ msgid "Route Description"
 msgstr "Maršruta apraksts"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Rādīt Lokāles"
 
 msgid "Former Destinations"
-msgstr ""
+msgstr "Nesenie galamērķi"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "- Nav neseno galamērķu -"
 
 msgid "Message"
 msgstr "Ziņa"
@@ -1770,114 +1784,117 @@ msgid "House number"
 msgstr "Mājas numurs"
 
 msgid "Next"
-msgstr ""
+msgstr "Nākamais"
 
 msgid "Prev"
-msgstr ""
+msgstr "Iepriekšējais"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "Atgriezties uz ceļa!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Uzmanību! Kamera!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "Lūdzu samaziet atrāmu"
 
 msgid "partial match"
-msgstr ""
+msgstr "daļēja sakritība"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "Meklēt"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
+msgstr "Pilsētas"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "Ceļš uz šejieni"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Karte (c) OpenStreetMap contributors, ODBL"
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "Lejuplādētās kartes"
+
+msgid "Cancel"
+msgstr "Atcelt"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "Visa Planēta"
 
 msgid "Africa"
-msgstr ""
+msgstr "Āfrika"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Kanāriju salas"
 
 msgid "Asia"
-msgstr ""
+msgstr "Āzija"
 
 msgid "Korea"
-msgstr ""
+msgstr "Koreja"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Taivāna"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "AAE+Citi"
 
 msgid "Oceania"
-msgstr ""
+msgstr "Okeānija"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmānija"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Viktorija"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "Jaunā Dienvidvelsa"
 
 msgid "Europe"
-msgstr ""
+msgstr "Eiropa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "Rietumeiropa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azoru salas"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "Beneluksa"
 
 msgid "Alsace"
-msgstr ""
+msgstr "Alsace"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "Akvitāna"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "Auvergne"
 
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "Basse-Normandija"
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "Bourgogne"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "Britānija"
 
 msgid "Centre"
-msgstr ""
+msgstr "Centrs"
 
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "Šampanja-Ardene"
 
 msgid "Corse"
-msgstr ""
+msgstr "Korse"
 
 msgid "Franche-Comte"
 msgstr ""
@@ -1892,7 +1909,7 @@ msgid "Languedoc-Roussillon"
 msgstr ""
 
 msgid "Limousin"
-msgstr ""
+msgstr "Limuzīns"
 
 msgid "Lorraine"
 msgstr ""
@@ -1922,10 +1939,10 @@ msgid "Baden-Wuerttemberg"
 msgstr ""
 
 msgid "Bayern"
-msgstr ""
+msgstr "Bajerna"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Mitelfarkena"
 
 msgid "Niederbayern"
 msgstr ""
@@ -1940,25 +1957,25 @@ msgid "Oberpfalz"
 msgstr ""
 
 msgid "Schwaben"
-msgstr ""
+msgstr "Švābene"
 
 msgid "Unterfranken"
 msgstr ""
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlīne"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburga"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Brēmene"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburga"
 
 msgid "Hessen"
-msgstr ""
+msgstr "Hessene"
 
 msgid "Mecklenburg-Vorpommern"
 msgstr ""
@@ -1994,31 +2011,31 @@ msgid "Galicia"
 msgstr ""
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Skandināvija"
 
 msgid "England"
-msgstr ""
+msgstr "Anglija"
 
 msgid "Buckinghamshire"
 msgstr ""
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "Kembridžšīra"
 
 msgid "Cumbria"
-msgstr ""
+msgstr "Kumbrija"
 
 msgid "East yorkshire with hull"
 msgstr ""
 
 msgid "Essex"
-msgstr ""
+msgstr "Eseksa"
 
 msgid "Herefordshire"
 msgstr ""
 
 msgid "Kent"
-msgstr ""
+msgstr "Kenta"
 
 msgid "Lancashire"
 msgstr ""
@@ -2027,19 +2044,19 @@ msgid "Leicestershire"
 msgstr ""
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolka"
 
 msgid "Nottinghamshire"
 msgstr ""
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "Oksfordšīre"
 
 msgid "Shropshire"
 msgstr ""
 
 msgid "Somerset"
-msgstr ""
+msgstr "Somerseta"
 
 msgid "South yorkshire"
 msgstr ""
@@ -2054,109 +2071,109 @@ msgid "Wiltshire"
 msgstr ""
 
 msgid "Scotland"
-msgstr ""
+msgstr "Skotija"
 
 msgid "Wales"
-msgstr ""
+msgstr "Velsa"
 
 msgid "Crete"
-msgstr ""
+msgstr "Krēta"
 
 msgid "North America"
-msgstr ""
+msgstr "Ziemeļamerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Aļaska"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Havaju salas"
 
 msgid "USA"
-msgstr ""
+msgstr "ASV"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (izņemt Aļasku un Havajas)"
 
 msgid "Midwest"
 msgstr ""
 
 msgid "Michigan"
-msgstr ""
+msgstr "Mičigana"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Ohaio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Ziemeļaustrumu"
 
 msgid "Massachusetts"
 msgstr ""
 
 msgid "Vermont"
-msgstr ""
+msgstr "Vermonta"
 
 msgid "Pacific"
-msgstr ""
+msgstr "Klusais okeāns"
 
 msgid "South"
-msgstr ""
+msgstr "Dienvidi"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkanzasa"
 
 msgid "District of Columbia"
 msgstr ""
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Luiziana"
 
 msgid "Maryland"
 msgstr ""
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Misisipi"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Teksasa"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Virdžīnija"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "Rietumvirdžīnija"
 
 msgid "West"
-msgstr ""
+msgstr "Rietumi"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Arizona"
 
 msgid "California"
-msgstr ""
+msgstr "Kalifornija"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Kolorado"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Aidaho"
 
 msgid "Montana"
-msgstr ""
+msgstr "Montana"
 
 msgid "New Mexico"
 msgstr ""
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Oregona"
 
 msgid "Utah"
 msgstr ""
@@ -2171,222 +2188,35 @@ msgid "Guyane Francaise"
 msgstr ""
 
 msgid "downloading"
-msgstr ""
+msgstr "lejupielādē"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr ""
+msgstr "gatavs"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Kļūda lejuplādējot karti!"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
-msgstr ""
+msgstr "Nav brīvas vietas"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Kļūda rakstot karti!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Kartes lejupielāde atcelta!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr ""
+msgstr "Atlikušais laiks"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr ""
+msgstr "Kartes lejuplāde"
 
 msgid "Vehicle Position"
 msgstr "Mašinas pozīcija"
-
-#. Strings from android/res/values/strings.xml
-#. Android resource: @strings/yes
-msgid "Yes"
-msgstr ""
-
-#. Android resource: @strings/notification_ticker
-msgid "Navit started"
-msgstr ""
-
-#. Android resource: @strings/notification_event_default
-msgid "Navit running"
-msgstr ""
-
-#. Android resource: @strings/initial_info_box_title
-msgid "Welcome to Navit"
-msgstr ""
-
-#. Android resource: @strings/initial_info_box_message
-msgid ""
-"Thank you for installing Navit!\n"
-"\n"
-"To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
-"\n"
-"Mapdata: (c) OpenStreetMap contributors\n"
-"\n"
-"Enjoy Navit!"
-msgstr ""
-
-#. Android resource: @strings/initial_info_box_OK
-msgid "OK"
-msgstr ""
-
-#. Android resource: @strings/initial_info_box_more_info
-msgid "More info"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_zoom_in
-msgid "Zoom in"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_zoom_out
-msgid "Zoom out"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_download_maps
-msgid "Download maps"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_toggle_poi
-msgid "Toggle POIs"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_exit_navit
-msgid "Exit Navit"
-msgstr ""
-
-#. Android resource: @strings/optionsmenu_backup_restore
-msgid "Backup / Restore"
-msgstr ""
-
-#. Android resource: @strings/map_delete
-msgid "Delete this map?"
-msgstr ""
-
-#. Android resource: @strings/map_download_downloading
-msgid "Downloading:"
-msgstr ""
-
-#. Android resource: @strings/map_download_download_error
-msgid "Error downloading map."
-msgstr ""
-
-#. Android resource: @strings/map_download_download_aborted
-msgid "Map download aborted"
-msgstr ""
-
-#. Android resource: @strings/map_no_fix
-msgid "No location. Reopen after location fix."
-msgstr ""
-
-#. Android resource: @strings/maps_for_current_location
-msgid "Maps containing current location"
-msgstr ""
-
-#. Android resource: @strings/address_search_title
-msgid "Address search"
-msgstr ""
-
-#. Android resource: @strings/address_enter_destination
-msgid "Enter destination"
-msgstr ""
-
-#. Android resource: @strings/address_partial_match
-msgid "Match partial address"
-msgstr ""
-
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr ""
-
-#. Android resource: @strings/address_search_not_found
-msgid "Address not found"
-msgstr ""
-
-#. Android resource: @strings/address_search_getting_results
-msgid "Getting search results"
-msgstr ""
-
-#. Android resource: @strings/address_search_loading_results
-msgid "Loading search results"
-msgstr ""
-
-#. Android resource: @strings/address_search_no_results
-msgid "No results found"
-msgstr ""
-
-#. Android resource: @strings/address_search_no_text_entered
-msgid "No text entered"
-msgstr ""
-
-#. Android resource: @strings/address_search_set_destination
-msgid "Setting destination to:"
-msgstr ""
-
-#. Android resource: @strings/choose_an_action
-msgid "Choose an action"
-msgstr ""
-
-#. Android resource: @strings/please_insert_an_sd_card
-msgid "Please insert an SD Card"
-msgstr ""
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr ""
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr ""
-
-#. Android resource: @strings/failed_to_create_backup_directory
-msgid "Failed to create backup directory"
-msgstr ""
-
-#. Android resource: @strings/backup_failed
-msgid "Backup failed"
-msgstr ""
-
-#. Android resource: @strings/no_backup_found
-msgid "No backup found"
-msgstr ""
-
-#. Android resource: @strings/failed_to_restore
-msgid "Failed to restore"
-msgstr ""
-
-#. Android resource: @strings/backup_successful
-msgid "Backup successful"
-msgstr ""
-
-#. Android resource: @strings/restore_successful_please_restart_navit
-msgid ""
-"Restore Successful\n"
-"Please restart Navit"
-msgstr ""
-
-#. Android resource: @strings/backup_not_found
-msgid "Backup not found"
-msgstr ""
-
-#. Android resource: @strings/restore_failed
-msgid "Restore failed"
-msgstr ""
-
-#. Android resource: @strings/select_backup
-msgid "Select backup"
-msgstr ""
-
-#. Android resource: @strings/backup
-msgid "Backup"
-msgstr ""
-
-#. Android resource: @strings/restore
-msgid "Restore"
-msgstr ""
 
 msgid "Main menu"
 msgstr "Galvenā izvēlne"
@@ -2405,7 +2235,7 @@ msgid "Tools"
 msgstr "Rīki"
 
 msgid "Route"
-msgstr ""
+msgstr "Maršruts"
 
 msgid "About"
 msgstr "Par"
@@ -2420,20 +2250,24 @@ msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
+"Nesenie\n"
+"Galamērķi"
 
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordinātas"
 
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
+"Apturēt\n"
+"Navigaciju"
 
 msgid "Display"
-msgstr ""
+msgstr "Ekrāns"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pilnekrāns"
 
 msgid "Window Mode"
 msgstr "Loga režīms"
@@ -2445,23 +2279,27 @@ msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
+"Atcelt pēdējo \n"
+"Pieturvietu"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
 msgstr ""
+"Atcelt nākamo \n"
+"Pieturvietu"
 
 msgid "Satellite Status"
-msgstr ""
+msgstr "Satalītu status"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "NMEA Dati"
 
 msgid "car_shortest"
-msgstr ""
+msgstr "Auto - ātrākais ceļš"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "Auto - izvairīties no maksas ceļiem"
 
 msgid "car_pedantic"
 msgstr ""
@@ -2469,27 +2307,203 @@ msgstr ""
 msgid "horse"
 msgstr "zirgs"
 
-#. chr:
-#. flags used for a truck: (first flag number is 0)
-#. 8: SIZE_OR_WEIGHT_LIMIT
-#. 21: TRANSPORT_TRUCK
-#. speed setup:
-#. 'speed' data of the atkaction for a car is
-#. reduced about 10 km/h. When the speed was at
-#. 10 km/h, I reduced it to 5 km/h.
-#. 'route_weight' data has been treated in the same way.
-#. If you want to discourage the use of small roads,
-#. just reduce this value.
-#. size and weight setup:
-#. This is an example, you have to use the data of your truck.
-#. bobshaffer's standard truck:
-#. (1 lb = 453.59237 g, 1 foot = .3048 m)
-#. (data has to be in [cm] and [kg] according to 'atkaction.h')
-#. vehicle_width=  9    feet,   274 cm
-#. vehicle_height= 13.5  feet,   411 cm
-#. vehicle_length= 70    feet,  2134 cm
-#. vehicle_weight= 80000 lbs,  36287 kg
-#. vehicle_axle_weight= 34000 lbs,  15422 kg
-#. 
 msgid "Truck"
 msgstr ""
+
+#. Strings from android/res/values/strings.xml
+#. Android resource: @strings/yes
+msgid "Yes"
+msgstr "Jā"
+
+#. Android resource: @strings/notification_ticker
+msgid "Navit started"
+msgstr "Navit sāknēts"
+
+#. Android resource: @strings/notification_event_default
+msgid "Navit running"
+msgstr "Navit darbojas"
+
+#. Android resource: @strings/initial_info_box_title
+msgid "Welcome to Navit"
+msgstr "Sveicināti Navit"
+
+#. Android resource: @strings/initial_info_box_message
+msgid ""
+"Thank you for installing Navit!\n"
+"\n"
+"To start, select \"Download maps\" from the menu to download a map. Note: "
+"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"\n"
+"Mapdata: (c) OpenStreetMap contributors\n"
+"\n"
+"Enjoy Navit!"
+msgstr ""
+"Paldies ka instalējāt Navit!\n"
+"\n"
+"Lai sāktu, izvēlaties \"Lejuplādēt kartes\" no izvēlnes, lai lejuplādētu "
+"kartes. Piezīme: Karšu izmērs var būt lilāks par (>50MB) - wifi savienojums "
+"ir rekomendēts.\n"
+"\n"
+"Karšu dati: (c) OpenStreetMap contributors\n"
+"\n"
+"Lai noder!"
+
+#. Android resource: @strings/initial_info_box_OK
+msgid "OK"
+msgstr "Labi"
+
+#. Android resource: @strings/initial_info_box_more_info
+msgid "More info"
+msgstr "Vairāk informācijas"
+
+#. Android resource: @strings/optionsmenu_zoom_in
+msgid "Zoom in"
+msgstr "Tuvināt"
+
+#. Android resource: @strings/optionsmenu_zoom_out
+msgid "Zoom out"
+msgstr "Tālināt"
+
+#. Android resource: @strings/optionsmenu_download_maps
+msgid "Download maps"
+msgstr "Lejuplādēt kartes"
+
+#. Android resource: @strings/optionsmenu_toggle_poi
+msgid "Toggle POIs"
+msgstr "Iespējot IP"
+
+#. Android resource: @strings/optionsmenu_exit_navit
+msgid "Exit Navit"
+msgstr "Iziet no Navit"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Rezerves kopija/Atjaunot"
+
+#. Android resource: @strings/map_delete
+msgid "Delete this map?"
+msgstr "Dzēst šo karti?"
+
+#. Android resource: @strings/map_download_downloading
+msgid "Downloading:"
+msgstr "Lejuplādē:"
+
+#. Android resource: @strings/map_download_download_error
+msgid "Error downloading map."
+msgstr "Kļūda lejuplādējot karti."
+
+#. Android resource: @strings/map_download_download_aborted
+msgid "Map download aborted"
+msgstr "Kartes lejupielāde atcelta"
+
+#. Android resource: @strings/map_no_fix
+msgid "No location. Reopen after location fix."
+msgstr "Nav atrašaās vietas. Atvriet vēlreiz kad noteikta tarašanās vieta"
+
+#. Android resource: @strings/maps_for_current_location
+msgid "Maps containing current location"
+msgstr "Kartes satur pasŗeizējo atrašanās vietu"
+
+#. Android resource: @strings/address_search_title
+msgid "Address search"
+msgstr "Meklēt adresi"
+
+#. Android resource: @strings/address_enter_destination
+msgid "Enter destination"
+msgstr "Ievadiet galamērķi"
+
+#. Android resource: @strings/address_partial_match
+msgid "Match partial address"
+msgstr "Daļēja adreses sakritība"
+
+#. Android resource: @strings/address_search_searching
+msgid "Searching..."
+msgstr "Meklē..."
+
+#. Android resource: @strings/address_search_not_found
+msgid "Address not found"
+msgstr "Adrese nav atrasta"
+
+#. Android resource: @strings/address_search_getting_results
+msgid "Getting search results"
+msgstr "Saņem meklēšanas rezultātus"
+
+#. Android resource: @strings/address_search_loading_results
+msgid "Loading search results"
+msgstr "Ielādē meklēšanas rezultātus"
+
+#. Android resource: @strings/address_search_no_results
+msgid "No results found"
+msgstr "Nekas nav atrasts"
+
+#. Android resource: @strings/address_search_no_text_entered
+msgid "No text entered"
+msgstr "Nav ivadīts teksts"
+
+#. Android resource: @strings/address_search_set_destination
+msgid "Setting destination to:"
+msgstr "Iestata galamērķi:"
+
+#. Android resource: @strings/choose_an_action
+msgid "Choose an action"
+msgstr "Izvēlaties darbību"
+
+#. Android resource: @strings/please_insert_an_sd_card
+msgid "Please insert an SD Card"
+msgstr "Ievietojiet SD karti"
+
+#. Android resource: @strings/backing_up
+msgid "Backing up..."
+msgstr "Rezerves kopēšana..."
+
+#. Android resource: @strings/restoring
+msgid "Restoring..."
+msgstr "Atjauno..."
+
+#. Android resource: @strings/failed_to_create_backup_directory
+msgid "Failed to create backup directory"
+msgstr "Neizdevās izveidot rezerves kopijas mapi"
+
+#. Android resource: @strings/backup_failed
+msgid "Backup failed"
+msgstr "Rezerves kopēšana neizdevās"
+
+#. Android resource: @strings/no_backup_found
+msgid "No backup found"
+msgstr "Rezerves kopija nav atrsta"
+
+#. Android resource: @strings/failed_to_restore
+msgid "Failed to restore"
+msgstr "Neizdevās atjunot"
+
+#. Android resource: @strings/backup_successful
+msgid "Backup successful"
+msgstr "Rezerves kopēšana veiksmīga"
+
+#. Android resource: @strings/restore_successful_please_restart_navit
+msgid ""
+"Restore Successful\n"
+"Please restart Navit"
+msgstr ""
+"Atjaunošana veiksmīga\n"
+"Lūdzu pārstartējiet Navit"
+
+#. Android resource: @strings/backup_not_found
+msgid "Backup not found"
+msgstr "Rezerves kopija nav atrasta"
+
+#. Android resource: @strings/restore_failed
+msgid "Restore failed"
+msgstr "Atjaunošana neizdevās"
+
+#. Android resource: @strings/select_backup
+msgid "Select backup"
+msgstr "Izvēlaties rezerves kopiju"
+
+#. Android resource: @strings/backup
+msgid "Backup"
+msgstr "Rezerves kopija"
+
+#. Android resource: @strings/restore
+msgid "Restore"
+msgstr "Atjaunot"
