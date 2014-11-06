@@ -10,7 +10,6 @@
 # Roadrunner IN https://launchpad.net/~online
 # Timo Jyrinki https://launchpad.net/~timo-jyrinki
 
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
@@ -23,8 +22,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 16:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
