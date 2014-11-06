@@ -115,21 +115,21 @@ msgstr "pēc %d.%d kilometr(a,iem"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "viena jūdze"
+msgstr[0] "%d jūdze"
 msgstr[1] "%d jūdzes"
 msgstr[2] "%d jūdzes"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "pēc vienas jūdzes"
+msgstr[0] "pēc %d jūdzes"
 msgstr[1] "pēc %d jūdzēm"
 msgstr[2] "pēc %d jūdzēm"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "kilometru"
+msgstr[0] "%d kilometru"
 msgstr[1] "%d kilometrus"
 msgstr[2] "%d kilometri"
 
