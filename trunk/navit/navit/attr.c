@@ -401,6 +401,15 @@ attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_f
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 
+/**
+ * @brief Converts an attribute to a string that can be displayed
+ *
+ * This function is just a wrapper around {@code attr_to_text_ext()}.
+ *
+ * @param attr The attribute to convert
+ * @param map
+ * @param pretty Not used
+ */
 char *
 attr_to_text(struct attr *attr, struct map *map, int pretty)
 {

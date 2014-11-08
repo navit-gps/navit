@@ -130,12 +130,33 @@ item_cleanup(void)
 		g_hash_table_destroy(default_flags_hash);
 }
 
+/**
+ * @brief Resets the "coordinate pointer" of an item
+ *
+ * This function resets the "coordinate pointer" of an item to point to the first coordinate pair,
+ * so that at the next call to {@code item_coord_get()} the first coordinates will be returned.
+ */
 void
 item_coord_rewind(struct item *it)
 {
 	it->meth->item_coord_rewind(it->priv_data);
 }
 
+/**
+ * @brief Gets the next coordinates from an item
+ *
+ * This function returns a list of coordinates from an item and advances the "coordinate pointer"
+ * by the number of coordinates returned, so that at the next call the next coordinates will be returned.
+ *
+ * @param it The item
+ * @param c Points to a buffer that will receive the coordinates.
+ * The buffer must be at least {@code count * sizeof(struct coord)} bytes in size.
+ * @param count The number of coordinates to retrieve. Attempts to read past the
+ * end are handled gracefully and only the available number of coordinates is
+ * returned.
+ *
+ * @return The number of coordinates actually retrieved and stored in {@code c}
+ */
 int
 item_coord_get(struct item *it, struct coord *c, int count)
 {
