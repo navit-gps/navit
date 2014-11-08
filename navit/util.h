@@ -23,6 +23,9 @@
 #include <ctype.h>
 #include "config.h"
 
+#define max(a,b) ((a) > (b) ? (a) : (b))
+#define min(a,b) ((a) < (b) ? (a) : (b))
+
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
 int navit_utf8_strcasecmp(const char *s1, const char *s2);
