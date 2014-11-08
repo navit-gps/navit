@@ -2135,7 +2135,7 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 }
 
 /**
- * @brief Adds a route distortion item to the route graph
+ * @brief Adds a turn restriction item to the route graph
  *
  * @param this The route graph to add to
  * @param item The item to add
