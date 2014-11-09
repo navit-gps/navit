@@ -1356,7 +1356,12 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 			 * at a motorway interchange.
 			 */
 			// FIXME: motorway junctions could have service roads
-			r="yes: motorway interchange";
+			r="yes: motorway interchange (multiple motorways)";
+			ret=1;
+		} else if (is_motorway_like(&(old->way)) && (num_other == 0) && (!is_same_street)) {
+			/* Another sign that we are at a motorway interchange is if the street name changes
+			 */
+			r="yes: motorway interchange (name changes)";
 			ret=1;
 		} else if ((new->way.item.type == type_ramp) && ((num_other == 0) || (abs(d) >= curve_limit)) && ((left > -90) || (right < 90))) {
 			/* Motorway ramps can be confusing, therefore we need to lower the bar for announcing a maneuver.
