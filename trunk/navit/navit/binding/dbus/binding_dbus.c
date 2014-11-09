@@ -1318,8 +1318,8 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 	struct map * map=NULL;
 	struct navigation * nav = NULL;
 	struct map_rect * mr=NULL;
-	struct item * item =NULL;
-	struct attr attr,route;
+	struct item *item = NULL;
+	struct attr attr,attr2,route;
 	struct coord c;
 	struct coord_geo g;
 	struct transformation *trans;
@@ -1350,7 +1350,7 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 		if(item_attr_get(item,attr_navigation_long,&attr)) {
 			item_coord_get(item, &c, 1);
 			transform_to_geo (projection_mg, &c, &g);
-			fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'><name>%s</name></rtept>\n",g.lng, g.lat, map_convert_string_tmp(item->map,attr.u.str));
+			fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'><type>%s</type><name>%s</name></rtept>\n",g.lng, g.lat, item_to_name(item->type), map_convert_string_tmp(item->map,attr.u.str));
 		}
 	}
 	fprintf(fp,"%s",trailer);
