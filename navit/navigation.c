@@ -1361,11 +1361,10 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		/* always make an announcement if you have to make a sharp turn */
 		r="yes: delta over 75";
 		ret=1;
-	} else if (!r && abs(d) > 22) {
-		//FIXME: use abs(d) >= curve_limit
+	} else if (!r && abs(d) >= curve_limit) {
 		/* When coming from street_2_* or higher category road, check if
 		 * - we have multiple options of the same category and
-		 * - we have to make a considerable turn (more than 22 degrees)
+		 * - we have to make a considerable turn (at least curve_limit)
 		 * If both is the case, ANNOUNCE.
 		 * Note: 22.5 degrees is the threshold because anything higher is
 		 * closer to 45 than to 0 degrees.
@@ -1373,7 +1372,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		if (cat >= maneuver_category(type_street_2_city)) {
 			if (num_similar > 1) {
 				ret=1;
-				r="yes: more than one similar road and delta over 22";
+				r="yes: more than one similar road and delta >= curve_limit";
 			}
 		}
 	}
