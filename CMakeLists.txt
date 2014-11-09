@@ -118,7 +118,7 @@ if(WIN32)
     add_feature(USE_NSIS "makensis not found" FALSE)
     FIND_PROGRAM(NSIS_EXECUTABLE NAMES makensis makensis.exe)
     if(NSIS_EXECUTABLE)
-    	set(USE_NSIS TRUE)
+        set_with_reason(USE_NSIS "makensis found" TRUE)
     endif(NSIS_EXECUTABLE)
 
     set(CPACK_GENERATOR ZIP)
