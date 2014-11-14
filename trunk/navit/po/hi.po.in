@@ -125,13 +125,13 @@ msgstr[1] ""
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "ek kilometer"
-msgstr[1] "kai kilometero"
+msgstr[1] "%d kilometero"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "ek kilometer mein"
-msgstr[1] "kai kilometero mein"
+msgstr[1] "%d kilometero mein"
 
 msgid "exit"
 msgstr "nikas"
