@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"Language: \n"
+"Language: sk\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -120,14 +120,14 @@ msgstr "o %d.%d kilometrov"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "jedna míľa"
+msgstr[0] "%d míľa"
 msgstr[1] "%d míle"
 msgstr[2] "%d míľ"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "o jednu míľu"
+msgstr[0] "o %d míľu"
 msgstr[1] "o %d míle"
 msgstr[2] "o %d míľ"
 
