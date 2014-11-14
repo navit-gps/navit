@@ -1319,7 +1319,7 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 	struct navigation * nav = NULL;
 	struct map_rect * mr=NULL;
 	struct item *item = NULL;
-	struct attr attr,attr2,route;
+	struct attr attr,route;
 	struct coord c;
 	struct coord_geo g;
 	struct transformation *trans;
