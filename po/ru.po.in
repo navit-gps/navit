@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"Language: \n"
+"Language: ru\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -135,14 +135,14 @@ msgstr "через %d,%d километров"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "одна миля"
+msgstr[0] "%d миля"
 msgstr[1] "%d мили"
 msgstr[2] "%d миль"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "через одну милю"
+msgstr[0] "чере%d милю"
 msgstr[1] "через %d мили"
 msgstr[2] "через %d миль"
 
