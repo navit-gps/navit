@@ -37,7 +37,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2014-09-12 20:49+0000\n"
 "Last-Translator: Artem Anufrij <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -45,6 +44,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1492,6 +1492,12 @@ msgstr "Als _Ziel setzen"
 msgid "Opens address search dialog"
 msgstr "Öffnet Adresssuche-Dialog"
 
+msgid "_POI search"
+msgstr ""
+
+msgid "Opens POI search dialog"
+msgstr ""
+
 msgid "_Stop Navigation"
 msgstr "Navigation be_enden"
 
@@ -1534,6 +1540,100 @@ msgstr "_Vollbild"
 
 msgid "Data"
 msgstr "Daten"
+
+msgid "Pharmacy"
+msgstr ""
+
+msgid "Restaurant"
+msgstr ""
+
+msgid "Restaurant. Fast food"
+msgstr ""
+
+msgid "Hotel"
+msgstr ""
+
+msgid "Car parking"
+msgstr ""
+
+msgid "Fuel station"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Hospital"
+msgstr ""
+
+msgid "Cinema"
+msgstr ""
+
+msgid "Train station"
+msgstr ""
+
+msgid "School"
+msgstr ""
+
+msgid "Police"
+msgstr ""
+
+msgid "Justice"
+msgstr ""
+
+msgid "Taxi"
+msgstr ""
+
+msgid "Shopping"
+msgstr ""
+
+msgid "Distance from screen center (km)"
+msgstr ""
+
+#, c-format
+msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "POI search"
+msgstr ""
+
+msgid "Select a category"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "Select a POI"
+msgstr ""
+
+msgid " "
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Visit Before"
+msgstr ""
 
 msgid "N"
 msgstr "N"

@@ -19,7 +19,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-05 11:04-0700\n"
 "PO-Revision-Date: 2013-12-01 01:04+0000\n"
 "Last-Translator: Sérgio Marques <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -1468,6 +1467,12 @@ msgstr "_Definir destino"
 msgid "Opens address search dialog"
 msgstr "Abre o diálogo de procura de destino"
 
+msgid "_POI search"
+msgstr ""
+
+msgid "Opens POI search dialog"
+msgstr ""
+
 msgid "_Stop Navigation"
 msgstr "Parar _navegação"
 
@@ -1509,6 +1514,100 @@ msgstr "Ecrã co_mpleto"
 
 msgid "Data"
 msgstr "Dados"
+
+msgid "Pharmacy"
+msgstr ""
+
+msgid "Restaurant"
+msgstr ""
+
+msgid "Restaurant. Fast food"
+msgstr ""
+
+msgid "Hotel"
+msgstr ""
+
+msgid "Car parking"
+msgstr ""
+
+msgid "Fuel station"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Hospital"
+msgstr ""
+
+msgid "Cinema"
+msgstr ""
+
+msgid "Train station"
+msgstr ""
+
+msgid "School"
+msgstr ""
+
+msgid "Police"
+msgstr ""
+
+msgid "Justice"
+msgstr ""
+
+msgid "Taxi"
+msgstr ""
+
+msgid "Shopping"
+msgstr ""
+
+msgid "Distance from screen center (km)"
+msgstr ""
+
+#, c-format
+msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "POI search"
+msgstr ""
+
+msgid "Select a category"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "Select a POI"
+msgstr ""
+
+msgid " "
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Visit Before"
+msgstr ""
 
 msgid "N"
 msgstr "N"
