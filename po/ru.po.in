@@ -1,4 +1,4 @@
-# Russian (ru)  translations for navit
+# Russian (ru) translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -30,8 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2014-10-05 16:09+0000\n"
+"PO-Revision-Date: 2014-11-09 21:33+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
@@ -136,14 +135,14 @@ msgstr "через %d,%d километров"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "%d мили"
+msgstr[0] "одна миля"
 msgstr[1] "%d мили"
 msgstr[2] "%d миль"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "через %d мили"
+msgstr[0] "через одну милю"
 msgstr[1] "через %d мили"
 msgstr[2] "через %d миль"
 
@@ -1486,6 +1485,12 @@ msgstr "Установить пункт назначения"
 msgid "Opens address search dialog"
 msgstr "Диалог поиска по адресу"
 
+msgid "_POI search"
+msgstr ""
+
+msgid "Opens POI search dialog"
+msgstr ""
+
 msgid "_Stop Navigation"
 msgstr "Остановить навигацию"
 
@@ -1527,6 +1532,100 @@ msgstr "Во весь экран"
 
 msgid "Data"
 msgstr "Данные"
+
+msgid "Pharmacy"
+msgstr "Аптека"
+
+msgid "Restaurant"
+msgstr "Ресторан"
+
+msgid "Restaurant. Fast food"
+msgstr ""
+
+msgid "Hotel"
+msgstr "Гостиница"
+
+msgid "Car parking"
+msgstr "Стоянка"
+
+msgid "Fuel station"
+msgstr "Заправочная станция"
+
+msgid "Bank"
+msgstr "Банк"
+
+msgid "Hospital"
+msgstr "Больница"
+
+msgid "Cinema"
+msgstr "Кинотеатр"
+
+msgid "Train station"
+msgstr "Железнодорожная станция"
+
+msgid "School"
+msgstr "Школа"
+
+msgid "Police"
+msgstr "Полиция"
+
+msgid "Justice"
+msgstr ""
+
+msgid "Taxi"
+msgstr "Такси"
+
+msgid "Shopping"
+msgstr "Магазин"
+
+msgid "Distance from screen center (km)"
+msgstr "Расстояние от центра экрана (км)"
+
+#, c-format
+msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "POI search"
+msgstr ""
+
+msgid "Select a category"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "Select a POI"
+msgstr ""
+
+msgid " "
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Visit Before"
+msgstr ""
 
 msgid "N"
 msgstr "С"

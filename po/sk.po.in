@@ -1,4 +1,4 @@
-# # Translation of Navit to Slovak language translations for navit
+# Slovak translations for navit
 # Copyright (C) 2006-2014 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
@@ -16,14 +16,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-05 11:04-0700\n"
-"PO-Revision-Date: 2014-06-27 23:32+0000\n"
+"PO-Revision-Date: 2014-11-07 17:39+0000\n"
 "Last-Translator: GizmoSK <gizmosk@gmail.com>\n"
 "Language-Team: Slovenčina\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+"Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -120,14 +120,14 @@ msgstr "o %d.%d kilometrov"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "%d míľa"
+msgstr[0] "jedna míľa"
 msgstr[1] "%d míle"
 msgstr[2] "%d míľ"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "o %d míľu"
+msgstr[0] "o jednu míľu"
 msgstr[1] "o %d míle"
 msgstr[2] "o %d míľ"
 
@@ -1471,6 +1471,12 @@ msgstr "Nastaviť _destination"
 msgid "Opens address search dialog"
 msgstr "Otvorí dialóg hľadania adresy"
 
+msgid "_POI search"
+msgstr ""
+
+msgid "Opens POI search dialog"
+msgstr ""
+
 msgid "_Stop Navigation"
 msgstr "Zastaviť navigáciu"
 
@@ -1512,6 +1518,100 @@ msgstr "Celá obrazovka"
 
 msgid "Data"
 msgstr "Dáta"
+
+msgid "Pharmacy"
+msgstr ""
+
+msgid "Restaurant"
+msgstr ""
+
+msgid "Restaurant. Fast food"
+msgstr ""
+
+msgid "Hotel"
+msgstr ""
+
+msgid "Car parking"
+msgstr ""
+
+msgid "Fuel station"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Hospital"
+msgstr ""
+
+msgid "Cinema"
+msgstr ""
+
+msgid "Train station"
+msgstr ""
+
+msgid "School"
+msgstr ""
+
+msgid "Police"
+msgstr ""
+
+msgid "Justice"
+msgstr ""
+
+msgid "Taxi"
+msgstr ""
+
+msgid "Shopping"
+msgstr ""
+
+msgid "Distance from screen center (km)"
+msgstr ""
+
+#, c-format
+msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "POI search"
+msgstr ""
+
+msgid "Select a category"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "Select a POI"
+msgstr ""
+
+msgid " "
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Visit Before"
+msgstr ""
 
 msgid "N"
 msgstr "S"
