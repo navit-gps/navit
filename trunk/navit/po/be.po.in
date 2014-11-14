@@ -124,8 +124,9 @@ msgstr[1] ""
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "адзін кіламетр"
+msgstr[0] "%d кіламетр"
 msgstr[1] "%d кіламетраў"
+msgstr[2] "%d кіламетраў"
 
 #, c-format
 msgid "in one kilometer"
