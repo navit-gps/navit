@@ -95,8 +95,7 @@ strftime_localtime(char *buffer, int size, char *fmt)
 
 	t=time(NULL);
 	tm=localtime(&t);
-	strftime(buffer, 4096, fmt, tm);
-	//FIXME: strftime(buffer, size - 1, fmt, tm);
+	strftime(buffer, size - 1, fmt, tm);
 }
 
 /** 
