@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2009 Navit Team
  *
@@ -15,6 +15,16 @@
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
+ */
+ 
+/** @file vehicle.c
+ * @brief Generic components of the vehicle object.
+ * 
+ * This file implements the generic vehicle interface, i.e. everything which is
+ * not specific to a single data source.
+ *
+ * @author Navit Team
+ * @date 2005-2014
  */
 
 #include <stdio.h>
@@ -78,7 +88,13 @@ static int vehicle_add_log(struct vehicle *this_, struct log *log);
 
 
 /**
- * Creates a new vehicle
+ * @brief Creates a new vehicle
+ *
+ * @param parent
+ * @param attrs Points to a null-terminated array of pointers to the attributes
+ * for the new vehicle type.
+ *
+ * @return The newly created vehicle object
  */
 struct vehicle *
 vehicle_new(struct attr *parent, struct attr **attrs)
@@ -138,7 +154,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 }
 
 /**
- * Destroys a vehicle
+ * @brief Destroys a vehicle
  * 
  * @param this_ The vehicle to destroy
  */
@@ -188,8 +204,9 @@ vehicle_attr_iter_destroy(struct attr_iter *iter)
  *
  * @param this_ Pointer to a vehicle structure
  * @param type The attribute type to look for
- * @param attr Pointer to an attr structure to store the attribute
+ * @param attr Pointer to a {@code struct attr} to store the attribute
  * @param iter A vehicle attr_iter
+ * @return True for success, false for failure
  */
 int
 vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
@@ -210,9 +227,9 @@ vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, 
 /**
  * Generic set function
  *
- * @param this_ Pointer to a vehicle structure
- * @param attr Pointer to an attr structure for the attribute to be set
- * @return nonzero on success, zero on failure
+ * @param this_ A vehicle
+ * @param attr The attribute to set
+ * @return False on success, true on failure
  */
 int
 vehicle_set_attr(struct vehicle *this_, struct attr *attr)
@@ -237,7 +254,9 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr)
  * Generic add function
  *
  * @param this_ A vehicle
- * @param attr A struct attr
+ * @param attr The attribute to add
+ *
+ * @return true if the attribute was added, false if not.
  */
 int
 vehicle_add_attr(struct vehicle *this_, struct attr *attr)
@@ -452,10 +471,10 @@ vehicle_draw_do(struct vehicle *this_, int lazy)
 }
 
 /**
- * Writes to an NMEA log.
+ * @brief Writes to an NMEA log.
  *
- * @param this_ Pointer to the vehicle structure of the data source
- * @param log Pointer to a log structure for the log file
+ * @param this_ The vehicle supplying data
+ * @param log The log to write to
  */
 static void
 vehicle_log_nmea(struct vehicle *this_, struct log *log)
@@ -468,6 +487,15 @@ vehicle_log_nmea(struct vehicle *this_, struct log *log)
 	log_write(log, pos_attr.u.str, strlen(pos_attr.u.str), 0);
 }
 
+/**
+ * Add a tag to the extensions section of a GPX trackpoint.
+ *
+ * @param tag The tag to add
+ * @param logstr Pointer to a pointer to a string to be inserted into the log.
+ * When calling this function, {@code *logstr} must point to the substring into which the new tag is
+ * to be inserted. If {@code *logstr} is NULL, a new string will be created for the extensions section.
+ * Upon returning, {@code *logstr} will point to the new string with the additional tag inserted.
+ */
 void
 vehicle_log_gpx_add_tag(char *tag, char **logstr)
 {
@@ -502,10 +530,10 @@ vehicle_log_gpx_add_tag(char *tag, char **logstr)
 }
 
 /**
- * Writes to a GPX log.
+ * @brief Writes a trackpoint to a GPX log.
  *
- * @param this_ Pointer to the vehicle structure of the data source
- * @param log Pointer to a log structure for the log file
+ * @param this_ The vehicle supplying data
+ * @param log The log to write to
  */
 static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
@@ -580,10 +608,10 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 }
 
 /**
- * Writes to a text log.
+ * @brief Writes to a text log.
  *
- * @param this_ Pointer to the vehicle structure of the data source
- * @param log Pointer to a log structure for the log file
+ * @param this_ The vehicle supplying data
+ * @param log The log to write to
  */
 static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
@@ -604,10 +632,10 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log)
 }
 
 /**
- * Writes to a binary log.
+ * @brief Writes to a binary log.
  *
- * @param this_ Pointer to the vehicle structure of the data source
- * @param log Pointer to a log structure for the log file
+ * @param this_ The vehicle supplying data
+ * @param log The log to write to
  */
 static void
 vehicle_log_binfile(struct vehicle *this_, struct log *log)
@@ -664,10 +692,12 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log)
 }
 
 /**
- * Register a new log to receive data.
+ * @brief Registers a new log to receive data.
  *
- * @param this_ Pointer to the vehicle structure of the data source
- * @param log Pointer to a log structure for the log file
+ * @param this_ The vehicle supplying data
+ * @param log The log to write to
+ *
+ * @return False if the log is of an unknown type, true otherwise (including when {@code attr_type} is missing).
  */
 static int
 vehicle_add_log(struct vehicle *this_, struct log *log)

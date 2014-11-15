@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -15,6 +15,15 @@
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
+ */
+ 
+/** @file log.c
+ * @brief The log object.
+ * 
+ * This file implements everything needed for logging: the log object and its functions.
+ *
+ * @author Navit Team
+ * @date 2005-2014
  */
 
 #include "config.h"
@@ -67,6 +76,17 @@ struct log {
 	struct log_data trailer;
 };
 
+/** 
+ * @brief Stores formatted time to a string.
+ *
+ * This function obtains local system time, formats it as specified in {@code fmt} and stores it in buffer.
+ * Format strings follow the same syntax as those for {@code strftime()}.
+ *
+ * @param buffer A preallocated buffer that will receive the formatted time
+ * @param size Size of the buffer, in bytes
+ * @param fmt The format string
+ * @return Nothing
+ */
 static void
 strftime_localtime(char *buffer, int size, char *fmt)
 {
@@ -76,8 +96,19 @@ strftime_localtime(char *buffer, int size, char *fmt)
 	t=time(NULL);
 	tm=localtime(&t);
 	strftime(buffer, 4096, fmt, tm);
+	//FIXME: strftime(buffer, size - 1, fmt, tm);
 }
 
+/** 
+ * @brief Expands placeholders in a filename
+ *
+ * This function examines the {@code log->filename} and replaces any placeholders
+ * found in it with date, time or an incremental number. If an incremental number is specified, the function
+ * will ensure the filename is unique. The expanded filename will be stored {@code log->filename_ex2}.
+ * The function uses {@code log->filename_ex1} to store the partly-expanded filename.
+ * 
+ * @param this_ The log object.
+ */
 static void
 expand_filenames(struct log *this_)
 {
@@ -102,6 +133,13 @@ expand_filenames(struct log *this_)
 		this_->filename_ex2=g_strdup(this_->filename_ex1);
 }
 
+/** 
+ * @brief Sets the time at which the log buffer was last flushed.
+ *
+ * This function sets {@code log->last_flush} to current time.
+ *
+ * @param this_ The log object.
+ */
 static void
 log_set_last_flush(struct log *this_)
 {
@@ -110,6 +148,24 @@ log_set_last_flush(struct log *this_)
 #endif
 }
 
+/** 
+ * @brief Opens a log file.
+ *
+ * This function opens the log file for {@code log}.
+ * The file name must be specified by {@code log->filename_ex2} before this function is called.
+ * <p>
+ * {@code log->overwrite} specifies the behavior if the file exists: if true,
+ * an existing file will be overwritten, else it will be appended to.
+ * <p>
+ * If the directory specified in the filename does not exist and the {@code log->mkdir}
+ * is true, it will be created.
+ * <p>
+ * After the function returns, {@code log->f} will contain the file handle (or NULL, if
+ * the operation failed) and {@code log->empty} will indicate if the file is empty.
+ * {@code log->last_flush} will be updated with the current time.
+ *
+ * @param this_ The log object.
+ */
 static void
 log_open(struct log *this_)
 {
@@ -131,6 +187,13 @@ log_open(struct log *this_)
 	log_set_last_flush(this_);
 }
 
+/** 
+ * @brief Closes a log file.
+ *
+ * This function writes the trailer to a log file, flushes it and closes the log file for {@code log}.
+ *
+ * @param this_ The log object.
+ */
 static void
 log_close(struct log *this_)
 {
@@ -143,6 +206,31 @@ log_close(struct log *this_)
 	this_->f=NULL;
 }
 
+/** 
+ * @brief Flushes the buffer of a log.
+ *
+ * This function writes buffered log data to the log file associated with {@code log}
+ * and updates {@code log->last_flush} with the current time.
+ * <p>
+ * If {@code log->lazy} is true, this function will open the file if needed, else
+ * the file must be opened with {@code log_open()} prior to calling this function.
+ * <p>
+ * If the file is empty, the header will be written first, followed by the buffer data.
+ * {@code log->empty} will be set to zero if header or data are written to the file.
+ *
+ * @param this_ The log object.
+ * @param flags Flags to control behavior of the function:
+ * <br>
+ * {@code log_flag_replace_buffer}: ignored
+ * <br>
+ * {@code log_flag_force_flush}: ignored
+ * <br>
+ * {@code log_flag_keep_pointer}: keeps the file pointer at the start position of the new data
+ * <br>
+ * {@code log_flag_keep_buffer}: prevents clearing of the buffer after a successful write (default is to clear the buffer).
+ * <br>
+ * {@code log_flag_truncate}: truncates the log file at the current position. On the Win32 Base API, this flag has no effect.
+ */
 static void
 log_flush(struct log *this_, enum log_flags flags)
 {
@@ -185,13 +273,39 @@ log_flush(struct log *this_, enum log_flags flags)
 	log_set_last_flush(this_);
 }
 
+/** 
+ * @brief Determines if the maximum buffer size of a log has been exceeded.
+ *
+ * This function examines the size of the data buffer to determine if it exceeds
+ * the maximum size specified in {@code log->flush_size} and thus needs to be flushed.
+ *
+ * @param this_ The log object.
+ * @return True if the cache needs to be flushed, false otherwise.
+ */
 static int
 log_flush_required(struct log *this_)
 {
 	return this_->data.len > this_->flush_size;
 }
 
-
+/** 
+ * @brief Rotates a log file.
+ *
+ * This function rotates a log by stopping and immediately restarting it.
+ * Stopping flushes the buffer and closes the file; restarting determines the
+ * new file name and opens the file as needed (depending on the lazy member).
+ * <p>
+ * Depending on the file name format and how the function was called, a new log
+ * file will be created or the old log file will be reused (appended to or
+ * overwritten, depending on {@code log->overwrite}): if the file name includes an
+ * incremental number, the new file will always have a different name. If a
+ * previous call to {@code log_change_required()} returned true, the new file
+ * will also have a different name. In all other cases the new file will have
+ * the same name as the old one, causing the old file to be overwritten or
+ * appended to.
+ *
+ * @param this_ The log object.
+ */
 static void
 log_change(struct log *this_)
 {
@@ -202,6 +316,15 @@ log_change(struct log *this_)
 		log_open(this_);
 }
 
+/** 
+ * @brief Determines if the log must be rotated.
+ *
+ * This function expands the date and time placeholders in {@code log->filename}
+ * to determine if the resulting part of the filename has changed.
+ *
+ * @param this_ The log object.
+ * @return True if the date/time-dependent part of the filename has changed, false otherwise.
+ */
 static int
 log_change_required(struct log *this_)
 {
@@ -211,6 +334,14 @@ log_change_required(struct log *this_)
 	return (strcmp(this_->filename_ex1, buffer) != 0);
 }
 
+/** 
+ * @brief Determines if the flush interval of a log has elapsed and flushes the buffer if needed.
+ *
+ * This function calculates the difference between current time and {@code log->last_flush}.
+ * If it is greater than or equal to {@code log->flush_time}, the buffer is flushed.
+ *
+ * @param this_ The log object.
+ */
 static void
 log_timer(struct log *this_)
 {
@@ -225,6 +356,15 @@ log_timer(struct log *this_)
 #endif
 }
 
+/** 
+ * @brief Gets an attribute
+ *
+ * @param this_ The log object.
+ * @param attr_type The attribute type to return
+ * @param attr Points to a struct attr to store the attribute
+ * @param iter An attribute iterator
+ * @return True for success, false for failure
+ */
 int
 log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
@@ -232,6 +372,13 @@ log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct a
 }
 
 
+/** 
+ * @brief Creates and initializes a new log object.
+ *
+ * @param parent The parent object.
+ * @param attrs Points to an array of pointers to attributes for the new log object
+ * @return The new log object, or NULL if creation fails.
+ */
 struct log *
 log_new(struct attr * parent,struct attr **attrs)
 {
@@ -285,6 +432,16 @@ log_new(struct attr * parent,struct attr **attrs)
 	return ret;
 }
 
+/** 
+ * @brief Sets the header for a log file.
+ *
+ * This function sets the header, which is to be inserted into any log file before
+ * the actual log data.
+ *
+ * @param this_ The log object.
+ * @param data The header data.
+ * @param len Size of the header data to be copied, in bytes.
+ */
 void
 log_set_header(struct log *this_, char *data, int len)
 {
@@ -293,6 +450,16 @@ log_set_header(struct log *this_, char *data, int len)
 	memcpy(this_->header.data, data, len);
 }
 
+/** 
+ * @brief Sets the trailer for a log file.
+ *
+ * This function sets the trailer, which is to be added to any log file after
+ * the actual log data.
+ *
+ * @param this_ The log object.
+ * @param data The trailer data.
+ * @param len Size of the trailer data to be copied, in bytes.
+ */
 void
 log_set_trailer(struct log *this_, char *data, int len)
 {
@@ -301,6 +468,28 @@ log_set_trailer(struct log *this_, char *data, int len)
 	memcpy(this_->trailer.data, data, len);
 }
 
+/** 
+ * @brief Writes to a log.
+ *
+ * This function appends data to a log. It rotates the log, if needed, before 
+ * adding the new data. After adding, the log is flushed if the buffer exceeds
+ * its maximum size or if the {@code log_flag_force_flush} flag is set.
+ *
+ * @param this_ The log object.
+ * @param data Points to a buffer containing the data to be appended.
+ * @param len Length of the data to be appended, in bytes.
+ * @param flags Flags to control behavior of the function:
+ * <br>
+ * {@code log_flag_replace_buffer}: discards any data in the buffer not yet written to the log file
+ * <br>
+ * {@code log_flag_force_flush}: forces a flush of the log after appending the data
+ * <br>
+ * {code log_flag_keep_pointer}: ignored
+ * <br>
+ * {@code log_flag_keep_buffer}: ignored
+ * <br>
+ * {@code log_flag_truncate}: ignored
+ */
 void
 log_write(struct log *this_, char *data, int len, enum log_flags flags)
 {
@@ -313,7 +502,7 @@ log_write(struct log *this_, char *data, int len, enum log_flags flags)
 		this_->data.len=0;
 	if (this_->data.len + len > this_->data.max_len) {
 		dbg(2,"overflow\n");
-		this_->data.max_len+=16384;
+		this_->data.max_len+=16384; // FIXME: what if len exceeds this->data.max_len by more than 16384 bytes?
 		this_->data.data=g_realloc(this_->data.data,this_->data.max_len);
 	}
 	memcpy(this_->data.data+this_->data.len, data, len);
@@ -322,6 +511,14 @@ log_write(struct log *this_, char *data, int len, enum log_flags flags)
 		log_flush(this_, flags);
 }
 
+/** 
+ * @brief Returns the data buffer of a log object and its length.
+ *
+ * @param this_ The log object.
+ * @param len Points to an int which will receive the length of the buffer.
+ * This can be NULL, in which case no information on buffer length will be stored.
+ * @return Pointer to the data buffer.
+ */
 void *
 log_get_buffer(struct log *this_, int *len)
 {
@@ -331,6 +528,16 @@ log_get_buffer(struct log *this_, int *len)
 }
 
 
+/** 
+ * @brief Writes a formatted string to a log.
+ *
+ * This function formats a string in a fashion similar to {@code printf()} and related functions
+ * and writes it to a log using {@code log_write()}.
+ *
+ * @param this_ The log object.
+ * @param fmt The format string.
+ * @param ... Additional arguments must be specified for each placeholder in the format string.
+ */
 void
 log_printf(struct log *this_, char *fmt, ...)
 {
@@ -347,6 +554,11 @@ log_printf(struct log *this_, char *fmt, ...)
 	va_end(ap);
 }
 
+/** 
+ * @brief Destroys a log object and frees up its memory.
+ *
+ * @param this_ The log object.
+ */
 void
 log_destroy(struct log *this_)
 {
