@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -15,6 +15,15 @@
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
+ */
+ 
+/** @file attr.c
+ * @brief Attribute handling code
+ * 
+ * Structures and functions for working with attributes.
+ *
+ * @author Navit Team
+ * @date 2005-2014
  */
 
 #include <stdlib.h>
@@ -74,6 +83,14 @@ attr_destroy_hash(void)
 	attr_hash=NULL;
 }
 
+/** 
+ * @brief Converts a string to an attr_type
+ *
+ * This function reads a string and returns the corresponding attr_type.
+ *
+ * @param name The attribute name
+ * @return The corresponding {@code attr_type}, or {@code attr_none} if the string specifies a nonexistent or invalid attribute type.
+ */
 enum attr_type
 attr_from_name(const char *name)
 {
@@ -93,6 +110,14 @@ static int attr_match(enum attr_type search, enum attr_type found);
 
 
 
+/** 
+ * @brief Converts an attr_type to a string
+ *
+ * @param attr The attribute type to be converted.
+ * @return The attribute name, or NULL if an invalid value was passed as {@code attr}.
+ * The calling function should create a copy of the string if it needs to alter it or relies on the
+ * string being available permanently.
+ */
 char *
 attr_to_name(enum attr_type attr)
 {
@@ -105,6 +130,16 @@ attr_to_name(enum attr_type attr)
 	return NULL; 
 }
 
+/** 
+ * @brief Creates an attribute from text information
+ *
+ * This function creates an attribute from two strings specifying the name and
+ * the value.
+ *
+ * @param name The name of the new attribute
+ * @param value The value of the new attribute
+ * @return The new attribute
+ */
 struct attr *
 attr_new_from_text(const char *name, const char *value)
 {
@@ -250,6 +285,12 @@ attr_new_from_text(const char *name, const char *value)
 	return ret;
 }
 
+/** 
+ * @brief Converts access flags to a human-readable string.
+ *
+ * @param flags The flags as a number
+ * @return The flags in human-readable form
+ */
 static char *
 flags_to_text(int flags)
 {
@@ -289,6 +330,19 @@ flags_to_text(int flags)
 	return ret;
 }
 
+/** 
+ * @brief Converts attribute data to human-readable text
+ *
+ * @param attr The attribute to be formatted
+ * @param sep The separator to insert between a numeric value and its unit. If NULL, nothing will be inserted.
+ * @param fmt Set to {@code attr_format_with_units} if {@code attr} is of type {@code attr_destination_length}
+ * or {@code attr_destination_time} or a group type which might contain attributes of those types. Ignored for
+ * all other attribute types.
+ * @param def_fmt Not used
+ * @param map The translation map. This is only needed for string type attributes or group type
+ * attributes which might contain strings. It can be NULL for other attribute types. If a string
+ * type attribute is encountered and {@code map} is NULL, the string will be returned unchanged.
+ */
 char *
 attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map)
 {
@@ -407,7 +461,7 @@ attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_f
  * This function is just a wrapper around {@code attr_to_text_ext()}.
  *
  * @param attr The attribute to convert
- * @param map
+ * @param map The translation map, see {@code attr_to_text_ext()}
  * @param pretty Not used
  */
 char *
@@ -416,6 +470,18 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	return attr_to_text_ext(attr, NULL, attr_format_default, attr_format_default, map);
 }
 
+/** 
+ * @brief Searches for an attribute of a given type
+ *
+ * This function searches an array of pointers to attributes for a given
+ * attribute type and returns the first match.
+ *
+ * @param attrs Points to the array of attribute pointers to be searched
+ * @param last Not used
+ * @param attr_type The attribute type to search for. Generic types (such as
+ * attr_any or attr_any_xml) are NOT supported.
+ * @return Pointer to the first matching attribute, or NULL if no match was found.
+ */
 struct attr *
 attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 {
@@ -448,6 +514,32 @@ attr_match(enum attr_type search, enum attr_type found)
 	}
 }
 
+/**
+ * @brief Generic get function
+ *
+ * This function searches an attribute list for an attribute of a given type and
+ * stores it in the attr parameter. If no match is found in attrs and the
+ * def_attrs argument is supplied, def_attrs is searched for the attribute type
+ * and the first match (if any) is returned.
+ * <p>
+ * Searching for attr_any or attr_any_xml is supported, but def_attrs will not
+ * be searched in that case.
+ * <p>
+ * An iterator can be specified to get multiple attributes of the same type:
+ * The first call will return the first match from attr; each subsequent call
+ * with the same iterator will return the next match. After obtaining the last
+ * match from attr, def_attrs is searched in the same manner. If no more matching
+ * attributes are found in either of them, false is returned.
+ *
+ * @param attrs Points to the array of attribute pointers to be searched
+ * @param def_attrs Points to a list of pointers to default attributes.
+ * If an attribute is not found in attrs, the function will return the first
+ * match from def_attrs. This parameter may be NULL.
+ * @param type The attribute type to search for
+ * @param attr Points to a {@code struct attr} which will receive the attribute
+ * @param iter An iterator. This parameter may be NULL.
+ * @return True if a matching attribute was found, false if not.
+ */
 int
 attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
@@ -475,6 +567,18 @@ attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_ty
 	return 0;
 }
 
+/**
+ * @brief Generic set function
+ *
+ * This function will search the list for the first attribute of the same type
+ * as the supplied new one and replace it with that. If the list does not
+ * contain an attribute whose type matches that of the new one, the new
+ * attribute is inserted into the list.
+ *
+ * @param attrs Points to the array of attribute pointers to be updated
+ * @param attr The new attribute.
+ * @return Pointer to the updated attribute list
+ */
 struct attr **
 attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 {
@@ -498,6 +602,15 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 	return curr;
 }
 
+/**
+ * @brief Generic add function
+ *
+ * This function will insert a new attribute into the list.
+ *
+ * @param attrs Points to the array of attribute pointers to be updated
+ * @param attr The new attribute.
+ * @return Pointer to the updated attribute list
+ */
 struct attr **
 attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 {
@@ -823,12 +936,12 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 }
 
 /**
- * Check if an enumeration of attribute types contains a specific attribute.
+ * @brief Checks if an enumeration of attribute types contains a specific attribute.
  *
- * @param types Pointer to the attr_type enumeration to be searched
+ * @param types Points to a NULL-terminated array of pointers to {@code enum attr_type}, which will be searched
  * @param type The attr_type to be searched for
  *
- * @return 1 if the attribute type was found, 0 if it was not found or if a null pointer was passed as types
+ * @return True if the attribute type was found, false if it was not found or if {@code types} is empty
  */
 int
 attr_types_contains(enum attr_type *types, enum attr_type type)
@@ -842,14 +955,16 @@ attr_types_contains(enum attr_type *types, enum attr_type type)
 }
 
 /**
- * Check if an enumeration of attribute types contains a specific attribute. 
- * It is different from attr_types_contains in that it returns a caller-defined value if the pointer to the enumeration is NULL.
+ * @brief Check if an enumeration of attribute types contains a specific attribute.
  *
- * @param types Pointer to the attr_type enumeration to be searched
+ * This function is mostly identical to {@code attr_types_contains()} but returns the supplied default
+ * value if {@code types} is empty.
+ *
+ * @param types Points to a NULL-terminated array of pointers to {@code enum attr_type}, which will be searched
  * @param type The attr_type to be searched for
- * @param deflt The default value to return if types is NULL.
+ * @param deflt The default value to return if {@code types} is empty.
  *
- * @return 1 if the attribute type was found, 0 if it was not found, the value of the deflt argument if types is NULL.
+ * @return True if the attribute type was found, false if it was not found, {@code deflt} if types is empty.
  */
 int
 attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt)

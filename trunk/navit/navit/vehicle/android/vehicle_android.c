@@ -59,7 +59,7 @@ struct vehicle_priv {
 /**
  * @brief Free the android_vehicle
  * 
- * @param priv
+ * @param priv vehicle_priv structure for the vehicle
  * @returns nothing
  */
 static void
@@ -70,12 +70,12 @@ vehicle_android_destroy(struct vehicle_priv *priv)
 }
 
 /**
- * @brief Provide the outside with information
- * 
- * @param priv
- * @param type TODO: What can this be?
- * @param attr
- * @returns true/false
+ * @brief Retrieves a vehicle attribute.
+ *
+ * @param priv vehicle_priv structure for the vehicle
+ * @param type The attribute type to retrieve
+ * @param attr Points to an attr structure that will receive the attribute data
+ * @returns True for success, false for failure
  */
 static int
 vehicle_android_position_attr_get(struct vehicle_priv *priv,

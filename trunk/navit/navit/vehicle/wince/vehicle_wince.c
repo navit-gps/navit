@@ -710,6 +710,11 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv)
 }
 
 
+/**
+ * @brief Frees the wince_vehicle
+ * 
+ * @param priv vehicle_priv structure for the vehicle
+ */
 static void
 vehicle_wince_destroy(struct vehicle_priv *priv)
 {
@@ -729,6 +734,14 @@ vehicle_wince_destroy(struct vehicle_priv *priv)
 	g_free(priv);
 }
 
+/**
+ * @brief Retrieves a vehicle attribute.
+ *
+ * @param priv vehicle_priv structure for the vehicle
+ * @param type The attribute type to retrieve
+ * @param attr Points to an attr structure that will receive the attribute data
+ * @returns True for success, false for failure
+ */
 static int
 vehicle_wince_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
@@ -846,6 +859,14 @@ struct vehicle_methods vehicle_wince_methods = {
 	NULL,
 };
 
+/**
+ * @brief Creates a new wince_vehicle
+ * 
+ * @param meth
+ * @param cbl
+ * @param attrs
+ * @returns vehicle_priv
+ */
 static struct vehicle_priv *
 vehicle_wince_new(struct vehicle_methods
 		      *meth, struct callback_list
@@ -921,6 +942,9 @@ vehicle_wince_new(struct vehicle_methods
 	return NULL;
 }
 
+/**
+ * @brief Registers the vehicle_wince plugin
+ */
 void
 plugin_init(void)
 {

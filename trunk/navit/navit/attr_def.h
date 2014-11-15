@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2009 Navit Team
  *
@@ -15,6 +15,15 @@
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
+ */
+
+/** @file attr_def.h
+ * @brief Attribute definitions.
+ * 
+ * Any attribute used by a Navit object must be defined in this file.
+ *
+ * @author Navit Team
+ * @date 2005-2014
  */
 
 /* prototypes */
