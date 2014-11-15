@@ -2516,13 +2516,14 @@ struct osd_text {
 
 
 /**
- * @brief Format a text attribute
+ * @brief Formats a text attribute
  *
  * Returns the formatted current value of an attribute as a string
  * 
- * @param attr Pointer to an attr structure specifying the attribute to be formatted
- * @param format Pointer to a string specifying how to format the attribute. Allowed format strings depend on the attribute; this member can be NULL.
- * @returns Pointer to a string containing the formatted value
+ * @param attr The attribute to be formatted
+ * @param format A string specifying how to format the attribute. Allowed format strings depend on the attribute; this member can be NULL.
+ * @param imperial True to convert values to imperial, false to return metric values
+ * @returns The formatted value
  */
 static char *
 osd_text_format_attr(struct attr *attr, char *format, int imperial)
@@ -2675,11 +2676,17 @@ osd_text_format_attr(struct attr *attr, char *format, int imperial)
 }
 
 /**
- * Parse a string of the form key.subkey or key[index].subkey into its components, where subkey can itself have its own index and further subkeys
+ * @brief Parses a string of the form key.subkey or key[index].subkey into its components, where subkey
+ * can itself have its own index and further subkeys
  *
- * @param in String to parse (the part before subkey will be modified by the function); upon returning this pointer will point to a string containing key
- * @param index Pointer to an address that will receive a pointer to a string containing index or a null pointer if key does not have an index
- * @returns If the function succeeds, a pointer to a string containing subkey, i.e. everything following the first period, or a pointer to an empty string if there is nothing left to parse. If the function fails(index with missing closed bracket or passing a null pointer as index argument when an index was encountered), the return value is NULL
+ * @param in String to parse (the part before subkey will be modified by the function); upon returning
+ * this pointer will point to a string containing key
+ * @param index Pointer to an address that will receive a pointer to a string containing index or NULL
+ * if key does not have an index
+ * @returns If the function succeeds, a pointer to a string containing subkey, i.e. everything following
+ * the first period, or a pointer to an empty string if there is nothing left to parse. If the function
+ * fails (index with missing closed bracket or passing a null pointer as index argument when an index
+ * was encountered), the return value is NULL
  */
 static char *
 osd_text_split(char *in, char **index)
@@ -2944,10 +2951,11 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 }
 
 /**
- * @brief Create a new osd_text_item and insert it into a linked list
+ * @brief Creates a new osd_text_item and inserts it into a linked list
  * 
- * @param parent Pointer to the preceding osd_text_item structure in the list. If NULL, the new osd_text_item becomes the root element of a new list.
- * @returns A pointer to the new osd_text_item element.
+ * @param parent The preceding {@code osd_text_item} in the list. If NULL, the new item becomes the root
+ * element of a new list
+ * @returns The new {@code osd_text_item}
  */
 static struct osd_text_item *
 oti_new(struct osd_text_item * parent)
@@ -2967,13 +2975,14 @@ oti_new(struct osd_text_item * parent)
 }
 
 /**
- * @brief Prepare a text type OSD element
+ * @brief Prepares a text type OSD element
  *
- * Parses the label string (as specified in the XML file) for a text type OSD element into attributes and static text. 
+ * This function parses the label string (as specified in the XML file) for a text type OSD element
+ * into attributes and static text.
  * 
- * @param this Pointer to an osd_text structure representing the OSD element. The items member of this structure will receive a pointer to a list of osd_text_item structures.
- * @param nav Pointer to a navit structure
- * @returns nothing
+ * @param opc The {@code struct osd_priv_common} for the OSD element. {@code opc->data->items} will
+ * receive a pointer to a list of {@code osd_text_item} structures.
+ * @param nav The navit structure
  */
 static void
 osd_text_prepare(struct osd_priv_common *opc, struct navit *nav)
