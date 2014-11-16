@@ -205,7 +205,7 @@ vehicle_attr_iter_destroy(struct attr_iter *iter)
  * @param this_ Pointer to a vehicle structure
  * @param type The attribute type to look for
  * @param attr Pointer to a {@code struct attr} to store the attribute
- * @param iter A vehicle attr_iter
+ * @param iter A vehicle attr_iter. This is only used for generic attributes; for attributes specific to the vehicle object it is ignored.
  * @return True for success, false for failure
  */
 int
