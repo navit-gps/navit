@@ -58,15 +58,15 @@ struct command_saved_cb {
 struct command_saved {
 	struct context ctx;
 	struct result res;
-	char *command;				// The command string itself
-	struct event_idle *idle_ev;		// Event to update this command
+	char *command;				/**< The command string itself **/
+	struct event_idle *idle_ev;		/**< Event to update this command **/
 	struct callback *idle_cb;
-	struct callback *register_cb;			// Callback to register all the callbacks
-	struct event_idle *register_ev;		// Idle event to register all the callbacks
+	struct callback *register_cb;			/**< Callback to register all the callbacks **/
+	struct event_idle *register_ev;		/**< Idle event to register all the callbacks **/
 	struct attr context_attr;
 	int num_cbs;
-	struct command_saved_cb *cbs;		// List of callbacks for this saved command
-	struct callback *cb; // Callback that should be called when we re-evaluate
+	struct command_saved_cb *cbs;		/**< List of callbacks for this saved command **/
+	struct callback *cb; /**< Callback that should be called when we re-evaluate **/
 	int error;
 	int async;
 };
@@ -279,7 +279,26 @@ get_double(struct context *ctx, struct result *res)
 }
 
 
-
+/**
+ * @brief Returns an integer or bool representation of the result of an expression
+ *
+ * This function evaluates the result of an expression ({@code res->attr}).
+ *
+ * If {@code res->attr} is of a numeric type, its integer part is returned.
+ *
+ * If {@code is_bool} is false and {@code res->attr} is not of a numeric type, 0 is returned.
+ *
+ * If {@code is_bool} is true and {@code res->attr} is of an object or string type, true is returned
+ * for non-null, false otherwise.
+ *
+ * For all other types of {@code res->attr}, 0 (false) is returned.
+ *
+ * @param ctx The context for the expression
+ * @param is_bool If true, return boolean representation, else return integer representation. See description.
+ * @param res The result of the evaluation
+ *
+ * @return The result of the expression, see description.
+ */
 static int
 get_int_bool(struct context *ctx, int is_bool, struct result *res)
 {
@@ -301,12 +320,24 @@ get_int_bool(struct context *ctx, int is_bool, struct result *res)
 	return 0;
 }
 
+/**
+ * @brief Returns an integer representation of the result of an expression
+ *
+ * This function is a wrapper around {@code get_int_bool()}. It is equivalent to
+ * {@code get_int_bool(ctx, 0, res)}. See {@code get_int_bool()} for a description.
+ */
 static int
 get_int(struct context *ctx, struct result *res)
 {
 	return get_int_bool(ctx, 0, res);
 }
 
+/**
+ * @brief Returns a boolean representation of the result of an expression
+ *
+ * This function is a wrapper around {@code get_int_bool()}. It is equivalent to
+ * {@code get_int_bool(ctx, 1, res)}. See {@code get_int_bool()} for a description.
+ */
 static int
 get_bool(struct context *ctx, struct result *res)
 {
@@ -1398,6 +1429,12 @@ command_saved_set_cb (struct command_saved *cs, struct callback *cb)
 	cs->cb = cb;
 }
 
+/**
+ * @brief Returns an integer representation of the evaluation result of a saved command
+ *
+ * This function is a wrapper around {@code get_int()}. It is equivalent to
+ * {@code get_int(&cs->ctx, &cs->res)}. See {@code get_int()} for a description.
+ */
 int
 command_saved_get_int (struct command_saved *cs)
 {
