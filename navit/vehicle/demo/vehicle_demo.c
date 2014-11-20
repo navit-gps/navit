@@ -49,6 +49,7 @@ struct vehicle_priv {
 	struct event_timeout *timer;
 	char *timep;
 	char *nmea;
+	enum attr_position_valid valid;  /**< Whether the vehicle has valid position data **/
 
 };
 
@@ -126,6 +127,9 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
 		g_free(rmc);
 		attr->u.str=priv->nmea;
 		break;
+	case attr_position_valid:
+		attr->u.num=priv->valid;
+		break;
 	default:
 		return 0;
 	}
@@ -154,6 +158,10 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
 		break;
 	case attr_position_coord_geo:
 		priv->geo=*(attr->u.coord_geo);
+		if (priv->valid != attr_position_valid_valid) {
+			priv->valid = attr_position_valid_valid;
+			callback_list_call_attr_0(priv->cbl, attr_position_valid);
+		}
 		priv->position_set=1;
 		dbg(1,"position_set %f %f\n", priv->geo.lat, priv->geo.lng);
 		break;
@@ -246,6 +254,10 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 				dbg(1, "ci=0x%x,0x%x\n", ci.x, ci.y);
 				transform_to_geo(projection_mg, &ci,
 						 &priv->geo);
+				if (priv->valid != attr_position_valid_valid) {
+					priv->valid = attr_position_valid_valid;
+					callback_list_call_attr_0(priv->cbl, attr_position_valid);
+				}
 				callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 				break;
 			}
@@ -273,6 +285,7 @@ vehicle_demo_new(struct vehicle_methods
 	ret->interval=1000;
 	ret->config_speed=40;
 	ret->timer_callback=callback_new_1(callback_cast(vehicle_demo_timer), ret);
+	ret->valid = attr_position_valid_invalid;
 	*meth = vehicle_demo_methods;
 	while (attrs && *attrs) 
 		vehicle_demo_set_attr_do(ret, *attrs++);
