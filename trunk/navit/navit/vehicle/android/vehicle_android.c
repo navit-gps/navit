@@ -37,17 +37,17 @@
 
 struct vehicle_priv {
 	struct callback_list *cbl;
-	struct coord_geo geo;
-	double speed;
-	double direction;
-	double height;
-	double radius;
-	int fix_type;
-	time_t fix_time;
-	char fixiso8601[128];
-	int sats;
-	int sats_used;
-	int have_coords;
+	struct coord_geo geo;      /**< The last known position of the vehicle **/
+	double speed;              /**< Speed in km/h **/
+	double direction;          /**< Bearing in degrees **/
+	double height;             /**< Elevation in meters **/
+	double radius;             /**< Position accuracy in meters **/
+	int fix_type;              /**< Type of last fix (not used) **/
+	time_t fix_time;           /**< Timestamp of last fix (not used) **/
+	char fixiso8601[128];      /**< Timestamp of last fix in ISO 8601 format **/
+	int sats;                  /**< Number of satellites in view (currently not used) **/
+	int sats_used;             /**< Number of satellites used in fix (currently not used) **/
+	int have_coords;           /**< Whether the vehicle coordinates in {@code geo} are valid **/
 	struct attr ** attrs;
 	struct callback *cb;
 	jclass NavitVehicleClass;
@@ -117,6 +117,9 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_time_iso8601:
 		attr->u.str=priv->fixiso8601;
 		break;
+	case attr_position_valid:
+		attr->u.num = priv->have_coords ? attr_position_valid_valid : attr_position_valid_invalid;
+		break;
 	default:
 		return 0;
 	}
@@ -147,7 +150,10 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 	tm = gmtime(&tnow);
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
 	dbg(1,"lat %f lon %f time %s\n",v->geo.lat,v->geo.lng,v->fixiso8601);
-	v->have_coords=1;
+	if (!v->have_coords) {
+		v->have_coords=1;
+		callback_list_call_attr_0(v->cbl, attr_position_valid);
+	}
 	callback_list_call_attr_0(v->cbl, attr_position_coord_geo);
 }
 
@@ -210,6 +216,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	ret->cb=callback_new_1(callback_cast(vehicle_android_callback), ret);
+	ret->have_coords = 0;
 	*meth = vehicle_android_methods;
 	vehicle_android_init(ret);
 	dbg(0, "return\n");
