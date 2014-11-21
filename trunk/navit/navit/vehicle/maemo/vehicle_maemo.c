@@ -245,7 +245,7 @@ vehicle_maemo_position_attr_get(struct vehicle_priv *priv,
 		attr->u.numd = &priv->hdop;
 		break;
 	case attr_position_sats:
-		dbg(1,"Attr requested: position_sats_signal\n");
+		dbg(1,"Attr requested: position_sats\n");
 		attr->u.num = priv->sats;
 		break;
 	case attr_position_sats_used:
