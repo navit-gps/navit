@@ -52,7 +52,8 @@ static struct sockaddr_in debug_sin;
 #endif
 
 
-dbg_level debug_level=lvl_error;
+#define DEFAULT_DEBUG_LEVEL lvl_error
+dbg_level max_debug_level=DEFAULT_DEBUG_LEVEL;
 #define GLOBAL_DEBUG_LEVEL_UNSET lvl_unset
 dbg_level global_debug_level=GLOBAL_DEBUG_LEVEL_UNSET;
 int segv_level=0;
@@ -101,16 +102,16 @@ debug_init(const char *program_name)
 static void
 debug_update_level(gpointer key, gpointer value, gpointer user_data)
 {
-	if (debug_level < GPOINTER_TO_INT(value))
-		debug_level = GPOINTER_TO_INT(value);
+	if (max_debug_level < GPOINTER_TO_INT(value))
+		max_debug_level = GPOINTER_TO_INT(value);
 }
 
 void
 debug_set_global_level(dbg_level level, int override_old_value ) {
 	if (global_debug_level == GLOBAL_DEBUG_LEVEL_UNSET || override_old_value) {
 		global_debug_level=level;
-		if (debug_level < global_debug_level){
-			debug_level = global_debug_level;
+		if (max_debug_level < global_debug_level){
+			max_debug_level = global_debug_level;
 		}
 	}
 }
@@ -176,8 +177,12 @@ dbg_level
 debug_level_get(const char *message_category)
 {
 	if (!debug_hash)
-		return lvl_error;
-	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, message_category));
+		return DEFAULT_DEBUG_LEVEL;
+	gpointer level = g_hash_table_lookup(debug_hash, message_category);
+	if (!level) {
+		return DEFAULT_DEBUG_LEVEL;
+	}
+	return GPOINTER_TO_INT(level);
 }
 
 static void debug_timestamp(char *buffer)
