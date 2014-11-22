@@ -2344,12 +2344,29 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
 	return 1;
 }
 
+/**
+ * @brief Recalculates the map view so that the vehicle cursor is visible
+ *
+ * This function recalculates the parameters which control the visible map area, zoom and orientation. The
+ * caller is responsible for redrawing the map after the function returns.
+ *
+ * If the vehicle supplies a {@code position_valid} attribute and it is {@code attr_position_valid_invalid},
+ * the map position is not changed.
+ *
+ * @param this_ The navit object
+ * @param autozoom Whether to set zoom based on current speed. If false, current zoom will be maintained.
+ * @param keep_orientation Whether to maintain the current map orientation. If false, the map will be rotated
+ * so that the bearing of the vehicle is up.
+ */
 void
 navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation)
 {
 	int dir;
 	struct point pn;
 	struct navit_vehicle *nv=this_->vehicle;
+	struct attr attr;
+	if (vehicle_get_attr(nv->vehicle, attr_position_valid, &attr, NULL) && (attr.u.num == attr_position_valid_invalid))
+		return;
 	navit_get_cursor_pnt(this_, &pn, keep_orientation, &dir);
 	transform_set_yaw(this_->trans, dir);
 	navit_set_center_coord_screen(this_, &nv->coord, &pn, 0);
@@ -2357,6 +2374,14 @@ navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation)
 		navit_autozoom(this_, &nv->coord, nv->speed, 0);
 }
 
+/**
+ * @brief Recenters the map so that the vehicle cursor is visible
+ *
+ * This function first calls {@code navit_set_center_cursor()} to recalculate the map display, then
+ * triggers a redraw of the map.
+ *
+ *@param this_ The navit object
+ */
 static void
 navit_set_center_cursor_draw(struct navit *this_)
 {
@@ -2365,6 +2390,14 @@ navit_set_center_cursor_draw(struct navit *this_)
 		navit_draw_async(this_, 1);
 }
 
+/**
+ * @brief Recenters the map so that the vehicle cursor is visible
+ *
+ * This is the callback function for the {@code set_center_cursor()} command. It is just a wrapper around
+ * {@code navit_set_center_cursor_draw()}.
+ *
+ *@param this_ The navit object
+ */
 static void
 navit_cmd_set_center_cursor(struct navit *this_)
 {
