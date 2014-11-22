@@ -228,6 +228,26 @@ static char* dbg_level_to_string(dbg_level level)
 	return "-invalid level-";
 }
 
+#ifdef HAVE_API_ANDROID
+static android_LogPriority
+dbg_level_to_android(dbg_level level)
+{
+	switch(level) {
+		case lvl_unset:
+			return ANDROID_LOG_UNKNOWN;
+		case lvl_error:
+			return ANDROID_LOG_ERROR;
+		case lvl_warning:
+			return ANDROID_LOG_WARN;
+		case lvl_info:
+			return ANDROID_LOG_INFO;
+		case lvl_debug:
+			return ANDROID_LOG_DEBUG;
+	}
+	return ANDROID_LOG_UNKNOWN;
+}
+#endif
+
 void
 debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
@@ -236,7 +256,6 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #else
 	char message_origin[mlen+flen+3];
 #endif
-	FILE *fp=debug_fp;
 
 	sprintf(message_origin, "%s:%s", module, function);
 	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
@@ -262,7 +281,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
 #else
 #ifdef HAVE_API_ANDROID
-		__android_log_print(ANDROID_LOG_ERROR,"navit", "%s", debug_message);
+		__android_log_print(dbg_level_to_android(level), "navit", "%s", debug_message);
 #else
 #ifdef HAVE_SOCKET
 		if (debug_socket != -1) {
@@ -270,6 +289,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 			return;
 		}
 #endif
+		FILE *fp=debug_fp;
 		if (! fp)
 			fp = stderr;
 		fprintf(fp,"%s",debug_message);
