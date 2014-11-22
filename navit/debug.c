@@ -281,7 +281,7 @@ void
 debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
-	char debug_headers[4096];
+	char message_origin[4096];
 #else
 	char message_origin[mlen+flen+3];
 #endif
