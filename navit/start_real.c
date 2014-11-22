@@ -60,10 +60,11 @@ print_usage(void)
 {
 	printf("%s",_("navit usage:\n"
 	"navit [options] [configfile]\n"
-	"\t-c <file>: use <file> as config file\n"
-	"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting from config file.\n"
+	"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+	"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, 2=info, 3=debug).\n"
+	"\tSettings from config file will still take effect where they set a higher level.\n"
 	"\t-h: print this usage info and exit.\n"
-	"\t-v: Print the version and exit.\n"));
+	"\t-v: print the version and exit.\n"));
 }
 
 
