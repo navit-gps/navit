@@ -173,11 +173,11 @@ debug_new(struct attr *parent, struct attr **attrs)
 
 
 dbg_level
-debug_level_get(const char *name)
+debug_level_get(const char *message_category)
 {
 	if (!debug_hash)
 		return lvl_error;
-	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, name));
+	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, message_category));
 }
 
 static void debug_timestamp(char *buffer)
@@ -206,49 +206,68 @@ static void debug_timestamp(char *buffer)
 #endif
 }
 
+static char* dbg_level_to_string(dbg_level level)
+{
+	switch(level) {
+		case lvl_unset:
+			return "-unset-";
+		case lvl_error:
+			return "error";
+		case lvl_warning:
+			return "warning";
+		case lvl_info:
+			return "info";
+		case lvl_debug:
+			return "debug";
+	}
+	return "-invalid level-";
+}
+
 void
 debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
-	char buffer[4096];
+	char debug_headers[4096];
 #else
-	char buffer[mlen+flen+3];
+	char message_origin[mlen+flen+3];
 #endif
 	FILE *fp=debug_fp;
 
-	sprintf(buffer, "%s:%s", module, function);
-	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
+	sprintf(message_origin, "%s:%s", module, function);
+	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
 		wchar_t muni[4096];
 #endif
-		char xbuffer[4096];
-		xbuffer[0]='\0';
+		char debug_message[4096];
+		debug_message[0]='\0';
 		if (prefix) {
 			if (timestamp_prefix)
-				debug_timestamp(xbuffer);	
-			strcpy(xbuffer+strlen(xbuffer),buffer);
-			strcpy(xbuffer+strlen(xbuffer),":");
+				debug_timestamp(debug_message);
+			strcpy(debug_message+strlen(debug_message),dbg_level_to_string(level));
+			strcpy(debug_message+strlen(debug_message),":");
+			strcpy(debug_message+strlen(debug_message),message_origin);
+			strcpy(debug_message+strlen(debug_message),":");
 		}
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
-		vsnprintf(xbuffer+strlen(xbuffer),4095-strlen(xbuffer),fmt,ap);
+		vsnprintf(debug_message+strlen(debug_message),4095-strlen(debug_message),fmt,ap);
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
-		mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
+		mbstowcs(muni, debug_message, strlen(debug_message)+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
 #else
 #ifdef HAVE_API_ANDROID
-		__android_log_print(ANDROID_LOG_ERROR,"navit", "%s", xbuffer);
+		__android_log_print(ANDROID_LOG_ERROR,"navit", "%s", debug_message);
 #else
 #ifdef HAVE_SOCKET
 		if (debug_socket != -1) {
-			sendto(debug_socket, xbuffer, strlen(xbuffer), 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
+			sendto(debug_socket, debug_message, strlen(debug_message), 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
 			return;
 		}
 #endif
 		if (! fp)
 			fp = stderr;
-		fprintf(fp,"%s",xbuffer);
+		fprintf(fp,"%s",debug_message);
 		fflush(fp);
 #endif
 #endif
