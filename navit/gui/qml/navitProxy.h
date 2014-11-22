@@ -82,7 +82,7 @@ public slots:
 
 		dropIterFunc(iter);
 
-		dbg(0,QString::number(_itemId).toStdString().c_str());
+		dbg(lvl_error,QString::number(_itemId).toStdString().c_str());
 
 		return retDoc.toString();
 	}

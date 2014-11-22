@@ -87,7 +87,7 @@ popup_traffic_distortion(struct item *item, char *attr)
 		}
 		else
 		{
-			dbg(0,"could not open file for distortions !!");
+			dbg(lvl_error,"could not open file for distortions !!");
 
 		} /* else - if (map) */
 		g_free(dist_filename);			/* free the file name */
@@ -99,7 +99,7 @@ popup_traffic_distortion(struct item *item, char *attr)
 static void
 popup_traffic_distortion_blocked(struct item *item)
 {
-	dbg(0,"item=%p\n",item);
+	dbg(lvl_error,"item=%p\n",item);
 	popup_traffic_distortion(item, "maxspeed=0");
 }
 
@@ -180,7 +180,7 @@ extern void *vehicle;
 static void
 popup_set_position(struct navit *nav, struct pcoord *pc)
 {
-	dbg(1,"%p %p\n", nav, pc);
+	dbg(lvl_warning,"%p %p\n", nav, pc);
 	navit_set_position(nav, pc);
 }
 
@@ -214,7 +214,7 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 
 	va_start(ap, fmt);
 	str=g_strdup_vprintf(fmt, ap);
-	dbg(0,"%s\n", str);
+	dbg(lvl_error,"%s\n", str);
 	us=str;
 	while (*us) {
 		if (*us == '_')
@@ -310,7 +310,7 @@ popup_item_dump(struct item *item)
 	struct map_rect *mr;
 	mr=map_rect_new(item->map,NULL);
 	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-	dbg(0,"item=%p\n",item);
+	dbg(lvl_error,"item=%p\n",item);
 	item_dump_filedesc(item,item->map,stdout);
 	map_rect_destroy(mr);
 }
@@ -349,7 +349,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	if (diitem->map) {
 		mr=map_rect_new(diitem->map,NULL);
 		item=map_rect_get_item_byid(mr, diitem->id_hi, diitem->id_lo);
-		dbg(1,"item=%p\n", item);
+		dbg(lvl_warning,"item=%p\n", item);
 		if (item) {
 			popup_show_attrs(item->map, menu_item, item);
 			popup_printf_cb(menu_item, menu_type_menu, callback_new_1(callback_cast(popup_item_dump), diitem), "Dump");
@@ -425,7 +425,7 @@ popup(struct navit *nav, int button, struct point *p)
 	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 	popup_printf(men, menu_type_menu, "%s", buffer);
 	popup_printf(men, menu_type_menu, "%f %f", g.lat, g.lng);
-	dbg(1,"%p %p\n", nav, &c);
+	dbg(lvl_warning,"%p %p\n", nav, &c);
 	c.pro = transform_get_projection(navit_get_trans(nav));
 	c.x = co.x;
 	c.y = co.y;

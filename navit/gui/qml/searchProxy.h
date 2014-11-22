@@ -33,7 +33,7 @@ public:
 			item=country_search_get_item(cs);
 			if (item && item_attr_get(item, attr_country_name, &country_name)) {
 				search_attr.type=attr_country_all;
-				dbg(0,"country %s\n", country_name.u.str);
+				dbg(lvl_error,"country %s\n", country_name.u.str);
 				this->country_name=QString::fromLocal8Bit(country_name.u.str);
 				search_attr.u.str=country_name.u.str;
 				search_list_search(this->sl, &search_attr, 0);
@@ -44,9 +44,9 @@ public:
 			}
 			country_search_destroy(cs);
 		} else {
-			dbg(0,"warning: no default country found\n");
+			dbg(lvl_error,"warning: no default country found\n");
 			if (!this->country_iso2.isEmpty()) {
-				dbg(0,"attempting to use country '%s'\n",this->country_iso2.toStdString().c_str());
+				dbg(lvl_error,"attempting to use country '%s'\n",this->country_iso2.toStdString().c_str());
 				search_attr.type=attr_country_iso2;
 				search_attr.u.str=(char*)this->country_iso2.toStdString().c_str();
 				search_list_search(this->sl, &search_attr, 0);

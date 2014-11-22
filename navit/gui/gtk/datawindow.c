@@ -48,7 +48,7 @@ select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, stru
 	GtkTreeModel *model;
 	int i;
 
-	dbg(0,"win=%p\n", win);
+	dbg(lvl_error,"win=%p\n", win);
 
 	model=gtk_tree_view_get_model(tree);
 	gtk_tree_model_get_iter(model, &iter, path);

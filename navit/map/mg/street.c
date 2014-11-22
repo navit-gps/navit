@@ -208,7 +208,7 @@ static int street_get_coord(unsigned char **pos, int bytes, struct coord_rect *r
 	if (f) {
 		f->x=ref->lu.x+x;
 		f->y=ref->rl.y+y;
-		dbg(1,"0x%x,0x%x + 0x%x,0x%x = 0x%x,0x%x\n", x, y, ref->lu.x, ref->rl.y, f->x, f->y);
+		dbg(lvl_warning,"0x%x,0x%x + 0x%x,0x%x = 0x%x,0x%x\n", x, y, ref->lu.x, ref->rl.y, f->x, f->y);
 	}
 	*pos=p;
 	return flags;
@@ -282,14 +282,14 @@ street_coord_get(void *priv_data, struct coord *c, int count)
 	if (segid == 0x15)
 		debug=1;
 	if (debug) {
-		dbg(0,"enter 0x%x\n",segid);
+		dbg(lvl_error,"enter 0x%x\n",segid);
 	}
 #endif
 	while (count > 0) {
 		if (street_coord_get_helper(street, c)) {
 #ifdef DEBUG_COORD_GET
 			if (debug) {
-				dbg(0,"0x%x,0x%x\n", c->x, c->y);
+				dbg(lvl_error,"0x%x,0x%x\n", c->x, c->y);
 			}
 #endif
 			c++;
@@ -316,7 +316,7 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct street_priv *street=priv_data;
 	int nameid;
 
-	dbg(1,"segid 0x%x\n", street_str_get_segid(street->str));
+	dbg(lvl_warning,"segid 0x%x\n", street_str_get_segid(street->str));
 	attr->type=attr_type;
 	switch (attr_type) {
 	case attr_any:
@@ -516,7 +516,7 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 			break;
 		default:
 			item->type=type_street_unkn;
-			dbg(0,"unknown type 0x%x\n",street_str_get_type(street->str));
+			dbg(lvl_error,"unknown type 0x%x\n",street_str_get_type(street->str));
 		}
 		flags=item_get_default_flags(item->type);
 		if (flags)
@@ -557,12 +557,12 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
         int country=id_hi & 0xffff;
         int res;
 	struct coord_rect r;
-	dbg(1,"enter(%p,%p,0x%x,0x%x,%p)\n", mr, street, id_hi, id_lo, item);
+	dbg(lvl_warning,"enter(%p,%p,0x%x,0x%x,%p)\n", mr, street, id_hi, id_lo, item);
 	if (! country)
 		return 0;
         if (! tree_search_hv(mr->m->dirname, "street", (id_lo >> 8) | (country << 24), id_lo & 0xff, &res))
 		return 0;
-	dbg(1,"res=0x%x (blk=0x%x)\n", res, res >> 12);
+	dbg(lvl_warning,"res=0x%x (blk=0x%x)\n", res, res >> 12);
         block_get_byindex(mr->m->file[mr->current_file], res >> 12, &mr->b);
 	street_get_data(street, &mr->b.p);
 	street->name_file=mr->m->file[file_strname_stn];
@@ -578,7 +578,7 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
 	item->meth=&street_meth;
 	item->priv_data=street;
 	street->str+=(res & 0xfff)-1;
-	dbg(1,"segid 0x%x\n", street_str_get_segid(&street->str[1]));
+	dbg(lvl_warning,"segid 0x%x\n", street_str_get_segid(&street->str[1]));
 	return street_get(mr, street, item);
 #if 0
         mr->b.p=mr->b.block_start+(res & 0xffff);
@@ -620,7 +620,7 @@ latin1_tolower_ascii(unsigned char c)
 		return 'u';
 	default:
 		if (ret >= 0x80)
-			dbg(1,"ret=0x%x\n",c);
+			dbg(lvl_warning,"ret=0x%x\n",c);
 		return ret;
 	}
 }
@@ -662,27 +662,27 @@ street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, 
 {
         int d,len;
 
-	dbg(1,"enter");
-	dbg(1,"country 0x%x town_assoc 0x%x name '%s'\n", country, town_assoc, name);
+	dbg(lvl_warning,"enter");
+	dbg(lvl_warning,"country 0x%x town_assoc 0x%x name '%s'\n", country, town_assoc, name);
 	d=(mr->search_item.id_hi & 0xffff)-country;
-	dbg(1,"country %d (%d vs %d)\n", d, mr->search_item.id_hi & 0xffff, country);
+	dbg(lvl_warning,"country %d (%d vs %d)\n", d, mr->search_item.id_hi & 0xffff, country);
 	if (!d) {
 		if (mr->search_item.id_lo == town_assoc ) {
-			dbg(1,"town_assoc match (0x%x)\n", town_assoc);
+			dbg(lvl_warning,"town_assoc match (0x%x)\n", town_assoc);
 			len=mr->search_partial ? strlen(mr->search_str):INT_MAX;
 			d=strncasecmp_latin1(mr->search_str, name, len);
 			if (!strncasecmp_latin1_ascii(mr->search_str, name, len))
 				d=0;
-			dbg(1,"string %d\n", d);
+			dbg(lvl_warning,"string %d\n", d);
 		} else {
 			if (town_assoc < mr->search_item.id_lo)
 				d=1;
 			else
 				d=-1;
-			dbg(1,"assoc %d 0x%x-0x%x\n",d, mr->search_item.id_lo, town_assoc);
+			dbg(lvl_warning,"assoc %d 0x%x-0x%x\n",d, mr->search_item.id_lo, town_assoc);
 		}
 	}
-	dbg(1,"d=%d\n", d);
+	dbg(lvl_warning,"d=%d\n", d);
 	return d;	
 }
 
@@ -692,11 +692,11 @@ street_search_compare(unsigned char **p, struct map_rect_priv *mr)
 	struct street_name_index *i;
 	int ret;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	i=(struct street_name_index *)(*p);
 	*p+=sizeof(*i)+strlen(i->name)+1;
 
-	dbg(1,"block 0x%x\n", i->block);
+	dbg(lvl_warning,"block 0x%x\n", i->block);
 	
 	ret=street_search_compare_do(mr, i->country, i->town_assoc, i->name);
 	if (ret <= 0)
@@ -725,7 +725,7 @@ street_name_coord_get(void *priv_data, struct coord *c, int count)
 	struct street_name_numbers snns;
 	unsigned char *p=mr->street.name.aux_data;
 
-	dbg(1,"aux_data=%p\n", p);
+	dbg(lvl_warning,"aux_data=%p\n", p);
 	if (count) {
 		street_name_numbers_get(&snns, &p);
 		street_name_numbers_get_coord(&snns, c);
@@ -801,7 +801,7 @@ street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *att
 			return 0;
 		return item_attr_get(mr->search_item_tmp, attr_type, attr);
 	default:
-		dbg(0,"unknown attr %s\n",attr_to_name(attr_type));
+		dbg(lvl_error,"unknown attr %s\n",attr_to_name(attr_type));
 		return 0;
 	}
 }
@@ -830,7 +830,7 @@ street_name_get_byid(struct map_rect_priv *mr, struct street_priv *street, int i
 	item->map=NULL;
 	item->priv_data=mr;
 	mr->b.p=street->name_file->begin+item->id_lo;
-	dbg(1,"last %p map %p file %d begin %p\n", mr->b.p, mr->m, mr->current_file, mr->m->file[mr->current_file]->begin);
+	dbg(lvl_warning,"last %p map %p file %d begin %p\n", mr->b.p, mr->m, mr->current_file, mr->m->file[mr->current_file]->begin);
 	street_name_get(&street->name, &mr->b.p);
 	return 1;
 }
@@ -841,30 +841,30 @@ street_search_get_item_street_name(struct map_rect_priv *mr)
 	int dir=1,leaf;
 	unsigned char *last;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	if (! mr->search_blk_count) {
-		dbg(1,"partial 0x%x '%s' ***\n", mr->town.street_assoc, mr->search_str);
+		dbg(lvl_warning,"partial 0x%x '%s' ***\n", mr->town.street_assoc, mr->search_str);
 		if (mr->search_linear)
 			return NULL;
-		dbg(1,"tree_search_next\n");
+		dbg(lvl_warning,"tree_search_next\n");
 		mr->search_block=-1;
 		while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 			dir=street_search_compare(&mr->search_p, mr);
 		}
-		dbg(1,"dir=%d mr->search_block=0x%x\n", dir, mr->search_block);
+		dbg(lvl_warning,"dir=%d mr->search_block=0x%x\n", dir, mr->search_block);
 		if (mr->search_block == -1)
 			return NULL;
 		mr->search_blk_count=1;
 		block_get_byindex(mr->m->file[file_strname_stn], mr->search_block, &mr->b);
 		mr->b.p=mr->b.block_start+12;
 	}
-	dbg(1,"name id %td\n", mr->b.p-mr->m->file[file_strname_stn]->begin);
+	dbg(lvl_warning,"name id %td\n", mr->b.p-mr->m->file[file_strname_stn]->begin);
 	if (! mr->search_blk_count)
 		return NULL;
 	for (;;) {
 		if (mr->b.p >= mr->b.end) {
 			if (!block_next_lin(mr)) {
-				dbg(1,"end of blocks in %p, %p\n", mr->m->file[file_strname_stn]->begin, mr->m->file[file_strname_stn]->end);
+				dbg(lvl_warning,"end of blocks in %p, %p\n", mr->m->file[file_strname_stn]->begin, mr->m->file[file_strname_stn]->end);
 				return NULL;
 			}
 			mr->b.p=mr->b.block_start+12;
@@ -873,23 +873,23 @@ street_search_get_item_street_name(struct map_rect_priv *mr)
 			last=mr->b.p;
 			street_name_get(&mr->street.name, &mr->b.p);
 			dir=street_search_compare_do(mr, mr->street.name.country, mr->street.name.townassoc, mr->street.name.name2);
-			dbg(1,"country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir);
+			dbg(lvl_warning,"country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir);
 			if (dir < 0) {
-				dbg(1,"end of data\n");
+				dbg(lvl_warning,"end of data\n");
 				mr->search_blk_count=0;
 				return NULL;
 			}
 			if (!dir) {
-				dbg(1,"result country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d aux_data=%p len=0x%x\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir, mr->street.name.aux_data, mr->street.name.aux_len);
+				dbg(lvl_warning,"result country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d aux_data=%p len=0x%x\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir, mr->street.name.aux_data, mr->street.name.aux_len);
 				mr->item.type = type_street_name;
 				mr->item.id_hi=(file_strname_stn << 16);
 				mr->item.id_lo=last-mr->m->file[file_strname_stn]->begin;
-				dbg(1,"id 0x%x 0x%x last %p map %p file %d begin %p\n", mr->item.id_hi, mr->item.id_lo, last, mr->m, mr->current_file, mr->m->file[mr->current_file]->begin);
+				dbg(lvl_warning,"id 0x%x 0x%x last %p map %p file %d begin %p\n", mr->item.id_hi, mr->item.id_lo, last, mr->m, mr->current_file, mr->m->file[mr->current_file]->begin);
 				mr->item.meth=&street_name_meth;
 				mr->item.map=NULL;
 				mr->item.priv_data=mr;
 				/* debug(mr); */
-				dbg(1,"last %p\n",last);
+				dbg(lvl_warning,"last %p\n",last);
 				return &mr->item;
 			}
 		}
@@ -920,7 +920,7 @@ street_name_numbers_next(struct map_rect_priv *mr)
 {
 	if (street_name_eod(&mr->street.name))
 		return 0;
-	dbg(1,"%p vs %p\n",mr->street.name.tmp_data, mr->street.name.aux_data);
+	dbg(lvl_warning,"%p vs %p\n",mr->street.name.tmp_data, mr->street.name.aux_data);
 	street_name_numbers_get(&mr->street.name_numbers, &mr->street.name.tmp_data);
 	return 1;
 }
@@ -975,7 +975,7 @@ housenumber_attr_get(void *priv_data, enum attr_type attr_type, struct attr *att
 			return 0;
 		return item_attr_get(mr->search_item_tmp, attr_type, attr);
 	default:
-		dbg(0,"unknown attr %s\n",attr_to_name(attr_type));
+		dbg(lvl_error,"unknown attr %s\n",attr_to_name(attr_type));
 		return 0;
 	}
 }
@@ -991,20 +991,20 @@ static struct item_methods housenumber_meth = {
 int
 housenumber_search_setup(struct map_rect_priv *mr)
 {
-	dbg(1,"enter (0x%x,0x%x)\n",mr->search_item.id_hi,mr->search_item.id_lo);
+	dbg(lvl_warning,"enter (0x%x,0x%x)\n",mr->search_item.id_hi,mr->search_item.id_lo);
 	int id=mr->search_item.id_hi & 0xff;
 	mr->current_file=file_strname_stn;
 	mr->street.name_file=mr->m->file[mr->current_file];
 	mr->b.p=mr->street.name_file->begin+mr->search_item.id_lo;
 	mr->search_str=g_strdup(mr->search_attr->u.str);
-	dbg(1,"last %p\n",mr->b.p);
+	dbg(lvl_warning,"last %p\n",mr->b.p);
 	street_name_get(&mr->street.name, &mr->b.p);
 #if 0
 	debug(mr);
 #endif
 	while (id > 0) {
 		id--;
-		dbg(1,"loop\n");
+		dbg(lvl_warning,"loop\n");
 		if (!street_name_numbers_next(mr))
 			return 0;
 	}
@@ -1015,10 +1015,10 @@ housenumber_search_setup(struct map_rect_priv *mr)
 	if (!id)
 		mr->item.id_hi+=1;
 	mr->item.id_lo=mr->search_item.id_lo;
-	dbg(1,"getting name_number %p vs %p + %d\n",mr->street.name_numbers.tmp_data,mr->street.name_numbers.aux_data, mr->street.name_numbers.aux_len);
+	dbg(lvl_warning,"getting name_number %p vs %p + %d\n",mr->street.name_numbers.tmp_data,mr->street.name_numbers.aux_data, mr->street.name_numbers.aux_len);
 	if (!street_name_number_next(mr)) 
 		return 0;
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	// debug(mr);
 	return 1;
 }
@@ -1055,7 +1055,7 @@ struct item *
 housenumber_search_get_item(struct map_rect_priv *mr)
 {
 	int d;
-	dbg(1,"enter %s %s\n",mr->street.first_number,mr->street.last_number);
+	dbg(lvl_warning,"enter %s %s\n",mr->street.first_number,mr->street.last_number);
 	for (;;) {
 		if (!house_number_next(mr->street.current_number, mr->street.first_number, mr->street.last_number, 0, NULL)) {
 			if (!street_name_number_next(mr))

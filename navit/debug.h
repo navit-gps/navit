@@ -38,7 +38,21 @@ extern "C" {
 #endif
 #endif
 
-extern int debug_level;
+/** Possible debug levels (inspired by SLF4J). */
+typedef enum {
+	/** Internal use only, do not use for logging. */
+	lvl_unset=-1,
+	/** Error: something did not work. */
+	lvl_error,
+	/** Warning: something may not have worked. */
+	lvl_warning,
+	/** Informational message. Should make sense to non-programmers. */
+	lvl_info,
+	/** Debug output: (almost) anything goes. */
+	lvl_debug
+} dbg_level;
+
+extern dbg_level debug_level;
 #define dbg_str2(x) #x
 #define dbg_str1(x) dbg_str2(x)
 #define dbg_module dbg_str1(MODULE)
@@ -70,11 +84,11 @@ extern int debug_level;
 struct attr;
 struct debug;
 void debug_init(const char *program_name);
-void debug_level_set(const char *name, int level);
+void debug_level_set(const char *name, dbg_level level);
 struct debug *debug_new(struct attr *parent, struct attr **attrs);
-int debug_level_get(const char *name);
-void debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap);
-void debug_printf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, ...)
+dbg_level debug_level_get(const char *name);
+void debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap);
+void debug_printf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, ...)
 #ifdef  __GNUC__
 	__attribute__ ((format (printf, 7, 8)))
 #endif
@@ -91,7 +105,7 @@ void debug_free(const char *where, int line, const char *func, void *ptr);
 void debug_free_func(void *ptr);
 void debug_finished(void);
 void *debug_realloc(const char *where, int line, const char *func, void *ptr, int size);
-void debug_set_global_level(int level, int override_old_value);
+void debug_set_global_level(dbg_level level, int override_old_value);
 /* end of prototypes */
 
 #ifdef __cplusplus

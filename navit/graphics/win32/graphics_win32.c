@@ -228,7 +228,7 @@ static void ErrorExit(LPTSTR lpszFunction)
                                       (lstrlen((LPCTSTR)lpMsgBuf)+lstrlen((LPCTSTR)lpszFunction)+40)*sizeof(TCHAR));
     _tprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
 
-    dbg(0, "%s failed with error %d: %s", lpszFunction, dw, lpMsgBuf);
+    dbg(lvl_error, "%s failed with error %d: %s", lpszFunction, dw, lpMsgBuf);
     MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
 
     LocalFree(lpMsgBuf);
@@ -274,7 +274,7 @@ static void create_memory_dc(struct graphics_priv *gr)
     hdc = GetDC( gr->wnd_handle );
     // Creates memory DC
     gr->hMemDC = CreateCompatibleDC(hdc);
-    dbg(1, "resize memDC to: %d %d \n", gr->width, gr->height );
+    dbg(lvl_warning, "resize memDC to: %d %d \n", gr->width, gr->height );
 
 
 #ifndef  FAST_TRANSPARENCY
@@ -311,7 +311,7 @@ static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
     TCHAR key = (TCHAR) wParam;
     char *s=NULL;
     char k[]={0,0};
-    dbg(1,"HandleKey %d\n",key);
+    dbg(lvl_warning,"HandleKey %d\n",key);
 	switch (key) {
     default:
 		k[0]=key;
@@ -330,7 +330,7 @@ static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
     char left[]={NAVIT_KEY_LEFT,0};
     char right[]={NAVIT_KEY_RIGHT,0};
     char *s=NULL;
-    dbg(1,"HandleKey %d\n",key);
+    dbg(lvl_warning,"HandleKey %d\n",key);
 	switch (key) {
     case 37:
 		s=left;
@@ -410,7 +410,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             gra_priv->width = LOWORD( lParam );
             gra_priv->height  = HIWORD( lParam );
             create_memory_dc(gra_priv);
-            dbg(0, "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
+            dbg(lvl_error, "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
             callback_list_call_attr_2(gra_priv->cbl, attr_resize, (void *)gra_priv->width, (void *)gra_priv->height);
         }
         break;
@@ -434,7 +434,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             PAINTSTRUCT ps = { 0 };
             HDC hdc;
             profile(0, NULL);
-            dbg(1, "WM_PAINT\n");
+            dbg(lvl_warning, "WM_PAINT\n");
             overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
@@ -535,13 +535,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONDOWN:
     {
-        dbg(1, "LBUTTONDOWN\n");
+        dbg(lvl_warning, "LBUTTONDOWN\n");
         HandleButtonClick( gra_priv, 1, 1, lParam);
     }
     break;
     case WM_LBUTTONUP:
     {
-        dbg(1, "LBUTTONUP\n");
+        dbg(lvl_warning, "LBUTTONUP\n");
         HandleButtonClick( gra_priv, 0, 1, lParam);
     }
     break;
@@ -552,7 +552,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         HandleButtonClick( gra_priv, 0, 3,lParam );
         break;
     case WM_LBUTTONDBLCLK:
-        dbg(1, "LBUTTONDBLCLK\n");
+        dbg(lvl_warning, "LBUTTONDBLCLK\n");
         HandleButtonClick( gra_priv, 1, 6,lParam );
         break;
     case WM_CHAR:
@@ -562,7 +562,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         HandleKeyDown( gra_priv, wParam);
         break;
    case WM_COPYDATA:
-   	dbg(0,"got WM_COPYDATA\n");
+   	dbg(lvl_error,"got WM_COPYDATA\n");
         callback_list_call_attr_2(gra_priv->cbl, attr_wm_copydata, (void *)wParam, (void*)lParam);
         break;
 #ifdef HAVE_API_WIN32_CE
@@ -689,7 +689,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
     if (!RegisterClassEx(&wc))
 #endif
     {
-        dbg(0, "Window registration failed\n");
+        dbg(lvl_error, "Window registration failed\n");
         return NULL;
     }
 
@@ -732,7 +732,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 #endif
     if (hwnd == NULL)
     {
-        dbg(0, "Window creation failed: %d\n",  GetLastError());
+        dbg(lvl_error, "Window creation failed: %d\n",  GetLastError());
         return NULL;
     }
     /* For Vista, we need here ChangeWindowMessageFilter(WM_COPYDATA,MSGFLT_ADD); since Win7 we need above one or ChangeWindowMessageFilterEx (MSDN), both are
@@ -939,7 +939,7 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-    dbg( 1, "set draw_mode to %x, %d\n", gr, (int)mode );
+    dbg(lvl_warning, "set draw_mode to %x, %d\n", gr, (int)mode );
 
     if ( mode == draw_mode_begin )
     {
@@ -951,7 +951,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
         {
             if ( gr->hMemDC )
             {
-                dbg(1, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
+                dbg(lvl_warning, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
 #ifdef  FAST_TRANSPARENCY
                 if ( gr->hPrebuildDC )
                 {
@@ -1143,11 +1143,11 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     BITMAPINFO pnginfo;
     HDC dc;
 
-    dbg(1,"enter %s\n",name);
+    dbg(lvl_warning,"enter %s\n",name);
     png_file=fopen(name, "rb");
     if (!png_file)
     {
-        dbg(1,"failed to open %s\n",name);
+        dbg(lvl_warning,"failed to open %s\n",name);
         return FALSE;
     }
 
@@ -1285,7 +1285,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
         g_free (row_pointers);
     img->hot.x=img->width/2-1;
     img->hot.y=img->height/2-1;
-    dbg(1,"ok\n");
+    dbg(lvl_warning,"ok\n");
     fclose(png_file);
     return TRUE;
 
@@ -1433,7 +1433,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         if (len >= 4)
         {
             char *ext;
-            dbg(2, "loading image '%s'\n", name );
+            dbg(lvl_info, "loading image '%s'\n", name );
             ret = g_new0( struct graphics_image_priv, 1 );
             ext = name+len-4;
             if (!strcmp(ext,".xpm")) {
@@ -1443,7 +1443,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             }
         }
         if (!rc) {
-            dbg(1, "failed loading '%s'\n", name );
+            dbg(lvl_warning, "failed loading '%s'\n", name );
             g_free(ret);
             ret=NULL;
         }
@@ -1486,7 +1486,7 @@ static struct graphics_priv *
 
 static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
 {
-    dbg(1, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_warning, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
 
     if ( gr->width != w || gr->height != h )
     {
@@ -1504,7 +1504,7 @@ static struct graphics_priv *
             overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
     struct graphics_priv *this=graphics_win32_new_helper(meth);
-    dbg(1, "overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", this, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_warning, "overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", this, p->x, p->y, w, h, alpha, wraparound);
     this->width  = w;
     this->height = h;
     this->parent = gr;
@@ -1538,7 +1538,7 @@ static struct graphics_priv *
 
 static void overlay_disable(struct graphics_priv *gr, int disable)
 {
-    dbg(1, "overlay: %x, disable: %d\n", gr, disable);
+    dbg(lvl_warning, "overlay: %x, disable: %d\n", gr, disable);
     gr->disabled = disable;
 }
 
@@ -1550,7 +1550,7 @@ static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *f
     int yMax = 13*font->size/256;
     int xMax = 9*font->size*len/256;
 
-    dbg(2, "Get bbox for %s\n", text);
+    dbg(lvl_info, "Get bbox for %s\n", text);
 
     ret[0].x = xMin;
     ret[0].y = -yMin;
@@ -1616,7 +1616,7 @@ static void bind_late(struct graphics_priv* gra_priv)
         gra_priv->AlphaBlend  = (FP_AlphaBlend)GetProcAddress(gra_priv->hCoreDll, TEXT("AlphaBlend") );
         if (!gra_priv->AlphaBlend)
         {
-            dbg(1, "AlphaBlend not supported\n");
+            dbg(lvl_warning, "AlphaBlend not supported\n");
         }
 #if HAVE_API_WIN32_CE
         gra_priv->SetStretchBltMode= (FP_SetStretchBltMode)GetProcAddress(gra_priv->hCoreDll, TEXT("SetStretchBltMode") );
@@ -1625,12 +1625,12 @@ static void bind_late(struct graphics_priv* gra_priv)
 #endif
         if (!gra_priv->SetStretchBltMode)
         {
-            dbg(1, "SetStretchBltMode not supported\n");
+            dbg(lvl_warning, "SetStretchBltMode not supported\n");
         }
     }
     else
     {
-        dbg(0, "Error loading coredll\n");
+        dbg(lvl_error, "Error loading coredll\n");
     }
     
     if(gra_priv->hUser32Dll) {
@@ -1684,7 +1684,7 @@ event_win32_main_loop_run(void)
 {
     MSG msg;
 
-    dbg(0,"enter\n");
+    dbg(lvl_error,"enter\n");
     while (GetMessage(&msg, 0, 0, 0))
     {
         TranslateMessage(&msg);       /*  Keyboard input.      */
@@ -1700,7 +1700,7 @@ static void event_win32_main_loop_quit(void)
     HWND hwndSip;
 #endif
 
-    dbg(0,"enter\n");
+    dbg(lvl_error,"enter\n");
 
 #ifdef HAVE_API_WIN32_CE
     hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
@@ -1716,14 +1716,14 @@ static void event_win32_main_loop_quit(void)
 static struct event_watch *
             event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
-    dbg(0,"enter\n");
+    dbg(lvl_error,"enter\n");
     return NULL;
 }
 
 static void
 event_win32_remove_watch(struct event_watch *ev)
 {
-    dbg(0,"enter\n");
+    dbg(lvl_error,"enter\n");
 }
 
 static GList *timers;
@@ -1746,7 +1746,7 @@ static void run_timer(UINT_PTR idEvent)
         if (t->timer_id == idEvent)
         {
             struct callback *cb = t->cb;
-            dbg(2, "Timer %d (multi: %d)\n", t->timer_id, t->multi);
+            dbg(lvl_info, "Timer %d (multi: %d)\n", t->timer_id, t->multi);
             if (!t->multi)
             {
                 KillTimer(NULL, t->timer_id);
@@ -1758,7 +1758,7 @@ static void run_timer(UINT_PTR idEvent)
         }
         l = g_list_next(l);
     }
-    dbg(0, "timer %d not found\n", idEvent);
+    dbg(lvl_error, "timer %d not found\n", idEvent);
 }
 
 static VOID CALLBACK win32_timer_cb(HWND hwnd, UINT uMsg,
@@ -1779,7 +1779,7 @@ static struct event_timeout *
     timers = g_list_prepend(timers, t);
     t->cb = cb;
     t->timer_id = SetTimer(NULL, 0, timeout, win32_timer_cb);
-    dbg(1, "Started timer %d for %d (multi: %d)\n", t->timer_id, timeout, multi);
+    dbg(lvl_warning, "Started timer %d for %d (multi: %d)\n", t->timer_id, timeout, multi);
     return t;
 }
 
@@ -1790,7 +1790,7 @@ event_win32_remove_timeout(struct event_timeout *to)
     {
         GList *l;
         struct event_timeout *t=NULL;
-        dbg(1, "Try stopping timer %d\n", to->timer_id);
+        dbg(lvl_warning, "Try stopping timer %d\n", to->timer_id);
         l = timers;
         while (l)
         {
@@ -1805,7 +1805,7 @@ event_win32_remove_timeout(struct event_timeout *to)
             }
             l = g_list_next(l);
         }
-        dbg(0, "Timer %d not found\n", to->timer_id);
+        dbg(lvl_error, "Timer %d not found\n", to->timer_id);
         g_free(to);
     }
 }

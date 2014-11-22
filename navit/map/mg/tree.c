@@ -78,22 +78,22 @@ tree_search_h(struct file *file, unsigned int search)
 	struct tree_hdr_h *thdr;
 	struct tree_leaf_h *tleaf;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	while (i++ < 1000) {
 		thdr=(struct tree_hdr_h *)p;
 		p+=sizeof(*thdr);
 		end=p+tree_hdr_h_get_size(thdr);
-		dbg(1,"@%td\n", p-file->begin);
+		dbg(lvl_warning,"@%td\n", p-file->begin);
 		last=0;
 		while (p < end) {
 			tleaf=(struct tree_leaf_h *)p;
 			p+=sizeof(*tleaf);
-			dbg(1,"low:0x%x high:0x%x match:0x%x val:0x%x search:0x%x\n", tree_leaf_h_get_lower(tleaf), tree_leaf_h_get_higher(tleaf), tree_leaf_h_get_match(tleaf), tree_leaf_h_get_value(tleaf), search);
+			dbg(lvl_warning,"low:0x%x high:0x%x match:0x%x val:0x%x search:0x%x\n", tree_leaf_h_get_lower(tleaf), tree_leaf_h_get_higher(tleaf), tree_leaf_h_get_match(tleaf), tree_leaf_h_get_value(tleaf), search);
 			value=tree_leaf_h_get_value(tleaf);
 			if (value == search)
 				return tree_leaf_h_get_match(tleaf);
 			if (value > search) {
-				dbg(1,"lower\n");
+				dbg(lvl_warning,"lower\n");
 				lower=tree_leaf_h_get_lower(tleaf);
 				if (lower)
 					last=lower;
@@ -119,11 +119,11 @@ tree_search_v(struct file *file, int offset, int search)
 		thdr=(struct tree_hdr_v *)p;
 		p+=sizeof(*thdr);
 		count=tree_hdr_v_get_count(thdr);
-		dbg(1,"offset=%td count=0x%x\n", p-file->begin, count);
+		dbg(lvl_warning,"offset=%td count=0x%x\n", p-file->begin, count);
 		while (count--) {
 			tleaf=(struct tree_leaf_v *)p;
 			p+=sizeof(*tleaf);
-			dbg(1,"0x%x 0x%x\n", tleaf->key, search);
+			dbg(lvl_warning,"0x%x 0x%x\n", tleaf->key, search);
 			if (tleaf->key == search)
 				return tree_leaf_v_get_value(tleaf);
 		}
@@ -142,32 +142,32 @@ tree_search_hv(char *dirname, char *filename, unsigned int search_h, unsigned in
 	char buffer[4096];
 	int h,v;
 
-	dbg(1,"enter(%s, %s, 0x%x, 0x%x, %p)\n",dirname, filename, search_h, search_v, result);
+	dbg(lvl_warning,"enter(%s, %s, 0x%x, 0x%x, %p)\n",dirname, filename, search_h, search_v, result);
 	sprintf(buffer, "%s/%s.h1", dirname, filename);
 	f_idx_h=file_create_caseinsensitive(buffer, 0);
 	if ((!f_idx_h) || (!file_mmap(f_idx_h)))
 		return 0;
 	sprintf(buffer, "%s/%s.v1", dirname, filename);
 	f_idx_v=file_create_caseinsensitive(buffer, 0);
-	dbg(1,"%p %p\n", f_idx_h, f_idx_v);
+	dbg(lvl_warning,"%p %p\n", f_idx_h, f_idx_v);
 	if ((!f_idx_v) || (!file_mmap(f_idx_v))) {
 		file_destroy(f_idx_h);
 		return 0;
 	}
 	if ((h=tree_search_h(f_idx_h, search_h))) {
-		dbg(1,"h=0x%x\n", h);
+		dbg(lvl_warning,"h=0x%x\n", h);
 		if ((v=tree_search_v(f_idx_v, h, search_v))) {
-			dbg(1,"v=0x%x\n", v);
+			dbg(lvl_warning,"v=0x%x\n", v);
 			*result=v;
 			file_destroy(f_idx_v);
 			file_destroy(f_idx_h);
-			dbg(1,"return 1\n");
+			dbg(lvl_warning,"return 1\n");
 			return 1;
 		}
 	}
 	file_destroy(f_idx_v);
 	file_destroy(f_idx_h);
-	dbg(1,"return 0\n");
+	dbg(lvl_warning,"return 0\n");
 	return 0;
 }
 
@@ -183,7 +183,7 @@ tree_search_enter(struct tree_search *ts, int offset)
 	tsn->end=p+tree_hdr_get_size(tsn->hdr);
 	tsn->low=tree_hdr_get_low(tsn->hdr);
 	tsn->high=tree_hdr_get_low(tsn->hdr);
-	dbg(1,"pos %td addr 0x%ux size 0x%ux low 0x%ux end %tu\n", p-ts->f->begin, tree_hdr_get_addr(tsn->hdr), tree_hdr_get_size(tsn->hdr), tree_hdr_get_low(tsn->hdr), tsn->end-ts->f->begin);
+	dbg(lvl_warning,"pos %td addr 0x%ux size 0x%ux low 0x%ux end %tu\n", p-ts->f->begin, tree_hdr_get_addr(tsn->hdr), tree_hdr_get_size(tsn->hdr), tree_hdr_get_low(tsn->hdr), tsn->end-ts->f->begin);
 	return tsn;
 }
 
@@ -193,17 +193,17 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 
 	if (! *p) 
 		*p=tsn->p;
-	dbg(1,"next *p=%p dir=%d\n", *p, dir);
-	dbg(1,"low1=0x%x high1=0x%x\n", tsn->low, tsn->high);
+	dbg(lvl_warning,"next *p=%p dir=%d\n", *p, dir);
+	dbg(lvl_warning,"low1=0x%x high1=0x%x\n", tsn->low, tsn->high);
 	if (dir <= 0) {
-		dbg(1,"down 0x%x\n", tsn->low);
+		dbg(lvl_warning,"down 0x%x\n", tsn->low);
 		if (tsn->low != 0xffffffff) {
 			tsn=tree_search_enter(ts, tsn->low);
 			*p=tsn->p;
 			tsn->high=get_u32(p);
 			ts->last_node=ts->curr_node;
-			dbg(1,"saving last2 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
-			dbg(1,"high2=0x%x\n", tsn->high);
+			dbg(lvl_warning,"saving last2 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
+			dbg(lvl_warning,"high2=0x%x\n", tsn->high);
 			return 0;
 		}
 		return -1;
@@ -211,18 +211,18 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 	tsn->low=tsn->high;
 	tsn->last=*p;
 	tsn->high=get_u32_unal(p);
-	dbg(1,"saving last3 %d %p\n", ts->curr_node, tsn->last);
+	dbg(lvl_warning,"saving last3 %d %p\n", ts->curr_node, tsn->last);
 	if (*p < tsn->end)
 		return (tsn->low == 0xffffffff ? 1 : 0);
-	dbg(1,"end reached high=0x%x\n",tsn->high);
+	dbg(lvl_warning,"end reached high=0x%x\n",tsn->high);
 	if (tsn->low != 0xffffffff) {
-		dbg(1,"low 0x%x\n", tsn->low);
+		dbg(lvl_warning,"low 0x%x\n", tsn->low);
 		tsn=tree_search_enter(ts, tsn->low);
 		*p=tsn->p;
 		tsn->high=get_u32_unal(p);
 		ts->last_node=ts->curr_node;
-		dbg(1,"saving last4 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
-		dbg(1,"high4=0x%x\n", tsn->high);
+		dbg(lvl_warning,"saving last4 %d %td\n", ts->curr_node, tsn->last-ts->f->begin);
+		dbg(lvl_warning,"high4=0x%x\n", tsn->high);
 		return 0;
 	}
 	return -1;
@@ -233,7 +233,7 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p)
 	struct tree_search_node *tsn=&ts->nodes[ts->curr_node];
 	int high;
 	
-	dbg(1,"pos=%d %td\n", ts->curr_node, *p-ts->f->begin);
+	dbg(lvl_warning,"pos=%d %td\n", ts->curr_node, *p-ts->f->begin);
 	if (*p)
 		ts->nodes[ts->last_node].last=*p;
 	*p=tsn->last;
@@ -243,12 +243,12 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p)
 			ts->last_node=ts->curr_node;
 			while (high != 0xffffffff) {
 				tsn=tree_search_enter(ts, high);
-				dbg(1,"reload %d\n",ts->curr_node);
+				dbg(lvl_warning,"reload %d\n",ts->curr_node);
 				high=tsn->low;
 			}
 			return 1;
 		}
-		dbg(1,"eon %d %td %td\n", ts->curr_node, *p-ts->f->begin, tsn->end-ts->f->begin);
+		dbg(lvl_warning,"eon %d %td %td\n", ts->curr_node, *p-ts->f->begin, tsn->end-ts->f->begin);
 		if (! ts->curr_node)
 			break;
 		ts->curr_node--;

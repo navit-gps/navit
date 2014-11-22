@@ -379,7 +379,7 @@ void quadtree_node_drop_garbage(struct quadtree_node* node, struct quadtree_iter
 {
 	int i,j;
 	int node_num=node->node_num;
-	dbg(1,"Processing unreferenced subnode children...\n");
+	dbg(lvl_warning,"Processing unreferenced subnode children...\n");
 	for(i=0,j=0;i<node_num;i++) {
 		if(node->items[i]->deleted && !node->items[i]->ref_count) {
 			if(iter->item_free) {
@@ -426,7 +426,7 @@ quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct qua
           }
           if (bSame) {
             //FIXME: memleak and items thrown away if more than QUADTREE_NODE_CAPACITY-1 items with same coordinates added.
-            dbg(0,"Unable to add another item with same coordinates. Throwing item to the ground. Will leak %p.\n",item);
+            dbg(lvl_error,"Unable to add another item with same coordinates. Throwing item to the ground. Will leak %p.\n",item);
             return;
           }
           this_->items[this_->node_num++] = item;
@@ -561,7 +561,7 @@ struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, 
 	ret->xmax=dXMax;
 	ret->ymin=dYMin;
 	ret->ymax=dYMax;
-	dbg(1,"%f %f %f %f\n",dXMin,dXMax,dYMin,dYMax)
+	dbg(lvl_warning,"%f %f %f %f\n",dXMin,dXMax,dYMin,dYMax)
 	ret->item_free=item_free;
 	ret->item_free_context=item_free_context;
 	n->node=this_;
@@ -577,7 +577,7 @@ struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, 
 	}	
 	
 	this_->ref_count++;
-	dbg(1,"Query %p \n",this_)
+	dbg(lvl_warning,"Query %p \n",this_)
 	return ret;
 
 }
@@ -627,16 +627,16 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 
 		if(iter_node->is_leaf) {
 			/* Try to find undeleted item in the current node */
-			dbg(1,"find item %p %p ...\n",iter->iter_nodes,iter->iter_nodes->data);
+			dbg(lvl_warning,"find item %p %p ...\n",iter->iter_nodes,iter->iter_nodes->data);
 			while(iter_node->item<iter_node->node_num) {
-				dbg(1,"%d %d\n",iter_node->item,iter_node->items[iter_node->item]->deleted);
+				dbg(lvl_warning,"%d %d\n",iter_node->item,iter_node->items[iter_node->item]->deleted);
 				if(iter_node->items[iter_node->item]->deleted) {
 					iter_node->item++;
 					continue;
 				}
 				iter->item=iter_node->items[iter_node->item];
 				iter_node->item++;
-				dbg(1,"Returning %p\n",iter->item);
+				dbg(lvl_warning,"Returning %p\n",iter->item);
 				iter->item->ref_count++;
 				return iter->item;
 			}
@@ -654,13 +654,13 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 				i=iter_node->subnode;
 				if(!nodes[i] || !rects_overlap(nodes[i]->xmin, nodes[i]->ymin, nodes[i]->xmax, nodes[i]->ymax, iter->xmin, iter->ymin, iter->xmax, iter->ymax))
 					continue;
-				dbg(1,"%f %f %f %f\n",nodes[i]->xmin, nodes[i]->xmax, nodes[i]->ymin, nodes[i]->ymax)
+				dbg(lvl_warning,"%f %f %f %f\n",nodes[i]->xmin, nodes[i]->xmax, nodes[i]->ymin, nodes[i]->ymax)
 				subnode=nodes[i];
 			}
 	
 			if(subnode) {
 				/* Go one level deeper */
-				dbg(1,"Go one level deeper...\n");
+				dbg(lvl_warning,"Go one level deeper...\n");
 				iter_node=g_new0(struct quadtree_iter_node, 1);
 				iter_node->node=subnode;
 				iter_node->is_leaf=subnode->is_leaf;
@@ -692,7 +692,7 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 		/* 2. remove empty leaf subnode if it's unreferenced */
 		
 		if(!subnode->ref_count && !subnode->node_num && subnode->is_leaf ) {
-			dbg(1,"Going to delete an empty unreferenced leaf subnode...\n");
+			dbg(lvl_warning,"Going to delete an empty unreferenced leaf subnode...\n");
 
 			if(subnode->parent) {
 				if(subnode->parent->aa==subnode) {
@@ -704,19 +704,19 @@ struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter)
 				} else if(subnode->parent->bb==subnode) {
 					subnode->parent->bb=NULL;
 				} else {
-					dbg(0,"Found Quadtree structure corruption while trying to free an empty node.\n");
+					dbg(lvl_error,"Found Quadtree structure corruption while trying to free an empty node.\n");
 				}
 
 				if(!subnode->parent->aa && !subnode->parent->ab && !subnode->parent->ba && !subnode->parent->bb ) 
 					subnode->parent->is_leaf=1;
 				g_free(subnode);
 			} else
-				dbg(1,"Quadtree is empty. NOT deleting the root subnode...\n");
+				dbg(lvl_warning,"Quadtree is empty. NOT deleting the root subnode...\n");
 				
 		}
 
 		/* Go one step towards root */
-		dbg(2,"Going towards root...\n");
+		dbg(lvl_info,"Going towards root...\n");
 		g_free(iter->iter_nodes->data);
 		iter->iter_nodes=g_list_delete_link(iter->iter_nodes,iter->iter_nodes);
 	}

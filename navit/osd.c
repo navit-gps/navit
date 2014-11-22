@@ -70,7 +70,7 @@ osd_new(struct attr *parent, struct attr **attrs)
 		g_free(o);
 		o=NULL;
 	}
-	dbg(3,"new osd %p\n",o);
+	dbg(lvl_debug,"new osd %p\n",o);
         return o;
 }
 
@@ -128,7 +128,7 @@ osd_evaluate_command(struct osd_item *this, struct navit *nav)
 	struct attr navit;
 	navit.type=attr_navit;
 	navit.u.navit=nav;
-	dbg(1, "calling command '%s'\n", this->command);
+	dbg(lvl_warning, "calling command '%s'\n", this->command);
 	command_evaluate(&navit, this->command);
 }
 
@@ -222,12 +222,12 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key)
 {
 #if 0
 	int i;
-	dbg(0,"key=%s\n",key);
+	dbg(lvl_error,"key=%s\n",key);
 	for (i = 0 ; i < strlen(key) ; i++) {
-		dbg(0,"key:0x%02x\n",key[i]);
+		dbg(lvl_error,"key:0x%02x\n",key[i]);
 	}
 	for (i = 0 ; i < strlen(item->accesskey) ; i++) {
-		dbg(0,"accesskey:0x%02x\n",item->accesskey[i]);
+		dbg(lvl_error,"accesskey:0x%02x\n",item->accesskey[i]);
 	}
 #endif
 	if ( ! graphics_is_disabled(item->gr) && item->accesskey && key && !strcmp(key, item->accesskey)) 
@@ -242,7 +242,7 @@ osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 		if (item->gr && !(item->flags & 16)) 
 			graphics_overlay_disable(item->gr, !item->configured);
 	} else {
-		dbg(0, "Error in saved command: %i\n", command_saved_error(cs));
+		dbg(lvl_error, "Error in saved command: %i\n", command_saved_error(cs));
 	}
 }
 
@@ -350,7 +350,7 @@ void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {
 	struct attr attr;
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	if (item->enable_cs) {
 		item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
 		command_saved_set_cb(item->enable_cs, item->reconfig_cb);
@@ -358,7 +358,7 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 		if (!command_saved_error(item->enable_cs)) {
 			item->configured = !! command_saved_get_int(item->enable_cs);
 		} else {
-			dbg(0, "Error in saved command: %i.\n", command_saved_error(item->enable_cs));
+			dbg(lvl_error, "Error in saved command: %i.\n", command_saved_error(item->enable_cs));
 		}
 	} else {
 		if (!navit_get_attr(navit, attr_osd_configuration, &attr, NULL))
@@ -381,7 +381,7 @@ void
 osd_set_keypress(struct navit *nav, struct osd_item *item)
 {
 	struct graphics *navit_gr = navit_get_graphics(nav);
-	dbg(2,"accesskey %s\n",item->accesskey);
+	dbg(lvl_info,"accesskey %s\n",item->accesskey);
 	if (item->accesskey) {
 		item->keypress_cb=callback_new_attr_2(callback_cast(osd_std_keypress), attr_keypress, item, nav);
 		graphics_add_callback(navit_gr, item->keypress_cb);

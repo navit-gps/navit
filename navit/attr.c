@@ -152,7 +152,7 @@ attr_new_from_text(const char *name, const char *value)
 	int min,max,count;
 
 	ret=g_new0(struct attr, 1);
-	dbg(3,"enter name='%s' value='%s'\n", name, value);
+	dbg(lvl_debug,"enter name='%s' value='%s'\n", name, value);
 	attr=attr_from_name(name);
 	ret->type=attr;
 	switch (attr) {
@@ -170,7 +170,7 @@ attr_new_from_text(const char *name, const char *value)
 				ret->u.item_types[count++]=item_type;
 				ret->u.item_types[count]=type_none;
 			} else {
-				dbg(0,"Unknown item type '%s' ignored.\n",tok);
+				dbg(lvl_error,"Unknown item type '%s' ignored.\n",tok);
 			}
 			str=NULL;
         	}
@@ -233,13 +233,13 @@ attr_new_from_text(const char *name, const char *value)
 					 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
 				if (strchr(value, '%')) {
 					if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
-						dbg(0, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
+						dbg(lvl_error, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 					}
 
 					ret->u.num += 0x60000000;
 				} else {
 					if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
-						dbg(0, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
+						dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 					}
 				}
 			} else 	if (attr >= attr_type_boolean_begin) { // also check for yes and no
@@ -267,7 +267,7 @@ attr_new_from_text(const char *name, const char *value)
 				color->b = (b << 8) | b;
 				color->a = (a << 8) | a;
 			} else {
-				dbg(0,"color %s has unknown format\n",value);
+				dbg(lvl_error,"color %s has unknown format\n",value);
 			}
 			break;
 		}
@@ -278,7 +278,7 @@ attr_new_from_text(const char *name, const char *value)
 			transform_to_geo(projection_mg, &c, g);
 			break;
 		}
-		dbg(1,"default\n");
+		dbg(lvl_warning,"default\n");
 		g_free(ret);
 		ret=NULL;
 	}
@@ -485,9 +485,9 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 struct attr *
 attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 {
-	dbg(2, "enter attrs=%p\n", attrs);
+	dbg(lvl_info, "enter attrs=%p\n", attrs);
 	while (*attrs) {
-		dbg(3,"*attrs=%p\n", *attrs);
+		dbg(lvl_debug,"*attrs=%p\n", *attrs);
 		if ((*attrs)->type == attr) {
 			return *attrs;
 		}
@@ -750,7 +750,7 @@ attr_data_size(struct attr *attr)
 		while (attr->u.attr_types[i++] != attr_none);
 		return i*sizeof(enum attr_type);
 	}
-	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
+	dbg(lvl_error,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
 
@@ -887,7 +887,7 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 	int len=0,quoted;
 	char *p,*e,*n;
 
-	dbg(1,"get_tag %s from %s\n", name, line); 
+	dbg(lvl_warning,"get_tag %s from %s\n", name, line); 
 	if (name)
 		len=strlen(name);
 	if (pos) 

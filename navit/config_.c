@@ -60,7 +60,7 @@ config_destroy(struct config *this_)
 static void
 config_terminate(int sig)
 {
-	dbg(0,"terminating\n");
+	dbg(lvl_error,"terminating\n");
 	config_destroy(config);
 }
 
@@ -142,11 +142,11 @@ struct config *
 config_new(struct attr *parent, struct attr **attrs)
 {
 	if (configured) {
-		dbg(0,"only one config allowed\n");
+		dbg(lvl_error,"only one config allowed\n");
 		return config;
 	}
 	if (parent) {
-		dbg(0,"no parent in config allowed\n");
+		dbg(lvl_error,"no parent in config allowed\n");
 		return NULL;
 	}
 	if (!config)
@@ -156,7 +156,7 @@ config_new(struct attr *parent, struct attr **attrs)
 	config->attrs=attr_generic_add_attr_list(config->attrs, attrs);
 	while (*attrs) {
 		if (!config_set_attr_int(config,*attrs)) {
-			dbg(0,"failed to set attribute '%s'\n",attr_to_name((*attrs)->type));
+			dbg(lvl_error,"failed to set attribute '%s'\n",attr_to_name((*attrs)->type));
 			config_destroy(config);
 			config=NULL;
 			break;

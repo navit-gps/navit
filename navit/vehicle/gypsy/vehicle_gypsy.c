@@ -286,7 +286,7 @@ vehicle_gypsy_try_open(gpointer *data)
 	}
 
 	vehicle_last = priv;
-	dbg(0,"gypsy connected to %d\n", source+8);
+	dbg(lvl_error,"gypsy connected to %d\n", source+8);
 	g_free(source);
 	return FALSE;
 }
@@ -457,11 +457,11 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 			dbus_message_unref(message);
 			dbus_connection_unref(conn);
 		} else {
-			dbg(0,"failed to connect to session bus\n");
+			dbg(lvl_error,"failed to connect to session bus\n");
 		}
 	}
 #endif
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->have_cords = 0;
@@ -471,11 +471,11 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
 		if (ret->retry_interval < MIN_RETRY_INTERVAL) {
-			dbg(0, "Retry interval %d too small, setting to %d\n", ret->retry_interval, MIN_RETRY_INTERVAL);
+			dbg(lvl_error, "Retry interval %d too small, setting to %d\n", ret->retry_interval, MIN_RETRY_INTERVAL);
 			ret->retry_interval = MIN_RETRY_INTERVAL;
 		}
 	} else {
-		dbg(0, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
+		dbg(lvl_error, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
 		ret->retry_interval = DEFAULT_RETRY_INTERVAL;
 	}
 	ret->cbl = cbl;
@@ -492,6 +492,6 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 void
 plugin_init(void)
 {
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	plugin_register_vehicle_type("gypsy", vehicle_gypsy_new_gypsy);
 }

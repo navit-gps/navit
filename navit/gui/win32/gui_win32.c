@@ -185,7 +185,7 @@ static void window_layout( HWND hwnd )
 
 	rcClient.top += iToolHeight;
 
-	dbg(0, "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
+	dbg(lvl_error, "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
 
 
 	hChild = GetDlgItem(hwnd, ID_CHILD_GFX);
@@ -285,7 +285,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					attr.type=attr_cursor;
 					// TODO attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 					if(!navit_set_attr(gui->nav, &attr)) {
-						dbg(0, "Failed to set attr_cursor\n");
+						dbg(lvl_error, "Failed to set attr_cursor\n");
 					}
 					return 0;
 				}
@@ -298,7 +298,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					// attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 					attr.u.num = 0; // TODO
 					if(!navit_set_attr(gui->nav, &attr)) {
-						dbg(0, "Failed to set attr_orientation\n");
+						dbg(lvl_error, "Failed to set attr_orientation\n");
 					}
 					return 0;
 				}

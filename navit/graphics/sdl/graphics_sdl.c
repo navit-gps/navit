@@ -187,7 +187,7 @@ struct graphics_image_priv {
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-    dbg(0, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
+    dbg(lvl_error, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
 
     if(gr->overlay_mode)
     {
@@ -222,7 +222,7 @@ gc_destroy(struct graphics_gc_priv *gc)
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-    dbg(1, "gc_set_linewidth %p %d\n", gc, w);
+    dbg(lvl_warning, "gc_set_linewidth %p %d\n", gc, w);
     gc->linewidth = w;
 }
 
@@ -235,7 +235,7 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-    dbg(1, "gc_set_foreground: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
+    dbg(lvl_warning, "gc_set_foreground: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
     gc->fore_r = c->r/256;
     gc->fore_g = c->g/256;
     gc->fore_b = c->b/256;
@@ -245,7 +245,7 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 static void
 gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
-    dbg(1, "gc_set_background: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
+    dbg(lvl_warning, "gc_set_background: %p %d %d %d %d\n", gc, c->a, c->r, c->g, c->b);
     gc->back_r = c->r/256;
     gc->back_g = c->g/256;
     gc->back_b = c->b/256;
@@ -294,7 +294,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     else
     {
         /* TODO: debug "colour parse errors" on xpm */
-        dbg(0,"image_new on '%s' failed: %s\n", name, IMG_GetError());
+        dbg(lvl_error,"image_new on '%s' failed: %s\n", name, IMG_GetError());
         g_free(gi);
         gi = NULL;
     }
@@ -331,7 +331,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
         vx[i] = x;
         vy[i] = y;
 
-        dbg(1, "draw_polygon: %p %i %d,%d\n", gc, i, p[i].x, p[i].y);
+        dbg(lvl_warning, "draw_polygon: %p %i %d,%d\n", gc, i, p[i].x, p[i].y);
     }
 
     if(gr->aa)
@@ -362,7 +362,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
       	return;
     }
 
-    dbg(1, "draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
+    dbg(lvl_warning, "draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
             gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
     if(w > gr->screen->w)
     {
@@ -495,10 +495,10 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                 y_lw_adj = round(cos(angle)*(float)lw/2.0);
                 if((x_lw_adj < 0) || (y_lw_adj < 0))
                 {
-                    dbg(1, "i=%d\n", i);
-                    dbg(1, "   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
-                    dbg(1, "   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
-                    dbg(1, "   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
+                    dbg(lvl_warning, "i=%d\n", i);
+                    dbg(lvl_warning, "   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
+                    dbg(lvl_warning, "   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
+                    dbg(lvl_warning, "   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
                 }
             }
 
@@ -588,7 +588,7 @@ resize_ft_buffer (unsigned int new_size)
     if (new_size > ft_buffer_size) {
 	g_free (ft_buffer);
 	ft_buffer = g_malloc (new_size);
-	dbg(1, "old_size(%u) new_size(%u) ft_buffer(%p)\n", ft_buffer_size, new_size, ft_buffer);
+	dbg(lvl_warning, "old_size(%u) new_size(%u) ft_buffer(%p)\n", ft_buffer_size, new_size, ft_buffer);
 	ft_buffer_size = new_size;
     }
 }
@@ -746,7 +746,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
     int color = 1;
 
     if (!font) {
-	dbg(0, "no font, returning\n");
+	dbg(lvl_error, "no font, returning\n");
 	return;
     }
     t = gr->freetype_methods.text_new(text,
@@ -782,13 +782,13 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 static void
 draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
-    dbg(1, "draw_restore\n");
+    dbg(lvl_warning, "draw_restore\n");
 }
 
 static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
-    dbg(1, "background_gc\n");
+    dbg(lvl_warning, "background_gc\n");
 }
 
 
@@ -805,7 +805,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     }
     else
     {
-        dbg(1, "draw_mode: %d\n", mode);
+        dbg(lvl_warning, "draw_mode: %d\n", mode);
 
         if(mode == draw_mode_end)
         {
@@ -934,11 +934,11 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     }
     if(i == OVERLAY_MAX)
     {
-	dbg(0, "too many overlays! increase OVERLAY_MAX\n");
+	dbg(lvl_error, "too many overlays! increase OVERLAY_MAX\n");
 	return NULL;
     }
 
-    dbg(1, "overlay_new %d %d %d %u %u (%x, %x, %x ,%x, %d)\n", i,
+    dbg(lvl_warning, "overlay_new %d %d %d %u %u (%x, %x, %x ,%x, %d)\n", i,
 	    p->x,
 	    p->y,
 	    w,
@@ -1032,7 +1032,7 @@ static gboolean graphics_sdl_idle(void *data)
 	    gr = the_graphics;
 	}
 	else {
-	    dbg(0,"graphics_idle: graphics not set!\n");
+	    dbg(lvl_error,"graphics_idle: graphics not set!\n");
 	    return FALSE;
 	}
     }
@@ -1077,7 +1077,7 @@ static gboolean graphics_sdl_idle(void *data)
 		if (idle_tasks_idx >= idle_tasks->len)
 		    idle_tasks_idx = 0;
 
-		dbg(3,"idle_tasks_idx(%d)\n",idle_tasks_idx);
+		dbg(lvl_debug,"idle_tasks_idx(%d)\n",idle_tasks_idx);
 		task = (struct idle_task *)g_ptr_array_index(idle_tasks,idle_tasks_idx);
 
 		if (idle_tasks_idx == 0)	// only execute tasks with lowest priority value
@@ -1102,7 +1102,7 @@ static gboolean graphics_sdl_idle(void *data)
 	}
 
 #ifdef USE_WEBOS
-	dbg(5,"SDL_Event %d\n", ev.type);
+	dbg(lvl_debug,"SDL_Event %d\n", ev.type);
 #endif
 	switch(ev.type)
 	{
@@ -1227,7 +1227,7 @@ static gboolean graphics_sdl_idle(void *data)
 					key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
 				}
 				else {
-				    dbg(0,"Unknown key sym: %x\n", ev.key.keysym.sym);
+				    dbg(lvl_error,"Unknown key sym: %x\n", ev.key.keysym.sym);
 				}
 #else
 				/* return unicode chars when they can be converted to ascii */
@@ -1237,7 +1237,7 @@ static gboolean graphics_sdl_idle(void *data)
 			    }
 		    }
 
-		    dbg(2,"key mod: 0x%x\n", key_mod);
+		    dbg(lvl_info,"key mod: 0x%x\n", key_mod);
 
 		    if (keybuf[0]) {
 			callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
@@ -1252,7 +1252,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 	    case SDL_MOUSEBUTTONDOWN:
 		{
-		    dbg(1, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
+		    dbg(lvl_warning, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
 			    ev.button.which,
 			    ev.button.button,
 			    ev.button.state,
@@ -1267,7 +1267,7 @@ static gboolean graphics_sdl_idle(void *data)
 
 	    case SDL_MOUSEBUTTONUP:
 		{
-		    dbg(1, "SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
+		    dbg(lvl_warning, "SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
 			    ev.button.which,
 			    ev.button.button,
 			    ev.button.state,
@@ -1309,7 +1309,7 @@ static gboolean graphics_sdl_idle(void *data)
 	    case SDL_USEREVENT:
 		{
 		    SDL_UserEvent userevent = ev.user;
-		    dbg(9,"received SDL_USEREVENT type(%x) code(%x)\n",userevent.type,userevent.code);
+		    dbg(lvl_info,"received SDL_USEREVENT type(%x) code(%x)\n",userevent.type,userevent.code);
 		    if (userevent.type != SDL_USEREVENT)
 			break;
 
@@ -1329,28 +1329,28 @@ static gboolean graphics_sdl_idle(void *data)
 		    else if(userevent.code == SDL_USEREVENT_CODE_TIMER)
 		    {
 			struct callback *cb = (struct callback *)userevent.data1;
-			dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
+			dbg(lvl_warning, "SDL_USEREVENT timer received cb(%p)\n", cb);
 			callback_call_0(cb);
 		    }
 		    else if(userevent.code == SDL_USEREVENT_CODE_WATCH)
 		    {
 			struct callback *cb = (struct callback *)userevent.data1;
-			dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
+			dbg(lvl_warning, "SDL_USEREVENT watch received cb(%p)\n", cb);
 			callback_call_0(cb);
 		    }
 		    else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK)
 		    {
 			struct callback_list *cbl = (struct callback_list *)userevent.data1;
-			dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
+			dbg(lvl_warning, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
 			callback_list_call_0(cbl);
 		    }
 		    else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
-			dbg(1, "SDL_USEREVENT idle_event received\n");
+			dbg(lvl_warning, "SDL_USEREVENT idle_event received\n");
 		    }
 #ifdef USE_WEBOS_ACCELEROMETER
 		    else if(userevent.code == SDL_USEREVENT_CODE_ROTATE)
 		    {
-			dbg(1, "SDL_USEREVENT rotate received\n");
+			dbg(lvl_warning, "SDL_USEREVENT rotate received\n");
 			switch(gr->orientation)
 			{
 			    case WEBOS_ORIENTATION_PORTRAIT:
@@ -1373,14 +1373,14 @@ static gboolean graphics_sdl_idle(void *data)
 		    }
 #endif
 		    else
-			dbg(1, "unknown SDL_USEREVENT\n");
+			dbg(lvl_warning, "unknown SDL_USEREVENT\n");
 
 		    break;
 		}
 #endif
 	    default:
 		{
-		    dbg(1, "SDL_Event %d\n", ev.type);
+		    dbg(lvl_warning, "SDL_Event %d\n", ev.type);
 		    break;
 		}
 	}
@@ -1430,7 +1430,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 			int)) this->freetype_methods.font_new;
 	meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
 
-    dbg(1,"Calling SDL_Init\n");
+    dbg(lvl_warning,"Calling SDL_Init\n");
 #ifdef USE_WEBOS
 # ifdef USE_WEBOS_ACCELEROMETER
     ret = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_JOYSTICK);
@@ -1442,18 +1442,18 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #endif
     if(ret < 0)
     {
-	dbg(0,"SDL_Init failed %d\n", ret);
+	dbg(lvl_error,"SDL_Init failed %d\n", ret);
 		this->freetype_methods.destroy();
         g_free(this);
         return NULL;
     }
 
 #ifdef USE_WEBOS
-    dbg(1,"Calling PDL_Init(0)\n");
+    dbg(lvl_warning,"Calling PDL_Init(0)\n");
     ret = PDL_Init(0);
     if(ret < 0)
     {
-    	dbg(0,"PDL_Init failed %d\n", ret);
+    	dbg(lvl_error,"PDL_Init failed %d\n", ret);
 		this->freetype_methods.destroy();
         g_free(this);
         return NULL;
@@ -1463,7 +1463,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #else
     if (! event_request_system("glib","graphics_sdl_new")) {
 #endif
-    	dbg(0,"event_request_system failed");
+    	dbg(lvl_error,"event_request_system failed");
 		this->freetype_methods.destroy();
 		g_free(this);
         return NULL;
@@ -1496,7 +1496,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     if(this->screen == NULL)
     {
-    	dbg(0,"SDL_SetVideoMode failed\n");
+    	dbg(lvl_error,"SDL_SetVideoMode failed\n");
 		this->freetype_methods.destroy();
         g_free(this);
 #ifdef USE_WEBOS
@@ -1510,7 +1510,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     w = this->screen->w;
     h = this->screen->h;
 
-    dbg(0, "using screen %ix%i@%i\n",
+    dbg(lvl_error, "using screen %ix%i@%i\n",
 	    this->screen->w, this->screen->h,
 	    this->screen->format->BytesPerPixel * 8);
 #ifdef USE_WEBOS_ACCELEROMETER
@@ -1537,7 +1537,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
 #ifdef USE_WEBOS
     if(the_graphics!=NULL) {
-	dbg(0,"graphics_sdl_new: graphics struct already set: %d!\n", the_graphics_count);
+	dbg(lvl_error,"graphics_sdl_new: graphics struct already set: %d!\n", the_graphics_count);
     }
     the_graphics = this;
     the_graphics_count++;
@@ -1563,7 +1563,7 @@ sdl_timer_callback(Uint32 interval, void* param)
 {
     struct event_timeout *timeout=(struct event_timeout*)param;
 
-    dbg(1,"timer(%p) multi(%d) interval(%d) fired\n", param, timeout->multi, interval);
+    dbg(lvl_warning,"timer(%p) multi(%d) interval(%d) fired\n", param, timeout->multi, interval);
 
     SDL_Event event;
     SDL_UserEvent userevent;
@@ -1620,7 +1620,7 @@ event_sdl_watch_thread (GPtrArray *watch_list)
 	for (idx = 0; idx < watch_list->len; idx++ ) {
 	    if (pfds[idx].revents == pfds[idx].events) {	/* The requested event happened, notify mainloop! */
 		ew = g_ptr_array_index (watch_list, idx);
-		dbg(1,"watch(%p) event(%d) encountered\n", ew, pfds[idx].revents);
+		dbg(lvl_warning,"watch(%p) event(%d) encountered\n", ew, pfds[idx].revents);
 
 		SDL_Event event;
 		SDL_UserEvent userevent;
@@ -1646,7 +1646,7 @@ event_sdl_watch_thread (GPtrArray *watch_list)
 static void
 event_sdl_watch_startthread(GPtrArray *watch_list)
 {
-    dbg(1,"enter\n");
+    dbg(lvl_warning,"enter\n");
     if (sdl_watch_thread)
 	event_sdl_watch_stopthread();
 
@@ -1659,7 +1659,7 @@ event_sdl_watch_startthread(GPtrArray *watch_list)
 static void
 event_sdl_watch_stopthread()
 {
-    dbg(1,"enter\n");
+    dbg(lvl_warning,"enter\n");
     if (sdl_watch_thread) {
 	/* Notify the watch thread that the list of FDs will change */
 	pthread_kill(sdl_watch_thread, SIGUSR1);
@@ -1671,7 +1671,7 @@ event_sdl_watch_stopthread()
 static struct event_watch *
 event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
-    dbg(1,"fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
+    dbg(lvl_warning,"fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
 
     event_sdl_watch_stopthread();
 
@@ -1709,7 +1709,7 @@ event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 static void
 event_sdl_remove_watch(struct event_watch *ew)
 {
-    dbg(1,"enter %p\n",ew);
+    dbg(lvl_warning,"enter %p\n",ew);
 
     event_sdl_watch_stopthread();
 
@@ -1728,10 +1728,10 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
 {
     struct event_timeout * ret =  g_new0(struct event_timeout, 1);
     if(!ret) {
-	dbg (0,"g_new0 failed\n");
+	dbg(lvl_error,"g_new0 failed\n");
 	return ret;
     }
-    dbg(1,"timer(%p) multi(%d) interval(%d) cb(%p) added\n",ret, multi, timeout, cb);
+    dbg(lvl_warning,"timer(%p) multi(%d) interval(%d) cb(%p) added\n",ret, multi, timeout, cb);
     ret->multi = multi;
     ret->cb = cb;
     ret->id = SDL_AddTimer(timeout, sdl_timer_callback, ret);
@@ -1742,17 +1742,17 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
 static void
 event_sdl_remove_timeout(struct event_timeout *to)
 {
-    dbg(2,"enter %p\n", to);
+    dbg(lvl_info,"enter %p\n", to);
     if(to)
     {
 	/* do not SDL_RemoveTimer if oneshot timer has already fired */
 	int ret = to->id == 0 ? SDL_TRUE : SDL_RemoveTimer(to->id);
 
         if (ret == SDL_FALSE)
-	    dbg(0,"SDL_RemoveTimer (%p) failed\n", to->id);
+	    dbg(lvl_error,"SDL_RemoveTimer (%p) failed\n", to->id);
 
 	g_free(to);
-	dbg(1,"timer(%p) removed\n", to);
+	dbg(lvl_warning,"timer(%p) removed\n", to);
     }
 }
 
@@ -1774,7 +1774,7 @@ sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb)
 static struct event_idle *
 event_sdl_add_idle(int priority, struct callback *cb)
 {
-    dbg(1,"add idle priority(%d) cb(%p)\n", priority, cb);
+    dbg(lvl_warning,"add idle priority(%d) cb(%p)\n", priority, cb);
 
     struct idle_task *task = g_new0(struct idle_task, 1);
     task->priority = priority;
@@ -1787,7 +1787,7 @@ event_sdl_add_idle(int priority, struct callback *cb)
 	SDL_Event event;
 	SDL_UserEvent userevent;
 
-	dbg(1,"poking eventloop because of new idle_events\n");
+	dbg(lvl_warning,"poking eventloop because of new idle_events\n");
 
 	userevent.type = SDL_USEREVENT;
 	userevent.code = SDL_USEREVENT_CODE_IDLE_EVENT;
@@ -1808,7 +1808,7 @@ event_sdl_add_idle(int priority, struct callback *cb)
 static void
 event_sdl_remove_idle(struct event_idle *task)
 {
-    dbg(1,"remove task(%p)\n", task);
+    dbg(lvl_warning,"remove task(%p)\n", task);
     g_ptr_array_remove(idle_tasks, (gpointer)task);
 }
 
@@ -1817,7 +1817,7 @@ event_sdl_remove_idle(struct event_idle *task)
 static void
 event_sdl_call_callback(struct callback_list *cbl)
 {
-    dbg(1,"call_callback cbl(%p)\n",cbl);
+    dbg(lvl_warning,"call_callback cbl(%p)\n",cbl);
     SDL_Event event;
     SDL_UserEvent userevent;
 
