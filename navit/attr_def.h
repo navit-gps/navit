@@ -389,6 +389,7 @@ ATTR(refresh_cond)
  * exclude the end nodes, because these are imported as separate nodes. */
 ATTR(house_number_interpolation_no_ends_incrmt_1)
 ATTR(house_number_interpolation_no_ends_incrmt_2)
+ATTR(dbg_level)
 ATTR2(0x0003ffff,type_string_end)
 ATTR2(0x00040000,type_special_begin)
 ATTR(order)
