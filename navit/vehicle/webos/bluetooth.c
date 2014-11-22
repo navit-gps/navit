@@ -25,7 +25,7 @@ static void
 mlPDL_ServiceCall_callback(struct callback_list *cbl, char *service, char *parameters/*, struct callback *fail_cb*/)
 {
 	PDL_Err err;
-	dbg(lvl_warning,"PDL_ServiceCall(%s) parameters(%s)\n",service,parameters);
+	dbg(lvl_debug,"PDL_ServiceCall(%s) parameters(%s)\n",service,parameters);
 	err = PDL_ServiceCall(service, parameters);
 	if (err != PDL_NOERROR) {
 		dbg(lvl_error,"PDL_ServiceCall to (%s) with (%s) failed with (%d): (%s)\n", service, parameters, err, PDL_GetError());
@@ -50,7 +50,7 @@ mlPDL_ServiceCall(const char *service, const char *parameters/*, struct callback
 
 	callback_list_add(cbl, cb);
 
-dbg(lvl_error,"event_call_callback(%p)\n",cbl);
+dbg(lvl_debug,"event_call_callback(%p)\n",cbl);
 	event_call_callback(cbl);
 }
 
@@ -65,7 +65,7 @@ mlPDL_ServiceCallWithCallback_callback(struct callback_list *cbl,
 		PDL_bool removeAfterResponse)
 {
 	PDL_Err err;
-	dbg(lvl_warning,"PDL_ServiceCallWithCallback(%s) parameters(%s)\n",service,parameters);
+	dbg(lvl_debug,"PDL_ServiceCallWithCallback(%s) parameters(%s)\n",service,parameters);
 	err = PDL_ServiceCallWithCallback(service, parameters, callback, user, removeAfterResponse);
 	if (err != PDL_NOERROR) {
 		dbg(lvl_error,"PDL_ServiceCallWithCallback to (%s) with (%s) failed with (%d): (%s)\n", service, parameters, err, PDL_GetError());
@@ -94,7 +94,7 @@ mlPDL_ServiceCallWithCallback(const char *service,
 
 	callback_list_add(cbl, cb);
 
-	dbg(lvl_error,"event_call_callback(%p)\n",cbl);
+	dbg(lvl_debug,"event_call_callback(%p)\n",cbl);
 	event_call_callback(cbl);
 }
 
@@ -107,7 +107,7 @@ vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, stru
 
 	priv->gps_type = param ? GPS_TYPE_INT: GPS_TYPE_NONE;
 
-	dbg(lvl_warning,"Calling PDL_EnableLocationTracking(%i)\n",param);
+	dbg(lvl_debug,"Calling PDL_EnableLocationTracking(%i)\n",param);
 	err = PDL_EnableLocationTracking(param);
 
 	if (err != PDL_NOERROR) {
@@ -380,7 +380,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(lvl_warning,"magnetic %d\n", priv->magnetic_direction);
+			dbg(lvl_debug,"magnetic %d\n", priv->magnetic_direction);
 		}
 	}
 	return ret;
@@ -411,12 +411,12 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
-	dbg(lvl_warning, "size=%d pos=%d buffer='%s'\n", size,
+	dbg(lvl_debug, "size=%d pos=%d buffer='%s'\n", size,
 	    priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
-		dbg(lvl_warning, "line='%s'\n", str);
+		dbg(lvl_debug, "line='%s'\n", str);
 		rc += vehicle_webos_parse_nmea(priv, str);
 		str = tok;
 //		if (priv->file_type == file_type_file && rc)
@@ -427,7 +427,7 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 		size = priv->buffer + priv->buffer_pos - str;
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
-		dbg(lvl_warning,"now pos=%d buffer='%s'\n",
+		dbg(lvl_debug,"now pos=%d buffer='%s'\n",
 		    priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
 		dbg(lvl_error,"Overflow. Most likely wrong baud rate or no nmea protocol\n");
@@ -481,7 +481,7 @@ vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user)
 	if (!priv->buffer)
 		priv->buffer = g_malloc(buffer_size);
 	
-	dbg(lvl_warning,"instanceId(%i)\n",priv->spp_instance_id);
+	dbg(lvl_debug,"instanceId(%i)\n",priv->spp_instance_id);
 
 	priv->gps_type = GPS_TYPE_BT;
 
@@ -513,7 +513,7 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user)
 	if(strcmp(notification,"notifnservicenames") == 0) {
 		int instance_id = PDL_GetParamInt(params, "instanceId");
 
-		dbg(lvl_warning,"instanceId(%i)\n", instance_id);
+		dbg(lvl_debug,"instanceId(%i)\n", instance_id);
 
 		cJSON *root = cJSON_Parse(params_json);
 		if (!root) {
@@ -563,7 +563,7 @@ vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr)
 {
 	char parameters[128];
 
-	dbg(lvl_warning,"subscribeNotifications\n");
+	dbg(lvl_debug,"subscribeNotifications\n");
 	mlPDL_ServiceCallWithCallback("palm://com.palm.bluetooth/spp/subscribenotifications",
 			"{\"subscribe\":true}",
 			(PDL_ServiceCallbackFunc)vehicle_webos_spp_notify,
@@ -598,7 +598,7 @@ vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param)
 	char *device_addr = NULL;
 	cJSON *root;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 
 	PDL_Err err;
 	err = PDL_GetParamInt(params, "errorCode");
@@ -619,17 +619,17 @@ vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param)
 	cJSON *trusted_devices = cJSON_GetObjectItem(root, "trusteddevices");
 
 	unsigned int i,c = cJSON_GetArraySize(trusted_devices);
-	dbg(lvl_warning, "trusted_devices(%i)\n",c);
+	dbg(lvl_debug, "trusted_devices(%i)\n",c);
 	for(i=0; i < c && !device_addr; i++) {
 		cJSON *device = cJSON_GetArrayItem(trusted_devices,i);
 		char *name = cJSON_GetObjectItem(device, "name")->valuestring;
 		char *address = cJSON_GetObjectItem(device, "address")->valuestring;
 		char *status = cJSON_GetObjectItem(device, "status")->valuestring;
 
-		dbg(lvl_warning,"i(%i) name(%s) address(%s) status(%s)\n",i,name,address,status);
+		dbg(lvl_debug,"i(%i) name(%s) address(%s) status(%s)\n",i,name,address,status);
 
 		if (/*strncmp(status, "connected",9) == 0 && */strstr(name, "GPS") != NULL) {
-			dbg(lvl_warning,"choose name(%s) address(%s)\n",name,address);
+			dbg(lvl_debug,"choose name(%s) address(%s)\n",name,address);
 			device_addr = g_strdup(address);
 			break;
 		}
@@ -649,7 +649,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv)
 {
 	// Try to connect to BT GPS, or use PDL method
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 
 	PDL_Err err;
 	err = PDL_ServiceCallWithCallback("palm://com.palm.bluetooth/gap/gettrusteddevices",
@@ -668,7 +668,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv)
 void
 vehicle_webos_bt_close(struct vehicle_priv *priv)
 {
-	dbg(lvl_error,"XXX\n");
+	dbg(lvl_debug,"XXX\n");
 	char parameters[128];
 	if (priv->spp_instance_id) {
 		snprintf(parameters, sizeof(parameters), "{\"instanceId\":%i}", priv->spp_instance_id);

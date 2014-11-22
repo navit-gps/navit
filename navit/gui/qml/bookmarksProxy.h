@@ -144,7 +144,7 @@ public slots:
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 
 			label=QString::fromLocal8Bit(attr.u.str);
-			dbg(lvl_error,"Bookmark is %s\n",bookmark.toStdString().c_str());
+			dbg(lvl_debug,"Bookmark is %s\n",bookmark.toStdString().c_str());
 			if (label.compare(bookmark)) continue;
 			item_coord_get(item, &c, 1);
 			if (this->object->currentPoint!=NULL) {

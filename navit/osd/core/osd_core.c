@@ -1479,7 +1479,7 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 	struct osd_button *this = (struct osd_button *)opc->data;
 
 	struct graphics *gra = navit_get_graphics(nav);
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	this->img = graphics_image_new(gra, this->src);
 	if (!this->img) {
 		dbg(lvl_warning, "failed to load '%s'\n", this->src);
@@ -1617,7 +1617,7 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 	struct osd_button *this = (struct osd_button *)opc->data;
 
 	struct graphics *gra = navit_get_graphics(nav);
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	this->img = graphics_image_new(gra, this->src);
 	if (!this->img) {
 		dbg(lvl_warning, "failed to load '%s'\n", this->src);
@@ -1719,7 +1719,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);
-		dbg(lvl_warning, "name=%s\n", name);
+		dbg(lvl_debug, "name=%s\n", name);
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
 			this->last_name = name;
@@ -1738,7 +1738,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		osd_std_draw(&opc->osd_item);
 		if (this->active) {
 			image = g_strdup_printf(this->icon_src, name);
-			dbg(lvl_warning, "image=%s\n", image);
+			dbg(lvl_debug, "image=%s\n", image);
 			gr_image =
 			    graphics_image_new_scaled(opc->osd_item.gr,
 						      image, this->icon_w,
@@ -1755,7 +1755,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 							      this->
 							      icon_h);
 			}
-			dbg(lvl_warning, "gr_image=%p\n", gr_image);
+			dbg(lvl_debug, "gr_image=%p\n", gr_image);
 			if (gr_image) {
 				p.x =
 				    (opc->osd_item.w -
@@ -1888,7 +1888,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
             gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
         }
         
-        dbg(lvl_warning, "gr_image=%p\n", gr_image);
+        dbg(lvl_debug, "gr_image=%p\n", gr_image);
         
         if (gr_image)
         {
@@ -2777,8 +2777,8 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 			}
 
 			if (item) {
-				dbg(lvl_warning,"name %s\n", item_to_name(item->type));
-				dbg(lvl_warning,"type %s\n", attr_to_name(oti->attr_typ));
+				dbg(lvl_debug,"name %s\n", item_to_name(item->type));
+				dbg(lvl_debug,"type %s\n", attr_to_name(oti->attr_typ));
 				if (item_attr_get(item, oti->attr_typ, &attr))
 					value=osd_text_format_attr(&attr, oti->format, imperial);
 			}
@@ -2891,7 +2891,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 			last++;
 		}
 
-		dbg(lvl_warning,"this->align=%d\n", this->align);
+		dbg(lvl_debug,"this->align=%d\n", this->align);
 		switch (this->align & 51) {
 		case 1:
 			p.y=0;
@@ -3175,7 +3175,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
 			case 2:
 				strength=2;
 				if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_sats_used, &attr, NULL)) {
-					dbg(lvl_warning,"num=%ld\n", attr.u.num);
+					dbg(lvl_debug,"num=%ld\n", attr.u.num);
 					if (attr.u.num >= 3) 
 						strength=attr.u.num-1;
 					if (strength > 5)
@@ -3490,7 +3490,7 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 	struct color color_white={COLOR_WHITE_};
 	struct color color_black={COLOR_BLACK_};
 	struct graphics *gra = navit_get_graphics(nav);
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	if (this->use_overlay) {
 		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	} else {
@@ -3564,7 +3564,7 @@ osd_auxmap_draw(struct osd_priv_common *opc)
 		memset(&sel, 0, sizeof(sel));
 		sel.u.p_rect.rl.x=opc->osd_item.w;
 		sel.u.p_rect.rl.y=opc->osd_item.h;
-		dbg(lvl_warning,"osd_auxmap_draw: sel.u.p_rect.rl=(%d, %d)\n", opc->osd_item.w, opc->osd_item.h);
+		dbg(lvl_debug,"osd_auxmap_draw: sel.u.p_rect.rl=(%d, %d)\n", opc->osd_item.w, opc->osd_item.h);
 		transform_set_screen_selection(this->trans, &sel);
 		graphics_set_rect(opc->osd_item.gr, &sel.u.p_rect);
 	}

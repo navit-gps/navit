@@ -122,7 +122,7 @@ gui_internal_poi_icon(struct gui_priv *this, struct item *item)
 								icon=g_strdup(el->u.icon.src);
 							}
 							char *dot=g_strrstr(icon,".");
-							dbg(lvl_info,"%s %s\n", item_to_name(item->type),icon);
+							dbg(lvl_debug,"%s %s\n", item_to_name(item->type),icon);
 							if(dot)
 								*dot=0;
 							img=image_new_xs(this,icon);
@@ -573,7 +573,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	char buffer[32];
 	struct poi_param *paramnew;
 	struct attr route;
-dbg(lvl_error,"POIs...");
+dbg(lvl_debug,"POIs...");
 	if(data) {
 	  param = data;
 	} else {
@@ -596,7 +596,7 @@ dbg(lvl_error,"POIs...");
 	items= g_new0( struct item_data, maxitem);
 	
 	
-	dbg(lvl_info, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, AddressFilterType= %d\n",
+	dbg(lvl_debug, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i, filterstr = %s, AddressFilterType= %d\n",
 		param->sel, param->selnb, param->pagenb, param->dist, param->filterstr, param->AddressFilterType);
 
 	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
@@ -614,7 +614,7 @@ dbg(lvl_error,"POIs...");
         while ((m=mapset_next(h, 1))) {
 		selm=map_selection_dup_pro(sel, pro, map_projection(m));
 		mr=map_rect_new(m, selm);
-		dbg(lvl_info,"mr=%p\n", mr);
+		dbg(lvl_debug,"mr=%p\n", mr);
 		if (mr) {
 			while ((item=map_rect_get_item(mr))) {
 				if (gui_internal_cmd_pois_item_selected(param, item) &&
@@ -685,10 +685,10 @@ dbg(lvl_error,"POIs...");
 		struct item_data *data = fh_extractmin(fh);
 		if (data == NULL)
 		{
-			dbg(lvl_info, "Empty heap: maxitem = %i, it = %i, dist = %i\n", maxitem, it, dist);
+			dbg(lvl_debug, "Empty heap: maxitem = %i, it = %i, dist = %i\n", maxitem, it, dist);
 			break;
 		}
-		dbg(lvl_info, "dist1: %i, dist2: %i\n", data->dist, (-key)>>10);
+		dbg(lvl_debug, "dist1: %i, dist2: %i\n", data->dist, (-key)>>10);
 		if(i==(it-pagesize*pagenb) && data->dist>prevdist)
 			prevdist=data->dist;
 		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, route.u.route, data->dist, data->label);
@@ -767,13 +767,13 @@ dbg(lvl_error,"POIs...");
 		while(firstrow>=0) {
 			int currow=g_list_index(wtable->children, td->bottom_row->data) - firstrow;
 			if(currow<0) {
-				dbg(lvl_error,"Can't find bottom row in children list. Stop paging.\n");
+				dbg(lvl_debug,"Can't find bottom row in children list. Stop paging.\n");
 				break;
 			}
 			if(currow>=param->count)
 				break;
 			if(!(td->scroll_buttons.next_button->state & STATE_SENSITIVE)) {
-				dbg(lvl_error,"Reached last page but item %i not found. Stop paging.\n",param->count);
+				dbg(lvl_debug,"Reached last page but item %i not found. Stop paging.\n",param->count);
 				break;
 			}
 			gui_internal_table_button_next(this, td->scroll_buttons.next_button, NULL);

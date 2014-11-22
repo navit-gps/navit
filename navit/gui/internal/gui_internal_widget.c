@@ -248,7 +248,7 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
 		this->highlighted_menu=g_list_last(this->root.children)->data;
 		this->highlighted->state |= STATE_HIGHLIGHTED;
 		gui_internal_widget_render(this, this->highlighted);
-		dbg(lvl_warning,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
+		dbg(lvl_debug,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
 	}
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
@@ -550,7 +550,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				wc->p.x=x-wc->w;
 #if 0
 			if (w->flags & flags_scrolly)
-				dbg(lvl_error,"%d - %d vs %d - %d\n",y,y+wc->h,w->p.y,w->p.y+w->h-hb);
+				dbg(lvl_debug,"%d - %d vs %d - %d\n",y,y+wc->h,w->p.y,w->p.y+w->h-hb);
 			if (y+wc->h > w->p.y+w->h-hb || y+wc->h < w->p.y)
 				wc->state |= STATE_OFFSCREEN;
 			else
@@ -605,7 +605,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		w->scroll_buttons->button_box->p.x=w->p.x;
 		w->scroll_buttons->button_box->p.y=w->p.y+w->h-w->scroll_buttons->button_box->h;
 		gui_internal_widget_pack(this, w->scroll_buttons->button_box);
-		dbg(lvl_error,"needs buttons %d vs %d\n",y,w->h);
+		dbg(lvl_debug,"needs buttons %d vs %d\n",y,w->h);
 		gui_internal_box_pack(this, w);
 		return;
 	}

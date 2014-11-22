@@ -39,7 +39,7 @@ maps_new(struct attr *parent, struct attr **attrs)
 		dbg(lvl_error,"Parent must be mapset\n");
 		return NULL;
 	}
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	attrs_dup=attr_list_dup(attrs);
 	data=attr_search(attrs_dup, NULL, attr_data);
 	if (data) {

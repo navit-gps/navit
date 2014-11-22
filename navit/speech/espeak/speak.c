@@ -214,7 +214,7 @@ static void start_speaking(struct speech_priv* sp_priv)
 
 static LRESULT CALLBACK speech_message_handler( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	dbg(lvl_warning, "message_handler called\n");
+	dbg(lvl_debug, "message_handler called\n");
 
 	switch (uMsg)
 	{
@@ -387,7 +387,7 @@ static int
 espeak_say(struct speech_priv *this, const char *text)
 {
 	char *phrase = g_strdup(text);
-	dbg(lvl_warning, "Speak: '%s'\n", text);
+	dbg(lvl_debug, "Speak: '%s'\n", text);
 
 	if (!PostMessage(this->h_queue, msg_say, (WPARAM)this, (LPARAM)phrase))
 	{
@@ -440,7 +440,7 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 		strcpy(path_home,path->u.str);
 	else
 		sprintf(path_home,"%s/espeak-data",getenv("NAVIT_SHAREDIR"));
-	dbg(lvl_error,"path_home set to %s\n",path_home);
+	dbg(lvl_debug,"path_home set to %s\n",path_home);
 
 	if ( !initialise() )
 	{
@@ -467,12 +467,12 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 			}
 			file1=g_strdup_printf("%s/voices/%s",path_home,lang_full);
 			file2=g_strdup_printf("%s/voices/%s/%s",path_home,lang,lang_full);
-			dbg(lvl_error,"Testing %s and %s\n",file1,file2);
+			dbg(lvl_debug,"Testing %s and %s\n",file1,file2);
 			if (file_exists(file1) || file_exists(file2)) 
 				lang_str=g_strdup(lang_full);
 			else
 				lang_str=g_strdup(lang);
-			dbg(lvl_error,"Language full %s lang %s result %s\n",lang_full,lang,lang_str);
+			dbg(lvl_debug,"Language full %s lang %s result %s\n",lang_full,lang,lang_str);
 			g_free(lang_full);
 			g_free(lang);
 			g_free(file1);

@@ -752,7 +752,7 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 	doc_new.level=doc_old->level+1;
 	doc_new.user_data=doc_old->user_data;
 	if (! href) {
-		dbg(lvl_warning,"no href, using '%s'\n", doc_old->href);
+		dbg(lvl_debug,"no href, using '%s'\n", doc_old->href);
 		doc_new.href=doc_old->href;
 		if (file_exists(doc_new.href)) {
 		    parse_file(&doc_new, error);
@@ -760,14 +760,14 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 		    dbg(lvl_error,"Unable to include %s\n",doc_new.href);
 		}
 	} else {
-		dbg(lvl_warning,"expanding '%s'\n", href);
+		dbg(lvl_debug,"expanding '%s'\n", href);
 		we=file_wordexp_new(href);
 		we_files=file_wordexp_get_array(we);
 		count=file_wordexp_get_count(we);
-		dbg(lvl_warning,"%d results\n", count);
+		dbg(lvl_debug,"%d results\n", count);
 		if (file_exists(we_files[0])) {
 			for (i = 0 ; i < count ; i++) {
-				dbg(lvl_warning,"result[%d]='%s'\n", i, we_files[i]);
+				dbg(lvl_debug,"result[%d]='%s'\n", i, we_files[i]);
 				doc_new.href=we_files[i];
 				parse_file(&doc_new, error);
 			}
@@ -787,7 +787,7 @@ strncmp_len(const char *s1, int s1len, const char *s2)
 	char c[s1len+1];
 	strncpy(c, s1, s1len);
 	c[s1len]='\0';
-	dbg(lvl_error,"'%s' vs '%s'\n", c, s2);
+	dbg(lvl_debug,"'%s' vs '%s'\n", c, s2);
 #endif
 
 	ret=strncmp(s1, s2, s1len);
@@ -832,7 +832,7 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 
 	strncpy(test2, test, len);
 	test2[len]='\0';
-	dbg(lvl_error,"%s\n", test2);
+	dbg(lvl_debug,"%s\n", test2);
 #endif
 	if (!len)
 		return 0;
@@ -1115,7 +1115,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	gboolean result;
 	char *xmldir,*newxmldir,*xmlfile,*newxmlfile,*sep;
 
-	dbg(lvl_warning,"enter filename='%s'\n", document->href);
+	dbg(lvl_debug,"enter filename='%s'\n", document->href);
 #if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 12
 #define G_MARKUP_TREAT_CDATA_AS_TEXT 0
 #endif
@@ -1159,7 +1159,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 		unsetenv("XMLFILE");
 	g_free(newxmldir);
 	g_free(newxmlfile);
-	dbg(lvl_warning,"return %d\n", result);
+	dbg(lvl_debug,"return %d\n", result);
 
 	return result;
 }
@@ -1219,7 +1219,7 @@ gboolean config_load(const char *filename, xmlerror **error)
 	item_create_hash();
 	initStatic();
 
-	dbg(lvl_warning,"enter filename='%s'\n", filename);
+	dbg(lvl_debug,"enter filename='%s'\n", filename);
 	memset(&document, 0, sizeof(document));
 	document.href=filename;
 	document.user_data=&curr;
@@ -1230,7 +1230,7 @@ gboolean config_load(const char *filename, xmlerror **error)
 	}
 	attr_destroy_hash();
 	item_destroy_hash();
-	dbg(lvl_warning,"return %d\n", result);
+	dbg(lvl_debug,"return %d\n", result);
 	return result;
 }
 
@@ -1264,7 +1264,7 @@ struct navit_object *
 navit_object_ref(struct navit_object *obj)
 {
 	obj->refcount++;
-	dbg(lvl_warning,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+	dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
         return obj;
 }
 
@@ -1273,7 +1273,7 @@ navit_object_unref(struct navit_object *obj)
 {
 	if (obj) {
 		obj->refcount--;
-		dbg(lvl_warning,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+		dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
 		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
 			obj->func->destroy(obj);
 	}

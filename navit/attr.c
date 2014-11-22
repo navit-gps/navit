@@ -278,7 +278,7 @@ attr_new_from_text(const char *name, const char *value)
 			transform_to_geo(projection_mg, &c, g);
 			break;
 		}
-		dbg(lvl_warning,"default\n");
+		dbg(lvl_debug,"default\n");
 		g_free(ret);
 		ret=NULL;
 	}
@@ -887,7 +887,7 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 	int len=0,quoted;
 	char *p,*e,*n;
 
-	dbg(lvl_warning,"get_tag %s from %s\n", name, line); 
+	dbg(lvl_debug,"get_tag %s from %s\n", name, line); 
 	if (name)
 		len=strlen(name);
 	if (pos) 

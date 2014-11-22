@@ -289,7 +289,7 @@ map_rect_get_item_mg(struct map_rect_priv *mr)
 		}
 		if (file_next(mr))
 			continue;
-		dbg(lvl_warning,"lin_count %d idx_count %d active_count %d %d kB (%d kB)\n", block_lin_count, block_idx_count, block_active_count, (block_mem+block_active_mem)/1024, block_active_mem/1024);
+		dbg(lvl_debug,"lin_count %d idx_count %d active_count %d %d kB (%d kB)\n", block_lin_count, block_idx_count, block_active_count, (block_mem+block_active_mem)/1024, block_active_mem/1024);
 		return NULL;
 	}
 }
@@ -361,7 +361,7 @@ map_search_mg_convert_special(char *str)
 			*c++='u';
 			break;
 		default:
-			dbg(lvl_warning,"0x%x\n", *str);
+			dbg(lvl_debug,"0x%x\n", *str);
 			*c++=*str;
 			break;
 		}
@@ -375,7 +375,7 @@ static int
 map_search_setup(struct map_rect_priv *mr)
 {
 	char *prefix;
-	dbg(lvl_warning,"%s\n", attr_to_name(mr->search_type));
+	dbg(lvl_debug,"%s\n", attr_to_name(mr->search_type));
 	switch (mr->search_type) {
 	case attr_town_postal:
 		if (mr->search_item.type != type_country_label) {
@@ -388,7 +388,7 @@ map_search_setup(struct map_rect_priv *mr)
 		tree_search_init(mr->m->dirname, "town.b1", &mr->ts, 0);
 		mr->current_file=file_town_twn;
 		mr->search_str=g_strdup_printf("%s%s",prefix,mr->search_attr->u.str);
-		dbg(lvl_error,"search_str='%s'\n",mr->search_str);
+		dbg(lvl_debug,"search_str='%s'\n",mr->search_str);
 		mr->search_country=mg_country_from_isonum(mr->search_item.id_lo);
 		break;
 	case attr_town_name:
@@ -438,7 +438,7 @@ map_search_setup(struct map_rect_priv *mr)
 				return 0;
 			}
 		}
-		dbg(lvl_warning,"street_assoc=0x%x\n", mr->search_item.id_lo);
+		dbg(lvl_debug,"street_assoc=0x%x\n", mr->search_item.id_lo);
 		tree_search_init(mr->m->dirname, "strname.b1", &mr->ts, 0);
 		mr->current_file=file_strname_stn;
 		mr->search_str=g_strdup(mr->search_attr->u.str);
@@ -467,9 +467,9 @@ static struct map_search_priv *
 map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
-	dbg(lvl_warning,"searching for %s '%s'\n", attr_to_name(search->type), search->u.str);
-	dbg(lvl_warning,"id_lo=0x%x\n", item->id_lo);
-	dbg(lvl_warning,"search=%s\n", search->u.str);
+	dbg(lvl_debug,"searching for %s '%s'\n", attr_to_name(search->type), search->u.str);
+	dbg(lvl_debug,"id_lo=0x%x\n", item->id_lo);
+	dbg(lvl_debug,"search=%s\n", search->u.str);
 	mr->m=map;
 	mr->search_attr=attr_dup(search);
 	mr->search_type=search->type;
@@ -507,7 +507,7 @@ map_search_destroy_mg(struct map_search_priv *ms)
 {
 	struct map_rect_priv *mr=(struct map_rect_priv *)ms;
 
-	dbg(lvl_warning,"mr=%p\n", mr);
+	dbg(lvl_debug,"mr=%p\n", mr);
 	if (! mr)
 		return;
 	map_search_cleanup(mr);

@@ -470,7 +470,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 {
 	int w,h;
 	static struct graphics_priv *imlib_gr;
-	dbg(lvl_warning,"draw_image_warp data=%p\n", img);
+	dbg(lvl_debug,"draw_image_warp data=%p\n", img);
 	if (imlib_gr != gr) {
 		imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
 		imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
@@ -577,9 +577,9 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	dbg(lvl_warning,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
+	dbg(lvl_debug,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
 	overlay_rect(parent, overlay, 0, &or);
-	dbg(lvl_warning,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
+	dbg(lvl_debug,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
@@ -719,7 +719,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	       gra->background_ready = 0;
 	}
 #ifndef _WIN32
-	dbg(lvl_warning,"window=%lu\n", GDK_WINDOW_XID(widget->window));
+	dbg(lvl_debug,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
@@ -1032,7 +1032,7 @@ get_data_window(struct graphics_priv *this, unsigned int xid)
 	if (!gtk_widget_get_parent(this->widget)) 
 		gtk_widget_ref(this->widget);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
-	dbg(lvl_warning,"h= %i, w= %i\n",this->win_h, this->win_w);
+	dbg(lvl_debug,"h= %i, w= %i\n",this->win_h, this->win_w);
 	gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
 	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", this->window_title);
 	gtk_widget_realize(this->win);
@@ -1156,7 +1156,7 @@ get_data(struct graphics_priv *this, char const *type)
 		f=popen("pidof /usr/bin/ipaq-sleep","r");
 		if (f) {
 			fscanf(f,"%d",&this->pid);
-			dbg(lvl_warning,"ipaq_sleep pid=%d\n", this->pid);
+			dbg(lvl_debug,"ipaq_sleep pid=%d\n", this->pid);
 			pclose(f);
 		}
 #endif

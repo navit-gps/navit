@@ -77,7 +77,7 @@ block_get_byid(struct file *file, int id, unsigned char **p_ret)
 int
 block_get_byindex(struct file *file, int idx, struct block_priv *blk)
 {
-	dbg(lvl_warning,"idx=%d\n", idx);
+	dbg(lvl_debug,"idx=%d\n", idx);
 	blk->b=block_get_byid(file, idx, &blk->p);
 	blk->block_start=(unsigned char *)(blk->b);
 	blk->p_start=blk->p;
@@ -177,7 +177,7 @@ block_next_lin(struct map_rect_priv *mr)
 		else
 			mr->b.p=mr->b.block_start+block_get_blocks(mr->b.b)*512;
 		if (mr->b.p >= mr->file->end) {
-			dbg(lvl_warning,"end of blocks %p vs %p\n", mr->b.p, mr->file->end);
+			dbg(lvl_debug,"end of blocks %p vs %p\n", mr->b.p, mr->file->end);
 			return 0;
 		}
 		mr->b.block_start=mr->b.p;
@@ -192,7 +192,7 @@ block_next_lin(struct map_rect_priv *mr)
 		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->u.c_rect, &r)) {
 			block_active_count++;
 			block_active_mem+=block_get_blocks(mr->b.b)*512-sizeof(struct block *);
-			dbg(lvl_warning,"block ok\n");
+			dbg(lvl_debug,"block ok\n");
 			return 1;
 		}
 		dbg(lvl_info,"block not in cur_sel\n");
@@ -210,14 +210,14 @@ block_next(struct map_rect_priv *mr)
 		return block_next_lin(mr);
 	for (;;) {
 		if (! bt->p) {
-			dbg(lvl_warning,"block 0x%x\n", bt->next);
+			dbg(lvl_debug,"block 0x%x\n", bt->next);
 			if (bt->next == -1)
 				return 0;
 			bt->b=block_get_byid(mr->file, bt->next, &bt->p);
 			bt->end=(unsigned char *)mr->b.bt.b+block_get_size(mr->b.bt.b);
 			bt->next=block_get_next(bt->b);
 			bt->order=0;
-			dbg(lvl_warning,"size 0x%x next 0x%x\n", block_get_size(bt->b), block_get_next(bt->b));
+			dbg(lvl_debug,"size 0x%x next 0x%x\n", block_get_size(bt->b), block_get_next(bt->b));
 			if (! mr->b.bt.block_count) {
 #if 0
 				if (debug) {
@@ -238,8 +238,8 @@ block_next(struct map_rect_priv *mr)
 			blk_num=get_u32(&mr->b.bt.p);
 			coord=get_u32(&mr->b.bt.p); 
 			block_mem+=8;
-			dbg(lvl_warning,"%p vs %p coord 0x%x ", mr->b.bt.end, mr->b.bt.p, coord);
-			dbg(lvl_warning,"block 0x%x", blk_num);
+			dbg(lvl_debug,"%p vs %p coord 0x%x ", mr->b.bt.end, mr->b.bt.p, coord);
+			dbg(lvl_debug,"block 0x%x", blk_num);
 		
 			r_w=bt->r_curr.rl.x-bt->r_curr.lu.x;
 			r_h=bt->r_curr.lu.y-bt->r_curr.rl.y;

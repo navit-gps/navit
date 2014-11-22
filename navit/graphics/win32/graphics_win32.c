@@ -274,7 +274,7 @@ static void create_memory_dc(struct graphics_priv *gr)
     hdc = GetDC( gr->wnd_handle );
     // Creates memory DC
     gr->hMemDC = CreateCompatibleDC(hdc);
-    dbg(lvl_warning, "resize memDC to: %d %d \n", gr->width, gr->height );
+    dbg(lvl_debug, "resize memDC to: %d %d \n", gr->width, gr->height );
 
 
 #ifndef  FAST_TRANSPARENCY
@@ -311,7 +311,7 @@ static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
     TCHAR key = (TCHAR) wParam;
     char *s=NULL;
     char k[]={0,0};
-    dbg(lvl_warning,"HandleKey %d\n",key);
+    dbg(lvl_debug,"HandleKey %d\n",key);
 	switch (key) {
     default:
 		k[0]=key;
@@ -330,7 +330,7 @@ static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
     char left[]={NAVIT_KEY_LEFT,0};
     char right[]={NAVIT_KEY_RIGHT,0};
     char *s=NULL;
-    dbg(lvl_warning,"HandleKey %d\n",key);
+    dbg(lvl_debug,"HandleKey %d\n",key);
 	switch (key) {
     case 37:
 		s=left;
@@ -410,7 +410,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             gra_priv->width = LOWORD( lParam );
             gra_priv->height  = HIWORD( lParam );
             create_memory_dc(gra_priv);
-            dbg(lvl_error, "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
+            dbg(lvl_debug, "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
             callback_list_call_attr_2(gra_priv->cbl, attr_resize, (void *)gra_priv->width, (void *)gra_priv->height);
         }
         break;
@@ -434,7 +434,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             PAINTSTRUCT ps = { 0 };
             HDC hdc;
             profile(0, NULL);
-            dbg(lvl_warning, "WM_PAINT\n");
+            dbg(lvl_debug, "WM_PAINT\n");
             overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
@@ -535,13 +535,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONDOWN:
     {
-        dbg(lvl_warning, "LBUTTONDOWN\n");
+        dbg(lvl_debug, "LBUTTONDOWN\n");
         HandleButtonClick( gra_priv, 1, 1, lParam);
     }
     break;
     case WM_LBUTTONUP:
     {
-        dbg(lvl_warning, "LBUTTONUP\n");
+        dbg(lvl_debug, "LBUTTONUP\n");
         HandleButtonClick( gra_priv, 0, 1, lParam);
     }
     break;
@@ -552,7 +552,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         HandleButtonClick( gra_priv, 0, 3,lParam );
         break;
     case WM_LBUTTONDBLCLK:
-        dbg(lvl_warning, "LBUTTONDBLCLK\n");
+        dbg(lvl_debug, "LBUTTONDBLCLK\n");
         HandleButtonClick( gra_priv, 1, 6,lParam );
         break;
     case WM_CHAR:
@@ -562,7 +562,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         HandleKeyDown( gra_priv, wParam);
         break;
    case WM_COPYDATA:
-   	dbg(lvl_error,"got WM_COPYDATA\n");
+   	dbg(lvl_debug,"got WM_COPYDATA\n");
         callback_list_call_attr_2(gra_priv->cbl, attr_wm_copydata, (void *)wParam, (void*)lParam);
         break;
 #ifdef HAVE_API_WIN32_CE
@@ -939,7 +939,7 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-    dbg(lvl_warning, "set draw_mode to %x, %d\n", gr, (int)mode );
+    dbg(lvl_debug, "set draw_mode to %x, %d\n", gr, (int)mode );
 
     if ( mode == draw_mode_begin )
     {
@@ -951,7 +951,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
         {
             if ( gr->hMemDC )
             {
-                dbg(lvl_warning, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
+                dbg(lvl_debug, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
 #ifdef  FAST_TRANSPARENCY
                 if ( gr->hPrebuildDC )
                 {
@@ -1143,7 +1143,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     BITMAPINFO pnginfo;
     HDC dc;
 
-    dbg(lvl_warning,"enter %s\n",name);
+    dbg(lvl_debug,"enter %s\n",name);
     png_file=fopen(name, "rb");
     if (!png_file)
     {
@@ -1285,7 +1285,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
         g_free (row_pointers);
     img->hot.x=img->width/2-1;
     img->hot.y=img->height/2-1;
-    dbg(lvl_warning,"ok\n");
+    dbg(lvl_debug,"ok\n");
     fclose(png_file);
     return TRUE;
 
@@ -1486,7 +1486,7 @@ static struct graphics_priv *
 
 static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
 {
-    dbg(lvl_warning, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
 
     if ( gr->width != w || gr->height != h )
     {
@@ -1504,7 +1504,7 @@ static struct graphics_priv *
             overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
     struct graphics_priv *this=graphics_win32_new_helper(meth);
-    dbg(lvl_warning, "overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", this, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_debug, "overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", this, p->x, p->y, w, h, alpha, wraparound);
     this->width  = w;
     this->height = h;
     this->parent = gr;
@@ -1538,7 +1538,7 @@ static struct graphics_priv *
 
 static void overlay_disable(struct graphics_priv *gr, int disable)
 {
-    dbg(lvl_warning, "overlay: %x, disable: %d\n", gr, disable);
+    dbg(lvl_debug, "overlay: %x, disable: %d\n", gr, disable);
     gr->disabled = disable;
 }
 
@@ -1684,7 +1684,7 @@ event_win32_main_loop_run(void)
 {
     MSG msg;
 
-    dbg(lvl_error,"enter\n");
+    dbg(lvl_debug,"enter\n");
     while (GetMessage(&msg, 0, 0, 0))
     {
         TranslateMessage(&msg);       /*  Keyboard input.      */
@@ -1700,7 +1700,7 @@ static void event_win32_main_loop_quit(void)
     HWND hwndSip;
 #endif
 
-    dbg(lvl_error,"enter\n");
+    dbg(lvl_debug,"enter\n");
 
 #ifdef HAVE_API_WIN32_CE
     hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
@@ -1716,14 +1716,14 @@ static void event_win32_main_loop_quit(void)
 static struct event_watch *
             event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
-    dbg(lvl_error,"enter\n");
+    dbg(lvl_debug,"enter\n");
     return NULL;
 }
 
 static void
 event_win32_remove_watch(struct event_watch *ev)
 {
-    dbg(lvl_error,"enter\n");
+    dbg(lvl_debug,"enter\n");
 }
 
 static GList *timers;
@@ -1779,7 +1779,7 @@ static struct event_timeout *
     timers = g_list_prepend(timers, t);
     t->cb = cb;
     t->timer_id = SetTimer(NULL, 0, timeout, win32_timer_cb);
-    dbg(lvl_warning, "Started timer %d for %d (multi: %d)\n", t->timer_id, timeout, multi);
+    dbg(lvl_debug, "Started timer %d for %d (multi: %d)\n", t->timer_id, timeout, multi);
     return t;
 }
 
@@ -1790,7 +1790,7 @@ event_win32_remove_timeout(struct event_timeout *to)
     {
         GList *l;
         struct event_timeout *t=NULL;
-        dbg(lvl_warning, "Try stopping timer %d\n", to->timer_id);
+        dbg(lvl_debug, "Try stopping timer %d\n", to->timer_id);
         l = timers;
         while (l)
         {

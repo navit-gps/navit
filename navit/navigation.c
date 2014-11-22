@@ -144,7 +144,7 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 {
 	struct map_rect *mr;
 	struct item *item;
-	dbg(lvl_warning,"enter %s\n", attr_to_name(type));
+	dbg(lvl_debug,"enter %s\n", attr_to_name(type));
 	switch (type) {
 	case attr_map:
 		attr->u.map=this_->map;
@@ -242,7 +242,7 @@ navigation_set_announce(struct navigation *this_, enum item_type type, int *leve
 {
 	int i;
 	if (type < route_item_first || type > route_item_last) {
-		dbg(lvl_error,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
+		dbg(lvl_debug,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
 		return 0;
 	}
 	for (i = 0 ; i < 3 ; i++) 
@@ -313,7 +313,7 @@ static int
 road_angle(struct coord *c1, struct coord *c2, int dir)
 {
 	int ret=transform_get_angle_delta(c1, c2, dir);
-	dbg(lvl_warning, "road_angle(0x%x,0x%x - 0x%x,0x%x)=%d\n", c1->x, c1->y, c2->x, c2->y, ret);
+	dbg(lvl_debug, "road_angle(0x%x,0x%x - 0x%x,0x%x)=%d\n", c1->x, c1->y, c2->x, c2->y, ret);
 	return ret;
 }
 
@@ -414,7 +414,7 @@ round_for_vocabulary(int vocabulary, int dist, int factor)
 				break;
 			i++;
 		}
-		dbg(lvl_error,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
+		dbg(lvl_debug,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
 		dist=distances[m];
 	}
 	return dist*factor;
@@ -762,7 +762,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		return;
 	}
 
-	dbg(lvl_warning,"length=%ld time=%ld speed=%ld\n", length.u.num, time.u.num, speed.u.num);
+	dbg(lvl_debug,"length=%ld time=%ld speed=%ld\n", length.u.num, time.u.num, speed.u.num);
 	itm->length=length.u.num;
 	itm->time=time.u.num;
 	itm->speed=speed.u.num;
@@ -865,7 +865,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		navigation_itm_update(ret, ritem);
 
 		while (item_coord_get(ritem, &c[i], 1)) {
-			dbg(lvl_warning, "coord %d 0x%x 0x%x\n", i, c[i].x ,c[i].y);
+			dbg(lvl_debug, "coord %d 0x%x 0x%x\n", i, c[i].x ,c[i].y);
 
 			if (i < 4) 
 				i++;
@@ -874,7 +874,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 				c[3]=c[4];
 			}
 		}
-		dbg(lvl_warning,"count=%d\n", i);
+		dbg(lvl_debug,"count=%d\n", i);
 		i--;
 
 		ret->way.angle2=road_angle(&c[0], &c[1], 0);
@@ -889,7 +889,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			ret->way.flags |= AF_ROUNDABOUT;
 		}
 
-		dbg(lvl_warning,"i=%d start %d end %d '%s' '%s'\n", i, ret->way.angle2, ret->angle_end, ret->way.name1, ret->way.name2);
+		dbg(lvl_debug,"i=%d start %d end %d '%s' '%s'\n", i, ret->way.angle2, ret->angle_end, ret->way.name1, ret->way.name2);
 		map_rect_destroy(mr);
 	} else {
 		if (this_->last)
@@ -904,7 +904,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			navigation_itm_ways_update(ret,graph_map);
 		}
 	}
-	dbg(lvl_warning,"ret=%p\n", ret);
+	dbg(lvl_debug,"ret=%p\n", ret);
 	this_->last=ret;
 	return ret;
 }
@@ -975,7 +975,7 @@ calculate_dest_distance(struct navigation *this_, int incr)
 {
 	int len=0, time=0, count=0;
 	struct navigation_itm *next,*itm=this_->last;
-	dbg(lvl_warning, "enter this_=%p, incr=%d\n", this_, incr);
+	dbg(lvl_debug, "enter this_=%p, incr=%d\n", this_, incr);
 	if (incr) {
 		if (itm) {
 			dbg(lvl_info, "old values: (%p) time=%d lenght=%d\n", itm, itm->dest_length, itm->dest_time);
@@ -1000,7 +1000,7 @@ calculate_dest_distance(struct navigation *this_, int incr)
 		itm->dest_count=count++;
 		itm=itm->prev;
 	}
-	dbg(lvl_warning,"len %d time %d\n", len, time);
+	dbg(lvl_debug,"len %d time %d\n", len, time);
 }
 
 /**
@@ -1018,14 +1018,14 @@ static int
 is_same_street2(char *old_name1, char *old_name2, char *new_name1, char *new_name2)
 {
 	if (old_name1 && new_name1 && !strcmp(old_name1, new_name1)) {
-		dbg(lvl_warning,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)\n", old_name2, new_name2, old_name1, new_name1);
+		dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)\n", old_name2, new_name2, old_name1, new_name1);
 		return 1;
 	}
 	if (old_name2 && new_name2 && !strcmp(old_name2, new_name2)) {
-		dbg(lvl_warning,"is_same_street: '%s' '%s' vs '%s' '%s' yes (2.)\n", old_name2, new_name2, old_name1, new_name1);
+		dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' yes (2.)\n", old_name2, new_name2, old_name1, new_name1);
 		return 1;
 	}
-	dbg(lvl_warning,"is_same_street: '%s' '%s' vs '%s' '%s' no\n", old_name2, new_name2, old_name1, new_name1);
+	dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' no\n", old_name2, new_name2, old_name1, new_name1);
 	return 0;
 }
 
@@ -1094,10 +1094,10 @@ maneuver_straight(struct navigation_itm *new, int diff)
 	struct navigation_way *w;
 
 	w = new->way.next;
-	dbg(lvl_warning,"diff=%d\n", diff);
+	dbg(lvl_debug,"diff=%d\n", diff);
 	while (w) {
 		curr_diff=abs(angle_delta(new->prev->angle_end, w->angle2));
-		dbg(lvl_warning,"curr_diff=%d\n", curr_diff);
+		dbg(lvl_debug,"curr_diff=%d\n", curr_diff);
 		if (curr_diff < diff) {
 			return 0;
 		}
@@ -1214,7 +1214,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	int num_new_motorways = 0; /* number of motorway-like ways */
 	int num_other = 0; /* number of ways which are neither motorway-like nor ramps */
 
-	dbg(lvl_warning,"enter %p %p %p\n",old, new, delta);
+	dbg(lvl_debug,"enter %p %p %p\n",old, new, delta);
 	d=angle_delta(old->angle_end, new->way.angle2);
 	if (!new->way.next) {
 		/* No announcement necessary */
@@ -1407,9 +1407,9 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		if (left < -dlim && right > dlim) 
 			is_unambiguous=1;
 		if (dc != d) {
-			dbg(lvl_warning,"d %d vs dc %d\n",d,dc);
+			dbg(lvl_debug,"d %d vs dc %d\n",d,dc);
 			d-=(dc+d+1)/2;
-			dbg(lvl_warning,"result %d\n",d);
+			dbg(lvl_debug,"result %d\n",d);
 			is_unambiguous=0;
 		}
 		if (!is_same_street && is_unambiguous < 1) {
@@ -1433,7 +1433,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
 			if (! entering_straight(new, abs(*delta))) {
-				dbg(lvl_warning, "maneuver_required: Not driving straight: yes\n");
+				dbg(lvl_debug, "maneuver_required: Not driving straight: yes\n");
 				if (reason)
 					*reason="yes: Not driving straight";
 				return 1;
@@ -1449,17 +1449,17 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 					*reason="yes: delta > ext_limit for same name";
 				return 1;
 			} else {
-				dbg(lvl_warning, "maneuver_required: Staying on the same street: no\n");
+				dbg(lvl_debug, "maneuver_required: Staying on the same street: no\n");
 				if (reason)
 					*reason="no: Staying on same street";
 				return 0;
 			}
 		}
 	} else
-		dbg(lvl_warning, "maneuver_required: old or new is ramp\n");
+		dbg(lvl_debug, "maneuver_required: old or new is ramp\n");
 #if 0
 	if (old->item.type == type_ramp && (new->item.type == type_highway_city || new->item.type == type_highway_land)) {
-		dbg(lvl_warning, "no_maneuver_required: old is ramp new is highway\n");
+		dbg(lvl_debug, "no_maneuver_required: old is ramp new is highway\n");
 		if (reason)
 			*reason="no: old is ramp new is highway";
 		return 0;
@@ -1467,13 +1467,13 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 #endif
 #if 0
 	if (old->crossings_end == 2) {
-		dbg(lvl_warning, "maneuver_required: only 2 connections: no\n");
+		dbg(lvl_debug, "maneuver_required: only 2 connections: no\n");
 		return 0;
 	}
 #endif
-	dbg(lvl_warning,"delta=%d-%d=%d\n", new->way.angle2, old->angle_end, *delta);
+	dbg(lvl_debug,"delta=%d-%d=%d\n", new->way.angle2, old->angle_end, *delta);
 	if ((new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) && (!is_same_street_systematic(old, new) || (old->name2 != NULL && new->name2 == NULL))) {
-		dbg(lvl_warning, "maneuver_required: highway changed name\n");
+		dbg(lvl_debug, "maneuver_required: highway changed name\n");
 		if (reason)
 			*reason="yes: highway changed name";
 		return 1;
@@ -1482,11 +1482,11 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		if (! entering_straight(new,abs(*delta))) {
 			if (reason)
 				*reason="yes: not straight";
-			dbg(lvl_warning, "maneuver_required: not driving straight: yes\n");
+			dbg(lvl_debug, "maneuver_required: not driving straight: yes\n");
 			return 1;
 		}
 
-		dbg(lvl_warning, "maneuver_required: delta(%d) < %d: no\n", *delta, straight_limit);
+		dbg(lvl_debug, "maneuver_required: delta(%d) < %d: no\n", *delta, straight_limit);
 		if (reason)
 			*reason="no: delta < limit";
 		return 0;
@@ -1500,13 +1500,13 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	}
 
 	if (! check_multiple_streets(new)) {
-		dbg(lvl_warning, "maneuver_required: only one possibility: no\n");
+		dbg(lvl_debug, "maneuver_required: only one possibility: no\n");
 		if (reason)
 			*reason="no: only one possibility";
 		return 0;
 	}
 
-	dbg(lvl_warning, "maneuver_required: delta=%d: yes\n", *delta);
+	dbg(lvl_debug, "maneuver_required: delta=%d: yes\n", *delta);
 	if (reason)
 		*reason="yes: delta >= limit";
 	return 1;
@@ -1517,7 +1517,7 @@ static struct navigation_command *
 command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 {
 	struct navigation_command *ret=g_new0(struct navigation_command, 1);
-	dbg(lvl_warning,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
+	dbg(lvl_debug,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
 	if (itm && itm->prev && itm->way.next && itm->prev->way.next && !(itm->way.flags & AF_ROUNDABOUT) && (itm->prev->way.flags & AF_ROUNDABOUT)) {
@@ -1526,7 +1526,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 		int entry_angle;
 		struct navigation_itm *itm2=itm->prev;
 		int exit_angle=angle_median(itm->prev->angle_end, itm->way.next->angle2);
-		dbg(lvl_warning,"exit %d median from %d,%d\n", exit_angle,itm->prev->angle_end, itm->way.next->angle2);
+		dbg(lvl_debug,"exit %d median from %d,%d\n", exit_angle,itm->prev->angle_end, itm->way.next->angle2);
 		while (itm2 && (itm2->way.flags & AF_ROUNDABOUT)) {
 			len+=itm2->length;
 			angle=itm2->angle_end;
@@ -1535,11 +1535,11 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 		if (itm2 && itm2->next && itm2->next->way.next) {
 			itm2=itm2->next;
 			entry_angle=angle_median(angle_opposite(itm2->way.angle2), itm2->way.next->angle2);
-			dbg(lvl_warning,"entry %d median from %d(%d),%d\n", entry_angle,angle_opposite(itm2->way.angle2), itm2->way.angle2, itm2->way.next->angle2);
+			dbg(lvl_debug,"entry %d median from %d(%d),%d\n", entry_angle,angle_opposite(itm2->way.angle2), itm2->way.angle2, itm2->way.next->angle2);
 		} else {
 			entry_angle=angle_opposite(angle);
 		}
-		dbg(lvl_error,"entry %d exit %d\n", entry_angle, exit_angle);
+		dbg(lvl_debug,"entry %d exit %d\n", entry_angle, exit_angle);
 		ret->roundabout_delta=angle_delta(entry_angle, exit_angle);
 		ret->length=len+roundabout_extra_length;
 	}
@@ -1622,7 +1622,7 @@ navigation_item_destination(struct navigation *nav, struct navigation_itm *itm, 
 	if (!vocabulary2)
 		n2=NULL;
 	if(!n1 && !n2 && itm->way.item.type == type_ramp && vocabulary2) {
-		dbg(lvl_warning,">> Next is ramp %x current is %x \n", itm->way.item.type, next->way.item.type);
+		dbg(lvl_debug,">> Next is ramp %x current is %x \n", itm->way.item.type, next->way.item.type);
 			 
 		if(next->way.item.type == type_ramp)
 			return NULL;
@@ -1755,7 +1755,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			/* TRANSLATORS: Don't forget the ending space */
 			strength=_("really strongly ");
 		} else {
-			dbg(lvl_warning,"delta=%d\n", delta);
+			dbg(lvl_debug,"delta=%d\n", delta);
 			/* TRANSLATORS: Don't forget the ending space */
 			strength=_("unknown ");
 		}
@@ -1771,7 +1771,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		if (!connect) {
 			level=navigation_get_announce_level_cmd(nav, itm, cmd, distance-cmd->length);
 		}
-		dbg(lvl_warning,"distance=%d level=%d type=0x%x\n", distance, level, itm->way.item.type);
+		dbg(lvl_debug,"distance=%d level=%d type=0x%x\n", distance, level, itm->way.item.type);
 	}
 
 	if (cmd->itm->prev->way.flags & AF_ROUNDABOUT) {
@@ -1986,10 +1986,10 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	if (!this_->cmd_first)
 		return;
 	callback_list_call(this_->callback, 1, &p);
-	dbg(lvl_warning,"force_speech=%d turn_around=%d turn_around_limit=%d\n", force_speech, this_->turn_around, this_->turn_around_limit);
+	dbg(lvl_debug,"force_speech=%d turn_around=%d turn_around_limit=%d\n", force_speech, this_->turn_around, this_->turn_around_limit);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
 	if (this_->turn_around_limit && this_->turn_around == this_->turn_around_limit) {
-		dbg(lvl_warning,"distance=%d distance_turn=%d\n", distance, this_->distance_turn);
+		dbg(lvl_debug,"distance=%d distance_turn=%d\n", distance, this_->distance_turn);
 		while (distance > this_->distance_turn) {
 			this_->level_last=4;
 			level=4;
@@ -2007,8 +2007,8 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 			/* only tell if the level is valid for more than 3 seconds */
 			int speed_distance=this_->first->speed*30/36;
 			if (distance < speed_distance || navigation_get_announce_level_cmd(this_, this_->first, this_->cmd_first, distance-speed_distance) == level) {
-				dbg(lvl_warning,"distance %d speed_distance %d\n",distance,speed_distance);
-				dbg(lvl_warning,"level %d < %d\n", level, this_->level_last);
+				dbg(lvl_debug,"distance %d speed_distance %d\n",distance,speed_distance);
+				dbg(lvl_debug,"level %d < %d\n", level, this_->level_last);
 				this_->level_last=level;
 				force_speech=3;
 			}
@@ -2030,7 +2030,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	if (force_speech) {
 		this_->level_last=level;
 		this_->curr_delay=0;
-		dbg(lvl_warning,"force_speech=%d distance=%d level=%d type=0x%x\n", force_speech, distance, level, this_->first->way.item.type);
+		dbg(lvl_debug,"force_speech=%d distance=%d level=%d type=0x%x\n", force_speech, distance, level, this_->first->way.item.type);
 		callback_list_call(this_->callback_speech, 1, &p);
 	}
 }
@@ -2049,7 +2049,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	if (attr->type != attr_route_status)
 		return;
 
-	dbg(lvl_warning,"enter %d\n", mode);
+	dbg(lvl_debug,"enter %d\n", mode);
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new) 
 		navigation_flush(this_);
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
@@ -2067,7 +2067,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		this_->vehicleprofile=vehicleprofile.u.vehicleprofile;
 	else
 		this_->vehicleprofile=NULL;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	while ((ritem=map_rect_get_item(mr))) {
 		if (ritem->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
@@ -2080,7 +2080,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 			if (!item_attr_get(ritem, attr_direction, &street_direction))
 				street_direction.u.num=0;
 			sitem=street_item.u.item;
-			dbg(lvl_warning,"sitem=%p\n", sitem);
+			dbg(lvl_debug,"sitem=%p\n", sitem);
 			itm=item_hash_lookup(this_->hash, sitem);
 			dbg(lvl_info,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
 			if (itm && itm->way.dir != street_direction.u.num) {
@@ -2092,7 +2092,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 				navigation_itm_update(itm, ritem);
 				break;
 			}
-			dbg(lvl_warning,"not on track\n");
+			dbg(lvl_debug,"not on track\n");
 		}
 		navigation_itm_new(this_, ritem);
 	}
@@ -2486,7 +2486,7 @@ navigation_map_get_item(struct map_rect_priv *priv)
 					l=type_nav_roundabout_l8;
 					break;
 				}
-				dbg(lvl_warning,"delta %d\n",priv->cmd->delta);
+				dbg(lvl_debug,"delta %d\n",priv->cmd->delta);
 				if (priv->cmd->delta < 0)
 					ret->type=l;
 				else
@@ -2520,7 +2520,7 @@ navigation_map_get_item(struct map_rect_priv *priv)
 	navigation_map_item_attr_rewind(priv);
 
 	ret->id_lo=priv->itm->dest_count;
-	dbg(lvl_warning,"type=%d\n", ret->type);
+	dbg(lvl_debug,"type=%d\n", ret->type);
 	return ret;
 }
 

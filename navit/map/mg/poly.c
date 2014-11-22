@@ -235,10 +235,10 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			}
 		} else 
 			mr->b.p=poly->subpoly_next;
-		dbg(lvl_warning,"%d %d %s\n", poly->subpoly_num_all, mr->b.block_num, poly->name);
+		dbg(lvl_debug,"%d %d %s\n", poly->subpoly_num_all, mr->b.block_num, poly->name);
 		item->id_lo=poly->subpoly_num_all | (mr->b.block_num << 16);
 		item->id_hi=(mr->current_file << 16);
-		dbg(lvl_warning,"0x%x 0x%x\n", item->id_lo, item->id_hi);
+		dbg(lvl_debug,"0x%x 0x%x\n", item->id_lo, item->id_hi);
 		poly->subpoly_next=mr->b.p+L(poly->count[poly->subpoly_num])*sizeof(struct coord);
 		poly->subpoly_num++;
 		poly->subpoly_num_all++;

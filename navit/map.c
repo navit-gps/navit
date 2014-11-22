@@ -442,8 +442,8 @@ struct map_search *
 map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial)
 {
 	struct map_search *this_;
-	dbg(lvl_warning,"enter(%p,%p,%p,%d)\n", m, item, search_attr, partial);
-	dbg(lvl_warning,"0x%x 0x%x 0x%x\n", attr_country_all, search_attr->type, attr_country_name);
+	dbg(lvl_debug,"enter(%p,%p,%p,%d)\n", m, item, search_attr, partial);
+	dbg(lvl_debug,"0x%x 0x%x 0x%x\n", attr_country_all, search_attr->type, attr_country_name);
 	this_=g_new0(struct map_search,1);
 	this_->m=m;
 	this_->search_attr=*search_attr;

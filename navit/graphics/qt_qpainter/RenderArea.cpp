@@ -98,7 +98,7 @@ bool RenderArea::event(QEvent *event)
 {
 #if QT_VERSION >= 0x040700                                                 
 	if (event->type() == QEvent::Gesture) {
-		dbg(lvl_error,"gesture\n");
+		dbg(lvl_debug,"gesture\n");
 		return true;
 	}
 #endif
@@ -135,8 +135,8 @@ void RenderArea::do_resize(QSize size)
     QPainter painter(pixmap);
     QBrush brush;
 	painter.fillRect(0, 0, size.width(), size.height(), brush);
-	dbg(lvl_error,"size %dx%d\n", size.width(), size.height());
-	dbg(lvl_error,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
+	dbg(lvl_debug,"size %dx%d\n", size.width(), size.height());
+	dbg(lvl_debug,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
 	callback_list_call_attr_2(this->cbl, attr_resize, GINT_TO_POINTER(size.width()), GINT_TO_POINTER(size.height()));
 }
 
@@ -240,9 +240,9 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 #else
 	const char *text=str.toUtf8().constData();
 #endif
-	dbg(lvl_error,"enter text='%s' 0x%x (%zu) key=%d\n", text, text[0], strlen(text), event->key());
+	dbg(lvl_debug,"enter text='%s' 0x%x (%zu) key=%d\n", text, text[0], strlen(text), event->key());
 	if (!text || !text[0] || text[0] == 0x7f) {
-		dbg(lvl_error,"special key\n");
+		dbg(lvl_debug,"special key\n");
 		switch (event->key()) {
 		case 4099:
 			{
@@ -305,7 +305,7 @@ void RenderArea::watchEvent(int fd)
 {
 #ifdef QT_QPAINTER_USE_EVENT_QT
 	struct event_watch *ev=(struct event_watch *)g_hash_table_lookup(watches, (void *)fd);
-	dbg(lvl_warning,"fd=%d ev=%p cb=%p\n", fd, ev, ev->cb);
+	dbg(lvl_debug,"fd=%d ev=%p cb=%p\n", fd, ev, ev->cb);
 	callback_call_0(ev->cb);
 #endif
 }

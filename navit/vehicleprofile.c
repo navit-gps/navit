@@ -30,7 +30,7 @@
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 {
-	dbg(lvl_warning,"%s:%ld\n", attr_to_name(attr->type), attr->u.num);
+	dbg(lvl_debug,"%s:%ld\n", attr_to_name(attr->type), attr->u.num);
 	switch (attr->type) {
 	case attr_flags:
 		this_->flags=attr->u.num;
@@ -154,7 +154,7 @@ vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struct navit_obje
 				struct navit_object *newrp;
 				struct attr_iter *iter=rp->func->iter_new(NULL);
 				struct attr attr;
-				dbg(lvl_warning,"patching roadprofile\n");
+				dbg(lvl_debug,"patching roadprofile\n");
 				newrp=oldrp->func->dup(oldrp);
 				while (rp->func->get_attr(rp, attr_any, &attr, iter)) 
 					newrp->func->set_attr(newrp, &attr);
@@ -177,7 +177,7 @@ vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navit_object *ob
 	struct attr attr;
 	struct attr_iter *iter=obj->func->iter_new(NULL);
 	while (obj->func->get_attr(obj, attr_any, &attr, iter)) {
-		dbg(lvl_warning,"%s\n",attr_to_name(attr.type));
+		dbg(lvl_debug,"%s\n",attr_to_name(attr.type));
 		if (attr.type == attr_roadprofile) 
 			vehicleprofile_apply_roadprofile(this_, attr.u.navit_object, is_option);
 		else if (attr.type != attr_profile_option)

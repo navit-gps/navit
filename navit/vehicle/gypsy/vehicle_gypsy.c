@@ -286,7 +286,7 @@ vehicle_gypsy_try_open(gpointer *data)
 	}
 
 	vehicle_last = priv;
-	dbg(lvl_error,"gypsy connected to %d\n", source+8);
+	dbg(lvl_debug,"gypsy connected to %d\n", source+8);
 	g_free(source);
 	return FALSE;
 }
@@ -461,7 +461,7 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 		}
 	}
 #endif
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->have_cords = 0;
@@ -492,6 +492,6 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
 void
 plugin_init(void)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_vehicle_type("gypsy", vehicle_gypsy_new_gypsy);
 }

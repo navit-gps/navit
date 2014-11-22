@@ -222,12 +222,12 @@ town_search_compare(unsigned char **p, struct map_rect_priv *mr)
 		d=0;
 	} else {
 		country=get_u16_unal(p);
-		dbg(lvl_warning,"country 0x%x ", country);
+		dbg(lvl_debug,"country 0x%x ", country);
 		name=get_string(p);
-		dbg(lvl_warning,"name '%s' ",name);
+		dbg(lvl_debug,"name '%s' ",name);
 		mr->search_blk_count=get_u32_unal(p);
 		mr->search_blk_off=(struct block_offset *)(*p);
-		dbg(lvl_warning,"len %d ", mr->search_blk_count);
+		dbg(lvl_debug,"len %d ", mr->search_blk_count);
 		(*p)+=mr->search_blk_count*4;
 		d=mr->search_country-country;
 	}
@@ -237,7 +237,7 @@ town_search_compare(unsigned char **p, struct map_rect_priv *mr)
 		else
 			d=strcasecmp(mr->search_str, name);
 	}
-	dbg(lvl_warning,"%d \n",d);
+	dbg(lvl_debug,"%d \n",d);
 	return d;
 
 }
@@ -250,7 +250,7 @@ town_search_get_item(struct map_rect_priv *mr)
 	int dir=1,leaf;
 
 	if (! mr->search_blk_count) {
-		dbg(lvl_warning,"partial %d 0x%x '%s' ***\n", mr->search_partial, mr->search_country, mr->search_str);
+		dbg(lvl_debug,"partial %d 0x%x '%s' ***\n", mr->search_partial, mr->search_country, mr->search_str);
 		if (! mr->search_linear) {
 			while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 				dir=town_search_compare(&mr->search_p, mr);
@@ -266,18 +266,18 @@ town_search_get_item(struct map_rect_priv *mr)
 			}
 		}
 		if (! tree_search_next_lin(&mr->ts, &mr->search_p)) {
-			dbg(lvl_warning,"linear not found\n");
+			dbg(lvl_debug,"linear not found\n");
 			return NULL;
 		}
 		if (town_search_compare(&mr->search_p, mr)) {
-			dbg(lvl_warning,"no match\n");
+			dbg(lvl_debug,"no match\n");
 			return NULL;
 		}
-		dbg(lvl_warning,"found %d blocks\n",mr->search_blk_count);
+		dbg(lvl_debug,"found %d blocks\n",mr->search_blk_count);
 	}
 	if (! mr->search_blk_count)
 		return NULL;
-	dbg(lvl_warning,"block 0x%x offset 0x%x\n", block_offset_get_block(mr->search_blk_off), block_offset_get_offset(mr->search_blk_off));
+	dbg(lvl_debug,"block 0x%x offset 0x%x\n", block_offset_get_block(mr->search_blk_off), block_offset_get_offset(mr->search_blk_off));
 	block_get_byindex(mr->m->file[mr->current_file], block_offset_get_block(mr->search_blk_off), &mr->b);
 	mr->b.p=mr->b.block_start+block_offset_get_offset(mr->search_blk_off);
 	town_get(mr, &mr->town, &mr->item);

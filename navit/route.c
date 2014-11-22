@@ -795,7 +795,7 @@ route_path_update_done(struct route *this, int new_graph)
 			/* FIXME */
 			int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
 			if (seg_time == INT_MAX) {
-				dbg(lvl_warning,"error\n");
+				dbg(lvl_debug,"error\n");
 			} else
 				path_time+=seg_time;
 			path_len+=seg->data->len;
@@ -834,9 +834,9 @@ route_path_update_done(struct route *this, int new_graph)
 static void
 route_path_update_flags(struct route *this, enum route_path_flags flags)
 {
-	dbg(lvl_warning,"enter %d\n", flags);
+	dbg(lvl_debug,"enter %d\n", flags);
 	if (! this->pos || ! this->destinations) {
-		dbg(lvl_warning,"destroy\n");
+		dbg(lvl_debug,"destroy\n");
 		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 		return;
@@ -848,21 +848,21 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
 	/* the graph is destroyed when setting the destination */
 	if (this->graph) {
 		if (this->graph->busy) {
-			dbg(lvl_warning,"busy building graph\n");
+			dbg(lvl_debug,"busy building graph\n");
 			return;
 		}
 		// we can try to update
-		dbg(lvl_warning,"try update\n");
+		dbg(lvl_debug,"try update\n");
 		route_path_update_done(this, 0);
 	} else {
 		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 	}
 	if (!this->graph || (!this->path2 && !(flags & route_path_flag_no_rebuild))) {
-		dbg(lvl_error,"rebuild graph %p %p\n",this->graph,this->path2);
+		dbg(lvl_debug,"rebuild graph %p %p\n",this->graph,this->path2);
 		if (! this->route_graph_flood_done_cb)
 			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, (long)1);
-		dbg(lvl_warning,"route_graph_update\n");
+		dbg(lvl_debug,"route_graph_update\n");
 		route_graph_update(this, this->route_graph_flood_done_cb, !!(flags & route_path_flag_async));
 	}
 }
@@ -919,7 +919,7 @@ route_set_position_flags(struct route *this, struct pcoord *pos, enum route_path
 	if (!this->pos) return 0;
 
 	this->pos->street_direction=0;
-	dbg(lvl_warning,"this->pos=%p\n", this->pos);
+	dbg(lvl_debug,"this->pos=%p\n", this->pos);
 	route_info_distances(this->pos, pos->pro);
 	route_path_update_flags(this, flags);
 	return 1;
@@ -999,7 +999,7 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 	sel->order=order;
 	sel->range.min=route_item_first;
 	sel->range.max=route_item_last;
-	dbg(lvl_warning,"%p %p\n", c1, c2);
+	dbg(lvl_debug,"%p %p\n", c1, c2);
 	dx=c1->x-c2->x;
 	dy=c1->y-c2->y;
 	if (dx < 0) {
@@ -1730,7 +1730,7 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 	struct route_path_segment *segment;
 	int seg_size,seg_dat_size;
 
-	dbg(lvl_warning,"line from 0x%x,0x%x-0x%x,0x%x\n", start->x, start->y, end->x, end->y);
+	dbg(lvl_debug,"line from 0x%x,0x%x-0x%x,0x%x\n", start->x, start->y, end->x, end->y);
 	seg_size=sizeof(*segment) + sizeof(struct coord) * ccnt;
         seg_dat_size=sizeof(struct route_segment_data);
         segment=g_malloc0(seg_size + seg_dat_size);
@@ -1775,7 +1775,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	if (rgs->data.flags & AF_SEGMENTED) 
 		offset=RSD_OFFSET(&rgs->data);
 
-	dbg(lvl_warning,"enter (0x%x,0x%x) dir=%d pos=%p dst=%p\n", rgs->data.item.id_hi, rgs->data.item.id_lo, dir, pos, dst);
+	dbg(lvl_debug,"enter (0x%x,0x%x) dir=%d pos=%p dst=%p\n", rgs->data.item.id_hi, rgs->data.item.id_lo, dir, pos, dst);
 	if (oldpath) {
 		segment=item_hash_lookup(oldpath->path_hash, &rgs->data.item);
 		if (segment && segment->direction == dir) {
@@ -1805,9 +1805,9 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			}
 		} else {
 			extra=1;
-			dbg(lvl_warning,"pos dir=%d\n", dir);
-			dbg(lvl_warning,"pos pos=%d\n", pos->pos);
-			dbg(lvl_warning,"pos count=%d\n", pos->street->count);
+			dbg(lvl_debug,"pos dir=%d\n", dir);
+			dbg(lvl_debug,"pos pos=%d\n", pos->pos);
+			dbg(lvl_debug,"pos count=%d\n", pos->street->count);
 			if (dir > 0) {
 				c=pos->street->c+pos->pos+1;
 				ccnt=pos->street->count-pos->pos-1;
@@ -1821,8 +1821,8 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		pos->dir=dir;
 	} else 	if (dst) {
 		extra=1;
-		dbg(lvl_warning,"dst dir=%d\n", dir);
-		dbg(lvl_warning,"dst pos=%d\n", dst->pos);
+		dbg(lvl_debug,"dst dir=%d\n", dir);
+		dbg(lvl_debug,"dst pos=%d\n", dst->pos);
 		if (dir > 0) {
 			c=dst->street->c;
 			ccnt=dst->pos+1;
@@ -2035,7 +2035,7 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	int ret;
 	struct route_traffic_distortion dist,*distp=NULL;
 #if 0
-	dbg(lvl_error,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
+	dbg(lvl_debug,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
 	if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
@@ -2150,14 +2150,14 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
 
 	count=item_coord_get(item, c, 5);
 	if (count != 3 && count != 4) {
-		dbg(lvl_error,"wrong count %d\n",count);
+		dbg(lvl_debug,"wrong count %d\n",count);
 		return;
 	}
 	if (count == 4)
 		return;
 	for (i = 0 ; i < count ; i++) 
 		pnt[i]=route_graph_add_point(this,&c[i]);
-	dbg(lvl_warning,"%s: (0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x) %p-%p-%p\n",item_to_name(item->type),c[0].x,c[0].y,c[1].x,c[1].y,c[2].x,c[2].y,pnt[0],pnt[1],pnt[2]);
+	dbg(lvl_debug,"%s: (0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x) %p-%p-%p\n",item_to_name(item->type),c[0].x,c[0].y,c[1].x,c[1].y,c[2].x,c[2].y,pnt[0],pnt[1],pnt[2]);
 	data.item=item;
 	data.flags=0;
 	data.len=0;
@@ -2433,7 +2433,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 	}
 	fh_deleteheap(heap);
 	callback_call_0(cb);
-	dbg(lvl_warning,"return\n");
+	dbg(lvl_debug,"return\n");
 }
 
 /**
@@ -2554,12 +2554,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		val=route_value_seg(profile, NULL, s, 2);
 		if (val != INT_MAX && s->end->value != INT_MAX) {
 			val=val*(100-pos->percent)/100;
-			dbg(lvl_warning,"val1 %d\n",val);
+			dbg(lvl_debug,"val1 %d\n",val);
 			if (route_graph_segment_match(s,this->avoid_seg) && pos->street_direction < 0)
 				val+=profile->turn_around_penalty;
-			dbg(lvl_warning,"val1 %d\n",val);
+			dbg(lvl_debug,"val1 %d\n",val);
 			val1_new=s->end->value+val;
-			dbg(lvl_warning,"val1 +%d=%d\n",s->end->value,val1_new);
+			dbg(lvl_debug,"val1 +%d=%d\n",s->end->value,val1_new);
 			if (val1_new < val1) {
 				val1=val1_new;
 				s1=s;
@@ -2568,12 +2568,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		val=route_value_seg(profile, NULL, s, -2);
 		if (val != INT_MAX && s->start->value != INT_MAX) {
 			val=val*pos->percent/100;
-			dbg(lvl_warning,"val2 %d\n",val);
+			dbg(lvl_debug,"val2 %d\n",val);
 			if (route_graph_segment_match(s,this->avoid_seg) && pos->street_direction > 0)
 				val+=profile->turn_around_penalty;
-			dbg(lvl_warning,"val2 %d\n",val);
+			dbg(lvl_debug,"val2 %d\n",val);
 			val2_new=s->start->value+val;
-			dbg(lvl_warning,"val2 +%d=%d\n",s->start->value,val2_new);
+			dbg(lvl_debug,"val2 +%d=%d\n",s->start->value,val2_new);
 			if (val2_new < val2) {
 				val2=val2_new;
 				s2=s;
@@ -2599,7 +2599,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	}
 	if (pos->street_direction && dir != pos->street_direction && profile->turn_around_penalty) {
 		if (!route_graph_segment_match(this->avoid_seg,s)) {
-			dbg(lvl_error,"avoid current segment\n");
+			dbg(lvl_debug,"avoid current segment\n");
 			if (this->avoid_seg)
 				route_graph_set_traffic_distortion(this, this->avoid_seg, 0);
 			this->avoid_seg=s;
@@ -2640,7 +2640,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	}
 	if (dst->lenextra) 
 		route_path_add_line(ret, &dst->lp, &dst->c, dst->lenextra);
-	dbg(lvl_warning, "%d segments\n", segs);
+	dbg(lvl_debug, "%d segments\n", segs);
 	return ret;
 }
 
@@ -2680,29 +2680,29 @@ is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, s
 			(tmp1->data.item.type == type_street_turn_restriction_no ||
 			tmp1->data.item.type == type_street_turn_restriction_only)) {
 			tmp2=p->start;
-			dbg(lvl_warning,"found %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp1->data.item.type),tmp1->data.item.id_hi,tmp1->data.item.id_lo,tmp1->start->c.x,tmp1->start->c.y,tmp1->end->c.x,tmp1->end->c.y,tmp1->start,tmp1->end);
+			dbg(lvl_debug,"found %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp1->data.item.type),tmp1->data.item.id_hi,tmp1->data.item.id_lo,tmp1->start->c.x,tmp1->start->c.y,tmp1->end->c.x,tmp1->end->c.y,tmp1->start,tmp1->end);
 			while (tmp2) {
-				dbg(lvl_warning,"compare %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp2->data.item.type),tmp2->data.item.id_hi,tmp2->data.item.id_lo,tmp2->start->c.x,tmp2->start->c.y,tmp2->end->c.x,tmp2->end->c.y,tmp2->start,tmp2->end);
+				dbg(lvl_debug,"compare %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp2->data.item.type),tmp2->data.item.id_hi,tmp2->data.item.id_lo,tmp2->start->c.x,tmp2->start->c.y,tmp2->end->c.x,tmp2->end->c.y,tmp2->start,tmp2->end);
 				if (item_is_equal(tmp1->data.item, tmp2->data.item)) 
 					break;
 				tmp2=tmp2->start_next;
 			}
-			dbg(lvl_warning,"tmp2=%p\n",tmp2);
+			dbg(lvl_debug,"tmp2=%p\n",tmp2);
 			if (tmp2) {
-				dbg(lvl_warning,"%s tmp2->end=%p next=%p\n",item_to_name(tmp1->data.item.type),tmp2->end,next);
+				dbg(lvl_debug,"%s tmp2->end=%p next=%p\n",item_to_name(tmp1->data.item.type),tmp2->end,next);
 			}
 			if (tmp1->data.item.type == type_street_turn_restriction_no && tmp2 && tmp2->end->c.x == next->c.x && tmp2->end->c.y == next->c.y) {
-				dbg(lvl_warning,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (no)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
+				dbg(lvl_debug,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (no)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 				return 0;
 			}
 			if (tmp1->data.item.type == type_street_turn_restriction_only && tmp2 && (tmp2->end->c.x != next->c.x || tmp2->end->c.y != next->c.y)) {
-				dbg(lvl_warning,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (only)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
+				dbg(lvl_debug,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (only)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 				return 0;
 			}
 		}
 		tmp1=tmp1->end_next;
 	}
-	dbg(lvl_warning,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x allowed\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
+	dbg(lvl_debug,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x allowed\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 	return 1;
 }
 
@@ -2719,7 +2719,7 @@ route_graph_clone_segment(struct route_graph *this, struct route_graph_segment *
 		data.maxspeed=RSD_MAXSPEED(&s->data);
 	if (s->data.flags & AF_SEGMENTED) 
 		data.offset=RSD_OFFSET(&s->data);
-	dbg(lvl_warning,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)\n",start,start->c.x,start->c.y, end, end->c.x, end->c.y);
+	dbg(lvl_debug,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)\n",start,start->c.x,start->c.y, end, end->c.x, end->c.y);
 	route_graph_add_segment(this, start, end, &data);
 }
 
@@ -2733,19 +2733,19 @@ route_graph_process_restriction_segment(struct route_graph *this, struct route_g
 	int dy=0;
 	c.x+=dx;
 	c.y+=dy;
-	dbg(lvl_warning,"From %s %d,%d\n",item_to_name(s->data.item.type),dx,dy);
+	dbg(lvl_debug,"From %s %d,%d\n",item_to_name(s->data.item.type),dx,dy);
 	pn=route_graph_point_new(this, &c);
 	if (dir > 0) { /* going away */
-		dbg(lvl_warning,"other 0x%x,0x%x\n",s->end->c.x,s->end->c.y);
+		dbg(lvl_debug,"other 0x%x,0x%x\n",s->end->c.x,s->end->c.y);
 		if (s->data.flags & AF_ONEWAY) {
-			dbg(lvl_warning,"Not possible\n");
+			dbg(lvl_debug,"Not possible\n");
 			return;
 		}
 		route_graph_clone_segment(this, s, pn, s->end, AF_ONEWAYREV);
 	} else { /* coming in */
-		dbg(lvl_warning,"other 0x%x,0x%x\n",s->start->c.x,s->start->c.y);
+		dbg(lvl_debug,"other 0x%x,0x%x\n",s->start->c.x,s->start->c.y);
 		if (s->data.flags & AF_ONEWAYREV) {
-			dbg(lvl_warning,"Not possible\n");
+			dbg(lvl_debug,"Not possible\n");
 			return;
 		}
 		route_graph_clone_segment(this, s, s->start, pn, AF_ONEWAY);
@@ -2756,7 +2756,7 @@ route_graph_process_restriction_segment(struct route_graph *this, struct route_g
 			tmp->data.item.type != type_street_turn_restriction_only &&
 			!(tmp->data.flags & AF_ONEWAYREV) && is_turn_allowed(p, s, tmp)) {
 			route_graph_clone_segment(this, tmp, pn, tmp->end, AF_ONEWAY);
-			dbg(lvl_warning,"To start %s\n",item_to_name(tmp->data.item.type));
+			dbg(lvl_debug,"To start %s\n",item_to_name(tmp->data.item.type));
 		}
 		tmp=tmp->start_next;
 	}
@@ -2766,7 +2766,7 @@ route_graph_process_restriction_segment(struct route_graph *this, struct route_g
 			tmp->data.item.type != type_street_turn_restriction_only &&
 			!(tmp->data.flags & AF_ONEWAY) && is_turn_allowed(p, s, tmp)) {
 			route_graph_clone_segment(this, tmp, tmp->start, pn, AF_ONEWAYREV);
-			dbg(lvl_warning,"To end %s\n",item_to_name(tmp->data.item.type));
+			dbg(lvl_debug,"To end %s\n",item_to_name(tmp->data.item.type));
 		}
 		tmp=tmp->end_next;
 	}
@@ -2777,7 +2777,7 @@ route_graph_process_restriction_point(struct route_graph *this, struct route_gra
 {
 	struct route_graph_segment *tmp;
 	tmp=p->start;
-	dbg(lvl_warning,"node 0x%x,0x%x\n",p->c.x,p->c.y);
+	dbg(lvl_debug,"node 0x%x,0x%x\n",p->c.x,p->c.y);
 	while (tmp) {
 		if (tmp->data.item.type != type_street_turn_restriction_no &&
 			tmp->data.item.type != type_street_turn_restriction_only)
@@ -2799,7 +2799,7 @@ route_graph_process_restrictions(struct route_graph *this)
 {
 	struct route_graph_point *curr;
 	int i;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	for (i = 0 ; i < HASH_SIZE ; i++) {
 		curr=this->hash[i];
 		while (curr) {
@@ -2813,7 +2813,7 @@ route_graph_process_restrictions(struct route_graph *this)
 static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
-	dbg(lvl_warning,"cancel=%d\n",cancel);
+	dbg(lvl_debug,"cancel=%d\n",cancel);
 	if (rg->idle_ev)
 		event_remove_idle(rg->idle_ev);
 	if (rg->idle_cb)
@@ -2880,7 +2880,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
 {
 	struct route_graph *ret=g_new0(struct route_graph, 1);
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 
 	ret->sel=route_calc_selection(c, count, profile);
 	ret->h=mapset_open(ms);
@@ -3083,7 +3083,7 @@ route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *
 					ret->lp=lp;
 					ret->pos=pos;
 					ret->street=sd;
-					dbg(lvl_warning,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
+					dbg(lvl_debug,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
 				} else {
 					street_data_free(sd);
 				}
@@ -3097,7 +3097,7 @@ route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *
 	if (!ret->street || mindist > max_dist*max_dist) {
 		if (ret->street) {
 			street_data_free(ret->street);
-			dbg(lvl_warning,"Much too far %d > %d\n", mindist, max_dist);
+			dbg(lvl_debug,"Much too far %d > %d\n", mindist, max_dist);
 		}
 		g_free(ret);
 		ret = NULL;
@@ -3318,7 +3318,7 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 			c[i] = seg->c[mr->last_coord++];
 		rc++;
 	}
-	dbg(lvl_warning,"return %d\n",rc);
+	dbg(lvl_debug,"return %d\n",rc);
 	return rc;
 }
 
@@ -3348,7 +3348,7 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	switch (attr_type) {
 	case attr_any: // works only with rg_points for now
 		while (mr->attr_next != attr_none) {
-			dbg(lvl_error,"querying %s\n", attr_to_name(mr->attr_next));
+			dbg(lvl_debug,"querying %s\n", attr_to_name(mr->attr_next));
 			if (rp_attr_get(priv_data, mr->attr_next, attr))
 				return 1;
 		}
@@ -3543,7 +3543,7 @@ static struct map_rect_priv *
 rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct map_rect_priv * mr;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 #if 0
 	if (! route_get_pos(priv->route))
 		return NULL;
@@ -3587,7 +3587,7 @@ rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct map_rect_priv * mr;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (! priv->route->graph)
 		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
@@ -3956,7 +3956,7 @@ route_add_attr(struct route *this_, struct attr *attr)
 int
 route_remove_attr(struct route *this_, struct attr *attr)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_remove(this_->cbl2, attr->u.callback);
@@ -4004,7 +4004,7 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 	case attr_vehicle:
 		attr->u.vehicle=this_->v;
 		ret=(this_->v != NULL);
-		dbg(lvl_error,"get vehicle %p\n",this_->v);
+		dbg(lvl_debug,"get vehicle %p\n",this_->v);
 		break;
 	case attr_vehicleprofile:
 		attr->u.vehicleprofile=this_->vehicleprofile;
@@ -4021,7 +4021,7 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 				attr->u.num+=path->path_time;
 				path=path->next;
 			}
-			dbg(lvl_warning,"path_time %ld\n",attr->u.num);
+			dbg(lvl_debug,"path_time %ld\n",attr->u.num);
 		} else
 			ret=0;
 		break;

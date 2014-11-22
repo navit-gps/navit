@@ -185,7 +185,7 @@ static void window_layout( HWND hwnd )
 
 	rcClient.top += iToolHeight;
 
-	dbg(lvl_error, "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
+	dbg(lvl_debug, "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
 
 
 	hChild = GetDlgItem(hwnd, ID_CHILD_GFX);

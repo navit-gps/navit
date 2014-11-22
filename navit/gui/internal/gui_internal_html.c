@@ -96,7 +96,7 @@ gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data)
 	struct widget *menu;
 	GList *l;
 
-	dbg(lvl_warning,"enter form %p %s\n",w->form,w->form->onsubmit);
+	dbg(lvl_debug,"enter form %p %s\n",w->form,w->form->onsubmit);
 	l=g_list_last(this->root.children);
 	menu=l->data;
 	graphics_draw_mode(this->gra, draw_mode_begin);
@@ -113,7 +113,7 @@ gui_internal_html_load_href(struct gui_priv *this, char *href, int replace)
 	if (replace)
 		gui_internal_prune_menu_count(this, 1, 0);
 	if (href && href[0] == '#') {
-		dbg(lvl_warning,"href=%s\n",href);
+		dbg(lvl_debug,"href=%s\n",href);
 		g_free(this->href);
 		this->href=g_strdup(href);
 		gui_internal_html_menu(this, this->html_text, href+1);
@@ -461,7 +461,7 @@ gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *da
 		}
 		break;
 	case html_tag_script:
-		dbg(lvl_warning,"execute %s\n",text_stripped);
+		dbg(lvl_debug,"execute %s\n",text_stripped);
 		gui_internal_evaluate(this,text_stripped);
 		break;
 	default:

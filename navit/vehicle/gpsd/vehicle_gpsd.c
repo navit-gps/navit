@@ -101,7 +101,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 			}
 		}
 	}	
-	dbg(lvl_warning,"data->set="LONGLONG_HEX_FMT"\n", data->set);
+	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"\n", data->set);
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * 3.6;
 		if(!isnan(data->fix.speed))
@@ -164,12 +164,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 	}
 #ifdef HAVE_LIBGPS19
 	if (data->set & DOP_SET) {
-		dbg(lvl_warning, "pdop : %g\n", data->dop.pdop);
+		dbg(lvl_debug, "pdop : %g\n", data->dop.pdop);
 		priv->hdop = data->dop.pdop;
 		data->set &= ~DOP_SET;
 #else
 	if (data->set & PDOP_SET) {
-		dbg(lvl_warning, "pdop : %g\n", data->pdop);
+		dbg(lvl_debug, "pdop : %g\n", data->pdop);
 		priv->hdop = data->hdop;
 		data->set &= ~PDOP_SET;
 #endif
@@ -177,7 +177,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 	if (data->set & LATLON_SET) {
 		priv->geo.lat = data->fix.latitude;
 		priv->geo.lng = data->fix.longitude;
-		dbg(lvl_warning,"lat=%f lng=%f\n", priv->geo.lat, priv->geo.lng);
+		dbg(lvl_debug,"lat=%f lng=%f\n", priv->geo.lat, priv->geo.lng);
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
@@ -205,7 +205,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 		*colon = '\0';
 		port=colon+1;
 	}
-	dbg(lvl_error,"Trying to connect to %s:%s\n",source+7,port?port:"default");
+	dbg(lvl_debug,"Trying to connect to %s:%s\n",source+7,port?port:"default");
 
 #if GPSD_API_MAJOR_VERSION >= 5
         /* gps_open returns 0 on success */
@@ -238,7 +238,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 	if (!priv->gps->gps_fd) {
 		dbg(lvl_error,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
 	}
-	dbg(lvl_error,"Connected to gpsd fd=%d evwatch=%p\n", priv->gps->gps_fd, priv->evwatch);
+	dbg(lvl_debug,"Connected to gpsd fd=%d evwatch=%p\n", priv->gps->gps_fd, priv->evwatch);
 	event_remove_timeout(priv->retry_timer2);
 	priv->retry_timer2=NULL;
 	return FALSE;
@@ -261,7 +261,7 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 		  errno, strerror(errno), errstr);
 	}
 	sleep(1);       /* give gpsd time to start */
-	dbg(lvl_warning,"gpsbt_start: completed\n");
+	dbg(lvl_debug,"gpsbt_start: completed\n");
 #endif
 	priv->retry_timer2=NULL;
 	if (vehicle_gpsd_try_open(priv)) 
@@ -303,14 +303,14 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	if (err < 0) {
 		dbg(lvl_error,"Error %d while gpsbt_stop", err);
 	}
-	dbg(lvl_warning,"gpsbt_stop: completed, (%d)",err);
+	dbg(lvl_debug,"gpsbt_stop: completed, (%d)",err);
 #endif
 }
 
 static void
 vehicle_gpsd_io(struct vehicle_priv *priv)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	if (priv->gps) {
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
@@ -427,7 +427,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	struct vehicle_priv *ret;
 	struct attr *source, *query, *retry_int;
 
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 #if GPSD_API_MAJOR_VERSION >= 5
@@ -440,7 +440,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	} else {
 		ret->gpsd_query = g_strdup("w+x\n");
 	}
-	dbg(lvl_warning,"Format string for gpsd_query: %s\n",ret->gpsd_query);
+	dbg(lvl_debug,"Format string for gpsd_query: %s\n",ret->gpsd_query);
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
@@ -449,7 +449,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 			ret->retry_interval = MIN_RETRY_INTERVAL;
 		}
 	} else {
-		dbg(lvl_warning, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
+		dbg(lvl_debug, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
 		ret->retry_interval = DEFAULT_RETRY_INTERVAL;
 	}
 	ret->cbl = cbl;
@@ -462,6 +462,6 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_vehicle_type("gpsd", vehicle_gpsd_new_gpsd);
 }

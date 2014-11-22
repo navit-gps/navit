@@ -171,14 +171,14 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 	struct coord c,offset;
 	enum projection str_pro=projection_none;
 
-	dbg(lvl_warning,"enter('%s',%d,%p)\n", coord_input, output_projection, result);
+	dbg(lvl_debug,"enter('%s',%d,%p)\n", coord_input, output_projection, result);
 	s=strchr(str,' ');
 	co=strchr(str,':');
 	if (co && co < s) {
 		proj=malloc(co-str+1);
 		strncpy(proj, str, co-str);
 		proj[co-str]='\0';
-		dbg(lvl_warning,"projection=%s\n", proj);
+		dbg(lvl_debug,"projection=%s\n", proj);
 		str=co+1;
 		s=strchr(str,' ');
 		if (!strcmp(proj, "geo"))
@@ -202,8 +202,8 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
 		if (args < 2)
 			goto out;
-		dbg(lvl_warning,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
-		dbg(lvl_warning,"rest='%s'\n", str+ret);
+		dbg(lvl_debug,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
+		dbg(lvl_debug,"rest='%s'\n", str+ret);
 
 		if (str_pro == projection_none) 
 			str_pro=projection_mg;
@@ -215,13 +215,13 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 	} else if (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's') {
 		double lng, lat;
 		char ns, ew;
-		dbg(lvl_warning,"str='%s'\n", str);
+		dbg(lvl_debug,"str='%s'\n", str);
 		args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
-		dbg(lvl_warning,"args=%d\n", args);
-		dbg(lvl_warning,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
+		dbg(lvl_debug,"args=%d\n", args);
+		dbg(lvl_debug,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
 		if (args < 4)
 			goto out;
-		dbg(lvl_warning,"projection=%d str_pro=%d projection_none=%d\n", output_projection, str_pro, projection_none);
+		dbg(lvl_debug,"projection=%d str_pro=%d projection_none=%d\n", output_projection, str_pro, projection_none);
 		if (str_pro == projection_none) {
 			g.lat=floor(lat/100);
 			lat-=g.lat*100;
@@ -233,9 +233,9 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 				g.lat=-g.lat;
 			if (ew == 'w' || ew == 'W')
 				g.lng=-g.lng;
-			dbg(lvl_warning,"transform_from_geo(%f,%f)",g.lat,g.lng);
+			dbg(lvl_debug,"transform_from_geo(%f,%f)",g.lat,g.lng);
 			transform_from_geo(output_projection, &g, result);
-			dbg(lvl_warning,"result 0x%x,0x%x\n", result->x,result->y);
+			dbg(lvl_debug,"result 0x%x,0x%x\n", result->x,result->y);
 		}
 		dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
 		dbg(lvl_debug,"rest='%s'\n", str+ret);
@@ -256,8 +256,8 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
 		if (args < 2)
 			goto out;
-		dbg(lvl_warning,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
-		dbg(lvl_warning,"rest='%s'\n", str+ret);
+		dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
+		dbg(lvl_debug,"rest='%s'\n", str+ret);
 		g.lng=lng;
 		g.lat=lat;
 		transform_from_geo(output_projection, &g, result);
