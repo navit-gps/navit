@@ -146,7 +146,7 @@ static void initBth(struct vehicle_priv *priv)
 			priv->BthSetMode  = (PFN_BthSetMode)GetProcAddress(priv->hBthDll, TEXT("BthSetMode") );
 			if( priv->BthSetMode &&  priv->BthSetMode(1) == ERROR_SUCCESS )
 			{
-				dbg(1, "bluetooth activated\n");
+				dbg(lvl_warning, "bluetooth activated\n");
 				succeeded = TRUE;
 			}
 		}
@@ -154,13 +154,13 @@ static void initBth(struct vehicle_priv *priv)
 	}
 	else
 	{
-		dbg(0, "Bluetooth library notfound\n");
+		dbg(lvl_error, "Bluetooth library notfound\n");
 	}
 
 	if ( !succeeded )
 	{
 
-		dbg(1, "Bluetooth already enabled or failed to enable it.\n");
+		dbg(lvl_warning, "Bluetooth already enabled or failed to enable it.\n");
 		priv->BthSetMode = NULL;
 		if ( priv->hBthDll )
 		{
@@ -178,7 +178,7 @@ static int initDevice(struct vehicle_priv *priv)
 	
 	if ( priv->file_type == file_type_device )
 	{
-		dbg(0, "Init Device\n");
+		dbg(lvl_error, "Init Device\n");
 		/* GPD0 is the control port for the GPS driver */
 		hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (hGPS != INVALID_HANDLE_VALUE) {
@@ -199,7 +199,7 @@ static int initDevice(struct vehicle_priv *priv)
 				NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) 
 		{
 			Sleep(1000);
-			dbg(0, "Waiting to connect to %s\n", priv->source);
+			dbg(lvl_error, "Waiting to connect to %s\n", priv->source);
 		}
 		GetCommTimeouts (priv->m_hGPSDevice, &commTiming);
 		commTiming.ReadIntervalTimeout = 20;
@@ -230,11 +230,11 @@ static int initDevice(struct vehicle_priv *priv)
 	}
 	else
 	{
-		dbg(0, "Open File\n");
+		dbg(lvl_error, "Open File\n");
 		priv->m_hGPSDevice = CreateFileW( A2W(priv->source),
 			GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
 		if ( priv->m_hGPSDevice == INVALID_HANDLE_VALUE) {
-			dbg(0, "Could not open %s\n", priv->source);
+			dbg(lvl_error, "Could not open %s\n", priv->source);
 			return 0;
 		}
 	}
@@ -264,7 +264,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 	DWORD bytes_read;
 	int waitcounter;
 	
-	dbg(0, "GPS Port:[%s]\n", priv->source);
+	dbg(lvl_error, "GPS Port:[%s]\n", priv->source);
 	priv->thread_up = 1;
 	
 	if ( !initDevice(priv) ) {
@@ -272,7 +272,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 	}
 	while (priv->is_running)
 	{
-		dbg(1,"readfile\n");
+		dbg(lvl_warning,"readfile\n");
 		waitcounter = 0;
 		status = ReadFile(priv->m_hGPSDevice,
 			chunk_buffer, sizeof(chunk_buffer),
@@ -280,7 +280,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 
 		if ( !status )
 		{
-			dbg(0,"Error reading file/device. Try again.\n");
+			dbg(lvl_error,"Error reading file/device. Try again.\n");
 			initDevice(priv);
 			continue;
 		}
@@ -290,24 +290,24 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam)
 			/* TODO (rikky#1#): should use blocking */
 			if ( priv->file_type != file_type_file )
 			{
-				dbg(3, "GPS data comes too fast. Have to wait here\n");
+				dbg(lvl_debug, "GPS data comes too fast. Have to wait here\n");
 			}
 
 			Sleep(50);
 			waitcounter++;
 			if ( waitcounter % 8 == 0 )
 			{
-				dbg(1, "Remind them of the data\n");
+				dbg(lvl_warning, "Remind them of the data\n");
 				event_call_callback(priv->priv_cbl);
 			}
 			if(waitcounter % 200 == 0) {
-				dbg(0,"Will main thread ever be ready for the GPS data? Already %d intervals gone.\n",waitcounter);
+				dbg(lvl_error,"Will main thread ever be ready for the GPS data? Already %d intervals gone.\n",waitcounter);
 			}
 
 		}
 		
 		if(waitcounter>2)
-			dbg(0,"Sent GPS data to the main thread after %d intervals delay.\n",waitcounter);
+			dbg(lvl_error,"Sent GPS data to the main thread after %d intervals delay.\n",waitcounter);
 
 		g_mutex_lock(&priv->lock);
 		memcpy(priv->read_buffer + priv->read_buffer_pos , chunk_buffer, bytes_read );
@@ -348,11 +348,11 @@ vehicle_wince_available_ports(void)
 				regdevtype_length = sizeof(devicetype);
 				if ( RegQueryValueEx( hkSubResult, L"Key", NULL, NULL, (LPBYTE)devicetype, &regdevtype_length) == ERROR_SUCCESS )
 				{
-					dbg(0, "Found device '%s' (%s)\n", W2A(devicename), W2A(devicetype));
+					dbg(lvl_error, "Found device '%s' (%s)\n", W2A(devicename), W2A(devicetype));
 				}
 				else
 				{
-					dbg(0, "Found device '%s'\n", W2A(devicename));
+					dbg(lvl_error, "Found device '%s'\n", W2A(devicename));
 				}
 			}
 			RegCloseKey(hkSubResult);
@@ -372,7 +372,7 @@ vehicle_wince_open(struct vehicle_priv *priv)
 	char* strport;
 	char* strsettings;
 
-	dbg(1, "enter vehicle_wince_open, priv->source='%s'\n", priv->source);
+	dbg(lvl_warning, "enter vehicle_wince_open, priv->source='%s'\n", priv->source);
 
 	if (priv->source ) {
 
@@ -391,7 +391,7 @@ vehicle_wince_open(struct vehicle_priv *priv)
 			*strsettings = '\0';
 			strsettings++;
 
-			dbg(0, "serial('%s', '%s')\n", strport, strsettings );
+			dbg(lvl_error, "serial('%s', '%s')\n", strport, strsettings );
 		}
 		if (raw_setting_str)
 		g_free( raw_setting_str );
@@ -402,7 +402,7 @@ vehicle_wince_open(struct vehicle_priv *priv)
 static void
 vehicle_wince_close(struct vehicle_priv *priv)
 {
-	dbg(1,"enter");
+	dbg(lvl_warning,"enter");
 }
 
 static int
@@ -416,10 +416,10 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 	int valid=0;
 	int ret = 0;
 
-	dbg(2, "enter: buffer='%s'\n", buffer);
+	dbg(lvl_info, "enter: buffer='%s'\n", buffer);
 	for (;;) {
 		if (len < 4) {
-			dbg(0, "'%s' too short\n", buffer);
+			dbg(lvl_error, "'%s' too short\n", buffer);
 			return ret;
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n') {
@@ -430,22 +430,22 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			break;
 	}
 	if (buffer[0] != '$') {
-		dbg(0, "no leading $ in '%s'\n", buffer);
+		dbg(lvl_error, "no leading $ in '%s'\n", buffer);
 		return ret;
 	}
 	if (buffer[len - 3] != '*') {
-		dbg(0, "no *XX in '%s'\n", buffer);
+		dbg(lvl_error, "no *XX in '%s'\n", buffer);
 		return ret;
 	}
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
 	if (!sscanf(buffer + len - 2, "%x", &bcsum) && priv->checksum_ignore != 2) {
-		dbg(0, "no checksum in '%s'\n", buffer);
+		dbg(lvl_error, "no checksum in '%s'\n", buffer);
 		return ret;
 	}
 	if (bcsum != csum && priv->checksum_ignore == 0) {
-		dbg(0, "wrong checksum in '%s'\n", buffer);
+		dbg(lvl_error, "wrong checksum in '%s'\n", buffer);
 		return ret;
 	}
 
@@ -454,7 +454,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data_buf);
 		priv->nmea_data_buf=nmea_data_buf;
 	} else {
-		dbg(0, "nmea buffer overflow, discarding '%s'\n", buffer);
+		dbg(lvl_error, "nmea buffer overflow, discarding '%s'\n", buffer);
 	}
 	i = 0;
 	p = buffer;
@@ -491,7 +491,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
 			priv->valid=attr_position_valid_valid;
-		dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+		dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
 		} else
 			priv->valid=attr_position_valid_invalid;
@@ -523,7 +523,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		if (valid) {
 			priv->direction = g_ascii_strtod( item[1], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
-			dbg(2,"direction %lf, speed %2.1lf\n", priv->direction, priv->speed);
+			dbg(lvl_info,"direction %lf, speed %2.1lf\n", priv->direction, priv->speed);
 		}
 	}
 	if (!strncmp(buffer, "$GPRMC", 6)) {
@@ -613,7 +613,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(1,"magnetic %d\n", priv->magnetic_direction);
+			dbg(lvl_warning,"magnetic %d\n", priv->magnetic_direction);
 		}
 	}
 	return ret;
@@ -625,7 +625,7 @@ vehicle_wince_io(struct vehicle_priv *priv)
 	int size, rc = 0;
 	char *str, *tok;
 
-	dbg(1, "vehicle_file_io : enter\n");
+	dbg(lvl_warning, "vehicle_file_io : enter\n");
 
 	size = read_win32(priv, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
 	
@@ -646,12 +646,12 @@ vehicle_wince_io(struct vehicle_priv *priv)
 	}
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
-	dbg(1, "size=%d pos=%d buffer='%s'\n", size,
+	dbg(lvl_warning, "size=%d pos=%d buffer='%s'\n", size,
 		priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
-		dbg(1, "line='%s'\n", str);
+		dbg(lvl_warning, "line='%s'\n", str);
 		rc +=vehicle_wince_parse(priv, str);
 		str = tok;
 		if (priv->file_type == file_type_file && rc)
@@ -662,10 +662,10 @@ vehicle_wince_io(struct vehicle_priv *priv)
 		size = priv->buffer + priv->buffer_pos - str;
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
-		dbg(2, "now pos=%d buffer='%s'\n",
+		dbg(lvl_info, "now pos=%d buffer='%s'\n",
 			priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
-		dbg(0,
+		dbg(lvl_error,
 			"Overflow. Most likely wrong baud rate or no nmea protocol\n");
 		priv->buffer_pos = 0;
 	}
@@ -676,7 +676,7 @@ vehicle_wince_io(struct vehicle_priv *priv)
 static void
 vehicle_wince_enable_watch(struct vehicle_priv *priv)
 {
-	dbg(1, "enter");
+	dbg(lvl_warning, "enter");
 	vehicle_wince_disable_watch(priv);
 	priv->is_running = 1;
 
@@ -697,7 +697,7 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv)
 {
 	int wait = 5000;
 
-	dbg(1, "enter");
+	dbg(lvl_warning, "enter");
 
 	priv->is_running = 0;
 	while (wait-- > 0 && priv->thread_up) {
@@ -791,7 +791,7 @@ vehicle_wince_position_attr_get(struct vehicle_priv *priv,
 		attr->u.str=priv->fixiso8601;
 		break;
 	case attr_position_sat_item:
-		dbg(0,"at here\n");
+		dbg(lvl_error,"at here\n");
 		priv->sat_item.id_lo++;
 		if (priv->sat_item.id_lo > priv->current_count) {
 			priv->sat_item.id_lo=0;
@@ -881,7 +881,7 @@ vehicle_wince_new(struct vehicle_methods
 	struct attr *handle_bluetooth;
 	char *cp;
 
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->fd = -1;
@@ -918,7 +918,7 @@ vehicle_wince_new(struct vehicle_methods
 		ret->on_eof=1;
 	if (on_eof && !g_strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
-	dbg(0,"on_eof=%d\n", ret->on_eof);
+	dbg(lvl_error,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_wince_methods;
 	ret->priv_cbl = callback_list_new();
 	callback_list_add(ret->priv_cbl, callback_new_1(callback_cast(vehicle_wince_io), ret));
@@ -937,7 +937,7 @@ vehicle_wince_new(struct vehicle_methods
 		vehicle_wince_enable_watch(ret);
 		return ret;
 	}
-	dbg(0, "Failed to open '%s'\n", ret->source);
+	dbg(lvl_error, "Failed to open '%s'\n", ret->source);
 	vehicle_wince_destroy(ret);
 	return NULL;
 }
@@ -948,7 +948,7 @@ vehicle_wince_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	plugin_register_vehicle_type("wince", vehicle_wince_new);
 	plugin_register_vehicle_type("file", vehicle_wince_new);
 }

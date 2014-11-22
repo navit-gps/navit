@@ -202,7 +202,7 @@ cursor_new(struct attr *parent, struct attr **attrs)
 	else {
 		this->sequence_range=NULL;
 	}
-	dbg(2,"ret=%p\n", this);
+	dbg(lvl_info,"ret=%p\n", this);
 	return this;
 }
 
@@ -252,7 +252,7 @@ layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 		l->ref=NULL;
 		obj=(struct navit_object *)l->navit;
 		if (obj==NULL){
-			dbg(0, "Invalid layer reference '%s': Only layers inside a layout can use references.\n", attr->u.str);
+			dbg(lvl_error, "Invalid layer reference '%s': Only layers inside a layout can use references.\n", attr->u.str);
 			return 0;
 		}
 		iter=obj->func->iter_new(obj);
@@ -263,7 +263,7 @@ layer_set_attr_do(struct layer *l, struct attr *attr, int init)
 			}
 		}
 		if (l->ref==NULL){
-			dbg(0, "Ignoring reference to unknown layer '%s' in layer '%s'.\n", attr->u.str, l->name);
+			dbg(lvl_error, "Ignoring reference to unknown layer '%s' in layer '%s'.\n", attr->u.str, l->name);
 		}
 		obj->func->iter_destroy(iter);
 	default:
@@ -287,7 +287,7 @@ struct layer * layer_new(struct attr *parent, struct attr **attrs)
 		layer_set_attr_do(l, *attrs, 1);
 	}
 	if (l->name==NULL){
-		dbg(0, "Ignoring layer without name.\n");
+		dbg(lvl_error, "Ignoring layer without name.\n");
 		g_free(l);
 		return NULL;
 	}
@@ -397,7 +397,7 @@ itemgra_add_attr(struct itemgra *itemgra, struct attr *attr)
 		itemgra->elements = g_list_append(itemgra->elements, attr->u.element);
 		return 1;
 	default:
-		dbg(0,"unknown: %s\n", attr_to_name(attr->type));
+		dbg(lvl_error,"unknown: %s\n", attr_to_name(attr->type));
 		return 0;
 	}
 }

@@ -114,7 +114,7 @@ vehicle_gpsd_dbus_open(struct vehicle_priv *priv)
 		priv->connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
 	}
 	if (!priv->connection) {
-		dbg(0,"Failed to open connection to %s message bus: %s\n", priv->address?priv->address:"session",error.message);
+		dbg(lvl_error,"Failed to open connection to %s message bus: %s\n", priv->address?priv->address:"session",error.message);
 		dbus_error_free(&error);
 		return 0;
 	}
@@ -122,12 +122,12 @@ vehicle_gpsd_dbus_open(struct vehicle_priv *priv)
 	dbus_bus_add_match(priv->connection,"type='signal',interface='org.gpsd'",&error);
 	dbus_connection_flush(priv->connection);
 	if (dbus_error_is_set(&error)) {
-		dbg(0,"Failed to add match to connection: %s\n", error.message);
+		dbg(lvl_error,"Failed to add match to connection: %s\n", error.message);
 		vehicle_gpsd_dbus_close(priv);
 		return 0;
 	}
 	if (!dbus_connection_add_filter(priv->connection, vehicle_gpsd_dbus_filter, priv, NULL)) {
-		dbg(0,"Failed to add filter to connection\n");
+		dbg(lvl_error,"Failed to add filter to connection\n");
 		vehicle_gpsd_dbus_close(priv);
 		return 0;
 	}
@@ -187,7 +187,7 @@ vehicle_gpsd_dbus_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int 
 	switch (attr->type) {
 	case attr_source:
 		if (strncmp(vehicle_gpsd_dbus_prefix,attr->u.str,strlen(vehicle_gpsd_dbus_prefix))) {
-			dbg(0,"source must start with '%s'\n", vehicle_gpsd_dbus_prefix);
+			dbg(lvl_error,"source must start with '%s'\n", vehicle_gpsd_dbus_prefix);
 			return 0;
 		}
 		g_free(priv->source);
@@ -243,6 +243,6 @@ vehicle_gpsd_dbus_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	plugin_register_vehicle_type("gpsd_dbus", vehicle_gpsd_dbus_new);
 }

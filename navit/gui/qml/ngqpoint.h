@@ -248,7 +248,7 @@ public slots:
             }
             map_selection_destroy(sel);
             mapset_close(h);
-            dbg(2,"%s\n",retDoc.toString().toLocal8Bit().constData());
+            dbg(lvl_info,"%s\n",retDoc.toString().toLocal8Bit().constData());
             return retDoc.toString();
     }
 protected:

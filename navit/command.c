@@ -152,8 +152,8 @@ dump(struct result *res)
 	if (res->attrn)
 		strncpy(attribute, res->attrn, res->attrnlen);
 	attribute[res->attrnlen]='\0';
-	dbg(0,"type:%s\n", attr_to_name(res->attr.type));
-	dbg(0,"attribute '%s' from '%s'\n", attribute, object);
+	dbg(lvl_error,"type:%s\n", attr_to_name(res->attr.type));
+	dbg(lvl_error,"attribute '%s' from '%s'\n", attribute, object);
 #endif
 }
 
@@ -315,7 +315,7 @@ get_int_bool(struct context *ctx, int is_bool, struct result *res)
 		return res->attr.u.data != NULL;
 	if (is_bool && ATTR_IS_STRING(res->attr.type)) 
 		return res->attr.u.data != NULL;
-	dbg(0,"bool %d %s\n",is_bool,attr_to_name(res->attr.type));
+	dbg(lvl_error,"bool %d %s\n",is_bool,attr_to_name(res->attr.type));
 	ctx->error=wrong_type;
 	return 0;
 }
@@ -481,7 +481,7 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 	default:
 		break;
 	}
-	dbg(0,"Unkown op %d %s\n",op_type,op);
+	dbg(lvl_error,"Unkown op %d %s\n",op_type,op);
 	ctx->error=internal;
 }
 
@@ -518,7 +518,7 @@ result_set(struct context *ctx, enum set_type set_type, const char *op, int len,
 	default:
 		break;
 	}
-	dbg(0,"unknown set type %d %s\n",set_type,op);
+	dbg(lvl_error,"unknown set type %d %s\n",set_type,op);
 	ctx->error=internal;
 }
 
@@ -605,7 +605,7 @@ eval_value(struct context *ctx, struct result *res) {
 	if (!*op)
 		ctx->error=eof_reached;
 	else {
-		dbg(0,"illegal character 0x%x\n",*op);
+		dbg(lvl_error,"illegal character 0x%x\n",*op);
 		ctx->error=illegal_character;
 	}
 }
@@ -657,7 +657,7 @@ command_call_function(struct context *ctx, struct result *res)
 	if (res->attrn)
 		strncpy(function, res->attrn, res->attrnlen);
 	function[res->attrnlen]='\0';
-	dbg(1,"function=%s\n", function);
+	dbg(lvl_warning,"function=%s\n", function);
 	if (ctx->expr[0] != ')') {
 		list=eval_list(ctx);	
 		if (ctx->error) {
@@ -686,7 +686,7 @@ command_call_function(struct context *ctx, struct result *res)
 					res->attr.u.num=list[0]->u.num;
 					res->allocated=0;
 				} else {
-					dbg(0,"don't know how to create int of args\n");
+					dbg(lvl_error,"don't know how to create int of args\n");
 				}
 			} else if (ATTR_IS_STRING(attr_type)) {
 				if (list && list[0] && ATTR_IS_STRING(list[0]->type)) {
@@ -694,7 +694,7 @@ command_call_function(struct context *ctx, struct result *res)
 					res->attr.u.str=g_strdup(list[0]->u.str);
 					res->allocated=1;
 				} else {
-					dbg(0,"don't know how to create string of args\n");
+					dbg(lvl_error,"don't know how to create string of args\n");
 				}
 			} else if (ATTR_IS_OBJECT(attr_type)) {
 				struct object_func *func=object_func_lookup(attr_type);
@@ -706,7 +706,7 @@ command_call_function(struct context *ctx, struct result *res)
 					res->allocated=1;
 				}
 			} else {
-				dbg(0,"don't know how to create %s (%s)\n",attr_to_name(attr_type),function+4);
+				dbg(lvl_error,"don't know how to create %s (%s)\n",attr_to_name(attr_type),function+4);
 			}
 		} else if (!strcmp(function,"add_attr")) {
 			command_object_add_attr(ctx, &res->attr, list[0]);
@@ -716,10 +716,10 @@ command_call_function(struct context *ctx, struct result *res)
 			if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 				int valid =0;
 				struct attr **out=NULL;
-				dbg(1,"function call %s from %s\n",function, attr_to_name(res->attr.type));
+				dbg(lvl_warning,"function call %s from %s\n",function, attr_to_name(res->attr.type));
 				callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
 				if (valid!=1){
-					dbg(0, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
+					dbg(lvl_error, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
 					    "The_Navit_Command_Interface for valid commands.\n", function);
 				}
 				if (out && out[0]) {
@@ -770,15 +770,15 @@ eval_postfix(struct context *ctx, struct result *res)
 					enum attr_type attr_type=command_attr_type(res);
 					void *obj=res->attr.u.data;
 					if (!obj) {
-						dbg(0,"no object\n");
+						dbg(lvl_error,"no object\n");
 						return;
 					}
 					if (!obj_func) {
-						dbg(0,"no object func\n");
+						dbg(lvl_error,"no object func\n");
 						return;
 					}
 					if (!obj_func->iter_new || !obj_func->iter_destroy) {
-						dbg(0,"no iter func\n");
+						dbg(lvl_error,"no iter func\n");
 						return;
 					}
 					iter = obj_func->iter_new(NULL);
@@ -801,7 +801,7 @@ eval_postfix(struct context *ctx, struct result *res)
 				return;
 			}
 		} else if (op[0] == '(') {
-			dbg(1,"function call\n");
+			dbg(lvl_warning,"function call\n");
 			resolve_object(ctx, res);
 			command_call_function(ctx, res);
 		}
@@ -989,7 +989,7 @@ eval_conditional(struct context *ctx, struct result *res)
 	memset(&tmp,0,sizeof(tmp));
 
 	if (!get_op(ctx,0,":",NULL)) {
-		dbg(0,"ctxerr\n");
+		dbg(lvl_error,"ctxerr\n");
 		ctx->error=missing_colon;
 		return;
 	}
@@ -1110,7 +1110,7 @@ command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr 
 		return attr_none;
 	resolve_object(&ctx, &res);
 	*ret=res.attr;
-	dbg(1,"type %s\n",attr_to_name(command_attr_type(&res)));
+	dbg(lvl_warning,"type %s\n",attr_to_name(command_attr_type(&res)));
 	return command_attr_type(&res);
 }
 
@@ -1280,15 +1280,15 @@ command_evaluate_single(struct context *ctx)
 		}
 		end=ctx->expr;
 		if (!obj) {
-			dbg(0,"no object\n");
+			dbg(lvl_error,"no object\n");
 			return 0;
 		}
 		if (!obj_func) {
-			dbg(0,"no object func\n");
+			dbg(lvl_error,"no object func\n");
 			return 0;
 		}
 		if (!obj_func->iter_new || !obj_func->iter_destroy) {
-			dbg(0,"no iter func\n");
+			dbg(lvl_error,"no iter func\n");
 			return 0;
 		}
 		iter = obj_func->iter_new(NULL);
@@ -1372,7 +1372,7 @@ command_evaluate(struct attr *attr, const char *expr)
 		char expr[32];
 		strncpy(expr, ctx.expr, 32);
 		expr[31]='\0';
-		dbg(0,"error %d starting at %s\n",ctx.error,expr);
+		dbg(lvl_error,"error %d starting at %s\n",ctx.error,expr);
 	}
 	g_free(expr_dup);
 }
@@ -1507,7 +1507,7 @@ command_saved_callbacks_changed(struct command_saved *cs)
 		func = object_func_lookup(cs->cbs[i].attr.type);
 		
 		if (!func->remove_attr) {
-			dbg(0, "Could not remove command-evaluation callback because remove_attr is missing for type %i!\n", cs->cbs[i].attr.type);
+			dbg(lvl_error, "Could not remove command-evaluation callback because remove_attr is missing for type %i!\n", cs->cbs[i].attr.type);
 			continue;
 		}
 
@@ -1557,7 +1557,7 @@ command_register_callbacks(struct command_saved *cs)
 					cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
 					cs->ctx.attr = &cs->context_attr;
 				} else {
-					dbg(0, "Error: Strange status returned from get_next_object()\n");
+					dbg(lvl_error, "Error: Strange status returned from get_next_object()\n");
 				}
 
 				cs->num_cbs++;
@@ -1571,7 +1571,7 @@ command_register_callbacks(struct command_saved *cs)
 				func->add_attr(prev.u.data, &cb_attr);
 
 			} else {
-				dbg(0, "Could not add callback because add_attr is missing for type %i}n", prev.type);
+				dbg(lvl_error, "Could not add callback because add_attr is missing for type %i}n", prev.type);
 			}
 		}
 

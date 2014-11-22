@@ -55,7 +55,7 @@ geticon(const char *name){
 	GError *error=NULL;
 	icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
 	if (error) {
-		dbg(0, "failed to load icon '%s': %s\n", name, error->message);
+		dbg(lvl_error, "failed to load icon '%s': %s\n", name, error->message);
 	}
 	return icon;
 }
@@ -228,7 +228,7 @@ button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	dest.y=lon;
 	dest.pro=1;
 	navit_set_destination(search->nav, &dest, buffer, 1);
-	dbg(1,_("Set destination to %ld, %ld \n"),lat,lon);
+	dbg(lvl_warning,_("Set destination to %ld, %ld \n"),lat,lon);
 }
 
 /* Show the POI's position in the map. */
@@ -251,7 +251,7 @@ button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	dest.y=lon;
 	dest.pro=1;
 	navit_set_center(search->nav, &dest,1);
-	dbg(1,_("Set map to %ld, %ld \n"),lat,lon);
+	dbg(lvl_warning,_("Set map to %ld, %ld \n"),lat,lon);
 }
 
 /** Set POI as the first "visit before". */
@@ -268,7 +268,7 @@ button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(search->store_poi_sorted), &iter, path)) return;
 	gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
 	gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
-	dbg(1,_("Set next visit to %ld, %ld \n"),lat,lon);
+	dbg(lvl_warning,_("Set next visit to %ld, %ld \n"),lat,lon);
 
 	struct pcoord dest;
 	dest.x=lat;

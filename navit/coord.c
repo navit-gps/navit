@@ -104,7 +104,7 @@ coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2)
 	dbg_assert(r1->lu.y >= r1->rl.y);
 	dbg_assert(r2->lu.x <= r2->rl.x);
 	dbg_assert(r2->lu.y >= r2->rl.y);
-	dbg(3,"0x%x,0x%x - 0x%x,0x%x vs 0x%x,0x%x - 0x%x,0x%x\n", r1->lu.x, r1->lu.y, r1->rl.x, r1->rl.y, r2->lu.x, r2->lu.y, r2->rl.x, r2->rl.y);
+	dbg(lvl_debug,"0x%x,0x%x - 0x%x,0x%x vs 0x%x,0x%x - 0x%x,0x%x\n", r1->lu.x, r1->lu.y, r1->rl.x, r1->rl.y, r2->lu.x, r2->lu.y, r2->rl.x, r2->rl.y);
 	if (r1->lu.x > r2->rl.x)
 		return 0;
 	if (r1->rl.x < r2->lu.x)
@@ -171,14 +171,14 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 	struct coord c,offset;
 	enum projection str_pro=projection_none;
 
-	dbg(1,"enter('%s',%d,%p)\n", coord_input, output_projection, result);
+	dbg(lvl_warning,"enter('%s',%d,%p)\n", coord_input, output_projection, result);
 	s=strchr(str,' ');
 	co=strchr(str,':');
 	if (co && co < s) {
 		proj=malloc(co-str+1);
 		strncpy(proj, str, co-str);
 		proj[co-str]='\0';
-		dbg(1,"projection=%s\n", proj);
+		dbg(lvl_warning,"projection=%s\n", proj);
 		str=co+1;
 		s=strchr(str,' ');
 		if (!strcmp(proj, "geo"))
@@ -186,7 +186,7 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		else {
 			str_pro = projection_from_name(proj,&offset);
 			if (str_pro == projection_none) {
-				dbg(0, "Unknown projection: %s\n", proj);
+				dbg(lvl_error, "Unknown projection: %s\n", proj);
 				goto out;
 			}
 		}
@@ -202,8 +202,8 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
 		if (args < 2)
 			goto out;
-		dbg(1,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
-		dbg(1,"rest='%s'\n", str+ret);
+		dbg(lvl_warning,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
+		dbg(lvl_warning,"rest='%s'\n", str+ret);
 
 		if (str_pro == projection_none) 
 			str_pro=projection_mg;
@@ -215,13 +215,13 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 	} else if (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's') {
 		double lng, lat;
 		char ns, ew;
-		dbg(1,"str='%s'\n", str);
+		dbg(lvl_warning,"str='%s'\n", str);
 		args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
-		dbg(1,"args=%d\n", args);
-		dbg(1,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
+		dbg(lvl_warning,"args=%d\n", args);
+		dbg(lvl_warning,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
 		if (args < 4)
 			goto out;
-		dbg(1,"projection=%d str_pro=%d projection_none=%d\n", output_projection, str_pro, projection_none);
+		dbg(lvl_warning,"projection=%d str_pro=%d projection_none=%d\n", output_projection, str_pro, projection_none);
 		if (str_pro == projection_none) {
 			g.lat=floor(lat/100);
 			lat-=g.lat*100;
@@ -233,12 +233,12 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 				g.lat=-g.lat;
 			if (ew == 'w' || ew == 'W')
 				g.lng=-g.lng;
-			dbg(1,"transform_from_geo(%f,%f)",g.lat,g.lng);
+			dbg(lvl_warning,"transform_from_geo(%f,%f)",g.lat,g.lng);
 			transform_from_geo(output_projection, &g, result);
-			dbg(1,"result 0x%x,0x%x\n", result->x,result->y);
+			dbg(lvl_warning,"result 0x%x,0x%x\n", result->x,result->y);
 		}
-		dbg(3,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
-		dbg(3,"rest='%s'\n", str+ret);
+		dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
+		dbg(lvl_debug,"rest='%s'\n", str+ret);
 	} else if (str_pro == projection_utm) {
 		double x,y;
 		args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
@@ -256,14 +256,14 @@ coord_parse(const char *coord_input, enum projection output_projection, struct c
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
 		if (args < 2)
 			goto out;
-		dbg(1,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
-		dbg(1,"rest='%s'\n", str+ret);
+		dbg(lvl_warning,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
+		dbg(lvl_warning,"rest='%s'\n", str+ret);
 		g.lng=lng;
 		g.lat=lat;
 		transform_from_geo(output_projection, &g, result);
 	}
 	ret+=str-coord_input;
-	dbg(2, "ret=%d delta=%d ret_str='%s'\n", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
+	dbg(lvl_info, "ret=%d delta=%d ret_str='%s'\n", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
 out:
 	free(proj);
 	return ret;

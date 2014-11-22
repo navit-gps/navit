@@ -40,10 +40,10 @@ script_run(struct script *scr)
 	struct attr *xml_text=attr_search(scr->attrs, NULL, attr_xml_text);
 	int error;
 	if (!xml_text || !xml_text->u.str) {
-		dbg(0,"no text\n");
+		dbg(lvl_error,"no text\n");
 		return;
 	}
-	dbg(0,"running '%s'\n",xml_text->u.str);
+	dbg(lvl_error,"running '%s'\n",xml_text->u.str);
 	command_evaluate_to_void(&scr->parent, xml_text->u.str, &error);
 }
 
@@ -52,7 +52,7 @@ script_set_attr_int(struct script *scr, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_refresh_cond:
-		dbg(0,"refresh_cond\n");
+		dbg(lvl_error,"refresh_cond\n");
 		if (scr->cs)
 			command_saved_destroy(scr->cs);
 		scr->cs=command_saved_attr_new(attr->u.str, &scr->parent, scr->cb, 0);
@@ -79,14 +79,14 @@ script_new(struct attr *parent, struct attr **attrs)
 	scr->parent=*parent;
 	while (attrs && *attrs) 
 		script_set_attr_int(scr, *attrs++);
-	dbg(0,"return %p\n",scr);
+	dbg(lvl_error,"return %p\n",scr);
 	return scr;
 }
 
 static void
 script_destroy(struct script *scr)
 {
-	dbg(0,"enter %p\n",scr);
+	dbg(lvl_error,"enter %p\n",scr);
 	if (scr->timeout)
 		event_remove_timeout(scr->timeout);
 	if (scr->cs)

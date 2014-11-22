@@ -134,11 +134,11 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 {
 	struct attr escaped;
 	if (!in || !in[0]) {
-		dbg(0,"first parameter missing or wrong type\n");
+		dbg(lvl_error,"first parameter missing or wrong type\n");
 		return;
 	}
 	if (!out) {
-		dbg(0,"output missing\n");
+		dbg(lvl_error,"output missing\n");
 		return;
 	}
 	if (ATTR_IS_STRING(in[0]->type)) {
@@ -148,10 +148,10 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		escaped.type=attr_type_string_begin;
 		escaped.u.str=g_strdup_printf("%ld",in[0]->u.num);
 	} else {
-		dbg(0,"first parameter wrong type\n");
+		dbg(lvl_error,"first parameter wrong type\n");
 		return;
 	}
-	dbg(1,"in %s result %s\n",in[0]->u.str,escaped.u.str);
+	dbg(lvl_warning,"in %s result %s\n",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
 }
@@ -514,7 +514,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_point->c.y=heightline->height;
 										diagram_point->next=diagram_points;
 										diagram_points=diagram_point;
-										dbg(2,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+										dbg(lvl_info,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
 									}
 								}
 							}
@@ -548,12 +548,12 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			coord_rect_extend(&dbbox, &diagram_point->c);
 		diagram_point=diagram_point->next;
 	}
-	dbg(2,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	dbg(lvl_info,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
 	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
 		dbbox.lu.x=0;
 	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
 		dbbox.rl.y=0;
-	dbg(2,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	dbg(lvl_info,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
 	x=dbbox.lu.x;
 	first=1;
 	for (;;) {
@@ -569,7 +569,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			break;
 		p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
 		p[1].y=(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y+5;
-		dbg(2,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+		dbg(lvl_info,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
 		graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
 		if (first)
 			first=0;
@@ -630,7 +630,7 @@ gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, 
 	struct attr pro;
 	struct coord c;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -871,7 +871,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	const char *name=_("Position");
 	int flags=-1;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -881,7 +881,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 		if (in[2] && ATTR_IS_INT(in[2]->type))
 			flags=in[2]->u.num;
 	}
-	dbg(1,"flags=0x%x\n",flags);
+	dbg(lvl_warning,"flags=0x%x\n",flags);
 	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
 
@@ -904,14 +904,14 @@ gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, s
 {
 	char *pattern,*command=NULL;
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
-		dbg(0,"first parameter missing or wrong type\n");
+		dbg(lvl_error,"first parameter missing or wrong type\n");
 		return;
 	}
 	pattern=in[0]->u.str;
-	dbg(1,"pattern %s\n",pattern);
+	dbg(lvl_warning,"pattern %s\n",pattern);
 	if (in[1]) {
 		command=gui_internal_cmd_match_expand(pattern, in+1);
-		dbg(1,"expand %s\n",command);
+		dbg(lvl_warning,"expand %s\n",command);
 		gui_internal_set(pattern, command);
 		command_evaluate(&this->self, command);
 		g_free(command);
@@ -955,7 +955,7 @@ static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str=NULL;
-	dbg(1,"enter %s %p %p %p\n",function,in,out,valid);
+	dbg(lvl_warning,"enter %s %p %p %p\n",function,in,out,valid);
 	if (!in)
 		return;
 	while (*in) {
@@ -965,7 +965,7 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	if (str) {
 		str=g_strdup_printf("<html>%s</html>\n",str);
 #if 0
-		dbg(0,"%s\n",str);
+		dbg(lvl_error,"%s\n",str);
 #endif
 		gui_internal_html_parse_text(this, str);
 	}
@@ -988,11 +988,11 @@ gui_internal_onclick(struct attr ***in, char **onclick, char *set)
 			char format[4],*end=strchr(c+2,'}'),*replacement=NULL,*new_str;
 			int is_arg;
 			if (!end) {
-				dbg(0,"Missing closing brace in format string %s\n",c);
+				dbg(lvl_error,"Missing closing brace in format string %s\n",c);
 				goto error;
 			}
 			if (end-c > sizeof(format)) {
-				dbg(0,"Invalid format string %s\n",c);
+				dbg(lvl_error,"Invalid format string %s\n",c);
 				goto error;
 			}
 			strncpy(format, c+2, end-c-2);
@@ -1019,7 +1019,7 @@ gui_internal_onclick(struct attr ***in, char **onclick, char *set)
 				}
 			}	
 			if (!replacement) {
-				dbg(0,"Unsupported format string %s\n",format);
+				dbg(lvl_error,"Unsupported format string %s\n",format);
 				goto error;
 			}
 			new_str=g_strconcat(str, replacement, end+1, NULL);
@@ -1063,7 +1063,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 			str=gui_internal_append_attr(str, escape_mode_string|escape_mode_html, " class=", *in, "");
 		in++;
 	} else {
-		dbg(0,"argument error: class argument not string\n");
+		dbg(lvl_error,"argument error: class argument not string\n");
 		goto error;
 	}
 	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
@@ -1072,7 +1072,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 		}
 		in++;
 	} else {
-		dbg(0,"argument error: image argument not string\n");
+		dbg(lvl_error,"argument error: image argument not string\n");
 		goto error;
 	}
 	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
@@ -1083,7 +1083,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 		}
 		in++;
 	} else {
-		dbg(0,"argument error: text argument not string\n");
+		dbg(lvl_error,"argument error: text argument not string\n");
 		goto error;
 	}
 	gui_internal_onclick(&in,&onclick,NULL);
@@ -1096,7 +1096,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 	}
 	g_free(onclick);
 	html=g_strdup_printf("<html>%s%s</html>\n",str,suffix);
-	dbg(1,"return %s",html);
+	dbg(lvl_warning,"return %s",html);
 	gui_internal_html_parse_text(this, html);
 	g_free(html);
 error:
@@ -1109,16 +1109,16 @@ static void
 gui_internal_cmd_debug(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str;
-	dbg(0,"begin\n");
+	dbg(lvl_error,"begin\n");
 	if (in) {
 		while (*in) {
 			str=attr_to_text(*in, NULL, 0);
-			dbg(0,"%s:%s\n",attr_to_name((*in)->type),str);
+			dbg(lvl_error,"%s:%s\n",attr_to_name((*in)->type),str);
 			in++;
 			g_free(str);
 		}
 	}
-	dbg(0,"done\n");
+	dbg(lvl_error,"done\n");
 }
 
 static void

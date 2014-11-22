@@ -55,7 +55,7 @@ public slots:
 			struct attr attr_value;
 			double *helper;
 
-			dbg(1,"Setting %s to %s\n",attr_name.toStdString().c_str(),attr_string.toStdString().c_str());
+			dbg(lvl_warning,"Setting %s to %s\n",attr_name.toStdString().c_str(),attr_string.toStdString().c_str());
 			getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr_value, NULL);
 
 			if (ATTR_IS_INT(attr_value.type)) {

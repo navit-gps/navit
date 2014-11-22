@@ -225,7 +225,7 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 				item->type=type_rail;
 				break;
 			default:
-				dbg(0,"Unknown poly type 0x%x '%s' 0x%x,0x%x\n", poly->type,poly->name,r.lu.x,r.lu.y);
+				dbg(lvl_error,"Unknown poly type 0x%x '%s' 0x%x,0x%x\n", poly->type,poly->name,r.lu.x,r.lu.y);
 				item->type=type_street_unkn;
 			}
 			if (!map_selection_contains_item(mr->cur_sel, 0, item->type)) {
@@ -235,10 +235,10 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			}
 		} else 
 			mr->b.p=poly->subpoly_next;
-		dbg(1,"%d %d %s\n", poly->subpoly_num_all, mr->b.block_num, poly->name);
+		dbg(lvl_warning,"%d %d %s\n", poly->subpoly_num_all, mr->b.block_num, poly->name);
 		item->id_lo=poly->subpoly_num_all | (mr->b.block_num << 16);
 		item->id_hi=(mr->current_file << 16);
-		dbg(1,"0x%x 0x%x\n", item->id_lo, item->id_hi);
+		dbg(lvl_warning,"0x%x 0x%x\n", item->id_lo, item->id_hi);
 		poly->subpoly_next=mr->b.p+L(poly->count[poly->subpoly_num])*sizeof(struct coord);
 		poly->subpoly_num++;
 		poly->subpoly_num_all++;

@@ -48,7 +48,7 @@ sdl_timer_callback(Uint32 interval, void* param)
 {
    struct event_timeout *timeout=(struct event_timeout*)param;
 
-   dbg(1,"timer(%p) multi(%d) interval(%d) fired\n", param, timeout->multi, interval);
+   dbg(lvl_warning,"timer(%p) multi(%d) interval(%d) fired\n", param, timeout->multi, interval);
 
    SDL_Event event;
    SDL_UserEvent userevent;
@@ -104,7 +104,7 @@ event_sdl_watch_thread (GPtrArray *watch_list)
       for (idx = 0; idx < watch_list->len; idx++ ) {
 	 if (pfds[idx].revents == pfds[idx].events) {	/* The requested event happened, notify mainloop! */
 	    ew = g_ptr_array_index (watch_list, idx);
-	    dbg(1,"watch(%p) event(%d) encountered\n", ew, pfds[idx].revents);
+	    dbg(lvl_warning,"watch(%p) event(%d) encountered\n", ew, pfds[idx].revents);
 
 	    SDL_Event event;
 	    SDL_UserEvent userevent;
@@ -130,7 +130,7 @@ event_sdl_watch_thread (GPtrArray *watch_list)
 static void
 event_sdl_watch_startthread(GPtrArray *watch_list)
 {
-   dbg(1,"enter\n");
+   dbg(lvl_warning,"enter\n");
    if (sdl_watch_thread)
       event_sdl_watch_stopthread();
 
@@ -143,7 +143,7 @@ event_sdl_watch_startthread(GPtrArray *watch_list)
 static void
 event_sdl_watch_stopthread()
 {
-   dbg(1,"enter\n");
+   dbg(lvl_warning,"enter\n");
    if (sdl_watch_thread) {
       /* Notify the watch thread that the list of FDs will change */
       pthread_kill(sdl_watch_thread, SIGUSR1);
@@ -155,7 +155,7 @@ event_sdl_watch_stopthread()
 static struct event_watch *
 event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
-   dbg(1,"fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
+   dbg(lvl_warning,"fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
 
    event_sdl_watch_stopthread();
 
@@ -193,7 +193,7 @@ event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 static void
 event_sdl_remove_watch(struct event_watch *ew)
 {
-   dbg(1,"enter %p\n",ew);
+   dbg(lvl_warning,"enter %p\n",ew);
 
    event_sdl_watch_stopthread();
 
@@ -212,10 +212,10 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
 {
    struct event_timeout * ret = g_new0(struct event_timeout, 1);
    if(!ret) {
-      dbg (0,"g_new0 failed\n");
+      dbg(lvl_error,"g_new0 failed\n");
       return ret;
    }
-   dbg(1,"timer(%p) multi(%d) interval(%d) cb(%p) added\n",ret, multi, timeout, cb);
+   dbg(lvl_warning,"timer(%p) multi(%d) interval(%d) cb(%p) added\n",ret, multi, timeout, cb);
    ret->multi = multi;
    ret->cb = cb;
    ret->id = SDL_AddTimer(timeout, sdl_timer_callback, ret);
@@ -226,17 +226,17 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
 static void
 event_sdl_remove_timeout(struct event_timeout *to)
 {
-   dbg(2,"enter %p\n", to);
+   dbg(lvl_info,"enter %p\n", to);
    if(to)
    {
       /* do not SDL_RemoveTimer if oneshot timer has already fired */
       int ret = to->id == 0 ? SDL_TRUE : SDL_RemoveTimer(to->id);
 
       if (ret == SDL_FALSE)
-	 dbg(0,"SDL_RemoveTimer (%p) failed\n", to->id);
+	 dbg(lvl_error,"SDL_RemoveTimer (%p) failed\n", to->id);
 
       g_free(to);
-      dbg(1,"timer(%p) removed\n", to);
+      dbg(lvl_warning,"timer(%p) removed\n", to);
    }
 }
 
@@ -258,7 +258,7 @@ sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb)
 static struct event_idle *
 event_sdl_add_idle(int priority, struct callback *cb)
 {
-   dbg(1,"add idle priority(%d) cb(%p)\n", priority, cb);
+   dbg(lvl_warning,"add idle priority(%d) cb(%p)\n", priority, cb);
 
    struct idle_task *task = g_new0(struct idle_task, 1);
    task->priority = priority;
@@ -271,7 +271,7 @@ event_sdl_add_idle(int priority, struct callback *cb)
       SDL_Event event;
       SDL_UserEvent userevent;
 
-      dbg(1,"poking eventloop because of new idle_events\n");
+      dbg(lvl_warning,"poking eventloop because of new idle_events\n");
 
       userevent.type = SDL_USEREVENT;
       userevent.code = SDL_USEREVENT_CODE_IDLE_EVENT;
@@ -292,7 +292,7 @@ event_sdl_add_idle(int priority, struct callback *cb)
 static void
 event_sdl_remove_idle(struct event_idle *task)
 {
-   dbg(1,"remove task(%p)\n", task);
+   dbg(lvl_warning,"remove task(%p)\n", task);
    g_ptr_array_remove(idle_tasks, (gpointer)task);
 }
 
@@ -301,7 +301,7 @@ event_sdl_remove_idle(struct event_idle *task)
 static void
 event_sdl_call_callback(struct callback_list *cbl)
 {
-   dbg(1,"call_callback cbl(%p)\n",cbl);
+   dbg(lvl_warning,"call_callback cbl(%p)\n",cbl);
    SDL_Event event;
    SDL_UserEvent userevent;
 

@@ -32,14 +32,14 @@ maps_new(struct attr *parent, struct attr **attrs)
 {
 	struct attr *data,**attrs_dup;
 	if (!parent) {
-		dbg(0,"No parent\n");
+		dbg(lvl_error,"No parent\n");
 		return NULL;
 	}
 	if (parent->type != attr_mapset) {
-		dbg(0,"Parent must be mapset\n");
+		dbg(lvl_error,"Parent must be mapset\n");
 		return NULL;
 	}
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	attrs_dup=attr_list_dup(attrs);
 	data=attr_search(attrs_dup, NULL, attr_data);
 	if (data) {
@@ -79,7 +79,7 @@ maps_new(struct attr *parent, struct attr **attrs)
 		}
 		file_wordexp_destroy(wexp);	
 	} else {
-		dbg(0,"no data attribute\n");
+		dbg(lvl_error,"no data attribute\n");
 	}
 	attr_list_free(attrs_dup);
 	return NULL;

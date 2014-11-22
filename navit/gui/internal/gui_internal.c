@@ -130,10 +130,10 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 	char *full_path=NULL;
 	full_path=graphics_icon_path(name);
 	ret=graphics_image_new_scaled(this->gra, full_path, w, h);
-	dbg(1,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
+	dbg(lvl_warning,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
 	g_free(full_path);
 	if (!ret) {
-		dbg(0,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
+		dbg(lvl_error,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
 		full_path=graphics_icon_path("unknown");
 		ret=graphics_image_new_scaled(this->gra, full_path, w, h);
 		g_free(full_path);
@@ -498,7 +498,7 @@ gui_internal_apply_config(struct gui_priv *this)
 {
   struct gui_config_settings *  current_config=0;
 
-  dbg(1,"w=%d h=%d\n", this->root.w, this->root.h);
+  dbg(lvl_warning,"w=%d h=%d\n", this->root.w, this->root.h);
   /**
    * Select default values from profile based on the screen.
    */
@@ -583,7 +583,7 @@ static void
 gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data)
 {
 	char *name=data;
-	dbg(2,"c=%d:0x%x,0x%x\n", wm->c.pro, wm->c.x, wm->c.y);
+	dbg(lvl_info,"c=%d:0x%x,0x%x\n", wm->c.pro, wm->c.x, wm->c.y);
 	navit_set_destination(this->nav, &wm->c, name, 1);
 	if (this->flags & 512) {
 		struct attr follow;
@@ -837,13 +837,13 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 	char *text;
 	int count=0;
 
-	dbg(2,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+	dbg(lvl_info,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
 	wb=gui_internal_menu(this, "Attributes");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	mr=map_rect_new(wm->item.map, NULL);
 	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-	dbg(2,"item=%p\n", item);
+	dbg(lvl_info,"item=%p\n", item);
 	if (item) {
 		text=g_strdup_printf("%s:%s", _("Item type"), item_to_name(item->type));
 		gui_internal_widget_append(w,
@@ -885,10 +885,10 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	char *cmd=NULL;
 
 	if (!wm->name) {
-		dbg(2,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+		dbg(lvl_info,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
 		mr=map_rect_new(wm->item.map, NULL);
 		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-		dbg(2,"item=%p\n", item);
+		dbg(lvl_info,"item=%p\n", item);
 		if (item) {
 			while(item_attr_get(item, attr_url_local, &attr)) {
 				if (! cmd)
@@ -903,7 +903,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 #ifdef HAVE_SYSTEM
 		system(cmd);
 #else
-		dbg(0,"Error: External commands were disabled during compilation, cannot call '%s'.\n",cmd);
+		dbg(lvl_error,"Error: External commands were disabled during compilation, cannot call '%s'.\n",cmd);
 #endif
 		g_free(cmd);
 	}
@@ -993,7 +993,7 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 	
 	if(!w) {
 		map_rect_destroy(mr);
-		dbg(1,"Can't find the results table - only map clean up is done.\n");
+		dbg(lvl_warning,"Can't find the results table - only map clean up is done.\n");
 		return;
 	}
 
@@ -1005,7 +1005,7 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 			struct item* it;
 			if(wi->name==NULL)
 				continue;
-			dbg(2,"%s\n",wi->name);
+			dbg(lvl_info,"%s\n",wi->name);
 			it=map_rect_create_item(mr,type_found_item);
 			if(it) {
 				struct coord c;
@@ -1106,7 +1106,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		pc=*pc_in;
 		c.x=pc.x;
 		c.y=pc.y;
-		dbg(2,"x=0x%x y=0x%x\n", c.x, c.y);
+		dbg(lvl_info,"x=0x%x y=0x%x\n", c.x, c.y);
 		transform_to_geo(pc.pro, &c, &g);
 	} else if (g_in) {
 		struct attr attr;
@@ -1551,7 +1551,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label_full=map_convert_string_tmp(item->map,attr.u.str);
-			dbg(2,"full_labled: %s\n",label_full);
+			dbg(lvl_info,"full_labled: %s\n",label_full);
 			
 			// hassub == 1 if the item type is a sub-folder
 			if (item->type == type_bookmark_folder) {
@@ -1624,7 +1624,7 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 			}
                        	return; 
 		} else if (*key == NAVIT_KEY_BACKSPACE) {
-			dbg(1,"backspace\n");
+			dbg(lvl_warning,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
 				wi->text[len]='\0';
@@ -1632,11 +1632,11 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 			}
 		} else {
 			if (wi->state & STATE_CLEAR) {
-				dbg(2,"wi->state=0x%x\n", wi->state);
+				dbg(lvl_info,"wi->state=0x%x\n", wi->state);
 				g_free(wi->text);
 				wi->text=NULL;
 				wi->state &= ~STATE_CLEAR;
-				dbg(2,"wi->state=0x%x\n", wi->state);
+				dbg(lvl_info,"wi->state=0x%x\n", wi->state);
 			}
 			text=g_strdup_printf("%s%s", wi->text ? wi->text : "", key);
 		}
@@ -1720,7 +1720,7 @@ gui_internal_set(char *remove, char *add)
 			int len=strlen(line);
 			if (len > 0 && line[len-1] == '\n')
 				line[len-1]='\0';
-			dbg(1,"line=%s\n",line);
+			dbg(lvl_warning,"line=%s\n",line);
 			if (!gui_internal_match(remove, line))
 				fprintf(fo,"%s\n",line);
 		}
@@ -1779,12 +1779,12 @@ gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void 
 		sel.range.max=type_last;
 		mr=map_rect_new(map, &sel);
 		while ((item=map_rect_get_item(mr))) {
-			dbg(2,"item\n");
+			dbg(lvl_info,"item\n");
 		}
 		map_rect_destroy(mr);
 	}
 	
-	dbg(2,"bbox=%s\n",wm->prefix);
+	dbg(lvl_info,"bbox=%s\n",wm->prefix);
 	gui_internal_menu_render(this);
 }
 
@@ -1798,7 +1798,7 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
 	char *search,buffer[256];
 	int found,sp_match=0;
 
-	dbg(1,"wm=%p prefix=%s\n",wm,wm->prefix);
+	dbg(lvl_warning,"wm=%p prefix=%s\n",wm,wm->prefix);
 
 	search=wm->prefix;
 	if (search) {
@@ -2007,14 +2007,14 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
 	vehicle_name = vehicle_name_attr.u.str;
 
-	dbg(1, "Changing vehicle %s to profile %s\n", vehicle_name,
+	dbg(lvl_warning, "Changing vehicle %s to profile %s\n", vehicle_name,
 			profilename);
 
 	// Change the profile name
 	profilename_attr.type = attr_profilename;
 	profilename_attr.u.str = profilename;
 	if(!vehicle_set_attr(v, &profilename_attr)) {
-		dbg(0, "Unable to set the vehicle's profile name\n");
+		dbg(lvl_error, "Unable to set the vehicle's profile name\n");
 	}
 
     // Notify Navit that the routing should be re-done if this is the
@@ -2056,7 +2056,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 	// Figure out the profile name
 	attr = attr_search(profile->attrs, NULL, attr_name);
 	if (!attr) {
-		dbg(0, "Adding vehicle profile failed. attr==NULL");
+		dbg(lvl_error, "Adding vehicle profile failed. attr==NULL");
 		return;
 	}
 	name = attr->u.str;
@@ -2066,7 +2066,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 		active_profile = profile_attr.u.str;
 	active = active_profile != NULL && !strcmp(name, active_profile);
 
-	dbg(1, "Adding vehicle profile %s, active=%s/%i\n", name,
+	dbg(lvl_warning, "Adding vehicle profile %s, active=%s/%i\n", name,
 			active_profile, active);
 
 	// Build a translatable label.
@@ -2213,7 +2213,7 @@ gui_internal_set_click_coord(struct gui_priv *this, struct point *p)
 	if (p) {
 		trans=navit_get_trans(this->nav);
 		transform_reverse(trans, p, &c);
-		dbg(1,"x=0x%x y=0x%x\n", c.x, c.y);
+		dbg(lvl_warning,"x=0x%x y=0x%x\n", c.x, c.y);
 		this->clickp.pro=transform_get_projection(trans);
 		this->clickp.x=c.x;
 		this->clickp.y=c.y;
@@ -2254,7 +2254,7 @@ gui_internal_enter_setup(struct gui_priv *this)
 void
 gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href)
 {
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	gui_internal_enter(this, ignore);
 	gui_internal_enter_setup(this);
 	// draw menu
@@ -2374,7 +2374,7 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 		this->on_map_click=g_strdup(attr->u.str);
 		return 1;
 	default:
-		dbg(0,"Unknown attribute: %s\n",attr_to_name(attr->type));
+		dbg(lvl_error,"Unknown attribute: %s\n",attr_to_name(attr->type));
 		return 1;
 	}
 }
@@ -2442,7 +2442,7 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 	sscanf(degree, "%lf", x);
 	
 	if(strchr(degree, plus) || strchr(degree, minus)) {
-		dbg(3,"degree %c/%c found\n",plus,minus);
+		dbg(lvl_debug,"degree %c/%c found\n",plus,minus);
 	} else {/* DEGREES_MINUTES */
 		if(!minute)
 			return 0;
@@ -2450,7 +2450,7 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 		sscanf(minute, "%lf", &tmp);
 		*x+=tmp/60;
 		if(strchr(minute, plus) || strchr(minute, minus)) {
-			dbg(3,"minute %c/%c found\n",plus,minus);
+			dbg(lvl_debug,"minute %c/%c found\n",plus,minus);
 		} else { /* DEGREES_MINUTES_SECONDS */
 			second=strtok(NULL,"");  
 			if(!second)
@@ -2474,7 +2474,7 @@ gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget)
 	char *lat, *lng;
 	char *widgettext;
 	double latitude, longitude; 
-	dbg(1,"text entered:%s\n", widget->text);
+	dbg(lvl_warning,"text entered:%s\n", widget->text);
 
 	/* possible entry can be identical to coord_format output but only space between lat and lng is allowed */
 	widgettext=g_ascii_strup(widget->text,-1);
@@ -2507,7 +2507,7 @@ gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget)
 void
 gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(1,"entered\n");
+	dbg(lvl_warning,"entered\n");
         gui_internal_cmd_enter_coord_do(this, widget->data);
 }
 
@@ -2527,18 +2527,18 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	struct gui_priv *this=data;
 	struct graphics *gra=this->gra;
 
-	dbg(1,"enter %d %d\n", pressed, button);
+	dbg(lvl_warning,"enter %d %d\n", pressed, button);
 	// if still on the map (not in the menu, yet):
-	dbg(1,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
+	dbg(lvl_warning,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
 	if (!this->root.children || this->ignore_button) {
 
 		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL)) {
-			dbg(1,"navit has handled button\n");
+			dbg(lvl_warning,"navit has handled button\n");
 			return;
 		}
-		dbg(1,"menu_on_map_click=%d\n",this->menu_on_map_click);
+		dbg(lvl_warning,"menu_on_map_click=%d\n",this->menu_on_map_click);
 		if (button != 1)
 			return;
 		if (this->on_map_click || this->menu_on_map_click) {
@@ -2639,7 +2639,7 @@ static void gui_internal_resize(void *data, int w, int h)
 		this->root.h=h;
 		changed=1;
 	}
-	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
+	dbg(lvl_warning,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
 		if (changed) {
@@ -2688,7 +2688,7 @@ gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int
 			if (dist1 < 0)
 				dist1=-dist1;
 		}
-		dbg(1,"checking %d,%d %d %d against %d,%d-%d,%d result %d,%d\n", p->x, p->y, dx, dy, wi->p.x, wi->p.y, wi->p.x+wi->w, wi->p.y+wi->h, dist1, dist2);
+		dbg(lvl_warning,"checking %d,%d %d %d against %d,%d-%d,%d result %d,%d\n", p->x, p->y, dx, dy, wi->p.x, wi->p.y, wi->p.x+wi->w, wi->p.y+wi->h, dist1, dist2);
 		if (dist1 >= 0) {
 			if (dist2 < 0)
 				dist1-=dist2;
@@ -2723,13 +2723,13 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		gui_internal_keynav_find_closest(menu, &p, 0, 0, &distance, &result);
 		if (result) {
 			gui_internal_keynav_point(result, dx, dy, &p);
-			dbg(1,"result origin=%p p=%d,%d\n", result, p.x, p.y);
+			dbg(lvl_warning,"result origin=%p p=%d,%d\n", result, p.x, p.y);
 		}
 	}
 	result=NULL;
 	distance=INT_MAX;
 	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
-	dbg(1,"result=%p\n", result);
+	dbg(lvl_warning,"result=%p\n", result);
 	if (! result) {
 		if (dx < 0)
 			p.x=this->root.w;
@@ -2742,7 +2742,7 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		result=NULL;
 		distance=INT_MAX;
 		gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
-		dbg(1,"wraparound result=%p\n", result);
+		dbg(lvl_warning,"wraparound result=%p\n", result);
 	}
 	gui_internal_highlight_do(this, result);
 	if (result)
@@ -3003,9 +3003,9 @@ line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct 
         if (a > n || b > n)
                 return 0;
 	if (n == 0) {
-		dbg(2,"a=%d b=%d n=%d\n", a, b, n);
-		dbg(2,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
-		dbg(2,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
+		dbg(lvl_info,"a=%d b=%d n=%d\n", a, b, n);
+		dbg(lvl_info,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
+		dbg(lvl_info,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
 		dbg_assert(n != 0);
 	}
         res->x = a1->x + a * adx / n;

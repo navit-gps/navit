@@ -30,10 +30,10 @@ public slots:
 		QList<struct attr> destinations=this->_routeDestinations();
 		for (QList<struct attr>::const_iterator iter=destinations.begin();iter!=destinations.end();iter++) {
 			NGQPoint helperPoint(this->object,iter->u.pcoord,MapPoint);
-			dbg(0,"Added destination %s\n",helperPoint.coordString().toLocal8Bit().constData());
+			dbg(lvl_error,"Added destination %s\n",helperPoint.coordString().toLocal8Bit().constData());
 		}
 
-		//dbg(0,QString::number(_itemId).toStdString().c_str());
+		//dbg(lvl_error,QString::number(_itemId).toStdString().c_str());
 
 		//return retDoc.toString();
 		return QString();

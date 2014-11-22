@@ -44,10 +44,10 @@ navit_get_attr_py(navitObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "s", &name))
 		return NULL;
 	if (!navit_get_attr(self->navit, attr_from_name(name), &attr, NULL)) {
-		dbg(0,"get_attr not ok\n");
+		dbg(lvl_error,"get_attr not ok\n");
 		Py_RETURN_NONE;
 	}
-	dbg(0,"get_attr ok\n");
+	dbg(lvl_error,"get_attr ok\n");
 	return python_object_from_attr(&attr);
 }
 
@@ -131,7 +131,7 @@ navit_py(PyObject *self, PyObject *args)
 {
 	navitObject *ret;
 
-	dbg(0,"enter\n");	
+	dbg(lvl_error,"enter\n");	
 	ret=PyObject_NEW(navitObject, &navit_Type);
 	return (PyObject *)ret;
 }
@@ -139,7 +139,7 @@ navit_py(PyObject *self, PyObject *args)
 PyObject *
 navit_py_ref(struct navit *navit)
 {
-	dbg(0,"navit=%p\n", navit);
+	dbg(lvl_error,"navit=%p\n", navit);
 	navitObject *ret=PyObject_NEW(navitObject, &navit_Type);
 	ret->navit=navit;
 	return (PyObject *)ret;

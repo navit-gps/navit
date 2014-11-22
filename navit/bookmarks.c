@@ -83,7 +83,7 @@ struct bookmark_item_priv {
 void bookmarks_move_root(struct bookmarks *this_) {
 	this_->current=this_->root;
 	this_->current->iter=g_list_first(this_->current->children);
-	dbg(2,"Root list have %u entries\n",g_list_length(this_->current->children));
+	dbg(lvl_info,"Root list have %u entries\n",g_list_length(this_->current->children));
 	return;
 }
 void bookmarks_move_up(struct bookmarks *this_) {
@@ -103,7 +103,7 @@ int bookmarks_move_down(struct bookmarks *this_,const char* name) {
 		if (!strcmp(data->label,name)) {
 			this_->current=(struct bookmark_item_priv*)this_->current->iter->data;
 			this_->current->iter=g_list_first(this_->current->children);
-			dbg(2,"%s list have %u entries\n",this_->current->label,g_list_length(this_->current->children));
+			dbg(lvl_info,"%s list have %u entries\n",this_->current->label,g_list_length(this_->current->children));
 			return 1;
 		}
 		this_->current->iter=g_list_next(this_->current->iter);
@@ -207,7 +207,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		finder=b_item->label;
 		while ((pos=strchr(finder,'/'))) {
 			*pos=0x00;
-			dbg(1,"Found path entry: %s\n",finder);
+			dbg(lvl_warning,"Found path entry: %s\n",finder);
 			if (!bookmarks_move_down(this_,finder)) {
 				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);
 				path_item->type=type_bookmark_folder;
@@ -231,7 +231,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
 		this_->current->children=g_list_append(this_->current->children,b_item);
 		this_->current->children=g_list_first(this_->current->children);
-		dbg(1,"Added %s to %s and current list now %u long\n",b_item->label,this_->current->label,g_list_length(this_->current->children));
+		dbg(lvl_warning,"Added %s to %s and current list now %u long\n",b_item->label,this_->current->label,g_list_length(this_->current->children));
 	}
 	bookmarks_move_root(this_);
 }
@@ -327,7 +327,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 				g_free(fullname);
 				fullname=g_strdup(pathHelper);
 				g_free(pathHelper);
-				dbg(1,"full name: %s\n",fullname);
+				dbg(lvl_warning,"full name: %s\n",fullname);
 			}
 		}
 
@@ -760,7 +760,7 @@ write_former_destinations(GList* former_destinations, char *former_destination_f
 		}
 		fclose(f);
 	} else {
-		dbg(0, "Error updating destinations file %s: %s\n", former_destination_file, strerror(errno));
+		dbg(lvl_error, "Error updating destinations file %s: %s\n", former_destination_file, strerror(errno));
 	}
 }
 /**

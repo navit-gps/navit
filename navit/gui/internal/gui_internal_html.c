@@ -96,7 +96,7 @@ gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data)
 	struct widget *menu;
 	GList *l;
 
-	dbg(1,"enter form %p %s\n",w->form,w->form->onsubmit);
+	dbg(lvl_warning,"enter form %p %s\n",w->form,w->form->onsubmit);
 	l=g_list_last(this->root.children);
 	menu=l->data;
 	graphics_draw_mode(this->gra, draw_mode_begin);
@@ -113,7 +113,7 @@ gui_internal_html_load_href(struct gui_priv *this, char *href, int replace)
 	if (replace)
 		gui_internal_prune_menu_count(this, 1, 0);
 	if (href && href[0] == '#') {
-		dbg(1,"href=%s\n",href);
+		dbg(lvl_warning,"href=%s\n",href);
 		g_free(this->href);
 		this->href=g_strdup(href);
 		gui_internal_html_menu(this, this->html_text, href+1);
@@ -376,22 +376,22 @@ gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *me
 static void
 gui_internal_set_refresh_callback(struct gui_priv *this, char *cond)
 {
-	dbg(2,"cond=%s\n",cond);
+	dbg(lvl_info,"cond=%s\n",cond);
 	if (cond) {
 		enum attr_type type;
 		struct object_func *func;
 		struct menu_data *menu_data=gui_internal_menu_data(this);
-		dbg(2,"navit=%p\n",this->nav);
+		dbg(lvl_info,"navit=%p\n",this->nav);
 		type=command_evaluate_to_attr(&this->self, cond, NULL, &menu_data->refresh_callback_obj);
 		if (type == attr_none) {
-			dbg(0,"can't get type of '%s'\n",cond);
+			dbg(lvl_error,"can't get type of '%s'\n",cond);
 			return;
 		}	
 		func=object_func_lookup(menu_data->refresh_callback_obj.type);
 		if (!func)
-			dbg(0,"'%s' has no functions\n",cond);
+			dbg(lvl_error,"'%s' has no functions\n",cond);
 		if (func && !func->add_attr)
-			dbg(0,"'%s' has no add_attr function\n",cond);
+			dbg(lvl_error,"'%s' has no add_attr function\n",cond);
 		if (!func || !func->add_attr)
 			return;
 		menu_data->refresh_callback.type=attr_callback;
@@ -461,7 +461,7 @@ gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *da
 		}
 		break;
 	case html_tag_script:
-		dbg(1,"execute %s\n",text_stripped);
+		dbg(lvl_warning,"execute %s\n",text_stripped);
 		gui_internal_evaluate(this,text_stripped);
 		break;
 	default:

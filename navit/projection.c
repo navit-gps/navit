@@ -77,20 +77,20 @@ projection_from_name(const char *name, struct coord *utm_offset)
 		if (sscanf(name,"utmref%d%c%c%c",&zone,&zone_field,&square_x,&square_y)) {
 			i=utmref_letter(zone_field);
 			if (i < 2 || i > 21) {
-				dbg(0,"invalid zone field '%c' in '%s'\n",zone_field,name);
+				dbg(lvl_error,"invalid zone field '%c' in '%s'\n",zone_field,name);
 				return projection_none;
 			}
 			i-=12;
-			dbg(1,"zone_field %d\n",i);
+			dbg(lvl_warning,"zone_field %d\n",i);
 			baserow=i*887.6/100;
 			utm_offset->x=zone*1000000;
 			i=utmref_letter(square_x);
 			utm_offset->x+=((i%8)+1)*100000;
 			i=utmref_letter(square_y);
-			dbg(1,"baserow %d\n",baserow);
+			dbg(lvl_warning,"baserow %d\n",baserow);
 			if (!(zone % 2))
 				i-=5;
-			dbg(1,"i=%d\n",i);
+			dbg(lvl_warning,"i=%d\n",i);
 			i=(i-baserow+100)%20+baserow;
 			utm_offset->y=i*100000;
 			return projection_utm;

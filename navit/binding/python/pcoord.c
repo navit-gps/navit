@@ -76,7 +76,7 @@ pcoord_py(PyObject *self, PyObject *args)
 	ret->pc.pro=pro;
 	ret->pc.x=c.x;
 	ret->pc.y=c.y;
-	dbg(0,"0x%x,0x%x\n", c.x, c.y);
+	dbg(lvl_error,"0x%x,0x%x\n", c.x, c.y);
 	return (PyObject *)ret;
 }
 

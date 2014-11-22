@@ -119,7 +119,7 @@ vehicle_iphone_update(void *arg,
 	strcpy(priv->str_time, str_time);
 	priv->radius = radius;
 
-	dbg(0,"position_get lat:%f lng:%f (spd:%f dir:%f time:%s)\n", priv->geo.lat, priv->geo.lng, priv->speed, priv->direction, priv->str_time);
+	dbg(lvl_error,"position_get lat:%f lng:%f (spd:%f dir:%f time:%s)\n", priv->geo.lat, priv->geo.lng, priv->speed, priv->direction, priv->str_time);
 	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
@@ -133,7 +133,7 @@ vehicle_iphone_new(struct vehicle_methods
 	struct vehicle_priv *ret;
 	struct attr *interval,*speed,*position_coord_geo;
 
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	ret->interval=1000;
@@ -146,7 +146,7 @@ vehicle_iphone_new(struct vehicle_methods
 	if ((position_coord_geo=attr_search(attrs, NULL, attr_position_coord_geo))) {
 		ret->geo=*(position_coord_geo->u.coord_geo);
 		ret->position_set=1;
-		dbg(0,"position_set %f %f\n", ret->geo.lat, ret->geo.lng);
+		dbg(lvl_error,"position_set %f %f\n", ret->geo.lat, ret->geo.lng);
 	}
 	*meth = vehicle_iphone_methods;
 	ret->str_time[0] = '\0';
@@ -160,6 +160,6 @@ vehicle_iphone_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	plugin_register_vehicle_type("iphone", vehicle_iphone_new);
 }

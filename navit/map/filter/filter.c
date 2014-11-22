@@ -319,7 +319,7 @@ map_filter_rect_get_item(struct map_rect_priv *mr)
 static struct item *
 map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	mr->parent_item=map_rect_get_item_byid(mr->parent, id_hi, id_lo);
 	if (!mr->parent_item)
 		return NULL;
@@ -332,21 +332,21 @@ map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 static struct map_search_priv *
 map_filter_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	return NULL;
 }
 
 static struct item *
 map_filter_search_get_item(struct map_search_priv *map_search)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	return NULL;
 }
 
 static void
 map_filter_search_destroy(struct map_search_priv *ms)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 }
 
 static void
@@ -429,7 +429,7 @@ map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_li
 void
 plugin_init(void)
 {
-	dbg(1,"filter: plugin_init\n");
+	dbg(lvl_warning,"filter: plugin_init\n");
 	plugin_register_map_type("filter", map_filter_new);
 }
 

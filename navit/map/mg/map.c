@@ -289,7 +289,7 @@ map_rect_get_item_mg(struct map_rect_priv *mr)
 		}
 		if (file_next(mr))
 			continue;
-		dbg(1,"lin_count %d idx_count %d active_count %d %d kB (%d kB)\n", block_lin_count, block_idx_count, block_active_count, (block_mem+block_active_mem)/1024, block_active_mem/1024);
+		dbg(lvl_warning,"lin_count %d idx_count %d active_count %d %d kB (%d kB)\n", block_lin_count, block_idx_count, block_active_count, (block_mem+block_active_mem)/1024, block_active_mem/1024);
 		return NULL;
 	}
 }
@@ -361,7 +361,7 @@ map_search_mg_convert_special(char *str)
 			*c++='u';
 			break;
 		default:
-			dbg(1,"0x%x\n", *str);
+			dbg(lvl_warning,"0x%x\n", *str);
 			*c++=*str;
 			break;
 		}
@@ -375,11 +375,11 @@ static int
 map_search_setup(struct map_rect_priv *mr)
 {
 	char *prefix;
-	dbg(1,"%s\n", attr_to_name(mr->search_type));
+	dbg(lvl_warning,"%s\n", attr_to_name(mr->search_type));
 	switch (mr->search_type) {
 	case attr_town_postal:
 		if (mr->search_item.type != type_country_label) {
-			dbg(0,"wrong parent type %s\n", item_to_name(mr->search_item.type));
+			dbg(lvl_error,"wrong parent type %s\n", item_to_name(mr->search_item.type));
 			return 0;
 		}
 		prefix=mg_country_postal_prefix(mr->search_item.id_lo);
@@ -388,12 +388,12 @@ map_search_setup(struct map_rect_priv *mr)
 		tree_search_init(mr->m->dirname, "town.b1", &mr->ts, 0);
 		mr->current_file=file_town_twn;
 		mr->search_str=g_strdup_printf("%s%s",prefix,mr->search_attr->u.str);
-		dbg(0,"search_str='%s'\n",mr->search_str);
+		dbg(lvl_error,"search_str='%s'\n",mr->search_str);
 		mr->search_country=mg_country_from_isonum(mr->search_item.id_lo);
 		break;
 	case attr_town_name:
 		if (mr->search_item.type != type_country_label) {
-			dbg(0,"wrong parent type %s\n", item_to_name(mr->search_item.type));
+			dbg(lvl_error,"wrong parent type %s\n", item_to_name(mr->search_item.type));
 			return 0;
 		}
 		tree_search_init(mr->m->dirname, "town.b2", &mr->ts, 0x1000);
@@ -403,7 +403,7 @@ map_search_setup(struct map_rect_priv *mr)
 		break;
 	case attr_district_name:
 		if (mr->search_item.type != type_country_label) {
-			dbg(0,"wrong parent type %s\n", item_to_name(mr->search_item.type));
+			dbg(lvl_error,"wrong parent type %s\n", item_to_name(mr->search_item.type));
 			return 0;
 		}
 		tree_search_init(mr->m->dirname, "town.b3", &mr->ts, 0x1000);
@@ -434,11 +434,11 @@ map_search_setup(struct map_rect_priv *mr)
 					return 0;
 				}
 			} else {
-				dbg(0,"wrong parent type %s %p 0x%x 0x%x\n", item_to_name(mr->search_item.type), item, mr->search_item.id_hi, mr->search_item.id_lo);
+				dbg(lvl_error,"wrong parent type %s %p 0x%x 0x%x\n", item_to_name(mr->search_item.type), item, mr->search_item.id_hi, mr->search_item.id_lo);
 				return 0;
 			}
 		}
-		dbg(1,"street_assoc=0x%x\n", mr->search_item.id_lo);
+		dbg(lvl_warning,"street_assoc=0x%x\n", mr->search_item.id_lo);
 		tree_search_init(mr->m->dirname, "strname.b1", &mr->ts, 0);
 		mr->current_file=file_strname_stn;
 		mr->search_str=g_strdup(mr->search_attr->u.str);
@@ -447,12 +447,12 @@ map_search_setup(struct map_rect_priv *mr)
 		if (!map_priv_is(mr->search_item.map, mr->m))
 			return 0;
 		if (!housenumber_search_setup(mr)) {
-			dbg(0,"failed to search for attr_house_number\n");
+			dbg(lvl_error,"failed to search for attr_house_number\n");
 			return 0;
 		}
 		break;
 	default:
-		dbg(0,"unknown search %s\n",attr_to_name(mr->search_type));
+		dbg(lvl_error,"unknown search %s\n",attr_to_name(mr->search_type));
 		return 0;
 	}
 	mr->file=mr->m->file[mr->current_file];
@@ -467,9 +467,9 @@ static struct map_search_priv *
 map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
-	dbg(1,"searching for %s '%s'\n", attr_to_name(search->type), search->u.str);
-	dbg(1,"id_lo=0x%x\n", item->id_lo);
-	dbg(1,"search=%s\n", search->u.str);
+	dbg(lvl_warning,"searching for %s '%s'\n", attr_to_name(search->type), search->u.str);
+	dbg(lvl_warning,"id_lo=0x%x\n", item->id_lo);
+	dbg(lvl_warning,"search=%s\n", search->u.str);
 	mr->m=map;
 	mr->search_attr=attr_dup(search);
 	mr->search_type=search->type;
@@ -480,7 +480,7 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 		mr->search_type_next=attr_district_name;	
 	}
 	if (!map_search_setup(mr)) {
-		dbg(1,"map_search_new_mg failed\n");
+		dbg(lvl_warning,"map_search_new_mg failed\n");
 		g_free(mr);
 		return NULL;
 	}
@@ -507,7 +507,7 @@ map_search_destroy_mg(struct map_search_priv *ms)
 {
 	struct map_rect_priv *mr=(struct map_rect_priv *)ms;
 
-	dbg(1,"mr=%p\n", mr);
+	dbg(lvl_warning,"mr=%p\n", mr);
 	if (! mr)
 		return;
 	map_search_cleanup(mr);
@@ -538,7 +538,7 @@ map_search_get_item_mg(struct map_search_priv *ms)
 		ret=housenumber_search_get_item(mr);
 		break;
 	default:
-		dbg(0,"unknown search %s\n",attr_to_name(mr->search_type));
+		dbg(lvl_error,"unknown search %s\n",attr_to_name(mr->search_type));
 		break;
 	}
 	if (!ret && mr->search_type_next != attr_none) {
@@ -595,7 +595,7 @@ map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *
 			if (! m->file[i]) {
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)
-					dbg(0,"Failed to load %s\n", filename);
+					dbg(lvl_error,"Failed to load %s\n", filename);
 			} else
 				file_mmap(m->file[i]);
 			g_free(filename);

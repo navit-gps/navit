@@ -203,7 +203,7 @@ navit_get_mapset(struct navit *this_)
 	if(this_->mapsets){
 		return this_->mapsets->data;
 	} else {
-		dbg(0,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
+		dbg(lvl_error,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
 	}
 	return NULL;
 }
@@ -229,9 +229,9 @@ navit_get_user_data_directory(int create) {
 	char *dir;
 	dir = getenv("NAVIT_USER_DATADIR");
 	if (create && !file_exists(dir)) {
-		dbg(0,"creating dir %s\n", dir);
+		dbg(lvl_error,"creating dir %s\n", dir);
 		if (file_mkdir(dir,0)) {
-			dbg(0,"failed creating dir %s\n", dir);
+			dbg(lvl_error,"failed creating dir %s\n", dir);
 			return NULL;
 		}
 	}
@@ -421,7 +421,7 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	center_new.x=center_old->x+coord_old.x-coord_new.x;
 	center_new.y=center_old->y+coord_old.y-coord_new.y;
 	navit_restrict_map_center_to_world_boundingbox(tr, &center_new);
-	dbg(1,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
+	dbg(lvl_warning,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
 	transform_set_center(tr, &center_new);
 }
 
@@ -439,7 +439,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
-	dbg(1,"button %d %s (ignore: %d)\n",button,pressed?"pressed":"released",this_->ignore_button);
+	dbg(lvl_warning,"button %d %s (ignore: %d)\n",button,pressed?"pressed":"released",this_->ignore_button);
 	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, GINT_TO_POINTER(pressed), GINT_TO_POINTER(button), p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
@@ -483,7 +483,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
-			dbg(1, "mouse drag (%d, %d)->(%d, %d)\n", this_->pressed.x, this_->pressed.y, p->x, p->y);
+			dbg(lvl_warning, "mouse drag (%d, %d)->(%d, %d)\n", this_->pressed.x, this_->pressed.y, p->x, p->y);
 			update_transformation(this_->trans, &this_->pressed, p);
 			graphics_draw_drag(this_->gra, NULL);
 			transform_copy(this_->trans, this_->trans_cursor);
@@ -501,7 +501,7 @@ static void
 navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this=data;
-	dbg(1,"enter %d %d ignore %d\n",pressed,button,this->ignore_graphics_events);
+	dbg(lvl_warning,"enter %d %d ignore %d\n",pressed,button,this->ignore_graphics_events);
 	if (!this->ignore_graphics_events) {
 		if (! this->popup_callback)
 			this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
@@ -797,7 +797,7 @@ navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, str
 		key = g_strdup(in[0]->u.str);
 		g_hash_table_insert(cmd_attr_var_hash, key, val);
         } else {
-		dbg(1, "Wrong parameters for set_attr_var() command function\n");
+		dbg(lvl_warning, "Wrong parameters for set_attr_var() command function\n");
 	}
 }
 
@@ -868,12 +868,12 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 	) {
 
 		if(!(ms=navit_get_mapset(this))) {
-			dbg(0, "Command function map_add_curr_pos(): there is no active mapset\n");
+			dbg(lvl_error, "Command function map_add_curr_pos(): there is no active mapset\n");
 			return;
 		}
 
 		if((item_type = item_from_name(in[1]->u.str))==type_none) {
-			dbg(0, "Command function map_add_curr_pos(): unknown item type\n");
+			dbg(lvl_error, "Command function map_add_curr_pos(): unknown item type\n");
 			return;
 		}
 
@@ -881,7 +881,7 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 
 		//no map with the given name found
 		if( ! curr_map) {
-			dbg(0, "Command function map_add_curr_pos(): map not found\n");
+			dbg(lvl_error, "Command function map_add_curr_pos(): map not found\n");
 			return;
 		}
 	
@@ -890,11 +890,11 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
 			if(vehicle_get_attr(this->vehicle->vehicle,attr_position_coord_geo,&pos_attr,NULL)) {
 				transform_from_geo(projection_mg, pos_attr.u.coord_geo, &curr_coord);
 			} else {
-				dbg(0, "Command function map_add_curr_pos(): vehicle position is not accessible\n");
+				dbg(lvl_error, "Command function map_add_curr_pos(): vehicle position is not accessible\n");
 				return;
 			}
 		} else {
-			dbg(0, "Command function map_add_curr_pos(): no vehicle\n");
+			dbg(lvl_error, "Command function map_add_curr_pos(): no vehicle\n");
 			return;
 		}
 
@@ -980,11 +980,11 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
 		}
 		map_rect_destroy(mr);
 	} else {
-		dbg(4,"Error in command function item_set_attr()\n");
-		dbg(4,"Command function item_set_attr(): map cond:       %d\n",(in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)?1:0);
-		dbg(4,"Command function item_set_attr(): item cond:      %d\n",(in[1] && ATTR_IS_ITEM(in[1]->type))?1:0);
-		dbg(4,"Command function item_set_attr(): attr type cond: %d\n",(in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str)?1:0);
-		dbg(4,"Command function item_set_attr(): attr val cond:  %d\n",(in[3] && ATTR_IS_STRING(in[3]->type) && in[3]->u.str)?1:0);
+		dbg(lvl_debug,"Error in command function item_set_attr()\n");
+		dbg(lvl_debug,"Command function item_set_attr(): map cond:       %d\n",(in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)?1:0);
+		dbg(lvl_debug,"Command function item_set_attr(): item cond:      %d\n",(in[1] && ATTR_IS_ITEM(in[1]->type))?1:0);
+		dbg(lvl_debug,"Command function item_set_attr(): attr type cond: %d\n",(in[2] && ATTR_IS_STRING(in[2]->type) && in[2]->u.str)?1:0);
+		dbg(lvl_debug,"Command function item_set_attr(): attr val cond:  %d\n",(in[3] && ATTR_IS_STRING(in[3]->type) && in[3]->u.str)?1:0);
 	}
 }
 
@@ -1308,7 +1308,7 @@ navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct att
 			if(in[i]->type!=attr_none ) {
 				argv[j++]=attr_to_text(in[i],NULL,1);
 			} else {
-				dbg(0,"Parameter #%i is attr_none - skipping\n",i);
+				dbg(lvl_error,"Parameter #%i is attr_none - skipping\n",i);
 			}
 		}
 		argv[j]=NULL;
@@ -1317,15 +1317,15 @@ navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct att
 		// spawn_process() testing suite - uncomment following code to test.
 		//sleep(3);
 		// example of non-blocking wait
-		//int st=spawn_process_check_status(pi,0);dbg(0,"status %i\n",st);
+		//int st=spawn_process_check_status(pi,0);dbg(lvl_error,"status %i\n",st);
 		// example of blocking wait
-		//st=spawn_process_check_status(pi,1);dbg(0,"status %i\n",st);
+		//st=spawn_process_check_status(pi,1);dbg(lvl_error,"status %i\n",st);
 		// example of wait after process is finished and status is
 		// already tested
-		//st=spawn_process_check_status(pi,1);dbg(0,"status %i\n",st);
+		//st=spawn_process_check_status(pi,1);dbg(lvl_error,"status %i\n",st);
 		// example of wait after process is finished and status is
 		// already tested - unblocked
-		//st=spawn_process_check_status(pi,0);dbg(0,"status %i\n",st);
+		//st=spawn_process_check_status(pi,0);dbg(lvl_error,"status %i\n",st);
 		
 		// End testing suite
 		spawn_process_info_free(pi);
@@ -1424,7 +1424,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->messages = messagelist_new(attrs);
 
-	dbg(1,"return %p\n",this_);
+	dbg(lvl_warning,"return %p\n",this_);
 	
 	return this_;
 }
@@ -1439,7 +1439,7 @@ navit_set_gui(struct navit *this_, struct gui *gui)
 		if (! main_loop_gui) {
 			main_loop_gui=this_->gui;
 		} else {
-			dbg(0,"gui with main loop already active, ignoring this instance");
+			dbg(lvl_error,"gui with main loop already active, ignoring this instance");
 			return 0;
 		}
 	}
@@ -1515,7 +1515,7 @@ navit_mark_navigation_stopped(char *former_destination_file){
 		fprintf(f,"%s", TEXTFILE_COMMENT_NAVI_STOPPED);
 		fclose(f);
 	}else{
-		dbg(0, "Error setting mark in destination file %s: %s\n", former_destination_file, strerror(errno));
+		dbg(lvl_error, "Error setting mark in destination file %s: %s\n", former_destination_file, strerror(errno));
 	}
 }
 
@@ -1537,7 +1537,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 		this_->destination=*c;
 		this_->destination_valid=1;
 
-		dbg(1, "c=(%i,%i)\n", c->x,c->y);
+		dbg(lvl_warning, "c=(%i,%i)\n", c->x,c->y);
 		bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination, description, this_->recentdest_count);
 	} else {
 		this_->destination_valid=0;
@@ -1822,7 +1822,7 @@ navit_say(struct navit *this_, const char *text)
 	if(this_->speech) {
 		if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
 			attr.u.num = 1;
-		dbg(1, "this_.speech->active %ld\n", attr.u.num);
+		dbg(lvl_warning, "this_.speech->active %ld\n", attr.u.num);
 		if(attr.u.num)
 			speech_say(this_->speech, text);
 	}
@@ -1869,7 +1869,7 @@ navit_speak(struct navit *this_)
 
     if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
         attr.u.num = 1;
-    dbg(1, "this_.speech->active %ld\n", attr.u.num);
+    dbg(lvl_warning, "this_.speech->active %ld\n", attr.u.num);
     if(!attr.u.num)
         return;
 
@@ -1899,31 +1899,31 @@ navit_window_roadbook_update(struct navit *this_)
 	struct param_list param[5];
 	int secs;
 
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	datawindow_mode(this_->roadbook_window, 1);
 	if (nav)
 		map=navigation_get_map(nav);
 	if (map)
 		mr=map_rect_new(map, NULL);
-	dbg(0,"nav=%p map=%p mr=%p\n", nav, map, mr);
+	dbg(lvl_error,"nav=%p map=%p mr=%p\n", nav, map, mr);
 	if (mr) {
-		dbg(0,"while loop\n");
+		dbg(lvl_error,"while loop\n");
 		while ((item=map_rect_get_item(mr))) {
-			dbg(0,"item=%p\n", item);
+			dbg(lvl_error,"item=%p\n", item);
 			attr.u.str=NULL;
 			if (item->type != type_nav_position) {
 				item_attr_get(item, attr_navigation_long, &attr);
 				if (attr.u.str == NULL) {
 					continue;
 				}
-				dbg(2, "Command='%s'\n", attr.u.str);
+				dbg(lvl_info, "Command='%s'\n", attr.u.str);
 				param[0].value=g_strdup(attr.u.str);
 			} else
 				param[0].value=_("Position");
 			param[0].name=_("Command");
 
 			item_attr_get(item, attr_length, &attr);
-			dbg(2, "Length=%ld\n", attr.u.num);
+			dbg(lvl_info, "Length=%ld\n", attr.u.num);
 			param[1].name=_("Length");
 
 			if ( attr.u.num >= 2000 )
@@ -1936,7 +1936,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_time, &attr);
-			dbg(2, "Time=%ld\n", attr.u.num);
+			dbg(lvl_info, "Time=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[2].name=_("Time");
 			if ( secs >= 3600 )
@@ -1949,7 +1949,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_destination_length, &attr);
-			dbg(2, "Destlength=%ld\n", attr.u.num);
+			dbg(lvl_info, "Destlength=%ld\n", attr.u.num);
 			param[3].name=_("Destination Length");
 			if ( attr.u.num >= 2000 )
 			{
@@ -1961,7 +1961,7 @@ navit_window_roadbook_update(struct navit *this_)
 			}
 
 			item_attr_get(item, attr_destination_time, &attr);
-			dbg(2, "Desttime=%ld\n", attr.u.num);
+			dbg(lvl_info, "Desttime=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[4].name=_("Destination Time");
 			if ( secs >= 3600 )
@@ -1982,7 +1982,7 @@ navit_window_roadbook_update(struct navit *this_)
 void
 navit_window_roadbook_destroy(struct navit *this_)
 {
-	dbg(0, "enter\n");
+	dbg(lvl_error, "enter\n");
 	navigation_unregister_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
 	callback_destroy(this_->roadbook_callback);
 	this_->roadbook_window=NULL;
@@ -2009,24 +2009,24 @@ navit_init(struct navit *this_)
 	int callback;
 	char *center_file;
 
-	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
+	dbg(lvl_info,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 
 	if (!this_->gui && !(this_->flags & 2)) {
-		dbg(0,"Warning: No GUI available.\n");
+		dbg(lvl_error,"Warning: No GUI available.\n");
 		return;
 	}
 	if (!this_->gra && !(this_->flags & 1)) {
-		dbg(0,"Warning: No graphics subsystem available.\n");
+		dbg(lvl_error,"Warning: No graphics subsystem available.\n");
 		return;
 	}
-	dbg(2,"Connecting gui to graphics\n");
+	dbg(lvl_info,"Connecting gui to graphics\n");
 	if (this_->gui && this_->gra && gui_set_graphics(this_->gui, this_->gra)) {
 		struct attr attr_type_gui, attr_type_graphics;
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
 		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-		dbg(0,"failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
-		dbg(0," Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
-		dbg(0," for explanations and solutions\n");
+		dbg(lvl_error,"failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
+		dbg(lvl_error," Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
+		dbg(lvl_error," for explanations and solutions\n");
 		return;
 	}
 	if (this_->speech && this_->navigation) {
@@ -2035,10 +2035,10 @@ navit_init(struct navit *this_)
 		speech.u.speech=this_->speech;
 		navigation_set_attr(this_->navigation, &speech);
 	}
-	dbg(2,"Initializing graphics\n");
-	dbg(2,"Setting Vehicle\n");
+	dbg(lvl_info,"Initializing graphics\n");
+	dbg(lvl_info,"Setting Vehicle\n");
 	navit_set_vehicle(this_, this_->vehicle);
-	dbg(2,"Adding dynamic maps to mapset %p\n",this_->mapsets);
+	dbg(lvl_info,"Adding dynamic maps to mapset %p\n",this_->mapsets);
 	if (this_->mapsets) {
 		struct mapset_handle *msh;
 		ms=this_->mapsets->data;
@@ -2099,7 +2099,7 @@ navit_init(struct navit *this_)
 		}
 		navit_add_former_destinations_from_file(this_);
 	} else {
-		dbg(0, "FATAL: No mapset available. Please add a (valid) mapset to your configuration.\n");
+		dbg(lvl_error, "FATAL: No mapset available. Please add a (valid) mapset to your configuration.\n");
 		exit(1);
 	}
 	if (this_->route) {
@@ -2117,7 +2117,7 @@ navit_init(struct navit *this_)
 		if (this_->route)
 			navigation_set_route(this_->navigation, this_->route);
 	}
-	dbg(2,"Setting Center\n");
+	dbg(lvl_info,"Setting Center\n");
 	center_file = bookmarks_get_center_file(FALSE);
 	bookmarks_set_center_from_file(this_->bookmarks, center_file);
 	g_free(center_file);
@@ -2142,7 +2142,7 @@ navit_init(struct navit *this_)
 	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
 	callback=(this_->ready == 2);
 	this_->ready|=1;
-	dbg(2,"ready=%d\n",this_->ready);
+	dbg(lvl_info,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw_async(this_, 1);
 	if (callback)
@@ -2162,15 +2162,15 @@ navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
 	c.y=(r->rl.y+r->lu.y)/2;
 	transform_set_center(this_->trans, &c);
 	transform_get_size(this_->trans, &w, &h);
-	dbg(0,"center 0x%x,0x%x w %d h %d\n",c.x,c.y,w,h);
-	dbg(0,"%x,%x-%x,%x\n", r->lu.x,r->lu.y,r->rl.x,r->rl.y);
+	dbg(lvl_error,"center 0x%x,0x%x w %d h %d\n",c.x,c.y,w,h);
+	dbg(lvl_error,"%x,%x-%x,%x\n", r->lu.x,r->lu.y,r->rl.x,r->rl.y);
 	while (scale < 1<<20) {
 		struct point p1,p2;
 		transform_set_scale(this_->trans, scale);
 		transform_setup_source_rect(this_->trans);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1, 1, 0, 0, NULL);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2, 1, 0, 0, NULL);
-		dbg(0,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		dbg(lvl_error,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
 		if (p1.x < 0 || p2.x < 0 || p1.x > w || p2.x > w ||
 		    p1.y < 0 || p2.y < 0 || p1.y > h || p2.y > h)
 			scale*=2;
@@ -2178,7 +2178,7 @@ navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
 			break;
 	
 	}
-	dbg(0,"scale=%d (0x%x) of %d (0x%x)\n",scale,scale,1<<20,1<<20);
+	dbg(lvl_error,"scale=%d (0x%x) of %d (0x%x)\n",scale,scale,1<<20,1<<20);
 	if (this_->ready == 3)
 		navit_draw_async(this_,0);
 }
@@ -2194,17 +2194,17 @@ navit_zoom_to_route(struct navit *this_, int orientation)
 	int count=0;
 	if (! this_->route)
 		return;
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 	map=route_get_map(this_->route);
-	dbg(1,"map=%p\n",map);
+	dbg(lvl_warning,"map=%p\n",map);
 	if (map)
 		mr=map_rect_new(map, NULL);
-	dbg(1,"mr=%p\n",mr);
+	dbg(lvl_warning,"mr=%p\n",mr);
 	if (mr) {
 		while ((item=map_rect_get_item(mr))) {
-			dbg(1,"item=%s\n", item_to_name(item->type));
+			dbg(lvl_warning,"item=%s\n", item_to_name(item->type));
 			while (item_coord_get(item, &c, 1)) {
-				dbg(1,"coord\n");
+				dbg(lvl_warning,"coord\n");
 				if (!count) 
 					r.lu=r.rl=c;
 				else
@@ -2440,7 +2440,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		break;
 	case attr_center:
 		transform_from_geo(transform_get_projection(this_->trans), attr->u.coord_geo, &co);
-		dbg(1,"0x%x,0x%x\n",co.x,co.y);
+		dbg(lvl_warning,"0x%x,0x%x\n",co.x,co.y);
 		transform_set_center(this_->trans, &co);
 		break;
 	case attr_drag_bitmap:
@@ -2516,7 +2516,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		}
 		break;
 	case attr_osd_configuration:
-		dbg(0,"setting osd_configuration to %ld (was %d)\n", attr->u.num, this_->osd_configuration);
+		dbg(lvl_error,"setting osd_configuration to %ld (was %d)\n", attr->u.num, this_->osd_configuration);
 		attr_updated=(this_->osd_configuration != attr->u.num);
 		this_->osd_configuration=attr->u.num;
 		break;
@@ -3335,7 +3335,7 @@ navit_layout_switch(struct navit *n)
 	//Check that we aren't calculating too fast
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
 		currTs=iso8601_to_secs(iso8601_attr.u.str);
-		dbg(1,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
+		dbg(lvl_warning,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 	}
 	if (currTs-(n->prevTs)<60) {
 	    //We've have to wait a little
@@ -3354,13 +3354,13 @@ navit_layout_switch(struct navit *n)
 	//We calculate sunrise anyway, cause it is needed both for day and for night
         if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
-		dbg(1,"trise: %u:%u, sun never visible, never switch profile\n",HOURS(trise),MINUTES(trise));
+		dbg(lvl_warning,"trise: %u:%u, sun never visible, never switch profile\n",HOURS(trise),MINUTES(trise));
 		n->prevTs=currTs;
 		return;
 	    }
 	
         trise_actual=trise;
-	dbg(1,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
+	dbg(lvl_warning,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
 	if (l->dayname) {
 	
 	    if ((HOURS(trise)*60+MINUTES(trise)==(currTs%86400)/60) || 
@@ -3374,11 +3374,11 @@ navit_layout_switch(struct navit *n)
 	if (l->nightname) {
 	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
-		dbg(1,"tset: %u:%u, sun always visible, never switch profile\n",HOURS(tset),MINUTES(tset));
+		dbg(lvl_warning,"tset: %u:%u, sun always visible, never switch profile\n",HOURS(tset),MINUTES(tset));
 		n->prevTs=currTs;
 		return;
 	    }
-	    dbg(1,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
+	    dbg(lvl_warning,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
 	    if (HOURS(tset)*60+MINUTES(tset)==((currTs%86400)/60)
 		|| (n->prevTs==0 && (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) || 
 			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))))) {
@@ -3483,7 +3483,7 @@ int navit_get_blocked(struct navit *this_)
 void
 navit_destroy(struct navit *this_)
 {
-	dbg(0,"enter %p\n",this_);
+	dbg(lvl_error,"enter %p\n",this_);
 	graphics_draw_cancel(this_->gra, this_->displaylist);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 	attr_list_free(this_->attrs);

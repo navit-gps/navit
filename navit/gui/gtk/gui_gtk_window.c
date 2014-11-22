@@ -85,7 +85,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	struct point p;
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
-	dbg(1,"keypress 0x%x\n", event->keyval);
+	dbg(lvl_warning,"keypress 0x%x\n", event->keyval);
 	transform_get_size(navit_get_trans(this->nav), &w, &h);
 	switch (event->keyval) {
 	case GDK_KP_Enter:
@@ -313,19 +313,19 @@ gui_gtk_toggle_init(struct gui_priv *this)
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num);
 	} else {
-		dbg(1, "Unable to locate CursorAction\n");
+		dbg(lvl_warning, "Unable to locate CursorAction\n");
 	}
 	if (navit_get_attr(this->nav, attr_orientation, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num != -1);
 	} else {
-		dbg(0, "Unable to locate OrientationAction\n");
+		dbg(lvl_error, "Unable to locate OrientationAction\n");
 	}
 	if (navit_get_attr(this->nav, attr_tracking, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num);
 	} else {
-		dbg(0, "Unable to locate TrackingAction\n");
+		dbg(lvl_error, "Unable to locate TrackingAction\n");
 	}
 }
 
@@ -478,7 +478,7 @@ gui_gtk_vehicles_update(struct gui_priv *this)
 	char *name;
 	GList *curr;
 	struct gui_menu_info *meninfo;
-	dbg(1,"enter\n");
+	dbg(lvl_warning,"enter\n");
 
 	curr = g_list_first(this->vehicle_menuitems);
 

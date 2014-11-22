@@ -88,7 +88,7 @@ save_map_csv(struct map_priv *m)
 		struct quadtree_item *qitem;
 
 		if( ! (fp=fopen(filename,"w+"))) {
-			dbg(0, "Error opening csv file to write new entries");
+			dbg(lvl_error, "Error opening csv file to write new entries");
 			return;
 		}
 		/*query the world*/
@@ -126,11 +126,11 @@ save_map_csv(struct map_priv *m)
 						} else if(ATTR_IS_STRING(*at)) {
 							tmpstr = g_strdup(found_attr->u.str);
 						} else {
-							dbg(0,"Cant represent attribute %s\n",attr_to_name(*at));
+							dbg(lvl_error,"Cant represent attribute %s\n",attr_to_name(*at));
 							tmpstr=g_strdup("");
 						}
 					} else {
-						dbg(0,"No value defined for the atribute %s, assuming empty string\n",attr_to_name(*at));
+						dbg(lvl_error,"No value defined for the atribute %s, assuming empty string\n",attr_to_name(*at));
 						tmpstr=g_strdup("");
 					}
 				}
@@ -149,7 +149,7 @@ save_map_csv(struct map_priv *m)
 			if(m->charset) {
 				tmpstr=g_convert(csv_line, -1,m->charset,"utf-8",NULL,NULL,NULL);
 				if(!tmpstr)
-					dbg(0,"Error converting '%s' to %s\n",csv_line, m->charset);
+					dbg(lvl_error,"Error converting '%s' to %s\n",csv_line, m->charset);
 			} else
 				tmpstr=csv_line;
 
@@ -181,7 +181,7 @@ static const int zoom_max = 18;
 static void
 map_destroy_csv(struct map_priv *m)
 {
-	dbg(1,"map_destroy_csv\n");
+	dbg(lvl_warning,"map_destroy_csv\n");
 	/*save if changed */
 	save_map_csv(m);
 	g_hash_table_destroy(m->qitem_hash);
@@ -355,10 +355,10 @@ static int
 csv_type_set(void *priv_data, enum item_type type)
 {
 	struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
-	dbg(1,"Enter %d\n", type);
+	dbg(lvl_warning,"Enter %d\n", type);
 
 	if(!mr || !mr->qitem) {
-		dbg(1,"Nothing to do\n");
+		dbg(lvl_warning,"Nothing to do\n");
 		return 0;
 	}
 
@@ -366,7 +366,7 @@ csv_type_set(void *priv_data, enum item_type type)
 		return 0;
 
 	mr->qitem->deleted=1;
-	dbg(1,"Item %p is deleted\n",mr->qitem);
+	dbg(lvl_warning,"Item %p is deleted\n",mr->qitem);
 
 	return 1;
 }
@@ -395,7 +395,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	struct map_priv* m;
 	struct quadtree_item* qi;
 	GList* new_it;
-	dbg(1,"Set coordinates %d %d\n", c->x, c->y);
+	dbg(lvl_warning,"Set coordinates %d %d\n", c->x, c->y);
 
 	/* for now we only support coord modification only */
 	if( ! change_mode_modify) {
@@ -430,7 +430,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 		qi->longitude = cg.lng;
 		qi->latitude = cg.lat;
 		quadtree_add( m->tree_root, qi, mr->qiter);
-		dbg(1,"Set coordinates %f %f\n", cg.lng, cg.lat);
+		dbg(lvl_warning,"Set coordinates %f %f\n", cg.lng, cg.lat);
 		m->new_items = g_list_remove_link(m->new_items,new_it);
 		m->dirty=1;
 		save_map_csv(m);
@@ -493,11 +493,11 @@ static void map_csv_debug_dump_hash_item(gpointer key, gpointer value, gpointer 
 {
 	struct quadtree_item *qi=value;
 	GList *attrs;
-	dbg(3,"%p del=%d ref=%d\n", qi,qi->deleted, qi->ref_count);
+	dbg(lvl_debug,"%p del=%d ref=%d\n", qi,qi->deleted, qi->ref_count);
 	attrs=((struct quadtree_data *)qi->data)->attr_list;
 	while(attrs) {
 		if(((struct attr*)attrs->data)->type==attr_label)
-			dbg(3,"... %s\n",((struct attr*)attrs->data)->u.str);
+			dbg(lvl_debug,"... %s\n",((struct attr*)attrs->data)->u.str);
 		attrs=g_list_next(attrs);
 	}
 }
@@ -518,7 +518,7 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
 	struct coord_geo lu;
 	struct coord_geo rl;
 	struct quadtree_iter *res = NULL;
-	dbg(1,"map_rect_new_csv\n");
+	dbg(lvl_warning,"map_rect_new_csv\n");
 	if(debug_level_get("map_csv")>2) {
 		map_csv_debug_dump(map);
 	}
@@ -725,7 +725,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 
 	charset  = attr_search(attrs, NULL, attr_charset);
 	if(charset) {
-		dbg(1,"charset:%s\n",charset->u.str);
+		dbg(lvl_warning,"charset:%s\n",charset->u.str);
 		m->charset=g_strdup(charset->u.str);
 	} else {
 		m->charset=g_strdup(map_methods_csv.charset);
@@ -757,7 +757,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  FILE *fp;
 	  wexp=file_wordexp_new(data->u.str);
 	  wexp_data=file_wordexp_get_array(wexp);
-	  dbg(1,"map_new_csv %s\n", data->u.str);
+	  dbg(lvl_warning,"map_new_csv %s\n", data->u.str);
 	  m->filename=g_strdup(wexp_data[0]);
 	  file_wordexp_destroy(wexp);
 
@@ -774,7 +774,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 				int col_cnt=0;
 				char *tok;
 				if(!line) {
-					dbg(0,"Error converting '%s' to utf-8 from %s\n",linebuf, m->charset);
+					dbg(lvl_error,"Error converting '%s' to utf-8 from %s\n",linebuf, m->charset);
 					continue;
 				}
 				if(line[strlen(line)-1]=='\n' || line[strlen(line)-1]=='\r') {
@@ -847,7 +847,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 						*pID = m->next_item_idx;
 						g_hash_table_insert(m->qitem_hash, pID,qi);
 						++m->next_item_idx;
-						dbg(1,"%s\n",line);
+						dbg(lvl_warning,"%s\n",line);
 					}
 					else {
 						g_free(curr_item);
@@ -855,7 +855,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 
 				}
 				else {
-	  				dbg(0,"ERROR: Non-matching attr count and column count: %d %d  SKIPPING line: %s\n",col_cnt, attr_cnt,line);
+	  				dbg(lvl_error,"ERROR: Non-matching attr count and column count: %d %d  SKIPPING line: %s\n",col_cnt, attr_cnt,line);
 				}
 				g_free(line);
 				g_free(line2);
@@ -864,20 +864,20 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  	fclose(fp);
 	  }
 	  else {
-		dbg(0,"Error opening csv map file %s, starting with empty map\n", m->filename);
+		dbg(lvl_error,"Error opening csv map file %s, starting with empty map\n", m->filename);
 	  }
 	} else {
-	  	dbg(1,"No data attribute, starting with in-memory map\n");
+	  	dbg(lvl_warning,"No data attribute, starting with in-memory map\n");
 	}
 
-	dbg(2,"%p\n",tree_root);
+	dbg(lvl_info,"%p\n",tree_root);
 	return m;
 }
 
 void
 plugin_init(void)
 {
-	dbg(1,"csv: plugin_init\n");
+	dbg(lvl_warning,"csv: plugin_init\n");
 	plugin_register_map_type("csv", map_new_csv);
 }
 

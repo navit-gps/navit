@@ -52,9 +52,9 @@ static struct sockaddr_in debug_sin;
 #endif
 
 
-int debug_level=0;
-#define GLOBAL_DEBUG_LEVEL_UNSET -1
-int global_debug_level=GLOBAL_DEBUG_LEVEL_UNSET;
+dbg_level debug_level=lvl_error;
+#define GLOBAL_DEBUG_LEVEL_UNSET lvl_unset
+dbg_level global_debug_level=GLOBAL_DEBUG_LEVEL_UNSET;
 int segv_level=0;
 int timestamp_prefix=0;
 
@@ -106,7 +106,7 @@ debug_update_level(gpointer key, gpointer value, gpointer user_data)
 }
 
 void
-debug_set_global_level(int level, int override_old_value ) {
+debug_set_global_level(dbg_level level, int override_old_value ) {
 	if (global_debug_level == GLOBAL_DEBUG_LEVEL_UNSET || override_old_value) {
 		global_debug_level=level;
 		if (debug_level < global_debug_level){
@@ -116,7 +116,7 @@ debug_set_global_level(int level, int override_old_value ) {
 }
 
 void
-debug_level_set(const char *name, int level)
+debug_level_set(const char *name, dbg_level level)
 {
 	if (!strcmp(name, "segv")) {
 		segv_level=level;
@@ -172,11 +172,11 @@ debug_new(struct attr *parent, struct attr **attrs)
 }
 
 
-int
+dbg_level
 debug_level_get(const char *name)
 {
 	if (!debug_hash)
-		return 0;
+		return lvl_error;
 	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, name));
 }
 
@@ -207,7 +207,7 @@ static void debug_timestamp(char *buffer)
 }
 
 void
-debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
+debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
 	char buffer[4096];
@@ -256,7 +256,7 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 }
 
 void
-debug_printf(int level, const char *module, const int mlen,const char *function, const int flen, int prefix, const char *fmt, ...)
+debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen, int prefix, const char *fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);
@@ -267,7 +267,7 @@ debug_printf(int level, const char *module, const int mlen,const char *function,
 void
 debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file, int line, const char *expr)
 {
-	debug_printf(0,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
+	debug_printf(lvl_error,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
 	abort();
 }
 
@@ -314,7 +314,7 @@ debug_dump_mallocs(void)
 {
 	struct malloc_head *head=malloc_heads;
 	int i;
-	dbg(0,"mallocs %d\n",mallocs);
+	dbg(lvl_error,"mallocs %d\n",mallocs);
 	while (head) {
 		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
 		for (i = 0 ; i < 8 ; i++)
@@ -337,7 +337,7 @@ debug_malloc(const char *where, int line, const char *func, int size)
 	debug_malloc_size+=size;
 	if (debug_malloc_size/(1024*1024) != debug_malloc_size_m) {
 		debug_malloc_size_m=debug_malloc_size/(1024*1024);
-		dbg(0,"malloced %d kb\n",debug_malloc_size/1024);
+		dbg(lvl_error,"malloced %d kb\n",debug_malloc_size/1024);
 	}
 	head=malloc(size+sizeof(*head)+sizeof(*tail));
 	head->magic=0xdeadbeef;

@@ -61,31 +61,31 @@ graphics_opengl_egl_new(void *display, void *window, struct graphics_opengl_plat
 	*methods=&graphics_opengl_egl_methods;
 	ret->egldisplay = eglGetDisplay((EGLNativeDisplayType)display);
 	if (!ret->egldisplay) {
-		dbg(0, "can't get display\n");
+		dbg(lvl_error, "can't get display\n");
 		goto error;
 	}
 	if (!eglInitialize(ret->egldisplay, &major, &minor)) {
-		dbg(0, "eglInitialize failed\n");
+		dbg(lvl_error, "eglInitialize failed\n");
 		goto error;
 	}
-	dbg(0,"eglInitialize ok with version %d.%d\n",major,minor);
+	dbg(lvl_error,"eglInitialize ok with version %d.%d\n",major,minor);
     	eglBindAPI(EGL_OPENGL_ES_API);
 	if (!eglChooseConfig(ret->egldisplay, attributeList, ret->config, sizeof(ret->config)/sizeof(EGLConfig), &nconfig)) {
-		dbg(0, "eglChooseConfig failed\n");
+		dbg(lvl_error, "eglChooseConfig failed\n");
 		goto error;
 	}
 	if (nconfig != 1) {
-		dbg(0, "unexpected number of configs %d\n",nconfig);
+		dbg(lvl_error, "unexpected number of configs %d\n",nconfig);
 		goto error;
 	}
 	ret->eglwindow = eglCreateWindowSurface(ret->egldisplay, ret->config[0], (NativeWindowType) window, NULL);
 	if (ret->eglwindow == EGL_NO_SURFACE) {
-		dbg(0, "eglCreateWindowSurface failed");
+		dbg(lvl_error, "eglCreateWindowSurface failed");
 		goto error;
 	}
 	ret->context = eglCreateContext(ret->egldisplay, ret->config[0], EGL_NO_CONTEXT, aEGLContextAttributes);
 	if (ret->context == EGL_NO_CONTEXT) {
-		dbg(0, "eglCreateContext failed");
+		dbg(lvl_error, "eglCreateContext failed");
 		goto error;
 	}
 	eglMakeCurrent(ret->egldisplay, ret->eglwindow, ret->eglwindow, ret->context);

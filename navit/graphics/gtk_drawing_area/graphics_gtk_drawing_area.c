@@ -114,13 +114,13 @@ struct graphics_image_priv {
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	dbg(3,"enter parent %p\n",gr->parent);
+	dbg(lvl_debug,"enter parent %p\n",gr->parent);
 	gr->freetype_methods.destroy();
 	if (!gr->parent) {
-		dbg(3,"enter win %p\n",gr->win);
+		dbg(lvl_debug,"enter win %p\n",gr->win);
 		if (gr->win)
 			gtk_widget_destroy(gr->win);
-		dbg(3,"widget %p\n",gr->widget);
+		dbg(lvl_debug,"widget %p\n",gr->widget);
 		if (gr->widget)
 			gtk_widget_destroy(gr->widget);
 		g_free(gr->window_title);
@@ -404,7 +404,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	if (! font)
 	{
-		dbg(0,"no font, returning\n");
+		dbg(lvl_error,"no font, returning\n");
 		return;
 	}
 #if 0 /* Temporarily disabled because it destroys text rendering of overlays and in gui internal in some places */
@@ -470,7 +470,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 {
 	int w,h;
 	static struct graphics_priv *imlib_gr;
-	dbg(1,"draw_image_warp data=%p\n", img);
+	dbg(lvl_warning,"draw_image_warp data=%p\n", img);
 	if (imlib_gr != gr) {
 		imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
 		imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
@@ -490,7 +490,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 		img->image=imlib_create_image(w, h);
 		imlib_context_set_image(img->image);
 		if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
-			dbg(0,"implement me\n");
+			dbg(lvl_error,"implement me\n");
 		} else if (gdk_pixbuf_get_has_alpha(img->pixbuf) && gdk_pixbuf_get_n_channels(img->pixbuf) == 4) {
 			for (y=0 ; y < h ; y++) {
 				unsigned int *dst=imlib_image_get_data()+y*w;
@@ -510,7 +510,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 				}
 			}
 		} else {
-			dbg(0,"implement me\n");
+			dbg(lvl_error,"implement me\n");
 		}
 		
 	} else 
@@ -577,9 +577,9 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
+	dbg(lvl_warning,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
 	overlay_rect(parent, overlay, 0, &or);
-	dbg(1,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
+	dbg(lvl_warning,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
@@ -719,7 +719,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	       gra->background_ready = 0;
 	}
 #ifndef _WIN32
-	dbg(1,"window=%lu\n", GDK_WINDOW_XID(widget->window));
+	dbg(lvl_warning,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
@@ -871,7 +871,7 @@ static gint
 delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
-	dbg(3,"enter this->win=%p\n",this->win);
+	dbg(lvl_debug,"enter this->win=%p\n",this->win);
 	if (this->delay & 2) {
 		if (this->win) 
 			this->win=NULL;
@@ -947,7 +947,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
 	else
-		dbg(3,"keyval 0x%x\n", event->keyval);
+		dbg(lvl_debug,"keyval 0x%x\n", event->keyval);
 	
 	return FALSE;
 }
@@ -1032,7 +1032,7 @@ get_data_window(struct graphics_priv *this, unsigned int xid)
 	if (!gtk_widget_get_parent(this->widget)) 
 		gtk_widget_ref(this->widget);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
-	dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
+	dbg(lvl_warning,"h= %i, w= %i\n",this->win_h, this->win_w);
 	gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
 	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", this->window_title);
 	gtk_widget_realize(this->win);
@@ -1051,7 +1051,7 @@ get_data_window(struct graphics_priv *this, unsigned int xid)
 static int
 set_attr(struct graphics_priv *gr, struct attr *attr)
 {
-	dbg(3,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	switch (attr->type) {
 	case attr_windowid:
 		get_data_window(gr, attr->u.num);
@@ -1127,7 +1127,7 @@ graphics_gtk_drawing_area_disable_suspend(struct window *w)
 	if (gr->pid)
 		kill(gr->pid, SIGWINCH);
 #else
-    dbg(1, "failed to kill() under Windows\n");
+    dbg(lvl_warning, "failed to kill() under Windows\n");
 #endif
 }
 
@@ -1156,7 +1156,7 @@ get_data(struct graphics_priv *this, char const *type)
 		f=popen("pidof /usr/bin/ipaq-sleep","r");
 		if (f) {
 			fscanf(f,"%d",&this->pid);
-			dbg(1,"ipaq_sleep pid=%d\n", this->pid);
+			dbg(lvl_warning,"ipaq_sleep pid=%d\n", this->pid);
 			pclose(f);
 		}
 #endif
