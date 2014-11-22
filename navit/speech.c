@@ -44,22 +44,22 @@ speech_new(struct attr *parent, struct attr **attrs)
 		dbg(lvl_error,"type missing\n");
 		return NULL;
 	}
-	dbg(lvl_warning,"type='%s'\n", attr->u.str);
+	dbg(lvl_debug,"type='%s'\n", attr->u.str);
 	speech_new=plugin_get_speech_type(attr->u.str);
-	dbg(lvl_warning,"new=%p\n", speech_new);
+	dbg(lvl_debug,"new=%p\n", speech_new);
 	if (! speech_new) {
 		dbg(lvl_error,"wrong type '%s'\n", attr->u.str);
 		return NULL;
 	}
 	this_=(struct speech *)navit_object_new(attrs, &speech_func, sizeof(struct speech));
 	this_->priv=speech_new(&this_->meth, this_->attrs, parent);
-	dbg(lvl_warning, "say=%p\n", this_->meth.say);
-	dbg(lvl_warning,"priv=%p\n", this_->priv);
+	dbg(lvl_debug, "say=%p\n", this_->meth.say);
+	dbg(lvl_debug,"priv=%p\n", this_->priv);
 	if (! this_->priv) {
 		speech_destroy(this_);
 		return NULL;
 	}
-	dbg(lvl_warning,"return %p\n", this_);
+	dbg(lvl_debug,"return %p\n", this_);
 	
 	return this_;
 }
@@ -75,7 +75,7 @@ speech_destroy(struct speech *this_)
 int
 speech_say(struct speech *this_, const char *text)
 {
-	dbg(lvl_warning, "this_=%p text='%s' calling %p\n", this_, text, this_->meth.say);
+	dbg(lvl_debug, "this_=%p text='%s' calling %p\n", this_, text, this_->meth.say);
 	return (this_->meth.say)(this_->priv, text);
 }
 

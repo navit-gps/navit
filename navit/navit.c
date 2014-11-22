@@ -229,7 +229,7 @@ navit_get_user_data_directory(int create) {
 	char *dir;
 	dir = getenv("NAVIT_USER_DATADIR");
 	if (create && !file_exists(dir)) {
-		dbg(lvl_error,"creating dir %s\n", dir);
+		dbg(lvl_debug,"creating dir %s\n", dir);
 		if (file_mkdir(dir,0)) {
 			dbg(lvl_error,"failed creating dir %s\n", dir);
 			return NULL;
@@ -421,7 +421,7 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	center_new.x=center_old->x+coord_old.x-coord_new.x;
 	center_new.y=center_old->y+coord_old.y-coord_new.y;
 	navit_restrict_map_center_to_world_boundingbox(tr, &center_new);
-	dbg(lvl_warning,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
+	dbg(lvl_debug,"change center from 0x%x,0x%x to 0x%x,0x%x\n", center_old->x, center_old->y, center_new.x, center_new.y);
 	transform_set_center(tr, &center_new);
 }
 
@@ -439,7 +439,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
-	dbg(lvl_warning,"button %d %s (ignore: %d)\n",button,pressed?"pressed":"released",this_->ignore_button);
+	dbg(lvl_debug,"button %d %s (ignore: %d)\n",button,pressed?"pressed":"released",this_->ignore_button);
 	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, GINT_TO_POINTER(pressed), GINT_TO_POINTER(button), p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
@@ -483,7 +483,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
-			dbg(lvl_warning, "mouse drag (%d, %d)->(%d, %d)\n", this_->pressed.x, this_->pressed.y, p->x, p->y);
+			dbg(lvl_debug, "mouse drag (%d, %d)->(%d, %d)\n", this_->pressed.x, this_->pressed.y, p->x, p->y);
 			update_transformation(this_->trans, &this_->pressed, p);
 			graphics_draw_drag(this_->gra, NULL);
 			transform_copy(this_->trans, this_->trans_cursor);
@@ -501,7 +501,7 @@ static void
 navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this=data;
-	dbg(lvl_warning,"enter %d %d ignore %d\n",pressed,button,this->ignore_graphics_events);
+	dbg(lvl_debug,"enter %d %d ignore %d\n",pressed,button,this->ignore_graphics_events);
 	if (!this->ignore_graphics_events) {
 		if (! this->popup_callback)
 			this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
@@ -1308,7 +1308,7 @@ navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct att
 			if(in[i]->type!=attr_none ) {
 				argv[j++]=attr_to_text(in[i],NULL,1);
 			} else {
-				dbg(lvl_error,"Parameter #%i is attr_none - skipping\n",i);
+				dbg(lvl_debug,"Parameter #%i is attr_none - skipping\n",i);
 			}
 		}
 		argv[j]=NULL;
@@ -1317,15 +1317,15 @@ navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct att
 		// spawn_process() testing suite - uncomment following code to test.
 		//sleep(3);
 		// example of non-blocking wait
-		//int st=spawn_process_check_status(pi,0);dbg(lvl_error,"status %i\n",st);
+		//int st=spawn_process_check_status(pi,0);dbg(lvl_debug,"status %i\n",st);
 		// example of blocking wait
-		//st=spawn_process_check_status(pi,1);dbg(lvl_error,"status %i\n",st);
+		//st=spawn_process_check_status(pi,1);dbg(lvl_debug,"status %i\n",st);
 		// example of wait after process is finished and status is
 		// already tested
-		//st=spawn_process_check_status(pi,1);dbg(lvl_error,"status %i\n",st);
+		//st=spawn_process_check_status(pi,1);dbg(lvl_debug,"status %i\n",st);
 		// example of wait after process is finished and status is
 		// already tested - unblocked
-		//st=spawn_process_check_status(pi,0);dbg(lvl_error,"status %i\n",st);
+		//st=spawn_process_check_status(pi,0);dbg(lvl_debug,"status %i\n",st);
 		
 		// End testing suite
 		spawn_process_info_free(pi);
@@ -1424,7 +1424,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->messages = messagelist_new(attrs);
 
-	dbg(lvl_warning,"return %p\n",this_);
+	dbg(lvl_debug,"return %p\n",this_);
 	
 	return this_;
 }
@@ -1537,7 +1537,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 		this_->destination=*c;
 		this_->destination_valid=1;
 
-		dbg(lvl_warning, "c=(%i,%i)\n", c->x,c->y);
+		dbg(lvl_debug, "c=(%i,%i)\n", c->x,c->y);
 		bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination, description, this_->recentdest_count);
 	} else {
 		this_->destination_valid=0;
@@ -1822,7 +1822,7 @@ navit_say(struct navit *this_, const char *text)
 	if(this_->speech) {
 		if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
 			attr.u.num = 1;
-		dbg(lvl_warning, "this_.speech->active %ld\n", attr.u.num);
+		dbg(lvl_debug, "this_.speech->active %ld\n", attr.u.num);
 		if(attr.u.num)
 			speech_say(this_->speech, text);
 	}
@@ -1869,7 +1869,7 @@ navit_speak(struct navit *this_)
 
     if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
         attr.u.num = 1;
-    dbg(lvl_warning, "this_.speech->active %ld\n", attr.u.num);
+    dbg(lvl_debug, "this_.speech->active %ld\n", attr.u.num);
     if(!attr.u.num)
         return;
 
@@ -1899,17 +1899,17 @@ navit_window_roadbook_update(struct navit *this_)
 	struct param_list param[5];
 	int secs;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	datawindow_mode(this_->roadbook_window, 1);
 	if (nav)
 		map=navigation_get_map(nav);
 	if (map)
 		mr=map_rect_new(map, NULL);
-	dbg(lvl_error,"nav=%p map=%p mr=%p\n", nav, map, mr);
+	dbg(lvl_debug,"nav=%p map=%p mr=%p\n", nav, map, mr);
 	if (mr) {
-		dbg(lvl_error,"while loop\n");
+		dbg(lvl_debug,"while loop\n");
 		while ((item=map_rect_get_item(mr))) {
-			dbg(lvl_error,"item=%p\n", item);
+			dbg(lvl_debug,"item=%p\n", item);
 			attr.u.str=NULL;
 			if (item->type != type_nav_position) {
 				item_attr_get(item, attr_navigation_long, &attr);
@@ -1982,7 +1982,7 @@ navit_window_roadbook_update(struct navit *this_)
 void
 navit_window_roadbook_destroy(struct navit *this_)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	navigation_unregister_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
 	callback_destroy(this_->roadbook_callback);
 	this_->roadbook_window=NULL;
@@ -2162,15 +2162,15 @@ navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
 	c.y=(r->rl.y+r->lu.y)/2;
 	transform_set_center(this_->trans, &c);
 	transform_get_size(this_->trans, &w, &h);
-	dbg(lvl_error,"center 0x%x,0x%x w %d h %d\n",c.x,c.y,w,h);
-	dbg(lvl_error,"%x,%x-%x,%x\n", r->lu.x,r->lu.y,r->rl.x,r->rl.y);
+	dbg(lvl_debug,"center 0x%x,0x%x w %d h %d\n",c.x,c.y,w,h);
+	dbg(lvl_debug,"%x,%x-%x,%x\n", r->lu.x,r->lu.y,r->rl.x,r->rl.y);
 	while (scale < 1<<20) {
 		struct point p1,p2;
 		transform_set_scale(this_->trans, scale);
 		transform_setup_source_rect(this_->trans);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1, 1, 0, 0, NULL);
 		transform(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2, 1, 0, 0, NULL);
-		dbg(lvl_error,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		dbg(lvl_debug,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
 		if (p1.x < 0 || p2.x < 0 || p1.x > w || p2.x > w ||
 		    p1.y < 0 || p2.y < 0 || p1.y > h || p2.y > h)
 			scale*=2;
@@ -2178,7 +2178,7 @@ navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
 			break;
 	
 	}
-	dbg(lvl_error,"scale=%d (0x%x) of %d (0x%x)\n",scale,scale,1<<20,1<<20);
+	dbg(lvl_debug,"scale=%d (0x%x) of %d (0x%x)\n",scale,scale,1<<20,1<<20);
 	if (this_->ready == 3)
 		navit_draw_async(this_,0);
 }
@@ -2194,17 +2194,17 @@ navit_zoom_to_route(struct navit *this_, int orientation)
 	int count=0;
 	if (! this_->route)
 		return;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	map=route_get_map(this_->route);
-	dbg(lvl_warning,"map=%p\n",map);
+	dbg(lvl_debug,"map=%p\n",map);
 	if (map)
 		mr=map_rect_new(map, NULL);
-	dbg(lvl_warning,"mr=%p\n",mr);
+	dbg(lvl_debug,"mr=%p\n",mr);
 	if (mr) {
 		while ((item=map_rect_get_item(mr))) {
-			dbg(lvl_warning,"item=%s\n", item_to_name(item->type));
+			dbg(lvl_debug,"item=%s\n", item_to_name(item->type));
 			while (item_coord_get(item, &c, 1)) {
-				dbg(lvl_warning,"coord\n");
+				dbg(lvl_debug,"coord\n");
 				if (!count) 
 					r.lu=r.rl=c;
 				else
@@ -2440,7 +2440,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		break;
 	case attr_center:
 		transform_from_geo(transform_get_projection(this_->trans), attr->u.coord_geo, &co);
-		dbg(lvl_warning,"0x%x,0x%x\n",co.x,co.y);
+		dbg(lvl_debug,"0x%x,0x%x\n",co.x,co.y);
 		transform_set_center(this_->trans, &co);
 		break;
 	case attr_drag_bitmap:
@@ -2516,7 +2516,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		}
 		break;
 	case attr_osd_configuration:
-		dbg(lvl_error,"setting osd_configuration to %ld (was %d)\n", attr->u.num, this_->osd_configuration);
+		dbg(lvl_debug,"setting osd_configuration to %ld (was %d)\n", attr->u.num, this_->osd_configuration);
 		attr_updated=(this_->osd_configuration != attr->u.num);
 		this_->osd_configuration=attr->u.num;
 		break;
@@ -3335,7 +3335,7 @@ navit_layout_switch(struct navit *n)
 	//Check that we aren't calculating too fast
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
 		currTs=iso8601_to_secs(iso8601_attr.u.str);
-		dbg(lvl_warning,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
+		dbg(lvl_debug,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 	}
 	if (currTs-(n->prevTs)<60) {
 	    //We've have to wait a little
@@ -3360,7 +3360,7 @@ navit_layout_switch(struct navit *n)
 	    }
 	
         trise_actual=trise;
-	dbg(lvl_warning,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
+	dbg(lvl_debug,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
 	if (l->dayname) {
 	
 	    if ((HOURS(trise)*60+MINUTES(trise)==(currTs%86400)/60) || 
@@ -3378,7 +3378,7 @@ navit_layout_switch(struct navit *n)
 		n->prevTs=currTs;
 		return;
 	    }
-	    dbg(lvl_warning,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
+	    dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
 	    if (HOURS(tset)*60+MINUTES(tset)==((currTs%86400)/60)
 		|| (n->prevTs==0 && (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) || 
 			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))))) {
@@ -3483,7 +3483,7 @@ int navit_get_blocked(struct navit *this_)
 void
 navit_destroy(struct navit *this_)
 {
-	dbg(lvl_error,"enter %p\n",this_);
+	dbg(lvl_debug,"enter %p\n",this_);
 	graphics_draw_cancel(this_->gra, this_->displaylist);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
 	attr_list_free(this_->attrs);

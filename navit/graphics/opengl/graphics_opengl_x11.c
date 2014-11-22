@@ -86,29 +86,29 @@ graphics_opengl_x11_watch(struct graphics_opengl_window_system *x11)
 				x11->button(x11->data,event.xbutton.button,0,event.xbutton.x,event.xbutton.y);
 			break;
 		case ConfigureNotify:
-			dbg(lvl_error,"ConfigureNotify\n");
+			dbg(lvl_debug,"ConfigureNotify\n");
 			break;
 		case Expose:
-			dbg(lvl_error,"Expose\n");
+			dbg(lvl_debug,"Expose\n");
 			break;
 		case KeyPress:
-			dbg(lvl_error,"KeyPress\n");
+			dbg(lvl_debug,"KeyPress\n");
 			break;
 		case KeyRelease:
-			dbg(lvl_error,"KeyRelease\n");
+			dbg(lvl_debug,"KeyRelease\n");
 			break;
 		case MapNotify:
-			dbg(lvl_error,"MapNotify\n");
+			dbg(lvl_debug,"MapNotify\n");
 			break;
 		case MotionNotify:
 			if (x11->motion)
 				x11->motion(x11->data,event.xmotion.x,event.xmotion.y);
 			break;
 		case ReparentNotify:
-			dbg(lvl_error,"ReparentNotify\n");
+			dbg(lvl_debug,"ReparentNotify\n");
 			break;
 		default:
-			dbg(lvl_error,"type %d\n",event.type);
+			dbg(lvl_debug,"type %d\n",event.type);
 		}
 	}
 }

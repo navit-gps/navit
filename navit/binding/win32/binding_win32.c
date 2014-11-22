@@ -63,7 +63,7 @@ win32_cmd_send_signal(struct navit *navit, char *command, struct attr **in, stru
 	dbg(lvl_error,"this function is a stub\n");
 	if (in) {
 		while (*in) {
-			dbg(lvl_error,"another attribute to be sent\n");
+			dbg(lvl_debug,"another attribute to be sent\n");
 			in++;
 		}
 	}
@@ -100,7 +100,7 @@ win32_wm_copydata(struct win32_binding_private *this, int *hwndSender, COPYDATAS
         	dbg(lvl_error,"Got request with wrong MAGIC, expected %s, got %*s.\n",NAVIT_BINDING_W32_MAGIC, msg->magic,sizeof(msg->magic));
         	return;
         }
-	dbg(lvl_error,"Running command %s\n", msg->text);
+	dbg(lvl_debug,"Running command %s\n", msg->text);
         command_evaluate(&navit, msg->text);
 }
 
@@ -120,9 +120,9 @@ static void
 win32_main_navit(struct win32_binding_private *this, struct navit *navit, int added)
 {
 	struct attr attr;
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (added==1) {
-		dbg(lvl_error,"enter2\n");
+		dbg(lvl_debug,"enter2\n");
 		this->navit=navit;
 		command_add_table_attr(commands, sizeof(commands)/sizeof(struct command_table), navit, &attr);
 		navit_add_attr(navit, &attr);
@@ -137,7 +137,7 @@ void plugin_init(void)
 {
 	struct attr callback;
 	struct win32_binding_private *this=g_new0(struct win32_binding_private,1);
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	callback.type=attr_callback;
 	callback.u.callback=callback_new_attr_1(callback_cast(win32_main_navit),attr_navit,this);
 	config_add_attr(config, &callback);

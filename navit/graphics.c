@@ -204,7 +204,7 @@ int
 graphics_set_attr(struct graphics *gra, struct attr *attr)
 {
 	int ret=1;
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (gra->meth.set_attr)
 		ret=gra->meth.set_attr(gra->priv, attr);
 	if (!ret)
@@ -662,7 +662,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
 		}
 		if (this_->priv) {
-			dbg(lvl_warning,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+			dbg(lvl_debug,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
 			g_free(new_name);
 			break;
 		}
@@ -1139,7 +1139,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 			p_t.x=x;
 			p_t.y=y;
 #if 0
-			dbg(lvl_error,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
+			dbg(lvl_debug,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
 			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y)
 				gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
@@ -1186,11 +1186,11 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 	      struct point * res)
 {
 	int n, a, b;
-	dbg(lvl_warning,"%d,%d - %d,%d x %d,%d-%d,%d\n",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
+	dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d\n",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
 	n = bdy * adx - bdx * ady;
 	a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
 	b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
-	dbg(lvl_warning,"a %d b %d n %d\n",a,b,n);
+	dbg(lvl_debug,"a %d b %d n %d\n",a,b,n);
 	if (n < 0) {
 		n = -n;
 		a = -a;
@@ -1206,7 +1206,7 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 		return 0;
 	res->x = a1->x + a * adx / n;
 	res->y = a1->y + a * ady / n;
-	dbg(lvl_warning,"%d,%d\n",res->x,res->y);
+	dbg(lvl_debug,"%d,%d\n",res->x,res->y);
 	return 1;
 }
 
@@ -1285,7 +1285,7 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 	struct circle *c;
 
 #if 0
-	dbg(lvl_error,"diameter=%d start=%d len=%d pos=%d dir=%d\n", diameter, start, len, *pos, dir);
+	dbg(lvl_debug,"diameter=%d start=%d len=%d pos=%d dir=%d\n", diameter, start, len, *pos, dir);
 #endif
 	int count=64;
 	int end=start+len;
@@ -1466,7 +1466,7 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 	struct draw_polyline_shape *prev=&ctx->prev_shape;
 
 #if 0
-	dbg(lvl_error,"enter %d,%d - %d,%d %d\n",pnt[0].x,pnt[0].y,pnt[1].x,pnt[1].y,wi);
+	dbg(lvl_debug,"enter %d,%d - %d,%d %d\n",pnt[0].x,pnt[0].y,pnt[1].x,pnt[1].y,wi);
 #endif
 
 	*prev=*shape;
@@ -1495,7 +1495,7 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 		l = int_sqrt((dxs+dys)*lscales);
 #endif
 	shape->fow=fowler(-shape->dy, shape->dx);
-	dbg(lvl_warning,"fow=%d\n",shape->fow);
+	dbg(lvl_debug,"fow=%d\n",shape->fow);
 	if (! l)
 		l=1;
 	if (wi*lscale > 10000)
@@ -1544,7 +1544,7 @@ draw_middle(struct draw_polyline_context *ctx, struct point *p)
 		draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
 		return 1;
 	}
-	dbg(lvl_warning,"delta %d\n",delta);
+	dbg(lvl_debug,"delta %d\n",delta);
 	if (delta > 0) {
 		struct point pos,poso;
 		draw_point(&ctx->shape, p, &pos, 1);
@@ -1604,9 +1604,9 @@ graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphic
 	if (count < 2)
 		return;
 #if 0
-	dbg(lvl_error,"count=%d\n",count);
+	dbg(lvl_debug,"count=%d\n",count);
 	for (i = 0 ; i < count ; i++)
-		dbg(lvl_error,"%d,%d width %d\n",pnt[i].x,pnt[i].y,width[i]);
+		dbg(lvl_debug,"%d,%d width %d\n",pnt[i].x,pnt[i].y,width[i]);
 #endif
 	ctx.shape.l=0;
 	ctx.res=g_alloca(sizeof(struct point)*maxpoints);
@@ -1939,7 +1939,7 @@ graphics_icon_path(const char *icon)
 	static char *navit_sharedir;
 	char *ret=NULL;
 	struct file_wordexp *wordexp=NULL;
-	dbg(lvl_warning,"enter %s\n",icon);
+	dbg(lvl_debug,"enter %s\n",icon);
 	if (strchr(icon, '$')) {
 		wordexp=file_wordexp_new(icon);
 		if (file_wordexp_get_count(wordexp))
@@ -1952,7 +1952,7 @@ graphics_icon_path(const char *icon)
 		// get resources for the correct screen density
 		//
 		// this part not needed, android unpacks only the correct version into res/drawable dir!
-		// dbg(lvl_warning,"android icon_path %s\n",icon);
+		// dbg(lvl_debug,"android icon_path %s\n",icon);
 		// static char *android_density;
 		// android_density = getenv("ANDROID_DENSITY");
 		// ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
@@ -2116,7 +2116,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		}
 		break;
 	case element_image:
-		dbg(lvl_warning,"image: '%s'\n", di->label);
+		dbg(lvl_debug,"image: '%s'\n", di->label);
 		if (gra->meth.draw_image_warp) {
 			img=graphics_image_new_scaled_rotated(gra, di->label, -1, -1, 0);
 			if (img)
@@ -2295,7 +2295,7 @@ displaylist_update_hash(struct displaylist *displaylist)
 	displaylist->max_offset=0;
 	clear_hash(displaylist);
 	displaylist_update_layers(displaylist, displaylist->layout->layers, displaylist->order);
-	dbg(lvl_warning,"max offset %d\n",displaylist->max_offset);
+	dbg(lvl_debug,"max offset %d\n",displaylist->max_offset);
 }
 
 
@@ -2400,7 +2400,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 				if (! count)
 					continue;
 #if 0
-				dbg(lvl_error,"%s 0x%x 0x%x\n",item_to_name(item->type), item->id_hi, item->id_lo);
+				dbg(lvl_debug,"%s 0x%x 0x%x\n",item_to_name(item->type), item->id_hi, item->id_lo);
 #endif
 				if (displaylist->dc.pro != pro)
 					transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
@@ -2510,14 +2510,14 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 {
 	int order=transform_get_order(trans);
 
-	dbg(lvl_warning,"enter");
+	dbg(lvl_debug,"enter");
 	if (displaylist->busy) {
 		if (async == 1)
 			return;
 		do_draw(displaylist, 1, flags);
 	}
 	xdisplay_free(displaylist);
-	dbg(lvl_warning,"order=%d\n", order);
+	dbg(lvl_debug,"order=%d\n", order);
 
 	displaylist->dc.gra=gra;
 	displaylist->ms=mapset;

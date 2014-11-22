@@ -87,7 +87,7 @@ gui_internal_search_cmp(gconstpointer _a, gconstpointer _b)
   sa=removecase(a->text);
   sb=removecase(b->text);
   r=strcmp(sa,sb);
-  dbg(lvl_warning,"%s %s %d\n",sa,sb,r);
+  dbg(lvl_debug,"%s %s %d\n",sa,sb,r);
   g_free(sa);
   g_free(sb);
   return r;
@@ -260,7 +260,7 @@ gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_
 			if(!exp)
 				continue;
 			if(!strcmp(exp,folded_query)) {
-				dbg(lvl_warning,"exact match for the whole string %s\n", exp);
+				dbg(lvl_debug,"exact match for the whole string %s\n", exp);
 				match_quality=full_string_match;
 				g_free(exp);
 				break;
@@ -268,7 +268,7 @@ gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_
 			if((p=strstr(exp,folded_query))!=NULL) {
 				p+=strlen(folded_query);
 				if(!*p||strchr(LINGUISTICS_WORD_SEPARATORS_ASCII,*p)) {
-					dbg(lvl_warning,"exact matching word found inside string %s\n",exp);
+					dbg(lvl_debug,"exact matching word found inside string %s\n",exp);
 					match_quality=word_match;
 				}
 			}
@@ -411,13 +411,13 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 		param=(void *)5;
 	if (! strcmp(wm->name,"House number"))
 		param=(void *)6;
-	dbg(lvl_warning,"%s now '%s'\n", wm->name, wm->text);
+	dbg(lvl_debug,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
 	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
 		struct attr search_attr;
 
-		dbg(lvl_warning,"process\n");
+		dbg(lvl_debug,"process\n");
 		if (! strcmp(wm->name,"Country"))
 			search_attr.type=attr_country_all;
 		if (! strcmp(wm->name,"Town"))
@@ -452,7 +452,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 		item=country_search_get_item(cs);
 		if (item && item_attr_get(item, attr_country_name, &country_name)) {
 			search_attr.type=attr_country_all;
-			dbg(lvl_warning,"country %s\n", country_name.u.str);
+			dbg(lvl_debug,"country %s\n", country_name.u.str);
 			search_attr.u.str=country_name.u.str;
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
@@ -467,7 +467,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 	} else {
 		dbg(lvl_error,"warning: no default country found\n");
 		if (this->country_iso2) {
-		    dbg(lvl_error,"attempting to use country '%s'\n",this->country_iso2);
+		    dbg(lvl_debug,"attempting to use country '%s'\n",this->country_iso2);
 		    search_attr.type=attr_country_iso2;
 		    search_attr.u.str=this->country_iso2;
             search_list_search(this->sl, &search_attr, 0);

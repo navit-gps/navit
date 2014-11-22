@@ -114,7 +114,7 @@ gui_internal_gesture_do(struct gui_priv *this)
 
 	if( abs(dx) > this->icon_s*3 && abs(dy) < this->icon_s ) {
 		struct widget *wt;
-		dbg(lvl_warning,"horizontal dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_debug,"horizontal dx=%d dy=%d\n",dx,dy);
 
 		/* Prevent swiping if widget was scrolled beforehand */
 		if(this->pressed==2)
@@ -133,11 +133,11 @@ gui_internal_gesture_do(struct gui_priv *this)
 			gui_internal_table_button_prev(this,NULL,wt);
 		return 1;
 	} else if( abs(dy) > this->icon_s*3 && abs(dx) < this->icon_s ) {
-		dbg(lvl_warning,"vertical dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_debug,"vertical dx=%d dy=%d\n",dx,dy);
 	} else if (dt>300 && abs(dx) <this->icon_s && abs(dy) <this->icon_s ) {
-		dbg(lvl_warning,"longtap dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_debug,"longtap dx=%d dy=%d\n",dx,dy);
 	} else {
-		dbg(lvl_warning,"none dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_debug,"none dx=%d dy=%d\n",dx,dy);
 	}
 	
 	return 0;

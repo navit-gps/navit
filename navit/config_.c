@@ -60,7 +60,7 @@ config_destroy(struct config *this_)
 static void
 config_terminate(int sig)
 {
-	dbg(lvl_error,"terminating\n");
+	dbg(lvl_debug,"terminating\n");
 	config_destroy(config);
 }
 

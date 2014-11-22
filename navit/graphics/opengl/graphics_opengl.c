@@ -748,7 +748,7 @@ getPrimitiveType(GLenum type)
 void APIENTRY
 tessBeginCB(GLenum which)
 {
-	dbg(lvl_warning, "glBegin( %s );\n", getPrimitiveType(which));
+	dbg(lvl_debug, "glBegin( %s );\n", getPrimitiveType(which));
 	tess_type=which;
 	tess_count=0;
 }
@@ -758,7 +758,7 @@ tessBeginCB(GLenum which)
 void APIENTRY
 tessEndCB(void)
 {
-	dbg(lvl_warning, "glEnd();\n");
+	dbg(lvl_debug, "glEnd();\n");
 	draw_array(graphics_priv_root, tess_array, tess_count, tess_type);
 }
 
@@ -769,7 +769,7 @@ tessVertexCB(const GLvoid * data)
 {
 	// cast back to double type
 	const GLdouble *ptr = (const GLdouble *) data;
-	dbg(lvl_warning, "  glVertex3d();\n");
+	dbg(lvl_debug, "  glVertex3d();\n");
 
 	tess_array[tess_count].x=ptr[0];
 	tess_array[tess_count].y=ptr[1];
@@ -1499,7 +1499,7 @@ static void
 click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y)
 {
 	struct point p={x,y};
-	dbg(lvl_error,"enter state %d button %d\n",state,button);
+	dbg(lvl_debug,"enter state %d button %d\n",state,button);
 	callback_list_call_attr_3(priv->cbl, attr_button, (void *) state, (void *)button, (void *) &p);
 }
 #endif
@@ -1749,55 +1749,55 @@ event_opengl_main_loop_run(void)
 static void
 event_opengl_main_loop_quit(void)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 }
 
 static struct event_watch *
 event_opengl_add_watch(int fd, enum event_watch_cond cond,
 		       struct callback *cb)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	return NULL;
 }
 
 static void
 event_opengl_remove_watch(struct event_watch *ev)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 }
 
 
 static struct event_timeout *
 event_opengl_add_timeout(int timeout, int multi, struct callback *cb)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	return NULL;
 }
 
 static void
 event_opengl_remove_timeout(struct event_timeout *to)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 }
 
 
 static struct event_idle *
 event_opengl_add_idle(int priority, struct callback *cb)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	return NULL;
 }
 
 static void
 event_opengl_remove_idle(struct event_idle *ev)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 }
 
 static void
 event_opengl_call_callback(struct callback_list *cb)
 {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 }
 
 static struct event_methods event_opengl_methods = {

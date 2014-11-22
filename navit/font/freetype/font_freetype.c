@@ -351,14 +351,14 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 	if (! face_id)
 		return FT_Err_Invalid_Handle;
 	fontfile=g_strdup((char *)face_id);
-	dbg(lvl_warning,"fontfile=%s\n", fontfile);
+	dbg(lvl_debug,"fontfile=%s\n", fontfile);
 	fontindex=strrchr(fontfile,'/');
 	if (! fontindex) {
 		g_free(fontfile);
 		return FT_Err_Invalid_Handle;
 	}
 	*fontindex++='\0';
-	dbg(lvl_warning,"new face %s %d\n", fontfile, atoi(fontindex));
+	dbg(lvl_debug,"new face %s %d\n", fontfile, atoi(fontindex));
 	ret = FT_New_Face( library, fontfile, atoi(fontindex), aface );
 	if(ret) {
 	       dbg(lvl_error,"Error while creating freetype face: %d\n", ret);

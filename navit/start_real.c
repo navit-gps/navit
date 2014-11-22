@@ -190,7 +190,7 @@ int main_real(int argc, char * const* argv)
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
-		dbg(lvl_warning,"trying %s\n",config_file);
+		dbg(lvl_debug,"trying %s\n",config_file);
 		if (file_exists(config_file)) {
 			break;
 		}
@@ -198,11 +198,11 @@ int main_real(int argc, char * const* argv)
 		li = g_list_next(li);
 	}
 
-	dbg(lvl_error,"Loading %s\n",config_file);
+	dbg(lvl_debug,"Loading %s\n",config_file);
 	if (!config_load(config_file, &error)) {
 		dbg(lvl_error, _("Error parsing config file '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
-		dbg(lvl_error, _("Using config file '%s'\n"), config_file);
+		dbg(lvl_info, _("Using config file '%s'\n"), config_file);
 	}
 	if (! config) {
 		dbg(lvl_error, _("Error: No configuration found in config file '%s'\n"), config_file);

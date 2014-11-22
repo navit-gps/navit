@@ -128,7 +128,7 @@ osd_evaluate_command(struct osd_item *this, struct navit *nav)
 	struct attr navit;
 	navit.type=attr_navit;
 	navit.u.navit=nav;
-	dbg(lvl_warning, "calling command '%s'\n", this->command);
+	dbg(lvl_debug, "calling command '%s'\n", this->command);
 	command_evaluate(&navit, this->command);
 }
 
@@ -222,12 +222,12 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key)
 {
 #if 0
 	int i;
-	dbg(lvl_error,"key=%s\n",key);
+	dbg(lvl_debug,"key=%s\n",key);
 	for (i = 0 ; i < strlen(key) ; i++) {
-		dbg(lvl_error,"key:0x%02x\n",key[i]);
+		dbg(lvl_debug,"key:0x%02x\n",key[i]);
 	}
 	for (i = 0 ; i < strlen(item->accesskey) ; i++) {
-		dbg(lvl_error,"accesskey:0x%02x\n",item->accesskey[i]);
+		dbg(lvl_debug,"accesskey:0x%02x\n",item->accesskey[i]);
 	}
 #endif
 	if ( ! graphics_is_disabled(item->gr) && item->accesskey && key && !strcmp(key, item->accesskey)) 
@@ -350,7 +350,7 @@ void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {
 	struct attr attr;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (item->enable_cs) {
 		item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
 		command_saved_set_cb(item->enable_cs, item->reconfig_cb);

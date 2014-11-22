@@ -43,7 +43,7 @@ script_run(struct script *scr)
 		dbg(lvl_error,"no text\n");
 		return;
 	}
-	dbg(lvl_error,"running '%s'\n",xml_text->u.str);
+	dbg(lvl_debug,"running '%s'\n",xml_text->u.str);
 	command_evaluate_to_void(&scr->parent, xml_text->u.str, &error);
 }
 
@@ -52,7 +52,7 @@ script_set_attr_int(struct script *scr, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_refresh_cond:
-		dbg(lvl_error,"refresh_cond\n");
+		dbg(lvl_debug,"refresh_cond\n");
 		if (scr->cs)
 			command_saved_destroy(scr->cs);
 		scr->cs=command_saved_attr_new(attr->u.str, &scr->parent, scr->cb, 0);
@@ -79,14 +79,14 @@ script_new(struct attr *parent, struct attr **attrs)
 	scr->parent=*parent;
 	while (attrs && *attrs) 
 		script_set_attr_int(scr, *attrs++);
-	dbg(lvl_error,"return %p\n",scr);
+	dbg(lvl_debug,"return %p\n",scr);
 	return scr;
 }
 
 static void
 script_destroy(struct script *scr)
 {
-	dbg(lvl_error,"enter %p\n",scr);
+	dbg(lvl_debug,"enter %p\n",scr);
 	if (scr->timeout)
 		event_remove_timeout(scr->timeout);
 	if (scr->cs)

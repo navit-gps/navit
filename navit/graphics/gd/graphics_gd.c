@@ -516,7 +516,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		if (gr->flags & 2) {
 			struct shmem_header *next=shm_next(gr);
 			gr->shm_header->flag=1;
-			dbg(lvl_warning,"next flag is %d\n",next->flag);
+			dbg(lvl_debug,"next flag is %d\n",next->flag);
 			if (!next->flag) {
 				gr->shm_header=next;
 				image_setup(gr);
@@ -537,7 +537,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 						dbg(lvl_error,"connect failed\n");
 					} else {
 						size_written=write(fd, data, size);	
-						dbg(lvl_error,"size %d vs %d\n",size, size_written);
+						dbg(lvl_debug,"size %d vs %d\n",size, size_written);
 						if (shutdown(fd, SHUT_RDWR) < 0)
 							dbg(lvl_error,"shutdown failed\n");
 					}
@@ -591,7 +591,7 @@ get_data(struct graphics_priv *this, char *type)
 	int b;
 	struct point p;
   	gdImagePtr im = this->im;
-	dbg(lvl_warning,"type=%s\n",type);
+	dbg(lvl_debug,"type=%s\n",type);
 	if (!strcmp(type,"window"))
 		return &this->window;
 	if (!strcmp(type,"image_png")) {
@@ -613,11 +613,11 @@ get_data(struct graphics_priv *this, char *type)
 		return &this->image;
 	}
 	if (sscanf(type,"click_%d_%d_%d",&p.x,&p.y,&b) == 3) {
-		dbg(lvl_warning,"click %d %d %d\n",p.x,p.y,b);
+		dbg(lvl_debug,"click %d %d %d\n",p.x,p.y,b);
         	callback_list_call_attr_3(this->cbl, attr_button, (void *)b, (void *)1, (void *)&p);
 	}
 	if (sscanf(type,"move_%d_%d",&p.x,&p.y) == 2) {
-		dbg(lvl_warning,"move %d %d\n",p.x,p.y);
+		dbg(lvl_debug,"move %d %d\n",p.x,p.y);
         	callback_list_call_attr_1(this->cbl, attr_motion, (void *)&p);
 	}
 	return NULL;
@@ -634,13 +634,13 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 static void
 overlay_disable(struct graphics_priv *gr, int disable)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 }
 
 static void
 overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 }
 
 struct shmem_header *
@@ -648,10 +648,10 @@ shm_next(struct graphics_priv *gr)
 {
 	char *next=(char *)gr->shm_header+gr->shmoffset;
 	if (next+gr->shmoffset > (char *)gr->shm+gr->shmsize) {
-		dbg(lvl_warning,"wraparound\n");
+		dbg(lvl_debug,"wraparound\n");
 		return gr->shm;
 	}
-	dbg(lvl_warning,"next 0x%x (offset 0x%x)\n",next-(char *)gr->shm,gr->shmoffset);
+	dbg(lvl_debug,"next 0x%x (offset 0x%x)\n",next-(char *)gr->shm,gr->shmoffset);
 	return (struct shmem_header *)next;
 	
 }
@@ -672,17 +672,17 @@ image_setup(struct graphics_priv *gr)
 static void
 image_create(struct graphics_priv *gr)
 {
-	dbg(lvl_error,"shmkey %d\n",gr->shmkey);
+	dbg(lvl_debug,"shmkey %d\n",gr->shmkey);
 #ifdef HAVE_SHMEM
 	if (gr->shmkey) {
 		int size=gr->h*gr->w*sizeof(int);
 		int shmid=shmget(gr->shmkey, size, 0666);
-		dbg(lvl_error,"shmid for key 0x%x is 0x%x\n",gr->shmkey, shmid);
+		dbg(lvl_debug,"shmid for key 0x%x is 0x%x\n",gr->shmkey, shmid);
 		if (shmid < 0)
-			dbg(lvl_error,"shmget\n");
+			dbg(lvl_debug,"shmget\n");
 		gr->shm=shmat(shmid, NULL, 0);
 		if (!gr->shm)
-			dbg(lvl_error,"shmat\n");
+			dbg(lvl_debug,"shmat\n");
 		gr->shm_header=gr->shm;
 		gr->im=g_new0(gdImage,1);
 		gr->im->tpixels=g_new(int *,gr->h);
@@ -759,7 +759,7 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 		g_list_free(gr->sockets);
 		gr->sockets=NULL;
 		c=s=g_strdup(attr->u.str);
-		dbg(lvl_error,"s=%s\n",s);
+		dbg(lvl_debug,"s=%s\n",s);
 		while (c) {
 			n=strchr(c,',');
 			if (n)
@@ -776,7 +776,7 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 					dbg(lvl_error,"error in %s\n",c);
 					g_free(sin);
 				}
-				dbg(lvl_error,"host=%s port=%s\n",c,p);
+				dbg(lvl_debug,"host=%s port=%s\n",c,p);
 			} else 
 				dbg(lvl_error,"error in format: %s\n",p);
 			c=n;
@@ -827,7 +827,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
         font_freetype_new=plugin_get_font_type("freetype");

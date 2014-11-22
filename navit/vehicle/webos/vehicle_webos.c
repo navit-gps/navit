@@ -157,7 +157,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 	PDL_Err err;
 
 	priv->pdk_version = PDL_GetPDKVersion();
-	dbg(lvl_warning,"pdk_version(%d)\n", priv->pdk_version);
+	dbg(lvl_debug,"pdk_version(%d)\n", priv->pdk_version);
 
 	if (priv->pdk_version <= 100) {
 		// Use Location Service via callback interface
@@ -380,7 +380,7 @@ vehicle_webos_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_vehicle_type("webos", vehicle_webos_new);
 }
 

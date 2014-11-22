@@ -130,7 +130,7 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 	char *full_path=NULL;
 	full_path=graphics_icon_path(name);
 	ret=graphics_image_new_scaled(this->gra, full_path, w, h);
-	dbg(lvl_warning,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
+	dbg(lvl_debug,"Trying to load image '%s' (w=%d, h=%d): %s\n", name, w, h, ret ? "OK" : "NOT FOUND");
 	g_free(full_path);
 	if (!ret) {
 		dbg(lvl_error,"Failed to load image for '%s' (w=%d, h=%d)\n", name, w, h);
@@ -498,7 +498,7 @@ gui_internal_apply_config(struct gui_priv *this)
 {
   struct gui_config_settings *  current_config=0;
 
-  dbg(lvl_warning,"w=%d h=%d\n", this->root.w, this->root.h);
+  dbg(lvl_debug,"w=%d h=%d\n", this->root.w, this->root.h);
   /**
    * Select default values from profile based on the screen.
    */
@@ -1624,7 +1624,7 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 			}
                        	return; 
 		} else if (*key == NAVIT_KEY_BACKSPACE) {
-			dbg(lvl_warning,"backspace\n");
+			dbg(lvl_debug,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
 				wi->text[len]='\0';
@@ -1720,7 +1720,7 @@ gui_internal_set(char *remove, char *add)
 			int len=strlen(line);
 			if (len > 0 && line[len-1] == '\n')
 				line[len-1]='\0';
-			dbg(lvl_warning,"line=%s\n",line);
+			dbg(lvl_debug,"line=%s\n",line);
 			if (!gui_internal_match(remove, line))
 				fprintf(fo,"%s\n",line);
 		}
@@ -1798,7 +1798,7 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
 	char *search,buffer[256];
 	int found,sp_match=0;
 
-	dbg(lvl_warning,"wm=%p prefix=%s\n",wm,wm->prefix);
+	dbg(lvl_debug,"wm=%p prefix=%s\n",wm,wm->prefix);
 
 	search=wm->prefix;
 	if (search) {
@@ -2007,7 +2007,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
 	vehicle_name = vehicle_name_attr.u.str;
 
-	dbg(lvl_warning, "Changing vehicle %s to profile %s\n", vehicle_name,
+	dbg(lvl_debug, "Changing vehicle %s to profile %s\n", vehicle_name,
 			profilename);
 
 	// Change the profile name
@@ -2066,7 +2066,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 		active_profile = profile_attr.u.str;
 	active = active_profile != NULL && !strcmp(name, active_profile);
 
-	dbg(lvl_warning, "Adding vehicle profile %s, active=%s/%i\n", name,
+	dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i\n", name,
 			active_profile, active);
 
 	// Build a translatable label.
@@ -2213,7 +2213,7 @@ gui_internal_set_click_coord(struct gui_priv *this, struct point *p)
 	if (p) {
 		trans=navit_get_trans(this->nav);
 		transform_reverse(trans, p, &c);
-		dbg(lvl_warning,"x=0x%x y=0x%x\n", c.x, c.y);
+		dbg(lvl_debug,"x=0x%x y=0x%x\n", c.x, c.y);
 		this->clickp.pro=transform_get_projection(trans);
 		this->clickp.x=c.x;
 		this->clickp.y=c.y;
@@ -2254,7 +2254,7 @@ gui_internal_enter_setup(struct gui_priv *this)
 void
 gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href)
 {
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	gui_internal_enter(this, ignore);
 	gui_internal_enter_setup(this);
 	// draw menu
@@ -2474,7 +2474,7 @@ gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget)
 	char *lat, *lng;
 	char *widgettext;
 	double latitude, longitude; 
-	dbg(lvl_warning,"text entered:%s\n", widget->text);
+	dbg(lvl_debug,"text entered:%s\n", widget->text);
 
 	/* possible entry can be identical to coord_format output but only space between lat and lng is allowed */
 	widgettext=g_ascii_strup(widget->text,-1);
@@ -2507,7 +2507,7 @@ gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget)
 void
 gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(lvl_warning,"entered\n");
+	dbg(lvl_debug,"entered\n");
         gui_internal_cmd_enter_coord_do(this, widget->data);
 }
 
@@ -2527,18 +2527,18 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	struct gui_priv *this=data;
 	struct graphics *gra=this->gra;
 
-	dbg(lvl_warning,"enter %d %d\n", pressed, button);
+	dbg(lvl_debug,"enter %d %d\n", pressed, button);
 	// if still on the map (not in the menu, yet):
-	dbg(lvl_warning,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
+	dbg(lvl_debug,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
 	if (!this->root.children || this->ignore_button) {
 
 		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL)) {
-			dbg(lvl_warning,"navit has handled button\n");
+			dbg(lvl_debug,"navit has handled button\n");
 			return;
 		}
-		dbg(lvl_warning,"menu_on_map_click=%d\n",this->menu_on_map_click);
+		dbg(lvl_debug,"menu_on_map_click=%d\n",this->menu_on_map_click);
 		if (button != 1)
 			return;
 		if (this->on_map_click || this->menu_on_map_click) {
@@ -2639,7 +2639,7 @@ static void gui_internal_resize(void *data, int w, int h)
 		this->root.h=h;
 		changed=1;
 	}
-	dbg(lvl_warning,"w=%d h=%d children=%p\n", w, h, this->root.children);
+	dbg(lvl_debug,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
 		if (changed) {
@@ -2688,7 +2688,7 @@ gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int
 			if (dist1 < 0)
 				dist1=-dist1;
 		}
-		dbg(lvl_warning,"checking %d,%d %d %d against %d,%d-%d,%d result %d,%d\n", p->x, p->y, dx, dy, wi->p.x, wi->p.y, wi->p.x+wi->w, wi->p.y+wi->h, dist1, dist2);
+		dbg(lvl_debug,"checking %d,%d %d %d against %d,%d-%d,%d result %d,%d\n", p->x, p->y, dx, dy, wi->p.x, wi->p.y, wi->p.x+wi->w, wi->p.y+wi->h, dist1, dist2);
 		if (dist1 >= 0) {
 			if (dist2 < 0)
 				dist1-=dist2;
@@ -2723,13 +2723,13 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		gui_internal_keynav_find_closest(menu, &p, 0, 0, &distance, &result);
 		if (result) {
 			gui_internal_keynav_point(result, dx, dy, &p);
-			dbg(lvl_warning,"result origin=%p p=%d,%d\n", result, p.x, p.y);
+			dbg(lvl_debug,"result origin=%p p=%d,%d\n", result, p.x, p.y);
 		}
 	}
 	result=NULL;
 	distance=INT_MAX;
 	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
-	dbg(lvl_warning,"result=%p\n", result);
+	dbg(lvl_debug,"result=%p\n", result);
 	if (! result) {
 		if (dx < 0)
 			p.x=this->root.w;
@@ -2742,7 +2742,7 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		result=NULL;
 		distance=INT_MAX;
 		gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
-		dbg(lvl_warning,"wraparound result=%p\n", result);
+		dbg(lvl_debug,"wraparound result=%p\n", result);
 	}
 	gui_internal_highlight_do(this, result);
 	if (result)

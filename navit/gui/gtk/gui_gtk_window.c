@@ -85,7 +85,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	struct point p;
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
-	dbg(lvl_warning,"keypress 0x%x\n", event->keyval);
+	dbg(lvl_debug,"keypress 0x%x\n", event->keyval);
 	transform_get_size(navit_get_trans(this->nav), &w, &h);
 	switch (event->keyval) {
 	case GDK_KP_Enter:
@@ -478,7 +478,7 @@ gui_gtk_vehicles_update(struct gui_priv *this)
 	char *name;
 	GList *curr;
 	struct gui_menu_info *meninfo;
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 
 	curr = g_list_first(this->vehicle_menuitems);
 

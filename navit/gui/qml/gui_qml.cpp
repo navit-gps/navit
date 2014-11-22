@@ -161,11 +161,11 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 
 	// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 	if (!navit_handle_button(this_->nav, pressed, button, p, NULL)) {
-		dbg(lvl_warning,"navit has handled button\n");
+		dbg(lvl_debug,"navit has handled button\n");
 		return;
 	}
 
-	dbg(lvl_warning,"enter %d %d\n", pressed, button);
+	dbg(lvl_debug,"enter %d %d\n", pressed, button);
 	if (this_->signal_on_map_click) {
 		gui_qml_dbus_signal(this_, p);
 		return;
