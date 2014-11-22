@@ -112,7 +112,7 @@ file_http_request(struct file *file, char *method, char *host, char *path, char 
 {
 	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,version,host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
 	write(file->fd, request, strlen(request));
-	dbg(lvl_warning,"%s\n",request);
+	dbg(lvl_debug,"%s\n",request);
 	file->requests++;
 }
 
@@ -149,7 +149,7 @@ file_request_do(struct file *file, struct attr **options, int connect)
 			host[path-name-7]='\0';
 		if (port)
 			*port++='\0';
-		dbg(lvl_warning,"host=%s path=%s\n",host,path);
+		dbg(lvl_debug,"host=%s path=%s\n",host,path);
 		if (connect) 
 			file->fd=file_socket_connect(host,port?port:"80");
 		file_http_request(file,method,host,path,header,persistent);
@@ -223,11 +223,11 @@ file_create(char *name, struct attr **options)
 			g_free(file);
 			return NULL;
 		}
-		dbg(lvl_warning,"fd=%d\n", file->fd);
+		dbg(lvl_debug,"fd=%d\n", file->fd);
 		file->size=lseek(file->fd, 0, SEEK_END);
 		if (file->size < 0)
 			file->size=0;
-		dbg(lvl_warning,"size="LONGLONG_FMT"\n", file->size);
+		dbg(lvl_debug,"size="LONGLONG_FMT"\n", file->size);
 		file->name_id = (long)atom(name);
 	}
 #ifdef CACHE_SIZE
@@ -282,7 +282,7 @@ int file_mkdir(char *name, int pflag)
 	char *buffer=g_alloca(sizeof(char)*(strlen(name)+1));
 	int ret;
 	char *next;
-	dbg(lvl_warning,"enter %s %d\n",name,pflag);
+	dbg(lvl_debug,"enter %s %d\n",name,pflag);
 	if (!pflag) {
 		if (file_is_dir(name))
 			return 0;
@@ -380,7 +380,7 @@ file_process_headers(struct file *file, unsigned char *headers)
 		if (*sep == ' ')
 			sep++;
 		strtolower(tok, tok);
-		dbg(lvl_warning,"header '%s'='%s'\n",tok,sep);
+		dbg(lvl_debug,"header '%s'='%s'\n",tok,sep);
 		g_hash_table_insert(file->headers, tok, sep);
 		headers=NULL;
 	}
@@ -424,10 +424,10 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 				eof=1;
 		}
 		if (file->requests) {
-			dbg(lvl_warning,"checking header\n");
+			dbg(lvl_debug,"checking header\n");
 			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				dbg(lvl_warning,"found %s\n",file->buffer);
+				dbg(lvl_debug,"found %s\n",file->buffer);
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
@@ -461,7 +461,7 @@ file_data_flush(struct file *file, long long offset, int size)
 	if (file->cache) {
 		struct file_cache_id id={offset,size,file->name_id,0};
 		cache_flush(file_cache,&id);
-		dbg(lvl_warning,"Flushing "LONGLONG_FMT" %d bytes\n",offset,size);
+		dbg(lvl_debug,"Flushing "LONGLONG_FMT" %d bytes\n",offset,size);
 	}
 }
 
@@ -832,7 +832,7 @@ file_wordexp_new(const char *pattern)
 	ret->pattern=g_strdup(pattern);
 	ret->err=wordexp(pattern, &ret->we, 0);
 	if (ret->err)
-		dbg(lvl_error,"wordexp('%s') returned %d\n", pattern, ret->err);
+		dbg(lvl_debug,"wordexp('%s') returned %d\n", pattern, ret->err);
 	return ret;
 }
 
@@ -886,7 +886,7 @@ file_version(struct file *file, int mode)
 			file->mtime=st.st_mtime;
 			file->ctime=st.st_ctime;
 			file->version++;
-			dbg(lvl_warning,"%s now version %d\n", file->name, file->version);
+			dbg(lvl_debug,"%s now version %d\n", file->name, file->version);
 		}
 	}
 	return file->version;

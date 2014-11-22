@@ -243,6 +243,6 @@ vehicle_gpsd_dbus_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_vehicle_type("gpsd_dbus", vehicle_gpsd_dbus_new);
 }

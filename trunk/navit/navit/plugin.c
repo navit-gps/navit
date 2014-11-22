@@ -183,7 +183,7 @@ plugin_load(struct plugin *pl)
 		g_module_close(mod);
 		return 0;
 	} else {
-		dbg(lvl_warning, "loaded module %s\n", pl->name);
+		dbg(lvl_debug, "loaded module %s\n", pl->name);
 		pl->mod=mod;
 		pl->init=init;
 	}
@@ -290,7 +290,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	if ( (attr=attr_search(attrs, NULL, attr_ondemand))) {
 		ondemand=attr->u.num;
 	}
-	dbg(lvl_warning, "path=\"%s\", active=%d, lazy=%d, ondemand=%d\n",path_attr->u.str, active, lazy, ondemand);
+	dbg(lvl_debug, "path=\"%s\", active=%d, lazy=%d, ondemand=%d\n",path_attr->u.str, active, lazy, ondemand);
 
 	we=file_wordexp_new(path_attr->u.str);
 	count=file_wordexp_get_count(we);
@@ -385,7 +385,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 	struct plugin *pl;
 	char *mod_name, *filename=NULL, *corename=NULL;
 
-	dbg(lvl_warning, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(lvl_debug, "type=\"%s\", name=\"%s\"\n", type_name, name);
 
 	l=plugin_types[type];
 	while (l) {
@@ -407,7 +407,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 			mod_name=pl->name;
 		dbg(lvl_info,"compare '%s' with '%s'\n", mod_name, filename);
 		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(corename))) {
-			dbg(lvl_warning, "Loading module \"%s\"\n",pl->name) ;
+			dbg(lvl_debug, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);

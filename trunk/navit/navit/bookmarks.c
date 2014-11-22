@@ -207,7 +207,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		finder=b_item->label;
 		while ((pos=strchr(finder,'/'))) {
 			*pos=0x00;
-			dbg(lvl_warning,"Found path entry: %s\n",finder);
+			dbg(lvl_debug,"Found path entry: %s\n",finder);
 			if (!bookmarks_move_down(this_,finder)) {
 				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);
 				path_item->type=type_bookmark_folder;
@@ -231,7 +231,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
 		this_->current->children=g_list_append(this_->current->children,b_item);
 		this_->current->children=g_list_first(this_->current->children);
-		dbg(lvl_warning,"Added %s to %s and current list now %u long\n",b_item->label,this_->current->label,g_list_length(this_->current->children));
+		dbg(lvl_debug,"Added %s to %s and current list now %u long\n",b_item->label,this_->current->label,g_list_length(this_->current->children));
 	}
 	bookmarks_move_root(this_);
 }
@@ -327,7 +327,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 				g_free(fullname);
 				fullname=g_strdup(pathHelper);
 				g_free(pathHelper);
-				dbg(lvl_warning,"full name: %s\n",fullname);
+				dbg(lvl_debug,"full name: %s\n",fullname);
 			}
 		}
 

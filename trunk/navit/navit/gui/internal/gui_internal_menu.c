@@ -260,7 +260,7 @@ gui_internal_top_bar(struct gui_priv *this)
 				use_sep=1;
 			else
 				use_sep=0;
-			dbg(lvl_warning,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
+			dbg(lvl_debug,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
 			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) + (g_list_previous(l) ? dots_len : 0) > width) {
 				incomplete=1;
 				gui_internal_widget_destroy(this, wcn);

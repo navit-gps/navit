@@ -310,7 +310,7 @@ struct mapset_search *
 mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial)
 {
 	struct mapset_search *this;
-	dbg(lvl_warning,"enter(%p,%p,%p,%d)\n", ms, item, search_attr, partial);
+	dbg(lvl_debug,"enter(%p,%p,%p,%d)\n", ms, item, search_attr, partial);
 	this=g_new0(struct mapset_search,1);
 	if(this != NULL && ms!=NULL )
         {

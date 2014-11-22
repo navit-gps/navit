@@ -67,7 +67,7 @@ static void vehicle_maemo_callback(LocationGPSDevice *device, gpointer user_data
 	priv->sats_used=device->satellites_in_use;
 	callback_list_call_attr_0(priv->cbl, attr_position_sats);
 
-	dbg(lvl_warning,"Got update with %u/%u satellites\n",priv->sats_used,priv->sats);
+	dbg(lvl_debug,"Got update with %u/%u satellites\n",priv->sats_used,priv->sats);
 
 	if (device->fix) {
 		switch(device->fix->mode) {
@@ -86,28 +86,28 @@ static void vehicle_maemo_callback(LocationGPSDevice *device, gpointer user_data
 			priv->geo.lng=device->fix->longitude;
 			priv->hdop=device->fix->eph/100;
 			callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-			dbg(lvl_warning,"Position: %f %f with error %f meters\n",priv->geo.lat,priv->geo.lng,priv->hdop);
+			dbg(lvl_debug,"Position: %f %f with error %f meters\n",priv->geo.lat,priv->geo.lng,priv->hdop);
 		}
 
 		if (device->fix->fields & LOCATION_GPS_DEVICE_SPEED_SET) {
 			priv->speed=device->fix->speed;
 			callback_list_call_attr_0(priv->cbl, attr_position_speed);
-			dbg(lvl_warning,"Speed: %f\n ",priv->speed);
+			dbg(lvl_debug,"Speed: %f\n ",priv->speed);
 		}
 
 		if (device->fix->fields & LOCATION_GPS_DEVICE_TRACK_SET) {
 			priv->direction=device->fix->track;
-			dbg(lvl_warning,"Direction: %f\n",priv->direction);
+			dbg(lvl_debug,"Direction: %f\n",priv->direction);
 		}
 
 		if (device->fix->fields & LOCATION_GPS_DEVICE_TIME_SET) {
 			priv->fix_time=device->fix->time;
-			dbg(lvl_warning,"Time: %f\n",priv->fix_time);
+			dbg(lvl_debug,"Time: %f\n",priv->fix_time);
 		}
 
 		if (device->fix->fields & LOCATION_GPS_DEVICE_ALTITUDE_SET) {
 			priv->height=device->fix->altitude;
-			dbg(lvl_warning,"Elevation: %f\n",priv->height);
+			dbg(lvl_debug,"Elevation: %f\n",priv->height);
 		}
 
 	}
@@ -148,54 +148,54 @@ vehicle_maemo_open(struct vehicle_priv *priv)
 
 	if (!strcasecmp(priv->source+8,"cwp")) {
 		g_object_set(G_OBJECT(priv->control),	"preferred-method", LOCATION_METHOD_CWP, NULL);
-		dbg(lvl_warning,"Method set: CWP\n");
+		dbg(lvl_debug,"Method set: CWP\n");
 	} else if (!strcasecmp(priv->source+8,"acwp")) {
 		g_object_set(G_OBJECT(priv->control),	"preferred-method", LOCATION_METHOD_ACWP, NULL);
-		dbg(lvl_warning,"Method set: ACWP\n");
+		dbg(lvl_debug,"Method set: ACWP\n");
 	} else if (!strcasecmp(priv->source+8,"gnss")) {
 		g_object_set(G_OBJECT(priv->control),	"preferred-method", LOCATION_METHOD_GNSS, NULL);
-		dbg(lvl_warning,"Method set: GNSS\n");
+		dbg(lvl_debug,"Method set: GNSS\n");
 	} else if (!strcasecmp(priv->source+8,"agnss")) {
 		g_object_set(G_OBJECT(priv->control),	"preferred-method", LOCATION_METHOD_AGNSS, NULL); 
-		dbg(lvl_warning,"Method set: AGNSS\n");
+		dbg(lvl_debug,"Method set: AGNSS\n");
 	} else {
 		g_object_set(G_OBJECT(priv->control),	"preferred-method", LOCATION_METHOD_USER_SELECTED, NULL); 
-		dbg(lvl_warning,"Method set: ANY\n");
+		dbg(lvl_debug,"Method set: ANY\n");
 	}
 
 	switch (priv->retry_interval) {
 	case 2:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_2S,	NULL);
-		dbg(lvl_warning,"Interval set: 2s\n");
+		dbg(lvl_debug,"Interval set: 2s\n");
 		break;
 	case 5:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_5S,	NULL);
-		dbg(lvl_warning,"Interval set: 5s\n");
+		dbg(lvl_debug,"Interval set: 5s\n");
 		break;
 	case 10:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_10S,	NULL);
-		dbg(lvl_warning,"Interval set: 10s\n");
+		dbg(lvl_debug,"Interval set: 10s\n");
 		break;
 	case 20:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_20S,	NULL);
-		dbg(lvl_warning,"Interval set: 20s\n");
+		dbg(lvl_debug,"Interval set: 20s\n");
 		break;
 	case 30:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_30S,	NULL);
-		dbg(lvl_warning,"Interval set: 30s\n");
+		dbg(lvl_debug,"Interval set: 30s\n");
 		break;
 	case 60:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_60S,	NULL);
-		dbg(lvl_warning,"Interval set: 60s\n");
+		dbg(lvl_debug,"Interval set: 60s\n");
 		break;
 	case 120:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_120S,	NULL);
-		dbg(lvl_warning,"Interval set: 120s\n");
+		dbg(lvl_debug,"Interval set: 120s\n");
 		break;
 	case 1:
 	default:
 		g_object_set(G_OBJECT(priv->control),	"preferred-interval", LOCATION_INTERVAL_1S,	NULL);
-		dbg(lvl_warning,"Interval set: 1s\n");
+		dbg(lvl_debug,"Interval set: 1s\n");
 		break;
 	}
 
@@ -225,41 +225,41 @@ vehicle_maemo_position_attr_get(struct vehicle_priv *priv,
 	struct attr * active=NULL;
 	switch (type) {
 	case attr_position_fix_type:
-		dbg(lvl_warning,"Attr requested: position_fix_type\n");
+		dbg(lvl_debug,"Attr requested: position_fix_type\n");
 		attr->u.num = priv->fix_type;
 		break;
 	case attr_position_height:
-		dbg(lvl_warning,"Attr requested: position_height\n");
+		dbg(lvl_debug,"Attr requested: position_height\n");
 		attr->u.numd = &priv->height;
 		break;
 	case attr_position_speed:
-		dbg(lvl_warning,"Attr requested: position_speed\n");
+		dbg(lvl_debug,"Attr requested: position_speed\n");
 		attr->u.numd = &priv->speed;
 		break;
 	case attr_position_direction:
-		dbg(lvl_warning,"Attr requested: position_direction\n");
+		dbg(lvl_debug,"Attr requested: position_direction\n");
 		attr->u.numd = &priv->direction;
 		break;
 	case attr_position_hdop:
-		dbg(lvl_warning,"Attr requested: position_hdop\n");
+		dbg(lvl_debug,"Attr requested: position_hdop\n");
 		attr->u.numd = &priv->hdop;
 		break;
 	case attr_position_sats:
-		dbg(lvl_warning,"Attr requested: position_sats\n");
+		dbg(lvl_debug,"Attr requested: position_sats\n");
 		attr->u.num = priv->sats;
 		break;
 	case attr_position_sats_used:
-		dbg(lvl_warning,"Attr requested: position_sats_used\n");
+		dbg(lvl_debug,"Attr requested: position_sats_used\n");
 		attr->u.num = priv->sats_used;
 		break;
 	case attr_position_coord_geo:
-		dbg(lvl_warning,"Attr requested: position_coord_geo\n");
+		dbg(lvl_debug,"Attr requested: position_coord_geo\n");
 		attr->u.coord_geo = &priv->geo;
 		break;
 	case attr_position_time_iso8601:
 		{
 		struct tm tm;
-		dbg(lvl_warning,"Attr requested: position_time_iso8601\n");
+		dbg(lvl_debug,"Attr requested: position_time_iso8601\n");
 		if (!priv->fix_time)
 			return 0;
 		if (gmtime_r(&priv->fix_time, &tm)) {
@@ -271,7 +271,7 @@ vehicle_maemo_position_attr_get(struct vehicle_priv *priv,
 		}
 		break;
 	case attr_active:
-		dbg(lvl_warning,"Attr requested: position_active\n");
+		dbg(lvl_debug,"Attr requested: position_active\n");
 		active = attr_search(priv->attrs,NULL,attr_active);
 		if(active != NULL) {
 			attr->u.num=active->u.num;
@@ -299,7 +299,7 @@ vehicle_maemo_new_maemo(struct vehicle_methods
 	struct vehicle_priv *ret;
 	struct attr *source, *retry_int;
 
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->source = g_strdup(source->u.str);
@@ -313,7 +313,7 @@ vehicle_maemo_new_maemo(struct vehicle_methods
 	} else {
 		ret->retry_interval = 1;
 	}
-	dbg(lvl_warning,"source: %s, interval: %u\n",ret->source,ret->retry_interval);
+	dbg(lvl_debug,"source: %s, interval: %u\n",ret->source,ret->retry_interval);
 	ret->cbl = cbl;
 	*meth = vehicle_maemo_methods;
 	ret->attrs = attrs;
@@ -324,6 +324,6 @@ vehicle_maemo_new_maemo(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_vehicle_type("maemo", vehicle_maemo_new_maemo);
 }

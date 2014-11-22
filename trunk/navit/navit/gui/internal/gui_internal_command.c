@@ -151,7 +151,7 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		dbg(lvl_error,"first parameter wrong type\n");
 		return;
 	}
-	dbg(lvl_warning,"in %s result %s\n",in[0]->u.str,escaped.u.str);
+	dbg(lvl_debug,"in %s result %s\n",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
 }
@@ -630,7 +630,7 @@ gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, 
 	struct attr pro;
 	struct coord c;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -871,7 +871,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	const char *name=_("Position");
 	int flags=-1;
 
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -881,7 +881,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 		if (in[2] && ATTR_IS_INT(in[2]->type))
 			flags=in[2]->u.num;
 	}
-	dbg(lvl_warning,"flags=0x%x\n",flags);
+	dbg(lvl_debug,"flags=0x%x\n",flags);
 	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
 
@@ -908,10 +908,10 @@ gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, s
 		return;
 	}
 	pattern=in[0]->u.str;
-	dbg(lvl_warning,"pattern %s\n",pattern);
+	dbg(lvl_debug,"pattern %s\n",pattern);
 	if (in[1]) {
 		command=gui_internal_cmd_match_expand(pattern, in+1);
-		dbg(lvl_warning,"expand %s\n",command);
+		dbg(lvl_debug,"expand %s\n",command);
 		gui_internal_set(pattern, command);
 		command_evaluate(&this->self, command);
 		g_free(command);
@@ -955,7 +955,7 @@ static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str=NULL;
-	dbg(lvl_warning,"enter %s %p %p %p\n",function,in,out,valid);
+	dbg(lvl_debug,"enter %s %p %p %p\n",function,in,out,valid);
 	if (!in)
 		return;
 	while (*in) {
@@ -965,7 +965,7 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	if (str) {
 		str=g_strdup_printf("<html>%s</html>\n",str);
 #if 0
-		dbg(lvl_error,"%s\n",str);
+		dbg(lvl_debug,"%s\n",str);
 #endif
 		gui_internal_html_parse_text(this, str);
 	}
@@ -1096,7 +1096,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 	}
 	g_free(onclick);
 	html=g_strdup_printf("<html>%s%s</html>\n",str,suffix);
-	dbg(lvl_warning,"return %s",html);
+	dbg(lvl_debug,"return %s",html);
 	gui_internal_html_parse_text(this, html);
 	g_free(html);
 error:
@@ -1109,16 +1109,16 @@ static void
 gui_internal_cmd_debug(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str;
-	dbg(lvl_error,"begin\n");
+	dbg(lvl_debug,"begin\n");
 	if (in) {
 		while (*in) {
 			str=attr_to_text(*in, NULL, 0);
-			dbg(lvl_error,"%s:%s\n",attr_to_name((*in)->type),str);
+			dbg(lvl_debug,"%s:%s\n",attr_to_name((*in)->type),str);
 			in++;
 			g_free(str);
 		}
 	}
-	dbg(lvl_error,"done\n");
+	dbg(lvl_debug,"done\n");
 }
 
 static void

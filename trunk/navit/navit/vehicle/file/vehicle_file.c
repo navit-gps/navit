@@ -148,7 +148,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
     int rc = 0;
     int dwBytes;
 
-    dbg(lvl_warning, "enter, *priv='%x', priv->source='%s'\n", priv, priv->source);
+    dbg(lvl_debug, "enter, *priv='%x', priv->source='%s'\n", priv, priv->source);
 
     if ( priv->no_data_count > 5 )
     {
@@ -329,7 +329,7 @@ vehicle_file_open(struct vehicle_priv *priv)
 static void
 vehicle_file_close(struct vehicle_priv *priv)
 {
-    dbg(lvl_warning, "enter, priv->fd='%d'\n", priv->fd);
+    dbg(lvl_debug, "enter, priv->fd='%d'\n", priv->fd);
 	vehicle_file_disable_watch(priv);
 #ifdef _WIN32
     if(priv->file_type == file_type_serial)
@@ -369,7 +369,7 @@ vehicle_file_close(struct vehicle_priv *priv)
 static int
 vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	vehicle_file_enable_watch(priv);
 
 	return FALSE;
@@ -603,7 +603,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(lvl_warning,"magnetic %d\n", priv->magnetic_direction);
+			dbg(lvl_debug,"magnetic %d\n", priv->magnetic_direction);
 		}
 	}
 	return ret;
@@ -624,7 +624,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 {
 	int size, rc = 0;
 	char *str, *tok;
-    dbg(lvl_warning, "vehicle_file_io : enter\n");
+    dbg(lvl_debug, "vehicle_file_io : enter\n");
 
 	if (priv->process_statefile) {
 		unsigned char *data;
@@ -657,12 +657,12 @@ vehicle_file_io(struct vehicle_priv *priv)
 	}
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
-	dbg(lvl_warning, "size=%d pos=%d buffer='%s'\n", size,
+	dbg(lvl_debug, "size=%d pos=%d buffer='%s'\n", size,
 	    priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
-		dbg(lvl_warning, "line='%s'\n", str);
+		dbg(lvl_debug, "line='%s'\n", str);
 		rc +=vehicle_file_parse(priv, str);
 		str = tok;
 		if (priv->file_type == file_type_file && rc)
@@ -673,10 +673,10 @@ vehicle_file_io(struct vehicle_priv *priv)
 		size = priv->buffer + priv->buffer_pos - str;
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
-		dbg(lvl_warning, "now pos=%d buffer='%s'\n",
+		dbg(lvl_debug, "now pos=%d buffer='%s'\n",
 		    priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
-		dbg(lvl_error,
+		dbg(lvl_debug,
 		    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
 		priv->buffer_pos = 0;
 	}
@@ -695,7 +695,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 static void
 vehicle_file_enable_watch(struct vehicle_priv *priv)
 {
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 #ifdef _WIN32
 	// add an event : don't use glib timers and g_timeout_add
     if (priv->file_type == file_type_serial)
@@ -723,7 +723,7 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 static void
 vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
-	dbg(lvl_warning, "vehicle_file_disable_watch : enter\n");
+	dbg(lvl_debug, "vehicle_file_disable_watch : enter\n");
 #ifdef _WIN32
     if(priv->file_type == file_type_serial)
     {
@@ -844,7 +844,7 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		attr->u.str=priv->fixiso8601;
 		break;
 	case attr_position_sat_item:
-		dbg(lvl_error,"at here\n");
+		dbg(lvl_debug,"at here\n");
 		priv->sat_item.id_lo++;
 		if (priv->sat_item.id_lo > priv->current_count) {
 			priv->sat_item.id_lo=0;
@@ -951,7 +951,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct attr *checksum_ignore;
 	struct attr *state_file;
 
-	dbg(lvl_warning, "enter\n");
+	dbg(lvl_debug, "enter\n");
 
 	source = attr_search(attrs, NULL, attr_source);
 	if(source == NULL){
@@ -1009,7 +1009,7 @@ vehicle_file_new_file(struct vehicle_methods
 		ret->on_eof=1;
 	if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
-	dbg(lvl_error,"on_eof=%d\n", ret->on_eof);
+	dbg(lvl_debug,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_file_methods;
 	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
 	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
@@ -1025,7 +1025,7 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->no_data_count = 0;
 #endif
 
-	dbg(lvl_warning, "vehicle_file_new_file:open\n");
+	dbg(lvl_debug, "vehicle_file_new_file:open\n");
 	if (!vehicle_file_open(ret)) {
         dbg(lvl_error, "Failed to open '%s'\n", ret->source);
 	}
@@ -1033,7 +1033,7 @@ vehicle_file_new_file(struct vehicle_methods
 	vehicle_file_enable_watch(ret);
 	// vehicle_file_destroy(ret);
 	// return NULL;
-	dbg(lvl_warning, "leave\n");
+	dbg(lvl_debug, "leave\n");
 	return ret;
 }
 
@@ -1045,7 +1045,7 @@ vehicle_file_new_file(struct vehicle_methods
 **/
 void plugin_init(void)
 {
-	dbg(lvl_warning, "vehicle_file:plugin_init:enter\n");
+	dbg(lvl_debug, "vehicle_file:plugin_init:enter\n");
 	plugin_register_vehicle_type("file", vehicle_file_new_file);
 	plugin_register_vehicle_type("pipe", vehicle_file_new_file);
 	plugin_register_vehicle_type("socket", vehicle_file_new_file);

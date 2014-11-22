@@ -152,8 +152,8 @@ dump(struct result *res)
 	if (res->attrn)
 		strncpy(attribute, res->attrn, res->attrnlen);
 	attribute[res->attrnlen]='\0';
-	dbg(lvl_error,"type:%s\n", attr_to_name(res->attr.type));
-	dbg(lvl_error,"attribute '%s' from '%s'\n", attribute, object);
+	dbg(lvl_debug,"type:%s\n", attr_to_name(res->attr.type));
+	dbg(lvl_debug,"attribute '%s' from '%s'\n", attribute, object);
 #endif
 }
 
@@ -315,7 +315,7 @@ get_int_bool(struct context *ctx, int is_bool, struct result *res)
 		return res->attr.u.data != NULL;
 	if (is_bool && ATTR_IS_STRING(res->attr.type)) 
 		return res->attr.u.data != NULL;
-	dbg(lvl_error,"bool %d %s\n",is_bool,attr_to_name(res->attr.type));
+	dbg(lvl_debug,"bool %d %s\n",is_bool,attr_to_name(res->attr.type));
 	ctx->error=wrong_type;
 	return 0;
 }
@@ -657,7 +657,7 @@ command_call_function(struct context *ctx, struct result *res)
 	if (res->attrn)
 		strncpy(function, res->attrn, res->attrnlen);
 	function[res->attrnlen]='\0';
-	dbg(lvl_warning,"function=%s\n", function);
+	dbg(lvl_debug,"function=%s\n", function);
 	if (ctx->expr[0] != ')') {
 		list=eval_list(ctx);	
 		if (ctx->error) {
@@ -716,7 +716,7 @@ command_call_function(struct context *ctx, struct result *res)
 			if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 				int valid =0;
 				struct attr **out=NULL;
-				dbg(lvl_warning,"function call %s from %s\n",function, attr_to_name(res->attr.type));
+				dbg(lvl_debug,"function call %s from %s\n",function, attr_to_name(res->attr.type));
 				callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
 				if (valid!=1){
 					dbg(lvl_error, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
@@ -801,7 +801,7 @@ eval_postfix(struct context *ctx, struct result *res)
 				return;
 			}
 		} else if (op[0] == '(') {
-			dbg(lvl_warning,"function call\n");
+			dbg(lvl_debug,"function call\n");
 			resolve_object(ctx, res);
 			command_call_function(ctx, res);
 		}
@@ -989,7 +989,7 @@ eval_conditional(struct context *ctx, struct result *res)
 	memset(&tmp,0,sizeof(tmp));
 
 	if (!get_op(ctx,0,":",NULL)) {
-		dbg(lvl_error,"ctxerr\n");
+		dbg(lvl_debug,"ctxerr\n");
 		ctx->error=missing_colon;
 		return;
 	}
@@ -1110,7 +1110,7 @@ command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr 
 		return attr_none;
 	resolve_object(&ctx, &res);
 	*ret=res.attr;
-	dbg(lvl_warning,"type %s\n",attr_to_name(command_attr_type(&res)));
+	dbg(lvl_debug,"type %s\n",attr_to_name(command_attr_type(&res)));
 	return command_attr_type(&res);
 }
 

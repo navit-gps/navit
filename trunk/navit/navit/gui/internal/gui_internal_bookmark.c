@@ -21,7 +21,7 @@ gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
 {
 	GList *l;
 	struct attr attr;
-	dbg(lvl_warning,"text='%s'\n", widget->text);
+	dbg(lvl_debug,"text='%s'\n", widget->text);
 	if (widget->text && strlen(widget->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_add_bookmark(attr.u.bookmarks, &widget->c, widget->text);
@@ -37,7 +37,7 @@ gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *wi
 {
 	GList *l;
 	struct attr attr;
-	dbg(lvl_warning,"text='%s'\n", widget->text);
+	dbg(lvl_debug,"text='%s'\n", widget->text);
 	if (widget->text && strlen(widget->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_add_bookmark(attr.u.bookmarks, NULL, widget->text);
@@ -66,7 +66,7 @@ gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *w
 	struct widget *w=(struct widget*)widget->data;
 	GList *l;
 	struct attr attr;
-	dbg(lvl_warning,"text='%s'\n", w->text);
+	dbg(lvl_debug,"text='%s'\n", w->text);
 	if (w->text && strlen(w->text)){
 		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
 		bookmarks_rename_bookmark(attr.u.bookmarks, w->name, w->text);

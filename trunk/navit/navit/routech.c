@@ -447,17 +447,17 @@ routech_find_edge(struct map_rect *mr, struct item_id *from, struct item_id *to,
 	struct item *item=map_rect_get_item_byid(mr, from->id_hi, from->id_lo);
 	struct attr edge_attr;
 	dbg_assert(item->type == type_ch_node);
-	dbg(lvl_warning,"type %s\n",item_to_name(item->type));
-	dbg(lvl_warning,"segment item=%p\n",item);
+	dbg(lvl_debug,"type %s\n",item_to_name(item->type));
+	dbg(lvl_debug,"segment item=%p\n",item);
 	while (item_attr_get(item, attr_ch_edge, &edge_attr)) {
 		struct ch_edge *edge=edge_attr.u.data;
-		dbg(lvl_warning,"flags=%d\n",edge->flags);
+		dbg(lvl_debug,"flags=%d\n",edge->flags);
 		if (edge->target.id_hi == to->id_hi && edge->target.id_lo == to->id_lo) {
 			*middle=edge->middle;
 			return edge->flags;
 		}
 	}
-	dbg(lvl_error,"** not found\n");
+	dbg(lvl_debug,"** not found\n");
 	return 0;
 }
 
@@ -470,7 +470,7 @@ routech_resolve(struct map_rect *mr, struct item_id *from, struct item_id *to, i
 		res=routech_find_edge(mr, to, from, &middle_node);
 	else
 		res=routech_find_edge(mr, from, to, &middle_node);
-	dbg(lvl_warning,"res=%d\n",res);
+	dbg(lvl_debug,"res=%d\n",res);
 	if (res & 4) {
 		routech_resolve(mr, from, &middle_node, 1);
 		routech_resolve(mr, &middle_node, to, 0);
@@ -483,7 +483,7 @@ routech_find_path(struct map_rect *mr, struct routech_search *search)
 {
 	struct item_id *curr_node=search->via;
 	GList *i,*n,*list=NULL;
-	dbg(lvl_warning,"node %p\n",curr_node);
+	dbg(lvl_debug,"node %p\n",curr_node);
 	for (;;) {
 		int element=GPOINTER_TO_INT(g_hash_table_lookup(search->hash, curr_node));
 		struct item_id *next_node=pq_get_parent_node_id(search->pq,element);
@@ -491,8 +491,8 @@ routech_find_path(struct map_rect *mr, struct routech_search *search)
 			list=g_list_append(list, curr_node);
 		else
 			list=g_list_prepend(list, curr_node);
-		dbg(lvl_warning,"element %d\n",element);
-		dbg(lvl_warning,"next node %p\n",next_node);
+		dbg(lvl_debug,"element %d\n",element);
+		dbg(lvl_debug,"next node %p\n",next_node);
 		if (!next_node)
 			break;
 		curr_node=next_node;
@@ -551,16 +551,16 @@ routech_test(struct navit *navit)
 		curr=search[search_id];
 		opposite=search[1-search_id];
 		if (pq_is_empty(curr->pq)) {
-			dbg(lvl_error,"empty\n");
+			dbg(lvl_debug,"empty\n");
 			break;
 		}
 		routech_relax(mr, curr, opposite);
 		if (pq_min(curr->pq) > curr->upper) {
-			dbg(lvl_error,"min %d upper %d\n",pq_min(curr->pq), curr->upper);
+			dbg(lvl_debug,"min %d upper %d\n",pq_min(curr->pq), curr->upper);
 			curr->finished=1;
 		}
 		if (curr->finished && opposite->finished) {
-			dbg(lvl_error,"finished\n");
+			dbg(lvl_debug,"finished\n");
 			break;
 		}
 	}

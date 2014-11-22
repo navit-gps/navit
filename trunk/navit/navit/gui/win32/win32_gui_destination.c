@@ -212,7 +212,7 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
         (void)ListView_InsertItem(datawindow->hwndList, &lvI);
         ListView_SetItemText(datawindow->hwndList, listIndex, 1, tcharBuffer);
         g_free(tcharBuffer);
-        dbg(lvl_error,"%s\n", res->country->name);
+        dbg(lvl_debug,"%s\n", res->country->name);
         listIndex++;
     }
 }

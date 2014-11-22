@@ -130,7 +130,7 @@ save_map_csv(struct map_priv *m)
 							tmpstr=g_strdup("");
 						}
 					} else {
-						dbg(lvl_error,"No value defined for the atribute %s, assuming empty string\n",attr_to_name(*at));
+						dbg(lvl_debug,"No value defined for the atribute %s, assuming empty string\n",attr_to_name(*at));
 						tmpstr=g_strdup("");
 					}
 				}
@@ -181,7 +181,7 @@ static const int zoom_max = 18;
 static void
 map_destroy_csv(struct map_priv *m)
 {
-	dbg(lvl_warning,"map_destroy_csv\n");
+	dbg(lvl_debug,"map_destroy_csv\n");
 	/*save if changed */
 	save_map_csv(m);
 	g_hash_table_destroy(m->qitem_hash);
@@ -355,10 +355,10 @@ static int
 csv_type_set(void *priv_data, enum item_type type)
 {
 	struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
-	dbg(lvl_warning,"Enter %d\n", type);
+	dbg(lvl_debug,"Enter %d\n", type);
 
 	if(!mr || !mr->qitem) {
-		dbg(lvl_warning,"Nothing to do\n");
+		dbg(lvl_debug,"Nothing to do\n");
 		return 0;
 	}
 
@@ -366,7 +366,7 @@ csv_type_set(void *priv_data, enum item_type type)
 		return 0;
 
 	mr->qitem->deleted=1;
-	dbg(lvl_warning,"Item %p is deleted\n",mr->qitem);
+	dbg(lvl_debug,"Item %p is deleted\n",mr->qitem);
 
 	return 1;
 }
@@ -395,7 +395,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 	struct map_priv* m;
 	struct quadtree_item* qi;
 	GList* new_it;
-	dbg(lvl_warning,"Set coordinates %d %d\n", c->x, c->y);
+	dbg(lvl_debug,"Set coordinates %d %d\n", c->x, c->y);
 
 	/* for now we only support coord modification only */
 	if( ! change_mode_modify) {
@@ -430,7 +430,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 		qi->longitude = cg.lng;
 		qi->latitude = cg.lat;
 		quadtree_add( m->tree_root, qi, mr->qiter);
-		dbg(lvl_warning,"Set coordinates %f %f\n", cg.lng, cg.lat);
+		dbg(lvl_debug,"Set coordinates %f %f\n", cg.lng, cg.lat);
 		m->new_items = g_list_remove_link(m->new_items,new_it);
 		m->dirty=1;
 		save_map_csv(m);
@@ -518,7 +518,7 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel)
 	struct coord_geo lu;
 	struct coord_geo rl;
 	struct quadtree_iter *res = NULL;
-	dbg(lvl_warning,"map_rect_new_csv\n");
+	dbg(lvl_debug,"map_rect_new_csv\n");
 	if(debug_level_get("map_csv")>2) {
 		map_csv_debug_dump(map);
 	}
@@ -725,7 +725,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 
 	charset  = attr_search(attrs, NULL, attr_charset);
 	if(charset) {
-		dbg(lvl_warning,"charset:%s\n",charset->u.str);
+		dbg(lvl_debug,"charset:%s\n",charset->u.str);
 		m->charset=g_strdup(charset->u.str);
 	} else {
 		m->charset=g_strdup(map_methods_csv.charset);
@@ -757,7 +757,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  FILE *fp;
 	  wexp=file_wordexp_new(data->u.str);
 	  wexp_data=file_wordexp_get_array(wexp);
-	  dbg(lvl_warning,"map_new_csv %s\n", data->u.str);
+	  dbg(lvl_debug,"map_new_csv %s\n", data->u.str);
 	  m->filename=g_strdup(wexp_data[0]);
 	  file_wordexp_destroy(wexp);
 
@@ -847,7 +847,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 						*pID = m->next_item_idx;
 						g_hash_table_insert(m->qitem_hash, pID,qi);
 						++m->next_item_idx;
-						dbg(lvl_warning,"%s\n",line);
+						dbg(lvl_debug,"%s\n",line);
 					}
 					else {
 						g_free(curr_item);
@@ -867,7 +867,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 		dbg(lvl_error,"Error opening csv map file %s, starting with empty map\n", m->filename);
 	  }
 	} else {
-	  	dbg(lvl_warning,"No data attribute, starting with in-memory map\n");
+	  	dbg(lvl_debug,"No data attribute, starting with in-memory map\n");
 	}
 
 	dbg(lvl_info,"%p\n",tree_root);
@@ -877,7 +877,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 void
 plugin_init(void)
 {
-	dbg(lvl_warning,"csv: plugin_init\n");
+	dbg(lvl_debug,"csv: plugin_init\n");
 	plugin_register_map_type("csv", map_new_csv);
 }
 

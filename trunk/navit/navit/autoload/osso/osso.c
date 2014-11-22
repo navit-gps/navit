@@ -33,7 +33,7 @@ osso_display_on(struct navit *this_)
 static gboolean
 osso_cb_hw_state_idle(struct cb_hw_state_trail * params)
 {
-	dbg(lvl_error, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)\n",
+	dbg(lvl_debug, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)\n",
 	    params->state->system_inactivity_ind,
 	    params->state->save_unsaved_data_ind, params->state->shutdown_ind,
 	    params->state->memory_low_ind, params->state->sig_device_mode_ind);
@@ -69,7 +69,7 @@ osso_cb_hw_state(osso_hw_state_t * state, gpointer data)
 static void
 osso_navit(struct navit *nav, int add)
 {
-	dbg(lvl_warning, "Installing osso context for org.navit_project.navit\n");
+	dbg(lvl_debug, "Installing osso context for org.navit_project.navit\n");
 	osso_context = osso_initialize("org.navit_project.navit", version, TRUE, NULL);
 	if (osso_context == NULL) {
 		dbg(lvl_error, "error initiating osso context\n");

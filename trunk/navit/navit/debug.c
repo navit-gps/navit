@@ -358,7 +358,7 @@ debug_dump_mallocs(void)
 {
 	struct malloc_head *head=malloc_heads;
 	int i;
-	dbg(lvl_error,"mallocs %d\n",mallocs);
+	dbg(lvl_debug,"mallocs %d\n",mallocs);
 	while (head) {
 		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
 		for (i = 0 ; i < 8 ; i++)
@@ -381,7 +381,7 @@ debug_malloc(const char *where, int line, const char *func, int size)
 	debug_malloc_size+=size;
 	if (debug_malloc_size/(1024*1024) != debug_malloc_size_m) {
 		debug_malloc_size_m=debug_malloc_size/(1024*1024);
-		dbg(lvl_error,"malloced %d kb\n",debug_malloc_size/1024);
+		dbg(lvl_debug,"malloced %d kb\n",debug_malloc_size/1024);
 	}
 	head=malloc(size+sizeof(*head)+sizeof(*tail));
 	head->magic=0xdeadbeef;

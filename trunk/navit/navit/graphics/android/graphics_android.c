@@ -222,18 +222,18 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		jclass localBitmap = NULL;
 		int id;
 
-		dbg(lvl_warning,"enter %s\n",path);
+		dbg(lvl_debug,"enter %s\n",path);
 		if (!strncmp(path,"res/drawable/",13)) {
 			jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
 			char *path_noext=g_strdup(path+13);
 			char *pos=strrchr(path_noext, '.');
 			if (pos)
 				*pos='\0';
-			dbg(lvl_warning,"path_noext=%s\n",path_noext);
+			dbg(lvl_debug,"path_noext=%s\n",path_noext);
 			string = (*jnienv)->NewStringUTF(jnienv, path_noext);
 			g_free(path_noext);
 			id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, gra->packageName);
-			dbg(lvl_warning,"id=%d\n",id);
+			dbg(lvl_debug,"id=%d\n",id);
 			if (id)
 				localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
 			(*jnienv)->DeleteLocalRef(jnienv, a);
@@ -241,13 +241,13 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 			string = (*jnienv)->NewStringUTF(jnienv, path);
 			localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
 		}
-		dbg(lvl_warning,"result=%p\n",localBitmap);
+		dbg(lvl_debug,"result=%p\n",localBitmap);
 		if (localBitmap) {
 			ret->Bitmap = (*jnienv)->NewGlobalRef(jnienv, localBitmap);
 			(*jnienv)->DeleteLocalRef(jnienv, localBitmap);
 			ret->width=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
 			ret->height=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
-			dbg(lvl_warning,"w=%d h=%d for %s\n",ret->width,ret->height,path);
+			dbg(lvl_debug,"w=%d h=%d for %s\n",ret->width,ret->height,path);
 			ret->hot.x=ret->width/2;
 			ret->hot.y=ret->height/2;
 		} else {
@@ -346,7 +346,7 @@ static void
 draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	int bgcolor=0;
-	dbg(lvl_warning,"enter %s\n", text);
+	dbg(lvl_debug,"enter %s\n", text);
 	initPaint(gra, fg);
 	if(bg)
 		bgcolor=(bg->a<<24)| (bg->r<<16) | (bg->g<<8) | bg->b;
@@ -358,7 +358,7 @@ draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphic
 static void
 draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-	dbg(lvl_warning,"enter %p\n",img);
+	dbg(lvl_debug,"enter %p\n",img);
 	initPaint(gra, fg);
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y, img->Bitmap);
 	
@@ -467,7 +467,7 @@ static struct graphics_methods graphics_methods = {
 static void
 resize_callback(struct graphics_priv *gra, int w, int h)
 {
-	dbg(lvl_error,"w=%d h=%d ok\n",w,h);
+	dbg(lvl_debug,"w=%d h=%d ok\n",w,h);
 	 callback_list_call_attr_2(gra->cbl, attr_resize, (void *)w, (void *)h);
 }
 
@@ -483,7 +483,7 @@ motion_callback(struct graphics_priv *gra, int x, int y)
 static void
 keypress_callback(struct graphics_priv *gra, char *s)
 {
-	dbg(lvl_error,"enter %s\n",s);
+	dbg(lvl_debug,"enter %s\n",s);
 	callback_list_call_attr_1(gra->cbl, attr_keypress, s);
 }
 
@@ -504,20 +504,20 @@ set_activity(jobject graphics)
 	jmethodID cid;
 
 	ActivityClass = (*jnienv)->GetObjectClass(jnienv, android_activity);
-	dbg(lvl_error,"at 5\n");
+	dbg(lvl_debug,"at 5\n");
 	if (ActivityClass == NULL) {
-		dbg(lvl_error,"no activity class found\n");
+		dbg(lvl_debug,"no activity class found\n");
 		return 0;
 	}
-	dbg(lvl_error,"at 6\n");
+	dbg(lvl_debug,"at 6\n");
 	cid = (*jnienv)->GetMethodID(jnienv, ActivityClass, "setContentView", "(Landroid/view/View;)V");
 	if (cid == NULL) {
 		dbg(lvl_error,"no setContentView method found\n");
 		return 0;
 	}
-	dbg(lvl_error,"at 7\n");
+	dbg(lvl_debug,"at 7\n");
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, cid, graphics);
-	dbg(lvl_error,"at 8\n");
+	dbg(lvl_debug,"at 8\n");
 	return 1;
 }
 
@@ -527,7 +527,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	struct callback *cb;
 	jmethodID cid, Context_getPackageName;
 
-	dbg(lvl_error,"at 2 jnienv=%p\n",jnienv);
+	dbg(lvl_debug,"at 2 jnienv=%p\n",jnienv);
 	if (!find_class_global("android/graphics/Paint", &ret->PaintClass))
 		return 0;
 	if (!find_method(ret->PaintClass, "<init>", "(I)V", &ret->Paint_init))
@@ -572,15 +572,15 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 
 	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
-	dbg(lvl_error,"at 3\n");
+	dbg(lvl_debug,"at 3\n");
 	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;IIIIIII)V");
 	if (cid == NULL) {
 		dbg(lvl_error,"no method found\n");
 		return 0; /* exception thrown */
 	}
-	dbg(lvl_error,"at 4 android_activity=%p\n",android_activity);
+	dbg(lvl_debug,"at 4 android_activity=%p\n",android_activity);
 	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound, use_camera);
-	dbg(lvl_error,"result=%p\n",ret->NavitGraphics);
+	dbg(lvl_debug,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		ret->NavitGraphics = (*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
 
@@ -589,7 +589,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	/* 0x101 = text kerning (default), antialiasing */
 	ret->Paint=(*jnienv)->NewObject(jnienv, ret->PaintClass, ret->Paint_init, 0x101);
 
-	dbg(lvl_error,"result=%p\n",ret->Paint);
+	dbg(lvl_debug,"result=%p\n",ret->Paint);
 	if (ret->Paint)
 		ret->Paint = (*jnienv)->NewGlobalRef(jnienv, ret->Paint);
 
@@ -666,7 +666,7 @@ graphics_android_fullscreen(struct window *win, int on)
 static void
 graphics_android_disable_suspend(struct window *win)
 {
-	dbg(lvl_warning,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_disableSuspend);
 }
 
@@ -691,7 +691,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	}
 	image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
-		dbg(lvl_error,"returning %p\n",ret);
+		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
 	} else {
 		g_free(ret);
@@ -705,7 +705,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
 	if (graphics_android_init(ret, gr, p, w, h, alpha, wraparound, 0)) {
-		dbg(lvl_error,"returning %p\n",ret);
+		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
 	} else {
 		g_free(ret);
@@ -717,12 +717,12 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 static void
 event_android_main_loop_run(void)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 }
 
 static void event_android_main_loop_quit(void)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_exit);
 }
 
@@ -744,7 +744,7 @@ static void do_poll(JNIEnv *env, int fd, int cond)
 {
 	struct pollfd pfd;
 	pfd.fd=fd;
-	dbg(lvl_warning,"%p poll called for %d %d\n", fd, cond);
+	dbg(lvl_debug,"%p poll called for %d %d\n", fd, cond);
 	switch ((enum event_watch_cond)cond) {
 	case event_watch_cond_read:
 		pfd.events=POLLIN;
@@ -767,7 +767,7 @@ event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
 	jobject ret;
 	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, h, (int) cond, (int)cb);
-	dbg(lvl_error,"result for %d,%d,%p=%p\n",h,cond,cb,ret);
+	dbg(lvl_debug,"result for %d,%d,%p=%p\n",h,cond,cb,ret);
 	if (ret)
 		ret = (*jnienv)->NewGlobalRef(jnienv, ret);
 	return (struct event_watch *)ret;
@@ -776,7 +776,7 @@ event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 static void
 event_android_remove_watch(struct event_watch *ev)
 {
-	dbg(lvl_error,"enter %p\n",ev);
+	dbg(lvl_debug,"enter %p\n",ev);
 	if (ev) {
 		jobject obj=(jobject )ev;
 		(*jnienv)->CallVoidMethod(jnienv, obj, NavitWatch_remove);
@@ -828,9 +828,9 @@ event_android_add_idle(int priority, struct callback *cb)
 {
 #if 0
 	jobject ret;
-        dbg(lvl_warning,"enter\n");
+        dbg(lvl_debug,"enter\n");
 	ret=(*jnienv)->NewObject(jnienv, NavitIdleClass, NavitIdle_init, (int)cb);
-	dbg(lvl_warning,"result for %p=%p\n",cb,ret);
+	dbg(lvl_debug,"result for %p=%p\n",cb,ret);
 	if (ret)
 		ret = (*jnienv)->NewGlobalRef(jnienv, ret);
 	return (struct event_idle *)ret;
@@ -842,7 +842,7 @@ static void
 event_android_remove_idle(struct event_idle *ev)
 {
 #if 0
-	dbg(lvl_warning,"enter %p\n",ev);
+	dbg(lvl_debug,"enter %p\n",ev);
 	if (ev) {
 		jobject obj=(jobject )ev;
 		(*jnienv)->CallVoidMethod(jnienv, obj, NavitIdle_remove);
@@ -855,7 +855,7 @@ event_android_remove_idle(struct event_idle *ev)
 static void
 event_android_call_callback(struct callback_list *cb)
 {
-        dbg(lvl_error,"enter\n");
+        dbg(lvl_debug,"enter\n");
 }
 
 static struct event_methods event_android_methods = {
@@ -873,7 +873,7 @@ static struct event_methods event_android_methods = {
 static struct event_priv *
 event_android_new(struct event_methods *meth)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
 	if (!find_class_global("org/navitproject/navit/NavitTimeout", &NavitTimeoutClass))
 		return NULL;
 	NavitTimeout_init = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "<init>", "(IZI)V");
@@ -913,7 +913,7 @@ event_android_new(struct event_methods *meth)
 	Navit_fullscreen = (*jnienv)->GetMethodID(jnienv, NavitClass, "fullscreen", "(I)V"); 
 	if (Navit_fullscreen == NULL) 
 		return NULL; 
-	dbg(lvl_error,"ok\n");
+	dbg(lvl_debug,"ok\n");
         *meth=event_android_methods;
         return NULL;
 }
@@ -922,7 +922,7 @@ event_android_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-	dbg(lvl_error,"enter\n");
+	dbg(lvl_debug,"enter\n");
         plugin_register_graphics_type("android", graphics_android_new);
 	plugin_register_event_type("android", event_android_new);
 }
