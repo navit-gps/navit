@@ -200,7 +200,7 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
             }
             break;
         default:
-            dbg(0, "Unhandled search type");
+            dbg(lvl_error, "Unhandled search type");
         }
 
         lvI.iItem = listIndex;
@@ -212,7 +212,7 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
         (void)ListView_InsertItem(datawindow->hwndList, &lvI);
         ListView_SetItemText(datawindow->hwndList, listIndex, 1, tcharBuffer);
         g_free(tcharBuffer);
-        dbg(0,"%s\n", res->country->name);
+        dbg(lvl_error,"%s\n", res->country->name);
         listIndex++;
     }
 }
@@ -307,7 +307,7 @@ BOOL register_destination_window()
 
     if (!RegisterClass(&wc))
     {
-        dbg(0, "Window Registration Failed!\n");
+        dbg(lvl_error, "Window Registration Failed!\n");
         return FALSE;
     }
     return TRUE;
@@ -339,7 +339,7 @@ HANDLE create_destination_window( struct navit *nav )
 
     if (this_->hwnd == NULL)
     {
-        dbg(0, "Window Creation Failed!\n");
+        dbg(lvl_error, "Window Creation Failed!\n");
         return 0;
     }
 

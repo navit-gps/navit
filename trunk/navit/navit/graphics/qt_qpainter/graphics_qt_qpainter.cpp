@@ -65,7 +65,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 {
 	if (!paintev) {
 #ifndef QT_QPAINTER_NO_WIDGET
-		dbg(1,"update %d,%d %d x %d\n", r->x(), r->y(), r->width(), r->height());
+		dbg(lvl_warning,"update %d,%d %d x %d\n", r->x(), r->y(), r->width(), r->height());
 		if (r->x() <= -r->width())
 			return;
 		if (r->y() <= -r->height())
@@ -74,7 +74,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 			return;
 		if (r->y() > gr->widget->pixmap->height())
 			return;
-		dbg(1,"update valid %d,%d %dx%d\n", r->x(), r->y(), r->width(), r->height());
+		dbg(lvl_warning,"update valid %d,%d %dx%d\n", r->x(), r->y(), r->width(), r->height());
 		gr->widget->update(*r);
 #endif
 		return;
@@ -380,7 +380,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 //##############################################################################################################
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	dbg(1,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
+	dbg(lvl_warning,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
@@ -547,7 +547,7 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 //##############################################################################################################
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	dbg(1,"mode for %p %d\n", gr, mode);
+	dbg(lvl_warning,"mode for %p %d\n", gr, mode);
 	QRect r;
 	if (mode == draw_mode_begin) {
 #if QT_VERSION >= 0x040000
@@ -652,7 +652,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 	bool ok;
 
 	if (!strcmp(type, "resize")) {
-		dbg(0,"resize %d %d\n",this_->w,this_->h);
+		dbg(lvl_error,"resize %d %d\n",this_->w,this_->h);
 		QSize size(this_->w,this_->h);
 		this_->widget->do_resize(size);
 	}
@@ -821,14 +821,14 @@ event_qt_main_loop_run(void)
 
 static void event_qt_main_loop_quit(void)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	exit(0);
 }
 
 static struct event_watch *
 event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
-	dbg(1,"enter fd=%d\n",(int)(long)fd);
+	dbg(lvl_warning,"enter fd=%d\n",(int)(long)fd);
 	struct event_watch *ret=g_new0(struct event_watch, 1);
 	ret->fd=fd;
 	ret->cb=cb;
@@ -868,21 +868,21 @@ event_qt_remove_timeout(struct event_timeout *ev)
 static struct event_idle *
 event_qt_add_idle(int priority, struct callback *cb)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	return (struct event_idle *)event_qt_add_timeout(0, 1, cb);
 }
 
 static void
 event_qt_remove_idle(struct event_idle *ev)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	event_qt_remove_timeout((struct event_timeout *) ev);
 }
 
 static void
 event_qt_call_callback(struct callback_list *cb)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 }
 
 static struct event_methods event_qt_methods = {
@@ -903,7 +903,7 @@ struct event_priv {
 struct event_priv *
 event_qt_new(struct event_methods *meth)
 {
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 	*meth=event_qt_methods;
 	return NULL;
 }
@@ -920,7 +920,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct attr *attr;
 
-	dbg(0,"enter\n");
+	dbg(lvl_error,"enter\n");
 #ifdef QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
@@ -934,7 +934,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #ifdef QT_QPAINTER_USE_FREETYPE
 	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
 	if (!font_freetype_new) {
-		dbg(0,"no freetype\n");
+		dbg(lvl_error,"no freetype\n");
 		return NULL;
 	}
 #endif
@@ -987,7 +987,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	else
 		ret->window_title=g_strdup("Navit");
 
-	dbg(0,"return\n");
+	dbg(lvl_error,"return\n");
 	return ret;
 }
 

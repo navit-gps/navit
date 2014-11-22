@@ -170,20 +170,20 @@ plugin_load(struct plugin *pl)
 	GModule *mod;
 
 	if (pl->mod) {
-		dbg(0,"can't load '%s', already loaded\n", pl->name);
+		dbg(lvl_error,"can't load '%s', already loaded\n", pl->name);
 		return 0;
 	}
 	mod=g_module_open(pl->name, G_MODULE_BIND_LOCAL | (pl->lazy ? G_MODULE_BIND_LAZY : 0));
 	if (! mod) {
-		dbg(0,"can't load '%s', Error '%s'\n", pl->name, g_module_error());
+		dbg(lvl_error,"can't load '%s', Error '%s'\n", pl->name, g_module_error());
 		return 0;
 	}
 	if (!g_module_symbol(mod, "plugin_init", &init)) {
-		dbg(0,"can't load '%s', plugin_init not found\n", pl->name);
+		dbg(lvl_error,"can't load '%s', plugin_init not found\n", pl->name);
 		g_module_close(mod);
 		return 0;
 	} else {
-		dbg(1, "loaded module %s\n", pl->name);
+		dbg(lvl_warning, "loaded module %s\n", pl->name);
 		pl->mod=mod;
 		pl->init=init;
 	}
@@ -278,7 +278,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 		pls=parent->u.plugins;
 
 	if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
-		dbg(0,"missing path\n");
+		dbg(lvl_error,"missing path\n");
 		return NULL;
 	}
 	if ( (attr=attr_search(attrs, NULL, attr_active))) {
@@ -290,20 +290,20 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	if ( (attr=attr_search(attrs, NULL, attr_ondemand))) {
 		ondemand=attr->u.num;
 	}
-	dbg(1, "path=\"%s\", active=%d, lazy=%d, ondemand=%d\n",path_attr->u.str, active, lazy, ondemand);
+	dbg(lvl_warning, "path=\"%s\", active=%d, lazy=%d, ondemand=%d\n",path_attr->u.str, active, lazy, ondemand);
 
 	we=file_wordexp_new(path_attr->u.str);
 	count=file_wordexp_get_count(we);
 	array=file_wordexp_get_array(we);	
-	dbg(2,"expanded to %d words\n",count);
+	dbg(lvl_info,"expanded to %d words\n",count);
 	if (count != 1 || file_exists(array[0])) {
 		for (i = 0 ; i < count ; i++) {
 			name=array[i];
-			dbg(2,"found plugin module file [%d]: '%s'\n", i, name);
+			dbg(lvl_info,"found plugin module file [%d]: '%s'\n", i, name);
 			if (! (pls && (pl=g_hash_table_lookup(pls->hash, name)))) {
 				pl=plugin_new_from_path(name);
 				if (! pl) {
-					dbg(0,"failed to create plugin from file '%s'\n", name);
+					dbg(lvl_error,"failed to create plugin from file '%s'\n", name);
 					continue;
 				}
 				if (pls) {
@@ -355,7 +355,7 @@ plugins_init(struct plugins *pls)
 			l=g_list_next(l);
 		}
 	} else {
-		dbg(0, "Warning: No plugins found. Is Navit installed correctly?\n");
+		dbg(lvl_error, "Warning: No plugins found. Is Navit installed correctly?\n");
 	}
 #endif
 }
@@ -385,7 +385,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 	struct plugin *pl;
 	char *mod_name, *filename=NULL, *corename=NULL;
 
-	dbg(1, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(lvl_warning, "type=\"%s\", name=\"%s\"\n", type_name, name);
 
 	l=plugin_types[type];
 	while (l) {
@@ -405,9 +405,9 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 			mod_name++;
 		else
 			mod_name=pl->name;
-		dbg(2,"compare '%s' with '%s'\n", mod_name, filename);
+		dbg(lvl_info,"compare '%s' with '%s'\n", mod_name, filename);
 		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(corename))) {
-			dbg(1, "Loading module \"%s\"\n",pl->name) ;
+			dbg(lvl_warning, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);

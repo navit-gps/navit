@@ -145,12 +145,12 @@ int
 gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description)
 {
 	int ret;
-	dbg(2,"enter\n");
+	dbg(lvl_info,"enter\n");
 	if (! gui->meth.add_bookmark)
 		return 0;
 	ret=gui->meth.add_bookmark(gui->priv, c, description);
 	
-	dbg(2,"ret=%d\n", ret);
+	dbg(lvl_info,"ret=%d\n", ret);
 	return ret;
 }
 

@@ -61,7 +61,7 @@ gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p)
    	}
 	this->gesture_ring[this->gesture_ring_last].p=*p;
 	this->gesture_ring[this->gesture_ring_last].msec=msec;
-	dbg(2,"msec="LONGLONG_FMT" x=%d y=%d\n",msec,p->x,p->y);
+	dbg(lvl_info,"msec="LONGLONG_FMT" x=%d y=%d\n",msec,p->x,p->y);
 };
 
 int
@@ -89,7 +89,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct po
 		*p0=g->p;
 	}
 	msec=g->msec;
-	dbg(2,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
+	dbg(lvl_info,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
 	for(i=1;(g=gui_internal_gesture_ring_get(this,i))!=NULL;i++) {
 		if( msec-g->msec > 1000 )
 			break;
@@ -99,7 +99,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct po
 		if(p0) {
 			*p0=g->p;
 		}
-		dbg(2,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
+		dbg(lvl_info,LONGLONG_FMT" %d %d\n",g->msec, g->p.x, g->p.y);
 	}
 	return dt;
 }
@@ -114,7 +114,7 @@ gui_internal_gesture_do(struct gui_priv *this)
 
 	if( abs(dx) > this->icon_s*3 && abs(dy) < this->icon_s ) {
 		struct widget *wt;
-		dbg(1,"horizontal dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_warning,"horizontal dx=%d dy=%d\n",dx,dy);
 
 		/* Prevent swiping if widget was scrolled beforehand */
 		if(this->pressed==2)
@@ -133,11 +133,11 @@ gui_internal_gesture_do(struct gui_priv *this)
 			gui_internal_table_button_prev(this,NULL,wt);
 		return 1;
 	} else if( abs(dy) > this->icon_s*3 && abs(dx) < this->icon_s ) {
-		dbg(1,"vertical dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_warning,"vertical dx=%d dy=%d\n",dx,dy);
 	} else if (dt>300 && abs(dx) <this->icon_s && abs(dy) <this->icon_s ) {
-		dbg(1,"longtap dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_warning,"longtap dx=%d dy=%d\n",dx,dy);
 	} else {
-		dbg(1,"none dx=%d dy=%d\n",dx,dy);
+		dbg(lvl_warning,"none dx=%d dy=%d\n",dx,dy);
 	}
 	
 	return 0;

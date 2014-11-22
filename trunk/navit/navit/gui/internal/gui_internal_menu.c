@@ -118,7 +118,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
-		dbg(2,"topbox->menu_data=%p\n", topbox->menu_data);
+		dbg(lvl_info,"topbox->menu_data=%p\n", topbox->menu_data);
 		gui_internal_widget_append(wm, w);
 		wb=gui_internal_box_new(this, gravity_right_center|orientation_horizontal|flags_fill);
 		wb->bl=6;
@@ -260,7 +260,7 @@ gui_internal_top_bar(struct gui_priv *this)
 				use_sep=1;
 			else
 				use_sep=0;
-			dbg(1,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
+			dbg(lvl_warning,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
 			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) + (g_list_previous(l) ? dots_len : 0) > width) {
 				incomplete=1;
 				gui_internal_widget_destroy(this, wcn);

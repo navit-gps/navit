@@ -104,7 +104,7 @@ transform_setup_matrix(struct transformation *t)
 	int scale=t->scale;
 	int order_dir=-1;
 
-	dbg(1,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+	dbg(lvl_warning,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
 	t->znear=1 << POST_SHIFT;
 	t->zfar=300*t->znear;
 	t->scale_shift=0;
@@ -122,7 +122,7 @@ transform_setup_matrix(struct transformation *t)
 		scale >>= 1;
 	}
 	fac=(1 << POST_SHIFT) * (1 << t->scale_shift) / t->scale;
-	dbg(1,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
+	dbg(lvl_warning,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
 	
         t->m00=rollc*yawc*fac;
         t->m01=rollc*yaws*fac;
@@ -139,7 +139,7 @@ transform_setup_matrix(struct transformation *t)
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
-		dbg(1,"near %d far %d\n",t->znear,t->zfar);
+		dbg(lvl_warning,"near %d far %d\n",t->znear,t->zfar);
 		t->xscale=t->xscale3d;
 		t->yscale=t->yscale3d;
 		t->wscale=t->wscale3d;
@@ -196,7 +196,7 @@ transform_set_hog(struct transformation *this_, int hog)
 #ifdef ENABLE_ROLL
 	this_->hog=hog;
 #else
-	dbg(0,"not supported\n");
+	dbg(lvl_error,"not supported\n");
 #endif
 
 }
@@ -451,7 +451,7 @@ transform_rotate(struct transformation *t, struct coord c)
 	result.y=c.x*t->m10+c.y*t->m11+HOG(*t)*t->m12;
 	result.z=(c.x*t->m20+c.y*t->m21+HOG(*t)*t->m22);
 	result.z+=t->offz << POST_SHIFT;
-	dbg(3, "result: (%d,%d,%d)\n", result.x,result.y,result.z);
+	dbg(lvl_debug, "result: (%d,%d,%d)\n", result.x,result.y,result.z);
 	return result;
 }
 
@@ -460,11 +460,11 @@ transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit)
 {
 	struct coord_3d result;
 	float clip_factor = ((float)zlimit-c.z)/(c_old.z-c.z);
-	dbg(3,"in (%d,%d,%d) - (%d,%d,%d)\n", c.x,c.y,c.z, c_old.x,c_old.y,c_old.z);
+	dbg(lvl_debug,"in (%d,%d,%d) - (%d,%d,%d)\n", c.x,c.y,c.z, c_old.x,c_old.y,c_old.z);
 	result.x=c.x+(c_old.x-c.x)*clip_factor;
 	result.y=c.y+(c_old.y-c.y)*clip_factor;
 	result.z=zlimit;
-	dbg(3,"clip result: (%d,%d,%d)\n", result.x, result.y, result.z);
+	dbg(lvl_debug,"clip result: (%d,%d,%d)\n", result.x, result.y, result.z);
 	return result;
 }
 
@@ -473,7 +473,7 @@ transform_project_onto_view_plane(struct transformation *t, struct coord_3d c)
 {
 	struct point result;
 #if 0
-	dbg(0,"z=%d\n",c.z);
+	dbg(lvl_error,"z=%d\n",c.z);
 #endif
 	result.x = (long long)c.x*t->xscale/c.z;
 	result.y = (long long)c.y*t->yscale/c.z;
@@ -530,9 +530,9 @@ transform(struct transformation *t, enum projection required_projection, struct 
 	int zlimit=t->znear;
 	struct z_clip_result clip_result, clip_result_old={{0,0}, -1, 0, 0};
 	int i,result_idx = 0,result_idx_last=0;
-	dbg(3,"count=%d\n", count);
+	dbg(lvl_debug,"count=%d\n", count);
 	for (i=0; i < count; i++) {
-		dbg(3, "input coord %d: (%d, %d)\n", i, input[i].x, input[i].y);
+		dbg(lvl_debug, "input coord %d: (%d, %d)\n", i, input[i].x, input[i].y);
 #if 0 /* doesn't work as wanted */
 		if (i && input[i].x == input[0].x && input[i].y == input[0].y && result_idx && !width_result) {
 			result[result_idx++]=result[0];
@@ -561,7 +561,7 @@ transform(struct transformation *t, enum projection required_projection, struct 
 		}
 		screen_point.x+=t->offx;
 		screen_point.y+=t->offy;
-		dbg(3,"result: (%d, %d)\n", screen_point.x, screen_point.y);
+		dbg(lvl_debug,"result: (%d, %d)\n", screen_point.x, screen_point.y);
 
 		if (i != 0 && i != count-1 &&
 		    (input[i+1].x != input[0].x || input[i+1].y != input[0].y)) {
@@ -572,7 +572,7 @@ transform(struct transformation *t, enum projection required_projection, struct 
 		result[result_idx]=screen_point;
 		if (width_result) {
 			if (t->ddd) {
-				dbg(3,"width %d * %d / %d\n",width,t->wscale,clip_result.clipped_coord.z);
+				dbg(lvl_debug,"width %d * %d / %d\n",width,t->wscale,clip_result.clipped_coord.z);
 				width_result[result_idx]=width*t->wscale/clip_result.clipped_coord.z;
 			} else 
 				width_result[result_idx]=width;
@@ -628,7 +628,7 @@ static int
 transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far)
 {
         double xc,yc;
-	dbg(1,"%d,%d\n",p->x,p->y);
+	dbg(lvl_warning,"%d,%d\n",p->x,p->y);
 	if (t->ddd) {
 		struct coord_geo_cart nearc,farc,nears,fars,intersection;
 		transform_screen_to_3d(t, p, near, &nearc);	
@@ -727,12 +727,12 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 		if (this_->pro != pro) {
 			transform_to_geo(this_->pro, &curri->u.c_rect.lu, &g);
 			transform_from_geo(pro, &g, &curro->u.c_rect.lu);
-			dbg(1,"%f,%f", g.lat, g.lng);
+			dbg(lvl_warning,"%f,%f", g.lat, g.lng);
 			transform_to_geo(this_->pro, &curri->u.c_rect.rl, &g);
 			transform_from_geo(pro, &g, &curro->u.c_rect.rl);
-			dbg(1,": - %f,%f\n", g.lat, g.lng);
+			dbg(lvl_warning,": - %f,%f\n", g.lat, g.lng);
 		}
-		dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
+		dbg(lvl_warning,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
 		curro->order+=order;
 #if 0
 		curro->u.c_rect.lu.x-=500;
@@ -798,7 +798,7 @@ transform_set_roll(struct transformation *this_,int roll)
 	this_->roll=roll;
 	transform_setup_matrix(this_);
 #else
-	dbg(0,"not supported\n");
+	dbg(lvl_error,"not supported\n");
 #endif
 }
 
@@ -920,7 +920,7 @@ transform_setup_source_rect(struct transformation *t)
 				if (transform_zplane_intersection(&cg[edgenodes[i*2]], &cg[edgenodes[i*2+1]], HOG(*t), &tmp) == 1) {
 					c.x=tmp.x*(1 << t->scale_shift)+t->map_center.x;
 					c.y=tmp.y*(1 << t->scale_shift)+t->map_center.y;
-					dbg(1,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
+					dbg(lvl_warning,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
 					if (valid)
 						coord_rect_extend(&msm->u.c_rect, &c);
 					else {
@@ -928,20 +928,20 @@ transform_setup_source_rect(struct transformation *t)
 						msm->u.c_rect.rl=c;
 						valid=1;
 					}
-					dbg(1,"rect 0x%x,0x%x - 0x%x,0x%x\n",msm->u.c_rect.lu.x,msm->u.c_rect.lu.y,msm->u.c_rect.rl.x,msm->u.c_rect.rl.y);
+					dbg(lvl_warning,"rect 0x%x,0x%x - 0x%x,0x%x\n",msm->u.c_rect.lu.x,msm->u.c_rect.lu.y,msm->u.c_rect.rl.x,msm->u.c_rect.rl.y);
 				}
 			}
 		} else {
 			for (i = 0 ; i < 4 ; i++) {
 				transform_reverse(t, &screen_pnt[i], &screen[i]);
-				dbg(1,"map(%d) %d,%d=0x%x,0x%x\n", i,screen_pnt[i].x, screen_pnt[i].y, screen[i].x, screen[i].y);
+				dbg(lvl_warning,"map(%d) %d,%d=0x%x,0x%x\n", i,screen_pnt[i].x, screen_pnt[i].y, screen[i].x, screen[i].y);
 			}
 			msm->u.c_rect.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
 			msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
 			msm->u.c_rect.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 			msm->u.c_rect.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 		}
-		dbg(1,"%dx%d\n", msm->u.c_rect.rl.x-msm->u.c_rect.lu.x,
+		dbg(lvl_warning,"%dx%d\n", msm->u.c_rect.rl.x-msm->u.c_rect.lu.x,
 				 msm->u.c_rect.lu.y-msm->u.c_rect.rl.y);
 		*msm_last=msm;
 		msm_last=&msm->next;
@@ -966,7 +966,7 @@ transform_set_scale(struct transformation *t, long scale)
 int
 transform_get_order(struct transformation *t)
 {
-	dbg(1,"order %d\n", t->order);
+	dbg(lvl_warning,"order %d\n", t->order);
 	return t->order;
 }
 
@@ -1086,7 +1086,7 @@ transform_distance(enum projection pro, struct coord *c1, struct coord *c2)
 	} else if (pro == projection_garmin) {
 		return transform_distance_garmin(c1, c2);
 	} else {
-		dbg(0,"Unknown projection: %d\n", pro);
+		dbg(lvl_error,"Unknown projection: %d\n", pro);
 		return 0;
 	}
 }
@@ -1102,7 +1102,7 @@ transform_project(enum projection pro, struct coord *c, int distance, int angle,
 		res->y=c->y+distance*cos(angle*M_PI/180)*scale;
 		break;
 	default:
-		dbg(0,"Unsupported projection: %d\n", pro);
+		dbg(lvl_error,"Unsupported projection: %d\n", pro);
 		return;
 	}
 	

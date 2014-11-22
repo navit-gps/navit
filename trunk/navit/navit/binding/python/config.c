@@ -66,7 +66,7 @@ config_py(PyObject *self, PyObject *args)
 {
 	configObject *ret;
 
-	dbg(0,"enter\n");	
+	dbg(lvl_error,"enter\n");	
 	ret=PyObject_NEW(configObject, &config_Type);
 	return (PyObject *)ret;
 }

@@ -317,7 +317,7 @@ linguistics_casefold(const char *in)
 	}
 	*dest=0;
 	if(*src)
-		dbg(0,"Casefolded string for '%s' needs extra space, result is trucated to '%s'.\n",in,ret);
+		dbg(lvl_error,"Casefolded string for '%s' needs extra space, result is trucated to '%s'.\n",in,ret);
 	return ret;
 }
 
@@ -423,7 +423,7 @@ linguistics_expand_special(const char *str, int mode)
 						out=new_ret+(out-ret);
 						ret=new_ret;
 					}
-					dbg(1,"found %s %s %d %s %d\n",in,spc[0],len,replace,replace_len);
+					dbg(lvl_warning,"found %s %s %d %s %d\n",in,spc[0],len,replace,replace_len);
 					strcpy(out, replace);
 					out+=replace_len;
 					match=1;

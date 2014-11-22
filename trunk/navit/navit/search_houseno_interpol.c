@@ -79,7 +79,7 @@ house_number_interpolation_clear_all(struct house_number_interpolation *inter)
 static char *
 search_next_house_number_curr_interpol_with_ends(struct house_number_interpolation *inter)
 {
-	dbg(1,"interpolate %s-%s %s\n",inter->first,inter->last,inter->curr);
+	dbg(lvl_warning,"interpolate %s-%s %s\n",inter->first,inter->last,inter->curr);
 	if (!inter->first || !inter->last)
 		return NULL;
 	if (!inter->curr)
@@ -97,7 +97,7 @@ search_next_house_number_curr_interpol_with_ends(struct house_number_interpolati
 			inter->curr=NULL;
 		}
 	}
-	dbg(1,"interpolate result %s\n",inter->curr);
+	dbg(lvl_warning,"interpolate result %s\n",inter->curr);
 	return inter->curr;
 }
 
@@ -141,7 +141,7 @@ search_house_number_interpolation_split(char *str, struct house_number_interpola
 	strncpy(first, str, len);
 	first[len]='\0';
 	last=g_strdup(pos+1);
-	dbg(1,"%s = %s - %s\n",str, first, last);
+	dbg(lvl_warning,"%s = %s - %s\n",str, first, last);
 	if (atoi(first) > atoi(last)) {
 		inter->first=last;
 		inter->last=first;
@@ -158,7 +158,7 @@ search_house_number_coordinate(struct item *item, struct house_number_interpolat
 {
 	struct pcoord *ret=g_new(struct pcoord, 1);
 	ret->pro = map_projection(item->map);
-	dbg(1,"%s\n",item_to_name(item->type));
+	dbg(lvl_warning,"%s\n",item_to_name(item->type));
 	if (!inter) {
 		struct coord c;
 		if (item_coord_get(item, &c, 1)) {
@@ -183,29 +183,29 @@ search_house_number_coordinate(struct item *item, struct house_number_interpolat
 		if (count) {
 			int i,distance_sum=0,hn_distance;
 			int *distances=g_alloca(sizeof(int)*(count-1));
-			dbg(1,"count=%d hn_length=%d hn_pos=%d (%s of %s-%s)\n",count,hn_length,hn_pos,inter->curr,inter->first,inter->last);
+			dbg(lvl_warning,"count=%d hn_length=%d hn_pos=%d (%s of %s-%s)\n",count,hn_length,hn_pos,inter->curr,inter->first,inter->last);
 			if (!hn_length) {
 				hn_length=2;
 				hn_pos=1;
 			}
 			if (count == max)
-				dbg(0,"coordinate overflow\n");
+				dbg(lvl_error,"coordinate overflow\n");
 			for (i = 0 ; i < count-1 ; i++) {
 				distances[i]=navit_sqrt(transform_distance_sq(&c[i],&c[i+1]));
 				distance_sum+=distances[i];
-				dbg(1,"distance[%d]=%d\n",i,distances[i]);
+				dbg(lvl_warning,"distance[%d]=%d\n",i,distances[i]);
 			}
-			dbg(1,"sum=%d\n",distance_sum);
+			dbg(lvl_warning,"sum=%d\n",distance_sum);
 #if 0
 			hn_distance=distance_sum*hn_pos/hn_length;
 #else
 			hn_distance=(distance_sum*hn_pos+distance_sum*inter_increment/2)/(hn_length+inter_increment);
 #endif
-			dbg(1,"hn_distance=%d\n",hn_distance);
+			dbg(lvl_warning,"hn_distance=%d\n",hn_distance);
 			i=0;
 			while (i < count-1 && hn_distance > distances[i])
 				hn_distance-=distances[i++];
-			dbg(1,"remaining distance=%d from %d\n",hn_distance,distances[i]);
+			dbg(lvl_warning,"remaining distance=%d from %d\n",hn_distance,distances[i]);
 			ret->x=(c[i+1].x-c[i].x)*hn_distance/distances[i]+c[i].x;
 			ret->y=(c[i+1].y-c[i].y)*hn_distance/distances[i]+c[i].y;
 		}

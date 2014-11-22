@@ -51,7 +51,7 @@ vehicle_webos_callback(PDL_ServiceParameters *params, void *priv)
 
 	err = PDL_GetParamInt(params, "errorCode");
 	if (err != 0) {
-		dbg(0,"Location Callback errorCode %d\n", err);
+		dbg(lvl_error,"Location Callback errorCode %d\n", err);
 		return /*PDL_EOTHER*/;
 	}
 
@@ -85,14 +85,14 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location)
 		gettimeofday(&tv,NULL);
 
 		priv->delta = (int)difftime(tv.tv_sec, priv->fix_time);
-		dbg(2,"delta(%i)\n",priv->delta);
+		dbg(lvl_info,"delta(%i)\n",priv->delta);
 		priv->fix_time = tv.tv_sec;
 		priv->geo.lat = location->latitude;
 		/* workaround for webOS GPS bug following */
 		priv->geo.lng = (priv->pdk_version >= 200 && location->longitude >= -1 && location->longitude <= 1) ?
 			-location->longitude : location->longitude;
 
-		dbg(2,"Location: %f %f %f %.12g %.12g +-%fm\n",
+		dbg(lvl_info,"Location: %f %f %f %.12g %.12g +-%fm\n",
 				location->altitude,
 				location->velocity,
 				location->heading,
@@ -126,7 +126,7 @@ vehicle_webos_timeout_callback(struct vehicle_priv *priv)
 		int delta = (int)difftime(tv.tv_sec, priv->fix_time);
 
 		if (delta >= priv->delta*2) {
-			dbg(1, "GPS timeout triggered cb(%p) delta(%d)\n", priv->timeout_cb, delta);
+			dbg(lvl_warning, "GPS timeout triggered cb(%p) delta(%d)\n", priv->timeout_cb, delta);
 
 			priv->delta = -1;
 
@@ -157,7 +157,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 	PDL_Err err;
 
 	priv->pdk_version = PDL_GetPDKVersion();
-	dbg(1,"pdk_version(%d)\n", priv->pdk_version);
+	dbg(lvl_warning,"pdk_version(%d)\n", priv->pdk_version);
 
 	if (priv->pdk_version <= 100) {
 		// Use Location Service via callback interface
@@ -167,7 +167,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 				priv,
 				PDL_FALSE);
 		if (err != PDL_NOERROR) {
-			dbg(0,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
+			dbg(lvl_error,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
 			vehicle_webos_close(priv);
 			return 0;
 		}
@@ -176,7 +176,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 		PDL_Err err;
 		err = PDL_EnableLocationTracking(PDL_TRUE);
 		if (err != PDL_NOERROR) {
-			dbg(0,"PDL_EnableLocationTracking failed with (%d): (%s)\n", err, PDL_GetError());
+			dbg(lvl_error,"PDL_EnableLocationTracking failed with (%d): (%s)\n", err, PDL_GetError());
 //			vehicle_webos_close(priv);
 //			return 0;
 		}
@@ -206,15 +206,15 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 {
 	switch (type) {
 		case attr_position_height:
-			dbg(2,"Altitude: %f\n", priv->altitude);
+			dbg(lvl_info,"Altitude: %f\n", priv->altitude);
 			attr->u.numd = &priv->altitude;
 			break;
 		case attr_position_speed:
-			dbg(2,"Speed: %f\n", priv->speed);
+			dbg(lvl_info,"Speed: %f\n", priv->speed);
 			attr->u.numd = &priv->speed;
 			break;
 		case attr_position_direction:
-			dbg(2,"Direction: %f\n", priv->track);
+			dbg(lvl_info,"Direction: %f\n", priv->track);
 			attr->u.numd = &priv->track;
 			break;
 		case attr_position_magnetic_direction:
@@ -238,11 +238,11 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 			}
 			break;
 		case attr_position_coord_geo:
-			dbg(2,"Coord: %.12g %.12g\n", priv->geo.lat, priv->geo.lng);
+			dbg(lvl_info,"Coord: %.12g %.12g\n", priv->geo.lat, priv->geo.lng);
 			attr->u.coord_geo = &priv->geo;
 			break;
 		case attr_position_radius:
-			dbg(2,"Radius: %f\n", priv->radius);
+			dbg(lvl_info,"Radius: %f\n", priv->radius);
 			attr->u.numd = &priv->radius;
 			break;
 		case attr_position_time_iso8601:
@@ -257,10 +257,10 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
 					priv->fix_time = 0;
 					return 0;
 				}
-				dbg(2,"Fix Time: %d %s\n", priv->fix_time, priv->fixiso8601);
+				dbg(lvl_info,"Fix Time: %d %s\n", priv->fix_time, priv->fixiso8601);
 			}
 			else {
-				dbg(2,"Fix Time: %d\n", priv->fix_time);
+				dbg(lvl_info,"Fix Time: %d\n", priv->fix_time);
 				return 0;
 			}
 
@@ -318,7 +318,7 @@ vehicle_webos_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init
 	switch (attr->type) {
 		case attr_source:
 			if (strncmp(vehicle_webos_prefix,attr->u.str,strlen(vehicle_webos_prefix))) {
-				dbg(1,"source must start with '%s'\n", vehicle_webos_prefix);
+				dbg(lvl_warning,"source must start with '%s'\n", vehicle_webos_prefix);
 				return 0;
 			}
 			g_free(priv->source);
@@ -380,7 +380,7 @@ vehicle_webos_new(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(1, "enter\n");
+	dbg(lvl_warning, "enter\n");
 	plugin_register_vehicle_type("webos", vehicle_webos_new);
 }
 
