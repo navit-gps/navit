@@ -135,14 +135,43 @@ debug_level_set(const char *name, dbg_level level)
 	}
 }
 
+static dbg_level
+parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr)
+{
+	if (dbg_level_attr) {
+		if(!strcmp(dbg_level_attr->u.str,"error")){
+			return lvl_error;
+		}
+		if(!strcmp(dbg_level_attr->u.str,"warning")){
+			return lvl_warning;
+		}
+		if(!strcmp(dbg_level_attr->u.str,"info")){
+			return lvl_info;
+		}
+		if(!strcmp(dbg_level_attr->u.str,"debug")){
+			return lvl_debug;
+		}
+		dbg(lvl_error, "Invalid debug level in config: '%s'\n", dbg_level_attr->u.str);
+	} else if (level_attr) {
+		if (level_attr->u.num>= lvl_error &&
+		    level_attr->u.num<= lvl_debug)
+			return level_attr->u.num;
+		dbg(lvl_error, "Invalid debug level in config: %ld\n", level_attr->u.num);
+	}
+	return lvl_unset;
+}
+
 struct debug *
 debug_new(struct attr *parent, struct attr **attrs)
 {
-	struct attr *name,*level;
+	struct attr *name,*dbg_level_attr,*level_attr;
+	dbg_level level;
 	name=attr_search(attrs, NULL, attr_name);
-	level=attr_search(attrs, NULL, attr_level);
+	dbg_level_attr=attr_search(attrs, NULL, attr_dbg_level);
+	level_attr=attr_search(attrs, NULL, attr_level);
+	level = parse_dbg_level(dbg_level_attr,level_attr);
 #ifdef HAVE_SOCKET
-	if (!name && !level) {
+	if (!name && level==lvl_unset) {
 		struct attr *socket_attr=attr_search(attrs, NULL, attr_socket);
 		char *p,*s;
 		if (!socket_attr)
@@ -166,9 +195,9 @@ debug_new(struct attr *parent, struct attr **attrs)
 		return (struct debug *)&dummy;	
 	}
 #endif
-	if (!name || !level)
+	if (!name || level==lvl_unset)
 		return NULL;
-	debug_level_set(name->u.str, level->u.num);
+	debug_level_set(name->u.str, level);
 	return (struct debug *)&dummy;
 }
 
