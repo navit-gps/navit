@@ -917,7 +917,7 @@ int main(int argc, char **argv)
 	if (start_phase(&p,"generating coastlines")) {
 		osm_process_coastlines(&p, suffix);
 	}
-	if (start_phase(&p,"assinging towns to countries")) {
+	if (start_phase(&p,"assigning towns to countries")) {
 		FILE *towns=tempfile(suffix,"towns",0),*boundaries=NULL,*ways=NULL;
 		if (towns) {
 			boundaries=tempfile(suffix,"boundaries",0);

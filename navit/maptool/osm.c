@@ -2030,7 +2030,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	profile(0,NULL);
 	bl=process_boundaries(boundaries, ways);
 
-	profile(1,"processed boundraries\n");
+	profile(1,"processed boundaries\n");
 
 	town_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	while ((ib=read_item(in)))  {
@@ -2057,7 +2057,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		else if (item_is_district(*ib)) // just for the town name
 			osm_process_town_by_is_in(ib, is_in, attrs, town_hash);
 
-		// treat a district like a town, if we could not find the town it blongs to
+		// treat a district like a town, if we could not find the town it belongs to
 		if (!item_bin_get_attr(ib, attr_town_name, NULL) && attrs[10].type != attr_town_name) {
 			char *district_name = item_bin_get_attr(ib, attr_district_name, NULL);
 
