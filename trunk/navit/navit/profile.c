@@ -27,40 +27,37 @@
 #include "profile.h"
 #include "debug.h"
 
+#define PROFILE_LEVEL_MAX 9
+
 void
 profile_timer(int level, const char *module, const char *function, const char *fmt, ...)
 {
 #ifndef _MSC_VER
 	va_list ap;
-	static struct timeval last[10];
+	static struct timeval last[PROFILE_LEVEL_MAX+1];
 	struct timeval curr;
-	int msec,usec;
+	double msec;
 	char buffer[strlen(module)+20];
 
-	va_start(ap, fmt);
 	if (level < 0)
 		level=0;
-	if (level > 9)
-		level=9;
+	if (level > PROFILE_LEVEL_MAX)
+		level=PROFILE_LEVEL_MAX;
 	if (fmt) {
 		gettimeofday(&curr, NULL);
-		msec=(curr.tv_usec-last[level].tv_usec)/1000+
+		msec=(curr.tv_usec-last[level].tv_usec)/((double)1000)+
 		     (curr.tv_sec-last[level].tv_sec)*1000;
 	
 		sprintf(buffer, "profile:%s", module);
+		va_start(ap, fmt);
 		debug_vprintf(1, buffer, strlen(buffer), function, strlen(function), 1, fmt, ap); 
-		if (msec >= 100) 
-			debug_printf(lvl_warning, buffer, strlen(buffer), function, strlen(function), 0, " %d msec\n", msec);
-		else {
-			usec=(curr.tv_usec-last[level].tv_usec)+(curr.tv_sec-last[level].tv_sec)*1000*1000;
-			debug_printf(1, buffer, strlen(buffer), function, strlen(function), 0, " %d.%d msec\n", usec/1000, usec%1000);
-		}
+		va_end(ap);
+		debug_printf(lvl_warning, buffer, strlen(buffer), function, strlen(function), 0, " %7.1f ms\n", msec);
 		gettimeofday(&last[level], NULL);
 	} else {
 		gettimeofday(&curr, NULL);
-		while (level < 10) 
+		while (level <= PROFILE_LEVEL_MAX)
 			last[level++]=curr;
 	}
-	va_end(ap);
 #endif /*_MSC_VER*/
 }
