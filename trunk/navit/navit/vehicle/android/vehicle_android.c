@@ -42,17 +42,19 @@ struct vehicle_priv {
 	double direction;          /**< Bearing in degrees **/
 	double height;             /**< Elevation in meters **/
 	double radius;             /**< Position accuracy in meters **/
-	int fix_type;              /**< Type of last fix (not used) **/
+	int fix_type;              /**< Type of last fix (1 = valid, 0 = invalid) **/
 	time_t fix_time;           /**< Timestamp of last fix (not used) **/
 	char fixiso8601[128];      /**< Timestamp of last fix in ISO 8601 format **/
-	int sats;                  /**< Number of satellites in view (currently not used) **/
-	int sats_used;             /**< Number of satellites used in fix (currently not used) **/
+	int sats;                  /**< Number of satellites in view **/
+	int sats_used;             /**< Number of satellites used in fix **/
 	int have_coords;           /**< Whether the vehicle coordinates in {@code geo} are valid **/
 	struct attr ** attrs;
-	struct callback *cb;
-	jclass NavitVehicleClass;
-	jobject NavitVehicle;
-	jclass LocationClass;
+	struct callback *pcb;      /**< The callback function for position updates **/
+	struct callback *scb;      /**< The callback function for status updates **/
+	struct callback *fcb;      /**< The callback function for fix status updates **/
+	jclass NavitVehicleClass;  /**< The {@code NavitVehicle} class **/
+	jobject NavitVehicle;      /**< An instance of {@code NavitVehicle} **/
+	jclass LocationClass;      /**< Android's {@code Location} class **/
 	jmethodID Location_getLatitude, Location_getLongitude, Location_getSpeed, Location_getBearing, Location_getAltitude, Location_getTime, Location_getAccuracy;
 };
 
@@ -83,11 +85,9 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 {
 	dbg(1,"enter %s\n",attr_to_name(type));
 	switch (type) {
-#if 0
 	case attr_position_fix_type:
 		attr->u.num = priv->fix_type;
 		break;
-#endif
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -100,15 +100,12 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_radius:
 		attr->u.numd = &priv->radius;
 		break;
-
-#if 0
 	case attr_position_qual:
 		attr->u.num = priv->sats;
 		break;
 	case attr_position_sats_used:
 		attr->u.num = priv->sats_used;
 		break;
-#endif
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
 		if (!priv->have_coords)
@@ -133,9 +130,16 @@ struct vehicle_methods vehicle_android_methods = {
 	vehicle_android_position_attr_get,
 };
 
+/**
+ * @brief Called when a new position has been reported
+ *
+ * This function is called by {@code NavitLocationListener} upon receiving a new {@code Location}.
+ *
+ * @param v The {@code struct_vehicle_priv} for the vehicle
+ * @param location A {@code Location} object describing the new position
+ */
 static void
-vehicle_android_callback(struct vehicle_priv *v, jobject location)
-{
+vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
 	time_t tnow;
 	struct tm *tm;
 	dbg(1,"enter\n");
@@ -157,6 +161,48 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 	callback_list_call_attr_0(v->cbl, attr_position_coord_geo);
 }
 
+/**
+ * @brief Called when a new GPS status has been reported
+ *
+ * This function is called by {@code NavitLocationListener} upon receiving a new {@code GpsStatus}.
+ *
+ * @param v The {@code struct_vehicle_priv} for the vehicle
+ * @param sats_in_view The number of satellites in view
+ * @param sats_used The number of satellites currently used to determine the position
+ */
+static void
+vehicle_android_status_callback(struct vehicle_priv *v, int sats_in_view, int sats_used) {
+	if (v->sats != sats_in_view) {
+		v->sats = sats_in_view;
+		callback_list_call_attr_0(v->cbl, attr_position_qual);
+	}
+	if (v->sats_used != sats_used) {
+		v->sats_used = sats_used;
+		callback_list_call_attr_0(v->cbl, attr_position_sats_used);
+	}
+}
+
+/**
+ * @brief Called when a change in GPS fix status has been reported
+ *
+ * This function is called by {@code NavitLocationListener} upon receiving a new {@code android.location.GPS_FIX_CHANGE} broadcast.
+ *
+ * @param v The {@code struct_vehicle_priv} for the vehicle
+ * @param fix_type The fix type (1 = valid, 0 = invalid)
+ */
+static void
+vehicle_android_fix_callback(struct vehicle_priv *v, int fix_type) {
+	if (v->fix_type != fix_type) {
+		v->fix_type = fix_type;
+		callback_list_call_attr_0(v->cbl, attr_position_fix_type);
+	}
+}
+
+/**
+ * @brief Initializes an Android vehicle
+ *
+ * @return True on success, false on failure
+ */
 static int
 vehicle_android_init(struct vehicle_priv *ret)
 {
@@ -181,13 +227,13 @@ vehicle_android_init(struct vehicle_priv *ret)
 	if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
                 return 0;
         dbg(0,"at 3\n");
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;I)V");
+        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;III)V");
         if (cid == NULL) {
                 dbg(0,"no method found\n");
                 return 0; /* exception thrown */
         }
         dbg(0,"at 4 android_activity=%p\n",android_activity);
-        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (int) ret->cb);
+        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (int) ret->pcb, (int) ret->scb, (int) ret->fcb);
         dbg(0,"result=%p\n",ret->NavitVehicle);
 	if (!ret->NavitVehicle)
 		return 0;
@@ -215,8 +261,12 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 	dbg(0, "enter\n");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
-	ret->cb=callback_new_1(callback_cast(vehicle_android_callback), ret);
+	ret->pcb = callback_new_1(callback_cast(vehicle_android_position_callback), ret);
+	ret->scb = callback_new_1(callback_cast(vehicle_android_status_callback), ret);
+	ret->fcb = callback_new_1(callback_cast(vehicle_android_fix_callback), ret);
 	ret->have_coords = 0;
+	ret->sats = 0;
+	ret->sats_used = 0;
 	*meth = vehicle_android_methods;
 	vehicle_android_init(ret);
 	dbg(0, "return\n");

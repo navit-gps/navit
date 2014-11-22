@@ -19,8 +19,13 @@
 
 package org.navitproject.navit;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Criteria;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,11 +33,16 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class NavitVehicle {
+	
+	public static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
 
 	public static Location lastLocation = null;
 
 	private static LocationManager sLocationManager = null;
-	private int vehicle_callbackid;
+	private static Context context = null;
+	private int vehicle_pcbid;
+	private int vehicle_scbid;
+	private int vehicle_fcbid;
 	private String preciseProvider;
 	private String fastProvider;
 
@@ -40,8 +50,10 @@ public class NavitVehicle {
 	private static NavitLocationListener fastLocationListener = null;
 
 	public native void VehicleCallback(int id, Location location);
+	public native void VehicleCallback(int id, int satsInView, int satsUsed);
+	public native void VehicleCallback(int id, int enabled);
 
-	private class NavitLocationListener implements LocationListener {
+	private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
 		public boolean precise = false;
 		public void onLocationChanged(Location location) {
 			lastLocation = location;
@@ -51,14 +63,52 @@ public class NavitVehicle {
 				fastProvider = null;
 			}
 			
-			VehicleCallback(vehicle_callbackid, location);
+			VehicleCallback(vehicle_pcbid, location);
+			VehicleCallback(vehicle_fcbid, 1);
 		}
 		public void onProviderDisabled(String provider){}
 		public void onProviderEnabled(String provider) {}
 		public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+		/**
+		 * Called when the status of the GPS changes.
+		 */
+		public void onGpsStatusChanged (int event) {
+			GpsStatus status = sLocationManager.getGpsStatus(null);
+			int satsInView = 0;
+			int satsUsed = 0;
+			Iterable<GpsSatellite> sats = status.getSatellites();
+			for (GpsSatellite sat : sats) {
+				satsInView++;
+				if (sat.usedInFix()) {
+					satsUsed++;
+				}
+			}
+			VehicleCallback(vehicle_scbid, satsInView, satsUsed);
+		}
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(GPS_FIX_CHANGE)) {
+				if (intent.getBooleanExtra("enabled", false))
+					VehicleCallback(vehicle_fcbid, 1);
+				else if (!intent.getBooleanExtra("enabled", true))
+					VehicleCallback(vehicle_fcbid, 0);
+			}
+		}
 	}
 
-	NavitVehicle (Context context, int callbackid) {
+	/**
+	 * @brief Creates a new {@code NavitVehicle}
+	 * 
+	 * @param context
+	 * @param pcbid The address of the position callback function which will be called when a location update is received
+	 * @param scbid The address of the status callback function which will be called when a status update is received
+	 * @param fcbid The address of the fix callback function which will be called when a
+	 * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
+	 */
+	NavitVehicle (Context context, int pcbid, int scbid, int fcbid) {
+		this.context = context;
 		sLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		preciseLocationListener = new NavitLocationListener();
 		preciseLocationListener.precise = true;
@@ -90,9 +140,13 @@ public class NavitVehicle {
 		Log.e("NavitVehicle", "Precise Provider " + preciseProvider);
 		fastProvider = sLocationManager.getBestProvider(lowCriteria, false);
 		Log.e("NavitVehicle", "Fast Provider " + fastProvider);
-		vehicle_callbackid=callbackid;
+		vehicle_pcbid = pcbid;
+		vehicle_scbid = scbid;
+		vehicle_fcbid = fcbid;
 
+		context.registerReceiver(preciseLocationListener, new IntentFilter(GPS_FIX_CHANGE));
 		sLocationManager.requestLocationUpdates(preciseProvider, 0, 0, preciseLocationListener);
+		sLocationManager.addGpsStatusListener(preciseLocationListener);
 
 		// If the 2 providers are the same, only activate one listener
 		if (fastProvider == null || preciseProvider.compareTo(fastProvider) == 0) {
@@ -104,7 +158,11 @@ public class NavitVehicle {
 
 	public static void removeListener() {
 		if (sLocationManager != null) {
-			if (preciseLocationListener != null) sLocationManager.removeUpdates(preciseLocationListener);
+			if (preciseLocationListener != null) {
+				sLocationManager.removeUpdates(preciseLocationListener);
+				sLocationManager.removeGpsStatusListener(preciseLocationListener);
+				context.unregisterReceiver(preciseLocationListener);
+			}
 			if (fastLocationListener != null) sLocationManager.removeUpdates(fastLocationListener);
 		}
 
