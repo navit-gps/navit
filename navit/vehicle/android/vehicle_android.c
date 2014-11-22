@@ -47,7 +47,7 @@ struct vehicle_priv {
 	char fixiso8601[128];      /**< Timestamp of last fix in ISO 8601 format **/
 	int sats;                  /**< Number of satellites in view **/
 	int sats_used;             /**< Number of satellites used in fix **/
-	int have_coords;           /**< Whether the vehicle coordinates in {@code geo} are valid **/
+	int valid;                 /**< Whether the vehicle coordinates in {@code geo} are valid **/
 	struct attr ** attrs;
 	struct callback *pcb;      /**< The callback function for position updates **/
 	struct callback *scb;      /**< The callback function for status updates **/
@@ -108,14 +108,14 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
-		if (!priv->have_coords)
+		if (priv->valid == attr_position_valid_invalid)
 			return 0;
 		break;
 	case attr_position_time_iso8601:
 		attr->u.str=priv->fixiso8601;
 		break;
 	case attr_position_valid:
-		attr->u.num = priv->have_coords ? attr_position_valid_valid : attr_position_valid_invalid;
+		attr->u.num = priv->valid;
 		break;
 	default:
 		return 0;
@@ -154,8 +154,8 @@ vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
 	tm = gmtime(&tnow);
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
 	dbg(1,"lat %f lon %f time %s\n",v->geo.lat,v->geo.lng,v->fixiso8601);
-	if (!v->have_coords) {
-		v->have_coords=1;
+	if (v->valid != attr_position_valid_valid) {
+		v->valid = attr_position_valid_valid;
 		callback_list_call_attr_0(v->cbl, attr_position_valid);
 	}
 	callback_list_call_attr_0(v->cbl, attr_position_coord_geo);
@@ -165,6 +165,11 @@ vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
  * @brief Called when a new GPS status has been reported
  *
  * This function is called by {@code NavitLocationListener} upon receiving a new {@code GpsStatus}.
+ *
+ * Note that {@code sats_used} should not be used to determine whether the vehicle's position is valid:
+ * some devices report non-zero numbers even when they do not have a fix. Position validity should be
+ * determined in {@code vehicle_android_fix_callback} (an invalid fix type means we have lost the fix)
+ * and {@code vehicle_android_position_callback} (receiving a position means we have a fix).
  *
  * @param v The {@code struct_vehicle_priv} for the vehicle
  * @param sats_in_view The number of satellites in view
@@ -195,6 +200,10 @@ vehicle_android_fix_callback(struct vehicle_priv *v, int fix_type) {
 	if (v->fix_type != fix_type) {
 		v->fix_type = fix_type;
 		callback_list_call_attr_0(v->cbl, attr_position_fix_type);
+		if (!fix_type && (v->valid == attr_position_valid_valid)) {
+			v->valid = attr_position_valid_extrapolated_time;
+			callback_list_call_attr_0(v->cbl, attr_position_valid);
+		}
 	}
 }
 
@@ -264,7 +273,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 	ret->pcb = callback_new_1(callback_cast(vehicle_android_position_callback), ret);
 	ret->scb = callback_new_1(callback_cast(vehicle_android_status_callback), ret);
 	ret->fcb = callback_new_1(callback_cast(vehicle_android_fix_callback), ret);
-	ret->have_coords = 0;
+	ret->valid = attr_position_valid_invalid;
 	ret->sats = 0;
 	ret->sats_used = 0;
 	*meth = vehicle_android_methods;
