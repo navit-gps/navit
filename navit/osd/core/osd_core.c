@@ -3221,6 +3221,9 @@ osd_gps_status_init(struct osd_priv_common *opc, struct navit *nav)
 {
 	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_coord_geo, opc));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_fix_type, opc));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_sats_used, opc));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_hdop, opc));
 	osd_gps_status_draw(opc, nav, NULL);
 }
 
