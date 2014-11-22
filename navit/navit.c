@@ -2987,9 +2987,29 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 #endif
 }
 
+/**
+ * @brief Called when the position of a vehicle changes.
+ *
+ * This function is called when the position of any configured vehicle changes and triggers all actions
+ * that need to happen in response, such as:
+ * <ul>
+ * <li>Switching between day and night layout (based on the new position timestamp)</li>
+ * <li>Updating position, bearing and speed of {@code nv} with the data of the active vehicle
+ * (which may be different from the vehicle reporting the update)</li>
+ * <li>Invoking callbacks for {@code navit}'s {@code attr_position} and {@code attr_position_coord_geo}
+ * attributes</li>
+ * <li>Triggering an update of the vehicle's position on the map and, if needed, an update of the
+ * visible map area ad orientation</li>
+ * <li>Logging a new track point, if enabled</li>
+ * <li>Updating the position on the route</li>
+ * <li>Stopping navigation if the destination has been reached</li>
+ * </ul>
+ *
+ * @param this_ The navit object
+ * @param nv The {@code navit_vehicle} which reported a new position
+ */
 static void
-navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
-{
+navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv) {
 	struct attr attr_valid, attr_dir, attr_speed, attr_pos;
 	struct pcoord cursor_pc;
 	struct point cursor_pnt, *pnt=&cursor_pnt;
@@ -3088,6 +3108,37 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 }
 
 /**
+ * @brief Called when a status attribute of a vehicle changes.
+ *
+ * This function is called when the {@code position_fix_type}, {@code position_sats_used} or {@code position_hdop}
+ * attribute of any configured vehicle changes.
+ *
+ * The function checks if {@code nv} refers to the active vehicle and if {@code type} is one of the above types.
+ * If this is the case, it invokes the callback functions for {@code navit}'s respective attributes.
+ *
+ * Future actions that need to happen when one of these three attribute changes for any vehicle should be
+ * implemented here.
+ *
+ * @param this_ The navit object
+ * @param nv The {@code navit_vehicle} which reported a new status attribute
+ * @param type The type of attribute with has changed
+ */
+static void
+navit_vehicle_update_status(struct navit *this_, struct navit_vehicle *nv, enum attr_type type) {
+	if (this_->vehicle != nv)
+		return;
+	switch(type) {
+	case attr_position_fix_type:
+	case attr_position_sats_used:
+	case attr_position_hdop:
+		callback_list_call_attr_2(this_->attr_cbl, type, this_, nv->vehicle);
+		break;
+	default:
+		return;
+	}
+}
+
+/**
  * Set the position of the vehicle
  *
  * @param navit The navit instance
@@ -3158,11 +3209,11 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 }
 
 /**
- * Register a new vehicle
+ * @brief Registers a new vehicle.
  *
- * @param navit The navit instance
- * @param v The vehicle instance
- * @returns 1 for success
+ * @param this_ The navit instance
+ * @param v The vehicle to register
+ * @return True for success
  */
 static int
 navit_add_vehicle(struct navit *this_, struct vehicle *v)
@@ -3183,7 +3234,13 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	if ((vehicle_get_attr(v, attr_animate, &animate, NULL)))
 		nv->animate_cursor=animate.u.num;
 	nv->callback.type=attr_callback;
-	nv->callback.u.callback=callback_new_attr_2(callback_cast(navit_vehicle_update), attr_position_coord_geo, this_, nv);
+	nv->callback.u.callback=callback_new_attr_2(callback_cast(navit_vehicle_update_position), attr_position_coord_geo, this_, nv);
+	vehicle_add_attr(nv->vehicle, &nv->callback);
+	nv->callback.u.callback=callback_new_attr_3(callback_cast(navit_vehicle_update_status), attr_position_fix_type, this_, nv, attr_position_fix_type);
+	vehicle_add_attr(nv->vehicle, &nv->callback);
+	nv->callback.u.callback=callback_new_attr_3(callback_cast(navit_vehicle_update_status), attr_position_sats_used, this_, nv, attr_position_sats_used);
+	vehicle_add_attr(nv->vehicle, &nv->callback);
+	nv->callback.u.callback=callback_new_attr_3(callback_cast(navit_vehicle_update_status), attr_position_hdop, this_, nv, attr_position_hdop);
 	vehicle_add_attr(nv->vehicle, &nv->callback);
 	vehicle_set_attr(nv->vehicle, &this_->self);
 	return 1;
