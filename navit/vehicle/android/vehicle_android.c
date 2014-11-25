@@ -235,55 +235,20 @@ vehicle_android_init(struct vehicle_priv *ret)
                 return 0;
 	if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
                 return 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
-        dbg(0,"at 3\n");
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;III)V");
-||||||| merged common ancestors
-        dbg(0,"at 3\n");
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;I)V");
-=======
-        dbg(lvl_error,"at 3\n");
-||||||| merged common ancestors
-        dbg(lvl_error,"at 3\n");
-=======
         dbg(lvl_debug,"at 3\n");
->>>>>>> Fix:core:Change all logging at lvl_error/warning to lvl_debug, unless it looks like an error message.|#1269, part 5
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;I)V");
->>>>>>> Refactor:core:Introduce enum for debug levels, and use it everywhere.|First part of #1269.
+        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;III)V");
         if (cid == NULL) {
                 dbg(lvl_error,"no method found\n");
                 return 0; /* exception thrown */
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-        dbg(0,"at 4 android_activity=%p\n",android_activity);
-        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (int) ret->pcb, (int) ret->scb, (int) ret->fcb);
-        dbg(0,"result=%p\n",ret->NavitVehicle);
-||||||| merged common ancestors
-        dbg(0,"at 4 android_activity=%p\n",android_activity);
-        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (int) ret->cb);
-        dbg(0,"result=%p\n",ret->NavitVehicle);
-=======
-        dbg(lvl_error,"at 4 android_activity=%p\n",android_activity);
-||||||| merged common ancestors
-        dbg(lvl_error,"at 4 android_activity=%p\n",android_activity);
-=======
-        dbg(lvl_debug,"at 4 android_activity=%p\n",android_activity);
->>>>>>> Fix:core:Change all logging at lvl_error/warning to lvl_debug, unless it looks like an error message.|#1269, part 5
-        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (int) ret->cb);
-<<<<<<< HEAD
-        dbg(lvl_error,"result=%p\n",ret->NavitVehicle);
->>>>>>> Refactor:core:Introduce enum for debug levels, and use it everywhere.|First part of #1269.
-||||||| merged common ancestors
-        dbg(lvl_error,"result=%p\n",ret->NavitVehicle);
-=======
+        dbg(lvl_debug, "at 4 android_activity=%p\n", android_activity);
+        ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity,
+                                                  (int) ret->pcb, (int) ret->scb, (int) ret->fcb);
         dbg(lvl_debug,"result=%p\n",ret->NavitVehicle);
->>>>>>> Fix:core:Change all logging at lvl_error/warning to lvl_debug, unless it looks like an error message.|#1269, part 5
 	if (!ret->NavitVehicle)
 		return 0;
         if (ret->NavitVehicle)
-				ret->NavitVehicle = (*jnienv)->NewGlobalRef(jnienv, ret->NavitVehicle);
+		ret->NavitVehicle = (*jnienv)->NewGlobalRef(jnienv, ret->NavitVehicle);
 
 	return 1;
 }
