@@ -176,7 +176,7 @@ struct attr_iter {
 	} u;
 };
 
-static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
+static void navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
