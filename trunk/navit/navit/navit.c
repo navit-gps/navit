@@ -2775,7 +2775,11 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.route=this_->route;
 		break;
 	case attr_speech:
-	        attr->u.speech=this_->speech;
+                if(this_->speech) {
+                        attr->u.speech=this_->speech;
+		} else {
+                        return  0;
+                }
 	        break;
 	case attr_timeout:
 		attr->u.num=this_->center_timeout;
