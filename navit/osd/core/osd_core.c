@@ -1858,7 +1858,12 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
 	char *gui_sound_on = "gui_sound";
     struct attr attr, speechattr;
 
-    if (!navit_get_attr(navit, attr_speech, &speechattr, NULL) || !speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
+    if (!navit_get_attr(navit, attr_speech, &speechattr, NULL))
+    {
+        dbg(lvl_error, "No speech plugin available, toggle_announcer disabled.\n");
+        return;
+    }
+    if (!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
         attr.u.num = 1;
     this->active = attr.u.num;
 
@@ -1868,7 +1873,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
         do_draw = 1;
     }
 
-	if (do_draw)
+    if (do_draw)
     {
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_begin);
 		p.x = 0;
