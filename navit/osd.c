@@ -335,9 +335,6 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	attr=attr_search(attrs, NULL, attr_text_color);
 	if (attr)
 		item->text_color=*attr->u.color;
-	attr=attr_search(attrs, NULL, attr_flags);
-	if (attr)
-		item->attr_flags=attr->u.num;
 	attr=attr_search(attrs, NULL, attr_accesskey);
 	if (attr)
 		item->accesskey = g_strdup(attr->u.str);
@@ -421,28 +418,10 @@ void
 osd_std_draw(struct osd_item *item)
 {
 	struct point p[2];
-	int flags=item->attr_flags;
-
 	graphics_draw_mode(item->gr, draw_mode_begin);
 	p[0].x=0;
 	p[0].y=0;
 	graphics_draw_rectangle(item->gr, item->graphic_bg, p, item->w, item->h);
-	p[1].x=item->w-1;
-	p[1].y=0;
-	if (flags & 1) 
-		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
-	p[0].x=item->w-1;
-	p[0].y=item->h-1;
-	if (flags & 2) 
-		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
-	p[1].x=0;
-	p[1].y=item->h-1;
-	if (flags & 4) 
-		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
-	p[0].x=0;
-	p[0].y=0;
-	if (flags & 8) 
-		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
 }
 
 struct object_func osd_func = {
