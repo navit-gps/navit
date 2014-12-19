@@ -39,7 +39,7 @@ struct osd_item_methods {
 struct osd_item {
 	struct point p;
 	struct osd_item_methods meth;
-	int flags, attr_flags, w, h, fg_line_width, font_size, osd_configuration, configured;
+	int flags, w, h, fg_line_width, font_size, osd_configuration, configured;
 	int rel_w, rel_h, rel_x, rel_y;
 	struct color color_bg, color_white, text_color;
 	struct navit *navit;
