@@ -238,7 +238,7 @@ static struct object_func object_funcs[] = {
 	{ attr_coord,      NEW(coord_new_from_attrs)},
 	{ attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
 	{ attr_debug,      NEW(debug_new)},
-	{ attr_graphics,   NEW(graphics_new)},
+	{ attr_graphics,   NEW(graphics_new), GET(graphics_get_attr)},
 	{ attr_gui,        NEW(gui_new), GET(gui_get_attr), NULL, NULL, SET(gui_set_attr), ADD(gui_add_attr)},
 	{ attr_icon,       NEW(icon_new),     NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_image,      NEW(image_new)},
