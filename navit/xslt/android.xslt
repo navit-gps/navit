@@ -35,6 +35,13 @@
          <xsl:apply-templates/>
       </xsl:copy>
    </xsl:template>
+   <xsl:template match="/config/navit/gui[2]/text()">
+		<xsl:value-of select="replace(/config/navit/gui[2]/text(),
+		    '&lt;a name=''Tools''>&lt;text>Tools&lt;/text>','&lt;a name=''Tools''>&lt;text>Tools&lt;/text>
+			&lt;img src=''gui_maps'' onclick=''navit.graphics.map_download_dialog();''>&lt;text>Map download&lt;/text>&lt;/img>
+			&lt;img src=''gui_rules'' onclick=''navit.graphics.backup_restore_dialog();''>&lt;text>Backup / Restore&lt;/text>&lt;/img>')"/>
+   </xsl:template>
+
    <xsl:template match="/config/navit[1]">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
