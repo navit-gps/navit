@@ -101,6 +101,11 @@ enum attr_strings_type {
 	attr_string_district_name,
 	attr_string_street_name,
 	attr_string_street_name_systematic,
+	attr_string_street_name_systematic_nat,
+	attr_string_street_name_systematic_int,
+	attr_string_ref,
+	attr_string_exit_to,
+	attr_string_street_destination,
 	attr_string_house_number,
 	attr_string_label,
 	attr_string_postal,
@@ -1161,7 +1166,28 @@ osm_add_tag(char *k, char *v)
 	if (! strcmp(k,"ref")) {
 		if (in_way)
 			attr_strings_save(attr_string_street_name_systematic, v);
+		/* for exit number of highway_exit poi */
+		else attr_strings_save(attr_string_ref, v);
 		level=5;
+	}
+	if (! strcmp(k,"nat_ref")) {
+			if (in_way)
+				attr_strings_save(attr_string_street_name_systematic_nat, v);
+			level=5;
+	}
+	if (! strcmp(k,"int_ref")) {
+			if (in_way)
+				attr_strings_save(attr_string_street_name_systematic_int, v);
+			level=5;
+	}
+	if (! strcmp(k,"destination")) {
+			if (in_way)
+				attr_strings_save(attr_string_street_destination, v);
+			level=5;
+	}
+	if (! strcmp(k,"exit_to")) {
+			attr_strings_save(attr_string_exit_to, v);
+			level=5;
 	}
 	if (! strcmp(k,"openGeoDB:is_in")) { 
 		if (!is_in_buffer[0]) 
@@ -1750,6 +1776,8 @@ osm_end_way(struct maptool_osm *osm)
 		item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
 		item_bin_add_attr_string(item_bin, attr_district_name, attr_strings[attr_string_district_name]);
 		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
+		item_bin_add_attr_string(item_bin, attr_street_name_systematic_nat, attr_strings[attr_string_street_name_systematic_nat]);
+		item_bin_add_attr_string(item_bin, attr_street_destination, attr_strings[attr_string_street_destination]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
 			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
@@ -1831,6 +1859,8 @@ osm_end_node(struct maptool_osm *osm)
 		item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]);
 		item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
+		item_bin_add_attr_string(item_bin, attr_ref, attr_strings[attr_string_ref]);
+		item_bin_add_attr_string(item_bin, attr_exit_to, attr_strings[attr_string_exit_to]);
 		item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
 		postal=attr_strings[attr_string_postal];
 		if (postal) {
