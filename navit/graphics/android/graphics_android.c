@@ -30,6 +30,7 @@
 #include "debug.h"
 #include "callback.h"
 #include "android.h"
+#include "command.h"
 
 int dummy;
 
@@ -654,7 +655,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem;
 
 static int
 graphics_android_fullscreen(struct window *win, int on)
@@ -670,6 +671,23 @@ graphics_android_disable_suspend(struct window *win)
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_disableSuspend);
 }
 
+static void
+graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	int ncmd=0;
+       	dbg(0,"Running %s\n",function);
+	if(!strcmp(function,"map_download_dialog")) {
+		ncmd=3;
+	} else if(!strcmp(function,"backup_restore_dialog")) {
+		ncmd=7;
+	}
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_runOptionsItem, ncmd);
+}
+
+static struct command_table commands[] = {
+	{"map_download_dialog",command_cast(graphics_android_cmd_runMenuItem)},
+	{"backup_restore_dialog",command_cast(graphics_android_cmd_runMenuItem)},
+};
 
 static struct graphics_priv *
 graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
@@ -689,6 +707,9 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
 		use_camera=attr->u.num;
 	}
+        if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), ret);
+        }
 	image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
 		dbg(lvl_debug,"returning %p\n",ret);
@@ -913,6 +934,10 @@ event_android_new(struct event_methods *meth)
 	Navit_fullscreen = (*jnienv)->GetMethodID(jnienv, NavitClass, "fullscreen", "(I)V"); 
 	if (Navit_fullscreen == NULL) 
 		return NULL; 
+	Navit_runOptionsItem = (*jnienv)->GetMethodID(jnienv, NavitClass, "runOptionsItem", "(I)V");
+	if (Navit_runOptionsItem == NULL) 
+		return NULL; 
+
 	dbg(lvl_debug,"ok\n");
         *meth=event_android_methods;
         return NULL;

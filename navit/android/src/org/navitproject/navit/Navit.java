@@ -508,8 +508,14 @@ public class Navit extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		runOptionsItem(item.getItemId());
+		return true;
+	}
+	
+	public void runOptionsItem(int id)
+	{
 		// Handle item selection
-		switch (item.getItemId())
+		switch (id)
 		{
 			case 1 :
 				// zoom in
@@ -559,7 +565,6 @@ public class Navit extends Activity
 				this.exit();
 				break;
 		}
-		return true;
 	}
 
 	void setDestination(float latitude, float longitude, String address) {
