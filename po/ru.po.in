@@ -25,19 +25,21 @@
 # kisaa https://launchpad.net/~kisaa-mail
 # zcc https://launchpad.net/~zcc
 # Павел https://launchpad.net/~pavel-sgn
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2014-11-09 21:33+0000\n"
-"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"POT-Creation-Date: 2014-11-14 23:10-0800\n"
+"PO-Revision-Date: 2014-12-21 21:24+0000\n"
+"Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2014-12-21 21:28+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 "Language: ru\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1486,10 +1488,10 @@ msgid "Opens address search dialog"
 msgstr "Диалог поиска по адресу"
 
 msgid "_POI search"
-msgstr ""
+msgstr "Поиск _POI"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Открыть диалог поиска точек интереса"
 
 msgid "_Stop Navigation"
 msgstr "Остановить навигацию"
@@ -1540,7 +1542,7 @@ msgid "Restaurant"
 msgstr "Ресторан"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Ресторан. Фастфуд"
 
 msgid "Hotel"
 msgstr "Гостиница"
@@ -1570,7 +1572,7 @@ msgid "Police"
 msgstr "Полиция"
 
 msgid "Justice"
-msgstr ""
+msgstr "Суды"
 
 msgid "Taxi"
 msgstr "Такси"
@@ -1598,34 +1600,34 @@ msgid "Set next visit to %ld, %ld \n"
 msgstr ""
 
 msgid "POI search"
-msgstr ""
+msgstr "Поиск POI"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Выберите категорию"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Выберите расстояние для поиска (км)"
 
 msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 msgid "Direction"
-msgstr ""
+msgstr "Направление"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Расстояние (м)"
 
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Заехать перед..."
 
 msgid "N"
 msgstr "С"
@@ -2464,7 +2466,7 @@ msgstr ""
 "Примечание: файл карты может быть очень большим (>50MB) - рекомендуется "
 "использовать подключениеWi-Fi.\n"
 "\n"
-"Mapdata: (c) участники OpenStreetMap\n"
+"Картографические данные: (c) участники OpenStreetMap\n"
 "\n"
 "Приятного общения с Navit!"
 
@@ -2598,7 +2600,7 @@ msgstr "Ошибка при восстановлении"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr "Восстановление завершено"
+msgstr "Резервное копирование успешно завершено"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
