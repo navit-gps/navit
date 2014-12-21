@@ -228,7 +228,7 @@ graphics_set_rect(struct graphics *gra, struct point_rect *pr)
 struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 {
 	struct graphics *this_;
-    	struct attr *type_attr;
+    	struct attr *type_attr, cbl_attr;
 	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
         if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
@@ -239,9 +239,12 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	if (! graphicstype_new)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
-	this_->cbl=callback_list_new();
-	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, attrs, this_->cbl);
 	this_->attrs=attr_list_dup(attrs);
+	this_->cbl=callback_list_new();
+	cbl_attr.type=attr_callback_list;
+        cbl_attr.u.callback_list=this_->cbl;
+        this_->attrs=attr_generic_add_attr(this_->attrs, &cbl_attr);
+	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, this_->attrs, this_->cbl);
 	this_->brightness=0;
 	this_->contrast=65536;
 	this_->gamma=65536;
