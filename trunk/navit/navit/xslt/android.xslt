@@ -64,6 +64,33 @@
          <xsl:apply-templates/>
       </xsl:copy>
    </xsl:template>
+   <xsl:template match="/config/navit/layout/layer/itemgra/child::*">
+      <xsl:copy>
+         <xsl:copy-of select="@*[not(name()='text_size') and not(name()='width') and not(name()='radius') and not(name()='w') and not(name()='h') and not(name()='x') and not(name()='y')]"/>
+         <xsl:if test="@text_size">
+		<xsl:attribute name="text_size"><xsl:value-of select="round(number(@text_size)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@width">
+		<xsl:attribute name="width"><xsl:value-of select="round(number(@width)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@radius">
+		<xsl:attribute name="radius"><xsl:value-of select="round(number(@radius)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@w">
+		<xsl:attribute name="w"><xsl:value-of select="round(number(@w)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@h">
+		<xsl:attribute name="h"><xsl:value-of select="round(number(@h)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:apply-templates/>
+         <xsl:if test="@x">
+		<xsl:attribute name="x"><xsl:value-of select="round(number(@x)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@y">
+		<xsl:attribute name="y"><xsl:value-of select="round(number(@y)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+      </xsl:copy>
+   </xsl:template>
    <xsl:template match="/config/navit/layout[@name='Car-Android']">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
