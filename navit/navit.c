@@ -80,11 +80,20 @@
 #define TEXTFILE_COMMENT_NAVI_STOPPED "# navigation stopped\n"
 
 /**
- * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
+ * @defgroup navit The navit core instance
+ * @brief navit is the object containing most global data structures.
+ *
+ * Among others:
+ * - a set of maps
+ * - one or more vehicles
+ * - a graphics object for rendering the map
+ * - a gui object for displaying the user interface
+ * - a route object
+ * - a navigation object
  * @{
  */
 
-//! The navit_vehicule
+//! The vehicle used for navigation.
 struct navit_vehicle {
 	int follow;
 	/*! Limit of the follow counter. See navit_add_vehicle */
@@ -236,7 +245,7 @@ navit_get_user_data_directory(int create) {
 		}
 	}
 	return dir;
-} /* end: navit_get_user_data_directory(gboolean create) */
+}
 
 
 void
