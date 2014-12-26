@@ -544,9 +544,6 @@ navit_motion_timeout(struct navit *this_)
 		graphics_overlay_disable(this_->gra, 1);
 		tr=transform_dup(this_->trans);
 		update_transformation(tr, &this_->pressed, &this_->current);
-#if 0
-		graphics_displaylist_move(this_->displaylist, dx, dy);
-#endif
 		graphics_draw_cancel(this_->gra, this_->displaylist);
 		graphics_displaylist_draw(this_->gra, this_->displaylist, tr, this_->layout_current, this_->graphics_flags|512);
 		transform_destroy(tr);
@@ -2130,19 +2127,7 @@ navit_init(struct navit *this_)
 	center_file = bookmarks_get_center_file(FALSE);
 	bookmarks_set_center_from_file(this_->bookmarks, center_file);
 	g_free(center_file);
-#if 0
-	if (this_->menubar) {
-		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL);
-		if (men) {
-			navit_add_menu_windows_items(this_, men);
-		}
-	}
-#endif
 	global_navit=this_;
-#if 0
-	navit_window_roadbook_new(this_);
-	navit_window_items_new(this_);
-#endif
 
 	messagelist_init(this_->messages);
 
@@ -3018,19 +3003,6 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
 	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans_cursor), nv->speed);
-#if 0	
-	if (pnt)
-		pnt2=*pnt;
-	else {
-		pro=transform_get_projection(this_->trans);
-		transform(this_->trans, pro, &nv->coord, &pnt2, 1);
-	}
-#if 1
-	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, pnt == NULL);
-#else
-	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, 1);
-#endif
-#endif
 }
 
 /**
