@@ -2465,7 +2465,7 @@ Waypoint</text></img>
 					<icon src="viewpoint.png"/>
 				</itemgra>
 				<itemgra item_types="tec_common" order="11-">
-					<icon src="tec_common.png" w="24" h="24"/>
+					<icon src="tec_common.png"/>
 				</itemgra>
 				<itemgra item_types="vehicle" order="0-">
 					<icon src="gui_vehicle_16_16.png" />
@@ -3918,7 +3918,7 @@ Waypoint</text></img>
 					<icon src="viewpoint.png"/>
 				</itemgra>
 				<itemgra item_types="tec_common" order="11-">
-					<icon src="tec_common.png" w="24" h="24"/>
+					<icon src="tec_common.png"/>
 				</itemgra>
 				<itemgra item_types="vehicle" order="0-">
 					<icon src="gui_vehicle_16_16.png" />
@@ -5289,7 +5289,7 @@ Waypoint</text></img>
           <icon src="viewpoint.png" />
         </itemgra>
         <itemgra item_types="tec_common" order="11-">
-          <icon src="tec_common.png" w="24" h="24" />
+          <icon src="tec_common.png"/>
         </itemgra>
         <itemgra item_types="vehicle" order="0-">
           <icon src="gui_vehicle_16_16.png" />
