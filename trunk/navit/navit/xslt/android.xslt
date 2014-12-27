@@ -76,10 +76,14 @@
          <xsl:if test="@radius">
 		<xsl:attribute name="radius"><xsl:value-of select="round(number(@radius)*number($OSD_SIZE))"/></xsl:attribute>
 	 </xsl:if>
-         <xsl:if test="@w">
+         <xsl:if test="name()='icon'">
+		<xsl:attribute name="w"><xsl:value-of select="round(24.0*number($OSD_SIZE))"/></xsl:attribute>
+		<xsl:attribute name="h"><xsl:value-of select="round(24.0*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@w and not(name()='icon')">
 		<xsl:attribute name="w"><xsl:value-of select="round(number(@w)*number($OSD_SIZE))"/></xsl:attribute>
 	 </xsl:if>
-         <xsl:if test="@h">
+         <xsl:if test="@h and not(name()='icon')">
 		<xsl:attribute name="h"><xsl:value-of select="round(number(@h)*number($OSD_SIZE))"/></xsl:attribute>
 	 </xsl:if>
          <xsl:apply-templates/>
@@ -91,10 +95,18 @@
 	 </xsl:if>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="/config/navit/layout[@name='Car-Android']">
+   <xsl:template match="/config/navit/layout">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
-         <xsl:attribute name="active">1</xsl:attribute>
+         <xsl:if test="@name='Car-Android'">
+		<xsl:attribute name="active">1</xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="number($OSD_SIZE)>3">
+		<xsl:attribute name="order_delta">-2</xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="number($OSD_SIZE)>1.4 and 3>=number($OSD_SIZE)">
+		<xsl:attribute name="order_delta">-1</xsl:attribute>
+	 </xsl:if>
          <xsl:apply-templates/>
       </xsl:copy>
    </xsl:template>
