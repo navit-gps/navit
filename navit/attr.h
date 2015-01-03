@@ -226,6 +226,7 @@ struct attr **attr_list_append(struct attr **attrs, struct attr *attr);
 int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
 int attr_types_contains(enum attr_type *types, enum attr_type type);
 int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);
+int attr_rel2real(int attrval, int whole, int treat_neg_as_rel);
 /* end of prototypes */
 #ifdef __cplusplus
 }

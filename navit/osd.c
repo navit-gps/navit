@@ -162,7 +162,10 @@ osd_std_resize(struct osd_item *item)
  * @brief Calculates the size and position of an OSD item.
  *
  * If the geometry of the OSD item is specified relative to screen dimensions,
- * this function will set its absolute dimensions accordingly.
+ * this function will set its absolute dimensions accordingly. If relative width
+ * or relative height is set to 0% (int value is equal to ATTR_REL_RELSHIFT), 
+ * object width (height) is not changed here, for button and image osds it means
+ * to derive values from the underlying image.
  * @param item
  * @param w Available screen width in pixels (the width that corresponds to
  * 100%)
@@ -172,21 +175,16 @@ osd_std_resize(struct osd_item *item)
 void
 osd_std_calculate_sizes(struct osd_item *item, int w, int h)
 {
- 	if (item->rel_w) {
-		item->w = (item->rel_w * w) / 100;
- 	}
-
- 	if (item->rel_h) {
-		item->h = (item->rel_h * h) / 100;
- 	}
-
- 	if (item->rel_x) {
-		item->p.x = (item->rel_x * w) / 100;
- 	}
-
- 	if (item->rel_y) {
-		item->p.y = (item->rel_y * h) / 100;
- 	}
+	if(item->rel_w!=ATTR_REL_RELSHIFT)
+		item->w=attr_rel2real(item->rel_w, w, 1);
+	if(item->w<0)
+		item->w=0;
+	if(item->rel_h!=ATTR_REL_RELSHIFT)
+		item->h=attr_rel2real(item->rel_h, h, 1);
+	if(item->h<0)
+		item->h=0;
+	item->p.x=attr_rel2real(item->rel_x, w, 1);
+	item->p.y=attr_rel2real(item->rel_y, h, 1);
 }
 
 /**
@@ -284,42 +282,22 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 
 	attr = attr_search(attrs, NULL, attr_w);
 	if (attr) {
-		if (attr->u.num > ATTR_REL_MAXABS) {
-			item->rel_w = attr->u.num - ATTR_REL_RELSHIFT;
-		} else {
-			item->rel_w = 0;
-			item->w = attr->u.num;
-		}
+		item->rel_w = attr->u.num;
 	}
 
 	attr = attr_search(attrs, NULL, attr_h);
 	if (attr) {
-		if (attr->u.num > ATTR_REL_MAXABS) {
-			item->rel_h = attr->u.num - ATTR_REL_RELSHIFT;
-		} else {
-			item->rel_h = 0;
-			item->h = attr->u.num;
-		}
+		item->rel_h = attr->u.num;
 	}
 
 	attr = attr_search(attrs, NULL, attr_x);
 	if (attr) {
-		if (attr->u.num > ATTR_REL_MAXABS) {
-			item->rel_x = attr->u.num - ATTR_REL_RELSHIFT;
-		} else {
-			item->rel_x = 0;
-			item->p.x = attr->u.num;
-		}
+		item->rel_x = attr->u.num;
 	}
 
 	attr = attr_search(attrs, NULL, attr_y);
 	if (attr) {
-		if (attr->u.num > ATTR_REL_MAXABS) {
-			item->rel_y = attr->u.num - ATTR_REL_RELSHIFT;
-		} else {
-			item->rel_y = 0;
-			item->p.y = attr->u.num;
-		}
+		item->rel_y = attr->u.num;
 	}
 
 	attr = attr_search(attrs, NULL, attr_font_size);
