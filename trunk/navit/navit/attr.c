@@ -974,3 +974,22 @@ attr_types_contains_default(enum attr_type *types, enum attr_type type, int defl
 	}
 	return attr_types_contains(types, type);	
 }
+
+/**
+ * @brief Derive absolute value from relative attribute, given value of the whole range.
+ *
+ * @param attrval Value of u.num member of attribute capable of holding relative values.
+ * @param whole Range counted as 100%.
+ * @param treat_neg_as_rel Replace negative absolute values with whole+attr.u.num.
+ *
+ * @return True if the attribute type was found, false if it was not found, {@code deflt} if types is empty.
+ */
+int attr_rel2real(int attrval, int whole, int treat_neg_as_rel)
+{
+  if (attrval > ATTR_REL_MAXABS)
+	return whole * (attrval - ATTR_REL_RELSHIFT)/100;
+  if(treat_neg_as_rel && attrval<0 )
+  	return whole+attrval;
+  return attrval;
+}
+
