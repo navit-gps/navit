@@ -66,7 +66,7 @@
    </xsl:template>
    <xsl:template match="/config/navit/layout/layer/itemgra/child::*">
       <xsl:copy>
-         <xsl:copy-of select="@*[not(name()='text_size') and not(name()='width') and not(name()='radius') and not(name()='w') and not(name()='h') and not(name()='x') and not(name()='y')]"/>
+         <xsl:copy-of select="@*[not(name()='text_size') and not(name()='width') and not(name()='radius') and not(name()='w') and not(name()='h') and not(name()='x') and not(name()='y') and not(name()='dash')]"/>
          <xsl:if test="@text_size">
 		<xsl:attribute name="text_size"><xsl:value-of select="round(number(@text_size)*number($OSD_SIZE))"/></xsl:attribute>
 	 </xsl:if>
@@ -77,8 +77,8 @@
 		<xsl:attribute name="radius"><xsl:value-of select="round(number(@radius)*number($OSD_SIZE))"/></xsl:attribute>
 	 </xsl:if>
          <xsl:if test="name()='icon'">
-		<xsl:attribute name="w"><xsl:value-of select="round(24.0*number($OSD_SIZE))"/></xsl:attribute>
-		<xsl:attribute name="h"><xsl:value-of select="round(24.0*number($OSD_SIZE))"/></xsl:attribute>
+		<xsl:attribute name="w"><xsl:value-of select="$ICON_SMALL"/></xsl:attribute>
+		<xsl:attribute name="h"><xsl:value-of select="$ICON_SMALL"/></xsl:attribute>
 	 </xsl:if>
          <xsl:if test="@w and not(name()='icon')">
 		<xsl:attribute name="w"><xsl:value-of select="round(number(@w)*number($OSD_SIZE))"/></xsl:attribute>
@@ -92,6 +92,17 @@
 	 </xsl:if>
          <xsl:if test="@y">
 		<xsl:attribute name="y"><xsl:value-of select="round(number(@y)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+         <xsl:if test="@offset">
+		<xsl:attribute name="offset"><xsl:value-of select="round(number(@offset)*number($OSD_SIZE))"/></xsl:attribute>
+	 </xsl:if>
+	 <xsl:if test="@dash">
+	 	<xsl:attribute name="dash">
+		 	<xsl:for-each select="tokenize(@dash,',')">
+		 		<xsl:value-of select="round(number(.)*number($OSD_SIZE))"/>
+	 			<xsl:if test="not(position() eq last())"><xsl:text>,</xsl:text></xsl:if>
+		 	</xsl:for-each>
+ 		</xsl:attribute>
 	 </xsl:if>
       </xsl:copy>
    </xsl:template>
