@@ -307,7 +307,7 @@ public class Navit extends Activity
 		int height_ = display_.getHeight();
 		metrics = new DisplayMetrics();
 		display_.getMetrics(Navit.metrics);
-		int densityDpi = (int)(( Navit.metrics.density*160)+.5f);
+		int densityDpi = (int)(( Navit.metrics.density*160)-.5f);
 		Log.e("Navit", "Navit -> pixels x=" + width_ + " pixels y=" + height_);
 		Log.e("Navit", "Navit -> dpi=" + densityDpi);
 		Log.e("Navit", "Navit -> density=" + Navit.metrics.density);
@@ -331,15 +331,27 @@ public class Navit extends Activity
 		{
 			my_display_density = "mdpi";
 		}
-		else if (densityDpi < 320)
+		else if (densityDpi < 240)
 		{
 			my_display_density = "hdpi";
 		}
+		else if (densityDpi < 320)
+		{
+			my_display_density = "xhdpi";
+		}
+		else if (densityDpi < 480)
+		{
+			my_display_density = "xxhdpi";
+		}
+		else if (densityDpi < 640)
+		{
+			my_display_density = "xxxhdpi";
+		}
 		else
 		{
-			Log.e("Navit", "found xhdpi device, this is not fully supported!!");
-			Log.e("Navit", "using hdpi values");
-			my_display_density = "hdpi";
+			Log.e("Navit", "found device of very high density ("+densityDpi+")");
+			Log.e("Navit", "using xxxhdpi values");
+			my_display_density = "xxxhdpi";
 		}
 
 		if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
