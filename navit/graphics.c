@@ -611,36 +611,82 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 static void
 image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path, char *name, int width, int height, int rotate, int zip)
 {
-	int i;
-	for (i = 1 ; i <= 6 ; i++) {
+	int i=0;
+	int stdsizes[]={8,12,16,22,24,32,36,48,64,72,96,128,192,256};
+	const int numstdsizes=sizeof(stdsizes)/sizeof(int);
+	int sz;
+	int mode=1;
+	int bmstd=0;
+	sz=width>0?width:height;
+	while (mode<=8) {
 		char *new_name=NULL;
-		switch (i) {
+		int n;
+		switch (mode) {
 			case 1:
 				/* The best variant both for cpu usage and quality would be prescaled png of a needed size */
+				mode++;
 				if (width != -1 && height != -1) {
 					new_name=g_strdup_printf("%s_%d_%d.png", name, width, height);
 				}
 				break;
 			case 2:
+				mode++;
 				/* Try to load image by the exact name given by user. For example, if she wants to
 				  scale some prescaled png variant to a new size given as function params, or have
 				  default png image to be displayed unscaled. */
 				new_name=g_strdup(path);
 				break;
 			case 3:
+				mode++;
 				/* Next, try uncompressed and compressed svgs as they should give best quality but 
 				   rendering might take more cpu resources when the image is displayed for the first time */
 				new_name=g_strdup_printf("%s.svg", name);
 				break;
 			case 4:
+				mode++;
 				new_name=g_strdup_printf("%s.svgz", name);
 				break;
 			case 5:
-				/* Scaling the default png to the needed size may give some quality loss */
+				mode++;
+				/* If we have no size specifiers, try the default png now */
+				if(sz<=0) {
+					new_name=g_strdup_printf("%s.png", name);
+					i=0;
+					break;
+				}
+				/* Find best matching size from standard row */
+				for(bmstd=0;bmstd<numstdsizes;bmstd++)
+					if(stdsizes[bmstd]>sz)
+						break;
+				i=1;
+				/* Fall through */
+			case 6:
+				/* Select closest matching image from standard row */
+				if(sz>0) {
+					/* If size were specified, start with bmstd and then try standard sizes in row
+					 * bmstd-1, bmstd+1, bmstd-2, bmstd+2 etc */
+					n=bmstd+(i/2)*((i%2)*2-1);
+					if(++i==numstdsizes*2)
+						mode++;
+				} else {
+					/* If no size were specified, start with the smallest standard size and then try following ones */
+					n=i++;
+					if(i==numstdsizes)
+						mode+=2;
+				}
+				if(n<0||n>=numstdsizes)
+					break;
+				new_name=g_strdup_printf("%s_%d_%d.png", name, stdsizes[n],stdsizes[n]);
+				break;
+				
+			case 7:
+				/* Scaling the default prescaled png of unknown size to the needed size will give random quality loss */
+				mode++;
 				new_name=g_strdup_printf("%s.png", name);
 				break;
-			case 6: 
+			case 8: 
 				/* xpm format is used as a last resort, because its not widely supported and we are moving to svg and png formats */
+				mode++;
 				new_name=g_strdup_printf("%s.xpm", name);
 				break;
 		}
