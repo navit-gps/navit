@@ -54,13 +54,15 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
       else()
          set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png)
       endif()
-
-      convert_to_png(
-         ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC} 
-         ${IMAGE_DST}
-         ${CURRENT_SCALE}
-      )
-      list(APPEND IMAGE_TARGETS ${IMAGE_DST})
+      
+      if(NOT CURRENT_SCALE EQUAL -1)
+        convert_to_png(
+           ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC} 
+           ${IMAGE_DST}
+           ${CURRENT_SCALE}
+        )
+        list(APPEND IMAGE_TARGETS ${IMAGE_DST})
+      endif()
    endforeach()
 endmacro()
 
