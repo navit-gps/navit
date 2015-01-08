@@ -252,6 +252,7 @@ graphics_destroy(struct graphics_priv *gr)
 {
 	/*FIXME graphics_destroy is never called */
 	/*TODO add destroy code for image cache(delete entries in hImageData) */
+	gr->freetype_methods.destroy();
 	g_free(gr);
 	gr = NULL;
 }
@@ -259,7 +260,6 @@ graphics_destroy(struct graphics_priv *gr)
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
-	gc->gr->freetype_methods.destroy();
 	g_free(gc);
 	gc = NULL;
 }
