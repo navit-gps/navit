@@ -29,12 +29,24 @@ static const char *e_system;
 
 static int has_quit;
 
+#define require_method_helper(m)\
+	if(!event_methods.m) {\
+		dbg(lvl_error, "Can't find event system method %s. Event system is %s%s\n",\
+			#m ,e_system?"set to ":"not set.", e_system?e_system:"");\
+
+#define require_method(m)\
+		require_method_helper(m)\
+		return;\
+	}
+
+#define require_method2(m,r)\
+		require_method_helper(m)\
+		return r;\
+	}
+
 void event_main_loop_run(void)
 {
-	if (! event_methods.main_loop_run) {
-		dbg(lvl_error,"no event system set\n");
-		return;
-	}
+	require_method(main_loop_run);
 	event_methods.main_loop_run();
 }
 
@@ -54,42 +66,49 @@ event_main_loop_has_quit(void)
 struct event_watch *
 event_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
+	require_method2(add_watch, NULL);
 	return event_methods.add_watch(fd, cond, cb);
 }
 
 void
 event_remove_watch(struct event_watch *ev)
 {
+	require_method(remove_watch);
 	event_methods.remove_watch(ev);
 }
 
 struct event_timeout *
 event_add_timeout(int timeout, int multi, struct callback *cb)
 {
+	require_method2(add_timeout, NULL);
 	return event_methods.add_timeout(timeout, multi, cb);
 }
 
 void
 event_remove_timeout(struct event_timeout *ev)
 {
+	require_method(remove_timeout);
 	event_methods.remove_timeout(ev);
 }
 
 struct event_idle *
 event_add_idle(int priority, struct callback *cb)
 {
+	require_method2(add_idle, NULL);
 	return event_methods.add_idle(priority,cb);
 }
 
 void
 event_remove_idle(struct event_idle *ev)
 {
+	require_method(remove_idle);
 	event_methods.remove_idle(ev);
 }
 
 void
 event_call_callback(struct callback_list *cb)
 {
+	require_method(call_callback);
 	event_methods.call_callback(cb);
 }
 
