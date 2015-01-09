@@ -232,12 +232,15 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
         if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+		dbg(lvl_error,"Graphics plugin type is not set.\n");
                 return NULL;
         }
 
 	graphicstype_new=plugin_get_graphics_type(type_attr->u.str);
-	if (! graphicstype_new)
+	if (! graphicstype_new) {
+		dbg(lvl_error,"Failed to load graphics plugin %s.\n", type_attr->u.str);
 		return NULL;
+	}
 	this_=g_new0(struct graphics, 1);
 	this_->attrs=attr_list_dup(attrs);
 	this_->cbl=callback_list_new();
