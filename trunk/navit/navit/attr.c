@@ -982,7 +982,7 @@ attr_types_contains_default(enum attr_type *types, enum attr_type type, int defl
  * @param whole Range counted as 100%.
  * @param treat_neg_as_rel Replace negative absolute values with whole+attr.u.num.
  *
- * @return True if the attribute type was found, false if it was not found, {@code deflt} if types is empty.
+ * @return Absolute value corresponding to given relative value.
  */
 int attr_rel2real(int attrval, int whole, int treat_neg_as_rel)
 {

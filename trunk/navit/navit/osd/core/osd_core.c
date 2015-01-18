@@ -2396,6 +2396,11 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, opc));
 
+	this->d=opc->osd_item.w;
+	if (opc->osd_item.h < this->d)
+		this->d=opc->osd_item.h;
+	this->width=this->d/10;
+
         if(this->label_str && !strncmp("images:",this->label_str,7)) {
           char *tok1=NULL, *tok2=NULL, *tok3=NULL;
           strtok(this->label_str,":");
@@ -2490,10 +2495,6 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	else
 		this->announce_on = 1;    //announce by default
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
-	this->d=opc->osd_item.w;
-	if (opc->osd_item.h < this->d)
-		this->d=opc->osd_item.h;
-	this->width=this->d/10;
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, opc));
 	return (struct osd_priv *) opc;
 }
@@ -3244,7 +3245,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.rel_y = -80;
 	opc->osd_item.rel_w = 60;
 	opc->osd_item.navit = nav;
-	opc->osd_item.h = 40;
+	opc->osd_item.rel_h = 40;
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_gps_status_draw);
 	meth->set_attr = set_std_osd_attr;
