@@ -243,7 +243,7 @@ binfile_read_eoc(struct file *fi)
 		eoc_to_cpu(eoc);
 		dbg(lvl_debug,"sig 0x%x\n", eoc->zipesig);
 		if (eoc->zipesig != zip_eoc_sig) {
-			dbg(lvl_error,"eoc signature check failed: 0x%x vs 0x%x\n",eoc->zipesig,zip_eoc_sig);
+			dbg(lvl_error,"map file %s: eoc signature check failed: 0x%x vs 0x%x\n", fi->name, eoc->zipesig,zip_eoc_sig);
 			file_data_free(fi,(unsigned char *)eoc);
 			eoc=NULL;
 		}
@@ -262,14 +262,14 @@ binfile_read_eoc64(struct file *fi)
 	dbg(lvl_debug,"sig 0x%x\n", eocl->zip64lsig);
 	if (eocl->zip64lsig != zip64_eocl_sig) {
 		file_data_free(fi,(unsigned char *)eocl);
-		dbg(lvl_warning,"eocl wrong\n");
+		dbg(lvl_warning,"map file %s: eocl wrong\n", fi->name);
 		return NULL;
 	}
 	eoc=(struct zip64_eoc *)file_data_read(fi,eocl->zip64lofst, sizeof(struct zip64_eoc));
 	if (eoc) {
 		if (eoc->zip64esig != zip64_eoc_sig) {
 			file_data_free(fi,(unsigned char *)eoc);
-			dbg(lvl_warning,"eoc wrong\n");
+		dbg(lvl_warning,"map file %s: eoc wrong\n", fi->name);
 			eoc=NULL;
 		}
 		dbg(lvl_debug,"eoc64 ok 0x"LONGLONG_HEX_FMT " 0x"LONGLONG_HEX_FMT "\n",eoc->zip64eofst,eoc->zip64ecsz);
@@ -389,12 +389,12 @@ binfile_read_content(struct map_priv *m, struct file *fi, long long offset, stru
 			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
 			break;
 		default:
-			dbg(lvl_error,"Unknown encrypted compression method %d\n",enc->compress_method);
+			dbg(lvl_error,"map file %s: unknown encrypted compression method %d\n", fi->name, enc->compress_method);
 		}
 		file_data_free(fi, (unsigned char *)enc);
 		break;
 	default:
-		dbg(lvl_error,"Unknown compression method %d\n", lfh->zipmthd);
+		dbg(lvl_error,"map file %s: unknown compression method %d\n", fi->name, lfh->zipmthd);
 	}
 	return ret;
 }
@@ -2564,7 +2564,7 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 	struct zip_cd *first_cd;
 	int i;
 	if (!(m->eoc=binfile_read_eoc(m->fi))) {
-		dbg(lvl_error,"unable to read eoc\n");
+		dbg(lvl_error,"map file %s: unable to read eoc\n", filename);
 		return 0;
 	}
 	dbg_assert(m->eoc->zipedsk == m->eoc->zipecen);
@@ -2583,11 +2583,11 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 	dbg(lvl_debug,"num_disk %d\n",m->eoc->zipedsk);
 	m->eoc64=binfile_read_eoc64(m->fi);
 	if (!binfile_get_index(m)) {
-		dbg(lvl_error,"no index found\n");
+		dbg(lvl_error,"map file %s: no index found\n", filename);
 		return 0;
 	}
 	if (!(first_cd=binfile_read_cd(m, 0, 0))) {
-		dbg(lvl_error,"unable to get first cd\n");
+		dbg(lvl_error,"map file %s: unable to get first cd\n", filename);
 		return 0;
 	}
 	m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
@@ -2717,7 +2717,7 @@ map_binfile_open(struct map_priv *m)
 			return 0;
 		}
 	} else if (*magic == zip_lfh_sig_rev || *magic == zip_split_sig_rev || *magic == zip_cd_sig_rev || *magic == zip64_eoc_sig_rev) {
-		dbg(lvl_error,"endianness mismatch\n");
+		dbg(lvl_error,"endianness mismatch for '%s'\n", m->filename);
 		file_destroy(m->fi);
 		m->fi=NULL;
 		return 0;
@@ -2744,7 +2744,8 @@ map_binfile_open(struct map_priv *m)
 		}
 		map_rect_destroy_binfile(mr);
 		if (m->map_version >= 16) {
-			dbg(lvl_error,"Warning: This map is incompatible with your navit version. Please update navit.\n");
+			dbg(lvl_error,"%s: This map is incompatible with your navit version. Please update navit. (map version %d)\n",
+				m->filename, m->map_version);
 			return 0;
 		}
 	}
