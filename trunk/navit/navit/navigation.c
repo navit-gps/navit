@@ -1424,7 +1424,7 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 	if (reason)
 		*reason=r;
 	if (r)
-		dbg(1, "%s %s -> %s %s: %s\n", old->way.name2, old->way.name1, new->way.name2, new->way.name1, r);
+		dbg(lvl_debug, "%s %s -> %s %s: %s\n", old->way.name2, old->way.name1, new->way.name2, new->way.name1, r);
 	return ret;
 	
 
