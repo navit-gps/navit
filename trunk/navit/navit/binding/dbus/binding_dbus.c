@@ -362,6 +362,12 @@ dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage
 }
 
 static DBusHandlerResult
+dbus_error_navigation_not_configured(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_FAILED, "navigation is not configured (no <navigation> element in config file?)");
+}
+
+static DBusHandlerResult
 dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message)
 {
 #if 1
@@ -1313,10 +1319,14 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 		pp=&p;
 	}
 
+	struct navigation *nav = navit_get_navigation(navit);
+        if(!nav) {
+                return dbus_error_navigation_not_configured(connection, message);
+        }
+
 	dbg(lvl_debug,"Dumping route from dbus to %s\n", filename);
 
 	struct map * map=NULL;
-	struct navigation * nav = NULL;
 	struct map_rect * mr=NULL;
 	struct item *item = NULL;
 	struct attr attr,route;
@@ -1333,10 +1343,6 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
                         "<rte>\n";
         char *trailer = "</rte>\n</gpx>\n";
 
-        nav = navit_get_navigation(navit);
-        if(!nav) {
-                return;
-        }
         map = navigation_get_map(nav);
         if(map)
           mr = map_rect_new(map,NULL);
