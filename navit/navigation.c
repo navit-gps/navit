@@ -1205,7 +1205,6 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 {
 	int ret=0,d,dw,dlim,dc;
 	char *r=NULL;
-	struct navigation_way *w;
 	int cat,ncat,wcat,maxcat,left=-180,right=180,is_unambiguous=0,is_same_street;
 	int curve_limit=25; /* any angle less than this is considered straight */
 	int junction_limit = 100; /* maximum distance between two carriageways at a junction */
