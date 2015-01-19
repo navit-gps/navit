@@ -36,6 +36,9 @@
 #include "navit/navit.h"
 
 #include <qglobal.h>
+#if QT_VERSION < 0x040000
+#error "Support for Qt 3 was dropped in rev 5999."
+#endif
 
 #ifndef QT_QPAINTER_USE_FREETYPE
 #define QT_QPAINTER_USE_FREETYPE 1
@@ -45,25 +48,6 @@
 #include "navit/font/freetype/font_freetype.h"
 #endif
 
-#if QT_VERSION < 0x040000
-#include <qwidget.h>
-#include <qapplication.h>
-#include <qpainter.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qimage.h>
-#include <qpixmap.h>
-#include <qpixmapcache.h>
-#include <qlistview.h>
-#include <qobject.h>
-#include <qsocketnotifier.h>
-#ifdef HAVE_QPE
-#include <qpe/qpeapplication.h>
-#endif
-#ifndef QT_QPAINTER_USE_EVENT_QT
-#define QT_QPAINTER_USE_EVENT_QT 1
-#endif
-#else
 #include <QResizeEvent>
 #include <QApplication>
 #if QT_VERSION >= 0x040200
@@ -90,8 +74,6 @@
 #ifndef QT_QPAINTER_USE_EMBEDDING
 #define QT_QPAINTER_USE_EMBEDDING 1
 #endif
-#endif
-
 #endif
 
 #ifdef QT_QPAINTER_USE_EMBEDDING

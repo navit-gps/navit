@@ -95,23 +95,14 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 		if (!overlay->overlay_disable && r->intersects(ovr)) {
 			unsigned char *data;
 			int i,size=ovr.width()*ovr.height();
-#if QT_VERSION < 0x040000
-			QImage img=overlay->widget->pixmap->convertToImage();
-			img.setAlphaBuffer(1);
-#else
 			QImage img=overlay->widget->pixmap->toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
-#endif
 			data=img.bits();
 			for (i = 0 ; i < size ; i++) {
 				if (data[0] == overlay->rgba[0] && data[1] == overlay->rgba[1] && data[2] == overlay->rgba[2]) 
 					data[3]=overlay->rgba[3];
 				data+=4;
 			}
-#if QT_VERSION < 0x040000
-			painter.drawImage(QPoint(ovr.x()-r->x(),ovr.y()-r->y()), img, 0);
-#else
 			painter.drawImage(QPoint(ovr.x()-r->x(),ovr.y()-r->y()), img);
-#endif
 		}
 		overlay=overlay->next;
 	}
@@ -231,11 +222,7 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsign
 //##############################################################################################################
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-#if QT_VERSION >= 0x040000
 	QColor col(c->r >> 8, c->g >> 8, c->b >> 8 /* , c->a >> 8 */); 
-#else
-	QColor col(c->r >> 8, c->g >> 8, c->b >> 8); 
-#endif
 	gc->pen->setColor(col);
 	gc->brush->setColor(col);
 	gc->c=*c;
@@ -340,11 +327,7 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
-#if QT_VERSION >= 0x040000
 	QPolygon polygon;
-#else
-	QPointArray polygon;
-#endif
 
 	for (i = 0 ; i < count ; i++)
 		polygon.putPoints(i, 1, p[i].x, p[i].y);
@@ -360,11 +343,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
-#if QT_VERSION >= 0x040000
 	QPolygon polygon;
-#else
-	QPointArray polygon;
-#endif
 
 	for (i = 0 ; i < count ; i++)
 		polygon.putPoints(i, 1, p[i].x, p[i].y);
@@ -407,15 +386,9 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 #ifndef QT_QPAINTER_USE_FREETYPE
 	QString tmp=QString::fromUtf8(text);
 #ifndef QT_NO_TRANSFORMATIONS
-#if QT_VERSION >= 0x040000
 	QMatrix sav=gr->painter->worldMatrix();
 	QMatrix m(dx/65535.0,dy/65535.0,-dy/65535.0,dx/65535.0,p->x,p->y);
 	painter->setWorldMatrix(m,TRUE);
-#else
-	QWMatrix sav=gr->painter->worldMatrix();
-	QWMatrix m(dx/65535.0,dy/65535.0,-dy/65535.0,dx/65535.0,p->x,p->y);
-	painter->setWorldMatrix(m,TRUE);
-#endif
 	painter->setPen(*fg->pen);
 	painter->setFont(*font->font);
 	painter->drawText(0, 0, tmp);
@@ -445,16 +418,9 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 			g=*gp++;
 			if (g->w && g->h) {
 				unsigned char *data;
-#if QT_VERSION < 0x040000
-				QImage img(g->w+2, g->h+2, 32);
-				img.setAlphaBuffer(1);
-				data=img.bits();
-				gr->freetype_methods.get_shadow(g,(unsigned char *)(img.jumpTable()),32,0,bgc,&transparent);
-#else
 				QImage img(g->w+2, g->h+2, QImage::Format_ARGB32_Premultiplied);
 				data=img.bits();
 				gr->freetype_methods.get_shadow(g,(unsigned char *)data,32,img.bytesPerLine(),bgc,&transparent);
-#endif
 
 				painter->drawImage(((x+g->x)>>6)-1, ((y+g->y)>>6)-1, img);
 			}
@@ -471,16 +437,9 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 		g=*gp++;
 		if (g->w && g->h) {
 			unsigned char *data;
-#if QT_VERSION < 0x040000
-			QImage img(g->w, g->h, 32);
-			img.setAlphaBuffer(1);
-			data=img.bits();
-			gr->freetype_methods.get_glyph(g,(unsigned char *)(img.jumpTable()),32,0,fgc,bgc,&transparent);
-#else
 			QImage img(g->w, g->h, QImage::Format_ARGB32_Premultiplied);
 			data=img.bits();
 			gr->freetype_methods.get_glyph(g,(unsigned char *)data,32,img.bytesPerLine(),fgc,bgc,&transparent);
-#endif
 			painter->drawImage((x+g->x)>>6, (y+g->y)>>6, img);
 		}
                 x+=g->dx;
@@ -550,25 +509,12 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	dbg(lvl_debug,"mode for %p %d\n", gr, mode);
 	QRect r;
 	if (mode == draw_mode_begin) {
-#if QT_VERSION >= 0x040000
 		if (gr->widget->pixmap->paintingActive()) {
 			gr->widget->pixmap->paintEngine()->painter()->end();
 		}
-#endif
 		gr->painter->begin(gr->widget->pixmap);
-#if 0
-		gr->painter->fillRect(QRect(QPoint(0,0), gr->widget->size()), *gr->background_gc->brush);
-#endif
 	}
-#if QT_VERSION < 0x040000
-	if (mode == draw_mode_cursor) {
-		gr->painter->begin(gr->widget);
-	}
-#endif
 	if (mode == draw_mode_end) {
-#if 0
-		if (gr->mode == draw_mode_begin) {
-#endif
 			gr->painter->end();
 			if (gr->parent) {
 				if (gr->cleanup) {
@@ -582,23 +528,12 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				r.setRect(0, 0, gr->widget->pixmap->width(), gr->widget->pixmap->height());
 				qt_qpainter_draw(gr, &r, 0);
 			}
-#if 0
-		} else {
-#if QT_VERSION < 0x040000
-			gr->painter->end();
-#endif
-		}
-#endif
-#if QT_VERSION >= 0x040000
 		if (!gr->parent)
 			QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents|QEventLoop::ExcludeSocketNotifiers|QEventLoop::DeferredDeletion|QEventLoop::X11ExcludeTimers);
-#endif
 	}
-#if QT_VERSION >= 0x040000
 	if (mode == draw_mode_end_lazy) {
 		gr->painter->end();
 	}
-#endif
 	gr->mode=mode;
 }
 
