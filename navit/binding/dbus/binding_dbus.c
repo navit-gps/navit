@@ -50,6 +50,7 @@
 #include "layout.h"
 #include "roadprofile.h"
 #include "util.h"
+#include "transform.h"
 
 
 static DBusConnection *connection;
@@ -1299,7 +1300,6 @@ static DBusHandlerResult
 request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 {
 	char * filename;
-	struct point p, *pp=NULL;
 	struct navit *navit;
 	DBusMessageIter iter;
 
@@ -1311,14 +1311,6 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 
 	dbus_message_iter_get_basic(&iter, &filename);
 
-	if (dbus_message_iter_has_next(&iter))
-	{
-		dbus_message_iter_next(&iter);
-		if (!point_get_from_message(message, &iter, &p))
-			return dbus_error_invalid_parameter(connection, message);
-		pp=&p;
-	}
-
 	struct navigation *nav = navit_get_navigation(navit);
         if(!nav) {
                 return dbus_error_navigation_not_configured(connection, message);
@@ -1329,10 +1321,9 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 	struct map * map=NULL;
 	struct map_rect * mr=NULL;
 	struct item *item = NULL;
-	struct attr attr,route;
+	struct attr attr;
 	struct coord c;
 	struct coord_geo g;
-	struct transformation *trans;
 	
         char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
                         "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
@@ -1346,7 +1337,6 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
         map = navigation_get_map(nav);
         if(map)
           mr = map_rect_new(map,NULL);
-  	trans = navit_get_trans (nav);
 
         FILE *fp;
         fp = fopen(filename,"w");
