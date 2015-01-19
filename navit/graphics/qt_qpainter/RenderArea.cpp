@@ -25,11 +25,7 @@
 EmbeddedWidget::EmbeddedWidget(struct graphics_priv *priv, QWidget* child, QWidget *parent) 
 : QX11EmbedWidget(parent) {
     this->gra=priv;
-#if QT_VERSION >= 0x040000
 		this->setWindowTitle(priv->window_title);
-#else
-		this->setCaption(priv->window_title);
-#endif
         QStackedLayout* _outerLayout = new QStackedLayout(this);
         this->setLayout(_outerLayout);
         _outerLayout->addWidget(child);
@@ -58,11 +54,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 		grabGesture(Qt::SwipeGesture);
 		grabGesture(Qt::PanGesture);
 #endif
-#if QT_VERSION >= 0x040000
 		setWindowTitle(priv->window_title);
-#else
-		setCaption(priv->window_title);
-#endif
 	}
 #endif
 	is_overlay=overlay;
@@ -72,11 +64,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 	timer_callback=g_hash_table_new(NULL, NULL);
 	watches=g_hash_table_new(NULL, NULL);
 #ifndef QT_QPAINTER_NO_WIDGET
-#if QT_VERSION >= 0x040000
 	setAttribute(Qt::WA_OpaquePaintEvent, true);
-#else
-	setBackgroundMode(QWidget::NoBackground);
-#endif
 #endif
 #endif
 }
@@ -234,12 +222,7 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 void RenderArea::keyPressEvent(QKeyEvent *event)
 {
 	QString str=event->text();
-#if QT_VERSION < 0x040000 
-	QCString cstr=str.utf8();
-	const char *text=cstr;
-#else
 	const char *text=str.toUtf8().constData();
-#endif
 	dbg(lvl_debug,"enter text='%s' 0x%x (%zu) key=%d\n", text, text[0], strlen(text), event->key());
 	if (!text || !text[0] || text[0] == 0x7f) {
 		dbg(lvl_debug,"special key\n");
