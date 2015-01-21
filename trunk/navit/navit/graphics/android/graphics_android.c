@@ -243,7 +243,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 	if (localBitmap) {
 		ret->width=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getWidth);
 		ret->height=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getHeight);
-		if(*w!=-1 || *h!=-1) {
+		if((*w!=-1 && *w!=ret->width) || (*h!=-1 && *w!=ret->height)) {
 			jclass scaledBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapClass, 
 				gra->Bitmap_createScaledBitmap, localBitmap, (*w==-1)?ret->width:*w, (*h==-1)?ret->height:*h, JNI_TRUE);
 			if(!scaledBitmap) {
@@ -251,6 +251,8 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 			} else {
 				(*jnienv)->DeleteLocalRef(jnienv, localBitmap);
 				localBitmap=scaledBitmap;
+				ret->width=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getWidth);
+				ret->height=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getHeight);
 			}
 		}
 		ret->Bitmap = (*jnienv)->NewGlobalRef(jnienv, localBitmap);
