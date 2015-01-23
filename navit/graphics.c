@@ -651,10 +651,10 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 				break;
 			case 5:
 				mode++;
+				i=0;
 				/* If we have no size specifiers, try the default png now */
 				if(sz<=0) {
 					new_name=g_strdup_printf("%s.png", name);
-					i=0;
 					break;
 				}
 				/* Find best matching size from standard row */
@@ -664,12 +664,15 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 				i=1;
 				/* Fall through */
 			case 6:
-				/* Select closest matching image from standard row */
+				/* Select best matching image from standard row */
 				if(sz>0) {
 					/* If size were specified, start with bmstd and then try standard sizes in row
-					 * bmstd-1, bmstd+1, bmstd-2, bmstd+2 etc */
-					n=bmstd+(i/2)*((i%2)*2-1);
-					if(++i==numstdsizes*2)
+					 * bmstd, bmstd+1, bmstd+2, .. numstdsizes-1, bmstd-1, bmstd-2, .., 0 */
+					n=bmstd+i;
+					if((bmstd+i)>=numstdsizes)
+						n=numstdsizes-i-1;
+					
+					if(++i==numstdsizes)
 						mode++;
 				} else {
 					/* If no size were specified, start with the smallest standard size and then try following ones */
@@ -698,7 +701,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 
 		this_->width=width;
 		this_->height=height;
-		dbg(lvl_info,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+		dbg(lvl_debug,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
 		if (zip) {
 			unsigned char *start;
 			int len;
@@ -714,7 +717,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
 		}
 		if (this_->priv) {
-			dbg(lvl_debug,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+			dbg(lvl_info,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
 			g_free(new_name);
 			break;
 		}
