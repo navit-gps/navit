@@ -3004,7 +3004,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 			return;
 		transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
-	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans_cursor), nv->speed);
+	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, nv->dir-transform_get_yaw(this_->trans_cursor), nv->speed);
 }
 
 /**

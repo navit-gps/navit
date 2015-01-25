@@ -1210,7 +1210,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			glNewList(gr->DLid, GL_COMPILE);
 		}
 
-		if (mode == draw_mode_end || mode == draw_mode_end_lazy) {
+		if (mode == draw_mode_end) {
 			glEndList();
 		}
 #endif

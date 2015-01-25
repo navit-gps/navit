@@ -50,7 +50,7 @@ int vehicle_set_attr(struct vehicle *this_, struct attr *attr);
 int vehicle_add_attr(struct vehicle *this_, struct attr *attr);
 int vehicle_remove_attr(struct vehicle *this_, struct attr *attr);
 void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite);
-void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int lazy, int angle, int speed);
+void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed);
 int vehicle_get_cursor_data(struct vehicle *this_, struct point *pnt, int *angle, int *speed);
 void vehicle_log_gpx_add_tag(char *tag, char **logstr);
 struct vehicle * vehicle_ref(struct vehicle *this_);

@@ -37,7 +37,7 @@ struct mapset;
 
 /* This enum must be synchronized with the constants in NavitGraphics.java. */
 enum draw_mode_num {
-	draw_mode_begin, draw_mode_end, draw_mode_end_lazy
+	draw_mode_begin, draw_mode_end
 };
 
 struct graphics_priv;
