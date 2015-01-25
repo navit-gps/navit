@@ -934,7 +934,6 @@ public class NavitGraphics
 	/* These constants must be synchronized with enum draw_mode_num in graphics.h. */
 	public static final int draw_mode_begin = 0;
 	public static final int draw_mode_end = 1;
-	public static final int draw_mode_end_lazy = 2;
 
 	protected void draw_mode(int mode)
 	{
