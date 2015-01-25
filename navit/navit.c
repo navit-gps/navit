@@ -2982,7 +2982,9 @@ coord_not_set(struct coord c){
 /**
  * Toggle the cursor update : refresh the map each time the cursor has moved (instead of only when it reaches a border)
  *
- * @param navit The navit instance
+ * @param this_ The navit instance
+ * @param nv vehicle to draw
+ * @param pnt Screen coordinates of the vehicle. If NULL, position stored in nv is used.
  * @returns nothing
  */
 
