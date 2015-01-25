@@ -663,13 +663,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	GdkRectangle r;
 	struct graphics_priv *overlay;
-#if 0
-	if (mode == draw_mode_begin) {
-		if (! gr->parent && gr->background_gc)
-			gdk_draw_rectangle(gr->drawable, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
-	}
-#endif
-	if (mode == draw_mode_end && gr->mode != draw_mode_cursor) {
+	if (mode == draw_mode_end) {
 		if (gr->parent) {
 			if (gr->cleanup) {
 				overlay_rect(gr->parent, gr, 1, &r);
