@@ -292,19 +292,13 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
-		gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_lines(gr->widget->window, gc->gc, (GdkPoint *)p, count);
+	gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
 }
 
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
-		gdk_draw_polygon(gr->drawable, gc->gc, TRUE, (GdkPoint *)p, count);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_polygon(gr->widget->window, gc->gc, TRUE, (GdkPoint *)p, count);
+	gdk_draw_polygon(gr->drawable, gc->gc, TRUE, (GdkPoint *)p, count);
 }
 
 static void
@@ -316,10 +310,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
-		gdk_draw_arc(gr->drawable, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_arc(gr->widget->window, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
+	gdk_draw_arc(gr->drawable, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
 }
 
 static void
