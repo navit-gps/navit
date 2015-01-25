@@ -930,19 +930,29 @@ public class NavitGraphics
 		//		float fy = y;
 		draw_canvas.drawBitmap(bitmap, x, y, paint);
 	}
+
+	/* These constants must be synchronized with enum draw_mode_num in graphics.h. */
+	public static final int draw_mode_begin = 0;
+	public static final int draw_mode_begin_clear = 1;
+	public static final int draw_mode_end = 2;
+	public static final int draw_mode_cursor = 3;
+	public static final int draw_mode_end_lazy = 4;
+
 	protected void draw_mode(int mode)
 	{
 		//Log.e("NavitGraphics", "draw_mode mode=" + mode + " parent_graphics="
 		//		+ String.valueOf(parent_graphics));
 
-		if (mode == 2) {
+		if (mode == draw_mode_end) {
 			if (parent_graphics == null) {
 				view.invalidate();
 			} else {
 				parent_graphics.view.invalidate(get_rect());
 			}
 		}
-		if (mode == 1 || (mode == 0 && parent_graphics != null)) draw_bitmap.eraseColor(0);
+		if (mode == draw_mode_begin_clear || (mode == draw_mode_begin && parent_graphics != null)) {
+			draw_bitmap.eraseColor(0);
+		}
 
 	}
 	protected void draw_drag(int x, int y)
