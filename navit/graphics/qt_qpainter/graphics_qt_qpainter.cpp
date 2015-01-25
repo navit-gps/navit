@@ -531,9 +531,6 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		if (!gr->parent)
 			QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents|QEventLoop::ExcludeSocketNotifiers|QEventLoop::DeferredDeletion|QEventLoop::X11ExcludeTimers);
 	}
-	if (mode == draw_mode_end_lazy) {
-		gr->painter->end();
-	}
 	gr->mode=mode;
 }
 

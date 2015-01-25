@@ -78,7 +78,7 @@ struct vehicle {
 struct object_func vehicle_func;
 
 static void vehicle_set_default_name(struct vehicle *this);
-static void vehicle_draw_do(struct vehicle *this_, int lazy);
+static void vehicle_draw_do(struct vehicle *this_);
 static void vehicle_log_nmea(struct vehicle *this_, struct log *log);
 static void vehicle_log_gpx(struct vehicle *this_, struct log *log);
 static void vehicle_log_textfile(struct vehicle *this_, struct log *log);
@@ -364,16 +364,15 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite)
  * @param this_ The vehicle
  * @param gra The graphics
  * @param pnt Screen coordinates of the vehicle.
- * @param lazy use lazy draw mode.
  * @param angle The angle relative to the map.
  * @param speed The speed of the vehicle.
  */
 void
-vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int lazy, int angle, int speed)
+vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed)
 {
 	if (angle < 0)
 		angle+=360;
-	dbg(lvl_debug,"enter this=%p gra=%p pnt=%p lazy=%d dir=%d speed=%d\n", this_, gra, pnt, lazy, angle, speed);
+	dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d\n", this_, gra, pnt, angle, speed);
 	dbg(lvl_debug,"point %d,%d\n", pnt->x, pnt->y);
 	this_->cursor_pnt=*pnt;
 	this_->angle=angle;
@@ -393,7 +392,7 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 			graphics_background_gc(this_->gra, this_->bg);
 		}
 	}
-	vehicle_draw_do(this_, lazy);
+	vehicle_draw_do(this_);
 }
 
 int
@@ -419,7 +418,7 @@ static void vehicle_set_default_name(struct vehicle *this_)
 
 
 static void
-vehicle_draw_do(struct vehicle *this_, int lazy)
+vehicle_draw_do(struct vehicle *this_)
 {
 	struct point p;
 	struct cursor *cursor=this_->cursor;
@@ -460,7 +459,7 @@ vehicle_draw_do(struct vehicle *this_, int lazy)
 		++attr;
 	}
 	graphics_draw_drag(this_->gra, &this_->cursor_pnt);
-	graphics_draw_mode(this_->gra, lazy ? draw_mode_end_lazy : draw_mode_end);
+	graphics_draw_mode(this_->gra, draw_mode_end);
 	if (this_->animate_callback) {
 		++this_->sequence;
 		if (cursor->sequence_range && cursor->sequence_range->max < this_->sequence)
