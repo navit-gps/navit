@@ -101,7 +101,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 			}
 		}
 	}	
-	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"\n", data->set);
+	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"\n", (unsigned long long)data->set);
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * 3.6;
 		if(!isnan(data->fix.speed))
