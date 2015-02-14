@@ -5,7 +5,13 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update
-    - sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin g++
+    - sudo apt-get upgrade
+    - sudo apt-get install cmake 
+    - sudo apt-get install zlib1g-dev
+    - sudo apt-get install libpng12-dev 
+    - sudo apt-get install libgtk2.0-dev 
+    - sudo apt-get install librsvg2-bin 
+    - sudo apt-get install g++
     - mkdir navit/bin && cd navit/bin && cmake ../ && make
   cache_directories:
     - "~/assets/"
