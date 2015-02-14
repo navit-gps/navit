@@ -1,13 +1,13 @@
 machine:
   pre:
-    - mkdir -p ~/assets/binmaps/
-#    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
 dependencies:
   pre:
     - find  ~/assets/
+    - mkdir -p ~/assets/binmaps/
     - sudo apt-get update
-    - curl -C -k -L -o ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
+    - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
     - curl -k -L -o ~/assets/california-latest.osm.bz2 http://sd-55475.dedibox.fr/california-latest.osm.bz2
+#    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
 #    - sudo apt-get upgrade
     - sudo apt-get install cmake 
 #    - sudo apt-get install zlib1g-dev
