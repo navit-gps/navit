@@ -2,6 +2,7 @@ machine:
   pre:
     - mkdir ~/assets/
 #    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
+    -  curl -k -L -o ~/assets/california-latest.osm.bz2 http://sd-55475.dedibox.fr/california-latest.osm.bz2
 dependencies:
   pre:
     - sudo apt-get update
@@ -18,3 +19,9 @@ dependencies:
     - bash ~/navit/build.sh
   cache_directories:
     - "~/assets/"
+test:
+  post:
+    - ls
+    - pwd
+    - bzcat  ~/assets/california-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/california-latest.bin
+  
