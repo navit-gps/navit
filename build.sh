@@ -1,1 +1,1 @@
-mkdir navit/bin && cd navit/bin && cmake ../ && make
+mkdir bin && cd bin && cmake ../ && make
