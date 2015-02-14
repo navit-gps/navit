@@ -13,6 +13,8 @@ dependencies:
     - sudo apt-get install libgtk2.0-dev 
     - sudo apt-get install librsvg2-bin 
     - sudo apt-get install g++
-    - bash navit/build.sh
+    - ls 
+    - ls navit
+    - bash ~/navit/build.sh
   cache_directories:
     - "~/assets/"
