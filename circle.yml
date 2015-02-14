@@ -1,11 +1,12 @@
 machine:
   pre:
     - mkdir ~/assets/
+    - curl -k -L -o ~/assets/cov-analysis-linux64-7.6.0.tar.gz https://scan.coverity.com/download/cxx/linux-64 
 #    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
 dependencies:
   pre:
     - sudo apt-get update
-    - sudo apt-get upgrade
+#    - sudo apt-get upgrade
     - sudo apt-get install cmake 
     - sudo apt-get install zlib1g-dev
     - sudo apt-get install libpng12-dev 
