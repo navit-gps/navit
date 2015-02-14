@@ -1900,6 +1900,7 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, G
 {
 	struct country_table *result=NULL, *lookup;
 	char *tok,*dup=g_strdup(is_in),*buf=dup;
+	int conflict=0;
 
 	int find_town_name = 0;
 
@@ -1917,14 +1918,18 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, G
 		lookup=g_hash_table_lookup(country_table_hash,tok);
 		if (lookup) {
 			if (result && result->countryid != lookup->countryid) {
-				char *label=item_bin_get_attr(ib, attr_town_name, NULL);
-				osm_warning("node",item_bin_get_nodeid(ib),0,"conflict for %s is_in=%s country %d vs %d\n", label, is_in, lookup->countryid, result->countryid);
+				conflict=1;
 			}
 			result=lookup;
 		}
 		buf=NULL;
 	}
 	g_free(dup);
+
+	if(conflict) {
+		char *label=item_bin_get_attr(ib, attr_town_name, NULL);
+		osm_warning("node",item_bin_get_nodeid(ib),0,"Country conflict for %s is_in=%s, choosen country %d (%s)\n", label, is_in, result->countryid, result->names);
+	}
 
 	return result;
 }
@@ -1940,9 +1945,9 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, st
 		struct boundary *b=l->data;
 		if (b->country) {
 			if (match && match->country->countryid!=b->country->countryid) {
-				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) conflict country ", c->x, c->y);
-				osm_warning("relation",boundary_relid(match),1,"country %d vs ",match->country->countryid);
-				osm_warning("relation",boundary_relid(b),1,"country %d\n",b->country->countryid);
+				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) country conflict: ", c->x, c->y);
+				osm_warning("relation",boundary_relid(match),1,"replacing country %d (%s) with ",match->country->countryid, match->country->names);
+				osm_warning("relation",boundary_relid(b),1,"country %d (%s)\n",b->country->countryid, b->country->names);
 			}
 			match=b;
 		}
