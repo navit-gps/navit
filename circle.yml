@@ -26,7 +26,8 @@ test:
     - ls
     - pwd
     - bzcat  ~/assets/california-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/california-latest.bin
-    - bzcat  ~/assets/netherlands-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/netherlands-latest.bin
+    - bzcat  ~/assets/netherlands-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/netherlands-latest.bin:
+      timeout: 600
 general:
   artifacts:
     - "~/assets/binmaps/"
