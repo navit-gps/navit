@@ -2,6 +2,7 @@ machine:
   pre:
     - mkdir ~/assets/
     - ls ~/assets/
+    - cat /proc/cpuinfo
     - curl -C -k -L -o ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
 #    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
 dependencies:
