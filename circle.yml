@@ -25,8 +25,7 @@ test:
   post:
     - ls
     - pwd
-    - case $CIRCLE_NODE_INDEX in 0) bzcat  ~/assets/california-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/california-latest.bin ;; 1) bzcat  ~/assets/netherlands-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/netherlands-latest.bin ;;
-esac:
+    - case $CIRCLE_NODE_INDEX in 0) bzcat  ~/assets/california-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/california-latest.bin ;; 1) bzcat  ~/assets/netherlands-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/netherlands-latest.bin ;; esac:
       parallel: true
 general:
   artifacts:
