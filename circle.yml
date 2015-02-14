@@ -1,0 +1,9 @@
+machine:
+  pre:
+    - mkdir ~/assets/
+    - curl -k -L -o ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
+dependencies:
+  pre:
+    - sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin g++
+  cache_directories:
+    - "~/assets/"
