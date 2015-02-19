@@ -8,7 +8,7 @@ dependencies:
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
     - wget -c -O ~/assets/california-latest.osm.bz2 http://download.geofabrik.de/north-america/us/california-latest.osm.bz2
     - wget -c -O ~/assets/netherlands-latest.osm.bz2 http://download.geofabrik.de/europe/netherlands-latest.osm.bz2
-    - wget -c -O ~/assets/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
+    - wget -c -O ~/planet-150202.osm.bz2 ftp://ftp.spline.de/pub/openstreetmap/planet/2015/planet-150202.osm.bz2
 #    - sudo apt-get upgrade
     - sudo apt-get install cmake 
 #    - sudo apt-get install zlib1g-dev
@@ -26,7 +26,7 @@ test:
     - ls
     - pwd
     - bzcat  ~/assets/california-latest.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/california-latest.bin
-    - bzcat  ~/assets/planet-150202.osm.bz2 | ./bin/navit/maptool/maptool  ~/assets/binmaps/planet-150202.bin
+    - bzcat  ~/planet-150202.osm.bz2 | ./bin/navit/maptool/maptool  ~/binmaps/planet-150202.bin
 general:
   artifacts:
     - "~/assets/binmaps/"
