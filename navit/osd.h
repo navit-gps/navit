@@ -73,7 +73,7 @@ void osd_set_std_config(struct navit *nav, struct osd_item *item);
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv);
 void osd_std_resize(struct osd_item *item);
 void osd_std_calculate_sizes(struct osd_item *item, int w, int h);
-void osd_std_draw(struct osd_item *item);
+void osd_fill_with_bgcolor(struct osd_item *item);
 int osd_set_attr(struct osd *osd, struct attr* attr);
 int osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 /* end of prototypes */

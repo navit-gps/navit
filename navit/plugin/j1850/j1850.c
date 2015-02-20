@@ -269,7 +269,7 @@ static void
 osd_j1850_draw(struct j1850 *this, struct navit *nav,
         struct vehicle *v)
 {
-    osd_std_draw(&this->osd_item);
+    osd_fill_with_bgcolor(&this->osd_item);
 
     struct point p, bbox[4];
 

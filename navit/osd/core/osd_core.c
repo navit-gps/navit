@@ -335,7 +335,7 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
 			this->warned = 0;
 		}
 	}
-	osd_std_draw(&opc->osd_item);
+	osd_fill_with_bgcolor(&opc->osd_item);
 
 	dist_str = format_distance(min_dist, "", imperial);
 
@@ -685,7 +685,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
   if(0==curr_vehicle)
     return;
 
-  osd_std_draw(&opc->osd_item);
+  osd_fill_with_bgcolor(&opc->osd_item);
   if(this->bActive) {
     if(!vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL)) {
       return;
@@ -1035,7 +1035,7 @@ osd_cmd_interface_draw(struct osd_priv_common *opc, struct navit *nav,
 		this->bReserved = 0;
 	}
  
-	osd_std_draw(&opc->osd_item);
+	osd_fill_with_bgcolor(&opc->osd_item);
 
 	//display image
 	if(this->img) {
@@ -1183,7 +1183,7 @@ osd_stopwatch_draw(struct osd_priv_common *opc, struct navit *nav,
 	time_t total_sec,total_min,total_hours,total_days;
 	total_sec = this->sum_time;
 
-	osd_std_draw(&opc->osd_item);
+	osd_fill_with_bgcolor(&opc->osd_item);
 
 	if(this->bActive) {
 		total_sec += time(0)-this->current_base_time;
@@ -1332,7 +1332,7 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 	if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
 		imperial=imperial_attr.u.num;
 
-	osd_std_draw(&opc->osd_item);
+	osd_fill_with_bgcolor(&opc->osd_item);
 	p.x = opc->osd_item.w/2;
 	p.y = opc->osd_item.w/2;
 	graphics_draw_circle(opc->osd_item.gr,
@@ -1448,7 +1448,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 		osd_button_adjust_sizes(opc, img);
 		p.x=(opc->osd_item.w-img->width)/2;
 		p.y=(opc->osd_item.h-img->height)/2;
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
 		graphics_image_free(opc->osd_item.gr, img);
 	} else {
@@ -1471,8 +1471,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 		if (!opc->osd_item.configured)
 			return;
 
-		if(this->img)
-			graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, this->img);
+		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, this->img);
 	}
 }
 
@@ -1496,7 +1495,7 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 		img=graphics_image_new(opc->osd_item.gr, this->src);
 		p.x=(opc->osd_item.w-this->img->width)/2;
 		p.y=(opc->osd_item.h-this->img->height)/2;
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 		graphics_image_free(opc->osd_item.gr, img);
@@ -1630,7 +1629,7 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 		img=graphics_image_new(opc->osd_item.gr, this->src);
 		p.x=(opc->osd_item.w-this->img->width)/2;
 		p.y=(opc->osd_item.h-this->img->height)/2;
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 		graphics_image_free(opc->osd_item.gr, img);
@@ -1734,7 +1733,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		map_rect_destroy(mr);
 
 	if (do_draw) {
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		if (this->active) {
 			image = g_strdup_printf(this->icon_src, name);
 			dbg(lvl_debug, "image=%s\n", image);
@@ -2141,7 +2140,7 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
       buffer [0] = 0;
       buffer2[0] = 0; 
   
-      osd_std_draw(&opc->osd_item);
+      osd_fill_with_bgcolor(&opc->osd_item);
 
       str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,"",imperial));
       str_replace(buffer2,buffer,"${camera_type}",(0<=idx && idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
@@ -2292,7 +2291,7 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
     struct graphics_image *img = this->img_off;
 
 
-    osd_std_draw(&opc->osd_item);
+    osd_fill_with_bgcolor(&opc->osd_item);
     p.x=opc->osd_item.w/2-this->d/4;
     p.y=opc->osd_item.h/2-this->d/4;
     p.x=opc->osd_item.w/2;
@@ -2875,10 +2874,10 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 
 	absbegin=str;
 	if (do_draw) {
-		//osd_std_draw(&opc->osd_item);
+		//osd_fill_with_bgcolor(&opc->osd_item);
 	}
 	if (do_draw && str) {
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		lines=0;
 		next=str;
 		last=str;
@@ -3205,7 +3204,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
 		do_draw=1;
 	}
 	if (do_draw) {
-		osd_std_draw(&opc->osd_item);
+		osd_fill_with_bgcolor(&opc->osd_item);
 		if (this->active) {
 			image = g_strdup_printf(this->icon_src, strength);
 			gr_image = graphics_image_new_scaled(opc->osd_item.gr, image, this->icon_w, this->icon_h);
@@ -3296,7 +3295,7 @@ osd_volume_draw(struct osd_priv_common *opc, struct navit *navit)
 	struct graphics_image *gr_image;
 	char *image;
 
-	osd_std_draw(&opc->osd_item);
+	osd_fill_with_bgcolor(&opc->osd_item);
 	if (this->active) {
 		image = g_strdup_printf(this->icon_src, this->strength);
 		gr_image = graphics_image_new_scaled(opc->osd_item.gr, image, this->icon_w, this->icon_h);

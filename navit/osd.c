@@ -135,11 +135,13 @@ osd_evaluate_command(struct osd_item *this, struct navit *nav)
 void
 osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p)
 {
+	int click_is_outside_item;
 	struct point bp = this->p;
 	if (!this->command || !this->command[0])
 		return;
 	osd_wrap_point(&bp, nav);
-	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h || !this->configured) && !this->pressed)
+	click_is_outside_item = p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h;
+	if ((click_is_outside_item || !this->configured) && !this->pressed)
 		return;
 	if (button != 1)
 		return;
@@ -393,9 +395,9 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 }
 
 void
-osd_std_draw(struct osd_item *item)
+osd_fill_with_bgcolor(struct osd_item *item)
 {
-	struct point p[2];
+	struct point p[1];
 	graphics_draw_mode(item->gr, draw_mode_begin);
 	p[0].x=0;
 	p[0].y=0;
