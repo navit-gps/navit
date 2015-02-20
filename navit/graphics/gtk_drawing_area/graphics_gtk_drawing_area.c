@@ -63,8 +63,6 @@ struct graphics_priv {
 	GtkWidget *win;
 	struct window window;
 	GdkDrawable *drawable;
-	GdkDrawable *background;
-	int background_ready;
 	GdkColormap *colormap;
 	struct point p;
 	struct point pclean;
@@ -699,10 +697,6 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	if (gra->drawable != NULL) {
                 g_object_unref(gra->drawable);
         }
-	if(gra->background_ready && gra->background != NULL) {
-	       g_object_unref(gra->background);
-	       gra->background_ready = 0;
-	}
 #ifndef _WIN32
 	dbg(lvl_debug,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
@@ -992,10 +986,8 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 	if (changed) {
 		// Set the drawables to the right sizes
 		g_object_unref(this->drawable);
-		g_object_unref(this->background);
 
 		this->drawable=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
-		this->background=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
 
 		if ((w == 0) || (h == 0)) {
 			this->overlay_autodisabled = 1;
@@ -1072,7 +1064,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 		w2 = w;
 	}
 
-	this->background=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
 	this->drawable=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
 
 	if ((w == 0) || (h == 0)) {
