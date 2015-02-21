@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <cairo.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
@@ -63,10 +64,10 @@ struct graphics_priv {
 	GtkWidget *win;
 	struct window window;
 	GdkDrawable *drawable;
+	cairo_t *cairo;
 	GdkColormap *colormap;
 	struct point p;
 	struct point pclean;
-	int cleanup;
 	int width;
 	int height;
 	int win_w;
@@ -80,7 +81,6 @@ struct graphics_priv {
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
 	struct graphics_gc_priv *background_gc;
-	enum draw_mode_num mode;
 	struct callback_list *cbl;
 	struct font_freetype_methods freetype_methods;
 	struct navit *nav;
@@ -280,19 +280,38 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
+	int i;
+	if (!count)
+		return;
+	cairo_move_to(gr->cairo, p[0].x, p[0].y);
+	for (i=1; i<count; i++) {
+		cairo_line_to(gr->cairo, p[i].x, p[i].y);
+	}
+	cairo_stroke(gr->cairo);
 }
 
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	gdk_draw_polygon(gr->drawable, gc->gc, TRUE, (GdkPoint *)p, count);
+	int i;
+	cairo_save(gr->cairo);
+	cairo_set_source_rgb(gr->cairo, 0.9, 0.3, 0.3);
+	cairo_move_to(gr->cairo, p[0].x, p[0].y);
+	for (i=1; i<count; i++) {
+		cairo_line_to(gr->cairo, p[i].x, p[i].y);
+	}
+	cairo_fill(gr->cairo);
+	cairo_restore(gr->cairo);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	gdk_draw_rectangle(gr->drawable, gc->gc, TRUE, p->x, p->y, w, h);
+	cairo_save(gr->cairo);
+	cairo_rectangle(gr->cairo, p->x, p->y, w, h);
+	cairo_set_source_rgb(gr->cairo, 0.3, 0.9, 0.3);
+	cairo_fill(gr->cairo);
+	cairo_restore(gr->cairo);
 }
 
 static void
@@ -547,10 +566,6 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
-	if (!gr->cleanup) {
-		gr->pclean=gr->p;
-		gr->cleanup=1;
-	}
 	if (p)
 		gr->p=*p;
 	else {
@@ -592,31 +607,11 @@ gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r)
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	GdkRectangle r;
-	struct graphics_priv *overlay;
 	if (mode == draw_mode_end) {
-		if (gr->parent) {
-			if (gr->cleanup) {
-				overlay_rect(gr->parent, gr, 1, &r);
-				gtk_drawing_area_draw(gr->parent, &r);
-				gr->cleanup=0;
-			}
-			overlay_rect(gr->parent, gr, 0, &r);
-			gtk_drawing_area_draw(gr->parent, &r);
-		} else {
-			r.x=0;
-			r.y=0;
-			r.width=gr->width;
-			r.height=gr->height;
-			gtk_drawing_area_draw(gr, &r);
-			overlay=gr->overlays;
-			while (overlay) {
-				overlay->cleanup=0;
-				overlay=overlay->next;
-			}
-		}
+		// Just invalidate the whole window. We could only the invalidate the area of
+		// graphics_priv, but that is probably not significantly faster.
+		gdk_window_invalidate_rect(gr->widget->window, NULL, TRUE);
 	}
-	gr->mode=mode;
 }
 
 /* Events */
@@ -636,6 +631,13 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
+	if (gra->cairo)
+		cairo_destroy(gra->cairo);
+	gra->cairo = cairo_create(surface);
+	cairo_surface_destroy(surface);
+	cairo_set_line_width(gra->cairo, 1.0);
+	cairo_set_antialias (gra->cairo, CAIRO_ANTIALIAS_GOOD);
 	callback_list_call_attr_2(gra->cbl, attr_resize, GINT_TO_POINTER(gra->width), GINT_TO_POINTER(gra->height));
 	return TRUE;
 }
@@ -649,6 +651,12 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	if (! gra->drawable)
 		configure(widget, NULL, user_data);
 	gtk_drawing_area_draw(gra, &event->area);
+
+	cairo_t *cairo=gdk_cairo_create(widget->window);
+	dbg(lvl_info, "called: widget=%p, gra->widget=%p, surface=%p\n", widget, gra->widget, cairo_get_target(cairo));
+	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), 0.0, 0.0);
+	cairo_paint(cairo);
+	cairo_destroy(cairo);
 	return FALSE;
 }
 
