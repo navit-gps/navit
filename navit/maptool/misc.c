@@ -181,6 +181,7 @@ item_order_by_type(enum item_type type)
 		case type_district_label_2e6:
 		case type_district_label_1e6:
 		case type_district_label_5e5:
+		case type_poly_water_tiled:
 			max=6;
 			break;
 		case type_town_label_2e5:
