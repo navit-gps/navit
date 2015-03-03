@@ -780,12 +780,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 }
 
 static void
-draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
-{
-    dbg(lvl_debug, "draw_restore\n");
-}
-
-static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
     dbg(lvl_debug, "background_gc\n");
@@ -903,7 +897,6 @@ static struct graphics_methods graphics_methods = {
     draw_text,
     draw_image,
     NULL, /*draw_image_warp */
-    draw_restore,
     draw_drag,
     NULL, /* font_new */
     gc_new,

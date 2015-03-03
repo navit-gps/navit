@@ -1084,11 +1084,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 }
 
 static void
-draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
-{
-}
-
-static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
 
@@ -1427,7 +1422,6 @@ static struct graphics_methods graphics_methods = {
 	draw_text,
 	draw_image,
 	NULL,
-	draw_restore,
 	draw_drag,
 	NULL,
 	gc_new,

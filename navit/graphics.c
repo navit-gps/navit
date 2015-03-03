@@ -857,17 +857,6 @@ void graphics_image_free(struct graphics *gra, struct graphics_image *img)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h)
-{
-	this_->meth.draw_restore(this_->priv, p, w, h);
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
 void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode)
 {
 	this_->meth.draw_mode(this_->priv, mode);

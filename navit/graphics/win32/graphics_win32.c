@@ -912,12 +912,6 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 }
 
 
-
-static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
-{
-    InvalidateRect( gr->wnd_handle, NULL, FALSE );
-}
-
 static void draw_drag(struct graphics_priv *gr, struct point *p)
 {
     if ( p )
@@ -1578,7 +1572,6 @@ static struct graphics_methods graphics_methods =
 #else
     NULL,
 #endif
-    draw_restore,
     draw_drag,
     font_new,
     gc_new,

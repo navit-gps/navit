@@ -601,17 +601,6 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 }
 
 static void
-draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
-{
-	GtkWidget *widget=gr->widget;
-	gdk_draw_drawable(widget->window,
-                        widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                        gr->drawable,
-                        p->x, p->y, p->x, p->y, w, h);
-
-}
-
-static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
 	if (!gr->cleanup) {
@@ -1155,7 +1144,6 @@ static struct graphics_methods graphics_methods = {
 #else
 	NULL,
 #endif
-	draw_restore,
 	draw_drag,
 	NULL, /* font_new */
 	gc_new,

@@ -639,7 +639,6 @@ static struct graphics_methods graphics_methods = {
 	draw_text, 
 	draw_image,
 	NULL, /* draw_image_warp, */
-	NULL, /* draw_restore, */
 	draw_drag,
 	font_new,
 	gc_new,

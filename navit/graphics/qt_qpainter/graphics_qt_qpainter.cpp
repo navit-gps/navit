@@ -459,16 +459,6 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
 	gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
-{
-}
-
-
 static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
@@ -694,7 +684,6 @@ static struct graphics_methods graphics_methods = {
 	draw_text,
 	draw_image,
 	NULL,
-	draw_restore,
 	draw_drag,
 	font_new,
 	gc_new,
