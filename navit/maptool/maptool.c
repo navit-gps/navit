@@ -57,7 +57,7 @@ int slices;
 int unknown_country;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
 /** Textual description of available experimental features, or NULL (=none available). */
-char* experimental_feature_description = NULL; /* add description here */
+char* experimental_feature_description = "Move coastline data to order 6 tiles. Makes map look more smooth, but may affect drawing/searching performance."; /* add description here */
 /** Indicates if experimental features (if available) were enabled. */
 int experimental;
 
