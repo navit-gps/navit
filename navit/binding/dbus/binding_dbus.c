@@ -988,6 +988,31 @@ request_map_set_attr(DBusConnection *connection, DBusMessage *message)
 	return request_set_add_remove_attr(connection, message, "map", NULL, (int (*)(void *, struct attr *))map_set_attr);
 }
 
+static DBusHandlerResult
+request_map_dump(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessageIter iter;
+	struct map *map;
+
+	map=object_get_from_message(message, "map");
+	if (! map)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	if(!strcmp(dbus_message_iter_get_signature(&iter), "s")) {
+		char *file;
+		FILE *f;
+		dbus_message_iter_get_basic(&iter, &file);
+		/* dbg(0,"File '%s'\n",file); */
+		f=fopen(file,"w");
+		map_dump_filedesc(map,f);
+		fclose(f);
+		return empty_reply(connection, message);
+	}
+	return dbus_error_invalid_parameter(connection, message);
+}
+
+
 /* mapset */
 
 static DBusHandlerResult
@@ -1818,6 +1843,7 @@ struct dbus_method {
 	{".layout", "get_attr",		   "s",	      "attribute",                               "sv",  "attrname,value", request_layout_get_attr},
 	{".map",    "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_map_get_attr},
 	{".map",    "set_attr",            "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
+	{".map",    "dump",                "s",       "file",                                    "",   "",  request_map_dump},
 	{".mapset", "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_mapset_attr_iter},
 	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
 	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},
