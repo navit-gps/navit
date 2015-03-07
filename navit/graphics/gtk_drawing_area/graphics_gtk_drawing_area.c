@@ -705,33 +705,8 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	if (! gra->drawable)
 		configure(widget, NULL, user_data);
 	gtk_drawing_area_draw(gra, &event->area);
-#if 0
-        gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                        gra->drawable, event->area.x, event->area.y,
-                        event->area.x, event->area.y,
-                        event->area.width, event->area.height);
-#endif
-
 	return FALSE;
 }
-
-#if 0
-static gint
-button_timeout(gpointer user_data)
-{
-#if 0
-	struct container *co=user_data;
-	int x=co->gra->gra->button_event.x;
-	int y=co->gra->gra->button_event.y;
-	int button=co->gra->gra->button_event.button;
-
-	co->gra->gra->button_timeout=0;
-	popup(co, x, y, button);
-
-	return FALSE;
-#endif
-}
-#endif
 
 static int
 tv_delta(struct timeval *old, struct timeval *new)
