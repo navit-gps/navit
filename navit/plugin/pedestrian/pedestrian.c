@@ -1021,7 +1021,6 @@ pedestrian_graphics_postdraw(struct graphics *gra)
 	p.x=0;
 	p.y=0;
 	graphics_gc_set_foreground(gc, &c);
-	graphics_gc_set_stipple(gc, NULL);
 	graphics_draw_rectangle(gra, gc, &p, 1000, 200);
 	graphics_gc_destroy(gc);
 #endif

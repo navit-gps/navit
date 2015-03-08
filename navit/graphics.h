@@ -99,7 +99,6 @@ struct graphics_gc_methods {
 	void (*gc_set_dashes)(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n);
 	void (*gc_set_foreground)(struct graphics_gc_priv *gc, struct color *c);
 	void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
-	void (*gc_set_stipple)(struct graphics_gc_priv *gc, struct graphics_image_priv *img);
 };
 
 struct graphics_gc {
@@ -166,7 +165,6 @@ struct graphics_gc *graphics_gc_new(struct graphics *gra);
 void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
-void graphics_gc_set_stipple(struct graphics_gc *gc, struct graphics_image *img);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
 void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n);
 struct graphics_image *graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h);

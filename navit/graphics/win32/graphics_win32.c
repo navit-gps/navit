@@ -822,7 +822,6 @@ static struct graphics_gc_methods gc_methods =
     gc_set_dashes,
     gc_set_foreground,
     gc_set_background,
-    NULL, //gc_set_stipple
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)

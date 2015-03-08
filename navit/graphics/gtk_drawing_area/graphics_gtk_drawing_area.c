@@ -175,22 +175,12 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 	gc_set_color(gc, c, 0);
 }
 
-static void
-gc_set_stipple(struct graphics_gc_priv *gc, struct graphics_image_priv *img)
-{
-	char data[2]={0x2,0x1};
-	gdk_gc_set_fill(gc->gc, GDK_STIPPLED);
-	gc->pixmap=gdk_bitmap_create_from_data(gc->gr->widget->window, data, 2, 2);
-	gdk_gc_set_stipple(gc->gc, gc->pixmap);
-}
-
 static struct graphics_gc_methods gc_methods = {
 	gc_destroy,
 	gc_set_linewidth,
 	gc_set_dashes,
 	gc_set_foreground,
 	gc_set_background,
-	gc_set_stipple,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)

@@ -568,18 +568,6 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_gc_set_stipple(struct graphics_gc *gc, struct graphics_image *img)
-{
-	gc->meth.gc_set_stipple(gc->priv, img ? img->priv : NULL);
-}
-
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width)
 {
 	gc->meth.gc_set_linewidth(gc->priv, width);
