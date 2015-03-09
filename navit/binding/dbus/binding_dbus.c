@@ -51,7 +51,7 @@
 #include "roadprofile.h"
 #include "util.h"
 #include "transform.h"
-
+#include "event.h"
 
 static DBusConnection *connection;
 static dbus_uint32_t dbus_serial;
@@ -1287,6 +1287,31 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+/**
+ * @brief Gracefully exit Navit by registering a one-second callback to allow clean shutdown of the dbus connection
+ * @param connection The DBusConnection object through which \a message arrived
+ * @param message The DBusMessage
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
+static DBusHandlerResult
+request_navit_quit(DBusConnection *connection, DBusMessage *message)
+{
+        dbg(lvl_debug,"Got a quit request from DBUS\n");
+        struct attr navit;
+        navit.type=attr_navit;
+        struct navit *nav;
+        nav = object_get_from_message(message, "navit");
+        if (! nav)
+                return dbus_error_invalid_object_path(connection, message);
+        navit.u.navit=nav;
+        config_remove_attr(config, &navit);
+
+        struct callback *callback;
+        callback=callback_new_1(callback_cast(event_main_loop_quit), NULL);
+        event_add_timeout(1000, 1, callback);
+        return empty_reply(connection, message);
+}
+
 static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
@@ -1321,6 +1346,12 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 
 }
 
+/**
+ * @brief Exports the current route as a GPX file
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the 'filename' parameter
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
 static DBusHandlerResult
 request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 {
@@ -1379,6 +1410,98 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
          fclose(fp);
 
 	return empty_reply(connection, message);
+}
+
+/**
+ * @brief Exports the current route as a GeoJSON file
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the 'filename' parameter
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
+static DBusHandlerResult
+request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *message)
+{
+        char * filename;
+        struct point p, *pp=NULL;
+        struct navit *navit;
+        DBusMessageIter iter;
+
+        navit = object_get_from_message(message, "navit");
+        if (! navit)
+                return dbus_error_invalid_object_path(connection, message);
+
+        dbus_message_iter_init(message, &iter);
+
+        dbus_message_iter_get_basic(&iter, &filename);
+
+        if (dbus_message_iter_has_next(&iter))
+        {
+                dbus_message_iter_next(&iter);
+                if (!point_get_from_message(message, &iter, &p))
+                        return dbus_error_invalid_parameter(connection, message);
+                pp=&p;
+        }
+
+        dbg(lvl_debug,"Dumping route from dbus to %s\n", filename);
+
+        struct map * map=NULL;
+        struct navigation * nav = NULL;
+        struct map_rect * mr=NULL;
+        struct item *item = NULL;
+        struct attr attr,route;
+        struct coord c;
+        struct coord_geo g;
+        struct transformation *trans;
+
+        char *header = "{\n"
+"  \"type\": \"FeatureCollection\",\n"
+"  \"features\": [\n"
+"    {\n"
+"      \"type\": \"Feature\",\n"
+"      \"properties\": {\n"
+"        \"name\": \"Navit route export\",\n"
+"        \"stroke\": \"red\",\n"
+"        \"stroke-width\": \"5px\"\n"
+"      },\n"
+"      \"geometry\": {\n"
+"        \"type\": \"LineString\",\n"
+"        \"coordinates\": [\n";
+
+        nav = navit_get_navigation(navit);
+        if(!nav) {
+                return;
+        }
+        map = navigation_get_map(nav);
+        if(map)
+          mr = map_rect_new(map,NULL);
+        trans = navit_get_trans (nav);
+
+        FILE *fp;
+        fp = fopen(filename,"w");
+        fprintf(fp, "%s", header);
+        int is_first=1;
+        char * instructions;
+        instructions=g_strdup_printf("");
+        while((item = map_rect_get_item(mr))) {
+                if(item_attr_get(item,attr_navigation_long,&attr)) {
+                        item_coord_get(item, &c, 1);
+                        transform_to_geo (projection_mg, &c, &g);
+                        if(!is_first){
+                                fprintf(fp,",\n");
+                                instructions=g_strconcat_printf(instructions,",\n");
+                        }
+                        fprintf(fp,"[ %4.16f, %4.16f ]",g.lng, g.lat);
+                         instructions=g_strconcat_printf(instructions, g_strdup_printf("    { \"type\": \"Feature\", \"properties\": { \"Instruction\": \"%s\", \"name\": \"\" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ %4.16f, %4.16f ] } }", map_convert_string_tmp(item->map,attr.u.str), g.lng, g.lat));
+                        /* fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'><type>%s</type><name>%s</name></rtept>\n",g.lng, g.lat, item_to_name(item->type), map_convert_string_tmp(item->map,attr.u.str)); */
+                        is_first=0;
+                }
+        }
+
+        fprintf(fp," ]}\n },\n%s  ]\n }\n",instructions);
+
+        fclose(fp);
+
+        return empty_reply(connection, message);
 }
 
 static DBusHandlerResult
@@ -1822,7 +1945,9 @@ struct dbus_method {
 	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
+        {".navit",  "quit",                "",        "",                                        "",   "",      request_navit_quit},
 	{".navit",  "export_as_gpx",       "s",       "filename",                                "",   "",      request_navit_route_export_gpx},
+        {".navit",  "export_as_geojson",   "s",       "filename",                                "",   "",      request_navit_route_export_geojson},
 	{".navit",  "block",               "i",       "mode",                                    "",   "",      request_navit_block},
 	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
 	{".navit",  "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_navit_attr_iter},
