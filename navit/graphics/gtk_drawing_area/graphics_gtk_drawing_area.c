@@ -98,6 +98,11 @@ struct graphics_gc_priv {
 	GdkPixmap *pixmap;
 	struct graphics_priv *gr;
 	struct color c;
+
+	double linewidth;
+	double *dashes;
+	int ndashes;
+	double offset;
 };
 
 struct graphics_image_priv {
@@ -136,43 +141,35 @@ gc_destroy(struct graphics_gc_priv *gc)
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-	gdk_gc_set_line_attributes(gc->gc, w, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+	gc->linewidth = w;
 }
 
 static void
 gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
-	gdk_gc_set_dashes(gc->gc, offset, (gint8 *)dash_list, n);
-	gdk_gc_set_line_attributes(gc->gc, w, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
-}
-
-static void
-gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
-{
-	GdkColor gdkc;
-	gdkc.pixel=0;
-	gdkc.red=c->r;
-	gdkc.green=c->g;
-	gdkc.blue=c->b;
-	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
-	gdk_colormap_query_color(gc->gr->colormap, gdkc.pixel, &gdkc);
-	gc->c=*c;
-	if (fg) {
-		gdk_gc_set_foreground(gc->gc, &gdkc);
-	} else
-		gdk_gc_set_background(gc->gc, &gdkc);
+	int i;
+	g_free(gc->dashes);
+	gc->ndashes=n;
+	gc->offset=offset;
+	if(n) {
+		gc->dashes=g_malloc_n(n, sizeof(double));
+		for (i=0; i<n; i++) {
+			gc->dashes[i]=dash_list[i];
+		}
+	} else {
+		gc->dashes=NULL;
+	}
 }
 
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc_set_color(gc, c, 1);
+	gc->c=*c;
 }
 
 static void
 gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc_set_color(gc, c, 0);
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -190,6 +187,16 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	*meth=gc_methods;
 	gc->gc=gdk_gc_new(gr->widget->window);
 	gc->gr=gr;
+
+	gc->linewidth=1;
+	gc->c.r=0;
+	gc->c.g=0;
+	gc->c.b=0;
+	gc->c.a=0;
+	gc->dashes=NULL;
+	gc->ndashes=0;
+	gc->offset=0;
+
 	return gc;
 }
 
@@ -278,6 +285,13 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 }
 
 static void
+set_drawing_color(cairo_t *cairo, struct color c)
+{
+	double col_max = 1<<COLOR_BITDEPTH;
+	cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
+}
+
+static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
@@ -287,6 +301,9 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 	for (i=1; i<count; i++) {
 		cairo_line_to(gr->cairo, p[i].x, p[i].y);
 	}
+	set_drawing_color(gr->cairo, gc->c);
+	cairo_set_dash(gr->cairo, gc->dashes, gc->ndashes, gc->offset);
+	cairo_set_line_width(gr->cairo, gc->linewidth);
 	cairo_stroke(gr->cairo);
 }
 
@@ -294,24 +311,20 @@ static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
-	cairo_save(gr->cairo);
-	cairo_set_source_rgb(gr->cairo, 0.9, 0.3, 0.3);
+	set_drawing_color(gr->cairo, gc->c);
 	cairo_move_to(gr->cairo, p[0].x, p[0].y);
 	for (i=1; i<count; i++) {
 		cairo_line_to(gr->cairo, p[i].x, p[i].y);
 	}
 	cairo_fill(gr->cairo);
-	cairo_restore(gr->cairo);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	cairo_save(gr->cairo);
 	cairo_rectangle(gr->cairo, p->x, p->y, w, h);
-	cairo_set_source_rgb(gr->cairo, 0.3, 0.9, 0.3);
+	set_drawing_color(gr->cairo, gc->c);
 	cairo_fill(gr->cairo);
-	cairo_restore(gr->cairo);
 }
 
 static void
@@ -636,7 +649,6 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 		cairo_destroy(gra->cairo);
 	gra->cairo = cairo_create(surface);
 	cairo_surface_destroy(surface);
-	cairo_set_line_width(gra->cairo, 1.0);
 	cairo_set_antialias (gra->cairo, CAIRO_ANTIALIAS_GOOD);
 	callback_list_call_attr_2(gra->cbl, attr_resize, GINT_TO_POINTER(gra->width), GINT_TO_POINTER(gra->height));
 	return TRUE;
@@ -653,7 +665,6 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	gtk_drawing_area_draw(gra, &event->area);
 
 	cairo_t *cairo=gdk_cairo_create(widget->window);
-	dbg(lvl_info, "called: widget=%p, gra->widget=%p, surface=%p\n", widget, gra->widget, cairo_get_target(cairo));
 	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), 0.0, 0.0);
 	cairo_paint(cairo);
 	cairo_destroy(cairo);
