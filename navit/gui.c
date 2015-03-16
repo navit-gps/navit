@@ -157,8 +157,10 @@ gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description)
 int
 gui_set_graphics(struct gui *this_, struct graphics *gra)
 {
-	if (! this_->meth.set_graphics)
+	if (! this_->meth.set_graphics) {
+		dbg(lvl_error, "cannot set graphics, method 'set_graphics' not available\n");
 		return 1;
+	}
 	return this_->meth.set_graphics(this_->priv, gra);
 }
 

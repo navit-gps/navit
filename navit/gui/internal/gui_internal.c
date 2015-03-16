@@ -2843,8 +2843,10 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct transformation *trans=navit_get_trans(this->nav);
 
 	win=graphics_get_data(gra, "window");
-        if (! win)
+        if (! win) {
+		dbg(lvl_error, "failed to obtain window from graphics plugin, cannot set graphics\n");
                 return 1;
+	}
 	navit_ignore_graphics_events(this->nav, 1);
 	this->gra=gra;
 	this->win=win;
