@@ -183,10 +183,6 @@ item_order_by_type(enum item_type type)
 		case type_district_label_5e5:
 			max=6;
 			break;
-		case type_poly_water_tiled:
-			if(experimental)
-				max=6;
-			break;
 		case type_town_label_2e5:
 		case type_town_label_1e5:
 		case type_district_label_2e5:
@@ -204,6 +200,10 @@ item_order_by_type(enum item_type type)
 		case type_district_label_2e4:
 		case type_district_label_1e4:
 			max=9;
+			break;
+		case type_poly_water_tiled:
+			if(experimental)
+				max=9;
 			break;
 		case type_street_4_land:
 		case type_street_4_city:
