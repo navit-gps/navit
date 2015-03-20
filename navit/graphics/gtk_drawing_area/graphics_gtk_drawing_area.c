@@ -343,13 +343,21 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 }
 
 static void
+draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y, int stride, unsigned char *buffer)
+{
+	cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
+			buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
+	cairo_set_source_surface(cairo, buffer_surface, draw_pos_x, draw_pos_y);
+	cairo_paint(cairo);
+	cairo_surface_destroy(buffer_surface);
+}
+
+static void
 display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p)
 {
 	int i,x,y,stride;
 	struct font_freetype_glyph *g, **gp;
-	unsigned char *shadow,*glyph;
 	struct color transparent={0x0,0x0,0x0,0x0};
-	struct color white={0xffff,0xffff,0xffff,0xffff};
 
 	gp=text->glyph;
 	i=text->glyph_count;
@@ -359,15 +367,11 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h && bg ) {
-			stride=g->w+2;
+			unsigned char *shadow;
+			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w+2);
 			shadow=g_malloc(stride*(g->h+2));
-			if (gr->freetype_methods.get_shadow(g, shadow, 8, stride, &white, &transparent))
-				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
-			g_free(shadow);
-			stride*=3;
-			shadow=g_malloc(stride*(g->h+2));
-			gr->freetype_methods.get_shadow(g, shadow, 24, stride, &bg->c, &transparent);
-			gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
+			gr->freetype_methods.get_shadow(g, shadow, 32, stride, &bg->c, &transparent);
+			draw_rgb_image_buffer(gr->cairo, g->w+2, g->h+2, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, stride, shadow);
 			g_free(shadow);
 		}
 		x+=g->dx;
@@ -381,17 +385,11 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h) {
-			stride=g->w;
-			if (bg) {
-				glyph=g_malloc(stride*g->h);
-				gr->freetype_methods.get_glyph(g, glyph, 8, stride, &fg->c, &bg->c, &transparent);
-				gdk_draw_gray_image(gr->drawable, bg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, g->w);
-				g_free(glyph);
-			}
-			stride*=3;
+			unsigned char *glyph;
+			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
 			glyph=g_malloc(stride*g->h);
-			gr->freetype_methods.get_glyph(g, glyph, 24, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
-			gdk_draw_rgb_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, stride);
+			gr->freetype_methods.get_glyph(g, glyph, 32, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
+			draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x+g->x)>>6, (y+g->y)>>6, stride, glyph);
 			g_free(glyph);
 		}
 		x+=g->dx;
