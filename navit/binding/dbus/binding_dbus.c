@@ -548,14 +548,18 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_boolean_begin) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32) {
-			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			int val;
+			dbus_message_iter_get_basic(&iterattr, &val);
+			attr->u.num=val;
 			return 1;
 		}
 		return 0;
 	}
 	if(attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
-			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			int val;
+			dbus_message_iter_get_basic(&iterattr, &val);
+			attr->u.num=val;
 			return 1;
 		}
 		return 0;
