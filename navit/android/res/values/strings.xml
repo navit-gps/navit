@@ -71,5 +71,9 @@
 	<string name="select_backup">Select backup</string>
 	<string name="backup">Backup</string>
 	<string name="restore">Restore</string>
+	
+	<!-- TTS -->
+	<string name="TTS_title_data_missing">System text to speech engine data is missing</string>
+	<string name="TTS_qery_install_data">Navit can use any text to speech engine installed on your device. The currently selected engine reports it is unable to speak in your language. Should we ask the system to show voice download dialog?</string>
 </resources>
 

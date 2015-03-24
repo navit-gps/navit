@@ -2629,3 +2629,20 @@ msgstr "Резервное копирование"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Восстановление из копии"
+
+#. Android resource: @strings/TTS_title_data_missing
+msgid "System text to speech engine data is missing"
+msgstr "Отсутствуют данные системного приложения преобразования текста в речь"
+
+#. Android resource: @strings/TTS_qery_install_data
+msgid ""
+"Navit can use any text to speech engine installed on your device. The "
+"currently selected engine reports it is unable to speak in your language. "
+"Should we ask the system to show voice download dialog?"
+msgstr ""
+"Navit может использовать любое приложение преобразования текста в "
+"речь, установленное на Вашем устройстве. Активное сейчас приложение "
+"сообщило о невозможности говорить на Вашем языке. Попросим систему "
+"показать диалог загрузки голосовых данных?"
+
+

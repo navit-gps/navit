@@ -20,7 +20,10 @@
 package org.navitproject.navit;
 
 import android.content.Intent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.app.AlertDialog;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -44,10 +47,20 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
 				// success, create the TTS instance
 				mTts = new TextToSpeech(navit, this);
 			} else {
-				// missing data, install it
-				Intent installIntent = new Intent();
-				installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				navit.startActivity(installIntent);
+				// missing data, ask to install it
+				AlertDialog.Builder builder = new AlertDialog.Builder(navit);
+			    	builder
+				.setTitle(R.string.TTS_title_data_missing)
+				.setMessage(R.string.TTS_qery_install_data)
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {			      	
+						Intent installIntent = new Intent();
+						installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+						navit.startActivity(installIntent);
+	    				}
+				})
+			    	.setNegativeButton(R.string.no, null)
+			    	.show();
 			}
 		}
 	}
