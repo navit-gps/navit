@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-12-09 13:46+0000\n"
-"Last-Translator: MMlosh <Unknown>\n"
+"PO-Revision-Date: 2015-03-15 14:56+0000\n"
+"Last-Translator: Jakuje <jakuje@gmail.com>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1351,7 +1351,7 @@ msgstr "Používáte konfigurační soubor '% s'\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Chyba: Nenalezena žádná konfigurace v konfiguračním souboru '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1477,7 +1477,7 @@ msgid "_POI search"
 msgstr ""
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Otevře dialog vyhledávání POI"
 
 msgid "_Stop Navigation"
 msgstr "Přestat navigovat"
@@ -1522,49 +1522,49 @@ msgid "Data"
 msgstr "Data"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Lékárna"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurace"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restaurace. Rychlé občerstvení"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Parkoviště"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Čerpací stanice"
 
 msgid "Bank"
-msgstr ""
+msgstr "Banka"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Nemocnice"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Kino"
 
 msgid "Train station"
-msgstr ""
+msgstr "Vlaková stanice"
 
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
 msgid "Police"
-msgstr ""
+msgstr "Policie"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Nakupování"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1575,45 +1575,45 @@ msgstr ""
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "Nastav cíl na %ld, %ld \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "Posuň mapu na %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Nastav další zastavení na %ld, %ld \n"
 
 msgid "POI search"
-msgstr ""
+msgstr "Vyhledávání POI"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Vyberte kategorii"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Vyberte vzdálenost ve které hledat (km)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "Vyberte POI"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 msgid "Direction"
-msgstr ""
+msgstr "Směr"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Vzdálenost (m)"
 
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Navštívit před"
 
 msgid "N"
 msgstr "S"
@@ -1832,7 +1832,7 @@ msgstr "Zadejte souřadnice"
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "Zeměpisná délka a šířka"
 
 msgid "Enter coordinates, for example:"
 msgstr "Zadejte souřadnice, například:"
