@@ -5,7 +5,6 @@ dependencies:
     - mkdir -p ~/assets/binmaps/
     - find  ~/assets/
     - sudo apt-get update
-#    - sudo apt-get upgrade
     - sudo apt-get install cmake 
 #    - sudo apt-get install zlib1g-dev
     - sudo apt-get install libpng12-dev 
