@@ -88,8 +88,10 @@ static void sigsegv(int sig)
 void
 debug_init(const char *program_name)
 {
+#ifndef HAVE_API_ANDROID
 	gdb_program=g_strdup(program_name);
 	signal(SIGSEGV, sigsegv);
+#endif
 	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	debug_fp = stdout;
@@ -120,11 +122,13 @@ void
 debug_level_set(const char *name, dbg_level level)
 {
 	if (!strcmp(name, "segv")) {
+#ifndef HAVE_API_ANDROID
 		segv_level=level;
 		if (segv_level)
 			signal(SIGSEGV, sigsegv);
 		else
 			signal(SIGSEGV, NULL);
+#endif
 	} else if (!strcmp(name, "timestamps")) {
 		timestamp_prefix=level;
 	} else if (!strcmp(name, DEBUG_MODULE_GLOBAL)) {

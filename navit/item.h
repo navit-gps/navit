@@ -53,10 +53,14 @@ extern int default_flags[];
 #define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
 #define item_is_point(item) ((item).type < type_line) 
 #define item_is_custom_poi(item) ((item).type >= type_poi_customg && (item).type < type_line)
-#define item_is_street(item) (((item).type >= type_street_0 && (item).type < type_street_1_land) \
-                               ||  (item).type == type_street_pedestrian \
+#define item_is_street(item) (((item).type >= type_street_nopass && (item).type <= type_roundabout) \
+                               ||  (item).type == type_street_service \
+                               || ((item).type >= type_street_pedestrian && (item).type <= type_track_grass) \
                                ||  (item).type == type_living_street  \
-                               ||  (item).type == type_footway)
+                               ||  (item).type == type_street_construction  \
+                               ||  (item).type == type_path \
+                               ||  (item).type == type_street_parking_lane \
+                               ||  (item).type == type_footway )
 
 #define item_is_equal_id(a,b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
 #define item_is_equal(a,b) (item_is_equal_id(a,b) && (a).map == (b).map)

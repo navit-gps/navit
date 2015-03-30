@@ -177,8 +177,15 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
 		String map_index = child.get("map_index");
 		if (map_index != null) {
+			int mi=Integer.parseInt(map_index);
+			if(NavitMapDownloader.osm_maps[mi].est_size_bytes/1024/1024/900>=2) {
+				NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null, 
+					Navit._("Sorry, we currently do not support maps above 1.8G on Android, please select a smaller one."),
+					 -1, 0, 0);
+				return true;
+			}
 			Intent resultIntent = new Intent();
-			resultIntent.putExtra("map_index", Integer.parseInt(map_index));
+			resultIntent.putExtra("map_index", mi);
 			setResult(Activity.RESULT_OK, resultIntent);
 			finish();
 		} else {
