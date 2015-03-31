@@ -345,7 +345,7 @@ public class NavitMapDownloader extends Thread
 		retry_counter = 0;
 
 		Log.v(TAG, "start download " + map_values.map_name);
-		updateProgress(0, 20, Navit._("downloading") + ": " + map_values.map_name);
+		updateProgress(0, map_values.est_size_bytes, Navit._("downloading") + ": " + map_values.map_name);
 		
 		boolean success;
 		do {
@@ -435,8 +435,12 @@ public class NavitMapDownloader extends Thread
 				c.setRequestProperty("Range", "bytes=" + old_download_size + "-");
 				already_read = old_download_size;
 			}
+			try {
+				real_size_bytes=Long.parseLong(c.getHeaderField("Content-Length")) + already_read;
+			} catch(Exception e) {
+				real_size_bytes=-1;
+			}
 
-			real_size_bytes = c.getContentLength() + already_read;
 			long fileTime = c.getLastModified();
 
 			if (!resume) {
@@ -638,7 +642,7 @@ public class NavitMapDownloader extends Thread
 	protected void updateProgress(long startTime, long offsetBytes, long readBytes, long maxBytes) {
 		long currentTime = System.nanoTime();
 
-		if (currentTime > uiLastUpdated + UPDATE_PROGRESS_TIME_NS) {
+		if ((currentTime > uiLastUpdated + UPDATE_PROGRESS_TIME_NS) && startTime!=currentTime) {
 			float per_second_overall = (readBytes - offsetBytes) / ((currentTime - startTime) / 1000000000f);
 			long bytes_remaining = maxBytes - readBytes;
 			int eta_seconds = (int) (bytes_remaining / per_second_overall);
