@@ -59,7 +59,15 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 		updateDownloadedMaps();
 		updateMapsForLocation(NavitMapDownloader.osm_maps);
 		setListAdapter(adapter);
-		setTitle(String.valueOf(getFreeSpace() / 1024 / 1024) + "MB available");
+		try {
+			setTitle(String.valueOf(getFreeSpace() / 1024 / 1024) + "MB available");
+		} catch (Exception e) {
+			Log.e("Navit","Exception "+e.getClass().getName()+" during getFreeSpace, reporting 'no sdcard present'");
+			NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null, 
+				Navit._("Please attach your SD card to enable map download."),
+				 -1, 0, 0);
+			finish();
+		}
 	}
 
 	protected long getFreeSpace()
