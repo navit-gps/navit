@@ -1223,10 +1223,6 @@ if test x"$glut" != xyes
        then
         sdl_failures=$sdl_failures"glut "
 fi
-if test x"$glc" != xyes
-        then
-        sdl_failures=$sdl_failures"quesoglc "
-fi
 if test -z "$sdl_failures"
         then
         echo "OpenGL gui  : ENABLED, with $CEGUI_LIBS"

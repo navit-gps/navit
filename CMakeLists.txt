@@ -160,7 +160,6 @@ endif (NOT DISABLE_QT)
 #pkg-config based detection
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
-   pkg_check_modules(QUESOGLC quesoglc)
    pkg_check_modules(LIBLOCATION liblocation)
    pkg_check_modules(LIBOSSO libosso)
    # Accept even old versions of libgps, because N810 uses an old version (see #1179).
