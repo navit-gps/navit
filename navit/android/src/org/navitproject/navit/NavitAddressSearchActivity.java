@@ -101,6 +101,23 @@ public class NavitAddressSearchActivity extends Activity {
 		}
 		return drawableId;
 	}
+	
+	private void setCountryButtonImage() {
+		// We have all images stored as drawable_nodpi resources which allows native code to manipulate them 
+		// without interference with android builtin choosing and scaling system. But that makes us to
+		// reinvent the wheel here to show an image in android native interface.
+		int flag_icon_sizes[]={24,32,48,64,96};
+		int exact_size, nearest_size;
+		exact_size=(int)(Navit.metrics.density*24.0 -.5);
+		nearest_size=flag_icon_sizes[0];
+		for(int size: flag_icon_sizes) {
+			nearest_size=size;
+			if(exact_size<=size)
+				break;
+		}
+		mCountryButton.setImageResource(getDrawableID("country_" + mCountry+"_"+nearest_size+"_"+nearest_size));
+	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +156,8 @@ public class NavitAddressSearchActivity extends Activity {
 		}
 
 		mCountryButton = new ImageButton(this);
-
-		mCountryButton.setImageResource(getDrawableID("country_" + mCountry));
+		
+		setCountryButtonImage();
 
 		mCountryButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -254,7 +271,7 @@ public class NavitAddressSearchActivity extends Activity {
 				edit_settings.putString("DefaultCountry", mCountry);
 				edit_settings.commit();
 
-				mCountryButton.setImageResource(getDrawableID("country_" + mCountry));
+				setCountryButtonImage();
 			}
 		});
 
