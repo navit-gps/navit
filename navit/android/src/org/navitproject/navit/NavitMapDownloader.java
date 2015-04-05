@@ -321,6 +321,7 @@ public class NavitMapDownloader extends Thread
 	}
 	private Boolean                     stop_me                                 = false;
 	private osm_map_values              map_values;
+	private int                         map_id;
 	private long                        uiLastUpdated                           = -1;
 
 	private Boolean                     retryDownload                           = false; //Download failed, but
@@ -338,6 +339,7 @@ public class NavitMapDownloader extends Thread
 
 	public NavitMapDownloader(int map_id) {
 		this.map_values = osm_maps[map_id];
+		this.map_id=map_id;
 	}
 
 	public void run() {
@@ -366,7 +368,7 @@ public class NavitMapDownloader extends Thread
 
 		if (success || stop_me ) {
 			NavitDialogs.sendDialogMessage( NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED
-					, MAP_FILENAME_PATH + map_values.map_name + ".bin", null, -1, success ? 1 : 0 , 0 );
+					, MAP_FILENAME_PATH + map_values.map_name + ".bin", null, -1, success ? 1 : 0 , map_id );
 		}
 	}
 	

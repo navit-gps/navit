@@ -68,11 +68,21 @@ public class NavitDialogs extends Handler{
 			mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
 			mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
 			if (msg.getData().getInt("value1") == 1) {
-				Message activate_map_msg =
+				Message msg_out =
 				        Message.obtain(Navit.N_NavitGraphics.callback_handler,
 				                NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
-				activate_map_msg.setData(msg.getData());
-				activate_map_msg.sendToTarget();
+				msg_out.setData(msg.getData());
+				msg_out.sendToTarget();
+
+				msg_out =  Message.obtain(Navit.N_NavitGraphics.callback_handler,
+				                NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+				Bundle b = new Bundle();
+				int mi=msg.getData().getInt("value2");
+				double lon=(Double.parseDouble(NavitMapDownloader.osm_maps[mi].lon1)+Double.parseDouble(NavitMapDownloader.osm_maps[mi].lon2))/2.0;
+				double lat=(Double.parseDouble(NavitMapDownloader.osm_maps[mi].lat1)+Double.parseDouble(NavitMapDownloader.osm_maps[mi].lat2))/2.0;
+				b.putString("cmd", "set_center(\""+ lon +" "+ lat + "\",1); zoom=256");
+				msg_out.setData(b);
+				msg_out.sendToTarget();
 			}
 			break;
 		}
