@@ -1215,10 +1215,13 @@ static void
 navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct pcoord pc;
+	int set_timeout=0;
 	in=navit_get_coord(this, in, &pc);
 	if (!in)
 		return;
-	navit_set_center(this, &pc, 0);
+	if(in[0] && ATTR_IS_INT(in[0]->type))
+		set_timeout=in[0]->u.num!=0;
+	navit_set_center(this, &pc, set_timeout);
 }
 
 
