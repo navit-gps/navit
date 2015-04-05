@@ -275,7 +275,9 @@ public class NavitAddressSearchActivity extends Activity {
 			}
 		});
 
-		mapModeChooser.show();
+		AlertDialog d=mapModeChooser.create();
+		d.getListView().setFastScrollEnabled(true);
+		d.show();
 	}
 
 	/**
@@ -312,6 +314,7 @@ public class NavitAddressSearchActivity extends Activity {
 			finish();
 		}
 		ListView addressesFound = new ListView(this);
+		addressesFound.setFastScrollEnabled(true);
 		ArrayAdapter<String> addressList =
 		    new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		
