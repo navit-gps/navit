@@ -626,7 +626,7 @@ public class Navit extends Activity
 			if(resultCode == RESULT_OK) {                        
 				String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter); 
 				Log.d(TAG, "selected path= "+newDir);  
-				if(!newDir.contains("/navit/")) 
+				if(!newDir.contains("/navit")) 
 					newDir = newDir+"/navit/";
 				else
 					newDir = newDir+"/";
