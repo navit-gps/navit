@@ -41,7 +41,7 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
-    - bash ci/build_apk.sh
+    - bash ci/build_android.sh
 test:
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
