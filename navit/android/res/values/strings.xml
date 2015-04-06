@@ -23,6 +23,7 @@
 	<string name="optionsmenu_toggle_poi">Toggle POIs</string>
 	<string name="optionsmenu_exit_navit">Exit Navit</string>
 	<string name="optionsmenu_backup_restore">Backup / Restore</string>
+	<string name="optionsmenu_set_map_location">Set map location</string>
 	
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>

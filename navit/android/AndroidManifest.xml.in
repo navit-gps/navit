@@ -25,6 +25,7 @@
 		<activity android:name=".NavitAddressSearchActivity"></activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
 		<activity android:name=".NavitAddressResultListActivity"></activity>
+        <activity android:name=".FileBrowserActivity"></activity>
     </application>
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8"/>
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
