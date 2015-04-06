@@ -18,28 +18,26 @@
 # Sergey Shilov https://launchpad.net/~sss-s-s-s
 # Takuto https://launchpad.net/~takutoatmorgue
 # Usul https://launchpad.net/~usul1
-# Vlad https://launchpad.net/~send-me-letter
 # cmdrhenner https://launchpad.net/~cmdrhenner
 # jmb_kz https://launchpad.net/~jmb-kz
 # kisaa https://launchpad.net/~alex-kisaa
 # kisaa https://launchpad.net/~kisaa-mail
+# tryagain https://launchpad.net/~mdankov
 # zcc https://launchpad.net/~zcc
 # Павел https://launchpad.net/~pavel-sgn
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 23:10-0800\n"
-"PO-Revision-Date: 2014-12-21 21:24+0000\n"
-"Last-Translator: tryagain <mdankov@yandex.ru>\n"
+"PO-Revision-Date: 2015-04-03 18:26+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-12-21 21:28+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
 "Language: ru\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -162,8 +160,10 @@ msgstr[0] "через %d километр"
 msgstr[1] "%d километра"
 msgstr[2] "%d километров"
 
-msgid "exit"
-msgstr "съезд"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "съезд на"
@@ -193,32 +193,17 @@ msgstr "%s на %s%s%s"
 msgid "%sinto the %s"
 msgstr "%s на %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "направо"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "налево"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "немного "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "круто "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "очень круто "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "неизвестно "
-
 msgid "When possible, please turn around"
 msgstr "Развернитесь, пожалуйста, если это возможно"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Двигайтесь по дороге следующие %s"
 
 msgid "Enter the roundabout soon"
 msgstr "Скоро круговое движение"
@@ -228,56 +213,133 @@ msgstr "Скоро круговое движение"
 msgid "Enter the roundabout %s"
 msgstr "Через %s круговое движение"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "потом съезжайте с кругового движения на %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Съезжайте с кругового движения на %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Двигайтесь по дороге следующие %s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "скоро"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "сейчас"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Выезжайте на %1$s дорогу в направлении %2$s"
+
+msgid "right"
+msgstr "направо"
 
 #, c-format
 msgid "after %i roads"
 msgstr "после %i дорог"
 
-msgid "now"
-msgstr "сейчас"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "ошибка"
+msgid "easily "
+msgstr "немного "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "круто "
+
+msgid "left"
+msgstr "налево"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Сверните %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "после чего поверните %1$s%2$s на %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "после чего вы прибудете в пункт назначения"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Вы прибыли в пункт назначения %s"
 
-msgid "then you have reached your destination."
-msgstr "после чего вы прибудете в пункт назначения"
+msgid "exit"
+msgstr "съезд"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1337,19 +1399,14 @@ msgstr "* Неизвестный, для выбора городов добав�
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
-"Использование navit:\n"
-"navit [параметры] [файл_настроек]\n"
-"\t-c <файл>: использовать <файл> с настройками\n"
-"\t-d <n>: установить уровень отладочных сообщений <n> (0-3). Имеет приоритет "
-"над параметром в файле настроек.\n"
-"\t-h: показать эту подсказку и выйти.\n"
-"\t-v: показать информацию о версии и выйти.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1713,6 +1770,9 @@ msgstr "Удалить результаты поиска с карты"
 
 msgid "Show results on the map"
 msgstr "Показать результаты поиска на карте"
+
+msgid "Foursquare"
+msgstr "Foursquare"
 
 msgid "Cut Bookmark"
 msgstr "Вырезать закладку"
@@ -2629,20 +2689,3 @@ msgstr "Резервное копирование"
 #. Android resource: @strings/restore
 msgid "Restore"
 msgstr "Восстановление из копии"
-
-#. Android resource: @strings/TTS_title_data_missing
-msgid "System text to speech engine data is missing"
-msgstr "Отсутствуют данные системного приложения преобразования текста в речь"
-
-#. Android resource: @strings/TTS_qery_install_data
-msgid ""
-"Navit can use any text to speech engine installed on your device. The "
-"currently selected engine reports it is unable to speak in your language. "
-"Should we ask the system to show voice download dialog?"
-msgstr ""
-"Navit может использовать любое приложение преобразования текста в "
-"речь, установленное на Вашем устройстве. Активное сейчас приложение "
-"сообщило о невозможности говорить на Вашем языке. Попросим систему "
-"показать диалог загрузки голосовых данных?"
-
-

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-12-05 21:25+0000\n"
-"Last-Translator: Jalakas <Unknown>\n"
+"PO-Revision-Date: 2015-01-05 22:03+0000\n"
+"Last-Translator: Manuel Hohmann <mhohmann@physnet.uni-hamburg.de>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,8 +137,10 @@ msgid_plural "in %d kilometers"
 msgstr[0] "ühe kilomeetri pärast"
 msgstr[1] "%d kilomeetri pärast"
 
-msgid "exit"
-msgstr "mahasõit"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "kaldteele"
@@ -168,32 +170,17 @@ msgstr "%s %s%s%s tänavale"
 msgid "%sinto the %s"
 msgstr "%steele %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "paremale"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "vasakule"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "laugelt "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "järsult "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "väga järsult "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "teadmata "
-
 msgid "When possible, please turn around"
 msgstr "Kui võimalik, palun pööra ümber"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Mööda teed järgmised %s"
 
 msgid "Enter the roundabout soon"
 msgstr "Sõida varsti ringteele"
@@ -203,56 +190,133 @@ msgstr "Sõida varsti ringteele"
 msgid "Enter the roundabout %s"
 msgstr "Ringteeni %s"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "ning lahku ringteelt %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Lahku ringteelt %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Mööda teed järgmised %s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "varsti"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "nüüd"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Vali %1$s tee, mis viib %2$s"
+
+msgid "right"
+msgstr "paremale"
 
 #, c-format
 msgid "after %i roads"
 msgstr "pärast %i teed"
 
-msgid "now"
-msgstr "nüüd"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "siis vali %1$s tee %2$s-sse"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "viga"
+msgid "easily "
+msgstr "laugelt "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "järsult "
+
+msgid "left"
+msgstr "vasakule"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Pööra %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "siis pööra %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "siis oled jõudnud sihtpunkti."
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Sa oled jõudnud sihtpunkti %s"
 
-msgid "then you have reached your destination."
-msgstr "siis oled jõudnud sihtpunkti."
+msgid "exit"
+msgstr "mahasõit"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1312,19 +1376,14 @@ msgstr "* Tundmatu, lisa \"is_in\" märge neile linnadele"
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
-"navit kasutamine:\n"
-"navit [valikud] [konfiguratsioonifail]\n"
-"\t-c <fail>: kasutab konfiguratsioonifaili <fail>.\n"
-"\t-d <n>: määrab globaalse veasilumisinfo väljundi taseme <n> (0-3). "
-"Tühistab konfiguratsioonifaili määratud taseme.\n"
-"\t-h: Prindib praeguse info ja väljub programmist.\n"
-"\t-v: Prindib versiooniinfo ja väljub programmist.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1511,49 +1570,49 @@ msgid "Data"
 msgstr "Andmed"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Apteek"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restoran"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restoran. Kiirtoit"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotell"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Autoparkla"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Bensiinijaam"
 
 msgid "Bank"
-msgstr ""
+msgstr "Pank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Haigla"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Kino"
 
 msgid "Train station"
-msgstr ""
+msgstr "Raudteejaam"
 
 msgid "School"
-msgstr ""
+msgstr "Kool"
 
 msgid "Police"
-msgstr ""
+msgstr "Politsei"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Takso"
 
 msgid "Shopping"
-msgstr ""
+msgstr "kauplus"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1688,6 +1747,9 @@ msgstr "Eemalda otsingutulemused kaardilt"
 
 msgid "Show results on the map"
 msgstr "Näita tulemusi kaardil"
+
+msgid "Foursquare"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Lõika järjehoidja"

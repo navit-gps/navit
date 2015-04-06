@@ -132,8 +132,10 @@ msgid_plural "in %d kilometers"
 msgstr[0] "in unu chilometru"
 msgstr[1] "in %d chilometroso"
 
-msgid "exit"
-msgstr "essi"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "in sa rampa"
@@ -163,32 +165,17 @@ msgstr "%s in su %s%s%s"
 msgid "%sinto the %s"
 msgstr "%s in sa %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "destra"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "manca"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "fatzilmente "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "fortemente "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "meda forte "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "inconnottu "
-
 msgid "When possible, please turn around"
 msgstr "Commente possibile torra in daesecusu"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Sichi s'istrada fintzasa a %s"
 
 msgid "Enter the roundabout soon"
 msgstr ""
@@ -198,56 +185,133 @@ msgstr ""
 msgid "Enter the roundabout %s"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "tando lassa sa rotatoria a %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "lassa sa rotatoria a %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Sichi s'istrada fintzasa a %s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "prestu"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "como"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Pica sa %1$s istrada a %2$s"
+
+msgid "right"
+msgstr "destra"
 
 #, c-format
 msgid "after %i roads"
 msgstr "dopu %i istradasa"
 
-msgid "now"
-msgstr "como"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "tando pica sa %1$s istrada a %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "errore"
+msgid "easily "
+msgstr "fatzilmente "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "fortemente "
+
+msgid "left"
+msgstr "manca"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Zira %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "tando zira %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "tando ses arribbau"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Ses arribbau a %s"
 
-msgid "then you have reached your destination."
-msgstr "tando ses arribbau"
+msgid "exit"
+msgstr "essi"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1307,11 +1371,13 @@ msgstr "* Inconnottu, pone sa tag is_in in custas zittadese"
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
 
 #. We have not found an existing config file from all possibilities
@@ -1673,6 +1739,9 @@ msgid "Remove search results from the map"
 msgstr ""
 
 msgid "Show results on the map"
+msgstr ""
+
+msgid "Foursquare"
 msgstr ""
 
 msgid "Cut Bookmark"

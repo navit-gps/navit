@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2014-11-07 03:58+0000\n"
-"Last-Translator: Sybren Stüvel <Unknown>\n"
+"PO-Revision-Date: 2015-04-03 19:48+0000\n"
+"Last-Translator: jan <jandegr1@hotmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,8 +153,10 @@ msgid_plural "in %d kilometers"
 msgstr[0] "na één kilometer"
 msgstr[1] "na %d kilometer"
 
-msgid "exit"
-msgstr "afslag"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr "de  %1$s %2$s op"
 
 msgid "into the ramp"
 msgstr "naar de oprit"
@@ -184,32 +186,17 @@ msgstr "%sde %s%s%s in"
 msgid "%sinto the %s"
 msgstr "%snaar de %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "rechts"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "links"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "flauw "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "scherp "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "zeer scherp "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "onbekende "
-
 msgid "When possible, please turn around"
 msgstr "Indien mogelijk omkeren"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr "richting %s"
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Volg de weg gedurende %s"
 
 msgid "Enter the roundabout soon"
 msgstr "U rijdt zodadelijk de rotonde op"
@@ -219,53 +206,130 @@ msgstr "U rijdt zodadelijk de rotonde op"
 msgid "Enter the roundabout %s"
 msgstr "neem de rotonde %s"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "daarna de rotonde verlaten bij de %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr "daarna de rotonde verlaten bij de  %1$s %2$s"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Verlaat de rotonde bij de %s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr "verlaat de rotonde bij  %1$s %2$s"
 
+msgid "now"
+msgstr "nu"
+
+msgid "then"
+msgstr "daarna"
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
 #, c-format
-msgid "Follow the road for the next %s"
-msgstr "Volg de weg gedurende %s"
+msgid "%1$s merge left %2$s"
+msgstr "%1$s links invoegen %2$s"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr "%1$s rechts invoegen %2$s"
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr " bij de afslag "
+
+msgid " at the interchange "
+msgstr " bij "
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr "%1$s ga rechtdoor %2$s"
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr "%1$s rechts aanhouden%2$s"
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr "%1$s links aanhouden%2$s"
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr "%1$s ga rechtdoor"
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr "%1$s rechts aanhouden"
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr "%1$s links aanhouden"
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Neem de %1$s straat naar %2$s"
+
+msgid "right"
+msgstr "rechts"
 
 #, c-format
 msgid "after %i roads"
 msgstr "na %i wegen"
 
-msgid "now"
-msgstr "nu"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "neem daarna de %1$s weg naar %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr "%3$s ga %1$s naar %2$s %4$s"
 
-msgid "error"
-msgstr "fout"
+msgid "easily "
+msgstr "flauw "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "scherp "
+
+msgid "left"
+msgstr "links"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Ga %3$s %1$s naar %2$s %4$s"
+msgid "%1$s left turnaround"
+msgstr "%1$s linksomkeren"
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "daarna ga %3$s %1$s naar %2$s %4$s"
+msgid "%1$s right turnaround"
+msgstr "%1$s rechtsomkeren"
 
+msgid "then you have reached your destination."
+msgstr "daarna heeft u uw bestemming bereikt."
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Bestemming %s bereikt"
 
-msgid "then you have reached your destination."
-msgstr "daarna heeft u uw bestemming bereikt."
+msgid "exit"
+msgstr "afslag"
+
+msgid "interchange"
+msgstr "bij"
+
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -665,7 +729,7 @@ msgstr "Gambia"
 
 #. 324
 msgid "Guinea"
-msgstr "Papoea-Nieuw-Guinea"
+msgstr "Guinee"
 
 #. 312
 msgid "Guadeloupe"
@@ -1326,19 +1390,14 @@ msgstr "* Onbekend, voeg een is_in-label toe aan deze steden"
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
-"navit gebruik:\n"
-"navit [opties] [configuratiebestand]\n"
-"\t -c <bestand>: gebruik <bestand> als configuratie bestand.\n"
-"\t -d <n>: zet het foutmeldingen niveau op <n> (0-3). Dit gaat boven de "
-"instellingen van het configuratie bestand.\n"
-"\t -h toon deze gebruiks informatie en sluit af.\n"
-"\t -v toon de versie en sluit af.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1491,7 +1550,7 @@ msgid "Test"
 msgstr "Test"
 
 msgid "_Quit"
-msgstr "Beëindigen"
+msgstr ""
 
 msgid "Quit the application"
 msgstr "Het programma afsluiten"
@@ -1527,46 +1586,46 @@ msgid "Data"
 msgstr "Gegevens"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Apotheek"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurant"
 
 msgid "Restaurant. Fast food"
 msgstr ""
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
 msgstr ""
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Tankstation"
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Ziekenhuis"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Bioscoop"
 
 msgid "Train station"
-msgstr ""
+msgstr "Treinstation"
 
 msgid "School"
-msgstr ""
+msgstr "School"
 
 msgid "Police"
-msgstr ""
+msgstr "Politie"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 msgid "Shopping"
 msgstr ""
@@ -1594,7 +1653,7 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Kies een categorie"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
@@ -1603,19 +1662,19 @@ msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 msgid "Direction"
-msgstr ""
+msgstr "Richting"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Afstand(m)"
 
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 msgid "Visit Before"
 msgstr ""
@@ -1704,6 +1763,9 @@ msgstr "Verwijder zoek resultaten van de kaart"
 
 msgid "Show results on the map"
 msgstr "laat de resultaten op de kaart zien"
+
+msgid "Foursquare"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Favoriet knippen"

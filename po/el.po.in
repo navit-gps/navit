@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-09-28 01:41+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2014-12-07 10:54+0000\n"
+"Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,11 +84,11 @@ msgstr "σε %d μ"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d πόδια"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "σε %d πόδια"
 
 #, c-format
 msgid "%d meters"
@@ -100,11 +100,11 @@ msgstr "σε %d μέτρα"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d μίλια"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "σε %d.%d μίλια"
 
 #, c-format
 msgid "%d.%d kilometers"
@@ -117,14 +117,14 @@ msgstr "σε %d %d χιλιόμετρα"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ένα μίλι"
+msgstr[1] "%d μίλια"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "σε ένα μίλι"
+msgstr[1] "σε %d μίλια"
 
 #, c-format
 msgid "one kilometer"
@@ -138,8 +138,10 @@ msgid_plural "in %d kilometers"
 msgstr[0] "σε ένα χιλιόμετρο"
 msgstr[1] "σε %d χιλιόμετρα"
 
-msgid "exit"
-msgstr "έξοδος"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "στη ράμπα"
@@ -169,32 +171,17 @@ msgstr "%sστο %s%s%s"
 msgid "%sinto the %s"
 msgstr "%s στην %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "δεξιά"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "αριστερά"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "ελαφρά "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "Κλειστά "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "πολύ κλειστά "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "άγνωστο "
-
 msgid "When possible, please turn around"
 msgstr "Όταν είναι δυνατόν, κάνε αναστροφή"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Ακολουθήστε το δρόμο για τα επόμενα %s"
 
 msgid "Enter the roundabout soon"
 msgstr "Μπές στη κυκλική πορεία άμεσα"
@@ -204,56 +191,133 @@ msgstr "Μπές στη κυκλική πορεία άμεσα"
 msgid "Enter the roundabout %s"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "και βγείτε απο την κυκλική πορεία στην %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Εξοδος απο την κυκλική πορεία στην %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Ακολουθήστε το δρόμο για τα επόμενα %s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "σύντομα"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "τώρα"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Πάρτε τον %1$s δρόμο για το %2$s"
+
+msgid "right"
+msgstr "δεξιά"
 
 #, c-format
 msgid "after %i roads"
 msgstr "μετά από %i δρόμους"
 
-msgid "now"
-msgstr "τώρα"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "στη συνέχεια πάρτε το %1$s δρόμο για το %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "σφάλμα"
+msgid "easily "
+msgstr "ελαφρά "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "Κλειστά "
+
+msgid "left"
+msgstr "αριστερά"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Στρίψτε %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "και στρίψτε %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "τότε έχετε φτάσει στον προορισμό σας."
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Φτάσατε στον προορισμό σας %s"
 
-msgid "then you have reached your destination."
-msgstr "τότε έχετε φτάσει στον προορισμό σας."
+msgid "exit"
+msgstr "έξοδος"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -853,7 +917,7 @@ msgstr "Λεττονία"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Λιβύη"
 
 #. 504
 msgid "Morocco"
@@ -1141,7 +1205,7 @@ msgstr "Σουρινάμ"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Νότιο Σουδάν"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1313,11 +1377,13 @@ msgstr "* Άγνωστη, προσθέστε ετικέτες is_in σε αυτ�
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
 
 #. We have not found an existing config file from all possibilities
@@ -1341,7 +1407,7 @@ msgid ""
 msgstr ""
 
 msgid "unknown street"
-msgstr ""
+msgstr "άγνωστος δρόμος"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
@@ -1503,49 +1569,49 @@ msgid "Data"
 msgstr "Δεδομένα"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Φαρμακείο"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Εστιατόριο"
 
 msgid "Restaurant. Fast food"
 msgstr ""
 
 msgid "Hotel"
-msgstr ""
+msgstr "Ξενοδοχείο"
 
 msgid "Car parking"
 msgstr ""
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Βενζινάδικο"
 
 msgid "Bank"
-msgstr ""
+msgstr "Τράπεζα"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Νοσοκομείο"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Κινηματογράφος"
 
 msgid "Train station"
-msgstr ""
+msgstr "Σταθμός τρένου"
 
 msgid "School"
-msgstr ""
+msgstr "Σχολείο"
 
 msgid "Police"
-msgstr ""
+msgstr "Αστυνομία"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Ταξί"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Αγορές"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1570,7 +1636,7 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Επιλέξτε μια κατηγορία"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
@@ -1679,6 +1745,9 @@ msgid "Remove search results from the map"
 msgstr ""
 
 msgid "Show results on the map"
+msgstr ""
+
+msgid "Foursquare"
 msgstr ""
 
 msgid "Cut Bookmark"

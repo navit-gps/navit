@@ -5,6 +5,7 @@
 # Feng Chao https://launchpad.net/~chaofeng
 # Kakurady Drakenar https://launchpad.net/~kakurady
 # Kyle https://launchpad.net/~kylelover
+# Kyle WANG https://launchpad.net/~osfans
 # Lele Long https://launchpad.net/~schemacs
 # Li Jin https://launchpad.net/~lijin
 # kelvin https://launchpad.net/~kelvinz
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2013-09-28 01:46+0000\n"
-"Last-Translator: Kyle WANG <Unknown>\n"
+"Last-Translator: Kyle WANG <waxaca@163.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,8 +137,10 @@ msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "距离%d千米"
 
-msgid "exit"
-msgstr "退出"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "进入坡道"
@@ -167,32 +170,17 @@ msgstr "%s 到达 %s%s%s | neutral form"
 msgid "%sinto the %s"
 msgstr "%s 到达 %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "右"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "左"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "缓 "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "急转 "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "非常大的急转 "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "未知 "
-
 msgid "When possible, please turn around"
 msgstr "当遇到路口的时候，请转弯"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "沿路继续行驶%s"
 
 msgid "Enter the roundabout soon"
 msgstr "不久将进入环形交叉路口"
@@ -202,56 +190,133 @@ msgstr "不久将进入环形交叉路口"
 msgid "Enter the roundabout %s"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "然后在%s处驶出环形区"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "还有%s就将驶离环形区"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "沿路继续行驶%s"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "不久"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "现在"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "可以经由道路 %1$s 到 %2$s"
+
+msgid "right"
+msgstr "右"
 
 #, c-format
 msgid "after %i roads"
 msgstr "之后有 %i 条道路"
 
-msgid "now"
-msgstr "现在"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "然后可以经由道路 %1$s 到 %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "错误"
+msgid "easily "
+msgstr "缓 "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "急转 "
+
+msgid "left"
+msgstr "左"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "转向 %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "然后转向 %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "然后你就到达您的目的地"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "您已经抵达您的目的地 %s"
 
-msgid "then you have reached your destination."
-msgstr "然后你就到达您的目的地"
+msgid "exit"
+msgstr "退出"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1311,11 +1376,13 @@ msgstr "* 未知，添加标签"
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
 
 #. We have not found an existing config file from all possibilities
@@ -1677,6 +1744,9 @@ msgid "Remove search results from the map"
 msgstr ""
 
 msgid "Show results on the map"
+msgstr ""
+
+msgid "Foursquare"
 msgstr ""
 
 msgid "Cut Bookmark"

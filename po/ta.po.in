@@ -134,7 +134,9 @@ msgid_plural "in %d kilometers"
 msgstr[0] "ஒரு கிலோமீட்டருக்குள்"
 msgstr[1] "%d கிலோமீட்டர்களுக்குள்"
 
-msgid "exit"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
 msgstr ""
 
 msgid "into the ramp"
@@ -165,32 +167,17 @@ msgstr ""
 msgid "%sinto the %s"
 msgstr ""
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr ""
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "இயல்பாக "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr ""
-
 msgid "When possible, please turn around"
 msgstr ""
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "%s க்கு இதே தெருவில் செல்லவும்"
 
 msgid "Enter the roundabout soon"
 msgstr ""
@@ -200,55 +187,132 @@ msgstr ""
 msgid "Enter the roundabout %s"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
+msgid "then leave the roundabout at the %1$s %2$s"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
+msgid "Leave the roundabout at the %1$s %2$s"
 msgstr ""
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "%s க்கு இதே தெருவில் செல்லவும்"
 
 msgid "soon"
 msgstr "சீக்கிரமாக"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "இப்பொழுது"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
+msgstr ""
+
+msgid "right"
 msgstr ""
 
 #, c-format
 msgid "after %i roads"
 msgstr ""
 
-msgid "now"
-msgstr "இப்பொழுது"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "பிறகு %2$s பக்கத்தில் %1$s ஆம் தெருவில் திரும்பவும்"
-
-msgid "error"
-msgstr "தவறு"
-
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
 msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
+msgid "easily "
+msgstr "இயல்பாக "
+
+msgid "strongly "
 msgstr ""
 
+msgid "left"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s left turnaround"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s right turnaround"
+msgstr ""
+
+msgid "then you have reached your destination."
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr ""
 
-msgid "then you have reached your destination."
+msgid "exit"
+msgstr ""
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
 msgstr ""
 
 #. Android resource: @strings/position_popup_title
@@ -1309,11 +1373,13 @@ msgstr ""
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
 
 #. We have not found an existing config file from all possibilities
@@ -1675,6 +1741,9 @@ msgid "Remove search results from the map"
 msgstr ""
 
 msgid "Show results on the map"
+msgstr ""
+
+msgid "Foursquare"
 msgstr ""
 
 msgid "Cut Bookmark"

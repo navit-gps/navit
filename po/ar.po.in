@@ -153,8 +153,10 @@ msgstr[3] "بعد %d كلم"
 msgstr[4] "بعد %d كلم"
 msgstr[5] "بعد %d كلم"
 
-msgid "exit"
-msgstr "خروج"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "إلى داخل الطريق المنحدر"
@@ -184,32 +186,17 @@ msgstr "%sإلى داخل %s%s%s|غير محدد الجنس"
 msgid "%sinto the %s"
 msgstr "%s إلى داخل %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "إلى اليمين"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "إلى اليسار"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "بسهولة "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "بكل شدة "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "بشدة حادة "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "غير معروف "
-
 msgid "When possible, please turn around"
 msgstr "حيث ممكن الرجاء اللف"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "تابع الطريق لل- %s التالية"
 
 msgid "Enter the roundabout soon"
 msgstr "قريباً الدخول إلى المستديرة"
@@ -219,56 +206,133 @@ msgstr "قريباً الدخول إلى المستديرة"
 msgid "Enter the roundabout %s"
 msgstr "أدخل المسافة %s إلى المستديرة"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "ثم أخرج من المستديرة عند الــ%s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "أخرج من المستديرة عند الــ  %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "تابع الطريق لل- %s التالية"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "قريبا"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "الآن"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "خذ الطريق %1$s إلى ال%2$s"
+
+msgid "right"
+msgstr "إلى اليمين"
 
 #, c-format
 msgid "after %i roads"
 msgstr "بعد %i طرقات"
 
-msgid "now"
-msgstr "الآن"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "ثم خذ الطريق %1$s إلى ال- %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "خطء"
+msgid "easily "
+msgstr "بسهولة "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "بكل شدة "
+
+msgid "left"
+msgstr "إلى اليسار"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "حوّل %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "ثم حوّل %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "و بعدها تكون قد وصلت إلى هدفك"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "لقد وصلت إلى هدفك %s"
 
-msgid "then you have reached your destination."
-msgstr "و بعدها تكون قد وصلت إلى هدفك"
+msgid "exit"
+msgstr "خروج"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1328,11 +1392,13 @@ msgstr "* غير معروف، أضف تسميات  is_in إلى تلك المد�
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
 
 #. We have not found an existing config file from all possibilities
@@ -1695,6 +1761,9 @@ msgstr "أحذف نتائج البحث من الخريطة"
 
 msgid "Show results on the map"
 msgstr "أعرض النتائج على الخريطة"
+
+msgid "Foursquare"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "قص العلامة"

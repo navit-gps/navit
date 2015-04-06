@@ -139,8 +139,10 @@ msgid_plural "in %d kilometers"
 msgstr[0] "egy kilométer után"
 msgstr[1] "%d kilométer után"
 
-msgid "exit"
-msgstr "kijárat"
+#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
+#, c-format
+msgid "onto the %1$s %2$s"
+msgstr ""
 
 msgid "into the ramp"
 msgstr "a felhajtóra"
@@ -170,32 +172,17 @@ msgstr "%sa(z) %s%s%s útra"
 msgid "%sinto the %s"
 msgstr "%shajtson rá a(z) %s útra"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "jobbra"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "balra"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "enyhén "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "élesen "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr "nagyon élesen "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr "ismeretlen "
-
 msgid "When possible, please turn around"
 msgstr "Amint lehet, fordujon meg"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Haladjon az úton a következő %sig"
 
 msgid "Enter the roundabout soon"
 msgstr "Hajtson be a körforgalomba hamarosan."
@@ -205,56 +192,133 @@ msgstr "Hajtson be a körforgalomba hamarosan."
 msgid "Enter the roundabout %s"
 msgstr "Hajtson be a körforgalomba %s"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "majd hagyja el a körforgalmat a(z) %s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Hagyja el a körforgalmat a(z) %s"
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Haladjon az úton a következő %sig"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "hamarosan"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "most"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge left %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
+#, c-format
+msgid "%1$s merge right %2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s left exit %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
+#, c-format
+msgid "%1$s right exit %2$s %3$s"
+msgstr ""
+
+msgid " at the exit "
+msgstr ""
+
+msgid " at the interchange "
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s continue straight%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep right%2$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
+#, c-format
+msgid "%1$s keep left%2$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s continue straight"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "%1$s keep left"
+msgstr ""
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "A(z) %1$s útnál forduljon %2$s"
+
+msgid "right"
+msgstr "jobbra"
 
 #, c-format
 msgid "after %i roads"
 msgstr "%i út után"
 
-msgid "now"
-msgstr "most"
-
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "aztán a(z) %1$s útnál forduljon %2$s"
+msgid "Turn %1$s%2$s %3$s %4$s"
+msgstr ""
 
-msgid "error"
-msgstr "hiba"
+msgid "easily "
+msgstr "enyhén "
 
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+msgid "strongly "
+msgstr "élesen "
+
+msgid "left"
+msgstr "balra"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Forduljon %1$s%2$s %3$s%4$s"
+msgid "%1$s left turnaround"
+msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "aztán forduljon %1$s%2$s %3$s%4$s"
+msgid "%1$s right turnaround"
+msgstr ""
 
+msgid "then you have reached your destination."
+msgstr "majd eléri az úticélját."
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Elérte az úticélját: %s"
 
-msgid "then you have reached your destination."
-msgstr "majd eléri az úticélját."
+msgid "exit"
+msgstr "kijárat"
+
+msgid "interchange"
+msgstr ""
+
+#, c-format
+msgid "%s %s"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1314,19 +1378,14 @@ msgstr "*Ismeretlen, is_in címkék hozzáadása ezekhez a városokhoz"
 msgid ""
 "navit usage:\n"
 "navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the global debug output level to <n> (0-3). Overrides setting "
-"from config file.\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
 "\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+"\t-v: print the version and exit.\n"
 msgstr ""
-"navit használata:\n"
-"navit [opciók] [konfigurációs állomány]\n"
-"\t-c <file>: használja a <file>-t mint konfigurációs állomány\n"
-"\t-d <n>: a globális hibakeresési kimeneti szintet <n>-re állítja (0-3). "
-"Felülbírálja a konfigurációs állomány beállításait.\n"
-"\t-h: kinyomtatja ezt a használati útmutatót és kilép.\n"
-"\t-v: kinyomtatja a verzióinformációt és kilép.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1690,6 +1749,9 @@ msgstr "Keresési találatok eltávolítása a térképről"
 
 msgid "Show results on the map"
 msgstr "Keresési találatok mutatása a térképen"
+
+msgid "Foursquare"
+msgstr ""
 
 msgid "Cut Bookmark"
 msgstr "Könyvjelző kivágása"
