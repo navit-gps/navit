@@ -35,5 +35,6 @@
         <activity android:name=".NavitAddressSearchActivity"></activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
         <activity android:name=".NavitAddressResultListActivity"></activity>
+        <activity android:name=".FileBrowserActivity"></activity>
     </application>
 </manifest> 
