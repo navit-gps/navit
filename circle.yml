@@ -1,0 +1,30 @@
+dependencies:
+  pre:
+    - "[ -d ~/assets ] || mkdir ~/assets"
+    - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
+    - sudo apt-get install cmake
+    - sudo apt-get install libpng12-dev 
+    - sudo apt-get install libgtk2.0-dev 
+    - sudo apt-get install librsvg2-bin 
+    - sudo apt-get install libfreetype6-dev
+    - sudo apt-get install libdbus-glib-1-dev
+    - sudo apt-get install g++
+    - bash ci/build.sh
+  cache_directories:
+    - "~/assets/"
+test:
+  post:
+    - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
+        pwd: bin/navit/
+    - sed -i -e 's@name="Demo" profilename="car" enabled="no" active="yes"@name="Demo" profilename="car" enabled="yes" active="yes" follow="1" refresh="1"@' navit.xml:
+        pwd: bin/navit/
+    - sed -i -e 's@type="internal" enabled@type="internal" fullscreen="1" font_size="350" enabled@' navit.xml:
+        pwd: bin/navit/
+    - sed -i -e 's@libbinding_dbus.so" active="no"@libbinding_dbus.so" active="yes"@' navit.xml:
+        pwd: bin/navit/
+    - ./navit:
+        pwd: bin/navit/
+        background: true
+    - sleep 5
+    - import -window root $CIRCLE_ARTIFACTS/default.png
+    - dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.quit
