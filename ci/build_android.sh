@@ -9,12 +9,10 @@ export START_PATH=~/
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
 export CMAKE_FILE=$SOURCE_PATH"/Toolchain/arm-eabi.cmake"
 
-export NDK_SUFFIX="r10d"
-export ANDROID_NDK=$ANDROID_HOME"/android-ndk-"$NDK_SUFFIX
+export ANDROID_NDK="/usr/local/android-ndk/"
 export ANDROID_NDK_BIN=$ANDROID_NDK"/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
  
-export ANDROID_SDK=$ANDROID_HOME"/android-sdk-linux"
-export ANDROID_SDK_TOOLS=$ANDROID_SDK"/tools"
+export ANDROID_SDK="/usr/local/android-sdk-linux/"
 export ANDROID_SDK_PLATFORM_TOOLS=$ANDROID_SDK"/platform-tools"
 
 export ANDROID_TOOLS_CHECK=$ANDROID_SDK"/tools"
