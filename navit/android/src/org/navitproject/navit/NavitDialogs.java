@@ -141,7 +141,8 @@ public class NavitDialogs extends Handler{
 					public void onDismiss(DialogInterface dialog)
 					{
 						Log.e("Navit", "onDismiss: mapdownloader_dialog");
-						mapdownloader.stop_thread();
+						if(mapdownloader!=null)
+							mapdownloader.stop_thread();
 					}
 				};
 				mapdownloader_dialog.setOnDismissListener(onDismissListener);
