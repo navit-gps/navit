@@ -684,12 +684,15 @@ graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, str
 		ncmd=3;
 	} else if(!strcmp(function,"backup_restore_dialog")) {
 		ncmd=7;
+	} else if(!strcmp(function,"set_map_location")) {
+		ncmd=10;
 	}
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_runOptionsItem, ncmd);
 }
 
 static struct command_table commands[] = {
 	{"map_download_dialog",command_cast(graphics_android_cmd_runMenuItem)},
+	{"set_map_location",command_cast(graphics_android_cmd_runMenuItem)},
 	{"backup_restore_dialog",command_cast(graphics_android_cmd_runMenuItem)},
 };
 

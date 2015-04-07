@@ -39,6 +39,7 @@
 		<xsl:value-of select="replace(/config/navit/gui[2]/text(),
 		    '&lt;a name=''Tools''>&lt;text>Tools&lt;/text>','&lt;a name=''Tools''>&lt;text>Tools&lt;/text>
 			&lt;img src=''gui_maps'' onclick=''navit.graphics.map_download_dialog();''>&lt;text>Map download&lt;/text>&lt;/img>
+			&lt;img src=''gui_rules'' onclick=''navit.graphics.set_map_location();''>&lt;text>Set map location&lt;/text>&lt;/img>
 			&lt;img src=''gui_rules'' onclick=''navit.graphics.backup_restore_dialog();''>&lt;text>Backup / Restore&lt;/text>&lt;/img>')"/>
    </xsl:template>
 
