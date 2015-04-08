@@ -41,7 +41,7 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
-    - "curl 'https://translations.launchpad.net/navit/trunk/+translations-upload' -H \"$lp_cookie\" -H 'Referer: https://translations.launchpad.net/navit/trunk/+translations-upload' F file=@bin/po/navit.pot"
+    - "curl 'https://translations.launchpad.net/navit/trunk/+translations-upload' -H \"$lp_cookie\" -H 'Referer: https://translations.launchpad.net/navit/trunk/+translations-upload' -F file=@bin/po/navit.pot"
     - bash ci/build_android.sh
 test:
   post:
