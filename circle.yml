@@ -1,11 +1,11 @@
 machine:
   environment:
-    ANDROID_HOME: /home/ubuntu/android
-    ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
-    ANDROID_SDK_CDN: https://dl.google.com/android
-    ANDROID_SDK_FILE: android-sdk_r24.0.2-linux.tgz
-    ANDROID_NDK_CDN: http://dl.google.com/android/ndk
-    ANDROID_NDK_FILE: android-ndk-r10d-linux-x86_64.bin
+    #ANDROID_HOME: /home/ubuntu/android
+    #ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
+    #ANDROID_SDK_CDN: https://dl.google.com/android
+    #ANDROID_SDK_FILE: android-sdk_r24.0.2-linux.tgz
+    #ANDROID_NDK_CDN: http://dl.google.com/android/ndk
+    #ANDROID_NDK_FILE: android-ndk-r10d-linux-x86_64.bin
     CMAKE_FILE: ../Toolchain/arm-eabi.cmake
 dependencies:
   cache_directories:
@@ -25,8 +25,8 @@ dependencies:
     - sudo apt-get install g++
     - bash ci/build.sh
 # Android build    
-    - wget -c -N -q $ANDROID_SDK_CDN/$ANDROID_SDK_FILE -O $ANDROID_HOME/$ANDROID_SDK_FILE
-    - wget -c -N -q $ANDROID_NDK_CDN/$ANDROID_NDK_FILE -O $ANDROID_HOME/$ANDROID_NDK_FILE
+    # - wget -c -N -q $ANDROID_SDK_CDN/$ANDROID_SDK_FILE -O $ANDROID_HOME/$ANDROID_SDK_FILE
+    # - wget -c -N -q $ANDROID_NDK_CDN/$ANDROID_NDK_FILE -O $ANDROID_HOME/$ANDROID_NDK_FILE
     - sudo apt-get install gpsd
     - sudo apt-get install gpsd-clients
     - sudo apt-get install libgps-dev
@@ -41,6 +41,7 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
+    - curl 'https://translations.launchpad.net/navit/trunk/+translations-upload' -H $lp_cookie -H 'Referer: https://translations.launchpad.net/navit/trunk/+translations-upload' F file=@bin/po/navit.pot
     - bash ci/build_android.sh
 test:
   post:
