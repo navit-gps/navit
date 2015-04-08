@@ -23,16 +23,16 @@ export ANDROID_BUILD_TOOLS="21.1.2"
 export ANDROID_BUILD_CHECK=$ANDROID_SDK"/build-tools/"$BUILD_TOOLS
 
 export ANDROID_PLATFORM_LATEST="android-21"
-export ANDROID_PLATFORM_MIN="android-10"
+export ANDROID_PLATFORM_MIN="android-7"
 export ANDROID_PLATFORM_CHECK_MIN=$ANDROID_SDK"/platforms/"$ANDROID_PLATFORM_MIN"/images"
 export ANDROID_PLATFORM_CHECK_MAX=$ANDROID_SDK"/platforms/"$ANDROID_PLATFORM_LATEST"/images"
 
 export BUILD_PATH=$START_PATH"/android-build"
 export ANDROID_ENV=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS
 
-export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.1.2,extra-android-m2repository,extra-android-support,android-10,sysimg-10,addon-google_apis-google-10,android-9,addon-google_apis-google-9,android-21,sysimg-21,addon-google_apis-google-21"
+export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support,android-10,sysimg-10,addon-google_apis-google-10,android-9,addon-google_apis-google-9,android-21,sysimg-21,addon-google_apis-google-21"
 
-export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.1.2,extra-android-m2repository,extra-android-support"
+export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support"
 
 mkdir $ANDROID_HOME
 
@@ -106,11 +106,11 @@ fi
 # $ADD_SDK
 #}
 #
-#function updateSDK {
-#  export UPD_SDK="echo y|android update sdk --no-ui --filter $SDK_UPD_FILTER"
-#echo $UPD_SDK
-#  $UPD_SDK
-#}
+function updateSDK {
+  export UPD_SDK="echo y|android update sdk --no-ui --filter $SDK_UPD_FILTER"
+echo $UPD_SDK
+  $UPD_SDK
+}
 #
 #if [ ! -d $ANDROID_PLATFORM_CHECK_MIN ]; then {
 #  echo -e -n "${yel}" "    Android SDK Platform ... MISSING, downloading may take a very long time... "
@@ -125,15 +125,18 @@ fi
 #}
 #fi
 
+updateSDK
 mkdir -p $BUILD_PATH
 cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 android list targets
-cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DANDROID_API_VERSION=10 $SOURCE_PATH
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DANDROID_API_VERSION=19 $SOURCE_PATH
 make && make apkg || exit 1
 mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
-mv navit/android/bin/Navit-debug-unaligned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug-unaligned.apk
-make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk
+#mv navit/android/bin/Navit-debug-unaligned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug-unaligned.apk
+#make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk
+
+echo $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
 
 echo
 echo "Build leftovers :"
