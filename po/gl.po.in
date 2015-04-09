@@ -136,10 +136,8 @@ msgid_plural "in %d kilometers"
 msgstr[0] "nun quilómetro"
 msgstr[1] "en %d quilómetros"
 
-#. TRANSLATORS: %1$s is the name_systematic of the next road to merge onto, %2$s it's name
-#, c-format
-msgid "onto the %1$s %2$s"
-msgstr ""
+msgid "exit"
+msgstr "saída"
 
 msgid "into the ramp"
 msgstr "na rampa"
@@ -169,17 +167,32 @@ msgstr "%s no %s%s%s"
 msgid "%sinto the %s"
 msgstr "%s na %s"
 
-msgid "When possible, please turn around"
-msgstr "Cando sexa posible, dea a volta"
+#. TRANSLATORS: right, as in 'Turn right'
+msgid "right"
+msgstr "á dereita"
 
-#. TRANSLATORS: the argument is the destination to follow
-#, c-format
-msgid "towards %s"
+#. TRANSLATORS: left, as in 'Turn left'
+msgid "left"
+msgstr "á esquerda"
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "easily "
+msgstr "suavemente "
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "strongly "
+msgstr "bruscamente "
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "really strongly "
 msgstr ""
 
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Siga a estrada durante os próximos %s"
+#. TRANSLATORS: Don't forget the ending space
+msgid "unknown "
+msgstr ""
+
+msgid "When possible, please turn around"
+msgstr "Cando sexa posible, dea a volta"
 
 msgid "Enter the roundabout soon"
 msgstr "Métase pronto na rotonda"
@@ -189,133 +202,56 @@ msgstr "Métase pronto na rotonda"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
+msgid "then leave the roundabout at the %s"
 msgstr ""
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %1$s %2$s"
+msgid "Leave the roundabout at the %s"
 msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Siga a estrada durante os próximos %s"
 
 msgid "soon"
 msgstr "cedo"
 
-msgid "now"
-msgstr "agora"
-
-msgid "then"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
-#, c-format
-msgid "%1$s merge left %2$s"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'
-#, c-format
-msgid "%1$s merge right %2$s"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
-#, c-format
-msgid "%1$s left exit %2$s %3$s"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is exit_ref and the third is exit_label
-#, c-format
-msgid "%1$s right exit %2$s %3$s"
-msgstr ""
-
-msgid " at the exit "
-msgstr ""
-
-msgid " at the interchange "
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
-#, c-format
-msgid "%1$s continue straight%2$s"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
-#, c-format
-msgid "%1$s keep right%2$s"
-msgstr ""
-
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuvre
-#, c-format
-msgid "%1$s keep left%2$s"
-msgstr ""
-
-#. TRANSLATORS: the arg. is distance
-#, c-format
-msgid "%1$s continue straight"
-msgstr ""
-
-#. TRANSLATORS: the arg. is distance
-#, c-format
-msgid "%1$s keep right"
-msgstr ""
-
-#. TRANSLATORS: the arg. is distance
-#, c-format
-msgid "%1$s keep left"
-msgstr ""
-
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Tome a estrada %1$s cara o %2$s"
-
-msgid "right"
-msgstr "á dereita"
 
 #, c-format
 msgid "after %i roads"
 msgstr "despois de %i estradas"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+msgid "now"
+msgstr "agora"
+
 #, c-format
-msgid "Turn %1$s%2$s %3$s %4$s"
+msgid "then take the %1$s road to the %2$s"
 msgstr ""
 
-msgid "easily "
-msgstr "suavemente "
-
-msgid "strongly "
-msgstr "bruscamente "
-
-msgid "left"
-msgstr "á esquerda"
-
-#. TRANSLATORS: the arg. is distance
-#, c-format
-msgid "%1$s left turnaround"
+msgid "error"
 msgstr ""
 
-#. TRANSLATORS: the arg. is distance
+#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
-msgid "%1$s right turnaround"
+msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr ""
 
-msgid "then you have reached your destination."
-msgstr "despois xa chega ao seu destino"
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""
 
-#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Chegou ao seu destino %s"
 
-msgid "exit"
-msgstr "saída"
-
-msgid "interchange"
-msgstr ""
-
-#, c-format
-msgid "%s %s"
-msgstr ""
+msgid "then you have reached your destination."
+msgstr "despois xa chega ao seu destino"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1745,9 +1681,6 @@ msgstr ""
 msgid "Show results on the map"
 msgstr ""
 
-msgid "Foursquare"
-msgstr ""
-
 msgid "Cut Bookmark"
 msgstr ""
 
@@ -1974,10 +1907,29 @@ msgstr ""
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
 msgid "Downloaded maps"
 msgstr ""
 
+msgid ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
+msgstr ""
+
 msgid "Cancel"
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
 msgstr ""
 
 msgid "Whole Planet"
@@ -2350,11 +2302,14 @@ msgstr ""
 msgid "ready"
 msgstr ""
 
-msgid "Error downloading map!"
+msgid "Media selected for map storage is not available"
 msgstr ""
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
+msgstr ""
+
+msgid "Error downloading map!"
 msgstr ""
 
 msgid "Error writing map!"
@@ -2519,6 +2474,10 @@ msgstr ""
 msgid "Backup / Restore"
 msgstr ""
 
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr ""
+
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr ""
@@ -2643,4 +2602,15 @@ msgstr ""
 
 #. Android resource: @strings/restore
 msgid "Restore"
+msgstr ""
+
+#. Android resource: @strings/TTS_title_data_missing
+msgid "System text to speech engine data is missing"
+msgstr ""
+
+#. Android resource: @strings/TTS_qery_install_data
+msgid ""
+"Navit can use any text to speech engine installed on your device. The "
+"currently selected engine reports it is unable to speak in your language. "
+"Should we ask the system to show voice download dialog?"
 msgstr ""
