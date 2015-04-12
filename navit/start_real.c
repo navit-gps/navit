@@ -213,13 +213,20 @@ int main_real(int argc, char * const* argv)
 	conf.type=attr_config;
 	conf.u.config=config;
 	if (startup_file) {
-		FILE *f=fopen(startup_file,"r");
+		FILE *f = fopen(startup_file,"r");
 		if (f) {
 			char buffer[4096];
+			int fclose_ret;
 			while(fgets(buffer, sizeof(buffer), f)) {
 				command_evaluate(&conf, buffer);
 			}
-		}
+                        fclose_ret = fclose(f);
+                        if (fclose_ret != 0) {
+				dbg(lvl_error, "Could not close the specified startup file: %s\n", startup_file);
+			}
+		} else {
+			dbg(lvl_error, "Could not open the specified startup file: %s", startup_file);
+                }
 	}
 	if (command) {
 		command_evaluate(&conf, command);
