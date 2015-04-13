@@ -97,7 +97,7 @@ struct scroll_buttons {
 	struct widget * prev_button;
 	/**
 	* a pointer to the gui context.
-	* This is needed by the free function to destory the buttons.
+	* This is needed by the free function to destroy the buttons.
 	*/
 	struct  gui_priv *  this;
 };
