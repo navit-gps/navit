@@ -105,9 +105,10 @@ osd_set_attr(struct osd *osd, struct attr* attr)
 static void
 osd_destroy(struct osd *osd)
 {
-	if (osd && osd->meth.destroy) {
+	if (!osd)
+		return;
+	if (osd->meth.destroy)
 		osd->meth.destroy(osd->priv);
-	}
 	attr_list_free(osd->attrs);
 	g_free(osd);
 }
