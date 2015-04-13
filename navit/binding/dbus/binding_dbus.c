@@ -1357,6 +1357,25 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
 static DBusHandlerResult
+request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	dbg(lvl_debug,"%s\n", dbus_message_iter_get_signature(&iter));
+
+	navit_zoom_to_route(navit,0);
+
+	return empty_reply(connection, message);
+
+}
+
+static DBusHandlerResult
 request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 {
 	char * filename;
@@ -1949,6 +1968,7 @@ struct dbus_method {
 	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
+	{".navit",  "zoom_to_route",       "",        "",                                        "",   "",      request_navit_zoom_to_route},
         {".navit",  "quit",                "",        "",                                        "",   "",      request_navit_quit},
 	{".navit",  "export_as_gpx",       "s",       "filename",                                "",   "",      request_navit_route_export_gpx},
         {".navit",  "export_as_geojson",   "s",       "filename",                                "",   "",      request_navit_route_export_geojson},
