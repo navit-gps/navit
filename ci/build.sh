@@ -11,4 +11,4 @@ curl --form token=$COVERITY_TOKEN \
   --form file=@navit.tgz \
   --form version="${CIRCLE_BRANCH}-$CIRCLE_SHA1" \
   --form description="${CIRCLE_BRANCH}-$CIRCLE_SHA1" \
-  https://scan.coverity.com/builds?project=$COVERITY_PROJECT
+  https://scan.coverity.com/builds?project=$CIRCLE_PROJECT_USERNAME
