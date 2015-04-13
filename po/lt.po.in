@@ -116,7 +116,7 @@ msgstr "už %d.%d kilometrų"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "viena mylia"
+msgstr[0] "%d mylia"
 msgstr[1] "%d mylios"
 msgstr[2] "%d mylių"
 
