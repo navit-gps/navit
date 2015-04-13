@@ -30,13 +30,6 @@ dependencies:
 # Android build    
     - wget -c -N -q $ANDROID_SDK_CDN/$ANDROID_SDK_FILE -O $ANDROID_HOME/$ANDROID_SDK_FILE
     - wget -c -N -q $ANDROID_NDK_CDN/$ANDROID_NDK_FILE -O $ANDROID_HOME/$ANDROID_NDK_FILE
-    - sudo apt-get install gpsd
-    - sudo apt-get install gpsd-clients
-    - sudo apt-get install libgps-dev
-    - sudo apt-get install freeglut3-dev
-    - sudo apt-get install libxft-dev
-    - sudo apt-get install libglib2.0-dev
-    - sudo apt-get install libfreeimage-dev
     - sudo apt-get install gettext
     - sudo apt-get install openjdk-7-jdk
     - sudo apt-get install ant
