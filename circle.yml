@@ -47,6 +47,8 @@ dependencies:
     - cmake -Dbinding/python:BOOL=FALSE -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw32.cmake ../ && make && make package:
         pwd: win32/
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
+# For python testing with junit reporting
+    - sudo pip install junit-xml
 test:
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
