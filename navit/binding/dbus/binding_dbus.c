@@ -1492,7 +1492,7 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
 
         nav = navit_get_navigation(navit);
         if(!nav) {
-                return;
+                return dbus_error_navigation_not_configured(connection, message);
         }
         map = navigation_get_map(nav);
         if(map)
