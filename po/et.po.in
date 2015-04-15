@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-01-05 22:03+0000\n"
+"PO-Revision-Date: 2015-04-13 06:57+0000\n"
 "Last-Translator: Manuel Hohmann <mhohmann@physnet.uni-hamburg.de>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -186,7 +186,7 @@ msgstr "järsult "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "väga järsult "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -205,11 +205,11 @@ msgstr "Ringteeni %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "siis lahku ringteelt %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Lahku ringteelt %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -232,20 +232,20 @@ msgstr "nüüd"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "siis vali %1$s mis viib %2$s"
 
 msgid "error"
-msgstr ""
+msgstr "viga"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Pööra %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "siis pööra %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -1570,34 +1570,34 @@ msgid "Set next visit to %ld, %ld \n"
 msgstr ""
 
 msgid "POI search"
-msgstr ""
+msgstr "POI otsing"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Vali kategooria"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
 
 msgid "Select a POI"
-msgstr ""
+msgstr "Vali POI"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategooria"
 
 msgid "Direction"
-msgstr ""
+msgstr "Suund"
 
 msgid "Distance(m)"
 msgstr ""
 
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Külasta enne"
 
 msgid "N"
 msgstr "N"
@@ -1816,7 +1816,7 @@ msgstr "Sisesta koordinaadid"
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "Laiuskraad Pikkuskraad"
 
 msgid "Enter coordinates, for example:"
 msgstr "Sisesta koordinaadid, näiteks:"
