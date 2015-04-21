@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-04-03 18:26+0000\n"
-"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"PO-Revision-Date: 2015-04-20 20:06+0000\n"
+"Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,11 +209,11 @@ msgstr "круто "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "очень круто "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
-msgstr ""
+msgstr "неизвестно "
 
 msgid "When possible, please turn around"
 msgstr "Развернитесь, пожалуйста, если это возможно"
@@ -228,11 +228,11 @@ msgstr "Через %s круговое движение"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "потом съезжайте с кругового движения на %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Съезжайте с кругового движения на %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -255,20 +255,20 @@ msgstr "сейчас"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
 
 msgid "error"
-msgstr ""
+msgstr "ошибка"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Сверните %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "после чего поверните %1$s%2$s на %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -1602,7 +1602,7 @@ msgid "Select a distance to look for (km)"
 msgstr "Выберите расстояние для поиска (км)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "Выберите POI"
 
 msgid " "
 msgstr " "
@@ -1938,6 +1938,9 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"Папка s, выбранная для хранения карт, недоступна.\n"
+"Пожалуйста, перезагрузите Navit после подключения SD карты, или выберите "
+"другую папку."
 
 msgid "Downloaded maps"
 msgstr "Загруженные карты"
@@ -1946,6 +1949,8 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"К сожалению, карты свыше 3.8 Гб не поддерживаются в Android версии. Выберите "
+"другую карту."
 
 msgid "Cancel"
 msgstr "Отмена"
@@ -1957,6 +1962,8 @@ msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Выбрана папка %s\n"
+"Перезапустите Navit для применения изменений."
 
 msgid "Whole Planet"
 msgstr "Вся планета"
@@ -2329,7 +2336,7 @@ msgid "ready"
 msgstr "готово"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "Устройство для хранения карт недоступно."
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2519,7 +2526,7 @@ msgstr "Копировать / Восстановить"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Выбрать папку для хранения карт"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2659,3 +2666,7 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+"Navit может использовать любое установленное в системе приложение "
+"преобразования текста в речь. Выбранное сейчас приложение сообщает о "
+"невозможности работы на выбранном языке. Попросим систему показать диалог "
+"загрузки голосовых данных?"
