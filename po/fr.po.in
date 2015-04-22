@@ -1,5 +1,5 @@
 # French (fr) translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Arnaud https://launchpad.net/~arnaud-lemeur
@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-03-10 20:10+0000\n"
+"PO-Revision-Date: 2015-04-21 18:51+0000\n"
 "Last-Translator: Jean Marc <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
@@ -209,7 +209,7 @@ msgstr ""
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
-msgstr ""
+msgstr "inconnu "
 
 msgid "When possible, please turn around"
 msgstr "Dès que possible, faites demi-tour"
@@ -224,11 +224,11 @@ msgstr "Entrer dans le rond-point %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "puis sortez du rond-point à la %s"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Sortez du rond-point à la %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -251,10 +251,10 @@ msgstr "maintenant"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "puis prenez la %1$s route à %2$s"
 
 msgid "error"
-msgstr ""
+msgstr "erreur"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
@@ -264,7 +264,7 @@ msgstr ""
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "puis tournez %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -1567,7 +1567,7 @@ msgid "Taxi"
 msgstr "Taxi"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Courses"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1592,7 +1592,7 @@ msgid "POI search"
 msgstr "recherche de point d'intérêt"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Sélectionnez une catégorie"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
