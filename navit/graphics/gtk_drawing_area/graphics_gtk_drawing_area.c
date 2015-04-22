@@ -302,7 +302,7 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 }
 
 static void
-display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p)
+display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p)
 {
 	int i,x,y,stride;
 	struct font_freetype_glyph *g, **gp;
@@ -323,14 +323,11 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 			if (gr->freetype_methods.get_shadow(g, shadow, 8, stride, &white, &transparent))
 				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
 			g_free(shadow);
-			if (color) {
-				stride*=3;
-				shadow=g_malloc(stride*(g->h+2));
-				gr->freetype_methods.get_shadow(g, shadow, 24, stride, &bg->c, &transparent);
-				gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
-				g_free(shadow);
-			} 
-			
+			stride*=3;
+			shadow=g_malloc(stride*(g->h+2));
+			gr->freetype_methods.get_shadow(g, shadow, 24, stride, &bg->c, &transparent);
+			gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
+			g_free(shadow);
 		}
 		x+=g->dx;
 		y+=g->dy;
@@ -343,21 +340,18 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h) {
-			if (color) {
-				stride=g->w;
-				if (bg) {
-					glyph=g_malloc(stride*g->h);
-					gr->freetype_methods.get_glyph(g, glyph, 8, stride, &fg->c, &bg->c, &transparent);
-					gdk_draw_gray_image(gr->drawable, bg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, g->w);
-					g_free(glyph);
-				}
-				stride*=3;
+			stride=g->w;
+			if (bg) {
 				glyph=g_malloc(stride*g->h);
-				gr->freetype_methods.get_glyph(g, glyph, 24, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
-				gdk_draw_rgb_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, stride);
+				gr->freetype_methods.get_glyph(g, glyph, 8, stride, &fg->c, &bg->c, &transparent);
+				gdk_draw_gray_image(gr->drawable, bg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, g->w);
 				g_free(glyph);
-			} else
-				gdk_draw_gray_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
+			}
+			stride*=3;
+			glyph=g_malloc(stride*g->h);
+			gr->freetype_methods.get_glyph(g, glyph, 24, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
+			gdk_draw_rgb_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, stride);
+			g_free(glyph);
 		}
 		x+=g->dx;
 		y+=g->dy;
@@ -368,7 +362,6 @@ static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	struct font_freetype_text *t;
-	int color=0;
 
 	if (! font)
 	{
@@ -389,23 +382,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	if (bg && !bg->c.a)
 		bg=NULL;
 	if (bg) {
-		if (COLOR_IS_BLACK(fg->c) && COLOR_IS_WHITE(bg->c)) {
-			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
-			gdk_gc_set_function(bg->gc, GDK_OR);
-		} else if (COLOR_IS_WHITE(fg->c) && COLOR_IS_BLACK(bg->c)) {
-			gdk_gc_set_function(fg->gc, GDK_OR);
-			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-		} else  {
-			gdk_gc_set_function(fg->gc, GDK_OR);
-			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-			color=1;
-		}
+		gdk_gc_set_function(fg->gc, GDK_OR);
+		gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
 	} else {
 		gdk_gc_set_function(fg->gc, GDK_OR);
-		color=1;
 	}
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
-	display_text_draw(t, gr, fg, bg, color, p);
+	display_text_draw(t, gr, fg, bg, p);
 	gr->freetype_methods.text_destroy(t);
 	gdk_gc_set_function(fg->gc, GDK_COPY);
 	if (bg)
