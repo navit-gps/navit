@@ -564,7 +564,6 @@ static char *attrmap={
 	"w	amenity=place_of_worship	poly_building\n"
 	"w	amenity=university	poly_university\n"
 	"w	boundary=administrative,admin_level=2	border_country\n"
-	"w	boundary=administrative	border_civil\n"
 	"w	boundary=civil		border_civil\n"
 	"w	boundary=national_park	border_national_park\n"
 	"w	boundary=political	border_political\n"
