@@ -709,7 +709,7 @@ public class Navit extends Activity
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nm.cancel(R.string.app_name);
 		NavitVehicle.removeListener();
-		finish();
+		NavitDestroy();
 	}
 
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path, String path2);
