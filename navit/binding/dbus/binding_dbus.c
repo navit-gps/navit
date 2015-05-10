@@ -1445,7 +1445,7 @@ static DBusHandlerResult
 request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *message)
 {
         char * filename;
-        struct point p, *pp=NULL;
+        struct point p;
         struct navit *navit;
         DBusMessageIter iter;
 
@@ -1462,7 +1462,6 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
                 dbus_message_iter_next(&iter);
                 if (!point_get_from_message(message, &iter, &p))
                         return dbus_error_invalid_parameter(connection, message);
-                pp=&p;
         }
 
         dbg(lvl_debug,"Dumping route from dbus to %s\n", filename);
@@ -1471,10 +1470,9 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
         struct navigation * nav = NULL;
         struct map_rect * mr=NULL;
         struct item *item = NULL;
-        struct attr attr,route;
+        struct attr attr;
         struct coord c;
         struct coord_geo g;
-        struct transformation *trans;
 
         char *header = "{\n"
 "  \"type\": \"FeatureCollection\",\n"
@@ -1497,14 +1495,13 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
         map = navigation_get_map(nav);
         if(map)
           mr = map_rect_new(map,NULL);
-        trans = navit_get_trans (nav);
 
         FILE *fp;
         fp = fopen(filename,"w");
         fprintf(fp, "%s", header);
         int is_first=1;
         char * instructions;
-        instructions=g_strdup_printf("");
+        instructions=g_strdup("");
         while((item = map_rect_get_item(mr))) {
                 if(item_attr_get(item,attr_navigation_long,&attr)) {
                         item_coord_get(item, &c, 1);
