@@ -6,20 +6,20 @@
 # Magd Addin M. Almuntaser https://launchpad.net/~ttmtt-team
 # drsaudi https://launchpad.net/~mon7b6
 # metehyi https://launchpad.net/~metehyi
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2013-11-10 01:24+0000\n"
 "Last-Translator: metehyi <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"Language: ar\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -153,30 +153,53 @@ msgstr[3] "بعد %d كلم"
 msgstr[4] "بعد %d كلم"
 msgstr[5] "بعد %d كلم"
 
-msgid "exit"
-msgstr "خروج"
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#, c-format
+msgid "%1$sonto the %2$s%3$s%4$s"
+msgstr ""
 
-msgid "into the ramp"
-msgstr "إلى داخل الطريق المنحدر"
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
+#, c-format
+msgid "%1$sonto %2$s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|masculine form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|feminine form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|neuter form"
+msgstr ""
+
+#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
+msgid "onto the motorway ramp"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
-msgid "%sinto the street %s%s%s"
+msgid "%sinto %s%s%s"
 msgstr "%s إلى داخل الشارع %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
-msgid "%sinto the %s%s%s|male form"
+msgid "%sinto %s%s%s|masculine form"
 msgstr "%sإلى داخل %s%s%s|صفة الذكر"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
-msgid "%sinto the %s%s%s|female form"
+msgid "%sinto %s%s%s|feminine form"
 msgstr "%sإلى داخل %s%s%s|صفة الأنثى"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
-msgid "%sinto the %s%s%s|neutral form"
+msgid "%sinto %s%s%s|neuter form"
 msgstr "%sإلى داخل %s%s%s|غير محدد الجنس"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
@@ -184,32 +207,17 @@ msgstr "%sإلى داخل %s%s%s|غير محدد الجنس"
 msgid "%sinto the %s"
 msgstr "%s إلى داخل %s"
 
-#. TRANSLATORS: right, as in 'Turn right'
-msgid "right"
-msgstr "إلى اليمين"
-
-#. TRANSLATORS: left, as in 'Turn left'
-msgid "left"
-msgstr "إلى اليسار"
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "easily "
-msgstr "بسهولة "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "strongly "
-msgstr "بكل شدة "
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "really strongly "
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-msgid "unknown "
-msgstr ""
-
 msgid "When possible, please turn around"
 msgstr "حيث ممكن الرجاء اللف"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "تابع الطريق لل- %s التالية"
 
 msgid "Enter the roundabout soon"
 msgstr "قريباً الدخول إلى المستديرة"
@@ -219,22 +227,114 @@ msgstr "قريباً الدخول إلى المستديرة"
 msgid "Enter the roundabout %s"
 msgstr "أدخل المسافة %s إلى المستديرة"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr "ثم أخرج من المستديرة عند الــ%1$s %2$s"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "تابع الطريق لل- %s التالية"
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr "أخرج من المستديرة عند الــ  %1$s %2$s"
 
 msgid "soon"
 msgstr "قريبا"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+msgid "now"
+msgstr "الآن"
+
+msgid "then"
+msgstr ""
+
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "then merge%1$s|right"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Merge %1$s%2$s|right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "then merge%1$s|left"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Merge %1$s%2$s|left"
+msgstr ""
+
+msgid "on your left"
+msgstr ""
+
+msgid "on your right"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#, c-format
+msgid "Take exit %1$s %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#, c-format
+msgid "Take the exit %1$s %2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
+msgid "at interchange"
+msgstr ""
+
+msgid "at exit"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then continue straight%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Continue straight %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then keep right%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Keep right %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then keep left%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Keep left %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: "right" as in "turn right"
+msgid "right"
+msgstr "إلى اليمين"
+
+#. TRANSLATORS: "left" as in "turn left"
+msgid "left"
+msgstr "إلى اليسار"
+
+#. TRANSLATORS: as in "turn easily right"
+msgid "easily "
+msgstr "بسهولة "
+
+#. TRANSLATORS: as in "turn strongly right"
+msgid "strongly "
+msgstr "بكل شدة "
+
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "خذ الطريق %1$s إلى ال%2$s"
@@ -243,32 +343,59 @@ msgstr "خذ الطريق %1$s إلى ال%2$s"
 msgid "after %i roads"
 msgstr "بعد %i طرقات"
 
-msgid "now"
-msgstr "الآن"
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-msgid "error"
-msgstr ""
-
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+#. cave: no else - may come from 'if (skip_roads)' above !
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr "حوّل %1$s%2$s %3$s%4$s"
+
+#. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
+msgid "then make a U-turn|left"
 msgstr ""
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
+msgid "Make a U-turn %1$s|left"
 msgstr ""
 
+#. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
+msgid "then make a U-turn|right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Make a U-turn %1$s|right"
+msgstr ""
+
+#. An empty placeholder that we can use in the future for
+#. * some motorway commands that are now suppressed but we
+#. * can in some cases make it say here :
+#. * 'follow destination blabla' without any further driving instructions,
+#. * in cases where relevant destination info is available.
+#. * Even if there is no driving command to be announced, in some cases
+#. * there is an overhead roadsign in preparation of an upcoming road-split,
+#. * and then we can give usefull info to the driver.
+#. *
+#. *  UNTESTED !
+#. *
+#.
+msgid "follow"
+msgstr ""
+
+msgid "then you have reached your destination."
+msgstr "و بعدها تكون قد وصلت إلى هدفك"
+
+#. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "لقد وصلت إلى هدفك %s"
 
-msgid "then you have reached your destination."
-msgstr "و بعدها تكون قد وصلت إلى هدفك"
+#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
+msgid "Interchange"
+msgstr ""
+
+msgid "Exit"
+msgstr "خروج"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1823,10 +1950,10 @@ msgstr "نقاط المراحل"
 msgid "Enter Coordinates"
 msgstr "أدخل الإحداثيات"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

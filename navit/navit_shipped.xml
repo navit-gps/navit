@@ -184,434 +184,124 @@ Waypoint</text></img>
 		<tracking cdf_histsize="0"/>
 
 		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_city" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_land" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="ramp" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30" />
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40" />
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50" />
+			<roadprofile item_types="highway_city" speed="80" route_weight="80" />
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65" />
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70" />
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80" />
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120" />
+			<roadprofile item_types="highway_land" speed="120" route_weight="120" />
+			<roadprofile item_types="ramp" speed="40" route_weight="40" />
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
-			<profile_option name="shortest">
-				<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane,street_2_city,track_paved,street_3_city,street_4_city,highway_city,street_1_land,street_2_land,street_3_land,street_4_land,street_n_lanes,highway_land,ramp,roundabout,ferry" route_weight="60" />
-			</profile_option>
-			<profile_option name="avoid_tolls" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000401" />
-			<profile_option name="pedantic" route_depth="18:25%,18:40000" />
 		</vehicleprofile>
 
 		<vehicleprofile name="car_shortest" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_city" speed="80" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_land" speed="120" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="ramp" speed="40" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="60" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="60" />
+			<roadprofile item_types="street_3_city" speed="40" route_weight="60" />
+			<roadprofile item_types="street_4_city" speed="50" route_weight="60" />
+			<roadprofile item_types="highway_city" speed="80" route_weight="60" />
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
+			<roadprofile item_types="street_2_land" speed="65" route_weight="60" />
+			<roadprofile item_types="street_3_land" speed="70" route_weight="60" />
+			<roadprofile item_types="street_4_land" speed="80" route_weight="60" />
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="60" />
+			<roadprofile item_types="highway_land" speed="120" route_weight="60" />
+			<roadprofile item_types="ramp" speed="40" route_weight="60" />
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="10" route_weight="60"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="60"/>
 		</vehicleprofile>
 
 		<vehicleprofile name="car_avoid_tolls" flags="0x4000000" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_city" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_land" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="ramp" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
+			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
+			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
+			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 		<vehicleprofile name="car_pedantic" route_depth="18:25%,18:40000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_city" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="highway_land" speed="120" route_weight="120">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="ramp" speed="40" route_weight="40">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
+			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
+			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
+			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="steps" speed="2" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_pedestrian,footway" speed="5" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="path,track_ground" speed="12" route_weight="12">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="track_gravelled" speed="17" route_weight="15">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="steps" speed="2" route_weight="5" />
+			<roadprofile item_types="street_pedestrian,footway" speed="5" route_weight="10" />
+			<roadprofile item_types="path,track_ground" speed="12" route_weight="12" />
+			<roadprofile item_types="track_gravelled" speed="17" route_weight="15" />
 			<!-- cycleways, paved tracks, serviceways etc. are the favourite ways -->
-			<roadprofile item_types="track_paved,cycleway,street_service,street_parking_lane" speed="22" route_weight="20">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="track_paved,cycleway,street_service,street_parking_lane" speed="22" route_weight="20" />
 			<!-- residential, unclassified, living street etc. -->
-			<roadprofile item_types="street_0,street_1_city,living_street" speed="20" route_weight="15">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_0,street_1_city,living_street" speed="20" route_weight="15" />
 			<!-- tertiary and minor roads are acceptable, but should be avoided in favour of tracks and cycleways -->
-			<roadprofile item_types="street_2_city,street_1_land,street_2_land" speed="22" route_weight="12">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_2_city,street_1_land,street_2_land" speed="22" route_weight="12" />
 			<!-- secondary etc. are acceptable when necessary -->
-			<roadprofile item_types="street_3_city" speed="22" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_3_city" speed="22" route_weight="10" />
 			<!-- primary, trunk etc. should be avoided -->
-			<roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7" />
 			<!-- Those types do not appear in maptool.c and therefore are not used ATM -->
-			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7" />
+			<!--roundabout does not apply to OSMaps -->	
 			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 
 		<vehicleprofile name="pedestrian" route_depth="18:25%,18:10000" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
-			<roadprofile item_types="footway,bridleway,path,steps" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="hiking_mountain" speed="4" route_weight="4">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="track_gravelled,track_unpaved,track_grass,track_ground,hiking" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="track_paved" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="cycleway" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="footway,bridleway,path,steps" speed="5" route_weight="5"/>
+			<roadprofile item_types="hiking_mountain" speed="4" route_weight="4"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_gravelled,track_unpaved,track_grass,track_ground,hiking" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
+			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="5"/>
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="5" route_weight="5"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 		<vehicleprofile name="horse" route_depth="18:25%,18:40000" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
-			<roadprofile item_types="bridleway" speed="10" route_weight="10">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="footway,path,steps" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="4">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="track_gravelled" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="track_paved" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="cycleway" speed="5" route_weight="5">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="2">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="4">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="2">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
-			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="4">
-					<announcement level="0"/>
-					<announcement level="1"/>
-					<announcement level="2"/>
-			</roadprofile>
+			<roadprofile item_types="bridleway" speed="10" route_weight="10"/>
+			<roadprofile item_types="footway,path,steps" speed="5" route_weight="5"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="4"/>
+			<roadprofile item_types="track_gravelled" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
+			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="2"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="4"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="2"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="4"/>
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="5" route_weight="2"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
@@ -642,66 +332,19 @@ Waypoint</text></img>
  static_distance="25"
                                 vehicle_width="274" vehicle_height="411" vehicle_length="2134"
                                 vehicle_weight="36287" vehicle_axle_weight="15422">
-                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="5">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_3_city" speed="30" route_weight="30">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                       <roadprofile item_types="street_4_city" speed="40" route_weight="40">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="highway_city" speed="70" route_weight="70">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_1_land" speed="50" route_weight="50">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_2_land" speed="55" route_weight="55">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_3_land" speed="60" route_weight="60">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_4_land" speed="70" route_weight="70">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="street_n_lanes" speed="80" route_weight="80">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="highway_land" speed="80" route_weight="80">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
-                        <roadprofile item_types="ramp" speed="30" route_weight="30">
-                                        <announcement level="0"/>
-                                        <announcement level="1"/>
-                                        <announcement level="2"/>
-                        </roadprofile>
+                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="5" />
+                        <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20"/>
+                        <roadprofile item_types="street_3_city" speed="30" route_weight="30"/>
+                       	<roadprofile item_types="street_4_city" speed="40" route_weight="40"/>
+                        <roadprofile item_types="highway_city" speed="70" route_weight="70"/>
+                        <roadprofile item_types="street_1_land" speed="50" route_weight="50"/>
+                        <roadprofile item_types="street_2_land" speed="55" route_weight="55"/>
+                        <roadprofile item_types="street_3_land" speed="60" route_weight="60"/>
+                        <roadprofile item_types="street_4_land" speed="70" route_weight="70"/>
+                        <roadprofile item_types="street_n_lanes" speed="80" route_weight="80"/>
+                        <roadprofile item_types="highway_land" speed="80" route_weight="80"/>
+                        <roadprofile item_types="ramp" speed="30" route_weight="30"/>
+			<!--roundabout does not apply to OSMaps -->
                         <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
                         <roadprofile item_types="ferry" speed="40" route_weight="40"/>
                 </vehicleprofile>
@@ -710,7 +353,7 @@ Waypoint</text></img>
 		<route destination_distance="50"/>
 
 		<navigation>
-			<announce type="street_0,street_1_city" level0="25" level1="100" level2="200" unit="m"/>
+			<announce type="street_0,street_1_city,street_parking_lane" level0="25" level1="100" level2="200" unit="m"/>
 			<announce type="street_2_city,street_3_city,street_4_city,ramp" level0="50" level1="200" level2="500" unit="m"/>
 			<announce type="highway_city,street_1_land,street_2_land,street_3_land,street_4_land" level0="100" level1="400" level2="1000" unit="m"/>
 			<announce type="street_n_lanes,highway_land" level0="300" level1="1000" level2="2000" unit="m"/>
@@ -1861,8 +1504,11 @@ Waypoint</text></img>
 				<itemgra item_types="nav_straight" order="0-">
 					<icon src="nav_straight_bk.svg" w="32" h="32"/>
 				</itemgra>
-				<itemgra item_types="nav_turnaround" order="0-">
+				<itemgra item_types="nav_turnaround_left" order="0-">
 					<icon src="nav_turnaround_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_turnaround_right" order="0-">
+					<icon src="nav_turnaround_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_l1" order="0-">
 					<icon src="nav_roundabout_l1_bk.svg" w="32" h="32"/>
@@ -1911,6 +1557,24 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_r8" order="0-">
 					<icon src="nav_roundabout_r8_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_left" order="0-">
+					<icon src="nav_keep_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_left" order="0-">
+					<icon src="nav_merge_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_right" order="0-">
+					<icon src="nav_keep_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_right" order="0-">
+					<icon src="nav_merge_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_left" order="0-">
+					<icon src="nav_exit_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_right" order="0-">
+					<icon src="nav_exit_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="route_end" order="0-">
 					<icon src="nav_destination_bk.svg" w="32" h="32" x="4" y="30"/>
@@ -3324,8 +2988,11 @@ Waypoint</text></img>
 				<itemgra item_types="nav_straight" order="0-">
 					<icon src="nav_straight_bk.svg" w="32" h="32"/>
 				</itemgra>
-				<itemgra item_types="nav_turnaround" order="0-">
+				<itemgra item_types="nav_turnaround_left" order="0-">
 					<icon src="nav_turnaround_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_turnaround_right" order="0-">
+					<icon src="nav_turnaround_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_l1" order="0-">
 					<icon src="nav_roundabout_l1_bk.svg" w="32" h="32"/>
@@ -3374,6 +3041,24 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_r8" order="0-">
 					<icon src="nav_roundabout_r8_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_left" order="0-">
+					<icon src="nav_keep_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_left" order="0-">
+					<icon src="nav_merge_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_right" order="0-">
+					<icon src="nav_keep_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_right" order="0-">
+					<icon src="nav_merge_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_left" order="0-">
+					<icon src="nav_exit_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_right" order="0-">
+					<icon src="nav_exit_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="route_end" order="0-">
 					<icon src="nav_destination_wh.svg" w="32" h="32" x="4" y="30"/>
@@ -4646,8 +4331,11 @@ Waypoint</text></img>
         <itemgra item_types="nav_straight" order="0-">
           <icon src="nav_straight_bk.png" w="32" h="32" />
         </itemgra>
-        <itemgra item_types="nav_turnaround" order="0-">
+        <itemgra item_types="nav_turnaround_left" order="0-">
           <icon src="nav_turnaround_left_bk.png" w="32" h="32" />
+        </itemgra>
+	 <itemgra item_types="nav_turnaround_right" order="0-">
+          <icon src="nav_turnaround_right_bk.png" w="32" h="32" />
         </itemgra>
         <itemgra item_types="nav_roundabout_l1" order="0-">
           <icon src="nav_roundabout_l1_bk.png" w="32" h="32" />
@@ -4697,6 +4385,24 @@ Waypoint</text></img>
         <itemgra item_types="nav_roundabout_r8" order="0-">
           <icon src="nav_roundabout_r8_bk.png" w="32" h="32" />
         </itemgra>
+	<itemgra item_types="nav_keep_left" order="0-">
+	  <icon src="nav_keep_left_bk.png" w="32" h="32"/>
+	</itemgra>
+	<itemgra item_types="nav_merge_left" order="0-">
+	  <icon src="nav_merge_left_bk.png" w="32" h="32"/>
+	</itemgra>
+	<itemgra item_types="nav_keep_right" order="0-">
+	  <icon src="nav_keep_right_bk.png" w="32" h="32"/>
+	</itemgra>
+	<itemgra item_types="nav_merge_right" order="0-">
+	  <icon src="nav_merge_right_bk.png" w="32" h="32"/>
+	</itemgra>
+	<itemgra item_types="nav_exit_left" order="0-">
+	  <icon src="nav_exit_left_bk.png" w="32" h="32"/>
+	</itemgra>
+	<itemgra item_types="nav_exit_right" order="0-">
+	  <icon src="nav_exit_right_bk.png" w="32" h="32"/>
+	</itemgra>
         <itemgra item_types="route_end" order="0-">
           <icon src="nav_destination_bk.png" w="32" h="32" x="4" y="30"/>
         </itemgra>
@@ -6298,8 +6004,11 @@ Waypoint</text></img>
 				<itemgra item_types="nav_straight" order="0-">
 					<icon src="nav_straight_bk.svg" w="32" h="32"/>
 				</itemgra>
-				<itemgra item_types="nav_turnaround" order="0-">
+				<itemgra item_types="nav_turnaround_left" order="0-">
 					<icon src="nav_turnaround_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_turnaround_right" order="0-">
+					<icon src="nav_turnaround_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_l1" order="0-">
 					<icon src="nav_roundabout_l1_bk.svg" w="32" h="32"/>
@@ -6348,6 +6057,24 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="nav_roundabout_r8" order="0-">
 					<icon src="nav_roundabout_r8_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_left" order="0-">
+					<icon src="nav_keep_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_left" order="0-">
+					<icon src="nav_merge_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_keep_right" order="0-">
+					<icon src="nav_keep_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_merge_right" order="0-">
+					<icon src="nav_merge_right_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_left" order="0-">
+					<icon src="nav_exit_left_bk.svg" w="32" h="32"/>
+				</itemgra>
+				<itemgra item_types="nav_exit_right" order="0-">
+					<icon src="nav_exit_right_bk.svg" w="32" h="32"/>
 				</itemgra>
 				<itemgra item_types="route_end" order="0-">
 					<icon src="nav_destination_bk.svg" w="32" h="32" x="4" y="30"/>

@@ -196,11 +196,11 @@ ATTR(autozoom_max)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
- * adding 0x60000000.							*
- *									*
+ * adding 0x60000000.											*
+ *																*
  * The range of valid absolute values is -0x40000000 to			*
- * 0x40000000, the range of relative values is from			*
- * -0x20000000 to 0x20000000.						*/
+ * 0x40000000, the range of relative values is from				*
+ * -0x20000000 to 0x20000000.									*/
 ATTR(h)
 ATTR(w)
 ATTR(x)
@@ -394,6 +394,8 @@ ATTR(street_name_systematic_nat)
 ATTR(street_name_systematic_int)
 ATTR(street_destination)
 ATTR(exit_to)
+ATTR(street_destination_forward)
+ATTR(street_destination_backward)
 ATTR2(0x0003ffff,type_string_end)
 ATTR2(0x00040000,type_special_begin)
 ATTR(order)

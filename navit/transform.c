@@ -1368,6 +1368,15 @@ atan2_int(int dx, int dy)
 }
 #endif
 
+/**
+ * @brief Gets the bearing from one point to another
+ *
+ * @param c1 The first coordinate
+ * @param c2 The second coordinate
+ * @param dir The direction: if it is -1, the bearing from c2 to c1 is returned, else the bearing from c1 to c2
+ *
+ * @return The bearing in degrees, {@code 0 <= result < 360}.
+ */
 int
 transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir)
 {

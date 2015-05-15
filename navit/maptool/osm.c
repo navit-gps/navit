@@ -1163,7 +1163,7 @@ osm_add_tag(char *k, char *v)
 		attr_strings_save(attr_string_population, v);
 		level=5;
 	}
-	if (! strcmp(k,"ref")) {
+	if ((! strcmp(k,"ref")) || (! strcmp(k,"destination:ref"))) {
 		if (in_way)
 			attr_strings_save(attr_string_street_name_systematic, v);
 		/* for exit number of highway_exit poi */
