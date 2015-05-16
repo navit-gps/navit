@@ -8,7 +8,7 @@ static int print;
 static char *types[]={"node","way","relation"};
 
 struct o5m {
-	unsigned char buffer[65536];
+	unsigned char buffer[65536*2];
 	int buffer_size;
 	unsigned char *buffer_start;
 	unsigned char *buffer_end;
@@ -208,7 +208,7 @@ map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm)
 				return 0;
 			}
 			if (buffer_end(&o, len)) {
-				fprintf(stderr,"unexpected eof or buffer too small\n");
+				fprintf(stderr,"unexpected eof or buffer too small, item type %d, item size %d\n", c, len);
 				return 0;
 			}
 			end=o.buffer_start+len;
