@@ -958,7 +958,7 @@ get_distance(struct navigation *nav, int dist, enum attr_type type, int is_lengt
 	int imperial=0,vocabulary=65535;
 	struct attr attr;
 	
-	if (type == attr_navigation_long) {
+	if (type == attr_navigation_long_exact) {
 		if (is_length)
 			return g_strdup_printf(_("%d m"), dist);
 		else
