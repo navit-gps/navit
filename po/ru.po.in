@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-15 21:31+0000\n"
-"PO-Revision-Date: 2015-05-16 21:57+0000\n"
+"POT-Creation-Date: 2015-05-16 16:23+0000\n"
+"PO-Revision-Date: 2015-05-17 11:10+0000\n"
 "Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-05-16 22:00+0000\n"
+"X-Launchpad-Export-Date: 2015-05-17 11:16+0000\n"
 "X-Generator: Launchpad (build 17493)\n"
 "Language: ru\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
@@ -159,8 +159,8 @@ msgstr[2] "%d километров"
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "через %d километр"
-msgstr[1] "%d километра"
-msgstr[2] "%d километров"
+msgstr[1] "через %d километра"
+msgstr[2] "через %d километров"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
@@ -234,12 +234,12 @@ msgstr "Скоро круговое движение"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "Через %s круговое движение"
+msgstr "%s круговое движение"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "затем съезжайте с круга на %1$s %2$s"
+msgstr "затем %2$s съезжайте с круга на %1$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -258,22 +258,22 @@ msgstr "после чего"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr "затем выезжайте%1$s"
+msgstr "затем выезд вправо %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr "Выезжайте %1$s%2$s"
+msgstr "%1$s выезд вправо %2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr "затем выезжайте%1$s"
+msgstr "затем выезжайте влево %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr "Выезжайте %1$s%2$s"
+msgstr "%1$s выезд влево %2$s"
 
 msgid "on your left"
 msgstr "влево"
@@ -284,12 +284,12 @@ msgstr "вправо"
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr "Съезжайте %3$s %2$s %1$s"
+msgstr "%3$s съезжайте %2$s %1$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr "Съезжайте %3$s %2$s %1$s"
+msgstr "%2$s съезжайте %1$s %3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
@@ -301,12 +301,12 @@ msgstr "на съезде"
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr "затем проезжайте развилку прямо%1$s"
+msgstr "затем проезжайте развилку прямо %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr "Проезжайте развилку прямо%1$s%2$s%3$s"
+msgstr "%1$s проезжайте развилку прямо %2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -316,7 +316,7 @@ msgstr "затем возмите правее%1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr "Возмите правее %1$s%2$s%3$s"
+msgstr "%1$s возмите правее %2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -326,7 +326,7 @@ msgstr "затем возмите левее%1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr "Возмите левее %1$s%2$s%3$s"
+msgstr "%1$s возмите левее %2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -356,7 +356,7 @@ msgstr "после %i дорог"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Сверните %1$s%2$s %3$s%4$s"
+msgstr "%3$s сверните %1$s%2$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -365,7 +365,7 @@ msgstr "затем развернитесь влево"
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "Разворот налево %1$s"
+msgstr "%1$s разворот налево"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
@@ -374,7 +374,7 @@ msgstr "затем развернитесь вправо"
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "Развернитесь вправо %1$s"
+msgstr "%1$s разворот направо"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
