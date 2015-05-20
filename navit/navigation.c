@@ -143,17 +143,6 @@ struct suffix {
 	{"gasse", NULL, feminine},
 	{"straße", "str.", feminine},
 
-	/* some for the dutch lang. */
-	{"straat", NULL, neuter},
-/*	{"weg", NULL, neuter}, doubles-up with German */
-	{"baan", NULL, neuter},
-	{"laan", NULL, neuter},
-	{"wegel", NULL, neuter},
-
-	/* some for the english lang. */
-	{"street", NULL, masculine},
-	{"drive", NULL, masculine},
-
 	/* some for Lithuanian, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
 	{"gatvė", "g.", feminine},
 	{"plentas", "pl.", masculine},
@@ -3398,18 +3387,18 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				case mex_merge_right:
 					if (cmd->maneuver->merge_or_exit == mex_merge_right) {
 						if (level == -2)
-							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included. */
-							instruction = g_strdup_printf(_("then merge%1$s|right"), d);
+							/* TRANSLATORS: the arg. is the phrase 'onto ...'.  */
+							instruction = g_strdup_printf(_("then right merge%1$s"), d);
 						else
-							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included. */
-							instruction = g_strdup_printf(_("Merge %1$s%2$s|right"), d, destination);
+							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. */
+							instruction = g_strdup_printf(_("Merge right %1$s%2$s"), d, destination);
 					} else {
 						if (level == -2)
-							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included. */
-							instruction = g_strdup_printf(_("then merge%1$s|left"), d);
+							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge */
+							instruction = g_strdup_printf(_("then left merge%1$s"), d);
 						else
-							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included. */
-							instruction = g_strdup_printf(_("Merge %1$s%2$s|left"), d, destination);
+							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge */
+							instruction = g_strdup_printf(_("Merge left %1$s%2$s"), d, destination);
 					}
 					break;
 				case mex_exit_left:
@@ -3521,19 +3510,19 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 					break;
 				case type_nav_turnaround_left:
 					if (level == -2)
-						/* TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included. */
-						instruction = g_strdup(_("then make a U-turn|left"));
+						/* TRANSLATORS: Left U-turn */
+						instruction = g_strdup(_("then make a left U-turn"));
 					else
-						/* TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included. */
-						instruction = g_strdup_printf(_("Make a U-turn %1$s|left"), d);
+						/* TRANSLATORS: the arg. is distance. Left U-turn */
+						instruction = g_strdup_printf(_("Make a left U-turn %1$s"), d);
 					break;
 				case type_nav_turnaround_right:
 					if (level == -2)
-						/* TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included. */
-						instruction = g_strdup(_("then make a U-turn|right"));
+						/* TRANSLATORS: Right U-turn, the stuff after */
+						instruction = g_strdup(_("then make a right U-turn"));
 					else
-						/* TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included. */
-						instruction = g_strdup_printf(_("Make a U-turn %1$s|right"), d);
+						/* TRANSLATORS: the arg. is distance. Right U-turn  */
+						instruction = g_strdup_printf(_("Make a right U-turn %1$s"), d);
 					break;
 				case type_nav_none:
 					/*An empty placeholder that we can use in the future for
