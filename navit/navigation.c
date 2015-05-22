@@ -3319,8 +3319,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				return g_strdup(_("Enter the roundabout soon"));
 			case 1:
 				d = get_distance_str(nav, distance, attr_navigation_short, 0);
-				/* TRANSLATORS: %s is the distance to the roundabout */
-				ret = g_strdup_printf(_("Enter the roundabout %s"), d);
+				/* TRANSLATORS: first arg. is the distance to the roundabout, second arg. is the manieth exit  */
+				ret = g_strdup_printf(_("Enter the roundabout %1$s and leave at the %2$s"), d,get_exit_count_str(count_roundabout));
 				g_free(d);
 				return ret;
 			case -2:
