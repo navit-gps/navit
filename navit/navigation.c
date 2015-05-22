@@ -3250,6 +3250,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int skip_roads = 0;
 	int count_roundabout;
 	struct navigation_itm *cur;
+	struct navigation_way *candidate_way;
 	int tellstreetname = 0;
 	char * at = NULL;        /* Motorway junction name */
 	char * direction = NULL; /* The direction-dependent part of the maneuver */
@@ -3293,9 +3294,20 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		count_roundabout = 0;
 		while (cur && (cur->way.flags & AF_ROUNDABOUT))
 		{
-			if (cur->next->way.next && is_way_allowed(nav,cur->next->way.next,3))
-			/* If the next segment has no exit or the exit isn't allowed, don't count it */
-				count_roundabout++;
+			candidate_way=cur->next->way.next;
+			while (candidate_way)
+			{
+				if (candidate_way && is_way_allowed(nav,candidate_way,3))
+				/* If the next segment has no exit or the exit isn't allowed, don't count it */
+				{
+					count_roundabout++;
+					/* As soon as we have an allowed one on this node,
+					 * stop further counting for this node.
+					 */
+					break;
+				}
+				candidate_way=candidate_way->next;
+			}
 			cur = cur->prev;
 		}
 		switch (level)
