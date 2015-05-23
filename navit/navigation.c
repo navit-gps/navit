@@ -3310,6 +3310,30 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			}
 			cur = cur->prev;
 		}
+		
+		/*try to figure out if the entry node has a usable exit as well
+		*
+		* this will fail for left-hand driving areas
+		*/
+		if (cur && cur->next)
+		{
+			candidate_way=cur->next->way.next;
+			while (candidate_way)
+			{
+				if (candidate_way && is_way_allowed(nav,candidate_way,3)
+					&& (cur->angle_end < candidate_way->angle2) && ( candidate_way->angle2 > cur->next->way.angle2 ))
+					/*for the entry node only count exits to the right ?*/
+				{
+					count_roundabout++;
+					/* As soon as we have an allowed one on this node,
+					* stop further counting for this node.
+					*/
+					break;
+				}
+				candidate_way=candidate_way->next;
+			}
+		}
+		
 		switch (level)
 		{
 			case 3:
