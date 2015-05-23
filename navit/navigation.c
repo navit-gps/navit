@@ -3321,7 +3321,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			while (candidate_way)
 			{
 				if (candidate_way && is_way_allowed(nav,candidate_way,3)
-					&& (cur->angle_end < candidate_way->angle2) && ( candidate_way->angle2 > cur->next->way.angle2 ))
+					&& (angle_delta(cur->angle_end,candidate_way->angle2) > 0) && ( angle_delta(candidate_way->angle2,cur->next->way.angle2) < 0 ))
 					/*for the entry node only count exits to the right ?*/
 				{
 					count_roundabout++;
