@@ -3313,9 +3313,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		
 		/*try to figure out if the entry node has a usable exit as well
 		*
-		* this will fail for left-hand driving areas
+		* the test is for RHD only, expand for LHD after such a case is known
 		*/
-		if (cur && cur->next)
+		if (cur && cur->next && (cmd->maneuver->type <= type_nav_roundabout_r8) && (cmd->maneuver->type >= type_nav_roundabout_r1))
 		{
 			candidate_way=cur->next->way.next;
 			while (candidate_way)
