@@ -1,22 +1,21 @@
 # Persian translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
-# salix https://launchpad.net/~s-shahsa
 # the_cephalex https://launchpad.net/~ali-rashidi
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2014-06-28 21:57+0000\n"
 "Last-Translator: the_cephalex <Unknown>\n"
 "Language-Team: Persian <fa@li.org>\n"
-"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"Language: fa\n"
 
 msgid "Running from source directory\n"
 msgstr ""
@@ -160,7 +159,7 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "به سوی شیب"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -358,7 +357,7 @@ msgstr ""
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
 msgstr ""
 
@@ -375,7 +374,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr "بیرون"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1930,10 +1929,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
