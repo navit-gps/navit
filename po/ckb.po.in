@@ -1,21 +1,21 @@
 # Kurdish (Sorani) translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # kosar https://launchpad.net/~kosar-belana
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2013-06-22 23:00+0000\n"
 "Last-Translator: kosar <kosar.belana@gmail.com>\n"
 "Language-Team: Kurdish (Sorani) <ckb@li.org>\n"
-"Language: ckb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: \n"
 
 msgid "Running from source directory\n"
 msgstr ""
@@ -357,7 +357,7 @@ msgstr ""
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
 msgstr ""
 
@@ -1929,10 +1929,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
