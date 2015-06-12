@@ -1,31 +1,31 @@
 # Catalan translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Ferran Roig https://launchpad.net/~ferro9
 # Frans https://launchpad.net/~francesc-galbany
+# Joan Montané https://launchpad.net/~jmontane
 # KaZeR https://launchpad.net/~kazer
 # Marc Coll Carrillo https://launchpad.net/~marc-coll-carrillo
 # Sergi Gomis https://launchpad.net/~paloky3
 # Xevib https://launchpad.net/~xbarnada
 # beamspot https://launchpad.net/~benrouravkg
-# jmontane https://launchpad.net/~jmontane
 # juliwoodbcn https://launchpad.net/~julianlozano
 # kualsevol https://launchpad.net/~ojuanv
 # peremayol@gmail.com https://launchpad.net/~peremayol
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2014-07-09 18:11+0000\n"
 "Last-Translator: Sergi Gomis <paloky3@gmail.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: ca\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -175,27 +175,27 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sal carrer %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%sal %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%sa la %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sa %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%scap a la %s"
+msgstr "%s cap a la %s"
 
 msgid "When possible, please turn around"
 msgstr "Quan sigui possible, doneu mitja volta"
@@ -203,7 +203,7 @@ msgstr "Quan sigui possible, doneu mitja volta"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr "cap a %s"
+msgstr ""
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -215,17 +215,17 @@ msgstr "Entreu a la rotonda vinent"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "Entreu a la rotonda %s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "aleshores deixeu la rotonda a la %1$s %2$s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "Deixeu la rotonda a la %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "aviat"
@@ -234,7 +234,7 @@ msgid "now"
 msgstr "ara"
 
 msgid "then"
-msgstr "aleshores"
+msgstr ""
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -257,27 +257,27 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr "a l'esquerra"
+msgstr ""
 
 msgid "on your right"
-msgstr "a la dreta"
+msgstr ""
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr "Preneu la sortida %1$s %2$s %3$s"
+msgstr ""
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr "Preneu la sortida %1$s %2$s%3$s"
+msgstr ""
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr "a l'intersecció"
+msgstr ""
 
 msgid "at exit"
-msgstr "a la sortida"
+msgstr ""
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -337,25 +337,25 @@ msgstr "després de %i carrers"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Gireu %1$s%2$s %3$s%4$s"
+msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "després, doneu mitja volta"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "Doneu mitja volta %1$s"
+msgstr ""
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "després, doneu mitja volta"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "Doneu mitja volta %1$s"
+msgstr ""
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -368,9 +368,9 @@ msgstr "Doneu mitja volta %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
-msgstr "seguiu"
+msgstr ""
 
 msgid "then you have reached your destination."
 msgstr "aleshores heu arribat a destí"
@@ -382,10 +382,10 @@ msgstr "Heu arribat a la destinació %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr "Intersecció"
+msgstr ""
 
 msgid "Exit"
-msgstr "Sortida"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1673,7 +1673,7 @@ msgid "Police"
 msgstr ""
 
 msgid "Justice"
-msgstr "Jutjats"
+msgstr ""
 
 msgid "Taxi"
 msgstr ""
@@ -1940,10 +1940,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
