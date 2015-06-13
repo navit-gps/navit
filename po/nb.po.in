@@ -1,5 +1,5 @@
 # Norwegian translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
@@ -8,19 +8,19 @@
 # Skippern https://launchpad.net/~gay-today
 # Thor H. Johansen https://launchpad.net/~thorhajo
 # burner https://launchpad.net/~bendik-xplore
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2013-09-28 01:44+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
-"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: \n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -165,27 +165,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "ut på akselerasjonsfeltet"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sinn på gaten %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%sinn på %s%s%sen"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%sinn på %s%s%sa"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sin på %s%s%set"
+msgstr ""
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -210,17 +210,17 @@ msgstr "Kjør inn i rundkjøringen snart"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "Kjør inn i rundkjøringen %s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "forlat så rundkjøringen ut %1$s %2$s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "Forlat rundkjøringen ut %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "snart"
@@ -229,7 +229,7 @@ msgid "now"
 msgstr "nå"
 
 msgid "then"
-msgstr "så"
+msgstr ""
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -332,25 +332,25 @@ msgstr "etter %i avkjøringer"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Sving %1$s til %2$s om %3$s %4$s"
+msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "snu så"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "Snu %1$s"
+msgstr ""
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "snu så"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "Snu %1$s"
+msgstr ""
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -363,9 +363,9 @@ msgstr "Snu %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
-msgstr "følg"
+msgstr ""
 
 msgid "then you have reached your destination."
 msgstr "så har du nådd ditt reisemål."
@@ -380,7 +380,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr "Avkjørsel"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1935,10 +1935,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

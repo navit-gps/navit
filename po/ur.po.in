@@ -1,34 +1,26 @@
 # Urdu translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
 # asghar https://launchpad.net/~asghar144
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2013-09-28 01:44+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
-"Language: ur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: ur\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "سورس ڈایرکٹری سے چلا ر ہے ہیں\n"
-
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "ترتیب '%s' سے '%s'\n"
-
-#. TRANSLATORS: the following counts refer to streets
-msgid "zeroth"
-msgstr "صفر سے"
 
 msgid "first"
 msgstr "پہلا"
@@ -75,6 +67,73 @@ msgid "%d m"
 msgstr "%d میٹر"
 
 #, c-format
+msgid "%d meters"
+msgstr "%d میٹر"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d میٹر میں"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d کلومیٹر"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d.%d کلومیٹر میں"
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#, c-format
+msgid "%sinto the %s"
+msgstr "%sپر %s"
+
+msgid "When possible, please turn around"
+msgstr "جب ممکن ہو گھومیں"
+
+#. TRANSLATORS: "right" as in "turn right"
+msgid "right"
+msgstr "دایئں"
+
+#. TRANSLATORS: "left" as in "turn left"
+msgid "left"
+msgstr "بایئں"
+
+#. TRANSLATORS: as in "turn easily right"
+msgid "easily "
+msgstr "آسانی سے "
+
+#. TRANSLATORS: as in "turn strongly right"
+msgid "strongly "
+msgstr "سختی سے "
+
+msgid "Set as destination"
+msgstr "بطور منزل انتخاب"
+
+msgid "Enter Destination"
+msgstr "منزل داخل کریں"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
+
+msgid " Elevation "
+msgstr " ارتفاع "
+
+#, c-format
+msgid "Current profile: %s"
+msgstr "موجودہ پروفائل: %s"
+
+msgid "Add Bookmark"
+msgstr "بک مارک میں شامل"
+
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "ترتیب '%s' سے '%s'\n"
+
+#. TRANSLATORS: the following counts refer to streets
+msgid "zeroth"
+msgstr "صفر سے"
+
+#, c-format
 msgid "in %d m"
 msgstr "%d میٹر میں"
 
@@ -87,28 +146,12 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "%d میٹر"
-
-#, c-format
-msgid "in %d meters"
-msgstr "%d میٹر میں"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d کلومیٹر"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d.%d کلومیٹر میں"
 
 #, c-format
 msgid "one mile"
@@ -161,35 +204,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "ڈھلان میں"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sمیں سے %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%sمیں سے %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%sمیں سے %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sمیں سے %s%s%s"
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#, c-format
-msgid "%sinto the %s"
-msgstr "%sپر %s"
-
-msgid "When possible, please turn around"
-msgstr "جب ممکن ہو گھومیں"
+msgstr ""
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
@@ -211,12 +246,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "پھر گول چوراہے کو  %1$s %2$s پے چھوڑ دیں"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "گول چوراہے کو %1$s %2$s پے چھوڑ دیں"
+msgstr ""
 
 msgid "soon"
 msgstr "جلد ہی"
@@ -300,22 +335,6 @@ msgstr ""
 msgid "Keep left %1$s%2$s%3$s"
 msgstr ""
 
-#. TRANSLATORS: "right" as in "turn right"
-msgid "right"
-msgstr "دایئں"
-
-#. TRANSLATORS: "left" as in "turn left"
-msgid "left"
-msgstr "بایئں"
-
-#. TRANSLATORS: as in "turn easily right"
-msgid "easily "
-msgstr "آسانی سے "
-
-#. TRANSLATORS: as in "turn strongly right"
-msgid "strongly "
-msgstr "سختی سے "
-
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "سڑک تک %1$s سے %2$s"
@@ -328,7 +347,7 @@ msgstr "%i سڑکوں کے بعد"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "%1$s%2$s %3$s%4$s گومیں"
+msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -359,7 +378,7 @@ msgstr ""
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
 msgstr ""
 
@@ -376,7 +395,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr "اخراج"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -415,9 +434,6 @@ msgstr ""
 
 msgid "Set as position"
 msgstr "بطور موجودہ مقام انتخاب"
-
-msgid "Set as destination"
-msgstr "بطور منزل انتخاب"
 
 msgid "Add as bookmark"
 msgstr "بک مارک میں محفوظ کریں"
@@ -1506,9 +1522,6 @@ msgstr "سڑک"
 msgid "Number"
 msgstr "نمبر"
 
-msgid "Enter Destination"
-msgstr "منزل داخل کریں"
-
 msgid "Zip Code"
 msgstr "زپ کوڈ"
 
@@ -1617,9 +1630,6 @@ msgstr "دکھیں/نہ دیکھیں سفر کی تفصیل"
 
 msgid "_Autozoom"
 msgstr "خودکار زوم"
-
-msgid "Enable/disable automatic zoom level changing"
-msgstr "فعال/غیر فعال کریں زوم کی خود کار تبدیلی"
 
 msgid "_Fullscreen"
 msgstr "پوری سکرین"
@@ -1870,9 +1880,6 @@ msgstr ""
 msgid "Show Satellite Status"
 msgstr "سٹلائٹ کی حالت دیکھیں"
 
-msgid " Elevation "
-msgstr " ارتفاع "
-
 msgid " Azimuth "
 msgstr " سمت "
 
@@ -1889,10 +1896,6 @@ msgid "pedestrian"
 msgstr "پیدل"
 
 #, c-format
-msgid "Current profile: %s"
-msgstr "موجودہ پروفائل: %s"
-
-#, c-format
 msgid "Change profile to: %s"
 msgstr "پروفائل کو :%s میں بدلیں"
 
@@ -1904,9 +1907,6 @@ msgstr "سٹلائٹ کی حالت دیکھیں"
 
 msgid "Show NMEA data"
 msgstr "NMEA ڈیٹا دیکھیں"
-
-msgid "Add Bookmark"
-msgstr "بک مارک میں شامل"
 
 msgid "Rename"
 msgstr "تبدیل نام"
@@ -1931,10 +1931,10 @@ msgstr ""
 msgid "Enter Coordinates"
 msgstr ""
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

@@ -1,5 +1,5 @@
 # Serbian translations for navit
-# Copyright (C) 2006-2014 The Navit Team
+# Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Ivan Janjić https://launchpad.net/~milandd
@@ -8,20 +8,20 @@
 # momcilo https://launchpad.net/~momcilo-majic
 # Мирослав Николић https://launchpad.net/~lipek
 # Саша Петровић https://launchpad.net/~salepetronije
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2015-02-08 21:50+0000\n"
 "Last-Translator: Саша Петровић <salepetronije@gmail.com>\n"
 "Language-Team: српски <xfce4@xfce4.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: sr\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -170,27 +170,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "на нагибу"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sу %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%sу %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%sу %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sу %s%s%s"
+msgstr ""
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -215,17 +215,17 @@ msgstr "Ускоро прелазак на обилазницу"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "Прелаз на обилазницу %s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "потом напутстите обилазницу на %1$s %2$s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "Напуштање обилазнице за %1$s %2$s"
+msgstr ""
 
 msgid "soon"
 msgstr "ускоро"
@@ -234,7 +234,7 @@ msgid "now"
 msgstr "сад"
 
 msgid "then"
-msgstr "потом"
+msgstr ""
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -337,25 +337,25 @@ msgstr "после %i путева"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Скрени %1$s%2$s %3$s%4$s"
+msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "потом променити смер"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "Променити смер %1$s"
+msgstr ""
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "потом променити смер"
+msgstr ""
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "Променити смер %1$s"
+msgstr ""
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -368,7 +368,7 @@ msgstr "Променити смер %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#.
+#. 
 msgid "follow"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr "Излаз"
+msgstr ""
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1456,11 +1456,13 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен\n"
+msgstr ""
+"Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr "Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s\n"
+msgstr ""
+"Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
@@ -1942,10 +1944,10 @@ msgstr "Пролазне тачке"
 msgid "Enter Coordinates"
 msgstr "Унесите координате"
 
-#.
+#. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#.
+#. 
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
@@ -2768,36 +2770,3 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
-
-#~ msgid "%sinto the street %s%s%s"
-#~ msgstr "%sу улици %s%s%s"
-
-#~ msgid "%sinto the %s%s%s|male form"
-#~ msgstr "%sу %s%s%s"
-
-#~ msgid "%sinto the %s%s%s|female form"
-#~ msgstr "%sу %s%s%s"
-
-#~ msgid "%sinto the %s%s%s|neutral form"
-#~ msgstr "%sу %s%s%s"
-
-#~ msgid "really strongly "
-#~ msgstr "веома јако "
-
-#~ msgid "unknown "
-#~ msgstr "непознат "
-
-#~ msgid "then leave the roundabout at the %s"
-#~ msgstr "потом напутстите обилазницу на %s"
-
-#~ msgid "Leave the roundabout at the %s"
-#~ msgstr "Напуштање обилазнице за %s"
-
-#~ msgid "then take the %1$s road to the %2$s"
-#~ msgstr "потом прати пут %1$s до %2$s"
-
-#~ msgid "error"
-#~ msgstr "грешка"
-
-#~ msgid "then turn %1$s%2$s %3$s%4$s"
-#~ msgstr "потом скрени %1$s%2$s %3$s%4$s"
