@@ -193,6 +193,9 @@ struct navigation {
 	int flags;
 };
 
+/** @brief Set of simplified distance values that are easy to be pronounced.
+*          Used for the 'vocabulary_distances' configuration.
+*/
 int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
 
 
@@ -916,108 +919,160 @@ round_distance(int dist)
 	return dist*10000;
 }
 
+/** @brief Returns the last element of the simplified numbers containing a distance value.
+*   @return value with the highest distance.
+*/
 static int
-round_for_vocabulary(int vocabulary, int dist, int factor)
+distance_set_last()
 {
-	if (!(vocabulary & 256)) {
-		if (factor != 1) 
-			dist=(dist+factor/2)/factor;
-	} else
-		factor=1;
-	if (!(vocabulary & 255)) {
-		int i=0,d=0,m=0;
-		while (distances[i] > 0) {
-			if (!i || abs(distances[i]-dist) <= d) {
-				d=abs(distances[i]-dist);
-				m=i;
-			}
-			if (distances[i] > dist)
-				break;
+	static int i=0;
+	if (i == 0) {
+		while (distances[i] > 0) 
 			i++;
-		}
-		dbg(lvl_debug,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
-		dist=distances[m];
 	}
-	return dist*factor;
-}
-
-static int
-vocabulary_last(int vocabulary)
-{
-	int i=0;
-	if (vocabulary == 65535)
-		return 1000;
-	while (distances[i] > 0) 
-		i++;
 	return distances[i-1];
 }
 
-static char *
-get_distance(struct navigation *nav, int dist, enum attr_type type, int is_length)
+/** @brief Restricts the distance value to a simple set of pronounceable numbers.
+*   @param  dist       The distance to be processed
+*   @return distance   Simplified distance value
+*/
+static int
+round_distance_reduced( int dist )
 {
-	int imperial=0,vocabulary=65535;
-	struct attr attr;
-	
-	if (type == attr_navigation_long_exact) {
-		if (is_length)
-			return g_strdup_printf(_("%d m"), dist);
-		else
-			return g_strdup_printf(_("in %d m"), dist);
+	int factor = 1;
+	if (dist > distance_set_last())
+	{
+		dist=(dist+500)/1000;
+		factor = 1000;
 	}
+
+	int i=0,d=0,m=0;
+	while (distances[i] > 0) {
+		if (!i || abs(distances[i]-dist) <= d) {
+			d=abs(distances[i]-dist);
+			m=i;
+		}
+		if (distances[i] > dist)
+			break;
+		i++;
+	}
+	dbg(lvl_debug,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
+	return distances[m] * factor;
+
+}
+
+
+/** @brief Generates the distance string.
+*   Considers the configuration of 'imperial' units and 'vocabulary_distances'.
+*   'imperial' if set distinguishes the distance statement between miles and feet. Maximum distance in feet is 500.
+*   'vocabulary_distances' if set constrains the distance values to a set of simple pronounceable numbers.
+*   
+*   @param nav       The navigation object.
+*   @param dist      Distance in meters.
+*   @param type      The type of announcement precision. 
+*   @param is_length 1 for length statement, 0 for distance statement.
+*   @return          String with length/distance statement.
+*/
+static char *
+get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length)
+{
+	int imperial=0,vocabulary=1; /* default configuration */
+	
+	/* Get configuration */
+	struct attr attr;
 	if (navit_get_attr(nav->navit, attr_imperial, &attr, NULL))
 		imperial=attr.u.num;
 	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_distances, &attr, NULL))
 		vocabulary=attr.u.num;
+	/****************************/
+
 	if (imperial) {
-		if (dist*FEET_PER_METER < vocabulary_last(vocabulary)) {
-			dist=round_for_vocabulary(vocabulary, dist*FEET_PER_METER, 1);
-			if (is_length)
-				return g_strdup_printf(_("%d feet"), dist);
-			else
-				return g_strdup_printf(_("in %d feet"), dist);
+
+		int dist_feet = dist_meters * FEET_PER_METER;
+
+		if (vocabulary > 0)
+		{
+			/* normal statement */
+			if (type != attr_navigation_long_exact)
+				dist_feet = round_distance(dist_feet);
 		}
+		else
+		{
+			/* statement with reduced vocabularies */
+			dist_feet = round_distance_reduced(dist_feet);
+		}
+
+		// check for statement in feet
+		if (dist_feet <= 500)
+		{
+			if (is_length)
+				return g_strdup_printf(_("%d feet"), dist_feet);
+			else
+				return g_strdup_printf(_("in %d feet"), dist_feet);
+		}
+
+		int dist_miles = (double) dist_meters / (double)METERS_PER_MILE + 0.5;
+
+		if (vocabulary == 0)
+		{
+			/* statement with reduced vocabularies */
+			dist_miles = round_distance_reduced(dist_miles);
+		}
+
+		if ((dist_meters < METERS_PER_MILE) && (vocabulary > 0))
+		{
+			/* values smaller than one need extra treatment for one decimal place. For reduced vocabulary it shall remain 'one'. */
+			int rem = (((double)dist_meters  / (double)METERS_PER_MILE) + 0.05) * 10.0;
+			dist_miles= 0;
+			if (is_length)
+				return g_strdup_printf(_("%d.%d miles"), dist_miles, rem);
+			else
+				return g_strdup_printf(_("in %d.%d miles"), dist_miles, rem);
+		}
+
+		if (is_length) 
+			return g_strdup_printf(navit_nls_ngettext("one mile","%d miles", dist_miles), dist_miles);
+		else
+			return g_strdup_printf(navit_nls_ngettext("in one mile","in %d miles", dist_miles), dist_miles);
+
 	} else {
-		if (dist < vocabulary_last(vocabulary)) {
-			dist=round_for_vocabulary(vocabulary, dist, 1);
-			if (is_length)
-				return g_strdup_printf(_("%d meters"), dist);
-			else
-				return g_strdup_printf(_("in %d meters"), dist);
+
+		if (vocabulary > 0)
+		{
+			/* normal statement */
+			if (type != attr_navigation_long_exact)
+				dist_meters = round_distance(dist_meters);
 		}
-	}
-	if (imperial)
-		dist=round_for_vocabulary(vocabulary, dist*FEET_PER_METER*1000/FEET_PER_MILE, 1000);
-	else
-		dist=round_for_vocabulary(vocabulary, dist, 1000);
-	if (dist < 5000) {
-		int rem=(dist/100)%10;
-		if (rem) {
-			if (imperial) {
+		else
+		{
+			/* statement with reduced vocabularies */
+			dist_meters = round_distance_reduced(dist_meters);
+		}
+
+		if (dist_meters < 1000)
+		{
+			if (is_length)
+				return g_strdup_printf(_("%d meters"), dist_meters);
+			else
+				return g_strdup_printf(_("in %d meters"), dist_meters);
+		}
+		if (dist_meters < 5000) {
+			/*  Distances below 5 km shall be announced with one decimal place. */
+			int rem=(dist_meters/100)%10;
+			if (rem) {
 				if (is_length)
-					return g_strdup_printf(_("%d.%d miles"), dist/1000, rem);
+					return g_strdup_printf(_("%d.%d kilometers"), dist_meters/1000, rem);
 				else
-					return g_strdup_printf(_("in %d.%d miles"), dist/1000, rem);
-			} else {
-				if (is_length)
-					return g_strdup_printf(_("%d.%d kilometers"), dist/1000, rem);
-				else
-					return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
+					return g_strdup_printf(_("in %d.%d kilometers"), dist_meters/1000, rem);
 			}
 		}
-	}
-	if (imperial) {
-		if (is_length) 
-			return g_strdup_printf(navit_nls_ngettext("one mile","%d miles", dist/1000), dist/1000);
+		if (is_length)
+			return g_strdup_printf(navit_nls_ngettext("one kilometer","%d kilometers", dist_meters/1000), dist_meters/1000);
 		else
-			return g_strdup_printf(navit_nls_ngettext("in one mile","in %d miles", dist/1000), dist/1000);
-	} else {
-		if (is_length) 
-			return g_strdup_printf(navit_nls_ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
-		else
-			return g_strdup_printf(navit_nls_ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
+			return g_strdup_printf(navit_nls_ngettext("in one kilometer","in %d kilometers", dist_meters/1000), dist_meters/1000);
 	}
 }
-
 
 /**
  * @brief Initializes a navigation_way
@@ -1727,7 +1782,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 			mselexit.order = 18;
 
 			map_rect_destroy(mr);
-			mr = map_rect_new	(tmap, &mselexit);
+			mr = map_rect_new(tmap, &mselexit);
 
 			while ((rampitem=map_rect_get_item(mr)))
 			{
@@ -2750,7 +2805,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 {
 	struct navigation_command *ret=g_new0(struct navigation_command, 1);
 	struct navigation_way *w;	/* the way in which to turn. */
-	int more_ways_for_strength = 0; /* Counts the number of ways of the current node that turn
+	int more_ways_for_strength = 0;	/* Counts the number of ways of the current node that turn
 					   to the same direction as the route way. Strengthening criterion. */
 	int turn_no_of_route_way = 0;   /* The number of the route way of all ways that turn to the same direction.
 					   Count direction from abs(0 degree) up to abs(180 degree). Strengthening criterion. */
@@ -3257,12 +3312,12 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		switch (level)
 		{
 			case 3:
-				d=get_distance(nav, distance, type, 1);
+				d=get_distance_str(nav, distance, type, 1);
 				return g_strdup_printf(_("Follow the road for the next %s"), d);
 			case 2:
 				return g_strdup(_("Enter the roundabout soon"));
 			case 1:
-				d = get_distance(nav, distance, type, 0);
+				d = get_distance_str(nav, distance, attr_navigation_short, 0);
 				/* TRANSLATORS: %s is the distance to the roundabout */
 				ret = g_strdup_printf(_("Enter the roundabout %s"), d);
 				g_free(d);
@@ -3308,7 +3363,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				d=g_strdup(_("soon"));
 				break;
 			case 1 :
-				d=get_distance(nav, distance, attr_navigation_short, 0);
+				d=get_distance_str(nav, distance, attr_navigation_short, 0);
 				break;
 			case 0 :
 				d=g_strdup(_("now"));
@@ -3518,7 +3573,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	switch (level)
 	{
 		case 3:
-			d=get_distance(nav, distance, type, 1);
+			d=get_distance_str(nav, distance, type, 1);
 			ret=g_strdup_printf(_("Follow the road for the next %s"), d);
 			break;
 		case 2:
