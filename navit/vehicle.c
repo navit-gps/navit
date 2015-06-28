@@ -212,14 +212,14 @@ int
 vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	int ret;
+	if (type == attr_log_gpx_desc) {
+		attr->u.str = this_->gpx_desc;
+		return 1;
+	}
 	if (this_->meth.position_attr_get) {
 		ret=this_->meth.position_attr_get(this_->priv, type, attr);
 		if (ret)
 			return ret;
-	}
-	if (type == attr_log_gpx_desc) {
-		attr->u.str = this_->gpx_desc;
-		return 1;
 	}
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
@@ -235,16 +235,15 @@ int
 vehicle_set_attr(struct vehicle *this_, struct attr *attr)
 {
 	int ret=1;
-	if (this_->meth.set_attr)
+	if (attr->type == attr_log_gpx_desc) {
+		g_free(this_->gpx_desc);
+		this_->gpx_desc = g_strdup(attr->u.str);
+	} else if (this_->meth.set_attr)
 		ret=this_->meth.set_attr(this_->priv, attr);
 	/* attr_profilename probably is never used by vehicle itself but it's used to control the
 	  routing engine. So any vehicle should allow to set and read it. */
 	if(attr->type == attr_profilename)
 		ret=1;
-	if (ret == 1 && attr->type == attr_log_gpx_desc) {
-		g_free(this_->gpx_desc);
-		this_->gpx_desc = attr->u.str;
-	}
 	if (ret == 1 && attr->type != attr_navit && attr->type != attr_pdl_gps_update)
 		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
 	return ret != 0;
