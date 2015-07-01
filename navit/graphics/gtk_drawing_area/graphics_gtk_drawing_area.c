@@ -318,7 +318,6 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h && bg ) {
-#if 1
 			stride=g->w+2;
 			shadow=g_malloc(stride*(g->h+2));
 			if (gr->freetype_methods.get_shadow(g, shadow, 8, stride, &white, &transparent))
@@ -331,16 +330,6 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 				gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
 				g_free(shadow);
 			} 
-#else
-			GdkImage *image;
-			stride=(g->w+9)/8;
-			shadow=malloc(stride*(g->h+2));
-			
-			gr->freetype_methods.get_shadow(g, shadow, 1, stride);
-			image=gdk_image_new_bitmap(gdk_visual_get_system(),shadow,g->w+2, g->h+2);
-			gdk_draw_image(gr->drawable, bg->gc, image, 0, 0, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2);
-			g_object_unref(image);
-#endif
 			
 		}
 		x+=g->dx;
@@ -421,19 +410,6 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	gdk_gc_set_function(fg->gc, GDK_COPY);
 	if (bg)
 		gdk_gc_set_function(bg->gc, GDK_COPY);
-#if 0
-	{
-		struct point pnt[5];
-		int i;
-		gr->freetype_methods.get_text_bbox(gr, font, text, dx, dy, pnt, 1);
-		for (i = 0 ; i < 4 ; i++) {
-			pnt[i].x+=p->x;
-			pnt[i].y+=p->y;
-		}
-		pnt[4]=pnt[0];
-		gdk_draw_lines(gr->drawable, fg->gc, (GdkPoint *)pnt, 5);
-	}
-#endif
 }
 
 static void
@@ -461,11 +437,6 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 	h = img->h;
 	if (!img->image) {
 		int x,y;
-#if 0
-		if (!gdk_pixbuf_get_has_alpha(img->pixbuf)) {
-			img->pixbuf=gdk_pixbuf_add_alpha(img->pixbuf, FALSE, 0, 0, 0);
-		}
-#endif
 		img->image=imlib_create_image(w, h);
 		imlib_context_set_image(img->image);
 		if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
