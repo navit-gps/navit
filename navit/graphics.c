@@ -727,6 +727,9 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 {
 	struct graphics_image *this_;
 	char* hash_key = g_strdup_printf("%s*%d*%d*%d",path,w,h,rotate);
+	struct file_wordexp *we;
+	int i;
+	char **paths;
 
 	if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
 		g_free(hash_key);
@@ -738,15 +741,19 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 	this_->height=h;
 	this_->width=w;
 
-	if(!this_->priv) {
+	we=file_wordexp_new(path);
+	paths=file_wordexp_get_array(we);
+	
+	for(i=0;i<file_wordexp_get_count(we) && !this_->priv;i++) {
 		char *ext;
 		char *s, *name;
-		int len=strlen(path);
+		char *pathi=paths[i];
+		int len=strlen(pathi);
 		int i,k;
 		int newwidth=-1, newheight=-1;
 
-		ext=g_utf8_strrchr(path,-1,'.');
-		i=path-ext+len;
+		ext=g_utf8_strrchr(pathi,-1,'.');
+		i=pathi-ext+len;
 		
 		/* Dont allow too long or too short file name extensions*/
 		if(ext && ((i>5) || (i<1)))
@@ -756,10 +763,10 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 		if(ext)
 			s=ext-1;
 		else
-			s=path+len;
+			s=pathi+len;
 		
 		k=1;
-		while(s>path && g_ascii_isdigit(*s)) {
+		while(s>pathi && g_ascii_isdigit(*s)) {
 			if(newheight<0)
 				newheight=0;
 			newheight+=(*s-'0')*k;
@@ -767,10 +774,10 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			s--;
 		}
 		
-		if(k>1 && s>path && *s=='_') {
+		if(k>1 && s>pathi && *s=='_') {
 			k=1;
 			s--;
-			while(s>path && g_ascii_isdigit(*s)) {
+			while(s>pathi && g_ascii_isdigit(*s)) {
 				if(newwidth<0)
 					newwidth=0;
 				newwidth+=(*s-'0')*k;;
@@ -779,13 +786,13 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			}
 		}
 		
-		if(k==1 || s<=path || *s!='_') {
+		if(k==1 || s<=pathi || *s!='_') {
 			newwidth=-1;
 			newheight=-1;
 			if(ext)
 				s=ext;
 			else
-				s=path+len;
+				s=pathi+len;
 				
 		}
 		
@@ -795,15 +802,17 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 		if(h!=-1)
 			newheight=h;
 			
-		name=g_strndup(path,s-path);
+		name=g_strndup(pathi,s-pathi);
 #if 0
 		if (!strstr(name,"test.zip"))
 #endif
-		image_new_helper(gra, this_, path, name, newwidth, newheight, rotate, 0);
-		if (!this_->priv && strstr(path, ".zip/"))
-			image_new_helper(gra, this_, path, name, newwidth, newheight, rotate, 1);
+		image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 0);
+		if (!this_->priv && strstr(pathi, ".zip/"))
+			image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 1);
 		g_free(name);
 	}
+
+	file_wordexp_destroy(we);
 
 	if (! this_->priv) {
 		dbg(lvl_error,"No image for '%s'\n", path);
@@ -2132,7 +2141,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				if (img)
 					dc->img=img;
 				else
-					dbg(lvl_error,"failed to load icon '%s'\n", path);
+					dbg(lvl_debug,"failed to load icon '%s'\n", path);
 				g_free(path);
 			}
 			if (img) {
