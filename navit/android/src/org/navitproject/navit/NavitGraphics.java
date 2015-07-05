@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -929,6 +930,48 @@ public class NavitGraphics
 		//		float fx = x;
 		//		float fy = y;
 		draw_canvas.drawBitmap(bitmap, x, y, paint);
+	}
+
+	/* takes an image and draws it on the screen as a prerendered maptile
+	 * 
+	 * 
+	 * 
+	 * @param paint		Paint object used to draw the image
+	 * @param count		the number of points specified 
+	 * @param p0x and p0y 	specifying the top left point
+	 * @param p1x and p1y 	specifying the top right point
+	 * @param p2x and p2y 	specifying the bottom left point, not yet used but kept 
+	 * 						for compatibility with the linux port
+	 * @param bitmap	Bitmap object holding the image to draw
+	 * 
+	 * TODO make it work with 4 points specified to make it work for 3D mapview, so it can be used
+	 * 		for small but very detailed maps as well as for large maps with very little detail but large
+	 * 		coverage.
+	 * TODO make it work with rectangular tiles as well ?
+	 */
+	protected void draw_image_warp(Paint paint, int count, int p0x, int p0y, int p1x, int p1y, int p2x, int p2y, Bitmap bitmap)
+	{
+	
+		float width;
+		float scale;
+		float deltaY;
+		float deltaX;
+		float angle;
+		Matrix matrix;	
+	
+		if (count == 3)
+		{			
+			matrix = new Matrix();
+			deltaX = p1x - p0x;
+			deltaY = p1y - p0y;
+			width = (float) (Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)));			
+			angle = (float) (Math.atan2(deltaY, deltaX) * 180d / Math.PI);
+			scale = width / bitmap.getWidth();
+			matrix.preScale(scale, scale);
+			matrix.postTranslate(p0x, p0y);			
+			matrix.postRotate(angle, p0x, p0y);
+			draw_canvas.drawBitmap(bitmap, matrix, paint);
+		}
 	}
 
 	/* These constants must be synchronized with enum draw_mode_num in graphics.h. */

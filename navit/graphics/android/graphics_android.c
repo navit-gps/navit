@@ -36,7 +36,10 @@ int dummy;
 
 struct graphics_priv {
 	jclass NavitGraphicsClass;
-	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, NavitGraphics_draw_mode, NavitGraphics_draw_drag, NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera;
+	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, 
+		NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, 
+		NavitGraphics_draw_image_warp, NavitGraphics_draw_mode, NavitGraphics_draw_drag, 
+		NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera;
 
 	jclass PaintClass;
 	jmethodID Paint_init,Paint_setStrokeWidth,Paint_setARGB;
@@ -373,6 +376,28 @@ draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point 
 	
 }
 
+static void
+draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)
+{
+
+	/*
+	 *
+	 *
+	 * if coord count==3 then top.left top.right bottom.left
+	 *
+	 */
+
+	if (count==3)
+	{
+		initPaint(gr, fg);
+		(*jnienv)->CallVoidMethod(jnienv, gr->NavitGraphics, gr->NavitGraphics_draw_image_warp, fg->gra->Paint, 
+			count,  p[0].x, p[0].y,p[1].x, p[1].y, p[2].x, p[2].y, img->Bitmap);
+	} else
+		dbg(lvl_debug,"draw_image_warp is called with unsupported count parameter value %d\n", count);
+}
+
+
+
 static void draw_drag(struct graphics_priv *gra, struct point *p)
 {
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_drag, p ? p->x : 0, p ? p->y : 0);
@@ -452,7 +477,7 @@ static struct graphics_methods graphics_methods = {
 	draw_circle,
 	draw_text,
 	draw_image,
-	NULL,
+	draw_image_warp,
 	draw_drag,
 	font_new,
 	gc_new,
@@ -641,6 +666,8 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	if (!find_method(ret->NavitGraphicsClass, "draw_text", "(Landroid/graphics/Paint;IILjava/lang/String;IIII)V", &ret->NavitGraphics_draw_text))
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_image", "(Landroid/graphics/Paint;IILandroid/graphics/Bitmap;)V", &ret->NavitGraphics_draw_image))
+		return 0;
+	if (!find_method(ret->NavitGraphicsClass, "draw_image_warp", "(Landroid/graphics/Paint;IIIIIIILandroid/graphics/Bitmap;)V", &ret->NavitGraphics_draw_image_warp))
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_mode", "(I)V", &ret->NavitGraphics_draw_mode))
 		return 0;
