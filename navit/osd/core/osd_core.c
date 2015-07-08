@@ -150,7 +150,7 @@ format_distance(double distance, char *sep, int imperial)
 {
 	if (imperial){
 		distance *= FEET_PER_METER;
-		if(distance <= 1500){
+		if(distance <= 500){
 			return g_strdup_printf("%.0f%sft", round(distance / 10) * 10, sep);
 		} else {
 			return g_strdup_printf("%.1f%smi", distance / FEET_PER_MILE, sep);
