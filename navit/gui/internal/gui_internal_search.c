@@ -211,6 +211,7 @@ static void
 gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 {
 	struct menu_data *md;
+	int first_available_key_found = 0;
 
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
@@ -222,12 +223,22 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 			while (lk2) {
 				struct widget *child_=lk2->data;
 				lk2=g_list_next(lk2);
-				if (child_->data && strcmp("\b", child_->data)) { // FIXME don't disable special keys
+				// The data_free part is an evil hack based on the observation that
+				// regular keys have set it to non-NULL whereas special keys appear
+				// to have it set to NULL.
+				if (child_->data && strcmp("\b", child_->data) && child_->data_free) {
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
-						child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
+						child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
+						child_->state&= ~(STATE_INVISIBLE);
+						// Select and highlight the first possible button.
+						if (!first_available_key_found) {
+							gui_internal_highlight_do(this, child_);
+							first_available_key_found=1;
+						}
 					} else {
-						child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SELECTED) ;
+						child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
+						child_->state|= STATE_INVISIBLE;
 					}
 					gui_internal_widget_render(this,child_);
 				}
