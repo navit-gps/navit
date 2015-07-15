@@ -130,7 +130,11 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 #else
                         for( i=0;i<data->satellites;i++) {
 #endif
+#if GPSD_API_MAJOR_VERSION >= 6
+                               if (data->skyview[i].ss > 0)
+#else
                                if (data->ss[i] > 0)
+#endif
                                         sats_signal++;
                         }
                 }
