@@ -446,20 +446,36 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 	cairo_paint(gr->cairo);
 }
 
+static unsigned char*
+create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel, size_t output_stride)
+{
+	int line;
+	size_t input_offset, output_offset;
+	unsigned char *out_buf;
+	size_t input_stride = w*bytes_per_pixel;
+	if (input_stride == output_stride) {
+		return NULL;
+	}
+
+	out_buf = g_malloc(h*output_stride);
+	for (line = 0; line < h; line++) {
+		input_offset =  line*input_stride;
+		output_offset = line*output_stride;
+		memcpy(out_buf+output_offset, input_buffer+input_offset, input_stride);
+	}
+	return out_buf;
+}
+
 #ifdef HAVE_IMLIB2
 static void
 draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)
 {
 	int w,h;
-	static struct graphics_priv *imlib_gr;
+	DATA32 *intermediate_buffer;
+	unsigned char* intermediate_buffer_aligned;
+	Imlib_Image intermediate_image;
+	size_t stride;
 	dbg(lvl_debug,"draw_image_warp data=%p\n", img);
-	if (imlib_gr != gr) {
-		imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
-		imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
-		imlib_context_set_visual(gdk_x11_visual_get_xvisual(gtk_widget_get_visual(gr->widget)));
-		imlib_context_set_drawable(gdk_x11_drawable_get_xid(gr->drawable));
-		imlib_gr=gr;
-	}
 	w = img->w;
 	h = img->h;
 	if (!img->image) {
@@ -490,26 +506,45 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 			dbg(lvl_error,"implement me\n");
 		}
 		
-	} else 
-		imlib_context_set_image(img->image);
+	}
+
+	intermediate_buffer = g_malloc0(gr->width*gr->height*4);
+	intermediate_image = imlib_create_image_using_data(gr->width, gr->height, intermediate_buffer);
+	imlib_context_set_image(intermediate_image);
+	imlib_image_set_has_alpha(1);
+
 	if (count == 3) {
 		/* 0 1
         	   2   */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
 	}
 	if (count == 2) {
-		/* 0 
+		/* 0
         	     1 */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
 	}
 	if (count == 1) {
-		/* 
-                   0 
+		/*
+                   0
         	     */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
 	}
-}
+
+	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, gr->width);
+	intermediate_buffer_aligned = create_buffer_with_stride_if_required(
+			(unsigned char* )intermediate_buffer, gr->width, gr->height, sizeof(DATA32), stride);
+	cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
+			intermediate_buffer_aligned ? intermediate_buffer_aligned : (unsigned char*)intermediate_buffer,
+			CAIRO_FORMAT_ARGB32, gr->width, gr->height, stride);
+	cairo_set_source_surface(gr->cairo, buffer_surface, 0, 0);
+	cairo_paint(gr->cairo);
+
+	cairo_surface_destroy(buffer_surface);
+	imlib_free_image();
+	g_free(intermediate_buffer);
+	g_free(intermediate_buffer_aligned);
 #endif
+}
 
 static void
 overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
