@@ -10,3 +10,6 @@
 #define NAVIT_KEY_SEARCH 19	/* ^S */
 #define NAVIT_KEY_BACK 27	/* Esc */
 #define NAVIT_KEY_DELETE 127
+#define NAVIT_KEY_TAB 9 /* TAB */
+#define NAVIT_KEY_ROTL 33 /* Page up */
+#define NAVIT_KEY_ROTR 34 /* Page down */

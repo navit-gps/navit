@@ -224,8 +224,8 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 				struct widget *child_=lk2->data;
 				lk2=g_list_next(lk2);
             // The data_free part is an evil hack based on the observation that
-            // regular keys have set it to non-NULL whereas special keys appear
-            // to have it set to NULL.
+            // regular keys have set data_free to non-NULL whereas special keys
+            // appear to have it set to NULL.
 				if (child_->data && strcmp("\b", child_->data) &&
                 child_->data_free) { 
 					if ( (strlen(possible_keys) == 0) ||
