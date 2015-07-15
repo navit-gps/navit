@@ -717,7 +717,7 @@ gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 void
 gui_internal_widget_render(struct gui_priv *this, struct widget *w)
 {
-	if(w->p.x > this->root.w || w->p.y > this->root.h)
+	if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
 		return;
 
 	switch (w->type) {
