@@ -847,14 +847,14 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]=NAVIT_KEY_ZOOM_OUT;
 		key[1]='\0';
 		break;
-   case GDK_Page_Up:
-      key[0]=NAVIT_KEY_ROTL;
-      key[1]='\0';
-      break;
-   case GDK_Page_Down:
-      key[0]=NAVIT_KEY_ROTR;
-      key[1]='\0';
-      break;
+	case GDK_Page_Up:
+		key[0]=NAVIT_KEY_PAGE_UP;
+		key[1]='\0';
+		break;
+	case GDK_Page_Down:
+		key[0]=NAVIT_KEY_PAGE_DOWN;
+		key[1]='\0';
+		break;
 	}
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);

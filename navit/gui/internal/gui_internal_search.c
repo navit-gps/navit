@@ -211,7 +211,7 @@ static void
 gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 {
 	struct menu_data *md;
-   int first = 1;
+	int first = 1;
 
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
@@ -223,19 +223,19 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 			while (lk2) {
 				struct widget *child_=lk2->data;
 				lk2=g_list_next(lk2);
-            // The data_free part is an evil hack based on the observation that
-            // regular keys have set data_free to non-NULL whereas special keys
-            // appear to have it set to NULL.
+				// The data_free part is an evil hack based on the observation that
+				// regular keys have set data_free to non-NULL whereas special keys
+				// appear to have it set to NULL.
 				if (child_->data && strcmp("\b", child_->data) &&
-                child_->data_free) { 
+				    child_->data_free) { 
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
 						child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
-                  child_->state&= ~(STATE_INVISIBLE);
-                  // Select and highlight the first possible button
-                  if (first) 
-                    gui_internal_highlight_do(this, child_);
-                  first = 0;
+						child_->state&= ~(STATE_INVISIBLE);
+						// Select and highlight the first possible button
+						if (first) 
+							gui_internal_highlight_do(this, child_);
+						first = 0;
 					} else {
 						child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
 						child_->state|= STATE_INVISIBLE;
