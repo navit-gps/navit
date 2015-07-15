@@ -835,6 +835,8 @@ gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, s
 
 	sb->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
 	sb->button_box->background=this->background;
+	sb->prev_button->state &= ~STATE_SENSITIVE;
+	sb->next_button->state &= ~STATE_SENSITIVE;
 	gui_internal_widget_append(sb->button_box, sb->prev_button);
 	gui_internal_widget_append(sb->button_box, sb->next_button);
 
