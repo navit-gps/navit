@@ -12,12 +12,24 @@
 #include "gui_internal_menu.h"
 #include "gui_internal_keyboard.h"
 
-
-static void
-gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
+void
+gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 {
 	struct menu_data *md;
-	gui_internal_keypress_do(this, (char *) wm->data);
+	md=gui_internal_menu_data(this);
+	// Switch to lowercase after the first key is pressed
+	if (md->keyboard_mode == 10) // Latin
+		gui_internal_keyboard_do(this, md->keyboard, 2);
+	if (md->keyboard_mode == 34) // Umlaut
+		gui_internal_keyboard_do(this, md->keyboard, 26);
+	if (md->keyboard_mode == 50) // Russian/Ukrainian/Belorussian
+		gui_internal_keyboard_do(this, md->keyboard, 42);
+}
+
+void
+gui_internal_keyboard_to_lower_case(struct gui_priv *this)
+{
+	struct menu_data *md;
 	md=gui_internal_menu_data(this);
 	// Switch to lowercase after the first key is pressed
 	if (md->keyboard_mode == 2) // Latin
@@ -26,6 +38,14 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_keyboard_do(this, md->keyboard, 34);
 	if (md->keyboard_mode == 42) // Russian/Ukrainian/Belorussian
 		gui_internal_keyboard_do(this, md->keyboard, 50);
+}
+
+static void
+gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
+{
+	gui_internal_keypress_do(this, (char *) wm->data);
+	// Switch to lowercase after the first key is pressed
+	gui_internal_keyboard_to_lower_case(this);
 }
 	
 static struct widget *

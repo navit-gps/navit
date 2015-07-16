@@ -215,6 +215,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
+		gchar* possible;
+		possible = g_utf8_strdown(possible_keys, -1);
+
 		GList *lk=md->keyboard->children;
 		graphics_draw_mode(this->gra, draw_mode_begin);
 		while (lk) {
@@ -228,8 +231,10 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 				// appear to have it set to NULL.
 				if (child_->data && strcmp("\b", child_->data) &&
 				    child_->data_free) { 
+					gchar* current;
+					current = g_utf8_strdown(child_->data, -1);
 					if ( (strlen(possible_keys) == 0) ||
-					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
+					     (g_strrstr(possible, current)!=NULL ) ) {
 						child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
 						child_->state&= ~(STATE_INVISIBLE);
 						// Select and highlight the first possible button
@@ -240,6 +245,7 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 						child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
 						child_->state|= STATE_INVISIBLE;
 					}
+					g_free(current);
 					gui_internal_widget_render(this,child_);
 				}
 			}
@@ -247,6 +253,7 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 		}
 		gui_internal_widget_render(this,md->keyboard);
 		graphics_draw_mode(this->gra, draw_mode_end);
+		g_free(possible);
 	}
 
 }
@@ -439,7 +446,14 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 			search_attr.type=attr_house_number;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
+		// Text is not necessarily entered via the on-screen keyboard,
+		// but we now switch it to lower case anyway.
+		gui_internal_keyboard_to_lower_case(this);
 		gui_internal_search_idle_start(this, wm->name, search_list, param);
+	} else {
+		// If not enough content is entered, we highlight all keys.
+		gui_internal_keyboard_to_upper_case(this);
+		gui_internal_highlight_possible_keys(this, "");
 	}
 	l=g_list_last(this->root.children);
 	gui_internal_widget_render(this, l->data);
