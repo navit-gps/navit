@@ -2,7 +2,7 @@ struct widget; // defined in gui_internal.c
 struct graphics_image;
 struct gui_priv;
 
-#define STATE_VISIBLE 1
+#define STATE_INVISIBLE 1
 #define STATE_SELECTED 2
 #define STATE_HIGHLIGHTED 4
 #define STATE_SENSITIVE 8

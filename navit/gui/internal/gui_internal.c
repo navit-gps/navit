@@ -1595,7 +1595,16 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 
 static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy);
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary);
+
+int
+gui_internal_keynav_find_next(struct widget *wi, struct widget *cur, struct widget **result);
+
+int
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result, struct widget** last);
+
+struct widget*
+gui_internal_keynav_find_next_sensitive_child(struct widget *wi);
 
 void
 gui_internal_keypress_do(struct gui_priv *this, char *key)
@@ -2665,6 +2674,71 @@ gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
 		p->y=w->p.y+w->h;
 }
 
+struct widget*
+gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
+	GList *l=wi->children;
+	if (wi && wi->state & STATE_SENSITIVE)
+		 return wi;
+	while (l) {
+		struct widget* tmp = gui_internal_keynav_find_next_sensitive_child(l->data);
+		if (tmp)
+			return tmp;
+		l=g_list_next(l);
+	}
+	return NULL;
+}
+
+int
+gui_internal_keynav_find_next(struct widget *wi, struct widget *cur, struct widget **result) {
+	GList *l=wi->children;
+	if (wi == cur)
+	    return 1;
+	while (l) {
+		struct widget *child=l->data;
+		l=g_list_next(l);
+		if (gui_internal_keynav_find_next(child, cur, result)) {
+			while (l) {
+				struct widget *new = gui_internal_keynav_find_next_sensitive_child(l->data);
+				if (new) {
+					*result = new;
+					/* Found one! */
+					return 0;
+				}
+				l=g_list_next(l);
+			}
+			/* Try parent */
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result, struct widget** last) {
+	GList *l=wi->children;
+	struct widget* my_last = NULL;
+	if (last == NULL)
+		last = &my_last;
+	if (wi == cur)
+		return 1;
+	while (l) {
+		struct widget *child=l->data;
+		if (gui_internal_keynav_find_prev(child, cur, result, last)) {
+			*result = *last;
+			if (*last)
+				/* Done. */
+				return 0;
+			else
+				/* Try parent. */
+				return 1;
+		}
+		if (child->state & STATE_SENSITIVE)
+			*last = child;
+		l=g_list_next(l);
+	}
+	return 0;
+}
+
 static void
 gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result)
 {
@@ -2708,13 +2782,16 @@ gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int
 }
 
 static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary)
 {
 	struct widget *result,*menu=g_list_last(this->root.children)->data;
+	struct widget *cur = NULL;
 	struct point p;
 	int distance;
-	if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
+	if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data) {
 		gui_internal_keynav_point(this->highlighted, dx, dy, &p);
+		cur = this->highlighted;
+	}
 	else {
 		p.x=0;
 		p.y=0;
@@ -2724,17 +2801,27 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		if (result) {
 			gui_internal_keynav_point(result, dx, dy, &p);
 			dbg(lvl_debug,"result origin=%p p=%d,%d\n", result, p.x, p.y);
+			cur = result;
 		}
 	}
 	result=NULL;
 	distance=INT_MAX;
-	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
+   if (rotary && dx > 0)
+      gui_internal_keynav_find_next(menu, cur, &result);
+   else if (rotary && dx < 0)
+      gui_internal_keynav_find_prev(menu, cur, &result, NULL);
+   else
+   	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
 	dbg(lvl_debug,"result=%p\n", result);
 	if (! result) {
-		if (dx < 0)
+		if (dx < 0) {
 			p.x=this->root.w;
-		if (dx > 0)
+			if (rotary) p.y = this->root.h;
+		}
+		if (dx > 0) {
 			p.x=0;
+			if (rotary) p.y = 0;
+		}
 		if (dy < 0)
 			p.y=this->root.h;
 		if (dy > 0)
@@ -2798,17 +2885,23 @@ static void gui_internal_keypress(void *data, char *key)
 	}
 	graphics_draw_mode(this->gra, draw_mode_begin);
 	switch (*key) {
+	case NAVIT_KEY_PAGE_DOWN:
+		gui_internal_keynav_highlight_next(this,1,0,1);
+		break;
+	case NAVIT_KEY_PAGE_UP:
+		gui_internal_keynav_highlight_next(this,-1,0,1);
+		break;
 	case NAVIT_KEY_LEFT:
-		gui_internal_keynav_highlight_next(this,-1,0);
+		gui_internal_keynav_highlight_next(this,-1,0,0);
 		break;
 	case NAVIT_KEY_RIGHT:
-		gui_internal_keynav_highlight_next(this,1,0);
+		gui_internal_keynav_highlight_next(this,1,0,0);
 		break;
 	case NAVIT_KEY_UP:
-		gui_internal_keynav_highlight_next(this,0,-1);
+		gui_internal_keynav_highlight_next(this,0,-1,0);
 		break;
 	case NAVIT_KEY_DOWN:
-		gui_internal_keynav_highlight_next(this,0,1);
+		gui_internal_keynav_highlight_next(this,0,1,0);
 		break;
 	case NAVIT_KEY_BACK:
 		if (g_list_length(this->root.children) > 1)
