@@ -12,6 +12,33 @@
 #include "gui_internal_menu.h"
 #include "gui_internal_keyboard.h"
 
+void
+gui_internal_keyboard_to_upper_case(struct gui_priv *this)
+{
+	struct menu_data *md;
+	md=gui_internal_menu_data(this);
+	// Switch to lowercase after the first key is pressed
+	if (md->keyboard_mode == 10) // Latin
+		gui_internal_keyboard_do(this, md->keyboard, 2);
+	if (md->keyboard_mode == 34) // Umlaut
+		gui_internal_keyboard_do(this, md->keyboard, 26);
+	if (md->keyboard_mode == 50) // Russian/Ukrainian/Belorussian
+		gui_internal_keyboard_do(this, md->keyboard, 42);
+}
+
+void
+gui_internal_keyboard_to_lower_case(struct gui_priv *this)
+{
+	struct menu_data *md;
+	md=gui_internal_menu_data(this);
+	// Switch to lowercase after the first key is pressed
+	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2)) // Latin
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2)) // Umlaut
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2)) // Russian/Ukrainian/Belorussian
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
+}
 
 /**
  * @brief Processes a key press on the internal GUI keyboard
@@ -26,16 +53,9 @@
 static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct menu_data *md;
 	gui_internal_keypress_do(this, (char *) wm->data);
-	md=gui_internal_menu_data(this);
 	// Switch to lowercase after the first key is pressed
-	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2)) // Latin
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2)) // Umlaut
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2)) // Russian/Ukrainian/Belorussian
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
+	gui_internal_keyboard_to_lower_case(this);
 }
 	
 static struct widget *
