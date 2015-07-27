@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-05-17 20:19+0000\n"
+"PO-Revision-Date: 2015-07-19 04:01+0000\n"
 "Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
@@ -92,14 +92,6 @@ msgid "sixth exit"
 msgstr "шестой съезд"
 
 #, c-format
-msgid "%d m"
-msgstr "%d м"
-
-#, c-format
-msgid "in %d m"
-msgstr "через %d м"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d футов"
 
@@ -108,28 +100,12 @@ msgid "in %d feet"
 msgstr "через %d футов"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d метров"
-
-#, c-format
-msgid "in %d meters"
-msgstr "через %d метров"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d,%d миль"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "через %d,%d миль"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d,%d километров"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "через %d,%d километров"
 
 #, c-format
 msgid "one mile"
@@ -144,6 +120,22 @@ msgid_plural "in %d miles"
 msgstr[0] "через %d милю"
 msgstr[1] "через %d мили"
 msgstr[2] "через %d миль"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d метров"
+
+#, c-format
+msgid "in %d meters"
+msgstr "через %d метров"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d,%d километров"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "через %d,%d километров"
 
 #, c-format
 msgid "one kilometer"
@@ -231,7 +223,7 @@ msgstr "Скоро круговое движение"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "%s круговое движение"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -255,22 +247,22 @@ msgstr "после чего"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "затем выезд вправо %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "%1$s выезд вправо %2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "затем выезжайте влево %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "%1$s выезд влево %2$s"
 
 msgid "on your left"
 msgstr "влево"
@@ -357,21 +349,21 @@ msgstr "%3$s сверните %1$s%2$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "затем развернитесь влево"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "%1$s разворот налево"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "затем развернитесь вправо"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "%1$s разворот направо"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we

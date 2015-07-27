@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Padi Phillips https://launchpad.net/~padi
 # Simon Hewison https://launchpad.net/~simon-hewison-6
 
@@ -9,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-01-18 20:41+0000\n"
-"Last-Translator: Padi Phillips <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 03:57+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Welsh <cy@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,14 +72,6 @@ msgid "sixth exit"
 msgstr "allanfa chweched"
 
 #, c-format
-msgid "%d m"
-msgstr ""
-
-#, c-format
-msgid "in %d m"
-msgstr ""
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -87,27 +80,11 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr ""
-
-#, c-format
-msgid "in %d meters"
-msgstr ""
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr ""
-
-#, c-format
-msgid "in %d.%d kilometers"
 msgstr ""
 
 #, c-format
@@ -121,6 +98,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr ""
+
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
 
 #, c-format
 msgid "one kilometer"
@@ -378,7 +371,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Allanfa"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # asghar https://launchpad.net/~asghar144
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-09-28 01:44+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 04:01+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Urdu <ur@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,10 +62,6 @@ msgstr "پانچواں اخراج"
 
 msgid "sixth exit"
 msgstr "چھٹا اخراج"
-
-#, c-format
-msgid "%d m"
-msgstr "%d میٹر"
 
 #, c-format
 msgid "%d meters"
@@ -134,10 +131,6 @@ msgid "zeroth"
 msgstr "صفر سے"
 
 #, c-format
-msgid "in %d m"
-msgstr "%d میٹر میں"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -204,27 +197,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "ڈھلان میں"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sمیں سے %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sمیں سے %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sمیں سے %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sمیں سے %s%s%s"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
@@ -246,12 +239,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "پھر گول چوراہے کو  %1$s %2$s پے چھوڑ دیں"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "گول چوراہے کو %1$s %2$s پے چھوڑ دیں"
 
 msgid "soon"
 msgstr "جلد ہی"
@@ -347,7 +340,7 @@ msgstr "%i سڑکوں کے بعد"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "%1$s%2$s %3$s%4$s گومیں"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -395,7 +388,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "اخراج"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

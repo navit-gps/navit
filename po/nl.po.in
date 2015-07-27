@@ -24,14 +24,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-06-07 07:03+0000\n"
+"PO-Revision-Date: 2015-07-19 03:59+0000\n"
 "Last-Translator: jan <jandegr1@hotmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: \n"
+"Language: nl\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "soon"
@@ -89,14 +89,6 @@ msgid "sixth exit"
 msgstr "zesde afslag"
 
 #, c-format
-msgid "%d m"
-msgstr "%d meter"
-
-#, c-format
-msgid "in %d m"
-msgstr "na %d meter"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d voet"
 
@@ -105,28 +97,12 @@ msgid "in %d feet"
 msgstr "na %d voet"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d meter"
-
-#, c-format
-msgid "in %d meters"
-msgstr "na %d meter"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d. mijl"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "na %d.%d mijl"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d kilometer"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "na %d,%d kilometer"
 
 #, c-format
 msgid "one mile"
@@ -139,6 +115,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "na %d mijl"
 msgstr[1] "na %d mijl"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d meter"
+
+#, c-format
+msgid "in %d meters"
+msgstr "na %d meter"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d kilometer"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "na %d,%d kilometer"
 
 #, c-format
 msgid "one kilometer"
@@ -229,12 +221,12 @@ msgstr "%s de rotonde oprijden"
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "daarna de rotonde verlaten bij de  %1$s %2$s"
+msgstr "daarna de rotonde verlaten bij de %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "verlaat de rotonde bij de  %1$s %2$s"
+msgstr "Verlaat de rotonde bij de %1$s %2$s"
 
 msgid "now"
 msgstr "nu"
@@ -343,7 +335,7 @@ msgstr "na %i wegen"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Ga %3$s%1$s naar %2$s%4$s"
+msgstr "Ga %3$s %1$s naar %2$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -388,10 +380,10 @@ msgstr "Bestemming %s bereikt"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "Knooppunt"
 
 msgid "Exit"
-msgstr "afslag"
+msgstr "Afslag"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -2786,5 +2778,5 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 "Navit kan elke tekst naar spraak-engine geïnstalleerd op uw apparaat "
-"gebruiken . De momenteel geselecteerde engine meldt dat het niet in uw taal "
-"kan spreken . Wil U de  spraak download dialoog van Uw toestel starten?"
+"gebruiken. De momenteel geselecteerde engine meldt dat het niet in uw taal "
+"kan spreken. Wil U de spraak download dialoog van Uw toestel starten?"

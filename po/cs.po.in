@@ -20,14 +20,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-03-15 14:56+0000\n"
+"PO-Revision-Date: 2015-07-19 03:57+0000\n"
 "Last-Translator: Jakuje <jakuje@gmail.com>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"Language: \n"
+"Language: cs\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -82,14 +82,6 @@ msgid "sixth exit"
 msgstr "šestý výjezd"
 
 #, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#, c-format
-msgid "in %d m"
-msgstr "za %d m"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d stop"
 
@@ -98,28 +90,12 @@ msgid "in %d feet"
 msgstr "za %d stop"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d metrů"
-
-#, c-format
-msgid "in %d meters"
-msgstr "za %d metrů"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d mílí"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "za %d.%d mílí"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d kilometrů"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "za %d.%d kilometrů"
 
 #, c-format
 msgid "one mile"
@@ -134,6 +110,22 @@ msgid_plural "in %d miles"
 msgstr[0] "za %d míli"
 msgstr[1] "za %d míle"
 msgstr[2] "za %d mílí"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d metrů"
+
+#, c-format
+msgid "in %d meters"
+msgstr "za %d metrů"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d kilometrů"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "za %d.%d kilometrů"
 
 #, c-format
 msgid "one kilometer"
@@ -152,51 +144,51 @@ msgstr[2] "za %d kilometrů"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$sna %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$sna %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$sna %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$sna %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$sna %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "na přivadeč"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sdo %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -226,12 +218,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "pak sjeďte na %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Sjeďte na %1$s %2$s"
 
 msgid "soon"
 msgstr "brzy"
@@ -240,7 +232,7 @@ msgid "now"
 msgstr "nyní"
 
 msgid "then"
-msgstr ""
+msgstr "pak"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -343,25 +335,25 @@ msgstr "za %i silnice"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Zabočte %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "pak otočte se"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Otočte se %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "pak otočte se"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Otočte se %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -391,7 +383,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Ukončit"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

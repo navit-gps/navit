@@ -2,19 +2,21 @@
 # Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
+# KaZeR https://launchpad.net/~kazer
 # Seungjun, Lee https://launchpad.net/~cybercorean
 
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2015-04-03 14:35+0000\n"
-"Last-Translator: Seungjun, Lee <cybercorean@gmail.com>\n"
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2015-07-19 21:39+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ko\n"
 
 msgid "Running from source directory\n"
 msgstr ""
@@ -68,28 +70,12 @@ msgid "sixth exit"
 msgstr "여섯번째 출구"
 
 #, c-format
-msgid "%d m"
-msgstr "%d 미터"
-
-#, c-format
-msgid "in %d m"
-msgstr "%d 미터 후에"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d 피트"
 
 #, c-format
 msgid "in %d feet"
 msgstr "%d 피트 후에"
-
-#, c-format
-msgid "%d meters"
-msgstr "%d 미터"
-
-#, c-format
-msgid "in %d meters"
-msgstr "%d 미터 후에"
 
 #, c-format
 msgid "%d.%d miles"
@@ -100,14 +86,6 @@ msgid "in %d.%d miles"
 msgstr "%d.%d 마일 후에"
 
 #, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d 킬로미터"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d.%d 킬로미터 후에"
-
-#, c-format
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] "%d 마일"
@@ -116,6 +94,22 @@ msgstr[0] "%d 마일"
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "%d 마일 후에"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d 미터"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d 미터 후에"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d 킬로미터"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d.%d 킬로미터 후에"
 
 #, c-format
 msgid "one kilometer"
@@ -179,10 +173,10 @@ msgstr ""
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s %s 방향으로"
 
 msgid "When possible, please turn around"
-msgstr ""
+msgstr "가능하면 유턴하세요"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
@@ -191,15 +185,15 @@ msgstr ""
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr ""
+msgstr "다음 %s 까지 직진하세요"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "로타리에 곧 진입합니다"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "%s 로타리에 진입합니다"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -212,10 +206,10 @@ msgid "Leave the roundabout at the %1$s %2$s"
 msgstr ""
 
 msgid "soon"
-msgstr ""
+msgstr "곧"
 
 msgid "now"
-msgstr ""
+msgstr "지금"
 
 msgid "then"
 msgstr ""
@@ -295,33 +289,33 @@ msgstr ""
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr ""
+msgstr "우"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr ""
+msgstr "좌"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr ""
+msgstr "약간 "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr ""
+msgstr "크게 "
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "%1$s 번째 출구에서 %2$s 로 나가세요"
 
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "%i 도로 이후에"
 
 #. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "%3$s%4$s %1$s%2$s 회전 하세요"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -357,12 +351,12 @@ msgid "follow"
 msgstr ""
 
 msgid "then you have reached your destination."
-msgstr ""
+msgstr "목적지에 도착하였습니다."
 
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr ""
+msgstr "%s 목적지에 도착합니다"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
@@ -376,16 +370,16 @@ msgid "Position"
 msgstr ""
 
 msgid "Command"
-msgstr ""
+msgstr "명령"
 
 msgid "Length"
 msgstr ""
 
 msgid "km"
-msgstr ""
+msgstr "km"
 
 msgid "m"
-msgstr ""
+msgstr "m"
 
 msgid "Time"
 msgstr ""
@@ -407,10 +401,10 @@ msgid "Visit before..."
 msgstr ""
 
 msgid "Set as position"
-msgstr ""
+msgstr "지점으로설정"
 
 msgid "Set as destination"
-msgstr ""
+msgstr "목적지로설정"
 
 msgid "Add as bookmark"
 msgstr ""
@@ -425,107 +419,107 @@ msgstr ""
 
 #. 020
 msgid "Andorra"
-msgstr ""
+msgstr "안도라"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "아랍에미리트연방"
 
 #. 004
 msgid "Afghanistan"
-msgstr ""
+msgstr "아프가니스탄"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "앤티가 바부다"
 
 #. 660
 msgid "Anguilla"
-msgstr ""
+msgstr "안길라"
 
 #. 008
 msgid "Albania"
-msgstr ""
+msgstr "알바니아"
 
 #. 051
 msgid "Armenia"
-msgstr ""
+msgstr "아르메니아"
 
 #. 530
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "앤틸러스제도"
 
 #. 024
 msgid "Angola"
-msgstr ""
+msgstr "앙골라"
 
 #. 010
 msgid "Antarctica"
-msgstr ""
+msgstr "남극"
 
 #. 032
 msgid "Argentina"
-msgstr ""
+msgstr "아르헨티나"
 
 #. 016
 msgid "American Samoa"
-msgstr ""
+msgstr "아메리칸사모아"
 
 #. 040
 msgid "Austria"
-msgstr ""
+msgstr "오스트리아"
 
 #. 036
 msgid "Australia"
-msgstr ""
+msgstr "오스트레일리아"
 
 #. 533
 msgid "Aruba"
-msgstr ""
+msgstr "아루바"
 
 #. 248
 msgid "Aland Islands"
-msgstr ""
+msgstr "올란드제도"
 
 #. 031
 msgid "Azerbaijan"
-msgstr ""
+msgstr "아제르바이잔"
 
 #. 070
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "보스니아・헤르체고비나"
 
 #. 052
 msgid "Barbados"
-msgstr ""
+msgstr "바베이도스"
 
 #. 050
 msgid "Bangladesh"
-msgstr ""
+msgstr "방글라데시"
 
 #. 056
 msgid "Belgium"
-msgstr ""
+msgstr "벨기에"
 
 #. 854
 msgid "Burkina Faso"
-msgstr ""
+msgstr "부르키나파소"
 
 #. 100
 msgid "Bulgaria"
-msgstr ""
+msgstr "불가리아"
 
 #. 048
 msgid "Bahrain"
-msgstr ""
+msgstr "바레인"
 
 #. 108
 msgid "Burundi"
-msgstr ""
+msgstr "부룬디"
 
 #. 204
 msgid "Benin"
-msgstr ""
+msgstr "베닌"
 
 #. 652
 msgid "Saint Barthelemy"
@@ -533,15 +527,15 @@ msgstr ""
 
 #. 060
 msgid "Bermuda"
-msgstr ""
+msgstr "버뮤다제도"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "브루나이"
 
 #. 068
 msgid "Bolivia"
-msgstr ""
+msgstr "볼리비아"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
@@ -549,359 +543,359 @@ msgstr ""
 
 #. 076
 msgid "Brazil"
-msgstr ""
+msgstr "브라질"
 
 #. 044
 msgid "Bahamas"
-msgstr ""
+msgstr "바하마"
 
 #. 064
 msgid "Bhutan"
-msgstr ""
+msgstr "부탄"
 
 #. 074
 msgid "Bouvet Island"
-msgstr ""
+msgstr "부베섬島"
 
 #. 072
 msgid "Botswana"
-msgstr ""
+msgstr "보츠와나"
 
 #. 112
 msgid "Belarus"
-msgstr ""
+msgstr "벨라루스"
 
 #. 084
 msgid "Belize"
-msgstr ""
+msgstr "벨리즈"
 
 #. 124
 msgid "Canada"
-msgstr ""
+msgstr "캐나다"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "코코아 (킬링) 제도"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "콩고민주공화국"
 
 #. 140
 msgid "Central African Republic"
-msgstr ""
+msgstr "중앙아프리카공화국"
 
 #. 178
 msgid "Congo"
-msgstr ""
+msgstr "콩고"
 
 #. 756
 msgid "Switzerland"
-msgstr ""
+msgstr "스위스"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "코트디부아르"
 
 #. 184
 msgid "Cook Islands"
-msgstr ""
+msgstr "쿡제도"
 
 #. 152
 msgid "Chile"
-msgstr ""
+msgstr "칠레"
 
 #. 120
 msgid "Cameroon"
-msgstr ""
+msgstr "카메룬"
 
 #. 156
 msgid "China"
-msgstr ""
+msgstr "중국"
 
 #. 170
 msgid "Colombia"
-msgstr ""
+msgstr "콜롬비아"
 
 #. 188
 msgid "Costa Rica"
-msgstr ""
+msgstr "코스타리카"
 
 #. 192
 msgid "Cuba"
-msgstr ""
+msgstr "쿠바"
 
 #. 132
 msgid "Cape Verde"
-msgstr ""
+msgstr "카보베르데"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "퀴라소"
 
 #. 162
 msgid "Christmas Island"
-msgstr ""
+msgstr "크리스마스섬"
 
 #. 196
 msgid "Cyprus"
-msgstr ""
+msgstr "키프로스"
 
 #. 203
 msgid "Czech Republic"
-msgstr ""
+msgstr "체코공화국"
 
 #. 276
 msgid "Germany"
-msgstr ""
+msgstr "독일"
 
 #. 262
 msgid "Djibouti"
-msgstr ""
+msgstr "지부티"
 
 #. 208
 msgid "Denmark"
-msgstr ""
+msgstr "덴마크"
 
 #. 212
 msgid "Dominica"
-msgstr ""
+msgstr "도미니카"
 
 #. 214
 msgid "Dominican Republic"
-msgstr ""
+msgstr "도미니카공화국"
 
 #. 012
 msgid "Algeria"
-msgstr ""
+msgstr "알제리"
 
 #. 218
 msgid "Ecuador"
-msgstr ""
+msgstr "에콰도르"
 
 #. 233
 msgid "Estonia"
-msgstr ""
+msgstr "에스토니아"
 
 #. 818
 msgid "Egypt"
-msgstr ""
+msgstr "이집트"
 
 #. 732
 msgid "Western Sahara"
-msgstr ""
+msgstr "서사하라"
 
 #. 232
 msgid "Eritrea"
-msgstr ""
+msgstr "에리트레아"
 
 #. 724
 msgid "Spain"
-msgstr ""
+msgstr "스페인"
 
 #. 231
 msgid "Ethiopia"
-msgstr ""
+msgstr "에티오피아"
 
 #. 246
 msgid "Finland"
-msgstr ""
+msgstr "핀란드"
 
 #. 242
 msgid "Fiji"
-msgstr ""
+msgstr "피지"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "포클랜드제도 (말비나스)"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "미크로네시아연방국"
 
 #. 234
 msgid "Faroe Islands"
-msgstr ""
+msgstr "파로제도"
 
 #. 250
 msgid "France"
-msgstr ""
+msgstr "프랑스"
 
 #. 266
 msgid "Gabon"
-msgstr ""
+msgstr "가봉"
 
 #. 826
 msgid "United Kingdom"
-msgstr ""
+msgstr "영국"
 
 #. 308
 msgid "Grenada"
-msgstr ""
+msgstr "그레나다"
 
 #. 268
 msgid "Georgia"
-msgstr ""
+msgstr "조지아"
 
 #. 254
 msgid "French Guiana"
-msgstr ""
+msgstr "프랑스령기아나"
 
 #. 831
 msgid "Guernsey"
-msgstr ""
+msgstr "건지섬"
 
 #. 288
 msgid "Ghana"
-msgstr ""
+msgstr "가나"
 
 #. 292
 msgid "Gibraltar"
-msgstr ""
+msgstr "지브롤터"
 
 #. 304
 msgid "Greenland"
-msgstr ""
+msgstr "그린란드"
 
 #. 270
 msgid "Gambia"
-msgstr ""
+msgstr "감비아"
 
 #. 324
 msgid "Guinea"
-msgstr ""
+msgstr "기니"
 
 #. 312
 msgid "Guadeloupe"
-msgstr ""
+msgstr "과달루페섬"
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "적도기니"
 
 #. 300
 msgid "Greece"
-msgstr ""
+msgstr "그리스"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "남조지아섬・남샌드위치제도"
 
 #. 320
 msgid "Guatemala"
-msgstr ""
+msgstr "과테말라"
 
 #. 316
 msgid "Guam"
-msgstr ""
+msgstr "괌"
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "기니비소"
 
 #. 328
 msgid "Guyana"
-msgstr ""
+msgstr "가이아나"
 
 #. 344
 msgid "Hong Kong"
-msgstr ""
+msgstr "홍콩"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "허드맥도날드제도"
 
 #. 340
 msgid "Honduras"
-msgstr ""
+msgstr "온두라스"
 
 #. 191
 msgid "Croatia"
-msgstr ""
+msgstr "크로아티아"
 
 #. 332
 msgid "Haiti"
-msgstr ""
+msgstr "아이티"
 
 #. 348
 msgid "Hungary"
-msgstr ""
+msgstr "헝가리"
 
 #. 360
 msgid "Indonesia"
-msgstr ""
+msgstr "인도네시아"
 
 #. 372
 msgid "Ireland"
-msgstr ""
+msgstr "아일랜드"
 
 #. 376
 msgid "Israel"
-msgstr ""
+msgstr "이스라엘"
 
 #. 833
 msgid "Isle of Man"
-msgstr ""
+msgstr "맨섬"
 
 #. 356
 msgid "India"
-msgstr ""
+msgstr "인도"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "영국령인도양지역"
 
 #. 368
 msgid "Iraq"
-msgstr ""
+msgstr "이라크"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "이란공화국"
 
 #. 352
 msgid "Iceland"
-msgstr ""
+msgstr "아이슬란드"
 
 #. 380
 msgid "Italy"
-msgstr ""
+msgstr "이탈리아"
 
 #. 832
 msgid "Jersey"
-msgstr ""
+msgstr "저지섬"
 
 #. 388
 msgid "Jamaica"
-msgstr ""
+msgstr "자메이카"
 
 #. 400
 msgid "Jordan"
-msgstr ""
+msgstr "요르단"
 
 #. 392
 msgid "Japan"
-msgstr ""
+msgstr "일본"
 
 #. 404
 msgid "Kenya"
-msgstr ""
+msgstr "케냐"
 
 #. 417
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "키르기스탄"
 
 #. 116
 msgid "Cambodia"
-msgstr ""
+msgstr "캄보디아"
 
 #. 296
 msgid "Kiribati"
-msgstr ""
+msgstr "키리바시"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "코모로"
 
 #. 659
 msgid "Saint Kitts and Nevis"
@@ -909,83 +903,83 @@ msgstr ""
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "조선민주주의인민공화국"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "대한민국"
 
 #. 414
 msgid "Kuwait"
-msgstr ""
+msgstr "쿠웨이트"
 
 #. 136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "카이만제도"
 
 #. 398
 msgid "Kazakhstan"
-msgstr ""
+msgstr "카자흐스탄"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "라오스인민민주공화국"
 
 #. 422
 msgid "Lebanon"
-msgstr ""
+msgstr "레바논"
 
 #. 662
 msgid "Saint Lucia"
-msgstr ""
+msgstr "세인트루시아"
 
 #. 438
 msgid "Liechtenstein"
-msgstr ""
+msgstr "리히텐슈타인"
 
 #. 144
 msgid "Sri Lanka"
-msgstr ""
+msgstr "스리랑카"
 
 #. 430
 msgid "Liberia"
-msgstr ""
+msgstr "라이베리아"
 
 #. 426
 msgid "Lesotho"
-msgstr ""
+msgstr "레소토"
 
 #. 440
 msgid "Lithuania"
-msgstr ""
+msgstr "리투아니아"
 
 #. 442
 msgid "Luxembourg"
-msgstr ""
+msgstr "룩셈부르크"
 
 #. 428
 msgid "Latvia"
-msgstr ""
+msgstr "라트비아"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "리비아"
 
 #. 504
 msgid "Morocco"
-msgstr ""
+msgstr "모로코"
 
 #. 492
 msgid "Monaco"
-msgstr ""
+msgstr "모나코"
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "몰도바공화국"
 
 #. 499
 msgid "Montenegro"
-msgstr ""
+msgstr "몬테네그로"
 
 #. 663
 msgid "Saint Martin (French part)"
@@ -993,379 +987,379 @@ msgstr ""
 
 #. 450
 msgid "Madagascar"
-msgstr ""
+msgstr "마다가스카르"
 
 #. 584
 msgid "Marshall Islands"
-msgstr ""
+msgstr "마셜제도"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "마케도니아"
 
 #. 466
 msgid "Mali"
-msgstr ""
+msgstr "말리"
 
 #. 104
 msgid "Myanmar"
-msgstr ""
+msgstr "미얀마"
 
 #. 496
 msgid "Mongolia"
-msgstr ""
+msgstr "몽골"
 
 #. 446
 msgid "Macao"
-msgstr ""
+msgstr "마카오"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "북마리아나제도"
 
 #. 474
 msgid "Martinique"
-msgstr ""
+msgstr "마르티니크"
 
 #. 478
 msgid "Mauritania"
-msgstr ""
+msgstr "모리타니아"
 
 #. 500
 msgid "Montserrat"
-msgstr ""
+msgstr "몬세라트"
 
 #. 470
 msgid "Malta"
-msgstr ""
+msgstr "말타"
 
 #. 480
 msgid "Mauritius"
-msgstr ""
+msgstr "모리셔스"
 
 #. 462
 msgid "Maldives"
-msgstr ""
+msgstr "몰디브"
 
 #. 454
 msgid "Malawi"
-msgstr ""
+msgstr "말라위"
 
 #. 484
 msgid "Mexico"
-msgstr ""
+msgstr "멕시코"
 
 #. 458
 msgid "Malaysia"
-msgstr ""
+msgstr "말레이지아"
 
 #. 508
 msgid "Mozambique"
-msgstr ""
+msgstr "모잠비크"
 
 #. 516
 msgid "Namibia"
-msgstr ""
+msgstr "나미비다"
 
 #. 540
 msgid "New Caledonia"
-msgstr ""
+msgstr "뉴칼레도니아"
 
 #. 562
 msgid "Niger"
-msgstr ""
+msgstr "니제르"
 
 #. 574
 msgid "Norfolk Island"
-msgstr ""
+msgstr "노포크섬"
 
 #. 566
 msgid "Nigeria"
-msgstr ""
+msgstr "나이지리아"
 
 #. 558
 msgid "Nicaragua"
-msgstr ""
+msgstr "니카라과"
 
 #. 528
 msgid "Netherlands"
-msgstr ""
+msgstr "네덜란드"
 
 #. 578
 msgid "Norway"
-msgstr ""
+msgstr "노르웨이"
 
 #. 524
 msgid "Nepal"
-msgstr ""
+msgstr "네팔"
 
 #. 520
 msgid "Nauru"
-msgstr ""
+msgstr "나우루"
 
 #. 570
 msgid "Niue"
-msgstr ""
+msgstr "니우에"
 
 #. 554
 msgid "New Zealand"
-msgstr ""
+msgstr "뉴질랜드"
 
 #. 512
 msgid "Oman"
-msgstr ""
+msgstr "오만"
 
 #. 591
 msgid "Panama"
-msgstr ""
+msgstr "파나마"
 
 #. 604
 msgid "Peru"
-msgstr ""
+msgstr "페루"
 
 #. 258
 msgid "French Polynesia"
-msgstr ""
+msgstr "프랑스령폴리네시아"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "파푸아뉴기니"
 
 #. 608
 msgid "Philippines"
-msgstr ""
+msgstr "필리핀"
 
 #. 586
 msgid "Pakistan"
-msgstr ""
+msgstr "파키스탄"
 
 #. 616
 msgid "Poland"
-msgstr ""
+msgstr "폴란드"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "생피에르미클롱"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "핏케언제도"
 
 #. 630
 msgid "Puerto Rico"
-msgstr ""
+msgstr "푸에르토리코"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "팔레스타인영토"
 
 #. 620
 msgid "Portugal"
-msgstr ""
+msgstr "포르투갈"
 
 #. 585
 msgid "Palau"
-msgstr ""
+msgstr "팔라우"
 
 #. 600
 msgid "Paraguay"
-msgstr ""
+msgstr "파라과이"
 
 #. 634
 msgid "Qatar"
-msgstr ""
+msgstr "카타르"
 
 #. 638
 msgid "Reunion"
-msgstr ""
+msgstr "레위니옹"
 
 #. 642
 msgid "Romania"
-msgstr ""
+msgstr "루마니아"
 
 #. 688
 msgid "Serbia"
-msgstr ""
+msgstr "세르비아"
 
 #. 643
 msgid "Russian Federation"
-msgstr ""
+msgstr "러시아연방"
 
 #. 646
 msgid "Rwanda"
-msgstr ""
+msgstr "르완다"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "사우디아라비아"
 
 #. 090
 msgid "Solomon Islands"
-msgstr ""
+msgstr "솔로몬제도"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "세이셸"
 
 #. 736
 msgid "Sudan"
-msgstr ""
+msgstr "수단"
 
 #. 752
 msgid "Sweden"
-msgstr ""
+msgstr "스웨덴"
 
 #. 702
 msgid "Singapore"
-msgstr ""
+msgstr "싱가포르"
 
 #. 654
 msgid "Saint Helena"
-msgstr ""
+msgstr "세인트헬레나"
 
 #. 705
 msgid "Slovenia"
-msgstr ""
+msgstr "슬로베니아"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "스발바르얀마옌"
 
 #. 703
 msgid "Slovakia"
-msgstr ""
+msgstr "슬로바키아"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "시에라리온"
 
 #. 674
 msgid "San Marino"
-msgstr ""
+msgstr "산마리노"
 
 #. 686
 msgid "Senegal"
-msgstr ""
+msgstr "세네갈"
 
 #. 706
 msgid "Somalia"
-msgstr ""
+msgstr "소말리아"
 
 #. 740
 msgid "Suriname"
-msgstr ""
+msgstr "수리남"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "남수단"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "상투메・프린시페"
 
 #. 222
 msgid "El Salvador"
-msgstr ""
+msgstr "엘살바도르"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "신트마르턴 (네덜란드)"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "시리아"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "스와질란드"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "터커스케이커스제도"
 
 #. 148
 msgid "Chad"
-msgstr ""
+msgstr "차드"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "프랑스령남부와남극지역"
 
 #. 768
 msgid "Togo"
-msgstr ""
+msgstr "토고"
 
 #. 764
 msgid "Thailand"
-msgstr ""
+msgstr "태국"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "타지키스탄"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "토켈라우"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "동티모르"
 
 #. 795
 msgid "Turkmenistan"
-msgstr ""
+msgstr "투르크메니스탄"
 
 #. 788
 msgid "Tunisia"
-msgstr ""
+msgstr "튀니지"
 
 #. 776
 msgid "Tonga"
-msgstr ""
+msgstr "통가"
 
 #. 792
 msgid "Turkey"
-msgstr ""
+msgstr "터키"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "트리니다드・토바고"
 
 #. 798
 msgid "Tuvalu"
-msgstr ""
+msgstr "투발루"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "대만"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "탄자니아연합공화국"
 
 #. 804
 msgid "Ukraine"
-msgstr ""
+msgstr "우크라이나"
 
 #. 800
 msgid "Uganda"
-msgstr ""
+msgstr "우간다"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "미국령군소제도"
 
 #. 840
 msgid "United States"
-msgstr ""
+msgstr "미국"
 
 #. 858
 msgid "Uruguay"
-msgstr ""
+msgstr "우루과이"
 
 #. 860
 msgid "Uzbekistan"
-msgstr ""
+msgstr "우즈베키스탄"
 
 #. 336
 msgid "Holy See (Vatican City State)"
@@ -1377,23 +1371,23 @@ msgstr ""
 
 #. 862
 msgid "Venezuela"
-msgstr ""
+msgstr "베네수엘라"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "영국령버진제도"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "미국령버진제도"
 
 #. 704
 msgid "Viet Nam"
-msgstr ""
+msgstr "베트남"
 
 #. 548
 msgid "Vanuatu"
-msgstr ""
+msgstr "바누아투"
 
 #. 876
 msgid "Wallis and Futuna"
@@ -1401,11 +1395,11 @@ msgstr ""
 
 #. 882
 msgid "Samoa"
-msgstr ""
+msgstr "사모아"
 
 #. 887
 msgid "Yemen"
-msgstr ""
+msgstr "예멘"
 
 #. 175
 msgid "Mayotte"
@@ -1413,15 +1407,15 @@ msgstr ""
 
 #. 710
 msgid "South Africa"
-msgstr ""
+msgstr "남아프리카"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "잠비아"
 
 #. 716
 msgid "Zimbabwe"
-msgstr ""
+msgstr "짐바브웨"
 
 msgid "* Unknown, add is_in tags to those cities"
 msgstr ""
@@ -1482,59 +1476,59 @@ msgid "Iso3"
 msgstr ""
 
 msgid "Country"
-msgstr ""
+msgstr "나라"
 
 msgid "Postal"
 msgstr ""
 
 msgid "Town"
-msgstr ""
+msgstr "마을"
 
 msgid "District"
-msgstr ""
+msgstr "지역"
 
 msgid "Street"
-msgstr ""
+msgstr "거리"
 
 msgid "Number"
 msgstr ""
 
 msgid "Enter Destination"
-msgstr ""
+msgstr "목적지입력"
 
 msgid "Zip Code"
-msgstr ""
+msgstr "우편번호"
 
 msgid "City"
-msgstr ""
+msgstr "도시"
 
 msgid "District/Township"
 msgstr ""
 
 msgid "Map"
-msgstr ""
+msgstr "지도"
 
 msgid "Bookmark"
-msgstr ""
+msgstr "북마크"
 
 msgid "Destination"
-msgstr ""
+msgstr "목적지"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
 msgstr ""
 
 msgid "_Route"
-msgstr ""
+msgstr "경로"
 
 msgid "_Former Destinations"
-msgstr ""
+msgstr "이전목적지"
 
 msgid "_Bookmarks"
-msgstr ""
+msgstr "북마크"
 
 msgid "_Map"
-msgstr ""
+msgstr "지도"
 
 msgid "_Layout"
 msgstr ""
@@ -1546,19 +1540,19 @@ msgid "_Vehicle"
 msgstr ""
 
 msgid "Zoom_Out"
-msgstr ""
+msgstr "줌아웃"
 
 msgid "Decrease zoom level"
 msgstr ""
 
 msgid "Zoom_In"
-msgstr ""
+msgstr "줌인"
 
 msgid "Increase zoom level"
 msgstr ""
 
 msgid "_Recalculate"
-msgstr ""
+msgstr "재계산"
 
 msgid "Redraw map"
 msgstr ""
@@ -1579,13 +1573,13 @@ msgid "Opens POI search dialog"
 msgstr ""
 
 msgid "_Stop Navigation"
-msgstr ""
+msgstr "안내중지"
 
 msgid "Test"
-msgstr ""
+msgstr "테스트"
 
 msgid "_Quit"
-msgstr ""
+msgstr "종료"
 
 msgid "Quit the application"
 msgstr ""
@@ -1615,7 +1609,7 @@ msgid "Enable/disable automatic zoom level changing"
 msgstr ""
 
 msgid "_Fullscreen"
-msgstr ""
+msgstr "전체화면"
 
 msgid "Data"
 msgstr ""
@@ -1715,28 +1709,28 @@ msgid "Visit Before"
 msgstr ""
 
 msgid "N"
-msgstr ""
+msgstr "북"
 
 msgid "NE"
-msgstr ""
+msgstr "복동"
 
 msgid "E"
-msgstr ""
+msgstr "동"
 
 msgid "SE"
-msgstr ""
+msgstr "남동"
 
 msgid "S"
-msgstr ""
+msgstr "남"
 
 msgid "SW"
-msgstr ""
+msgstr "남서"
 
 msgid "W"
-msgstr ""
+msgstr "서"
 
 msgid "NW"
-msgstr ""
+msgstr "북서"
 
 #. Android resource: @strings/no
 msgid "No"
@@ -1763,7 +1757,7 @@ msgstr ""
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "경유지 %s"
 
 msgid "Select waypoint to insert the new one before"
 msgstr ""
@@ -1818,7 +1812,7 @@ msgid "Delete waypoint"
 msgstr ""
 
 msgid "Bookmarks"
-msgstr ""
+msgstr "북마크"
 
 msgid "Bookmarks as waypoints"
 msgstr ""
@@ -1970,7 +1964,7 @@ msgid "Show Locale"
 msgstr ""
 
 msgid "Former Destinations"
-msgstr ""
+msgstr "이전목적지"
 
 msgid "- No former destinations available -"
 msgstr ""
@@ -2462,7 +2456,7 @@ msgid "Tools"
 msgstr ""
 
 msgid "Route"
-msgstr ""
+msgstr "경로"
 
 msgid "About"
 msgstr ""
@@ -2490,7 +2484,7 @@ msgid "Display"
 msgstr ""
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "전체화면"
 
 msgid "Window Mode"
 msgstr ""

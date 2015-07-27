@@ -6,6 +6,7 @@
 # Carla Pita https://launchpad.net/~carla-pita
 # Diogo Lavareda https://launchpad.net/~diogolavareda
 # Joel Patrão https://launchpad.net/~jpatrao
+# João Pirralha https://launchpad.net/~joaopirralha
 # Rui Correia https://launchpad.net/~rds-correia
 # Skippern https://launchpad.net/~gay-today
 # Sérgio Marques https://launchpad.net/~sergio+marques
@@ -19,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-12-01 01:04+0000\n"
-"Last-Translator: Sérgio Marques <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 04:00+0000\n"
+"Last-Translator: João Pirralha <joaopirralha@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgid "first"
 msgstr "primeira"
 
 msgid "second"
-msgstr "Segundo"
+msgstr "segunda"
 
 msgid "third"
 msgstr "terceira"
@@ -81,28 +82,12 @@ msgid "sixth exit"
 msgstr "sexta saída"
 
 #, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#, c-format
-msgid "in %d m"
-msgstr "a %d m"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d pés"
 
 #, c-format
 msgid "in %d feet"
-msgstr "a %d pés"
-
-#, c-format
-msgid "%d meters"
-msgstr "%d metros"
-
-#, c-format
-msgid "in %d meters"
-msgstr "a %d metros"
+msgstr "em %d pés"
 
 #, c-format
 msgid "%d.%d miles"
@@ -110,15 +95,7 @@ msgstr "%d.%d milhas"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "a %d.%d milhas"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d quilómetro"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "a %d.%d quilómetros"
+msgstr "em %d.%d milhas"
 
 #, c-format
 msgid "one mile"
@@ -129,8 +106,24 @@ msgstr[1] "%d milhas"
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "a uma milha"
-msgstr[1] "a %d milhas"
+msgstr[0] "em uma milha"
+msgstr[1] "em %d milhas"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d metros"
+
+#, c-format
+msgid "in %d meters"
+msgstr "em %d metros"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d quilómetro"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "em %d.%d quilómetros"
 
 #, c-format
 msgid "one kilometer"
@@ -141,62 +134,62 @@ msgstr[1] "%d quilómetros"
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "a um quilómetro"
-msgstr[1] "a %d quilómetros"
+msgstr[0] "em um quilómetro"
+msgstr[1] "em %d quilómetros"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$spara %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$spara %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$spara o %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$spara a %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$spara %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "no acesso à auto-estrada"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sem %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sno %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sna %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sem %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s na %s"
+msgstr "%sna %s"
 
 msgid "When possible, please turn around"
 msgstr "Quando for possível, inverta o sentido de marcha"
@@ -204,7 +197,7 @@ msgstr "Quando for possível, inverta o sentido de marcha"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "rumo a %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -216,17 +209,17 @@ msgstr "Entre na próxima rotunda"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Entre na rotunda %s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "e saia da rotunda na %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Saia da rotunda na %1$s %2$s"
 
 msgid "soon"
 msgstr "logo"
@@ -235,96 +228,96 @@ msgid "now"
 msgstr "agora"
 
 msgid "then"
-msgstr ""
+msgstr "e depois"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "e juntar à direita%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Juntar à direita %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "e juntar à esquerda%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Juntar à esquerda %1$s%2$s"
 
 msgid "on your left"
-msgstr ""
+msgstr "à sua esquerda"
 
 msgid "on your right"
-msgstr ""
+msgstr "à sua direita"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Saia %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Saia na saída %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "no trevo"
 
 msgid "at exit"
-msgstr ""
+msgstr "na saída"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "e avance%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Avance %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "e continue à direita%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Continue à direita %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "e continue à esquerda%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Continue à esquerda %1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr "direita"
+msgstr "à direita"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr "esquerda"
+msgstr "à esquerda"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr "facilmente "
+msgstr "ligeiramente "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr "veementemente "
+msgstr "apertadamente "
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -338,25 +331,25 @@ msgstr "depois de %i estradas"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Vire %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "e dê meia-volta à esquerda"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Dê meia-volta à esquerda %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "e dê meia-volta à direita"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Dê meia-volta à direita %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -371,7 +364,7 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "siga"
 
 msgid "then you have reached your destination."
 msgstr "depois chegou ao seu destino."
@@ -379,14 +372,14 @@ msgstr "depois chegou ao seu destino."
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Chega ao seu destino em %s"
+msgstr "Chega ao seu destino %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "Trevo"
 
 msgid "Exit"
-msgstr ""
+msgstr "Saída"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -408,20 +401,20 @@ msgid "Time"
 msgstr "Duração"
 
 msgid "Destination Length"
-msgstr "Distância do destino"
+msgstr "Distância ao destino"
 
 msgid "Destination Time"
 msgstr "Duração até ao destino"
 
 msgid "Roadbook"
-msgstr "Mapa"
+msgstr "Descrição da rota"
 
 #, c-format
 msgid "Waypoint %d"
 msgstr "Ponto %d"
 
 msgid "Visit before..."
-msgstr "Visite antes..."
+msgstr "Visitar antes..."
 
 msgid "Set as position"
 msgstr "Definir como posição"
@@ -446,7 +439,7 @@ msgstr "Andorra"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr "Emiratos Árabes Unidos"
+msgstr "Emirados Árabes Unidos"
 
 #. 004
 msgid "Afghanistan"
@@ -1441,7 +1434,7 @@ msgid "Zimbabwe"
 msgstr "Zimbabué"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "* Desconhecido, adicione tags \"is_in\"  para estas cidades"
+msgstr "* Desconhecido, adicione tags \"is_in\" para estas cidades"
 
 msgid ""
 "navit usage:\n"
@@ -1454,6 +1447,16 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
 msgstr ""
+"Utilização do Navit:\n"
+"navit [opções] [ficheiro de configuração]\n"
+"\t-c <ficheiro>: usar <ficheiro> como ficheiro de configuração, em vez de "
+"usar o ficheiro pré-definido.\n"
+"\t-d <n>: define o nível global de saída de depuração para <n> (0=erro, "
+"1=aviso, 2=informação, 3=depuração).\n"
+"\tDefinições do ficheiro de configuração irão ter efeito mesmo quando "
+"definiram um nível superior.\n"
+"\t-h: imprimir esta informação de utilização e sair.\n"
+"\t-v: imprimir a versão e sair.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1470,6 +1473,7 @@ msgstr "Utilizando o ficheiro '%s'\n"
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
 msgstr ""
+"Erro: Nenhuma configuração encontrada no ficheiro de configuração '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1545,16 +1549,16 @@ msgid "_Route"
 msgstr "_Rota"
 
 msgid "_Former Destinations"
-msgstr "Destinos an:teriores"
+msgstr "Destinos _anteriores"
 
 msgid "_Bookmarks"
-msgstr "Marca_dores"
+msgstr "Marcador_es"
 
 msgid "_Map"
 msgstr "_Mapa"
 
 msgid "_Layout"
-msgstr "Es_quema"
+msgstr "_Esquema"
 
 msgid "_Projection"
 msgstr "_Projeção"
@@ -1590,13 +1594,13 @@ msgid "Opens address search dialog"
 msgstr "Abre o diálogo de procura de destino"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_Pesquisar POI"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Abre o diálogo de pesquisa de POI"
 
 msgid "_Stop Navigation"
-msgstr "Parar _navegação"
+msgstr "Parar _Navegação"
 
 msgid "Test"
 msgstr "Teste"
@@ -1614,13 +1618,13 @@ msgid "_Lock on Road"
 msgstr "B_loqueio na estrada"
 
 msgid "_Keep orientation to the North"
-msgstr "_Manter orientação ao Norte"
+msgstr "Manter orientação ao _Norte"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr "Muda a orientação do mapa para o norte ou para o veículo"
 
 msgid "_Roadbook"
-msgstr "Ma_pa"
+msgstr "_Descrição da rota"
 
 msgid "Show/hide route description"
 msgstr "Mostrar/ocultar descrição da rota"
@@ -1632,104 +1636,104 @@ msgid "Enable/disable automatic zoom level changing"
 msgstr "Ativar/desativar tamanho automático da ampliação"
 
 msgid "_Fullscreen"
-msgstr "Ecrã co_mpleto"
+msgstr "_Ecrã completo"
 
 msgid "Data"
 msgstr "Dados"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Farmácia"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurante"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restaurante. Comida rápida"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Estacionamento para carros"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Posto de abastecimento"
 
 msgid "Bank"
-msgstr ""
+msgstr "Banco"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Hospital"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Cinema"
 
 msgid "Train station"
-msgstr ""
+msgstr "Estação de comboios"
 
 msgid "School"
-msgstr ""
+msgstr "Escola"
 
 msgid "Police"
-msgstr ""
+msgstr "Polícia"
 
 msgid "Justice"
-msgstr ""
+msgstr "Justiça"
 
 msgid "Taxi"
-msgstr ""
+msgstr "Táxi"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Compras"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "Distância ao centro do ecrã (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "Definir destino para %ld, %ld \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "Definir mapa para %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Definir próxima visita para %ld, %ld \n"
 
 msgid "POI search"
-msgstr ""
+msgstr "Pesquisar POIs"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Selecione uma categoria"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Selecione a distância a pesquisar (km)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "Selecione um POI"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 msgid "Direction"
-msgstr ""
+msgstr "Direção"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distância (m)"
 
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Visitar Antes"
 
 msgid "N"
 msgstr "N"
@@ -1930,7 +1934,7 @@ msgstr "De"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr "equipa Navit"
+msgstr "E toda a equipa do Navit"
 
 msgid "members and contributors."
 msgstr "membros e contribuidores."
@@ -1948,10 +1952,10 @@ msgstr "Introduzir coordenadas"
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "Latitude Longitude"
 
 msgid "Enter coordinates, for example:"
-msgstr "Introduza as coordenadas. Por exemplo:"
+msgstr "Introduza as coordenadas, por exemplo:"
 
 msgid "Vehicle"
 msgstr "Veículo"
@@ -1990,7 +1994,7 @@ msgid "Former Destinations"
 msgstr "Destinos anteriores"
 
 msgid "- No former destinations available -"
-msgstr "-Não existem destinos anteriores-"
+msgstr "- Não existem destinos anteriores -"
 
 msgid "Message"
 msgstr "Mensagem"
@@ -2047,6 +2051,9 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"A atual localização %s no mapa não está disponível\n"
+"Por favor reinicie o Navit após introduzir um cartão SD ou selecionar uma "
+"localização diferente no mapa."
 
 msgid "Downloaded maps"
 msgstr "Mapas transferidos"
@@ -2055,17 +2062,21 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Infelizmente não suportamos mapas maiores que 3.8G no Android, por favor "
+"selecione um mais pequeno."
 
 msgid "Cancel"
 msgstr "Cancelar"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "nomedoficheiroCaminho"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Nova localização definida para %s\n"
+"Reinicie o Navit para aplicar as alterações."
 
 msgid "Whole Planet"
 msgstr "Planeta"
@@ -2431,14 +2442,14 @@ msgid "Guyane Francaise"
 msgstr "Guiana Francesa"
 
 msgid "downloading"
-msgstr "a transferir..."
+msgstr "a transferir"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
 msgstr "pronto"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "A unidade selecionada para armazenar mapas não está dispoível"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2455,11 +2466,11 @@ msgstr "Transferência interrompida!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr "ETA"
+msgstr "Duração estimada"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr "TransferÊncia de mapa"
+msgstr "Transferência do mapa"
 
 msgid "Vehicle Position"
 msgstr "Posição do veículo"
@@ -2497,7 +2508,7 @@ msgid ""
 "Destinations"
 msgstr ""
 "Destinos\n"
-"anteriores"
+"Anteriores"
 
 msgid "Coordinates"
 msgstr "Coordenadas"
@@ -2548,7 +2559,7 @@ msgid "car_avoid_tolls"
 msgstr "carro_evitar_portagens"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "carro_pedante"
 
 msgid "horse"
 msgstr "cavalo"
@@ -2586,9 +2597,9 @@ msgid ""
 msgstr ""
 "Obrigado por instalar o Navit!\n"
 "\n"
-"Para iniciar, deve selecionar a opção de menu \"Transferir mapas\" para "
-"transferir um mapa. Nota: o ficheiro de mapa pode ser bastante extenso "
-"(>50MB). Recomenda-se a utilização de uma rede sem fios.\n"
+"Para começar, selecione \"Transferir mapas\" no menu para transferir um "
+"mapa. Nota: o tamanho do ficheiro de mapa pode ser bastante grande (>50MB) - "
+"recomenda-se a utilização de uma rede wifi.\n"
 "\n"
 "Dados do mapa: (c) colaboradores OpenStreetMap\n"
 "\n"
@@ -2600,7 +2611,7 @@ msgstr "Sim"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr "Mais detalhes"
+msgstr "Mais informações"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
@@ -2616,7 +2627,7 @@ msgstr "Transferir mapas"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr "Alternar POIs"
+msgstr "Ativar POIs"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
@@ -2624,11 +2635,11 @@ msgstr "Sair"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr "Backup/Restauro"
+msgstr "Cópia seg. / Restauro"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Definir localização do mapa"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2636,7 +2647,7 @@ msgstr "Eliminar mapa?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr "Transferência:"
+msgstr "A transferir:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2669,7 +2680,7 @@ msgstr "Ocorrências parciais"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr "Procura..."
+msgstr "A procurar..."
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2677,11 +2688,11 @@ msgstr "Endereço não encontrado"
 
 #. Android resource: @strings/address_search_getting_results
 msgid "Getting search results"
-msgstr "Obtenção dos resultados"
+msgstr "A obter resultados"
 
 #. Android resource: @strings/address_search_loading_results
 msgid "Loading search results"
-msgstr "Carregamento de resultados"
+msgstr "Carregando resultados"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
@@ -2689,7 +2700,7 @@ msgstr "Nenhum resultado encontrado"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
-msgstr "Texto não introduzido"
+msgstr "Nenhum texto introduzido"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
@@ -2701,27 +2712,27 @@ msgstr "Escolha uma ação"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr "Por favor insira o cartão SD"
+msgstr "Por favor insira um cartão SD"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Backup..."
+msgstr "A criar cópia de segurança..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr "Restauro..."
+msgstr "A restaurar..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr "Erro ao criar pasta de backup"
+msgstr "Falha ao criar o diretório da cópia de segurança"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr "Erro ao efetuar backup"
+msgstr "A cópia de segurança falhou"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr "Backup não encontrado"
+msgstr "Nenhuma cópia de segurança encontrada"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
@@ -2729,7 +2740,7 @@ msgstr "Falha ao restaurar"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr "Backup efetuado"
+msgstr "Cópia de segurança efetuada com sucesso"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
@@ -2741,7 +2752,7 @@ msgstr ""
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr "Backup não encontrado"
+msgstr "Cópia de segurança não encontrada"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
@@ -2749,11 +2760,11 @@ msgstr "Erro ao restaurar"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr "Escolha o backup"
+msgstr "Escolha a cópia de segurança"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr "Backup"
+msgstr "Cópia de segurança"
 
 #. Android resource: @strings/restore
 msgid "Restore"
@@ -2761,7 +2772,7 @@ msgstr "Restauro"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "Dados do motor de síntese de voz em falta no sistema"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""
@@ -2769,3 +2780,6 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+"O Navit pode usar qualquer motor de síntese de voz no dispositivo. O motor "
+"atualmente selecionado reporta não suportar o seu idioma. Pedir ao sistema "
+"para exibir o diálogo de transferência de voz?"

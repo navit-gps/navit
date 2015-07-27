@@ -4,13 +4,14 @@
 # Many thanks to the contributors of this translation:
 # HinzundKunz https://launchpad.net/~martin-tlustos
 # KaZeR https://launchpad.net/~kazer
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2014-08-08 23:15+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 04:00+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Swahili <sw@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,14 +71,6 @@ msgid "sixth exit"
 msgstr "exit ya sita"
 
 #, c-format
-msgid "%d m"
-msgstr "mita %d"
-
-#, c-format
-msgid "in %d m"
-msgstr "baada ya mita %d"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -86,28 +79,12 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "mita %d"
-
-#, c-format
-msgid "in %d meters"
-msgstr "baada ya mita %d"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "kilomita %d.%d"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "baada ya kilomita %d.%d"
 
 #, c-format
 msgid "one mile"
@@ -120,6 +97,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr "mita %d"
+
+#, c-format
+msgid "in %d meters"
+msgstr "baada ya mita %d"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "kilomita %d.%d"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "baada ya kilomita %d.%d"
 
 #, c-format
 msgid "one kilometer"
@@ -165,30 +158,30 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%skufuata %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%skufuata %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%skufuata %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%skufuata %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s kufuata %s"
+msgstr "%skufuata %s"
 
 msgid "When possible, please turn around"
-msgstr "geuka na kurudi nyuma inapowezekana"
+msgstr "Geuka na kurudi nyuma inapowezekana"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
@@ -197,7 +190,7 @@ msgstr ""
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "buata barabara kwa %s"
+msgstr "Buata barabara kwa %s"
 
 msgid "Enter the roundabout soon"
 msgstr ""
@@ -210,12 +203,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "halafu toka kutoka kwenye kipilefti kwenye %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Toka kutoka kwenye kipilefti kwenye %1$s %2$s"
 
 msgid "soon"
 msgstr "karibuni"
@@ -224,7 +217,7 @@ msgid "now"
 msgstr "sasa"
 
 msgid "then"
-msgstr ""
+msgstr "halafu"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -327,7 +320,7 @@ msgstr "baada ya barabara %i"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "piga kona %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -375,7 +368,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Ondoka"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

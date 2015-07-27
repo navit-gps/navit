@@ -6,8 +6,8 @@
 
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2015-03-11 06:11+0000\n"
 "Last-Translator: Enkhbold <enkhbold_baatar@yahoo.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"Language: mn\n"
 
 msgid "Running from source directory\n"
 msgstr "Эх байгаа сангаас нь ажиллуулах\n"
@@ -68,14 +69,6 @@ msgid "sixth exit"
 msgstr ""
 
 #, c-format
-msgid "%d m"
-msgstr ""
-
-#, c-format
-msgid "in %d m"
-msgstr ""
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -84,27 +77,11 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr ""
-
-#, c-format
-msgid "in %d meters"
-msgstr ""
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr ""
-
-#, c-format
-msgid "in %d.%d kilometers"
 msgstr ""
 
 #, c-format
@@ -118,6 +95,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr ""
+
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
 
 #, c-format
 msgid "one kilometer"
