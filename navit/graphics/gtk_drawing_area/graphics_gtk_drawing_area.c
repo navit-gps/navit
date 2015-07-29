@@ -64,9 +64,7 @@ struct graphics_priv {
 	GtkWidget *widget;
 	GtkWidget *win;
 	struct window window;
-	GdkDrawable *drawable;
 	cairo_t *cairo;
-	GdkColormap *colormap;
 	struct point p;
 	struct point pclean;
 	int width;
@@ -95,11 +93,8 @@ struct graphics_priv {
 
 
 struct graphics_gc_priv {
-	GdkGC *gc;
-	GdkPixmap *pixmap;
 	struct graphics_priv *gr;
 	struct color c;
-
 	double linewidth;
 	double *dashes;
 	int ndashes;
@@ -135,7 +130,6 @@ graphics_destroy(struct graphics_priv *gr)
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
-	g_object_unref(gc->gc);
 	g_free(gc);
 }
 
@@ -186,7 +180,6 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
 
 	*meth=gc_methods;
-	gc->gc=gdk_gc_new(gr->widget->window);
 	gc->gr=gr;
 
 	gc->linewidth=1;
@@ -425,18 +418,9 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 #endif
 	if (bg && !bg->c.a)
 		bg=NULL;
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_OR);
-		gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-	} else {
-		gdk_gc_set_function(fg->gc, GDK_OR);
-	}
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
 	display_text_draw(t, gr, fg, bg, p);
 	gr->freetype_methods.text_destroy(t);
-	gdk_gc_set_function(fg->gc, GDK_COPY);
-	if (bg)
-		gdk_gc_set_function(bg->gc, GDK_COPY);
 }
 
 static void
@@ -571,7 +555,7 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
 }
 
 static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo, GdkGC *gc)
+overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo)
 {
 	GdkRectangle or, ir;
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
@@ -605,22 +589,6 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
-gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r, cairo_t *cairo)
-{
-	GtkWidget *widget=gr->widget;
-	GdkGC *gc=widget->style->fg_gc[GTK_WIDGET_STATE(widget)];
-	struct graphics_priv *overlay;
-
-	if (! gr->drawable)
-		return;
-	overlay=gr->overlays;
-	while (overlay) {
-		overlay_draw(gr,overlay,r,cairo,gc);
-		overlay=overlay->next;
-	}
-}
-
-static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
@@ -638,15 +606,11 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	struct graphics_priv *gra=user_data;
 	if (! gra->visible)
 		return TRUE;
-	if (gra->drawable != NULL) {
-                g_object_unref(gra->drawable);
-        }
 #ifndef _WIN32
 	dbg(lvl_debug,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
-        gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
 	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
 	if (gra->cairo)
 		cairo_destroy(gra->cairo);
@@ -662,9 +626,10 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 {
 	struct graphics_priv *gra=user_data;
 	struct graphics_gc_priv *background_gc=gra->background_gc;
+	struct graphics_priv *overlay;
 
 	gra->visible=1;
-	if (! gra->drawable)
+	if (! gra->cairo)
 		configure(widget, NULL, user_data);
 
 	cairo_t *cairo=gdk_cairo_create(widget->window);
@@ -675,7 +640,12 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), gra->p.x, gra->p.y);
 	cairo_paint(cairo);
 
-	gtk_drawing_area_draw(gra, &event->area, cairo);
+	overlay = gra->overlays;
+	while (overlay) {
+		overlay_draw(gra,overlay,&event->area,cairo);
+		overlay=overlay->next;
+	}
+
 	cairo_destroy(cairo);
 	return FALSE;
 }
@@ -920,11 +890,6 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 	this->wraparound = wraparound;
 
 	if (changed) {
-		// Set the drawables to the right sizes
-		g_object_unref(this->drawable);
-
-		this->drawable=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
-
 		cairo_destroy(this->cairo);
 		cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
 		this->cairo=cairo_create(surface);
@@ -984,7 +949,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 {
 	int w2,h2;
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
-	this->colormap=gr->colormap;
 	this->widget=gr->widget;
 	this->p=*p;
 	this->width=w;
@@ -1005,7 +969,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 		w2 = w;
 	}
 
-	this->drawable=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
 	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
 	this->cairo=cairo_create(surface);
 	cairo_surface_destroy(surface);
@@ -1159,7 +1122,6 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	else
 		this->window_title=g_strdup("Navit");
 	this->cbl=cbl;
-	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
 	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
         g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
