@@ -130,7 +130,7 @@ mkdir -p $BUILD_PATH
 cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 android list targets
-svn_rev=` cd ~/navit/; git log -1|grep svn|cut -c 65-68`
+svn_rev=` cd ~/navit/; git log -1|grep git-svn-id:|cut -c 65-68`
 sed -i -e "s/ANDROID_VERSION_INT=\"0\"/ANDROID_VERSION_INT=\"${svn_rev}\"/g" ~/navit/navit/android/CMakeLists.txt
 cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/
 
