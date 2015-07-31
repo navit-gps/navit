@@ -53,6 +53,9 @@
 #endif
 #endif
 
+#define COLOR_BITDEPTH_OUTPUT 8
+#define COL_SHIFT (COLOR_BITDEPTH-COLOR_BITDEPTH_OUTPUT)
+
 struct font_freetype_font {
 	int size;
 #if USE_CACHING
@@ -552,19 +555,19 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 		bg=0x00;
 		break;
 	case 8:
-		fg=foreground->a>>8;
-		bg=background->a>>8;
+		fg=foreground->a>>COL_SHIFT;
+		bg=background->a>>COL_SHIFT;
 		break;
 	case 24:
 	case 32:
-		fg=((foreground->a>>8)<<24)|
-		   ((foreground->r>>8)<<16)|
-		   ((foreground->g>>8)<<8)|
-		   ((foreground->b>>8)<<0);
-		bg=((background->a>>8)<<24)|
-		   ((background->r>>8)<<16)|
-		   ((background->g>>8)<<8)|
-		   ((background->b>>8)<<0);
+		fg=((foreground->a>>COL_SHIFT)<<24)|
+		   ((foreground->r>>COL_SHIFT)<<16)|
+		   ((foreground->g>>COL_SHIFT)<<8)|
+		   ((foreground->b>>COL_SHIFT)<<0);
+		bg=((background->a>>COL_SHIFT)<<24)|
+		   ((background->r>>COL_SHIFT)<<16)|
+		   ((background->g>>COL_SHIFT)<<8)|
+		   ((background->b>>COL_SHIFT)<<0);
 		break;
 	default:
 		return 0;
@@ -710,14 +713,14 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 	unsigned char v,vi,*pm, *ps;
 	switch (depth) {
 	case 8:
-		tr=transparent->a>>8;
+		tr=transparent->a>>COL_SHIFT;
 		break;
 	case 24:
 	case 32:
-		tr=((transparent->a>>8)<<24)|
-		   ((transparent->r>>8)<<16)|
-		   ((transparent->g>>8)<<8)|
-		   ((transparent->b>>8)<<0);
+		tr=((transparent->a>>COL_SHIFT)<<24)|
+		   ((transparent->r>>COL_SHIFT)<<16)|
+		   ((transparent->g>>COL_SHIFT)<<8)|
+		   ((transparent->b>>COL_SHIFT)<<0);
 		break;
 	default:
 		return 0;
@@ -747,9 +750,9 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 				v=*pm;
 				if (v) {
 					vi=255-v;
-					ps[0]=(((fg->r*v+bg->r*vi)/255)>>8);
-					ps[1]=(((fg->g*v+bg->g*vi)/255)>>8);
-					ps[2]=(((fg->b*v+bg->b*vi)/255)>>8);
+					ps[0]=(((fg->r*v+bg->r*vi)/255)>>COL_SHIFT);
+					ps[1]=(((fg->g*v+bg->g*vi)/255)>>COL_SHIFT);
+					ps[2]=(((fg->b*v+bg->b*vi)/255)>>COL_SHIFT);
 				} else {
 					ps[0]=tr >> 16;
 					ps[1]=tr >> 8;
@@ -765,10 +768,10 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 				if (v) {
 					vi=255-v;
 					((unsigned int *)ps)[0]=
-						((((fg->a*v+bg->a*vi)/255)>>8)<<24)|
-						((((fg->r*v+bg->r*vi)/255)>>8)<<16)|
-						((((fg->g*v+bg->g*vi)/255)>>8)<<8)|
-						((((fg->b*v+bg->b*vi)/255)>>8)<<0);
+						((((fg->a*v+bg->a*vi)/255)>>COL_SHIFT)<<24)|
+						((((fg->r*v+bg->r*vi)/255)>>COL_SHIFT)<<16)|
+						((((fg->g*v+bg->g*vi)/255)>>COL_SHIFT)<<8)|
+						((((fg->b*v+bg->b*vi)/255)>>COL_SHIFT)<<0);
 				} else
 					((unsigned int *)ps)[0]=tr;
 				ps+=4;
