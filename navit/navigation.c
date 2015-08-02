@@ -143,6 +143,17 @@ struct suffix {
 	{"gasse", NULL, feminine},
 	{"straße", "str.", feminine},
 
+	/* some for the dutch lang. */
+	{"straat", NULL, neuter},
+/*	{"weg", NULL, neuter}, doubles-up with German */
+	{"baan", NULL, neuter},
+	{"laan", NULL, neuter},
+	{"wegel", NULL, neuter},
+
+	/* some for the english lang. */
+	{"street", NULL, masculine},
+	{"drive", NULL, masculine},
+
 	/* some for Lithuanian, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
 	{"gatvė", "g.", feminine},
 	{"plentas", "pl.", masculine},
@@ -3250,7 +3261,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int skip_roads = 0;
 	int count_roundabout;
 	struct navigation_itm *cur;
-	struct navigation_way *candidate_way;
 	int tellstreetname = 0;
 	char * at = NULL;        /* Motorway junction name */
 	char * direction = NULL; /* The direction-dependent part of the maneuver */
@@ -3294,46 +3304,11 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		count_roundabout = 0;
 		while (cur && (cur->way.flags & AF_ROUNDABOUT))
 		{
-			candidate_way=cur->next->way.next;
-			while (candidate_way)
-			{
-				if (candidate_way && is_way_allowed(nav,candidate_way,3))
-				/* If the next segment has no exit or the exit isn't allowed, don't count it */
-				{
-					count_roundabout++;
-					/* As soon as we have an allowed one on this node,
-					 * stop further counting for this node.
-					 */
-					break;
-				}
-				candidate_way=candidate_way->next;
-			}
+			if (cur->next->way.next && is_way_allowed(nav,cur->next->way.next,3))
+			/* If the next segment has no exit or the exit isn't allowed, don't count it */
+				count_roundabout++;
 			cur = cur->prev;
 		}
-		
-		/*try to figure out if the entry node has a usable exit as well
-		*
-		* the test is for RHD only, expand for LHD after such a case is known
-		*/
-		if (cur && cur->next && (cmd->maneuver->type <= type_nav_roundabout_r8) && (cmd->maneuver->type >= type_nav_roundabout_r1))
-		{
-			candidate_way=cur->next->way.next;
-			while (candidate_way)
-			{
-				if (candidate_way && is_way_allowed(nav,candidate_way,3)
-					&& (angle_delta(cur->angle_end,candidate_way->angle2) > 0) && ( angle_delta(candidate_way->angle2,cur->next->way.angle2) < 0 ))
-					/*for the entry node only count exits to the right ?*/
-				{
-					count_roundabout++;
-					/* As soon as we have an allowed one on this node,
-					* stop further counting for this node.
-					*/
-					break;
-				}
-				candidate_way=candidate_way->next;
-			}
-		}
-		
 		switch (level)
 		{
 			case 3:
@@ -3343,8 +3318,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				return g_strdup(_("Enter the roundabout soon"));
 			case 1:
 				d = get_distance_str(nav, distance, attr_navigation_short, 0);
-				/* TRANSLATORS: first arg. is the distance to the roundabout, second arg. is the manieth exit  */
-				ret = g_strdup_printf(_("Enter the roundabout %1$s and leave at the %2$s"), d,get_exit_count_str(count_roundabout));
+				/* TRANSLATORS: %s is the distance to the roundabout */
+				ret = g_strdup_printf(_("Enter the roundabout %s"), d);
 				g_free(d);
 				return ret;
 			case -2:
@@ -3423,18 +3398,18 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				case mex_merge_right:
 					if (cmd->maneuver->merge_or_exit == mex_merge_right) {
 						if (level == -2)
-							/* TRANSLATORS: the arg. is the phrase 'onto ...'.  */
-							instruction = g_strdup_printf(_("then right merge%1$s"), d);
+							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included. */
+							instruction = g_strdup_printf(_("then merge%1$s|right"), d);
 						else
-							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. */
-							instruction = g_strdup_printf(_("Merge right %1$s%2$s"), d, destination);
+							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included. */
+							instruction = g_strdup_printf(_("Merge %1$s%2$s|right"), d, destination);
 					} else {
 						if (level == -2)
-							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge */
-							instruction = g_strdup_printf(_("then left merge%1$s"), d);
+							/* TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included. */
+							instruction = g_strdup_printf(_("then merge%1$s|left"), d);
 						else
-							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge */
-							instruction = g_strdup_printf(_("Merge left %1$s%2$s"), d, destination);
+							/* TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included. */
+							instruction = g_strdup_printf(_("Merge %1$s%2$s|left"), d, destination);
 					}
 					break;
 				case mex_exit_left:
@@ -3546,19 +3521,19 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 					break;
 				case type_nav_turnaround_left:
 					if (level == -2)
-						/* TRANSLATORS: Left U-turn */
-						instruction = g_strdup(_("then make a left U-turn"));
+						/* TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included. */
+						instruction = g_strdup(_("then make a U-turn|left"));
 					else
-						/* TRANSLATORS: the arg. is distance. Left U-turn */
-						instruction = g_strdup_printf(_("Make a left U-turn %1$s"), d);
+						/* TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included. */
+						instruction = g_strdup_printf(_("Make a U-turn %1$s|left"), d);
 					break;
 				case type_nav_turnaround_right:
 					if (level == -2)
-						/* TRANSLATORS: Right U-turn, the stuff after */
-						instruction = g_strdup(_("then make a right U-turn"));
+						/* TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included. */
+						instruction = g_strdup(_("then make a U-turn|right"));
 					else
-						/* TRANSLATORS: the arg. is distance. Right U-turn  */
-						instruction = g_strdup_printf(_("Make a right U-turn %1$s"), d);
+						/* TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included. */
+						instruction = g_strdup_printf(_("Make a U-turn %1$s|right"), d);
 					break;
 				case type_nav_none:
 					/*An empty placeholder that we can use in the future for
