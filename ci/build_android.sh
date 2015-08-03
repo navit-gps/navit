@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 red='\e[0;31m'
 grn='\e[0;32m'
 yel='\e[1;33m'
@@ -34,7 +36,7 @@ export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2re
 
 export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support"
 
-mkdir $ANDROID_HOME
+[ -d $ANDROID_HOME ] || mkdir $ANDROID_HOME
 
 # If path already has our environment no need to set it
 if echo "$ANDROID_ENV" | grep -q "$PATH"; then
@@ -131,6 +133,7 @@ cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 android list targets
 svn_rev=` cd ~/navit/; git log -1|grep git-svn-id:|cut -c 65-68`
+if [[ "$svn_rev" == "" ]]; then svn_rev="0"; fi
 sed -i -e "s/ANDROID_VERSION_INT=\"0\"/ANDROID_VERSION_INT=\"${svn_rev}\"/g" ~/navit/navit/android/CMakeLists.txt
 cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/
 
