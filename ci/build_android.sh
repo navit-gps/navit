@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 red='\e[0;31m'
 grn='\e[0;32m'
 yel='\e[1;33m'
