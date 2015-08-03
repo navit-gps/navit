@@ -10,7 +10,6 @@
                  android:name=".NavitAppConfig">
         <activity android:name="Navit"
                   android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar"
 		  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
