@@ -3,9 +3,9 @@ machine:
     ANDROID_HOME: /home/ubuntu/android
     ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
     ANDROID_SDK_CDN: https://dl.google.com/android
-    ANDROID_SDK_FILE: android-sdk_r24.2-linux.tgz
+    ANDROID_SDK_FILE: android-sdk_r24.0.2-linux.tgz
     ANDROID_NDK_CDN: http://dl.google.com/android/ndk
-    ANDROID_NDK_FILE: android-ndk-r10e-linux-x86_64.bin
+    ANDROID_NDK_FILE: android-ndk-r10d-linux-x86_64.bin
     CMAKE_FILE: ../Toolchain/arm-eabi.cmake
 dependencies:
   cache_directories:

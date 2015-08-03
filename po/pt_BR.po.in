@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:00+0000\n"
-"Last-Translator: Helder Santana <helder.bs.santana@gmail.com>\n"
+"PO-Revision-Date: 2015-07-27 11:44+0000\n"
+"Last-Translator: Julio Alexander Sieg <julio.sieg@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "Executando do diretório de origem\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "ajustando '%s' para '%s'\n"
+msgstr "ajustando de '%s' para '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -86,6 +86,14 @@ msgid "sixth exit"
 msgstr "sexta saída"
 
 #, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
 msgid "%d feet"
 msgstr "%d pés"
 
@@ -94,12 +102,28 @@ msgid "in %d feet"
 msgstr "em %d pés"
 
 #, c-format
+msgid "%d meters"
+msgstr "%d metros"
+
+#, c-format
+msgid "in %d meters"
+msgstr "em %d metros"
+
+#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d milhas"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "em %d.%d milhas"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d quilômetros"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "em %d.%d quilômetros"
 
 #, c-format
 msgid "one mile"
@@ -112,22 +136,6 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "em uma milha"
 msgstr[1] "em %d milhas"
-
-#, c-format
-msgid "%d meters"
-msgstr "%d metros"
-
-#, c-format
-msgid "in %d meters"
-msgstr "em %d metros"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d quilômetros"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "em %d.%d quilôtros"
 
 #, c-format
 msgid "one kilometer"
@@ -149,7 +157,7 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$sno %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
@@ -210,10 +218,10 @@ msgstr "Continue na via por %s"
 msgid "Enter the roundabout soon"
 msgstr "Entre na rotatória em seguida"
 
-#. TRANSLATORS: %s is the distance to the roundabout
+#. TRANSLATORS: first arg. is the distance to the roundabout, second arg. is the manieth exit
 #, c-format
-msgid "Enter the roundabout %s"
-msgstr "Entre na rotatória %s"
+msgid "Enter the roundabout %1$s and leave at the %2$s"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -234,25 +242,25 @@ msgstr "agora"
 msgid "then"
 msgstr "em seguida"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'.
 #, c-format
-msgid "then merge%1$s|right"
+msgid "then right merge%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'.
 #, c-format
-msgid "Merge %1$s%2$s|right"
+msgid "Merge right %1$s%2$s"
 msgstr ""
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge
 #, c-format
-msgid "then merge%1$s|left"
-msgstr "em seguida vire a %1$s|esquerda"
+msgid "then left merge%1$s"
+msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge
 #, c-format
-msgid "Merge %1$s%2$s|left"
-msgstr "Vire a %1$s%2$s|esquerda"
+msgid "Merge left %1$s%2$s"
+msgstr ""
 
 msgid "on your left"
 msgstr "à sua esquerda"
@@ -337,23 +345,23 @@ msgstr "após %i vias"
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Vire a %1$s%2$s %3$s%4$s"
 
-#. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
-msgid "then make a U-turn|left"
-msgstr "então faça o retorno"
+#. TRANSLATORS: Left U-turn
+msgid "then make a left U-turn"
+msgstr ""
 
-#. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is distance. Left U-turn
 #, c-format
-msgid "Make a U-turn %1$s|left"
-msgstr "Faça o retorno a esquerda %1$s"
+msgid "Make a left U-turn %1$s"
+msgstr ""
 
-#. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
-msgid "then make a U-turn|right"
-msgstr "então faça o retorno a direita"
+#. TRANSLATORS: Right U-turn, the stuff after
+msgid "then make a right U-turn"
+msgstr ""
 
-#. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is distance. Right U-turn
 #, c-format
-msgid "Make a U-turn %1$s|right"
-msgstr "Faça o retorno a direita %1$s"
+msgid "Make a right U-turn %1$s"
+msgstr ""
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -2778,3 +2786,29 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "Enter the roundabout %s"
+#~ msgstr "Entre na rotatória %s"
+
+#, c-format
+#~ msgid "then merge%1$s|left"
+#~ msgstr "em seguida vire a %1$s|esquerda"
+
+#, c-format
+#~ msgid "Merge %1$s%2$s|left"
+#~ msgstr "Vire a %1$s%2$s|esquerda"
+
+#~ msgid "then make a U-turn|left"
+#~ msgstr "então faça o retorno"
+
+#, c-format
+#~ msgid "Make a U-turn %1$s|left"
+#~ msgstr "Faça o retorno a esquerda %1$s"
+
+#~ msgid "then make a U-turn|right"
+#~ msgstr "então faça o retorno a direita"
+
+#, c-format
+#~ msgid "Make a U-turn %1$s|right"
+#~ msgstr "Faça o retorno a direita %1$s"

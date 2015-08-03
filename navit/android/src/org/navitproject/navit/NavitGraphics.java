@@ -161,16 +161,24 @@ public class NavitGraphics
 			canvas.drawBitmap(draw_bitmap, pos_x, pos_y, null);
 			if (overlay_disabled == 0)
 			{
+				//Log.e("NavitGraphics", "view -> onDraw 1");
 				// assume we ARE in map view mode!
 				in_map = true;
-				for (NavitGraphics overlay : overlays)
+
+				Object overlays_array[];
+				overlays_array = overlays.toArray();
+				for (Object overlay : overlays_array)
 				{
-					if (overlay.overlay_disabled == 0)
+					//Log.e("NavitGraphics","view -> onDraw 2");
+
+					NavitGraphics overlay_graphics = (NavitGraphics) overlay;
+					if (overlay_graphics.overlay_disabled == 0)
 					{
-						Rect r=overlay.get_rect();
-						canvas.drawBitmap(overlay.draw_bitmap, r.left, r.top, null);
+						//Log.e("NavitGraphics","view -> onDraw 3");
+						Rect r=overlay_graphics.get_rect();
+						canvas.drawBitmap(overlay_graphics.draw_bitmap, r.left, r.top, null);
 					}
-				}				
+				}
 			}
 			else
 			{
