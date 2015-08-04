@@ -16,6 +16,9 @@ dependencies:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
+    - wget -c -O ~/assets/libspotify-12.1.51-Linux-x86_64-release.tar.gz https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
+    - tar xvfz ~/assets/libspotify-12.1.51-Linux-x86_64-release.tar.gz
+    - cd libspotify-12.1.51-Linux-x86_64-release && sudo make prefix=/usr/local install
     - sudo apt-get install cmake
     - sudo apt-get install libpng12-dev 
     - sudo apt-get install libgtk2.0-dev 
