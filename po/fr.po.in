@@ -22,14 +22,15 @@
 # mercier133 https://launchpad.net/~mercierdamien
 # metehyi https://launchpad.net/~metehyi
 # pierre https://launchpad.net/~pmghost4
+# quent57 https://launchpad.net/~quent57
 # yannick56 https://launchpad.net/~yleny
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2015-08-02 19:54+0000\n"
+"Last-Translator: quent57 <quent57@yahoo.fr>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,10 +260,10 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr ""
+msgstr "sur votre gauche"
 
 msgid "on your right"
-msgstr ""
+msgstr "sur votre droite"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
