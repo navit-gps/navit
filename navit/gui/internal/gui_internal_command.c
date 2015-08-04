@@ -36,6 +36,15 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
+#ifdef USE_SPOTIFY
+#include "gui_internal_spotify.h"
+#endif
+#ifdef USE_FOURSQUARE
+#include "gui_internal_foursquare.h"
+#endif
+#ifdef USE_GOOGLEPLACES
+#include "gui_internal_googlesearch.h"
+#endif
 
 extern char *version;
 
@@ -189,7 +198,7 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
 	g_free(text);
-
+	
 	//Authors
 	text=g_strdup_printf("%s:",_("By"));
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
@@ -1203,6 +1212,21 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
+#ifdef USE_SPOTIFY
+        {"spotify_toggle", command_cast (gui_internal_spotify_toggle)},
+        {"spotify_next_track", command_cast (gui_internal_spotify_next_track)},
+        {"spotify_previous_track", command_cast (gui_internal_spotify_previous_track)},
+        {"spotify_show_playlist", command_cast (gui_internal_spotify_show_playlist)},
+        {"spotify_volume_up", command_cast (gui_internal_spotify_volume_up)},
+        {"spotify_volume_down", command_cast (gui_internal_spotify_volume_down)},
+        {"spotify_volume_toggle", command_cast (gui_internal_spotify_volume_toggle)},
+#endif
+#ifdef USE_FOURSQUARE
+	{"foursquare_show_pois", command_cast (gui_internal_foursquare_show_pois)},
+#endif
+#ifdef USE_GOOGLEPLACES
+	{"googlesearch_search", command_cast (gui_internal_googlesearch_search)},
+#endif
 
 };
 
