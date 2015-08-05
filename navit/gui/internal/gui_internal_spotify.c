@@ -106,7 +106,9 @@ spotify_play_toggle_offline_mode (struct gui_priv *this, struct widget *wm, void
 void
 gui_internal_start_radio (struct gui_priv *this, struct widget *wm, void *data)
 {
+#if 0
     echonest_start_radio (wm->c.x);
+#endif
     gui_internal_html_main_menu(this);
     // gui_internal_spotify_show_playlist (this, NULL, NULL);
 }
@@ -173,7 +175,6 @@ gui_internal_spotify_playlist_toolbar (struct gui_priv *this)
 						orientation_horizontal, gui_internal_spotify_show_rootlist, NULL);
     gui_internal_widget_append (wl, wb);
 
-
     gui_internal_widget_append (wl, wb =
 				gui_internal_button_new_with_callback (this,
 								       "Offline",
@@ -183,10 +184,12 @@ gui_internal_spotify_playlist_toolbar (struct gui_priv *this)
 								       orientation_horizontal,
 								       spotify_play_toggle_offline_mode, NULL));
 
+#ifdef USE_ECHONEST
     gui_internal_widget_append (wl, wb = gui_internal_button_new_with_callback (this, "Start Radio",
 						image_new_s (this, "radio"),
 						gravity_left_center | orientation_horizontal, gui_internal_start_radio, NULL));
     gui_internal_widget_pack (this, wl);
+#endif
     return wl;
 }
 
