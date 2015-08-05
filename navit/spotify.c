@@ -10,8 +10,9 @@
 #include <libspotify/api.h>
 #include "audio.h"
 #include "queue.h"
-
+#ifdef USE_ECHONEST
 #include "jansson.h"
+#endif
 
 extern const uint8_t spotify_apikey[];
 extern const size_t spotify_apikey_size;
@@ -55,25 +56,25 @@ struct spotify
 static void
 try_jukebox_start (void)
 {
-    dbg (0, "Starting the jukebox\n");
+    dbg (lvl_info, "Starting the jukebox\n");
     sp_track *t;
     spotify->playing = 0;
 
     if (!g_jukeboxlist)
       {
-	  dbg (0, "jukebox: No playlist. Waiting\n");
+	  dbg (lvl_info, "jukebox: No playlist. Waiting\n");
 	  return;
       }
 
     if (!sp_playlist_num_tracks (g_jukeboxlist))
       {
-	  dbg (0, "jukebox: No tracks in playlist. Waiting\n");
+	  dbg (lvl_info, "jukebox: No tracks in playlist. Waiting\n");
 	  return;
       }
 
     if (sp_playlist_num_tracks (g_jukeboxlist) < g_track_index)
       {
-	  dbg (0, "jukebox: No more tracks in playlist. Waiting\n");
+	  dbg (lvl_info, "jukebox: No more tracks in playlist. Waiting\n");
 	  return;
       }
 
@@ -98,7 +99,7 @@ try_jukebox_start (void)
 
     g_currenttrack = t;
 
-    dbg (0, "jukebox: Now playing \"%s\"...\n", sp_track_name (t));
+    dbg (lvl_info, "jukebox: Now playing \"%s\"...\n", sp_track_name (t));
 
     sp_session_player_load (g_sess, t);
     spotify->playing = 1;
@@ -117,7 +118,7 @@ try_jukebox_start (void)
 static void
 tracks_added (sp_playlist * pl, sp_track * const *tracks, int num_tracks, int position, void *userdata)
 {
-    dbg (0, "jukebox: %d tracks were added to %s\n", num_tracks, sp_playlist_name (pl));
+    dbg (lvl_info, "jukebox: %d tracks were added to %s\n", num_tracks, sp_playlist_name (pl));
 
     if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
       {
@@ -153,7 +154,7 @@ static void
 playlist_added (sp_playlistcontainer * pc, sp_playlist * pl, int position, void *userdata)
 {
     sp_playlist_add_callbacks (pl, &pl_callbacks, NULL);
-    dbg (0, "List name: %s\n", sp_playlist_name (pl));
+    dbg (lvl_info, "List name: %s\n", sp_playlist_name (pl));
 
     if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
       {
@@ -174,7 +175,7 @@ playlist_added (sp_playlistcontainer * pc, sp_playlist * pl, int position, void 
 static void
 container_loaded (sp_playlistcontainer * pc, void *userdata)
 {
-    dbg (0, "jukebox: Rootlist synchronized (%d playlists)\n", sp_playlistcontainer_num_playlists (pc));
+    dbg (lvl_info, "jukebox: Rootlist synchronized (%d playlists)\n", sp_playlistcontainer_num_playlists (pc));
     if (autostart)
 	try_jukebox_start ();
 }
@@ -191,10 +192,10 @@ static sp_playlistcontainer_callbacks pc_callbacks = {
 static void
 on_login (sp_session * session, sp_error error)
 {
-    dbg (0, "spotify login\n");
+    dbg (lvl_info, "spotify login\n");
     if (error != SP_ERROR_OK)
       {
-	  dbg (0, "Error: unable to log in: %s\n", sp_error_message (error));
+	  dbg (lvl_error, "Error: unable to log in: %s\n", sp_error_message (error));
 	  return;
       }
 
@@ -203,7 +204,7 @@ on_login (sp_session * session, sp_error error)
     int i;
 
     sp_playlistcontainer_add_callbacks (spotify->pc, &pc_callbacks, NULL);
-    dbg (0, "Got %d playlists\n",
+    dbg (lvl_info, "Got %d playlists\n",
 	 sp_playlistcontainer_num_playlists (spotify->pc)) for (i = 0; i < sp_playlistcontainer_num_playlists (spotify->pc); ++i)
       {
 	  sp_playlist *pl = sp_playlistcontainer_playlist (spotify->pc, i);
@@ -211,29 +212,29 @@ on_login (sp_session * session, sp_error error)
 
 	  if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
 	    {
-		dbg (0, "Found the playlist %s\n", spotify->playlist);
+		dbg (lvl_info, "Found the playlist %s\n", spotify->playlist);
 		switch (sp_playlist_get_offline_status (session, pl))
 		  {
 		  case SP_PLAYLIST_OFFLINE_STATUS_NO:
-		      dbg (0, "Playlist is not offline enabled.\n");
+		      dbg (lvl_info, "Playlist is not offline enabled.\n");
 		      sp_playlist_set_offline_mode (session, pl, 1);
-		      dbg (0, "  %d tracks to sync\n", sp_offline_tracks_to_sync (session));
+		      dbg (lvl_info, "  %d tracks to sync\n", sp_offline_tracks_to_sync (session));
 		      break;
 
 		  case SP_PLAYLIST_OFFLINE_STATUS_YES:
-		      dbg (0, "Playlist is synchronized to local storage.\n");
+		      dbg (lvl_info, "Playlist is synchronized to local storage.\n");
 		      break;
 
 		  case SP_PLAYLIST_OFFLINE_STATUS_DOWNLOADING:
-		      dbg (0, "This playlist is currently downloading. Only one playlist can be in this state any given time.\n");
+		      dbg (lvl_info, "This playlist is currently downloading. Only one playlist can be in this state any given time.\n");
 		      break;
 
 		  case SP_PLAYLIST_OFFLINE_STATUS_WAITING:
-		      dbg (0, "Playlist is queued for download.\n");
+		      dbg (lvl_info, "Playlist is queued for download.\n");
 		      break;
 
 		  default:
-		      dbg (0, "unknow state\n");
+		      dbg (lvl_error, "unknow state\n");
 		      break;
 		  }
 		g_jukeboxlist = pl;
@@ -242,7 +243,7 @@ on_login (sp_session * session, sp_error error)
       }
     if (!g_jukeboxlist)
       {
-	  dbg (0, "jukebox: No such playlist. Waiting for one to pop up...\n");
+	  dbg (lvl_error, "jukebox: No such playlist. Waiting for one to pop up...\n");
       }
     // try_jukebox_start ();
 }
@@ -323,27 +324,27 @@ spotify_spotify_idle (struct spotify *spotify)
 void
 spotify_navit_init (struct navit *nav)
 {
-    dbg (0, "spotify_navit_init\n");
+    dbg (lvl_error, "spotify_navit_init\n");
     sp_error error;
     sp_session *session;
 
     long vol = -1;
     audio_volume (AUDIO_VOLUME_GET, &vol);
-    dbg (0, "Master volume is %i\n", vol);
+    dbg (lvl_error, "Master volume is %i\n", vol);
 
     spconfig.application_key_size = spotify_apikey_size;
     if (spconfig.application_key_size == 0)
       {
-	  dbg (0, "Can't create session, did you setup your spotify apikey ?\n");
+	  dbg (lvl_error, "Can't create session, did you setup your spotify apikey ?\n");
 	  return;
       }
     error = sp_session_create (&spconfig, &session);
     if (error != SP_ERROR_OK)
       {
-	  dbg (0, "Can't create spotify session :(\n");
+	  dbg (lvl_error, "Can't create spotify session :(\n");
 	  return;
       }
-    dbg (0, "Session created successfully :)\n");
+    dbg (lvl_info, "Session created successfully :)\n");
     g_sess = session;
     g_logged_in = 0;
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
@@ -352,7 +353,7 @@ spotify_navit_init (struct navit *nav)
     // FIXME : we should maybe use a timer instead of the idle loop
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     event_add_idle (125, spotify->callback);
-    dbg (0, "Callback created successfully\n");
+    dbg (lvl_error, "Callback created successfully\n");
     spotify->navit = nav;
 }
 
@@ -376,21 +377,21 @@ spotify_set_attr (struct attr **attrs)
     struct attr *attr;
     if ((attr = attr_search (attrs, NULL, attr_spotify_login)))
       {
-	  dbg (0, "found spotify_login attr %s\n", attr->u.str);
+	  dbg (lvl_info, "found spotify_login attr %s\n", attr->u.str);
 	  spotify->login = attr->u.str;
       }
     if ((attr = attr_search (attrs, NULL, attr_spotify_password)))
       {
-	  dbg (0, "found spotify_password attr %s\n", attr->u.str);
+	  dbg (lvl_info, "found spotify_password attr %s\n", attr->u.str);
 	  spotify->password = attr->u.str;
       }
     else
       {
-	  dbg (0, "SPOTIFY PASSWORD NOT FOUND!\n");
+	  dbg (lvl_error, "SPOTIFY PASSWORD NOT FOUND!\n");
       }
     if ((attr = attr_search (attrs, NULL, attr_spotify_playlist)))
       {
-	  dbg (0, "found spotify_playlist attr %s\n", attr->u.str);
+	  dbg (lvl_info, "found spotify_playlist attr %s\n", attr->u.str);
 	  spotify->playlist = attr->u.str;
       }
 
@@ -405,7 +406,7 @@ spotify_set_attr (struct attr **attrs)
       {
 
 	  char *name = snd_device_name_get_hint (*n, "NAME");
-	  dbg (0, "Found audio device %s\n", name);
+	  dbg (lvl_error, "Found audio device %s\n", name);
 
 	  if (name != NULL && 0 != strcmp ("null", name))
 	    {
@@ -619,6 +620,7 @@ media_toggle_current_playlist_offline()
     sp_playlist_set_offline_mode (g_sess, g_jukeboxlist,  sp_playlist_get_offline_status (g_sess, g_jukeboxlist) != 1);
 }
 
+#ifdef USE_ECHONEST
 /**
  * @brief   Build a playlist (radio) from Echonest
  * @param[in]   track_index    - the index of the track in the current playlist to use as a baseline
@@ -733,3 +735,5 @@ echonest_start_radio (int track_index)
     g_jukeboxlist = echonest_pl;
     spotify->playlist = sp_playlist_name (echonest_pl);
 }
+
+#endif
