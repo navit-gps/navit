@@ -92,3 +92,7 @@
 #cmakedefine HAVE_SHMEM 1
 
 #cmakedefine HAVE_IMLIB2 1
+
+#cmakedefine USE_SPOTIFY 1
+#cmakedefine USE_ECHONEST 1
+#cmakedefine USE_GOOGLEPLACES 1
