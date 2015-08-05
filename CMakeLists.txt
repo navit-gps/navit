@@ -149,6 +149,9 @@ find_package(DBusGLib)
 find_package(PythonLibs)
 find_package(OpenSSL)
 find_package(Threads)
+find_package(libspotify)
+find_package(ALSA)
+find_package(Jansson)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
@@ -439,20 +442,31 @@ add_feature(USE_SVG "default" TRUE)
 add_feature(SVG2PNG "default" TRUE)
 add_feature(SAMPLE_MAP "default" TRUE)
 add_feature(USE_SPOTIFY "default" FALSE)
+add_feature(USE_ECHONEST "default" FALSE)
+add_feature(USE_GOOGLEPLACES "default" FALSE)
 
 if (LIBSPOTIFY_FOUND)
       if (ALSA_FOUND)
               set_with_reason(USE_SPOTIFY "libspotify and alsa found" TRUE)
-              SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u spotify_apikey_size -u audio_volume")
-              # FIXME : this is a bad way to do it as maptool also gets
-              # linked
-              list(APPEND NAVIT_LIBS "-lasound -lspotify -lpthread -ljansson")
+              SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u spotify_apikey_size -u audio_volume -u media_get_playlists_count")
+              # FIXME : this is a bad way to do it as maptool also gets linked
+              list(APPEND NAVIT_LIBS "-lasound -lspotify -lpthread")
       else (ALSA_FOUND)
               set_with_reason(USE_SPOTIFY "alsa not found" FALSE)
       endif (ALSA_FOUND)
 else(LIBSPOTIFY_FOUND)
       set_with_reason(USE_SPOTIFY "libspotify not found" FALSE)
 endif(LIBSPOTIFY_FOUND)
+
+if (JANSSON_FOUND)
+      set_with_reason(USE_GOOGLEPLACES "jansson found" TRUE)#
+      set_with_reason(USE_ECHONEST "jansson found" TRUE)#
+      list(APPEND NAVIT_LIBS "-ljansson")
+      SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u fetch_url_to_string ")
+else (JANSSON_FOUND)
+      set_with_reason(USE_GOOGLEPLACES "jansson not found" FALSE)
+      set_with_reason(USE_ECHONEST "jansson not found" FALSE)
+endif (JANSSON_FOUND)
 
 IF(NOT svg2png_scaling)
    IF(NOT ANDROID)
