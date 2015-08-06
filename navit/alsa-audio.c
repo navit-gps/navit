@@ -79,7 +79,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_hw_params_set_period_size_near(h, hwp, &period_size, &dir);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to set period size %lu (%s)\n",
+		dbg(lvl_error, "audio: Unable to set period size %lu (%s)\n",
 		        period_size, snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -89,7 +89,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_hw_params_get_period_size(hwp, &period_size, &dir);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to get period size (%s)\n",
+		dbg(lvl_error, "audio: Unable to get period size (%s)\n",
 		        snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -105,7 +105,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_hw_params_set_buffer_size_near(h, hwp, &buffer_size);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to set buffer size %lu (%s)\n",
+		dbg(lvl_error, "audio: Unable to set buffer size %lu (%s)\n",
 		        buffer_size, snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -114,7 +114,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_hw_params_get_buffer_size(hwp, &buffer_size);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to get buffer size (%s)\n",
+		dbg(lvl_error, "audio: Unable to get buffer size (%s)\n",
 		        snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -124,7 +124,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_hw_params(h, hwp);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to configure hardware parameters (%s)\n",
+		dbg(lvl_error, "audio: Unable to configure hardware parameters (%s)\n",
 		        snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -141,7 +141,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_sw_params_set_avail_min(h, swp, period_size);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to configure wakeup threshold (%s)\n",
+		dbg(lvl_error, "audio: Unable to configure wakeup threshold (%s)\n",
 		        snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -150,7 +150,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	snd_pcm_sw_params_set_start_threshold(h, swp, 0);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Unable to configure start threshold (%s)\n",
+		dbg(lvl_error, "audio: Unable to configure start threshold (%s)\n",
 		        snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -159,7 +159,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	r = snd_pcm_sw_params(h, swp);
 
 	if (r < 0) {
-		fprintf(stderr, "audio: Cannot set soft parameters (%s)\n",
+		dbg(lvl_error, "audio: Cannot set soft parameters (%s)\n",
 		snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -167,7 +167,7 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 
 	r = snd_pcm_prepare(h);
 	if (r < 0) {
-		fprintf(stderr, "audio: Cannot prepare audio for playback (%s)\n",
+		dbg(lvl_error, "audio: Cannot prepare audio for playback (%s)\n",
 		snd_strerror(r));
 		snd_pcm_close(h);
 		return NULL;
@@ -195,7 +195,7 @@ static void* alsa_audio_start(void *aux)
 			cur_rate = afd->rate;
 			cur_channels = afd->channels;
 
-			h = alsa_open("front:CARD=Set,DEV=0", cur_rate, cur_channels);
+			h = alsa_open("default", cur_rate, cur_channels);
 
 			if (!h) {
 				dbg(lvl_error, "Unable to open ALSA device (%d channels, %d Hz), can't continue\n", cur_channels, cur_rate);
@@ -229,6 +229,34 @@ void audio_init(audio_fifo_t *af)
 	pthread_cond_init(&af->cond, NULL);
 
 	pthread_create(&tid, NULL, alsa_audio_start, af);
+}
+
+
+void audio_toggle_mute()
+{
+    long min, max;
+    int value;
+    snd_mixer_t *handle;
+    snd_mixer_selem_id_t *sid;
+    const char *card = "default";
+    const char *selem_name = "Headphone";
+
+    snd_mixer_open(&handle, 0);
+    snd_mixer_attach(handle, card);
+    snd_mixer_selem_register(handle, NULL, NULL);
+    snd_mixer_load(handle);
+
+    snd_mixer_selem_id_alloca(&sid);
+    snd_mixer_selem_id_set_index(sid, 0);
+    snd_mixer_selem_id_set_name(sid, selem_name);
+    snd_mixer_elem_t* elem = snd_mixer_find_selem(handle, sid);
+    snd_mixer_selem_get_playback_switch(elem, SND_MIXER_SCHN_UNKNOWN, &value);
+
+    if (snd_mixer_selem_has_playback_switch(elem)) {
+        snd_mixer_selem_set_playback_switch_all(elem, value ? 0 : 1);
+    }
+
+    snd_mixer_close(handle);
 }
 
 /*
@@ -329,7 +357,7 @@ int audio_volume(audio_volume_action action, long* outvol)
             snd_mixer_close(handle);
             return -9;
         }
-        fprintf(stderr, "Set volume %i with status %i\n", *outvol, ret);
+        dbg(lvl_error, "Set volume %i with status %i\n", *outvol, ret);
     }
 
     snd_mixer_close(handle);
