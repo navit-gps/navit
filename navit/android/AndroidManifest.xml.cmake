@@ -5,7 +5,7 @@
       android:versionCode="@ANDROID_VERSION_INT@"
       android:versionName="@ANDROID_VERSION_NAME@-@ANDROID_VERSION_INT@"
       android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="@ANDROID_API_VERSION@"/>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="@ANDROID_API_VERSION@"/>
     <uses-feature android:name="android.hardware.location.network" android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
@@ -20,8 +20,7 @@
                  android:name=".NavitAppConfig">
         <activity android:name="Navit"
                   android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar"
-                  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale">
+                  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
