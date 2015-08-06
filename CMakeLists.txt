@@ -461,7 +461,7 @@ endif(LIBSPOTIFY_FOUND)
 if (JANSSON_FOUND)
       set_with_reason(USE_GOOGLEPLACES "jansson found" TRUE)#
       set_with_reason(USE_ECHONEST "jansson found" TRUE)#
-      list(APPEND NAVIT_LIBS "-ljansson")
+      list(APPEND NAVIT_LIBS "-ljansson -lcurl")
       SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u fetch_url_to_string ")
 else (JANSSON_FOUND)
       set_with_reason(USE_GOOGLEPLACES "jansson not found" FALSE)
