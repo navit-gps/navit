@@ -584,18 +584,7 @@ media_volume_down ()
 void
 media_mute_toggle ()
 {
-    if (previous_volume == -1)
-      {
-	  // no previous volume know. We should mute
-	  audio_volume (AUDIO_VOLUME_GET, &previous_volume);
-	  long vol = 0;
-	  audio_volume (AUDIO_VOLUME_SET, &vol);
-      }
-    else
-      {
-	  audio_volume (AUDIO_VOLUME_SET, &previous_volume);
-	  previous_volume = -1;
-      }
+    audio_toggle_mute();
 }
 
 void
