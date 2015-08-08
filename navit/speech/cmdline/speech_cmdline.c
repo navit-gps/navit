@@ -236,6 +236,10 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 		this->flags=attr->u.num;
 	if (this->sample_dir && this->sample_suffix) {
 		void *handle=file_opendir(this->sample_dir);
+		if (!handle) {
+			dbg(lvl_error,"Cannot read sample directory contents: %s", this->sample_dir);
+			return NULL;
+		}
 		char *name;
 		int suffix_len=strlen(this->sample_suffix);
 		while((name=file_readdir(handle))) {
