@@ -195,7 +195,7 @@ static void* alsa_audio_start(void *aux)
 			cur_rate = afd->rate;
 			cur_channels = afd->channels;
 
-			h = alsa_open("default", cur_rate, cur_channels);
+			h = alsa_open("front:CARD=Set,DEV=0", cur_rate, cur_channels);
 
 			if (!h) {
 				dbg(lvl_error, "Unable to open ALSA device (%d channels, %d Hz), can't continue\n", cur_channels, cur_rate);
@@ -242,6 +242,10 @@ void audio_toggle_mute()
     const char *selem_name = "Headphone";
 
     snd_mixer_open(&handle, 0);
+    if(!handle) {
+        dbg(lvl_error, "snd_mixer_open failed for card %s\n", card);
+	return;
+    }
     snd_mixer_attach(handle, card);
     snd_mixer_selem_register(handle, NULL, NULL);
     snd_mixer_load(handle);
@@ -250,10 +254,14 @@ void audio_toggle_mute()
     snd_mixer_selem_id_set_index(sid, 0);
     snd_mixer_selem_id_set_name(sid, selem_name);
     snd_mixer_elem_t* elem = snd_mixer_find_selem(handle, sid);
-    snd_mixer_selem_get_playback_switch(elem, SND_MIXER_SCHN_UNKNOWN, &value);
-
-    if (snd_mixer_selem_has_playback_switch(elem)) {
-        snd_mixer_selem_set_playback_switch_all(elem, value ? 0 : 1);
+    if(elem)
+    {
+        snd_mixer_selem_get_playback_switch(elem, SND_MIXER_SCHN_UNKNOWN, &value);
+        if (snd_mixer_selem_has_playback_switch(elem)) {
+            snd_mixer_selem_set_playback_switch_all(elem, value ? 0 : 1);
+        }
+    } else {
+        dbg(lvl_error, "snd_mixer_selem_get_playback_switch failed for card %s\n", card);
     }
 
     snd_mixer_close(handle);
