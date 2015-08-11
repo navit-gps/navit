@@ -352,8 +352,9 @@ process_boundaries(FILE *boundaries, FILE *ways)
 }
 
 void
-free_boundaries(GList *l)
+free_boundaries(GList *bl)
 {
+	GList *l=bl;
 	while (l) {
 		struct boundary *boundary=l->data;
 		GList *s=boundary->segments;
@@ -378,5 +379,5 @@ free_boundaries(GList *l)
 		g_free(boundary);
 		l=g_list_next(l);
 	}
-	g_list_free(l);
+	g_list_free(bl);
 }
