@@ -83,6 +83,8 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations)
 		int has_subrelations=0;
 		int has_outer_ways=0;
 		
+		processed_relations++;
+		
 		if(!iso)
 			iso=osm_tag_value(ib, "iso3166-1:alpha2");
 		

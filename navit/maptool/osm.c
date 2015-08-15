@@ -2062,10 +2062,13 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	struct attr attrs[11];
 	FILE *towns_poly;
 
-	profile(0,NULL);
+	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
+	bytes_read=0;
+	sig_alrm(0);
+
 	bl=process_boundaries(boundaries, ways);
 
-	profile(1,"processed boundaries\n");
+	fprintf(stderr, "Processed boundaries\n");
 
 	town_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	while ((ib=read_item(in)))  {
@@ -2077,13 +2080,15 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	}
 	fseek(in, 0, SEEK_SET);
 
-	profile(1, "Finished town table rebuild\n");
+	fprintf(stderr, "Finished town table rebuild\n");
 
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
 		struct country_table *result=NULL;
 		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
 		int i;
+		
+		processed_nodes++;
 
 		memset(attrs, 0, sizeof(attrs));
 		result=osm_process_town_by_boundary(bl, ib, c, attrs);
@@ -2145,7 +2150,10 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	g_hash_table_destroy(town_hash);
 	free_boundaries(bl);
 
-	profile(0, "Finished processing towns\n");
+	sig_alrm(0);
+	sig_alrm_end();
+
+	fprintf(stderr, "Finished processing towns\n");
 }
 
 void
