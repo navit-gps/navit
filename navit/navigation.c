@@ -3332,8 +3332,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			while (candidate_way)
 			{
 				if (candidate_way && is_way_allowed(nav,candidate_way,3)
-					&& (angle_delta(cur->angle_end,candidate_way->angle2) > 0) && ( angle_delta(candidate_way->angle2,cur->next->way.angle2) < 0 ))
-					/*for the entry node only count exits to the right ?*/
+					/*&& (angle_delta(cur->angle_end,candidate_way->angle2) > 0) && ( angle_delta(candidate_way->angle2,cur->next->way.angle2) < 0 )*/)
+					/*for right-hand traffic, exits should be to the right anyway to allow smooth turns, so leave this out until we find a counterexample :)*/
 				{
 					count_roundabout++;
 					/* As soon as we have an allowed one on this node,
