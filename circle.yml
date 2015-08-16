@@ -16,6 +16,7 @@ dependencies:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
+    - sudo apt-get update
     - sudo apt-get install cmake
     - sudo apt-get install libpng12-dev 
     - sudo apt-get install libgtk2.0-dev 
