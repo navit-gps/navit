@@ -72,3 +72,6 @@ deployment:
     branch: trunk
     commands:
       - git push origin $CIRCLE_SHA1:refs/heads/master
+notify:
+  webhooks:
+    - url: http://62.210.125.30:8000/
