@@ -38,6 +38,6 @@ for i in po/import_queue/*.po; do
         sed '1,/msgid ""/ d' ${i} >> po/${po}.in
 
 	# Yay, we should have a clean .po file now!
-	git diff po/${po}.in
+	git --no-pager diff po/${po}.in
 done
 	
