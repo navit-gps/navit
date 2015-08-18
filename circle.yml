@@ -73,6 +73,14 @@ deployment:
     branch: trunk
     commands:
       - git push origin $CIRCLE_SHA1:refs/heads/master
+  merge_translations:
+    branch: /i18n.*/
+    owner: navit-gps
+    commands:
+      - git checkout trunk
+      - git checkout ${CIRCLE_BRANCH} po/*.po.in
+      - git commit -m "Automatic translation import from launchpad" po/*.po.in
+      - git push
 notify:
   webhooks:
     - url: http://62.210.125.30:8000/
