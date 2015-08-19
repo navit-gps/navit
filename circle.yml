@@ -77,8 +77,11 @@ deployment:
     branch: /i18n.*/
     owner: navit-gps
     commands:
+      - git config --global user.email "circleci@navit-project.org"
+      - git config --global user.name "CircleCI"
       - git checkout trunk
-      - git checkout ${CIRCLE_BRANCH} po/*.po.in
+      - git pull origin trunk
+      - cp $CIRCLE_ARTIFACTS/po/* po/
       - git commit -m "Automatic translation import from launchpad" po/*.po.in
       - git push
 notify:
