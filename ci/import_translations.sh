@@ -37,7 +37,12 @@ for i in po/import_queue/*.po; do
         mv po/${po}.header po/${po}.in
         sed '1,/msgid ""/ d' ${i} >> po/${po}.in
 
+	git rm -f $i
+
+	# Archive the po
+	[ -d $CIRCLE_ARTIFACTS/po ] || mkdir $CIRCLE_ARTIFACTS/po
+	cp po/${po}.in $CIRCLE_ARTIFACTS/po/
 	# Yay, we should have a clean .po file now!
 	git --no-pager diff po/${po}.in
 done
-	
+
