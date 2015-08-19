@@ -82,6 +82,7 @@ deployment:
       - git checkout trunk
       - git pull origin trunk
       - cp $CIRCLE_ARTIFACTS/po/* po/
+      - git add po/*.po.in
       - git commit -m "Automatic translation import from launchpad" po/*.po.in
       - git push
 notify:
