@@ -23,14 +23,15 @@
 # metehyi https://launchpad.net/~metehyi
 # pierre https://launchpad.net/~pmghost4
 # quent57 https://launchpad.net/~quent57
+# tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-08-02 19:54+0000\n"
-"Last-Translator: quent57 <quent57@yahoo.fr>\n"
+"PO-Revision-Date: 2015-08-13 20:49+0000\n"
+"Last-Translator: tuxi <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,7 +219,7 @@ msgstr "Préparez vous à vous engager dans le rond-point"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "à %s Entrez dans le rond-point"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -242,22 +243,22 @@ msgstr "puis"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "Puis prendre à droite sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "à %1$s prendre à droite sur %2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "Puis prendre à gauche sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "à %1$s prendre à gauche sur %2$s"
 
 msgid "on your left"
 msgstr "sur votre gauche"
@@ -285,32 +286,32 @@ msgstr "à la sortie"
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "Puis continuez tout droit sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s continuez tout droit sur %2$s en direction de %3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "Puis restez sur la voie de droite sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s Restez sur la voie de droite sur %2$s en direction de %3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "Puis restez sur la voie de gauche sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s Restez sur la voie de gauche sur %2$s en direction de %3$s"
 
 # tournez à droite
 #. TRANSLATORS: "right" as in "turn right"
@@ -343,7 +344,7 @@ msgstr "après %i rues"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "à %3$s Tournez %1$s sur %2$s en direction de %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -1582,7 +1583,7 @@ msgid "Increase zoom level"
 msgstr "Augmenter le zoom"
 
 msgid "_Recalculate"
-msgstr "Recalculer"
+msgstr "Recalcul de l'itinéraire"
 
 msgid "Redraw map"
 msgstr "Redessiner la carte"
@@ -1681,7 +1682,7 @@ msgid "Police"
 msgstr "Poste de police"
 
 msgid "Justice"
-msgstr ""
+msgstr "Police"
 
 msgid "Taxi"
 msgstr "Taxi"
@@ -1690,7 +1691,7 @@ msgid "Shopping"
 msgstr "Courses"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "Distance du centre de l'ecran (Kilomètre)"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1702,7 +1703,7 @@ msgstr "Définir la destination vers %ld, %ld \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "sélectionner la carte de  %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
@@ -1736,7 +1737,7 @@ msgid "Name"
 msgstr "Nom"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Visitez avant"
 
 msgid "N"
 msgstr "N"
@@ -2072,7 +2073,7 @@ msgstr ""
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
-msgstr ""
+msgstr "redémarrer Navit pour appliquer les modifications"
 
 msgid "Whole Planet"
 msgstr "Terre entière"
@@ -2635,7 +2636,7 @@ msgstr "Sauvegarde / Restauration"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "sélectionner le chemin de la carte"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
