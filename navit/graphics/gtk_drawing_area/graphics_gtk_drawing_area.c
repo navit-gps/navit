@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <math.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <cairo.h>
@@ -292,6 +293,14 @@ set_drawing_color(cairo_t *cairo, struct color c)
 }
 
 static void
+set_stroke_params_from_gc(cairo_t *cairo, struct graphics_gc_priv *gc)
+{
+	set_drawing_color(cairo, gc->c);
+	cairo_set_dash(cairo, gc->dashes, gc->ndashes, gc->offset);
+	cairo_set_line_width(cairo, gc->linewidth);
+}
+
+static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
@@ -301,9 +310,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 	for (i=1; i<count; i++) {
 		cairo_line_to(gr->cairo, p[i].x, p[i].y);
 	}
-	set_drawing_color(gr->cairo, gc->c);
-	cairo_set_dash(gr->cairo, gc->dashes, gc->ndashes, gc->offset);
-	cairo_set_line_width(gr->cairo, gc->linewidth);
+	set_stroke_params_from_gc(gr->cairo, gc);
 	cairo_stroke(gr->cairo);
 }
 
@@ -330,7 +337,9 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-	gdk_draw_arc(gr->drawable, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
+	cairo_arc (gr->cairo,  p->x, p->y, r/2, 0.0, 2*M_PI);
+	set_stroke_params_from_gc(gr->cairo, gc);
+	cairo_stroke(gr->cairo);
 }
 
 static void
