@@ -430,8 +430,8 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 static void
 draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-	gdk_draw_pixbuf(gr->drawable, fg->gc, img->pixbuf, 0, 0, p->x, p->y,
-		    img->w, img->h, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_cairo_set_source_pixbuf(gr->cairo, img->pixbuf, p->x, p->y);
+	cairo_paint(gr->cairo);
 }
 
 #ifdef HAVE_IMLIB2
