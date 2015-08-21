@@ -711,7 +711,10 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		zip_set_compression_level(zip_info, p->compression_level);
 		if (p->md5file) 
 			zip_set_md5(zip_info, 1);
-		zip_open(zip_info, p->result, zipdir, zipindex);	
+		if(!zip_open(zip_info, p->result, zipdir, zipindex)) {
+			fprintf(stderr,"Fatal: Could not write output file.\n");
+			exit(1);
+		}
 		if (p->url) {
 			map_information_attrs[1].type=attr_url;
 			map_information_attrs[1].u.str=p->url;

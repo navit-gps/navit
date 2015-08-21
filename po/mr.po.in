@@ -69,14 +69,6 @@ msgid "sixth exit"
 msgstr "सहावा बाहेर जाण्याचा मार्ग"
 
 #, c-format
-msgid "%d m"
-msgstr "%d मि."
-
-#, c-format
-msgid "in %d m"
-msgstr "%d मिनीटांत"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -85,27 +77,11 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr ""
-
-#, c-format
-msgid "in %d meters"
-msgstr ""
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr ""
-
-#, c-format
-msgid "in %d.%d kilometers"
 msgstr ""
 
 #, c-format
@@ -119,6 +95,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr ""
+
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
 
 #, c-format
 msgid "one kilometer"

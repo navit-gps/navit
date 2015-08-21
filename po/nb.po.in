@@ -5,6 +5,7 @@
 # KaZeR https://launchpad.net/~kazer
 # Kenneth Langdalen https://launchpad.net/~spam-klnetworks
 # Kurt Nielsen https://launchpad.net/~kurtn-penguins
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Skippern https://launchpad.net/~gay-today
 # Thor H. Johansen https://launchpad.net/~thorhajo
 # burner https://launchpad.net/~bendik-xplore
@@ -13,14 +14,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2013-09-28 01:44+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 03:59+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: \n"
+"Language: nb\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -75,14 +76,6 @@ msgid "sixth exit"
 msgstr "sjette avkjøring"
 
 #, c-format
-msgid "%d m"
-msgstr "%d meter"
-
-#, c-format
-msgid "in %d m"
-msgstr "om %d meter"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -91,28 +84,12 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "%d meter"
-
-#, c-format
-msgid "in %d meters"
-msgstr "om %d meter"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d kilometer"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "om %d,%d kilometer"
 
 #, c-format
 msgid "one mile"
@@ -125,6 +102,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr "%d meter"
+
+#, c-format
+msgid "in %d meters"
+msgstr "om %d meter"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d kilometer"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "om %d,%d kilometer"
 
 #, c-format
 msgid "one kilometer"
@@ -165,27 +158,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "ut på akselerasjonsfeltet"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sinn på gaten %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sinn på %s%s%sen"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sinn på %s%s%sa"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sin på %s%s%set"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -210,17 +203,17 @@ msgstr "Kjør inn i rundkjøringen snart"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Kjør inn i rundkjøringen %s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "forlat så rundkjøringen ut %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Forlat rundkjøringen ut %1$s %2$s"
 
 msgid "soon"
 msgstr "snart"
@@ -229,7 +222,7 @@ msgid "now"
 msgstr "nå"
 
 msgid "then"
-msgstr ""
+msgstr "så"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -332,25 +325,25 @@ msgstr "etter %i avkjøringer"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Sving %1$s til %2$s om %3$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "snu så"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Snu %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "snu så"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Snu %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -365,7 +358,7 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "følg"
 
 msgid "then you have reached your destination."
 msgstr "så har du nådd ditt reisemål."
@@ -380,7 +373,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Avkjørsel"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

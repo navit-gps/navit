@@ -11,6 +11,7 @@
 # Jean-Marc https://launchpad.net/~m-balthazar
 # Jérôme BLUM https://launchpad.net/~jblum
 # KaZeR https://launchpad.net/~kazer
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Roadrunner IN https://launchpad.net/~online
 # Thibault Lemaitre https://launchpad.net/~thibault.lemaitre
 # Thjazi https://launchpad.net/~pa2l
@@ -21,14 +22,16 @@
 # mercier133 https://launchpad.net/~mercierdamien
 # metehyi https://launchpad.net/~metehyi
 # pierre https://launchpad.net/~pmghost4
+# quent57 https://launchpad.net/~quent57
+# tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-04-21 18:51+0000\n"
-"Last-Translator: Jean-Marc <Unknown>\n"
+"PO-Revision-Date: 2015-08-13 20:49+0000\n"
+"Last-Translator: tuxi <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,14 +92,6 @@ msgid "sixth exit"
 msgstr "sixième sortie"
 
 #, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#, c-format
-msgid "in %d m"
-msgstr "dans %d m"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d pieds"
 
@@ -105,28 +100,12 @@ msgid "in %d feet"
 msgstr "dans %d pieds"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d mètres"
-
-#, c-format
-msgid "in %d meters"
-msgstr "dans %d mètres"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d milles"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "dans %d.%d milles"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d kilomètres %d"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "dans %d kilomètres %d"
 
 #, c-format
 msgid "one mile"
@@ -139,6 +118,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "dans un mile"
 msgstr[1] "dans %d miles"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d mètres"
+
+#, c-format
+msgid "in %d meters"
+msgstr "dans %d mètres"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d kilomètres %d"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "dans %d kilomètres %d"
 
 #, c-format
 msgid "one kilometer"
@@ -155,51 +150,51 @@ msgstr[1] "dans %d kilomètres"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$svers %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$svers %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$svers le %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$svers la %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$svers l'%2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "vers la bretelle"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%ssur %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%ssur le %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%ssur la %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%ssur l'%s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -212,7 +207,7 @@ msgstr "Dès que possible, faites demi-tour"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "vers %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -224,17 +219,17 @@ msgstr "Préparez vous à vous engager dans le rond-point"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "à %s Entrez dans le rond-point"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "puis sortez du rond-point à la %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Sortez du rond-point à la %1$s %2$s"
 
 msgid "soon"
 msgstr "bientôt"
@@ -243,80 +238,80 @@ msgid "now"
 msgstr "maintenant"
 
 msgid "then"
-msgstr ""
+msgstr "puis"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "Puis prendre à droite sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "à %1$s prendre à droite sur %2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "Puis prendre à gauche sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "à %1$s prendre à gauche sur %2$s"
 
 msgid "on your left"
-msgstr ""
+msgstr "sur votre gauche"
 
 msgid "on your right"
-msgstr ""
+msgstr "sur votre droite"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Prenez la sortie %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Prenez la sortie %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "à l'èchangeur"
 
 msgid "at exit"
-msgstr ""
+msgstr "à la sortie"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "Puis continuez tout droit sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s continuez tout droit sur %2$s en direction de %3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "Puis restez sur la voie de droite sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s Restez sur la voie de droite sur %2$s en direction de %3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "Puis restez sur la voie de gauche sur %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "à %1$s Restez sur la voie de gauche sur %2$s en direction de %3$s"
 
 # tournez à droite
 #. TRANSLATORS: "right" as in "turn right"
@@ -349,25 +344,25 @@ msgstr "après %i rues"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "à %3$s Tournez %1$s sur %2$s en direction de %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "puis faites demi-tour"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Faites demi-tour %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "puis faites demi-tour"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Faites demi-tour %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -382,7 +377,7 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "suivez"
 
 msgid "then you have reached your destination."
 msgstr "puis vous arriverez à destination"
@@ -390,14 +385,14 @@ msgstr "puis vous arriverez à destination"
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Vous êtes arrivé à destination : %s"
+msgstr "Vous êtes arrivé à destination %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "Echangeur"
 
 msgid "Exit"
-msgstr ""
+msgstr "Sortie"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1588,7 +1583,7 @@ msgid "Increase zoom level"
 msgstr "Augmenter le zoom"
 
 msgid "_Recalculate"
-msgstr "Recalculer"
+msgstr "Recalcul de l'itinéraire"
 
 msgid "Redraw map"
 msgstr "Redessiner la carte"
@@ -1687,7 +1682,7 @@ msgid "Police"
 msgstr "Poste de police"
 
 msgid "Justice"
-msgstr ""
+msgstr "Police"
 
 msgid "Taxi"
 msgstr "Taxi"
@@ -1696,7 +1691,7 @@ msgid "Shopping"
 msgstr "Courses"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "Distance du centre de l'ecran (Kilomètre)"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1708,7 +1703,7 @@ msgstr "Définir la destination vers %ld, %ld \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "sélectionner la carte de  %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
@@ -1742,7 +1737,7 @@ msgid "Name"
 msgstr "Nom"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Visitez avant"
 
 msgid "N"
 msgstr "N"
@@ -2078,7 +2073,7 @@ msgstr ""
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
-msgstr ""
+msgstr "redémarrer Navit pour appliquer les modifications"
 
 msgid "Whole Planet"
 msgstr "Terre entière"
@@ -2641,7 +2636,7 @@ msgstr "Sauvegarde / Restauration"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "sélectionner le chemin de la carte"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"

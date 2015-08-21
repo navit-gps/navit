@@ -1,342 +1,343 @@
-# Sinhalese translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Albanian translation for navit
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the navit package.
-# Many thanks to the contributors of this translation:
-# සපුමල් බණ්ඩාර https://launchpad.net/~sapumalbandaraucsc
-
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.0\n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:00+0000\n"
-"Last-Translator: සපුමල් බණ්ඩාර <sapumalbandaraucsc@gmail.com>\n"
-"Language-Team: Sinhalese <si@li.org>\n"
+"Project-Id-Version: navit\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-08-18 03:36+0000\n"
+"PO-Revision-Date: 2015-08-16 18:51+0000\n"
+"Last-Translator: Denis Ju <Unknown>\n"
+"Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: si\n"
+"X-Launchpad-Export-Date: 2015-08-18 19:28+0000\n"
+"X-Generator: Launchpad (build 17690)\n"
 
 msgid "Running from source directory\n"
-msgstr "මූල ඩිරෙක්ටරියෙන් විචලනය වේ\n"
+msgstr "Fillo nga lista preardhëse\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "'%s' ලෙස '%s' සිටුවීම\n"
+msgstr "vendos '%s' tek '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr "ශුන්‍යවන"
+msgstr "zerim"
 
 msgid "first"
-msgstr "පළමු"
+msgstr "i pari"
 
 msgid "second"
-msgstr "තත්පරය"
+msgstr "i dyti"
 
 msgid "third"
-msgstr "තෙවන"
+msgstr "i treti"
 
 msgid "fourth"
-msgstr "සිව්වන"
+msgstr "i katërti"
 
 msgid "fifth"
-msgstr "පස්වන"
+msgstr "i pesti"
 
 msgid "sixth"
-msgstr "සයවන"
+msgstr "i gjashti"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr "ශුන්‍යවන පිටවුම"
+msgstr "dalje e zeruar"
 
 msgid "first exit"
-msgstr "පළමු පිටවුම"
+msgstr "dalja e parë"
 
 msgid "second exit"
-msgstr "දෙවන පිටවුම"
+msgstr "dalja e dytë"
 
 msgid "third exit"
-msgstr "තෙවන පිටවුම"
+msgstr "dalja e tretë"
 
 msgid "fourth exit"
-msgstr "සිව්වන පිටවුම"
+msgstr "dalja e katërt"
 
 msgid "fifth exit"
-msgstr "පස්වන පිටවුම"
+msgstr "dalja e pestë"
 
 msgid "sixth exit"
-msgstr "සයවන පිටවුම"
+msgstr "dalja e gjashtë"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d këmbë"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "në %d këmbë"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d milje"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "në %d.%d milje"
 
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "një milje"
+msgstr[1] "%d milje"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "në një milje"
+msgstr[1] "në %d milje"
 
 #, c-format
 msgid "%d meters"
-msgstr "මීටර %d"
+msgstr "%d metra"
 
 #, c-format
 msgid "in %d meters"
-msgstr "මීටර %d කින්"
+msgstr "në %d metra"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "කිලෝ මීටර %d.%d"
+msgstr "%d.%d kilometra"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "කිලෝ මීටර %d.%d කින්"
+msgstr "në %d.%d kilometra"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "කිලෝ මීටරයයි"
-msgstr[1] "කිලෝ මීටර %d"
+msgstr[0] "një kilometër"
+msgstr[1] "%d kilometra"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "කිලෝ මීටරයකින්"
-msgstr[1] "කිලෝ මීටර %d කින්"
+msgstr[0] "në një kilometër"
+msgstr[1] "në %d kilometra"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$smbi tek %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$smbi %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$smbi %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$smbi %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$smbi %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "රැම්පය තුළට"
+msgstr "mbi hyrjen e autostradës"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%s %s %s %s තුළට"
+msgstr "%snë %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%s %s %s %s තුළට"
+msgstr "%snë %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%s %s %s %s තුළට"
+msgstr "%snë %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%s %s %s %s තුළට"
+msgstr "%snë %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s %s තුළට"
+msgstr "%snë %s"
 
 msgid "When possible, please turn around"
-msgstr "හැකියාව ඇතිවිට දී, කරුණාකර හැරෙන්න."
+msgstr "Nqs është e mundur, ju lutem kthehuni mbrapsht"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "në drejtim të %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "මීළඟ %s දක්වා මාර්ගය හඹායන්න."
+msgstr "Ndjekni rrugën për tjetrën %s"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "Hyni në rrethrrotullim së shpejti"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Hyni në rrethrrotullimin %s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "එවිට %1$s %2$s හිදී වටරවුමෙන් ඉවත්වන්න."
+msgstr "pastaj dilni nga rrethrrotullimi tek %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "%1$s %2$s හිදී වටරවුමෙන් ඉවත්වන්න."
+msgstr "Dilni nga rrethrrotullimi tek %1$s %2$s"
 
 msgid "soon"
-msgstr "ලඟදීම"
+msgstr "së shpejti"
 
 msgid "now"
-msgstr "දැන්"
+msgstr "tani"
 
 msgid "then"
-msgstr ""
+msgstr "pastaj"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "pastaj futuni%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Udhëtoni tek %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "pastaj udhëtoni tek%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Udhëtoni tek %1$s%2$s"
 
 msgid "on your left"
-msgstr ""
+msgstr "në të majtën"
 
 msgid "on your right"
-msgstr ""
+msgstr "në të djathtën"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Merrni daljen %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Merrni daljen %1$s %2$s %3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "tek ndërrimi i autostradës"
 
 msgid "at exit"
-msgstr ""
+msgstr "në dalje"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "pastaj udhëtoni drejt%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Vazhdoni drejt %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "pastaj mbani krahun e djathtë%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Mbani krahun e djathtë %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "pastaj mbani krahun e majtë%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Mbani krahun e majtë%1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr "දකුණ"
+msgstr "djathtas"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr "වම"
+msgstr "majtas"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr "පහසුවෙන් "
+msgstr "lehtë "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr "ශක්තිමත් ලෙස "
+msgstr "fuqishëm "
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr "ගන්න %1$s මාර්ගය %2$s ට"
+msgstr "Merrni rrugën %1$s për tek rruga %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "මාර්ග %i පසු"
+msgstr "pas rrugës %i"
 
 #. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "%1$s%2$s %3$s%4$s හරවන්න"
+msgstr "Kthehuni %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "pastaj bëni një U-kthim"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Bëni një U-kthim %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "pastaj bëni një U-kthim"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Bëni një U-kthim %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -351,286 +352,286 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "ndiqni"
 
 msgid "then you have reached your destination."
-msgstr "එවිට ඔබ ඔබේ ගමනාන්තයට ළඟා වී ඇත."
+msgstr "pastaj ju keni arritur pikëmbërritjen"
 
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "ඔබ ඔබේ ගමනාන්තය වන %s ට ළඟා වී ඇත."
+msgstr "Ju e keni arritur pikëmbërritjen tuaj %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr "පිටවුම"
+msgstr "Dalje"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
-msgstr "ස්ථානය"
+msgstr "Vendndodhja"
 
 msgid "Command"
-msgstr "විධානය"
+msgstr "Komanda"
 
 msgid "Length"
-msgstr "දිග"
+msgstr "Zgjatja"
 
 msgid "km"
-msgstr "කිලෝ මිටර"
+msgstr "km"
 
 msgid "m"
-msgstr "මි."
+msgstr "m"
 
 msgid "Time"
-msgstr "වේලාව"
+msgstr "Koha"
 
 msgid "Destination Length"
-msgstr "ගමනාන්තයට දුර"
+msgstr "Gjatësia deri në arritje"
 
 msgid "Destination Time"
-msgstr "ගමනාන්තයට කාලය"
+msgstr "Kohëzgjatja deri në arritje"
 
 msgid "Roadbook"
-msgstr "මාර්ග පොත"
+msgstr "Përshkrimi i rrugës"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "Pikëzim rruge %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "Vendos si pikëzim rruge ..."
 
 msgid "Set as position"
-msgstr "ස්ථානය ලෙස සිටුවන්න"
+msgstr "Vendosni si pozicion"
 
 msgid "Set as destination"
-msgstr "ගමනාන්තය ලෙස සිටුවන්න"
+msgstr "Vendosni si vendarritje"
 
 msgid "Add as bookmark"
-msgstr "පිටුසනක් ලෙස ඈඳන්න"
+msgstr "Shtoni një shenjim"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr "පොයින්ට් 0x%x 0x%x"
+msgstr "Pikë 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr "තිර ඛණ්ඩාංක  : %d %d"
+msgstr "Koordinatat e ekranit %d %d"
 
 #. 020
 msgid "Andorra"
-msgstr "ඇන්ඩොර්රා"
+msgstr "Andora"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr "එක්සත් අරාබි එමිර් රාජ්‍යය"
+msgstr "Emiratet e Bashkuara Arabe"
 
 #. 004
 msgid "Afghanistan"
-msgstr "ඇෆ්ගනිස්ථානය"
+msgstr "Afganistan"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr "ඇන්ටිගුවා සහ බාර්බඩා"
+msgstr "Antigua dhe Barbuda"
 
 #. 660
 msgid "Anguilla"
-msgstr "ඇන්ගියුලාව"
+msgstr "Anguila"
 
 #. 008
 msgid "Albania"
-msgstr "ඇල්බෙනියාව"
+msgstr "Shqipëri"
 
 #. 051
 msgid "Armenia"
-msgstr "අර්මෙනියාව"
+msgstr "Armenia"
 
 #. 530
 msgid "Netherlands Antilles"
-msgstr "නෙදර්ලන්ත ඇන්ටිලීස්"
+msgstr "Antilet Hollandeze"
 
 #. 024
 msgid "Angola"
-msgstr "ඇන්ගෝලාව"
+msgstr "Angola"
 
 #. 010
 msgid "Antarctica"
-msgstr "ඇන්ටාක්ටිකාව"
+msgstr "Antarktidë"
 
 #. 032
 msgid "Argentina"
-msgstr "ආජන්ටිනාව"
+msgstr "Argjentina"
 
 #. 016
 msgid "American Samoa"
-msgstr "ඇමරිකානු සැමෝවා"
+msgstr "Samoa Amerikane"
 
 #. 040
 msgid "Austria"
-msgstr "ඔස්ට්‍රියාව"
+msgstr "Austri"
 
 #. 036
 msgid "Australia"
-msgstr "ඔස්ට්‍රේලියාව"
+msgstr "Australi"
 
 #. 533
 msgid "Aruba"
-msgstr "අරුබාව"
+msgstr "Aruba"
 
 #. 248
 msgid "Aland Islands"
-msgstr "අලෑන්ඩ් දූපත්"
+msgstr "Ishujt Aland"
 
 #. 031
 msgid "Azerbaijan"
-msgstr "අසර්බයිජානය"
+msgstr "Azerbaixhan"
 
 #. 070
 msgid "Bosnia and Herzegovina"
-msgstr "බොස්නියාව සහ හෙසෙගවිනා"
+msgstr "Bosnjë-Hercegovinë"
 
 #. 052
 msgid "Barbados"
-msgstr "බාබඩෝසය"
+msgstr "Barbados"
 
 #. 050
 msgid "Bangladesh"
-msgstr "බංග්ලාදේශය"
+msgstr "Bangladesh"
 
 #. 056
 msgid "Belgium"
-msgstr "බෙල්ජියම"
+msgstr "Belgjikë"
 
 #. 854
 msgid "Burkina Faso"
-msgstr "බර්කිනා ෆාසෝ"
+msgstr "Burkina Faso"
 
 #. 100
 msgid "Bulgaria"
-msgstr "බල්ගේරියාව"
+msgstr "Bullgari"
 
 #. 048
 msgid "Bahrain"
-msgstr "බහරේනය"
+msgstr "Bahrein"
 
 #. 108
 msgid "Burundi"
-msgstr "බුරුන්ඩි"
+msgstr "Burundi"
 
 #. 204
 msgid "Benin"
-msgstr "බෙනින්"
+msgstr "Benin"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr "සාන්ත බාතලෙමේය"
+msgstr "Saint-Barthélemy"
 
 #. 060
 msgid "Bermuda"
-msgstr "බර්මියුඩාව"
+msgstr "Bermuda"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr "බෘනායි දරුස්සලාම්"
+msgstr "Brunei Darussalam"
 
 #. 068
 msgid "Bolivia"
-msgstr "බොලීවියාව"
+msgstr "Bolivi"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius dhe Saba"
 
 #. 076
 msgid "Brazil"
-msgstr "බ්‍රසීලය"
+msgstr ""
 
 #. 044
 msgid "Bahamas"
-msgstr "බහමාස්"
+msgstr ""
 
 #. 064
 msgid "Bhutan"
-msgstr "භුතානය"
+msgstr ""
 
 #. 074
 msgid "Bouvet Island"
-msgstr "බොවෙ දිවයින"
+msgstr ""
 
 #. 072
 msgid "Botswana"
-msgstr "බොට්ස්වානා"
+msgstr ""
 
 #. 112
 msgid "Belarus"
-msgstr "බෙලරුසය"
+msgstr ""
 
 #. 084
 msgid "Belize"
-msgstr "බෙලිසිය"
+msgstr ""
 
 #. 124
 msgid "Canada"
-msgstr "කැනඩාව"
+msgstr ""
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr "කොකෝවා (කීලිං) දූපත්"
+msgstr ""
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr "කොංගෝව, ප්‍රජාතාන්ත්‍රික සමූහාණ්ඩුව"
+msgstr ""
 
 #. 140
 msgid "Central African Republic"
-msgstr "මධ්‍යම අප්‍රිකානු ජනරජය"
+msgstr ""
 
 #. 178
 msgid "Congo"
-msgstr "කොන්ගෝව"
+msgstr ""
 
 #. 756
 msgid "Switzerland"
-msgstr "ස්විට්සර්ලන්තය"
+msgstr ""
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr "කොට් ඩි'ඉවොයර්"
+msgstr ""
 
 #. 184
 msgid "Cook Islands"
-msgstr "කුක් දූපත්"
+msgstr ""
 
 #. 152
 msgid "Chile"
-msgstr "චිලී"
+msgstr ""
 
 #. 120
 msgid "Cameroon"
-msgstr "කැමරූන්"
+msgstr ""
 
 #. 156
 msgid "China"
-msgstr "චීනය"
+msgstr ""
 
 #. 170
 msgid "Colombia"
-msgstr "කොලොම්බියාව"
+msgstr ""
 
 #. 188
 msgid "Costa Rica"
-msgstr "කොස්ට රිකා"
+msgstr ""
 
 #. 192
 msgid "Cuba"
-msgstr "කියුබාව"
+msgstr ""
 
 #. 132
 msgid "Cape Verde"
-msgstr "කේප් තුඩුව"
+msgstr ""
 
 #. 531
 msgid "Curacao"
@@ -638,331 +639,331 @@ msgstr ""
 
 #. 162
 msgid "Christmas Island"
-msgstr "ක්‍රිස්ම්ස් දූපත"
+msgstr ""
 
 #. 196
 msgid "Cyprus"
-msgstr "සයිප්‍රසය"
+msgstr ""
 
 #. 203
 msgid "Czech Republic"
-msgstr "චෙක් ජනරජය"
+msgstr ""
 
 #. 276
 msgid "Germany"
-msgstr "ජර්මනිය"
+msgstr ""
 
 #. 262
 msgid "Djibouti"
-msgstr "ජිබුටි"
+msgstr ""
 
 #. 208
 msgid "Denmark"
-msgstr "ඩෙන්මාකය"
+msgstr ""
 
 #. 212
 msgid "Dominica"
-msgstr "ඩොමිනිකාව"
+msgstr ""
 
 #. 214
 msgid "Dominican Republic"
-msgstr "ඩොමිනිකන් ජනරජය"
+msgstr ""
 
 #. 012
 msgid "Algeria"
-msgstr "ඇල්ජීරියාව"
+msgstr ""
 
 #. 218
 msgid "Ecuador"
-msgstr "ඉක්වදෝරය"
+msgstr ""
 
 #. 233
 msgid "Estonia"
-msgstr "එස්ටෝනියාව"
+msgstr ""
 
 #. 818
 msgid "Egypt"
-msgstr "ඊජිප්තුව"
+msgstr ""
 
 #. 732
 msgid "Western Sahara"
-msgstr "බටහිර සහරා"
+msgstr ""
 
 #. 232
 msgid "Eritrea"
-msgstr "එරිත්‍රියාව"
+msgstr ""
 
 #. 724
 msgid "Spain"
-msgstr "ස්පාඤ්ඤය"
+msgstr ""
 
 #. 231
 msgid "Ethiopia"
-msgstr "ඉතියෝපියාව"
+msgstr ""
 
 #. 246
 msgid "Finland"
-msgstr "පින්ලන්තය"
+msgstr ""
 
 #. 242
 msgid "Fiji"
-msgstr "ෆීජි"
+msgstr ""
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr "ෆෝක්ලන්ඩ් දූපත් (මල්විනාස්)"
+msgstr ""
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr "මයික්‍රොනීසියානු සමූහාණ්ඩුව"
+msgstr ""
 
 #. 234
 msgid "Faroe Islands"
-msgstr "ෆැරෝයි දූපත්"
+msgstr ""
 
 #. 250
 msgid "France"
-msgstr "ප්‍රංශය"
+msgstr ""
 
 #. 266
 msgid "Gabon"
-msgstr "ගැබෝනය"
+msgstr ""
 
 #. 826
 msgid "United Kingdom"
-msgstr "එක්සත් රාජධානිය"
+msgstr ""
 
 #. 308
 msgid "Grenada"
-msgstr "ග්‍රෙනාඩා"
+msgstr ""
 
 #. 268
 msgid "Georgia"
-msgstr "ජොර්ජියාව"
+msgstr ""
 
 #. 254
 msgid "French Guiana"
-msgstr "ප්‍රංශ ගයනාව"
+msgstr ""
 
 #. 831
 msgid "Guernsey"
-msgstr "ගුවන්සි"
+msgstr ""
 
 #. 288
 msgid "Ghana"
-msgstr "ඝානාව"
+msgstr ""
 
 #. 292
 msgid "Gibraltar"
-msgstr "ජිබ්‍රොල්ටා"
+msgstr ""
 
 #. 304
 msgid "Greenland"
-msgstr "ග්‍රීන්ලන්තය"
+msgstr ""
 
 #. 270
 msgid "Gambia"
-msgstr "ගැම්බියාව"
+msgstr ""
 
 #. 324
 msgid "Guinea"
-msgstr "ගිනියා"
+msgstr ""
 
 #. 312
 msgid "Guadeloupe"
-msgstr "‍ගෝඩිලෝප්"
+msgstr ""
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr "එක්වටෝරියල් ගිනියා"
+msgstr ""
 
 #. 300
 msgid "Greece"
-msgstr "ග්‍රීසිය"
+msgstr ""
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr "දකුණු ජොර්ජියාව සහ දකුණු සැන්විච් දූපත්"
+msgstr ""
 
 #. 320
 msgid "Guatemala"
-msgstr "ගෝතමාලාව"
+msgstr ""
 
 #. 316
 msgid "Guam"
-msgstr "ගුවාම්"
+msgstr ""
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr "ගිනි - බිසව්"
+msgstr ""
 
 #. 328
 msgid "Guyana"
-msgstr "ගුයානා"
+msgstr ""
 
 #. 344
 msgid "Hong Kong"
-msgstr "හොං කොං"
+msgstr ""
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr "හර්ඩ් දූපත සහ මැක්ඩොනල්ඩ් දූපත්"
+msgstr ""
 
 #. 340
 msgid "Honduras"
-msgstr "හොන්ඩුරාස්"
+msgstr ""
 
 #. 191
 msgid "Croatia"
-msgstr "ක්‍රොඒෂියාව"
+msgstr ""
 
 #. 332
 msgid "Haiti"
-msgstr "හයිටි"
+msgstr ""
 
 #. 348
 msgid "Hungary"
-msgstr "හංගේරියාව"
+msgstr ""
 
 #. 360
 msgid "Indonesia"
-msgstr "ඉන්දුනීසියාව"
+msgstr ""
 
 #. 372
 msgid "Ireland"
-msgstr "අයර්ලන්තය"
+msgstr ""
 
 #. 376
 msgid "Israel"
-msgstr "ඊශ්‍රායලය"
+msgstr ""
 
 #. 833
 msgid "Isle of Man"
-msgstr "අයිල් ඔෆ් මෑන්"
+msgstr ""
 
 #. 356
 msgid "India"
-msgstr "ඉන්දියාව"
+msgstr ""
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr "බ්‍රිතාන්‍යයේ ඉන්දියානු සාගර  බල ප්‍රදේශය"
+msgstr ""
 
 #. 368
 msgid "Iraq"
-msgstr "ඉරාකය"
+msgstr ""
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr "ඉරාන ඉස්ලාමීය ජනරජය"
+msgstr ""
 
 #. 352
 msgid "Iceland"
-msgstr "අයිස්ලන්තය"
+msgstr ""
 
 #. 380
 msgid "Italy"
-msgstr "ඉතාලිය"
+msgstr ""
 
 #. 832
 msgid "Jersey"
-msgstr "ජර්සි"
+msgstr ""
 
 #. 388
 msgid "Jamaica"
-msgstr "ජැමෙයිකාව"
+msgstr ""
 
 #. 400
 msgid "Jordan"
-msgstr "ජොර්දානය"
+msgstr ""
 
 #. 392
 msgid "Japan"
-msgstr "ජපානය"
+msgstr ""
 
 #. 404
 msgid "Kenya"
-msgstr "කෙන්යාව"
+msgstr ""
 
 #. 417
 msgid "Kyrgyzstan"
-msgstr "කිර්ගිස්තානය"
+msgstr ""
 
 #. 116
 msgid "Cambodia"
-msgstr "කාම්බෝජියාව"
+msgstr ""
 
 #. 296
 msgid "Kiribati"
-msgstr "කිරිබටි"
+msgstr ""
 
 #. 174
 msgid "Comoros"
-msgstr "කොමොරොස්"
+msgstr ""
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr "ශාන්ත කිට්ස් සහ නෙවිස්"
+msgstr ""
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr "කොරියානු ප්‍රජාතාන්ත්‍රික ජනරජය"
+msgstr ""
 
 #. 410
 msgid "Korea, Republic of"
-msgstr "කොරියානු ජනරජය"
+msgstr ""
 
 #. 414
 msgid "Kuwait"
-msgstr "කුවේටය"
+msgstr ""
 
 #. 136
 msgid "Cayman Islands"
-msgstr "කේමන් දූපත්"
+msgstr ""
 
 #. 398
 msgid "Kazakhstan"
-msgstr "කසකස්තානය"
+msgstr ""
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr "ලාඕ ප්‍රජාතාන්ත්‍රික ජනරජය"
+msgstr ""
 
 #. 422
 msgid "Lebanon"
-msgstr "ලෙබනනය"
+msgstr ""
 
 #. 662
 msgid "Saint Lucia"
-msgstr "ශාන්ත ලුසියා"
+msgstr ""
 
 #. 438
 msgid "Liechtenstein"
-msgstr "ලීච්ටෙන්ස්ටයින්"
+msgstr ""
 
 #. 144
 msgid "Sri Lanka"
-msgstr "ශ්‍රී ලංකාව"
+msgstr ""
 
 #. 430
 msgid "Liberia"
-msgstr "ලයිබීරියාව"
+msgstr ""
 
 #. 426
 msgid "Lesotho"
-msgstr "ලෙසතෝව"
+msgstr ""
 
 #. 440
 msgid "Lithuania"
-msgstr "ලිතුවේනියාව"
+msgstr ""
 
 #. 442
 msgid "Luxembourg"
-msgstr "ලක්සම්බර්ග්"
+msgstr ""
 
 #. 428
 msgid "Latvia"
-msgstr "ලැට්වියාව"
+msgstr ""
 
 #. 434
 msgid "Libya"
@@ -970,287 +971,287 @@ msgstr ""
 
 #. 504
 msgid "Morocco"
-msgstr "මොරොක්කෝව"
+msgstr ""
 
 #. 492
 msgid "Monaco"
-msgstr "මොනකෝව"
+msgstr ""
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr "මෝල්ඩෝවා ජනරජය"
+msgstr ""
 
 #. 499
 msgid "Montenegro"
-msgstr "මොන්ටෙන්ග්‍රෝව"
+msgstr ""
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr "සාන්ත මාටින් ( ප්‍රංශ කොටස )"
+msgstr ""
 
 #. 450
 msgid "Madagascar"
-msgstr "මැඩගස්කරය"
+msgstr ""
 
 #. 584
 msgid "Marshall Islands"
-msgstr "මාෂල් දූපත්"
+msgstr ""
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "මැසිඩෝනියාව ( පෙර යුගෝස්ලෝවියනු ජනරජය )"
+msgstr ""
 
 #. 466
 msgid "Mali"
-msgstr "මාලි"
+msgstr ""
 
 #. 104
 msgid "Myanmar"
-msgstr "මියන්මාරය"
+msgstr ""
 
 #. 496
 msgid "Mongolia"
-msgstr "මොංගෝලියාව"
+msgstr ""
 
 #. 446
 msgid "Macao"
-msgstr "මැකෝ"
+msgstr ""
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr "උතුරු මරියානා දූපත්"
+msgstr ""
 
 #. 474
 msgid "Martinique"
-msgstr "මාටිනික්"
+msgstr ""
 
 #. 478
 msgid "Mauritania"
-msgstr "මවුරිටේනියා"
+msgstr ""
 
 #. 500
 msgid "Montserrat"
-msgstr "මොන්ට්සෙරට්"
+msgstr ""
 
 #. 470
 msgid "Malta"
-msgstr "මොල්ටාව"
+msgstr ""
 
 #. 480
 msgid "Mauritius"
-msgstr "මොරිෂස්"
+msgstr ""
 
 #. 462
 msgid "Maldives"
-msgstr "මාලදිවයින"
+msgstr ""
 
 #. 454
 msgid "Malawi"
-msgstr "මලාවී"
+msgstr ""
 
 #. 484
 msgid "Mexico"
-msgstr "මෙක්සිකෝව"
+msgstr ""
 
 #. 458
 msgid "Malaysia"
-msgstr "මැලේසියාව"
+msgstr ""
 
 #. 508
 msgid "Mozambique"
-msgstr "මොසැම්බික්"
+msgstr ""
 
 #. 516
 msgid "Namibia"
-msgstr "නැමීබියාව"
+msgstr ""
 
 #. 540
 msgid "New Caledonia"
-msgstr "නිව් සෙලිඩෝනියාව"
+msgstr ""
 
 #. 562
 msgid "Niger"
-msgstr "නයිජර්"
+msgstr ""
 
 #. 574
 msgid "Norfolk Island"
-msgstr "නෝෆෝක් දූපත"
+msgstr ""
 
 #. 566
 msgid "Nigeria"
-msgstr "නයිජීරියාව"
+msgstr ""
 
 #. 558
 msgid "Nicaragua"
-msgstr "නිකරගුවාව"
+msgstr ""
 
 #. 528
 msgid "Netherlands"
-msgstr "නෙදර්ලන්තය"
+msgstr ""
 
 #. 578
 msgid "Norway"
-msgstr "නෝර්වේ"
+msgstr ""
 
 #. 524
 msgid "Nepal"
-msgstr "නේපාලය"
+msgstr ""
 
 #. 520
 msgid "Nauru"
-msgstr "නාවුරු"
+msgstr ""
 
 #. 570
 msgid "Niue"
-msgstr "නිඌ"
+msgstr ""
 
 #. 554
 msgid "New Zealand"
-msgstr "නවසීලන්තය"
+msgstr ""
 
 #. 512
 msgid "Oman"
-msgstr "ඕමානය"
+msgstr ""
 
 #. 591
 msgid "Panama"
-msgstr "පැනමාව"
+msgstr ""
 
 #. 604
 msgid "Peru"
-msgstr "පේරු"
+msgstr ""
 
 #. 258
 msgid "French Polynesia"
-msgstr "ප්‍රංශ පොලිනීසියාව"
+msgstr ""
 
 #. 598
 msgid "Papua New Guinea"
-msgstr "පැපුවා නිව් ගිනියාව"
+msgstr ""
 
 #. 608
 msgid "Philippines"
-msgstr "පිලිපීනය"
+msgstr ""
 
 #. 586
 msgid "Pakistan"
-msgstr "පකිස්තානය"
+msgstr ""
 
 #. 616
 msgid "Poland"
-msgstr "පෝලන්තය"
+msgstr ""
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr "සාන්ත පියරෙ ඇන්ඩ් මැක්‍ලන්"
+msgstr ""
 
 #. 612
 msgid "Pitcairn"
-msgstr "පිට්කෙයාන්"
+msgstr ""
 
 #. 630
 msgid "Puerto Rico"
-msgstr "පෝටො රිකෝ"
+msgstr ""
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr "පලස්තීනියානු බල ප්‍රදේශය, සන්තක"
+msgstr ""
 
 #. 620
 msgid "Portugal"
-msgstr "පෘතුගාලය"
+msgstr ""
 
 #. 585
 msgid "Palau"
-msgstr "පාවුලු"
+msgstr ""
 
 #. 600
 msgid "Paraguay"
-msgstr "පැරගුවේ"
+msgstr ""
 
 #. 634
 msgid "Qatar"
-msgstr "කටාරය"
+msgstr ""
 
 #. 638
 msgid "Reunion"
-msgstr "රියුනියන්"
+msgstr ""
 
 #. 642
 msgid "Romania"
-msgstr "රොමේනියාව"
+msgstr ""
 
 #. 688
 msgid "Serbia"
-msgstr "සර්බියාව"
+msgstr ""
 
 #. 643
 msgid "Russian Federation"
-msgstr "රුසියානු සමූහාණ්ඩුව"
+msgstr ""
 
 #. 646
 msgid "Rwanda"
-msgstr "ර්වන්ඩා"
+msgstr ""
 
 #. 682
 msgid "Saudi Arabia"
-msgstr "සවුදි අරාබිය"
+msgstr ""
 
 #. 090
 msgid "Solomon Islands"
-msgstr "සොලමන් දූපත්"
+msgstr ""
 
 #. 690
 msgid "Seychelles"
-msgstr "සී ශෙල්ස්"
+msgstr ""
 
 #. 736
 msgid "Sudan"
-msgstr "සුඩානය"
+msgstr ""
 
 #. 752
 msgid "Sweden"
-msgstr "ස්වීඩනය"
+msgstr ""
 
 #. 702
 msgid "Singapore"
-msgstr "සිංගප්පූරුව"
+msgstr ""
 
 #. 654
 msgid "Saint Helena"
-msgstr "සාන්ත හෙලේනා"
+msgstr ""
 
 #. 705
 msgid "Slovenia"
-msgstr "ස්ලෝවේනියා"
+msgstr ""
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr "ස්වල්බාඩ් සහ ජන් මයෙන්"
+msgstr ""
 
 #. 703
 msgid "Slovakia"
-msgstr "ස්ලෝවැකියාව"
+msgstr ""
 
 #. 694
 msgid "Sierra Leone"
-msgstr "සියෙරා ලියොන්"
+msgstr ""
 
 #. 674
 msgid "San Marino"
-msgstr "සැන් මරීනෝ"
+msgstr ""
 
 #. 686
 msgid "Senegal"
-msgstr "සෙනගාලය"
+msgstr ""
 
 #. 706
 msgid "Somalia"
-msgstr "සෝමාලියාව"
+msgstr ""
 
 #. 740
 msgid "Suriname"
-msgstr "සුරිනේම්"
+msgstr ""
 
 #. 728
 msgid "South Sudan"
@@ -1258,11 +1259,11 @@ msgstr ""
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr "සාඕ ටොමේ සහ ප්‍රින්සිපේ"
+msgstr ""
 
 #. 222
 msgid "El Salvador"
-msgstr "එල් සැල්වදෝරය"
+msgstr ""
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
@@ -1270,158 +1271,158 @@ msgstr ""
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr "සිරියානු අරාබි ජනරජය"
+msgstr ""
 
 #. 748
 msgid "Swaziland"
-msgstr "ස්වාසිලන්තය"
+msgstr ""
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr "ටර්ක්ස් සහ කයිකොස් දූපත්"
+msgstr ""
 
 #. 148
 msgid "Chad"
-msgstr "චැඩ්"
+msgstr ""
 
 #. 260
 msgid "French Southern Territories"
-msgstr "ප්‍රංශ දකුණු බලප්‍රදේශය"
+msgstr ""
 
 #. 768
 msgid "Togo"
-msgstr "ටෝගෝව"
+msgstr ""
 
 #. 764
 msgid "Thailand"
-msgstr "තායිලන්තය"
+msgstr ""
 
 #. 762
 msgid "Tajikistan"
-msgstr "ටජිකිස්තානය"
+msgstr ""
 
 #. 772
 msgid "Tokelau"
-msgstr "ටොකෙලෝව"
+msgstr ""
 
 #. 626
 msgid "Timor-Leste"
-msgstr "ටිමෝර්-ලෙස්ටේ"
+msgstr ""
 
 #. 795
 msgid "Turkmenistan"
-msgstr "ටර්ක්මනිස්ථාන්"
+msgstr ""
 
 #. 788
 msgid "Tunisia"
-msgstr "ටියුනීසියාව"
+msgstr ""
 
 #. 776
 msgid "Tonga"
-msgstr "ටොන්ගා"
+msgstr ""
 
 #. 792
 msgid "Turkey"
-msgstr "තුර්කිය"
+msgstr ""
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr "ට්‍රිනිඩෑඩ් සහ ටොබේගෝ"
+msgstr ""
 
 #. 798
 msgid "Tuvalu"
-msgstr "ටුවාලු"
+msgstr ""
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr "තායිවානය, චීන පළාත"
+msgstr ""
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr "ටැන්සානියා එක්සත් ජනරජය"
+msgstr ""
 
 #. 804
 msgid "Ukraine"
-msgstr "යුක්රේනය"
+msgstr ""
 
 #. 800
 msgid "Uganda"
-msgstr "උගන්ඩාව"
+msgstr ""
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr "එක්සත් ජනපදයේ දුරින් පිහිටි කුඩා දූපත්"
+msgstr ""
 
 #. 840
 msgid "United States"
-msgstr "එක්සත් ජනපදය"
+msgstr ""
 
 #. 858
 msgid "Uruguay"
-msgstr "උරුගුවේ"
+msgstr ""
 
 #. 860
 msgid "Uzbekistan"
-msgstr "උස්බකිස්තානය"
+msgstr ""
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr "ශුද්ධ වූ බැලීම ( වතිකානු නගර ජනපදය )"
+msgstr ""
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr "සාන්ත වින්සන්ට් සහ ද ග්‍රිනැඩින්ස්"
+msgstr ""
 
 #. 862
 msgid "Venezuela"
-msgstr "වෙනිසියුලාව"
+msgstr ""
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr "වර්ජින් දූපත්, බ්‍රිතාන්‍යය"
+msgstr ""
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr "වර්ජින් දූපත්, එ.ජ."
+msgstr ""
 
 #. 704
 msgid "Viet Nam"
-msgstr "වියට්නාමය"
+msgstr ""
 
 #. 548
 msgid "Vanuatu"
-msgstr "වැනෝටු"
+msgstr ""
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr "වෝලිස් සහ ෆුටුනා"
+msgstr ""
 
 #. 882
 msgid "Samoa"
-msgstr "සැමෝවා"
+msgstr ""
 
 #. 887
 msgid "Yemen"
-msgstr "යේමනය"
+msgstr ""
 
 #. 175
 msgid "Mayotte"
-msgstr "මයෝ"
+msgstr ""
 
 #. 710
 msgid "South Africa"
-msgstr "දකුණු අප්‍රිකාව"
+msgstr ""
 
 #. 894
 msgid "Zambia"
-msgstr "සැම්බියාව"
+msgstr ""
 
 #. 716
 msgid "Zimbabwe"
-msgstr "සිම්බාබ්වේ"
+msgstr ""
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "*නොදන්නා, යි_යේ ලේබල එම නගර වලට ඈඳන්න"
+msgstr ""
 
 msgid ""
 "navit usage:\n"
@@ -1467,55 +1468,55 @@ msgstr ""
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr "සිතියමේ පොයින්ට්"
+msgstr ""
 
 msgid "Car"
-msgstr "මෝටර් රථය"
+msgstr ""
 
 msgid "Iso2"
-msgstr "Iso2"
+msgstr ""
 
 msgid "Iso3"
-msgstr "Iso3"
+msgstr ""
 
 msgid "Country"
-msgstr "රට"
+msgstr ""
 
 msgid "Postal"
-msgstr "තැපැල්"
+msgstr ""
 
 msgid "Town"
-msgstr "සුළු නගරය"
+msgstr ""
 
 msgid "District"
-msgstr "දිස්ත්‍රික්කය"
+msgstr ""
 
 msgid "Street"
-msgstr "වීදිය"
+msgstr ""
 
 msgid "Number"
-msgstr "අංකය"
+msgstr ""
 
 msgid "Enter Destination"
-msgstr "ගමනාන්තය ඇතුල් කරන්න"
+msgstr ""
 
 msgid "Zip Code"
-msgstr "තැපැල් අංකය"
+msgstr ""
 
 msgid "City"
-msgstr "නගරය"
+msgstr ""
 
 msgid "District/Township"
-msgstr "දිස්ත්‍රික්කය/සුළු නගරභාවය"
+msgstr ""
 
 msgid "Map"
-msgstr "සිතියම"
+msgstr ""
 
 msgid "Bookmark"
-msgstr "පිටුසන"
+msgstr ""
 
 msgid "Destination"
-msgstr "ගමනාන්තය"
+msgstr ""
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
@@ -1546,19 +1547,19 @@ msgid "Zoom_Out"
 msgstr ""
 
 msgid "Decrease zoom level"
-msgstr "විශාලන මට්ටම අඩුකරන්න"
+msgstr ""
 
 msgid "Zoom_In"
 msgstr ""
 
 msgid "Increase zoom level"
-msgstr "විශාලන මට්ටම වැඩිකරන්න"
+msgstr ""
 
 msgid "_Recalculate"
 msgstr ""
 
 msgid "Redraw map"
-msgstr "නැවත සිතියම අඳින්න"
+msgstr ""
 
 msgid "_Info"
 msgstr ""
@@ -1567,7 +1568,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr "ලිපින සෙවුම් සංවාදය විවෘත කරයි"
+msgstr ""
 
 msgid "_POI search"
 msgstr ""
@@ -1579,13 +1580,13 @@ msgid "_Stop Navigation"
 msgstr ""
 
 msgid "Test"
-msgstr "පිරික්සුම"
+msgstr ""
 
 msgid "_Quit"
-msgstr "_ඉවත් වෙන්න"
+msgstr ""
 
 msgid "Quit the application"
-msgstr "යෙදුමෙන් ඉවත් වෙන්න"
+msgstr ""
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1597,25 +1598,25 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr "සිතියම් දිශානතිය උතුරට හෝ වාහනයට විචලනය කරයි"
+msgstr ""
 
 msgid "_Roadbook"
 msgstr ""
 
 msgid "Show/hide route description"
-msgstr "පෙන්වන්න/සඟවන්න රවුට් විස්තරය"
+msgstr ""
 
 msgid "_Autozoom"
 msgstr ""
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr "සක්‍රීය/ අක්‍රීය කරන්න ස්වයංක්‍රීය විශාලන මට්ටම් වෙනස"
+msgstr ""
 
 msgid "_Fullscreen"
 msgstr ""
 
 msgid "Data"
-msgstr "දත්ත"
+msgstr ""
 
 msgid "Pharmacy"
 msgstr ""
@@ -1712,51 +1713,51 @@ msgid "Visit Before"
 msgstr ""
 
 msgid "N"
-msgstr "උ"
+msgstr ""
 
 msgid "NE"
-msgstr "උ නැ"
+msgstr ""
 
 msgid "E"
-msgstr "නැ"
+msgstr ""
 
 msgid "SE"
-msgstr "ද නැ"
+msgstr ""
 
 msgid "S"
-msgstr "ද"
+msgstr ""
 
 msgid "SW"
-msgstr "ද බ"
+msgstr ""
 
 msgid "W"
-msgstr "බ"
+msgstr ""
 
 msgid "NW"
-msgstr "උ බ"
+msgstr ""
 
 #. Android resource: @strings/no
 msgid "No"
-msgstr "නැත"
+msgstr ""
 
 msgid "2D"
-msgstr "ද්විමාන"
+msgstr ""
 
 msgid "3D"
-msgstr "ත්‍රිමාන"
+msgstr ""
 
 msgid "OT"
-msgstr "OT"
+msgstr ""
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "රවුට් කරන්න %4.0f කි.මී. %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr "රවුට් කරන්න 0000 කි.මී. 0+00:00 ETA"
+msgstr ""
 
 msgid "Help"
-msgstr "සහාය"
+msgstr ""
 
 #, c-format
 msgid "Waypoint %s"
@@ -1766,29 +1767,29 @@ msgid "Select waypoint to insert the new one before"
 msgstr ""
 
 msgid "View in Browser"
-msgstr "බ්‍රවුසරයේ දක්වන්න"
+msgstr ""
 
 msgid "Item type"
 msgstr ""
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
-msgstr "වීදි"
+msgstr ""
 
 msgid "House numbers"
-msgstr "ගෘහ අංක"
+msgstr ""
 
 msgid "View Attributes"
-msgstr "උප ලක්ෂණ දක්වන්න"
+msgstr ""
 
 msgid "Set as position (and deactivate vehicle)"
 msgstr ""
 
 msgid "POIs"
-msgstr "POIs"
+msgstr ""
 
 msgid "View on map"
-msgstr "සිතියමේ දක්වන්න"
+msgstr ""
 
 msgid "Remove search results from the map"
 msgstr ""
@@ -1797,25 +1798,25 @@ msgid "Show results on the map"
 msgstr ""
 
 msgid "Cut Bookmark"
-msgstr "පිටුසන කපන්න"
+msgstr ""
 
 msgid "Copy Bookmark"
-msgstr "පිටුසන පිටපත් කරන්න"
+msgstr ""
 
 msgid "Rename Bookmark"
-msgstr "පිටුසන ප්‍රතිනාම කරන්න"
+msgstr ""
 
 msgid "Paste Bookmark"
-msgstr "පිටුසන අලවන්න"
+msgstr ""
 
 msgid "Delete Bookmark"
-msgstr "පිටුසන මකන්න"
+msgstr ""
 
 msgid "Delete waypoint"
 msgstr ""
 
 msgid "Bookmarks"
-msgstr "පිටුසන්"
+msgstr ""
 
 msgid "Bookmarks as waypoints"
 msgstr ""
@@ -1831,15 +1832,15 @@ msgstr ""
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr "පිටුසන් ෆෝල්ඩරය ඈඳන්න"
+msgstr ""
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr "පිටුසන අලවන්න"
+msgstr ""
 
 #, c-format
 msgid "Bookmark %s"
-msgstr "පිටුසන් කරන්න %s"
+msgstr ""
 
 #, c-format
 msgid "Download %s"
@@ -1858,62 +1859,62 @@ msgid "Download completely"
 msgstr ""
 
 msgid "Show Satellite Status"
-msgstr "චන්ද්‍රිකා තත්වය පෙන්වන්න"
+msgstr ""
 
 msgid " Elevation "
-msgstr " උන්නතිය "
+msgstr ""
 
 msgid " Azimuth "
-msgstr " දිගංශය "
+msgstr ""
 
 msgid "Show NMEA Data"
-msgstr "NMEA දත්ත පෙන්වන්න"
+msgstr ""
 
 msgid "car"
-msgstr "මෝටර් රථය"
+msgstr ""
 
 msgid "bike"
-msgstr "යතුරු පැදිය"
+msgstr ""
 
 msgid "pedestrian"
-msgstr "පදික"
+msgstr ""
 
 #, c-format
 msgid "Current profile: %s"
-msgstr "දැන් පවත්නා පැතිකඩ: %s"
+msgstr ""
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr "පැතිකඩ වෙනස් කරන්න : %s"
+msgstr ""
 
 msgid "Set as active"
-msgstr "ක්‍රියාකාරී ලෙස සිටුවන්න"
+msgstr ""
 
 msgid "Show Satellite status"
-msgstr "චන්ද්‍රිකා තත්වය පෙන්වන්න"
+msgstr ""
 
 msgid "Show NMEA data"
-msgstr "NMEA දත්ත පෙන්වන්න"
+msgstr ""
 
 msgid "Add Bookmark"
-msgstr "පිටුසනක් ඈඳන්න"
+msgstr ""
 
 msgid "Rename"
-msgstr "නම වෙනස් කරන්න"
+msgstr ""
 
 msgid "About Navit"
-msgstr "Navit පිළිබඳව"
+msgstr ""
 
 #. Authors
 msgid "By"
-msgstr "කර්තෘ:"
+msgstr ""
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr "Navit කණ්ඩායමේ සියලුම දෙනා"
+msgstr ""
 
 msgid "members and contributors."
-msgstr "සාමාජිකයන් සහ දායකයන්"
+msgstr ""
 
 msgid "Waypoints"
 msgstr ""
@@ -1934,58 +1935,58 @@ msgid "Enter coordinates, for example:"
 msgstr ""
 
 msgid "Vehicle"
-msgstr "වාහනය"
+msgstr ""
 
 msgid "Rules"
-msgstr "නීති"
+msgstr ""
 
 msgid "Lock on road"
-msgstr "මාර්ගය අගුළුලන්න"
+msgstr ""
 
 msgid "Northing"
-msgstr "උතුරු දිශාගත"
+msgstr ""
 
 msgid "Map follows Vehicle"
-msgstr "සිතියම වාහනය අනුගමනය කරයි"
+msgstr ""
 
 msgid "Plan with Waypoints"
 msgstr ""
 
 msgid "Maps"
-msgstr "සිතියම්"
+msgstr ""
 
 msgid "Layout"
-msgstr "පිරිසැලසුම"
+msgstr ""
 
 msgid "Height Profile"
-msgstr "උසේ පැතිපෙනුම"
+msgstr ""
 
 msgid "Route Description"
-msgstr "රවුට් විස්තරය"
+msgstr ""
 
 msgid "Show Locale"
-msgstr "පෙදෙසිය පෙන්වන්න"
+msgstr ""
 
 msgid "Former Destinations"
-msgstr "පූර්ව ගමනාන්ත"
+msgstr ""
 
 msgid "- No former destinations available -"
 msgstr ""
 
 msgid "Message"
-msgstr "පණිවිඩය"
+msgstr ""
 
 msgid "Back"
-msgstr "ආපසු"
+msgstr ""
 
 msgid "Back to map"
-msgstr "ආපසු සිතියමට"
+msgstr ""
 
 msgid "Main Menu"
-msgstr "ප්‍රධාන මෙනුව"
+msgstr ""
 
 msgid "House number"
-msgstr "ගෘහ අංකය"
+msgstr ""
 
 msgid "Next"
 msgstr ""
@@ -2442,35 +2443,33 @@ msgid "Map download"
 msgstr ""
 
 msgid "Vehicle Position"
-msgstr "වාහනයේ පිහිටීම"
+msgstr ""
 
 msgid "Main menu"
-msgstr "ප්‍රධාන මෙනුව"
+msgstr ""
 
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-"පෙන්වන්න\n"
-"මෙනුව"
 
 msgid "Settings"
-msgstr "සිටුවීම්"
+msgstr ""
 
 msgid "Tools"
-msgstr "මෙවලම්"
+msgstr ""
 
 msgid "Route"
-msgstr "රවුට්"
+msgstr ""
 
 msgid "About"
-msgstr "පිළිබඳව"
+msgstr ""
 
 msgid "Quit"
-msgstr "ඉවත්වන්න"
+msgstr ""
 
 msgid "Actions"
-msgstr "ක්‍රියා"
+msgstr ""
 
 msgid ""
 "Former\n"
@@ -2484,20 +2483,18 @@ msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
-"සංචාලනය\n"
-"නවත්වන්න"
 
 msgid "Display"
-msgstr "සංදර්ශකය"
+msgstr ""
 
 msgid "Fullscreen"
-msgstr "මුළු තිරය"
+msgstr ""
 
 msgid "Window Mode"
-msgstr "කවුළු ප්‍රකාරය"
+msgstr ""
 
 msgid "Description"
-msgstr "විස්තරය"
+msgstr ""
 
 msgid ""
 "Drop last \n"
@@ -2525,7 +2522,7 @@ msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
-msgstr "අශ්ව"
+msgstr ""
 
 msgid "Truck"
 msgstr ""

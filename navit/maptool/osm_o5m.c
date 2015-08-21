@@ -335,7 +335,17 @@ map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm)
 			break;
 		default:
 			fprintf(stderr,"Unknown tag 0x%x\n",c);
-			return 0;
+			/* Fall through */
+		case 0xdc: /* File timestamp: silently ignore it */
+			len=get_uval(&o.buffer_start);
+			if (o.buffer_start > o.buffer_end) {
+				return 0;
+			}
+			if (buffer_end(&o, len)) {
+				return 0;
+			}
+			o.buffer_start+=len;
+			break;
 		}
 	}
 	return 0;

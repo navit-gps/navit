@@ -2,14 +2,15 @@
 # Copyright (C) 2006-2015 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Rex Sanna https://launchpad.net/~rex-sanna
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2011-02-05 18:46+0000\n"
-"Last-Translator: Rex Sanna <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 04:00+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Sardinian <sc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,14 +70,6 @@ msgid "sixth exit"
 msgstr ""
 
 #, c-format
-msgid "%d m"
-msgstr "'%d' minutu"
-
-#, c-format
-msgid "in %d m"
-msgstr "in %d minutoso"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -85,28 +78,12 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "%d metroso"
-
-#, c-format
-msgid "in %d meters"
-msgstr "in %d metroso"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d, %d chilometroso"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "in %d, %d chilometroso"
 
 #, c-format
 msgid "one mile"
@@ -119,6 +96,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr "%d metroso"
+
+#, c-format
+msgid "in %d meters"
+msgstr "in %d metroso"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d, %d chilometroso"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "in %d, %d chilometroso"
 
 #, c-format
 msgid "one kilometer"
@@ -159,32 +152,32 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "in sa rampa"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sin s\\'istrada %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sin su %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sin sa %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sin su %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s in sa %s"
+msgstr "%sin sa %s"
 
 msgid "When possible, please turn around"
 msgstr "Commente possibile torra in daesecusu"
@@ -209,12 +202,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "tando lassa sa rotatoria a %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Lassa sa rotatoria a %1$s %2$s"
 
 msgid "soon"
 msgstr "prestu"
@@ -223,7 +216,7 @@ msgid "now"
 msgstr "como"
 
 msgid "then"
-msgstr ""
+msgstr "tando"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -326,25 +319,25 @@ msgstr "dopu %i istradasa"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Zira %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "tando torra in daesecusu"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Torra in daesecusu %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "tando torra in daesecusu"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Torra in daesecusu %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -359,7 +352,7 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "sichi"
 
 msgid "then you have reached your destination."
 msgstr "tando ses arribbau"
@@ -374,7 +367,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Essi"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

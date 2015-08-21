@@ -3,19 +3,21 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Faju https://launchpad.net/~gotoarunk
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Sunil K https://launchpad.net/~sunilk
 
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2015-03-18 13:32+0000\n"
-"Last-Translator: Sunil K <Unknown>\n"
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2015-07-19 03:59+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Malayalam <ml@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: ml\n"
 
 msgid "Running from source directory\n"
 msgstr "സോര്‍സ് ഡൈരക്ടറിയില് നിന്നും പ്രവര്ത്തിക്കുന്നു\n"
@@ -69,14 +71,6 @@ msgid "sixth exit"
 msgstr "ആറാമത്തെ വഴി"
 
 #, c-format
-msgid "%d m"
-msgstr "%d മീറ്റര്‍"
-
-#, c-format
-msgid "in %d m"
-msgstr "%d മീറ്ററില്‍"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d അടി"
 
@@ -85,28 +79,12 @@ msgid "in %d feet"
 msgstr "%d അടിയില്‍"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d മീറ്റര്‍"
-
-#, c-format
-msgid "in %d meters"
-msgstr "%d മീറ്ററില്‍"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d മൈല്‍"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "%d.%d മൈലില്‍"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d കിലോമീറ്റര്‍"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d.%d കിലോമീറ്ററില്‍"
 
 #, c-format
 msgid "one mile"
@@ -119,6 +97,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "ഒരു മൈലില്‍"
 msgstr[1] "%d മൈലില്‍"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d മീറ്റര്‍"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d മീറ്ററില്‍"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d കിലോമീറ്റര്‍"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d.%d കിലോമീറ്ററില്‍"
 
 #, c-format
 msgid "one kilometer"
@@ -164,22 +158,22 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sകഴിഞ്ഞു %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sകഴിഞ്ഞു %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sകഴിഞ്ഞു %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sകഴിഞ്ഞു %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -209,12 +203,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "%1$s- ല്‍ റൗണ്ടാനയില്‍ നിന്നും പുറത്തോട്ട് പോവുക %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "%1$s-ലൂടെ റൗണ്ടാനയില്‍ നിന്നും പുറത്തു പോവുകാ %2$s"
 
 msgid "soon"
 msgstr "അല്പസമയത്തിനുള്ളില്‍"
@@ -326,7 +320,7 @@ msgstr "%i വഴികൾക്കു ശേഷം"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "%4$s ലേക്ക്  %3$s %2$s %1$s തിരിയുക"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -374,7 +368,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "പുറത്തേക്ക്"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

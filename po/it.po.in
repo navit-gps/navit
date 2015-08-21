@@ -8,6 +8,7 @@
 # Marco Lazzaroni https://launchpad.net/~marcolazzaroni
 # Matteo Zaffo &#x27;80 https://launchpad.net/~zaffo80
 # MeltingShell https://launchpad.net/~meltingshell
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Michele Olivo https://launchpad.net/~micheleolivo
 # Niccolo Rigacci https://launchpad.net/~niccolo
 # Stefano Angeleri https://launchpad.net/~weltall
@@ -23,14 +24,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2014-11-15 00:53+0000\n"
-"Last-Translator: giardia <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: \n"
+"Language: it\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -85,14 +86,6 @@ msgid "sixth exit"
 msgstr "sesta uscita"
 
 #, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#, c-format
-msgid "in %d m"
-msgstr "tra %d m"
-
-#, c-format
 msgid "%d feet"
 msgstr "%d piedi"
 
@@ -101,28 +94,12 @@ msgid "in %d feet"
 msgstr "tra %d piedi"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d metri"
-
-#, c-format
-msgid "in %d meters"
-msgstr "tra %d metri"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d miglia"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "tra %d.%d miglia"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d chilometri"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "tra %d,%d chilometri"
 
 #, c-format
 msgid "one mile"
@@ -135,6 +112,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "tra un miglio"
 msgstr[1] "tra %d miglia"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d metri"
+
+#, c-format
+msgid "in %d meters"
+msgstr "tra %d metri"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d chilometri"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "tra %d,%d chilometri"
 
 #, c-format
 msgid "one kilometer"
@@ -151,51 +144,51 @@ msgstr[1] "tra %d chilometri"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$ssulla %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$ssulla strada %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$ssul %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$ssulla %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$ssulla strada %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "nella rampa"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -208,7 +201,7 @@ msgstr "Appena possibile, invertire il senso di marcia"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "verso %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -225,12 +218,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "e alla rotonda prendere la %1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Alla rotonda prendere la %1$s %2$s"
 
 msgid "soon"
 msgstr "tra poco"
@@ -239,80 +232,80 @@ msgid "now"
 msgstr "adesso"
 
 msgid "then"
-msgstr ""
+msgstr "poi"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "poi entrare%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Entrare %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "poi entrare%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Entrare %1$s%2$s"
 
 msgid "on your left"
-msgstr ""
+msgstr "a sinistra"
 
 msgid "on your right"
-msgstr ""
+msgstr "a destra"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Prendere l'uscita %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Prendere l'uscita %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "all'intersezione"
 
 msgid "at exit"
-msgstr ""
+msgstr "all'uscita"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "poi procedere dritto%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Procedere dritto %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "poi tenere la destra%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Tenere la destra %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "poi tenere la sinistra%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Tenere la sinistra %1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -342,25 +335,25 @@ msgstr "tra %i strade"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Svoltare %1$s %2$s %3$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "poi invertire il senso di marcia"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Invertire il senso di marcia %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "poi invertire il senso di marcia"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Invertire il senso di marcia %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -375,7 +368,7 @@ msgstr ""
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "seguire"
 
 msgid "then you have reached your destination."
 msgstr "poi sarete arrivati a destinazione"
@@ -387,10 +380,10 @@ msgstr "Siete arrivati a destinazione %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "Intersezione"
 
 msgid "Exit"
-msgstr ""
+msgstr "Uscita"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1597,10 +1590,10 @@ msgid "Opens address search dialog"
 msgstr "Apri la finestra di ricerca indirizzo"
 
 msgid "_POI search"
-msgstr "_ricerca POI"
+msgstr "_Ricerca POI"
 
 msgid "Opens POI search dialog"
-msgstr "Apre finestra di ricerca POI"
+msgstr "Apri la finestra di ricerca POI"
 
 msgid "_Stop Navigation"
 msgstr "Interrompi la navigazione"
@@ -1673,7 +1666,7 @@ msgid "Cinema"
 msgstr "Cinema"
 
 msgid "Train station"
-msgstr "Stazione del treno"
+msgstr "Stazione ferroviaria"
 
 msgid "School"
 msgstr "Scuola"
@@ -1710,16 +1703,16 @@ msgid "Set next visit to %ld, %ld \n"
 msgstr "Imposta la prossima tappa a %ld, %ld \n"
 
 msgid "POI search"
-msgstr "ricerca POI"
+msgstr "Ricerca POI"
 
 msgid "Select a category"
-msgstr "Seleziona una categoria"
+msgstr "Selezionare una categoria"
 
 msgid "Select a distance to look for (km)"
-msgstr "Seleziona la distanza in cui cercare (km)"
+msgstr "Selezionare la distanza in cui cercare (km)"
 
 msgid "Select a POI"
-msgstr "Seleziona un POI"
+msgstr "Selezionare un POI"
 
 msgid " "
 msgstr " "
@@ -1731,7 +1724,7 @@ msgid "Direction"
 msgstr "Direzione"
 
 msgid "Distance(m)"
-msgstr "Distanza(m)"
+msgstr "Distanza (m)"
 
 msgid "Name"
 msgstr "Nome"
@@ -2065,7 +2058,7 @@ msgid ""
 msgstr ""
 
 msgid "Cancel"
-msgstr "Cancella"
+msgstr "Annulla"
 
 msgid "filenamePath"
 msgstr ""
@@ -2504,8 +2497,8 @@ msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
-"Precedenti\n"
-"Destinazioni"
+"Destinazioni\n"
+"precedenti"
 
 msgid "Coordinates"
 msgstr "Coordinate"
@@ -2622,7 +2615,7 @@ msgstr "Scarica mappe"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr "Attiva/Disattiva Punti Di Interesse"
+msgstr "Mostra/nascondi POI"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"

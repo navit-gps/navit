@@ -3,9 +3,9 @@ machine:
     ANDROID_HOME: /home/ubuntu/android
     ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
     ANDROID_SDK_CDN: https://dl.google.com/android
-    ANDROID_SDK_FILE: android-sdk_r24.0.2-linux.tgz
+    ANDROID_SDK_FILE: android-sdk_r24.3.3-linux.tgz
     ANDROID_NDK_CDN: http://dl.google.com/android/ndk
-    ANDROID_NDK_FILE: android-ndk-r10d-linux-x86_64.bin
+    ANDROID_NDK_FILE: android-ndk-r10e-linux-x86_64.bin
     CMAKE_FILE: ../Toolchain/arm-eabi.cmake
 dependencies:
   cache_directories:
@@ -16,6 +16,7 @@ dependencies:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
+    - sudo apt-get update
     - sudo apt-get install cmake
     - sudo apt-get install libpng12-dev 
     - sudo apt-get install libgtk2.0-dev 
@@ -23,6 +24,7 @@ dependencies:
     - sudo apt-get install libfreetype6-dev
     - sudo apt-get install libdbus-glib-1-dev
     - sudo apt-get install g++
+    - bash ci/import_translations.sh
     - bash ci/build.sh
     - sed -i '/INTEGER/d' bin/po/navit.pot
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
@@ -44,7 +46,7 @@ dependencies:
 # for sys/select.h
 #    - sudo apt-get install -y libc6-dev
     - mkdir win32
-    - cmake -Dbinding/python:BOOL=FALSE -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw32.cmake ../ && make && make package:
+    - cmake -Dbinding/python:BOOL=FALSE -DSAMPLE_MAP=n -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw32.cmake ../ && make && make package:
         pwd: win32/
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
@@ -71,3 +73,18 @@ deployment:
     branch: trunk
     commands:
       - git push origin $CIRCLE_SHA1:refs/heads/master
+  merge_translations:
+    branch: /i18n.*/
+    owner: navit-gps
+    commands:
+      - git config --global user.email "circleci@navit-project.org"
+      - git config --global user.name "CircleCI"
+      - git checkout trunk
+      - git pull origin trunk
+      - cp $CIRCLE_ARTIFACTS/po/* po/
+      - git add po/*.po.in
+      - git commit -m "Automatic translation import from launchpad" po/*.po.in
+      - git push
+notify:
+  webhooks:
+    - url: http://62.210.125.30:8000/

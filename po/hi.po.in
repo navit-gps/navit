@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
+# Michael von Glasow https://launchpad.net/~michael-vonglasow
 # desh deep https://launchpad.net/~singhdeepdesh
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2014-11-15 22:03+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Hindi <hi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,14 +71,6 @@ msgid "sixth exit"
 msgstr "chatha nikas"
 
 #, c-format
-msgid "%d m"
-msgstr "%d meter"
-
-#, c-format
-msgid "in %d m"
-msgstr "%d meter mein"
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -86,28 +79,12 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "%d meters"
-
-#, c-format
-msgid "in %d meters"
-msgstr "%d meters mein"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d kilometero mein"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d.%d kilometero mein"
 
 #, c-format
 msgid "one mile"
@@ -120,6 +97,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr "%d meters"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d meters mein"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d kilometero mein"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d.%d kilometero mein"
 
 #, c-format
 msgid "one kilometer"
@@ -160,27 +153,27 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "dhalan mein"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%ssheher mein %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%ssheher mein %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%ssheher mein %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%ssheher mein %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -210,12 +203,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "तो %1$s %2$s के राउंडअबाउट छोड़"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s के राउंडअबाउट छोड़ें"
 
 msgid "soon"
 msgstr "जल्दी"
@@ -224,7 +217,7 @@ msgid "now"
 msgstr "अब"
 
 msgid "then"
-msgstr ""
+msgstr "तो"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -331,21 +324,21 @@ msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "तो चारों ओर मोड़"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "चारों ओर मोड़ %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "तो चारों ओर मोड़"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "चारों ओर मोड़ %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -375,7 +368,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "Nikas"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"

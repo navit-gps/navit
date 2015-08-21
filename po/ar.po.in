@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-06-12 18:19+0000\n"
+"PO-Revision-Date: 2015-07-19 03:57+0000\n"
 "Last-Translator: dargirov <dargirov@mail.ru>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -75,14 +75,6 @@ msgid "sixth exit"
 msgstr "المخرج السادس"
 
 #, c-format
-msgid "%d m"
-msgstr "%d م"
-
-#, c-format
-msgid "in %d m"
-msgstr "بعد %d متر"
-
-#, c-format
 msgid "%d feet"
 msgstr "%dقدم"
 
@@ -91,28 +83,12 @@ msgid "in %d feet"
 msgstr "بعد  %d قدم"
 
 #, c-format
-msgid "%d meters"
-msgstr "%d متر"
-
-#, c-format
-msgid "in %d meters"
-msgstr "بعد %d متر"
-
-#, c-format
 msgid "%d.%d miles"
 msgstr "%d.%d أميال"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "بعد %d.%d أميال"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d كلم"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "بعد %d%d كلم"
 
 #, c-format
 msgid "one mile"
@@ -133,6 +109,22 @@ msgstr[2] "بعد %d أميال"
 msgstr[3] "بعد %d أميال"
 msgstr[4] "بعد %d أميال"
 msgstr[5] "بعد %d أميال"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d متر"
+
+#, c-format
+msgid "in %d meters"
+msgstr "بعد %d متر"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d كلم"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "بعد %d%d كلم"
 
 #, c-format
 msgid "one kilometer"
@@ -186,22 +178,22 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%s إلى داخل الشارع %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%sإلى داخل %s%s%s|صفة الذكر"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%sإلى داخل %s%s%s|صفة الأنثى"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%sإلى داخل %s%s%s|غير محدد الجنس"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -231,12 +223,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "ثم أخرج من المستديرة عند الــ%1$s %2$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "أخرج من المستديرة عند الــ  %1$s %2$s"
 
 msgid "soon"
 msgstr "قريبا"
@@ -348,7 +340,7 @@ msgstr "بعد %i طرقات"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "حوّل %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -396,7 +388,7 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "خروج"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
