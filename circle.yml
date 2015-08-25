@@ -25,7 +25,7 @@ dependencies:
     - sudo apt-get install libdbus-glib-1-dev
     - sudo apt-get install g++
     - bash ci/import_translations.sh
-    - bash ci/build.sh
+    - bash ci/build_linux.sh
     - sed -i '/INTEGER/d' bin/po/navit.pot
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
     - "curl \"https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -H \"$lp_cookie\" -H \"Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -F file=@bin/po/navit.pot | grep title"
