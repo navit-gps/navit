@@ -329,9 +329,14 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
+	cairo_save(gr->cairo);
+	// Use OPERATOR_SOURCE to overwrite old contents even when drawing with transparency.
+	// Necessary for OSD drawing.
+	cairo_set_operator(gr->cairo, CAIRO_OPERATOR_SOURCE);
 	cairo_rectangle(gr->cairo, p->x, p->y, w, h);
 	set_drawing_color(gr->cairo, gc->c);
 	cairo_fill(gr->cairo);
+	cairo_restore(gr->cairo);
 }
 
 static void
@@ -531,56 +536,19 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
 }
 
 static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, GdkPixmap *pixmap, GdkGC *gc)
+overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo, GdkGC *gc)
 {
-	GdkPixbuf *pixbuf,*pixbuf2;
-	guchar *pixels1, *pixels2, *p1, *p2, r=0, g=0, b=0, a=0;
-	int x,y;
-	int rowstride1,rowstride2;
-	int n_channels1,n_channels2;
-	GdkRectangle or,ir;
-	struct graphics_gc_priv *bg=overlay->background_gc;
-	if (bg) {
-		r=bg->c.r>>8;
-		g=bg->c.g>>8;
-		b=bg->c.b>>8;
-		a=bg->c.a>>8;
-	}
-
+	GdkRectangle or, ir;
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	dbg(lvl_debug,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
 	overlay_rect(parent, overlay, 0, &or);
-	dbg(lvl_debug,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
 	or.y-=re->y;
-	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, or.width, or.height);
-	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf),
-				or.width, or.height);
-	rowstride1 = gdk_pixbuf_get_rowstride (pixbuf);
-	rowstride2 = gdk_pixbuf_get_rowstride (pixbuf2);
-	pixels1=gdk_pixbuf_get_pixels (pixbuf);
-	pixels2=gdk_pixbuf_get_pixels (pixbuf2);
-	n_channels1 = gdk_pixbuf_get_n_channels (pixbuf);
-	n_channels2 = gdk_pixbuf_get_n_channels (pixbuf2);
-	for (y = 0 ; y < or.height ; y++) {
-		for (x = 0 ; x < or.width ; x++) {
-			p1 = pixels1 + y * rowstride1 + x * n_channels1;
-			p2 = pixels2 + y * rowstride2 + x * n_channels2;
-			p2[0]=p1[0];
-			p2[1]=p1[1];
-			p2[2]=p1[2];
-			if (bg && p1[0] == r && p1[1] == g && p1[2] == b) 
-				p2[3]=a;
-			else 
-				p2[3]=overlay->a;
-		}
-	}
-	gdk_draw_pixbuf(pixmap, gc, pixbuf2, 0, 0, or.x, or.y, or.width, or.height, GDK_RGB_DITHER_NONE, 0, 0);
-	g_object_unref(pixbuf);
-	g_object_unref(pixbuf2);
+	cairo_surface_t *overlay_surface = cairo_get_target(overlay->cairo);
+	cairo_set_source_surface(cairo, overlay_surface, or.x, or.y);
+	cairo_paint(cairo);
 }
 
 static void
@@ -602,26 +570,19 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
-gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r)
+gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r, cairo_t *cairo)
 {
-	GdkPixmap *pixmap;
 	GtkWidget *widget=gr->widget;
 	GdkGC *gc=widget->style->fg_gc[GTK_WIDGET_STATE(widget)];
 	struct graphics_priv *overlay;
 
 	if (! gr->drawable)
 		return;
-	pixmap = gdk_pixmap_new(widget->window, r->width, r->height, -1);
-	if ((gr->p.x || gr->p.y) && gr->background_gc) 
-		gdk_draw_rectangle(pixmap, gr->background_gc->gc, TRUE, 0, 0, r->width, r->height);
-	gdk_draw_drawable(pixmap, gc, gr->drawable, r->x, r->y, gr->p.x, gr->p.y, r->width, r->height);
 	overlay=gr->overlays;
 	while (overlay) {
-		overlay_draw(gr,overlay,r,pixmap,gc);
+		overlay_draw(gr,overlay,r,cairo,gc);
 		overlay=overlay->next;
 	}
-	gdk_draw_drawable(widget->window, gc, pixmap, 0, 0, r->x, r->y, r->width, r->height);
-	g_object_unref(pixmap);
 }
 
 static void
@@ -670,7 +631,6 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	gra->visible=1;
 	if (! gra->drawable)
 		configure(widget, NULL, user_data);
-	gtk_drawing_area_draw(gra, &event->area);
 
 	cairo_t *cairo=gdk_cairo_create(widget->window);
 	if (gra->p.x || gra->p.y) {
@@ -679,6 +639,8 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	}
 	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), gra->p.x, gra->p.y);
 	cairo_paint(cairo);
+
+	gtk_drawing_area_draw(gra, &event->area, cairo);
 	cairo_destroy(cairo);
 	return FALSE;
 }
@@ -880,7 +842,7 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 		if (gr->parent) {
 			GdkRectangle r;
 			overlay_rect(gr->parent, gr, 0, &r);
-			gtk_drawing_area_draw(gr->parent, &r);
+			gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
 		}
 	}
 }
@@ -927,6 +889,11 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 		g_object_unref(this->drawable);
 
 		this->drawable=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
+
+		cairo_destroy(this->cairo);
+		cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
+		this->cairo=cairo_create(surface);
+		cairo_surface_destroy(surface);
 
 		if ((w == 0) || (h == 0)) {
 			this->overlay_autodisabled = 1;
@@ -1004,6 +971,9 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	}
 
 	this->drawable=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
+	this->cairo=cairo_create(surface);
+	cairo_surface_destroy(surface);
 
 	if ((w == 0) || (h == 0)) {
 		this->overlay_autodisabled = 1;
