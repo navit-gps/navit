@@ -658,6 +658,7 @@ static gint
 expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 {
 	struct graphics_priv *gra=user_data;
+	struct graphics_gc_priv *background_gc=gra->background_gc;
 
 	gra->visible=1;
 	if (! gra->drawable)
@@ -665,7 +666,11 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	gtk_drawing_area_draw(gra, &event->area);
 
 	cairo_t *cairo=gdk_cairo_create(widget->window);
-	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), 0.0, 0.0);
+	if (gra->p.x || gra->p.y) {
+		set_drawing_color(cairo, background_gc->c);
+		cairo_paint(cairo);
+	}
+	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), gra->p.x, gra->p.y);
 	cairo_paint(cairo);
 	cairo_destroy(cairo);
 	return FALSE;
