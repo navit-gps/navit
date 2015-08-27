@@ -346,6 +346,7 @@ static struct map_methods map_methods_textfile = {
 	map_rect_destroy_textfile,
 	map_rect_get_item_textfile,
 	map_rect_get_item_byid_textfile,
+	NULL,
 };
 
 static struct map_priv *

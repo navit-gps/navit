@@ -920,6 +920,7 @@ static struct map_methods map_methods = {
 	gmap_search_new,
 	gmap_search_destroy,
 	NULL,
+	NULL,
 };
 
 static struct map_priv *

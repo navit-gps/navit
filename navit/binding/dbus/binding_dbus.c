@@ -1934,6 +1934,18 @@ request_vehicleprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage
 	return request_attr_iter_destroy(connection, message, "vehicleprofile", (void (*)(struct attr_iter *))vehicleprofile_attr_iter_destroy);
 }
 
+static DBusHandlerResult
+request_map_reload(DBusConnection *connection, DBusMessage *message)
+{
+	struct map *map;
+	map=object_get_from_message(message, "map");
+	if (! map)
+		return dbus_error_invalid_object_path(connection, message);
+
+	map_reload(map);
+	return empty_reply(connection, message);
+}
+
 struct dbus_method {
 	char *path;
 	char *method;
@@ -1990,6 +2002,7 @@ struct dbus_method {
 	{".map",    "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_map_get_attr},
 	{".map",    "set_attr",            "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
 	{".map",    "dump",                "s",       "file",                                    "",   "",  request_map_dump},
+	{".map",    "reload",              "",        "",                                        "",   "",  request_map_reload},
 	{".mapset", "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_mapset_attr_iter},
 	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
 	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},

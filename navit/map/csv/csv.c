@@ -49,6 +49,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type);
 static void quadtree_item_free(void *mr, struct quadtree_item *qitem);
 static void quadtree_item_free_do(void *qitem);
+void map_reload_csv(struct map_priv* m);
 
 
 struct quadtree_data
@@ -179,13 +180,19 @@ save_map_csv(struct map_priv *m)
 static const int zoom_max = 18;
 
 static void
+map_empty_csv(struct map_priv *m)
+{
+	g_hash_table_destroy(m->qitem_hash);
+	quadtree_destroy(m->tree_root);
+}
+
+static void
 map_destroy_csv(struct map_priv *m)
 {
 	dbg(lvl_debug,"map_destroy_csv\n");
 	/*save if changed */
 	save_map_csv(m);
-	g_hash_table_destroy(m->qitem_hash);
-	quadtree_destroy(m->tree_root);
+	map_empty_csv(m);
 	g_free(m->filename);
 	g_free(m->charset);
 	g_free(m->attr_types);
@@ -680,7 +687,125 @@ static struct map_methods map_methods_csv = {
 	NULL,
 	csv_create_item,
 	csv_get_attr,
+	NULL,
+	map_reload_csv,
 };
+
+static void map_init_csv(struct map_priv *m) 
+{
+	struct quadtree_node* tree_root = quadtree_node_new(NULL,-180,180,-180,180);
+	m->qitem_hash = g_hash_table_new_full(g_int_hash, g_int_equal, g_free, quadtree_item_free_do);
+	m->tree_root = tree_root;
+}
+
+static void map_parse_csv(struct map_priv *m)
+{
+	  FILE* fp;
+	  /*load csv file into quadtree structure*/
+	  /*if column number is wrong skip*/
+	  if((fp=fopen(m->filename,"rt"))) {
+		const int max_line_len = 256;
+		char *linebuf=g_alloca(sizeof(char)*max_line_len);
+	  	while(!feof(fp)) {
+			if(fgets(linebuf,max_line_len,fp)) {
+				char *line=g_convert(linebuf, -1,"utf-8",m->charset,NULL,NULL,NULL);
+				char *line2=NULL;
+				char *delim = ",";
+				int col_cnt=0;
+				char *tok;
+				if(!line) {
+					dbg(lvl_error,"Error converting '%s' to utf-8 from %s\n",linebuf, m->charset);
+					continue;
+				}
+				if(line[strlen(line)-1]=='\n' || line[strlen(line)-1]=='\r') {
+					line[strlen(line)-1] = '\0';
+				}
+				line2 = g_strdup(line);
+				while((tok=strtok( (col_cnt==0)?line:NULL , delim))) {
+					++col_cnt;
+				}
+
+				if(col_cnt==m->attr_cnt) {
+					int cnt = 0;	/*index of current attr*/
+					char*tok;
+					GList* attr_list = NULL;
+					int bAddSum = 1;
+					double longitude = 0.0, latitude=0.0;
+					struct item *curr_item = item_new("",zoom_max);/*does not use parameters*/
+
+					curr_item->type = m->item_type;
+					curr_item->id_lo = m->next_item_idx;
+					if (m->flags & 1)
+						curr_item->id_hi=1;
+					else
+						curr_item->id_hi=0;
+					curr_item->meth=&methods_csv;
+
+
+					while((tok=strtok( (cnt==0)?line2:NULL , delim))) {
+						struct attr*curr_attr = g_new0(struct attr,1);
+						int bAdd = 1;
+						curr_attr->type = m->attr_types[cnt];
+						if(ATTR_IS_STRING(m->attr_types[cnt])) {
+							curr_attr->u.str = g_strdup(tok);
+						}
+						else if(ATTR_IS_INT(m->attr_types[cnt])) {
+							curr_attr->u.num = atoi(tok);
+						}
+						else if(ATTR_IS_DOUBLE(m->attr_types[cnt])) {
+							double *d = g_new(double,1);
+							*d = atof(tok);
+							curr_attr->u.numd = d;
+							if(m->attr_types[cnt] == attr_position_longitude) {
+								longitude = *d;
+							}
+							if(m->attr_types[cnt] == attr_position_latitude) {
+								latitude = *d;
+							}
+						}
+						else {
+							/*unknown attribute*/
+							bAddSum = bAdd = 0;
+							g_free(curr_attr);
+						}
+
+						if(bAdd) {
+							attr_list = g_list_prepend(attr_list, curr_attr);
+						}
+						++cnt;
+					}
+					if(bAddSum && (longitude!=0.0 || latitude!=0.0)) {
+						struct quadtree_data* qd = g_new0(struct quadtree_data,1);
+						struct quadtree_item* qi =g_new0(struct quadtree_item,1);
+						int* pID = g_new(int,1);
+						qd->item = curr_item;
+						qd->attr_list = attr_list;
+						qi->data = qd;
+						qi->longitude = longitude;
+						qi->latitude = latitude;
+						quadtree_add(m->tree_root, qi, NULL);
+						*pID = m->next_item_idx;
+						g_hash_table_insert(m->qitem_hash, pID,qi);
+						++m->next_item_idx;
+						dbg(lvl_debug,"%s\n",line);
+					}
+					else {
+						g_free(curr_item);
+					}
+
+				}
+				else {
+	  				dbg(lvl_error,"ERROR: Non-matching attr count and column count: %d %d  SKIPPING line: %s\n",col_cnt, m->attr_cnt,line);
+				}
+				g_free(line);
+				g_free(line2);
+			}
+		}
+	  	fclose(fp);
+	  } else {
+		dbg(lvl_error,"Error opening csv map file %s, starting with empty map\n", m->filename);
+	  }
+}
 
 static struct map_priv *
 map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
@@ -695,12 +820,9 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	int bLatFound = 0;
 	int attr_cnt = 0;
 	enum attr_type* attr_type_list = NULL;
-	struct quadtree_node* tree_root = quadtree_node_new(NULL,-180,180,-180,180);
 	m = g_new0(struct map_priv, 1);
 	m->id = ++map_id;
-	m->qitem_hash = g_hash_table_new_full(g_int_hash, g_int_equal, g_free, quadtree_item_free_do);
-	m->tree_root = tree_root;
-
+	map_init_csv(m);
 	attr_types = attr_search(attrs, NULL, attr_attr_types);
 	if(attr_types) {
 		enum attr_type* at = attr_types->u.attr_types;
@@ -760,118 +882,29 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  dbg(lvl_debug,"map_new_csv %s\n", data->u.str);
 	  m->filename=g_strdup(wexp_data[0]);
 	  file_wordexp_destroy(wexp);
-
-	  /*load csv file into quadtree structure*/
-	  /*if column number is wrong skip*/
-	  if((fp=fopen(m->filename,"rt"))) {
-		const int max_line_len = 256;
-		char *linebuf=g_alloca(sizeof(char)*max_line_len);
-	  	while(!feof(fp)) {
-			if(fgets(linebuf,max_line_len,fp)) {
-				char *line=g_convert(linebuf, -1,"utf-8",m->charset,NULL,NULL,NULL);
-				char *line2=NULL;
-				char *delim = ",";
-				int col_cnt=0;
-				char *tok;
-				if(!line) {
-					dbg(lvl_error,"Error converting '%s' to utf-8 from %s\n",linebuf, m->charset);
-					continue;
-				}
-				if(line[strlen(line)-1]=='\n' || line[strlen(line)-1]=='\r') {
-					line[strlen(line)-1] = '\0';
-				}
-				line2 = g_strdup(line);
-				while((tok=strtok( (col_cnt==0)?line:NULL , delim))) {
-					++col_cnt;
-				}
-
-				if(col_cnt==attr_cnt) {
-					int cnt = 0;	/*index of current attr*/
-					char*tok;
-					GList* attr_list = NULL;
-					int bAddSum = 1;
-					double longitude = 0.0, latitude=0.0;
-					struct item *curr_item = item_new("",zoom_max);/*does not use parameters*/
-
-					curr_item->type = item_type_attr->u.item_type;
-					curr_item->id_lo = m->next_item_idx;
-					if (m->flags & 1)
-						curr_item->id_hi=1;
-					else
-						curr_item->id_hi=0;
-					curr_item->meth=&methods_csv;
-
-
-					while((tok=strtok( (cnt==0)?line2:NULL , delim))) {
-						struct attr*curr_attr = g_new0(struct attr,1);
-						int bAdd = 1;
-						curr_attr->type = attr_types->u.attr_types[cnt];
-						if(ATTR_IS_STRING(attr_types->u.attr_types[cnt])) {
-							curr_attr->u.str = g_strdup(tok);
-						}
-						else if(ATTR_IS_INT(attr_types->u.attr_types[cnt])) {
-							curr_attr->u.num = atoi(tok);
-						}
-						else if(ATTR_IS_DOUBLE(attr_types->u.attr_types[cnt])) {
-							double *d = g_new(double,1);
-							*d = atof(tok);
-							curr_attr->u.numd = d;
-							if(attr_types->u.attr_types[cnt] == attr_position_longitude) {
-								longitude = *d;
-							}
-							if(attr_types->u.attr_types[cnt] == attr_position_latitude) {
-								latitude = *d;
-							}
-						}
-						else {
-							/*unknown attribute*/
-							bAddSum = bAdd = 0;
-							g_free(curr_attr);
-						}
-
-						if(bAdd) {
-							attr_list = g_list_prepend(attr_list, curr_attr);
-						}
-						++cnt;
-					}
-					if(bAddSum && (longitude!=0.0 || latitude!=0.0)) {
-						struct quadtree_data* qd = g_new0(struct quadtree_data,1);
-						struct quadtree_item* qi =g_new0(struct quadtree_item,1);
-						int* pID = g_new(int,1);
-						qd->item = curr_item;
-						qd->attr_list = attr_list;
-						qi->data = qd;
-						qi->longitude = longitude;
-						qi->latitude = latitude;
-						quadtree_add(tree_root, qi, NULL);
-						*pID = m->next_item_idx;
-						g_hash_table_insert(m->qitem_hash, pID,qi);
-						++m->next_item_idx;
-						dbg(lvl_debug,"%s\n",line);
-					}
-					else {
-						g_free(curr_item);
-					}
-
-				}
-				else {
-	  				dbg(lvl_error,"ERROR: Non-matching attr count and column count: %d %d  SKIPPING line: %s\n",col_cnt, attr_cnt,line);
-				}
-				g_free(line);
-				g_free(line2);
-			}
-		}
-	  	fclose(fp);
-	  }
-	  else {
-		dbg(lvl_error,"Error opening csv map file %s, starting with empty map\n", m->filename);
-	  }
+	  map_parse_csv(m);
 	} else {
 	  	dbg(lvl_debug,"No data attribute, starting with in-memory map\n");
 	}
 
-	dbg(lvl_info,"%p\n",tree_root);
+	dbg(lvl_info,"%p\n",m->tree_root);
 	return m;
+}
+
+static void
+map_reload_csv(struct map_priv* m)
+{
+	map_empty_csv(m);
+	map_init_csv(m);
+	map_parse_csv(m);
+}
+
+void
+map_reload_csv(struct map_priv* m)
+{
+	map_empty_csv(m);
+	map_init_csv(m);
+	map_parse_csv(m);
 }
 
 void

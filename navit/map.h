@@ -86,6 +86,7 @@ struct map_methods {
 	struct item *		(*map_rect_create_item)(struct map_rect_priv *mr, enum item_type type); /**< Function to create a new item in the map */
 	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr);
         int			(*map_set_attr)(struct map_priv *priv, struct attr *attr);
+	void                    (*map_reload)(struct map_priv *priv);
 
 };
 
@@ -275,6 +276,7 @@ void map_dump_file(struct map *map, const char *file);
 void map_dump(struct map *map);
 void map_destroy_do(struct map *m);
 struct maps * maps_new(struct attr *parent, struct attr **attrs);
+void map_reload(struct map *m);
 /* end of prototypes */
 
 #ifdef __cplusplus
