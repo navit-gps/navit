@@ -49,7 +49,7 @@ csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode
 static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type);
 static void quadtree_item_free(void *mr, struct quadtree_item *qitem);
 static void quadtree_item_free_do(void *qitem);
-void map_reload_csv(struct map_priv* m);
+static void map_reload_csv(struct map_priv* m);
 
 
 struct quadtree_data
@@ -876,7 +876,6 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	if(data) {
 	  struct file_wordexp *wexp;
 	  char **wexp_data;
-	  FILE *fp;
 	  wexp=file_wordexp_new(data->u.str);
 	  wexp_data=file_wordexp_get_array(wexp);
 	  dbg(lvl_debug,"map_new_csv %s\n", data->u.str);
@@ -892,14 +891,6 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 }
 
 static void
-map_reload_csv(struct map_priv* m)
-{
-	map_empty_csv(m);
-	map_init_csv(m);
-	map_parse_csv(m);
-}
-
-void
 map_reload_csv(struct map_priv* m)
 {
 	map_empty_csv(m);
