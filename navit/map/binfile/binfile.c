@@ -2129,7 +2129,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 					town = map_rect_get_item_byid_binfile(map_rec, map->last_searched_town_id_hi, map->last_searched_town_id_lo);
 					if (town)
 						msp->mr = binmap_search_street_by_place(map, town, &c, &msp->ms, &msp->boundaries);
-					map_rect_destroy_binfile(map_rec);
 					if (msp->boundaries)
 						dbg(lvl_debug, "using map town boundaries\n");
 					if (!msp->boundaries && town)
@@ -2138,6 +2137,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 							if (msp->boundaries)
 								dbg(lvl_debug, "using estimated boundaries\n");
 						}
+					map_rect_destroy_binfile(map_rec);
 					/* start searching in area around the street segment even if town boundaries are available */
 					msp->mr=binmap_search_housenumber_by_estimate(map, &c, &msp->ms);
 					msp->mode = 2;

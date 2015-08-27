@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
 	For configuration options used in this file, please read
-	http://wiki.navit-project.org/index.php/Configuring_Navit
-	Do not edit /usr/share/navit/navit.xml : changes would be lost
-	on upgrade. Rather copy it to ~/.navit/.
+	http://wiki.navit-project.org/index.php/Configuration
+	Do not edit /usr/share/navit/navit.xml or /etc/navit/navit.xml :
+	changes would be lost on upgrade. Rather copy it to ~/.navit/.
 -->
 <!DOCTYPE config
   SYSTEM "navit.dtd">
