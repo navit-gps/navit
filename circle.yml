@@ -77,14 +77,7 @@ deployment:
     branch: /i18n.*/
     owner: navit-gps
     commands:
-      - git config --global user.email "circleci@navit-project.org"
-      - git config --global user.name "CircleCI"
-      - git checkout trunk
-      - git pull origin trunk
-      - cp $CIRCLE_ARTIFACTS/po/* po/
-      - git add po/*.po.in
-      - git commit -m "Automatic translation import from launchpad" po/*.po.in
-      - git push
+      - bash ci/submit_i18n_pr.sh
 notify:
   webhooks:
     - url: http://62.210.125.30:8000/
