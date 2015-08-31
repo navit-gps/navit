@@ -527,8 +527,8 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 	imlib_free_image();
 	g_free(intermediate_buffer);
 	g_free(intermediate_buffer_aligned);
-#endif
 }
+#endif
 
 static void
 overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
