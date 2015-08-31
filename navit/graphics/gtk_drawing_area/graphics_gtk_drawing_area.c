@@ -66,7 +66,6 @@ struct graphics_priv {
 	struct window window;
 	cairo_t *cairo;
 	struct point p;
-	struct point pclean;
 	int width;
 	int height;
 	int win_w;
@@ -531,15 +530,10 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 #endif
 
 static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r)
 {
-	if (clean) {
-		r->x=overlay->pclean.x;
-		r->y=overlay->pclean.y;
-	} else {
-		r->x=overlay->p.x;
-		r->y=overlay->p.y;
-	}
+	r->x=overlay->p.x;
+	r->y=overlay->p.y;
 	r->width=overlay->width;
 	r->height=overlay->height;
 	if (!overlay->wraparound)
@@ -560,7 +554,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	GdkRectangle or, ir;
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	overlay_rect(parent, overlay, 0, &or);
+	overlay_rect(parent, overlay, &or);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
@@ -846,7 +840,7 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 		gr->overlay_disabled=disabled;
 		if (gr->parent) {
 			GdkRectangle r;
-			overlay_rect(gr->parent, gr, 0, &r);
+			overlay_rect(gr->parent, gr, &r);
 			gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
 		}
 	}
