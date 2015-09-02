@@ -58,6 +58,15 @@
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
+/**
+ * @brief graphics object
+ * A graphics object serves as the target for drawing operations.
+ * It encapsulates various settings, and a drawing target, such as an image buffer or a window.
+ * Currently, in Navit, there is always one main graphics object, which is used to draw the
+ * map, and optionally additional graphics objects for overlays.
+ * @see graphics_overlay_new()
+ * @see struct graphics_gc
+ */
 struct graphics
 {
 	struct graphics* parent;
@@ -272,9 +281,21 @@ int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * @brief Create a new graphics overlay.
+ * An overlay is a graphics object that is independent of the main graphics object. When
+ * drawing everything to a window, the overlay will be shown on top of the main graphics
+ * object. Navit uses overlays for OSD elements and for the vehicle on the map.
+ * This allows updating OSD elements and the vehicle without redrawing the map.
+ *
+ * @param parent parent graphics context (should be the main graphics context as returned by
+ *        graphics_new)
+ * @param p drawing position for the overlay
+ * @param w width of overlay
+ * @param h height of overlay
+ * @param wraparound use wraparound (0/1). If set, position, width and height "wrap around":
+ * negative position coordinates wrap around the window, negative width/height specify
+ * difference to window width/height.
+ * @returns new overlay
  * @author Martin Schaller (04/2008)
 */
 struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound)
@@ -467,9 +488,9 @@ void graphics_font_destroy_all(struct graphics *gra)
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * Create a new graphics context.
+ * @param gra associated graphics object for the new context
+ * @returns new graphics context
  * @author Martin Schaller (04/2008)
 */
 struct graphics_gc * graphics_gc_new(struct graphics *gra)
@@ -483,9 +504,8 @@ struct graphics_gc * graphics_gc_new(struct graphics *gra)
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * Destroy a graphics context, freeing associated resources.
+ * @param gc context to destroy
  * @author Martin Schaller (04/2008)
 */
 void graphics_gc_destroy(struct graphics_gc *gc)
@@ -530,9 +550,9 @@ graphics_convert_color(struct graphics *gra, struct color *in, struct color *out
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * Set foreground color.
+ * @param gc graphics context to set color for
+ * @param c color to set
  * @author Martin Schaller (04/2008)
 */
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
@@ -849,9 +869,9 @@ void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * Report the beginning or the end of a set of drawing operations.
+ * @param this_ graphics object that is being drawn to
+ * @param mode specify beginning or end of drawing
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode)

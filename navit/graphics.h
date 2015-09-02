@@ -101,6 +101,11 @@ struct graphics_gc_methods {
 	void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
 };
 
+/**
+ * @brief graphics context
+ * A graphics context encapsulates a set of drawing parameters, such as
+ * linewidth and drawing color.
+ */
 struct graphics_gc {
 	struct graphics_gc_priv *priv;
 	struct graphics_gc_methods meth;
