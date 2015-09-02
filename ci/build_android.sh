@@ -138,13 +138,10 @@ cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DANDROID_API_VERSION=19 $SOURCE_PATH
 make || exit 1
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-  make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk
+  make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk || exit 1
 else
-  make apkg && mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
+  make apkg && mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk || exit 1
 fi
-#mv navit/android/bin/Navit-debug-unaligned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug-unaligned.apk
-
-echo $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
 
 echo
 echo "Build leftovers :"
