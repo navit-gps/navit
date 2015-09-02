@@ -298,14 +298,14 @@ int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *
  * @returns new overlay
  * @author Martin Schaller (04/2008)
 */
-struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound)
+struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int wraparound)
 {
 	struct graphics *this_;
 	struct point_rect pr;
 	if (!parent->meth.overlay_new)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
-	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha, wraparound);
+	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, 65535, wraparound);
 	this_->image_cache_hash = parent->image_cache_hash;
 	this_->parent = parent;
 	pr.lu.x=0;
@@ -322,23 +322,22 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 }
 
 /**
- * @brief Alters the size, position, alpha and wraparound for an overlay
+ * @brief Alters the size, position and wraparound for an overlay
  *
  * @param this_ The overlay's graphics struct
  * @param p The new position of the overlay
  * @param w The new width of the overlay
  * @param h The new height of the overlay
- * @param alpha The new alpha of the overlay
  * @param wraparound The new wraparound of the overlay
  */
 void
-graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int alpha, int wraparound)
+graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int wraparound)
 {
 	if (! this_->meth.overlay_resize) {
 		return;
 	}
 
-	this_->meth.overlay_resize(this_->priv, p, w, h, alpha, wraparound);
+	this_->meth.overlay_resize(this_->priv, p, w, h, 65535, wraparound);
 }
 
 static void
