@@ -108,12 +108,11 @@ if (DEFINED NAVIT_COMPILE_FLAGS)
    set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
 endif()
 
-# Subversion revision
 ADD_CUSTOM_TARGET(
-   version
+   git_version
    ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
-                    -D NAME=SVN_VERSION
+		    -D NAME="GIT_VERSION"
                     -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 )
 
@@ -154,7 +153,7 @@ else()
    add_custom_target( navit_config_xml ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/navit.xml)
 endif()
 
-ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
+ADD_DEPENDENCIES(${NAVIT_LIBNAME} git_version)
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
    ADD_DEPENDENCIES(support_glib support_gettext_intl)
 endif()

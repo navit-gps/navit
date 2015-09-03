@@ -24,7 +24,7 @@
  * (#519)
  *
  */
- 
+
 /* KNOWN ISSUES
  *
  *
@@ -111,7 +111,7 @@ static int min_turn_limit = 25;
  * robotaxi:
  * suggested limits derived from 'simple turn rules' in bugfix/enhancement #1095:
  * 25-45-110-165.
- * taken over from here: 25 (straight limit) and 165 (u-turn-limit used for very strong turn) 
+ * taken over from here: 25 (straight limit) and 165 (u-turn-limit used for very strong turn)
  */
 
 /** Minimum absolute delta for a turn of "normal" strength (which is always just announced as "turn left/right" even when strength is required).
@@ -357,7 +357,7 @@ static void navigation_flush(struct navigation *this_);
  * @param angle1 The first angle
  * @param angle2 The second angle
  * @return The difference between the angles, see description
- */ 
+ */
 static int
 angle_delta(int angle1, int angle2)
 {
@@ -698,9 +698,9 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 		mr=map_rect_new(this_->map, NULL);
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type != type_nav_none && item->type != type_nav_position) {
-				if (type == attr_item_type) 
+				if (type == attr_item_type)
 					attr->u.item_type=item->type;
-				else { 
+				else {
 					if (!item_attr_get(item, type, attr))
 						item=NULL;
 				}
@@ -775,7 +775,7 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	if ((attr=attr_search(attrs, NULL, attr_flags))) {
 		ret->flags = attr->u.num;
 	}
-	return ret;	
+	return ret;
 }
 
 int
@@ -786,7 +786,7 @@ navigation_set_announce(struct navigation *this_, enum item_type type, int *leve
 		dbg(lvl_debug,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
 		return 0;
 	}
-	for (i = 0 ; i < 3 ; i++) 
+	for (i = 0 ; i < 3 ; i++)
 		this_->announce[type-route_item_first][i]=level[i];
 	return 1;
 }
@@ -841,7 +841,7 @@ road_angle(struct coord *c1, struct coord *c2, int dir)
 }
 
 static const char
-*get_count_str(int n) 
+*get_count_str(int n)
 {
 	switch (n) {
 	case 0:
@@ -859,13 +859,13 @@ static const char
 		return _("fifth");
 	case 6:
 		return _("sixth");
-	default: 
+	default:
 		return NULL;
 	}
 }
 
 static const char
-*get_exit_count_str(int n) 
+*get_exit_count_str(int n)
 {
 	switch (n) {
 	case 0:
@@ -883,7 +883,7 @@ static const char
 		return _("fifth exit");
 	case 6:
 		return _("sixth exit");
-	default: 
+	default:
 		return NULL;
 	}
 }
@@ -927,7 +927,7 @@ distance_set_last()
 {
 	static int i=0;
 	if (i == 0) {
-		while (distances[i] > 0) 
+		while (distances[i] > 0)
 			i++;
 	}
 	return distances[i-1];
@@ -957,7 +957,7 @@ round_distance_reduced( int dist )
 			break;
 		i++;
 	}
-	dbg(lvl_debug,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
+	dbg(lvl_debug,"converted %d to %d with factor %d\n",dist,distances[m],factor);
 	return distances[m] * factor;
 
 }
@@ -967,10 +967,10 @@ round_distance_reduced( int dist )
 *   Considers the configuration of 'imperial' units and 'vocabulary_distances'.
 *   'imperial' if set distinguishes the distance statement between miles and feet. Maximum distance in feet is 500.
 *   'vocabulary_distances' if set constrains the distance values to a set of simple pronounceable numbers.
-*   
+*
 *   @param nav       The navigation object.
 *   @param dist      Distance in meters.
-*   @param type      The type of announcement precision. 
+*   @param type      The type of announcement precision.
 *   @param is_length 1 for length statement, 0 for distance statement.
 *   @return          String with length/distance statement.
 */
@@ -978,7 +978,7 @@ static char *
 get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length)
 {
 	int imperial=0,vocabulary=1; /* default configuration */
-	
+
 	/* Get configuration */
 	struct attr attr;
 	if (navit_get_attr(nav->navit, attr_imperial, &attr, NULL))
@@ -1031,7 +1031,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 				return g_strdup_printf(_("in %d.%d miles"), dist_miles, rem);
 		}
 
-		if (is_length) 
+		if (is_length)
 			return g_strdup_printf(navit_nls_ngettext("one mile","%d miles", dist_miles), dist_miles);
 		else
 			return g_strdup_printf(navit_nls_ngettext("in one mile","in %d miles", dist_miles), dist_miles);
@@ -1124,19 +1124,19 @@ navigation_way_init(struct navigation_way *w)
 		w->name_systematic=map_convert_string(realitem->map,attr.u.str);
 	else
 		w->name_systematic=NULL;
-		
+
 	if (w->dir < 0) {
 		if (item_coord_get(realitem, cbuf, 2) != 2) {
 			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
 			map_rect_destroy(mr);
 			return;
 		}
-			
+
 		while (item_coord_get(realitem, &c, 1)) {
 			cbuf[0] = cbuf[1];
 			cbuf[1] = c;
 		}
-		
+
 	} else {
 		if (item_coord_get(realitem, cbuf, 2) != 2) {
 			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
@@ -1475,10 +1475,10 @@ navigation_itm_ways_clear(struct navigation_itm *itm)
  * and the next navigation item are excluded.
  *
  * @param itm The item that should be updated
- * @param graph_map The route graph's map that these items are on 
+ * @param graph_map The route graph's map that these items are on
  */
 static void
-navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map) 
+navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 {
 	struct map_selection coord_sel;
 	struct map_rect *g_rect; /* Contains a map rectangle from the route graph's map */
@@ -1495,9 +1495,9 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 	coord_sel.u.c_rect.lu = itm->start;
 	coord_sel.u.c_rect.rl = itm->start;
 	/* the selection's order is ignored */
-	
+
 	g_rect = map_rect_new(graph_map, &coord_sel);
-	
+
 	i = map_rect_get_item(g_rect);
 	if (!i || i->type != type_rg_point) { /* probably offroad? */
 		map_rect_destroy(g_rect);
@@ -1505,22 +1505,22 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 	}
 
 	w = NULL;
-	
+
 	while (1) {
 		i = map_rect_get_item(g_rect);
 
 		if (!i) {
 			break;
 		}
-		
+
 		if (i->type != type_rg_segment) {
 			continue;
 		}
-		
+
 		if (!item_attr_get(i,attr_street_item,&sitem_attr)) {
 			dbg(lvl_warning, "Got no street item for route graph item in entering_straight()\n");
 			continue;
-		}		
+		}
 
 		if (!item_attr_get(i,attr_direction,&direction_attr)) {
 			continue;
@@ -1556,7 +1556,7 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 	}
 
 	map_rect_destroy(g_rect);
-	
+
 	itm->way.next = w;
 }
 
@@ -1596,7 +1596,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 				g_free(cmd->maneuver);
 			g_free(cmd);
 		}
-	
+
 		map_convert_free(itm->way.name);
 		map_convert_free(itm->way.name_systematic);
 		map_convert_free(itm->way.exit_ref);
@@ -1607,7 +1607,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 	}
 	if (! this_->first)
 		this_->last=NULL;
-	if (! this_->first && end) 
+	if (! this_->first && end)
 		dbg(lvl_error,"end wrong\n");
 	dbg(lvl_info,"ret this_->first=%p this_->cmd_first=%p\n",this_->first, this_->cmd_first);
 }
@@ -1677,7 +1677,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		ret->way.item=*streetitem;
 		item_hash_insert(this_->hash, streetitem, ret);
 
-		mr=map_rect_new(streetitem->map, NULL);  
+		mr=map_rect_new(streetitem->map, NULL);
 
 		struct map *tmap = streetitem->map;
 
@@ -1733,7 +1733,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 					}
 				}
 			}
-		
+
 		navigation_itm_update(ret, routeitem);
 
 
@@ -1855,7 +1855,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 }
 
 /**
- * @brief Counts how many times a driver could turn right/left 
+ * @brief Counts how many times a driver could turn right/left
  *
  * This function counts how many times the driver theoretically could
  * turn right/left between two navigation items, not counting the final
@@ -1889,7 +1889,7 @@ count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct
 					if (angle_delta(curr->prev->angle_end, w->angle2) > 0) {
 						count++;
 						break;
-					}				
+					}
 				}
 			}
 			w = w->next;
@@ -3159,7 +3159,7 @@ navigation_item_destination(struct navigation *nav, struct navigation_command *c
 			ret=g_strdup_printf(_("%sinto %s%s%s|neuter form"), prefix, name1, sep, name2);
 			break;
 		}
-			
+
 	} else
 		/* TRANSLATORS: gives the name of the next road to turn into (into the E17) */
 		ret=g_strdup_printf(_("%sinto the %s"),prefix,name_systematic);
@@ -3261,6 +3261,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int skip_roads = 0;
 	int count_roundabout;
 	struct navigation_itm *cur;
+	struct navigation_way *candidate_way;
 	int tellstreetname = 0;
 	char * at = NULL;        /* Motorway junction name */
 	char * direction = NULL; /* The direction-dependent part of the maneuver */
@@ -3304,11 +3305,46 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		count_roundabout = 0;
 		while (cur && (cur->way.flags & AF_ROUNDABOUT))
 		{
-			if (cur->next->way.next && is_way_allowed(nav,cur->next->way.next,3))
-			/* If the next segment has no exit or the exit isn't allowed, don't count it */
-				count_roundabout++;
+			candidate_way=cur->next->way.next;
+			while (candidate_way)
+			{
+				if (candidate_way && is_way_allowed(nav,candidate_way,3))
+				/* If the next segment has no exit or the exit isn't allowed, don't count it */
+				{
+					count_roundabout++;
+					/* As soon as we have an allowed one on this node,
+					 * stop further counting for this node.
+					 */
+					break;
+				}
+				candidate_way=candidate_way->next;
+			}
 			cur = cur->prev;
 		}
+
+		/*try to figure out if the entry node has a usable exit as well
+		*
+		* this will fail for left-hand driving areas
+		*/
+		if (cur && cur->next)
+		{
+			candidate_way=cur->next->way.next;
+			while (candidate_way)
+			{
+				if (candidate_way && is_way_allowed(nav,candidate_way,3)
+					/*&& (angle_delta(cur->angle_end,candidate_way->angle2) > 0) && ( angle_delta(candidate_way->angle2,cur->next->way.angle2) < 0 )*/)
+					/*for right-hand traffic, exits should be to the right anyway to allow smooth turns, so leave this out until we find a counterexample :)*/
+				{
+					count_roundabout++;
+					/* As soon as we have an allowed one on this node,
+					* stop further counting for this node.
+					*/
+					break;
+				}
+				candidate_way=candidate_way->next;
+			}
+		}
+
 		switch (level)
 		{
 			case 3:
@@ -3385,7 +3421,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			char *exit_announce=NULL;
 
 			 /* interchange or exit announcement shall be a long distance information only.
-			    But if so, exit_label shall not be announced in case it is a substring 
+			    But if so, exit_label shall not be announced in case it is a substring
 			    of destination info to avoid redundancy and not let the sentence become too long.
 			    Otherwise, if there is no additional destination info, just say it at level 1. */
 			if ((level == 2) || ((level == 1) && (!street_destination_announce && !destination)) || (type != attr_navigation_speech)) {
@@ -3664,7 +3700,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		if (i > 1) { /* if you change this, please also change the value below, that is used to terminate the loop */
 			break;
 		}
-		
+
 		next = show_maneuver(nav,prev->itm, cur, type, 0);
 		if (nav->speech)
 			speech_time = speech_estimate_duration(nav->speech,next);
@@ -3779,11 +3815,11 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		return;
 
 	dbg(lvl_debug,"enter %d\n", mode);
-	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new) 
+	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
 		navigation_flush(this_);
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
 		return;
-		
+
 	if (! this_->route)
 		return;
 	map=route_get_map(this_->route);
@@ -3826,7 +3862,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		navigation_itm_new(this_, ritem);
 	}
 	dbg(lvl_info,"turn_around=%d\n", this_->turn_around);
-	if (first) 
+	if (first)
 		navigation_destroy_itms_cmds(this_, NULL);
 	else {
 		if (! ritem) {
@@ -3889,7 +3925,7 @@ navigation_get_map(struct navigation *this_)
 	data.u.str="";
 	description.type=attr_description;
 	description.u.str="Navigation";
-	
+
 	attrs[0]=&type;
 	attrs[1]=&navigation;
 	attrs[2]=&data;
@@ -4029,7 +4065,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		return 0;
 	case attr_street_name_systematic:
 		attr->u.str=itm->way.name_systematic;
-		this_->attr_next=attr_street_destination; 
+		this_->attr_next=attr_street_destination;
 		if (attr->u.str){
 			return 1;}
 		return 0;
@@ -4134,7 +4170,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 						maneuver->delta);
 				return 1;
 			}
-			
+
 		default:
 			this_->attr_next=attr_none;
 			return 0;
@@ -4233,7 +4269,7 @@ navigation_map_get_item(struct map_rect_priv *priv)
 	priv->cmd_itm=priv->cmd_itm_next;
 	if (!priv->cmd)
 		return NULL;
-	if (!priv->show_all && priv->itm->prev != NULL) 
+	if (!priv->show_all && priv->itm->prev != NULL)
 		priv->itm=priv->cmd->itm;
 	priv->itm_next=priv->itm->next;
 	if (priv->itm->prev)
@@ -4303,7 +4339,7 @@ navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo)
 	struct item *ret;
 	navigation_map_rect_init(priv);
 	while ((ret=navigation_map_get_item(priv))) {
-		if (ret->id_hi == id_hi && ret->id_lo == id_lo) 
+		if (ret->id_hi == id_hi && ret->id_lo == id_lo)
 			return ret;
 	}
 	return NULL;

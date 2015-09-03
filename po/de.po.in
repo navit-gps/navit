@@ -40,8 +40,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-20 21:54+0000\n"
-"Last-Translator: Mathias Klein <ma_klein@gmx.de>\n"
+"PO-Revision-Date: 2015-08-11 10:56+0000\n"
+"Last-Translator: Robotaxi <robotaxi@arcor.de>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -254,7 +254,7 @@ msgstr "dann"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr "dann auf die%1$s auffahren"
+msgstr "dann%1$s auffahren"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -264,7 +264,7 @@ msgstr "Fahren Sie %1$s%2$s auf"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr "dann auf die%1$s auffahren"
+msgstr "dann%1$s auffahren"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -393,7 +393,7 @@ msgstr "dann haben Sie Ihr Ziel erreicht."
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Sie haben Ihr Ziel %s erreicht"
+msgstr "%s haben Sie Ihr Ziel erreicht"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
@@ -2805,12 +2805,6 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
-"Navit kann jede text-to-speech engine nutzen, die installiert ist. Die\r\n"
-"derzeit angewählte engine kann Ihre Sprache nicht wiedergeben.\r\n"
-"Soll das System den Voice-Download Dialog öffnen?"
-
-#~ msgid "%d m"
-#~ msgstr "%d m"
-
-#~ msgid "in %d m"
-#~ msgstr "in %d m"
+"Navit kann jede text-to-speech Engine nutzen, die installiert ist. Die "
+"derzeit angewählte Engine kann Ihre Sprache nicht wiedergeben. Soll das "
+"System den Voice-Download Dialog öffnen?"

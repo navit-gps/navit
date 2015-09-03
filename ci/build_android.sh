@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 red='\e[0;31m'
 grn='\e[0;32m'
 yel='\e[1;33m'
@@ -36,7 +34,7 @@ export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2re
 
 export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support"
 
-[ -d $ANDROID_HOME ] || mkdir $ANDROID_HOME
+mkdir $ANDROID_HOME
 
 # If path already has our environment no need to set it
 if echo "$ANDROID_ENV" | grep -q "$PATH"; then
@@ -132,21 +130,18 @@ mkdir -p $BUILD_PATH
 cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 android list targets
-svn_rev=` cd ~/navit/; git log -1|grep git-svn-id:|cut -c 65-68`
-if [[ "$svn_rev" == "" ]]; then svn_rev="0"; fi
+# The value comes from ( last_svn_rev - max_build_id ) at the time of the git migration
+svn_rev=$(( 5658 + $CIRCLE_BUILD_NUM )) 
 sed -i -e "s/ANDROID_VERSION_INT=\"0\"/ANDROID_VERSION_INT=\"${svn_rev}\"/g" ~/navit/navit/android/CMakeLists.txt
 cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/
 
-cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DANDROID_API_VERSION=19 $SOURCE_PATH
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DANDROID_API_VERSION=19 $SOURCE_PATH
 make || exit 1
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-  make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk
+  make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk || exit 1
 else
-  make apkg && mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
+  make apkg && mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk || exit 1
 fi
-#mv navit/android/bin/Navit-debug-unaligned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug-unaligned.apk
-
-echo $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk
 
 echo
 echo "Build leftovers :"
