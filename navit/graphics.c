@@ -305,7 +305,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 	if (!parent->meth.overlay_new)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
-	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, 65535, wraparound);
+	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, wraparound);
 	this_->image_cache_hash = parent->image_cache_hash;
 	this_->parent = parent;
 	pr.lu.x=0;
@@ -337,7 +337,7 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
 		return;
 	}
 
-	this_->meth.overlay_resize(this_->priv, p, w, h, 65535, wraparound);
+	this_->meth.overlay_resize(this_->priv, p, w, h, wraparound);
 }
 
 static void

@@ -73,7 +73,6 @@ struct graphics_priv {
 	int visible;
 	int overlay_disabled;
 	int overlay_autodisabled;
-	int a;
 	int wraparound;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
@@ -847,7 +846,7 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 }
 
 static void
-overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound)
 {
 	//do not dereference parent for non overlay osds
 	if(!this->parent) {
@@ -880,7 +879,6 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 		changed = 1;
 	}
 
-	this->a = alpha >> 8;
 	this->wraparound = wraparound;
 
 	if (changed) {
@@ -939,7 +937,7 @@ set_attr(struct graphics_priv *gr, struct attr *attr)
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	int w2,h2;
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
@@ -974,7 +972,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	}
 
 	this->next=gr->overlays;
-	this->a=alpha >> 8;
 	this->wraparound=wraparound;
 	gr->overlays=this;
 	return this;

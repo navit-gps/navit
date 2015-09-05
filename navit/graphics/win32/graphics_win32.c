@@ -1477,9 +1477,9 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
 static struct graphics_priv *
             graphics_win32_new_helper(struct graphics_methods *meth);
 
-static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int int wraparound)
 {
-    dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d\n", gr, p->x, p->y, w, h, wraparound);
 
     if ( gr->width != w || gr->height != h )
     {
@@ -1494,10 +1494,10 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
 
 
 static struct graphics_priv *
-            overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+            overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
     struct graphics_priv *this=graphics_win32_new_helper(meth);
-    dbg(lvl_debug, "overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", this, p->x, p->y, w, h, alpha, wraparound);
+    dbg(lvl_debug, "overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d\n", this, p->x, p->y, w, h, wraparound);
     this->width  = w;
     this->height = h;
     this->parent = gr;
