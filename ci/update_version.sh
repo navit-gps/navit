@@ -13,19 +13,21 @@ fi
 
 TAG=R$(( 5658 + $CIRCLE_BUILD_NUM ))
 
-git log -1 --format="%H %d" | grep 'tag: R' 
-
-if [ $? -eq 0 ] ; then
-  echo "This commit is already tagged."
-  exit
-fi
-
 if [ "$1" == "prepare" ] ; then
+  git log -1 --format="%H %d" | grep 'tag: R' 
+  if [ $? -eq 0 ] ; then
+    echo "This commit is already tagged."
+    exit
+  fi
   git tag $TAG
   exit
 fi
 
 if [ "$1" == "push" ] ; then
-  git push origin $TAG
+  git log -1 --format="%H %d" | grep 'tag: R$TAG' 
+  if [ $? -eq 0 ] ; then
+    echo Pushing tag $TAG to origin...
+    git push origin $TAG
+  fi
 fi
 
