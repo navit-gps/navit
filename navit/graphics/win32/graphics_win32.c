@@ -1477,7 +1477,7 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
 static struct graphics_priv *
             graphics_win32_new_helper(struct graphics_methods *meth);
 
-static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int int wraparound)
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)
 {
     dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d\n", gr, p->x, p->y, w, h, wraparound);
 
