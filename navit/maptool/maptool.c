@@ -72,6 +72,9 @@ int overlap=1;
 int bytes_read;
 
 static long start_brk;
+#ifdef _WIN32
+#define timespec timeval
+#endif
 static struct timespec start_ts;
 
 /*
@@ -128,7 +131,11 @@ progress_time(void)
 	char buf[buflen];
 	int pos=1;
 	buf[0]=' ';
+#ifdef _WIN32
+	gettimeofday(&ts, NULL);
+#else
 	clock_gettime(CLOCK_REALTIME, &ts);
+#endif
 	seconds=ts.tv_sec-start_ts.tv_sec;
 	pos+=assafe_lltoa(seconds/60, buflen-pos, buf+pos);
 	seconds%=60;
@@ -150,13 +157,6 @@ progress_memory(void)
 	pos+=assafe_strcp2buf(" MB", buflen-pos, buf+pos);
 	write(2,buf,pos);
 #endif
-}
-
-void
-sig_alrm(int sig)
-{
-	fflush(stderr);
-	sig_alrm_do(sig);
 }
 
 void
@@ -191,6 +191,14 @@ sig_alrm_do(int sig)
 	write(2,"\n",1);
 #endif
 }
+
+void
+sig_alrm(int sig)
+{
+	fflush(stderr);
+	sig_alrm_do(sig);
+}
+
 
 
 void
@@ -935,8 +943,11 @@ int main(int argc, char **argv)
 #ifdef HAVE_SBRK
 	start_brk=(long)sbrk(0);
 #endif
+#ifdef _WIN32
+	gettimeofday(&start_ts,NULL);
+#else
 	clock_gettime(CLOCK_REALTIME, &start_ts);
-
+#endif
 	while (1) {
 		int parse_result=parse_option(&p, argv, argc, &option_index);
 		if (!parse_result) {
