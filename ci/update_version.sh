@@ -24,10 +24,9 @@ if [ "$1" == "prepare" ] ; then
 fi
 
 if [ "$1" == "push" ] ; then
-  git log -1 --format="%H %d" | grep 'tag: $TAG' 
+  git log -1 --format="%H %d" | grep "tag: $TAG"
   if [ $? -eq 0 ] ; then
     echo Pushing tag $TAG to origin...
     git push origin $TAG
   fi
 fi
-
