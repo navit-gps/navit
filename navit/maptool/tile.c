@@ -576,6 +576,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 		}
 		len--;
 	}
+	g_list_free(tiles_list);
 	if (info->suffix[0] && info->write) {
 		struct item_bin *item_bin=init_item(type_submap);
 		item_bin_add_coord_rect(item_bin, &world_bbox);

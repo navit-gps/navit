@@ -158,7 +158,7 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 void
 osd_std_resize(struct osd_item *item)
 {
- 	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 65535, 1);
+	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 1);
 }
  
 /**
@@ -373,7 +373,7 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 
 	navit_gr = navit_get_graphics(nav);
 	osd_std_calculate_sizes(item, navit_get_width(nav), navit_get_height(nav));
-	item->gr = graphics_overlay_new(navit_gr, &item->p, item->w, item->h, 65535, 1);
+	item->gr = graphics_overlay_new(navit_gr, &item->p, item->w, item->h, 1);
 
 	item->graphic_bg = graphics_gc_new(item->gr);
 	graphics_gc_set_foreground(item->graphic_bg, &item->color_bg);

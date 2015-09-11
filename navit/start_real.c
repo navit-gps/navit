@@ -51,7 +51,7 @@
 #include <winbase.h>
 #endif
 
-char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT;
+char *version=PACKAGE_VERSION"+git:"GIT_VERSION""NAVIT_VARIANT;
 int main_argc;
 char * const* main_argv;
 

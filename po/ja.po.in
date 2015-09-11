@@ -71,14 +71,6 @@ msgid "sixth exit"
 msgstr ""
 
 #, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#, c-format
-msgid "in %d m"
-msgstr ""
-
-#, c-format
 msgid "%d feet"
 msgstr ""
 
@@ -87,27 +79,11 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
-msgid "%d meters"
-msgstr "%d メートル"
-
-#, c-format
-msgid "in %d meters"
-msgstr ""
-
-#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr ""
-
-#, c-format
-msgid "in %d.%d kilometers"
 msgstr ""
 
 #, c-format
@@ -121,6 +97,22 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+
+#, c-format
+msgid "%d meters"
+msgstr "%d メートル"
+
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr ""
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
 
 #, c-format
 msgid "one kilometer"

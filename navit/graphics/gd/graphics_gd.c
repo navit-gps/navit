@@ -195,7 +195,7 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 
 struct graphics_priv {
 	gdImagePtr im;
-	int w,h,flags,alpha,overlay,shmkey,shmsize,shmoffset;
+	int w,h,flags,overlay,shmkey,shmsize,shmoffset;
 	void *shm;
 	struct shmem_header *shm_header;
 	struct point p;
@@ -547,7 +547,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	}
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
 
 static void
 add_overlays(struct graphics_priv *overlay, gdImagePtr im)
@@ -633,7 +633,7 @@ overlay_disable(struct graphics_priv *gr, int disable)
 }
 
 static void
-overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)
 {
 	dbg(lvl_debug,"enter\n");
 }
@@ -816,7 +816,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
@@ -831,7 +831,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	ret->p=*p;
 	ret->w=w;
 	ret->h=h;
-	ret->alpha=alpha;
 	ret->overlay=1;
 	ret->flags=1;
 	ret->im=gdImageCreateTrueColor(ret->w,ret->h);

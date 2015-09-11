@@ -22,8 +22,10 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <math.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <cairo.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
@@ -62,11 +64,8 @@ struct graphics_priv {
 	GtkWidget *widget;
 	GtkWidget *win;
 	struct window window;
-	GdkDrawable *drawable;
-	GdkColormap *colormap;
+	cairo_t *cairo;
 	struct point p;
-	struct point pclean;
-	int cleanup;
 	int width;
 	int height;
 	int win_w;
@@ -74,13 +73,11 @@ struct graphics_priv {
 	int visible;
 	int overlay_disabled;
 	int overlay_autodisabled;
-	int a;
 	int wraparound;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
 	struct graphics_gc_priv *background_gc;
-	enum draw_mode_num mode;
 	struct callback_list *cbl;
 	struct font_freetype_methods freetype_methods;
 	struct navit *nav;
@@ -94,10 +91,12 @@ struct graphics_priv {
 
 
 struct graphics_gc_priv {
-	GdkGC *gc;
-	GdkPixmap *pixmap;
 	struct graphics_priv *gr;
 	struct color c;
+	double linewidth;
+	double *dashes;
+	int ndashes;
+	double offset;
 };
 
 struct graphics_image_priv {
@@ -129,50 +128,41 @@ graphics_destroy(struct graphics_priv *gr)
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
-	g_object_unref(gc->gc);
 	g_free(gc);
 }
 
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-	gdk_gc_set_line_attributes(gc->gc, w, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+	gc->linewidth = w;
 }
 
 static void
 gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
-	gdk_gc_set_dashes(gc->gc, offset, (gint8 *)dash_list, n);
-	gdk_gc_set_line_attributes(gc->gc, w, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
-}
-
-static void
-gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
-{
-	GdkColor gdkc;
-	gdkc.pixel=0;
-	gdkc.red=c->r;
-	gdkc.green=c->g;
-	gdkc.blue=c->b;
-	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
-	gdk_colormap_query_color(gc->gr->colormap, gdkc.pixel, &gdkc);
-	gc->c=*c;
-	if (fg) {
-		gdk_gc_set_foreground(gc->gc, &gdkc);
-	} else
-		gdk_gc_set_background(gc->gc, &gdkc);
+	int i;
+	g_free(gc->dashes);
+	gc->ndashes=n;
+	gc->offset=offset;
+	if(n) {
+		gc->dashes=g_malloc_n(n, sizeof(double));
+		for (i=0; i<n; i++) {
+			gc->dashes[i]=dash_list[i];
+		}
+	} else {
+		gc->dashes=NULL;
+	}
 }
 
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc_set_color(gc, c, 1);
+	gc->c=*c;
 }
 
 static void
 gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc_set_color(gc, c, 0);
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -188,8 +178,17 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
 
 	*meth=gc_methods;
-	gc->gc=gdk_gc_new(gr->widget->window);
 	gc->gr=gr;
+
+	gc->linewidth=1;
+	gc->c.r=0;
+	gc->c.g=0;
+	gc->c.b=0;
+	gc->c.a=0;
+	gc->dashes=NULL;
+	gc->ndashes=0;
+	gc->offset=0;
+
 	return gc;
 }
 
@@ -278,37 +277,83 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 }
 
 static void
+set_drawing_color(cairo_t *cairo, struct color c)
+{
+	double col_max = 1<<COLOR_BITDEPTH;
+	cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
+}
+
+static void
+set_stroke_params_from_gc(cairo_t *cairo, struct graphics_gc_priv *gc)
+{
+	set_drawing_color(cairo, gc->c);
+	cairo_set_dash(cairo, gc->dashes, gc->ndashes, gc->offset);
+	cairo_set_line_width(cairo, gc->linewidth);
+}
+
+static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
+	int i;
+	if (!count)
+		return;
+	cairo_move_to(gr->cairo, p[0].x, p[0].y);
+	for (i=1; i<count; i++) {
+		cairo_line_to(gr->cairo, p[i].x, p[i].y);
+	}
+	set_stroke_params_from_gc(gr->cairo, gc);
+	cairo_stroke(gr->cairo);
 }
 
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	gdk_draw_polygon(gr->drawable, gc->gc, TRUE, (GdkPoint *)p, count);
+	int i;
+	set_drawing_color(gr->cairo, gc->c);
+	cairo_move_to(gr->cairo, p[0].x, p[0].y);
+	for (i=1; i<count; i++) {
+		cairo_line_to(gr->cairo, p[i].x, p[i].y);
+	}
+	cairo_fill(gr->cairo);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	gdk_draw_rectangle(gr->drawable, gc->gc, TRUE, p->x, p->y, w, h);
+	cairo_save(gr->cairo);
+	// Use OPERATOR_SOURCE to overwrite old contents even when drawing with transparency.
+	// Necessary for OSD drawing.
+	cairo_set_operator(gr->cairo, CAIRO_OPERATOR_SOURCE);
+	cairo_rectangle(gr->cairo, p->x, p->y, w, h);
+	set_drawing_color(gr->cairo, gc->c);
+	cairo_fill(gr->cairo);
+	cairo_restore(gr->cairo);
 }
 
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-	gdk_draw_arc(gr->drawable, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
+	cairo_arc (gr->cairo,  p->x, p->y, r/2, 0.0, 2*M_PI);
+	set_stroke_params_from_gc(gr->cairo, gc);
+	cairo_stroke(gr->cairo);
 }
 
 static void
-display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p)
+draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y, int stride, unsigned char *buffer)
+{
+	cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
+			buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
+	cairo_set_source_surface(cairo, buffer_surface, draw_pos_x, draw_pos_y);
+	cairo_paint(cairo);
+	cairo_surface_destroy(buffer_surface);
+}
+
+static void
+display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p)
 {
 	int i,x,y,stride;
 	struct font_freetype_glyph *g, **gp;
-	unsigned char *shadow,*glyph;
 	struct color transparent={0x0,0x0,0x0,0x0};
-	struct color white={0xffff,0xffff,0xffff,0xffff};
 
 	gp=text->glyph;
 	i=text->glyph_count;
@@ -318,19 +363,12 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h && bg ) {
-			stride=g->w+2;
+			unsigned char *shadow;
+			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w+2);
 			shadow=g_malloc(stride*(g->h+2));
-			if (gr->freetype_methods.get_shadow(g, shadow, 8, stride, &white, &transparent))
-				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
+			gr->freetype_methods.get_shadow(g, shadow, 32, stride, &bg->c, &transparent);
+			draw_rgb_image_buffer(gr->cairo, g->w+2, g->h+2, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, stride, shadow);
 			g_free(shadow);
-			if (color) {
-				stride*=3;
-				shadow=g_malloc(stride*(g->h+2));
-				gr->freetype_methods.get_shadow(g, shadow, 24, stride, &bg->c, &transparent);
-				gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
-				g_free(shadow);
-			} 
-			
 		}
 		x+=g->dx;
 		y+=g->dy;
@@ -343,21 +381,12 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	{
 		g=*gp++;
 		if (g->w && g->h) {
-			if (color) {
-				stride=g->w;
-				if (bg) {
-					glyph=g_malloc(stride*g->h);
-					gr->freetype_methods.get_glyph(g, glyph, 8, stride, &fg->c, &bg->c, &transparent);
-					gdk_draw_gray_image(gr->drawable, bg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, g->w);
-					g_free(glyph);
-				}
-				stride*=3;
-				glyph=g_malloc(stride*g->h);
-				gr->freetype_methods.get_glyph(g, glyph, 24, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
-				gdk_draw_rgb_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, stride);
-				g_free(glyph);
-			} else
-				gdk_draw_gray_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
+			unsigned char *glyph;
+			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
+			glyph=g_malloc(stride*g->h);
+			gr->freetype_methods.get_glyph(g, glyph, 32, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
+			draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x+g->x)>>6, (y+g->y)>>6, stride, glyph);
+			g_free(glyph);
 		}
 		x+=g->dx;
 		y+=g->dy;
@@ -368,7 +397,6 @@ static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	struct font_freetype_text *t;
-	int color=0;
 
 	if (! font)
 	{
@@ -388,35 +416,36 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 #endif
 	if (bg && !bg->c.a)
 		bg=NULL;
-	if (bg) {
-		if (COLOR_IS_BLACK(fg->c) && COLOR_IS_WHITE(bg->c)) {
-			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
-			gdk_gc_set_function(bg->gc, GDK_OR);
-		} else if (COLOR_IS_WHITE(fg->c) && COLOR_IS_BLACK(bg->c)) {
-			gdk_gc_set_function(fg->gc, GDK_OR);
-			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-		} else  {
-			gdk_gc_set_function(fg->gc, GDK_OR);
-			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-			color=1;
-		}
-	} else {
-		gdk_gc_set_function(fg->gc, GDK_OR);
-		color=1;
-	}
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
-	display_text_draw(t, gr, fg, bg, color, p);
+	display_text_draw(t, gr, fg, bg, p);
 	gr->freetype_methods.text_destroy(t);
-	gdk_gc_set_function(fg->gc, GDK_COPY);
-	if (bg)
-		gdk_gc_set_function(bg->gc, GDK_COPY);
 }
 
 static void
 draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-	gdk_draw_pixbuf(gr->drawable, fg->gc, img->pixbuf, 0, 0, p->x, p->y,
-		    img->w, img->h, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_cairo_set_source_pixbuf(gr->cairo, img->pixbuf, p->x, p->y);
+	cairo_paint(gr->cairo);
+}
+
+static unsigned char*
+create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel, size_t output_stride)
+{
+	int line;
+	size_t input_offset, output_offset;
+	unsigned char *out_buf;
+	size_t input_stride = w*bytes_per_pixel;
+	if (input_stride == output_stride) {
+		return NULL;
+	}
+
+	out_buf = g_malloc(h*output_stride);
+	for (line = 0; line < h; line++) {
+		input_offset =  line*input_stride;
+		output_offset = line*output_stride;
+		memcpy(out_buf+output_offset, input_buffer+input_offset, input_stride);
+	}
+	return out_buf;
 }
 
 #ifdef HAVE_IMLIB2
@@ -424,15 +453,11 @@ static void
 draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)
 {
 	int w,h;
-	static struct graphics_priv *imlib_gr;
+	DATA32 *intermediate_buffer;
+	unsigned char* intermediate_buffer_aligned;
+	Imlib_Image intermediate_image;
+	size_t stride;
 	dbg(lvl_debug,"draw_image_warp data=%p\n", img);
-	if (imlib_gr != gr) {
-		imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
-		imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
-		imlib_context_set_visual(gdk_x11_visual_get_xvisual(gtk_widget_get_visual(gr->widget)));
-		imlib_context_set_drawable(gdk_x11_drawable_get_xid(gr->drawable));
-		imlib_gr=gr;
-	}
 	w = img->w;
 	h = img->h;
 	if (!img->image) {
@@ -463,37 +488,51 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 			dbg(lvl_error,"implement me\n");
 		}
 		
-	} else 
-		imlib_context_set_image(img->image);
+	}
+
+	intermediate_buffer = g_malloc0(gr->width*gr->height*4);
+	intermediate_image = imlib_create_image_using_data(gr->width, gr->height, intermediate_buffer);
+	imlib_context_set_image(intermediate_image);
+	imlib_image_set_has_alpha(1);
+
 	if (count == 3) {
 		/* 0 1
         	   2   */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
 	}
 	if (count == 2) {
-		/* 0 
+		/* 0
         	     1 */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
 	}
 	if (count == 1) {
-		/* 
-                   0 
+		/*
+                   0
         	     */
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
+		imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
 	}
+
+	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, gr->width);
+	intermediate_buffer_aligned = create_buffer_with_stride_if_required(
+			(unsigned char* )intermediate_buffer, gr->width, gr->height, sizeof(DATA32), stride);
+	cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
+			intermediate_buffer_aligned ? intermediate_buffer_aligned : (unsigned char*)intermediate_buffer,
+			CAIRO_FORMAT_ARGB32, gr->width, gr->height, stride);
+	cairo_set_source_surface(gr->cairo, buffer_surface, 0, 0);
+	cairo_paint(gr->cairo);
+
+	cairo_surface_destroy(buffer_surface);
+	imlib_free_image();
+	g_free(intermediate_buffer);
+	g_free(intermediate_buffer_aligned);
 }
 #endif
 
 static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r)
 {
-	if (clean) {
-		r->x=overlay->pclean.x;
-		r->y=overlay->pclean.y;
-	} else {
-		r->x=overlay->p.x;
-		r->y=overlay->p.y;
-	}
+	r->x=overlay->p.x;
+	r->y=overlay->p.y;
 	r->width=overlay->width;
 	r->height=overlay->height;
 	if (!overlay->wraparound)
@@ -509,65 +548,24 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
 }
 
 static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, GdkPixmap *pixmap, GdkGC *gc)
+overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo)
 {
-	GdkPixbuf *pixbuf,*pixbuf2;
-	guchar *pixels1, *pixels2, *p1, *p2, r=0, g=0, b=0, a=0;
-	int x,y;
-	int rowstride1,rowstride2;
-	int n_channels1,n_channels2;
-	GdkRectangle or,ir;
-	struct graphics_gc_priv *bg=overlay->background_gc;
-	if (bg) {
-		r=bg->c.r>>8;
-		g=bg->c.g>>8;
-		b=bg->c.b>>8;
-		a=bg->c.a>>8;
-	}
-
+	GdkRectangle or, ir;
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	dbg(lvl_debug,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
-	overlay_rect(parent, overlay, 0, &or);
-	dbg(lvl_debug,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
+	overlay_rect(parent, overlay, &or);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
 	or.y-=re->y;
-	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, or.width, or.height);
-	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf),
-				or.width, or.height);
-	rowstride1 = gdk_pixbuf_get_rowstride (pixbuf);
-	rowstride2 = gdk_pixbuf_get_rowstride (pixbuf2);
-	pixels1=gdk_pixbuf_get_pixels (pixbuf);
-	pixels2=gdk_pixbuf_get_pixels (pixbuf2);
-	n_channels1 = gdk_pixbuf_get_n_channels (pixbuf);
-	n_channels2 = gdk_pixbuf_get_n_channels (pixbuf2);
-	for (y = 0 ; y < or.height ; y++) {
-		for (x = 0 ; x < or.width ; x++) {
-			p1 = pixels1 + y * rowstride1 + x * n_channels1;
-			p2 = pixels2 + y * rowstride2 + x * n_channels2;
-			p2[0]=p1[0];
-			p2[1]=p1[1];
-			p2[2]=p1[2];
-			if (bg && p1[0] == r && p1[1] == g && p1[2] == b) 
-				p2[3]=a;
-			else 
-				p2[3]=overlay->a;
-		}
-	}
-	gdk_draw_pixbuf(pixmap, gc, pixbuf2, 0, 0, or.x, or.y, or.width, or.height, GDK_RGB_DITHER_NONE, 0, 0);
-	g_object_unref(pixbuf);
-	g_object_unref(pixbuf2);
+	cairo_surface_t *overlay_surface = cairo_get_target(overlay->cairo);
+	cairo_set_source_surface(cairo, overlay_surface, or.x, or.y);
+	cairo_paint(cairo);
 }
 
 static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
-	if (!gr->cleanup) {
-		gr->pclean=gr->p;
-		gr->cleanup=1;
-	}
 	if (p)
 		gr->p=*p;
 	else {
@@ -584,56 +582,13 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
-gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r)
-{
-	GdkPixmap *pixmap;
-	GtkWidget *widget=gr->widget;
-	GdkGC *gc=widget->style->fg_gc[GTK_WIDGET_STATE(widget)];
-	struct graphics_priv *overlay;
-
-	if (! gr->drawable)
-		return;
-	pixmap = gdk_pixmap_new(widget->window, r->width, r->height, -1);
-	if ((gr->p.x || gr->p.y) && gr->background_gc) 
-		gdk_draw_rectangle(pixmap, gr->background_gc->gc, TRUE, 0, 0, r->width, r->height);
-	gdk_draw_drawable(pixmap, gc, gr->drawable, r->x, r->y, gr->p.x, gr->p.y, r->width, r->height);
-	overlay=gr->overlays;
-	while (overlay) {
-		overlay_draw(gr,overlay,r,pixmap,gc);
-		overlay=overlay->next;
-	}
-	gdk_draw_drawable(widget->window, gc, pixmap, 0, 0, r->x, r->y, r->width, r->height);
-	g_object_unref(pixmap);
-}
-
-static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	GdkRectangle r;
-	struct graphics_priv *overlay;
 	if (mode == draw_mode_end) {
-		if (gr->parent) {
-			if (gr->cleanup) {
-				overlay_rect(gr->parent, gr, 1, &r);
-				gtk_drawing_area_draw(gr->parent, &r);
-				gr->cleanup=0;
-			}
-			overlay_rect(gr->parent, gr, 0, &r);
-			gtk_drawing_area_draw(gr->parent, &r);
-		} else {
-			r.x=0;
-			r.y=0;
-			r.width=gr->width;
-			r.height=gr->height;
-			gtk_drawing_area_draw(gr, &r);
-			overlay=gr->overlays;
-			while (overlay) {
-				overlay->cleanup=0;
-				overlay=overlay->next;
-			}
-		}
+		// Just invalidate the whole window. We could only the invalidate the area of
+		// graphics_priv, but that is probably not significantly faster.
+		gdk_window_invalidate_rect(gr->widget->window, NULL, TRUE);
 	}
-	gr->mode=mode;
 }
 
 /* Events */
@@ -644,15 +599,17 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	struct graphics_priv *gra=user_data;
 	if (! gra->visible)
 		return TRUE;
-	if (gra->drawable != NULL) {
-                g_object_unref(gra->drawable);
-        }
 #ifndef _WIN32
 	dbg(lvl_debug,"window=%lu\n", GDK_WINDOW_XID(widget->window));
 #endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
-        gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
+	if (gra->cairo)
+		cairo_destroy(gra->cairo);
+	gra->cairo = cairo_create(surface);
+	cairo_surface_destroy(surface);
+	cairo_set_antialias (gra->cairo, CAIRO_ANTIALIAS_GOOD);
 	callback_list_call_attr_2(gra->cbl, attr_resize, GINT_TO_POINTER(gra->width), GINT_TO_POINTER(gra->height));
 	return TRUE;
 }
@@ -661,11 +618,28 @@ static gint
 expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 {
 	struct graphics_priv *gra=user_data;
+	struct graphics_gc_priv *background_gc=gra->background_gc;
+	struct graphics_priv *overlay;
 
 	gra->visible=1;
-	if (! gra->drawable)
+	if (! gra->cairo)
 		configure(widget, NULL, user_data);
-	gtk_drawing_area_draw(gra, &event->area);
+
+	cairo_t *cairo=gdk_cairo_create(widget->window);
+	if (gra->p.x || gra->p.y) {
+		set_drawing_color(cairo, background_gc->c);
+		cairo_paint(cairo);
+	}
+	cairo_set_source_surface(cairo, cairo_get_target(gra->cairo), gra->p.x, gra->p.y);
+	cairo_paint(cairo);
+
+	overlay = gra->overlays;
+	while (overlay) {
+		overlay_draw(gra,overlay,&event->area,cairo);
+		overlay=overlay->next;
+	}
+
+	cairo_destroy(cairo);
 	return FALSE;
 }
 
@@ -865,14 +839,14 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 		gr->overlay_disabled=disabled;
 		if (gr->parent) {
 			GdkRectangle r;
-			overlay_rect(gr->parent, gr, 0, &r);
-			gtk_drawing_area_draw(gr->parent, &r);
+			overlay_rect(gr->parent, gr, &r);
+			gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
 		}
 	}
 }
 
 static void
-overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound)
 {
 	//do not dereference parent for non overlay osds
 	if(!this->parent) {
@@ -905,14 +879,13 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 		changed = 1;
 	}
 
-	this->a = alpha >> 8;
 	this->wraparound = wraparound;
 
 	if (changed) {
-		// Set the drawables to the right sizes
-		g_object_unref(this->drawable);
-
-		this->drawable=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
+		cairo_destroy(this->cairo);
+		cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
+		this->cairo=cairo_create(surface);
+		cairo_surface_destroy(surface);
 
 		if ((w == 0) || (h == 0)) {
 			this->overlay_autodisabled = 1;
@@ -964,11 +937,10 @@ set_attr(struct graphics_priv *gr, struct attr *attr)
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	int w2,h2;
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
-	this->colormap=gr->colormap;
 	this->widget=gr->widget;
 	this->p=*p;
 	this->width=w;
@@ -989,7 +961,9 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 		w2 = w;
 	}
 
-	this->drawable=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
+	this->cairo=cairo_create(surface);
+	cairo_surface_destroy(surface);
 
 	if ((w == 0) || (h == 0)) {
 		this->overlay_autodisabled = 1;
@@ -998,7 +972,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	}
 
 	this->next=gr->overlays;
-	this->a=alpha >> 8;
 	this->wraparound=wraparound;
 	gr->overlays=this;
 	return this;
@@ -1140,7 +1113,6 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	else
 		this->window_title=g_strdup("Navit");
 	this->cbl=cbl;
-	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
 	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
         g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);

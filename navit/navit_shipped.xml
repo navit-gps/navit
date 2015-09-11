@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
 	For configuration options used in this file, please read
-	http://wiki.navit-project.org/index.php/Configuring_Navit
-	Do not edit /usr/share/navit/navit.xml : changes would be lost
-	on upgrade. Rather copy it to ~/.navit/.
+	http://wiki.navit-project.org/index.php/Configuration
+	Do not edit /usr/share/navit/navit.xml or /etc/navit/navit.xml :
+	changes would be lost on upgrade. Rather copy it to ~/.navit/.
 -->
 <!DOCTYPE config
   SYSTEM "navit.dtd">
@@ -353,7 +353,7 @@ Waypoint</text></img>
 		<route destination_distance="50"/>
 
 		<navigation>
-			<announce type="street_0,street_1_city,street_parking_lane" level0="25" level1="100" level2="200" unit="m"/>
+			<announce type="street_0,street_1_city,street_parking_lane,living_street,street_service" level0="25" level1="100" level2="200" unit="m"/>
 			<announce type="street_2_city,street_3_city,street_4_city,ramp" level0="50" level1="200" level2="500" unit="m"/>
 			<announce type="highway_city,street_1_land,street_2_land,street_3_land,street_4_land" level0="100" level1="400" level2="1000" unit="m"/>
 			<announce type="street_n_lanes,highway_land" level0="300" level1="1000" level2="2000" unit="m"/>

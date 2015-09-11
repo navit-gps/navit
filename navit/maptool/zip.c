@@ -428,12 +428,25 @@ zip_set_timestamp(struct zip_info *info, char *timestamp)
 	return 0;
 }
 
-void
+int
 zip_open(struct zip_info *info, char *out, char *dir, char *index)
 {
 	info->res2=fopen(out,"wb+");
+	if(!info->res2) {
+		fprintf(stderr,"Could not open output zip file %s\n", out);
+		return 0;
+	}
 	info->dir=fopen(dir,"wb+");
+	if(!info->dir) {
+		fprintf(stderr,"Could not open zip directory %s\n", dir);
+		return 0;
+	}
 	info->index=fopen(index,"wb+");
+	if(!info->index) {
+		fprintf(stderr,"Could not open index %s\n", index);
+		return 0;
+	}
+	return 1;
 }
 
 FILE *
