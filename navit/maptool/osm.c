@@ -1904,6 +1904,9 @@ osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, G
 
 	int find_town_name = 0;
 
+	if(!is_in)
+		return NULL;
+
 	if (item_is_district(*ib))
 		find_town_name = 1;
 
@@ -2635,7 +2638,7 @@ process_turn_restrictions_finish(GList *tr, FILE *out)
 	GList *l=tr;
 	while (l) {
 		struct turn_restriction *t=l->data;
-		struct coord *c[4];
+		struct coord *c[4]={NULL,NULL,NULL,NULL};
 		struct item_bin *ib=tmp_item_bin;
 
 		if (!t->c_count[0]) {
