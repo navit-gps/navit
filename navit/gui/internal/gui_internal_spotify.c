@@ -15,41 +15,13 @@
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_spotify.h"
-
-void
-gui_internal_spotify_previous_track (struct gui_priv *this, struct widget *wm, void *data)
-{
-    //media_previous_track();
-}
-
-void
-gui_internal_spotify_next_track (struct gui_priv *this, struct widget *wm, void *data)
-{
-    //media_next_track();
-}
-
-void
-gui_internal_spotify_toggle (struct gui_priv *this, struct widget *wm, void *data)
-{
-    //media_toggle_playback();
-}
-
-static void
-gui_internal_spotify_play_random_track (struct spotify *spotify)
-{
-    /*
-       int tracks = sp_playlist_num_tracks (g_jukeboxlist);
-       srand (time (NULL));
-       g_track_index = rand () % tracks;
-       dbg (0, "New track index is %i (out of %i)\n", g_track_index, tracks);
-       try_jukebox_start ();
-     */
-}
+#include "audio.h"
 
 void
 spotify_play_track (struct gui_priv *this, struct widget *wm, void *data)
 {
     dbg (0, "Got a request to play a specific track : %i\n", wm->c.x);
+    audio_play_track(this->nav, wm->c.x);
     /*
     media_set_current_track(wm->c.x);
     gui_internal_spotify_show_playlist (this, NULL, NULL);
@@ -108,23 +80,21 @@ gui_internal_start_radio (struct gui_priv *this, struct widget *wm, void *data)
  */
 
 static struct widget *
-gui_internal_spotify_track_toolbar (struct gui_priv *this, int track_index)
+gui_internal_spotify_track_toolbar (struct gui_priv *this, int track_index, char * track_name)
 {
     struct widget *wl, *wb;
     wl = gui_internal_box_new (this, gravity_left_center | orientation_horizontal_vertical | flags_fill);
     wl->w = this->root.w;
     wl->cols = this->root.w / this->icon_s;
     wl->h = this->icon_s;
-    /*
     gui_internal_widget_append (wl, wb =
 				gui_internal_button_new_with_callback (this,
-								       media_get_track_name (track_index),
+								       track_name,
 								       image_new_s
-								       (this, media_get_track_status_icon (track_index)),
+								       (this, "gui_active"),// media_get_track_status_icon (track_index)),
 								       gravity_left_center
 								       | orientation_horizontal, spotify_play_track, NULL));
     wb->c.x = track_index;
-    */
     gui_internal_widget_pack (this, wl);
     return wl;
 }
@@ -194,6 +164,7 @@ gui_internal_spotify_show_rootlist (struct gui_priv *this, struct widget *wm, vo
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
     dbg (0, "Showing rootlist\n");
+    GList *playlists = audio_get_playlists(this->nav);
 
     gui_internal_prune_menu_count (this, 1, 0);
     wb = gui_internal_menu (this, "Spotify > Playlists");
@@ -204,20 +175,21 @@ gui_internal_spotify_show_rootlist (struct gui_priv *this, struct widget *wm, vo
 
     tbl = gui_internal_widget_table_new (this, gravity_left_top | flags_fill | flags_expand | orientation_vertical, 1);
     gui_internal_widget_append (w, tbl);
-    int i;
 
-    for (i = 0; i < audio_player_get_playlists_count (); i++)
-      {
+    while(playlists) {
+      struct audio_playlist * pl=playlists->data;
+      dbg(lvl_error,"Found playlist with name %s in the list\n", pl->name);
+      playlists=g_list_next(playlists);
 	  row = gui_internal_widget_table_row_new (this, gravity_left | flags_fill | orientation_horizontal);
 	  gui_internal_widget_append (tbl, row);
 	  wbm =
 	      gui_internal_button_new_with_callback (this,
-						     sprintf("%i",i),image_new_s (this, "gui_active"), // media_get_playlist_status_icon_by_index(i)),
+						     pl->name,image_new_s (this, "gui_active"), // media_get_playlist_status_icon_by_index(i)),
 						     gravity_left_center |
 						     orientation_horizontal | flags_fill, spotify_play_playlist, NULL);
 
 	  gui_internal_widget_append (row, wbm);
-	  wbm->c.x = i;
+	  wbm->c.x = pl->index;
       }
 
     gui_internal_menu_render (this);
@@ -240,6 +212,7 @@ gui_internal_spotify_show_playlist (struct gui_priv *this, struct widget *wm, vo
 {
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
+    GList *tracks = audio_get_tracks(this->nav,1);
 
     gui_internal_prune_menu_count (this, 1, 0);
     
@@ -250,15 +223,12 @@ gui_internal_spotify_show_playlist (struct gui_priv *this, struct widget *wm, vo
     gui_internal_widget_append (w, gui_internal_spotify_playlist_toolbar (this));
     tbl = gui_internal_widget_table_new (this, gravity_left_top | flags_fill | flags_expand | orientation_vertical, 1);
     gui_internal_widget_append (w, tbl);
-    /*
-    int i;
-    int tracks = media_get_current_playlist_items_count ();
-    for (i = 0; i < tracks; i++)
-      {
+    while(tracks) {
+      struct audio_track * track=tracks->data;
+      tracks=g_list_next(tracks);
 	  row = gui_internal_widget_table_row_new (this, gravity_left | flags_fill | orientation_horizontal);
 	  gui_internal_widget_append (tbl, row);
-	  gui_internal_widget_append (row, gui_internal_spotify_track_toolbar (this, i));
+	  gui_internal_widget_append (row, gui_internal_spotify_track_toolbar (this, track->index, track->name));
       }
-	*/
     gui_internal_menu_render (this);
 }

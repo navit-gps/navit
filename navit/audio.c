@@ -15,39 +15,11 @@ struct attr *audio_default_attrs[]={
 	NULL,
 };
 
-// The two next methods are called from navit.c
-int
-change_volume(struct audio *this_, const int direction)
-{
-	dbg(lvl_error,"Calling plugin volume management\n");
-        return (this_->meth.volume)(this_->priv, direction);
-}
-
-int
-playback_do(struct audio *this_, const int action)
-{
-        return (this_->meth.playback)(this_->priv, action);
-}
-
-int
-playlists(struct audio *this_, const int action)
-{
-        return (this_->meth.playlists)(this_->priv, action);
-}
-
-
-int
-audio_player_get_playlists_count (struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
-{
-
-}
-
 char *
 audio_player_get_current_playlist_name ()
 {
         return "OK!";
 }
-
 
 struct audio *
 audio_new(struct attr *parent, struct attr **attrs)
@@ -77,17 +49,25 @@ audio_new(struct attr *parent, struct attr **attrs)
 		g_free(this_);
 		return NULL;
 	}
-	dbg(lvl_error, "checking volume method\n");
 	if (this_->meth.volume) {
-		dbg(lvl_error, "volume=%p\n", this_->meth.volume);
+		dbg(lvl_error, "%s.volume=%p\n", attr->u.str, this_->meth.volume);
 	} else {
 		dbg(lvl_error, "The plugin %s cannot manage the volume\n", attr->u.str);
 	}
-	dbg(lvl_error, "checking playback method\n");
 	if (this_->meth.playback) {
-		dbg(lvl_error, "playback=%p\n", this_->meth.volume);
+		dbg(lvl_error, "%s.playback=%p\n", attr->u.str, this_->meth.playback);
 	} else {
 		dbg(lvl_error, "The plugin %s cannot handle playback\n", attr->u.str);
+	}
+	if (this_->meth.tracks) {
+		dbg(lvl_error, "%s.tracks=%p\n", attr->u.str, this_->meth.tracks);
+	} else {
+		dbg(lvl_error, "The plugin %s cannot handle tracks\n", attr->u.str);
+	}
+	if (this_->meth.playlists) {
+		dbg(lvl_error, "%s.playlists=%p\n", attr->u.str, this_->meth.playlists);
+	} else {
+		dbg(lvl_error, "The plugin %s cannot handle playlists\n", attr->u.str);
 	}
         dbg(lvl_error,"return %p\n", this_);
 
