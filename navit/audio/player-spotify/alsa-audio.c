@@ -185,7 +185,7 @@ static void* alsa_audio_start(void *aux)
 	int cur_rate = 0;
 
 	audio_fifo_data_t *afd;
-
+    dbg(lvl_error, "alsa_audio_start\n");
 	for (;;) {
 		afd = audio_get(af);
 
@@ -202,9 +202,11 @@ static void* alsa_audio_start(void *aux)
 				dbg(lvl_error, "Unable to open ALSA device (%d channels, %d Hz), can't continue\n", cur_channels, cur_rate);
                 return;
 			} else {
-			    dbg(lvl_info, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
+			    dbg(lvl_error, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
             }
-		}
+		} else {
+            dbg(lvl_error,"woops\n");
+        }
 
 		c = snd_pcm_wait(h, 1000);
 

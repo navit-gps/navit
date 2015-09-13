@@ -11,7 +11,6 @@
 
 struct spotify
 {
-    struct navit *navit;
     struct callback *callback;
     struct event_idle *idle;
     struct attr **attrs;
@@ -89,11 +88,14 @@ try_jukebox_start (void)
 
     g_currenttrack = t;
 
-    dbg (lvl_error, "jukebox: Now playing \"%s\"...\n", sp_track_name (t));
-
+    dbg (lvl_error, "jukebox: Now playing \"%s\"... g_sess=%p\n", sp_track_name (t), g_sess);
+        
     sp_session_player_load (g_sess, t);
+    dbg(lvl_error, "loaded\n");
     spotify->playing = 1;
+    dbg(lvl_error, "playing\n");
     sp_session_player_play (g_sess, 1);
+    dbg(lvl_error, "sp_session_player_play\n");
 }
 
 /**
@@ -246,10 +248,46 @@ toggle_playback ()
     spotify->playing = !spotify->playing;
 }
 
-static int
-playlists(struct audio_priv *this, const int action)
+GList *
+playlists(struct audio_priv *this)
 {
-        return 5;
+        GList * playlists=NULL;
+        struct audio_playlist *pl;
+        int i;
+        dbg(lvl_error,"Spotify's playlists method\n");
+        sp_playlistcontainer *pc = sp_session_playlistcontainer(g_sess);
+        dbg(lvl_error,"get_playlists: Looking at %d playlists\n", sp_playlistcontainer_num_playlists(pc)); 
+        for (i = 0; i < sp_playlistcontainer_num_playlists(pc); ++i) {
+                sp_playlist *spl = sp_playlistcontainer_playlist(pc, i);
+                // fixme : should we enable this callback?
+                // sp_playlist_add_callbacks(pl, &pl_callbacks, NULL);
+                pl = g_new0(struct audio_playlist, 1);
+                pl->name=g_strdup(sp_playlist_name(spl));
+                pl->index=i;
+                pl->status=0;
+                playlists=g_list_append(playlists, pl);
+        }
+        return playlists;
+}
+
+GList *
+tracks(struct audio_priv *this, int playlist_index)
+{
+        GList * tracks=NULL;
+        struct audio_track *t;
+        sp_playlist *spl;
+        int i;
+        dbg(lvl_error,"Spotify's tracks method\n");
+        sp_playlistcontainer *pc = sp_session_playlistcontainer(g_sess);
+        spl = sp_playlistcontainer_playlist(pc, playlist_index);
+        for (i = 0; i < sp_playlist_num_tracks(spl); i++) {
+                t = g_new0(struct audio_track, 1);
+                t->name=g_strdup(sp_track_name (sp_playlist_track(spl, i)));
+                t->index=i;
+                t->status=0;
+                tracks=g_list_append(tracks, t);
+        }
+        return tracks;
 }
 
 static int
@@ -260,17 +298,22 @@ playback(struct audio_priv *this, const int action)
         case 0:
                 toggle_playback();
                 break;
-        case 1:
+        case -1:
                 ++g_track_index;
                 try_jukebox_start ();
                 break;
-        case -1:
+        case -2:
                 if (g_track_index > 0)
                         --g_track_index;
                 try_jukebox_start ();
                 break;
         default:
-                dbg(lvl_error,"Don't know what to do with action '%i'. That's a bug\n", action);
+                if ( action > 0 ) {
+                       g_track_index = action;
+                       try_jukebox_start ();
+                } else {
+                        dbg(lvl_error,"Don't know what to do with action '%i'. That's a bug\n", action);
+                }
         }
         return 0;
 }
@@ -278,6 +321,7 @@ playback(struct audio_priv *this, const int action)
 static struct audio_methods player_spotify_meth = {
         NULL,
         playback,
+        tracks,
         playlists,
 };
 
@@ -319,7 +363,6 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     g_logged_in = 0;
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
     audio_init (&g_audiofifo);
-    //spotify->navit = nav;
     // FIXME : we should maybe use a timer instead of the idle loop
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     event_add_idle (125, spotify->callback);
@@ -329,6 +372,7 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     *meth=player_spotify_meth;
     return this;
 }
+
 
 void
 plugin_init(void)
