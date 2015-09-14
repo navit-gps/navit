@@ -72,16 +72,76 @@ int overlap=1;
 int bytes_read;
 
 static long start_brk;
-static struct timeval start_tv;
+#ifdef _WIN32
+#define timespec timeval
+#endif
+static struct timespec start_ts;
+
+/*
+  Asynchronous signal safe lltoa function (note: no trailing \0 char!)
+*/
+int assafe_lltoa(long long n, int maxlen, char *buf)
+{
+	int i;
+	int out_length;
+
+	if(maxlen<1)
+		return 0;
+
+	if(n<0) {
+		n=-n;
+		buf[0]='-';
+		maxlen--;
+		buf++;
+	} else if(n==0) {
+		buf[0]='0';
+		return 1;
+	}
+
+	for(i=0; n>0 && i<maxlen; i++) {
+		buf[i]='0'+(n%10);
+		n/=10;
+	}
+	out_length=i;
+	for(i=0;i<out_length/2;i++) {
+		char c=buf[i];
+		buf[i]=buf[out_length-i-1];
+		buf[out_length-i-1]=c;
+	}
+	return out_length;
+}
+
+/*
+  Asynchronous signal safe string copy to buffer function (note: no trailing \0 char!)
+*/
+int assafe_strcp2buf(char *str, int maxlen, char *buf)
+{
+	int i;
+	for(i=0;str[i] && i<maxlen;i++)
+		buf[i]=str[i];
+	return i;
+}
 
 static void
 progress_time(void)
 {
-	struct timeval tv;
+	struct timespec ts;
 	int seconds;
-	gettimeofday(&tv, NULL);
-	seconds=tv.tv_sec-start_tv.tv_sec;
-	fprintf(stderr," %d:%02d",seconds/60,seconds%60);
+	const int buflen=20;
+	char buf[buflen];
+	int pos=1;
+	buf[0]=' ';
+#ifdef _WIN32
+	gettimeofday(&ts, NULL);
+#else
+	clock_gettime(CLOCK_REALTIME, &ts);
+#endif
+	seconds=ts.tv_sec-start_ts.tv_sec;
+	pos+=assafe_lltoa(seconds/60, buflen-pos, buf+pos);
+	seconds%=60;
+	pos+=assafe_strcp2buf(seconds>9?":":":0", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(seconds, buflen-pos, buf+pos);
+	write(2,buf,pos);
 }
 
 static void
@@ -89,22 +149,56 @@ progress_memory(void)
 {
 #ifdef HAVE_SBRK
 	long mem=(long)sbrk(0)-start_brk;
-	fprintf(stderr," %ld MB",mem/1024/1024);
+	const int buflen=20;
+	char buf[buflen];
+	int pos=1;
+	buf[0]=' ';
+	pos+=assafe_lltoa(mem/1024/1024, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" MB", buflen-pos, buf+pos);
+	write(2,buf,pos);
+#endif
+}
+
+void
+sig_alrm_do(int sig)
+{
+	const int buflen=1024;
+	char buf[buflen];
+	int pos=0;
+#ifndef _WIN32
+	signal(SIGALRM, sig_alrm_do);
+	alarm(30);
+#endif
+	pos+=assafe_strcp2buf("PROGRESS", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(phase, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(": Processed ", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(processed_nodes, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" nodes (", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(processed_nodes_out, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" out) ", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(processed_ways, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" ways ", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(processed_relations, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" relations ", buflen-pos, buf+pos);
+	pos+=assafe_lltoa(processed_tiles, buflen-pos, buf+pos);
+	pos+=assafe_strcp2buf(" tiles", buflen-pos, buf+pos);
+	write(2,buf,pos);
+	progress_time();
+	progress_memory();
+#ifndef _WIN32
+	write(2,"\r\n",2);
+#else
+	write(2,"\n",1);
 #endif
 }
 
 void
 sig_alrm(int sig)
 {
-#ifndef _WIN32
-	signal(SIGALRM, sig_alrm);
-	alarm(30);
-#endif
-	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
-	progress_time();
-	progress_memory();
-	fprintf(stderr,"\n");
+	fflush(stderr);
+	sig_alrm_do(sig);
 }
+
 
 
 void
@@ -444,6 +538,7 @@ start_phase(struct maptool_params *p, char *str)
 	phase++;
 	if (p->start <= phase && p->end >= phase) {
 		fprintf(stderr,"PROGRESS: Phase %d: %s",phase,str);
+		fflush(stderr);
 		progress_time();
 		progress_memory();
 		fprintf(stderr,"\n");
@@ -848,8 +943,11 @@ int main(int argc, char **argv)
 #ifdef HAVE_SBRK
 	start_brk=(long)sbrk(0);
 #endif
-	gettimeofday(&start_tv, NULL);
-
+#ifdef _WIN32
+	gettimeofday(&start_ts,NULL);
+#else
+	clock_gettime(CLOCK_REALTIME, &start_ts);
+#endif
 	while (1) {
 		int parse_result=parse_option(&p, argv, argc, &option_index);
 		if (!parse_result) {

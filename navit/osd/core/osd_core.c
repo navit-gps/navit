@@ -674,12 +674,10 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
   char buffer2[256+1]="";
 
   if(nav) {
-    navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
+    if (navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL))
+      curr_vehicle=vehicle_attr.u.vehicle;
     if (navit_get_attr(nav, attr_imperial, &imperial_attr, NULL))
       imperial=imperial_attr.u.num;
-  }
-  if (vehicle_attr.u.vehicle) {
-    curr_vehicle = vehicle_attr.u.vehicle;
   }
 
   if(0==curr_vehicle)

@@ -222,13 +222,18 @@ attr_new_from_text(const char *name, const char *value)
 			ret->u.str=g_strdup(value);
 			break;
 		}
-		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
+		if (attr >= attr_type_int_begin && attr < attr_type_boolean_begin) {
+			char *tail;
 			if (value[0] == '0' && value[1] == 'x')
-				ret->u.num=strtoul(value, NULL, 0);
+				ret->u.num=strtoul(value, &tail, 0);
 			else
-				ret->u.num=strtol(value, NULL, 0);
+				ret->u.num=strtol(value, &tail, 0);
+			if (*tail) {
+				dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number. "
+					"Defaulting to 0.\n", value, name);
+			}
 			
-			if ((attr >= attr_type_rel_abs_begin) && (attr < attr_type_boolean_begin)) {
+			if (attr >= attr_type_rel_abs_begin) {
 				/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)
 					 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
 				if (strchr(value, '%')) {
@@ -242,11 +247,18 @@ attr_new_from_text(const char *name, const char *value)
 						dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 					}
 				}
-			} else 	if (attr >= attr_type_boolean_begin) { // also check for yes and no
-				if (g_ascii_strcasecmp(value,"no") && g_ascii_strcasecmp(value,"0") && g_ascii_strcasecmp(value,"false")) 
-					ret->u.num=1;
-				else
-					ret->u.num=0;
+			}
+			break;
+		}
+		if (attr >= attr_type_boolean_begin && attr <=  attr_type_int_end) {
+			if (!(g_ascii_strcasecmp(value,"no") && g_ascii_strcasecmp(value,"0") && g_ascii_strcasecmp(value,"false")))
+				ret->u.num=0;
+			else if (!(g_ascii_strcasecmp(value,"yes") && g_ascii_strcasecmp(value,"1") && g_ascii_strcasecmp(value,"true")))
+				ret->u.num=1;
+			else {
+				dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a boolean (no/0/false or yes/1/true). "
+					"Defaulting to 'true'.\n", value, name);
+				ret->u.num=1;
 			}
 			break;
 		}
@@ -278,7 +290,7 @@ attr_new_from_text(const char *name, const char *value)
 			transform_to_geo(projection_mg, &c, g);
 			break;
 		}
-		dbg(lvl_debug,"default\n");
+		dbg(lvl_debug,"unknown attribute\n");
 		g_free(ret);
 		ret=NULL;
 	}

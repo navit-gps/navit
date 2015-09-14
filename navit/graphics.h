@@ -73,13 +73,13 @@ struct graphics_methods {
 	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags);
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
-	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
+	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, const char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate);
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
-	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound);
+	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound);
 	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
 };
 
@@ -101,6 +101,11 @@ struct graphics_gc_methods {
 	void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
 };
 
+/**
+ * @brief graphics context
+ * A graphics context encapsulates a set of drawing parameters, such as
+ * linewidth and drawing color.
+ */
 struct graphics_gc {
 	struct graphics_gc_priv *priv;
 	struct graphics_gc_methods meth;
@@ -150,8 +155,8 @@ int graphics_set_attr(struct graphics *gra, struct attr *attr);
 void graphics_set_rect(struct graphics *gra, struct point_rect *pr);
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound);
-void graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int alpha, int wraparound);
+struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int wraparound);
+void graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int wraparound);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, const char *type);
 void graphics_add_callback(struct graphics *this_, struct callback *cb);

@@ -66,7 +66,6 @@ struct graphics_priv {
 	struct window window;
 	cairo_t *cairo;
 	struct point p;
-	struct point pclean;
 	int width;
 	int height;
 	int win_w;
@@ -74,7 +73,6 @@ struct graphics_priv {
 	int visible;
 	int overlay_disabled;
 	int overlay_autodisabled;
-	int a;
 	int wraparound;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
@@ -531,15 +529,10 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 #endif
 
 static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r)
 {
-	if (clean) {
-		r->x=overlay->pclean.x;
-		r->y=overlay->pclean.y;
-	} else {
-		r->x=overlay->p.x;
-		r->y=overlay->p.y;
-	}
+	r->x=overlay->p.x;
+	r->y=overlay->p.y;
 	r->width=overlay->width;
 	r->height=overlay->height;
 	if (!overlay->wraparound)
@@ -560,7 +553,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	GdkRectangle or, ir;
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	overlay_rect(parent, overlay, 0, &or);
+	overlay_rect(parent, overlay, &or);
 	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
 	or.x-=re->x;
@@ -846,14 +839,14 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 		gr->overlay_disabled=disabled;
 		if (gr->parent) {
 			GdkRectangle r;
-			overlay_rect(gr->parent, gr, 0, &r);
+			overlay_rect(gr->parent, gr, &r);
 			gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
 		}
 	}
 }
 
 static void
-overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound)
 {
 	//do not dereference parent for non overlay osds
 	if(!this->parent) {
@@ -886,7 +879,6 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 		changed = 1;
 	}
 
-	this->a = alpha >> 8;
 	this->wraparound = wraparound;
 
 	if (changed) {
@@ -945,7 +937,7 @@ set_attr(struct graphics_priv *gr, struct attr *attr)
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	int w2,h2;
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
@@ -980,7 +972,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	}
 
 	this->next=gr->overlays;
-	this->a=alpha >> 8;
 	this->wraparound=wraparound;
 	gr->overlays=this;
 	return this;
