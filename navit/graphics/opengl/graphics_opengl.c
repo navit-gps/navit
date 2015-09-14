@@ -1235,7 +1235,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 static struct graphics_priv *overlay_new(struct graphics_priv *gr,
 					 struct graphics_methods *meth,
 					 struct point *p, int w, int h,
-					 int alpha, int wraparound);
+					 int wraparound);
 
 static int
 graphics_opengl_fullscreen(struct window *w, int on)
@@ -1369,7 +1369,7 @@ overlay_disable(struct graphics_priv *gr, int disable)
 
 static void
 overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
-	       int alpha, int wraparound)
+	       int wraparound)
 {
 	int changed = 0;
 	int w2, h2;
@@ -1462,7 +1462,7 @@ graphics_opengl_new_helper(struct graphics_methods *meth)
 
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
-	    struct point *p, int w, int h, int alpha, int wraparound)
+	    struct point *p, int w, int h, int wraparound)
 {
 	struct graphics_priv *this = graphics_opengl_new_helper(meth);
 	this->p = *p;

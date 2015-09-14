@@ -686,7 +686,7 @@ public class NavitGraphics
 	}
 	
 	public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
-			int alpha, int wraparound, int use_camera)
+			int wraparound, int use_camera)
 	{
 		if (parent == null)
 		{
@@ -1007,7 +1007,7 @@ public class NavitGraphics
 		}
 	}
 
-	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparound)
+	protected void overlay_resize(int x, int y, int w, int h, int wraparound)
 	{
 		//Log.e("NavitGraphics","overlay_resize");
 		draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);

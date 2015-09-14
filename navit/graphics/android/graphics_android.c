@@ -414,7 +414,7 @@ draw_mode(struct graphics_priv *gra, enum draw_mode_num mode)
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_mode, (int)mode);
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
 
 static void *
 get_data(struct graphics_priv *this, const char *type)
@@ -451,9 +451,9 @@ static void overlay_disable(struct graphics_priv *gra, int disable)
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_disable, disable);
 }
 
-static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int alpha, int wraparound)
+static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int wraparound)
 {
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, wraparound);
 }
 
 static int
@@ -550,7 +550,7 @@ set_activity(jobject graphics)
 }
 
 static int
-graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int alpha, int wraparound, int use_camera)
+graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int wraparound, int use_camera)
 {
 	struct callback *cb;
 	jmethodID cid, Context_getPackageName;
@@ -603,13 +603,13 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
 	dbg(lvl_debug,"at 3\n");
-	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;IIIIIII)V");
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;IIIIII)V");
 	if (cid == NULL) {
 		dbg(lvl_error,"no method found\n");
 		return 0; /* exception thrown */
 	}
 	dbg(lvl_debug,"at 4 android_activity=%p\n",android_activity);
-	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound, use_camera);
+	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, wraparound, use_camera);
 	dbg(lvl_debug,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		ret->NavitGraphics = (*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
@@ -675,7 +675,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "overlay_disable", "(I)V", &ret->NavitGraphics_overlay_disable))
 		return 0;
-	if (!find_method(ret->NavitGraphicsClass, "overlay_resize", "(IIIIII)V", &ret->NavitGraphics_overlay_resize))
+	if (!find_method(ret->NavitGraphicsClass, "overlay_resize", "(IIIII)V", &ret->NavitGraphics_overlay_resize))
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "SetCamera", "(I)V", &ret->NavitGraphics_SetCamera))
 		return 0;
@@ -745,7 +745,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), ret);
         }
 	image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
-	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
+	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, use_camera)) {
 		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
 	} else {
@@ -755,11 +755,11 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
-	if (graphics_android_init(ret, gr, p, w, h, alpha, wraparound, 0)) {
+	if (graphics_android_init(ret, gr, p, w, h, wraparound, 0)) {
 		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
 	} else {

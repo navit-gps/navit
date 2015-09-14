@@ -339,7 +339,7 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite)
 	if (cursor && this_->gra && this_->cursor) {
 		this_->cursor_pnt.x+=(this_->cursor->w - cursor->w)/2;
 		this_->cursor_pnt.y+=(this_->cursor->h - cursor->h)/2;
-		graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 65535, 0);
+		graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 0);
 	}
 
 	if (cursor) { 
@@ -382,7 +382,7 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 	this_->cursor_pnt.y-=this_->cursor->h/2;
 	if (!this_->gra) {
 		struct color c;
-		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->cursor->w, this_->cursor->h, 65535, 0);
+		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->cursor->w, this_->cursor->h, 0);
 		if (this_->gra) {
 			graphics_init(this_->gra);
 			this_->bg=graphics_gc_new(this_->gra);

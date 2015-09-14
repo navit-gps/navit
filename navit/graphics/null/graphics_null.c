@@ -164,7 +164,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
 
 static void
 resize_callback(int w, int h)
@@ -211,7 +211,7 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
 {
 }
 
-static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)
 {
 }
 
@@ -239,7 +239,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
 	*meth=graphics_methods;
 	return &graphics_priv;

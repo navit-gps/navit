@@ -133,7 +133,8 @@ android list targets
 # The value comes from ( last_svn_rev - max_build_id ) at the time of the git migration
 svn_rev=$(( 5658 + $CIRCLE_BUILD_NUM )) 
 sed -i -e "s/ANDROID_VERSION_INT=\"0\"/ANDROID_VERSION_INT=\"${svn_rev}\"/g" ~/navit/navit/android/CMakeLists.txt
-cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/
+mkdir $CIRCLE_ARTIFACTS/android/
+cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/android/
 
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DANDROID_API_VERSION=19 $SOURCE_PATH
 make || exit 1
@@ -142,6 +143,8 @@ if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
 else
   make apkg && mv navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-debug.apk || exit 1
 fi
+
+cp ~/android-build/navit/*.xml $CIRCLE_ARTIFACTS/android/
 
 echo
 echo "Build leftovers :"
