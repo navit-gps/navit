@@ -1405,8 +1405,7 @@ audio_playback_do(struct navit *this, int action)
                 dbg(lvl_error,"Went thru one plugin at %p with name %s\n", a, a->name);
                 if(a->meth.playback && a->meth.playback != 0xffffffff ) {
                         dbg(lvl_error,"Found a playback method at %p in plugin %s\n", a->meth.playback, a->name);
-			int (*f)(struct audio_priv *this, const int action)=a->meth.playback+1;
-                        dbg(lvl_error,"Relocating at %p \n", f);
+			int (*f)(struct audio_priv *this, const int action)=a->meth.playback;
 			f(a->priv, action);
 		}
                 l=g_list_next(l);
