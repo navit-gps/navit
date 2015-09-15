@@ -37,7 +37,7 @@
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
 #ifdef USE_SPOTIFY
-#include "gui_internal_spotify.h"
+#include "gui_internal_media.h"
 #endif
 #ifdef USE_FOURSQUARE
 #include "gui_internal_foursquare.h"
@@ -1213,7 +1213,7 @@ static struct command_table commands[] = {
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
 #ifdef USE_SPOTIFY
-        {"spotify_show_playlist", command_cast (gui_internal_spotify_show_playlist)},
+        {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
 #endif
 #ifdef USE_FOURSQUARE
 	{"foursquare_show_pois", command_cast (gui_internal_foursquare_show_pois)},
