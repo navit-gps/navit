@@ -17,6 +17,8 @@
 #include "gui_internal_media.h"
 #include "audio.h"
 
+int currently_displayed_playlist=-1;
+
 void
 media_play_track (struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -27,10 +29,8 @@ media_play_track (struct gui_priv *this, struct widget *wm, void *data)
 void
 media_play_playlist (struct gui_priv *this, struct widget *wm, void *data)
 {
-    /*
-    media_set_active_playlist(wm->c.x);
+    currently_displayed_playlist=wm->c.x;
     gui_internal_media_show_playlist (this, NULL, NULL);
-    */
 }
 
 void
@@ -207,7 +207,7 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
 {
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
-    GList *tracks = audio_get_tracks(this->nav,1);
+    GList *tracks = audio_get_tracks(this->nav,currently_displayed_playlist);
 
     gui_internal_prune_menu_count (this, 1, 0);
     

@@ -27,6 +27,7 @@ struct audio_priv {
 
 const bool autostart = 0;
 
+int current_playlist_index;
 /// Handle to the playlist currently being played
 static sp_playlist *g_jukeboxlist;
 /// Handle to the current track
@@ -149,6 +150,7 @@ playlist_added (sp_playlistcontainer * pc, sp_playlist * pl, int position, void 
     if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
       {
       g_jukeboxlist = pl;
+      current_playlist_index = position;
       if (autostart)
           try_jukebox_start ();
       }
@@ -231,17 +233,18 @@ spotify_spotify_idle (struct spotify *spotify)
 {
     sp_session_process_events (g_sess, &next_timeout);
 }
+
 void
 toggle_playback ()
 {
     if (spotify->playing)
       {
-      dbg (0, "pausing playback\n");
+      dbg (lvl_error, "pausing playback\n");
       sp_session_player_play (g_sess, 0);
       }
     else
       {
-      dbg (0, "resuming playback\n");
+      dbg (lvl_error, "resuming playback\n");
       sp_session_player_play (g_sess, 1);
       try_jukebox_start ();
       }
@@ -277,6 +280,9 @@ tracks(struct audio_priv *this, int playlist_index)
         struct audio_track *t;
         sp_playlist *spl;
         int i;
+        if ( playlist_index < 0 ) {
+                playlist_index = current_playlist_index;
+        }
         dbg(lvl_error,"Spotify's tracks method\n");
         sp_playlistcontainer *pc = sp_session_playlistcontainer(g_sess);
         spl = sp_playlistcontainer_playlist(pc, playlist_index);
