@@ -274,6 +274,7 @@ process_boundaries_finish(GList *boundaries_list)
 			if (f) {
 				struct item_bin *ib=tmp_item_bin;
 				item_bin_init(ib, type_selected_line);
+				/* FIXME check for overflow */
 				item_bin_add_coord(ib, gs->first, gs->last-gs->first+1);
 				item_bin_write(ib, f);
 			}
