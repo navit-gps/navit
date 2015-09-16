@@ -170,8 +170,8 @@ plugin_load(struct plugin *pl)
 	GModule *mod;
 
 	if (pl->mod) {
-		dbg(lvl_error,"can't load '%s', already loaded\n", pl->name);
-		return 0;
+		dbg(lvl_debug,"'%s' already loaded, returning\n", pl->name);
+		return 1;
 	}
 	mod=g_module_open(pl->name, G_MODULE_BIND_LOCAL | (pl->lazy ? G_MODULE_BIND_LAZY : 0));
 	if (! mod) {

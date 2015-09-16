@@ -53,8 +53,10 @@ osd_new(struct attr *parent, struct attr **attrs)
 	if (! type)
 		return NULL;
         new=plugin_get_osd_type(type->u.str);
-        if (! new)
+        if (! new) {
+		dbg(lvl_error, "invalid OSD type '%s'\n", type->u.str);
                 return NULL;
+	}
         o=g_new0(struct osd, 1);
 	o->attrs=attr_list_dup(attrs);
 	cbl.type=attr_callback_list;
