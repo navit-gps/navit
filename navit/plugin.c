@@ -170,8 +170,8 @@ plugin_load(struct plugin *pl)
 	GModule *mod;
 
 	if (pl->mod) {
-		dbg(lvl_error,"can't load '%s', already loaded\n", pl->name);
-		return 0;
+		dbg(lvl_debug,"'%s' already loaded, returning\n", pl->name);
+		return 1;
 	}
 	mod=g_module_open(pl->name, G_MODULE_BIND_LOCAL | (pl->lazy ? G_MODULE_BIND_LAZY : 0));
 	if (! mod) {
@@ -377,35 +377,43 @@ plugins_destroy(struct plugins *pls)
 	g_free(pls);
 }
 
-	void *
+static void *
+find_by_name(enum plugin_type type, const char *name)
+{
+	GList *name_list=plugin_types[type];
+	while (name_list) {
+		struct name_val *nv=name_list->data;
+		if (!g_ascii_strcasecmp(nv->name, name))
+			return nv->val;
+		name_list=g_list_next(name_list);
+	}
+	return NULL;
+}
+
+void *
 plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
-	GList *l,*lpls;
-	struct name_val *nv;
+	GList *plugin_list;
 	struct plugin *pl;
 	char *mod_name, *filename=NULL, *corename=NULL;
+	void *result=NULL;
 
 	dbg(lvl_debug, "type=\"%s\", name=\"%s\"\n", type_name, name);
 
-	l=plugin_types[type];
-	while (l) {
-		nv=l->data;
-		if (!g_ascii_strcasecmp(nv->name, name))
-			return nv->val;
-		l=g_list_next(l);
+	if ((result=find_by_name(type, name))) {
+		return result;
 	}
 	if (!pls)
 		return NULL;
-	lpls=pls->list;
+	plugin_list=pls->list;
 	filename=g_strjoin("", "lib", type_name, "_", name, NULL);
 	corename=g_strjoin("", "lib", type_name, "_", "core", NULL);
-	while (lpls) {
-		pl=lpls->data;
+	while (plugin_list) {
+		pl=plugin_list->data;
 		if ((mod_name=g_strrstr(pl->name, "/")))
 			mod_name++;
 		else
 			mod_name=pl->name;
-		dbg(lvl_info,"compare '%s' with '%s'\n", mod_name, filename);
 		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(corename))) {
 			dbg(lvl_debug, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
@@ -413,18 +421,13 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 					plugin_set_active(pl, 0);
 			if (plugin_get_active(pl)) 
 				plugin_call_init(pl);
-			l=plugin_types[type];
-			while (l) {
-				nv=l->data;
-				if (!g_ascii_strcasecmp(nv->name, name)) {
-					g_free(filename);
-					g_free(corename);
-					return nv->val;
-				}
-				l=g_list_next(l);
+			if ((result=find_by_name(type, name))) {
+				g_free(filename);
+				g_free(corename);
+				return result;
 			}
 		}
-		lpls=g_list_next(lpls);
+		plugin_list=g_list_next(plugin_list);
 	}
 	g_free(filename);
 	g_free(corename);

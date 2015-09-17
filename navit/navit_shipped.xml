@@ -32,7 +32,7 @@
 		Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
 		For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
 		-->
-	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250">
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
 		     On windows systems, use win32 -->
 		<graphics type="gtk_drawing_area"/>
@@ -151,10 +151,6 @@ Waypoint</text></img>
 		<log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
 		<!-- osd items allow to position display and control items directly on top of the map: -->
 		<osd enabled="no" type="compass"/>
-		<osd enabled="no" type="eta"/> 
-		<osd enabled="no" type="navigation_distance_to_target"/> 
-		<osd enabled="no" type="navigation"/> 
-		<osd enabled="no" type="navigation_distance_to_next"/> 
 		<osd enabled="no" type="navigation_next_turn"/> 
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
@@ -178,7 +174,7 @@ Waypoint</text></img>
 		<!-- For SDL, you should add follow="1" to have the view centered on your position -->
 		<!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
 
-		<vehicle name="Demo" profilename="car" enabled="no" active="yes" source="demo://"/>
+		<vehicle name="Demo" profilename="car" enabled="no" source="demo://"/>
 
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>

@@ -23,7 +23,7 @@
 
 
 /** Buffer for temporarily storing an item. */
-static char misc_item_buffer[2000000];
+static char misc_item_buffer[20000000];
 /** An item_bin for temporary use. */
 struct item_bin *tmp_item_bin=(struct item_bin *)(void *)misc_item_buffer;
 /** A node_item for temporary use. */
