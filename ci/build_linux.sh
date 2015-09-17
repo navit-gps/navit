@@ -3,7 +3,7 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
 	
 	mkdir bin && cd bin
-	cov-build --dir cov-int cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE
+	cov-build --dir cov-int cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n
 	cov-build --dir cov-int make || exit -1
 	tar czvf navit.tgz cov-int
 	
@@ -15,6 +15,6 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
   https://scan.coverity.com/builds?project=$CIRCLE_PROJECT_USERNAME
 else
 	mkdir bin && cd bin
-	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE || exit -1
+	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n|| exit -1
 	make  || exit -1
 fi
