@@ -14,8 +14,7 @@
 #  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
-set(GTK2_DEBUG ON)
-
+# Set GTK2_DEBUG to enable debug output.
 macro(GTK2_DEBUG_MESSAGE _message)
   if (GTK2_DEBUG)
     message(STATUS "(DEBUG) ${_message}")
