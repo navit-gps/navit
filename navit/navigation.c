@@ -1386,41 +1386,6 @@ navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int 
 	return ret;
 }
 
-
-/**
- * @brief Returns the time (in seconds) one will drive between two navigation items
- *
- * This function returns the time needed to drive between two items, including both of them,
- * in seconds.
- *
- * @param from The first item
- * @param to The last item
- * @return The travel time in seconds, or -1 on error
- */
-static int
-navigation_time(struct navigation_itm *from, struct navigation_itm *to)
-{
-	struct navigation_itm *cur;
-	int time;
-
-	time = 0;
-	cur = from;
-	while (cur) {
-		time += cur->time;
-
-		if (cur == to) {
-			break;
-		}
-		cur = cur->next;
-	}
-
-	if (!cur) {
-		return -1;
-	}
-
-	return time;
-}
-
 /**
  * @brief Clears the ways one can drive from itm
  *
@@ -3354,6 +3319,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			case level_now:
 				/* TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow */
 				return g_strdup_printf(_("Leave the roundabout at the %1$s %2$s"), get_exit_count_str(count_roundabout),street_destination_announce);
+			default :
+				dbg(lvl_error,"unexpected announcement level %d\n", level);
+				return g_strdup_printf("internal error");
 		}
 	}
 
@@ -3629,7 +3597,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			break;
 		default :
 			ret= g_strdup_printf(("%1$s %2$s"),instruction,street_destination_announce);
-			dbg(lvl_error,"unevaluated announcement level\n");
+			dbg(lvl_error,"unexpected announcement level %d\n", level);
 			break;
 	}
 
