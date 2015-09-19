@@ -1,41 +1,3 @@
-/* some changes in navigation.c
- *
- *
- *
- * some relate to (partially or in whole)
- * #1265 from mvglaslow
- * #1271 from jandegr
- * #1274 from jandegr
- * #1174 from arnaud le meur
- * #1082 from robotaxi
- * #921 from psoding
- * #795 from user:ps333
- * #694 from user:nop
- * #660 from user:polarbear_n
- *
- * and an incomplete list of more navigation.c related tickets
- * #1190
- * #1160
- * #1161
- * #1095
- * #1087
- * #880
- * #870
- * (#519)
- *
- */
-
-/* KNOWN ISSUES
- *
- *
- *  in navigation_itm_new() : If a way splits in 2, exit_to info ends up on
- *	both continuations of the ramp, sometimes leading to wrong guidance
- *	The case where a ramp itself splits in 2 is already covered by ignoring exit_to info
- *	in such cases.
- *
- *
- */
-
 /**
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2015 Navit Team
@@ -1654,6 +1616,12 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
  *
  * routeitem has an attr. streetitem, but that is only and id and a map,
  * allowing to fetch the actual streetitem, that will live under the same name.
+ *
+ * Known issue:
+ * If a way splits in 2, exit_to info ends up on both continuations of the ramp, sometimes
+ * leading to wrong guidance.
+ * The case where a ramp itself splits in 2 is already covered by ignoring exit_to info
+ * in such cases.
  *
  * @param this_ the navigation object
  * @param routeitem the routeitem from which to create a navigation item
