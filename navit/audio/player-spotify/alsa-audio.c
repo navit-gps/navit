@@ -188,25 +188,26 @@ static void* alsa_audio_start(void *aux)
     dbg(lvl_error, "alsa_audio_start\n");
 	for (;;) {
 		afd = audio_get(af);
-
+		dbg(lvl_error,"got afd\n");
 		if (!h || cur_rate != afd->rate || cur_channels != afd->channels) {
+			dbg(lvl_error,"h\n");
 			if (h) snd_pcm_close(h);
 
 			cur_rate = afd->rate;
 			cur_channels = afd->channels;
 
-			// h = alsa_open("front:CARD=Set,DEV=0", cur_rate, cur_channels);
+			//h = alsa_open("front:CARD=Set,DEV=0", cur_rate, cur_channels);
 			h = alsa_open("dmixer", cur_rate, cur_channels);
 
 			if (!h) {
 				dbg(lvl_error, "Unable to open ALSA device (%d channels, %d Hz), can't continue\n", cur_channels, cur_rate);
-                return;
+                		return;
 			} else {
 			    dbg(lvl_error, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
-            }
+            		}
 		} else {
-            dbg(lvl_error,"woops\n");
-        }
+           		 dbg(lvl_error,"woops\n");
+       		}
 
 		c = snd_pcm_wait(h, 1000);
 
@@ -219,6 +220,7 @@ static void* alsa_audio_start(void *aux)
 		snd_pcm_writei(h, afd->samples, afd->nsamples);
 		free(afd);
 	}
+	dbg(lvl_error,"spotify alsa_audio_start done\n");
 }
 
 void audio_init(audio_fifo_t *af)
