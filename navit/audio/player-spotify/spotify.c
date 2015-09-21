@@ -95,8 +95,12 @@ try_jukebox_start (void)
     dbg(lvl_error, "loaded\n");
     spotify->playing = 1;
     dbg(lvl_error, "playing\n");
-    sp_session_player_play (g_sess, 1);
-    dbg(lvl_error, "sp_session_player_play\n");
+    if (g_sess) {
+        sp_session_player_play (g_sess, 1);
+        dbg(lvl_error, "sp_session_player_play called\n");
+    } else {
+        dbg(lvl_error, "g_sess is null\n");
+    }
 }
 
 /**
@@ -198,7 +202,30 @@ on_login (sp_session * session, sp_error error)
 static int
 on_music_delivered (sp_session * session, const sp_audioformat * format, const void *frames, int num_frames)
 {
-    dbg (lvl_error, "music delivered\n");
+    audio_fifo_t *af = &g_audiofifo;
+    audio_fifo_data_t *afd;
+    size_t s;
+    if (num_frames == 0)
+        return 0; // Audio discontinuity, do nothing
+    pthread_mutex_lock (&af->mutex);
+    /* Buffer one second of audio */
+    if (af->qlen > format->sample_rate)
+    {
+        pthread_mutex_unlock (&af->mutex);
+        return 0;
+    }
+    s = num_frames * sizeof (int16_t) * format->channels;
+    afd = malloc (sizeof (*afd) + s);
+    memcpy (afd->samples, frames, s);
+    afd->nsamples = num_frames;
+    afd->rate = format->sample_rate;
+    afd->channels = format->channels;
+    TAILQ_INSERT_TAIL (&af->q, afd, link);
+    af->qlen += num_frames;
+    pthread_cond_signal (&af->cond);
+    pthread_mutex_unlock (&af->mutex);
+    dbg(lvl_error,"Delivery done\n");
+    return num_frames;   
 }
 
 static void
@@ -293,6 +320,8 @@ tracks(struct audio_priv *this, int playlist_index)
                 t->status=0;
                 tracks=g_list_append(tracks, t);
         }
+	g_jukeboxlist=spl;
+	dbg(lvl_error,"Active playlist updated\n");
         return tracks;
 }
 
