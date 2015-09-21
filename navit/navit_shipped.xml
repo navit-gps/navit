@@ -21,6 +21,9 @@
 	<debug name="navit:do_draw" dbg_level="error"/>
 	<!-- This is here so one can copy&paste the contents of popup menus --> 
 	<debug name="navit:popup_printf_cb" dbg_level="debug"/>
+	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
+	<debug name="profile:navit:do_draw" dbg_level="debug"/>
+	-->
 	<!-- segv: 1 - show backtrace with gdb and exit, 2 - stay in gdb -->
 	<debug name="segv" level="1"/>
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->

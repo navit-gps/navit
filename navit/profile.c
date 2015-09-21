@@ -29,6 +29,30 @@
 
 #define PROFILE_LEVEL_MAX 9
 
+/**
+ * @brief Log timing information.
+ *
+ * @note Normally this function is called via the macro 'profile', which automatically fills in
+ * parameters 'module' and 'function'.
+ *
+ * Successive calls to this function will print the elapsed time between calls, using an
+ * internal timer. To start/reset the internal timer without printing a message, set parameter
+ * 'fmt' to NULL.
+ *
+ * To run multiple timers in parallel, the parameter 'level' can be used. Each invocation will
+ * print the elapsed time to the last invocation with the same level. As an exception, calling
+ * with 'fmt'=NULL wll reset all timers with a level greater or equal to the level parameter.
+ *
+ * Typically, profiling is started by calling profile(0, NULL). Then calls with various levels
+ * can be used to print different intermediate timings.
+ *
+ * @param level level of timer to use (0 to PROFILE_LEVEL_MAX).
+ * @param module name of current module (for logging)
+ * @param function name of current function (for logging)
+ * @param fmt format string Log message to print (as a printf format string), followed by required
+ * parameters as varargs. May be NULL; then no message is printed, and all timers with the
+ * same or higher level are reset.
+ */
 void
 profile_timer(int level, const char *module, const char *function, const char *fmt, ...)
 {
@@ -50,7 +74,7 @@ profile_timer(int level, const char *module, const char *function, const char *f
 	
 		sprintf(buffer, "profile:%s", module);
 		va_start(ap, fmt);
-		debug_vprintf(1, buffer, strlen(buffer), function, strlen(function), 1, fmt, ap); 
+		debug_vprintf(lvl_debug, buffer, strlen(buffer), function, strlen(function), 1, fmt, ap);
 		va_end(ap);
 		debug_printf(lvl_debug, buffer, strlen(buffer), function, strlen(function), 0, " %7.1f ms\n", msec);
 		gettimeofday(&last[level], NULL);
