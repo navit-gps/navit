@@ -22,7 +22,7 @@ int currently_displayed_playlist=-1;
 void
 media_play_track (struct gui_priv *this, struct widget *wm, void *data)
 {
-    dbg (0, "Got a request to play a specific track : %i\n", wm->c.x);
+    dbg (lvl_error, "Got a request to play a specific track : %i\n", wm->c.x);
     audio_play_track(this->nav, wm->c.x);
 }
 
@@ -158,7 +158,7 @@ gui_internal_media_show_rootlist (struct gui_priv *this, struct widget *wm, void
 {
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
-    dbg (0, "Showing rootlist\n");
+    dbg (lvl_error, "Showing rootlist\n");
     GList *playlists = audio_get_playlists(this->nav);
 
     gui_internal_prune_menu_count (this, 1, 0);
@@ -173,7 +173,7 @@ gui_internal_media_show_rootlist (struct gui_priv *this, struct widget *wm, void
 
     while(playlists) {
       struct audio_playlist * pl=playlists->data;
-      dbg(lvl_error,"Found playlist with name %s in the list\n", pl->name);
+      dbg(lvl_info,"Found playlist with name %s in the list\n", pl->name);
       playlists=g_list_next(playlists);
 	  row = gui_internal_widget_table_row_new (this, gravity_left | flags_fill | orientation_horizontal);
 	  gui_internal_widget_append (tbl, row);
