@@ -868,7 +868,12 @@ void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 }
 
 /**
- * Report the beginning or the end of a set of drawing operations.
+ * @brief Start or finish a set of drawing operations.
+ *
+ * graphics_draw_mode(draw_mode_begin) must be invoked before performing any drawing
+ * operations; this allows the graphics driver to perform any necessary setup.
+ * graphics_draw_mode(draw_mode_end) must be invoked to finish a set of drawing operations;
+ * this will typically clean up drawing resources and display the drawing result.
  * @param this_ graphics object that is being drawn to
  * @param mode specify beginning or end of drawing
  * @author Martin Schaller (04/2008)

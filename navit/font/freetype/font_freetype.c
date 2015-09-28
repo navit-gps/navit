@@ -374,17 +374,7 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 }
 #endif
 
-/**
- * Load a new font using the fontconfig library.
- * First search for each of the font families and require and exact match on family
- * If no font found, let fontconfig pick the best match
- * @param graphics_priv FIXME
- * @param graphics_font_methods FIXME
- * @param fontfamily the preferred font family
- * @param size requested size of fonts
- * @param flags extra flags for the font (bold,etc)
- * @returns <>
-*/
+/** Implementation of font_freetype_methods.font_new */
 static struct font_freetype_font *
 font_freetype_font_new(struct graphics_priv *gr,
 		       struct graphics_font_methods *meth,
@@ -542,6 +532,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 	return font;
 }
 
+/** Implementation of font_freetype_methods.get_shadow. */
 static int
 font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 			       unsigned char *data, int depth, int stride, struct color *foreground, struct color *background)
@@ -704,6 +695,7 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 	return 1;
 }
 
+/** Implementation of font_freetype_methods.get_glyph. */
 static int
 font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 			       unsigned char *data, int depth, int stride, struct color *fg, struct color *bg, struct color *transparent)
