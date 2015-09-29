@@ -36,6 +36,7 @@
 #include "debug.h"
 
 #include "alsa.h"
+#include "spotify.h"
 
 
 static snd_pcm_t *alsa_open(char *dev, int rate, int channels)

@@ -7,7 +7,7 @@
 #include <navit/callback.h>
 #include <navit/event.h>
 #include <navit/audio.h>
-#include "audio.h"
+#include "spotify.h"
 
 struct spotify
 {
@@ -391,7 +391,7 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     if (error != SP_ERROR_OK)
       {
       dbg (lvl_error, "Can't create spotify session :(\n");
-      return;
+      return NULL;
       }
     dbg (lvl_error, "Session created successfully :)\n");
     g_sess = session;
