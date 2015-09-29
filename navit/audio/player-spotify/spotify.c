@@ -224,7 +224,7 @@ on_music_delivered (sp_session * session, const sp_audioformat * format, const v
     af->qlen += num_frames;
     pthread_cond_signal (&af->cond);
     pthread_mutex_unlock (&af->mutex);
-    dbg(lvl_error,"Delivery done\n");
+    dbg(lvl_debug,"Delivery done\n");
     return num_frames;   
 }
 

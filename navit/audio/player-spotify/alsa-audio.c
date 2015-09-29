@@ -189,7 +189,6 @@ static void* alsa_audio_start(void *aux)
     dbg(lvl_error, "alsa_audio_start\n");
 	for (;;) {
 		afd = audio_get(af);
-		dbg(lvl_error,"got afd\n");
 		if (!h || cur_rate != afd->rate || cur_channels != afd->channels) {
 			dbg(lvl_error,"h\n");
 			if (h) snd_pcm_close(h);
@@ -206,8 +205,6 @@ static void* alsa_audio_start(void *aux)
 			} else {
 			    dbg(lvl_error, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
             		}
-		} else {
-           		 dbg(lvl_error,"woops\n");
        		}
 
 		c = snd_pcm_wait(h, 1000);
