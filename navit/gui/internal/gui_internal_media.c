@@ -75,7 +75,7 @@ gui_internal_start_radio (struct gui_priv *this, struct widget *wm, void *data)
  */
 
 static struct widget *
-gui_internal_media_track_toolbar (struct gui_priv *this, int track_index, char * track_name)
+gui_internal_media_track_toolbar (struct gui_priv *this, int track_index, char * track_name, char * track_icon)
 {
     struct widget *wl, *wb;
     wl = gui_internal_box_new (this, gravity_left_center | orientation_horizontal_vertical | flags_fill);
@@ -86,7 +86,7 @@ gui_internal_media_track_toolbar (struct gui_priv *this, int track_index, char *
 				gui_internal_button_new_with_callback (this,
 								       track_name,
 								       image_new_s
-								       (this, "gui_active"),// media_get_track_status_icon (track_index)),
+								       (this, track_icon),
 								       gravity_left_center
 								       | orientation_horizontal, media_play_track, NULL));
     wb->c.x = track_index;
@@ -223,7 +223,7 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
       tracks=g_list_next(tracks);
 	  row = gui_internal_widget_table_row_new (this, gravity_left | flags_fill | orientation_horizontal);
 	  gui_internal_widget_append (tbl, row);
-	  gui_internal_widget_append (row, gui_internal_media_track_toolbar (this, track->index, track->name));
+	  gui_internal_widget_append (row, gui_internal_media_track_toolbar (this, track->index, track->name, track->icon));
       }
     gui_internal_menu_render (this);
 }

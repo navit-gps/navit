@@ -90,6 +90,10 @@ try_jukebox_start (void)
     g_currenttrack = t;
 
     dbg (lvl_error, "jukebox: Now playing \"%s\"... g_sess=%p\n", sp_track_name (t), g_sess);
+
+    // Ensure that the playlist is "offline" if we play a track
+    sp_playlist_set_offline_mode (g_sess, g_jukeboxlist, 1);
+    dbg(lvl_error, "Forced offline mode for the playlist\n");
         
     sp_session_player_load (g_sess, t);
     dbg(lvl_error, "loaded\n");
@@ -317,9 +321,27 @@ tracks(struct audio_priv *this, int playlist_index)
         spl = sp_playlistcontainer_playlist(pc, playlist_index);
         for (i = 0; i < sp_playlist_num_tracks(spl); i++) {
                 t = g_new0(struct audio_track, 1);
-                t->name=g_strdup(sp_track_name (sp_playlist_track(spl, i)));
+                sp_track *track = sp_playlist_track (spl, i);
+                t->name=g_strdup(sp_track_name (track));
                 t->index=i;
                 t->status=0;
+
+                switch (sp_track_offline_get_status (track))
+                  {
+                  case SP_TRACK_OFFLINE_DONE:
+            	  t->icon = "music-green";
+            	  break;
+                  case SP_TRACK_OFFLINE_DOWNLOADING:
+            	  t->icon = "music-orange";
+            	  break;
+                  case SP_TRACK_OFFLINE_NO:
+            	  t->icon = "music-blue";
+            	  break;
+                  default:
+            	  t->icon = "music-red";
+                  }
+                t->icon=g_strdup ((i == g_track_index) ? "play" : t->icon);
+
                 tracks=g_list_append(tracks, t);
         }
 	g_jukeboxlist=spl;

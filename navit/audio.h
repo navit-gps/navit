@@ -19,6 +19,7 @@ struct audio_playlist {
 
 struct audio_track {
 	char * name;
+	char * icon;
 	int index;
 	int status;
 };
