@@ -232,6 +232,8 @@ static void
 on_end_of_track (sp_session * session)
 {
     dbg (lvl_error, "end of track\n");
+    ++g_track_index;
+    try_jukebox_start ();
 }
 
 static sp_session_callbacks session_callbacks = {
