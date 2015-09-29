@@ -55,8 +55,3 @@ extern void audio_fifo_flush(audio_fifo_t *af);
 audio_fifo_data_t* audio_get(audio_fifo_t *af);
 
 #endif /* _JUKEBOX_AUDIO_H_ */
-
-typedef enum {
-    AUDIO_VOLUME_SET,
-    AUDIO_VOLUME_GET,
-} audio_volume_action;
