@@ -208,10 +208,25 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
     GList *tracks = audio_get_tracks(this->nav,currently_displayed_playlist);
+    int index=0;
+    struct audio_playlist *pl;
 
     gui_internal_prune_menu_count (this, 1, 0);
     
-    wb = gui_internal_menu (this, g_strdup_printf ("Spotify > %s", audio_player_get_current_playlist_name ()));
+    // Look in the playlists to get the current playlist name. Might not be optimal.
+    GList *playlists = audio_get_playlists(this->nav);
+    while(playlists && index!=currently_displayed_playlist) {
+	playlists=g_list_next(playlists);
+	index++;
+    }
+
+    if (playlists) {
+       pl=playlists->data;
+       wb = gui_internal_menu (this, g_strdup_printf ("Media > %s", pl->name));
+    } else {
+       wb = gui_internal_menu (this, g_strdup_printf ("Media > Unknown playlist"));
+    }
+
     wb->background = this->background;
     w = gui_internal_box_new (this, gravity_top_center | orientation_vertical | flags_expand | flags_fill);
     gui_internal_widget_append (wb, w);
