@@ -13,6 +13,7 @@ struct audio_priv;
 
 struct audio_playlist {
 	char * name;
+	char * icon;
 	int index;
 	int status;
 };

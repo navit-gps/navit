@@ -302,6 +302,29 @@ playlists(struct audio_priv *this)
                 pl->index=i;
                 pl->status=0;
                 playlists=g_list_append(playlists, pl);
+
+                switch (sp_playlist_get_offline_status (g_sess, spl))
+                  {
+                  case SP_PLAYLIST_OFFLINE_STATUS_NO:
+                      pl->icon = "playlist-no-offline";
+                      break;
+            
+                  case SP_PLAYLIST_OFFLINE_STATUS_YES:
+                      pl->icon = "playlist-offline";
+                      break;
+            
+                  case SP_PLAYLIST_OFFLINE_STATUS_DOWNLOADING:
+                      pl->icon = "playlist-downloading";
+                      break;
+            
+                  case SP_PLAYLIST_OFFLINE_STATUS_WAITING:
+                      pl->icon = "playlist-pending";
+                      break;
+            
+                  default:
+                      pl->icon = "music-red";
+                      break;
+                  }
         }
         return playlists;
 }

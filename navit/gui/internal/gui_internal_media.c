@@ -179,7 +179,7 @@ gui_internal_media_show_rootlist (struct gui_priv *this, struct widget *wm, void
 	  gui_internal_widget_append (tbl, row);
 	  wbm =
 	      gui_internal_button_new_with_callback (this,
-						     pl->name,image_new_s (this, "gui_active"), // media_get_playlist_status_icon_by_index(i)),
+						     pl->name,image_new_s (this, pl->icon),
 						     gravity_left_center |
 						     orientation_horizontal | flags_fill, media_play_playlist, NULL);
 
