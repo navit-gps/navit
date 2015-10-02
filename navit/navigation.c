@@ -1566,7 +1566,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		return;
 	}
 	if (! item_attr_get(ritem, attr_speed, &speed)) {
-		dbg(lvl_error,"no time\n");
+		dbg(lvl_error,"no speed\n");
 		return;
 	}
 
