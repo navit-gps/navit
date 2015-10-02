@@ -1623,8 +1623,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		ret->way.item=*streetitem;
 		item_hash_insert(this_->hash, streetitem, ret);
 
-		mr=map_rect_new(streetitem->map, NULL);  
-
+		mr=map_rect_new(streetitem->map, NULL);
 		struct map *tmap = streetitem->map;
 
 		if (! (streetitem=map_rect_get_item_byid(mr, streetitem->id_hi, streetitem->id_lo))) {
@@ -1679,9 +1678,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 					}
 				}
 			}
-		
 		navigation_itm_update(ret, routeitem);
-
 
 		while (item_coord_get(routeitem, &c[i], 1))
 		{
@@ -1721,9 +1718,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		 * If present, obtain exit_ref, exit_label and exit_to
 		 * from the map.
 		 */
-		if ((streetitem->type == type_ramp) || (
-			ret->way.next && ret->way.next->next &&
-			((streetitem->type == type_highway_land)
+		if ((streetitem->type == type_ramp) || (ret->way.next && ret->way.next->next && ((streetitem->type == type_highway_land)
 			|| (streetitem->type == type_highway_city) || (streetitem->type == type_street_n_lanes))))
 		{
 			struct map_selection mselexit;
