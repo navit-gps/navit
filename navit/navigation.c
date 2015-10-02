@@ -1704,7 +1704,9 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		if(item_attr_get(routeitem, attr_route, &route_attr))
 			graph_map = route_get_graph_map(route_attr.u.route);
 		if (graph_map )
-		{
+		{	
+			if (this_->last)
+				ret->prev=this_->last;
 			navigation_itm_ways_update(ret,graph_map);
 		}
 
@@ -1718,7 +1720,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		 * If present, obtain exit_ref, exit_label and exit_to
 		 * from the map.
 		 */
-		if ((streetitem->type == type_ramp) || (ret->way.next && ret->way.next->next && ((streetitem->type == type_highway_land)
+		if ((streetitem->type == type_ramp) || (ret->way.next && ((streetitem->type == type_highway_land)
 			|| (streetitem->type == type_highway_city) || (streetitem->type == type_street_n_lanes))))
 		{
 			struct map_selection mselexit;
