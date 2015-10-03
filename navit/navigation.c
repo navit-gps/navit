@@ -1624,7 +1624,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		item_hash_insert(this_->hash, streetitem, ret);
 
 		mr=map_rect_new(streetitem->map, NULL);
-
 		struct map *tmap = streetitem->map;
 
 		if (! (streetitem=map_rect_get_item_byid(mr, streetitem->id_hi, streetitem->id_lo))) {
@@ -1679,9 +1678,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 					}
 				}
 			}
-
 		navigation_itm_update(ret, routeitem);
-
 
 		while (item_coord_get(routeitem, &c[i], 1))
 		{
@@ -1704,6 +1701,15 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		ret->start=c[0];
 		ret->end=c[i];
 
+		if(item_attr_get(routeitem, attr_route, &route_attr))
+			graph_map = route_get_graph_map(route_attr.u.route);
+		if (graph_map )
+		{	
+			if (this_->last)
+				ret->prev=this_->last;
+			navigation_itm_ways_update(ret,graph_map);
+		}
+
 		/* If we have a ramp, check the map for higway_exit info,
 		 * but only on the first node of the ramp.
 		 * We are doing the same for motorway-like roads because some
@@ -1714,10 +1720,9 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		 * If present, obtain exit_ref, exit_label and exit_to
 		 * from the map.
 		 */
-		if (   (streetitem->type == type_ramp)
-		    || (streetitem->type == type_highway_land)
-		    || (streetitem->type == type_highway_city)
-		    || (streetitem->type == type_street_n_lanes)) {
+		if (ret->way.next && ((streetitem->type == type_ramp) || (streetitem->type == type_highway_land)
+			|| (streetitem->type == type_highway_city) || (streetitem->type == type_street_n_lanes)))
+		{
 			struct map_selection mselexit;
 			struct item *rampitem;
 			dbg(lvl_debug,"test ramp\n");
@@ -1725,7 +1730,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 			mselexit.u.c_rect.lu = c[0] ;
 			mselexit.u.c_rect.rl = c[0] ;
 			mselexit.range = item_range_all;
-			mselexit.order = 18;
+			mselexit.order =18;
 
 			map_rect_destroy(mr);
 			mr = map_rect_new(tmap, &mselexit);
@@ -1740,12 +1745,12 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 						if (attr.type && attr.type == attr_label)
 						{
 							dbg(lvl_debug,"exit_label=%s\n",attr.u.str);
-							ret->way.exit_label= map_convert_string(streetitem->map,attr.u.str);
+							ret->way.exit_label= map_convert_string(tmap,attr.u.str);
 						}
 						if (attr.type == attr_ref)
 						{
 							dbg(lvl_debug,"exit_ref=%s\n",attr.u.str);
-							ret->way.exit_ref= map_convert_string(streetitem->map,attr.u.str);
+							ret->way.exit_ref= map_convert_string(tmap,attr.u.str);
 						}
 						if (attr.type == attr_exit_to)
 						{
@@ -1759,7 +1764,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 									&& (this_->last)
 									&& (!(this_->last->way.item.type == type_ramp))) {
 								char *destination_raw;
-								destination_raw=map_convert_string(streetitem->map,attr.u.str);
+								destination_raw=map_convert_string(tmap,attr.u.str);
 								dbg(lvl_debug,"destination_raw from exit_to =%s\n",destination_raw);
 								if ((split_string_to_list(&(ret->way),destination_raw, ';')) < 2)
 								/*
@@ -1776,10 +1781,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 				}
 			}
 		}
-
-		if(item_attr_get(routeitem, attr_route, &route_attr))
-			graph_map = route_get_graph_map(route_attr.u.route);
-
 		dbg(lvl_debug,"i=%d start %d end %d '%s' \n", i, ret->way.angle2, ret->angle_end, ret->way.name_systematic);
 		map_rect_destroy(mr);
 	} else {
@@ -1791,9 +1792,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 	if (this_->last) {
 		this_->last->next=ret;
 		ret->prev=this_->last;
-		if (graph_map) {
-			navigation_itm_ways_update(ret,graph_map);
-		}
 	}
 	dbg(lvl_debug,"ret=%p\n", ret);
 	this_->last=ret;
