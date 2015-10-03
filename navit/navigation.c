@@ -2335,7 +2335,17 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 		if (!m.is_same_street && m.is_unambiguous < 1) { /* FIXME: why < 1? */
 			ret=1;
 			r="yes: different street and ambiguous";
-		} else
+		} 
+		/* we should have cat of the candidate within dlim
+		 * instead of testing against max_cat.
+		 * The highest cat road might be well outside dlim
+		 */
+		else if (m.max_cat >= m.new_cat && m.is_unambiguous < 1)
+		{
+			ret = 1;
+			r="yes: ambiguous because of other candidates within dlim";
+		}
+		else
 			r="no: same street or unambiguous";
 #ifdef DEBUG
 		r=g_strdup_printf("%s: d %d left %d right %d dlim=%d cat old:%d new:%d max:%d unambiguous=%d same_street=%d", ret==1?"yes":"no", m.delta, m.left, m.right, dlim, m.old_cat, m.new_cat, m.max_cat, m.is_unambiguous, m.is_same_street);
