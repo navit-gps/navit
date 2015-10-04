@@ -1123,8 +1123,8 @@ route_clear_destinations(struct route *this_)
  *
  * @param this The route to set the destination for
  * @param dst Coordinates to set as destination
- * @param count: Number of destinations (last one is final)
- * @param async: If set, do routing asynchronously
+ * @param count Number of destinations (last one is final)
+ * @param async If set, do routing asynchronously
  */
 
 void
@@ -1253,8 +1253,8 @@ route_get_destination_description(struct route *this, int n)
  * @brief Start a route given set of coordinates
  *
  * @param this The route instance
- * @param c The coordinate to start routing to
- * @param async 1 for async
+ * @param dst The coordinate to start routing to
+ * @param async Set to 1 to do route calculation asynchronously
  * @return nothing
  */
 void
@@ -2870,11 +2870,13 @@ route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile)
  * between c1 and c2.
  *
  * @param ms The mapset to build the route graph from
+ * @param c The coordinates of the destination or next waypoint
  * @param c1 Corner 1 of the rectangle to use from the map
  * @param c2 Corner 2 of the rectangle to use from the map
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
+// FIXME documentation does not match argument list
 static struct route_graph *
 route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async, struct vehicleprofile *profile)
 {
@@ -2910,6 +2912,8 @@ route_graph_update_done(struct route *this, struct callback *cb)
  * adds routing information afterwards by calling route_graph_flood().
  * 
  * @param this The route to update the graph for
+ * @param cb The callback function to call when the route graph update is complete (used only in asynchronous mode)
+ * @param async Set to nonzero in order to update the route graph asynchronously
  */
 static void
 route_graph_update(struct route *this, struct callback *cb, int async)
