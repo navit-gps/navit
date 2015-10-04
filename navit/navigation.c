@@ -165,6 +165,7 @@ struct navigation {
 	int curr_delay;
 	int turn_around_count;
 	int flags;
+	time_t starttime;       /**< Time at which route calculation started, used internally for measurements */
 };
 
 /** @brief Set of simplified distance values that are easy to be pronounced.
@@ -3762,10 +3763,20 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	struct navigation_itm *itm;
 	struct attr vehicleprofile;
 	int mode=0, incr=0, first=1;
+	time_t now;
 	if (attr->type != attr_route_status)
 		return;
 
 	dbg(lvl_debug,"enter %d\n", mode);
+
+	if (attr->u.num == route_status_building_graph) {
+		time(&(this_->starttime));
+		dbg(lvl_info, "route status changed to 0x%x, time elapsed reset to 0 s\n", attr->u.num);
+	} else if ((attr->u.num != route_status_destination_set) && (attr->u.num != route_status_no_destination)) {
+		time(&now);
+		dbg(lvl_info, "route status changed to 0x%x, time elapsed: %.f s\n", attr->u.num, difftime(now, this_->starttime));
+	}
+
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
 		navigation_flush(this_);
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
@@ -3825,6 +3836,9 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		navigation_call_callbacks(this_, FALSE);
 	}
 	map_rect_destroy(mr);
+
+	time(&now);
+	dbg(lvl_info, "done generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
 }
 
 static void
