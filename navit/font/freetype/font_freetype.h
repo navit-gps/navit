@@ -63,39 +63,37 @@ struct font_freetype_methods {
 	/**
 	 * @brief Get glyph "shadow", a glyph bitmap to be used as background.
 	 *
-	 * This method returns a glyph shadow, a bitmap with the glyph, where individual glyphs have been
-	 * "fattened" by expanding them by one pixel on each side.
+	 * This method returns a glyph shadow, a bitmap with the glyph, where the glyph has been
+	 * "fattened" by expanding it by one pixel on each side.
 	 * In Navit, the shadow is used as the background behind the glyph bitmaps (returned by
 	 * font_freetype_methods.get_glyph() ), to make the text easier to read.
 	 *
 	 * @param g glyph to render, usually created via font_freetype_methods.text_new()
-	 * @param data buffer for result image bitmap. Size must be at least (stride * (g->h+2)).
-	 * @param depth bit depth for result bitmap
+	 * @param data buffer for result image bitmap. Size must be at least (4 * stride * (g->h+2)).
 	 * @param stride see font_freetype_methods.get_glyph(). Minimum: g->w+2.
 	 * @param foreground color for rendering the "shadow"
 	 * @param background color for rest of the bitmap (typically set to transparent)
 	 * @returns 0 if depth is invalid, 1 otherwise
 	 */
 	int (*get_shadow) (struct font_freetype_glyph * glyph,
-			   unsigned char *data, int depth, int stride, struct color *fg, struct color *tr);
+			   unsigned char *data, int stride, struct color *fg, struct color *tr);
 	/**
 	 * @brief Get a glyph bitmap.
 	 *
 	 * This method returns a bitmap for rendering the supplied glyph.
 	 *
 	 * @param g glyph to render, usually obtained from a struct font_freetype_text created via font_freetype_methods.text_new()
-	 * @param data buffer for result image bitmap. Size must be at least (stride * g->h).
-	 * @param depth bit depth for result bitmap
+	 * @param data buffer for result image bitmap. Size must be at least (4 * stride * g->h).
 	 * @param stride stride (bytes per data row) for result bitmap; must be at least g->w, but may include padding.
 	 * Special case:
 	 * If set to 0, 'data' is interpreted as an array of pointers to image data rows (i.e. unsigned char**).
-	 * @param fg color for rendering the glyphs (depth 8 only uses alpha channel)
-	 * @param bg color to alpha blend with fg for semi-transparent glyph pixels (only for depth 24 & 32)
-	 * @param transparent color for background pixels (depth 8 only uses alpha channel)
+	 * @param fg color for rendering the glyph
+	 * @param bg color to alpha blend with fg for semi-transparent glyph pixels
+	 * @param transparent color for background pixels
 	 * @returns 0 if depth is invalid, 1 otherwise
 	 */
 	int (*get_glyph) (struct font_freetype_glyph * glyph,
-			   unsigned char *data, int depth, int stride,
+			   unsigned char *data, int stride,
 			   struct color * fg, struct color * bg, struct color *tr);
 };
 

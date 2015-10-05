@@ -366,7 +366,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 			unsigned char *shadow;
 			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w+2);
 			shadow=g_malloc(stride*(g->h+2));
-			gr->freetype_methods.get_shadow(g, shadow, 32, stride, &bg->c, &transparent);
+			gr->freetype_methods.get_shadow(g, shadow, stride, &bg->c, &transparent);
 			draw_rgb_image_buffer(gr->cairo, g->w+2, g->h+2, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, stride, shadow);
 			g_free(shadow);
 		}
@@ -384,7 +384,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 			unsigned char *glyph;
 			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
 			glyph=g_malloc(stride*g->h);
-			gr->freetype_methods.get_glyph(g, glyph, 32, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
+			gr->freetype_methods.get_glyph(g, glyph, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
 			draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x+g->x)>>6, (y+g->y)>>6, stride, glyph);
 			g_free(glyph);
 		}

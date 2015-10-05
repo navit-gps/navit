@@ -921,7 +921,7 @@ display_text_draw(struct font_freetype_text *text,
 			if (color) {
 				shadow = g_malloc(stride * (g->h + 2));
 				gr->freetype_methods.get_shadow(g, shadow,
-								32, stride,
+								stride,
 								&white,
 								&transparent);
 #ifdef USE_OPENGLES
@@ -961,7 +961,6 @@ display_text_draw(struct font_freetype_text *text,
 					    g_malloc(stride * g->h * 4);
 					gr->freetype_methods.get_glyph(g,
 								       glyph,
-								       32,
 								       stride
 								       * 4,
 								       &black,
@@ -989,7 +988,7 @@ display_text_draw(struct font_freetype_text *text,
 				stride *= 4;
 				glyph = g_malloc(stride * g->h);
 				gr->freetype_methods.get_glyph(g, glyph,
-							       32, stride,
+							       stride,
 							       &black,
 							       &white,
 							       &transparent);
