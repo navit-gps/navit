@@ -3832,6 +3832,8 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		navigation_itm_new(this_, ritem);
 	}
 	dbg(lvl_info,"turn_around=%d\n", this_->turn_around);
+	time(&now);
+	dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
 	if (first)
 		navigation_destroy_itms_cmds(this_, NULL);
 	else {
