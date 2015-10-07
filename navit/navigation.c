@@ -165,6 +165,7 @@ struct navigation {
 	int curr_delay;
 	int turn_around_count;
 	int flags;
+	int busy;               /**< Whether we are currently busy generating maneuvers */
 	time_t starttime;       /**< Time at which route calculation started, used internally for measurements */
 };
 
@@ -3760,6 +3761,100 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	}
 }
 
+/**
+ * @brief Initiates maneuver creation.
+ *
+ * This function is called by {@link navigation_update_idle(struct navigation *, struct map_rect *, struct item **, int *)}
+ * after it has retrieved all objects from the route map.
+ */
+static void
+navigation_update_done(struct navigation *this_, struct map_rect *mr, struct item *ritem, int first) {
+	int incr = 0;
+	time_t now;
+
+	time(&now);
+	dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+
+	if (first)
+		navigation_destroy_itms_cmds(this_, NULL);
+	else {
+		if (! ritem) {
+			navigation_itm_new(this_, NULL);
+			make_maneuvers(this_,this_->route);
+		}
+		calculate_dest_distance(this_, incr);
+		profile(0,"end");
+		navigation_call_callbacks(this_, FALSE);
+	}
+	map_rect_destroy(mr);
+	this_->busy = 0;
+
+	time(&now);
+	dbg(lvl_info, "done generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+}
+
+/**
+ * @brief Idle loop function to retrieve items from the route map.
+ *
+ * @param this_ Points to the navigation object
+ * @param mr Points to a map rect on the route map. The caller is responsible for initializing the
+ * map rect before the first call to this function, and destroying it after processing is complete.
+ * @param ritem Points to a buffer that will receive a pointer to the last item retrieved from
+ * {@code mr}. The caller is responsible for creating the buffer and setting its contents to
+ * {@code NULL} before the first call to this function, and for destroying it after the last call
+ * returns.
+ * @param first Points to an int value indicating if the next street item retrieved will be the
+ * first one. The caller must set the contents of this buffer to 1 before first calling this
+ * function, and preserve buffer contents across function calls.
+ */
+static void
+navigation_update_idle(struct navigation *this_, struct map_rect *mr, struct item **ritem, int *first) {
+	int count = 100;            /* Maximum number of items retrieved in one run of this function */
+	struct item *sitem;			/* Holds the item from the actual map which corresponds to ritem */
+	struct attr street_item, street_direction;
+	struct navigation_itm *itm;
+	time_t now;
+
+	while ((count > 0)) {
+		count--;
+		if (!(*ritem = map_rect_get_item(mr))) {
+			time(&now);
+			dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
+			navigation_update_done(this_, mr, *ritem, *first);
+			return;
+		}
+		if ((*ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
+			this_->turn_around--;
+		if ((*ritem)->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
+			this_->turn_around++;
+		if ((*ritem)->type != type_street_route)
+			continue;
+		if (*first && item_attr_get(*ritem, attr_street_item, &street_item)) {
+			*first=0;
+			if (!item_attr_get(*ritem, attr_direction, &street_direction))
+				street_direction.u.num = 0;
+			sitem = street_item.u.item;
+			dbg(lvl_debug,"sitem=%p\n", sitem);
+			itm = item_hash_lookup(this_->hash, sitem);
+			dbg(lvl_info,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
+			if (itm && itm->way.dir != street_direction.u.num) {
+				dbg(lvl_info,"wrong direction\n");
+				itm = NULL;
+			}
+			navigation_destroy_itms_cmds(this_, itm);
+			if (itm) {
+				navigation_itm_update(itm, *ritem);
+				break;
+			}
+			dbg(lvl_debug,"not on track\n");
+		}
+		navigation_itm_new(this_, *ritem);
+	}
+
+	time(&now);
+	dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
+}
+
 static void
 navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
 {
@@ -3803,52 +3898,11 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	else
 		this_->vehicleprofile=NULL;
 	dbg(lvl_debug,"enter\n");
-	while ((ritem=map_rect_get_item(mr))) {
-		if (ritem->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
-			this_->turn_around--;
-		if (ritem->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
-			this_->turn_around++;
-		if (ritem->type != type_street_route)
-			continue;
-		if (first && item_attr_get(ritem, attr_street_item, &street_item)) {
-			first=0;
-			if (!item_attr_get(ritem, attr_direction, &street_direction))
-				street_direction.u.num=0;
-			sitem=street_item.u.item;
-			dbg(lvl_debug,"sitem=%p\n", sitem);
-			itm=item_hash_lookup(this_->hash, sitem);
-			dbg(lvl_info,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
-			if (itm && itm->way.dir != street_direction.u.num) {
-				dbg(lvl_info,"wrong direction\n");
-				itm=NULL;
-			}
-			navigation_destroy_itms_cmds(this_, itm);
-			if (itm) {
-				navigation_itm_update(itm, ritem);
-				break;
-			}
-			dbg(lvl_debug,"not on track\n");
-		}
-		navigation_itm_new(this_, ritem);
-	}
-	dbg(lvl_info,"turn_around=%d\n", this_->turn_around);
-	time(&now);
-	dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
-	if (first)
-		navigation_destroy_itms_cmds(this_, NULL);
-	else {
-		if (! ritem) {
-			navigation_itm_new(this_, NULL);
-			make_maneuvers(this_,this_->route);
-		}
-		calculate_dest_distance(this_, incr);
-		profile(0,"end");
-		navigation_call_callbacks(this_, FALSE);
-	}
-	map_rect_destroy(mr);
 
-	time(&now);
-	dbg(lvl_info, "done generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+	this_->busy = 1;
+	while (this_->busy)
+		navigation_update_idle(this_, mr, &ritem, &first);
+	// TODO implement asynchronous processing
 }
 
 static void
