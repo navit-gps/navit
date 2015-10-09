@@ -3765,13 +3765,26 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 }
 
 /**
- * @brief Initiates maneuver creation.
+ * @brief Cleans up and initiates maneuver creation.
  *
  * This function is called by {@link navigation_update_idle(struct navigation *, struct map_rect *, struct item **, int *)}
  * after it has retrieved all objects from the route map.
+ *
+ * It will reset the navigation object's idle event/callback, deallocate some temporary objects and
+ * reset the {@code busy} flag. Arguments correspond to those of
+ * {@link navigation_update_idle(struct navigation *, struct map_rect *, struct item **, int *)}.
+ *
+ * @param this_ Points to the navigation object
+ * @param mr Points to a map rect on the route map. After the function returns, the map rect os no
+ * longer valid.
+ * @param ritem Points to a buffer that will be freed.
+ * returns.
+ * @param first Points to a buffer that will be freed.
+ * @param cancel If true, only cleanup (deallocation of objects) will be done and no maneuvers will be generated.
+ * If false, maneuvers will be generated.
  */
 static void
-navigation_update_done(struct navigation *this_, struct map_rect *mr, struct item **ritem, int *first) {
+navigation_update_done(struct navigation *this_, struct map_rect *mr, struct item **ritem, int *first, int cancel) {
 	int incr = 0;
 	time_t now;
 
@@ -3782,19 +3795,21 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, struct ite
 	this_->idle_ev=NULL;
 	this_->idle_cb=NULL;
 
-	time(&now);
-	dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+	if (!cancel) {
+		time(&now);
+		dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
 
-	if (*first)
-		navigation_destroy_itms_cmds(this_, NULL);
-	else {
-		if (! *ritem) {
-			navigation_itm_new(this_, NULL);
-			make_maneuvers(this_,this_->route);
+		if (*first)
+			navigation_destroy_itms_cmds(this_, NULL);
+		else {
+			if (! *ritem) {
+				navigation_itm_new(this_, NULL);
+				make_maneuvers(this_,this_->route);
+			}
+			calculate_dest_distance(this_, incr);
+			profile(0,"end");
+			navigation_call_callbacks(this_, FALSE);
 		}
-		calculate_dest_distance(this_, incr);
-		profile(0,"end");
-		navigation_call_callbacks(this_, FALSE);
 	}
 	map_rect_destroy(mr);
 	g_free(ritem);
@@ -3802,7 +3817,7 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, struct ite
 	this_->busy = 0;
 
 	time(&now);
-	dbg(lvl_info, "done generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+	dbg(lvl_info, "done, time elapsed: %.f s\n", difftime(now, this_->starttime));
 }
 
 /**
@@ -3830,12 +3845,17 @@ navigation_update_idle(struct navigation *this_, struct map_rect *mr, struct ite
 	struct navigation_itm *itm;
 	time_t now;
 
+	if (!route_has_graph(this_->route)) {
+		navigation_update_done(this_, mr, ritem, first, 1);
+		return;
+	}
+
 	while ((count > 0)) {
 		count--;
 		if (!(*ritem = map_rect_get_item(mr))) {
 			time(&now);
 			dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
-			navigation_update_done(this_, mr, ritem, first);
+			navigation_update_done(this_, mr, ritem, first, 0);
 			return;
 		}
 		if ((*ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)

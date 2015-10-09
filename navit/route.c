@@ -3898,6 +3898,17 @@ route_get_graph_map(struct route *this_)
 	return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
 }
 
+
+/**
+ * @brief Whether the route has a valid graph.
+ *
+ * @return True if the route has a graph, false if not.
+ */
+int
+route_has_graph(struct route *this_) {
+	return (this_->graph != NULL);
+}
+
 void
 route_set_projection(struct route *this_, enum projection pro)
 {

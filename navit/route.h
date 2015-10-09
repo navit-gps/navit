@@ -111,6 +111,7 @@ void route_info_free(struct route_info *inf);
 struct street_data *route_info_street(struct route_info *rinf);
 struct map *route_get_map(struct route *this_);
 struct map *route_get_graph_map(struct route *this_);
+int route_has_graph(struct route *this_);
 void route_set_projection(struct route *this_, enum projection pro);
 void route_set_destinations(struct route *this_, struct pcoord *dst, int count, int async);
 int route_set_attr(struct route *this_, struct attr *attr);
