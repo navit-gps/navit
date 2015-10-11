@@ -347,20 +347,19 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 	info.tilesdir_out=NULL;
 	phase34(&info, zip_info, in, reference, in_count, with_range);
 
-	th=tile_head_root;
-	while (th) {
-		if (th->process) {
-			if (th->name[0]) {
-				if (th->total_size != th->total_size_used) {
-					fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
-					exit(1);
-				}
-				write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
-				zipfiles++;
-			} else 
-				fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info));
+	for (th=tile_head_root;th;th=th->next) {
+		if (!th->process)
+			continue;
+		if (th->name[0]) {
+			if (th->total_size != th->total_size_used) {
+				fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
+				exit(1);
+			}
+			write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
+			zipfiles++;
+		} else {
+			dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info))==1);
 		}
-		th=th->next;
 	}
 	free(slice_data);
 
@@ -420,7 +419,7 @@ process_binfile(FILE *in, FILE *out)
 {
 	struct item_bin *ib;
 	while ((ib=read_item(in))) {
-		fwrite(ib, (ib->len+1)*4, 1, out);
+		item_bin_write(ib, out);
 	}
 }
 

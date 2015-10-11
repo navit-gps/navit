@@ -1014,7 +1014,6 @@ int main(int argc, char **argv)
 			fclose(ways_split);
 		}
 	}
-
 	if (start_phase(&p,"generating coastlines")) {
 		osm_process_coastlines(&p, suffix);
 	}
