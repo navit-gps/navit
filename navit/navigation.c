@@ -174,6 +174,7 @@ struct navigation {
 	int curr_delay;
 	int turn_around_count;
 	int flags;
+	struct map_rect *route_mr;			/**< Map rect on the route map, used for maneuver generation */
 	enum navigation_status status;		/**< Status information used during maneuver generation */
 	struct callback *idle_cb;			/**< Idle callback to process the route map */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
@@ -746,6 +747,7 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	ret->turn_around_limit=3;
 	ret->navit=parent->u.navit;
 	ret->tell_street_name=1;
+	ret->route_mr = NULL;
 
 	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
 		for (i = 0 ; i < 3 ; i++) {
@@ -3775,21 +3777,20 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 /**
  * @brief Cleans up and initiates maneuver creation.
  *
- * This function is called by {@link navigation_update_idle(struct navigation *, struct map_rect *, struct item **, int *)}
+ * This function is called by {@link navigation_update_idle(struct navigation *)}
  * after it has retrieved all objects from the route map.
  *
  * It will reset the navigation object's idle event/callback, deallocate some temporary objects and
  * reset the {@code busy} flag. Arguments correspond to those of
- * {@link navigation_update_idle(struct navigation *, struct map_rect *)}.
+ * {@link navigation_update_idle(struct navigation *)}.
  *
- * @param this_ Points to the navigation object
- * @param mr Points to a map rect on the route map. After the function returns, the map rect os no
- * longer valid.
+ * @param this_ Points to the navigation object. After the function returns, its {@code map_rect}
+ * member will no longer be valid.
  * @param cancel If true, only cleanup (deallocation of objects) will be done and no maneuvers will be generated.
  * If false, maneuvers will be generated.
  */
 static void
-navigation_update_done(struct navigation *this_, struct map_rect *mr, int cancel) {
+navigation_update_done(struct navigation *this_, int cancel) {
 	int incr = 0;
 	time_t now;
 
@@ -3816,7 +3817,8 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, int cancel
 			navigation_call_callbacks(this_, FALSE);
 		}
 	}
-	map_rect_destroy(mr);
+	map_rect_destroy(this_->route_mr);
+	this_->route_mr = NULL;
 	this_->status = status_none;
 
 	time(&now);
@@ -3826,20 +3828,12 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, int cancel
 /**
  * @brief Idle loop function to retrieve items from the route map.
  *
- * @param this_ Points to the navigation object
- * @param mr Points to a map rect on the route map. The caller is responsible for initializing the
- * map rect before the first call to this function, and destroying it after processing is complete.
- * @param ritem Points to a buffer that will receive a pointer to the last item retrieved from
- * {@code mr}. The caller is responsible for allocating the buffer and setting its contents to
- * {@code NULL} before the first call to this function. It will be freed before the last call
- * returns.
- * @param first Points to an int value indicating if the next street item retrieved will be the
- * first one. The caller must allocate the buffer and set its contents to 1 before first calling
- * this function, and preserve buffer contents across function calls. It will be freed before the
- * last call returns.
+ * @param this_ Points to the navigation object. The caller is responsible for initializing its
+ * {@code route_mr} member. After processing completes, the {@code route_mr} member will no longer
+ * be valid.
  */
 static void
-navigation_update_idle(struct navigation *this_, struct map_rect *mr) {
+navigation_update_idle(struct navigation *this_) {
 	int count = 100;            /* Maximum number of items retrieved in one run of this function.
 	                             * This should be set low enough for each pass to complete in less
 	                             * than a second even on low-performance devices. */
@@ -3850,16 +3844,16 @@ navigation_update_idle(struct navigation *this_, struct map_rect *mr) {
 	time_t now;
 
 	if (!route_has_graph(this_->route)) {
-		navigation_update_done(this_, mr, 1);
+		navigation_update_done(this_, 1);
 		return;
 	}
 
 	while ((count > 0)) {
 		count--;
-		if (!(ritem = map_rect_get_item(mr))) {
+		if (!(ritem = map_rect_get_item(this_->route_mr))) {
 			time(&now);
 			dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
-			navigation_update_done(this_, mr, 0);
+			navigation_update_done(this_, 0);
 			return;
 		}
 		this_->status |= status_has_ritem;
@@ -3910,7 +3904,6 @@ static void
 navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
 {
 	struct map *map;
-	struct map_rect *mr;
 	struct attr vehicleprofile;
 	int async = 1;					/* FIXME determine if asynchronous routing was requested */
 	time_t now;
@@ -3933,7 +3926,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		navigation_flush(this_);
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental) {
 		if (this_->status & status_busy) {
-			navigation_update_done(this_, mr, 1);
+			navigation_update_done(this_, 1);
 			return;
 		}
 
@@ -3945,8 +3938,8 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	map=route_get_map(this_->route);
 	if (! map)
 		return;
-	mr=map_rect_new(map, NULL);
-	if (! mr)
+	this_->route_mr = map_rect_new(map, NULL);
+	if (! this_->route_mr)
 		return;
 	if (route_get_attr(route, attr_vehicleprofile, &vehicleprofile, NULL))
 		this_->vehicleprofile=vehicleprofile.u.vehicleprofile;
@@ -3956,13 +3949,13 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 
 	this_->status = status_busy;
 	if (async) {
-		this_->idle_cb = callback_new_2(callback_cast(navigation_update_idle), this_, mr);
+		this_->idle_cb = callback_new_1(callback_cast(navigation_update_idle), this_);
 		this_->idle_ev = event_add_idle(50, this_->idle_cb);
 	} else {
 		this_->idle_ev = NULL;
 		this_->idle_cb = NULL;
 		while (this_->status & status_busy)
-			navigation_update_idle(this_, mr);
+			navigation_update_idle(this_);
 	}
 }
 
