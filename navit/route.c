@@ -824,12 +824,20 @@ route_path_update_done(struct route *this, int new_graph)
  * @brief Updates the route graph and the route path if something changed with the route
  *
  * This will update the route graph and the route path of the route if some of the
- * route's settings (destination, position) have changed. 
+ * route's settings (destination, position) have changed.
+ *
+ * The behavior of this function can be controlled via flags:
+ * <ul>
+ * <li>{@code route_path_flag_cancel}: Cancel navigation, clear route graph and route path</li>
+ * <li>{@code route_path_flag_async}: Perform operations asynchronously</li>
+ * <li>{@code route_path_flag_no_rebuild}: Do not rebuild the route graph</li>
+ * </ul>
  * 
  * @attention For this to work the route graph has to be destroyed if the route's 
  * @attention destination is changed somewhere!
  *
  * @param this The route to update
+ * @param flags Flags to control the behavior of this function, see description
  */
 static void
 route_path_update_flags(struct route *this, enum route_path_flags flags)
@@ -867,6 +875,15 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
 	}
 }
 
+/**
+ * @brief Updates the route graph and the route path if something changed with the route
+ *
+ * This function is a wrapper around {@link route_path_update_flags(route *, enum route_path)}.
+ *
+ * @param this The route to update
+ * @param cancel If true, cancel navigation, clear route geaph and route path
+ * @param async If true, perform processing asynchronously
+ */
 static void
 route_path_update(struct route *this, int cancel, int async)
 {
