@@ -140,6 +140,14 @@ struct suffix {
 };
 
 
+enum navigation_status {
+	status_none = 0,
+	status_busy = 1,
+	status_has_ritem = 2,
+	status_has_sitem = 4
+};
+
+
 struct navigation {
 	NAVIT_OBJECT
 	struct route *route;
@@ -166,7 +174,7 @@ struct navigation {
 	int curr_delay;
 	int turn_around_count;
 	int flags;
-	int busy;							/**< Whether we are currently busy generating maneuvers */
+	enum navigation_status status;		/**< Status information used during maneuver generation */
 	struct callback *idle_cb;			/**< Idle callback to process the route map */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
 	time_t starttime;					/**< Time at which route calculation started, used internally for measurements */
@@ -3777,14 +3785,11 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
  * @param this_ Points to the navigation object
  * @param mr Points to a map rect on the route map. After the function returns, the map rect os no
  * longer valid.
- * @param ritem Points to a buffer that will be freed.
- * returns.
- * @param first Points to a buffer that will be freed.
  * @param cancel If true, only cleanup (deallocation of objects) will be done and no maneuvers will be generated.
  * If false, maneuvers will be generated.
  */
 static void
-navigation_update_done(struct navigation *this_, struct map_rect *mr, struct item **ritem, int *first, int cancel) {
+navigation_update_done(struct navigation *this_, struct map_rect *mr, int cancel) {
 	int incr = 0;
 	time_t now;
 
@@ -3799,10 +3804,10 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, struct ite
 		time(&now);
 		dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
 
-		if (*first)
+		if (!(this_->status & status_has_sitem))
 			navigation_destroy_itms_cmds(this_, NULL);
 		else {
-			if (! *ritem) {
+			if (!(this_->status & status_has_ritem)) {
 				navigation_itm_new(this_, NULL);
 				make_maneuvers(this_,this_->route);
 			}
@@ -3812,9 +3817,7 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, struct ite
 		}
 	}
 	map_rect_destroy(mr);
-	g_free(ritem);
-	g_free(first);
-	this_->busy = 0;
+	this_->status = status_none;
 
 	time(&now);
 	dbg(lvl_info, "done, time elapsed: %.f s\n", difftime(now, this_->starttime));
@@ -3836,37 +3839,39 @@ navigation_update_done(struct navigation *this_, struct map_rect *mr, struct ite
  * last call returns.
  */
 static void
-navigation_update_idle(struct navigation *this_, struct map_rect *mr, struct item **ritem, int *first) {
+navigation_update_idle(struct navigation *this_, struct map_rect *mr) {
 	int count = 100;            /* Maximum number of items retrieved in one run of this function.
 	                             * This should be set low enough for each pass to complete in less
 	                             * than a second even on low-performance devices. */
+	struct item *ritem;			/* Holds an item from the route map */
 	struct item *sitem;			/* Holds the item from the actual map which corresponds to ritem */
 	struct attr street_item, street_direction;
 	struct navigation_itm *itm;
 	time_t now;
 
 	if (!route_has_graph(this_->route)) {
-		navigation_update_done(this_, mr, ritem, first, 1);
+		navigation_update_done(this_, mr, 1);
 		return;
 	}
 
 	while ((count > 0)) {
 		count--;
-		if (!(*ritem = map_rect_get_item(mr))) {
+		if (!(ritem = map_rect_get_item(mr))) {
 			time(&now);
 			dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
-			navigation_update_done(this_, mr, ritem, first, 0);
+			navigation_update_done(this_, mr, 0);
 			return;
 		}
-		if ((*ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
+		this_->status |= status_has_ritem;
+		if ((ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
-		if ((*ritem)->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
+		if ((ritem)->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
 			this_->turn_around++;
-		if ((*ritem)->type != type_street_route)
+		if ((ritem)->type != type_street_route)
 			continue;
-		if (*first && item_attr_get(*ritem, attr_street_item, &street_item)) {
-			*first=0;
-			if (!item_attr_get(*ritem, attr_direction, &street_direction))
+		if ((!(this_->status & status_has_sitem)) && item_attr_get(ritem, attr_street_item, &street_item)) {
+			this_->status |= status_has_sitem;
+			if (!item_attr_get(ritem, attr_direction, &street_direction))
 				street_direction.u.num = 0;
 			sitem = street_item.u.item;
 			dbg(lvl_debug,"sitem=%p\n", sitem);
@@ -3878,12 +3883,12 @@ navigation_update_idle(struct navigation *this_, struct map_rect *mr, struct ite
 			}
 			navigation_destroy_itms_cmds(this_, itm);
 			if (itm) {
-				navigation_itm_update(itm, *ritem);
+				navigation_itm_update(itm, ritem);
 				break;
 			}
 			dbg(lvl_debug,"not on track\n");
 		}
-		navigation_itm_new(this_, *ritem);
+		navigation_itm_new(this_, ritem);
 	}
 
 	time(&now);
@@ -3895,9 +3900,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 {
 	struct map *map;
 	struct map_rect *mr;
-	struct item **ritem;			/* Holds an item from the route map */
 	struct attr vehicleprofile;
-	int *first;						/* Whether the next street item retrieved from the map will be the first */
 	int async = 1;					/* FIXME determine if asynchronous routing was requested */
 	time_t now;
 
@@ -3917,8 +3920,14 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
 		navigation_flush(this_);
-	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
+	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental) {
+		if (this_->status & status_busy) {
+			navigation_update_done(this_, mr, 1);
+			return;
+		}
+
 		return;
+	}
 
 	if (! this_->route)
 		return;
@@ -3934,19 +3943,15 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		this_->vehicleprofile=NULL;
 	dbg(lvl_debug,"enter\n");
 
-	first = g_new0(int, 1);
-	*first = 1;
-	ritem = g_new0(struct item *, 1);
-	*ritem = NULL;
-	this_->busy = 1;
+	this_->status = status_busy;
 	if (async) {
-		this_->idle_cb = callback_new_4(callback_cast(navigation_update_idle), this_, mr, ritem, first);
+		this_->idle_cb = callback_new_2(callback_cast(navigation_update_idle), this_, mr);
 		this_->idle_ev = event_add_idle(50, this_->idle_cb);
 	} else {
 		this_->idle_ev = NULL;
 		this_->idle_cb = NULL;
-		while (this_->busy)
-			navigation_update_idle(this_, mr, ritem, first);
+		while (this_->status & status_busy)
+			navigation_update_idle(this_, mr);
 	}
 }
 
