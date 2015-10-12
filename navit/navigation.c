@@ -3780,7 +3780,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
  *
  * It will reset the navigation object's idle event/callback, deallocate some temporary objects and
  * reset the {@code busy} flag. Arguments correspond to those of
- * {@link navigation_update_idle(struct navigation *, struct map_rect *, struct item **, int *)}.
+ * {@link navigation_update_idle(struct navigation *, struct map_rect *)}.
  *
  * @param this_ Points to the navigation object
  * @param mr Points to a map rect on the route map. After the function returns, the map rect os no
@@ -3895,6 +3895,17 @@ navigation_update_idle(struct navigation *this_, struct map_rect *mr) {
 	dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
 }
 
+/**
+ * @brief Event handler for changes to the route.
+ *
+ * This function is added to the callback list of the current route. It is called whenever the
+ * status of the route changes and will either discard the current list of maneuvers or build a new
+ * list.
+ *
+ * @param this_ The navigation object
+ * @param route The route
+ * @param attr The route status attribute
+ */
 static void
 navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
 {
