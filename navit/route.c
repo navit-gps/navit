@@ -78,13 +78,6 @@ struct map_priv {
 
 int debug_route=0;
 
-enum route_path_flags {
-	route_path_flag_none=0,
-	route_path_flag_cancel=1,
-	route_path_flag_async=2,
-	route_path_flag_no_rebuild=4,
-};
-
 /**
  * @brief A point in the route graph
  *
@@ -239,7 +232,7 @@ struct route_path {
 struct route {
 	NAVIT_OBJECT
 	struct mapset *ms;			/**< The mapset this route is built upon */
-	unsigned flags;
+	enum route_path_flags flags;
 	struct route_info *pos;		/**< Current position within this route */
 	GList *destinations;		/**< Destinations of the route */
 	int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
@@ -833,6 +826,8 @@ route_path_update_done(struct route *this, int new_graph)
  * <li>{@code route_path_flag_no_rebuild}: Do not rebuild the route graph</li>
  * </ul>
  * 
+ * These flags will be stored in the {@code flags} member of the route object.
+ *
  * @attention For this to work the route graph has to be destroyed if the route's 
  * @attention destination is changed somewhere!
  *
@@ -843,6 +838,7 @@ static void
 route_path_update_flags(struct route *this, enum route_path_flags flags)
 {
 	dbg(lvl_debug,"enter %d\n", flags);
+	this->flags = flags;
 	if (! this->pos || ! this->destinations) {
 		dbg(lvl_debug,"destroy\n");
 		route_path_destroy(this->path2,1);
@@ -881,12 +877,13 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
  * This function is a wrapper around {@link route_path_update_flags(route *, enum route_path)}.
  *
  * @param this The route to update
- * @param cancel If true, cancel navigation, clear route geaph and route path
+ * @param cancel If true, cancel navigation, clear route graph and route path
  * @param async If true, perform processing asynchronously
  */
 static void
 route_path_update(struct route *this, int cancel, int async)
 {
+	dbg(lvl_error, "cancel=0x%x, async=0x%x\n", cancel, async);
 	enum route_path_flags flags=(cancel ? route_path_flag_cancel:0)|(async ? route_path_flag_async:0);
 	route_path_update_flags(this, flags);
 }
@@ -3915,6 +3912,13 @@ route_get_graph_map(struct route *this_)
 	return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
 }
 
+
+/**
+ * @brief Returns the flags for the route.
+ */
+enum route_path_flags route_get_flags(struct route *this_) {
+	return this_->flags;
+}
 
 /**
  * @brief Whether the route has a valid graph.

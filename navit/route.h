@@ -31,6 +31,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+enum route_path_flags {
+	route_path_flag_none=0,
+	route_path_flag_cancel=1,
+	route_path_flag_async=2,
+	route_path_flag_no_rebuild=4,
+};
+
 enum route_status {
 	route_status_no_destination=0,
 	route_status_destination_set=1,
@@ -111,6 +118,7 @@ void route_info_free(struct route_info *inf);
 struct street_data *route_info_street(struct route_info *rinf);
 struct map *route_get_map(struct route *this_);
 struct map *route_get_graph_map(struct route *this_);
+enum route_path_flags route_get_flags(struct route *this_);
 int route_has_graph(struct route *this_);
 void route_set_projection(struct route *this_, enum projection pro);
 void route_set_destinations(struct route *this_, struct pcoord *dst, int count, int async);

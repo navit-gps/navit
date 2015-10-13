@@ -3843,6 +3843,9 @@ navigation_update_idle(struct navigation *this_) {
 	struct navigation_itm *itm;
 	time_t now;
 
+	/* Do not use the route_path_flag_cancel flag here because it is also used whenever
+	 * destinations or waypoints change, not just when the user stops navigation altogether
+	 */
 	if (!route_has_graph(this_->route)) {
 		navigation_update_done(this_, 1);
 		return;
@@ -3905,7 +3908,6 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 {
 	struct map *map;
 	struct attr vehicleprofile;
-	int async = 1;					/* FIXME determine if asynchronous routing was requested */
 	time_t now;
 
 
@@ -3948,7 +3950,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	dbg(lvl_debug,"enter\n");
 
 	this_->status = status_busy;
-	if (async) {
+	if (route_get_flags(this_->route) & route_path_flag_async) {
 		this_->idle_cb = callback_new_1(callback_cast(navigation_update_idle), this_);
 		this_->idle_ev = event_add_idle(50, this_->idle_cb);
 	} else {
