@@ -2977,6 +2977,23 @@ osm_add_nd(osmid ref)
 }
 
 static void
+write_item_way_subsection_index(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, long long *last_id)
+{
+	osmid idx[2];
+	idx[0]=item_bin_get_wayid(orig);
+	idx[1]=ftello(out);
+	if (way_hash) {
+		if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
+			g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
+	} else {
+		if (!last_id || *last_id != idx[0])
+			dbg_assert(fwrite(idx, sizeof(idx), 1, out_index)==1);
+		if (last_id)
+			*last_id=idx[0];
+	}
+}
+
+static void
 write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
 {
 	struct item_bin new;
@@ -2987,27 +3004,14 @@ write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct it
 	new.type=orig->type;
 	new.clen=(last-first+1)*2;
 	new.len=new.clen+attr_len+2;
-	if (out_index) {
-		osmid idx[2];
-		idx[0]=item_bin_get_wayid(orig);
-		idx[1]=ftello(out);
-		if (way_hash) {
-			if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
-				g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
-		} else {
-			if (!last_id || *last_id != idx[0])
-				fwrite(idx, sizeof(idx), 1, out_index);
-			if (last_id)
-				*last_id=idx[0];
-		}
-
-	}
+	if (out_index)
+		write_item_way_subsection_index(out, out_index, out_graph, orig, last_id);
 #if 0
 	fprintf(stderr,"first %d last %d type 0x%x len %d clen %d attr_len %d\n", first, last, new.type, new.len, new.clen, attr_len);
 #endif
-	fwrite(&new, sizeof(new), 1, out);
-	fwrite(c+first, new.clen*4, 1, out);
-	fwrite(attr, attr_len*4, 1, out);
+	dbg_assert(fwrite(&new, sizeof(new), 1, out)==1);
+	dbg_assert(fwrite(c+first, new.clen*4, 1, out)==1);
+	dbg_assert(fwrite(attr, attr_len*4, 1, out)==1);
 #if 0
 		fwrite(&new, sizeof(new), 1, out_graph);
 		fwrite(c+first, new.clen*4, 1, out_graph);

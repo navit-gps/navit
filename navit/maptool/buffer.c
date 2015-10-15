@@ -30,8 +30,8 @@ save_buffer(char *filename, struct buffer *b, long long offset)
 		f=fopen(filename,"wb+");
 		
 	dbg_assert(f != NULL);
-	fseeko(f, offset, SEEK_SET);
-	fwrite(b->base, b->size, 1, f);
+	dbg_assert(fseeko(f, offset, SEEK_SET)==0);
+	dbg_assert(fwrite(b->base, b->size, 1, f)==1);
 	fclose(f);
 }
 

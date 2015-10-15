@@ -269,7 +269,7 @@ item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, sho
 void
 item_bin_write(struct item_bin *ib, FILE *out)
 {
-	fwrite(ib, (ib->len+1)*4, 1, out);
+	dbg_assert(fwrite(ib, (ib->len+1)*4, 1, out)==1);
 }
 
 struct item_bin *
@@ -587,7 +587,7 @@ item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
 		for (j = 0 ; j < count ; j++) {
 			ib=(struct item_bin *)(idx[j]);
 			c=(struct coord *)(ib+1);
-			fwrite(ib, (ib->len+1)*4, 1, f);
+			dbg_assert(fwrite(ib, (ib->len+1)*4, 1, f)==1);
 			if (r) {
 				for (k = 0 ; k < ib->clen/2 ; k++) {
 					if (rc) 

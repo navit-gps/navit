@@ -109,6 +109,7 @@ struct suffix {
 	char *abbrev;
 	int gender;
 } suffixes[]= {
+	/* DE */
 	{"weg", NULL, masculine},
 /*	{"platz", "pl.", masculine}, collides with Lithuanian "plentas" (which is more frequent) */
 	{"platz", NULL, masculine},
@@ -118,24 +119,29 @@ struct suffix {
 	{"gasse", NULL, feminine},
 	{"straße", "str.", feminine},
 
-	/* some for the dutch lang. */
-	{"straat", NULL, neuter},
-/*	{"weg", NULL, neuter}, doubles-up with German */
-	{"baan", NULL, neuter},
-	{"laan", NULL, neuter},
-	{"wegel", NULL, neuter},
-
-	/* some for the english lang. */
+	/* EN */
 	{"street", NULL, masculine},
 	{"drive", NULL, masculine},
 
-	/* some for Lithuanian, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
+	/* FR */
+	{"boulevard", NULL, masculine},
+	{"chemin", NULL, neuter},
+	{"rue", NULL, feminine},
+
+	/* LT, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
 	{"gatvė", "g.", feminine},
 	{"plentas", "pl.", masculine},
 	{"prospektas", "pr.", masculine},
 	{"alėja", "al.", feminine},
 	{"skersgatvis", "skg.", masculine},
 	{"aikštė", "a.", feminine},
+
+	/* NL */
+	{"straat", NULL, neuter},
+/*	{"weg", NULL, neuter}, doubles-up with German */
+	{"baan", NULL, neuter},
+	{"laan", NULL, neuter},
+	{"wegel", NULL, neuter},
 
 };
 
@@ -993,7 +999,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 			dist_feet = round_distance_reduced(dist_feet);
 		}
 
-		// check for statement in feet
+		/* check for statement in feet */
 		if (dist_feet <= 500)
 		{
 			if (is_length)
@@ -1142,158 +1148,6 @@ navigation_way_init(struct navigation_way *w)
 
 	w->angle2=road_angle(&cbuf[1],&cbuf[0],0);
 }
-
-
-#if 0
-// /home/michael/src/navit/navit/navit/navigation.c:1039:1: warning: ‘navigation_way_get_exit_angle’ defined but not used [-Wunused-function]
-/**
- * @brief Returns the bearing at the end of a way
- *
- * @param w The way to examine
- *
- * @return The bearing, {@code 0 <= bearing < 360}.
- */
-static int
-navigation_way_get_exit_angle(struct navigation_way *w) {
-	int ret = invalid_angle;
-	struct coord cbuf[2];
-	struct item *realitem;
-	struct coord c;
-	struct map_rect *mr;
-
-	mr = map_rect_new(w->item.map, NULL);
-	if (!mr)
-		return ret;
-
-	realitem = map_rect_get_item_byid(mr, w->item.id_hi, w->item.id_lo);
-	if (!realitem) {
-		dbg(lvl_warning,"Item from segment not found on map!\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (realitem->type < type_line || realitem->type >= type_area) {
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (w->dir < 0) {
-		if (item_coord_get(realitem, cbuf, 2) != 2) {
-			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-		c = cbuf[0];
-		cbuf[0] = cbuf[1];
-		cbuf[1] = c;
-	}
-	else {
-		if (item_coord_get(realitem, cbuf, 2) != 2) {
-			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-
-		while (item_coord_get(realitem, &c, 1)) {
-			cbuf[0] = cbuf[1];
-			cbuf[1] = c;
-		}
-	}
-
-	map_rect_destroy(mr);
-
-	ret = road_angle(&cbuf[1],&cbuf[0],0);
-
-	return ret;
-}
-#endif
-
-
-#if 0
-// /home/michael/src/navit/navit/navit/navigation.c:1110:1: warning: ‘navigation_way_get_angle_at’ defined but not used [-Wunused-function]
-/**
- * @brief Returns the bearing of a way at a given distance from its start
- *
- * {@code invalid_angle} will be returned if one of the following errors occurs:
- * <ul>
- * <li>The item is not found on the map</li>
- * <li>The item is not of the correct type</li>
- * <li>The item is shorter than {@code distance}</li>
- * </ul>
- *
- * @param pro The projection used by the map
- * @param w The way to examine
- * @param dist The distance from the start of the way at which to determine bearing
- *
- * @return The bearing, {@code 0 <= bearing < 360}, or {@code invalid_angle} if an error occurred.
- */
-static int
-navigation_way_get_angle_at(struct navigation_way *w, enum projection pro, double dist) {
-	double dist_left = dist; /* distance from last examined point */
-	int ret = invalid_angle;
-	struct coord cbuf[2];
-	struct item *realitem;
-	struct coord c;
-	struct map_rect *mr;
-
-	mr = map_rect_new(w->item.map, NULL);
-	if (!mr)
-		return ret;
-
-	realitem = map_rect_get_item_byid(mr, w->item.id_hi, w->item.id_lo);
-	if (!realitem) {
-		dbg(lvl_warning,"Item from segment not found on map!\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (realitem->type < type_line || realitem->type >= type_area) {
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (item_coord_get(realitem, &cbuf[1], 1) != 1) {
-		dbg(lvl_warning,"item has no coords\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (w->dir < 0) {
-		/* we're going against the direction of the item:
-		 * measure its total length and set distance_left to difference of total length and distance */
-		dist_left = 0;
-		while (item_coord_get(realitem, &c, 1)) {
-			cbuf[0] = cbuf[1];
-			cbuf[1] = c;
-			dist_left += transform_distance(pro, &cbuf[0], &cbuf[1]);
-		}
-
-		// FIXME: dist_left is now the complete length - subtract dist
-
-		item_coord_rewind(realitem);
-
-		if (item_coord_get(realitem, &cbuf[1], 1) != 1) {
-			dbg(lvl_warning,"item has no more coords after rewind\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-	}
-
-	while (item_coord_get(realitem, &c, 1)) {
-		cbuf[0] = cbuf[1];
-		cbuf[1] = c;
-		dist_left -= transform_distance(pro, &cbuf[0], &cbuf[1]);
-		if (dist_left <= 0) {
-			ret = road_angle(&cbuf[0], &cbuf[1], w->dir);
-			map_rect_destroy(mr);
-			return ret;
-		}
-	}
-
-	map_rect_destroy(mr);
-	return ret;
-}
-#endif
 
 
 /**
@@ -2190,7 +2044,6 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 						 * side effects.
 						 */
 						if (m.is_same_street && is_same_street2(old->way.name, old->way.name_systematic, w->name, w->name_systematic) && (!is_motorway_like(&(old->way), 0) || (!is_motorway_like(w, 0) && w->item.type != type_ramp)) && is_way_allowed(nav,w,2))
-							//if (m.is_same_street && is_same_street2(old->way.name, old->way.name_systematic, w->name, w->name_systematic) && (!is_motorway_like(&(old->way), 0) || !is_motorway_like(w, 1)) && is_way_allowed(nav,w,2))
 							m.is_same_street=0;
 						/* If the route category changes to a lower one but another road has the same route category as old,
 						 * it is not clear which of the two the driver would perceive as the "same street", hence reset is_same_street */
@@ -2242,7 +2095,7 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 			int hist_dist = old->length; /* distance between previous and current maneuver */
 			ni = old;
 			while (ni && (hist_through_segments == 0) && (hist_dist <= junction_limit)) {
-				// TODO: shouldn't the condition be (hist_through_segments < 2) to catch through segments that are slightly offset??
+				/* TODO: shouldn't the condition be (hist_through_segments < 2) to catch through segments that are slightly offset?? */
 				struct navigation_way *w = ni->way.next;
 				while (w) {
 					if (is_same_street2(new->way.name, new->way.name_systematic, w->name, w->name_systematic)
@@ -2839,10 +2692,10 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 				}
 
 
-				// Investigate the strengthening of announcement.
+				/* Investigate the strengthening of announcement. */
 				switch (more_ways_for_strength) {
 				case 0:
-					// Only one possibility to turn to this direction
+					/* Only one possibility to turn to this direction */
 					if (ret->delta < -sharp_turn_limit) {
 						ret->maneuver->type = type_nav_left_3; /* strongly left */
 					} else if (ret->delta <= 0) {
@@ -2856,7 +2709,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 				case 1:
 					/* One additional possibility to turn to the same direction */
 					if (turn_no_of_route_way == 0) {
-						// the route is less strong to turn
+						/* the route is less strong to turn */
 						if (ret->delta < -turn_2_limit) {
 							ret->maneuver->type = type_nav_left_2;  /* normally left */
 						} else if (ret->delta <= 0) {
@@ -2903,7 +2756,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 						}
 					}
 					else if (turn_no_of_route_way > 1) {
-						// if the route is the strongest of all possible turns here
+						/* if the route is the strongest of all possible turns here */
 						if (ret->delta < -u_turn_limit) {
 							ret->maneuver->type = type_nav_turnaround_left; /* turn around left */
 						} else if (ret->delta < -sharp_turn_limit) {
@@ -3659,7 +3512,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 static char *
 show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
 {
-	int distance = itm->dest_length-cmd->itm->dest_length; // distance from e.g. current GPS position to next announced turn position
+	int distance = itm->dest_length-cmd->itm->dest_length; /* distance from e.g. current GPS position to next announced turn position */
 	enum announcement_level level;
 	char *ret,*buf,*next;
 
@@ -3697,17 +3550,17 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	}
 
 	if (cmd->next && cmd->itm) {
-		// determine the level of the command that comes immediately after that.
+		/* determine the level of the command that comes immediately after that. */
 		enum announcement_level nextlevel = navigation_get_announce_level(nav, cmd->itm->way.item.type, cmd->itm->dest_length - cmd->next->itm->dest_length);
 
-		// If this level starts with 1 or 0 concatenate the following announcement to the current:
+		/* If this level starts with 1 or 0 concatenate the following announcement to the current: */
 		if (nextlevel <= level_soon) {
 			next = show_maneuver(nav, cmd->itm, cmd->next, type, level_connect);
 			if (*next != '\0') /* is the second announcement not an empty string? */
 			{
 				cmd->itm->told = 1;
 				buf = ret;
-				ret = g_strdup_printf("%s, %s", buf, next); // concatenate both announcements
+				ret = g_strdup_printf("%s, %s", buf, next); /* concatenate both announcements */
 				g_free(buf);
 			}
 			g_free(next);

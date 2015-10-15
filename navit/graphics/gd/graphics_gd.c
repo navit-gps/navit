@@ -430,7 +430,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 			h=g->h;
 			if (w && h) {
 				im=gdImageCreateTrueColor(w+2, h+2);
-				gr->freetype_methods.get_shadow(g,(unsigned char *)(im->tpixels),32,0,&bgc,&transparent);
+				gr->freetype_methods.get_shadow(g,(unsigned char *)(im->tpixels),0,&bgc,&transparent);
 				gdImageCopy(gr->im, im, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, 0, 0, w+2, h+2);
 				gdImageDestroy(im);
 			}
@@ -450,7 +450,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		h=g->h;
 		if (w && h) {
 			im=gdImageCreateTrueColor(w, h);
-			gr->freetype_methods.get_glyph(g,(unsigned char *)(im->tpixels),32,0,&fgc,&bgc,&transparent);
+			gr->freetype_methods.get_glyph(g,(unsigned char *)(im->tpixels),0,&fgc,&bgc,&transparent);
 			gdImageCopy(gr->im, im, (x+g->x)>>6, (y+g->y)>>6, 0, 0, w, h);
 			gdImageDestroy(im);
 		}

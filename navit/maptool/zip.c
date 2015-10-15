@@ -20,6 +20,7 @@
 #include <zlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include "debug.h"
 #include "maptool.h"
 #include "config.h"
 #include "zipfile.h"
@@ -261,16 +262,16 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		zip_info->offset+=sizeof(mac);
 	}
 #endif
-	fwrite(&cd, sizeof(cd), 1, zip_info->dir);
-	fwrite(filename, filelen, 1, zip_info->dir);
+	dbg_assert(fwrite(&cd, sizeof(cd), 1, zip_info->dir)==1);
+	dbg_assert(fwrite(filename, filelen, 1, zip_info->dir)==1);
 	zip_info->dir_size+=sizeof(cd)+filelen;
 	if (zip_info->zip64) {
-		fwrite(&cd_ext, sizeof(cd_ext), 1, zip_info->dir);
+		dbg_assert(fwrite(&cd_ext, sizeof(cd_ext), 1, zip_info->dir)==1);
 		zip_info->dir_size+=sizeof(cd_ext);
 	}
 #ifdef HAVE_LIBCRYPTO
 	if (zip_info->passwd) {
-		fwrite(&enc, sizeof(enc), 1, zip_info->dir);
+		dbg_assert(fwrite(&enc, sizeof(enc), 1, zip_info->dir)==1);
 		zip_info->dir_size+=sizeof(enc);
 	}
 #endif
