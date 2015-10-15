@@ -184,7 +184,6 @@ struct navigation {
 	enum navigation_status status;		/**< Status information used during maneuver generation */
 	struct callback *idle_cb;			/**< Idle callback to process the route map */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
-	time_t starttime;					/**< Time at which route calculation started, used internally for measurements */
 };
 
 /** @brief Set of simplified distance values that are easy to be pronounced.
@@ -3645,7 +3644,6 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 static void
 navigation_update_done(struct navigation *this_, int cancel) {
 	int incr = 0;
-	time_t now;
 
 	if (this_->idle_ev)
 		event_remove_idle(this_->idle_ev);
@@ -3655,8 +3653,7 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	this_->idle_cb=NULL;
 
 	if (!cancel) {
-		time(&now);
-		dbg(lvl_info, "generating maneuvers, time elapsed: %.f s\n", difftime(now, this_->starttime));
+		profile(1, "generating maneuvers\n");
 
 		if (!(this_->status & status_has_sitem))
 			navigation_destroy_itms_cmds(this_, NULL);
@@ -3674,8 +3671,7 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	this_->route_mr = NULL;
 	this_->status = status_none;
 
-	time(&now);
-	dbg(lvl_info, "done, time elapsed: %.f s\n", difftime(now, this_->starttime));
+	profile(1, "done\n");
 }
 
 /**
@@ -3694,7 +3690,6 @@ navigation_update_idle(struct navigation *this_) {
 	struct item *sitem;			/* Holds the item from the actual map which corresponds to ritem */
 	struct attr street_item, street_direction;
 	struct navigation_itm *itm;
-	time_t now;
 
 	/* Do not use the route_path_flag_cancel flag here because it is also used whenever
 	 * destinations or waypoints change, not just when the user stops navigation altogether
@@ -3707,8 +3702,7 @@ navigation_update_idle(struct navigation *this_) {
 	while ((count > 0)) {
 		count--;
 		if (!(ritem = map_rect_get_item(this_->route_mr))) {
-			time(&now);
-			dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
+			profile(1, "processed %d map items\n", (100 - count));
 			navigation_update_done(this_, 0);
 			return;
 		}
@@ -3741,8 +3735,7 @@ navigation_update_idle(struct navigation *this_) {
 		navigation_itm_new(this_, ritem);
 	}
 
-	time(&now);
-	dbg(lvl_info, "processed %d map items, time elapsed: %.f s\n", (100 - count), difftime(now, this_->starttime));
+	profile(1, "processed %d map items\n", (100 - count));
 }
 
 /**
@@ -3761,7 +3754,6 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 {
 	struct map *map;
 	struct attr vehicleprofile;
-	time_t now;
 
 
 	if (attr->type != attr_route_status)
@@ -3770,11 +3762,10 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	dbg(lvl_debug,"enter\n");
 
 	if (attr->u.num == route_status_building_graph) {
-		time(&(this_->starttime));
-		dbg(lvl_info, "route status changed to 0x%x, time elapsed reset to 0 s\n", attr->u.num);
+		profile(1, NULL);
+		dbg(lvl_debug, "route status changed to 0x%x\n", attr->u.num);
 	} else if ((attr->u.num != route_status_destination_set) && (attr->u.num != route_status_no_destination)) {
-		time(&now);
-		dbg(lvl_info, "route status changed to 0x%x, time elapsed: %.f s\n", attr->u.num, difftime(now, this_->starttime));
+		profile(1, "route status changed to 0x%x\n", attr->u.num);
 	}
 
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
