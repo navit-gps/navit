@@ -3653,8 +3653,6 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	this_->idle_cb=NULL;
 
 	if (!cancel) {
-		profile(1, "generating maneuvers\n");
-
 		if (!(this_->status & status_has_sitem))
 			navigation_destroy_itms_cmds(this_, NULL);
 		else {
@@ -3670,8 +3668,6 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	map_rect_destroy(this_->route_mr);
 	this_->route_mr = NULL;
 	this_->status = status_none;
-
-	profile(1, "done\n");
 }
 
 /**
@@ -3702,7 +3698,6 @@ navigation_update_idle(struct navigation *this_) {
 	while ((count > 0)) {
 		count--;
 		if (!(ritem = map_rect_get_item(this_->route_mr))) {
-			profile(1, "processed %d map items\n", (100 - count));
 			navigation_update_done(this_, 0);
 			return;
 		}
@@ -3734,8 +3729,6 @@ navigation_update_idle(struct navigation *this_) {
 		}
 		navigation_itm_new(this_, ritem);
 	}
-
-	profile(1, "processed %d map items\n", (100 - count));
 }
 
 /**
@@ -3760,13 +3753,6 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		return;
 
 	dbg(lvl_debug,"enter\n");
-
-	if (attr->u.num == route_status_building_graph) {
-		profile(1, NULL);
-		dbg(lvl_debug, "route status changed to 0x%x\n", attr->u.num);
-	} else if ((attr->u.num != route_status_destination_set) && (attr->u.num != route_status_no_destination)) {
-		profile(1, "route status changed to 0x%x\n", attr->u.num);
-	}
 
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
 		navigation_flush(this_);
