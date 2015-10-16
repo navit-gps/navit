@@ -314,11 +314,17 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 static void
 vehicle_gpsd_io(struct vehicle_priv *priv)
 {
+	int result = -1;
+
 	dbg(lvl_debug, "enter\n");
 	if (priv->gps) {
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
-                if(gps_read(priv->gps)==-1) {
+		/* Try to catch up, in case we're lagging behind. */
+	 	while (gps_waiting (priv->gps, 500)) {
+	 		result = gps_read(priv->gps);
+	 	}
+                if(result == -1) {
                   dbg(lvl_error,"gps_poll failed\n");
                   vehicle_gpsd_close(priv);
                   vehicle_gpsd_open(priv);
