@@ -3695,12 +3695,9 @@ navigation_update_idle(struct navigation *this_) {
 		return;
 	}
 
-	while ((count > 0)) {
-		count--;
-		if (!(ritem = map_rect_get_item(this_->route_mr))) {
-			navigation_update_done(this_, 0);
-			return;
-		}
+	while (count > 0) {
+		if (!(ritem = map_rect_get_item(this_->route_mr)))
+			break;
 		this_->status |= status_has_ritem;
 		if ((ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
@@ -3728,6 +3725,12 @@ navigation_update_idle(struct navigation *this_) {
 			dbg(lvl_debug,"not on track\n");
 		}
 		navigation_itm_new(this_, ritem);
+		count--;
+	}
+	if (count > 0) {
+		/* if count > 0, one of the break conditions in the loop was true and we're done */
+		navigation_update_done(this_, 0);
+		return;
 	}
 }
 
