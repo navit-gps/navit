@@ -883,7 +883,6 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
 static void
 route_path_update(struct route *this, int cancel, int async)
 {
-	dbg(lvl_error, "cancel=0x%x, async=0x%x\n", cancel, async);
 	enum route_path_flags flags=(cancel ? route_path_flag_cancel:0)|(async ? route_path_flag_async:0);
 	route_path_update_flags(this, flags);
 }
