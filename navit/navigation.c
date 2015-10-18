@@ -3669,10 +3669,9 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	/*
 	 * In order to ensure that route_mr holds either NULL or a valid pointer at any given time,
 	 * always pass a copy of it to map_rect_destroy() and set route_mr to NULL prior to calling
-	 * map_rect_destroy(). The reason is that map_rect_destroy() for a route map may call idle
-	 * callback functions before it returns. If one of these calls results in a call to
-	 * navigation_update(), a race condition will occur. For the same reason, status must be reset
-	 * before the call to map_rect_destroy().
+	 * map_rect_destroy(). The reason is that map_rect_destroy() for a route map may indirectly
+	 * call navigation_update(), which will modify the same members. For the same reason, status
+	 * must be reset before the call to map_rect_destroy().
 	 */
 	this_->status = status_none;
 	this_->route_mr = NULL;

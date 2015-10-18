@@ -3631,7 +3631,7 @@ rm_rect_destroy(struct map_rect_priv *mr)
 	}
 	if (mr->path) {
 		mr->path->in_use--;
-		if (mr->path->update_required && (mr->path->in_use==1)) 
+		if (mr->path->update_required && (mr->path->in_use==1) && (mr->mpriv->route->route_status & ~route_status_destination_set))
 			route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
 		else if (!mr->path->in_use)
 			g_free(mr->path);
