@@ -3644,6 +3644,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 static void
 navigation_update_done(struct navigation *this_, int cancel) {
 	int incr = 0;
+	struct map_rect *mr = this_->route_mr;
 
 	if (this_->idle_ev)
 		event_remove_idle(this_->idle_ev);
@@ -3665,13 +3666,21 @@ navigation_update_done(struct navigation *this_, int cancel) {
 			navigation_call_callbacks(this_, FALSE);
 		}
 	}
-	map_rect_destroy(this_->route_mr);
-	this_->route_mr = NULL;
+	/*
+	 * In order to ensure that route_mr holds either NULL or a valid pointer at any given time,
+	 * always pass a copy of it to map_rect_destroy() and set route_mr to NULL prior to calling
+	 * map_rect_destroy(). The reason is that map_rect_destroy() for a route map may call idle
+	 * callback functions before it returns. If one of these calls results in a call to
+	 * navigation_update(), a race condition will occur. For the same reason, status must be reset
+	 * before the call to map_rect_destroy().
+	 */
 	this_->status = status_none;
+	this_->route_mr = NULL;
+	map_rect_destroy(mr);
 }
 
 /**
- * @brief Idle loop function to retrieve items from the route map.
+ * @brief Idle callback function to retrieve items from the route map.
  *
  * @param this_ Points to the navigation object. The caller is responsible for initializing its
  * {@code route_mr} member. After processing completes, the {@code route_mr} member will no longer
@@ -3696,8 +3705,10 @@ navigation_update_idle(struct navigation *this_) {
 	}
 
 	while (count > 0) {
-		if (!(ritem = map_rect_get_item(this_->route_mr)))
+		if (!(ritem = map_rect_get_item(this_->route_mr))) {
+			this_->status &= ~(status_has_ritem);
 			break;
+		}
 		this_->status |= status_has_ritem;
 		if ((ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
@@ -3762,9 +3773,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental) {
 		if (this_->status & status_busy) {
 			navigation_update_done(this_, 1);
-			return;
 		}
-
 		return;
 	}
 
