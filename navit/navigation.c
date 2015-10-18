@@ -146,7 +146,15 @@ struct suffix {
 };
 
 
-enum navigation_status {
+enum nav_status {
+	status_no_route = -1,
+	status_no_destination = 0,
+	status_position_wait = 1,
+	status_calculating = 2,
+	status_routing = 3,
+};
+
+enum nav_status_int {
 	status_none = 0,
 	status_busy = 1,
 	status_has_ritem = 2,
@@ -181,9 +189,10 @@ struct navigation {
 	int turn_around_count;
 	int flags;
 	struct map_rect *route_mr;			/**< Map rect on the route map, used for maneuver generation */
-	enum navigation_status status;		/**< Status information used during maneuver generation */
+	enum nav_status_int status_int;		/**< Internal status information used during maneuver generation */
 	struct callback *idle_cb;			/**< Idle callback to process the route map */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
+	int nav_status;						/**< Status of the navigation engine */
 };
 
 /** @brief Set of simplified distance values that are easy to be pronounced.
@@ -707,6 +716,9 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 	case attr_turn_around_count:
 		attr->u.num=this_->turn_around_count;
 		break;
+	case attr_nav_status:
+		attr->u.num=this_->nav_status;
+		break;
 	default:
 		return navit_object_get_attr((struct navit_object *)this_, type, attr, iter);
 	}
@@ -727,13 +739,24 @@ navigation_set_turnaround(struct navigation *this_, int val)
 int
 navigation_set_attr(struct navigation *this_, struct attr *attr)
 {
+	int attr_updated=0;
 	switch (attr->type) {
 	case attr_speech:
 		this_->speech=attr->u.speech;
 		break;
+	case attr_nav_status:
+		attr_updated = (this_->nav_status != attr->u.num);
+		this_->nav_status = attr->u.num;
+		break;
 	default:
 		break;
 	}
+	/*
+	if (attr_updated)
+		callback_list_call_attr_2(this_->cbl2, attr->type, this_, attr);
+	*/
+	if (attr_updated)
+		dbg(lvl_error, "updated %s, new value %d\n", attr_to_name(attr->type), attr->u.num);
 	return navit_object_set_attr((struct navit_object *)this_, attr);
 }
 
@@ -3645,6 +3668,7 @@ static void
 navigation_update_done(struct navigation *this_, int cancel) {
 	int incr = 0;
 	struct map_rect *mr = this_->route_mr;
+	struct attr nav_status;
 
 	if (this_->idle_ev)
 		event_remove_idle(this_->idle_ev);
@@ -3654,10 +3678,12 @@ navigation_update_done(struct navigation *this_, int cancel) {
 	this_->idle_cb=NULL;
 
 	if (!cancel) {
-		if (!(this_->status & status_has_sitem))
+		nav_status.type = attr_nav_status;
+		nav_status.u.num = status_routing;
+		if (!(this_->status_int & status_has_sitem))
 			navigation_destroy_itms_cmds(this_, NULL);
 		else {
-			if (!(this_->status & status_has_ritem)) {
+			if (!(this_->status_int & status_has_ritem)) {
 				navigation_itm_new(this_, NULL);
 				make_maneuvers(this_,this_->route);
 			}
@@ -3665,15 +3691,16 @@ navigation_update_done(struct navigation *this_, int cancel) {
 			profile(0,"end");
 			navigation_call_callbacks(this_, FALSE);
 		}
+		navigation_set_attr(this_, &nav_status);
 	}
 	/*
 	 * In order to ensure that route_mr holds either NULL or a valid pointer at any given time,
 	 * always pass a copy of it to map_rect_destroy() and set route_mr to NULL prior to calling
 	 * map_rect_destroy(). The reason is that map_rect_destroy() for a route map may indirectly
-	 * call navigation_update(), which will modify the same members. For the same reason, status
-	 * must be reset before the call to map_rect_destroy().
+	 * call navigation_update(), which will modify the same members. For the same reason,
+	 * status_int must be reset before the call to map_rect_destroy().
 	 */
-	this_->status = status_none;
+	this_->status_int = status_none;
 	this_->route_mr = NULL;
 	map_rect_destroy(mr);
 }
@@ -3705,18 +3732,18 @@ navigation_update_idle(struct navigation *this_) {
 
 	while (count > 0) {
 		if (!(ritem = map_rect_get_item(this_->route_mr))) {
-			this_->status &= ~(status_has_ritem);
+			this_->status_int &= ~(status_has_ritem);
 			break;
 		}
-		this_->status |= status_has_ritem;
+		this_->status_int |= status_has_ritem;
 		if ((ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
 		if ((ritem)->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
 			this_->turn_around++;
 		if ((ritem)->type != type_street_route)
 			continue;
-		if ((!(this_->status & status_has_sitem)) && item_attr_get(ritem, attr_street_item, &street_item)) {
-			this_->status |= status_has_sitem;
+		if ((!(this_->status_int & status_has_sitem)) && item_attr_get(ritem, attr_street_item, &street_item)) {
+			this_->status_int |= status_has_sitem;
 			if (!item_attr_get(ritem, attr_direction, &street_direction))
 				street_direction.u.num = 0;
 			sitem = street_item.u.item;
@@ -3760,17 +3787,36 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 {
 	struct map *map;
 	struct attr vehicleprofile;
-
+	struct attr nav_status;
 
 	if (attr->type != attr_route_status)
 		return;
 
 	dbg(lvl_debug,"enter\n");
 
+	nav_status.type = attr_nav_status;
+	switch(attr->u.num) {
+	case route_status_not_found:
+		nav_status.u.num = status_no_route;
+		break;
+	case route_status_no_destination:
+		nav_status.u.num = status_no_destination;
+		break;
+	case route_status_destination_set:
+		nav_status.u.num = status_position_wait;
+		break;
+	case route_status_building_path:
+	case route_status_building_graph:
+	case route_status_path_done_new:
+	case route_status_path_done_incremental:
+		nav_status.u.num = status_calculating;
+	}
+	navigation_set_attr(this_, &nav_status);
+
 	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
 		navigation_flush(this_);
 	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental) {
-		if (this_->status & status_busy) {
+		if (this_->status_int & status_busy) {
 			navigation_update_done(this_, 1);
 		}
 		return;
@@ -3790,14 +3836,14 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		this_->vehicleprofile=NULL;
 	dbg(lvl_debug,"enter\n");
 
-	this_->status = status_busy;
+	this_->status_int = status_busy;
 	if (route_get_flags(this_->route) & route_path_flag_async) {
 		this_->idle_cb = callback_new_1(callback_cast(navigation_update_idle), this_);
 		this_->idle_ev = event_add_idle(50, this_->idle_cb);
 	} else {
 		this_->idle_ev = NULL;
 		this_->idle_cb = NULL;
-		while (this_->status & status_busy)
+		while (this_->status_int & status_busy)
 			navigation_update_idle(this_);
 	}
 }
