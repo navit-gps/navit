@@ -752,12 +752,6 @@ navigation_set_attr(struct navigation *this_, struct attr *attr)
 	default:
 		break;
 	}
-	/*
-	if (attr_updated)
-		callback_list_call_attr_2(this_->cbl2, attr->type, this_, attr);
-	*/
-	if (attr_updated)
-		dbg(lvl_error, "updated %s, new value %d\n", attr_to_name(attr->type), attr->u.num);
 	return navit_object_set_attr((struct navit_object *)this_, attr);
 }
 
