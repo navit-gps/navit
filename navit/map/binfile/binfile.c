@@ -2514,6 +2514,7 @@ static struct map_methods map_methods_binfile = {
 	NULL,
 	binmap_get_attr,
 	binmap_set_attr,
+	NULL,
 };
 
 static int

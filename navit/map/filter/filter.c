@@ -383,6 +383,7 @@ static struct map_methods map_methods_filter = {
 	NULL,
 	NULL,
 	map_filter_set_attr,
+	NULL,
 };
 
 

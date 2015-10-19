@@ -1488,6 +1488,7 @@ static struct map_methods map_methods_garmin_img = {
 	map_rect_destroy_garmin_img,
 	map_rect_get_item_garmin_img,
 	map_rect_get_item_byid_garmin_img,
+	NULL,
 };
 
 static struct map_priv *

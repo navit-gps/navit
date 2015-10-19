@@ -633,6 +633,7 @@ static struct map_methods map_methods_shapefile = {
 	map_rect_destroy_shapefile,
 	map_rect_get_item_shapefile,
 	map_rect_get_item_byid_shapefile,
+	NULL,
 };
 
 static struct map_priv *

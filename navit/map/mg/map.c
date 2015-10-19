@@ -562,6 +562,7 @@ static struct map_methods map_methods_mg = {
 	map_search_new_mg,
 	map_search_destroy_mg,
 	map_search_get_item_mg,
+	NULL,
 };
 
 

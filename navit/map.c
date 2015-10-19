@@ -732,6 +732,13 @@ map_rect_create_item(struct map_rect *mr, enum item_type type_)
 	}
 }
 
+void
+map_reload(struct map *map)
+{
+	if (map->meth.map_reload)
+		map->meth.map_reload(map->priv);
+}
+
 struct object_func map_func = {
 	attr_map,
 	(object_func_new)map_new,
