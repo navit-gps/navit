@@ -151,7 +151,8 @@ enum nav_status {
 	status_no_destination = 0,
 	status_position_wait = 1,
 	status_calculating = 2,
-	status_routing = 3,
+	status_recalculating = 3,
+	status_routing = 4,
 };
 
 enum nav_status_int {
@@ -3809,7 +3810,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	case route_status_building_graph:
 	case route_status_path_done_new:
 	case route_status_path_done_incremental:
-		nav_status.u.num = status_calculating;
+		nav_status.u.num = (this_->nav_status >= status_recalculating) ? status_recalculating : status_calculating;
 	}
 	navigation_set_attr(this_, &nav_status);
 
