@@ -489,7 +489,7 @@ public class NavitGraphics
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN)
 				{
-					s = java.lang.String.valueOf((char) 16);
+					s = java.lang.String.valueOf((char) 14);
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT)
 				{
@@ -501,7 +501,7 @@ public class NavitGraphics
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_UP)
 				{
-					s = java.lang.String.valueOf((char) 14);
+					s = java.lang.String.valueOf((char) 16);
 				}
 			} 
 			else if (i == 10)
