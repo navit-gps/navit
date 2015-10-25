@@ -243,6 +243,8 @@ public class Navit extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
+			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		dialogs = new NavitDialogs(this);
 
