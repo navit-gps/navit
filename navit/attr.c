@@ -35,6 +35,7 @@
 #include "coord.h"
 #include "transform.h"
 #include "color.h"
+#include "navigation.h"
 #include "attr.h"
 #include "map.h"
 #include "config.h"
@@ -354,6 +355,9 @@ flags_to_text(int flags)
  * @param map The translation map. This is only needed for string type attributes or group type
  * attributes which might contain strings. It can be NULL for other attribute types. If a string
  * type attribute is encountered and {@code map} is NULL, the string will be returned unchanged.
+ *
+ * @return The attribute data in human-readable form. The caller is responsible for calling {@code g_free()} on
+ * the result when it is no longer needed.
  */
 char *
 attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map)
@@ -463,6 +467,9 @@ attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_f
 	}
 	if (type >= attr_type_item_type_begin && type <= attr_type_item_type_end) {
 		return g_strdup_printf("0x%ld[%s]",attr->u.num,item_to_name(attr->u.num));
+	}
+	if (type == attr_nav_status) {
+		return nav_status_to_text(attr->u.num);
 	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }

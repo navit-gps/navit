@@ -146,15 +146,6 @@ struct suffix {
 };
 
 
-enum nav_status {
-	status_no_route = -1,
-	status_no_destination = 0,
-	status_position_wait = 1,
-	status_calculating = 2,
-	status_recalculating = 3,
-	status_routing = 4,
-};
-
 enum nav_status_int {
 	status_none = 0,
 	status_busy = 1,
@@ -681,6 +672,46 @@ select_announced_destinations(struct navigation_command *current_command)
 }
 
 
+/**
+ * @brief Converts navigation status to human-readable text.
+ *
+ * @param The status. This must be one of the values for {@code enum nav_status}.
+ *
+ * @return A string which corresponds to the constant value. The caller is responsible for calling
+ * {@code g_free()} when the result is no longer needed.
+ */
+char *nav_status_to_text(int status) {
+	char *ret;
+
+	switch (status) {
+	case status_invalid:
+		ret = g_strdup("status_invalid");
+		break;
+	case status_no_route:
+		ret = g_strdup("status_no_route");
+		break;
+	case status_no_destination:
+		ret = g_strdup("status_no_destination");
+		break;
+	case status_position_wait:
+		ret = g_strdup("status_position_wait");
+		break;
+	case status_calculating:
+		ret = g_strdup("status_calculating");
+		break;
+	case status_recalculating:
+		ret = g_strdup("status_recalculating");
+		break;
+	case status_routing:
+		ret = g_strdup("status_routing");
+		break;
+	default:
+		ret = g_strdup_printf("status_unknown_%d)", status);
+	}
+	return ret;
+}
+
+
 int
 navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
@@ -740,13 +771,11 @@ navigation_set_turnaround(struct navigation *this_, int val)
 int
 navigation_set_attr(struct navigation *this_, struct attr *attr)
 {
-	int attr_updated=0;
 	switch (attr->type) {
 	case attr_speech:
 		this_->speech=attr->u.speech;
 		break;
 	case attr_nav_status:
-		attr_updated = (this_->nav_status != attr->u.num);
 		this_->nav_status = attr->u.num;
 		break;
 	default:
@@ -3860,23 +3889,71 @@ navigation_destroy(struct navigation *this_)
 	g_free(this_);
 }
 
+/**
+ * @brief Registers a new callback function.
+ *
+ * Callback functions are called whenever the attribute for which they are registered changes.
+ * It is possible to register callbacks for {@code attr_any}, which will fire on any change.
+ *
+ * The {@code navigation} object has three callback lists. They differ by the arguments which are
+ * passed to the callback function and are selected based on the attribute type:
+ * <ul>
+ * <li>Callbacks for the {@code navigation_speech} attribute are added to the
+ * {@code callback_speech} list.</li>
+ * <li>Callbacks for the {@code navigation_long} attribute are added to the {@code callback} list.
+ * </li>
+ * <li>Callbacks for any other attribute, including {@code attr_any}, are added to the list stored
+ * in the {@code callback_list} attribute. This functionality is inherited from
+ * {@code navit_object}.</li>
+ * </ul>
+ *
+ * @param this_ The navigation object.
+ * @param type The attribute type
+ * @param cb The callback function
+ *
+ * @return true on success, false on failure
+ */
 int
 navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
+	struct attr attr_cbl;
+
 	if (type == attr_navigation_speech)
 		callback_list_add(this_->callback_speech, cb);
-	else
+	else if (type == attr_navigation_long)
 		callback_list_add(this_->callback, cb);
+	else {
+		if (navigation_get_attr(this_, attr_callback_list, &attr_cbl, NULL))
+			callback_list_add(attr_cbl.u.callback_list, cb);
+		else
+			return 0;
+	}
 	return 1;
 }
 
+/**
+ * @brief Unregisters a callback function.
+ *
+ * This function removes a previously registered callback function from the callback list to which
+ * it was added. See the documentation on
+ * {@link navigation_register_callback(struct navigation *, enum attr_type, struct callback *)} for
+ * details on callback lists.
+ *
+ * @param this_ The navigation object.
+ * @param type The attribute type
+ * @param cb The callback function
+ */
 void
 navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
+	struct attr attr_cbl;
+
 	if (type == attr_navigation_speech)
 		callback_list_remove(this_->callback_speech, cb);
-	else
+	else if (type == attr_navigation_long)
 		callback_list_remove(this_->callback, cb);
+	else if (navigation_get_attr(this_, attr_callback_list, &attr_cbl, NULL))
+		callback_list_remove(attr_cbl.u.callback_list, cb);
 }
 
 struct map *
