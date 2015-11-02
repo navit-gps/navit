@@ -240,12 +240,16 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key)
 static void
 osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 {
+	char *err = NULL;	/* Error description */
+
 	if (!command_saved_error(cs)) {
 		item->configured = !! command_saved_get_int(cs);
 		if (item->gr && !(item->flags & 16)) 
 			graphics_overlay_disable(item->gr, !item->configured);
 	} else {
-		dbg(lvl_error, "Error in saved command: %i\n", command_saved_error(cs));
+		err = command_error_to_text(command_saved_error(cs));
+		dbg(lvl_error, "Error in saved command: %s, cs=%p.\n", err, cs);
+		g_free(err);
 	}
 }
 
@@ -330,6 +334,8 @@ void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {
 	struct attr attr;
+	char *err = NULL;	/* Error description */
+
 	dbg(lvl_debug,"enter\n");
 	if (item->enable_cs) {
 		item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
@@ -338,7 +344,9 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 		if (!command_saved_error(item->enable_cs)) {
 			item->configured = !! command_saved_get_int(item->enable_cs);
 		} else {
-			dbg(lvl_error, "Error in saved command: %i.\n", command_saved_error(item->enable_cs));
+			err = command_error_to_text(command_saved_error(item->enable_cs));
+			dbg(lvl_error, "Error in saved command: %s, item=%p.\n", err, item);
+			g_free(err);
 		}
 	} else {
 		if (!navit_get_attr(navit, attr_osd_configuration, &attr, NULL))

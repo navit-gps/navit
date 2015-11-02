@@ -88,6 +88,51 @@ enum set_type {
 static void eval_comma(struct context *ctx, struct result *res);
 static struct attr ** eval_list(struct context *ctx);
 
+/**
+ * @brief Converts an error to human-readable text.
+ *
+ * @param err The error code
+ *
+ * @return A string containing the error description. The caller is responsible for freeing up the string by
+ * calling {@code g_free()} when it is no longer needed.
+ */
+char *command_error_to_text(int err) {
+	switch (err) {
+	case no_error:
+		return g_strdup("no_error");
+	case missing_double_quote:
+		return g_strdup("missing_double_quote");
+	case missing_opening_parenthesis:
+		return g_strdup("missing_opening_parenthesis");
+	case missing_closing_parenthesis:
+		return g_strdup("missing_closing_parenthesis");
+	case missing_closing_brace:
+		return g_strdup("missing_closing_brace");
+	case missing_colon:
+		return g_strdup("missing_colon");
+	case missing_semicolon:
+		return g_strdup("missing_semicolon");
+	case wrong_type:
+		return g_strdup("wrong_type");
+	case illegal_number_format:
+		return g_strdup("illegal_number_format");
+	case illegal_character:
+		return g_strdup("illegal_character");
+	case missing_closing_bracket:
+		return g_strdup("missing_closing_bracket");
+	case invalid_type:
+		return g_strdup("invalid_type");
+	case not_ready:
+		return g_strdup("not_ready");
+	case internal:
+		return g_strdup("internal");
+	case eof_reached:
+		return g_strdup("eof_reached");
+	default:
+		return g_strdup("unknown");
+	}
+}
+
 static void
 result_free(struct result *res)
 {
@@ -1360,6 +1405,7 @@ command_evaluate(struct attr *attr, const char *expr)
 	 * subsequent command call. Hence the g_strdup. */
 
 	char *expr_dup;
+	char *err = NULL;	/* Error description */
 	struct context ctx={0,};
 	ctx.attr=attr;
 	ctx.error=0;
@@ -1372,7 +1418,9 @@ command_evaluate(struct attr *attr, const char *expr)
 		char expr[32];
 		strncpy(expr, ctx.expr, 32);
 		expr[31]='\0';
-		dbg(lvl_error,"error %d starting at %s\n",ctx.error,expr);
+		err = command_error_to_text(ctx.error);
+		dbg(lvl_error, "error %s starting at %s\n", err, expr);
+		g_free(err);
 	}
 	g_free(expr_dup);
 }
