@@ -39,6 +39,7 @@ struct callback_list;
 struct command_saved;
 struct command_table;
 struct navit;
+char *command_error_to_text(int err);
 enum attr_type command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret);
 void command_evaluate_to_void(struct attr *attr, char *expr, int *error);
 char *command_evaluate_to_string(struct attr *attr, char *expr, int *error);
