@@ -173,8 +173,12 @@ item_order_by_type(enum item_type type)
 	switch (type) {
 		case type_town_label_1e7:
 		case type_town_label_5e6:
+			max=3;
+			break;
 		case type_town_label_2e6:
 		case type_town_label_1e6:
+			max=5;
+			break;
 		case type_town_label_5e5:
 		case type_district_label_1e7:
 		case type_district_label_5e6:
