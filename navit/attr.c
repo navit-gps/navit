@@ -223,7 +223,7 @@ attr_new_from_text(const char *name, const char *value)
 			ret->u.str=g_strdup(value);
 			break;
 		}
-		if (attr >= attr_type_int_begin && attr < attr_type_boolean_begin) {
+		if (attr >= attr_type_int_begin && attr < attr_type_rel_abs_begin) {
 			char *tail;
 			if (value[0] == '0' && value[1] == 'x')
 				ret->u.num=strtoul(value, &tail, 0);
@@ -232,21 +232,34 @@ attr_new_from_text(const char *name, const char *value)
 			if (*tail) {
 				dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number. "
 					"Defaulting to 0.\n", value, name);
+				ret->u.num=0;
 			}
-			
-			if (attr >= attr_type_rel_abs_begin) {
-				/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)
-					 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
-				if (strchr(value, '%')) {
-					if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
-						dbg(lvl_error, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
-					}
-
-					ret->u.num += 0x60000000;
+			break;
+		}
+		if (attr >= attr_type_rel_abs_begin && attr < attr_type_boolean_begin) {
+			char *tail;
+			int value_is_relative=0;
+			ret->u.num=strtol(value, &tail, 0);
+			if (*tail) {
+				if (!strcmp(tail, "%")) {
+					value_is_relative=1;
 				} else {
-					if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
-						dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
-					}
+					dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number or a relative value in percent. "
+						"Defaulting to 0.\n", value, name);
+					ret->u.num=0;
+				}
+			}
+			/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)
+				 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
+			if (value_is_relative) {
+				if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
+					dbg(lvl_error, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
+				}
+
+				ret->u.num += 0x60000000;
+			} else {
+				if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
+					dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
 				}
 			}
 			break;
