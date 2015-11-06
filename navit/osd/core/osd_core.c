@@ -1414,6 +1414,9 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 
 struct osd_button {
 	int use_overlay;
+	/* FIXME: do we need navit_init_cb? It is set in two places but never read.
+	 * osd_button_new sets it to osd_button_init (init callback), and
+	 * osd_button_init sets it to osd_std_click (click callback). */
 	struct callback *draw_cb,*navit_init_cb;
 	struct graphics_image *img;
 	char *src_dir,*src;
@@ -1513,7 +1516,7 @@ osd_button_icon_path(struct osd_button *this_, char *src)
 {
 	if (!this_->src_dir)
 		return graphics_icon_path(src);
-	return g_strdup_printf("%s%s%s",this_->src_dir, G_DIR_SEPARATOR_S, src);
+	return g_strdup_printf("%s%s%s", this_->src_dir, G_DIR_SEPARATOR_S, src);
 }
  
 int
@@ -2003,6 +2006,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 struct nav_toggle_announcer
 {
 	int w,h;
+	/* FIXME this is actually the click callback, which is set once but never read. Do we need this? */
 	struct callback *navit_init_cb;
 	char *icon_src;
 	int icon_h, icon_w, active, last_state;

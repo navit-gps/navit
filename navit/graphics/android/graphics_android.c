@@ -25,6 +25,8 @@
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
+#include "item.h"
+#include "xmlconfig.h"
 #include "plugin.h"
 #include "event.h"
 #include "debug.h"
@@ -549,6 +551,19 @@ set_activity(jobject graphics)
 	return 1;
 }
 
+/**
+ * @brief Initializes a new Android graphics instance.
+ *
+ * This initializes a new Android graphics instance, which can either be the main view or an overlay.
+ *
+ * @param ret The new graphics instance
+ * @param parent The graphics instance that contains the new instance ({@code NULL} for the main view)
+ * @param p The position of the overlay in its parent ({@code NULL} for the main view)
+ * @param w The width of the overlay (0 for the main view)
+ * @param h The height of the overlay (0 for the main view)
+ * @param wraparound (0 for the main view)
+ * @param use_camera Whether to use the camera (0 for overlays)
+ */
 static int
 graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int wraparound, int use_camera)
 {
@@ -686,7 +701,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu;
 
 static int
 graphics_android_fullscreen(struct window *win, int on)
@@ -702,6 +717,17 @@ graphics_android_disable_suspend(struct window *win)
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_disableSuspend);
 }
 
+/**
+ * @brief Runs an item from the Android menu.
+ *
+ * This is a callback function which implements multiple API functions.
+ *
+ * @param this The {@code graohics_prov} structure
+ * @param function The API function which was called
+ * @param in Parameters to pass to the API function
+ * @param out Points to a buffer which will receive a pointer to the output of the command
+ * @param valid
+ */
 static void
 graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -717,18 +743,57 @@ graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, str
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_runOptionsItem, ncmd);
 }
 
+/**
+ * @brief Shows the Android menu.
+ *
+ * This is the callback function associated with the {@code menu()} API function.
+ *
+ * @param this The {@code graohics_prov} structure
+ * @param function The API function which was called
+ * @param in Parameters to pass to the API function
+ * @param out Points to a buffer which will receive a pointer to the output of the command
+ * @param valid
+ */
+static void
+graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	dbg(lvl_debug, "enter\n");
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_showMenu);
+}
+
+/**
+ * The command table. Each entry consists of an API function name and the callback function which implements
+ * this command.
+ */
 static struct command_table commands[] = {
 	{"map_download_dialog",command_cast(graphics_android_cmd_runMenuItem)},
 	{"set_map_location",command_cast(graphics_android_cmd_runMenuItem)},
 	{"backup_restore_dialog",command_cast(graphics_android_cmd_runMenuItem)},
+	{"menu", command_cast(graphics_android_cmd_menu)},
 };
 
+/**
+ * @brief Creates a new Android graphics instance.
+ *
+ * This method is called when the graphics plugin is initialized. It creates the main view, i.e. the map view.
+ * Unless overlay mode is enabled, it also holds any OSD items.
+ *
+ * @param nav The navit instance.
+ * @param meth The methods for the new graphics instance
+ * @param attrs The attributes for the new graphics instance
+ * @param cbl The callback list for the new graphics instance
+ *
+ * @return The new graphics instance
+ */
 static struct graphics_priv *
 graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct graphics_priv *ret;
 	struct attr *attr;
 	int use_camera=0;
+	jmethodID cid;
+
+	dbg(lvl_debug, "enter\n");
 	if (!event_request_system("android","graphics_android"))
 		return NULL;
 	ret=g_new0(struct graphics_priv, 1);
@@ -746,6 +811,22 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
         }
 	image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, use_camera)) {
+		cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "hasMenuButton", "()Z");
+		if (cid != NULL) {
+			attr = g_new0(struct attr, 1);
+			attr->type = attr_has_menu_button;
+			attr->u.num = (*jnienv)->CallBooleanMethod(jnienv, ret->NavitGraphics, cid);
+
+			/*
+			 * Although the attribute refers to information obtained by the graphics plugin, we are storing it
+			 * with the navit object: the object is easier to access from anywhere in the program, and ultimately
+			 * it refers to a configuration value affecting all of Navit, thus users are likely to look for it in
+			 * the navit object (as the fact that graphics also handles input devices is not immedately obvious).
+			 */
+			navit_object_set_attr((struct navit_object *) nav, attr);
+			dbg(lvl_debug, "attr_has_menu_button=%d\n", attr->u.num);
+			g_free(attr);
+		}
 		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
 	} else {
@@ -754,6 +835,21 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	}
 }
 
+/**
+ * @brief Creates a new overlay
+ *
+ * This method creates a graphics instance for a new overlay. If overlay mode is enabled, a separate overlay is
+ * created for each OSD item.
+ *
+ * @param gr The parent graphics instance, i.e. the one which will contain the overlay.
+ * @param meth The methods for the new graphics instance
+ * @param p The position of the overlay in its parent
+ * @param w The width of the overlay
+ * @param h The height of the overlay
+ * @param wraparound
+ *
+ * @return The graphics instance for the new overlay
+ */
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
 {
@@ -971,6 +1067,9 @@ event_android_new(struct event_methods *meth)
 	Navit_runOptionsItem = (*jnienv)->GetMethodID(jnienv, NavitClass, "runOptionsItem", "(I)V");
 	if (Navit_runOptionsItem == NULL) 
 		return NULL; 
+	Navit_showMenu = (*jnienv)->GetMethodID(jnienv, NavitClass, "showMenu", "()V");
+	if (Navit_showMenu == NULL)
+		return NULL;
 
 	dbg(lvl_debug,"ok\n");
         *meth=event_android_methods;

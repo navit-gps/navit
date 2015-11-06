@@ -590,6 +590,16 @@ public class Navit extends Activity
 				break;
 		}
 	}
+	
+	/**
+	 * @brief Shows the Options menu.
+	 * 
+	 * Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
+	 * the overflow button in the Action bar.
+	 */
+	public void showMenu() {
+		openOptionsMenu();
+	}
 
 	void setDestination(float latitude, float longitude, String address) {
 		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
