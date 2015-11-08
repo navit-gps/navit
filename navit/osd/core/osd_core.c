@@ -1423,6 +1423,20 @@ struct osd_button {
 };
 
 
+/**
+ * @brief Adjusts width and height of an OSD item to fit the image it displays.
+ *
+ * A width or height of 0%, stored in relative attributes as {@code ATTR_REL_RELSHIFT}, is used as a flag
+ * indicating that the respective dimension is unset, i.e. determined by the dimensions of its image.
+ *
+ * If this is the case for height and/or width, the respective dimension will be updated to fit the image.
+ *
+ * Note that this method is used by several OSD items, notably {@code osd_image}, {@code osd_button} and
+ * {@code osd_android_menu}.
+ *
+ * @param opc The OSD item
+ * @param img The image displayed by the item
+ */
 static void 
 osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img)
 {
