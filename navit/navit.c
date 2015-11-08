@@ -1552,7 +1552,8 @@ navit_mark_navigation_stopped(char *former_destination_file){
  * @param navit The navit instance
  * @param c The coordinate to start routing to
  * @param description A label which allows the user to later identify this destination in the former destinations selection
- * @returns nothing
+ * @param async Set to 1 to do route calculation asynchronously
+ * @return nothing
  */
 void
 navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async)

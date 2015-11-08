@@ -78,13 +78,6 @@ struct map_priv {
 
 int debug_route=0;
 
-enum route_path_flags {
-	route_path_flag_none=0,
-	route_path_flag_cancel=1,
-	route_path_flag_async=2,
-	route_path_flag_no_rebuild=4,
-};
-
 /**
  * @brief A point in the route graph
  *
@@ -246,7 +239,7 @@ struct route_path {
 struct route {
 	NAVIT_OBJECT
 	struct mapset *ms;			/**< The mapset this route is built upon */
-	unsigned flags;
+	enum route_path_flags flags;
 	struct route_info *pos;		/**< Current position within this route */
 	GList *destinations;		/**< Destinations of the route */
 	int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
@@ -854,17 +847,28 @@ route_path_update_done(struct route *this, int new_graph)
  * @brief Updates the route graph and the route path if something changed with the route
  *
  * This will update the route graph and the route path of the route if some of the
- * route's settings (destination, position) have changed. 
+ * route's settings (destination, position) have changed.
+ *
+ * The behavior of this function can be controlled via flags:
+ * <ul>
+ * <li>{@code route_path_flag_cancel}: Cancel navigation, clear route graph and route path</li>
+ * <li>{@code route_path_flag_async}: Perform operations asynchronously</li>
+ * <li>{@code route_path_flag_no_rebuild}: Do not rebuild the route graph</li>
+ * </ul>
  * 
+ * These flags will be stored in the {@code flags} member of the route object.
+ *
  * @attention For this to work the route graph has to be destroyed if the route's 
  * @attention destination is changed somewhere!
  *
  * @param this The route to update
+ * @param flags Flags to control the behavior of this function, see description
  */
 static void
 route_path_update_flags(struct route *this, enum route_path_flags flags)
 {
 	dbg(lvl_debug,"enter %d\n", flags);
+	this->flags = flags;
 	if (! this->pos || ! this->destinations) {
 		dbg(lvl_debug,"destroy\n");
 		route_path_destroy(this->path2,1);
@@ -897,6 +901,15 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
 	}
 }
 
+/**
+ * @brief Updates the route graph and the route path if something changed with the route
+ *
+ * This function is a wrapper around {@link route_path_update_flags(route *, enum route_path)}.
+ *
+ * @param this The route to update
+ * @param cancel If true, cancel navigation, clear route graph and route path
+ * @param async If true, perform processing asynchronously
+ */
 static void
 route_path_update(struct route *this, int cancel, int async)
 {
@@ -1153,8 +1166,8 @@ route_clear_destinations(struct route *this_)
  *
  * @param this The route to set the destination for
  * @param dst Coordinates to set as destination
- * @param count: Number of destinations (last one is final)
- * @param async: If set, do routing asynchronously
+ * @param count Number of destinations (last one is final)
+ * @param async If set, do routing asynchronously
  */
 
 void
@@ -1283,8 +1296,8 @@ route_get_destination_description(struct route *this, int n)
  * @brief Start a route given set of coordinates
  *
  * @param this The route instance
- * @param c The coordinate to start routing to
- * @param async 1 for async
+ * @param dst The coordinate to start routing to
+ * @param async Set to 1 to do route calculation asynchronously
  * @return nothing
  */
 void
@@ -2979,11 +2992,13 @@ route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile)
  * between c1 and c2.
  *
  * @param ms The mapset to build the route graph from
+ * @param c The coordinates of the destination or next waypoint
  * @param c1 Corner 1 of the rectangle to use from the map
  * @param c2 Corner 2 of the rectangle to use from the map
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
+// FIXME documentation does not match argument list
 static struct route_graph *
 route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async, struct vehicleprofile *profile)
 {
@@ -3019,6 +3034,8 @@ route_graph_update_done(struct route *this, struct callback *cb)
  * adds routing information afterwards by calling route_graph_flood().
  * 
  * @param this The route to update the graph for
+ * @param cb The callback function to call when the route graph update is complete (used only in asynchronous mode)
+ * @param async Set to nonzero in order to update the route graph asynchronously
  */
 static void
 route_graph_update(struct route *this, struct callback *cb, int async)
@@ -3723,7 +3740,7 @@ rm_rect_destroy(struct map_rect_priv *mr)
 	}
 	if (mr->path) {
 		mr->path->in_use--;
-		if (mr->path->update_required && (mr->path->in_use==1)) 
+		if (mr->path->update_required && (mr->path->in_use==1) && (mr->mpriv->route->route_status & ~route_status_destination_set))
 			route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
 		else if (!mr->path->in_use)
 			g_free(mr->path);
@@ -4001,6 +4018,24 @@ struct map *
 route_get_graph_map(struct route *this_)
 {
 	return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
+}
+
+
+/**
+ * @brief Returns the flags for the route.
+ */
+enum route_path_flags route_get_flags(struct route *this_) {
+	return this_->flags;
+}
+
+/**
+ * @brief Whether the route has a valid graph.
+ *
+ * @return True if the route has a graph, false if not.
+ */
+int
+route_has_graph(struct route *this_) {
+	return (this_->graph != NULL);
 }
 
 void
