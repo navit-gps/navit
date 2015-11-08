@@ -151,7 +151,10 @@ struct navit {
 	struct log *textfile_debug_log;
 	struct pcoord destination;
 	int destination_valid;
-	int blocked;
+	int blocked;	/**< Whether draw operations are currently blocked. This can be a combination of the
+					     following flags:
+					     1: draw operations are blocked
+					     2: draw operations are pending, requiring a redraw once draw operations are unblocked */
 	int w,h;
 	int drag_bitmap;
 	int use_mousewheel;
@@ -381,6 +384,20 @@ navit_popup(void *data)
 }
 
 
+/**
+ * @brief Sets a flag indicating that the current button event should be ignored by subsequent handlers.
+ *
+ * Calling this function will set the {@code ignore_button} member to {@code true} and return its previous state.
+ * The default handler, {@link navit_handle_button(navit *, int, int, point *, callback *)} calls this function
+ * just before the actual event handling core and aborts if the result is {@code true}. In order to prevent
+ * multiple handlers from firing on a single event, custom button click handlers should implement the same logic
+ * for events they wish to handle.
+ *
+ * If a handler wishes to pass down an event to other handlers, it must abort without calling this function.
+ *
+ * @param this_ The navit instance
+ * @return {@code true} if the caller should ignore the button event, {@code false} if it should handle it
+ */
 int
 navit_ignore_button(struct navit *this_)
 {
@@ -3450,6 +3467,24 @@ navit_disable_suspend() {
 	callback_list_call_attr_0(global_navit->attr_cbl,attr_unsuspend);
 }
 
+/**
+ * @brief Blocks or unblocks redraw operations.
+ *
+ * The {@code block} parameter specifies the operation to carry out:
+ *
+ * {@code block > 0} cancels all draw operations in progress and blocks future operations. It sets flag 1 of the
+ * {@code blocked} member. If draw operations in progress were canceled, flag 2 is also set.
+ *
+ * {@code block = 0} unblocks redraw operations, resetting {@code blocked} to 0. If flag 2 was previously set,
+ * indicating that draw operations had been previously canceled, a redraw is triggered.
+ *
+ * {@code block < 0} unblocks redraw operations and forces a redraw. As above, {@code blocked} is reset to 0.
+ *
+ * @param this_ The navit instance
+ * @param block The operation to perform, see description
+ *
+ * @return {@code true} if a redraw operation was triggered, {@code false} if not
+ */
 int
 navit_block(struct navit *this_, int block)
 {
@@ -3468,6 +3503,9 @@ navit_block(struct navit *this_, int block)
 	return 0;
 }
 
+/**
+ * @brief Returns whether redraw operations are currently blocked.
+ */
 int navit_get_blocked(struct navit *this_)
 {
 	return this_->blocked;
