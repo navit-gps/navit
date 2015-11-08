@@ -59,6 +59,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -243,6 +244,8 @@ public class Navit extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
+			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		dialogs = new NavitDialogs(this);
 
@@ -687,16 +690,24 @@ public class Navit extends Activity
 		NavitDestroy();
 	}
 	
-	public void fullscreen(int fullscreen) {
-		if(fullscreen != 0) {
+	public void fullscreen(int fullscreen) 
+	{
+		if(fullscreen != 0) 
+		{
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+				this.getActionBar().hide();
 		}
-		else {
+		else 
+		{
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+				this.getActionBar().show();
 		}
 	}
+
 
 	public void disableSuspend()
 	{
