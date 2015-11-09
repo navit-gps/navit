@@ -151,10 +151,10 @@ public class NavitVehicle {
 		sLocationManager.addGpsStatusListener(preciseLocationListener);
 
 		/*
-		 * If the two providers are the same, do not enable two listeners.
-		 * Note that Android criteria have no way to specify "fast fix", thus lowCriteria may return the same
-		 * provider as highCriteria, even if others are available. In this case, we have to manually pick one
-		 * of the others.
+		 * Since Android criteria have no way to specify "fast fix", lowCriteria may return the same
+		 * provider as highCriteria, even if others are available. In this case, do not register two
+		 * listeners for the same provider but pick the fast provider manually. (Usually there will
+		 * only be two providers in total, which makes the choice easy.)
 		 */
 		if (fastProvider == null || preciseProvider.compareTo(fastProvider) == 0) {
 			List<String> fastProviderList = sLocationManager.getProviders(lowCriteria, false);
