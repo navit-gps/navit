@@ -1772,6 +1772,7 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 	struct navigation *nav = NULL;
 	struct attr attr;
 
+	dbg(lvl_debug, "enter, opc=%p\n", opc);
 	osd_set_std_graphic(navit, &opc->osd_item, (struct osd_priv *)opc);
 	if (navit)
 		nav = navit_get_navigation(navit);
