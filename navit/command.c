@@ -28,8 +28,13 @@ osd[@type=="xxx"].active=0;osd[@type=="yyy"].active=0
 */
 
 
+/**
+ * The result, or interim result, of evaluating a saved command.
+ */
 struct result {
-	struct attr attr;	/**< The attribute */
+	struct attr attr;	/**< The attribute. If {@code allocated} is true, it stores an object that was
+						 *   successfully retrieved. Else it is either a placeholder or a constant value.
+						 */
 	double val;
 	const char *var;	/**< If {@code allocated} is false, the name of the object to be resolved.
 						 *   Else, it is the name of the object successfully retrieved and stored in
@@ -57,11 +62,17 @@ struct context {
 	struct result res;
 };
 
+/**
+ * Information about a callback function for a saved command.
+ */
 struct command_saved_cb {
-	struct callback *cb;
+	struct callback *cb;	/**< The callback function */
 	struct attr attr;
 };
 
+/**
+ * A saved command.
+ */
 struct command_saved {
 	struct context ctx;
 	struct result res;
@@ -70,8 +81,10 @@ struct command_saved {
 	struct callback *idle_cb;
 	struct callback *register_cb;			/**< Callback to register all the callbacks **/
 	struct event_idle *register_ev;		/**< Idle event to register all the callbacks **/
-	struct attr context_attr;
-	int num_cbs;
+	struct attr context_attr;			/**< The root of the object hierarchy, which will be assumed as
+										 *   the parent of all unqualified or partially qualified object
+										 *   references. **/
+	int num_cbs;						/**< Number of entries in {@code cbs} **/
 	struct command_saved_cb *cbs;		/**< List of callbacks for this saved command **/
 	struct callback *cb; /**< Callback that should be called when we re-evaluate **/
 	int error;
@@ -294,6 +307,7 @@ command_get_attr(struct context *ctx, struct result *res)
 	int result;
 	struct result tmp={{0,},};
 	enum attr_type attr_type=command_attr_type(res);
+	enum attr_type parent_type = res->attr.type; /* for debugging only */
 	if (ctx->skip)
 		return;
 	result=command_object_get_attr(ctx, &res->attr, attr_type, &tmp.attr);
@@ -301,9 +315,11 @@ command_get_attr(struct context *ctx, struct result *res)
 	*res=tmp;
 	res->allocated=1;
 	if (result) {
+		dbg(lvl_debug, "successfully retrieved '%s' from '%s'\n", attr_to_name(attr_type), attr_to_name(parent_type));
 		res->var=res->attrn;
 		res->varlen=res->attrnlen;
 	} else {
+		dbg(lvl_warning, "could not retrieve '%s' from '%s'\n", attr_to_name(attr_type), attr_to_name(parent_type));
 		result_free(res);
 		res->attr.type=attr_none;
 		res->var=NULL;
@@ -1764,7 +1780,8 @@ command_saved_callbacks_changed(struct command_saved *cs)
 static int
 command_register_callbacks(struct command_saved *cs)
 {
-	struct attr prev,cb_attr,attr;
+	struct attr prev;	/* The parent of the next object which will be retrieved. */
+	struct attr cb_attr,attr;
 	int status;
 	struct object_func *func;
 	struct callback *cb;
