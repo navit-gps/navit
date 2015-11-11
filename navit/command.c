@@ -678,8 +678,6 @@ eval_value(struct context *ctx, struct result *res) {
 	const char *op;
 	int dots=0;
 
-	op=ctx->expr;
-
 	result_free(res);
 
 	res->varlen=0;
@@ -687,9 +685,11 @@ eval_value(struct context *ctx, struct result *res) {
 	res->attrnlen=0;
 	res->attrn=NULL;
 
-	while (g_ascii_isspace(*op)) {
-		op++;
+	while (g_ascii_isspace(*(ctx->expr))) {
+		ctx->expr++;
 	}
+	op = ctx->expr;
+
 	if ((op[0] >= 'a' && op[0] <= 'z') || (op[0] >= 'A' && op[0] <= 'Z') || op[0] == '_') {
 		const char *s=op;
 		for (;;) {
