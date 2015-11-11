@@ -1792,11 +1792,11 @@ command_register_callbacks(struct command_saved *cs)
 	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 	attr = cs->context_attr;
 	cs->ctx.expr = cs->command;
-	cs->ctx.attr = &attr;
 	prev = cs->context_attr;
 
 	while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
 		tmpoffset = cs->res.var - cs->command;
+		cs->ctx.attr = &prev;
 		resolve(&cs->ctx, &cs->res);
 
 		if (cs->ctx.error) {
