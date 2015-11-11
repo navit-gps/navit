@@ -1495,9 +1495,20 @@ command_saved_error (struct command_saved *cs)
 	return cs->error;
 }
 
+/**
+ * @brief Idle function to evaluate a command
+ *
+ * This function is called from an idle loop for asynchronous evaluation but may also be called in-line.
+ *
+ * The result of the evaluation can be retrieved from {@code cs->res} after this function returns. If an
+ * error occurred, it will be stored in {@code cs->error}.
+ *
+ * @param cs The command to evaluate
+ */
 static void
 command_saved_evaluate_idle (struct command_saved *cs) 
 {
+	dbg(lvl_debug, "enter: cs=%p, cs->command=%s\n", cs, cs->command);
 	// Only run once at a time
 	if (cs->idle_ev) {
 		event_remove_idle(cs->idle_ev);
@@ -1517,9 +1528,21 @@ command_saved_evaluate_idle (struct command_saved *cs)
 	}
 }
 
+/**
+ * @brief Evaluates a command
+ *
+ * This function examines {@code cs->async} to determine if the command should be evaluated immediately.
+ * If {@code cs->async} is true, an idle event is registered to register the command. Else the command
+ * is evaluated immediately and the result can be retrieved immediately after this function returns.
+ *
+ * See {@link command_saved_evaluate_idle(struct command_saved *)} for details.
+ *
+ * @param cs The command to evaluate
+ */
 static void
 command_saved_evaluate(struct command_saved *cs)
 {	
+	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 	if (!cs->async) {
 		command_saved_evaluate_idle(cs);
 		return;
@@ -1573,6 +1596,14 @@ command_saved_callbacks_changed(struct command_saved *cs)
 	command_register_callbacks(cs);
 }
 
+/**
+ * @brief Registers callbacks for a saved command
+ *
+ * This function registers callbacks for each attribute used in a saved command, causing the command to
+ * be re-evaluated whenever its value might change.
+ *
+ * @param cs The command
+ */
 static int
 command_register_callbacks(struct command_saved *cs)
 {
@@ -1581,6 +1612,7 @@ command_register_callbacks(struct command_saved *cs)
 	struct object_func *func;
 	struct callback *cb;
 	
+	dbg(lvl_error, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 	attr = cs->context_attr;
 	cs->ctx.expr = cs->command;
 	cs->ctx.attr = &attr;
@@ -1591,6 +1623,7 @@ command_register_callbacks(struct command_saved *cs)
 
 		if (cs->ctx.error || (cs->res.attr.type == attr_none)) {
 			// We could not resolve an object, perhaps because it has not been created
+			dbg(lvl_error, "could not resolve an object: cs=%p, cs->ctx.error=%d, cs->ctx.expr=%s\n", cs, cs->ctx.error, cs->ctx.expr);
 			return 0;
 		}
 
@@ -1619,7 +1652,7 @@ command_register_callbacks(struct command_saved *cs)
 				func->add_attr(prev.u.data, &cb_attr);
 
 			} else {
-				dbg(lvl_error, "Could not add callback because add_attr is missing for type %i}n", prev.type);
+				dbg(lvl_error, "Could not add callback because add_attr is missing for type %i\n", prev.type);
 			}
 		}
 
@@ -1632,6 +1665,7 @@ command_register_callbacks(struct command_saved *cs)
 
 	command_saved_evaluate_idle(cs);
 
+	dbg(lvl_debug, "done: cs=%p, cs->command=%s\n", cs, cs->command);
 	return 1;
 }
 
