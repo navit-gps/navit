@@ -1781,7 +1781,7 @@ static int
 command_register_callbacks(struct command_saved *cs)
 {
 	struct attr prev;	/* The parent of the next object which will be retrieved. */
-	struct attr cb_attr,attr;
+	struct attr cb_attr;
 	int status;
 	struct object_func *func;
 	struct callback *cb;
@@ -1790,7 +1790,6 @@ command_register_callbacks(struct command_saved *cs)
 					 */
 	
 	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
-	attr = cs->context_attr;
 	cs->ctx.expr = cs->command;
 	prev = cs->context_attr;
 
@@ -1816,7 +1815,6 @@ command_register_callbacks(struct command_saved *cs)
 			if (func->add_attr) {
 				if (status == 2) { // This is not the final attribute name
 					cb = callback_new_attr_1(callback_cast(command_saved_callbacks_changed), cs->res.attr.type, (void*)cs);
-					attr = cs->res.attr;
 				} else if (status == 1) { // This is the final attribute name
 					cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
 					cs->ctx.attr = &cs->context_attr;
