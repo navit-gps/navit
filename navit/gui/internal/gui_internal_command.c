@@ -47,6 +47,8 @@ extern char *version;
  *
  * @param gc A WGS84 coordinate pair
  * @param sep The separator character to insert between latitude and longitude
+ *
+ * @return The coordinates as a formatted string
  */
 static char *
 coordinates_geo(const struct coord_geo *gc, char sep)
@@ -89,6 +91,17 @@ coordinates_geo(const struct coord_geo *gc, char sep)
 	return ret;
 }
 
+/**
+ * @brief Converts a coordinate pair to its WGS84 string representation.
+ *
+ * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
+ * {@code 45°28'0" N 9°11'26" E}.
+ *
+ * @param gc A coordinate pair
+ * @param sep The separator character to insert between latitude and longitude
+ *
+ * @return The coordinates as a formatted string
+ */
 char *
 gui_internal_coordinates(struct pcoord *pc, char sep)
 {
