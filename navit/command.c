@@ -1748,7 +1748,16 @@ command_saved_callbacks_changed(struct command_saved *cs)
 	cs->num_cbs = 0;
 
 	// Now, re-create all the callbacks
+#if 0
+	if (!command_register_callbacks(cs) && (!cs->ctx.error)) {
+		// We try this as an idle call again
+		dbg(lvl_debug, "could not register callbacks, will retry as an idle call\n");
+		cs->register_cb = callback_new_1(callback_cast(command_saved_callbacks_changed), cs);
+		cs->register_ev = event_add_idle(300, cs->register_cb);
+	}
+#else
 	command_register_callbacks(cs);
+#endif
 }
 
 /**

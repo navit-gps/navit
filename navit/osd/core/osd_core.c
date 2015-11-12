@@ -478,7 +478,7 @@ osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
 	return (struct osd_priv *) opc;
 }
 
- 
+
 static int odometers_saved = 0;
 static GList* odometer_list = NULL;
 
@@ -1678,6 +1678,173 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 	g_free(this);
 	return NULL;
 }
+
+
+/**
+ * Internal data for {@code navigation_status} OSD.
+ */
+struct navigation_status {
+	char *icon_src;		/**< Source for icon, with a placeholder */
+	int icon_h;
+	int icon_w;
+	int last_status;	/**< Last status displayed.
+						     Apart from the usual values of {@code nav_status}, -2 is used to
+						     indicate we have not yet received a status. */
+};
+
+
+/**
+ * @brief Draws a {@code navigation_status} OSD.
+ *
+ * @param opc The OSD to draw
+ * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
+ */
+static void osd_navigation_status_draw(struct osd_priv_common *opc, int status) {
+	struct navigation_status *this = (struct navigation_status *)opc->data;
+	struct point p;
+	int do_draw = opc->osd_item.do_draw;
+	struct graphics_image *gr_image;
+	char *image;
+
+	/* When we're routing, the status will flip from 4 (routing) to 3 (recalculating) and back on
+	 * every position update. This hack prevents unnecessary (and even undesirable) updates.
+	 */
+	int status2 = (status == 3) ? 4 : status;
+
+
+	if ((status2 != this->last_status) && (status2 != status_invalid)) {
+		this->last_status = status2;
+		do_draw = 1;
+	}
+
+	if (do_draw) {
+		osd_fill_with_bgcolor(&opc->osd_item);
+		image = g_strdup_printf(this->icon_src, nav_status_to_text(status2));
+		dbg(lvl_debug, "image=%s\n", image);
+		gr_image =
+				graphics_image_new_scaled(opc->osd_item.gr,
+						image, this->icon_w,
+						this->icon_h);
+		if (!gr_image) {
+			dbg(lvl_error,"failed to load %s in %dx%d\n",image,this->icon_w,this->icon_h);
+			g_free(image);
+			image = graphics_icon_path("unknown.png");
+			gr_image =
+					graphics_image_new_scaled(opc->
+							osd_item.gr,
+							image,
+							this->icon_w,
+							this->
+							icon_h);
+		}
+		dbg(lvl_debug, "gr_image=%p\n", gr_image);
+		if (gr_image) {
+			p.x =
+					(opc->osd_item.w -
+							gr_image->width) / 2;
+			p.y =
+					(opc->osd_item.h -
+							gr_image->height) / 2;
+			graphics_draw_image(opc->osd_item.gr,
+					opc->osd_item.
+					graphic_fg_white, &p,
+					gr_image);
+			graphics_image_free(opc->osd_item.gr,
+					gr_image);
+		}
+		g_free(image);
+		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+	}
+}
+
+
+/**
+ * @brief Initializes a new {@code navigation_status} OSD.
+ *
+ * This function is registered as a callback function in {@link osd_navigation_status_new(struct navit *, struct osd_methods *, struct attr **)}.
+ * It is called after graphics initialization has finished and can be used for any initialization
+ * tasks which rely on a functional graphics system.
+ *
+ * @param opc The OSD to initialize
+ * @param navit The navit instance
+ */
+static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit *navit) {
+	struct navigation *nav = NULL;
+	struct attr attr;
+
+	dbg(lvl_debug, "enter, opc=%p\n", opc);
+	osd_set_std_graphic(navit, &opc->osd_item, (struct osd_priv *)opc);
+	if (navit)
+		nav = navit_get_navigation(navit);
+	if (nav) {
+		navigation_register_callback(nav, attr_nav_status, callback_new_attr_1(callback_cast(osd_navigation_status_draw), attr_nav_status, opc));
+		if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
+			osd_navigation_status_draw(opc, attr.u.num);
+	}
+	else
+		dbg(lvl_error, "navigation instance is NULL, OSD will never update\n");
+	//navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item)); // FIXME do we need this?
+}
+
+
+/**
+ * @brief Creates a new {@code navigation_status} OSD.
+ *
+ * This initializes the data structures and registers {@link osd_navigation_status_init(struct osd_priv_common *, struct navit *)}
+ * as a callback.
+ *
+ * Note that this function runs before the graphics system has been initialized. Therefore, code
+ * that requires a functional graphics system must be placed in
+ * {@link osd_navigation_status_init(struct osd_priv_common *, struct navit *)}.
+ *
+ * @param nav The navit instance
+ * @param meth The methods for the new OSD
+ * @param attrs The attributes for the new OSD
+ */
+static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+	struct navigation_status *this = g_new0(struct navigation_status, 1);
+	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
+	struct attr *attr;
+
+	opc->data = (void*)this;
+	opc->osd_item.rel_x = 20;
+	opc->osd_item.rel_y = -80;
+	opc->osd_item.rel_w = 70;
+	opc->osd_item.navit = nav;
+	opc->osd_item.rel_h = 70;
+	opc->osd_item.font_size = 200;  // FIXME may not be needed
+	opc->osd_item.meth.draw = osd_draw_cast(osd_navigation_status_draw);
+	meth->set_attr = set_std_osd_attr;
+	osd_set_std_attr(attrs, &opc->osd_item, 0);
+
+	this->icon_w = -1;
+	this->icon_h = -1;
+	this->last_status = status_invalid;
+
+	attr = attr_search(attrs, NULL, attr_icon_w);
+	if (attr)
+		this->icon_w = attr->u.num;
+
+	attr = attr_search(attrs, NULL, attr_icon_h);
+	if (attr)
+		this->icon_h = attr->u.num;
+
+	attr = attr_search(attrs, NULL, attr_icon_src);
+	if (attr) {
+		struct file_wordexp *we;
+		char **array;
+		we = file_wordexp_new(attr->u.str);
+		array = file_wordexp_get_array(we);
+		this->icon_src = graphics_icon_path(array[0]);
+		file_wordexp_destroy(we);
+	} else {
+		this->icon_src = graphics_icon_path("%s_wh.svg");
+	}
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_status_init), attr_graphics_ready, opc));
+	return (struct osd_priv *) opc;
+}
+
 
 struct nav_next_turn {
 	char *test_text;
@@ -3666,4 +3833,5 @@ plugin_init(void)
 	plugin_register_osd_type("auxmap", osd_auxmap_new);
 	plugin_register_osd_type("cmd_interface", osd_cmd_interface_new);
 	plugin_register_osd_type("route_guard", osd_route_guard_new);
+	plugin_register_osd_type("navigation_status", osd_navigation_status_new);
 }
