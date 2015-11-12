@@ -237,11 +237,24 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key)
 		osd_evaluate_command(item, nav);
 }
 
+/**
+ * @brief Configures or unconfigures an OSD item.
+ *
+ * This method evaluates the result of the last execution of {@code cs}. If it evaluates to true, the
+ * item is configured, else it is unconfigured. (A configured item is displayed on the screen and can
+ * respond to user input, an unconfigured item is invisible and cannot receive user input.)
+ *
+ * If an error occurred during evaluation of {@code cs}, the item's configuration state is not changed.
+ *
+ * @param item The OSD item to reconfigure
+ * @param cs The command to evaluate
+ */
 static void
 osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 {
 	char *err = NULL;	/* Error description */
 
+	dbg(lvl_debug, "enter, item=%p, cs=%p\n", item, cs);
 	if (!command_saved_error(cs)) {
 		item->configured = !! command_saved_get_int(cs);
 		if (item->gr && !(item->flags & 16)) 
@@ -336,7 +349,7 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 	struct attr attr;
 	char *err = NULL;	/* Error description */
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug, "enter, item=%p, enable_cs=%p\n", item, item->enable_cs);
 	if (item->enable_cs) {
 		item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
 		command_saved_set_cb(item->enable_cs, item->reconfig_cb);
@@ -360,6 +373,7 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 void
 osd_set_std_config(struct navit *nav, struct osd_item *item)
 {
+	dbg(lvl_debug, "enter, item=%p\n", item);
 	item->cb = callback_new_attr_2(callback_cast(osd_std_config), attr_osd_configuration, item, nav);
 	navit_add_callback(nav, item->cb);
 	osd_std_config(item, nav);
