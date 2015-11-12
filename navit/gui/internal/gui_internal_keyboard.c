@@ -13,6 +13,16 @@
 #include "gui_internal_keyboard.h"
 
 
+/**
+ * @brief Processes a key press on the internal GUI keyboard
+ *
+ * If the keyboard is currently in uppercase mode, it is then switched to the corresponding lowercase
+ * mode.
+ *
+ * @param this The internal GUI instance
+ * @param wm
+ * @param data Not used
+ */
 static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -54,12 +64,19 @@ gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
 
 
-// A list of availiable keyboard modes.
+/**
+ * @struct gui_internal_keyb_mode
+ * @brief Describes a keyboard mode
+ */
+/**
+ * @var gui_internal_keyb_modes
+ * @brief A list of all available keyboard modes
+ */
 struct gui_internal_keyb_mode {
-    char title[16]; // Label to be displayed on keys that switch to it
-    int font; // Font size of label
-    int case_mode; // Mode to switch to when case CHANGE() key is pressed.
-    int umlaut_mode;  // Mode to switch to when UMLAUT() key is pressed.
+    char title[16];		/**< Label to be displayed on keys that switch to it */
+    int font;			/**< Font size of label */
+    int case_mode;		/**< Mode to switch to when case CHANGE() key is pressed. */
+    int umlaut_mode;	/**< Mode to switch to when UMLAUT() key is pressed. */
 } gui_internal_keyb_modes[]= {
 	/* 0*/ {"ABC", 2,  8, 24},
 	/* 8*/ {"abc", 2,  0, 32},
@@ -83,6 +100,18 @@ struct gui_internal_keyb_mode {
 			-> datai=(mode&7)+((x)&~7)
 #define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
 #define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
+/**
+ * @brief Creates a new keyboard widget or switches the layout of an existing widget
+ *
+ * This is an internal helper function that is not normally called directly. To create a new keyboard
+ * widget, GUI widgets should call {@link gui_internal_keyboard(struct gui_priv *, struct widget *, int)}.
+ *
+ * @param this The internal GUI instance
+ * @param wkbdb The existing keyboard widget whose layout is to be switched, or {@code NULL} to create a
+ * new keyboard widget
+ * @param mode The new keyboard mode, see {@link gui_internal_keyboard(struct gui_priv *, struct widget *, int)}
+ * for a description of possible values
+ */
 struct widget *
 gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
@@ -316,6 +345,28 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 #undef UMLAUT
 #undef MODE
 
+/**
+ * @brief Creates a keyboard widget.
+ *
+ * This function creates a widget to display the internal GUI keyboard.
+ *
+ * The {@code mode} argument specifies the type of keyboard which should initially be displayed:
+ * <ul>
+ * <li>0: ABC (Latin uppercase)</li>
+ * <li>8: abc (Latin lowercase)</li>
+ * <li>16: 123 (Numeric)</li>
+ * <li>24: ÄÖÜ (Umlaut uppercase)</li>
+ * <li>32: äöü (Umlaut lowercase)</li>
+ * <li>40: АБВ (Cyrillic uppercase)</li>
+ * <li>48: абв (Cyrillic lowercase)</li>
+ * <li>56: DEG (Coordinate input: 0–9, decimal dot, NESW, degree/minute signs)</li>
+ * </ul>
+ *
+ * @param this The internal GUI instance
+ * @param mode The mode for the keyboard, see description
+ *
+ * @return A new keyboard widget
+ */
 struct widget *
 gui_internal_keyboard(struct gui_priv *this, int mode)
 {
@@ -329,6 +380,17 @@ gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *da
 {
 	gui_internal_keyboard_do(this, key->data, key->datai);
 }
+
+/**
+ * @brief Returns the default keyboard mode for a country.
+ *
+ * The return value can be passed to {@link gui_internal_keyboard(struct gui_priv *, int)} and related
+ * functions.
+ *
+ * @param lang The two-letter country code
+ *
+ * @return 40 (АБВ) for countries using the Cyrillic alphabet, 0 (ABC) otherwise
+ */
 int
 gui_internal_keyboard_init_mode(char *lang)
 {
