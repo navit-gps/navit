@@ -195,13 +195,9 @@ ATTR(turn_around_penalty2)
 ATTR(autozoom_max)
 ATTR(nav_status)
 ATTR2(0x00027500,type_rel_abs_begin)
-/* These attributes are int that can either hold relative		*
- * or absolute values. A relative value is indicated by 		*
- * adding 0x60000000.											*
- *																*
- * The range of valid absolute values is -0x40000000 to			*
- * 0x40000000, the range of relative values is from				*
- * -0x20000000 to 0x20000000.									*/
+/* These attributes are int that can either hold relative or absolute values. See the
+ * documentation of ATTR_REL_RELSHIFT for details.
+ */
 ATTR(h)
 ATTR(w)
 ATTR(x)

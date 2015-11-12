@@ -249,17 +249,15 @@ attr_new_from_text(const char *name, const char *value)
 					ret->u.num=0;
 				}
 			}
-			/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)
-				 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
 			if (value_is_relative) {
-				if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
-					dbg(lvl_error, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
+				if ((ret->u.num > ATTR_REL_MAXREL) || (ret->u.num < ATTR_REL_MINREL)) {
+					dbg(lvl_error, "Relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
 				}
 
-				ret->u.num += 0x60000000;
+				ret->u.num += ATTR_REL_RELSHIFT;
 			} else {
-				if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
-					dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
+				if ((ret->u.num > ATTR_REL_MAXABS) || (ret->u.num < ATTR_REL_MINABS)) {
+					dbg(lvl_error, "Non-relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
 				}
 			}
 			break;

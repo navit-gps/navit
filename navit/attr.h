@@ -97,9 +97,24 @@ enum attr_format {
 #define AF_DG_EXPLOSIVE		(1<<2)
 #define AF_DG_FLAMMABLE		(1<<3)
 
-/* Values for attributes that could carry relative values */
-#define ATTR_REL_MAXABS			0x40000000
-#define ATTR_REL_RELSHIFT		0x60000000
+/*
+ * Values for attributes that could carry relative values.
+ * Some attributes allow both absolute and relative values. The value for these
+ * attributes is stored as an int. Absolute values are stored as-is, relative
+ * values are stored shifted by adding ATTR_REL_RELSHIFT.
+ */
+/** Minimum value for an absolute attribute value. */
+#define ATTR_REL_MINABS		-0x40000000
+/** Maximum value for an absolute attribute value. */
+#define ATTR_REL_MAXABS		0x40000000
+/** Minimum value for an relative attribute value (without value shift). */
+#define ATTR_REL_MINREL		-0x1FFFFFFF
+/** Maximum value for an relative attribute value (without value shift). */
+#define ATTR_REL_MAXREL		0x20000000
+/**
+ * Value shift for relative values. This value is added to an attribute values to indicate
+ * a relative value. */
+#define ATTR_REL_RELSHIFT	0x60000000
 
 /** Indicates whether a position is valid **/
 enum attr_position_valid {
