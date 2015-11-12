@@ -1078,6 +1078,18 @@ gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void 
 }
 
 
+/**
+ * @brief
+ *
+ * One of {@code pc_in} or {@code g_in} must be supplied, the other should be {@code NULL}.
+ *
+ * @param this The internal GUI instance
+ * @param pc_in Projected coordinates of the position
+ * @param g_in WGS84 coordinates of the position
+ * @param wm
+ * @param name The display name for the position
+ * @param flags Flags specifying the operations available from the GUI
+ */
 /* meaning of the bits in "flags":
  * 1: "Streets"
  * 2: "House numbers"
