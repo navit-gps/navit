@@ -64,6 +64,18 @@ struct graphics_image_buffer {
 	int len;
 };
 
+struct graphics_keyboard_priv;
+
+/**
+ * Describes an instance of the native on-screen keyboard or other input method.
+ */
+struct graphics_keyboard {
+	// TODO complete
+	char *lang;									/**< The preferred language for text input, may be {@code NULL}. */
+	void *gui_priv;								/**< Private data determined by the GUI */
+	struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin */
+};
+
 /** Magic value for unset/unspecified width/height. */
 #define IMAGE_W_H_UNSET (-1)
 
@@ -124,6 +136,8 @@ struct graphics_methods {
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound);
 	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
+	int (*show_native_keyboard)(struct graphics_keyboard *kbd);
+	void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
 };
 
 
@@ -253,6 +267,9 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
+int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+
 /* end of prototypes */
 #ifdef __cplusplus
 }

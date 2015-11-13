@@ -1073,6 +1073,8 @@ static struct graphics_methods graphics_methods = {
 	overlay_disable,
 	overlay_resize,
 	set_attr,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *

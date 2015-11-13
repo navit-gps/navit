@@ -1070,6 +1070,37 @@ graphics_background_gc(struct graphics *this_, struct graphics_gc *gc)
 	this_->meth.background_gc(this_->priv, gc ? gc->priv : NULL);
 }
 
+
+/**
+ * @brief Shows the native on-screen keyboard or other input method
+ *
+ * This method is just a wrapper which calls the respective method of the graphics plugin.
+ *
+ * @return 1 if the native keyboard is going to be displayed, 0 if not, -1 if the method is not
+ * supported by the plugin
+ */
+int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd) {
+	if (!this_->meth.show_native_keyboard)
+		return -1;
+	return this_->meth.show_native_keyboard(kbd);
+}
+
+
+/**
+ * @brief Hides the native on-screen keyboard or other input method
+ *
+ * This method is just a wrapper which calls the respective method of the graphics plugin.
+ *
+ * @return True if the call was successfully passed to the plugin, false if the method is not supported
+ * by the plugin
+ */
+int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd) {
+	if (!this_->meth.hide_native_keyboard)
+		return 0;
+	this_->meth.hide_native_keyboard(kbd);
+	return 1;
+}
+
 #include "attr.h"
 #include "popup.h"
 #include <stdio.h>
@@ -2959,3 +2990,4 @@ graphics_process_selection(struct graphics *gra, struct displaylist *dl)
 		curr=g_list_next(curr);
 	}
 }
+

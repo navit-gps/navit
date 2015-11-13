@@ -435,3 +435,108 @@ gui_internal_keyboard_init_mode(char *lang)
 	g_free(lang);
 	return ret;
 }
+
+
+/**
+ * @brief Hides the platform's native on-screen keyboard or other input method
+ *
+ * This function is called as the {@code wfree} method of the placeholder widget for the platform's
+ * native on-screen keyboard. It is a wrapper around the corresponding method of the graphics plugin,
+ * which takes care of all platform-specific actions to hide the on-screen input method it previously
+ * displayed.
+ *
+ * A call to this function indicates that Navit no longer needs the input method and is about to destroy
+ * its placeholder widget. Navit will subsequently reclaim any screen real estate it may have previously
+ * reserved for the input method.
+ *
+ * On platforms that don't support overlapping windows this means that the on-screen input method should
+ * be hidden, as it may otherwise obstruct parts of Navit's UI.
+ *
+ * On windowed platforms, where on-screen input methods can be displayed alongside Navit or moved around
+ * as needed, the graphics driver should instead notify the on-screen method that it is no longer
+ * expecting user input, allowing the input method to take the appropriate action.
+ *
+ * @param this The internal GUI instance
+ * @param w The placeholder widget
+ */
+void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
+	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
+
+	if (kbd) {
+		graphics_hide_native_keyboard(this_->gra, kbd);
+		g_free(kbd->lang);
+		g_free(kbd->gui_priv);
+	} else
+		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed\n");
+	g_free(w);
+}
+
+
+/**
+ * @brief Shows the platform's native on-screen keyboard or other input method
+ *
+ * This method is a wrapper around the corresponding method of the graphics plugin, which takes care of
+ * all platform-specific details. In particular, it is up to the graphics plugin to determine how to
+ * handle the request: it may show its on-screen keyboard or another input method (such as stroke
+ * recognition). It may also simply ignore the request, which will typically occur when a hardware
+ * keyboard (or other hardware input) is available.
+ *
+ * If an input method is shown, the graphics plugin should try to select the configuration which best
+ * matches the specified {@code mode}. For example, if {@code mode} specifies a numeric layout, the
+ * graphics plugin should select a numeric keyboard layout (if available), or the equivalent for another
+ * input method (such as setting stroke recognition to identify strokes as numbers). Likewise, when an
+ * alphanumeric-uppercase mode is requested, it should switch to uppercase input.
+ *
+ * When multiple alphanumeric layouts are available, the graphics plugin should use the {@code lang}
+ * argument to determine the best layout.
+ *
+ * When selecting an input method, preference should always be given to the default or last selected
+ * input method and configuration if it matches the requested {@code mode} and {@code lang}.
+ *
+ * The platform's native input method may obstruct parts of Navit's UI. To prevent parts of the UI from
+ * becoming unreachable, this method will insert an empty box widget in the appropriate size at the
+ * appropriate position, provided the graphics plugin reports the correct values. Otherwise a zero-size
+ * widget is inserted. If the graphics driver decides not to display an on-screen input method, no
+ * widget will be created and the return value will be {@code NULL}.
+ *
+ * The widget's {@code wfree} function, to be called when the widget is destroyed, will be used to hide
+ * the platform keyboard when it is no longer needed.
+ *
+ * @param this The internal GUI instance
+ * @param w The parent of the widget requiring text input
+ * @param mode The requested keyboard mode
+ * @param lang The language for text input, used to select a keyboard layout
+ *
+ * @return The placeholder widget for the on-screen keyboard, may be {@code NULL}
+ */
+struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) {
+	struct widget *ret = NULL;
+	struct menu_data *md = gui_internal_menu_data(this);
+	struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
+	int res;
+
+	if (lang)
+		kbd->lang = g_strdup(lang);
+	res = graphics_show_native_keyboard(this->gra, kbd);
+
+	switch(res) {
+	case -1:
+		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard\n");
+		/* no break */
+	case 0:
+		g_free(kbd);
+		return NULL;
+	}
+
+	ret = gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	md->keyboard = ret;
+	md->keyboard_mode=mode;
+	ret->wfree = gui_internal_keyboard_hide_native;
+	/* TODO
+	 * set ret dimensions
+	 */
+	ret->data = (void *) kbd;
+	gui_internal_widget_append(w, ret);
+	/* FIXME do we need to render anything? */
+	return ret;
+}
