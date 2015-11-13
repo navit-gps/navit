@@ -653,6 +653,12 @@ gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w)
 	}
 }
 
+/**
+ * @brief Adds a child widget to a parent widget, making it the last child.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ */
 void
 gui_internal_widget_append(struct widget *parent, struct widget *child)
 {
@@ -664,6 +670,12 @@ gui_internal_widget_append(struct widget *parent, struct widget *child)
 	child->parent=parent;
 }
 
+/**
+ * @brief Adds a child widget to a parent widget, making it the first child.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ */
 void
 gui_internal_widget_prepend(struct widget *parent, struct widget *child)
 {
@@ -673,6 +685,15 @@ gui_internal_widget_prepend(struct widget *parent, struct widget *child)
 	child->parent=parent;
 }
 
+/**
+ * @brief Adds a child widget to a parent widget.
+ *
+ * Placement of the child widget among its siblings depends on the comparison function {@code func}.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ * @param func The comparison function
+ */
 void
 gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func)
 {
@@ -684,6 +705,14 @@ gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, G
 }
 
 
+/**
+ * @brief Destroys all child widgets.
+ *
+ * This function is recursive, destroying all widgets in the child hierarchy of {@code w}.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget whose children are to be destroyed
+ */
 void
 gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 {
@@ -701,6 +730,15 @@ gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 }
 
 
+/**
+ * @brief Destroys a widget.
+ *
+ * This function also takes care of recursively destroying the entire child widget hierarchy of
+ * {@code w} prior to destroying {@code w} itself.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to destroy
+ */
 void
 gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 {

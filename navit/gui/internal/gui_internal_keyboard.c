@@ -111,6 +111,8 @@ struct gui_internal_keyb_mode {
  * new keyboard widget
  * @param mode The new keyboard mode, see {@link gui_internal_keyboard(struct gui_priv *, struct widget *, int)}
  * for a description of possible values
+ *
+ * @return {@code wkbdb} if a non-NULL value was passed, else a new keyboard widget will be returned.
  */
 struct widget *
 gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
