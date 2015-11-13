@@ -57,7 +57,6 @@ coordinates_geo(const struct coord_geo *gc, char sep)
 	int lat_deg,lat_min,lat_sec;
 	int lng_deg,lng_min,lng_sec;
 	struct coord_geo g=*gc;
-	char *ret;
 
 	if (g.lat < 0) {
 		g.lat=-g.lat;
@@ -74,21 +73,8 @@ coordinates_geo(const struct coord_geo *gc, char sep)
 	lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
 	lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
 
-	/* Don't use g_strdup_printf for the full string because it has issues with extended ANSI characters
-	 * (notably the degree sign, 0xb0) on Android Lollipop.
-	 */
-	ret = g_strjoin(NULL,
-			g_strdup_printf("%d", lat_deg), "°",
-			g_strdup_printf("%d", lat_min), "'",
-			g_strdup_printf("%d", lat_sec), "\" ",
-			g_strnfill(1, latc),
-			g_strnfill(1, sep),
-			g_strdup_printf("%d", lng_deg), "°",
-			g_strdup_printf("%d", lng_min), "'",
-			g_strdup_printf("%d", lng_sec), "\" ",
-			g_strnfill(1, lngc),
-			NULL);
-	return ret;
+	/* Using degree sign directly in g_strdup_printf format string breaks things on Android Lollipop, see trac #1331. */
+	return g_strdup_printf("%d%s%d'%d\" %c%c%d%s%d'%d\" %c",lat_deg,"°",lat_min,lat_sec,latc,sep,lng_deg,"°",lng_min,lng_sec,lngc);
 }
 
 /**
