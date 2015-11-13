@@ -502,7 +502,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	char *country;
 	int keyboard_mode;
 	gui_internal_search_list_new(this);
-	keyboard_mode=2+gui_internal_keyboard_init_mode(this->country_iso2?this->country_iso2:getenv("LANG"));
+	keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(this->country_iso2 ? this->country_iso2 : getenv("LANG"));
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -543,7 +543,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_select_street")));
 		wb->state |= STATE_SENSITIVE;
 		wb->func = gui_internal_back;
-		keyboard_mode=18;
+		keyboard_mode = VKBD_NUMERIC | VKBD_FLAG_2;
 	}
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
 	if (wnext) {
@@ -559,7 +559,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
 	gui_internal_menu_render(this);
 }
 
