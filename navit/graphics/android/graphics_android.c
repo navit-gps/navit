@@ -485,6 +485,12 @@ set_attr(struct graphics_priv *gra, struct attr *attr)
 	}
 }
 
+
+int show_native_keyboard (struct graphics_keyboard *kbd);
+
+void hide_native_keyboard (struct graphics_keyboard *kbd);
+
+
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -507,6 +513,8 @@ static struct graphics_methods graphics_methods = {
 	overlay_disable,
 	overlay_resize,
 	set_attr,
+	show_native_keyboard,
+	hide_native_keyboard,
 };
 
 static void
@@ -737,7 +745,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu, Navit_showNativeKeyboard, Navit_hideNativeKeyboard;
 
 static int
 graphics_android_fullscreen(struct window *win, int on)
@@ -1128,10 +1136,51 @@ event_android_new(struct event_methods *meth)
 	Navit_showMenu = (*jnienv)->GetMethodID(jnienv, NavitClass, "showMenu", "()V");
 	if (Navit_showMenu == NULL)
 		return NULL;
+	Navit_showNativeKeyboard = (*jnienv)->GetMethodID(jnienv, NavitClass, "showNativeKeyboard", "()Z");
+	Navit_hideNativeKeyboard = (*jnienv)->GetMethodID(jnienv, NavitClass, "hideNativeKeyboard", "()V");
 
 	dbg(lvl_debug,"ok\n");
         *meth=event_android_methods;
         return NULL;
+}
+
+
+/**
+ * @brief Displays the native input method.
+ *
+ * This method decides whether a native on-screen input method, such as a virtual keyboard, needs to be
+ * displayed. A typical case in which there is no need for an on-screen input method is if a hardware
+ * keyboard is present.
+ *
+ * @param kbd A {@code struct graphics_keyboard} which describes the requirements for the input method
+ * and will be populated with the data of the input method before the function returns.
+ *
+ * @return True if the input method is displayed, false if not.
+ */
+int show_native_keyboard (struct graphics_keyboard *kbd) {
+	// TODO populate kbd with values
+	if (Navit_showNativeKeyboard == NULL) {
+		dbg(lvl_error, "method Navit.showNativeKeyboard() not found, cannot display keyboard\n");
+		return 0;
+	}
+	return (*jnienv)->CallBooleanMethod(jnienv, android_activity, Navit_showNativeKeyboard);
+}
+
+
+/**
+ * @brief Hides the native input method and frees associated private data.
+ *
+ * @param kbd The {@code struct graphics_keyboard} which was passed to the earlier call to
+ * {@link show_native_keyboard(struct graphics_keyboard *)}. The {@code gra_priv} member of the struct
+ * will be freed by this function.
+ */
+void hide_native_keyboard (struct graphics_keyboard *kbd) {
+	if (Navit_hideNativeKeyboard == NULL) {
+		dbg(lvl_error, "method Navit.hideNativeKeyboard() not found, cannot dismiss keyboard\n");
+		return;
+	}
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_hideNativeKeyboard);
+	g_free(kbd->gra_priv);
 }
 
 

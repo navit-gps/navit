@@ -570,6 +570,8 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	wk->name=g_strdup(type);
 	if (this->keyboard)
 		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
+	else
+		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 

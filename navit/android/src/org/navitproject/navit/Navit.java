@@ -645,6 +645,27 @@ public class Navit extends Activity
 		openOptionsMenu();
 	}
 
+	
+	/**
+	 * @brief Shows the native keyboard or other input method.
+	 * 
+	 * @return {@code true} if an input method is going to be displayed, {@code false} if not
+	 */
+	public boolean showNativeKeyboard() {
+		// TODO determine if we need on-screen input
+		mgr.showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
+		return true;
+	}
+	
+	
+	/**
+	 * @brief Hides the native keyboard or other input method.
+	 */
+	public void hideNativeKeyboard() {
+		mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+	}
+	
+
 	void setDestination(float latitude, float longitude, String address) {
 		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
 
