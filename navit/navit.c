@@ -2164,9 +2164,6 @@ navit_init(struct navit *this_)
 		navit_draw_async(this_, 1);
 	if (callback)
 		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
-#if 0
-	routech_test(this_);
-#endif
 }
 
 void
