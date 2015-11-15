@@ -1136,7 +1136,7 @@ event_android_new(struct event_methods *meth)
 	Navit_showMenu = (*jnienv)->GetMethodID(jnienv, NavitClass, "showMenu", "()V");
 	if (Navit_showMenu == NULL)
 		return NULL;
-	Navit_showNativeKeyboard = (*jnienv)->GetMethodID(jnienv, NavitClass, "showNativeKeyboard", "()Z");
+	Navit_showNativeKeyboard = (*jnienv)->GetMethodID(jnienv, NavitClass, "showNativeKeyboard", "()I");
 	Navit_hideNativeKeyboard = (*jnienv)->GetMethodID(jnienv, NavitClass, "hideNativeKeyboard", "()V");
 
 	dbg(lvl_debug,"ok\n");
@@ -1152,18 +1152,28 @@ event_android_new(struct event_methods *meth)
  * displayed. A typical case in which there is no need for an on-screen input method is if a hardware
  * keyboard is present.
  *
+ * Note that the Android platform lacks reliable means of determining whether an on-screen input method
+ * is going to be displayed or how much screen space it is going to occupy. Therefore this method tries
+ * to guess these values. They have been tested and found to work correctly with the AOSP keyboard, and
+ * are thus expected to be compatible with most on-screen keyboards found on the market, but results may
+ * be unexpected with other input methods.
+ *
  * @param kbd A {@code struct graphics_keyboard} which describes the requirements for the input method
  * and will be populated with the data of the input method before the function returns.
  *
- * @return True if the input method is displayed, false if not.
+ * @return True if the input method is going to be displayed, false if not.
  */
 int show_native_keyboard (struct graphics_keyboard *kbd) {
-	// TODO populate kbd with values
+	kbd->w = -1;
 	if (Navit_showNativeKeyboard == NULL) {
 		dbg(lvl_error, "method Navit.showNativeKeyboard() not found, cannot display keyboard\n");
 		return 0;
 	}
-	return (*jnienv)->CallBooleanMethod(jnienv, android_activity, Navit_showNativeKeyboard);
+	kbd->h = (*jnienv)->CallIntMethod(jnienv, android_activity, Navit_showNativeKeyboard);
+	dbg(lvl_error, "keyboard size is %d x %d px\n", kbd->w, kbd->h);
+	dbg(lvl_error, "return\n");
+	/* zero height means we're not showing a keyboard, therefore normalize height to boolean */
+	return !!(kbd->h);
 }
 
 

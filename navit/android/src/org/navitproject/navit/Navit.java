@@ -116,6 +116,20 @@ public class Navit extends Activity
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
 	Boolean                          isFullscreen                   = false;
 
+	
+	/**
+	 * @brief A Runnable to restore soft input when the user returns to the activity.
+	 * 
+	 * An instance of this class can be passed to the main message queue in the Activity's
+	 * {@code onRestore()} method.
+	 */
+	private class SoftInputRestorer implements Runnable {
+		public void run() {
+			Navit.this.showNativeKeyboard();
+		}
+	}
+	
+	
 	public void removeFileIfExists(String source) {
 		File file = new File(source);
 
@@ -445,6 +459,21 @@ public class Navit extends Activity
 				Log.e("Navit", "timestamp for navigate_to expired! not using data");
 			}
 		}
+		Log.d(TAG, "onResume");
+		/* FIXME this doesn't work */
+		if (show_soft_keyboard_now_showing)
+			this.showNativeKeyboard();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+		if (show_soft_keyboard_now_showing) {
+			Log.d(TAG, "onPause:hiding soft input");
+			this.hideNativeKeyboard();
+			show_soft_keyboard_now_showing = true;
+		}
 	}
 
 	private void parseNavigationURI(String schemeSpecificPart) {
@@ -651,10 +680,38 @@ public class Navit extends Activity
 	 * 
 	 * @return {@code true} if an input method is going to be displayed, {@code false} if not
 	 */
-	public boolean showNativeKeyboard() {
-		// TODO determine if we need on-screen input
-		mgr.showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
-		return true;
+	public int showNativeKeyboard() {
+		/*
+		 * Apologies for the huge mess that this function is, but Android's soft input API is a big
+		 * nightmare. Its devs have mercifully given us an option to show or hide the keyboard, but
+		 * there is no reliable way to figure out if it is actually showing, let alone how much of the
+		 * screen it occupies, so our best bet is guesswork.
+		 */
+		Configuration config = getResources().getConfiguration();
+		if ((config.keyboard == Configuration.KEYBOARD_QWERTY) && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO))
+			/* physical keyboard present, exit */
+			return 0;
+		
+		/* Use SHOW_FORCED here, else keyboard won't show in landscape mode */
+		mgr.showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+		show_soft_keyboard_now_showing = true;
+
+		/* 
+		 * Crude way to estimate the height occupied by the keyboard: for AOSP on KitKat and Lollipop it
+		 * is about 62-63% of available screen width (in portrait mode) but no more than slightly above
+		 * 46% of height (in landscape mode).
+		 */
+		Display display_ = getWindowManager().getDefaultDisplay();
+		int width_ = display_.getWidth();
+		int height_ = display_.getHeight();
+		int maxHeight = height_ * 47 / 100;
+		int inputHeight = width_ * 63 / 100;
+		if (inputHeight > (maxHeight))
+			inputHeight = maxHeight;
+
+		/* the receiver isn't going to fire before the UI thread becomes idle, well after this method returns */
+		Log.d(TAG, "showNativeKeyboard:return (assuming true)");
+		return inputHeight;
 	}
 	
 	
@@ -662,10 +719,11 @@ public class Navit extends Activity
 	 * @brief Hides the native keyboard or other input method.
 	 */
 	public void hideNativeKeyboard() {
-		mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+		mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		show_soft_keyboard_now_showing = false;
 	}
 	
-
+	
 	void setDestination(float latitude, float longitude, String address) {
 		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
 
