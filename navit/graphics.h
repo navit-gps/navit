@@ -70,10 +70,23 @@ struct graphics_keyboard_priv;
  * Describes an instance of the native on-screen keyboard or other input method.
  */
 struct graphics_keyboard {
-	// TODO complete
+	int w;										/**< The width of the area obscured by the keyboard (-1 for full width) */
+	int h;										/**< The height of the area obscured by the keyboard (-1 for full height) */
+	/* TODO mode is currently a copy of the respective value in the internal GUI and uses the same values.
+	 * This may need to be changed to something with globally available enum, possibly with revised values.
+	 * The Android implementation (the first to support a native on-screen keyboard) does not use this field
+	 * due to limitations of the platform. */
+	int mode;									/**< Mode flags for the keyboard */
 	char *lang;									/**< The preferred language for text input, may be {@code NULL}. */
-	void *gui_priv;								/**< Private data determined by the GUI */
-	struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin */
+	void *gui_priv;								/**< Private data determined by the GUI. The GUI may store
+												 *   a pointer to a data structure of its choice here. It is
+												 *   the responsibility of the GUI to free the data structure
+												 *   when it is no longer needed. The graphics plugin should
+												 *   not access this member. */
+	struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin. The
+												 *   graphics plugin is responsible for its management. If it
+												 *   uses this member, it must free the associated data in
+												 *   its {@code hide_native_keyboard} method. */
 };
 
 /** Magic value for unset/unspecified width/height. */

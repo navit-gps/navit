@@ -738,6 +738,7 @@ public class NavitGraphics
 			frameLayout.addView(statusTintView);
 
 			activity.setContentView(frameLayout);
+			
 			view.requestFocus();
 		}
 		else

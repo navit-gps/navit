@@ -449,12 +449,7 @@ gui_internal_keyboard_init_mode(char *lang)
  * its placeholder widget. Navit will subsequently reclaim any screen real estate it may have previously
  * reserved for the input method.
  *
- * On platforms that don't support overlapping windows this means that the on-screen input method should
- * be hidden, as it may otherwise obstruct parts of Navit's UI.
- *
- * On windowed platforms, where on-screen input methods can be displayed alongside Navit or moved around
- * as needed, the graphics driver should instead notify the on-screen method that it is no longer
- * expecting user input, allowing the input method to take the appropriate action.
+ * This function will free the {@code struct graphics_keyboard} pointed to by {@code w->data}
  *
  * @param this The internal GUI instance
  * @param w The placeholder widget
@@ -478,20 +473,8 @@ void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w)
  * This method is a wrapper around the corresponding method of the graphics plugin, which takes care of
  * all platform-specific details. In particular, it is up to the graphics plugin to determine how to
  * handle the request: it may show its on-screen keyboard or another input method (such as stroke
- * recognition). It may also simply ignore the request, which will typically occur when a hardware
+ * recognition). It may choose to simply ignore the request, which will typically occur when a hardware
  * keyboard (or other hardware input) is available.
- *
- * If an input method is shown, the graphics plugin should try to select the configuration which best
- * matches the specified {@code mode}. For example, if {@code mode} specifies a numeric layout, the
- * graphics plugin should select a numeric keyboard layout (if available), or the equivalent for another
- * input method (such as setting stroke recognition to identify strokes as numbers). Likewise, when an
- * alphanumeric-uppercase mode is requested, it should switch to uppercase input.
- *
- * When multiple alphanumeric layouts are available, the graphics plugin should use the {@code lang}
- * argument to determine the best layout.
- *
- * When selecting an input method, preference should always be given to the default or last selected
- * input method and configuration if it matches the requested {@code mode} and {@code lang}.
  *
  * The platform's native input method may obstruct parts of Navit's UI. To prevent parts of the UI from
  * becoming unreachable, this method will insert an empty box widget in the appropriate size at the
@@ -532,11 +515,19 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
 	md->keyboard = ret;
 	md->keyboard_mode=mode;
 	ret->wfree = gui_internal_keyboard_hide_native;
-	/* TODO
-	 * set ret dimensions
-	 */
+	if (kbd->h < 0) {
+		ret->h = w->h;
+		ret->hmin = w->hmin;
+	} else
+		ret->h = kbd->h;
+	if (kbd->w < 0) {
+		ret->w = w->w;
+		ret->wmin = w->wmin;
+	} else
+		ret->w = kbd->w;
+	dbg(lvl_error, "ret->w=%d, ret->h=%d\n", ret->w, ret->h);
 	ret->data = (void *) kbd;
 	gui_internal_widget_append(w, ret);
-	/* FIXME do we need to render anything? */
+	dbg(lvl_error, "return\n");
 	return ret;
 }
