@@ -205,10 +205,8 @@ msgstr "Μπές στη κυκλική πορεία άμεσα"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "και βγείτε απο την κυκλική πορεία στην %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -314,6 +312,10 @@ msgid "strongly "
 msgstr "κλειστά "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Πάρτε τον %1$s δρόμο για το %2$s"
 
@@ -321,7 +323,6 @@ msgstr "Πάρτε τον %1$s δρόμο για το %2$s"
 msgid "after %i roads"
 msgstr "μετά από %i δρόμους"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -352,7 +353,7 @@ msgstr "Κάνε αναστροφή %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -2736,3 +2737,7 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "και βγείτε απο την κυκλική πορεία στην %1$s %2$s"

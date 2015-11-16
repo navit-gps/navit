@@ -5,6 +5,7 @@
 # CaioNavas https://launchpad.net/~webmaster-caiomnavas
 # Carla Pita https://launchpad.net/~carla-pita
 # Diogo Lavareda https://launchpad.net/~diogolavareda
+# Ivo Xavier https://launchpad.net/~ivoxavier
 # Joel Patrão https://launchpad.net/~jpatrao
 # João Pirralha https://launchpad.net/~joaopirralha
 # Rui Correia https://launchpad.net/~rds-correia
@@ -20,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-08-19 04:46+0000\n"
-"Last-Translator: Sérgio Marques <Unknown>\n"
+"PO-Revision-Date: 2015-09-19 14:04+0000\n"
+"Last-Translator: João Pirralha <joaopirralha@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,10 +212,8 @@ msgstr "Entre na próxima rotunda"
 msgid "Enter the roundabout %s"
 msgstr "Entre na rotunda %s"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "e saia da rotunda na %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr "e entre na rotunda"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -320,6 +319,10 @@ msgid "strongly "
 msgstr "apertadamente "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "depois apanhe a %1$s estrada para %2$s"
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Apanhe a %1$s estrada para a %2$s"
 
@@ -327,7 +330,6 @@ msgstr "Apanhe a %1$s estrada para a %2$s"
 msgid "after %i roads"
 msgstr "depois de %i estradas"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -358,7 +360,7 @@ msgstr "Dê meia-volta à direita %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -386,7 +388,7 @@ msgid "Position"
 msgstr "Posição"
 
 msgid "Command"
-msgstr "Comando"
+msgstr "Instrução"
 
 msgid "Length"
 msgstr "Distância"
@@ -414,7 +416,7 @@ msgid "Waypoint %d"
 msgstr "Ponto %d"
 
 msgid "Visit before..."
-msgstr "Visitar antes..."
+msgstr "Visitar antes de..."
 
 msgid "Set as position"
 msgstr "Definir como posição"
@@ -1460,7 +1462,8 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Ficheiros navit.xml, navit.xml.local não encontrados\n"
+msgstr ""
+"Ficheiros de configuração navit.xml, navit.xml.local não encontrados\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
@@ -1484,7 +1487,7 @@ msgstr "rua desconhecida"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr "Viatura sem nome"
+msgstr "Veículo sem nome"
 
 msgid "Failed to write bookmarks file"
 msgstr "Erro ao escrever os marcadores"
@@ -1543,7 +1546,7 @@ msgstr "Destino"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "E_xibir"
+msgstr "_Exibir"
 
 msgid "_Route"
 msgstr "_Rota"
@@ -1552,7 +1555,7 @@ msgid "_Former Destinations"
 msgstr "Destinos _anteriores"
 
 msgid "_Bookmarks"
-msgstr "Marcador_es"
+msgstr "_Marcadores"
 
 msgid "_Map"
 msgstr "_Mapa"
@@ -1567,13 +1570,13 @@ msgid "_Vehicle"
 msgstr "_Veículo"
 
 msgid "Zoom_Out"
-msgstr "Redu_zir"
+msgstr "_Reduzir"
 
 msgid "Decrease zoom level"
 msgstr "Diminuir nível de ampliação"
 
 msgid "Zoom_In"
-msgstr "Ampl_iar"
+msgstr "_Ampliar"
 
 msgid "Increase zoom level"
 msgstr "Aumentar nível de ampliação"
@@ -1582,7 +1585,7 @@ msgid "_Recalculate"
 msgstr "_Recalcular"
 
 msgid "Redraw map"
-msgstr "Refazer mapa"
+msgstr "Redesenhar mapa"
 
 msgid "_Info"
 msgstr "_Informação"
@@ -1615,10 +1618,10 @@ msgid "Show position _cursor"
 msgstr "Mostrar _cursor de posição"
 
 msgid "_Lock on Road"
-msgstr "B_loqueio na estrada"
+msgstr "_Bloqueio na estrada"
 
 msgid "_Keep orientation to the North"
-msgstr "Manter orientação ao _Norte"
+msgstr "Manter orientação ao _norte"
 
 msgid "Switches map orientation to the north or the vehicle"
 msgstr "Muda a orientação do mapa para o norte ou para o veículo"
@@ -1630,7 +1633,7 @@ msgid "Show/hide route description"
 msgstr "Mostrar/ocultar descrição da rota"
 
 msgid "_Autozoom"
-msgstr "Tamanho _automático"
+msgstr "_Tamanho automático"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr "Ativar/desativar tamanho automático da ampliação"
@@ -1733,7 +1736,7 @@ msgid "Name"
 msgstr "Nome"
 
 msgid "Visit Before"
-msgstr "Visitar Antes"
+msgstr "Visitar antes"
 
 msgid "N"
 msgstr "N"
@@ -1806,7 +1809,7 @@ msgid "View Attributes"
 msgstr "Atributos de vista"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr "Definir como posição (desativar viatura)"
+msgstr "Definir como posição (desativar veículo)"
 
 msgid "POIs"
 msgstr "POIs"
@@ -1967,7 +1970,7 @@ msgid "Lock on road"
 msgstr "Bloqueio na estrada"
 
 msgid "Northing"
-msgstr "Para norte"
+msgstr "Para Norte"
 
 msgid "Map follows Vehicle"
 msgstr "Mapa segue veículo"
@@ -1988,7 +1991,7 @@ msgid "Route Description"
 msgstr "Descrição da rota"
 
 msgid "Show Locale"
-msgstr "Mostrar local"
+msgstr "Exibir região e idioma"
 
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
@@ -2051,9 +2054,9 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
-"A atual localização %s no mapa não está disponível\n"
+"A atual localização do mapa %s não está disponível\n"
 "Por favor reinicie o Navit após introduzir um cartão SD ou selecionar uma "
-"localização diferente no mapa."
+"localização do mapa diferente."
 
 msgid "Downloaded maps"
 msgstr "Mapas transferidos"
@@ -2508,7 +2511,7 @@ msgid ""
 "Destinations"
 msgstr ""
 "Destinos\n"
-"Anteriores"
+"anteriores"
 
 msgid "Coordinates"
 msgstr "Coordenadas"
@@ -2521,7 +2524,7 @@ msgstr ""
 "navegação"
 
 msgid "Display"
-msgstr "Mostrar"
+msgstr "Visualização"
 
 msgid "Fullscreen"
 msgstr "Ecrã completo"
@@ -2783,3 +2786,7 @@ msgstr ""
 "O Navit pode usar qualquer motor de síntese de voz no dispositivo. O motor "
 "atualmente selecionado reporta não suportar o seu idioma. Pedir ao sistema "
 "para exibir o diálogo de transferência de voz?"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "e saia da rotunda na %1$s %2$s"

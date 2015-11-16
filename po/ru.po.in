@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:01+0000\n"
+"PO-Revision-Date: 2015-11-15 20:38+0000\n"
 "Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
@@ -225,10 +225,8 @@ msgstr "Скоро круговое движение"
 msgid "Enter the roundabout %s"
 msgstr "%s круговое движение"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "затем %2$s съезжайте с круга на %1$s"
+msgid "then enter the roundabout"
+msgstr "затем круговое движение"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -334,6 +332,10 @@ msgid "strongly "
 msgstr "круто "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Выезжайте на %1$s дорогу в направлении %2$s"
 
@@ -341,7 +343,6 @@ msgstr "Выезжайте на %1$s дорогу в направлении %2$s
 msgid "after %i roads"
 msgstr "после %i дорог"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -372,7 +373,7 @@ msgstr "%1$s разворот направо"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -2056,7 +2057,7 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
-"Папка s, выбранная для хранения карт, недоступна.\n"
+"Папка %s, выбранная для хранения карт, недоступна.\n"
 "Пожалуйста, перезагрузите Navit после подключения SD карты, или выберите "
 "другую папку."
 
@@ -2788,3 +2789,7 @@ msgstr ""
 "преобразования текста в речь. Выбранное сейчас приложение сообщает о "
 "невозможности работы на выбранном языке. Попросим систему показать диалог "
 "загрузки голосовых данных?"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "затем %2$s съезжайте с круга на %1$s"
