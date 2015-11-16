@@ -1,0 +1,2759 @@
+# Hungarian translations for navit
+# Copyright (C) 2006-2015 The Navit Team
+# This file is distributed under the same license as the navit package.
+# Many thanks to the contributors of this translation:
+# Bernath Marci https://launchpad.net/~bernath-marci
+# György Balló https://launchpad.net/~ballogy
+# KaZeR https://launchpad.net/~kazer
+# Nagy Attila https://launchpad.net/~tylla-at-launchpad-net
+# WintermuteHun https://launchpad.net/~wintermute-valodi
+# dandor https://launchpad.net/~dandorfs
+# kalmarzs https://launchpad.net/~kalmarzs
+msgid ""
+msgstr ""
+"Project-Id-Version: navit 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-15 00:45+0000\n"
+"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"Last-Translator: György Balló <ballogyor@gmail.com>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2015-11-15 20:44+0000\n"
+"X-Generator: Launchpad (build 17845)\n"
+"Language: hu\n"
+"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+msgid "Running from source directory\n"
+msgstr "Futtatás a forráskönyvtárból\n"
+
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "'%s' beállítása erre: '%s'\n"
+
+#. TRANSLATORS: the following counts refer to streets
+msgid "zeroth"
+msgstr "nulladik"
+
+msgid "first"
+msgstr "első"
+
+msgid "second"
+msgstr "második"
+
+msgid "third"
+msgstr "harmadik"
+
+msgid "fourth"
+msgstr "negyedik"
+
+msgid "fifth"
+msgstr "ötödik"
+
+msgid "sixth"
+msgstr "hatodik"
+
+#. TRANSLATORS: the following counts refer to roundabout exits
+msgid "zeroth exit"
+msgstr "nulladik kijáraton"
+
+msgid "first exit"
+msgstr "első kijáraton"
+
+msgid "second exit"
+msgstr "második kijáraton"
+
+msgid "third exit"
+msgstr "harmadik kijáraton"
+
+msgid "fourth exit"
+msgstr "negyedik kijáraton"
+
+msgid "fifth exit"
+msgstr "ötödik kijáraton"
+
+msgid "sixth exit"
+msgstr "hatodik kijáraton"
+
+#, c-format
+msgid "%d feet"
+msgstr "%d láb"
+
+#, c-format
+msgid "in %d feet"
+msgstr "%d láb múlva"
+
+#, c-format
+msgid "%d.%d miles"
+msgstr "%d.%d mérföld"
+
+#, c-format
+msgid "in %d.%d miles"
+msgstr "%d.%d mérföld múlva"
+
+#, c-format
+msgid "one mile"
+msgid_plural "%d miles"
+msgstr[0] "egy mérföld"
+msgstr[1] "%d mérföld"
+
+#, c-format
+msgid "in one mile"
+msgid_plural "in %d miles"
+msgstr[0] "egy mérföld múlva"
+msgstr[1] "%d mérföld múlva"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d méter"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d méter után"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d,%d kilométer"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d,%d kilométer után"
+
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "egy kilométer"
+msgstr[1] "%d kilométer"
+
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "egy kilométer után"
+msgstr[1] "%d kilométer után"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#, c-format
+msgid "%1$sonto the %2$s%3$s%4$s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
+#, c-format
+msgid "%1$sonto %2$s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|masculine form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|feminine form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%1$sonto %2$s|neuter form"
+msgstr ""
+
+#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
+msgid "onto the motorway ramp"
+msgstr "a felhajtóra"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#, c-format
+msgid "%sinto %s%s%s"
+msgstr "%sa(z) %s%s%s utcába"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto %s%s%s|masculine form"
+msgstr "%sa(z) %s%s%s útra"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto %s%s%s|feminine form"
+msgstr "%sa(z) %s%s%s útra"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto %s%s%s|neuter form"
+msgstr "%sa(z) %s%s%s útra"
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#, c-format
+msgid "%sinto the %s"
+msgstr "%shajtson rá a(z) %s útra"
+
+msgid "When possible, please turn around"
+msgstr "Amint lehet, fordujon meg"
+
+#. TRANSLATORS: the argument is the destination to follow
+#, c-format
+msgid "towards %s"
+msgstr ""
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Haladjon az úton a következő %sig"
+
+msgid "Enter the roundabout soon"
+msgstr "Hajtson be a körforgalomba hamarosan."
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#, c-format
+msgid "Enter the roundabout %s"
+msgstr ""
+
+msgid "then enter the roundabout"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "Leave the roundabout at the %1$s %2$s"
+msgstr "Hagyja el a körforgalmat a(z) %1$s %2$s"
+
+msgid "soon"
+msgstr "hamarosan"
+
+msgid "now"
+msgstr "most"
+
+msgid "then"
+msgstr "aztán"
+
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "then merge%1$s|right"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Merge %1$s%2$s|right"
+msgstr ""
+
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "then merge%1$s|left"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Merge %1$s%2$s|left"
+msgstr ""
+
+msgid "on your left"
+msgstr ""
+
+msgid "on your right"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#, c-format
+msgid "Take exit %1$s %2$s %3$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#, c-format
+msgid "Take the exit %1$s %2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
+msgid "at interchange"
+msgstr ""
+
+msgid "at exit"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then continue straight%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Continue straight %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then keep right%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Keep right %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: the arg. is where to do the maneuver
+#, c-format
+msgid "then keep left%1$s"
+msgstr ""
+
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#, c-format
+msgid "Keep left %1$s%2$s%3$s"
+msgstr ""
+
+#. TRANSLATORS: "right" as in "turn right"
+msgid "right"
+msgstr "jobbra"
+
+#. TRANSLATORS: "left" as in "turn left"
+msgid "left"
+msgstr "balra"
+
+#. TRANSLATORS: as in "turn easily right"
+msgid "easily "
+msgstr "enyhén "
+
+#. TRANSLATORS: as in "turn strongly right"
+msgid "strongly "
+msgstr "élesen "
+
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr "A(z) %1$s útnál forduljon %2$s"
+
+#, c-format
+msgid "after %i roads"
+msgstr "%i út után"
+
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#, c-format
+msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr "Forduljon %1$s%2$s %3$s%4$s"
+
+#. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
+msgid "then make a U-turn|left"
+msgstr "aztán fordujon meg"
+
+#. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Make a U-turn %1$s|left"
+msgstr "Fordujon meg %1$s"
+
+#. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
+msgid "then make a U-turn|right"
+msgstr "aztán fordujon meg"
+
+#. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#, c-format
+msgid "Make a U-turn %1$s|right"
+msgstr "Fordujon meg %1$s"
+
+#. An empty placeholder that we can use in the future for
+#. * some motorway commands that are now suppressed but we
+#. * can in some cases make it say here :
+#. * 'follow destination blabla' without any further driving instructions,
+#. * in cases where relevant destination info is available.
+#. * Even if there is no driving command to be announced, in some cases
+#. * there is an overhead roadsign in preparation of an upcoming road-split,
+#. * and then we can give useful info to the driver.
+#. *
+#. *  UNTESTED !
+#. *
+#. 
+msgid "follow"
+msgstr ""
+
+msgid "then you have reached your destination."
+msgstr "majd eléri az úticélját."
+
+#. TRANSLATORS: the arg. is distance
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "Elérte az úticélját: %s"
+
+#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
+msgid "Interchange"
+msgstr ""
+
+msgid "Exit"
+msgstr "Kijárat"
+
+#. Android resource: @strings/position_popup_title
+msgid "Position"
+msgstr "Pozíció"
+
+msgid "Command"
+msgstr "Utasítás"
+
+msgid "Length"
+msgstr "Hossz"
+
+msgid "km"
+msgstr "km"
+
+msgid "m"
+msgstr "m"
+
+msgid "Time"
+msgstr "Idő"
+
+msgid "Destination Length"
+msgstr "Távolság a céltól"
+
+msgid "Destination Time"
+msgstr "Menetidő"
+
+msgid "Roadbook"
+msgstr "Útikalauz"
+
+#, c-format
+msgid "Waypoint %d"
+msgstr "Útvonalpont %d"
+
+msgid "Visit before..."
+msgstr "Meglátogatás ez előtt..."
+
+msgid "Set as position"
+msgstr "Beállítás pozícióként"
+
+msgid "Set as destination"
+msgstr "Beállítás úticélként"
+
+msgid "Add as bookmark"
+msgstr "Hozzáadás a könyvjelzőkhöz"
+
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "Pont 0x%x 0x%x"
+
+#, c-format
+msgid "Screen coord : %d %d"
+msgstr "Képernyő koordinátái: %d %d"
+
+#. 020
+msgid "Andorra"
+msgstr "Andorra"
+
+#. 784
+msgid "United Arab Emirates"
+msgstr "Egyesült Arab Emirátusok"
+
+#. 004
+msgid "Afghanistan"
+msgstr "Afganisztán"
+
+#. 028
+msgid "Antigua and Barbuda"
+msgstr "Antigua és Barbuda"
+
+#. 660
+msgid "Anguilla"
+msgstr "Angola"
+
+#. 008
+msgid "Albania"
+msgstr "Albánia"
+
+#. 051
+msgid "Armenia"
+msgstr "Örményország"
+
+#. 530
+msgid "Netherlands Antilles"
+msgstr "Holland Antillák"
+
+#. 024
+msgid "Angola"
+msgstr "Angola"
+
+#. 010
+msgid "Antarctica"
+msgstr "Antarktisz"
+
+#. 032
+msgid "Argentina"
+msgstr "Argentína"
+
+#. 016
+msgid "American Samoa"
+msgstr "Amerikai Szamoa"
+
+#. 040
+msgid "Austria"
+msgstr "Ausztria"
+
+#. 036
+msgid "Australia"
+msgstr "Ausztrália"
+
+#. 533
+msgid "Aruba"
+msgstr "Aruba"
+
+#. 248
+msgid "Aland Islands"
+msgstr "Aland-sziget"
+
+#. 031
+msgid "Azerbaijan"
+msgstr "Azerbajdzsán"
+
+#. 070
+msgid "Bosnia and Herzegovina"
+msgstr "Bosznia és Hercegovina"
+
+#. 052
+msgid "Barbados"
+msgstr "Barbados"
+
+#. 050
+msgid "Bangladesh"
+msgstr "Banglades"
+
+#. 056
+msgid "Belgium"
+msgstr "Belgium"
+
+#. 854
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#. 100
+msgid "Bulgaria"
+msgstr "Bulgária"
+
+#. 048
+msgid "Bahrain"
+msgstr "Bahrain"
+
+#. 108
+msgid "Burundi"
+msgstr "Burundi"
+
+#. 204
+msgid "Benin"
+msgstr "Benin"
+
+#. 652
+msgid "Saint Barthelemy"
+msgstr "Saint Barthelemy"
+
+#. 060
+msgid "Bermuda"
+msgstr "Bermudák"
+
+#. 096
+msgid "Brunei Darussalam"
+msgstr "Brunei Szultanátus"
+
+#. 068
+msgid "Bolivia"
+msgstr "Bolívia"
+
+#. 535
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
+#. 076
+msgid "Brazil"
+msgstr "Brazília"
+
+#. 044
+msgid "Bahamas"
+msgstr "Bahamák"
+
+#. 064
+msgid "Bhutan"
+msgstr "Bhután"
+
+#. 074
+msgid "Bouvet Island"
+msgstr "Bouvet-sziget"
+
+#. 072
+msgid "Botswana"
+msgstr "Botswana"
+
+#. 112
+msgid "Belarus"
+msgstr "Fehéroroszország"
+
+#. 084
+msgid "Belize"
+msgstr "Belizé"
+
+#. 124
+msgid "Canada"
+msgstr "Kanada"
+
+#. 166
+msgid "Cocos (Keeling) Islands"
+msgstr "Cocos (Keeling) -szigetek"
+
+#. 180
+msgid "Congo, Democratic Republic of the"
+msgstr "Kongói Demokratikus Köztársaság"
+
+#. 140
+msgid "Central African Republic"
+msgstr "Közép-afrikai Köztársaság"
+
+#. 178
+msgid "Congo"
+msgstr "Kongó"
+
+#. 756
+msgid "Switzerland"
+msgstr "Svájc"
+
+#. 384
+msgid "Cote d'Ivoire"
+msgstr "Elefántcsontpart"
+
+#. 184
+msgid "Cook Islands"
+msgstr "Cook-szigetek"
+
+#. 152
+msgid "Chile"
+msgstr "Chile"
+
+#. 120
+msgid "Cameroon"
+msgstr "Kamerun"
+
+#. 156
+msgid "China"
+msgstr "Kína"
+
+#. 170
+msgid "Colombia"
+msgstr "Kolumbia"
+
+#. 188
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#. 192
+msgid "Cuba"
+msgstr "Kuba"
+
+#. 132
+msgid "Cape Verde"
+msgstr "Zöldfoki-szigetek"
+
+#. 531
+msgid "Curacao"
+msgstr ""
+
+#. 162
+msgid "Christmas Island"
+msgstr "Karácsony-szigetek"
+
+#. 196
+msgid "Cyprus"
+msgstr "Ciprus"
+
+#. 203
+msgid "Czech Republic"
+msgstr "Csehország"
+
+#. 276
+msgid "Germany"
+msgstr "Németország"
+
+#. 262
+msgid "Djibouti"
+msgstr "Dzsibuti"
+
+#. 208
+msgid "Denmark"
+msgstr "Dánia"
+
+#. 212
+msgid "Dominica"
+msgstr "Dominika"
+
+#. 214
+msgid "Dominican Republic"
+msgstr "Dominikai Köztársaság"
+
+#. 012
+msgid "Algeria"
+msgstr "Algéria"
+
+#. 218
+msgid "Ecuador"
+msgstr "Ecuador"
+
+#. 233
+msgid "Estonia"
+msgstr "Észtország"
+
+#. 818
+msgid "Egypt"
+msgstr "Egyiptom"
+
+#. 732
+msgid "Western Sahara"
+msgstr "Nyugat-Szahara"
+
+#. 232
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#. 724
+msgid "Spain"
+msgstr "Spanyolország"
+
+#. 231
+msgid "Ethiopia"
+msgstr "Etiópia"
+
+#. 246
+msgid "Finland"
+msgstr "Finnország"
+
+#. 242
+msgid "Fiji"
+msgstr "Fidzsi-szigetek"
+
+#. 238
+msgid "Falkland Islands (Malvinas)"
+msgstr "Falkland-szigetek"
+
+#. 583
+msgid "Micronesia, Federated States of"
+msgstr "Mikronéz Államszövetség"
+
+#. 234
+msgid "Faroe Islands"
+msgstr "Feröer-szigetek"
+
+#. 250
+msgid "France"
+msgstr "Franciaország"
+
+#. 266
+msgid "Gabon"
+msgstr "Gabon"
+
+#. 826
+msgid "United Kingdom"
+msgstr "Egyesült Királyság"
+
+#. 308
+msgid "Grenada"
+msgstr "Grenada"
+
+#. 268
+msgid "Georgia"
+msgstr "Grúzia"
+
+#. 254
+msgid "French Guiana"
+msgstr "Francia Guyana"
+
+#. 831
+msgid "Guernsey"
+msgstr "Guernsey"
+
+#. 288
+msgid "Ghana"
+msgstr "Ghána"
+
+#. 292
+msgid "Gibraltar"
+msgstr "Gibraltár"
+
+#. 304
+msgid "Greenland"
+msgstr "Grönland"
+
+#. 270
+msgid "Gambia"
+msgstr "Gambia"
+
+#. 324
+msgid "Guinea"
+msgstr "Guinea"
+
+#. 312
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+#. 226
+msgid "Equatorial Guinea"
+msgstr "Egyenlítői Guinea"
+
+#. 300
+msgid "Greece"
+msgstr "Görögország"
+
+#. 239
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Dél-Georgia és Déli-Sandwich-szigetek"
+
+#. 320
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#. 316
+msgid "Guam"
+msgstr "Guam"
+
+#. 624
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+#. 328
+msgid "Guyana"
+msgstr "Guyana"
+
+#. 344
+msgid "Hong Kong"
+msgstr "Hongkong"
+
+#. 334
+msgid "Heard Island and McDonald Islands"
+msgstr "Heard-sziget és McDonald-szigetek"
+
+#. 340
+msgid "Honduras"
+msgstr "Honduras"
+
+#. 191
+msgid "Croatia"
+msgstr "Horvátország"
+
+#. 332
+msgid "Haiti"
+msgstr "Haiti"
+
+#. 348
+msgid "Hungary"
+msgstr "Magyarország"
+
+#. 360
+msgid "Indonesia"
+msgstr "Indonézia"
+
+#. 372
+msgid "Ireland"
+msgstr "Írország"
+
+#. 376
+msgid "Israel"
+msgstr "Izrael"
+
+#. 833
+msgid "Isle of Man"
+msgstr "Man sziget"
+
+#. 356
+msgid "India"
+msgstr "India"
+
+#. 086
+msgid "British Indian Ocean Territory"
+msgstr "Brit Indiai Óceáni Terület"
+
+#. 368
+msgid "Iraq"
+msgstr "Irak"
+
+#. 364
+msgid "Iran, Islamic Republic of"
+msgstr "Irán"
+
+#. 352
+msgid "Iceland"
+msgstr "Izland"
+
+#. 380
+msgid "Italy"
+msgstr "Olaszország"
+
+#. 832
+msgid "Jersey"
+msgstr "Jersey"
+
+#. 388
+msgid "Jamaica"
+msgstr "Jamaika"
+
+#. 400
+msgid "Jordan"
+msgstr "Jordánia"
+
+#. 392
+msgid "Japan"
+msgstr "Japán"
+
+#. 404
+msgid "Kenya"
+msgstr "Kenya"
+
+#. 417
+msgid "Kyrgyzstan"
+msgstr "Kirgizisztán"
+
+#. 116
+msgid "Cambodia"
+msgstr "Kambodzsa"
+
+#. 296
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#. 174
+msgid "Comoros"
+msgstr "Comore-szigetek"
+
+#. 659
+msgid "Saint Kitts and Nevis"
+msgstr "St. Kitts és Nevis"
+
+#. 408
+msgid "Korea, Democratic People's Republic of"
+msgstr "Koreai Demokratikus Népköztársaság"
+
+#. 410
+msgid "Korea, Republic of"
+msgstr "Koreai Köztársaság"
+
+#. 414
+msgid "Kuwait"
+msgstr "Kuvait"
+
+#. 136
+msgid "Cayman Islands"
+msgstr "Kajmán-szigetek"
+
+#. 398
+msgid "Kazakhstan"
+msgstr "Kazahsztán"
+
+#. 418
+msgid "Lao People's Democratic Republic"
+msgstr "Laoszi Demokratikus Népköztársaság"
+
+#. 422
+msgid "Lebanon"
+msgstr "Libanon"
+
+#. 662
+msgid "Saint Lucia"
+msgstr "St. Lucia"
+
+#. 438
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#. 144
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#. 430
+msgid "Liberia"
+msgstr "Libéria"
+
+#. 426
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#. 440
+msgid "Lithuania"
+msgstr "Litvánia"
+
+#. 442
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#. 428
+msgid "Latvia"
+msgstr "Lettország"
+
+#. 434
+msgid "Libya"
+msgstr "Líbia"
+
+#. 504
+msgid "Morocco"
+msgstr "Marokkó"
+
+#. 492
+msgid "Monaco"
+msgstr "Monaco"
+
+#. 498
+msgid "Moldova, Republic of"
+msgstr "Moldáv Köztársaság"
+
+#. 499
+msgid "Montenegro"
+msgstr "Montenegró"
+
+#. 663
+msgid "Saint Martin (French part)"
+msgstr "Saint Martin (francia oldal)"
+
+#. 450
+msgid "Madagascar"
+msgstr "Madagaszkár"
+
+#. 584
+msgid "Marshall Islands"
+msgstr "Marsall-szigetek"
+
+#. 807
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr "Macedónia, korábban Jugoszláv Köztársaság"
+
+#. 466
+msgid "Mali"
+msgstr "Mali"
+
+#. 104
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#. 496
+msgid "Mongolia"
+msgstr "Mongólia"
+
+#. 446
+msgid "Macao"
+msgstr "Makaó"
+
+#. 580
+msgid "Northern Mariana Islands"
+msgstr "Északi Mariana-szigetek"
+
+#. 474
+msgid "Martinique"
+msgstr "Martinique"
+
+#. 478
+msgid "Mauritania"
+msgstr "Mauritánia"
+
+#. 500
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#. 470
+msgid "Malta"
+msgstr "Málta"
+
+#. 480
+msgid "Mauritius"
+msgstr "Mauritius"
+
+#. 462
+msgid "Maldives"
+msgstr "Maldív-szigetek"
+
+#. 454
+msgid "Malawi"
+msgstr "Malawi"
+
+#. 484
+msgid "Mexico"
+msgstr "Mexikó"
+
+#. 458
+msgid "Malaysia"
+msgstr "Malajzia"
+
+#. 508
+msgid "Mozambique"
+msgstr "Mozambik"
+
+#. 516
+msgid "Namibia"
+msgstr "Namíbia"
+
+#. 540
+msgid "New Caledonia"
+msgstr "Új-Kaledónia"
+
+#. 562
+msgid "Niger"
+msgstr "Niger"
+
+#. 574
+msgid "Norfolk Island"
+msgstr "Norfolk-sziget"
+
+#. 566
+msgid "Nigeria"
+msgstr "Nigéria"
+
+#. 558
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+#. 528
+msgid "Netherlands"
+msgstr "Hollandia"
+
+#. 578
+msgid "Norway"
+msgstr "Norvégia"
+
+#. 524
+msgid "Nepal"
+msgstr "Nepál"
+
+#. 520
+msgid "Nauru"
+msgstr "Nauru"
+
+#. 570
+msgid "Niue"
+msgstr "Niue"
+
+#. 554
+msgid "New Zealand"
+msgstr "Új-Zéland"
+
+#. 512
+msgid "Oman"
+msgstr "Omán"
+
+#. 591
+msgid "Panama"
+msgstr "Panama"
+
+#. 604
+msgid "Peru"
+msgstr "Peru"
+
+#. 258
+msgid "French Polynesia"
+msgstr "Francia Polinézia"
+
+#. 598
+msgid "Papua New Guinea"
+msgstr "Pápua Új-Guinea"
+
+#. 608
+msgid "Philippines"
+msgstr "Fülöp-szigetek"
+
+#. 586
+msgid "Pakistan"
+msgstr "Pakisztán"
+
+#. 616
+msgid "Poland"
+msgstr "Lengyelország"
+
+#. 666
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint-Pierre és Miquelon"
+
+#. 612
+msgid "Pitcairn"
+msgstr "Pitcairn-szigetek"
+
+#. 630
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#. 275
+msgid "Palestinian Territory, Occupied"
+msgstr "Palesztin Megszállt Területek"
+
+#. 620
+msgid "Portugal"
+msgstr "Portugália"
+
+#. 585
+msgid "Palau"
+msgstr "Palau"
+
+#. 600
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#. 634
+msgid "Qatar"
+msgstr "Katar"
+
+#. 638
+msgid "Reunion"
+msgstr "Réunion"
+
+#. 642
+msgid "Romania"
+msgstr "Románia"
+
+#. 688
+msgid "Serbia"
+msgstr "Szerbia"
+
+#. 643
+msgid "Russian Federation"
+msgstr "Orosz Föderáció"
+
+#. 646
+msgid "Rwanda"
+msgstr "Ruanda"
+
+#. 682
+msgid "Saudi Arabia"
+msgstr "Szaúd-Arábia"
+
+#. 090
+msgid "Solomon Islands"
+msgstr "Salamon-szigetek"
+
+#. 690
+msgid "Seychelles"
+msgstr "Seychelles-szigetek"
+
+#. 736
+msgid "Sudan"
+msgstr "Szudán"
+
+#. 752
+msgid "Sweden"
+msgstr "Svédország"
+
+#. 702
+msgid "Singapore"
+msgstr "Szingapúr"
+
+#. 654
+msgid "Saint Helena"
+msgstr "Szent Ilona"
+
+#. 705
+msgid "Slovenia"
+msgstr "Szlovénia"
+
+#. 744
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard-szigetek és Jan Mayen-sziget"
+
+#. 703
+msgid "Slovakia"
+msgstr "Szlovákia"
+
+#. 694
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+#. 674
+msgid "San Marino"
+msgstr "San Marino"
+
+#. 686
+msgid "Senegal"
+msgstr "Szenegál"
+
+#. 706
+msgid "Somalia"
+msgstr "Szomália"
+
+#. 740
+msgid "Suriname"
+msgstr "Suriname"
+
+#. 728
+msgid "South Sudan"
+msgstr "Dél-Szudán"
+
+#. 678
+msgid "Sao Tome and Principe"
+msgstr "São Tomé és Príncipe"
+
+#. 222
+msgid "El Salvador"
+msgstr "Salvador"
+
+#. 534
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
+
+#. 760
+msgid "Syrian Arab Republic"
+msgstr "Szíriai Arab Köztársaság"
+
+#. 748
+msgid "Swaziland"
+msgstr "Szváziföld"
+
+#. 796
+msgid "Turks and Caicos Islands"
+msgstr "Turks és Caicos-szigetek"
+
+#. 148
+msgid "Chad"
+msgstr "Csád"
+
+#. 260
+msgid "French Southern Territories"
+msgstr "Francia déli területek"
+
+#. 768
+msgid "Togo"
+msgstr "Togó"
+
+#. 764
+msgid "Thailand"
+msgstr "Thaiföld"
+
+#. 762
+msgid "Tajikistan"
+msgstr "Tadzsikisztán"
+
+#. 772
+msgid "Tokelau"
+msgstr "Tokelau-szigetek"
+
+#. 626
+msgid "Timor-Leste"
+msgstr "Kelet-Timor"
+
+#. 795
+msgid "Turkmenistan"
+msgstr "Türkmenisztán"
+
+#. 788
+msgid "Tunisia"
+msgstr "Tunézia"
+
+#. 776
+msgid "Tonga"
+msgstr "Tonga"
+
+#. 792
+msgid "Turkey"
+msgstr "Törökország"
+
+#. 780
+msgid "Trinidad and Tobago"
+msgstr "Trinidad és Tobago"
+
+#. 798
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#. 158
+msgid "Taiwan, Province of China"
+msgstr "Tajvan, Kínai Tartomány"
+
+#. 834
+msgid "Tanzania, United Republic of"
+msgstr "Tanzániai Egyesült Köztársaság"
+
+#. 804
+msgid "Ukraine"
+msgstr "Ukrajna"
+
+#. 800
+msgid "Uganda"
+msgstr "Uganda"
+
+#. 581
+msgid "United States Minor Outlying Islands"
+msgstr "Amerikai Csendes-óceáni-szigetek"
+
+#. 840
+msgid "United States"
+msgstr "Egyesült Államok"
+
+#. 858
+msgid "Uruguay"
+msgstr "Uruguay"
+
+#. 860
+msgid "Uzbekistan"
+msgstr "Üzbegisztán"
+
+#. 336
+msgid "Holy See (Vatican City State)"
+msgstr "Vatikán"
+
+#. 670
+msgid "Saint Vincent and the Grenadines"
+msgstr "Saint Vincent és a Grenadines-szigetek"
+
+#. 862
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#. 092
+msgid "Virgin Islands, British"
+msgstr "Virgin-szigetek (brit)"
+
+#. 850
+msgid "Virgin Islands, U.S."
+msgstr "Virgin-szigetek (USA)"
+
+#. 704
+msgid "Viet Nam"
+msgstr "Vietnám"
+
+#. 548
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#. 876
+msgid "Wallis and Futuna"
+msgstr "Wallis és Futuna"
+
+#. 882
+msgid "Samoa"
+msgstr "Szamoa"
+
+#. 887
+msgid "Yemen"
+msgstr "Jemen"
+
+#. 175
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#. 710
+msgid "South Africa"
+msgstr "Dél-Afrika"
+
+#. 894
+msgid "Zambia"
+msgstr "Zambia"
+
+#. 716
+msgid "Zimbabwe"
+msgstr "Zimbabve"
+
+msgid "* Unknown, add is_in tags to those cities"
+msgstr "*Ismeretlen, is_in címkék hozzáadása ezekhez a városokhoz"
+
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Nem található konfigurációs állomány (navit.xml, navit.xml.local)\n"
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr "A konfigurációs állomány '%s' elemzése közben hiba történt: %s\n"
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr "A következő konfigurációs állomány használata: %s\n"
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+"Belső inicializálás sikertelen, kilépés. Ellenőrizze az előző "
+"hibaüzeneteket.\n"
+
+msgid "unknown street"
+msgstr "ismeretlen utca"
+
+#. Safe cast: attr_generic_set_attr does not modify its parameter.
+msgid "Unnamed vehicle"
+msgstr "Névtelen jármű"
+
+msgid "Failed to write bookmarks file"
+msgstr "Hiba történt a könyvjelző állomány írása közben"
+
+#. Strings from navit_shipped.xml
+msgid "Map Point"
+msgstr "Térképpont"
+
+msgid "Car"
+msgstr "Autó"
+
+msgid "Iso2"
+msgstr "Iso2"
+
+msgid "Iso3"
+msgstr "Iso3"
+
+msgid "Country"
+msgstr "Ország"
+
+msgid "Postal"
+msgstr "Ir. szám"
+
+msgid "Town"
+msgstr "Város"
+
+msgid "District"
+msgstr "Kerület"
+
+msgid "Street"
+msgstr "Utca"
+
+msgid "Number"
+msgstr "Házszám"
+
+msgid "Enter Destination"
+msgstr "Úticél megadása"
+
+msgid "Zip Code"
+msgstr "Irányítószám"
+
+msgid "City"
+msgstr "Város"
+
+msgid "District/Township"
+msgstr "Kerület/Környék"
+
+msgid "Map"
+msgstr "Térkép"
+
+msgid "Bookmark"
+msgstr "Könyvjelző"
+
+msgid "Destination"
+msgstr "Úticél"
+
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+msgid "_Display"
+msgstr "Megjelenítés"
+
+msgid "_Route"
+msgstr "Útvonal"
+
+msgid "_Former Destinations"
+msgstr "Korábbi úticélok"
+
+msgid "_Bookmarks"
+msgstr "Könyvjelzők"
+
+msgid "_Map"
+msgstr "Térkép"
+
+msgid "_Layout"
+msgstr "Elrendezés"
+
+msgid "_Projection"
+msgstr "Vetület"
+
+msgid "_Vehicle"
+msgstr "Jármű"
+
+msgid "Zoom_Out"
+msgstr "Távolítás"
+
+msgid "Decrease zoom level"
+msgstr "Távolítás"
+
+msgid "Zoom_In"
+msgstr "Közelítés"
+
+msgid "Increase zoom level"
+msgstr "Közelítés"
+
+msgid "_Recalculate"
+msgstr "Újratervezés"
+
+msgid "Redraw map"
+msgstr "Térkép újrarajzolása"
+
+msgid "_Info"
+msgstr "Információk"
+
+msgid "Set _destination"
+msgstr "Cél beállítása"
+
+msgid "Opens address search dialog"
+msgstr "Címkeresés"
+
+msgid "_POI search"
+msgstr ""
+
+msgid "Opens POI search dialog"
+msgstr ""
+
+msgid "_Stop Navigation"
+msgstr "Navigálás vége"
+
+msgid "Test"
+msgstr "Teszt"
+
+msgid "_Quit"
+msgstr "_Kilépés"
+
+msgid "Quit the application"
+msgstr "Kilépés az alkalmazásból"
+
+msgid "Show position _cursor"
+msgstr "Helyzetjelző megjelenítése"
+
+msgid "_Lock on Road"
+msgstr "Rögzítés az úthoz"
+
+msgid "_Keep orientation to the North"
+msgstr "A tájolás észak felé tartása"
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr "Térkép rögzítése északra vagy a jármű irányához"
+
+msgid "_Roadbook"
+msgstr "Útikalauz"
+
+msgid "Show/hide route description"
+msgstr "Útvonal leírás megjelenítése/elrejtése"
+
+msgid "_Autozoom"
+msgstr "Ráközelítés"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "Automatikus közelítés engedélyezése/tiltása"
+
+msgid "_Fullscreen"
+msgstr "Teljes képernyő"
+
+msgid "Data"
+msgstr "Adat"
+
+msgid "Pharmacy"
+msgstr ""
+
+msgid "Restaurant"
+msgstr ""
+
+msgid "Restaurant. Fast food"
+msgstr ""
+
+msgid "Hotel"
+msgstr ""
+
+msgid "Car parking"
+msgstr ""
+
+msgid "Fuel station"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Hospital"
+msgstr ""
+
+msgid "Cinema"
+msgstr ""
+
+msgid "Train station"
+msgstr ""
+
+msgid "School"
+msgstr ""
+
+msgid "Police"
+msgstr ""
+
+msgid "Justice"
+msgstr ""
+
+msgid "Taxi"
+msgstr ""
+
+msgid "Shopping"
+msgstr ""
+
+msgid "Distance from screen center (km)"
+msgstr ""
+
+#, c-format
+msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "POI search"
+msgstr ""
+
+msgid "Select a category"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "Select a POI"
+msgstr ""
+
+msgid " "
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Visit Before"
+msgstr ""
+
+msgid "N"
+msgstr "É"
+
+msgid "NE"
+msgstr "ÉK"
+
+msgid "E"
+msgstr "K"
+
+msgid "SE"
+msgstr "DK"
+
+msgid "S"
+msgstr "D"
+
+msgid "SW"
+msgstr "DNy"
+
+msgid "W"
+msgstr "Ny"
+
+msgid "NW"
+msgstr "ÉNy"
+
+#. Android resource: @strings/no
+msgid "No"
+msgstr "Nincs"
+
+msgid "2D"
+msgstr "2D"
+
+msgid "3D"
+msgstr "3D"
+
+msgid "OT"
+msgstr "OT"
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr "Útvonal hossza: %4.0fkm, becsült menetidő: %02d:%02d"
+
+msgid "Route 0000km  0+00:00 ETA"
+msgstr "Útvonal hossza 0000km, becsült menetidő: 0+00:00"
+
+msgid "Help"
+msgstr "Súgó"
+
+#, c-format
+msgid "Waypoint %s"
+msgstr "Útvonalpont %s"
+
+msgid "Select waypoint to insert the new one before"
+msgstr "Válassza ki az útvonalpontot amely elé beszúrja az újat"
+
+msgid "View in Browser"
+msgstr "Megtekintés böngészőben"
+
+msgid "Item type"
+msgstr "Elem típusa"
+
+#. Android resource: @strings/address_search_streets
+msgid "Streets"
+msgstr "Utcák"
+
+msgid "House numbers"
+msgstr "Házszámok"
+
+msgid "View Attributes"
+msgstr "Attribútumok megjelenítése"
+
+msgid "Set as position (and deactivate vehicle)"
+msgstr "Beállítás pozícióként (és jármű kikapcsolása)"
+
+msgid "POIs"
+msgstr "POI-k"
+
+msgid "View on map"
+msgstr "Megtekintés térképen"
+
+msgid "Remove search results from the map"
+msgstr "Keresési találatok eltávolítása a térképről"
+
+msgid "Show results on the map"
+msgstr "Keresési találatok mutatása a térképen"
+
+msgid "Cut Bookmark"
+msgstr "Könyvjelző kivágása"
+
+msgid "Copy Bookmark"
+msgstr "Könyvjelző másolása"
+
+msgid "Rename Bookmark"
+msgstr "Könyvjelző átnevezése"
+
+msgid "Paste Bookmark"
+msgstr "Könyvjelző beillesztése"
+
+msgid "Delete Bookmark"
+msgstr "Könyvjelző törlése"
+
+msgid "Delete waypoint"
+msgstr "Útvonalpont törlése"
+
+msgid "Bookmarks"
+msgstr "Könyvjelzők"
+
+msgid "Bookmarks as waypoints"
+msgstr "Könyvjelzők mint útvonalpontok"
+
+msgid "Save waypoints"
+msgstr "Útvonalpontok mentése"
+
+msgid "Replace with waypoints"
+msgstr "Helyettesítés útvonalpontokkal"
+
+msgid "Delete Folder"
+msgstr "Mappa törlése"
+
+#. Adds the Bookmark folders
+msgid "Add Bookmark folder"
+msgstr "Könyvjelző mappa létrehozása"
+
+#. Pastes the Bookmark
+msgid "Paste bookmark"
+msgstr "Könyvjelző beillesztése"
+
+#, c-format
+msgid "Bookmark %s"
+msgstr "%s hozzáadása a könyvjelzőkhöz"
+
+#, c-format
+msgid "Download %s"
+msgstr "Letöltés %s"
+
+msgid "Map Download"
+msgstr "Térkép letöltés"
+
+msgid "Active"
+msgstr "Aktív"
+
+msgid "Download Enabled"
+msgstr "Letöltés engedélyezve"
+
+msgid "Download completely"
+msgstr "Teljes letöltés"
+
+msgid "Show Satellite Status"
+msgstr "Műhold státusz"
+
+msgid " Elevation "
+msgstr " Magasság "
+
+msgid " Azimuth "
+msgstr " Irány "
+
+msgid "Show NMEA Data"
+msgstr "NMEA adatok"
+
+msgid "car"
+msgstr "autós"
+
+msgid "bike"
+msgstr "kerékpáros"
+
+msgid "pedestrian"
+msgstr "gyalogos"
+
+#, c-format
+msgid "Current profile: %s"
+msgstr "Jelenlegi profil: %s"
+
+#, c-format
+msgid "Change profile to: %s"
+msgstr "Profil módosítása erre: %s"
+
+msgid "Set as active"
+msgstr "Aktívra állítás"
+
+msgid "Show Satellite status"
+msgstr "Műhold státusz"
+
+msgid "Show NMEA data"
+msgstr "NMEA adatok"
+
+msgid "Add Bookmark"
+msgstr "Könyvjelző hozzáadása"
+
+msgid "Rename"
+msgstr "Átnevezés"
+
+msgid "About Navit"
+msgstr "A Navit névjegye"
+
+#. Authors
+msgid "By"
+msgstr "Készítők"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "És az egész Navit Team"
+
+msgid "members and contributors."
+msgstr "tagok és hozzájárulók"
+
+msgid "Waypoints"
+msgstr "Útvonalpontok"
+
+msgid "Enter Coordinates"
+msgstr "Koordináták megadása"
+
+#. 
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
+#. gui_internal_widget_append(wb, w)
+#. 
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
+#. gui_internal_widget_append(w, we)
+msgid "Latitude Longitude"
+msgstr ""
+
+msgid "Enter coordinates, for example:"
+msgstr "Koordináták megadása, pl:"
+
+msgid "Vehicle"
+msgstr "Jármű"
+
+msgid "Rules"
+msgstr "Szabályok"
+
+msgid "Lock on road"
+msgstr "Rögzítés az úthoz"
+
+msgid "Northing"
+msgstr "Észak felé"
+
+msgid "Map follows Vehicle"
+msgstr "A térkép követi a járművet"
+
+msgid "Plan with Waypoints"
+msgstr "Tervezés útvonalpontokkal"
+
+msgid "Maps"
+msgstr "Térképek"
+
+msgid "Layout"
+msgstr "Elrendezés"
+
+msgid "Height Profile"
+msgstr "Magassági profil"
+
+msgid "Route Description"
+msgstr "Útvonalleírás"
+
+msgid "Show Locale"
+msgstr "Hely megjelenítése"
+
+msgid "Former Destinations"
+msgstr "Korábbi úticélok"
+
+msgid "- No former destinations available -"
+msgstr "- Nincsenek előző célpontok -"
+
+msgid "Message"
+msgstr "Üzenet"
+
+msgid "Back"
+msgstr "Vissza"
+
+msgid "Back to map"
+msgstr "Vissza a térképhez"
+
+msgid "Main Menu"
+msgstr "Főmenü"
+
+msgid "House number"
+msgstr "Házszám"
+
+msgid "Next"
+msgstr "Következő"
+
+msgid "Prev"
+msgstr "Előző"
+
+msgid "Return to route!"
+msgstr "Vissza az útvonalra!"
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr "Vigyázz, kamera!"
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr "Lassíts!"
+
+msgid "partial match"
+msgstr "részleges egyezés"
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "Keres"
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "Városok"
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Útvonal ide"
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr "Térkép adatok (c) OpenStreeMap közreműködők, ODBL"
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr "Letöltött térképek"
+
+msgid ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Mégse"
+
+msgid "filenamePath"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid "Whole Planet"
+msgstr "Teljes bolygó"
+
+msgid "Africa"
+msgstr "Afrika"
+
+msgid "Canary Islands"
+msgstr "Kanári-szigetek"
+
+msgid "Asia"
+msgstr "Ázsia"
+
+msgid "Korea"
+msgstr "Korea"
+
+msgid "Taiwan"
+msgstr "Tajvan"
+
+msgid "UAE+Other"
+msgstr ""
+
+msgid "Oceania"
+msgstr "Óceánia"
+
+msgid "Tasmania"
+msgstr "Tasmánia"
+
+msgid "Victoria"
+msgstr "Viktória"
+
+msgid "New South Wales"
+msgstr "Új-Dél-Wales"
+
+msgid "Europe"
+msgstr "Európa"
+
+msgid "Western Europe"
+msgstr "Nyugat-Európa"
+
+msgid "Azores"
+msgstr "Azori-szigetek"
+
+msgid "BeNeLux"
+msgstr "BeneLux"
+
+msgid "Alsace"
+msgstr "Elzász"
+
+msgid "Aquitaine"
+msgstr "Aquitania"
+
+msgid "Auvergne"
+msgstr "Auvergne"
+
+msgid "Basse-Normandie"
+msgstr "Alsó-Normandia"
+
+msgid "Bourgogne"
+msgstr "Burgundia"
+
+msgid "Bretagne"
+msgstr "Bretagne"
+
+msgid "Centre"
+msgstr "Közép"
+
+msgid "Champagne-Ardenne"
+msgstr "Champagne-Ardenne"
+
+msgid "Corse"
+msgstr "Korzika"
+
+msgid "Franche-Comte"
+msgstr ""
+
+msgid "Haute-Normandie"
+msgstr "Felső-Normandia"
+
+msgid "Ile-de-France"
+msgstr "Ile-de-France"
+
+msgid "Languedoc-Roussillon"
+msgstr "Languedoc-Roussillon"
+
+msgid "Limousin"
+msgstr "Limousin"
+
+msgid "Lorraine"
+msgstr "Lotaringia"
+
+msgid "Midi-Pyrenees"
+msgstr "Midi-Pyrenees"
+
+msgid "Nord-pas-de-Calais"
+msgstr "Nord-pas-de-Calais"
+
+msgid "Pays-de-la-Loire"
+msgstr "Pays-de-la-Loire"
+
+msgid "Picardie"
+msgstr "Pikárdia"
+
+msgid "Poitou-Charentes"
+msgstr "Poitou-Charentes"
+
+msgid "Provence-Alpes-Cote-d-Azur"
+msgstr "Provence-Alpes-Cote-d-Azur"
+
+msgid "Rhone-Alpes"
+msgstr ""
+
+msgid "Baden-Wuerttemberg"
+msgstr "Baden-Württemberg"
+
+msgid "Bayern"
+msgstr "Bajorország"
+
+msgid "Mittelfranken"
+msgstr ""
+
+msgid "Niederbayern"
+msgstr "Niederbayern"
+
+msgid "Oberbayern"
+msgstr ""
+
+msgid "Oberfranken"
+msgstr ""
+
+msgid "Oberpfalz"
+msgstr ""
+
+msgid "Schwaben"
+msgstr ""
+
+msgid "Unterfranken"
+msgstr ""
+
+msgid "Berlin"
+msgstr "Berlin"
+
+msgid "Brandenburg"
+msgstr "Brandenburg"
+
+msgid "Bremen"
+msgstr "Bréma"
+
+msgid "Hamburg"
+msgstr "Hamburg"
+
+msgid "Hessen"
+msgstr ""
+
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+msgid "Niedersachsen"
+msgstr "Alsó-Szászország"
+
+msgid "Nordrhein-westfalen"
+msgstr ""
+
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+msgid "Saarland"
+msgstr "Saar-vidék"
+
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+msgid "Sachsen"
+msgstr "Szászország"
+
+msgid "Schleswig-Holstein"
+msgstr ""
+
+msgid "Thueringen"
+msgstr "Türingia"
+
+msgid "Mallorca"
+msgstr ""
+
+msgid "Galicia"
+msgstr ""
+
+msgid "Scandinavia"
+msgstr "Skandinávia"
+
+msgid "England"
+msgstr "Anglia"
+
+msgid "Buckinghamshire"
+msgstr ""
+
+msgid "Cambridgeshire"
+msgstr ""
+
+msgid "Cumbria"
+msgstr ""
+
+msgid "East yorkshire with hull"
+msgstr ""
+
+msgid "Essex"
+msgstr ""
+
+msgid "Herefordshire"
+msgstr ""
+
+msgid "Kent"
+msgstr ""
+
+msgid "Lancashire"
+msgstr ""
+
+msgid "Leicestershire"
+msgstr ""
+
+msgid "Norfolk"
+msgstr ""
+
+msgid "Nottinghamshire"
+msgstr ""
+
+msgid "Oxfordshire"
+msgstr ""
+
+msgid "Shropshire"
+msgstr ""
+
+msgid "Somerset"
+msgstr ""
+
+msgid "South yorkshire"
+msgstr ""
+
+msgid "Suffolk"
+msgstr ""
+
+msgid "Surrey"
+msgstr ""
+
+msgid "Wiltshire"
+msgstr ""
+
+msgid "Scotland"
+msgstr ""
+
+msgid "Wales"
+msgstr ""
+
+msgid "Crete"
+msgstr ""
+
+msgid "North America"
+msgstr "Észak-Amerika"
+
+msgid "Alaska"
+msgstr "Alaszka"
+
+msgid "Hawaii"
+msgstr ""
+
+msgid "USA"
+msgstr "Amerikai Egyesült Államok"
+
+msgid " (except Alaska and Hawaii)"
+msgstr " (kivéve Alaszka és Hawaii)"
+
+msgid "Midwest"
+msgstr ""
+
+msgid "Michigan"
+msgstr ""
+
+msgid "Ohio"
+msgstr ""
+
+msgid "Northeast"
+msgstr ""
+
+msgid "Massachusetts"
+msgstr ""
+
+msgid "Vermont"
+msgstr ""
+
+msgid "Pacific"
+msgstr ""
+
+msgid "South"
+msgstr ""
+
+msgid "Arkansas"
+msgstr ""
+
+msgid "District of Columbia"
+msgstr ""
+
+msgid "Florida"
+msgstr ""
+
+msgid "Louisiana"
+msgstr ""
+
+msgid "Maryland"
+msgstr ""
+
+msgid "Mississippi"
+msgstr ""
+
+msgid "Oklahoma"
+msgstr ""
+
+msgid "Texas"
+msgstr ""
+
+msgid "Virginia"
+msgstr ""
+
+msgid "West Virginia"
+msgstr ""
+
+msgid "West"
+msgstr ""
+
+msgid "Arizona"
+msgstr ""
+
+msgid "California"
+msgstr ""
+
+msgid "Colorado"
+msgstr ""
+
+msgid "Idaho"
+msgstr ""
+
+msgid "Montana"
+msgstr ""
+
+msgid "New Mexico"
+msgstr ""
+
+msgid "Nevada"
+msgstr ""
+
+msgid "Oregon"
+msgstr ""
+
+msgid "Utah"
+msgstr ""
+
+msgid "Washington State"
+msgstr ""
+
+msgid "South+Middle America"
+msgstr "Dél és Közép-Amerika"
+
+msgid "Guyane Francaise"
+msgstr ""
+
+msgid "downloading"
+msgstr "letöltés"
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "kész"
+
+msgid "Media selected for map storage is not available"
+msgstr ""
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "Kevés a szabad terület"
+
+msgid "Error downloading map!"
+msgstr "Hiba térképletöltés közben!"
+
+msgid "Error writing map!"
+msgstr "Hiba a térkép mentése közben!"
+
+msgid "Map download aborted!"
+msgstr "Térképletöltés megszakítva!"
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "Becsült hátralévő idő"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Térképletöltés"
+
+msgid "Vehicle Position"
+msgstr "Jármű helyzete"
+
+msgid "Main menu"
+msgstr "Főmenü"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Térkép\n"
+"megjelenítése"
+
+msgid "Settings"
+msgstr "Beállítások"
+
+msgid "Tools"
+msgstr "Eszközök"
+
+msgid "Route"
+msgstr "Útvonal"
+
+msgid "About"
+msgstr "Névjegy"
+
+msgid "Quit"
+msgstr "Kilépés"
+
+msgid "Actions"
+msgstr "Műveletek"
+
+msgid ""
+"Former\n"
+"Destinations"
+msgstr ""
+
+msgid "Coordinates"
+msgstr "Koordináták"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Navigáció\n"
+"leállítása"
+
+msgid "Display"
+msgstr "Megjelenítés"
+
+msgid "Fullscreen"
+msgstr "Teljes képernyő"
+
+msgid "Window Mode"
+msgstr "Ablak mód"
+
+msgid "Description"
+msgstr "Leírás"
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+msgid "Satellite Status"
+msgstr "Műhold állapot"
+
+msgid "NMEA Data"
+msgstr "NMEA adat"
+
+msgid "car_shortest"
+msgstr ""
+
+msgid "car_avoid_tolls"
+msgstr ""
+
+msgid "car_pedantic"
+msgstr ""
+
+msgid "horse"
+msgstr "ló"
+
+msgid "Truck"
+msgstr ""
+
+#. Strings from android/res/values/strings.xml
+#. Android resource: @strings/yes
+msgid "Yes"
+msgstr "Igen"
+
+#. Android resource: @strings/notification_ticker
+msgid "Navit started"
+msgstr "Navit elindult"
+
+#. Android resource: @strings/notification_event_default
+msgid "Navit running"
+msgstr "Navit fut"
+
+#. Android resource: @strings/initial_info_box_title
+msgid "Welcome to Navit"
+msgstr "Üdvözli önt a Navit"
+
+#. Android resource: @strings/initial_info_box_message
+msgid ""
+"Thank you for installing Navit!\n"
+"\n"
+"To start, select \"Download maps\" from the menu to download a map. Note: "
+"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"\n"
+"Mapdata: (c) OpenStreetMap contributors\n"
+"\n"
+"Enjoy Navit!"
+msgstr ""
+"Köszönjük hogy feltelepítette a Navit-ot!\n"
+"\n"
+"Kezdésnek válassza a \"Térképletöltés\"-t a menüből térkép letöltéséhez. "
+"Megj: a térkép mérete nagy lehet (> 50 MB) - WiFi kapcsolat javasolt.\n"
+"\n"
+"Térképadatok: (c) OpenStreeMap közreműködők\n"
+"\n"
+"Használja élvezettel, Navit!"
+
+#. Android resource: @strings/initial_info_box_OK
+msgid "OK"
+msgstr "OK"
+
+#. Android resource: @strings/initial_info_box_more_info
+msgid "More info"
+msgstr "További információ"
+
+#. Android resource: @strings/optionsmenu_zoom_in
+msgid "Zoom in"
+msgstr "Nagyítás"
+
+#. Android resource: @strings/optionsmenu_zoom_out
+msgid "Zoom out"
+msgstr "Kicsinyítés"
+
+#. Android resource: @strings/optionsmenu_download_maps
+msgid "Download maps"
+msgstr "Térképletöltés"
+
+#. Android resource: @strings/optionsmenu_toggle_poi
+msgid "Toggle POIs"
+msgstr "POIk ki/bekapcsolása"
+
+#. Android resource: @strings/optionsmenu_exit_navit
+msgid "Exit Navit"
+msgstr "Kilépés"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Mentés / Visszaállítás"
+
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr ""
+
+#. Android resource: @strings/map_delete
+msgid "Delete this map?"
+msgstr "Töröljük ezt a térképet?"
+
+#. Android resource: @strings/map_download_downloading
+msgid "Downloading:"
+msgstr "Letöltés:"
+
+#. Android resource: @strings/map_download_download_error
+msgid "Error downloading map."
+msgstr "Hiba történt a térképletöltés közben."
+
+#. Android resource: @strings/map_download_download_aborted
+msgid "Map download aborted"
+msgstr "Térképletöltés megszabítva"
+
+#. Android resource: @strings/map_no_fix
+msgid "No location. Reopen after location fix."
+msgstr "Nincs helymeghatározás. Indítsa újra sikeres helymeghatározás után."
+
+#. Android resource: @strings/maps_for_current_location
+msgid "Maps containing current location"
+msgstr "Térképek az aktuális helyzettel"
+
+#. Android resource: @strings/address_search_title
+msgid "Address search"
+msgstr "Címkeresés"
+
+#. Android resource: @strings/address_enter_destination
+msgid "Enter destination"
+msgstr "Célbevitel"
+
+#. Android resource: @strings/address_partial_match
+msgid "Match partial address"
+msgstr "Cím részleges egyezés"
+
+#. Android resource: @strings/address_search_searching
+msgid "Searching..."
+msgstr "Keresés..."
+
+#. Android resource: @strings/address_search_not_found
+msgid "Address not found"
+msgstr "Cím nem található"
+
+#. Android resource: @strings/address_search_getting_results
+msgid "Getting search results"
+msgstr "Keresési találatok lekérése"
+
+#. Android resource: @strings/address_search_loading_results
+msgid "Loading search results"
+msgstr "Keresési találatok betöltése"
+
+#. Android resource: @strings/address_search_no_results
+msgid "No results found"
+msgstr "Nincs találat"
+
+#. Android resource: @strings/address_search_no_text_entered
+msgid "No text entered"
+msgstr "Nincs keresési kifejezés"
+
+#. Android resource: @strings/address_search_set_destination
+msgid "Setting destination to:"
+msgstr "Cél beállítása:"
+
+#. Android resource: @strings/choose_an_action
+msgid "Choose an action"
+msgstr "Válasszon műveletet."
+
+#. Android resource: @strings/please_insert_an_sd_card
+msgid "Please insert an SD Card"
+msgstr "Kérem helyezzen be egy SD kártyát"
+
+#. Android resource: @strings/backing_up
+msgid "Backing up..."
+msgstr "Biztonsági mentés..."
+
+#. Android resource: @strings/restoring
+msgid "Restoring..."
+msgstr "Visszaállítás..."
+
+#. Android resource: @strings/failed_to_create_backup_directory
+msgid "Failed to create backup directory"
+msgstr "Nem sikerült a biztonsági mentés könyvtárát létrehozni"
+
+#. Android resource: @strings/backup_failed
+msgid "Backup failed"
+msgstr "A mentés sikertelen"
+
+#. Android resource: @strings/no_backup_found
+msgid "No backup found"
+msgstr "Nem található biztonsági mentés"
+
+#. Android resource: @strings/failed_to_restore
+msgid "Failed to restore"
+msgstr "Sikertelen visszaállítás"
+
+#. Android resource: @strings/backup_successful
+msgid "Backup successful"
+msgstr "A mentés sikeres"
+
+#. Android resource: @strings/restore_successful_please_restart_navit
+msgid ""
+"Restore Successful\n"
+"Please restart Navit"
+msgstr ""
+"Visszaállítás sikeres\n"
+"Kérem indítsa újra a Navit-ot"
+
+#. Android resource: @strings/backup_not_found
+msgid "Backup not found"
+msgstr "Biztonsági mentés nem található"
+
+#. Android resource: @strings/restore_failed
+msgid "Restore failed"
+msgstr "A visszaállítás sikertelen"
+
+#. Android resource: @strings/select_backup
+msgid "Select backup"
+msgstr "Biztonsági mentés kiválasztása"
+
+#. Android resource: @strings/backup
+msgid "Backup"
+msgstr "Biztonsági mentés"
+
+#. Android resource: @strings/restore
+msgid "Restore"
+msgstr "Visszaállítás"
+
+#. Android resource: @strings/TTS_title_data_missing
+msgid "System text to speech engine data is missing"
+msgstr ""
+
+#. Android resource: @strings/TTS_qery_install_data
+msgid ""
+"Navit can use any text to speech engine installed on your device. The "
+"currently selected engine reports it is unable to speak in your language. "
+"Should we ask the system to show voice download dialog?"
+msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "majd hagyja el a körforgalmat a(z) %1$s %2$s"
