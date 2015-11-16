@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
-"Last-Translator: jan <jandegr1@hotmail.com>\n"
+"PO-Revision-Date: 2015-08-29 12:36+0000\n"
+"Last-Translator: Andi Chandler <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,12 +136,12 @@ msgstr[1] "in %d kilometres"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr ""
+msgstr "%1$sonto the %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
@@ -165,7 +165,7 @@ msgstr "onto the slip road"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr ""
+msgstr "%sinto %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
@@ -193,7 +193,7 @@ msgstr "When possible, please turn around"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "towards %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -205,17 +205,15 @@ msgstr "Enter the roundabout soon"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Enter the roundabout %s"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
+msgid "then enter the roundabout"
 msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "Leave the roundabout at the %1$s %2$s"
 
 msgid "soon"
 msgstr "soon"
@@ -224,7 +222,7 @@ msgid "now"
 msgstr "now"
 
 msgid "then"
-msgstr ""
+msgstr "then"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -247,57 +245,57 @@ msgid "Merge %1$s%2$s|left"
 msgstr "Merge %1$s%2$s"
 
 msgid "on your left"
-msgstr ""
+msgstr "on your left"
 
 msgid "on your right"
-msgstr ""
+msgstr "on your right"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Take exit %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Take the exit %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr "at interchange"
 
 msgid "at exit"
-msgstr ""
+msgstr "at exit"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "then continue straight%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Continue straight %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "then keep right%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Keep right %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "then keep left%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Keep left %1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -316,6 +314,10 @@ msgid "strongly "
 msgstr "strongly "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Take the %1$s road to the %2$s"
 
@@ -323,7 +325,6 @@ msgstr "Take the %1$s road to the %2$s"
 msgid "after %i roads"
 msgstr "after %i roads"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -354,13 +355,13 @@ msgstr "Make a U-turn %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "follow"
 
 msgid "then you have reached your destination."
 msgstr "then you have reached your destination"
@@ -1443,6 +1444,15 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
 msgstr ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file, instead of using the default file.\n"
+"\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tSettings from config file will still take effect where they set a higher "
+"level.\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: print the version and exit.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -2037,6 +2047,9 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
 
 msgid "Downloaded maps"
 msgstr "Downloaded maps"
@@ -2045,17 +2058,21 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
 
 msgid "Cancel"
 msgstr "Cancel"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "filenamePath"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
 
 msgid "Whole Planet"
 msgstr "Whole Planet"
@@ -2428,7 +2445,7 @@ msgid "ready"
 msgstr "ready"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "Media selected for map storage is not available"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2613,7 +2630,7 @@ msgstr "Backup / Restore"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Set map location"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2745,7 +2762,7 @@ msgstr "Restore"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "System text to speech engine data is missing"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""
@@ -2753,3 +2770,10 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+"Navit can use any text to speech engine installed on your device. The "
+"currently selected engine reports it is unable to speak in your language. "
+"Should we ask the system to show voice download dialog?"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "then leave the roundabout at the %1$s %2$s"

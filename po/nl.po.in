@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
+"PO-Revision-Date: 2015-10-05 13:45+0000\n"
 "Last-Translator: jan <jandegr1@hotmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
@@ -218,10 +218,8 @@ msgstr "straks de rotonde oprijden"
 msgid "Enter the roundabout %s"
 msgstr "%s de rotonde oprijden"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "daarna de rotonde verlaten bij de %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr "daarna rij de rotonde op"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -324,6 +322,10 @@ msgid "strongly "
 msgstr "scherp "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "neem daarna de %1$s straat naar %2$s"
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Neem de %1$s straat naar %2$s"
 
@@ -331,7 +333,6 @@ msgstr "Neem de %1$s straat naar %2$s"
 msgid "after %i roads"
 msgstr "na %i wegen"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -362,7 +363,7 @@ msgstr "%1$s rechtsomkeren"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -2780,3 +2781,7 @@ msgstr ""
 "Navit kan elke tekst naar spraak-engine geïnstalleerd op uw apparaat "
 "gebruiken. De momenteel geselecteerde engine meldt dat het niet in uw taal "
 "kan spreken. Wil U de spraak download dialoog van Uw toestel starten?"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "daarna de rotonde verlaten bij de %1$s %2$s"
