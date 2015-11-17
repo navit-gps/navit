@@ -821,6 +821,62 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]=NAVIT_KEY_ZOOM_OUT;
 		key[1]='\0';
 		break;
+	case GDK_F1:
+       key[0]=NAVIT_KEY_AUDIO_PLAY;
+       key[1]='\0';
+       break;
+    case GDK_F2:
+       key[0]=NAVIT_KEY_AUDIO_PREV_TRACK;
+       key[1]='\0';
+       break;
+    case GDK_F3:
+       key[0]=NAVIT_KEY_AUDIO_NEXT_TRACK;
+       key[1]='\0';
+       break;
+    case GDK_F4:
+       key[0]=NAVIT_KEY_AUDIO_PREV_PLAYLIST;
+       key[1]='\0';
+       break;
+    case GDK_F5:
+       key[0]=NAVIT_KEY_AUDIO_NEXT_PLAYLIST;
+       key[1]='\0';
+       break;
+    case GDK_F6:
+       key[0]=NAVIT_KEY_AUDIO_PREV_ARTIST;
+       key[1]='\0';
+       break;
+    case GDK_F7:
+       key[0]=NAVIT_KEY_AUDIO_NEXT_ARTIST;
+       key[1]='\0';
+       break;
+    case GDK_F8:
+       key[0]=NAVIT_KEY_AUDIO_STOP;
+       key[1]='\0';
+       break;
+    case GDK_F9:
+       key[0]=NAVIT_KEY_AUDIO_MUTE;
+       key[1]='\0';
+       break;
+    case GDK_F10:
+       key[0]=NAVIT_KEY_AUDIO_LOWER_VOLUME;
+       key[1]='\0';
+       break;
+    case GDK_F11:
+       key[0]=NAVIT_KEY_AUDIO_RAISE_VOLUME;
+       key[1]='\0';
+       break;
+    case GDK_F12:
+       key[0]=NAVIT_KEY_RELOAD_PLAYLISTS;
+       key[1]='\0';
+       break;
+    case GDK_Shift_L:
+       key[0]=NAVIT_KEY_SHUFFLE;
+       key[1]='\0';
+       break;
+    case GDK_Shift_R:
+       key[0]=NAVIT_KEY_REPEAT;
+       key[1]='\0';
+       break;
 	}
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);

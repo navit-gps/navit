@@ -79,6 +79,7 @@
 #include "debug.h"
 #include "fib.h"
 #include "types.h"
+#include "audio.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_html.h"
@@ -2813,6 +2814,41 @@ static void gui_internal_keypress(void *data, char *key)
 			gui_internal_set_click_coord(this, NULL);
 			gui_internal_cmd_menu(this, 0, NULL);
 			break;
+		case NAVIT_KEY_AUDIO_PLAY:
+		case NAVIT_KEY_AUDIO_STOP:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_TOGGLE); 
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_TRACK: 
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_TRACK);
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_PLAYLIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_PLAYLIST);
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_ARTIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_ARTIST);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_TRACK:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_TRACK);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_PLAYLIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_PLAYLIST);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_ARTIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_ARTIST);
+			break;
+		case NAVIT_KEY_AUDIO_RAISE_VOLUME: 
+			audio_set_volume(this->nav, AUDIO_RAISE_VOLUME);
+			break;
+		case NAVIT_KEY_AUDIO_LOWER_VOLUME:
+			audio_set_volume(this->nav, AUDIO_LOWER_VOLUME);
+			break;
+		case NAVIT_KEY_AUDIO_MUTE:
+			audio_set_volume(this->nav, AUDIO_MUTE);
+			break;
+		case NAVIT_KEY_RELOAD_PLAYLISTS:
+			audio_do_action(this->nav, AUDIO_MISC_RELOAD_PLAYLISTS);
+			break;
+			//TODO: Add the unmentioned audio actions
 		}
 		return;
 	}
