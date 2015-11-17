@@ -498,6 +498,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
 	struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
 	int res;
 
+	kbd->mode = mode;
 	if (lang)
 		kbd->lang = g_strdup(lang);
 	res = graphics_show_native_keyboard(this->gra, kbd);
