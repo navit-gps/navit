@@ -2,7 +2,7 @@ if [ -z "$CIRCLE_BUILD_NUM" -o "$CIRCLE_PROJECT_USERNAME" != "navit-gps" ] ; the
   exit
 fi
 
-if ! git log -n 1 ; then
+if ! git log -n 1 --oneline ; then
   echo "This script should be run from the versioned directory"
   exit 1
 fi
