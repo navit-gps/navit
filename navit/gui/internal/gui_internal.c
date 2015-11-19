@@ -743,9 +743,7 @@ gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, voi
 struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
 
 
-
-
-
+struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang);
 
 
 static void
