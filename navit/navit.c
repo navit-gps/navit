@@ -2443,6 +2443,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	active.type=attr_active;
 	active.u.num=0;
 
+	dbg(lvl_debug, "enter, this_=%p, attr=%p (%s), init=%d\n", this_, attr, attr_to_name(attr->type), init);
+
 	switch (attr->type) {
 	case attr_autozoom:
 		attr_updated=(this_->autozoom_secs != attr->u.num);
@@ -2635,6 +2637,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->waypoints_flag=!!attr->u.num;
 		break;
 	default:
+		dbg(lvl_warning, "attribute type %s not supported by navit\n", attr_to_name(attr->type))
 		return 0;
 	}
 	if (attr_updated && !init) {
@@ -2852,6 +2855,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->waypoints_flag;
 		break;
 	default:
+		dbg(lvl_warning, "attribute type %s not supported by navit\n", attr_to_name(type))
 		return 0;
 	}
 	attr->type=type;
