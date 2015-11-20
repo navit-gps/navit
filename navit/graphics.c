@@ -185,6 +185,20 @@ set_hash_entry(struct displaylist *dl, enum item_type type)
 	return NULL;
 }
 
+/**
+ * @brief Sets a generic attribute of the graphics instance
+ *
+ * This will only set one of the supported generic graphics attributes (currently {@code gamma},
+ * {@code brightness}, {@code contrast} or {@code font_size}) and fail for other attribute types.
+ *
+ * To set an attribute provided by a graphics plugin, use {@link graphics_set_attr(struct graphics *, struct attr *)}
+ * instead.
+ *
+ * @param gra The graphics instance
+ * @param attr The attribute to set
+ *
+ * @return True if the attribute was set, false if not
+ */
 static int
 graphics_set_attr_do(struct graphics *gra, struct attr *attr)
 {
@@ -209,10 +223,25 @@ graphics_set_attr_do(struct graphics *gra, struct attr *attr)
 	return 1;
 }
 
+/**
+ * @brief Sets an attribute of the graphics instance
+ *
+ * This method first tries to set one of the private attributes implemented by the current graphics
+ * plugin. If this fails, it tries to set one of the generic attributes.
+ *
+ * If the graphics plugin does not supply a {@code set_attr} method, this method currently does nothing
+ * and returns true, even if the attribute is a generic one.
+ *
+ * @param gra The graphics instance
+ * @param attr The attribute to set
+ *
+ * @return True if the attribute was successfully set, false otherwise.
+ */
 int
 graphics_set_attr(struct graphics *gra, struct attr *attr)
 {
 	int ret=1;
+	/* FIXME if gra->meth doesn't have a setter, we don't even try the generic attrs - is that what we want? */
 	dbg(lvl_debug,"enter\n");
 	if (gra->meth.set_attr)
 		ret=gra->meth.set_attr(gra->priv, attr);
@@ -270,9 +299,29 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * @brief Gets an attribute of the graphics instance
+ *
+ * This function searches the attribute list of the graphics object for an attribute of a given type and
+ * stores it in the attr parameter.
+ * <p>
+ * Searching for attr_any or attr_any_xml is supported.
+ * <p>
+ * An iterator can be specified to get multiple attributes of the same type:
+ * The first call will return the first match from attr; each subsequent call
+ * with the same iterator will return the next match. If no more matching
+ * attributes are found in either of them, false is returned.
+ * <p>
+ * Note that currently this will only return the generic attributes which can be set with
+ * {@link graphics_set_attr_do(struct graphics *, struct attr *)}. Attributes implemented by a graphics
+ * plugin cannot be retrieved with this method.
+ *
+ * @param this The graphics instance
+ * @param type The attribute type to search for
+ * @param attr Points to a {@code struct attr} which will receive the attribute
+ * @param iter An iterator. This parameter may be NULL.
+ *
+ * @return True if a matching attribute was found, false if not.
+ *
  * @author Martin Schaller (04/2008)
 */
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
