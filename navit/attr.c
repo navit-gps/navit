@@ -614,6 +614,7 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		if ((*curr)->type == attr->type) {
 			attr_free(*curr);
@@ -646,6 +647,7 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		curr++;
 		count++;
