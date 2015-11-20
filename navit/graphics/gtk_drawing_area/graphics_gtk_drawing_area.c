@@ -821,6 +821,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]=NAVIT_KEY_ZOOM_OUT;
 		key[1]='\0';
 		break;
+#ifdef USE_AUDIO_FRAMEWORK
 	case GDK_F1:
        key[0]=NAVIT_KEY_AUDIO_PLAY;
        key[1]='\0';
@@ -877,6 +878,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
        key[0]=NAVIT_KEY_REPEAT;
        key[1]='\0';
        break;
+#endif
 	}
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
