@@ -11,7 +11,7 @@ set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.
    profile.c profile_option.c projection.c roadprofile.c route.c script.c search.c speech.c start_real.c sunriset.c transform.c track.c
    search_houseno_interpol.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
 if(USE_AUDIO_FRAMEWORK)
-   audio.c network.c
+   list(APPEND NAVIT_SRC audio.c network.c)
 endif(USE_AUDIO_FRAMEWORK)
 
 if(NOT USE_PLUGINS)
