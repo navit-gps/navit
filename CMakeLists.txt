@@ -86,6 +86,7 @@ add_module(graphics/gtk_drawing_area "FreeType library not found" FALSE)
 add_module(graphics/opengl "FreeType library not found" FALSE)
 add_module(graphics/sdl "Required library not found" FALSE)
 add_module(graphics/qt_qpainter "Qt libraries not found" FALSE)
+add_module(graphics/qt5 "Qt5 libraries not found" FALSE)
 add_module(gui/qml "Qt Declarative not found" FALSE)
 add_module(gui/gtk "GTK libs not found" FALSE)
 add_module(vehicle/gpsd "gpsd lib not found" FALSE)
@@ -151,11 +152,18 @@ find_package(Threads)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
-  # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
-  # and actually requires all components to be installed. Maybe this can
-  # be fixed later...
-  find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
+  find_package(Qt5Widgets)
+  find_package(Qt5Svg)
+  #find_package(Qt5Declarative)
+  if (Qt5Widgets_FOUND)
+  else (Qt5Widgets_FOUND)
+    # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
+    # and actually requires all components to be installed. Maybe this can
+    # be fixed later...
+    find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
+  endif (Qt5Widgets_FOUND)      
 endif (NOT DISABLE_QT)
+
 #pkg-config based detection
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
@@ -296,7 +304,11 @@ if (QT_FOUND)
       endif()
    endif()
 endif(QT_FOUND)
-
+if (Qt5Widgets_FOUND)
+	set_with_reason(graphics/qt5 "Qt5 found" TRUE ${Qt5Widgets_LIBRARIES}
+		${Qt5Declarative_LIBRARIES}
+		${Qt5Svg_LIBRARIES})
+endif ()
 if(GTK2_FOUND)
    # Include gtk.h with "SYSTEM" to avoid GCC compiler warning for gtkitemfactory.h.
    include_directories(SYSTEM ${GTK2_GTK_INCLUDE_DIR})
