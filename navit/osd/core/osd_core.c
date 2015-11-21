@@ -1458,7 +1458,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 
 	if (this->use_overlay) {
 		struct graphics_image *img;
-		img=graphics_image_new(opc->osd_item.gr, this->src);
+		img=graphics_image_new_scaled(opc->osd_item.gr, this->src, opc->osd_item.w, opc->osd_item.h);
 		osd_button_adjust_sizes(opc, img);
 		p.x=(opc->osd_item.w-img->width)/2;
 		p.y=(opc->osd_item.h-img->height)/2;
@@ -1468,7 +1468,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 	} else {
 		struct graphics *gra;
 		gra = navit_get_graphics(nav);
-		this->img = graphics_image_new(gra, this->src);
+		this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 
 		if (!this->img) {
 			dbg(lvl_warning, "failed to load '%s'\n", this->src);
@@ -1495,18 +1495,27 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 	struct osd_button *this = (struct osd_button *)opc->data;
 
 	struct graphics *gra = navit_get_graphics(nav);
+
+	/* translate properties to real size */
+	osd_std_calculate_sizes(&opc->osd_item, navit_get_width(nav), navit_get_height(nav));
+
 	dbg(lvl_debug, "enter\n");
-	this->img = graphics_image_new(gra, this->src);
+	dbg(lvl_debug, "Get: %s, %d, %d, %d, %d\n", this->src, opc->osd_item.rel_w, opc->osd_item.rel_h, opc->osd_item.w, opc->osd_item.h);
+	this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 	if (!this->img) {
 		dbg(lvl_warning, "failed to load '%s'\n", this->src);
 		return;
 	}
+        else
+        {
+		dbg(lvl_debug,"Got %s: %d, %d\n", this->src, this->img->width, this->img->height);
+        }
 	osd_button_adjust_sizes(opc, this->img);
 	if (this->use_overlay) {
 		struct graphics_image *img;
 		struct point p;
 		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-		img=graphics_image_new(opc->osd_item.gr, this->src);
+		img=graphics_image_new_scaled(opc->osd_item.gr, this->src, opc->osd_item.w, opc->osd_item.h);
 		p.x=(opc->osd_item.w-this->img->width)/2;
 		p.y=(opc->osd_item.h-this->img->height)/2;
 		osd_fill_with_bgcolor(&opc->osd_item);
@@ -1551,7 +1560,7 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 		}
 		nav = opc->osd_item.navit;
 		gra = navit_get_graphics(nav);
-		this_->img = graphics_image_new(gra, this_->src);
+	        this_->img = graphics_image_new_scaled(gra, this_->src, opc->osd_item.w, opc->osd_item.h);
 		if (!this_->img) {
 			dbg(lvl_warning, "failed to load '%s'\n", this_->src);
 			return 0;
