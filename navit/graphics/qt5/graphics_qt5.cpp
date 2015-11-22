@@ -100,9 +100,12 @@ static struct graphics_font_methods font_methods = {
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags)
 {
         struct graphics_font_priv *font_priv;
-//        dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
+        dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
         font_priv = g_new0(struct graphics_font_priv, 1);
-        font_priv->font=new QFont(font,size/16);
+        if(font != NULL)
+                font_priv->font=new QFont(font,size/16);
+        else
+                font_priv->font=new QFont("Arial",size/16);
         font_priv->font->setStyleStrategy(QFont::NoAntialias);
 	*meth=font_methods;
 	return font_priv;
@@ -111,7 +114,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
-//        dbg(lvl_debug,"enter gc=%p\n", gc);
+        dbg(lvl_debug,"enter gc=%p\n", gc);
         delete(gc->pen);
         delete(gc->brush);
         g_free(gc);
@@ -120,7 +123,7 @@ gc_destroy(struct graphics_gc_priv *gc)
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-        //dbg(lvl_debug,"enter gc=%p, %d\n", gc, w);
+        dbg(lvl_debug,"enter gc=%p, %d\n", gc, w);
 	gc->pen->setWidth(w);
 }
 
@@ -139,7 +142,7 @@ static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
 	QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8 ); 
-        //dbg(lvl_debug,"context %p: color %02x%02x%02x\n",gc, c->r >> 8, c->g >> 8, c->b >> 8);
+        dbg(lvl_debug,"context %p: color %02x%02x%02x\n",gc, c->r >> 8, c->g >> 8, c->b >> 8);
 	gc->pen->setColor(col);
 	gc->brush->setColor(col);
 	//gc->c=*c;
@@ -149,7 +152,7 @@ static void
 gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
 	QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8 ); 
-        //dbg(lvl_debug,"context %p: color %02x%02x%02x\n",gc, c->r >> 8, c->g >> 8, c->b >> 8);
+        dbg(lvl_debug,"context %p: color %02x%02x%02x\n",gc, c->r >> 8, c->g >> 8, c->b >> 8);
 	//gc->pen->setColor(col);
 	//gc->brush->setColor(col);
 }
@@ -165,7 +168,7 @@ static struct graphics_gc_methods gc_methods = {
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
         struct graphics_gc_priv * graphics_gc_priv = NULL;
-//        dbg(lvl_debug,"enter gr==%p\n", gr);
+        dbg(lvl_debug,"enter gr==%p\n", gr);
         graphics_gc_priv = g_new0(struct graphics_gc_priv, 1);
         graphics_gc_priv->graphics_priv = gr;
         graphics_gc_priv->pen=new QPen();
@@ -177,7 +180,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 static void image_destroy(struct graphics_image_priv *img)
 {
-//    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter\n");
     if(img->pixmap != NULL)
         delete(img->pixmap);
     g_free(img);
@@ -241,7 +244,9 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 {
 	int i;
 	QPolygon polygon;
-//        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)\n", gr, gc, p->x, p->y);
+        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)\n", gr, gc, p->x, p->y);
+        if(gr->painter == NULL)
+                return;
 
 	for (i = 0 ; i < count ; i++)
 		polygon.putPoints(i, 1, p[i].x, p[i].y);
@@ -255,7 +260,9 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 {
 	int i;
 	QPolygon polygon;
-//        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)\n", gr, gc, p->x, p->y);
+        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)\n", gr, gc, p->x, p->y);
+        if(gr->painter == NULL)
+                return;
 
 	for (i = 0 ; i < count ; i++)
 		polygon.putPoints(i, 1, p[i].x, p[i].y);
@@ -267,14 +274,18 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-//	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
+	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
+        if(gr->painter == NULL)
+                return;
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-//        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d,%d) r=%d\n", gr, gc, p->x, p->y, r);
+        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d,%d) r=%d\n", gr, gc, p->x, p->y, r);
+        if(gr->painter == NULL)
+                return;
         gr->painter->setPen(*gc->pen);
 	gr->painter->drawArc(p->x-r/2, p->y-r/2, r, r, 0, 360*16);
 }
@@ -283,8 +294,10 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-//        dbg(lvl_debug,"enter gc=%p, fg=%p, bg=%p pos(%d,%d) %s\n", gr, fg, bg, p->x, p->y, text);
+        dbg(lvl_debug,"enter gc=%p, fg=%p, bg=%p pos(%d,%d) %s\n", gr, fg, bg, p->x, p->y, text);
 	QPainter *painter=gr->painter;
+        if(painter == NULL)
+                return;
 #ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_freetype_text *t;
 	struct font_freetype_glyph *g, **gp;
@@ -310,7 +323,9 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
                 bgc.a = bg->pen->color().alpha() << 8;
         }
         else
+        {
                 bgc = transparent;
+        }
         
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
 	x=p->x << 6;
@@ -359,12 +374,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	painter->drawText(0, 0, tmp);
         painter->setWorldMatrix(sav);
 #endif
+    dbg(lvl_debug,"leave\n");
 }
 
 static void
 draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-//        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter\n");
         if(gr->painter != NULL)
             gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
         else
@@ -388,7 +404,7 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
-//        dbg(lvl_debug,"register context %p on %p\n", gc, gr);
+        dbg(lvl_debug,"register context %p on %p\n", gc, gr);
         gr->background_graphics_gc_priv = gc;
 }
 
@@ -563,6 +579,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 {
         struct graphics_priv * graphics_priv = NULL;
         graphics_priv = g_new0(struct graphics_priv, 1);
+	*meth=graphics_methods;
 #ifdef QT_QPAINTER_USE_FREETYPE
 	if (gr->font_freetype_new) {
 		graphics_priv->font_freetype_new=gr->font_freetype_new;
@@ -584,7 +601,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
         g_hash_table_insert(gr->overlays, graphics_priv, graphics_priv);
         dbg(lvl_debug,"New overlay: %p\n", graphics_priv);
 
-	*meth=graphics_methods;
 	return graphics_priv;
 }
 
