@@ -99,6 +99,7 @@ add_module(binding/python "python libraries not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
+add_module(vehicle/qt5 "Qt5 libraries not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
 add_module(map/garmin "Garmin library not found" FALSE)
@@ -158,6 +159,8 @@ libfind_pkg_check_modules(FONTCONFIG fontconfig)
 if (NOT DISABLE_QT)
   find_package(Qt5Widgets)
   find_package(Qt5Svg)
+  find_package(Qt5Positioning)
+  find_package(Qt5Sensors)
   #find_package(Qt5Declarative)
   if (Qt5Widgets_FOUND)
   else (Qt5Widgets_FOUND)
@@ -313,6 +316,11 @@ if (Qt5Widgets_FOUND)
 	set_with_reason(graphics/qt5 "Qt5 found" TRUE ${Qt5Widgets_LIBRARIES}
 		${Qt5Declarative_LIBRARIES}
 		${Qt5Svg_LIBRARIES})
+endif ()
+if (Qt5Positioning_FOUND)
+	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
+		${Qt5Positioning_LIBRARIES}
+		${Qt5Sensors_LIBRARIES}) 
 endif ()
 if(GTK2_FOUND)
    # Include gtk.h with "SYSTEM" to avoid GCC compiler warning for gtkitemfactory.h.
