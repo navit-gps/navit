@@ -44,7 +44,8 @@
 #include <QFont>
 #include <QSvgRenderer>
 #include <QPixmapCache>
-
+#include <QDBusConnection>
+#include <QDBusInterface>
 
 
 struct callback_list* callbacks;
@@ -467,7 +468,12 @@ graphics_qt5_fullscreen(struct window *w, int on)
 static void
 graphics_qt5_disable_suspend(struct window *w)
 {
-//        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter\n");
+        QDBusConnection system = QDBusConnection::connectToBus(QDBusConnection::SystemBus, "system");
+        QDBusInterface interface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", system);
+
+        interface.call(QLatin1String("req_display_blanking_pause"));
+//        interface.call(QLatin1String("req_display_cancel_blanking_pause"));
 }
 
 static void *

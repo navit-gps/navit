@@ -155,6 +155,7 @@ libfind_pkg_check_modules(FONTCONFIG fontconfig)
 if (NOT DISABLE_QT)
   find_package(Qt5Widgets)
   find_package(Qt5Svg)
+  find_package(Qt5DBus)
   find_package(Qt5Positioning)
   find_package(Qt5Sensors)
   #find_package(Qt5Declarative)
@@ -310,7 +311,8 @@ endif(QT_FOUND)
 if (Qt5Widgets_FOUND)
 	set_with_reason(graphics/qt5 "Qt5 found" TRUE ${Qt5Widgets_LIBRARIES}
 		${Qt5Declarative_LIBRARIES}
-		${Qt5Svg_LIBRARIES})
+		${Qt5Svg_LIBRARIES}
+		${Qt5DBus_LIBRARIES})
 endif ()
 if (Qt5Positioning_FOUND)
 	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
