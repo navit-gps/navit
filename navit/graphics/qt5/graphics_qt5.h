@@ -12,6 +12,11 @@
 #define QT_QPAINTER_USE_FREETYPE 1
 #endif
 
+#ifndef SAILFISH_OS
+#define SAILFISH_OS 1
+#endif
+
+
 #ifdef QT_QPAINTER_USE_FREETYPE
 #include "navit/font/freetype/font_freetype.h"
 #endif
@@ -28,6 +33,10 @@ struct graphics_priv {
 #ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
+#endif
+#ifdef SAILFISH_OS
+        struct callback *display_on_cb;
+        struct event_timeout *display_on_ev;
 #endif
         GHashTable *overlays;
         struct graphics_priv * parent;

@@ -47,7 +47,6 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 
-
 struct callback_list* callbacks;
 QApplication * navit_app = NULL;
 
@@ -79,6 +78,16 @@ graphics_destroy(struct graphics_priv *gr)
         {
             g_hash_table_remove(gr->parent->overlays, gr);
         }
+#ifdef SAILFISH_OS
+        if(gr->display_on_ev != NULL)
+        {
+            event_remove_timeout(gr->display_on_ev);
+        }
+        if(gr->display_on_cb != NULL)
+        {
+            g_free(gr->display_on_cb);
+        }
+#endif
         /* destroy overlays hash */
         g_hash_table_destroy(gr->overlays);
         /* destroy self */
@@ -465,15 +474,32 @@ graphics_qt5_fullscreen(struct window *w, int on)
 	return 1;
 }
 
+#ifdef SAILFISH_OS
 static void
-graphics_qt5_disable_suspend(struct window *w)
+keep_display_on(struct graphics_priv * priv)
 {
         dbg(lvl_debug,"enter\n");
         QDBusConnection system = QDBusConnection::connectToBus(QDBusConnection::SystemBus, "system");
         QDBusInterface interface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", system);
 
-        interface.call(QLatin1String("req_display_blanking_pause"));
-//        interface.call(QLatin1String("req_display_cancel_blanking_pause"));
+        interface.call(QLatin1String("req_display_blanking_pause"));    
+}
+#endif
+
+
+static void
+graphics_qt5_disable_suspend(struct window *w)
+{
+//        dbg(lvl_debug,"enter\n");
+#ifdef SAILFISH_OS
+        struct graphics_priv * gr;
+        gr = (struct graphics_priv *) w->priv;
+        keep_display_on(gr);
+        /* to keep display on, d-bus trigger must be called at least once per second.
+         * to cope with fuzz, trigger it once per 30 seconds */
+        gr->display_on_cb = callback_new_1(callback_cast(keep_display_on), gr);
+        gr->display_on_ev = event_add_timeout(30000, 1, gr->display_on_cb);
+#endif
 }
 
 static void *
