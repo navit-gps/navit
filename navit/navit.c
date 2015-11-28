@@ -2637,8 +2637,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->waypoints_flag=!!attr->u.num;
 		break;
 	default:
-		dbg(lvl_warning, "attribute type %s not supported by navit\n", attr_to_name(attr->type))
-		return 0;
+		dbg(lvl_debug, "calling generic setter method for attribute type %s\n", attr_to_name(attr->type))
+		return navit_object_set_attr((struct navit_object *) this_, attr);
 	}
 	if (attr_updated && !init) {
 		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
@@ -2855,8 +2855,8 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->waypoints_flag;
 		break;
 	default:
-		dbg(lvl_warning, "attribute type %s not supported by navit\n", attr_to_name(type))
-		return 0;
+		dbg(lvl_debug, "calling generic getter method for attribute type %s\n", attr_to_name(type))
+		return navit_object_get_attr((struct navit_object *) this_, type, attr, iter);
 	}
 	attr->type=type;
 	return ret;
