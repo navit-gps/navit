@@ -294,6 +294,8 @@ gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr 
 
 	if (this->keyboard)
 		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_DEGREE));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_DEGREE, NULL);
 	gui_internal_menu_render(this);
 }
 
@@ -860,6 +862,8 @@ gui_internal_cmd_log(struct gui_priv *this)
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
 		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
 	gui_internal_menu_render(this);
 	gui_internal_leave(this);
 }
