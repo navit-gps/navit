@@ -143,8 +143,11 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
         /* use Qt dash feature */
         QVector<qreal> dashes;
         gc->pen->setWidth(w);
+        gc->pen->setDashOffset(offset);
         for(int a = 0; a < n; a ++)
-                dashes << dash_list[n];
+        {
+                dashes << dash_list[a];
+        }
         gc->pen->setDashPattern(dashes);
 }
 
@@ -278,6 +281,14 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 		polygon.putPoints(i, 1, p[i].x, p[i].y);
 	gr->painter->setPen(*gc->pen);
 	gr->painter->setBrush(*gc->brush);
+        /* if the polygon is transparent, we need to clear it first */
+        if(!gc->brush->isOpaque())
+        {
+                QPainter::CompositionMode mode = gr->painter->compositionMode();
+                gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
+                gr->painter->drawPolygon(polygon);
+                gr->painter->setCompositionMode(mode);
+        }
 	gr->painter->drawPolygon(polygon);
 }
 
@@ -287,6 +298,14 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
         if(gr->painter == NULL)
                 return;
+        /* if the rectangle is transparent, we need to clear it first */
+        if(!gc->brush->isOpaque())
+        {
+                QPainter::CompositionMode mode = gr->painter->compositionMode();
+                gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
+                gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
+                gr->painter->setCompositionMode(mode);
+        }
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
@@ -424,14 +443,14 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
         {
                 case draw_mode_begin:
                     gr->use_count ++;
-//                    dbg(lvl_debug,"Begin drawing on context %p\n", gr);
+                    dbg(lvl_debug,"Begin drawing on context %p\n", gr);
                     if(gr->painter == NULL)
                         gr->painter = new QPainter(gr->pixmap);
                     else
                         dbg(lvl_debug, "drawing on %p already active\n", gr);
                     break;
                 case draw_mode_end:
-//                    dbg(lvl_debug,"End drawing on context %p\n", gr);
+                    dbg(lvl_debug,"End drawing on context %p\n", gr);
                     gr->use_count --;
                     if(gr->painter != NULL && gr->use_count == 0)
                     {
@@ -478,7 +497,7 @@ graphics_qt5_fullscreen(struct window *w, int on)
 static void
 keep_display_on(struct graphics_priv * priv)
 {
-        dbg(lvl_debug,"enter\n");
+//        dbg(lvl_debug,"enter\n");
         QDBusConnection system = QDBusConnection::connectToBus(QDBusConnection::SystemBus, "system");
         QDBusInterface interface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", system);
 
@@ -521,7 +540,7 @@ get_data(struct graphics_priv *this_priv, char const *type)
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-        //dbg(lvl_debug,"enter\n");
+//        dbg(lvl_debug,"enter\n");
         delete(priv->pixmap);
         g_free(priv);
 }
