@@ -1627,7 +1627,7 @@ int
 gui_internal_keynav_find_next(struct widget *wi, struct widget *cur, struct widget **result);
 
 int
-gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result, struct widget** last);
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result);
 
 struct widget*
 gui_internal_keynav_find_next_sensitive_child(struct widget *wi);
@@ -2733,30 +2733,28 @@ gui_internal_keynav_find_next(struct widget *wi, struct widget *cur, struct widg
 	return 0;
 }
 
+#define RESULT_FOUND 1
+#define NO_RESULT_YET 0
+
 int
-gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result, struct widget** last) {
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *cur, struct widget **result) {
+	if (wi == cur && *result) {
+		// Reached current widget; last widget found is the result.
+		return RESULT_FOUND;
+	}
+	if (wi->state & STATE_SENSITIVE)
+		*result= wi;
 	GList *l=wi->children;
-	struct widget* my_last = NULL;
-	if (last == NULL)
-		last = &my_last;
-	if (wi == cur)
-		return 1;
 	while (l) {
 		struct widget *child=l->data;
-		if (gui_internal_keynav_find_prev(child, cur, result, last)) {
-			*result = *last;
-			if (*last)
-				/* Done. */
-				return 0;
-			else
-				/* Try parent. */
-				return 1;
+		if (gui_internal_keynav_find_prev(child, cur, result) == RESULT_FOUND) {
+			return RESULT_FOUND;
 		}
-		if (child->state & STATE_SENSITIVE)
-			*last = child;
 		l=g_list_next(l);
 	}
-	return 0;
+	// If no sensitive widget is found before "cur", return the last sensitive widget when
+	// recursion terminates.
+	return NO_RESULT_YET;
 }
 
 static void
@@ -2829,7 +2827,7 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int ro
 	if (rotary && dx > 0)
 		gui_internal_keynav_find_next(menu, cur, &result);
 	else if (rotary && dx < 0)
-		gui_internal_keynav_find_prev(menu, cur, &result, NULL);
+		gui_internal_keynav_find_prev(menu, cur, &result);
 	else
 		gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
 	dbg(lvl_debug,"result=%p\n", result);
