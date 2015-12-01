@@ -24,7 +24,7 @@
 
 #include "vehicle_qt5.h"
 #include "vehicle_qt5.moc"
-
+#include <QDateTime>
 QNavitGeoReceiver::QNavitGeoReceiver (QObject * parent, struct vehicle_priv * c):QObject(parent)
 {
         priv = c;
@@ -54,6 +54,17 @@ void QNavitGeoReceiver::satellitesInViewUpdated(const QList<QGeoSatelliteInfo> &
 
 void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo &info)
 {
+    
+        /* ignore stale view */
+        if(info.coordinate().isValid())
+        {
+                if(info.timestamp().toUTC().secsTo(QDateTime::currentDateTimeUtc()) > 20)
+                {
+                    dbg(lvl_debug,"Ignoring old FIX\n");
+                    return;
+                }
+        }
+        
         if(info.hasAttribute(QGeoPositionInfo::HorizontalAccuracy))
         {
                 dbg(lvl_debug,"Horizontal acc (%f)\n",info.attribute(QGeoPositionInfo::HorizontalAccuracy));
