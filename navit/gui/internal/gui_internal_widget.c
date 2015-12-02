@@ -320,11 +320,6 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	GList *l;
 
 	gui_internal_background_render(this, w);
-#if 0
-	w->border=1;
-	w->foreground=this->foreground;
-#endif
-#if 1
 	if (w->foreground && w->border) {
 	struct point pnt[5];
 	pnt[0]=w->p;
@@ -339,13 +334,11 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	graphics_draw_lines(this->gra, w->foreground, pnt, 5);
 	graphics_gc_set_linewidth(w->foreground, 1);
 	}
-#endif
 
 	l=w->children;
 	while (l) {
 		wc=l->data;
-		if (!(wc->state & STATE_OFFSCREEN))
-			gui_internal_widget_render(this, wc);
+		gui_internal_widget_render(this, wc);
 		l=g_list_next(l);
 	}
 	if (w->scroll_buttons) 
@@ -561,14 +554,6 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				wc->p.x=x-wc->w/2;
 			if (w->flags & gravity_right)
 				wc->p.x=x-wc->w;
-#if 0
-			if (w->flags & flags_scrolly)
-				dbg(lvl_debug,"%d - %d vs %d - %d\n",y,y+wc->h,w->p.y,w->p.y+w->h-hb);
-			if (y+wc->h > w->p.y+w->h-hb || y+wc->h < w->p.y)
-				wc->state |= STATE_OFFSCREEN;
-			else
-				wc->state &= ~STATE_OFFSCREEN;
-#endif
 			y+=wc->h+w->spy;
 			l=g_list_next(l);
 		}
@@ -1369,11 +1354,6 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		}
 		table_data->scroll_buttons.button_box->p.x = w->p.x;
 		table_data->scroll_buttons.button_box->w = w->w;
-		//    table_data->button_box->h = w->h - y;
-		//    table_data->next_button->h=table_data->button_box->h;
-		//    table_data->prev_button->h=table_data->button_box->h;
-		//    table_data->next_button->c.y=table_data->button_box->c.y;
-		//    table_data->prev_button->c.y=table_data->button_box->c.y;
 		gui_internal_widget_pack(this,table_data->scroll_buttons.button_box);
 		if(table_data->scroll_buttons.next_button->p.y > w->p.y + w->h + table_data->scroll_buttons.next_button->h)
 		{

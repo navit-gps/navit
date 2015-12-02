@@ -54,8 +54,6 @@ static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
 	gui_internal_keypress_do(this, (char *) wm->data);
-	// Switch to lowercase after the first key is pressed
-	gui_internal_keyboard_to_lower_case(this);
 }
 	
 static struct widget *

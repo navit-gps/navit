@@ -401,7 +401,6 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	GList *l;
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
 	void *param=(void *)3;
-	int minlen=1;
 
 	gui_internal_widget_table_clear(this, search_list);
 
@@ -414,7 +413,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	dbg(lvl_debug,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
-	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
+	if (wm->text && g_utf8_strlen(wm->text, -1) > 0) {
 		struct attr search_attr;
 
 		dbg(lvl_debug,"process\n");
