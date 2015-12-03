@@ -2707,6 +2707,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	active.type=attr_active;
 	active.u.num=0;
 
+	dbg(lvl_debug, "enter, this_=%p, attr=%p (%s), init=%d\n", this_, attr, attr_to_name(attr->type), init);
+
 	switch (attr->type) {
 	case attr_autozoom:
 		attr_updated=(this_->autozoom_secs != attr->u.num);
@@ -2899,7 +2901,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->waypoints_flag=!!attr->u.num;
 		break;
 	default:
-		return 0;
+		dbg(lvl_debug, "calling generic setter method for attribute type %s\n", attr_to_name(attr->type))
+		return navit_object_set_attr((struct navit_object *) this_, attr);
 	}
 	if (attr_updated && !init) {
 		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
@@ -3116,7 +3119,8 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->waypoints_flag;
 		break;
 	default:
-		return 0;
+		dbg(lvl_debug, "calling generic getter method for attribute type %s\n", attr_to_name(type))
+		return navit_object_get_attr((struct navit_object *) this_, type, attr, iter);
 	}
 	attr->type=type;
 	return ret;

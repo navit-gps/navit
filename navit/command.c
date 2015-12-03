@@ -253,11 +253,15 @@ command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type
 	int r;
 	struct attr dup;
 	struct object_func *func=object_func_lookup(object->type);
-	if (!object->u.data || !func || !func->get_attr)
+	if (!object->u.data || !func || !func->get_attr) {
+		dbg(lvl_warning, "cannot retrieve attributes from %s (%p), func=%p\n", attr_to_name(object->type), object->u.data, func)
 		return 0;
+	}
 	r=func->get_attr(object->u.data, attr_type, &dup, NULL);
 	if(r)
 		attr_dup_content(&dup,ret);
+	else
+		dbg(lvl_warning, "%s (%p) has no attribute %s\n", attr_to_name(object->type), object->u.data, attr_to_name(attr_type))
 	return r;
 }
 

@@ -325,6 +325,18 @@ transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, 
 	transform_from_geo(to, &g, cto);
 }
 
+
+/**
+ * @brief Transforms geodetic to Cartesian coordinates.
+ *
+ * This transforms geodetic coordinates (consisting of latitude and longitude) into ECEF Cartesian
+ * coordinates.
+ *
+ * @param geo The WGS84 coordinates to convert
+ * @param a Semi-minor axis of the ellipsoid
+ * @param b Semi-minor axis of the ellipsoid
+ * @param cart Points to a structure that will receive the Cartesian coordinates
+ */
 void
 transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart)
 {
@@ -335,6 +347,18 @@ transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struc
         cart->z=n*(1-ee)*navit_sin(geo->lat);
 }
 
+
+/**
+ * @brief Transforms Cartesian to geodetic coordinates.
+ *
+ * This transforms ECEF Cartesian coordinates into geodetic coordinates, consisting of latitude and
+ * longitude.
+ *
+ * @param cart The Cartesian coordinates
+ * @param a Semi-minor axis of the ellipsoid
+ * @param b Semi-minor axis of the ellipsoid
+ * @param geo Points to a structure that will receive the geodetic coordinates
+ */
 void
 transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo)
 {
@@ -355,14 +379,19 @@ transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b,
 }
 
 
+/**
+ * @brief Converts UTM coords to lat/long.
+ *
+ * Equations from USGS Bulletin 1532.
+ *
+ * @author Chuck Gantz- chuck.gantz@globalstar.com
+ */
 void
 transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere, struct coord_geo *geo)
 {
-//converts UTM coords to lat/long.  Equations from USGS Bulletin 1532 
 //East Longitudes are positive, West longitudes are negative. 
 //North latitudes are positive, South latitudes are negative
 //Lat and Long are in decimal degrees. 
-	//Written by Chuck Gantz- chuck.gantz@globalstar.com
 
 	double Lat, Long;
 	double k0 = 0.99960000000000004;

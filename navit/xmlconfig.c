@@ -1353,6 +1353,7 @@ navit_object_callbacks(struct navit_object *obj, struct attr *attr)
 int
 navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 {
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
 	obj->attrs=attr_generic_set_attr(obj->attrs, attr);
 	navit_object_callbacks(obj, attr);
 	return 1;
@@ -1361,6 +1362,7 @@ navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 int
 navit_object_add_attr(struct navit_object *obj, struct attr *attr)
 {
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
 	if (attr->type == attr_callback) {
 		struct callback_list *cbl;
 		if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) 
