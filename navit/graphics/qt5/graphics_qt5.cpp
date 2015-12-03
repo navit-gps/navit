@@ -140,6 +140,10 @@ gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 static void
 gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
+        if(n <= 0)
+        {
+            dbg(lvl_error, "Refuse to set dashes without dash pattern");
+        }
         /* use Qt dash feature */
         QVector<qreal> dashes;
         gc->pen->setWidth(w);
@@ -147,6 +151,13 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
         for(int a = 0; a < n; a ++)
         {
                 dashes << dash_list[a];
+        }
+        /* Qt requires the pattern to have even element count. Add the last
+         * element twice if n doesn't divide by two
+         */
+        if((n % 2) != 0)
+        {
+            dashes << dash_list[n-1];
         }
         gc->pen->setDashPattern(dashes);
 }
