@@ -90,7 +90,6 @@
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
 
-
 /**
  * Indexes into the config_profiles array.
  */

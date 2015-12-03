@@ -1280,9 +1280,19 @@ navit_object_unref(struct navit_object *obj)
 {
 	if (obj) {
 		obj->refcount--;
-		dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+		if(obj->func){
+			if(obj->func->type){
+				dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+			}else{
+				dbg(lvl_error,"refcount no type %p %d\n",obj,obj->refcount);
+			}
+		}else{
+			dbg(lvl_error,"refcount no func %p %d\n",obj,obj->refcount);
+		}
 		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
 			obj->func->destroy(obj);
+	}else{
+		dbg(lvl_error,"refcount no object\n");
 	}
 }
 

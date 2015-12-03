@@ -58,9 +58,9 @@
 #include "event.h"
 #include "mapset.h"
 #include "util.h"
-#ifdef USE_AUDIO_FRAMEWORK
+//#ifdef USE_AUDIO_FRAMEWORK
 #include "audio.h"
-#endif
+//#endif
 #ifdef HAVE_API_WIN32_CE
 #include "libc.h"
 #endif
@@ -3815,7 +3815,6 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 	return (struct osd_priv *) opc;
 }
 
-#ifdef USE_AUDIO_FRAMEWORK
 struct audio_player{
 	gchar* str;
 	struct navit *nav;
@@ -3825,12 +3824,7 @@ static void
 osd_audio_player_draw(struct osd_priv_common *opc)
 {
 	struct audio_player *this = (struct audio_player *)opc->data;
-	gchar str[256];
-	strcpy(str, audio_get_current_track(this->nav));
-	strcat(str, " - ");
-	strcat(str, audio_get_current_playlist(this->nav));
-	this->str = g_strdup(str);
-	
+	this->str = g_strdup_printf( "%s - %s", audio_get_current_track(this->nav) , audio_get_current_playlist(this->nav));
 	struct point p, p2[4];
 	p.x=0;
 	p.y=opc->osd_item.h/2;
@@ -3885,7 +3879,6 @@ osd_audio_player_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_audio_player_init), attr_graphics_ready, opc));
 	return (struct osd_priv *) opc;
 }
-#endif
 
 void
 plugin_init(void)
@@ -3907,7 +3900,6 @@ plugin_init(void)
 	plugin_register_osd_type("cmd_interface", osd_cmd_interface_new);
 	plugin_register_osd_type("route_guard", osd_route_guard_new);
 	plugin_register_osd_type("navigation_status", osd_navigation_status_new);
-#ifdef USE_AUDIO_FRAMEWORK
 	plugin_register_osd_type("audio_player", osd_audio_player_new);
-#endif
+
 }
