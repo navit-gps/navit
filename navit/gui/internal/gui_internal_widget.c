@@ -1225,7 +1225,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	GList * cur_row = NULL;
 	GList * current_desc=NULL;
 	struct table_data * table_data = (struct table_data*)w->data;
-	int is_skipped=0;
+	int drawing_space_left=1;
 	int is_first_page=1;
 	struct table_column_desc * dim=NULL;
 
@@ -1291,10 +1291,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 
 		if( y + dim->height + bbox_height + this->spacing >= w->p.y + w->h )
 		{
-			/*
-			 * No more drawing space left.
-			 */
-			is_skipped=1;
+			drawing_space_left=0;
 		}
 		for(cur_column = cur_row_widget->children; cur_column;
 		    cur_column=g_list_next(cur_column))
@@ -1302,7 +1299,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
 			dim = (struct table_column_desc*)current_desc->data;
 
-			if (!is_skipped) {
+			if (drawing_space_left) {
 				cur_widget->p.x=x;
 				cur_widget->w=dim->width;
 				cur_widget->p.y=y;
@@ -1326,7 +1323,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			}
 		}
 
-		if (!is_skipped) {
+		if (drawing_space_left) {
 			/* Row object should have its coordinates in actual
 			 * state to be able to pass mouse clicks to Column objects
 			 */
@@ -1344,7 +1341,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	table_data->scroll_buttons.next_button->state&= ~STATE_SENSITIVE;
 	table_data->scroll_buttons.prev_button->state&= ~STATE_SENSITIVE;
 
-	if(table_data->scroll_buttons.button_box && (is_skipped || !is_first_page) && !table_data->scroll_buttons.button_box_hide )
+	if(table_data->scroll_buttons.button_box && (!drawing_space_left || !is_first_page) && !table_data->scroll_buttons.button_box_hide )
 	{
 		table_data->scroll_buttons.button_box->p.y =w->p.y+w->h-table_data->scroll_buttons.button_box->h -
 			this->spacing;
@@ -1360,7 +1357,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			table_data->scroll_buttons.button_box->p.y = w->p.y + w->h -
 				table_data->scroll_buttons.button_box->h;
 		}
-		if(is_skipped)
+		if(!drawing_space_left)
 	        {
 			table_data->scroll_buttons.next_button->state|= STATE_SENSITIVE;
 		}
