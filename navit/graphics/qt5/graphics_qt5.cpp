@@ -258,9 +258,9 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *p
             {
                 dbg(lvl_debug,"render %s\n", path);
                 /* try to render this */
-                /* assume 16 pixel if size is not given */
-                if(*w <= 0) *w = 16;
-                if(*h <= 0) *h = 16;
+                /* assume "standard" size if size is not given */
+                if(*w <= 0) *w = renderer.defaultSize().width();
+                if(*h <= 0) *h = renderer.defaultSize().height();
                 image_priv->pixmap=new QPixmap(*w, *h);
                 image_priv->pixmap->fill(Qt::transparent);
                 QPainter painter(image_priv->pixmap); 
