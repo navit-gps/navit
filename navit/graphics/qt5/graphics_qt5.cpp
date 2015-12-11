@@ -220,37 +220,80 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *p
 {
         struct graphics_image_priv * image_priv;
 //        dbg(lvl_debug,"enter %s, %d %d\n", path, *w, *h);
-        if(*w == -1) *w = 16;
-        if(*h == -1) *h = 16;
-//	QPixmap *cachedPixmap;
+        if(path[0] == 0)
+        {
+            dbg(lvl_debug,"Refuse to load image without path\n");
+            return NULL;
+        }
 	QString key(path);
+        QString renderer_key(key);
+        QString extension = key.right(key.lastIndexOf("."));
+        QFile imagefile(key);
+        if(!imagefile.exists())
+        {
+            /* file doesn't exit. Either navit wants us to guess file name by
+             * ommitting exstension, or the file does really not exist.
+             */
+            if(extension != "")
+            {
+                /*file doesn't exist. give up */
+                dbg(lvl_debug,"File %s does not exist\n",path);
+                return NULL;
+            }
+            else
+            {
+                /* add ".svg" for renderer to try .svg file first in renderer */
+                dbg(lvl_debug, "Guess extension on %s\n", path);
+                renderer_key += ".svg";
+            }
+        }
         image_priv = g_new0(struct graphics_image_priv, 1);
         *meth = image_methods;
-//	cachedPixmap=QPixmapCache::find(key);
-//	if (!cachedPixmap) {
-                if(1/*key.endsWith(".svg", Qt::CaseInsensitive)*/) {
-                    QSvgRenderer renderer(key);
-                    if (!renderer.isValid()) {
-                       g_free(image_priv);
-                       return NULL;
-                    }
-                    image_priv->pixmap=new QPixmap(/*renderer.defaultSize()*/*w, *h);
-                    image_priv->pixmap->fill(Qt::transparent);
-                    QPainter painter(image_priv->pixmap); 
-                    renderer.render(&painter);
-
-                } else {
-		    image_priv->pixmap=new QPixmap(path);
+        
+        /* check if this can be rendered */
+        if(renderer_key.endsWith("svg"))
+        {
+            QSvgRenderer renderer(renderer_key);
+            if(renderer.isValid())
+            {
+                dbg(lvl_debug,"render %s\n", path);
+                /* try to render this */
+                /* assume 16 pixel if size is not given */
+                if(*w <= 0) *w = 16;
+                if(*h <= 0) *h = 16;
+                image_priv->pixmap=new QPixmap(*w, *h);
+                image_priv->pixmap->fill(Qt::transparent);
+                QPainter painter(image_priv->pixmap); 
+                renderer.render(&painter);
+            }
+        }
+        
+        if (image_priv->pixmap == NULL) {
+            /*cannot be rendered. try to load it */
+            dbg(lvl_debug,"cannot render %s\n",path);
+            image_priv->pixmap=new QPixmap(key);
+        }
+        
+        /* check if we got image */
+        if (image_priv->pixmap->isNull()) {
+            g_free(image_priv);
+            return NULL;
+        }
+        else
+        {
+            /* check if we need to scale this */                
+            if((*w > 0) && (*h > 0))
+            {
+                if((image_priv->pixmap->width() != *w) ||
+                   (image_priv->pixmap->height() != *h))
+                {
+                    dbg(lvl_debug,"scale pixmap %s, %d->%d,%d->%d\n",path, image_priv->pixmap->width(), *w, image_priv->pixmap->height(), *h);
+                    QPixmap * scaled = new QPixmap(image_priv->pixmap->scaled(*w, *h,Qt::IgnoreAspectRatio,Qt::FastTransformation));
+                    delete (image_priv->pixmap);
+                    image_priv->pixmap = scaled;
                 }
-                if (image_priv->pixmap->isNull()) {
-                        g_free(image_priv);
-                        return NULL;
-                }
-                   
-//		QPixmapCache::insert(key,QPixmap(*image_priv->pixmap));
-//	} else {
-//		image_priv->pixmap=new QPixmap(*cachedPixmap);
-//	}
+            }
+        }
 
 	*w=image_priv->pixmap->width();
 	*h=image_priv->pixmap->height();
