@@ -9,6 +9,10 @@ if (GIT_EXECUTABLE)
       OUTPUT_VARIABLE VERSION
       OUTPUT_STRIP_TRAILING_WHITESPACE
    )
+   if(NOT VERSION)
+      message(STATUS "git found, but no git tree")
+      set(VERSION "0000")
+   endif()
 else()
    message(STATUS "git not found, cannot record git commit")
    set(VERSION "0000")
