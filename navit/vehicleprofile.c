@@ -119,7 +119,7 @@ vehicleprofile_clear(struct vehicleprofile *this_)
 	this_->flags_forward_mask=0;
 	this_->flags_reverse_mask=0;
 	this_->flags=0;
-	this_->maxspeed_handling=0;
+	this_->maxspeed_handling = maxspeed_enforce;
 	this_->static_speed=0;
 	this_->static_distance=0;
 	g_free(this_->name);
