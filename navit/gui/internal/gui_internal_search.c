@@ -313,21 +313,24 @@ gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_r
 	return resultlist_entry;
 }
 
+/**
+ * @brief List of possible next keys/characters given the current result list of the incremental search.
+ */
+char possible_keys_incremental_search[256]="";
+
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
 	char *result_main_label=NULL,*result_sublabel=NULL,*item_name=NULL, *widget_name=NULL, *search_text;
 	struct search_list_result *res;
 	struct item *item=NULL;
-	static char possible_keys[256]="";
-        struct widget *search_input=NULL;
+	struct widget *search_input=NULL;
 	struct widget *menu, *resultlist_row, *resultlist_entry;
 
 	res=search_list_get_result(this->sl);
 	if (!res) {
 		gui_internal_search_idle_end(this);
-		gui_internal_highlight_possible_keys(this, possible_keys);
-		possible_keys[0]='\0';
+		gui_internal_highlight_possible_keys(this, possible_keys_incremental_search);
 		return;
 	}
 
@@ -364,7 +367,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	dbg_assert(search_input);
 	search_text=search_input->text;
 
-	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys, item_name);
+	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys_incremental_search, item_name);
 
 	resultlist_row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 	if (!result_sublabel)
@@ -403,6 +406,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	void *param=(void *)3;
 
 	gui_internal_widget_table_clear(this, search_list);
+	possible_keys_incremental_search[0]='\0';
 
 	if (! strcmp(wm->name,"Country"))
 		param=(void *)4;
