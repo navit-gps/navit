@@ -7,10 +7,12 @@ if (GIT_EXECUTABLE)
       COMMAND ${GIT_EXECUTABLE} log "--format=%h %d"
       WORKING_DIRECTORY "${SOURCE_DIR}"
       OUTPUT_VARIABLE VERSION
+      ERROR_VARIABLE GIT_ERROR
       OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_STRIP_TRAILING_WHITESPACE
    )
    if(NOT VERSION)
-      message(STATUS "git found, but no git tree")
+      message(STATUS "Cannot determine current git commit - git error: '${GIT_ERROR}'")
       set(VERSION "0000")
    endif()
 else()
