@@ -72,6 +72,7 @@ test:
 deployment:
   merge_into_master:
     branch: trunk
+    owner: navit-gps
     commands:
       - bash ci/update_version.sh push
       - git push origin $CIRCLE_SHA1:refs/heads/master
