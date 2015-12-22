@@ -1,0 +1,1 @@
+module_add_library(plugin_switch_layout switch_layout.c)
