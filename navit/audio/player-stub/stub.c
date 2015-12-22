@@ -474,7 +474,7 @@ stub_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_PLAYLIST;
-		aa->icon = g_strdup("media_skip-back");//todo: make beautiful icon
+		aa->icon = g_strdup("media_prev");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -498,7 +498,7 @@ stub_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_PLAYLIST;
-		aa->icon = g_strdup("media_skip-ahead");//todo: make beautiful icon
+		aa->icon = g_strdup("media_next");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -508,12 +508,12 @@ stub_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_MODE_TOGGLE_REPEAT;
-		aa->icon = g_strdup("media_refresh");//todo: make beautiful icon
+		aa->icon = g_strdup("media_repeat_off");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_MODE_TOGGLE_SHUFFLE;
-		aa->icon = g_strdup("media_shuffle");//todo: make beautiful icon
+		aa->icon = g_strdup("media_shuffle_off");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -708,7 +708,7 @@ playlists(struct audio_priv *this)
 				struct audio_playlist *apl = g_new0(struct audio_playlist, 1);
 				apl->name=g_strdup(stub_get_playlist_name(i));
 				apl->index = i;
-				apl->icon = "playlist";
+				apl->icon = "media_hierarchy";
 				playlists=g_list_append(playlists, apl);
 				stub->playlists = playlists;
 			}
@@ -738,7 +738,7 @@ tracks(struct audio_priv *this, int playlist_index)
                 t->name=g_strdup(stub_get_track_name(i));
                 t->index=i;
                 t->status=0;
-                t->icon = "music-green";
+                t->icon = "media_audio";
                 tracks=g_list_append(tracks, t);
         }
 		dbg(lvl_debug, "Active playlist updated\n");

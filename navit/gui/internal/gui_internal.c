@@ -2911,6 +2911,7 @@ static void gui_internal_keypress(void *data, char *key)
 			gui_internal_set_click_coord(this, NULL);
 			gui_internal_cmd_menu(this, 0, NULL);
 			break;
+#ifdef USE_AUDIO_FRAMEWORK
 		case NAVIT_KEY_AUDIO_PLAY:
 		case NAVIT_KEY_AUDIO_STOP:
 			audio_do_action(this->nav, AUDIO_PLAYBACK_TOGGLE); 
@@ -2945,6 +2946,7 @@ static void gui_internal_keypress(void *data, char *key)
 		case NAVIT_KEY_RELOAD_PLAYLISTS:
 			audio_do_action(this->nav, AUDIO_MISC_RELOAD_PLAYLISTS);
 			break;
+#endif
 		}
 		return;
 	}
