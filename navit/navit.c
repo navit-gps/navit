@@ -1507,6 +1507,12 @@ navit_get_graphics(struct navit *this_)
 	return this_->gra;
 }
 
+struct layout* 
+navit_get_current_layout(struct navit *this)
+{
+	return this->layout_current;
+}
+
 struct vehicleprofile *
 navit_get_vehicleprofile(struct navit *this_)
 {
