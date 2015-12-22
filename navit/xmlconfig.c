@@ -289,6 +289,8 @@ object_func_lookup(enum attr_type type)
 		return &speech_func;
 	case attr_vehicle:
 		return &vehicle_func;
+	case attr_audio:
+		return &audio_func;
 	case attr_vehicleprofile:
 		return &vehicleprofile_func;
 	default:
@@ -340,7 +342,7 @@ static char *element_fixmes[]={
 };
 
 static void initStatic(void) {
-	elements=g_new0(struct element_func,44); //43 is a number of elements + ending NULL element
+	elements=g_new0(struct element_func,45); //44 is a number of elements + ending NULL element
 
 	elements[0].name="config";
 	elements[0].parent=NULL;
@@ -555,6 +557,11 @@ static void initStatic(void) {
 	elements[42].parent="navit";
 	elements[42].func=NULL;
 	elements[42].type=attr_script;
+	
+	elements[43].name="audio";
+	elements[43].parent="navit";
+	elements[43].func=NULL;
+	elements[43].type=attr_audio;
 }
 
 /**

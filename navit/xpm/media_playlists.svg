@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generiert durch Microsoft Visio, SVG Export media_playlists.svg Rectangle_3_1_ -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="0.166667in" height="0.166667in" viewBox="0 0 12 12"
+		xml:space="preserve" color-interpolation-filters="sRGB" class="st2">
+	<v:documentProperties v:langID="1031" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#bfbfbf;stroke:none;stroke-linecap:butt;stroke-width:0.75}
+		.st2 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>Rectangle_3_1_</title>
+		<v:pageProperties v:drawingScale="1" v:pageScale="1" v:drawingUnits="19" v:shadowOffsetX="9" v:shadowOffsetY="-9"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(1.5,-2.25)">
+			<title>Tabelle.1</title>
+			<path d="M0 6 L1.5 6 L1.5 4.5 L0 4.5 L0 6 ZM3 4.5 L3 6 L9 6 L9 4.5 L3 4.5 ZM0 9 L1.5 9 L1.5 7.5 L0 7.5 L0 9 ZM6.75 7.5
+						 L3 7.5 L3 9 L6.75 9 L6.75 7.5 ZM0 12 L1.5 12 L1.5 10.5 L0 10.5 L0 12 ZM3 12 L8.25 12 L8.25 10.5 L3 10.5
+						 L3 12 Z" class="st1"/>
+		</g>
+	</g>
+</svg>
