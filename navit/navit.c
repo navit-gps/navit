@@ -67,6 +67,7 @@
 #include "messages.h"
 #include "vehicleprofile.h"
 #include "sunriset.h"
+#include "audio.h"
 #include "bookmarks.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
