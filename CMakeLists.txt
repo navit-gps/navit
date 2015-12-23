@@ -448,6 +448,7 @@ add_feature(USE_AUDIO_FRAMEWORK "default" FALSE)
 
 if (ALSA_FOUND)
 	if(UNIX AND NOT ANDROID AND NOT APPLE)
+	list(APPEND NAVIT_LIBS "-lasound -lpthread")
 	set_with_reason(audio/output-alsa "alsa found" TRUE)
 	set_with_reason(audio/player-mpd "null" TRUE)
 	set_with_reason(audio/player-stub "null" TRUE)

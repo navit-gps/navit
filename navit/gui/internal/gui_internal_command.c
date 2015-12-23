@@ -36,9 +36,9 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
-#ifdef USE_AUDIO_FRAMEWORK
+//#ifdef USE_AUDIO_FRAMEWORK
 #include "gui_internal_media.h"
-#endif
+//#endif
 
 extern char *version;
 
@@ -1229,9 +1229,9 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
-#ifdef USE_AUDIO_FRAMEWORK
+//#ifdef USE_AUDIO_FRAMEWORK
     {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
-#endif
+//#endif
 };
 
 void
