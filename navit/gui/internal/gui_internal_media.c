@@ -230,11 +230,18 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
 {
     struct widget *wb, *w, *wbm;
     struct widget *tbl, *row;
-    GList *tracks = audio_get_tracks(this->nav,currently_displayed_playlist);
     int index=0;
+    gui_internal_prune_menu_count (this, 1, 0);
+#ifndef USE_AUDIO_FRAMEWORK
+    wb = gui_internal_menu (this, g_strdup_printf ("Media not available"));
+    wb->background = this->background;
+    w = gui_internal_box_new (this, gravity_top_center | orientation_vertical | flags_expand | flags_fill);
+    gui_internal_widget_append (wb, w);
+#else
+    GList *tracks = audio_get_tracks(this->nav,currently_displayed_playlist);
     struct audio_playlist *pl;
 	GList *playlist = audio_get_playlists(this->nav);
-    gui_internal_prune_menu_count (this, 1, 0);
+    
     dbg(lvl_info, "\n\t%p\n\n", this);
     
     wb = gui_internal_menu (this, g_strdup_printf ("Media > %s", audio_get_current_playlist(this->nav)));
@@ -259,5 +266,6 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
 		wbm->c.x = track->index;
 		gui_internal_widget_append (row, wbm);
     }
+#endif
     gui_internal_menu_render (this);
 }
