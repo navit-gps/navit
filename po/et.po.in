@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"PO-Revision-Date: 2015-12-22 07:09+0000\n"
 "Last-Translator: Manuel Hohmann <mhohmann@physnet.uni-hamburg.de>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -201,10 +201,10 @@ msgstr "Sõida varsti ringteele"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Sõida ringteele %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "siis sõida ringteele"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
