@@ -428,6 +428,7 @@ ATTR2(0x00070000,type_color_begin)
 ATTR(color)
 ATTR_UNUSED
 ATTR(background_color)
+ATTR(foreground_color)
 ATTR(text_color)
 ATTR(idle_color)
 ATTR(background_color2)
