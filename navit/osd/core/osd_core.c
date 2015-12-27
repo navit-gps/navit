@@ -270,7 +270,6 @@ struct route_guard {
 	int update_period;
 	struct color active_color;
 	struct graphics_gc *red;
-	//struct graphics_gc *white;
 	int width;
 };
 
@@ -490,7 +489,6 @@ static struct command_table commands[] = {
 struct odometer {
 	int width;
 	struct graphics_gc *orange;
-	//struct graphics_gc *white;
 	struct callback *click_cb;
 	char *text;                 //text of label attribute for this osd
 	char *name;                 //unique name of the odometer (needed for handling multiple odometers persistently)
@@ -1005,7 +1003,6 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 struct cmd_interface {
 	int width;
 	struct graphics_gc *orange;
-	//struct graphics_gc *white;
 	int update_period;   //in sec
 	char* text;
 	struct graphics_image *img;
@@ -1160,7 +1157,6 @@ osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
 struct stopwatch {
 	int width;
 	struct graphics_gc *orange;
-	//struct graphics_gc *white;
 	struct callback *click_cb;
 	struct color idle_color;    //text color when counter is idle
 
@@ -2143,7 +2139,6 @@ struct osd_speed_cam_entry {
 struct osd_speed_cam {
   int width;
   int flags;
-  //struct graphics_gc *white;
   struct graphics_gc *orange;
   struct graphics_gc *red;
   struct color idle_color; 
@@ -2434,7 +2429,6 @@ struct osd_speed_warner {
 	struct graphics_gc *green;
 	struct graphics_gc *grey;
 	struct graphics_gc *black;
-	//struct graphics_gc *white;
 	int width;
 	int active;
 	int d;
@@ -2555,7 +2549,6 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
-	//struct color white_color={0xffff,0xffff,0xffff,0x0000};
 	struct color red_color={0xffff,0,0,0xffff};
 	struct color green_color={0,0xffff,0,0xffff};
 	struct color grey_color={0x8888,0x8888,0x8888,0x8888};
@@ -2594,9 +2587,6 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 	
 	g_free(this->label_str);
 	this->label_str = NULL;
-
-	//opc->osd_item.graphic_fg=graphics_gc_new(opc->osd_item.gr);
-	//graphics_gc_set_foreground(opc->osd_item.graphic_fg, &white_color);
 
 	graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->d/2-2 /*-this->width*/ );
 
@@ -3661,7 +3651,6 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_scale *this = (struct osd_scale *)opc->data;
 
-	//struct color color_white={COLOR_WHITE_};
 	struct color color_black={COLOR_BLACK_};
 	struct graphics *gra = navit_get_graphics(nav);
 	dbg(lvl_debug, "enter\n");
@@ -3672,8 +3661,6 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 		opc->osd_item.gr=gra;
 		opc->osd_item.font = graphics_font_new(opc->osd_item.gr, opc->osd_item.font_size, 1);
 		opc->osd_item.graphic_fg=graphics_gc_new(opc->osd_item.gr);
-		//opc->osd_item.color_white=color_white;
-		//graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.color_white);
 	}
 	this->black=graphics_gc_new(opc->osd_item.gr);
 	graphics_gc_set_foreground(this->black, &color_black);
