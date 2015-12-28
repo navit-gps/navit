@@ -871,9 +871,6 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 			newheight=h;
 			
 		name=g_strndup(pathi,s-pathi);
-#if 0
-		if (!strstr(name,"test.zip"))
-#endif
 		image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 0);
 		if (!this_->priv && strstr(pathi, ".zip/"))
 			image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 1);
@@ -1075,56 +1072,6 @@ graphics_background_gc(struct graphics *this_, struct graphics_gc *gc)
 #include "popup.h"
 #include <stdio.h>
 
-
-#if 0
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void popup_view_html(struct popup_item *item, char *file)
-{
-	char command[1024];
-	sprintf(command,"firefox %s", file);
-	system(command);
-}
-
-struct transformatin *tg;
-enum projection pg;
-
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void graphics_popup(struct display_list *list, struct popup_item **popup)
-{
-	struct item *item;
-	struct attr attr;
-	struct map_rect *mr;
-	struct coord c;
-	struct popup_item *curr_item,*last=NULL;
-	item=list->data;
-	mr=map_rect_new(item->map, NULL, NULL, 0);
-	printf("id hi=0x%x lo=0x%x\n", item->id_hi, item->id_lo);
-	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-	if (item) {
-		if (item_attr_get(item, attr_name, &attr)) {
-			curr_item=popup_item_new_text(popup,attr.u.str,1);
-			if (item_attr_get(item, attr_info_html, &attr)) {
-				popup_item_new_func(&last,"HTML Info",1, popup_view_html, g_strdup(attr.u.str));
-			}
-			if (item_attr_get(item, attr_price_html, &attr)) {
-				popup_item_new_func(&last,"HTML Preis",2, popup_view_html, g_strdup(attr.u.str));
-			}
-			curr_item->submenu=last;
-		}
-	}
-	map_rect_destroy(mr);
-}
-#endif
-
-
 /**
  * FIXME
  * @param <>
@@ -1252,9 +1199,6 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 			y+=dx*thm/l/64;
 			p_t.x=x;
 			p_t.y=y;
-#if 0
-			dbg(lvl_debug,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
-#endif
 			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y)
 				gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
@@ -1310,12 +1254,6 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 		a = -a;
 		b = -b;
 	}
-#if 0
-	if (a < 0 || b < 0)
-		return 0;
-	if (a > n || b > n)
-		return 0;
-#endif
 	if (n == 0)
 		return 0;
 	res->x = a1->x + a * adx / n;
@@ -1397,10 +1335,6 @@ static void
 draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir)
 {
 	struct circle *c;
-
-#if 0
-	dbg(lvl_debug,"diameter=%d start=%d len=%d pos=%d dir=%d\n", diameter, start, len, *pos, dir);
-#endif
 	int count=64;
 	int end=start+len;
 	int i,step;
@@ -1520,32 +1454,6 @@ int_sqrt(unsigned int n)
 	}
 	return p;
 }
-
-#if 0
-static void
-debug_line(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int dx, int dy)
-{
-	struct point p[2];
-	p[0]=p[1]=*pnt;
-	p[1].x+=dx;
-	p[1].y+=dy;
-	gra->meth.draw_lines(gra->priv, gc->priv, p, 2);
-}
-
-static void
-debug_point(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int s)
-{
-	struct point p[4];
-	p[0]=p[1]=p[2]=*pnt;
-	p[0].x-=s;
-	p[0].y+=s;
-	p[1].x+=s;
-	p[1].y+=s;
-	p[2].y-=s;
-	p[3]=p[0];
-	gra->meth.draw_lines(gra->priv, gc->priv, p, 4);
-}
-#endif
 
 struct draw_polyline_shape {
 	int wi;
@@ -2104,7 +2012,6 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	struct element *e=dc->e;
 	struct graphics_image *img=dc->img;
 	struct point p;
-	struct coord *c;
 	char *path;
 
 	while (di) {
@@ -2121,7 +2028,6 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		count=limit_count(di->c, count);
 	if (dc->type == type_poly_water_tiled)
 		mindist=0;
-	c=di->c;
 #if 0
 	if (dc->e->type == element_polygon) {
 		int max=1000;
@@ -2135,9 +2041,9 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	}
 #endif
 	if (dc->e->type == element_polyline)
-		count=transform(dc->trans, dc->pro, c, pa, count, mindist, e->u.polyline.width, width);
+		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
 	else
-		count=transform(dc->trans, dc->pro, c, pa, count, mindist, 0, NULL);
+		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
 	switch (e->type) {
 	case element_polygon:
 		graphics_draw_polygon_clipped(gra, gc, pa, count);
