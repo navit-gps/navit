@@ -19,20 +19,13 @@ export ANDROID_TOOLS_CHECK=$ANDROID_SDK"/tools"
 
 export ANDROID_PLATFORM_TOOLS_CHECK=$ANDROID_SDK"/platform-tools"
 
-export ANDROID_BUILD_TOOLS="21.1.2"
+export ANDROID_BUILD_TOOLS="23.0.1"
 export ANDROID_BUILD_CHECK=$ANDROID_SDK"/build-tools/"$BUILD_TOOLS
 
 export ANDROID_PLATFORM_LATEST="android-21"
 export ANDROID_PLATFORM_MIN="android-7"
-export ANDROID_PLATFORM_CHECK_MIN=$ANDROID_SDK"/platforms/"$ANDROID_PLATFORM_MIN"/images"
-export ANDROID_PLATFORM_CHECK_MAX=$ANDROID_SDK"/platforms/"$ANDROID_PLATFORM_LATEST"/images"
-
 export BUILD_PATH=$START_PATH"/android-build"
 export ANDROID_ENV=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS
-
-export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support,android-10,sysimg-10,addon-google_apis-google-10,android-9,addon-google_apis-google-9,android-21,sysimg-21,addon-google_apis-google-21"
-
-export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support"
 
 # $ANDROID_HOME is /usr/local/android-sdk-linux for the android env. provided by CircleCI
 
@@ -46,13 +39,6 @@ else
   echo
 fi
 
-function updateSDK {
-  export UPD_SDK="echo y|android update sdk --no-ui --filter $SDK_UPD_FILTER"
-echo $UPD_SDK
-  $UPD_SDK
-}
-
-updateSDK
 mkdir -p $BUILD_PATH
 cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
