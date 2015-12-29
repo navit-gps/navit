@@ -46,84 +46,11 @@ else
   echo
 fi
 
-#function extractSDK {
-#   echo -e -n "${yel}" "    Unpacking Android SDK...   "
-#
-#   cd $ANDROID_HOME
-#
-#   $(tar -xf $ANDROID_SDK_FILE -C $ANDROID_HOME)
-#
-#   if [ $? -eq 0  ]; then {
-#   	echo -e "${grn}" "SUCCEEDED" "${off}"
-#   }
-#   else
-#   {
-#	echo -e "${red}" "FAILED" "${off}"
-#        exit 1
-#   }
-#   fi
-#}
-#
-#function extractNDK {
-#   echo -e -n "${yel}" "    Unpacking Android NDK...   "
-#
-#   cd $ANDROID_HOME
-#   chmod +x ./android-ndk-r10d-linux-x86_64.bin
-#   ./android-ndk-r10d-linux-x86_64.bin
-#
-#   if [ $? -eq 0  ]; then {
-#   	echo -e "${grn}" "SUCCEEDED" "${off}"
-#   }
-#   else
-#   {
-#	echo -e "${red}" "FAILED" "${off}"
-#        exit 1
-#   }
-#   fi
-#}
-#
-#
-#if [ ! -d $ANDROID_SDK ]; then {
-#  echo -e -n "${yel}" "    Android SDK downloading... "
-#  extractSDK
-#}
-#else {
-#  echo -e "${grn}" "    Android SDK Found " "${off}"
-#}
-#fi
-#
-#if [ ! -d $ANDROID_NDK_BIN ]; then {
-#  echo -e -n "${yel}" "    Android NDK downloading... "
-#  extractNDK
-#}
-#else {
-#  echo -e "${grn}" "    Android NDK Found " "${off}"
-#}
-#fi
-#
-#function addSDK {
-# export ADD_SDK="echo y|android update sdk --no-ui --all --filter $SDK_ADD_FILTER"
-# $ADD_SDK
-#}
-#
 function updateSDK {
   export UPD_SDK="echo y|android update sdk --no-ui --filter $SDK_UPD_FILTER"
 echo $UPD_SDK
   $UPD_SDK
 }
-#
-#if [ ! -d $ANDROID_PLATFORM_CHECK_MIN ]; then {
-#  echo -e -n "${yel}" "    Android SDK Platform ... MISSING, downloading may take a very long time... "
-#  echo y|android update sdk --no-ui --all --filter platform-tool,tools,build-tools-21.1.2,extra-android-m2repository,extra-android-support,android-10,sysimg-10,addon-google_apis-google-10,android-9,addon-google_apis-google-9,android-21,sysimg-21,addon-google_apis-google-21
-#
-#  echo -e "${grn}" "SUCCEEDED" "${off}"
-#}
-#else {
-#  echo -e -n "${grn}" "    Android SDK Platform ..." "${off}"
-#	updateSDK
-#  echo -e "${grn}" "VERIFIED" "${off}"
-#}
-#fi
 
 updateSDK
 mkdir -p $BUILD_PATH
