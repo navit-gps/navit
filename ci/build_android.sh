@@ -34,7 +34,7 @@ export SDK_ADD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2re
 
 export SDK_UPD_FILTER="platform-tool,tools,build-tools-21.0.1,extra-android-m2repository,extra-android-support"
 
-mkdir $ANDROID_HOME
+# $ANDROID_HOME is /usr/local/android-sdk-linux for the android env. provided by CircleCI
 
 # If path already has our environment no need to set it
 if echo "$ANDROID_ENV" | grep -q "$PATH"; then
