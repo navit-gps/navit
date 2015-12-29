@@ -1,11 +1,11 @@
 machine:
   environment:
-    ANDROID_HOME: /home/ubuntu/android
-    ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
-    ANDROID_SDK_CDN: https://dl.google.com/android
-    ANDROID_SDK_FILE: android-sdk_r24.4.1-linux.tgz
-    ANDROID_NDK_CDN: http://dl.google.com/android/ndk
-    ANDROID_NDK_FILE: android-ndk-r10e-linux-x86_64.bin
+#    ANDROID_HOME: /home/ubuntu/android
+#    ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
+#    ANDROID_SDK_CDN: https://dl.google.com/android
+#    ANDROID_SDK_FILE: android-sdk_r24.4.1-linux.tgz
+#    ANDROID_NDK_CDN: http://dl.google.com/android/ndk
+#    ANDROID_NDK_FILE: android-ndk-r10e-linux-x86_64.bin
     CMAKE_FILE: ../Toolchain/arm-eabi.cmake
 dependencies:
   cache_directories:
@@ -19,7 +19,6 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install cmake
     - sudo apt-get install libpng12-dev
-#    - sudo apt-get install libgtk2.0-dev 
     - sudo apt-get install librsvg2-bin 
     - sudo apt-get install libfreetype6-dev
     - sudo apt-get install libdbus-glib-1-dev
