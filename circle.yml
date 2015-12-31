@@ -24,7 +24,7 @@ dependencies:
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
     - "[ $CIRCLE_PROJECT_USERNAME != navit-gps ] || curl \"https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -H \"$lp_cookie\" -H \"Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -F file=@bin/po/navit.pot | grep title"
 # Android build    
-    - sudo apt-get install gettext
+#    - sudo apt-get install gettext
     - sudo apt-get install libsaxonb-java
 # for aapt
     - sudo apt-get install lib32stdc++6
