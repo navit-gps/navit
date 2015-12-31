@@ -5,8 +5,8 @@ set(ANDROID_API_VERSION 9 CACHE STRING "Andriod API Version")
 set(ANDROID_NDK_API_VERSION ${ANDROID_API_VERSION} CACHE STRING "Andriod NDK API Version")
 set(ANDROID_ARCH "x86" CACHE STRING "Android architecture")
 
-find_program(CMAKE_C_COMPILER NAMES i686-android-linux-gcc i686-android-linux-gcc.exe)
-find_program(CMAKE_CXX_COMPILER NAMES i686-android-linux-g++ i686-android-linux-g++.exe)
+find_program(CMAKE_C_COMPILER NAMES i686-linux-android-gcc i686-linux-android-gcc.exe)
+find_program(CMAKE_CXX_COMPILER NAMES i686-linux-android-g++ i686-linux-android-g++.exe)
 set(PKG_CONFIG_EXECUTABLE "i686-android-pkg-config")
 
 get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} PATH)
