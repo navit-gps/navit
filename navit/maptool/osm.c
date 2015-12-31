@@ -519,6 +519,7 @@ static char *attrmap={
 	"?	shop=photo		poi_shop_photo\n"
 	"?	shop=shoes		poi_shop_shoes\n"
 	"?	shop=supermarket	poi_shopping\n"
+        "?      shop=mall               poi_mall\n" 
 	"?	sport=10pin		poi_bowling\n"
 	"?	sport=baseball		poi_baseball\n"
 	"?	sport=basketball	poi_basketball\n"
