@@ -42,6 +42,8 @@ dependencies:
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
     - sudo pip install junit-xml
+#
+    - ls -la $CIRCLE_ARTIFACTS
 test:
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
