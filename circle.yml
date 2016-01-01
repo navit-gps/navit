@@ -30,6 +30,7 @@ dependencies:
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
     - bash ci/build_android.sh
+    - bash ci/build_android_x86.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
@@ -41,6 +42,8 @@ dependencies:
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
     - sudo pip install junit-xml
+#
+    - ls -la $CIRCLE_ARTIFACTS
 test:
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
