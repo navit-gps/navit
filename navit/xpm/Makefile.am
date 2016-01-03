@@ -56,6 +56,7 @@ image_DATA += nav_right_2_32.xpm
 svgs  = gui_about.svg
 svgs += gui_actions.svg
 svgs += gui_active.svg
+svgs += gui_android_menu.svg
 svgs += gui_bookmark.svg
 svgs += gui_formerdests.svg
 svgs += gui_display.svg

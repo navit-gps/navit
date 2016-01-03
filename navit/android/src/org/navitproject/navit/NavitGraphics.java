@@ -32,6 +32,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.FloatMath;
@@ -41,6 +42,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
@@ -792,6 +794,24 @@ public class NavitGraphics
 	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
 	// private int count;
 
+	/**
+	 * @brief Returns whether the device has a hardware menu button.
+	 * 
+	 * Only Android versions starting with ICS (API version 14) support the API call to detect the presence of a
+	 * Menu button. On earlier Android versions, the following assumptions will be made: On API levels up to 10,
+	 * this method will always return {@code true}, as these Android versions relied on devices having a physical
+	 * Menu button. On API levels 11 through 13 (Honeycomb releases), this method will always return
+	 * {@code false}, as Honeycomb was a tablet-only release and did not require devices to have a Menu button.
+	 */
+	public boolean hasMenuButton() {
+		if (Build.VERSION.SDK_INT <= 10)
+			return true;
+		else if (Build.VERSION.SDK_INT <= 13)
+			return false;
+		else
+			return ViewConfiguration.get(activity.getApplication()).hasPermanentMenuKey();
+	}
+	
 	public void setSizeChangedCallback(int id)
 	{
 		SizeChangedCallbackID = id;

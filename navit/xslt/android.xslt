@@ -9,6 +9,7 @@
    <xsl:include href="default_plugins.xslt"/>
    <xsl:include href="map_sdcard_navitmap_bin.xslt"/>
    <xsl:include href="osd_minimum.xslt"/>
+   <xsl:include href="osd_android.xslt"/>
    <xsl:include href="cursor_scale.xslt"/>
    <xsl:template match="/config/plugins/plugin[1]" priority="100">
       <plugin path="$NAVIT_PREFIX/lib/lib*.so" ondemand="yes"/>
