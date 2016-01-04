@@ -17,5 +17,5 @@ else
 	mkdir bin && cd bin
 	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n|| exit -1
 	make  || exit -1
-	cp -r navit/xpm $CIRCLE_ARTIFACTS
 fi
+cp -r navit/xpm $CIRCLE_ARTIFACTS
