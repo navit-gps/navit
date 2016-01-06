@@ -1497,7 +1497,12 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 
 	/* translate properties to real size */
 	osd_std_calculate_sizes(&opc->osd_item, navit_get_width(nav), navit_get_height(nav));
-
+	/* most graphics plugins cannot accept w=0 or h=0. They require special w=-1 or h=-1 for "no size"*/
+	if((opc->osd_item.w <= 0) || (opc->osd_item.h <=0))
+	{
+		opc->osd_item.w = -1;
+		opc->osd_item.h = -1;
+	}
 	dbg(lvl_debug, "enter\n");
 	dbg(lvl_debug, "Get: %s, %d, %d, %d, %d\n", this->src, opc->osd_item.rel_w, opc->osd_item.rel_h, opc->osd_item.w, opc->osd_item.h);
 	this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
