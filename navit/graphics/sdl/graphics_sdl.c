@@ -96,8 +96,6 @@ struct graphics_priv {
     /* </main> */
 };
 
-static int dummy;
-
 #ifdef USE_WEBOS
 # define WEBOS_KEY_SHIFT 0x130
 # define WEBOS_KEY_SYM 0x131
@@ -875,7 +873,7 @@ get_data(struct graphics_priv *this, char const *type)
 	win->disable_suspend=NULL;
 	return win;
     } else {
-	return &dummy;
+	return NULL;
     }
 }
 

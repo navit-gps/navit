@@ -34,8 +34,6 @@
 #include "android.h"
 #include "command.h"
 
-int dummy;
-
 struct graphics_priv {
 	jclass NavitGraphicsClass;
 	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, 
