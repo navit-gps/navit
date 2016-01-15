@@ -205,7 +205,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		GdkPixbufLoader *loader=gdk_pixbuf_loader_new();
 		if (!loader)
 			return NULL;
-		if (*w != -1 || *h != -1)
+		if (*w != IMAGE_W_H_UNSET || *h != IMAGE_W_H_UNSET)
 			gdk_pixbuf_loader_set_size(loader, *w, *h);
 		gdk_pixbuf_loader_write(loader, buffer->start, buffer->len, NULL);
 		gdk_pixbuf_loader_close(loader, NULL);
@@ -213,7 +213,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		g_object_ref(pixbuf);
 		g_object_unref(loader);
 	} else {
-		if (*w == -1 && *h == -1)
+		if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 		else
 			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
