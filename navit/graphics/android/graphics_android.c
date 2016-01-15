@@ -246,9 +246,9 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 	if (localBitmap) {
 		ret->width=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getWidth);
 		ret->height=(*jnienv)->CallIntMethod(jnienv, localBitmap, gra->Bitmap_getHeight);
-		if((*w!=-1 && *w!=ret->width) || (*h!=-1 && *w!=ret->height)) {
+		if((*w!=IMAGE_W_H_UNSET && *w!=ret->width) || (*h!=IMAGE_W_H_UNSET && *w!=ret->height)) {
 			jclass scaledBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapClass, 
-				gra->Bitmap_createScaledBitmap, localBitmap, (*w==-1)?ret->width:*w, (*h==-1)?ret->height:*h, JNI_TRUE);
+				gra->Bitmap_createScaledBitmap, localBitmap, (*w==IMAGE_W_H_UNSET)?ret->width:*w, (*h==IMAGE_W_H_UNSET)?ret->height:*h, JNI_TRUE);
 			if(!scaledBitmap) {
 				dbg(lvl_error,"Bitmap scaling to %dx%d failed for %s",*w,*h,path);
 			} else {

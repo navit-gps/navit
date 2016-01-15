@@ -654,11 +654,12 @@ void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsig
 }
 
 /**
- * Create a new image from file path scaled to w and h pixels
+ * @brief Create a new image from file path, optionally scaled to w and h pixels.
+ *
  * @param gra the graphics instance
  * @param path path of the image to load
- * @param w width to rescale to
- * @param h height to rescale to
+ * @param w width to rescale to, or IMAGE_W_H_UNSET for original width
+ * @param h height to rescale to, or IMAGE_W_H_UNSET for original height
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
@@ -684,7 +685,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 			case 1:
 				/* The best variant both for cpu usage and quality would be prescaled png of a needed size */
 				mode++;
-				if (width != -1 && height != -1) {
+				if (width != IMAGE_W_H_UNSET && height != IMAGE_W_H_UNSET) {
 					new_name=g_strdup_printf("%s_%d_%d.png", name, width, height);
 				}
 				break;
@@ -782,12 +783,13 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 }
 
 /**
- * Create a new image from file path scaled to w and h pixels and possibly rotated
+ * @brief Create a new image from file path, optionally scaled to w and h pixels and rotated.
+ *
  * @param gra the graphics instance
  * @param path path of the image to load
- * @param w width to rescale to
- * @param h height to rescale to
- * @param rotate angle to rotate the image. Warning, graphics might only support 90 degree steps here
+ * @param w width to rescale to, or IMAGE_W_H_UNSET for original width
+ * @param h height to rescale to, or IMAGE_W_H_UNSET for original height
+ * @param rotate angle to rotate the image, in 90 degree steps (not supported by all plugins).
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
@@ -818,7 +820,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 		char *pathi=paths[i];
 		int len=strlen(pathi);
 		int i,k;
-		int newwidth=-1, newheight=-1;
+		int newwidth=IMAGE_W_H_UNSET, newheight=IMAGE_W_H_UNSET;
 
 		ext=g_utf8_strrchr(pathi,-1,'.');
 		i=pathi-ext+len;
@@ -855,8 +857,8 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 		}
 		
 		if(k==1 || s<=pathi || *s!='_') {
-			newwidth=-1;
-			newheight=-1;
+			newwidth=IMAGE_W_H_UNSET;
+			newheight=IMAGE_W_H_UNSET;
 			if(ext)
 				s=ext;
 			else
@@ -865,9 +867,9 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 		}
 		
 		/* If exact h and w values were given as function parameters, they take precedence over values guessed from the image name */
-		if(w!=-1)
+		if(w!=IMAGE_W_H_UNSET)
 			newwidth=w;
-		if(h!=-1)
+		if(h!=IMAGE_W_H_UNSET)
 			newheight=h;
 			
 		name=g_strndup(pathi,s-pathi);
@@ -899,7 +901,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 */
 struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
 {
-	return graphics_image_new_scaled_rotated(gra, path, -1, -1, 0);
+	return graphics_image_new_scaled_rotated(gra, path, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
 }
 
 /**
@@ -2138,7 +2140,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	case element_image:
 		dbg(lvl_debug,"image: '%s'\n", di->label);
 		if (gra->meth.draw_image_warp) {
-			img=graphics_image_new_scaled_rotated(gra, di->label, -1, -1, 0);
+			img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
 			if (img)
 				gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, img->priv);
 		} else

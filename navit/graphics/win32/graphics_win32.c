@@ -1445,9 +1445,9 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         /* Hash_key will be freed ater the hash table, so set it to NULL here to disable freing it on this function return */
         hash_key=NULL;
         if(ret) {
-            if (*w==-1)
+            if (*w==IMAGE_W_H_UNSET)
                 *w=ret->width;
-            if (*h==-1)
+            if (*h==IMAGE_W_H_UNSET)
                 *h=ret->height;
             if (*w!=ret->width || *h!=ret->height) {
                 if(ret->png_pixels && ret->hBitmap)
