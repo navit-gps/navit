@@ -18,10 +18,11 @@
     <application android:label="@string/app_name"
                  android:icon="@drawable/icon"
                  android:name=".NavitAppConfig"
-                 android:theme="@style/NavitTheme">
+                 android:theme="@style/NavitBaseTheme">
         <activity android:name="Navit"
                   android:label="@string/app_name"
-                  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize">
+                  android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
+                  android:theme="@style/NavitTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
