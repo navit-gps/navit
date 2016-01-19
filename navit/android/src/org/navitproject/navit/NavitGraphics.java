@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -199,11 +201,8 @@ public class NavitGraphics
 			Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="
 					+ Navit.metrics.scaledDensity);
 			super.onSizeChanged(w, h, oldw, oldh);
-			draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-			draw_canvas = new Canvas(draw_bitmap);
-			bitmap_w = w;
-			bitmap_h = h;
-			SizeChangedCallback(SizeChangedCallbackID, w, h);
+			
+			handleResize(w, h);
 		}
 
 		public void do_longpress_action()
@@ -783,6 +782,7 @@ public class NavitGraphics
 		};
 
 	public native void SizeChangedCallback(int id, int x, int y);
+	public native void PaddingChangedCallback(int id, int left, int right, int top, int bottom);
 	public native void KeypressCallback(int id, String s);
 	public native int CallbackMessageChannel(int i, String s);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
@@ -791,8 +791,74 @@ public class NavitGraphics
 	public static native String[][] GetAllCountries();
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
-	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
+	private int		SizeChangedCallbackID, PaddingChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
 	// private int count;
+	
+	/**
+	 * @brief Handles resize events.
+	 * 
+	 * This method is called whenever the main View is resized in any way. This is the case when its
+	 * {@code onSizeChanged()} event handler fires or when toggling Fullscreen mode.
+	 * 
+	 * It (re-)evaluates if and where the navigation bar is going to be shown, and calculates the
+	 * padding for objects which should not be obstructed.
+	 */
+	public void handleResize(int w, int h) {
+		if (this.parent_graphics != null)
+			this.parent_graphics.handleResize(w, h);
+		else {
+			Log.d("NavitGraphics", String.format("handleResize w=%d h=%d", w, h));
+			/*
+			 * The code would work on API14+ but is meaningful only on API17+
+			 */
+			if (Build.VERSION.SDK_INT >= 17) {
+				Navit navit = null;
+				if (activity instanceof Navit) {
+					navit = (Navit) activity;
+					/*
+					 * Determine visibility of status bar.
+					 * The status bar is always visible unless we are in fullscreen mode.
+					 */
+					Boolean isStatusShowing = !navit.isFullscreen;
+
+					/*
+					 * Determine visibility of navigation bar.
+					 * This logic is based on the presence of a hardware menu button and is known to work on
+					 * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
+					 */
+					Boolean isNavShowing = !ViewConfiguration.get(navit.getApplication()).hasPermanentMenuKey();
+
+					Log.d("NavitGraphics", String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
+
+					/*
+					 * Determine where the navigation bar would be displayed.
+					 * Logic is taken from AOSP RenderSessionImpl.findNavigationBar()
+					 * (platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java)
+					 */
+					Boolean isLandscape = (navit.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+					Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+					Log.d("NavitGraphics", String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)", 
+							isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
+
+					int left = 0;
+					int top = isStatusShowing ? Navit.status_bar_height : 0;
+					int right = (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0;
+					int bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height;
+
+					Log.d("NavitGraphics", String.format("Padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom));
+
+					PaddingChangedCallback(PaddingChangedCallbackID, left, top, right, bottom);
+				} else
+					Log.e("NavitGraphics", "Main Activity is not a Navit instance, cannot update padding");
+			}
+
+			draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+			draw_canvas = new Canvas(draw_bitmap);
+			bitmap_w = w;
+			bitmap_h = h;
+			SizeChangedCallback(SizeChangedCallbackID, w, h);
+		}
+	}
 
 	/**
 	 * @brief Returns whether the device has a hardware menu button.
@@ -802,6 +868,10 @@ public class NavitGraphics
 	 * this method will always return {@code true}, as these Android versions relied on devices having a physical
 	 * Menu button. On API levels 11 through 13 (Honeycomb releases), this method will always return
 	 * {@code false}, as Honeycomb was a tablet-only release and did not require devices to have a Menu button.
+	 * 
+	 * Note that this method is not aware of non-standard mechanisms on some customized builds of Android. For
+	 * example, CyanogenMod has an option to add a menu button to the navigation bar. Even with that option,
+	 * this method will still return `false`.
 	 */
 	public boolean hasMenuButton() {
 		if (Build.VERSION.SDK_INT <= 10)
@@ -815,6 +885,10 @@ public class NavitGraphics
 	public void setSizeChangedCallback(int id)
 	{
 		SizeChangedCallbackID = id;
+	}
+	public void setPaddingChangedCallback(int id)
+	{
+		PaddingChangedCallbackID = id;
 	}
 	public void setButtonCallback(int id)
 	{

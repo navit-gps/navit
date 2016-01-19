@@ -64,6 +64,7 @@ struct graphics_priv {
 
 	struct callback_list *cbl;
 	struct window win;
+	struct padding *padding;
 };
 
 struct graphics_font_priv {
@@ -419,9 +420,11 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 static void *
 get_data(struct graphics_priv *this, const char *type)
 {
-	if (strcmp(type,"window"))
-		return NULL;
-	return &this->win;
+	if (!strcmp(type,"padding"))
+		return this->padding;
+	if (!strcmp(type,"window"))
+		return &this->win;
+	return NULL;
 }
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
@@ -496,7 +499,18 @@ static void
 resize_callback(struct graphics_priv *gra, int w, int h)
 {
 	dbg(lvl_debug,"w=%d h=%d ok\n",w,h);
+	dbg(lvl_debug,"gra=%p, %d callbacks in list\n", gra, g_list_length(gra->cbl));
 	 callback_list_call_attr_2(gra->cbl, attr_resize, (void *)w, (void *)h);
+}
+
+static void
+padding_callback(struct graphics_priv *gra, int left, int top, int right, int bottom)
+{
+	dbg(lvl_debug, "win.padding left=%d top=%d right=%d bottom=%d ok\n", left, top, right, bottom);
+	gra->padding->left = left;
+	gra->padding->top = top;
+	gra->padding->right = right;
+	gra->padding->bottom = bottom;
 }
 
 static void
@@ -569,6 +583,8 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	jmethodID cid, Context_getPackageName;
 
 	dbg(lvl_debug,"at 2 jnienv=%p\n",jnienv);
+	if (parent)
+		ret->padding = parent->padding;
 	if (!find_class_global("android/graphics/Paint", &ret->PaintClass))
 		return 0;
 	if (!find_method(ret->PaintClass, "<init>", "(I)V", &ret->Paint_init))
@@ -642,6 +658,14 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0; /* exception thrown */
 	}
 	cb=callback_new_1(callback_cast(resize_callback), ret);
+	(*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setPaddingChangedCallback", "(I)V");
+	if (cid == NULL) {
+		dbg(lvl_error,"no SetPaddingCallback method found\n");
+		return 0; /* exception thrown */
+	}
+	cb=callback_new_1(callback_cast(padding_callback), ret);
 	(*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
 
 	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setButtonCallback", "(I)V");
@@ -801,6 +825,11 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	ret->win.priv=ret;
 	ret->win.fullscreen=graphics_android_fullscreen;
 	ret->win.disable_suspend=graphics_android_disable_suspend;
+	ret->padding = g_new0(struct padding, 1);
+	ret->padding->left = 0;
+	ret->padding->top = 0;
+	ret->padding->right = 0;
+	ret->padding->bottom = 0;
 	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
 		use_camera=attr->u.num;
 	}
