@@ -196,7 +196,9 @@ osd_std_calculate_sizes(struct osd_item *item, int w, int h)
  * @brief Recalculates the size and position of an OSD item and
  * triggers a redraw of the item.
  *
- * @param item
+ * This is a callback function that can be stored in the `resize_cb` member of an OSD item.
+ *
+ * @param item The OSD item to resize and redraw
  * @param priv
  * @param w Available screen width in pixels (the width that corresponds to
  * 100%)
