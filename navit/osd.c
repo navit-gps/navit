@@ -395,6 +395,16 @@ osd_set_keypress(struct navit *nav, struct osd_item *item)
 	}
 }
 
+/**
+ * @brief Sets up the graphics for an item.
+ *
+ * This method creates a new graphics overlay for an item and initializes its attributes (colors, font
+ * and callbacks for resize and key events).
+ *
+ * @param nav The navit object
+ * @param item The OSD item
+ * @param priv The `struct osd_priv` for the OSD item
+ */
 void
 osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv)
 {
