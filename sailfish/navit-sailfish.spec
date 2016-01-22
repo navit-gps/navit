@@ -1,19 +1,44 @@
 # $Id$
 # Authority: dries
+%global navit_version_minor %(grep NAVIT_VERSION_MINOR ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+%global navit_version_major %(grep NAVIT_VERSION_MAJOR ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+%global navit_version_patch %(grep NAVIT_VERSION_PATCH ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+%global navit_version %{navit_version_major}.%{navit_version_minor}.%{navit_version_patch}
+%global git_version %(git describe --tags | sed y/-/_/)
 
 Name: navit
 Summary: Open Source car navigation system
-Version: R6485_metalstrolch
-Release: 1%{?dist}
+Version: %{navit_version}_%{git_version}
+Release: metalstrolch
 License: GPL
 Group: Applications/Productivity
 URL: http://navit.sourceforge.net/
 
 BuildRequires: gcc
+BuildRequires: cmake
 BuildRequires: glib2-devel
+BuildRequires: gettext-devel
 BuildRequires: freetype-devel
 BuildRequires: zlib-devel
-BuildRequires: cmake
+BuildRequires: qt5-qtcore-devel
+BuildRequires: qt5-qtwidgets-devel
+BuildRequires: qt5-qtdeclarative-devel
+BuildRequires: qt5-qtdbus-devel
+BuildRequires: qt5-qtpositioning-devel
+BuildRequires: qt5-qtxml-devel
+BuildRequires: qt5-qtsvg-devel
+
+Requires: glib2
+Requires: gettext
+Requires: freetype
+Requires: zlib
+Requires: qt5-qtcore
+Requires: qt5-qtwidgets
+Requires: qt5-qtdeclarative
+Requires: qt5-qtdbus
+Requires: qt5-qtpositioning
+Requires: qt5-qtxml
+Requires: qt5-qtsvg
 
 %global navit_real_source %{navit_source}
 
@@ -39,7 +64,11 @@ mkdir navit-build
 %define debug_package %{nil}
 %{__rm} -rf %{buildroot}
 #cmake git files directly 
-cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr %{navit_real_source}
+cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+       -Dspeech/dbus:BOOL=FALSE \
+       -Dbinding/dbus:BOOL=FALSE \
+       -Dvehicle/gpsd_dbus:BOOL=FALSE \
+         %{navit_real_source}
 %{__make}
 
 %install
