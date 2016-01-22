@@ -29,7 +29,7 @@ BuildRequires: qt5-qtxml-devel
 BuildRequires: qt5-qtsvg-devel
 
 Requires: glib2
-Requires: gettext
+Requires: gettext-libs
 Requires: freetype
 Requires: zlib
 Requires: qt5-qtcore
