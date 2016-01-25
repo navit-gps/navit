@@ -2591,6 +2591,18 @@ navit_set_cursors(struct navit *this_)
 	return;
 }
 
+
+/**
+ * @brief Calculates the position of the cursor on the screen.
+ *
+ * @param this_ The navit object
+ * @param p Receives the screen coordinates for the cursor
+ * @param keep_orientation Whether to maintain the current map orientation. If false, the map will be
+ * rotated so that the bearing of the vehicle is up.
+ * @param dir Receives the new map orientation as requested by `screen_orientation` (can be `NULL`)
+ *
+ * @return Always 1
+ */
 static int
 navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir)
 {
@@ -2602,7 +2614,7 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
         float min_offset = 0.;      // Percent offset at min_offset_speed.
         float max_offset = 30.;     // Percent offset at max_offset_speed.
         int min_offset_speed = 2;   // Speed in km/h
-        int max_offset_speed = 50;  // Speed ini km/h
+        int max_offset_speed = 50;  // Speed in km/h
         // Calculate cursor offset from the center of the screen, upon speed.
         if (nv->speed <= min_offset_speed) {
             offset = min_offset;
