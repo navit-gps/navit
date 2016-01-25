@@ -2318,6 +2318,10 @@ navit_set_cursors(struct navit *this_)
 /**
  * @brief Calculates the position of the cursor on the screen.
  *
+ * This method considers padding if supported by the graphics plugin. In that case, the inner rectangle
+ * (i.e. screen size minus padding) will be used to center the cursor and to determine cursor offset (as
+ * specified in `this_->radius`).
+ *
  * @param this_ The navit object
  * @param p Receives the screen coordinates for the cursor
  * @param keep_orientation Whether to maintain the current map orientation. If false, the map will be
@@ -2331,6 +2335,7 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
 {
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
+	struct padding *padding = NULL;
 
         float offset=this_->radius;      // Cursor offset from the center of the screen (percent).
 #if 0 /* Better improve track.c to get that issue resolved or make it configurable with being off the default, the jumping back to the center is a bit annoying */
@@ -2348,7 +2353,20 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
         }
 #endif
 
+	if (this_->gra) {
+		padding = graphics_get_data(this_->gra, "padding");
+	} else
+		dbg(lvl_warning, "cannot get padding: this->gra is NULL\n");
+
 	transform_get_size(this_->trans, &width, &height);
+	dbg(lvl_debug, "width=%d height=%d\n", width, height);
+
+	if (padding) {
+		width -= (padding->left + padding->right);
+		height -= (padding->top + padding->bottom);
+		dbg(lvl_debug, "corrected for padding: width=%d height=%d\n", width, height);
+	}
+
 	if (this_->orientation == -1 || keep_orientation) {
 		p->x=50*width/100;
 		p->y=(50 + offset)*height/100;
@@ -2367,6 +2385,14 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
 		if (dir)
 			*dir=this_->orientation;
 	}
+
+	if (padding) {
+		p->x += padding->left;
+		p->y += padding->top;
+	}
+
+	dbg(lvl_debug, "x=%d y=%d, offset=%f\n", p->x, p->y, offset);
+
 	return 1;
 }
 
