@@ -212,6 +212,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 {
 	struct menu_data *md;
 
+	if (!this->keyboard)
+		return;
+
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
 		GList *lk=md->keyboard->children;

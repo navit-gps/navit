@@ -16,6 +16,9 @@ void
 gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 {
 	struct menu_data *md;
+
+	if (!this->keyboard)
+		return;
 	md=gui_internal_menu_data(this);
 	// Switch to lowercase after the first key is pressed
 	if (md->keyboard_mode == 10) // Latin
@@ -30,6 +33,9 @@ void
 gui_internal_keyboard_to_lower_case(struct gui_priv *this)
 {
 	struct menu_data *md;
+
+	if (!this->keyboard)
+		return;
 	md=gui_internal_menu_data(this);
 	// Switch to lowercase after the first key is pressed
 	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2)) // Latin
