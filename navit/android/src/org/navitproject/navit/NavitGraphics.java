@@ -29,6 +29,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -40,12 +41,15 @@ import android.os.Message;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 
@@ -61,6 +65,9 @@ public class NavitGraphics
 	int                              overlay_disabled;
 	float                            trackball_x, trackball_y;
 	View                             view;
+	SystemBarTintView                navigationTintView;
+	SystemBarTintView                statusTintView;
+	FrameLayout                      frameLayout;
 	RelativeLayout                   relativelayout;
 	NavitCamera                      camera;
 	Activity                         activity;
@@ -686,6 +693,15 @@ public class NavitGraphics
 		
 	}
 	
+	private class SystemBarTintView extends View {
+
+		public SystemBarTintView(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+		
+	}
+	
 	public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
 			int wraparound, int use_camera)
 	{
@@ -698,14 +714,26 @@ public class NavitGraphics
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
 			view.setKeepScreenOn(true);
+			frameLayout = new FrameLayout(activity);
 			relativelayout = new RelativeLayout(activity);
+			frameLayout.addView(relativelayout);
 			if (use_camera != 0)
 			{
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
+			
+			// TODO get colors from config
+			navigationTintView = new SystemBarTintView(activity);
+			navigationTintView.setBackgroundColor(Color.argb(160, 0, 0, 0));
+			
+			statusTintView = new SystemBarTintView(activity);
+			statusTintView.setBackgroundColor(Color.argb(160, 0, 0, 0));
+			
+			frameLayout.addView(navigationTintView);
+			frameLayout.addView(statusTintView);
 
-			activity.setContentView(relativelayout);
+			activity.setContentView(frameLayout);
 			view.requestFocus();
 		}
 		else
@@ -819,14 +847,14 @@ public class NavitGraphics
 					 * Determine visibility of status bar.
 					 * The status bar is always visible unless we are in fullscreen mode.
 					 */
-					Boolean isStatusShowing = !navit.isFullscreen;
+					final Boolean isStatusShowing = !navit.isFullscreen;
 
 					/*
 					 * Determine visibility of navigation bar.
 					 * This logic is based on the presence of a hardware menu button and is known to work on
 					 * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
 					 */
-					Boolean isNavShowing = !ViewConfiguration.get(navit.getApplication()).hasPermanentMenuKey();
+					final Boolean isNavShowing = !ViewConfiguration.get(navit.getApplication()).hasPermanentMenuKey();
 
 					Log.d("NavitGraphics", String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
 
@@ -836,14 +864,41 @@ public class NavitGraphics
 					 * (platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java)
 					 */
 					Boolean isLandscape = (navit.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-					Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+					final Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
 					Log.d("NavitGraphics", String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)", 
 							isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
 
 					int left = 0;
 					int top = isStatusShowing ? Navit.status_bar_height : 0;
 					int right = (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0;
-					int bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height;
+					final int bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height;
+					
+					/* hide tint bars during update to prevent ugly effects */
+					statusTintView.setVisibility(View.GONE);
+					navigationTintView.setVisibility(View.GONE);
+					
+					frameLayout.post(new Runnable() {
+						@Override
+						public void run() {
+							statusTintView.setVisibility(isStatusShowing ? View.VISIBLE : View.GONE);
+							LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Navit.status_bar_height, Gravity.TOP);
+							Log.d("NavitGraphics", String.format("statusLayoutParams: x=%d y=%d gravity=TOP (hardcoded)",
+									statusLayoutParams.width, statusLayoutParams.height));
+							statusTintView.setLayoutParams(statusLayoutParams);
+							Log.d("NavitGraphics", String.format("statusTintView: width=%d height=%d",
+									statusTintView.getWidth(), statusTintView.getHeight()));
+							// FIXME views will overlap when status is showing and navigation is on the right
+
+							navigationTintView.setVisibility(isNavShowing ? View.VISIBLE : View.GONE);
+							LayoutParams navigationLayoutParams = new FrameLayout.LayoutParams(
+									isNavAtBottom ? LayoutParams.MATCH_PARENT : Navit.navigation_bar_width,  // X
+											isNavAtBottom ? bottom : LayoutParams.MATCH_PARENT, // Y
+													Gravity.BOTTOM | Gravity.RIGHT);
+							navigationTintView.setLayoutParams(navigationLayoutParams);
+							Log.d("NavitGraphics", String.format("navigationTintView: width=%d height=%d",
+									navigationTintView.getWidth(), navigationTintView.getHeight()));
+						}
+					});
 
 					Log.d("NavitGraphics", String.format("Padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom));
 
