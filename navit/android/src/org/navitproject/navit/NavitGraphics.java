@@ -881,13 +881,14 @@ public class NavitGraphics
 						@Override
 						public void run() {
 							statusTintView.setVisibility(isStatusShowing ? View.VISIBLE : View.GONE);
-							LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Navit.status_bar_height, Gravity.TOP);
+							FrameLayout.LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Navit.status_bar_height, Gravity.TOP);
+							/* Prevent tint views from overlapping when navigation is on the right */
+							statusLayoutParams.setMargins(0, 0, (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
 							Log.d("NavitGraphics", String.format("statusLayoutParams: x=%d y=%d gravity=TOP (hardcoded)",
 									statusLayoutParams.width, statusLayoutParams.height));
 							statusTintView.setLayoutParams(statusLayoutParams);
 							Log.d("NavitGraphics", String.format("statusTintView: width=%d height=%d",
 									statusTintView.getWidth(), statusTintView.getHeight()));
-							// FIXME views will overlap when status is showing and navigation is on the right
 
 							navigationTintView.setVisibility(isNavShowing ? View.VISIBLE : View.GONE);
 							LayoutParams navigationLayoutParams = new FrameLayout.LayoutParams(
