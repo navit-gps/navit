@@ -63,6 +63,7 @@ public class NavitGraphics
 	int                              pos_y;
 	int                              pos_wraparound;
 	int                              overlay_disabled;
+	int                              bgcolor;
 	float                            trackball_x, trackball_y;
 	View                             view;
 	SystemBarTintView                navigationTintView;
@@ -79,6 +80,14 @@ public class NavitGraphics
 	private static long              interval_for_long_press           = 200L;
 
 	private Handler timer_handler = new Handler();
+	
+	public void setBackgroundColor(int bgcolor) {
+		this.bgcolor = bgcolor;
+		if (navigationTintView != null)
+			navigationTintView.setBackgroundColor(bgcolor);
+		if (statusTintView != null)
+			statusTintView.setBackgroundColor(bgcolor);
+	}
 
 	public void SetCamera(int use_camera)
 	{
@@ -697,7 +706,7 @@ public class NavitGraphics
 
 		public SystemBarTintView(Context context) {
 			super(context);
-			// TODO Auto-generated constructor stub
+			this.setBackgroundColor(bgcolor);
 		}
 		
 	}
@@ -723,13 +732,8 @@ public class NavitGraphics
 			}
 			relativelayout.addView(view);
 			
-			// TODO get colors from config
 			navigationTintView = new SystemBarTintView(activity);
-			navigationTintView.setBackgroundColor(Color.argb(160, 0, 0, 0));
-			
 			statusTintView = new SystemBarTintView(activity);
-			statusTintView.setBackgroundColor(Color.argb(160, 0, 0, 0));
-			
 			frameLayout.addView(navigationTintView);
 			frameLayout.addView(statusTintView);
 

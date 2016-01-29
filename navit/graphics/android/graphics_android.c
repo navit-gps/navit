@@ -39,7 +39,8 @@ struct graphics_priv {
 	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, 
 		NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, 
 		NavitGraphics_draw_image_warp, NavitGraphics_draw_mode, NavitGraphics_draw_drag, 
-		NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera;
+		NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera,
+		NavitGraphics_setBackgroundColor;
 
 	jclass PaintClass;
 	jmethodID Paint_init,Paint_setStrokeWidth,Paint_setARGB;
@@ -65,6 +66,7 @@ struct graphics_priv {
 	struct callback_list *cbl;
 	struct window win;
 	struct padding *padding;
+	jint bgcolor;
 };
 
 struct graphics_font_priv {
@@ -466,6 +468,18 @@ set_attr(struct graphics_priv *gra, struct attr *attr)
 	case attr_use_camera:
 		(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_SetCamera, attr->u.num);
 		return 1;
+	case attr_background_color:
+		gra->bgcolor = (attr->u.color->a / 0x101) << 24
+				| (attr->u.color->r / 0x101) << 16
+				| (attr->u.color->g / 0x101) << 8
+				| (attr->u.color->b / 0x101);
+		dbg(lvl_debug, "set attr_background_color %04x %04x %04x %04x (%08x)\n",
+				attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, gra->bgcolor);
+		if (gra->NavitGraphics_setBackgroundColor != NULL)
+			(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_setBackgroundColor, gra->bgcolor);
+		else
+			dbg(lvl_error, "NavitGraphics.setBackgroundColor not found, cannot set background color\n");
+		return 1;
 	default:
 		return 0;
 	}
@@ -814,6 +828,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	struct attr *attr;
 	int use_camera=0;
 	jmethodID cid;
+	jint android_bgcolor;
 
 	dbg(lvl_debug, "enter\n");
 	if (!event_request_system("android","graphics_android"))
@@ -830,6 +845,18 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	ret->padding->top = 0;
 	ret->padding->right = 0;
 	ret->padding->bottom = 0;
+	/* attr_background_color is the background color for system bars (API 17+ only) */
+	if ((attr=attr_search(attrs, NULL, attr_background_color))) {
+		ret->bgcolor = (attr->u.color->a / 0x101) << 24
+				| (attr->u.color->r / 0x101) << 16
+				| (attr->u.color->g / 0x101) << 8
+				| (attr->u.color->b / 0x101);
+		dbg(lvl_debug, "attr_background_color %04x %04x %04x %04x (%08x)\n",
+				attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, ret->bgcolor);
+	} else {
+		/* default is the same as for OSD */
+		ret->bgcolor = 0x60000000;
+	}
 	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
 		use_camera=attr->u.num;
 	}
@@ -853,6 +880,10 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 			navit_object_set_attr((struct navit_object *) nav, attr);
 			dbg(lvl_debug, "attr_has_menu_button=%d\n", attr->u.num);
 			g_free(attr);
+		}
+		ret->NavitGraphics_setBackgroundColor = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setBackgroundColor", "(I)V");
+		if (ret->NavitGraphics_setBackgroundColor != NULL) {
+			(*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, ret->NavitGraphics_setBackgroundColor, ret->bgcolor);
 		}
 		dbg(lvl_debug,"returning %p\n",ret);
 		return ret;
