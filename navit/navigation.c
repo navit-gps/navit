@@ -710,7 +710,7 @@ char *nav_status_to_text(int status) {
 		ret = g_strdup("status_routing");
 		break;
 	default:
-		ret = g_strdup_printf("status_unknown_%d)", status);
+		ret = g_strdup_printf("status_unknown_%d", status);
 	}
 	return ret;
 }
