@@ -1724,12 +1724,16 @@ struct navigation_status {
 
 
 /**
- * @brief Draws a {@code navigation_status} OSD.
+ * @brief Draws a `navigation_status` OSD.
+ *
+ * This method performs the actual operation of selecting and drawing the image. It can be called
+ * directly as a callback method for the `navigation.nav_status` attribute, or indirectly through the
+ * draw method.
  *
  * @param opc The OSD to draw
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
-static void osd_navigation_status_draw(struct osd_priv_common *opc, int status) {
+static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int status) {
 	struct navigation_status *this = (struct navigation_status *)opc->data;
 	struct point p;
 	int do_draw = opc->osd_item.do_draw;
@@ -1789,6 +1793,29 @@ static void osd_navigation_status_draw(struct osd_priv_common *opc, int status) 
 
 
 /**
+ * @brief Draws a `navigation_status` OSD.
+ *
+ * This is the draw method for the OSD. It exposes the standard signature for the `draw` method and acts
+ * as a wrapper around `osd_navigation_status_draw_do()`.
+ *
+ * @param osd The OSD to draw.
+ * @param navit The navit instance
+ * @param v The vehicle (not used but part of the prototype)
+ */
+static void osd_navigation_status_draw(struct osd_priv *osd, struct navit *navit, struct vehicle *v) {
+	struct navigation *nav = NULL;
+	struct attr attr;
+
+	if (navit)
+		nav = navit_get_navigation(navit);
+	if (nav) {
+		if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
+			osd_navigation_status_draw_do((struct osd_priv_common *) osd, attr.u.num);
+	}
+}
+
+
+/**
  * @brief Initializes a new {@code navigation_status} OSD.
  *
  * This function is registered as a callback function in {@link osd_navigation_status_new(struct navit *, struct osd_methods *, struct attr **)}.
@@ -1807,9 +1834,9 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 	if (navit)
 		nav = navit_get_navigation(navit);
 	if (nav) {
-		navigation_register_callback(nav, attr_nav_status, callback_new_attr_1(callback_cast(osd_navigation_status_draw), attr_nav_status, opc));
+		navigation_register_callback(nav, attr_nav_status, callback_new_attr_1(callback_cast(osd_navigation_status_draw_do), attr_nav_status, opc));
 		if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
-			osd_navigation_status_draw(opc, attr.u.num);
+			osd_navigation_status_draw_do(opc, attr.u.num);
 	}
 	else
 		dbg(lvl_error, "navigation instance is NULL, OSD will never update\n");
