@@ -888,8 +888,6 @@ public class NavitGraphics
 							FrameLayout.LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Navit.status_bar_height, Gravity.TOP);
 							/* Prevent tint views from overlapping when navigation is on the right */
 							statusLayoutParams.setMargins(0, 0, (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
-							Log.d("NavitGraphics", String.format("statusLayoutParams: x=%d y=%d gravity=TOP (hardcoded)",
-									statusLayoutParams.width, statusLayoutParams.height));
 							statusTintView.setLayoutParams(statusLayoutParams);
 							Log.d("NavitGraphics", String.format("statusTintView: width=%d height=%d",
 									statusTintView.getWidth(), statusTintView.getHeight()));
