@@ -17,6 +17,7 @@ dependencies:
     - sudo apt-get install libfreetype6-dev
     - sudo apt-get install libdbus-glib-1-dev
     - sudo apt-get install g++
+    - sudo apt-get install mpd mpc
     - bash ci/update_version.sh prepare
     - bash ci/import_translations.sh
     - bash ci/build_linux.sh
