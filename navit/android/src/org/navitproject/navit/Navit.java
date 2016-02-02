@@ -246,6 +246,8 @@ public class Navit extends Activity
 		super.onCreate(savedInstanceState);
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		else
+			this.getActionBar().hide();
 
 		dialogs = new NavitDialogs(this);
 
@@ -590,6 +592,16 @@ public class Navit extends Activity
 				break;
 		}
 	}
+	
+	/**
+	 * @brief Shows the Options menu.
+	 * 
+	 * Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
+	 * the overflow button in the Action bar.
+	 */
+	public void showMenu() {
+		openOptionsMenu();
+	}
 
 	void setDestination(float latitude, float longitude, String address) {
 		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
@@ -690,24 +702,16 @@ public class Navit extends Activity
 		NavitDestroy();
 	}
 	
-	public void fullscreen(int fullscreen) 
-	{
-		if(fullscreen != 0) 
-		{
+	public void fullscreen(int fullscreen) {
+		if(fullscreen != 0) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
-				this.getActionBar().hide();
 		}
-		else 
-		{
+		else {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
-				this.getActionBar().show();
 		}
 	}
-
 
 	public void disableSuspend()
 	{

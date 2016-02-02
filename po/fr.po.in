@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-11-09 11:15+0000\n"
+"PO-Revision-Date: 2015-11-25 21:48+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
@@ -2448,6 +2448,7 @@ msgstr "prêt"
 
 msgid "Media selected for map storage is not available"
 msgstr ""
+"Le support sélectionné pour le stockage de la carte n'est pas disponible"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2677,7 +2678,7 @@ msgstr "Correspondance partielle"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr "Recherche en cours..."
+msgstr "Recherche..."
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2693,7 +2694,7 @@ msgstr "Chargement des résultats de recherche"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr "Pas de résultats trouvés"
+msgstr "Aucun résultat trouvé"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
@@ -2713,7 +2714,7 @@ msgstr "Veuillez insérer une carte SD"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Sauvegarde en cours..."
+msgstr "Sauvegarde..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."

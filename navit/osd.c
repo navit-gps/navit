@@ -196,7 +196,9 @@ osd_std_calculate_sizes(struct osd_item *item, int w, int h)
  * @brief Recalculates the size and position of an OSD item and
  * triggers a redraw of the item.
  *
- * @param item
+ * This is a callback function that can be stored in the `resize_cb` member of an OSD item.
+ *
+ * @param item The OSD item to resize and redraw
  * @param priv
  * @param w Available screen width in pixels (the width that corresponds to
  * 100%)
@@ -273,10 +275,10 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 
 	item->flags=flags;
 	item->osd_configuration=-1;
-	item->color_white.r = 0xffff;
-	item->color_white.g = 0xffff;
-	item->color_white.b = 0xffff;
-	item->color_white.a = 0xffff;
+	item->color_fg.r = 0xffff;
+	item->color_fg.g = 0xffff;
+	item->color_fg.b = 0xffff;
+	item->color_fg.a = 0xffff;
 	item->text_color.r = 0xffff;
 	item->text_color.g = 0xffff;
 	item->text_color.b = 0xffff;
@@ -335,6 +337,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	attr=attr_search(attrs, NULL, attr_text_color);
 	if (attr)
 		item->text_color=*attr->u.color;
+	attr=attr_search(attrs, NULL, attr_foreground_color);
+	if (attr)
+		item->color_fg=*attr->u.color;
 	attr=attr_search(attrs, NULL, attr_accesskey);
 	if (attr)
 		item->accesskey = g_strdup(attr->u.str);
@@ -390,6 +395,16 @@ osd_set_keypress(struct navit *nav, struct osd_item *item)
 	}
 }
 
+/**
+ * @brief Sets up the graphics for an item.
+ *
+ * This method creates a new graphics overlay for an item and initializes its attributes (colors, font
+ * and callbacks for resize and key events).
+ *
+ * @param nav The navit object
+ * @param item The OSD item
+ * @param priv The `struct osd_priv` for the OSD item
+ */
 void
 osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv)
 {
@@ -403,8 +418,8 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 	graphics_gc_set_foreground(item->graphic_bg, &item->color_bg);
 	graphics_background_gc(item->gr, item->graphic_bg);
 
-	item->graphic_fg_white = graphics_gc_new(item->gr);
-	graphics_gc_set_foreground(item->graphic_fg_white, &item->color_white);
+	item->graphic_fg = graphics_gc_new(item->gr);
+	graphics_gc_set_foreground(item->graphic_fg, &item->color_fg);
 
 	if (item->flags & 2) {
 		item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size, 1);

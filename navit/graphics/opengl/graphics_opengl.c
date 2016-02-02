@@ -451,7 +451,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 		width = FreeImage_GetWidth(image);
 		height = FreeImage_GetHeight(image);
 
-		if ((*w != width || *h != height) && 0 < *w && 0 < *h) {
+		if ((*w != width || *h != height) && *w != IMAGE_W_H_UNSET && *h != IMAGE_W_H_UNSET) {
 			FIBITMAP *image2;
 			image2 = FreeImage_Rescale(image, *w, *h, FILTER_BOX);
 			FreeImage_Unload(image);
