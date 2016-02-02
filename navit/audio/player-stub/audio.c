@@ -25,7 +25,7 @@
  * This file is part of the libspotify examples suite.
  */
 
-#include "mpd.h"
+#include "stub.h"
 #include <stdlib.h>
 
 audio_fifo_data_t* audio_get(audio_fifo_t *af)

@@ -39,7 +39,7 @@
 #include "debug.h"
 
 #include "alsa.h"
-#include "mpd.h"
+#include "stub.h"
 
 static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 {
