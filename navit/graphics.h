@@ -17,6 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file
+ *
+ * @brief Exported functions / structures for the graphics subsystem.
+ */
+
 #ifndef NAVIT_GRAPHICS_H
 #define NAVIT_GRAPHICS_H
 
@@ -59,6 +64,16 @@ struct graphics_image_buffer {
 	int len;
 };
 
+/** Magic value for unset/unspecified width/height. */
+#define IMAGE_W_H_UNSET (-1)
+
+/** @brief The functions to be implemented by graphics plugins.
+ *
+ * This struct lists the functions that Navit graphics plugins must implement.
+ * The plugin must supply its list of function implementations from its plugin_init() function.
+ * @see graphics_gtk_drawing_area#plugin_init()
+ * @see graphics_android#plugin_init()
+ */
 struct graphics_methods {
 	void (*graphics_destroy)(struct graphics_priv *gr);
 	void (*draw_mode)(struct graphics_priv *gr, enum draw_mode_num mode);
@@ -74,6 +89,19 @@ struct graphics_methods {
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+	/** @brief Load an image from a file.
+	 *
+	 * @param gr graphics object
+	 * @param meth output parameter for graphics methods object
+	 * @param path file name/path of image to load
+	 * @param w In: width to scale image to, or IMAGE_W_H_UNSET for original width.
+	 * Out: Actual width of returned image.
+	 * @param h heigth; see w
+	 * @param hot output parameter for image hotspot
+	 * @param rotate angle to rotate the image, in 90 degree steps (not supported by all plugins).
+	 * @return pointer to allocated image, to be freed by image_free()
+	 * @see image_free()
+	 */
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, const char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);

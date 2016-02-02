@@ -1,5 +1,5 @@
 # Catalan translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Ferran Roig https://launchpad.net/~ferro9
@@ -12,14 +12,15 @@
 # beamspot https://launchpad.net/~benrouravkg
 # juliwoodbcn https://launchpad.net/~julianlozano
 # kualsevol https://launchpad.net/~ojuanv
+# pataquets https://launchpad.net/~pataquets
 # peremayol@gmail.com https://launchpad.net/~peremayol
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:57+0000\n"
-"Last-Translator: Sergi Gomis <paloky3@gmail.com>\n"
+"PO-Revision-Date: 2016-01-01 20:32+0000\n"
+"Last-Translator: pataquets <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,22 +273,22 @@ msgstr "a la sortida"
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "després continueu tot recte%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Continueu tot recte %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "després manteniu-vos a la dreta%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Manteniu-vos a la dreta %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -1472,7 +1473,7 @@ msgstr ""
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "Vehicle sense nom"
 
 msgid "Failed to write bookmarks file"
 msgstr ""
@@ -1630,16 +1631,16 @@ msgid "Data"
 msgstr "Dades"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Farmàcia"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurant"
 
 msgid "Restaurant. Fast food"
 msgstr ""
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
 msgstr ""
@@ -1651,10 +1652,10 @@ msgid "Bank"
 msgstr ""
 
 msgid "Hospital"
-msgstr ""
+msgstr "Hospital"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Cinema"
 
 msgid "Train station"
 msgstr ""
@@ -1663,7 +1664,7 @@ msgid "School"
 msgstr ""
 
 msgid "Police"
-msgstr ""
+msgstr "Comissaria de Policia"
 
 msgid "Justice"
 msgstr "Jutjats"
@@ -1697,7 +1698,7 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Seleccioneu una categoria"
 
 msgid "Select a distance to look for (km)"
 msgstr ""

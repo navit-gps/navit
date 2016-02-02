@@ -519,6 +519,7 @@ static char *attrmap={
 	"?	shop=photo		poi_shop_photo\n"
 	"?	shop=shoes		poi_shop_shoes\n"
 	"?	shop=supermarket	poi_shopping\n"
+        "?      shop=mall               poi_mall\n" 
 	"?	sport=10pin		poi_bowling\n"
 	"?	sport=baseball		poi_baseball\n"
 	"?	sport=basketball	poi_basketball\n"
@@ -1048,6 +1049,8 @@ osm_add_tag(char *k, char *v)
 			flagsa[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
 		else
 			flags[0] |= AF_THROUGH_TRAFFIC_LIMIT;
+		if (! strcmp(v,"hov")) 	
+			flags[0] |= AF_HIGH_OCCUPANCY_CAR_ONLY;
 		level=5;
 	}
 	if (! strcmp(k,"vehicle")) {

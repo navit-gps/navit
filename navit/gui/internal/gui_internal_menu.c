@@ -91,6 +91,21 @@ gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 	}
 }
 
+
+/**
+ * @brief Initializes a GUI screen
+ *
+ * This method initializes the internal GUI's screen on which all other elements (such as HTML menus,
+ * dialogs or others) are displayed.
+ *
+ * It sets up a view hierarchy, which includes a title bar and a client area to hold widgets defined by
+ * the caller.
+ *
+ * @param this The GUI instance
+ * @param label The label to display in the top bar
+ *
+ * @return The container for caller-defined widgets
+ */
 struct widget *
 gui_internal_menu(struct gui_priv *this, const char *label)
 {
