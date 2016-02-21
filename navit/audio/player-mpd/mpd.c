@@ -89,7 +89,27 @@ void reload_playlists(struct mpd* this);
 // playlist functions
 
 gboolean mpd_get_playing_status(void){
-	return mpd->playing;
+	if(mpd->playing)
+		return mpd->playing;
+	// check if mpd is really paused
+	FILE *fp;
+	fp = popen("mpc ", "r");
+	char text[32] = {0,};
+    if (fp == NULL) {
+        dbg(lvl_error, "Failed to run command\n" );
+        return false;
+    }
+    while (fgets(text, sizeof(text)-1, fp) != NULL) {
+		if(strstr(text, "[playing]")){
+			mpd->playing = true;
+			return true;
+		}else if (strstr(text, "[paused]")){
+			mpd->playing = false;
+			return false;
+		}
+	}	
+	pclose(fp);
+	return false;
 }
 
 struct audio_playlist*
@@ -363,23 +383,6 @@ get_entry(GList* head, char *data)
 				}
 			}
 		}
-		
-		
-		
-		/*
-		
-		while(strcmp(((get_playlist_data(current))?get_playlist_data(current)->name:""), data) != 0)
-		{
-			dbg(lvl_error,  "Search Entry: %s\n",data);
-			
-			
-			current = current->next;
-			if(current == head)
-			{
-				return NULL; //nothing found!
-			}
-		}
-		*/
 		return current; //found!
 	}
 	return NULL;
