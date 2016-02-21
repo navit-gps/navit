@@ -97,21 +97,23 @@ check_switch_layout(struct switch_layout *this)
     navit.u.navit=this->nav;
 	
 	
-	
+	dbg(lvl_error, "check_switch_layout\n");
 	
 	
 	bool light_on = check_interior_light();
 	this->layout = navit_get_current_layout(this->nav);
 	if(this->layout->dayname){
 		if(!light_on){
+			dbg(lvl_error, "day");
 			navit_set_layout_by_name(this->nav, this->layout->dayname);
-			command_evaluate(&navit, "gui.change_gui_color_day()");
+			//command_evaluate(&navit, "gui.change_gui_color_day()");
 		}
 	}
 	if(this->layout->nightname){
 		if(light_on){
+			dbg(lvl_error, "night");
 			navit_set_layout_by_name(this->nav, this->layout->nightname);
-			command_evaluate(&navit, "gui.change_gui_color_night()");
+			//command_evaluate(&navit, "gui.change_gui_color_night()");
 
 		}
 	}
