@@ -130,7 +130,7 @@ struct audio_playlist* new_audio_playlist(char *name, int index)
 	pl->name=g_strdup(name);
 	pl->index = index;
 	pl->status=0;
-	pl->icon = "media_hierarchy";
+	pl->icon = "playlist";
 	dbg(lvl_debug,  "Created a playlist with name %s and index %i\n", name, index);
 	return pl;
 }
@@ -347,20 +347,22 @@ get_entry(GList* head, char *data)
 		GList* current = head;
 		struct audio *currend_data = NULL;
 		int cmp = -1;
-		do{
+		while(cmp != 0){
 			currend_data = get_playlist_data(current);
 			if(currend_data){
 				if(currend_data->name){
-					current = current->next;
 					dbg(lvl_debug,  "Got Entry: %s\n",currend_data->name);
 					cmp = strcmp(currend_data->name, data);
 					if(current == NULL)
 					{
 						return NULL; //nothing found!
 					}
+					if(cmp != 0){
+						current = current->next;
+					}
 				}
 			}
-		}while(cmp != 0);
+		}
 		
 		
 		
@@ -532,6 +534,7 @@ check_playlists(void)
 			return mpd->playlists;
 		}
     }
+    exit;
     pclose(fp);
     return list;
 }
@@ -609,14 +612,11 @@ get_last_playlist(struct mpd* this)
         return NULL;
     }
     if(fgets(text, sizeof(text)-1, fp) != NULL) {
-		dbg(lvl_debug, "%s\n",text);
-        saved_list = get_entry(this->playlists, text);
+		saved_list = get_entry(this->playlists, text);
         if(saved_list == NULL){
 			saved_list = this->playlists;
-			dbg(lvl_debug, "saved_list = this->playlists;\n");
 		}else{
 			mpd->current_playlist = saved_list;
-			dbg(lvl_debug, "mpd->current_playlist = saved_list;\n");
 		}
     }
     fclose(fp);
@@ -782,7 +782,7 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_PLAYLIST;
-		aa->icon = g_strdup("media_prev");//todo: make beautiful icon
+		aa->icon = g_strdup("media_skip-back");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -806,7 +806,7 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_PLAYLIST;
-		aa->icon = g_strdup("media_next");//todo: make beautiful icon
+		aa->icon = g_strdup("media_skip-ahead");//todo: make beautiful icon
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -1132,7 +1132,7 @@ tracks(struct audio_priv *this, int playlist_index)
                 t->name=g_strdup(mpd_get_track_name(i));
                 t->index=i;
                 t->status=0;
-                t->icon = "media_audio";
+                t->icon = "music-green";
                 tracks=g_list_append(tracks, t);
         }
 		dbg(lvl_debug, "Active playlist updated\n");
@@ -1174,6 +1174,18 @@ action_do(struct audio_priv *this, const int action)
 	dbg(lvl_debug, "In mpd's action control\n");
 	switch(action)
 	{
+		case AUDIO_PLAYBACK_PLAY:{	
+			dbg (lvl_debug, "resuming playback\n");
+			system("mpc play");
+			mpd->playing = 1;
+			break;
+		}
+		case AUDIO_PLAYBACK_PAUSE:{
+			dbg (lvl_debug, "pausing playback\n");
+			system("mpc pause");
+			mpd->playing = 0;
+			break;
+		}
 		case AUDIO_PLAYBACK_TOGGLE:{
 			mpd_toggle_playback(get_specific_action(mpd->actions, AUDIO_PLAYBACK_TOGGLE));
 			break;
@@ -1181,7 +1193,6 @@ action_do(struct audio_priv *this, const int action)
 		case AUDIO_PLAYBACK_NEXT_TRACK:{
 			++g_track_index;
 			system("mpc next");
-			 
 			break;
 		}
 		case AUDIO_PLAYBACK_PREVIOUS_TRACK:{
@@ -1346,7 +1357,6 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
 			load_playlist(mpd->playlists);
 		}
 	}
-	
 	mpd_play();
     mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
     mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);

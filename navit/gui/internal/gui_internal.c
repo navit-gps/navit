@@ -2913,8 +2913,10 @@ static void gui_internal_keypress(void *data, char *key)
 			break;
 #ifdef USE_AUDIO_FRAMEWORK
 		case NAVIT_KEY_AUDIO_PLAY:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PLAY); 
+			break;
 		case NAVIT_KEY_AUDIO_STOP:
-			audio_do_action(this->nav, AUDIO_PLAYBACK_TOGGLE); 
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PAUSE); 
 			break;
 		case NAVIT_KEY_AUDIO_NEXT_TRACK: 
 			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_TRACK);
