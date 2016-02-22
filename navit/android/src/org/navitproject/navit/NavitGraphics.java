@@ -25,8 +25,11 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -38,12 +41,15 @@ import android.os.Message;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 
@@ -57,8 +63,12 @@ public class NavitGraphics
 	int                              pos_y;
 	int                              pos_wraparound;
 	int                              overlay_disabled;
+	int                              bgcolor;
 	float                            trackball_x, trackball_y;
 	View                             view;
+	SystemBarTintView                navigationTintView;
+	SystemBarTintView                statusTintView;
+	FrameLayout                      frameLayout;
 	RelativeLayout                   relativelayout;
 	NavitCamera                      camera;
 	Activity                         activity;
@@ -70,6 +80,14 @@ public class NavitGraphics
 	private static long              interval_for_long_press           = 200L;
 
 	private Handler timer_handler = new Handler();
+	
+	public void setBackgroundColor(int bgcolor) {
+		this.bgcolor = bgcolor;
+		if (navigationTintView != null)
+			navigationTintView.setBackgroundColor(bgcolor);
+		if (statusTintView != null)
+			statusTintView.setBackgroundColor(bgcolor);
+	}
 
 	public void SetCamera(int use_camera)
 	{
@@ -199,11 +217,8 @@ public class NavitGraphics
 			Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="
 					+ Navit.metrics.scaledDensity);
 			super.onSizeChanged(w, h, oldw, oldh);
-			draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-			draw_canvas = new Canvas(draw_bitmap);
-			bitmap_w = w;
-			bitmap_h = h;
-			SizeChangedCallback(SizeChangedCallbackID, w, h);
+			
+			handleResize(w, h);
 		}
 
 		public void do_longpress_action()
@@ -687,6 +702,15 @@ public class NavitGraphics
 		
 	}
 	
+	private class SystemBarTintView extends View {
+
+		public SystemBarTintView(Context context) {
+			super(context);
+			this.setBackgroundColor(bgcolor);
+		}
+		
+	}
+	
 	public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
 			int wraparound, int use_camera)
 	{
@@ -699,14 +723,21 @@ public class NavitGraphics
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
 			view.setKeepScreenOn(true);
+			frameLayout = new FrameLayout(activity);
 			relativelayout = new RelativeLayout(activity);
+			frameLayout.addView(relativelayout);
 			if (use_camera != 0)
 			{
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
+			
+			navigationTintView = new SystemBarTintView(activity);
+			statusTintView = new SystemBarTintView(activity);
+			frameLayout.addView(navigationTintView);
+			frameLayout.addView(statusTintView);
 
-			activity.setContentView(relativelayout);
+			activity.setContentView(frameLayout);
 			view.requestFocus();
 		}
 		else
@@ -783,6 +814,7 @@ public class NavitGraphics
 		};
 
 	public native void SizeChangedCallback(int id, int x, int y);
+	public native void PaddingChangedCallback(int id, int left, int right, int top, int bottom);
 	public native void KeypressCallback(int id, String s);
 	public native int CallbackMessageChannel(int i, String s);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
@@ -791,8 +823,100 @@ public class NavitGraphics
 	public static native String[][] GetAllCountries();
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
-	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
+	private int		SizeChangedCallbackID, PaddingChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
 	// private int count;
+	
+	/**
+	 * @brief Handles resize events.
+	 * 
+	 * This method is called whenever the main View is resized in any way. This is the case when its
+	 * {@code onSizeChanged()} event handler fires or when toggling Fullscreen mode.
+	 * 
+	 * It (re-)evaluates if and where the navigation bar is going to be shown, and calculates the
+	 * padding for objects which should not be obstructed.
+	 */
+	public void handleResize(int w, int h) {
+		if (this.parent_graphics != null)
+			this.parent_graphics.handleResize(w, h);
+		else {
+			Log.d("NavitGraphics", String.format("handleResize w=%d h=%d", w, h));
+			/*
+			 * The code would work on API14+ but is meaningful only on API17+
+			 */
+			if (Build.VERSION.SDK_INT >= 17) {
+				Navit navit = null;
+				if (activity instanceof Navit) {
+					navit = (Navit) activity;
+					/*
+					 * Determine visibility of status bar.
+					 * The status bar is always visible unless we are in fullscreen mode.
+					 */
+					final Boolean isStatusShowing = !navit.isFullscreen;
+
+					/*
+					 * Determine visibility of navigation bar.
+					 * This logic is based on the presence of a hardware menu button and is known to work on
+					 * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
+					 */
+					final Boolean isNavShowing = !ViewConfiguration.get(navit.getApplication()).hasPermanentMenuKey();
+
+					Log.d("NavitGraphics", String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
+
+					/*
+					 * Determine where the navigation bar would be displayed.
+					 * Logic is taken from AOSP RenderSessionImpl.findNavigationBar()
+					 * (platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java)
+					 */
+					Boolean isLandscape = (navit.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+					final Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+					Log.d("NavitGraphics", String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)", 
+							isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
+
+					int left = 0;
+					int top = isStatusShowing ? Navit.status_bar_height : 0;
+					int right = (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0;
+					final int bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height;
+					
+					/* hide tint bars during update to prevent ugly effects */
+					statusTintView.setVisibility(View.GONE);
+					navigationTintView.setVisibility(View.GONE);
+					
+					frameLayout.post(new Runnable() {
+						@Override
+						public void run() {
+							statusTintView.setVisibility(isStatusShowing ? View.VISIBLE : View.GONE);
+							FrameLayout.LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Navit.status_bar_height, Gravity.TOP);
+							/* Prevent tint views from overlapping when navigation is on the right */
+							statusLayoutParams.setMargins(0, 0, (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
+							statusTintView.setLayoutParams(statusLayoutParams);
+							Log.d("NavitGraphics", String.format("statusTintView: width=%d height=%d",
+									statusTintView.getWidth(), statusTintView.getHeight()));
+
+							navigationTintView.setVisibility(isNavShowing ? View.VISIBLE : View.GONE);
+							LayoutParams navigationLayoutParams = new FrameLayout.LayoutParams(
+									isNavAtBottom ? LayoutParams.MATCH_PARENT : Navit.navigation_bar_width,  // X
+											isNavAtBottom ? bottom : LayoutParams.MATCH_PARENT, // Y
+													Gravity.BOTTOM | Gravity.RIGHT);
+							navigationTintView.setLayoutParams(navigationLayoutParams);
+							Log.d("NavitGraphics", String.format("navigationTintView: width=%d height=%d",
+									navigationTintView.getWidth(), navigationTintView.getHeight()));
+						}
+					});
+
+					Log.d("NavitGraphics", String.format("Padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom));
+
+					PaddingChangedCallback(PaddingChangedCallbackID, left, top, right, bottom);
+				} else
+					Log.e("NavitGraphics", "Main Activity is not a Navit instance, cannot update padding");
+			}
+
+			draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+			draw_canvas = new Canvas(draw_bitmap);
+			bitmap_w = w;
+			bitmap_h = h;
+			SizeChangedCallback(SizeChangedCallbackID, w, h);
+		}
+	}
 
 	/**
 	 * @brief Returns whether the device has a hardware menu button.
@@ -802,6 +926,10 @@ public class NavitGraphics
 	 * this method will always return {@code true}, as these Android versions relied on devices having a physical
 	 * Menu button. On API levels 11 through 13 (Honeycomb releases), this method will always return
 	 * {@code false}, as Honeycomb was a tablet-only release and did not require devices to have a Menu button.
+	 * 
+	 * Note that this method is not aware of non-standard mechanisms on some customized builds of Android. For
+	 * example, CyanogenMod has an option to add a menu button to the navigation bar. Even with that option,
+	 * this method will still return `false`.
 	 */
 	public boolean hasMenuButton() {
 		if (Build.VERSION.SDK_INT <= 10)
@@ -815,6 +943,10 @@ public class NavitGraphics
 	public void setSizeChangedCallback(int id)
 	{
 		SizeChangedCallbackID = id;
+	}
+	public void setPaddingChangedCallback(int id)
+	{
+		PaddingChangedCallbackID = id;
 	}
 	public void setButtonCallback(int id)
 	{

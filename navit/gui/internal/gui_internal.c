@@ -2668,6 +2668,12 @@ static void gui_internal_resize(void *data, int w, int h)
 		this->root.h=h;
 		changed=1;
 	}
+	/*
+	 * If we're drawing behind system bars on Android, watching for actual size changes will not catch
+	 * fullscreen toggle events. As a workaround, always assume a size change if padding is supplied.
+	 */
+	if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
+		changed = 1;
 	dbg(lvl_debug,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {

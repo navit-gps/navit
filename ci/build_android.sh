@@ -46,7 +46,7 @@ android list targets
 mkdir $CIRCLE_ARTIFACTS/android/
 cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/android/
 
-cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=19 $SOURCE_PATH
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=21 -DANDROID_NDK_API_VERSION=19 $SOURCE_PATH
 make || exit 1
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
   make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk || exit 1
