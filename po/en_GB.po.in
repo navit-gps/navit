@@ -1,5 +1,5 @@
 # English (United Kingdom) translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Andi Chandler https://launchpad.net/~bing
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-08-29 12:36+0000\n"
+"PO-Revision-Date: 2016-02-17 14:43+0000\n"
 "Last-Translator: Andi Chandler <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -208,7 +208,7 @@ msgid "Enter the roundabout %s"
 msgstr "Enter the roundabout %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "then enter the roundabout"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -315,7 +315,7 @@ msgstr "strongly "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "then take the %1$s road to the %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
