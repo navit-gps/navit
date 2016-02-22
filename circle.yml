@@ -18,7 +18,6 @@ dependencies:
     - sudo apt-get install libdbus-glib-1-dev
     - sudo apt-get install g++
     - bash ci/update_version.sh prepare
-    - bash ci/import_translations.sh
     - bash ci/build_linux.sh
     - sed -i '/INTEGER/d' bin/po/navit.pot
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
