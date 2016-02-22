@@ -2564,14 +2564,14 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
             if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
-                    wait_before_warn++;
-                    if(wait_before_warn > 10){
+                    this->wait_before_warn++;
+                    if(this->wait_before_warn > 10){
                     	this->announce_state=eWarningTold; //warning told
                     	navit_say(navit,_("Please decrease your speed"));
                     }
                 }else{
                 	/* reset speed warning */
-                    	wait_before_warn = 0;	
+                    	this->wait_before_warn = 0;	
                 }
             }
             if( tracking_speed <= routespeed ) {
