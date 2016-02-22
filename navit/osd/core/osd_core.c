@@ -2498,6 +2498,7 @@ struct osd_speed_warner {
 	int bTextOnly;
 	struct graphics_image *img_active,*img_passive,*img_off;
 	char* label_str;
+	int timeout;
 	int wait_before_warn;
 };
 
@@ -2564,15 +2565,16 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
             if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
-                    this->wait_before_warn++;
-                    if(this->wait_before_warn > 10){
+                    if(this->wait_before_warn>0){
+                    	this->wait_before_warn--;
+                    }else{
                     	this->announce_state=eWarningTold; //warning told
                     	navit_say(navit,_("Please decrease your speed"));
                     }
-                }else{
-                	/* reset speed warning */
-                    	this->wait_before_warn = 0;	
                 }
+            }else{
+    		/* reset speed warning */
+            	this->wait_before_warn = this->timeout;	
             }
             if( tracking_speed <= routespeed ) {
                 this->announce_state=eNoWarn; //no warning
@@ -2627,7 +2629,7 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 	if (opc->osd_item.h < this->d)
 		this->d=opc->osd_item.h;
 	this->width=this->d/10;
-	this->wait_before_warn = 0;
+	this->wait_before_warn = this->timeout;
         if(this->label_str && !strncmp("images:",this->label_str,7)) {
           char *tok1=NULL, *tok2=NULL, *tok3=NULL;
           strtok(this->label_str,":");
@@ -2712,7 +2714,12 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
             this->bTextOnly = 1;
           }
        }
-
+	attr = attr_search(attrs, NULL, attr_timeout);
+	if (attr)
+		this->timeout = attr->u.num;
+	else
+		this->timeout = 10;    // 10s timeout by default
+		
 	attr = attr_search(attrs, NULL, attr_announce_on);
 	if (attr)
 		this->announce_on = attr->u.num;
