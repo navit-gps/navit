@@ -171,15 +171,42 @@ osd_std_resize(struct osd_item *item)
  * or relative height is set to 0% (int value is equal to ATTR_REL_RELSHIFT), 
  * object width (height) is not changed here, for button and image osds it means
  * to derive values from the underlying image.
- * @param item
- * @param w Available screen width in pixels (the width that corresponds to
- * 100%)
- * @param h Available screen height in pixels (the height that corresponds to
- * 100%)
+ *
+ * This method considers padding if the graphics plugin supports it (i.e. its `get_data` method returns
+ * a valid pointer if `"padding"` is supplied as its arument): It will offset the origin of the item by
+ * the amount of padding in the left and top edges, and will reduce `w` and `h` by the total amount of
+ * padding in the respective dimension to obtain the equivalent of 100%.
+ *
+ * If the graphics driver does not support padding, none of these corrections take place (this is
+ * equivalent to 0 padding on all sides).
+ *
+ * @param item The item whose size and position are to be calculated
+ * @param w Available screen width in pixels
+ * @param h Available screen height in pixels
  */
 void
 osd_std_calculate_sizes(struct osd_item *item, int w, int h)
 {
+	struct padding *padding = NULL;
+
+	if (item->gr) {
+		padding = graphics_get_data(item->gr, "padding");
+		if (padding) {
+			dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p): left=%d top=%d right=%d bottom=%d\n",
+					padding, item, item->gr, padding->left, padding->top, padding->right, padding->bottom);
+		} else {
+			dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p)\n",
+					padding, item, item->gr);
+		}
+	} else
+		dbg(lvl_warning, "cannot get padding for item=%p: item->gr is NULL\n", item);
+
+	/* reduce w and h by total padding in the respective dimension */
+	if (padding) {
+		w -= (padding->left + padding->right);
+		h -= (padding->top + padding->bottom);
+	}
+
 	if(item->rel_w!=ATTR_REL_RELSHIFT)
 		item->w=attr_rel2real(item->rel_w, w, 1);
 	if(item->w<0)
@@ -190,6 +217,12 @@ osd_std_calculate_sizes(struct osd_item *item, int w, int h)
 		item->h=0;
 	item->p.x=attr_rel2real(item->rel_x, w, 1);
 	item->p.y=attr_rel2real(item->rel_y, h, 1);
+
+	/* add left and top padding to item->p */
+	if (padding) {
+		item->p.x += padding->left;
+		item->p.y += padding->top;
+	}
 }
 
 /**
@@ -409,9 +442,30 @@ void
 osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv)
 {
 	struct graphics *navit_gr;
+	int w, h;
+	struct padding *padding = NULL;
 
 	navit_gr = navit_get_graphics(nav);
-	osd_std_calculate_sizes(item, navit_get_width(nav), navit_get_height(nav));
+	w = navit_get_width(nav);
+	h = navit_get_height(nav);
+
+	padding = graphics_get_data(navit_gr, "padding");
+
+	if (padding) {
+		dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d\n",
+				padding, item, padding->left, padding->top, padding->right, padding->bottom);
+		w -= (padding->left + padding->right);
+		h -= (padding->top + padding->bottom);
+	} else
+		dbg(lvl_debug, "Padding is NULL\n");
+
+	osd_std_calculate_sizes(item, w, h);
+
+	if (padding) {
+		item->p.x += padding->left;
+		item->p.y += padding->top;
+	}
+
 	item->gr = graphics_overlay_new(navit_gr, &item->p, item->w, item->h, 1);
 
 	item->graphic_bg = graphics_gc_new(item->gr);

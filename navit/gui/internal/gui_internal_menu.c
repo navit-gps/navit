@@ -110,6 +110,12 @@ struct widget *
 gui_internal_menu(struct gui_priv *this, const char *label)
 {
 	struct widget *menu,*w,*w1,*topbox;
+	struct padding *padding = NULL;
+
+	if (this->gra) {
+		padding = graphics_get_data(this->gra, "padding");
+	} else
+		dbg(lvl_warning, "cannot get padding: this->gra is NULL\n");
 
 	gui_internal_search_idle_end(this);
 	topbox=gui_internal_box_new_with_label(this, 0, label);
@@ -117,8 +123,18 @@ gui_internal_menu(struct gui_priv *this, const char *label)
         topbox->h=this->root.h;
         gui_internal_widget_append(&this->root, topbox);
 	menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
-	menu->w=this->root.w;
-	menu->h=this->root.h;
+
+	if (padding) {
+		menu->p.x = padding->left;
+		menu->p.y = padding->top;
+		menu->w = topbox->w - padding->left - padding->right;
+		menu->h = topbox->h - padding->top - padding->bottom;
+	} else {
+		menu->p.x = 0;
+		menu->p.y = 0;
+		menu->w = topbox->w;
+		menu->h = topbox->h;
+	}
 	menu->background=this->background;
 	gui_internal_apply_config(this);
  	topbox->menu_data=g_new0(struct menu_data, 1);
@@ -149,8 +165,17 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	}
 	if (this->flags & 192) {
 		menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
-		menu->w=this->root.w;
-		menu->h=this->root.h;
+		if (padding) {
+			menu->p.x = padding->left;
+			menu->p.y = padding->top;
+			menu->w = topbox->w - padding->left - padding->right;
+			menu->h = topbox->h - padding->top - padding->bottom;
+		} else {
+			menu->p.x = 0;
+			menu->p.y = 0;
+			menu->w = topbox->w;
+			menu->h = topbox->h;
+		}
 		w1=gui_internal_time_help(this);
 		gui_internal_widget_append(menu, w1);
 		w1=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
@@ -162,8 +187,17 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	gui_internal_widget_reset_pack(this, topbox);
         topbox->w=this->root.w;
         topbox->h=this->root.h;
-	menu->w=this->root.w;
-	menu->h=this->root.h;
+		if (padding) {
+			menu->p.x = padding->left;
+			menu->p.y = padding->top;
+			menu->w = topbox->w - padding->left - padding->right;
+			menu->h = topbox->h - padding->top - padding->bottom;
+		} else {
+			menu->p.x = 0;
+			menu->p.y = 0;
+			menu->w = topbox->w;
+			menu->h = topbox->h;
+		}
 	return w;
 }
 

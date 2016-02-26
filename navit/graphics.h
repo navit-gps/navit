@@ -74,6 +74,21 @@ struct graphics_image_buffer {
  * @see graphics_gtk_drawing_area#plugin_init()
  * @see graphics_android#plugin_init()
  */
+
+/**
+ * Describes areas at each edge of the application window which may be obstructed by the system UI.
+ *
+ * This allows the map to use all available space, including areas which may be obscured by system UI
+ * elements, while constraining other elements such as OSDs or UI controls to an area that is guaranteed
+ * to be visible as long as Navit is in the foreground.
+ */
+struct padding {
+	int left;
+	int top;
+	int right;
+	int bottom;
+};
+
 struct graphics_methods {
 	void (*graphics_destroy)(struct graphics_priv *gr);
 	void (*draw_mode)(struct graphics_priv *gr, enum draw_mode_num mode);
