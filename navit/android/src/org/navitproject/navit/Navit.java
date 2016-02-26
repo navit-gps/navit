@@ -25,13 +25,18 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager.TaskDescription;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -44,9 +49,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -59,6 +70,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -75,6 +87,11 @@ public class Navit extends Activity
 	private NavitActivityResult      ActivityResults[];
 	public static InputMethodManager mgr                            = null;
 	public static DisplayMetrics     metrics                        = null;
+	public static int                status_bar_height              = 0;
+	public static int                action_bar_default_height      = 0;
+	public static int                navigation_bar_height          = 0;
+	public static int                navigation_bar_height_landscape= 0;
+	public static int                navigation_bar_width           = 0;
 	public static Boolean            show_soft_keyboard             = false;
 	public static Boolean            show_soft_keyboard_now_showing = false;
 	public static long               last_pressed_menu_key          = 0L;
@@ -97,6 +114,7 @@ public class Navit extends Activity
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
+	Boolean                          isFullscreen                   = false;
 
 	public void removeFileIfExists(String source) {
 		File file = new File(source);
@@ -267,12 +285,29 @@ public class Navit extends Activity
 		// Setup the status bar notification		
 		// This notification is removed in the exit() function
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);	// Grab a handle to the NotificationManager
-		Notification NavitNotification = new Notification(R.drawable.icon, getString(R.string.notification_ticker), System.currentTimeMillis());	// Create a new notification, with the text string to show when the notification first appears
+		Notification NavitNotification = new Notification(R.drawable.ic_notify, getString(R.string.notification_ticker), System.currentTimeMillis());	// Create a new notification, with the text string to show when the notification first appears
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 		NavitNotification.setLatestEventInfo(getApplicationContext(), "Navit", getString(R.string.notification_event_default), appIntent);	// Set the text in the notification
 		NavitNotification.flags|=Notification.FLAG_ONGOING_EVENT;	// Ensure that the notification appears in Ongoing
 		nm.notify(R.string.app_name, NavitNotification);	// Set the notification
 		
+		// Status and navigation bar sizes
+		// These are platform defaults and do not change with rotation, but we have to figure out which ones apply
+		// (is the navigation bar visible? on the side or at the bottom?)
+		Resources resources = getResources();
+		int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
+		int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
+		int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+		int nhlid = resources.getIdentifier("navigation_bar_height_landscape", "dimen", "android");
+		int nwid = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+		status_bar_height = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+		action_bar_default_height = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
+		navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
+		navigation_bar_height_landscape = (nhid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
+		navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
+		Log.d(TAG, String.format("status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, navigation_bar_height_landscape=%d, navigation_bar_width=%d", 
+				status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape, navigation_bar_width));
+
 		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
 		String lang = locale.getLanguage();
@@ -382,7 +417,13 @@ public class Navit extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		Log.e("Navit", "OnResume");
+		Log.d("Navit", "OnResume");
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			/* Required to make system bars fully transparent */
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+		}
 		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		// DEBUG
 		// intent_data = "google.navigation:q=Wien Burggasse 27";
@@ -593,6 +634,7 @@ public class Navit extends Activity
 		}
 	}
 	
+	
 	/**
 	 * @brief Shows the Options menu.
 	 * 
@@ -703,7 +745,10 @@ public class Navit extends Activity
 	}
 	
 	public void fullscreen(int fullscreen) {
-		if(fullscreen != 0) {
+		int w, h;
+		
+		isFullscreen = (fullscreen != 0);
+		if (isFullscreen) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		}
@@ -711,6 +756,19 @@ public class Navit extends Activity
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
+		
+		Display display_ = getWindowManager().getDefaultDisplay();
+		if (Build.VERSION.SDK_INT < 17) {
+			w = display_.getWidth();
+			h = display_.getHeight();
+		} else {
+			Point size = new Point();
+			display_.getRealSize(size);
+			w = size.x;
+			h = size.y;
+		}
+		Log.d(TAG, String.format("Toggle fullscreen, w=%d, h=%d", w, h));
+		N_NavitGraphics.handleResize(w, h);
 	}
 
 	public void disableSuspend()
