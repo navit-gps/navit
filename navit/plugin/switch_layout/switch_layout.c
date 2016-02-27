@@ -67,8 +67,6 @@ struct switch_layout {
     struct layout *layout;
 };
 
-extern void gui_change_color(struct colors* colors);
-
 bool 
 check_interior_light(void){
 	FILE *fp;
@@ -95,25 +93,17 @@ check_switch_layout(struct switch_layout *this)
 	struct attr navit;
 	navit.type=attr_navit;
     navit.u.navit=this->nav;
-	
-	
-	dbg(lvl_error, "check_switch_layout\n");
-	
-	
+
 	bool light_on = check_interior_light();
 	this->layout = navit_get_current_layout(this->nav);
 	if(this->layout->dayname){
 		if(!light_on){
-			dbg(lvl_error, "day");
 			navit_set_layout_by_name(this->nav, this->layout->dayname);
-			//command_evaluate(&navit, "gui.change_gui_color_day()");
 		}
 	}
 	if(this->layout->nightname){
 		if(light_on){
-			dbg(lvl_error, "night");
 			navit_set_layout_by_name(this->nav, this->layout->nightname);
-			//command_evaluate(&navit, "gui.change_gui_color_night()");
 
 		}
 	}
@@ -122,16 +112,13 @@ check_switch_layout(struct switch_layout *this)
 
 static void 
 switch_layout_main(struct switch_layout *this, struct navit *nav){
-	dbg(lvl_error, "switch_layout_main\n");
-	event_add_timeout(1500, 1, callback_new_1(callback_cast(check_switch_layout), this));
+	event_add_timeout(300, 1, callback_new_1(callback_cast(check_switch_layout), this));
 }
 
 static void 
 switch_layout_init(struct switch_layout *this, struct navit *nav)
 {
-	dbg(lvl_error, "switch_layout_init\n");
 	this->nav=nav;
-	
 	navit_add_callback(nav,callback_new_attr_1(callback_cast(switch_layout_main),attr_graphics_ready, this));
 }
 /**
