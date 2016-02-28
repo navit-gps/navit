@@ -3895,6 +3895,11 @@ osd_audio_player_draw(struct osd_priv_common *opc)
 			this->str = g_strdup(audio_get_current_playlist(this->nav));
 		}else{
 			dbg(lvl_error, "Couldn't understand label: valid options are 'playlist' and 'track'. Falling back to default output.\n");
+			gchar str[256] = {0,};
+			strcpy(str, audio_get_current_track(this->nav));
+			strcat(str, " - ");
+			strcat(str, audio_get_current_playlist(this->nav));
+			this->str = g_strdup(str);
 		}
 	}else{	
 		gchar str[256] = {0,};

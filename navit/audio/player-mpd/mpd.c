@@ -102,9 +102,11 @@ gboolean mpd_get_playing_status(void){
     while (fgets(text, sizeof(text)-1, fp) != NULL) {
 		if(strstr(text, "[playing]")){
 			mpd->playing = true;
+			pclose(fp);
 			return true;
 		}else if (strstr(text, "[paused]")){
 			mpd->playing = false;
+			pclose(fp);
 			return false;
 		}
 	}	
@@ -537,7 +539,7 @@ check_playlists(void)
 			return mpd->playlists;
 		}
     }
-    exit;
+    //exit;
     pclose(fp);
     return list;
 }
@@ -554,8 +556,7 @@ delete_all_playlists(struct mpd* this)
 		char text[64];
 		fp = popen("mpc lsplaylists", "r");
 		if (fp == NULL) {
-			dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );
-			pclose(fp);
+			dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );;
 			return;
 		}
 		while (fgets(text, sizeof(text)-1, fp) != NULL) {
@@ -585,7 +586,7 @@ delete_all_playlists(struct mpd* this)
     system(&command[0]);
     dbg(lvl_debug,command);
     system("mpc update --wait");
-    dbg(lvl_debug,"%s\n",get_playlist_name(current));
+    dbg(lvl_error,"%s\n",get_playlist_name(current));
     this->playlists = current;
     this->current_playlist = current;
 }
@@ -593,7 +594,7 @@ delete_all_playlists(struct mpd* this)
 void 
 reload_playlists(struct mpd* this)
 {
-	dbg(lvl_debug, "\n\n\n");
+	dbg(lvl_error, "\nreload_playlists\n\n");
 	delete_all_playlists(this);                      
 	system("mpc stop");
 	system("mpc update");
@@ -742,7 +743,6 @@ mpd_get_playlists_count(void)
     fp = popen("mpc lsplaylists", "r");
     if (fp == NULL) {
         dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );
-		pclose(fp);
         return 0;
     }
     while (fgets(text, sizeof(text)-1, fp) != NULL) {
@@ -1338,13 +1338,13 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
     struct audio_priv *this;
     struct attr *attr;
     attr=attr_search(attrs, NULL, attr_music_dir);
-    dbg(lvl_debug,"Initializing mpd\n");
+    dbg(lvl_error,"Initializing mpd\n");
 	srandom(time(NULL));
 	mpd = g_new0 (struct mpd, 1);
     if ((attr = attr_search (attrs, NULL, attr_music_dir)))
       {
           mpd->musicdir = g_strdup(attr->u.str);
-          dbg (lvl_debug, "found music directory: %s\n", mpd->musicdir);
+          dbg (lvl_error, "found music directory: %s\n", mpd->musicdir);
       }
    
 	audio_init (&g_audiofifo);
@@ -1363,7 +1363,7 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
 	mpd_play();
     mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
     mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
-    dbg (lvl_debug,  "Callback created successfully\n");
+    dbg (lvl_error,  "Callback created successfully\n");
 
     this=g_new(struct audio_priv,1);
 

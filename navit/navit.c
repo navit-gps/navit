@@ -1392,21 +1392,21 @@ audio_volume_do(struct navit *this, int direction)
 static void
 audio_volume_down(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-    dbg(lvl_error,"Volume down\n");
+    dbg(lvl_info,"Volume down\n");
 	audio_volume_do(this,-1);
 }
 
 static void
 audio_volume_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-    dbg(lvl_error,"Volume up\n");
+    dbg(lvl_info,"Volume toggle\n");
 	audio_volume_do(this,0);
 }
 
 static void
 audio_volume_up(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-    dbg(lvl_error,"Volume up\n");
+    dbg(lvl_info,"Volume up\n");
 	audio_volume_do(this,1);
 }
 
@@ -1519,7 +1519,7 @@ GList *
 audio_get_actions(struct navit *this)
 {
         GList *l;
-		GList *ret;
+		GList *ret = NULL;
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
@@ -1541,7 +1541,7 @@ GList *
 audio_get_playlists(struct navit *this)
 {
         GList *l;
-	GList *ret;
+	GList *ret = NULL;
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
@@ -1563,7 +1563,7 @@ char *
 audio_get_current_playlist(struct navit *this)
 {
 	GList *l;
-	char *ret;
+	char *ret = 0;
 	l=this->audio_plugins;
 	while(l) {
 		struct navit_audio_plugin * na=l->data;
@@ -1578,14 +1578,17 @@ audio_get_current_playlist(struct navit *this)
 		l=g_list_next(l);
 	}
 	dbg(lvl_info,"current_playlist method enumeration done\n");
-	return(ret);
+	if(ret)
+		return(ret);
+	else
+		return "";
 }
 
 char *
 audio_get_current_track(struct navit *this)
 {
 	GList *l;
-	char *ret = NULL;
+	char *ret = 0;
 	l=this->audio_plugins;
 	while(l) {
 		struct navit_audio_plugin * na=l->data;
@@ -1594,13 +1597,16 @@ audio_get_current_track(struct navit *this)
 		if(a->meth.current_track && a->meth.current_track != 0xffffffff ) {
 			dbg(lvl_info,"Found a current_track method at %p in plugin %s\n", a->meth.current_track, a->name);
 			GList * (*f)(struct audio_priv *this)=a->meth.current_track+0;
-			dbg(lvl_error,"Relocating at %p \n", f);
+			dbg(lvl_info,"Relocating at %p \n", f);
 			ret=f(a->priv);
 		}
 		l=g_list_next(l);
 	}
-	dbg(lvl_error,"current_track method enumeration done %p\n", ret);
-	return(ret);
+	dbg(lvl_info,"current_track method enumeration done %p\n", ret);
+	if(ret)
+		return(ret);
+	else
+		return "";
 }
 
 
@@ -1608,7 +1614,7 @@ GList *
 audio_get_tracks(struct navit *this, const int playlist_index)
 {
         GList *l;
-	GList *ret;
+	GList *ret = NULL;
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
