@@ -93,21 +93,22 @@ check_switch_layout(struct switch_layout *this)
 	struct attr navit;
 	navit.type=attr_navit;
     navit.u.navit=this->nav;
-
+	
 	bool light_on = check_interior_light();
 	this->layout = navit_get_current_layout(this->nav);
-	if(this->layout->dayname){
-		if(!light_on){
-			navit_set_layout_by_name(this->nav, this->layout->dayname);
+	if(this->layout->auto_switch){
+		if(this->layout->dayname){
+			if(!light_on){
+				navit_set_layout_by_name(this->nav, this->layout->dayname);
+			}
 		}
-	}
-	if(this->layout->nightname){
-		if(light_on){
-			navit_set_layout_by_name(this->nav, this->layout->nightname);
+		if(this->layout->nightname){
+			if(light_on){
+				navit_set_layout_by_name(this->nav, this->layout->nightname);
 
+			}
 		}
 	}
-	
 }
 
 static void 

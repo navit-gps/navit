@@ -57,6 +57,7 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 	if ((active_attr=attr_search(attrs, NULL, attr_active)))
 		l->active = active_attr->u.num;
 	l->navit=parent->u.navit;
+	l->auto_switch = 1;
 	return l;
 }
 
