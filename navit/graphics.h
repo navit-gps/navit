@@ -64,6 +64,31 @@ struct graphics_image_buffer {
 	int len;
 };
 
+struct graphics_keyboard_priv;
+
+/**
+ * Describes an instance of the native on-screen keyboard or other input method.
+ */
+struct graphics_keyboard {
+	int w;										/**< The width of the area obscured by the keyboard (-1 for full width) */
+	int h;										/**< The height of the area obscured by the keyboard (-1 for full height) */
+	/* TODO mode is currently a copy of the respective value in the internal GUI and uses the same values.
+	 * This may need to be changed to something with globally available enum, possibly with revised values.
+	 * The Android implementation (the first to support a native on-screen keyboard) does not use this field
+	 * due to limitations of the platform. */
+	int mode;									/**< Mode flags for the keyboard */
+	char *lang;									/**< The preferred language for text input, may be {@code NULL}. */
+	void *gui_priv;								/**< Private data determined by the GUI. The GUI may store
+												 *   a pointer to a data structure of its choice here. It is
+												 *   the responsibility of the GUI to free the data structure
+												 *   when it is no longer needed. The graphics plugin should
+												 *   not access this member. */
+	struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin. The
+												 *   graphics plugin is responsible for its management. If it
+												 *   uses this member, it must free the associated data in
+												 *   its {@code hide_native_keyboard} method. */
+};
+
 /** Magic value for unset/unspecified width/height. */
 #define IMAGE_W_H_UNSET (-1)
 
@@ -124,6 +149,8 @@ struct graphics_methods {
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound);
 	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
+	int (*show_native_keyboard)(struct graphics_keyboard *kbd);
+	void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
 };
 
 
@@ -253,6 +280,9 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
+int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+
 /* end of prototypes */
 #ifdef __cplusplus
 }
