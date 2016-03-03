@@ -539,7 +539,7 @@ check_playlists(void)
 			return mpd->playlists;
 		}
     }
-    exit;
+    //exit;
     pclose(fp);
     return list;
 }
