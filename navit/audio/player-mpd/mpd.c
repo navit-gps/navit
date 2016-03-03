@@ -102,9 +102,11 @@ gboolean mpd_get_playing_status(void){
     while (fgets(text, sizeof(text)-1, fp) != NULL) {
 		if(strstr(text, "[playing]")){
 			mpd->playing = true;
+			pclose(fp);
 			return true;
 		}else if (strstr(text, "[paused]")){
 			mpd->playing = false;
+			pclose(fp);
 			return false;
 		}
 	}	
@@ -554,8 +556,7 @@ delete_all_playlists(struct mpd* this)
 		char text[64];
 		fp = popen("mpc lsplaylists", "r");
 		if (fp == NULL) {
-			dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );
-			pclose(fp);
+			dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );;
 			return;
 		}
 		while (fgets(text, sizeof(text)-1, fp) != NULL) {
@@ -742,7 +743,6 @@ mpd_get_playlists_count(void)
     fp = popen("mpc lsplaylists", "r");
     if (fp == NULL) {
         dbg(lvl_error, "Failed to run command 'mpc lsplaylists'\n" );
-		pclose(fp);
         return 0;
     }
     while (fgets(text, sizeof(text)-1, fp) != NULL) {
