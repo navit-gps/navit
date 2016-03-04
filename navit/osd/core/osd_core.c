@@ -156,9 +156,9 @@ format_distance(double distance, char *sep, int imperial)
 			return g_strdup_printf("%.1f%smi", distance / FEET_PER_MILE, sep);
 		}
 	} else {
-		if (distance >= 100000)
+		if (distance >= 10000)
 			return g_strdup_printf("%.0f%skm", distance / 1000, sep);
-		else if (distance >= 10000)
+		else if (distance >= 1000)
 			return g_strdup_printf("%.1f%skm", distance / 1000, sep);
 		else if (distance >= 300)
 			return g_strdup_printf("%.0f%sm", round(distance / 25) * 25, sep);
