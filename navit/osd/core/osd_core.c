@@ -3879,6 +3879,7 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 #ifdef USE_AUDIO_FRAMEWORK
 struct audio_player{
 	gchar* str;
+	int align;
 	gchar* label;
 	struct navit *nav;
 };
@@ -3887,6 +3888,13 @@ static void
 osd_audio_player_draw(struct osd_priv_common *opc)
 {
 	struct audio_player *this = (struct audio_player *)opc->data;
+	int height=opc->osd_item.font_size*13/256;
+	int yspacing=height/2;
+	int xspacing=height/4;
+	char *next, *last, *absbegin;
+	struct point p, p2[4];
+	int lines;
+	int do_draw = opc->osd_item.do_draw;
 	
 	if(this->label){
 		if(g_strcmp0(this->label, "track") == 0){
@@ -3894,7 +3902,7 @@ osd_audio_player_draw(struct osd_priv_common *opc)
 		}else if(g_strcmp0(this->label, "playlist") == 0){
 			this->str = g_strdup(audio_get_current_playlist(this->nav));
 		}else{
-			dbg(lvl_error, "Couldn't understand label: valid options are 'playlist' and 'track'. Falling back to default output.\n");
+			dbg(lvl_error, "Couldn't understand label: %s valid options are 'playlist' and 'track'. Falling back to default output.\n", this->label);
 			gchar str[256] = {0,};
 			strcpy(str, audio_get_current_track(this->nav));
 			strcat(str, " - ");
@@ -3908,25 +3916,83 @@ osd_audio_player_draw(struct osd_priv_common *opc)
 		strcat(str, audio_get_current_playlist(this->nav));
 		this->str = g_strdup(str);
 	}
-	
-	
-	struct point p, p2[4];
-	p.x=0;
-	p.y=opc->osd_item.h/2;
+
+	absbegin=this->str;
+		
+
 	osd_fill_with_bgcolor(&opc->osd_item);
-	graphics_get_text_bbox(opc->osd_item.gr,
-				   opc->osd_item.font,
-				   (char*) this->str, 0x10000,
-				   0, p2, 0);
-	
-	graphics_draw_text(opc->osd_item.gr,
-			   opc->osd_item.graphic_fg_text,
-			   NULL, opc->osd_item.font,
-			   (char*) this->str, &p, 0x10000,
-			   0);
-	
-	graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
-	g_free((gpointer*) this->str);
+	lines=0;
+	next=this->str;
+	last=this->str;
+	while ((next=strstr(next, "\\n"))) {
+		last = next;
+		lines++;
+		next++;
+	}
+
+	while (*last) {
+		if (! g_ascii_isspace(*last)) {
+			lines++;
+			break;
+		}
+		last++;
+	}
+
+	dbg(lvl_debug,"this->align=%d\n", this->align);
+	switch (this->align & 51) {
+	case 1:
+		p.y=0;
+		break;
+	case 2:
+		p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing);
+		break;
+	case 16: // Grow from top to bottom
+		p.y = 0;
+		if (lines != 0) {
+			opc->osd_item.h = (lines-1) * (height+yspacing) + height;
+		} else {
+			opc->osd_item.h = 0;
+		}
+
+		if (do_draw) {
+			osd_std_resize(&opc->osd_item);
+		}
+	default:
+		p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing)/2;
+	}
+
+	while (this->str) {
+		next=strstr(this->str, "\\n");
+		if (next) {
+			*next='\0';
+			next+=2;
+		}
+		graphics_get_text_bbox(opc->osd_item.gr,
+					   opc->osd_item.font,
+					   this->str, 0x10000,
+					   0x0, p2, 0);
+		switch (this->align & 12) {
+		case 4:
+			p.x=xspacing;
+			break;
+		case 8:
+			p.x=opc->osd_item.w-(p2[2].x-p2[0].x)-xspacing;
+			break;
+		default:
+			p.x = ((p2[0].x - p2[2].x) / 2) + (opc->osd_item.w / 2);
+		}
+		p.y += height+yspacing;
+		graphics_draw_text(opc->osd_item.gr,
+				   opc->osd_item.graphic_fg_text,
+				   NULL, opc->osd_item.font,
+				   this->str, &p, 0x10000,
+				   0);
+		this->str=next;
+		
+		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+		
+		g_free(absbegin);
+	}
 }
 
 
@@ -3957,6 +4023,10 @@ osd_audio_player_new(struct navit *nav, struct osd_methods *meth, struct attr **
 
 	opc->osd_item.font_size = 200;
 	meth->set_attr = set_std_osd_attr;
+	
+	attr = attr_search(attrs, NULL, attr_align);
+	if (attr)
+		this->align=attr->u.num;
 	
 	attr=attr_search(attrs, NULL, attr_label);
 	if (attr)
