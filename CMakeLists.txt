@@ -441,11 +441,11 @@ add_feature(SVG2PNG "default" TRUE)
 add_feature(SAMPLE_MAP "default" TRUE)
 add_feature(USE_SWITCH_LAYOUT "default" FALSE)
 
-if(WiringPi_FOUND)
-if(USE_SWITCH_LAYOUT)
-set_with_reason(plugin/switch_layout "by commandline" TRUE)
-endif(USE_SWITCH_LAYOUT)
-endif(WiringPi_FOUND)
+if(WIRINGPI_FOUND)
+	if(USE_SWITCH_LAYOUT)
+		set_with_reason(plugin/switch_layout "by commandline" TRUE)
+	endif(USE_SWITCH_LAYOUT)
+endif(WIRINGPI_FOUND)
 
 
 IF(NOT svg2png_scaling)

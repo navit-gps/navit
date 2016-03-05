@@ -101,19 +101,23 @@ check_switch_layout(struct switch_layout *this)
 			if(!light_on){
 				navit_set_layout_by_name(this->nav, this->layout->dayname);
 			}
-		}
-		if(this->layout->nightname){
+		}else if(this->layout->nightname){
 			if(light_on){
 				navit_set_layout_by_name(this->nav, this->layout->nightname);
 
 			}
+		}
+	}else{
+		if((this->layout->dayname && light_on) || (this->layout->nightname && !light_on)){
+			this->layout->auto_switch = 1;
+			dbg(lvl_debug,"current layout %s, auto: %i\n",this->layout->name, this->layout->auto_switch);
 		}
 	}
 }
 
 static void 
 switch_layout_main(struct switch_layout *this, struct navit *nav){
-	event_add_timeout(300, 1, callback_new_1(callback_cast(check_switch_layout), this));
+	event_add_timeout(1000, 1, callback_new_1(callback_cast(check_switch_layout), this));
 }
 
 static void 
@@ -133,6 +137,7 @@ switch_layout_init(struct switch_layout *this, struct navit *nav)
 void
 plugin_init(void)
 {
+	dbg(lvl_debug, "start switch_layout\n" );
 	struct attr callback; 
 	struct switch_layout *this=g_new0(struct switch_layout, 1);
 	callback.type=attr_callback;

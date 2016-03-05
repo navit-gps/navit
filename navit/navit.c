@@ -3471,17 +3471,17 @@ static void navit_cmd_switch_layout(struct navit *this_){
     
     
     if (this_->layout_current->dayname || this_->layout_current->nightname) {
-		dbg(lvl_error,"Ok, we know that we have profile to switch\n");
+		dbg(lvl_debug,"current layout %s, auto: %i\n",this_->layout_current->name, this_->layout_current->auto_switch);
+		//this_->layout_current->auto_switch = 0;
 		
-		this_->layout_current->auto_switch = 0;
-		
-		if (strcmp(this_->layout_current->name,this_->layout_current->dayname)) {
+		if (this_->layout_current->dayname && strcmp(this_->layout_current->name,this_->layout_current->dayname)) {
+			dbg(lvl_debug,"switched layout from %s to %s\n",this_->layout_current->name, this_->layout_current->dayname);
 			navit_set_layout_by_name(this_,this_->layout_current->dayname);
-		}
-		
-		if (strcmp(this_->layout_current->name,this_->layout_current->nightname)) {
+		}else if (this_->layout_current->nightname && strcmp(this_->layout_current->name,this_->layout_current->nightname)) {
+			dbg(lvl_debug,"switched layout from %s to %s\n",this_->layout_current->name, this_->layout_current->nightname)
 			navit_set_layout_by_name(this_,this_->layout_current->nightname);
 		}
+		this_->layout_current->auto_switch = 0;
 	}
 	
 }
