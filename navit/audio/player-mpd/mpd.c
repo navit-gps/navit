@@ -82,7 +82,7 @@ char* get_playlist_name(GList* list);
 void mpd_play(void);
 void mpd_play_track(int track);
 GList* get_entry_by_index(GList* list, int index);
-void save_playlist(GList* list);
+//void save_playlist(GList* list);
 int mpd_get_playlists_count (void);
 void reload_playlists(struct mpd* this);
 
@@ -346,7 +346,7 @@ load_playlist(GList * list){
 		strcat(command, get_playlist_name(list));
 		strcat(command, "\"");
 		system(&command[0]);
-		save_playlist(list);
+		//save_playlist(list);
 	}
 }
 GList* 
@@ -608,25 +608,27 @@ GList*
 get_last_playlist(struct mpd* this)
 {
     FILE *fp;
-    GList* saved_list = NULL;
+    GList* playlist = NULL;
     char text[64];
-    fp = fopen("last_playlist","r");
+    char *playlist_name;
+    fp = popen("mpc -f %file%","r");
     if (fp == NULL) {
         dbg(lvl_error, "Failed to open file\n" );  
         return NULL;
     }
     if(fgets(text, sizeof(text)-1, fp) != NULL) {
-		saved_list = get_entry(this->playlists, text);
-        if(saved_list == NULL){
-			saved_list = this->playlists;
+		playlist_name = strtok(text, "/");
+		playlist = get_entry(this->playlists, playlist_name);
+        if(playlist == NULL){
+			playlist = this->playlists;
 		}else{
-			mpd->current_playlist = saved_list;
+			mpd->current_playlist = playlist;
 		}
     }
     fclose(fp);
-    return saved_list;
+    return playlist;
 }
-
+/*
 void 
 save_playlist(GList* list)
 {
@@ -641,7 +643,7 @@ save_playlist(GList* list)
     dbg(lvl_debug, "Last Playlist: %s", get_playlist_name(list));
     fclose(fp);
 }
-
+*/
 char *
 mpd_get_track_name (int track_index)
 {
