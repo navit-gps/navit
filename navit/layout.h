@@ -104,6 +104,7 @@ struct layout {
 	GList *cursors;
 	int order_delta;
 	int active;
+	int auto_switch;
 };
 
 /* prototypes */

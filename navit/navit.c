@@ -196,6 +196,7 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
 static void navit_set_cursors(struct navit *this_);
 static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
+static void navit_cmd_switch_layout(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
@@ -1387,6 +1388,7 @@ static struct command_table commands[] = {
 	{"map_item_set_attr",command_cast(navit_cmd_map_item_set_attr)},
 	{"set_attr_var",command_cast(navit_cmd_set_attr_var)},
 	{"get_attr_var",command_cast(navit_cmd_get_attr_var)},
+	{"toggle_layout",command_cast(navit_cmd_switch_layout)},
 };
 	
 void 
@@ -1505,6 +1507,12 @@ struct graphics *
 navit_get_graphics(struct navit *this_)
 {
 	return this_->gra;
+}
+
+struct layout* 
+navit_get_current_layout(struct navit *this)
+{
+	return this->layout_current;
 }
 
 struct vehicleprofile *
@@ -3374,6 +3382,11 @@ navit_layout_switch(struct navit *n)
     if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
 	return; //No layout - nothing to switch
     }
+#ifdef USE_SWITCH_LAYOUT 
+	return; // We change the layout with the power of gpio so no need to
+			// resume here
+#endif
+    
     if (!n->vehicle)
 	return;
     l=layout_attr.u.layout;
@@ -3441,6 +3454,38 @@ navit_layout_switch(struct navit *n)
 	n->prevTs=currTs;
     }
 }
+
+
+/**
+ * this function is used to change from night to day layout manually (osd item or button)
+ * to prevent the automatic layout switcher to change the layout back.
+ */
+static void navit_cmd_switch_layout(struct navit *this_){
+	
+	if (!this_->layout_current) {
+	return; //No layout - nothing to switch
+    }
+    
+    if (!this_->vehicle)
+	return;
+    
+    
+    if (this_->layout_current->dayname || this_->layout_current->nightname) {
+		dbg(lvl_debug,"current layout %s, auto: %i\n",this_->layout_current->name, this_->layout_current->auto_switch);
+		//this_->layout_current->auto_switch = 0;
+		
+		if (this_->layout_current->dayname && strcmp(this_->layout_current->name,this_->layout_current->dayname)) {
+			dbg(lvl_debug,"switched layout from %s to %s\n",this_->layout_current->name, this_->layout_current->dayname);
+			navit_set_layout_by_name(this_,this_->layout_current->dayname);
+		}else if (this_->layout_current->nightname && strcmp(this_->layout_current->name,this_->layout_current->nightname)) {
+			dbg(lvl_debug,"switched layout from %s to %s\n",this_->layout_current->name, this_->layout_current->nightname)
+			navit_set_layout_by_name(this_,this_->layout_current->nightname);
+		}
+		this_->layout_current->auto_switch = 0;
+	}
+	
+}
+
 
 int 
 navit_set_vehicle_by_name(struct navit *n,const char *name) 
