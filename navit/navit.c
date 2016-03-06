@@ -3699,9 +3699,9 @@ navit_layout_switch(struct navit *n)
 	//Check that we aren't calculating too fast
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
 		currTs=iso8601_to_secs(iso8601_attr.u.str);
-		dbg(0,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
+		dbg(lvl_debug,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 	}
-	dbg(0,"prevTs: %u:%u\n",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
+	dbg(lvl_debug,"prevTs: %u:%u\n",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
 	if (currTs-(n->prevTs)<60) {
 		//We've have to wait a little
 		return;
@@ -3775,8 +3775,8 @@ navit_layout_switch(struct navit *n)
  * the version of the active layout (day/night/undefined)
  */
 static
-void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out, int valid){
-
+void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out, int valid)
+{
 
 	if (!(in && in[0] && ATTR_IS_STRING(in[0]->type))) {
 		return;
