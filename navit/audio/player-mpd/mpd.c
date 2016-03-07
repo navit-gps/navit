@@ -44,7 +44,9 @@ static int g_track_index;
 
 static audio_fifo_t g_audiofifo;
 
+// placeholder for the current track used to communicate with the osd item
 char track[64];
+
 
 struct mpd
 {
@@ -52,22 +54,22 @@ struct mpd
     struct callback *callback;
     struct event_timeout *timeout;
     struct attr **attrs;
-    GList* current_playlist;
-    GList* playlists;
-    GList* actions;
-    gchar *musicdir;
-    int num_playlists;
-    int playlist_index;
-    gboolean random_track;
-    gboolean random_playlist;
-    gboolean repeat;
-    gboolean single;
-    gboolean shuffle;
+    GList* current_playlist; 	// the currently playing albun/playlist
+    GList* playlists;		// the head of the playlist list
+    GList* actions;		// all possible actions
+    gchar *musicdir;		// path where the music is stored
+    int num_playlists;		// count value for the number of playlists
+    int playlist_index;		// the index of the currently loaded list
+    gboolean random_track;	// setting for randomized playback, true means play randomized
+    gboolean random_playlist;	// setting for randomized playback of playlists, true means choose a playlist randomized
+    gboolean repeat;		// setting for repeated playback. 
+    gboolean single;		// setting for single playback the playback stops if the track ended. 
+    gboolean shuffle;		// setting for shuffle playback
     char current_track[64];
-    int volume;
+    int volume;			// stores the volume for mpc - needs to be restored if the audio output was muted
     int width;
-    gboolean muted;
-    gboolean playing;
+    gboolean muted;		// muting status true is volume = 0
+    gboolean playing;		// playing status true is playing
 } *mpd;
 
 struct audio_priv 
@@ -88,6 +90,14 @@ void reload_playlists(struct mpd* this);
 
 // playlist functions
 
+/**
+* @brief this command checks if the audio player is playing
+*
+* @return the status of the player. True is playing.
+*
+* This command checks if the player is playing. 
+* If the player 'says' not playing it asks the mpc process if its playing.
+*/
 gboolean mpd_get_playing_status(void){
 	if(mpd->playing)
 		return mpd->playing;
@@ -113,7 +123,12 @@ gboolean mpd_get_playing_status(void){
 	pclose(fp);
 	return false;
 }
-
+/**
+* @brief this command reads a data of a certain playlist
+*
+* @param the playlist object
+* @return the playlist data structure or NULL on error
+*/
 struct audio_playlist*
 get_playlist_data(GList* list)
 {
@@ -128,6 +143,16 @@ get_playlist_data(GList* list)
 	return NULL;
 }
 
+
+/**
+* @brief this command reindexes a list of playlists
+*
+* @param the playlist object to start indexing
+* @return the number of reindexed playlists.
+*
+* This command reindexes a list of playlists to reorder them.  
+* It's intended to be used after a sorting command on the head of a list of playlists.  
+*/
 int
 reindex_playlists(GList *list)
 {
@@ -145,6 +170,14 @@ reindex_playlists(GList *list)
 	return i;
 }
 
+
+/**
+* @brief this command creates a new playlist data structure
+* 
+* @param the playlist name
+* @param the desired playlist index
+* @return  the playlist data object.
+*/
 struct audio_playlist* new_audio_playlist(char *name, int index)
 {
 	struct audio_playlist *pl;
@@ -157,6 +190,13 @@ struct audio_playlist* new_audio_playlist(char *name, int index)
 	return pl;
 }
 
+/**
+* @brief this command appends a playlist data structure to the list of playlists
+* 
+* @param list the playlist to apped the data
+* @param playlist the playlist data to append
+* @return  the playlist.
+*/
 GList*
 insert_right(GList* list, struct audio_playlist* playlist)
 {
@@ -182,7 +222,13 @@ print_all(GList* list)
 		current = current->next;
 	}
 }	
-
+/**
+* @brief choose a playlist randomly
+*
+* @param list the entire list of playlists
+*
+* @return the randomly chosen list element 
+*/
 GList*
 random_entry(GList* list){
 	int n = mpd_get_playlists_count();
@@ -210,6 +256,14 @@ prev_playlist(GList* list)
 	return (list->prev!=NULL)?g_list_previous(list):g_list_last(list);
 } 
 
+
+/**
+* @brief Get the name of the playlist
+*
+* @param list the playlist object
+*
+* @return the name of the playlist
+*/
 char*
 get_playlist_name(GList* list)
 {
@@ -227,12 +281,26 @@ get_playlist_name(GList* list)
 	return NULL;
 }
 
+/**
+* @brief Delete a playlist from the list of playlists
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList* 
 delete_and_free(GList *list)
 {
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief Delete a playlist from the list of playlists and from mpc's database
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList*
 delete_playlist(GList* list)
 {	
@@ -244,6 +312,11 @@ delete_playlist(GList* list)
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief Initialize the mpd database and create the list of playlists
+*
+* @return the created list of playlists alphabetically sorted
+*/
 GList*
 load_playlists(void)
 {
@@ -286,6 +359,12 @@ load_playlists(void)
     return sort_playlists(list);
 }
 
+/**
+* @brief set the index of a playlist
+*
+* @param entry the playlist element
+* @param entry_index the desired index 
+*/
 void set_playlist_index(GList* entry, int entry_index)
 {
 	struct audio_playlist *pl;
@@ -299,6 +378,13 @@ void set_playlist_index(GList* entry, int entry_index)
 	}
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 swap_playlists(GList* a, GList* b)
 {
@@ -308,6 +394,13 @@ swap_playlists(GList* a, GList* b)
     b->data = temp;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList* 
 sort_playlists(GList* list)
 {
@@ -337,6 +430,13 @@ sort_playlists(GList* list)
     return list;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 load_playlist(GList * list){
 	if(list){
@@ -349,6 +449,14 @@ load_playlist(GList * list){
 		//save_playlist(list);
 	}
 }
+
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList* 
 load_next_playlist(GList* current)
 {
@@ -360,6 +468,13 @@ load_next_playlist(GList* current)
     return next;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList* 
 get_entry(GList* head, char *data)
 {
@@ -390,12 +505,26 @@ get_entry(GList* head, char *data)
 	return NULL;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 get_entry_by_index(GList* list, int index)
 {
 	return g_list_nth(list, index);
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList* 
 load_prev_playlist(GList* current)
 {
@@ -407,6 +536,13 @@ load_prev_playlist(GList* current)
     return previous;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 change_artist(GList* current, int next)
 {
@@ -453,18 +589,39 @@ change_artist(GList* current, int next)
     return current;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 next_artist(GList* current)
 {
 	return change_artist(current, 1);
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 prev_artist(GList* current)
 {
 	return change_artist(current, 0);
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_next_artist(void)
 {
@@ -472,7 +629,13 @@ mpd_next_artist(void)
 	printf("next Artist");
 }
 
-
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_prev_artist(void)
 {
@@ -480,6 +643,13 @@ mpd_prev_artist(void)
 	printf("next Artist");
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 gboolean
 directory_exists(char* dir_name)
 {
@@ -494,7 +664,13 @@ directory_exists(char* dir_name)
 	return exists;
 }
 
-
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 check_playlists(void)
 {
@@ -539,11 +715,17 @@ check_playlists(void)
 			return mpd->playlists;
 		}
     }
-    //exit;
     pclose(fp);
     return list;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void 
 delete_all_playlists(struct mpd* this)
 {
@@ -591,6 +773,13 @@ delete_all_playlists(struct mpd* this)
     this->current_playlist = current;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void 
 reload_playlists(struct mpd* this)
 {
@@ -604,6 +793,13 @@ reload_playlists(struct mpd* this)
 	system("mpc update");
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 get_last_playlist(struct mpd* this)
 {
@@ -644,6 +840,14 @@ save_playlist(GList* list)
     fclose(fp);
 }
 */
+
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 char *
 mpd_get_track_name (int track_index)
 {
@@ -673,6 +877,13 @@ mpd_get_track_name (int track_index)
     return "NULL (track name)";
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 char *
 mpd_get_current_playlist_name ()
 {
@@ -685,6 +896,13 @@ mpd_get_current_playlist_name ()
 	return data;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 char *
 mpd_get_playlist_name (int playlist_index)
 {
@@ -704,6 +922,13 @@ mpd_get_playlist_name (int playlist_index)
 	return "NULL (playlist name index)";//text;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_set_current_track (int track_index)
 {
@@ -711,6 +936,13 @@ mpd_set_current_track (int track_index)
     g_track_index = track_index;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 int
 mpd_get_current_playlist_items_count ()
 {
@@ -736,6 +968,13 @@ mpd_get_current_playlist_items_count ()
 	return l;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 int
 mpd_get_playlists_count(void)
 {
@@ -754,6 +993,13 @@ mpd_get_playlists_count(void)
 	return l;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_set_active_playlist (int playlist_index)
 {
@@ -857,7 +1103,13 @@ mpd_get_actions(void){
 }
 
 
-
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static void
 mpd_mpd_idle (struct mpd *mpd)
 {
@@ -945,11 +1197,25 @@ mpd_mpd_idle (struct mpd *mpd)
 
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void mpd_play(void)
 {
 	mpd->playing = true;
 	system("mpc play");
 }
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 
 void mpd_play_track(int track)
 {
@@ -959,6 +1225,13 @@ void mpd_play_track(int track)
 	system(&command[0]);
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_next_playlist(void)
 {
@@ -967,6 +1240,13 @@ mpd_next_playlist(void)
 	
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_prev_playlist(void)
 {
@@ -974,11 +1254,25 @@ mpd_prev_playlist(void)
 	mpd->current_playlist = load_prev_playlist(mpd->current_playlist);
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 int mpd_get_volume(void)
 {
 	return mpd->volume;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void mpd_set_volume(int vol)
 {
 	char command[100] = {0,};
@@ -987,11 +1281,25 @@ void mpd_set_volume(int vol)
 	mpd->volume = vol;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void mpd_delete_playlist(void){
 	dbg(lvl_debug, "Hi, I was told to delete this playlist: %s", mpd_get_current_playlist_name());
 	delete_playlist(get_entry(mpd->playlists, mpd_get_current_playlist_name()));
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void mpd_toggle_repeat(struct audio_actions *action){
 	//TODO: Change Icon for toolbar 
 	int toggle = 0;
@@ -1029,6 +1337,13 @@ void mpd_toggle_repeat(struct audio_actions *action){
 	}
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void mpd_toggle_shuffle(struct audio_actions *action){
 	//TODO: Change Icon for toolbar 
 	int toggle = 0;
@@ -1079,6 +1394,13 @@ void mpd_toggle_shuffle(struct audio_actions *action){
 	}
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 mpd_toggle_playback (struct audio_actions *action)
 {
@@ -1101,6 +1423,13 @@ mpd_toggle_playback (struct audio_actions *action)
 	mpd->playing = !mpd->playing;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList *
 playlists(struct audio_priv *this)
 {
@@ -1116,6 +1445,13 @@ playlists(struct audio_priv *this)
         return playlists;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList *
 tracks(struct audio_priv *this, int playlist_index)
 {
@@ -1144,6 +1480,13 @@ tracks(struct audio_priv *this, int playlist_index)
         return tracks;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 GList*
 actions(struct audio_priv *this){
 	dbg(lvl_debug, "In mpd's actions\n");
@@ -1157,7 +1500,13 @@ actions(struct audio_priv *this){
 	return mpd->actions;
 }
 
-
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 struct audio_actions*
 get_specific_action(GList* actions, int specific_action)
 {
@@ -1173,6 +1522,13 @@ get_specific_action(GList* actions, int specific_action)
 	return NULL;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static int
 action_do(struct audio_priv *this, const int action)
 {
@@ -1248,6 +1604,13 @@ action_do(struct audio_priv *this, const int action)
 	return action;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static int
 playback(struct audio_priv *this, const int action)
 {
@@ -1262,6 +1625,13 @@ playback(struct audio_priv *this, const int action)
 	return 0;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static int 
 volume(struct audio_priv *this, const int action)
 {
@@ -1307,6 +1677,13 @@ volume(struct audio_priv *this, const int action)
 	return mpd->volume;
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 char*
 current_track(struct audio_priv *this)
 {
@@ -1317,12 +1694,26 @@ current_track(struct audio_priv *this)
 	}
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 char*
 current_playlist(struct audio_priv *this)
 {
 	return mpd_get_current_playlist_name();
 }
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static struct audio_methods player_mpd_meth = {
         volume,
         playback,
@@ -1334,6 +1725,13 @@ static struct audio_methods player_mpd_meth = {
         current_playlist,
 };
 
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 static struct audio_priv *
 player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *parent) 
 {
@@ -1373,7 +1771,13 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
     return this;
 }
 
-
+/**
+* @brief
+*
+* @param
+*
+* @return
+*/
 void
 plugin_init(void)
 { 
