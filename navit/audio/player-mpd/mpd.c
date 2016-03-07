@@ -1,4 +1,22 @@
-/* vim: set tabstop=8 expandtab: */
+/**
+ * Navit, a modular navigation system.
+ * Copyright (C) 2005-2016 Navit Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
+ */
+ 
 #include <glib.h>
 #include "item.h"
 #include <stdio.h>
@@ -44,7 +62,9 @@ static int g_track_index;
 
 static audio_fifo_t g_audiofifo;
 
+// placeholder for the current track used to communicate with the osd item
 char track[64];
+
 
 struct mpd
 {
@@ -52,22 +72,22 @@ struct mpd
     struct callback *callback;
     struct event_timeout *timeout;
     struct attr **attrs;
-    GList* current_playlist;
-    GList* playlists;
-    GList* actions;
-    gchar *musicdir;
-    int num_playlists;
-    int playlist_index;
-    gboolean random_track;
-    gboolean random_playlist;
-    gboolean repeat;
-    gboolean single;
-    gboolean shuffle;
+    GList* current_playlist; 	// the currently playing album/playlist
+    GList* playlists;		// the head of the playlist list
+    GList* actions;		// all possible actions
+    gchar *musicdir;		// path where the music is stored
+    int num_playlists;		// count value for the number of playlists
+    int playlist_index;		// the index of the currently loaded list
+    gboolean random_track;	// setting for randomized playback, true means play randomized
+    gboolean random_playlist;	// setting for randomized playback of playlists, true means choose a playlist randomized
+    gboolean repeat;		// setting for repeated playback. 
+    gboolean single;		// setting for single playback the playback stops if the track ended. 
+    gboolean shuffle;		// setting for shuffle playback
     char current_track[64];
-    int volume;
+    int volume;			// stores the volume for mpc - needs to be restored if the audio output was muted
     int width;
-    gboolean muted;
-    gboolean playing;
+    gboolean muted;		// muting status true is volume = 0
+    gboolean playing;		// playing status true is playing
 } *mpd;
 
 struct audio_priv 
@@ -88,6 +108,14 @@ void reload_playlists(struct mpd* this);
 
 // playlist functions
 
+/**
+* @brief this function checks if the audio player is playing
+*
+* @return the status of the player. True is playing.
+*
+* this function checks if the player is playing. 
+* If the player 'says' not playing it asks the mpc process if its playing.
+*/
 gboolean mpd_get_playing_status(void){
 	if(mpd->playing)
 		return mpd->playing;
@@ -113,7 +141,12 @@ gboolean mpd_get_playing_status(void){
 	pclose(fp);
 	return false;
 }
-
+/**
+* @brief this function reads a data of a certain playlist
+*
+* @param the playlist object
+* @return the playlist data structure or NULL on error
+*/
 struct audio_playlist*
 get_playlist_data(GList* list)
 {
@@ -128,6 +161,16 @@ get_playlist_data(GList* list)
 	return NULL;
 }
 
+
+/**
+* @brief this function reindexes a list of playlists
+*
+* @param the playlist object to start indexing
+* @return the number of reindexed playlists.
+*
+* this function reindexes a list of playlists to reorder them.  
+* It's intended to be used after a sorting algorithm on the head of a list of playlists.  
+*/
 int
 reindex_playlists(GList *list)
 {
@@ -145,6 +188,14 @@ reindex_playlists(GList *list)
 	return i;
 }
 
+
+/**
+* @brief this function creates a new playlist data structure
+* 
+* @param the playlist name
+* @param the desired playlist index
+* @return  the playlist data object.
+*/
 struct audio_playlist* new_audio_playlist(char *name, int index)
 {
 	struct audio_playlist *pl;
@@ -157,6 +208,13 @@ struct audio_playlist* new_audio_playlist(char *name, int index)
 	return pl;
 }
 
+/**
+* @brief this function appends a playlist data structure to the list of playlists
+* 
+* @param list the playlist to apped the data
+* @param playlist the playlist data to append
+* @return  the playlist.
+*/
 GList*
 insert_right(GList* list, struct audio_playlist* playlist)
 {
@@ -182,7 +240,13 @@ print_all(GList* list)
 		current = current->next;
 	}
 }	
-
+/**
+* @brief choose a playlist randomly
+*
+* @param list the entire list of playlists
+*
+* @return the randomly chosen list element 
+*/
 GList*
 random_entry(GList* list){
 	int n = mpd_get_playlists_count();
@@ -192,6 +256,13 @@ random_entry(GList* list){
 	return get_entry_by_index(g_list_first(list), i);
 }
 
+/**
+* @brief switch to the next playlist
+*
+* @param list the entire list of playlists
+*
+* @return the next list element 
+*/
 GList*
 next_playlist(GList* list)
 {
@@ -201,6 +272,13 @@ next_playlist(GList* list)
 	return (list->next!=NULL)?g_list_next(list):g_list_first(list);
 } 
 
+/**
+* @brief switch to the previous playlist
+*
+* @param list the entire list of playlists
+*
+* @return the previous list element 
+*/
 GList*
 prev_playlist(GList* list)
 {
@@ -210,6 +288,14 @@ prev_playlist(GList* list)
 	return (list->prev!=NULL)?g_list_previous(list):g_list_last(list);
 } 
 
+
+/**
+* @brief Get the name of the playlist
+*
+* @param list the playlist object
+*
+* @return the name of the playlist
+*/
 char*
 get_playlist_name(GList* list)
 {
@@ -227,12 +313,26 @@ get_playlist_name(GList* list)
 	return NULL;
 }
 
+/**
+* @brief Delete a playlist from the list of playlists
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList* 
 delete_and_free(GList *list)
 {
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief Delete a playlist from the list of playlists and from mpc's database
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList*
 delete_playlist(GList* list)
 {	
@@ -244,6 +344,11 @@ delete_playlist(GList* list)
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief Initialize the mpd database and create the list of playlists
+*
+* @return the created list of playlists alphabetically sorted
+*/
 GList*
 load_playlists(void)
 {
@@ -286,6 +391,12 @@ load_playlists(void)
     return sort_playlists(list);
 }
 
+/**
+* @brief set the index of a playlist
+*
+* @param entry the playlist element
+* @param entry_index the desired index 
+*/
 void set_playlist_index(GList* entry, int entry_index)
 {
 	struct audio_playlist *pl;
@@ -299,6 +410,14 @@ void set_playlist_index(GList* entry, int entry_index)
 	}
 }
 
+/**
+* @brief swap two playlists
+*
+* @param a playlist a to swap
+* @param b playlist b to swap
+* 
+* this function is used to bubblesort the playlists
+*/
 void
 swap_playlists(GList* a, GList* b)
 {
@@ -308,6 +427,13 @@ swap_playlists(GList* a, GList* b)
     b->data = temp;
 }
 
+/**
+* @brief this function sorts a list of playlists alphabetically
+*
+* @param list the entire list of playlists
+*
+* @return the sorted list of playlists
+*/
 GList* 
 sort_playlists(GList* list)
 {
@@ -337,6 +463,11 @@ sort_playlists(GList* list)
     return list;
 }
 
+/**
+* @brief this function loads a playlist to mpd/mpd
+*
+* @param list the playlist to be loaded
+*/
 void
 load_playlist(GList * list){
 	if(list){
@@ -349,17 +480,32 @@ load_playlist(GList * list){
 		//save_playlist(list);
 	}
 }
+
+/**
+* @brief this function choses the next playlist from the list of playlists
+*
+* @param current the currently loaded playlist element
+*
+* @return the playlist element that was loaded
+*/
 GList* 
 load_next_playlist(GList* current)
 {
     GList* next = next_playlist(current);
-    system("mpc clear");
-	load_playlist(next);
+    load_playlist(next);
     mpd->playlist_index = g_list_index(mpd->playlists, next->data);
     mpd_play();
     return next;
 }
 
+/**
+* @brief seeks and returns the playlist with the given data
+*
+* @param head the list of playlist to search on
+* @param data the data, which contains the playlist name to search
+*
+* @return the searched element or NULL if it wasnt found
+*/
 GList* 
 get_entry(GList* head, char *data)
 {
@@ -390,23 +536,50 @@ get_entry(GList* head, char *data)
 	return NULL;
 }
 
+/**
+* @brief this function returns the nth element of the list of playlists
+*
+* @param list the list of playlists
+* @param index the index to get
+*
+* @return the nth playlist
+*/
 GList*
 get_entry_by_index(GList* list, int index)
 {
 	return g_list_nth(list, index);
 }
 
+/**
+* @brief this function choses the previous playlist from the list of playlists
+*
+* @param current the currently loaded playlist element
+*
+* @return the playlist element that was loaded
+*/
 GList* 
 load_prev_playlist(GList* current)
 {
 	GList* previous = prev_playlist(current);
-    system("mpc clear");
     load_playlist(previous);
     mpd->playlist_index = g_list_index(mpd->playlists, previous->data);
     mpd_play();
     return previous;
 }
 
+/**
+* @brief this function gets the next playlist where the artist differs
+*
+* @param current playlist entry
+* @param next specifies if we go forwards or backwards
+*
+* @return the playlist item which differs in its artist name
+* 
+* For proper us of this function the playlists must be named in a special way:
+* "Artist - Album" The algorithm iterates over the list of playlists forwards 
+* or backwards (depending on next is set or not) and stops and return 
+* the first item which differs in the part until the dash char
+*/
 GList*
 change_artist(GList* current, int next)
 {
@@ -453,33 +626,27 @@ change_artist(GList* current, int next)
     return current;
 }
 
-GList*
-next_artist(GList* current)
-{
-	return change_artist(current, 1);
-}
-
-GList*
-prev_artist(GList* current)
-{
-	return change_artist(current, 0);
-}
-
 void
 mpd_next_artist(void)
 {
-	mpd->current_playlist = next_artist(mpd->current_playlist);
+	mpd->current_playlist = change_artist(mpd->current_playlist,1);
 	printf("next Artist");
 }
-
 
 void
 mpd_prev_artist(void)
 {
-	mpd->current_playlist = prev_artist(mpd->current_playlist);
+	mpd->current_playlist = change_artist(mpd->current_playlist,0);
 	printf("next Artist");
 }
 
+/**
+* @brief test if a directory on the file system exists
+*
+* @param dir_name path of the directory
+*
+* @return true if the directory exists, false otherwise. surprise.
+*/
 gboolean
 directory_exists(char* dir_name)
 {
@@ -494,7 +661,16 @@ directory_exists(char* dir_name)
 	return exists;
 }
 
-
+/**
+* @brief this function checks if mpd already knows playlists and gets it or creates a new list of playlists
+*
+* @return the list of playlists
+* 
+* mpd stores the saved playlists on the file system and can be asked for
+* them. If the audio player gets a list of playlists from mpd, it will 
+* create a list of playlists from them. Otherwise it creates a new list 
+* of playlist from the music that is stored inside the music directory
+*/
 GList*
 check_playlists(void)
 {
@@ -504,13 +680,12 @@ check_playlists(void)
     gchar md[100] = {0,};
     int i = 0;
    
-    // Open the command for reading.
     fp = popen("mpc lsplaylists", "r");
     if (fp == NULL) {
         dbg(lvl_error, "Failed to run command\n" );
         return(NULL);
     }
-    // Read the output a line at a time - output it.
+
     while (fgets(_playlist, sizeof(_playlist)-1, fp) != NULL) {
         strtok(_playlist, "\n");
         dbg(lvl_debug, "Check Playlist: %s\n", _playlist);
@@ -539,11 +714,15 @@ check_playlists(void)
 			return mpd->playlists;
 		}
     }
-    //exit;
     pclose(fp);
     return list;
 }
 
+/**
+* @brief this function deletes all playlists
+*
+* @param this the audio player object
+*/
 void 
 delete_all_playlists(struct mpd* this)
 {
@@ -586,15 +765,24 @@ delete_all_playlists(struct mpd* this)
     system(&command[0]);
     dbg(lvl_debug,command);
     system("mpc update --wait");
-    dbg(lvl_error,"%s\n",get_playlist_name(current));
+    dbg(lvl_debug,"%s\n",get_playlist_name(current));
     this->playlists = current;
     this->current_playlist = current;
 }
 
+/**
+* @brief this function deletes and reloads all playlists
+*
+* @param this the audio player object 
+*
+* This function is used to clean all playlist data and reload the playlist
+* this might be useful if the music is stored on a usb media and the usb 
+* storage device is changed to change the music
+*/
 void 
 reload_playlists(struct mpd* this)
 {
-	dbg(lvl_error, "\nreload_playlists\n\n");
+	dbg(lvl_debug, "\nreload_playlists\n\n");
 	delete_all_playlists(this);                      
 	system("mpc stop");
 	system("mpc update");
@@ -604,6 +792,17 @@ reload_playlists(struct mpd* this)
 	system("mpc update");
 }
 
+/**
+* @brief this function reads the currently by mpd loaded playlist and 
+* sets the playlist pointer on the corresponding object in the list of 
+* playlists
+*
+* @param this the audio player object
+*
+* @return the pointer to the read playlist
+* 
+* When the embedded device is shut down mpd keeps the currently loaded playlist and track position. On restart 
+*/
 GList*
 get_last_playlist(struct mpd* this)
 {
@@ -628,21 +827,14 @@ get_last_playlist(struct mpd* this)
     fclose(fp);
     return playlist;
 }
-/*
-void 
-save_playlist(GList* list)
-{
-    FILE *fp;
-    fp = fopen("last_playlist","w");
-    if (fp == NULL) {
-        dbg(lvl_error, "Failed to open file\n" );
-        fclose(fp);
-        return;
-    }
-    fprintf(fp, get_playlist_name(list));
-    dbg(lvl_debug, "Last Playlist: %s", get_playlist_name(list));
-    fclose(fp);
-}
+
+
+/**
+* @brief this function reads the track name to print it on the gui
+*
+* @param track_index the index of the track
+*
+* @return the track name
 */
 char *
 mpd_get_track_name (int track_index)
@@ -673,6 +865,13 @@ mpd_get_track_name (int track_index)
     return "NULL (track name)";
 }
 
+/**
+* @brief this function gets and returns the current playing playlist
+*
+* @return the playlist name
+* 
+* this function is used for OSD and GUI
+*/
 char *
 mpd_get_current_playlist_name ()
 {
@@ -685,6 +884,13 @@ mpd_get_current_playlist_name ()
 	return data;
 }
 
+/**
+* @brief this function reads the playlist name to print it on the gui
+*
+* @param playlist_index the index of the playlist
+*
+* @return the playlist name
+*/
 char *
 mpd_get_playlist_name (int playlist_index)
 {
@@ -704,6 +910,11 @@ mpd_get_playlist_name (int playlist_index)
 	return "NULL (playlist name index)";//text;
 }
 
+/**
+* @brief this function starts playback for the track from the current playlist
+*
+* @param track_index the number of the track
+*/
 void
 mpd_set_current_track (int track_index)
 {
@@ -711,6 +922,11 @@ mpd_set_current_track (int track_index)
     g_track_index = track_index;
 }
 
+/**
+* @brief this funtion reads the number of tracks for the current playlist
+*
+* @return the number of tracks
+*/
 int
 mpd_get_current_playlist_items_count ()
 {
@@ -736,6 +952,11 @@ mpd_get_current_playlist_items_count ()
 	return l;
 }
 
+/**
+* @brief this function counts all playlists and returns the number
+*
+* @return the number of playlists
+*/
 int
 mpd_get_playlists_count(void)
 {
@@ -754,6 +975,11 @@ mpd_get_playlists_count(void)
 	return l;
 }
 
+/**
+* @brief this function starts playback for the given playlist
+*
+* @param playlist_index the given playlist to play
+*/
 void
 mpd_set_active_playlist (int playlist_index)
 {
@@ -769,9 +995,15 @@ mpd_set_active_playlist (int playlist_index)
 }
 
 
-/*  Function to provide all possible audio actions for the player
- *  takes nothing
- *  returns a list of actions with their icons for GUI and OSD
+/**
+ * @brief this function creates all possible actions for the player
+ * 
+ * @return the list of actions
+ * 
+ * Function to provide all possible audio actions for the player. These 
+ * actions are acessible inside the media gui as a toolbar, so they 
+ * might provide an icon. Their order will be applied to the toolbar too.
+ * It is possible to change the icon depending on the actions state
  */ 
 GList*
 mpd_get_actions(void){
@@ -782,17 +1014,17 @@ mpd_get_actions(void){
 	}else{
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_ARTIST;
-		aa->icon = g_strdup("media_prev_artist");//todo: make beautiful icon
+		aa->icon = g_strdup("media_prev_artist");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_PLAYLIST;
-		aa->icon = g_strdup("media_skip-back");//todo: make beautiful icon
+		aa->icon = g_strdup("media_skip-back");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_TRACK;
-		aa->icon = g_strdup("media_minus");//todo: make beautiful icon
+		aa->icon = g_strdup("media_minus");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -806,17 +1038,17 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_TRACK;
-		aa->icon = g_strdup("media_plus");//todo: make beautiful icon
+		aa->icon = g_strdup("media_plus");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_PLAYLIST;
-		aa->icon = g_strdup("media_skip-ahead");//todo: make beautiful icon
+		aa->icon = g_strdup("media_skip-ahead");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_ARTIST;
-		aa->icon = g_strdup("media_next_artist");//todo: make beautiful icon
+		aa->icon = g_strdup("media_next_artist");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -845,23 +1077,35 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_MISC_DELETE_PLAYLIST;
-		aa->icon = g_strdup("media_trash");//todo: make beautiful icon
+		aa->icon = g_strdup("media_trash");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_MISC_RELOAD_PLAYLISTS;
-		aa->icon = g_strdup("media_close");//todo: make beautiful icon
+		aa->icon = g_strdup("media_close");
 		actions = g_list_append(actions, aa);
 	}
 	return actions;
 }
 
 
-
+/**
+* @brief the loop function for the audio player
+*
+* @param the audio player object
+*
+* this function is the loop core for this plugin. Here is the playlist 
+* change and the currend trackname processes for continous playback and 
+* nice osd view. If the last song of a playlist ends, the mpd process 
+* pauses playback automatically. For continous playback we have to 
+* change to the next playlist. 
+* 
+* We also read some statuses and save them to the audio player object
+*/
 static void
 mpd_mpd_idle (struct mpd *mpd)
 {
-	//dbg(lvl_error, "%s\n", mpd_get_current_playlist_name());
+	dbg(lvl_debug, "%s\n", mpd_get_current_playlist_name());
     if(mpd->current_playlist == NULL)
 	{
 		dbg(lvl_error,"Playlist=nULL\n");
@@ -884,6 +1128,7 @@ mpd_mpd_idle (struct mpd *mpd)
 				if(strstr(text, "volume:") != NULL && mpd->current_track[0] != NO_TRACK)
 				{
 					// playlist ist zu ende.. die naechste bitte ;)
+					// playlist has finished, the next please.
 					system("mpc clear");
 					mpd->current_playlist = load_next_playlist(mpd->current_playlist);
 					for(j=0; j<64;j++)
@@ -895,7 +1140,7 @@ mpd_mpd_idle (struct mpd *mpd)
 					return;
 				}else{
 					strcpy(mpd->current_track, text);
-					//dbg(lvl_error, "%s\n",mpd->current_track);
+					dbg(lvl_debug, "%s\n",mpd->current_track);
 				}
 			}
 		}else{
@@ -945,12 +1190,20 @@ mpd_mpd_idle (struct mpd *mpd)
 
 }
 
+/**
+* @brief play :)
+*/
 void mpd_play(void)
 {
 	mpd->playing = true;
 	system("mpc play");
 }
 
+/**
+* @brief play a specific track
+*
+* @param track the number of the track to play
+*/
 void mpd_play_track(int track)
 {
 	char command[15] = {0,};
@@ -959,6 +1212,9 @@ void mpd_play_track(int track)
 	system(&command[0]);
 }
 
+/**
+* @brief load the next playlist
+*/
 void
 mpd_next_playlist(void)
 {
@@ -967,6 +1223,9 @@ mpd_next_playlist(void)
 	
 }
 
+/**
+* @brief load the previous playlist
+*/
 void
 mpd_prev_playlist(void)
 {
@@ -974,11 +1233,21 @@ mpd_prev_playlist(void)
 	mpd->current_playlist = load_prev_playlist(mpd->current_playlist);
 }
 
+/**
+* @brief getter for the volume value of the audio player object
+*
+* @return the volume
+*/
 int mpd_get_volume(void)
 {
 	return mpd->volume;
 }
 
+/**
+* @brief sets the volume value
+*
+* @param vol the volume value to set
+*/
 void mpd_set_volume(int vol)
 {
 	char command[100] = {0,};
@@ -987,13 +1256,21 @@ void mpd_set_volume(int vol)
 	mpd->volume = vol;
 }
 
+/**
+* @brief delete the current playlist
+*/
 void mpd_delete_playlist(void){
 	dbg(lvl_debug, "Hi, I was told to delete this playlist: %s", mpd_get_current_playlist_name());
 	delete_playlist(get_entry(mpd->playlists, mpd_get_current_playlist_name()));
 }
 
+/**
+* @brief this function toggles the repeat mode
+*
+* @param action the action that owns the toggle
+*/
 void mpd_toggle_repeat(struct audio_actions *action){
-	//TODO: Change Icon for toolbar 
+	
 	int toggle = 0;
 	if(mpd->single) toggle++;
 	if(mpd->repeat) toggle += 2;
@@ -1005,7 +1282,7 @@ void mpd_toggle_repeat(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_playlist");
 			}
-			//dbg(lvl_error, "\nrepeat playlist\n");
+			dbg(lvl_debug, "\nrepeat playlist\n");
 			break;
 		}
 		case 2:{// repeat playlist
@@ -1014,7 +1291,7 @@ void mpd_toggle_repeat(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_track");
 			}
-			//dbg(lvl_error, "\nrepeat track\n");
+			dbg(lvl_debug, "\nrepeat track\n");
 			break;
 		}
 		case 3:{// repeat track
@@ -1023,19 +1300,30 @@ void mpd_toggle_repeat(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_off");
 			}
-			//dbg(lvl_error, "\nrepeat off\n");
+			dbg(lvl_debug, "\nrepeat off\n");
 			break;
 		}
 	}
 }
 
+/**
+* @brief this function toggles the shuffle mode
+*
+* @param action the action that owns the toggle
+*
+* starting from OFF state the command switches through
+* 	shuffle track only (of the loaded playlist)
+* 	shuffle playlist and track (a randomly chosen track from the entire music database)
+* 	shuffle playlist only (play all tracks on the playlist in the given order but coose the next playlist randomly)
+*/
 void mpd_toggle_shuffle(struct audio_actions *action){
-	//TODO: Change Icon for toolbar 
+
 	int toggle = 0;
 	if(mpd->random_track) toggle++;
 	if(mpd->random_playlist) toggle += 2;
 	dbg(lvl_debug,  "Toggle Shuffle: %i\n", toggle);
-	switch(toggle){//0 -> 1 -> 3 -> 2 -> 0
+	switch(toggle){
+		//0 -> 1 -> 3 -> 2 -> 0
 		case 0:{ 
 			system("mpc random on");
 			mpd->random_track = TRUE;
@@ -1043,7 +1331,7 @@ void mpd_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_playlists");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Playlists: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Playlists: %i\n", toggle);
 			break;
 		}
 		case 1:{
@@ -1053,7 +1341,7 @@ void mpd_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_tracks_playlists");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Tracks & Playlists: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Tracks & Playlists: %i\n", toggle);
 			break;
 		}
 		case 3:{
@@ -1063,7 +1351,7 @@ void mpd_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_tracks");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Tracks: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Tracks: %i\n", toggle);
 			break;
 		}
 		case 2:{
@@ -1073,12 +1361,19 @@ void mpd_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_off");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle OFF: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle OFF: %i\n", toggle);
 			break;
 		}
 	}
 }
 
+/**
+* @brief command to toggle playback
+*
+* @param action the action that owns the toggle
+*
+* the action must be passed because the playback action keeps the icon. This icon changes dependent on the playback state
+*/
 void
 mpd_toggle_playback (struct audio_actions *action)
 {
@@ -1101,6 +1396,15 @@ mpd_toggle_playback (struct audio_actions *action)
 	mpd->playing = !mpd->playing;
 }
 
+/**
+* @brief this function returns a list of playlists
+*
+* @param this the audio player object
+*
+* @return the list of playlists
+* 
+* if no playlists are found, this function iniyializes the playists for this player
+*/
 GList *
 playlists(struct audio_priv *this)
 {
@@ -1116,6 +1420,14 @@ playlists(struct audio_priv *this)
         return playlists;
 }
 
+/**
+* @brief this function returns a list of tracks for a specific playlist 
+*
+* @param this the audio player object
+* @param playlist_index the index of the playlist to get the tracks from
+*
+* @return the list of tracks
+*/
 GList *
 tracks(struct audio_priv *this, int playlist_index)
 {
@@ -1137,13 +1449,22 @@ tracks(struct audio_priv *this, int playlist_index)
                 t->name=g_strdup(mpd_get_track_name(i));
                 t->index=i;
                 t->status=0;
-                t->icon = "music-green";
+                t->icon = "music-green"; //we init with the green icon - maybe we will use thsi for any kind of rating in the future
                 tracks=g_list_append(tracks, t);
         }
 		dbg(lvl_debug, "Active playlist updated\n");
         return tracks;
 }
 
+/**
+* @brief this function returns the list of possible actions
+*
+* @param this the audio player object
+*
+* @return the list of actions
+* 
+* if there are no actions present, the command inits the action list
+*/
 GList*
 actions(struct audio_priv *this){
 	dbg(lvl_debug, "In mpd's actions\n");
@@ -1157,7 +1478,14 @@ actions(struct audio_priv *this){
 	return mpd->actions;
 }
 
-
+/**
+* @brief this function iterates over all possible actions for this player and searches for an action
+*
+* @param actions the list of actions 
+* @param action the action we want to find
+*
+* @return the audio action object wh searched or NULL if its not present
+*/
 struct audio_actions*
 get_specific_action(GList* actions, int specific_action)
 {
@@ -1173,6 +1501,29 @@ get_specific_action(GList* actions, int specific_action)
 	return NULL;
 }
 
+/**
+* @brief this function provides the action control for the audio player
+*
+* @param this the audio player object
+* @param action the action to be performed on the player
+*
+* @return returns the action
+* 
+* possible actions:
+* AUDIO_PLAYBACK_PLAY
+* AUDIO_PLAYBACK_PAUSE
+* AUDIO_PLAYBACK_TOGGLE
+* AUDIO_PLAYBACK_NEXT_TRACK
+* AUDIO_PLAYBACK_PREVIOUS_TRACK
+* AUDIO_PLAYBACK_NEXT_PLAYLIST
+* AUDIO_PLAYBACK_PREVIOUS_PLAYLIST
+* AUDIO_PLAYBACK_NEXT_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - "
+* AUDIO_PLAYBACK_PREVIOUS_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - " but backwards
+* AUDIO_MISC_DELETE_PLAYLIST
+* AUDIO_MODE_TOGGLE_REPEAT: switches through the repeat modes
+* AUDIO_MODE_TOGGLE_SHUFFLE: switches through the shuffle modes
+* AUDIO_MISC_RELOAD_PLAYLISTS: reload all playlists (delete and reload)
+*/
 static int
 action_do(struct audio_priv *this, const int action)
 {
@@ -1248,6 +1599,16 @@ action_do(struct audio_priv *this, const int action)
 	return action;
 }
 
+/**
+* @brief this function provides the playback control for the audio player
+*
+* @param this the audio player object
+* @param action the index of the song to play
+*
+* @return the playback status
+* 
+* this function is accessed, when one clicks on a specific song in gui internal
+*/
 static int
 playback(struct audio_priv *this, const int action)
 {
@@ -1262,6 +1623,20 @@ playback(struct audio_priv *this, const int action)
 	return 0;
 }
 
+/**
+* @brief this function provides the volume control for the audio player
+*
+* @param this the audio player object
+* @param action the kind of action to perform
+*
+* @return the resulting volume
+* 
+* possible values are:
+* 	AUDIO_MUTE: save the current volume and set the mpd volume to 0
+* 	AUDIO_LOWER_VOLUME: decrease the volume by 1
+* 	AUDIO_RAISE_VOLUME: increase the volume by 1
+*   any positive integer between 1 and 100: Set the value as volume
+*/
 static int 
 volume(struct audio_priv *this, const int action)
 {
@@ -1294,7 +1669,7 @@ volume(struct audio_priv *this, const int action)
 			}
 			break;
 		default:
-			if(action >0){
+			if(action >0 && action <= 100){
 				sprintf(command, "mpc volume %i", action);
 				system(&command[0]);
 				mpd->volume = action;
@@ -1307,6 +1682,13 @@ volume(struct audio_priv *this, const int action)
 	return mpd->volume;
 }
 
+/**
+* @brief this function returns the currently playing trsck
+*
+* @param this the audio player object
+*
+* @return the track name of the current track
+*/
 char*
 current_track(struct audio_priv *this)
 {
@@ -1317,12 +1699,24 @@ current_track(struct audio_priv *this)
 	}
 }
 
+/**
+* @brief this function returns the currently loaded playlist
+*
+* @param this the audio player object
+*
+* @return the playlist name
+*/
 char*
 current_playlist(struct audio_priv *this)
 {
 	return mpd_get_current_playlist_name();
 }
 
+/**
+* @brief the audio methods
+*
+* these methods are acessible from anywhere in the program
+*/
 static struct audio_methods player_mpd_meth = {
         volume,
         playback,
@@ -1373,7 +1767,9 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
     return this;
 }
 
-
+/**
+* @brief plugin entry point
+*/
 void
 plugin_init(void)
 { 
