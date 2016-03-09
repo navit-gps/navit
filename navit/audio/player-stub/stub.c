@@ -1,4 +1,33 @@
-/* vim: set tabstop=8 expandtab: */
+/**
+ * Navit, a modular navigation system.
+ * Copyright (C) 2005-2016 Navit Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
+ */
+ 
+ /*
+  * this file is a working example for an entry point for developing an
+  * own audio plugin.
+  * 
+  * you need to enable it inside the navit.xml file with the following:
+  * <audio type="player-stub" /> anywhere between the <navit></navit>
+  * tags. You also might want need an entry point to the gui_internal_media 
+  * This could look that way:
+  * <img src='music-blue' onclick='media_show_playlist()'><text>Music</text></img>
+  * put this inside the <gui type="internal" enabled="yes" ...></gui> block
+  */ 
 #include <glib.h>
 #include "item.h"
 #include <stdio.h>
@@ -85,6 +114,12 @@ void stub_play(void);
 void stub_play_track(int track);
 GList* get_entry_by_index(GList* list, int index);
 
+/**
+* @brief this function reads a data of a certain playlist
+*
+* @param the playlist object
+* @return the playlist data structure or NULL on error
+*/
 struct audio_playlist*
 get_playlist_data(GList* list)
 {
@@ -99,6 +134,15 @@ get_playlist_data(GList* list)
 	return NULL;
 }
 
+/**
+* @brief this function reindexes a list of playlists
+*
+* @param the playlist object to start indexing
+* @return the number of reindexed playlists.
+*
+* this function reindexes a list of playlists to reorder them.  
+* It's intended to be used after a sorting algorithm on the head of a list of playlists.  
+*/
 int
 reindex_playlists(GList *list)
 {
@@ -116,6 +160,13 @@ reindex_playlists(GList *list)
 	return i;
 }
 
+/**
+* @brief this function creates a new playlist data structure
+* 
+* @param the playlist name
+* @param the desired playlist index
+* @return  the playlist data object.
+*/
 struct audio_playlist* new_audio_playlist(char *name, int index)
 {
 	struct audio_playlist *pl;
@@ -128,6 +179,13 @@ struct audio_playlist* new_audio_playlist(char *name, int index)
 	return pl;
 }
 
+/**
+* @brief this function appends a playlist data structure to the list of playlists
+* 
+* @param list the playlist to apped the data
+* @param playlist the playlist data to append
+* @return  the playlist.
+*/
 GList*
 insert_right(GList* list, struct audio_playlist* playlist)
 {
@@ -154,6 +212,13 @@ print_all(GList* list)
 	}
 }	
 
+/**
+* @brief choose a playlist randomly
+*
+* @param list the entire list of playlists
+*
+* @return the randomly chosen list element 
+*/
 GList*
 random_entry(GList* list){
 	int n = 9;
@@ -163,6 +228,13 @@ random_entry(GList* list){
 	return get_entry_by_index(g_list_first(list), i);
 }
 
+/**
+* @brief switch to the next playlist
+*
+* @param list the entire list of playlists
+*
+* @return the next list element 
+*/
 GList*
 next_playlist(GList* list)
 {
@@ -172,6 +244,13 @@ next_playlist(GList* list)
 	return (list->next!=NULL)?g_list_next(list):g_list_first(list);
 } 
 
+/**
+* @brief switch to the previous playlist
+*
+* @param list the entire list of playlists
+*
+* @return the previous list element 
+*/
 GList*
 prev_playlist(GList* list)
 {
@@ -180,7 +259,13 @@ prev_playlist(GList* list)
 	}
 	return (list->prev!=NULL)?g_list_previous(list):g_list_last(list);
 } 
-
+/**
+* @brief Get the name of the playlist
+*
+* @param list the playlist object
+*
+* @return the name of the playlist
+*/
 char*
 get_playlist_name(GList* list)
 {
@@ -198,12 +283,26 @@ get_playlist_name(GList* list)
 	return NULL;
 }
 
+/**
+* @brief Delete a playlist from the list of playlists
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList* 
 delete_and_free(GList *list)
 {
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief Delete a playlist from the list of playlists and from mpc's database
+*
+* @param list the playlist object to be deleted
+*
+* @return the list of playlists without the deleted element
+*/
 GList*
 delete_playlist(GList* list)
 {	
@@ -212,6 +311,12 @@ delete_playlist(GList* list)
     return g_list_delete_link(g_list_first(list),list);
 }
 
+/**
+* @brief set the index of a playlist
+*
+* @param entry the playlist element
+* @param entry_index the desired index 
+*/
 void set_playlist_index(GList* entry, int entry_index)
 {
 	struct audio_playlist *pl;
@@ -225,6 +330,15 @@ void set_playlist_index(GList* entry, int entry_index)
 	}
 }
 
+
+/**
+* @brief swap two playlists
+*
+* @param a playlist a to swap
+* @param b playlist b to swap
+* 
+* this function is used to bubblesort the playlists
+*/
 void
 swap_playlists(GList* a, GList* b)
 {
@@ -234,6 +348,13 @@ swap_playlists(GList* a, GList* b)
     b->data = temp;
 }
 
+/**
+* @brief this function sorts a list of playlists alphabetically
+*
+* @param list the entire list of playlists
+*
+* @return the sorted list of playlists
+*/
 GList* 
 sort_playlists(GList* list)
 {
@@ -266,7 +387,12 @@ save_playlist(GList* list){
 	 * save the current playlist to a file
 	 */
  } 
-
+ 
+/**
+* @brief this function loads a playlist to mpd/mpd
+*
+* @param list the playlist to be loaded
+*/
 void
 load_playlist(GList * list){
 	if(list){
@@ -274,6 +400,14 @@ load_playlist(GList * list){
 		save_playlist(list);
 	}
 }
+
+/**
+* @brief this function choses the next playlist from the list of playlists
+*
+* @param current the currently loaded playlist element
+*
+* @return the playlist element that was loaded
+*/
 GList* 
 load_next_playlist(GList* current)
 {
@@ -284,6 +418,14 @@ load_next_playlist(GList* current)
     return next;
 }
 
+/**
+* @brief seeks and returns the playlist with the given data
+*
+* @param head the list of playlist to search on
+* @param data the data, which contains the playlist name to search
+*
+* @return the searched element or NULL if it wasnt found
+*/
 GList* 
 get_entry(GList* head, char *data)
 {
@@ -302,6 +444,14 @@ get_entry(GList* head, char *data)
     return current; //found!
 }
 
+/**
+* @brief this function returns the nth element of the list of playlists
+*
+* @param list the list of playlists
+* @param index the index to get
+*
+* @return the nth playlist
+*/
 GList*
 get_entry_by_index(GList* list, int index)
 {
@@ -309,6 +459,13 @@ get_entry_by_index(GList* list, int index)
 	return entry;
 }
 
+/**
+* @brief this function choses the previous playlist from the list of playlists
+*
+* @param current the currently loaded playlist element
+*
+* @return the playlist element that was loaded
+*/
 GList* 
 load_prev_playlist(GList* current)
 {
@@ -319,6 +476,19 @@ load_prev_playlist(GList* current)
     return previous;
 }
 
+/**
+* @brief this function gets the next playlist where the artist differs
+*
+* @param current playlist entry
+* @param next specifies if we go forwards or backwards
+*
+* @return the playlist item which differs in its artist name
+* 
+* For proper us of this function the playlists must be named in a special way:
+* "Artist - Album" The algorithm iterates over the list of playlists forwards 
+* or backwards (depending on next is set or not) and stops and return 
+* the first item which differs in the part until the dash char
+*/
 GList*
 change_artist(GList* current, int next)
 {
@@ -380,6 +550,13 @@ prev_artist(GList* current)
 	return change_artist(current, 0);
 }
 
+/**
+* @brief this function reads the track name to print it on the gui
+*
+* @param track_index the index of the track
+*
+* @return the track name
+*/
 char *
 stub_get_track_name (int track_index)
 {
@@ -390,6 +567,13 @@ stub_get_track_name (int track_index)
 	 return str;
 }
 
+/**
+* @brief this function gets and returns the current playing playlist
+*
+* @return the playlist name
+* 
+* this function is used for OSD and GUI
+*/
 char *
 stub_get_current_playlist_name ()
 {
@@ -398,6 +582,13 @@ stub_get_current_playlist_name ()
 	return "currently loaded playlist";
 }
 
+/**
+* @brief this function reads the playlist name to print it on the gui
+*
+* @param playlist_index the index of the playlist
+*
+* @return the playlist name
+*/
 char *
 stub_get_playlist_name (int playlist_index)
 {
@@ -410,6 +601,11 @@ stub_get_playlist_name (int playlist_index)
 	 return str;
 }
 
+/**
+* @brief this function starts playback for the track from the current playlist
+*
+* @param track_index the number of the track
+*/
 void
 stub_set_current_track (int track_index)
 {
@@ -417,6 +613,11 @@ stub_set_current_track (int track_index)
     g_track_index = track_index;
 }
 
+/**
+* @brief this funtion reads the number of tracks for the current playlist
+*
+* @return the number of tracks
+*/
 int
 stub_get_current_playlist_items_count ()
 {
@@ -426,6 +627,11 @@ stub_get_current_playlist_items_count ()
 	return 7;
 }
 
+/**
+* @brief this function counts all playlists and returns the number
+*
+* @return the number of playlists
+*/
 int
 stub_get_playlists_count ()
 {
@@ -435,6 +641,11 @@ stub_get_playlists_count ()
 	return 9;
 }
 
+/**
+* @brief this function starts playback for the given playlist
+*
+* @param playlist_index the given playlist to play
+*/
 void
 stub_set_active_playlist (int playlist_index)
 {
@@ -449,9 +660,15 @@ stub_set_active_playlist (int playlist_index)
 }
 
 
-/*  Function to provide all possible audio actions for the player
- *  takes nothing
- *  returns a list of actions with their icons for GUI and OSD
+/**
+ * @brief this function creates all possible actions for the player
+ * 
+ * @return the list of actions
+ * 
+ * Function to provide all possible audio actions for the player. These 
+ * actions are acessible inside the media gui as a toolbar, so they 
+ * might provide an icon. Their order will be applied to the toolbar too.
+ * It is possible to change the icon depending on the actions state
  */ 
 GList*
 stub_get_actions(void){
@@ -531,6 +748,19 @@ stub_get_actions(void){
 
 
 
+/**
+* @brief the loop function for the audio player
+*
+* @param the audio player object
+*
+* this function is the loop core for this plugin. Here is the playlist 
+* change and the currend trackname processes for continous playback and 
+* nice osd view. If the last song of a playlist ends, the mpd process 
+* pauses playback automatically. For continous playback we have to 
+* change to the next playlist. 
+* 
+* We also read some statuses and save them to the audio player object
+*/
 static void
 stub_stub_idle (struct stub *stub)
 {
@@ -542,18 +772,29 @@ stub_stub_idle (struct stub *stub)
 
 }
 
+/**
+* @brief play :)
+*/
 void stub_play(void)
 {
 	stub->playing = true;
 	// start your playback
 }
 
+/**
+* @brief play a specific track
+*
+* @param track the number of the track to play
+*/
 void stub_play_track(int track)
 {
 	stub->playing = true;
 	// choose and play track track here
 }
 
+/**
+* @brief load the next playlist
+*/
 void
 stub_next_playlist(void)
 {
@@ -562,6 +803,9 @@ stub_next_playlist(void)
 	
 }
 
+/**
+* @brief load the previous playlist
+*/
 void
 stub_prev_playlist(void)
 {
@@ -569,19 +813,32 @@ stub_prev_playlist(void)
 	stub->current_playlist = load_prev_playlist(stub->current_playlist);
 }
 
+/**
+* @brief getter for the volume value of the audio player object
+*
+* @return the volume
+*/
 int stub_get_volume(void)
 {
 	return stub->volume;
 }
 
+/**
+* @brief sets the volume value
+*
+* @param vol the volume value to set
+*/
 void stub_set_volume(int vol)
 {
 	// set volume to vol here
 	stub->volume = vol;
 }
 
-
-
+/**
+* @brief this function toggles the repeat mode
+*
+* @param action the action that owns the toggle
+*/
 void stub_toggle_repeat(struct audio_actions *action){
 	int toggle = 0;
 	if(stub->single) toggle++;
@@ -614,7 +871,11 @@ void stub_toggle_repeat(struct audio_actions *action){
 		}
 	}
 }
-
+/**
+* @brief this function toggles the shuffle mode
+*
+* @param action the action that owns the toggle
+*/
 void stub_toggle_shuffle(struct audio_actions *action){
 	
 	int toggle = 0;
@@ -665,6 +926,13 @@ void stub_toggle_shuffle(struct audio_actions *action){
 	}
 }
 
+/**
+* @brief command to toggle playback
+*
+* @param action the action that owns the toggle
+*
+* the action must be passed because the playback action keeps the icon. This icon changes dependent on the playback state
+*/
 void
 stub_toggle_playback (struct audio_actions *action)
 {
@@ -687,6 +955,15 @@ stub_toggle_playback (struct audio_actions *action)
 	stub->playing = !stub->playing;
 }
 
+/**
+* @brief this function returns a list of playlists
+*
+* @param this the audio player object
+*
+* @return the list of playlists
+* 
+* if no playlists are found, this function iniyializes the playists for this player
+*/
 GList *
 playlists(struct audio_priv *this)
 {
@@ -717,6 +994,14 @@ playlists(struct audio_priv *this)
         return playlists;
 }
 
+/**
+* @brief this function returns a list of tracks for a specific playlist 
+*
+* @param this the audio player object
+* @param playlist_index the index of the playlist to get the tracks from
+*
+* @return the list of tracks
+*/
 GList *
 tracks(struct audio_priv *this, int playlist_index)
 {
@@ -745,6 +1030,15 @@ tracks(struct audio_priv *this, int playlist_index)
         return tracks;
 }
 
+/**
+* @brief this function returns the list of possible actions
+*
+* @param this the audio player object
+*
+* @return the list of actions
+* 
+* if there are no actions present, the command inits the action list
+*/
 GList*
 actions(struct audio_priv *this){
 	dbg(lvl_debug, "In stub's actions\n");
@@ -758,7 +1052,14 @@ actions(struct audio_priv *this){
 	return stub->actions;
 }
 
-
+/**
+* @brief this function iterates over all possible actions for this player and searches for an action
+*
+* @param actions the list of actions 
+* @param action the action we want to find
+*
+* @return the audio action object wh searched or NULL if its not present
+*/
 struct audio_actions*
 get_specific_action(GList* actions, int specific_action)
 {
@@ -772,6 +1073,29 @@ get_specific_action(GList* actions, int specific_action)
 	return NULL;
 }
 
+/**
+* @brief this function provides the action control for the audio player
+*
+* @param this the audio player object
+* @param action the action to be performed on the player
+*
+* @return returns the action
+* 
+* possible actions:
+* AUDIO_PLAYBACK_PLAY
+* AUDIO_PLAYBACK_PAUSE
+* AUDIO_PLAYBACK_TOGGLE
+* AUDIO_PLAYBACK_NEXT_TRACK
+* AUDIO_PLAYBACK_PREVIOUS_TRACK
+* AUDIO_PLAYBACK_NEXT_PLAYLIST
+* AUDIO_PLAYBACK_PREVIOUS_PLAYLIST
+* AUDIO_PLAYBACK_NEXT_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - "
+* AUDIO_PLAYBACK_PREVIOUS_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - " but backwards
+* AUDIO_MISC_DELETE_PLAYLIST
+* AUDIO_MODE_TOGGLE_REPEAT: switches through the repeat modes
+* AUDIO_MODE_TOGGLE_SHUFFLE: switches through the shuffle modes
+* AUDIO_MISC_RELOAD_PLAYLISTS: reload all playlists (delete and reload)
+*/
 static int
 action_do(struct audio_priv *this, const int action)
 {
@@ -847,6 +1171,16 @@ action_do(struct audio_priv *this, const int action)
 	return action;
 }
 
+/**
+* @brief this function provides the playback control for the audio player
+*
+* @param this the audio player object
+* @param action the index of the song to play
+*
+* @return the playback status
+* 
+* this function is accessed, when one clicks on a specific song in gui internal
+*/
 static int
 playback(struct audio_priv *this, const int action)
 {
@@ -865,6 +1199,20 @@ playback(struct audio_priv *this, const int action)
 	return 0;
 }
 
+/**
+* @brief this function provides the volume control for the audio player
+*
+* @param this the audio player object
+* @param action the kind of action to perform
+*
+* @return the resulting volume
+* 
+* possible values are:
+* 	AUDIO_MUTE: save the current volume and set the mpd volume to 0
+* 	AUDIO_LOWER_VOLUME: decrease the volume by 1
+* 	AUDIO_RAISE_VOLUME: increase the volume by 1
+*   any positive integer between 1 and 100: Set the value as volume
+*/
 static int 
 volume(struct audio_priv *this, const int action)
 {
@@ -907,6 +1255,13 @@ volume(struct audio_priv *this, const int action)
 	return stub->volume;
 }
 
+/**
+* @brief this function returns the currently playing trsck
+*
+* @param this the audio player object
+*
+* @return the track name of the current track
+*/
 char*
 current_track(struct audio_priv *this)
 {
@@ -914,6 +1269,13 @@ current_track(struct audio_priv *this)
 	//return stub_get_current_track_name();
 }
 
+/**
+* @brief this function returns the currently loaded playlist
+*
+* @param this the audio player object
+*
+* @return the playlist name
+*/
 char*
 current_playlist(struct audio_priv *this)
 {
@@ -921,6 +1283,12 @@ current_playlist(struct audio_priv *this)
 	//return stub_get_current_playlist_name();
 }
 
+/**
+* @brief the audio methods
+*
+* these methods are acessible from anywhere in the program. 
+* actions you do not need, should be NULL.
+*/
 static struct audio_methods player_stub_meth = {
         volume,
         playback,
@@ -967,6 +1335,9 @@ player_stub_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 }
 
 
+/**
+* @brief plugin entry point
+*/
 void
 plugin_init(void)
 { 

@@ -15,13 +15,25 @@ struct attr *audio_default_attrs[]={
 	NULL,
 };
 
-char *
-audio_player_get_name ()
+/**
+ * @brief audio_player_get_name
+ * @param
+ * @return
+ * 
+ */
+char* audio_player_get_name (void)
 {
 		dbg(lvl_error,"//fixme: get the name of the music player... where is the name set?\n");
         return "Music Player";
 }
 
+/**
+* @brief
+* 
+* @param
+* 
+* @return
+*/
 struct audio *
 audio_new(struct attr *parent, struct attr **attrs)
 {
@@ -30,20 +42,20 @@ audio_new(struct attr *parent, struct attr **attrs)
 	struct attr *attr;
 	struct audio_priv *(*audiotype_new)(struct audio_methods *meth, struct attr **attrs, struct attr *parent);
 
-        attr=attr_search(attrs, NULL, attr_type);
-        if (! attr) {
-                dbg(lvl_error,"type missing\n");
-                return NULL;
-        }
-        dbg(lvl_info,"type='%s'\n", attr->u.str);
-        audiotype_new=plugin_get_audio_type(attr->u.str);
-        dbg(lvl_info,"new=%p\n", audio_new);
-        if (! audiotype_new) {
-                dbg(lvl_error,"wrong type '%s'\n", attr->u.str);
-                return NULL;
-        }
-        this_=g_new0(struct audio, 1);
-	//this_->name = g_strdup(attr->u.str);
+	attr=attr_search(attrs, NULL, attr_type);
+	if (! attr) {
+			dbg(lvl_error,"type missing\n");
+			return NULL;
+	}
+	dbg(lvl_info,"type='%s'\n", attr->u.str);
+	audiotype_new=plugin_get_audio_type(attr->u.str);
+	dbg(lvl_info,"new=%p\n", audio_new);
+	if (! audiotype_new) {
+			dbg(lvl_error,"wrong type '%s'\n", attr->u.str);
+			return NULL;
+	}
+	this_=g_new0(struct audio, 1);
+	this_->name = g_strdup(attr->u.str);
 	this_->priv = audiotype_new(&this_->meth, attrs, parent);
 	if (!this_->priv) {
 		dbg(lvl_error, "audio_new failed\n");
