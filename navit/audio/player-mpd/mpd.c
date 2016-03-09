@@ -238,6 +238,13 @@ random_entry(GList* list){
 	return get_entry_by_index(g_list_first(list), i);
 }
 
+/**
+* @brief switch to the next playlist
+*
+* @param list the entire list of playlists
+*
+* @return the next list element 
+*/
 GList*
 next_playlist(GList* list)
 {
@@ -247,6 +254,13 @@ next_playlist(GList* list)
 	return (list->next!=NULL)?g_list_next(list):g_list_first(list);
 } 
 
+/**
+* @brief switch to the previous playlist
+*
+* @param list the entire list of playlists
+*
+* @return the previous list element 
+*/
 GList*
 prev_playlist(GList* list)
 {
@@ -379,11 +393,12 @@ void set_playlist_index(GList* entry, int entry_index)
 }
 
 /**
-* @brief
+* @brief swap two playlists
 *
-* @param
-*
-* @return
+* @param a playlist a to swap
+* @param b playlist b to swap
+* 
+* this command is used to bubblesort the playlists
 */
 void
 swap_playlists(GList* a, GList* b)
@@ -395,11 +410,11 @@ swap_playlists(GList* a, GList* b)
 }
 
 /**
-* @brief
+* @brief this command sorts a list of playlists alphabetically
 *
-* @param
+* @param list the entire list of playlists
 *
-* @return
+* @return the sorted list of playlists
 */
 GList* 
 sort_playlists(GList* list)
@@ -431,11 +446,9 @@ sort_playlists(GList* list)
 }
 
 /**
-* @brief
+* @brief this command loads a playlist to mpd/mpd
 *
-* @param
-*
-* @return
+* @param list the playlist to be loaded
 */
 void
 load_playlist(GList * list){
@@ -451,29 +464,29 @@ load_playlist(GList * list){
 }
 
 /**
-* @brief
+* @brief this command choses the next playlist from the list of playlists
 *
-* @param
+* @param current the currently loaded playlist element
 *
-* @return
+* @return the playlist element that was loaded
 */
 GList* 
 load_next_playlist(GList* current)
 {
     GList* next = next_playlist(current);
-    system("mpc clear");
-	load_playlist(next);
+    load_playlist(next);
     mpd->playlist_index = g_list_index(mpd->playlists, next->data);
     mpd_play();
     return next;
 }
 
 /**
-* @brief
+* @brief seeks and returns the playlist with the given data
 *
-* @param
+* @param head the list of playlist to search on
+* @param data the data, which contains the playlist name to search
 *
-* @return
+* @return the searched element or NULL if it wasnt found
 */
 GList* 
 get_entry(GList* head, char *data)
@@ -506,11 +519,12 @@ get_entry(GList* head, char *data)
 }
 
 /**
-* @brief
+* @brief this command returns the nth element of the list of playlists
 *
-* @param
+* @param list the list of playlists
+* @param index the index to get
 *
-* @return
+* @return the nth playlist
 */
 GList*
 get_entry_by_index(GList* list, int index)
@@ -519,17 +533,16 @@ get_entry_by_index(GList* list, int index)
 }
 
 /**
-* @brief
+* @brief this command choses the previous playlist from the list of playlists
 *
-* @param
+* @param current the currently loaded playlist element
 *
-* @return
+* @return the playlist element that was loaded
 */
 GList* 
 load_prev_playlist(GList* current)
 {
 	GList* previous = prev_playlist(current);
-    system("mpc clear");
     load_playlist(previous);
     mpd->playlist_index = g_list_index(mpd->playlists, previous->data);
     mpd_play();
