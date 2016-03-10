@@ -1,3 +1,22 @@
+/**
+ * Navit, a modular navigation system.
+ * Copyright (C) 2005-2016 Navit Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
+ */
+ 
 #include <glib.h>
 #include <navit/main.h>
 #include <navit/debug.h>
@@ -19,6 +38,12 @@
 
 int currently_displayed_playlist=-1;
 
+/**
+ * @brief   play a track from the playlist
+ * @param[in]   this    - pointer to the gui_priv
+ *              wm      - pointer the the parent widget
+ *              date    - pointer to arbitrary data
+ */
 void
 media_play_track (struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -28,6 +53,12 @@ media_play_track (struct gui_priv *this, struct widget *wm, void *data)
     //gui_internal_media_show_playlist (this, NULL, NULL);
 }
 
+/**
+ * @brief   play a playlist from the list of playlist playlist
+ * @param[in]   this    - pointer to the gui_priv
+ *              wm      - pointer the the parent widget
+ *              date    - pointer to arbitrary data
+ */
 void
 media_play_playlist (struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -36,22 +67,15 @@ media_play_playlist (struct gui_priv *this, struct widget *wm, void *data)
     gui_internal_media_show_playlist (this, NULL, NULL);
 }
 
-void
-media_play_toggle_offline_mode (struct gui_priv *this, struct widget *wm, void *data)
-{
-    /*
-    media_toggle_current_playlist_offline();
-    gui_internal_media_show_playlist (this, wm, data);
-    */
-}
-
-void
-media_toggle_playback (struct gui_priv *this, struct widget *wm, void *data)
-{
-    audio_do_action(this->nav, AUDIO_PLAYBACK_TOGGLE);
-    gui_internal_prune_menu(this, NULL);
-}
-
+/**
+ * @brief   Perform a media action
+ * @param[in]   this    - pointer to the gui_priv
+ *              wm      - pointer the the parent widget
+ *              date    - pointer to arbitrary data
+ *
+ * Perform an action on the audio player which are defined in the player implementation
+ *
+ */
 void
 media_action_do (struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -87,35 +111,13 @@ media_action_do (struct gui_priv *this, struct widget *wm, void *data)
 }
 
 /**
- * @brief   Build a playlist from echonest and start its playback
- * @param[in]   this    - pointer to the gui_priv
- *              wm      - pointer the the parent widget
- *              date    - pointer to arbitrary data
- *
- * @return  nothing
- *
- * Build a playlist from echonest and start its playback
- *
- */
-void
-gui_internal_start_radio (struct gui_priv *this, struct widget *wm, void *data)
-{
-#if 0
-    echonest_start_radio (wm->c.x);
-#endif
-    gui_internal_html_main_menu(this);
-}
-
-
-/**
- * @brief   Build a playlist 'toolbar'
+ * @brief   Build a player 'toolbar'
  * @param[in]   this    - pointer to the gui_priv
  *
  * @return  the resulting widget
  *
  * Builds a widget containing buttons to browse the root playlist, some buttons to control the player
- * and another botton to display and toggle the state of the offline availability
- *
+ * The buttons are mapped to the player actions
  */
 static struct widget *
 gui_internal_media_playlist_toolbar (struct gui_priv *this)
@@ -146,23 +148,8 @@ gui_internal_media_playlist_toolbar (struct gui_priv *this)
 					   |
 					   orientation_horizontal,
 					   media_action_do, aa->action));
-    }}
-/*
-    gui_internal_widget_append (wl, wb =
-				gui_internal_button_new_with_callback (this,
-								       "Offline",
-								       image_new_s (this, media_get_current_playlist_status_icon ()),
-								       gravity_left_center
-								       |
-								       orientation_horizontal,
-								       media_play_toggle_offline_mode, NULL));
-	*/
-#ifdef USE_ECHONEST
-    gui_internal_widget_append (wl, wb = gui_internal_button_new_with_callback (this, "Start Radio",
-						image_new_s (this, "radio"),
-						gravity_left_center | orientation_horizontal, gui_internal_start_radio, NULL));
-    //gui_internal_widget_pack (this, wl);
-#endif
+    		}
+    }
     return wl;
 }
 
