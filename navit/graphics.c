@@ -1070,6 +1070,91 @@ graphics_background_gc(struct graphics *this_, struct graphics_gc *gc)
 	this_->meth.background_gc(this_->priv, gc ? gc->priv : NULL);
 }
 
+
+/**
+ * @brief Shows the native on-screen keyboard or other input method
+ *
+ * This method is a wrapper around the respective method of the graphics plugin.
+ *
+ * The caller should populate the {@code kbd} argument with appropriate {@code mode} and {@code lang}
+ * members so the graphics plugin can determine the best matching layout.
+ *
+ * If an input method is shown, the graphics plugin should try to select the configuration which best
+ * matches the specified {@code mode}. For example, if {@code mode} specifies a numeric layout, the
+ * graphics plugin should select a numeric keyboard layout (if available), or the equivalent for another
+ * input method (such as setting stroke recognition to identify strokes as numbers). Likewise, when an
+ * alphanumeric-uppercase mode is requested, it should switch to uppercase input.
+ *
+ * Implementations should, however, consider that Navit's internal keyboard allows the user to switch
+ * modes at will (the only exception being degree mode) and thus must not "lock" the user into a limited
+ * layout with no means to switch to a general-purpose one. For example, house number entry in an
+ * address search dialog may default to numeric mode, but since some house numbers may contain
+ * non-numeric characters, a pure numeric keyboard is suitable only if the user has the option to switch
+ * to an alphanumeric layout.
+ *
+ * When multiple alphanumeric layouts are available, the graphics plugin should use the {@code lang}
+ * argument to determine the best layout.
+ *
+ * When selecting an input method, preference should always be given to the default or last selected
+ * input method and configuration if it matches the requested {@code mode} and {@code lang}.
+ *
+ * If the native input method is going to obstruct parts of Navit's UI, the graphics plugin should set
+ * {@code kbd->w} and {@code kbd->h} to the height and width to the appropriate value in pixels. A value
+ * of -1 indicates that the input method fills the entire available width or height of the space
+ * available to Navit. On windowed platforms, where the on-screen input method and Navit's window may be
+ * moved relative to each other as needed and can be displayed alongside each other, the graphics plugin
+ * should report 0 for both dimensions.
+ *
+ * @param this_ The graphics instance
+ * @param kbd The keyboard instance
+ *
+ * @return 1 if the native keyboard is going to be displayed, 0 if not, -1 if the method is not
+ * supported by the plugin
+ */
+int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd) {
+	int ret;
+	if (!this_->meth.show_native_keyboard)
+		ret = -1;
+	else
+		ret = this_->meth.show_native_keyboard(kbd);
+	dbg(lvl_debug, "return %d\n", ret);
+	return ret;
+}
+
+
+/**
+ * @brief Hides the native on-screen keyboard or other input method
+ *
+ * This method is a wrapper around the respective method of the graphics plugin.
+ *
+ * A call to this function indicates that Navit no longer needs the input method and is about to reclaim
+ * any screen real estate it may have previously reserved for the input method.
+ *
+ * On platforms that don't support overlapping windows this means that the on-screen input method should
+ * be hidden, as it may otherwise obstruct parts of Navit's UI.
+ *
+ * On windowed platforms, where on-screen input methods can be displayed alongside Navit or moved around
+ * as needed, the graphics driver should instead notify the on-screen method that it is no longer
+ * expecting user input, allowing the input method to take the appropriate action.
+ *
+ * The graphics plugin must free any data it has stored in {@code kbd->gra_priv} and reset the pointer
+ * to {@code NULL} to indicate it has done so.
+ *
+ * The caller may free {@code kbd} after this function returns.
+ *
+ * @param this The graphics instance
+ * @param kbd The keyboard instance
+ *
+ * @return True if the call was successfully passed to the plugin, false if the method is not supported
+ * by the plugin
+ */
+int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd) {
+	if (!this_->meth.hide_native_keyboard)
+		return 0;
+	this_->meth.hide_native_keyboard(kbd);
+	return 1;
+}
+
 #include "attr.h"
 #include "popup.h"
 #include <stdio.h>
@@ -2959,3 +3044,4 @@ graphics_process_selection(struct graphics *gra, struct displaylist *dl)
 		curr=g_list_next(curr);
 	}
 }
+

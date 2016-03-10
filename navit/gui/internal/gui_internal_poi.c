@@ -449,6 +449,7 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 {
 	struct widget *w=data;
 	struct poi_param *param;
+	GList *l;
 	
 	if(!w->text)
 		return;
@@ -467,6 +468,9 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 		param->AddressFilterType=0;
 
 	gui_internal_poi_param_set_filter(param, w->text);
+
+	l = g_list_previous(g_list_last(this->root.children));
+	gui_internal_prune_menu(this, l->data);
 
 	gui_internal_cmd_pois(this,w,param);
 	gui_internal_poi_param_free(param);
@@ -533,6 +537,8 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
 	
 	if (this->keyboard)
 		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
+	else
+		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
 	gui_internal_menu_render(this);
 
 
