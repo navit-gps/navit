@@ -38,6 +38,17 @@
 
 int currently_displayed_playlist=-1;
 
+static void
+tracks_free (gpointer data)
+{
+	if (data != NULL)
+	{
+		struct audio_track *track = data;
+		g_free(track->name);
+		g_free (track);
+	}
+}
+
 /**
  * @brief   play a track from the playlist
  * @param[in]   this    - pointer to the gui_priv
@@ -254,5 +265,6 @@ gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void
 		gui_internal_widget_append (row, wbm);
     }
 #endif
+	g_list_free_full(tracks, tracks_free);
     gui_internal_menu_render (this);
 }
