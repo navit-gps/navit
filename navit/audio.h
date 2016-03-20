@@ -1,7 +1,6 @@
 #ifndef NAVIT_AUDIO_H
 #define NAVIT_AUDIO_H
 #include "glib_slice.h"
-#include <alsa/asoundlib.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
