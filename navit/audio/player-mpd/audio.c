@@ -27,6 +27,7 @@
 
 #include "mpd.h"
 #include <stdlib.h>
+#include <alsa/asoundlib.h>
 
 audio_fifo_data_t* audio_get(audio_fifo_t *af)
 {

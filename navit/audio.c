@@ -4,6 +4,7 @@
 #include "audio.h"
 #include "plugin.h"
 #include "xmlconfig.h"
+#include <alsa/asoundlib.h>
 
 struct object_func audio_func;
 

@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <glib.h>
 #include "queue.h"
+#include <alsa/asoundlib.h>
 
 
 /* --- Types --- */
