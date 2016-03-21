@@ -1019,7 +1019,7 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_PREVIOUS_PLAYLIST;
-		aa->icon = g_strdup("media_skip-back");
+		aa->icon = g_strdup("media_prev");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
@@ -1043,7 +1043,7 @@ mpd_get_actions(void){
 		
 		aa = g_new0(struct audio_actions, 1);
 		aa->action = AUDIO_PLAYBACK_NEXT_PLAYLIST;
-		aa->icon = g_strdup("media_skip-ahead");
+		aa->icon = g_strdup("media_next");
 		actions = g_list_append(actions, aa);
 		
 		aa = g_new0(struct audio_actions, 1);
