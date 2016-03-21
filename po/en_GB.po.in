@@ -2035,10 +2035,6 @@ msgstr "Search"
 msgid "Towns"
 msgstr "Towns"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Route to here"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Map data (c) OpenStreetMap contributors, ODBL"
 
@@ -2060,6 +2056,10 @@ msgid ""
 msgstr ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Route to here"
 
 msgid "Cancel"
 msgstr "Cancel"
