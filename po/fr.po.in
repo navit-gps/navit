@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-02-15 22:19+0000\n"
+"PO-Revision-Date: 2016-03-21 16:49+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
@@ -1689,14 +1689,14 @@ msgid "Taxi"
 msgstr "Taxi"
 
 msgid "Shopping"
-msgstr "Courses"
+msgstr "Achats"
 
 msgid "Distance from screen center (km)"
-msgstr "Distance du centre de l'ecran (Kilomètre)"
+msgstr "Distance du centre de l'écran (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr "point d'intérêt %s. %s"
+msgstr "Point d'intérêt %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
@@ -2044,10 +2044,6 @@ msgstr "Chercher"
 msgid "Towns"
 msgstr "Villes"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Conduire ici"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
 
@@ -2064,6 +2060,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Conduire ici"
 
 msgid "Cancel"
 msgstr "Annuler"
