@@ -158,6 +158,8 @@ get_playlist_data(GList* list)
 		}
 	}
 	dbg(lvl_error, "No playlists or data is corrupted\n");
+	mpd->current_playlist = NULL;
+	mpd->playlists = NULL;
 	reload_playlists(mpd);
 	return NULL;
 }
