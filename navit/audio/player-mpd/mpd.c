@@ -158,6 +158,7 @@ get_playlist_data(GList* list)
 		}
 	}
 	dbg(lvl_error, "No playlists or data is corrupted\n");
+	reload_playlists(mpd);
 	return NULL;
 }
 
@@ -1744,7 +1745,6 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
       }
    
 	audio_init (&g_audiofifo);
-	
 	GList* pl = check_playlists();
 	if(pl == NULL){
 		reload_playlists(mpd);
