@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-01-29 09:37+0000\n"
+"PO-Revision-Date: 2016-03-29 21:43+0000\n"
 "Last-Translator: Jurek <jorgosw@gmail.com>\n"
 "Language-Team: Translators\n"
 "MIME-Version: 1.0\n"
@@ -255,10 +255,10 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr ""
+msgstr "po twojej lewej"
 
 msgid "on your right"
-msgstr ""
+msgstr "po twojej prawej"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
@@ -272,7 +272,7 @@ msgstr ""
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "na skrzyżowaniu"
 
 msgid "at exit"
 msgstr ""
@@ -280,32 +280,32 @@ msgstr ""
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "i kontynuuj prosto%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Kontynuuj prosto %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "i trzymaj się prawej%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Trzymaj się prawej %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "i trzymaj się lewej %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Trzymaj się lewej %1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -1469,7 +1469,7 @@ msgstr "Użycie pliku konfiguracji '%s'\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Błąd: Brak konfiguracji w pliku '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1640,46 +1640,46 @@ msgid "Data"
 msgstr "Dane"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Apteka"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restauracja"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restauracja. Fast food"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Parking"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Stacja benzynowa"
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Szpital"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Kino"
 
 msgid "Train station"
-msgstr ""
+msgstr "Stacja kolejowa"
 
 msgid "School"
-msgstr ""
+msgstr "Szkoła"
 
 msgid "Police"
-msgstr ""
+msgstr "Posterunek policji"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Postój taksówek"
 
 msgid "Shopping"
 msgstr ""
@@ -1707,28 +1707,28 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Wybierz kategorię"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Wybierz zakres poszukiwań (km)"
 
 msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategoria"
 
 msgid "Direction"
-msgstr ""
+msgstr "Kierunek"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Dystans(m)"
 
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 msgid "Visit Before"
 msgstr ""
@@ -2037,10 +2037,6 @@ msgstr "Wyszukaj"
 msgid "Towns"
 msgstr "Miasta"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Prowadź z tąd"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Dane Mapy (c) OpenStreetMap contributors, ODBL"
 
@@ -2057,6 +2053,12 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Przepraszamy, aktualnie nie wspieramy map większych niż 3,8Gb na Androidzie, "
+"proszę wybrać mniejszą."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Prowadź z tąd"
 
 msgid "Cancel"
 msgstr "Anuluj"
@@ -2068,6 +2070,8 @@ msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Nowa lokalizacja ustawiona jako %s\n"
+"Uruchom ponownie aplikację Navit, aby zmiany zostały zastosowane."
 
 msgid "Whole Planet"
 msgstr "Cały Ś"
