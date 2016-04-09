@@ -1642,6 +1642,7 @@ static struct command_table commands[] = {
 	{"set_center",command_cast(navit_cmd_set_center)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
+	{"set_position",command_cast(navit_cmd_set_position)},
 	{"route_remove_next_waypoint",command_cast(navit_cmd_route_remove_next_waypoint)},
 	{"route_remove_last_waypoint",command_cast(navit_cmd_route_remove_last_waypoint)},
 	{"set_position",command_cast(navit_cmd_set_position)},
