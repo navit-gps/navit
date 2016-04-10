@@ -57,9 +57,6 @@
 #define TRACK 2
 #define NO_TRACK ' '
 
-/// Index to the next track
-static int g_track_index;
-
 static audio_fifo_t g_audiofifo;
 
 // placeholder for the current track used to communicate with the osd item
@@ -929,7 +926,6 @@ void
 mpd_set_current_track (int track_index)
 {
 	mpd_play_track(track_index + 1);
-    g_track_index = track_index;
 }
 
 /**
@@ -1557,16 +1553,12 @@ action_do(struct audio_priv *this, const int action)
 			break;
 		}
 		case AUDIO_PLAYBACK_NEXT_TRACK:{
-			++g_track_index;
 			system("mpc next");
 			break;
 		}
 		case AUDIO_PLAYBACK_PREVIOUS_TRACK:{
-			if (g_track_index > 0)
-			{
-				--g_track_index;
-				system("mpc prev");
-			}
+			system("mpc prev");
+			
 			break;
 		}
 		case AUDIO_PLAYBACK_NEXT_PLAYLIST:{
@@ -1624,7 +1616,6 @@ playback(struct audio_priv *this, const int action)
 {
 	dbg(lvl_debug, "In mpd's playback control\n");
 	if ( action > -1 ) {
-		g_track_index = action;
 		mpd_play_track(action + 1);
 	} else {
 		dbg(lvl_error,"Don't know what to do with play track '%i'. That's a bug\n", action);
