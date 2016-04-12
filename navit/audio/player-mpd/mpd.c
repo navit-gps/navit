@@ -158,9 +158,13 @@ get_playlist_data(GList* list)
 		}
 	}
 	dbg(lvl_error, "No playlists or data is corrupted\n");
-	mpd->current_playlist = NULL;
-	mpd->playlists = NULL;
-	reload_playlists(mpd);
+	sleep(2);
+	if(mpd->current_playlist == NULL){
+		load_playlist(mpd->current_playlist);
+	}
+	//mpd->current_playlist = NULL;
+	//mpd->playlists = NULL;
+	//reload_playlists(mpd);
 	return NULL;
 }
 
@@ -526,6 +530,7 @@ get_entry(GList* head, char *data)
 					cmp = strcmp(currend_data->name, data);
 					if(current == NULL)
 					{
+						dbg(lvl_debug,  "Did not find Entry\n");
 						return NULL; //nothing found!
 					}
 					if(cmp != 0){
@@ -534,8 +539,10 @@ get_entry(GList* head, char *data)
 				}
 			}
 		}
+		dbg(lvl_debug,  "Found Entry: %s\n",currend_data->name);
 		return current; //found!
 	}
+	dbg(lvl_debug,  "Did not find Entry\n");
 	return NULL;
 }
 
@@ -820,11 +827,20 @@ get_last_playlist(struct mpd* this)
     }
     if(fgets(text, sizeof(text)-1, fp) != NULL) {
 		playlist_name = strtok(text, "/");
+		if(strstr(text, "volume:") != NULL){
+			load_playlist(mpd->playlists);
+			mpd_play();
+			fclose(fp);
+			return mpd->playlists;
+		}
+		dbg(lvl_debug, "Last Playlist: %s\n", playlist_name);
 		playlist = get_entry(this->playlists, playlist_name);
         if(playlist == NULL){
 			playlist = this->playlists;
-		}else{
+			load_playlist(playlist);
 			mpd->current_playlist = playlist;
+		}else{
+			load_playlist(playlist);
 		}
     }
     fclose(fp);
@@ -1743,7 +1759,7 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
     if ((attr = attr_search (attrs, NULL, attr_music_dir)))
       {
           mpd->musicdir = g_strdup(attr->u.str);
-          dbg (lvl_error, "found music directory: %s\n", mpd->musicdir);
+          dbg (lvl_debug, "found music directory: %s\n", mpd->musicdir);
       }
    
 	audio_init (&g_audiofifo);
@@ -1752,16 +1768,12 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
 		reload_playlists(mpd);
 	}else{
 		mpd->playlists = sort_playlists(pl);
-		pl = NULL;
-		pl = get_last_playlist(mpd);
-		if(pl == NULL){
-			load_playlist(mpd->playlists);
-		}
+		mpd->current_playlist = get_last_playlist(mpd);
 	}
 	mpd_play();
     mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
     mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
-    dbg (lvl_error,  "Callback created successfully\n");
+    dbg (lvl_debug,  "Callback created successfully\n");
 
     this=g_new(struct audio_priv,1);
 
