@@ -57,9 +57,6 @@
 #define TRACK 2
 #define NO_TRACK ' '
 
-/// Index to the next track
-static int g_track_index;
-
 static audio_fifo_t g_audiofifo;
 
 // placeholder for the current track used to communicate with the osd item
@@ -157,11 +154,7 @@ get_playlist_data(GList* list)
 			return (struct audio_playlist*) list->data;
 		}
 	}
-	dbg(lvl_error, "No playlists or data is corrupted\n");
-	sleep(2);
-	if(mpd->current_playlist == NULL){
-		load_playlist(mpd->current_playlist);
-	}
+	dbg(lvl_error, "No playlists or data is corrupted: %p\n", list);
 	//mpd->current_playlist = NULL;
 	//mpd->playlists = NULL;
 	//reload_playlists(mpd);
@@ -183,12 +176,13 @@ reindex_playlists(GList *list)
 {
     GList *current = list;
     int i = 0;
+    dbg(lvl_debug, "read %p\n", list);
     get_playlist_data(list)->index = i;
     dbg(lvl_debug, "playlist:%s \n\n", get_playlist_name(list));
     
     while (NULL != (current = current->next))
 	{
-        dbg(lvl_debug,  "playlist:%s \n", get_playlist_name(current));
+        dbg(lvl_debug,  "playlist:%s (%p)\n", get_playlist_name(current), current);
         get_playlist_data(current)->index = ++i;
     }
     dbg(lvl_debug,  "%i Playlists indexed\n",i);
@@ -232,7 +226,7 @@ insert_right(GList* list, struct audio_playlist* playlist)
 void
 print_all(GList* list)
 {
-	return;
+	//return;
 	int i = 0;
 	if(list==NULL) return;
 	GList* current = list;
@@ -240,7 +234,7 @@ print_all(GList* list)
 	{
 		if(get_playlist_data(current)!=NULL)
 		{
-			printf("List element %i, %s. Index %i\n", i++, get_playlist_name(current), get_playlist_data(current)->index );
+			printf("List element %i, %s. Index %i (%p)\n", i++, get_playlist_name(current), get_playlist_data(current)->index, current );
 		}else{
 			dbg(lvl_error, "%i: This appears to be an empty list. That's probably a Bug!\n",i);
 		}
@@ -516,6 +510,7 @@ load_next_playlist(GList* current)
 GList* 
 get_entry(GList* head, char *data)
 {
+	print_all(head);
 	if(head != NULL)
 	{
 		dbg(lvl_debug,  "Search Entry: %s\n",data);
@@ -528,15 +523,14 @@ get_entry(GList* head, char *data)
 				if(currend_data->name){
 					dbg(lvl_debug,  "Got Entry: %s\n",currend_data->name);
 					cmp = strcmp(currend_data->name, data);
-					if(current == NULL)
-					{
-						dbg(lvl_debug,  "Did not find Entry\n");
-						return NULL; //nothing found!
-					}
 					if(cmp != 0){
+						
 						current = current->next;
 					}
 				}
+			}else{
+				dbg(lvl_debug,  "Nothing Found!\n");
+				return NULL; //nothing found!
 			}
 		}
 		dbg(lvl_debug,  "Found Entry: %s\n",currend_data->name);
@@ -793,13 +787,15 @@ void
 reload_playlists(struct mpd* this)
 {
 	dbg(lvl_debug, "\nreload_playlists\n\n");
-	delete_all_playlists(this);                      
+	delete_all_playlists(this); 
+	system("mpc clear");                     
 	system("mpc stop");
 	system("mpc update");
 	this->playlists = load_playlists();
 	sort_playlists(this->playlists);
 	this->current_playlist = this->playlists;
 	system("mpc update");
+	sleep(1);
 }
 
 /**
@@ -836,14 +832,13 @@ get_last_playlist(struct mpd* this)
 		dbg(lvl_debug, "Last Playlist: %s\n", playlist_name);
 		playlist = get_entry(this->playlists, playlist_name);
         if(playlist == NULL){
+			dbg(lvl_debug, "Last Playlist not found! %p => %p\n",this->playlists, playlist);
 			playlist = this->playlists;
-			load_playlist(playlist);
-			mpd->current_playlist = playlist;
-		}else{
-			load_playlist(playlist);
 		}
+		mpd->current_playlist = playlist;
     }
     fclose(fp);
+    dbg(lvl_debug, "returning: %s\n",get_playlist_name(playlist));
     return playlist;
 }
 
@@ -938,7 +933,6 @@ void
 mpd_set_current_track (int track_index)
 {
 	mpd_play_track(track_index + 1);
-    g_track_index = track_index;
 }
 
 /**
@@ -1566,16 +1560,12 @@ action_do(struct audio_priv *this, const int action)
 			break;
 		}
 		case AUDIO_PLAYBACK_NEXT_TRACK:{
-			++g_track_index;
 			system("mpc next");
 			break;
 		}
 		case AUDIO_PLAYBACK_PREVIOUS_TRACK:{
-			if (g_track_index > 0)
-			{
-				--g_track_index;
-				system("mpc prev");
-			}
+			system("mpc prev");
+			
 			break;
 		}
 		case AUDIO_PLAYBACK_NEXT_PLAYLIST:{
@@ -1633,7 +1623,6 @@ playback(struct audio_priv *this, const int action)
 {
 	dbg(lvl_debug, "In mpd's playback control\n");
 	if ( action > -1 ) {
-		g_track_index = action;
 		mpd_play_track(action + 1);
 	} else {
 		dbg(lvl_error,"Don't know what to do with play track '%i'. That's a bug\n", action);
@@ -1753,13 +1742,13 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
     struct audio_priv *this;
     struct attr *attr;
     attr=attr_search(attrs, NULL, attr_music_dir);
-    dbg(lvl_error,"Initializing mpd\n");
+    dbg(lvl_info,"Initializing mpd\n");
 	srandom(time(NULL));
 	mpd = g_new0 (struct mpd, 1);
     if ((attr = attr_search (attrs, NULL, attr_music_dir)))
       {
           mpd->musicdir = g_strdup(attr->u.str);
-          dbg (lvl_debug, "found music directory: %s\n", mpd->musicdir);
+          dbg (lvl_info, "found music directory: %s\n", mpd->musicdir);
       }
    
 	audio_init (&g_audiofifo);
@@ -1768,12 +1757,13 @@ player_mpd_new(struct audio_methods *meth, struct attr **attrs, struct attr *par
 		reload_playlists(mpd);
 	}else{
 		mpd->playlists = sort_playlists(pl);
+
 		mpd->current_playlist = get_last_playlist(mpd);
 	}
 	mpd_play();
     mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
     mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
-    dbg (lvl_debug,  "Callback created successfully\n");
+    dbg (lvl_info,  "Callback created successfully\n");
 
     this=g_new(struct audio_priv,1);
 
