@@ -28,6 +28,117 @@ char* audio_player_get_name (void)
 }
 
 /**
+ * Generic get function
+ *
+ * @param this_ Pointer to a audio structure
+ * @param type The attribute type to look for
+ * @param attr Pointer to a {@code struct attr} to store the attribute
+ * @param iter A audio attr_iter. This is only used for generic attributes; for attributes specific to the audio object it is ignored.
+ * @return True for success, false for failure
+ */
+int
+audio_get_attr(struct audio *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	int ret;
+	switch (attr->type) {
+	case attr_playing:
+		
+		break;
+	case attr_shuffle:
+		
+		break;
+	case attr_repeat:
+	
+		break;
+	default:
+		break;
+	}
+	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+}
+
+/**
+ * Generic set function
+ *
+ * @param this_ A audio
+ * @param attr The attribute to set
+ * @return False on success, true on failure
+ */
+int
+audio_set_attr(struct audio *this_, struct attr *attr)
+{
+	int ret=1;
+	switch (attr->type) {
+	case attr_playing:
+		
+		break;
+	case attr_shuffle:
+		
+		break;
+	case attr_repeat:
+	
+		break;
+	default:
+		break;
+	}
+	if (ret == 1 && attr->type != attr_navit && attr->type != attr_pdl_gps_update)
+		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	return ret != 0;
+}
+
+
+/**
+ * Generic add function
+ *
+ * @param this_ A audio
+ * @param attr The attribute to add
+ *
+ * @return true if the attribute was added, false if not.
+ */
+int
+audio_add_attr(struct audio *this_, struct attr *attr)
+{
+	int ret=1;
+	switch (attr->type) {
+	case attr_playing:
+		this_->
+		break;
+	case attr_shuffle:
+		
+		break;
+	case attr_repeat:
+	
+		break;
+	default:
+		break;
+	}
+	if (ret)
+		this_->attrs=attr_generic_add_attr(this_->attrs, attr);
+	return ret;
+}
+
+/**
+ * @brief Generic remove function.
+ *
+ * Used to remove a callback from the audio.
+ * @param this_ A audio
+ * @param attr
+ */
+int
+audio_remove_attr(struct audio *this_, struct attr *attr)
+{
+	struct callback *cb;
+	this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
+	return 0;
+}
+
+
+
+
+
+
+
+
+/**
 * @brief
 * 
 * @param

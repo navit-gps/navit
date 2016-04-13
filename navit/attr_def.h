@@ -194,6 +194,8 @@ ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
 ATTR(autozoom_max)
 ATTR(nav_status)
+ATTR(shuffle)
+ATTR(repeat)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative or absolute values. See the
  * documentation of ATTR_REL_RELSHIFT for details.
@@ -254,6 +256,7 @@ ATTR(waypoints_flag) /* toggle for "set as destination" to switch between start 
 ATTR(no_warning_if_map_file_missing)
 ATTR(duplicate)
 ATTR(has_menu_button)
+ATTR(playing)
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)

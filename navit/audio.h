@@ -71,6 +71,11 @@ struct audio {
         struct audio_priv *priv;
 };
 
+int audio_get_attr(struct audio *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int audio_set_attr(struct audio *this_, struct attr *attr);
+int audio_add_attr(struct audio *this_, struct attr *attr);
+int audio_remove_attr(struct audio *this_, struct attr *attr);
+
 struct audio * audio_new(struct attr *parent, struct attr **attrs);
 //int change_volume(struct audio *this_, const int direction);
 void audio_play_track(struct navit *this, int track_index);
