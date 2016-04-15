@@ -321,18 +321,18 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 
 	gui_internal_background_render(this, w);
 	if (w->foreground && w->border) {
-	struct point pnt[5];
-	pnt[0]=w->p;
-        pnt[1].x=pnt[0].x+w->w;
-        pnt[1].y=pnt[0].y;
-        pnt[2].x=pnt[0].x+w->w;
-        pnt[2].y=pnt[0].y+w->h;
-        pnt[3].x=pnt[0].x;
-        pnt[3].y=pnt[0].y+w->h;
-        pnt[4]=pnt[0];
-	graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
-	graphics_draw_lines(this->gra, w->foreground, pnt, 5);
-	graphics_gc_set_linewidth(w->foreground, 1);
+		struct point pnt[5];
+		pnt[0]=w->p;
+		pnt[1].x=pnt[0].x+w->w;
+		pnt[1].y=pnt[0].y;
+		pnt[2].x=pnt[0].x+w->w;
+		pnt[2].y=pnt[0].y+w->h;
+		pnt[3].x=pnt[0].x;
+		pnt[3].y=pnt[0].y+w->h;
+		pnt[4]=pnt[0];
+		graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
+		graphics_draw_lines(this->gra, w->foreground, pnt, 5);
+		graphics_gc_set_linewidth(w->foreground, 1);
 	}
 
 	l=w->children;
@@ -1226,7 +1226,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	GList * current_desc=NULL;
 	struct table_data * table_data = (struct table_data*)w->data;
 	int drawing_space_left=1;
-	int is_first_page=1;
+	int is_first_page;
 	struct table_column_desc * dim=NULL;
 
 	dbg_assert(table_data);
@@ -1238,16 +1238,17 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	/*
 	 * Skip rows that are on previous pages.
 	 */
-	cur_row = w->children;
 	if(table_data->top_row && table_data->top_row != w->children && !table_data->scroll_buttons.button_box_hide)
 	{
 		cur_row = table_data->top_row;
 		is_first_page=0;
 	} else {
+		cur_row = w->children;
 		table_data->top_row=NULL;
+		is_first_page=1;
 	}
 
-	/* First, let's deactivate all columns that are in rows which are *before*
+	/* First, let's mark all columns as off-screen that are in rows which are *before*
 	 * our current page.
 	 * */
 	GList *row = w->children;
@@ -1263,7 +1264,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			cur_widget->state &= ~STATE_SENSITIVE;
+			cur_widget->state |= STATE_OFFSCREEN;
 		}
 		row = g_list_next(row);
 	}
@@ -1297,8 +1298,6 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			dim = (struct table_column_desc*)current_desc->data;
-
 			if (drawing_space_left) {
 				cur_widget->p.x=x;
 				cur_widget->w=dim->width;
@@ -1309,7 +1308,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				/* We pack the widget before rendering to ensure that the x and y
 				 * coordinates get pushed down.
 				 */
-				cur_widget->state |= STATE_SENSITIVE;
+				cur_widget->state &= ~STATE_OFFSCREEN;
 				gui_internal_widget_pack(this,cur_widget);
 				gui_internal_widget_render(this,cur_widget);
 
@@ -1318,8 +1317,8 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				    max_height = dim->height;
 				}
 			} else {
-				/* Deactivate contents that we don't have space for. */
-				cur_widget->state &= ~STATE_SENSITIVE;
+				/* Mark contents that we don't have space for. */
+				cur_widget->state |= STATE_OFFSCREEN;
 			}
 		}
 

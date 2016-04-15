@@ -228,9 +228,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 				if (child_->data && strcmp("\b", child_->data)) { // FIXME don't disable special keys
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
-						child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
+						child_->state|= STATE_HIGHLIGHTED|STATE_SENSITIVE|STATE_CLEAR ;
 					} else {
-						child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SELECTED) ;
+						child_->state&= ~STATE_HIGHLIGHTED;
 					}
 					gui_internal_widget_render(this,child_);
 				}
