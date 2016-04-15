@@ -111,6 +111,7 @@ struct navit_vehicle {
 
 struct navit_audio_plugin {
         int active;
+        struct attr callback;
         struct audio *audio;
 };
 
@@ -152,6 +153,7 @@ struct navit {
 	int autozoom_min;
 	int autozoom_max;
 	int autozoom_active;
+	int autozoom_paused;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -670,12 +672,17 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 		return;
 	}
 
+	if(this_->autozoom_paused){
+		this_->autozoom_paused--;
+		return;
+	}
+	
 	distance = speed * this_->autozoom_secs;
 
 	transform_get_size(this_->trans, &w, &h);
 	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
 	scale = transform_get_scale(this_->trans);
-
+	
 	/* We make sure that the point we want to see is within a certain range
 	 * around the vehicle. The radius of this circle is the size of the
 	 * screen. This doesn't necessarily mean the point is visible because of
@@ -710,6 +717,9 @@ void
 navit_zoom_in(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)/factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	if (scale < 1)
 		scale=1;
 	navit_scale(this_, scale, p, 1);
@@ -727,6 +737,9 @@ void
 navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)*factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	navit_scale(this_, scale, p, 1);
 }
 
@@ -755,6 +768,7 @@ navit_zoom_out_cursor(struct navit *this_, int factor)
 static int
 navit_cmd_zoom_in(struct navit *this_)
 {
+	
 	navit_zoom_in_cursor(this_, 2);
 	return 0;
 }
@@ -1471,6 +1485,18 @@ audio_playback_toggle(struct navit *this, char *function, struct attr **in, stru
 }
 
 static void
+audio_playback_play(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	audio_do_action(this,AUDIO_PLAYBACK_TOGGLE);
+}
+
+static void
+audio_playback_pause(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	audio_do_action(this,AUDIO_PLAYBACK_TOGGLE);
+}
+
+static void
 audio_playback_next(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	audio_do_action(this,AUDIO_PLAYBACK_NEXT_TRACK);
@@ -1665,6 +1691,8 @@ static struct command_table commands[] = {
 	{"volume_up",command_cast(audio_volume_up)},
 	{"audio_playback_previous",command_cast(audio_playback_previous)},
 	{"audio_playback_toggle",command_cast(audio_playback_toggle)},
+	{"audio_playback_play",command_cast(audio_playback_play)},
+	{"audio_playback_pause",command_cast(audio_playback_pause)},
 	{"audio_playback_next",command_cast(audio_playback_next)},
 	{"audio_playback_previous_playlist",command_cast(audio_playback_previous_playlist)},
 	{"audio_playback_next_playlist",command_cast(audio_playback_next_playlist)},
@@ -1711,6 +1739,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_secs = 10;
 	this_->autozoom_min = 7;
 	this_->autozoom_active = 0;
+	this_->autozoom_paused = 0;
 	this_->zoom_min = 1;
 	this_->zoom_max = 2097152;
 	this_->autozoom_max = this_->zoom_max;
@@ -3480,6 +3509,43 @@ navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv) {
 	profile(0,"return 5\n");
 }
 
+
+/**
+ * @brief Called when a status attribute of a audio changes.
+ *
+ * This function is called when the {@code playing}, {@code shuffle} or {@code repeat}
+ * attribute of any configured audio changes.
+ *
+ * The function checks if {@code na} refers to the active audio and if {@code type} is one of the above types.
+ * If this is the case, it invokes the callback functions for {@code navit}'s respective attributes.
+ *
+ * Future actions that need to happen when one of these three attribute changes for any audio should be
+ * implemented here.
+ *
+ * @param this_ The navit object
+ * @param na The {@code navit_audio_plugin} which reported a new status attribute
+ * @param type The type of attribute with has changed
+ */
+static void
+navit_audio_update_status(struct navit *this_, struct navit_audio_plugin *na, enum attr_type type) {
+	/*
+	if (this_->audio != na){
+		dbg(lvl_error, "Wrong Plugin!\n");
+		//return;
+	}
+	*/
+	switch(type) {
+	case attr_playing:
+	case attr_shuffle:
+	case attr_repeat:
+		callback_list_call_attr_2(this_->attr_cbl, type, this_, na->audio);
+		break;
+	default:
+		dbg(lvl_error, "Bad Audio Callback!\n");
+		return;
+	}
+}
+
 /**
  * @brief Called when a status attribute of a vehicle changes.
  *
@@ -3598,8 +3664,16 @@ navit_add_audio(struct navit *this_, struct audio *a)
         struct attr active;
         na->audio=a;
         na->active=0;
+        na->callback.type=attr_callback;
+		na->callback.u.callback=callback_new_attr_3(callback_cast(navit_audio_update_status), attr_playing, this_, na, attr_playing);
+		audio_add_attr(na->audio, &na->callback);
+		na->callback.u.callback=callback_new_attr_3(callback_cast(navit_audio_update_status), attr_shuffle, this_, na, attr_shuffle);
+		audio_add_attr(na->audio, &na->callback);
+		na->callback.u.callback=callback_new_attr_3(callback_cast(navit_audio_update_status), attr_repeat, this_, na, attr_repeat);
+		audio_add_attr(na->audio, &na->callback);
         dbg(lvl_info,"Adding one plugin at %p\n", a);
         this_->audio_plugins=g_list_append(this_->audio_plugins, na);
+        audio_set_attr(na->audio, &this_->self);
         return 1;
 }
 

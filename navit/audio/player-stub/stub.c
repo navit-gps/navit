@@ -45,7 +45,7 @@
 #include <dirent.h>
 #include <sys/ioctl.h>
 
-
+#include <attr.h>
 #include <navit/map.h>
 #include <navit/navit.h>
 #include <navit/file.h>
@@ -74,13 +74,15 @@ static audio_fifo_t g_audiofifo;
 char str[25]; // this string is just for visualisation of the functions
 char track[64];
 
-struct stub
+struct audio_priv
 {
 	/* this is the data structure for the audio plugin
 	 * you might not need every element of it
 	 */ 
     struct navit *navit;
     struct callback *callback;
+    struct callback *idle;
+    struct callback_list *cbl;
     struct event_timeout *timeout;
     struct attr **attrs;
     GList* current_playlist;
@@ -98,22 +100,113 @@ struct stub
     int volume;
     int width;
     gboolean muted;
-    gboolean playing;
+    int playing;
 } *stub;
 
-struct audio_priv 
-{
-    struct stub *stub;
-};
 
 GList* sort_playlists(GList* list);
 
 char * stub_get_playlist_name (int playlist_index);
 char* get_playlist_name(GList* list);
 void stub_play(void);
+void stub_pause(void);
 void stub_play_track(int track);
 GList* get_entry_by_index(GList* list, int index);
+void stub_toggle_repeat(struct audio_actions *action);
+void stub_toggle_shuffle(struct audio_actions *action);
+struct audio_actions* get_specific_action(GList* actions, int specific_action);
 
+int stub_get_attr(struct audio_priv* priv, enum attr_type type, struct attr *attr){
+	int ret = 1;
+	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, type,attr_to_name(type), attr);
+	if(priv != stub) {
+		dbg(lvl_debug, "failed\n");
+		return -1;
+	}
+	switch(type){
+		case attr_playing:{
+			attr->u.num = stub->playing;
+			dbg(lvl_debug, "Status: %ld\n", attr->u.num);
+			break;
+		}
+		case attr_name:{
+			attr->u.str = g_strdup("STUB");
+			dbg(lvl_debug, "%s\n", attr->u.str);
+			break;
+		}
+		case attr_shuffle:{			
+			int toggle = 0;	
+			if(stub->random_track) toggle++;
+			if(stub->random_playlist) toggle += 2;
+			attr->u.num = toggle;
+			dbg(lvl_debug, "%ld\n", attr->u.num);
+			break;
+		}
+		case attr_repeat:{
+			int toggle = 0;	
+			if(stub->single) toggle++;
+			if(stub->repeat) toggle += 2;
+			attr->u.num = toggle;
+			dbg(lvl_debug, "%ld\n", attr->u.num);
+			break;
+		}
+		default:{
+			dbg(lvl_error, "Don't know what to do with ATTR type %s\n", attr_to_name(attr->type));
+			ret = 0;
+			break;
+		}
+	}
+	attr->type = type;
+	return ret;
+}
+
+int stub_set_attr(struct audio_priv *priv, struct attr *attr){
+	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, attr->type,attr_to_name(attr->type), attr);
+	if(priv != stub){
+		dbg(lvl_debug, "failed\n");
+		return -1;
+	}
+	if(attr){
+		switch(attr->type){
+			case attr_name:{
+				dbg(lvl_debug, "%s\n", attr->u.str);
+				break;
+			}
+			case attr_playing:{
+				dbg(lvl_debug, "attr->u.num: %ld\n", attr->u.num);
+
+				if(attr->u.num == 0){
+					dbg(lvl_debug, "stub_pause();%ld\n", attr->u.num);
+					stub_pause();
+				}else{
+					dbg(lvl_debug, "stub_play();%ld\n", attr->u.num);
+					stub_play();
+				}
+
+				break;
+			}
+			case attr_shuffle:{
+
+				stub_toggle_shuffle(get_specific_action(stub->actions, AUDIO_MODE_TOGGLE_SHUFFLE));
+				break;
+			}
+			case attr_repeat:{
+				
+				stub_toggle_repeat(get_specific_action(stub->actions, AUDIO_MODE_TOGGLE_REPEAT));
+				break;
+			}
+			default:{
+				dbg(lvl_error, "Don't know what to do with ATTR type %s", attr_to_name(attr->type));
+				return 0;
+				break;
+			}
+		}
+
+		return 1;
+	}
+	return 0;
+}
+	
 /**
 * @brief this function reads a data of a certain playlist
 *
@@ -149,7 +242,7 @@ reindex_playlists(GList *list)
     GList *current = list;
     int i = 0;
     get_playlist_data(list)->index = i;
-    dbg(lvl_error, "playlist:%s \n\n", get_playlist_name(list));
+    dbg(lvl_debug, "playlist:%s \n\n", get_playlist_name(list));
     
     while (NULL != (current = current->next))
 	{
@@ -762,22 +855,54 @@ stub_get_actions(void){
 * We also read some statuses and save them to the audio player object
 */
 static void
-stub_stub_idle (struct stub *stub)
+stub_stub_idle (struct audio_priv *stub)
 {
 	/*
 	 * periodic called function
 	 * here you might get the current track and other information from
 	 * your player api or lib
 	 */ 
-
+	dbg(lvl_info, "In Stubs Idle Loop\n"); 
+	 
+	/* List all attached attrs.
+	struct attr** attrs = stub->attrs;
+	if (attrs) {
+		for (;*attrs; attrs++){
+			struct attr* a = *attrs;
+			dbg(lvl_debug, "Attr (%s) at %p\n", attr_to_name(a->type), *attrs);
+		}
+	}
+	//*/
 }
 
+/**
+* @brief pause :)
+*/
+void stub_pause(void)
+{
+	stub->playing = 0;
+	struct attr* playing = attr_search(stub->attrs,NULL, attr_playing);
+	if(playing)
+		playing->u.num = stub->playing;
+	else
+		dbg(lvl_debug, "No such Attr in %p\n", stub->attrs);
+	dbg(lvl_debug,"\n");
+	callback_list_call_attr_0(stub->cbl, attr_playing);
+	// pause your playback
+}
 /**
 * @brief play :)
 */
 void stub_play(void)
 {
-	stub->playing = true;
+	stub->playing = 1;
+	struct attr* playing = attr_search(stub->attrs,NULL, attr_playing);
+	if(playing)
+		playing->u.num = stub->playing;
+	else
+		dbg(lvl_debug, "No such Attr in %p\n", stub->attrs);
+	dbg(lvl_debug,  "\n");
+	callback_list_call_attr_0(stub->cbl, attr_playing);
 	// start your playback
 }
 
@@ -788,7 +913,14 @@ void stub_play(void)
 */
 void stub_play_track(int track)
 {
-	stub->playing = true;
+	stub->playing = 1;
+	struct attr* playing = attr_search(stub->attrs,NULL, attr_playing);
+	if(playing)
+		playing->u.num = stub->playing;
+	else
+		dbg(lvl_debug, "No such Attr in %p\n", stub->attrs);
+	dbg(lvl_debug,  "\n");
+	callback_list_call_attr_0(stub->cbl, attr_playing);
 	// choose and play track track here
 }
 
@@ -800,7 +932,6 @@ stub_next_playlist(void)
 {
 	dbg(lvl_debug,  "\n");
 	stub->current_playlist = load_next_playlist(stub->current_playlist);
-	
 }
 
 /**
@@ -846,30 +977,34 @@ void stub_toggle_repeat(struct audio_actions *action){
 	switch(toggle){
 		case 0:// no repeat
 		case 1:{
-			
+			stub->single = 0;
+			stub->repeat = 1;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_playlist");
 			}
-			//dbg(lvl_error, "\nrepeat playlist\n");
+			dbg(lvl_debug, "\nrepeat playlist\n");
 			break;
 		}
 		case 2:{// repeat playlist
-			
+			stub->single = 1;
+			stub->repeat = 1;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_track");
 			}
-			//dbg(lvl_error, "\nrepeat track\n");
+			dbg(lvl_debug, "\nrepeat track\n");
 			break;
 		}
 		case 3:{// repeat track
-			
+			stub->single = 0;
+			stub->repeat = 0;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_off");
 			}
-			//dbg(lvl_error, "\nrepeat off\n");
+			dbg(lvl_debug, "\nrepeat off\n");
 			break;
 		}
 	}
+	callback_list_call_attr_0(stub->cbl, attr_repeat);
 }
 /**
 * @brief this function toggles the shuffle mode
@@ -890,7 +1025,7 @@ void stub_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_playlists");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Playlists: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Playlists: %i\n", toggle);
 			break;
 		}
 		case 1:{
@@ -900,7 +1035,7 @@ void stub_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_tracks_playlists");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Tracks & Playlists: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Tracks & Playlists: %i\n", toggle);
 			break;
 		}
 		case 3:{
@@ -910,7 +1045,7 @@ void stub_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_tracks");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle Tracks: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle Tracks: %i\n", toggle);
 			break;
 		}
 		case 2:{
@@ -920,10 +1055,11 @@ void stub_toggle_shuffle(struct audio_actions *action){
 			if(action != NULL){
 				action->icon = g_strdup("media_shuffle_off");
 			}
-			//dbg(lvl_error,  "Toggle Shuffle OFF: %i\n", toggle);
+			dbg(lvl_debug,  "Toggle Shuffle OFF: %i\n", toggle);
 			break;
 		}
 	}
+	callback_list_call_attr_0(stub->cbl, attr_shuffle);
 }
 
 /**
@@ -936,9 +1072,19 @@ void stub_toggle_shuffle(struct audio_actions *action){
 void
 stub_toggle_playback (struct audio_actions *action)
 {
+
+	struct attr* playing = attr_search(stub->attrs,NULL, attr_playing);
+	if(playing){
+		stub_get_attr(stub, attr_playing, playing);
+		playing->u.num = stub->playing;
+		if(stub_get_attr(stub, attr_playing, playing) && playing->u.num)
+			stub->playing = 1;
+	}
+	else
+		dbg (lvl_debug, "No such Attr in: %p\n", stub->attrs);
 	if (stub->playing)
 	{
-		dbg (0, "pausing playback\n");
+		dbg (lvl_debug, "pausing playback\n");
 		// pause your playback here
 		if(action != NULL){
 			action->icon = g_strdup("media_play");
@@ -946,13 +1092,18 @@ stub_toggle_playback (struct audio_actions *action)
 	}
 	else
 	{
-		dbg (0, "resuming playback\n");
+		dbg (lvl_debug, "resuming playback\n");
 		// resume your playback here
 		if(action != NULL){
 			action->icon = g_strdup("media_pause");
 		}
 	}
 	stub->playing = !stub->playing;
+	if(playing){
+		playing->u.num = stub->playing;
+		stub_set_attr(stub, playing);
+	}
+	callback_list_call_attr_0(stub->cbl, attr_playing);
 }
 
 /**
@@ -1064,7 +1215,7 @@ struct audio_actions*
 get_specific_action(GList* actions, int specific_action)
 {
 	GList* result = g_list_first(actions);
-	while(result->next != NULL){
+	while(result != NULL && result->next != NULL){
 		struct audio_actions *aa = result->data;
 		if(aa->action == specific_action)
 			return aa;
@@ -1105,6 +1256,14 @@ action_do(struct audio_priv *this, const int action)
 	 */ 
 	switch(action)
 	{
+		case AUDIO_PLAYBACK_PAUSE:{
+			stub_pause();
+			break;
+		}
+		case AUDIO_PLAYBACK_PLAY:{
+			stub_play();
+			break;
+		}
 		case AUDIO_PLAYBACK_TOGGLE:{
 			stub_toggle_playback(get_specific_action(stub->actions, AUDIO_PLAYBACK_TOGGLE));
 			break;
@@ -1184,17 +1343,17 @@ action_do(struct audio_priv *this, const int action)
 static int
 playback(struct audio_priv *this, const int action)
 {
-	dbg(lvl_debug, "In stub's playback control\n");
+	dbg(lvl_debug, "In stub's playback control %i\n", action);
 	/* here are the players playback functions
 	 * it's called when a track is clicked to play that track
 	 * 
 	 */ 
 	if ( action > -1 ) {
 		g_track_index = action;
+		stub_play();
 		// call play_track_function here
-	} else {
+	} else
 		dbg(lvl_error,"Don't know what to do with play track '%i'. That's a bug\n", action);
-	}
 	if(stub->playing) return 1;
 	return 0;
 }
@@ -1290,7 +1449,7 @@ current_playlist(struct audio_priv *this)
 * actions you do not need, should be NULL.
 */
 static struct audio_methods player_stub_meth = {
-        volume,
+		volume,
         playback,
         action_do,
         tracks,
@@ -1298,40 +1457,71 @@ static struct audio_methods player_stub_meth = {
         actions,
         current_track,
         current_playlist,
+        stub_get_attr,
+        stub_set_attr,
 };
 
 static struct audio_priv *
-player_stub_new(struct audio_methods *meth, struct attr **attrs, struct attr *parent) 
+player_stub_new(struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent) 
 {
-    struct audio_priv *this;
-    struct attr *attr;
-    attr=attr_search(attrs, NULL, attr_music_dir);
+    struct attr *attr, *playing, *shuffle, *repeat;
+    
     dbg(lvl_debug,"Initializing stub\n");
 	srandom(time(NULL));
-	stub = g_new0 (struct stub, 1);
+	stub = g_new0 (struct audio_priv, 1);
 	/* example for reading an attribute from navit.xml
 	 * here is the path to the music directory given
 	 */
     if ((attr = attr_search (attrs, NULL, attr_music_dir)))
-      {
-          stub->musicdir = g_strdup(attr->u.str);
-          dbg (lvl_info, "found music directory: %s\n", stub->musicdir);
-      }
+	{
+		stub->musicdir = g_strdup(attr->u.str);
+		dbg (lvl_info, "found music directory: %s\n", stub->musicdir);
+	}
    
 	audio_init (&g_audiofifo);
-	
 	/*
 	 * place init code for your player implementation here
 	 */
-	  
+	stub->idle = callback_new_1 (callback_cast (stub_stub_idle), stub);
+    stub->timeout = event_add_timeout(1000, 1,  stub->idle);
     stub->callback = callback_new_1 (callback_cast (stub_stub_idle), stub);
     stub->timeout = event_add_timeout(1000, 1,  stub->callback);
+
+    stub->playing = false;
+	stub->attrs=attrs;
+    //*
+    playing = attr_search(stub->attrs, NULL, attr_playing);
+
+    if(!playing){
+		playing = g_new0( struct attr, 1);
+		playing->type = attr_playing;
+		stub->attrs=attr_generic_add_attr(stub->attrs, playing);
+		dbg (lvl_debug,"*\n");
+	}	
+	repeat = attr_search(stub->attrs, NULL, attr_repeat);
+
+    if(!repeat){
+		repeat = g_new0( struct attr, 1);
+		repeat->type = attr_repeat;
+		stub->attrs=attr_generic_add_attr(stub->attrs, repeat);
+		dbg (lvl_debug,"*\n");
+	}	
+	shuffle = attr_search(stub->attrs, NULL, attr_shuffle);
+
+    if(!shuffle){
+		shuffle = g_new0( struct attr, 1);
+		shuffle->type = attr_shuffle;
+		stub->attrs=attr_generic_add_attr(stub->attrs, shuffle);
+		dbg (lvl_debug,"*\n");
+	}	
+    //*/ 
+
     dbg (lvl_debug,  "Callback created successfully\n");
 
-    this=g_new(struct audio_priv,1);
-
+	stub->cbl = cbl;
     *meth=player_stub_meth;
-    return this;
+
+    return stub;
 }
 
 
