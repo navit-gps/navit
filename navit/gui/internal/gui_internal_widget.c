@@ -1226,7 +1226,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	GList * current_desc=NULL;
 	struct table_data * table_data = (struct table_data*)w->data;
 	int drawing_space_left=1;
-	int is_first_page=1;
+	int is_first_page;
 	struct table_column_desc * dim=NULL;
 
 	dbg_assert(table_data);
@@ -1238,13 +1238,14 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	/*
 	 * Skip rows that are on previous pages.
 	 */
-	cur_row = w->children;
 	if(table_data->top_row && table_data->top_row != w->children && !table_data->scroll_buttons.button_box_hide)
 	{
 		cur_row = table_data->top_row;
 		is_first_page=0;
 	} else {
+		cur_row = w->children;
 		table_data->top_row=NULL;
+		is_first_page=1;
 	}
 
 	/* First, let's deactivate all columns that are in rows which are *before*
@@ -1297,8 +1298,6 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			dim = (struct table_column_desc*)current_desc->data;
-
 			if (drawing_space_left) {
 				cur_widget->p.x=x;
 				cur_widget->w=dim->width;
