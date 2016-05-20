@@ -321,18 +321,18 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 
 	gui_internal_background_render(this, w);
 	if (w->foreground && w->border) {
-	struct point pnt[5];
-	pnt[0]=w->p;
-        pnt[1].x=pnt[0].x+w->w;
-        pnt[1].y=pnt[0].y;
-        pnt[2].x=pnt[0].x+w->w;
-        pnt[2].y=pnt[0].y+w->h;
-        pnt[3].x=pnt[0].x;
-        pnt[3].y=pnt[0].y+w->h;
-        pnt[4]=pnt[0];
-	graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
-	graphics_draw_lines(this->gra, w->foreground, pnt, 5);
-	graphics_gc_set_linewidth(w->foreground, 1);
+		struct point pnt[5];
+		pnt[0]=w->p;
+		pnt[1].x=pnt[0].x+w->w;
+		pnt[1].y=pnt[0].y;
+		pnt[2].x=pnt[0].x+w->w;
+		pnt[2].y=pnt[0].y+w->h;
+		pnt[3].x=pnt[0].x;
+		pnt[3].y=pnt[0].y+w->h;
+		pnt[4]=pnt[0];
+		graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
+		graphics_draw_lines(this->gra, w->foreground, pnt, 5);
+		graphics_gc_set_linewidth(w->foreground, 1);
 	}
 
 	l=w->children;
