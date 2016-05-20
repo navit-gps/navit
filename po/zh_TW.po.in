@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2016-05-05 16:20+0000\n"
+"PO-Revision-Date: 2016-05-15 07:14+0000\n"
 "Last-Translator: icefirewu <icefirewu@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -77,11 +77,11 @@ msgstr "在 %d 英尺"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr "%d.%d 英里"
+msgstr "%d 點 %d 英里"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "在 %d.%d 英里"
+msgstr "在 %d 點 %d 英里"
 
 #, c-format
 msgid "one mile"
@@ -103,11 +103,11 @@ msgstr "在 %d 公尺"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d 公里"
+msgstr "%d 點 %d 公里"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "在 %d.%d 公里"
+msgstr "在 %d 點 %d 公里"
 
 #, c-format
 msgid "one kilometer"
@@ -132,21 +132,21 @@ msgstr "%1$s 往 %2$s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr "%1$s 駛往 %2$s|男性模式"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr "%1$s 駛往 %2$s|女性模式"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr "%1$s 駛往 %2$s|中性模式"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "駛往交流道斜坡"
+msgstr "往交流道斜坡"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -156,22 +156,22 @@ msgstr "%s 往 %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s 往 %s"
 
 msgid "When possible, please turn around"
 msgstr "請盡可能迴轉"
@@ -213,17 +213,17 @@ msgstr "然後"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr "然後匯入右方主線 %1$s"
+msgstr "然後匯入右方車道 %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr "靠 %1$s%2$s 行駛"
+msgstr "%1$s 靠 %2$s 行駛"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr "然後并入 %1$s 線行駛"
+msgstr "然後并入左線 %1$s 行駛"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -239,12 +239,12 @@ msgstr "切入左線"
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "下 %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr "%2$s 靠 %1$s 下交流道 %3$s"
+msgstr "%2$s 靠 %1$s 下 %3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
@@ -281,7 +281,7 @@ msgstr "然後繼續靠左 %1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr "在 %1$s 繼續靠左 下 %2$s 交流道 往 %3$s"
+msgstr "在 %1$s 繼續靠左 下 %2$s 往 %3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -301,15 +301,15 @@ msgstr "急 "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "然後進入 %1$s 條路往 %2$s"
+msgstr "然後進入 %1$s 往 %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr "進入 %1$s 條路往 %2$s"
+msgstr "進入 %1$s 往 %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "經過%i 條路"
+msgstr "經過 %i 條路"
 
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
@@ -318,21 +318,21 @@ msgstr "%3$s 向 %2$s %1$s 轉 %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "然後 %1$s 迴轉"
+msgstr "然後左迴轉"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "%1$s 迴轉"
+msgstr "%1$s 左迴轉"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "然後 %1$s 迴轉"
+msgstr "然後右迴轉"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "%1$s 迴轉"
+msgstr "%1$s 右迴轉"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -355,7 +355,7 @@ msgstr "然後你將抵達目的地"
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "你已抵達目的地 %s"
+msgstr "%s 你將抵達目的地"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
@@ -394,7 +394,7 @@ msgstr "Roadbook"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "航點 %d"
 
 msgid "Visit before..."
 msgstr "歷經"
@@ -1512,38 +1512,38 @@ msgid "District/Township"
 msgstr "市區/鄉鎮"
 
 msgid "Map"
-msgstr ""
+msgstr "地圖"
 
 msgid "Bookmark"
-msgstr ""
+msgstr "書籤"
 
 msgid "Destination"
-msgstr ""
+msgstr "目的地"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr ""
+msgstr "_顯示"
 
 msgid "_Route"
 msgstr "_路徑"
 
 msgid "_Former Destinations"
-msgstr ""
+msgstr "_歷來目的地"
 
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_書籤"
 
 msgid "_Map"
-msgstr ""
+msgstr "_圖資"
 
 msgid "_Layout"
-msgstr ""
+msgstr "_畫面配置"
 
 msgid "_Projection"
-msgstr ""
+msgstr "_規劃"
 
 msgid "_Vehicle"
-msgstr ""
+msgstr "_車輛"
 
 msgid "Zoom_Out"
 msgstr "拉遠"
@@ -1591,28 +1591,28 @@ msgid "Quit the application"
 msgstr "結束本程式"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "_顯示游標"
 
 msgid "_Lock on Road"
 msgstr "_鎖定道路"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "_保持地圖朝北"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "切換地圖固定朝北或隨車轉"
 
 msgid "_Roadbook"
 msgstr "_Roadbook"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "顯示/隱藏 路徑敘述"
 
 msgid "_Autozoom"
 msgstr "_自動縮放"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "啟用/停用 自動縮放"
 
 msgid "_Fullscreen"
 msgstr "_全螢幕"
@@ -1674,15 +1674,15 @@ msgstr "趣點 %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "將  %ld, %ld 設為目的地 \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "將 %ld, %ld 設為地圖 \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "設定接下來經過 %ld, %ld \n"
 
 msgid "POI search"
 msgstr "趣點搜尋"
@@ -1712,7 +1712,7 @@ msgid "Name"
 msgstr "名稱"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "歷經"
 
 msgid "N"
 msgstr "N"
@@ -1763,16 +1763,16 @@ msgstr "幫助"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "航點 %s"
 
 msgid "Select waypoint to insert the new one before"
 msgstr ""
 
 msgid "View in Browser"
-msgstr ""
+msgstr "列表顯示"
 
 msgid "Item type"
-msgstr ""
+msgstr "物件類型"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
@@ -1815,19 +1815,19 @@ msgid "Delete Bookmark"
 msgstr "刪除書籤"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "刪除航點"
 
 msgid "Bookmarks"
 msgstr "書籤"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "標記為航點"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "儲存這些航點"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "置換航點"
 
 msgid "Delete Folder"
 msgstr "刪除目錄"
@@ -1890,10 +1890,10 @@ msgid "Change profile to: %s"
 msgstr "改用設定檔：%s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "設為啟用"
 
 msgid "Show Satellite status"
-msgstr ""
+msgstr "顯示衛星狀態"
 
 msgid "Show NMEA data"
 msgstr "顯示GPS協定資料"
@@ -1949,13 +1949,13 @@ msgid "Northing"
 msgstr "保持朝北"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "圖隨車轉"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "依這些航點規劃路徑"
 
 msgid "Maps"
-msgstr ""
+msgstr "圖資"
 
 msgid "Layout"
 msgstr "版面佈局"
@@ -1979,10 +1979,10 @@ msgid "Message"
 msgstr "訊息"
 
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 msgid "Back to map"
-msgstr ""
+msgstr "回到地圖"
 
 msgid "Main Menu"
 msgstr "主選單"
@@ -1991,17 +1991,17 @@ msgid "House number"
 msgstr "門牌號碼"
 
 msgid "Next"
-msgstr ""
+msgstr "下一頁"
 
 msgid "Prev"
-msgstr ""
+msgstr "前一頁"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "回導航路徑"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "注意! 拍照!"
 
 #. warning told
 msgid "Please decrease your speed"
@@ -2019,7 +2019,7 @@ msgid "Towns"
 msgstr "鄉鎮市區"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "圖資 (c) OpenStreetMap 創作群, ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
@@ -2033,11 +2033,11 @@ msgstr "下載地圖"
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
-msgstr ""
+msgstr "抱歉, 我們現今於安卓系統上不支援大於3.8G的圖資, 請另選一個較小的."
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "導航至此"
 
 msgid "Cancel"
 msgstr "取消"
@@ -2049,9 +2049,11 @@ msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"重新定位至 %s\n"
+"套用變更請重啟 Navit ."
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "全球"
 
 msgid "Africa"
 msgstr "非洲"
@@ -2069,7 +2071,7 @@ msgid "Taiwan"
 msgstr "臺灣"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "阿拉伯聯合大公國+其他"
 
 msgid "Oceania"
 msgstr "大洋洲"
@@ -2291,124 +2293,124 @@ msgid "Suffolk"
 msgstr "薩福克郡"
 
 msgid "Surrey"
-msgstr ""
+msgstr "薩里"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "威爾特郡"
 
 msgid "Scotland"
-msgstr ""
+msgstr "蘇格蘭"
 
 msgid "Wales"
-msgstr ""
+msgstr "威爾斯"
 
 msgid "Crete"
-msgstr ""
+msgstr "克里特"
 
 msgid "North America"
-msgstr ""
+msgstr "北美"
 
 msgid "Alaska"
-msgstr ""
+msgstr "阿拉斯加"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "夏威夷"
 
 msgid "USA"
-msgstr ""
+msgstr "美國"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (阿拉斯加及夏威夷除外)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "中西部"
 
 msgid "Michigan"
-msgstr ""
+msgstr "密西根"
 
 msgid "Ohio"
-msgstr ""
+msgstr "俄亥俄"
 
 msgid "Northeast"
-msgstr ""
+msgstr "東北"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "麻塞諸塞"
 
 msgid "Vermont"
-msgstr ""
+msgstr "佛蒙特"
 
 msgid "Pacific"
-msgstr ""
+msgstr "太平洋"
 
 msgid "South"
-msgstr ""
+msgstr "南"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "阿肯色"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "哥倫比亞特區"
 
 msgid "Florida"
-msgstr ""
+msgstr "佛羅里達"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "路易斯安那"
 
 msgid "Maryland"
-msgstr ""
+msgstr "馬里蘭"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "密西西比"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "奧克拉荷馬"
 
 msgid "Texas"
-msgstr ""
+msgstr "德克薩斯"
 
 msgid "Virginia"
-msgstr ""
+msgstr "維吉尼亞"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "西維吉尼亞"
 
 msgid "West"
-msgstr ""
+msgstr "西"
 
 msgid "Arizona"
-msgstr ""
+msgstr "亞利桑那"
 
 msgid "California"
-msgstr ""
+msgstr "加利福尼亞"
 
 msgid "Colorado"
-msgstr ""
+msgstr "科羅拉多"
 
 msgid "Idaho"
-msgstr ""
+msgstr "愛達荷"
 
 msgid "Montana"
-msgstr ""
+msgstr "蒙大拿"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "新墨西哥"
 
 msgid "Nevada"
-msgstr ""
+msgstr "內華達"
 
 msgid "Oregon"
-msgstr ""
+msgstr "奧勒岡"
 
 msgid "Utah"
-msgstr ""
+msgstr "猶他"
 
 msgid "Washington State"
-msgstr ""
+msgstr "華盛頓州"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "中南美洲"
 
 msgid "Guyane Francaise"
 msgstr "法屬圭亞那"
@@ -2508,11 +2510,15 @@ msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
+"捨棄前一\n"
+"航點"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
 msgstr ""
+"捨棄次一\n"
+"航點"
 
 msgid "Satellite Status"
 msgstr "衛星狀態"
@@ -2527,7 +2533,7 @@ msgid "car_avoid_tolls"
 msgstr "汽車_避付費路徑"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "步行"
 
 msgid "horse"
 msgstr "馬"
