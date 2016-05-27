@@ -1248,7 +1248,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		is_first_page=1;
 	}
 
-	/* First, let's deactivate all columns that are in rows which are *before*
+	/* First, let's mark all columns as off-screen that are in rows which are *before*
 	 * our current page.
 	 * */
 	GList *row = w->children;
@@ -1264,7 +1264,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			cur_widget->state &= ~STATE_SENSITIVE;
+			cur_widget->state |= STATE_OFFSCREEN;
 		}
 		row = g_list_next(row);
 	}
@@ -1308,7 +1308,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				/* We pack the widget before rendering to ensure that the x and y
 				 * coordinates get pushed down.
 				 */
-				cur_widget->state |= STATE_SENSITIVE;
+				cur_widget->state &= ~STATE_OFFSCREEN;
 				gui_internal_widget_pack(this,cur_widget);
 				gui_internal_widget_render(this,cur_widget);
 
@@ -1317,8 +1317,8 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				    max_height = dim->height;
 				}
 			} else {
-				/* Deactivate contents that we don't have space for. */
-				cur_widget->state &= ~STATE_SENSITIVE;
+				/* Mark contents that we don't have space for. */
+				cur_widget->state |= STATE_OFFSCREEN;
 			}
 		}
 

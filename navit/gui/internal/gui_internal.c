@@ -2701,7 +2701,9 @@ gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
 static struct widget*
 gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
 	GList *l=wi->children;
-	if (wi && wi->state & STATE_SENSITIVE)
+	if (wi->state & STATE_OFFSCREEN)
+		 return NULL;
+	if (wi->state & STATE_SENSITIVE)
 		 return wi;
 	while (l) {
 		struct widget* tmp = gui_internal_keynav_find_next_sensitive_child(l->data);
@@ -2746,6 +2748,9 @@ gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highligh
 		// Reached current widget; last widget found is the result.
 		return RESULT_FOUND;
 	}
+	// If widget is off-screen, do not recurse into it.
+        if (wi->state & STATE_OFFSCREEN)
+		return NO_RESULT_YET;
 	if (wi->state & STATE_SENSITIVE)
 		*result= wi;
 	GList *l=wi->children;

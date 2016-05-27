@@ -8,6 +8,7 @@ struct gui_priv;
 #define STATE_CLEAR 32
 #define STATE_EDITABLE 64
 #define STATE_SCROLLABLE 128
+#define STATE_OFFSCREEN 256
 
 #define GESTURE_RINGSIZE 100
 
