@@ -1416,21 +1416,21 @@ static void
 audio_playback_previous(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_error,"playback previous\n");
-	audio_playback_do(this,-2);
+	audio_playback_do(this,AUDIO_PLAYBACK_PREVIOUS);
 }
 
 static void
 audio_playback_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_error,"playback toggle\n");
-	audio_playback_do(this,0);
+	audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
 }
 
 static void
 audio_playback_next(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_error,"playback next\n");
-	audio_playback_do(this,-1);
+	audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
 }
 
 int
@@ -3399,6 +3399,7 @@ navit_add_audio(struct navit *this_, struct audio *a)
         na->active=0;
         dbg(lvl_error,"Adding one plugin at %p\n", a);
         this_->audio_plugins=g_list_append(this_->audio_plugins, na);
+        dbg(lvl_error,"Done adding one plugin at %p\n", a);
         return 1;
 }
 

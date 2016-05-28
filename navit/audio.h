@@ -5,9 +5,12 @@
 extern "C" {
 #endif
 
-// const int AUDIO_PLAYBACK_TOGGLE=0;
-// const int AUDIO_PLAYBACK_NEXT=1;
-// const int AUDIO_PLAYBACK_PREVIOUS=-1;
+// Values from 0+ are also used to reference tracks
+// in playlists, so we can use negative values to
+// control the playback
+#define AUDIO_PLAYBACK_TOGGLE -1
+#define AUDIO_PLAYBACK_NEXT -2
+#define AUDIO_PLAYBACK_PREVIOUS -3
 
 struct audio_priv;
 

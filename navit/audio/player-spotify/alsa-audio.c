@@ -33,11 +33,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <glib.h>
 #include "debug.h"
 
 #include "alsa.h"
 #include "spotify.h"
 
+struct arg_struct {
+    audio_fifo_t *af;
+    char * audio_playback_pcm;
+};
 
 static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 {
@@ -177,33 +182,36 @@ static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 	return h;
 }
 
-static void* alsa_audio_start(void *aux)
+static void* alsa_audio_start(void *arguments)
 {
-	audio_fifo_t *af = aux;
+	struct arg_struct *args = arguments;
+        char * audio_playback_pcm;
+	audio_playback_pcm = malloc(256);
+	strcpy(audio_playback_pcm, args -> audio_playback_pcm);
+	dbg(lvl_info, "will use audio_playback_pcm : %s\n", audio_playback_pcm);
+
+	audio_fifo_t *af = args -> af;
 	snd_pcm_t *h = NULL;
 	int c;
 	int cur_channels = 0;
 	int cur_rate = 0;
 
 	audio_fifo_data_t *afd;
-    dbg(lvl_error, "alsa_audio_start\n");
 	for (;;) {
 		afd = audio_get(af);
 		if (!h || cur_rate != afd->rate || cur_channels != afd->channels) {
-			dbg(lvl_error,"h\n");
 			if (h) snd_pcm_close(h);
 
 			cur_rate = afd->rate;
 			cur_channels = afd->channels;
 
-			//h = alsa_open("front:CARD=Set,DEV=0", cur_rate, cur_channels);
-			h = alsa_open("dmixer", cur_rate, cur_channels);
+			h = alsa_open(audio_playback_pcm, cur_rate, cur_channels);
 
 			if (!h) {
 				dbg(lvl_error, "Unable to open ALSA device (%d channels, %d Hz), can't continue\n", cur_channels, cur_rate);
-                		return;
+                		return NULL;
 			} else {
-			    dbg(lvl_error, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
+			    dbg(lvl_info, "ALSA device (%d channels, %d Hz), ok\n", cur_channels, cur_rate);
             		}
        		}
 
@@ -218,10 +226,10 @@ static void* alsa_audio_start(void *aux)
 		snd_pcm_writei(h, afd->samples, afd->nsamples);
 		free(afd);
 	}
-	dbg(lvl_error,"spotify alsa_audio_start done\n");
+	dbg(lvl_debug,"spotify alsa_audio_start done\n");
 }
 
-void audio_init(audio_fifo_t *af)
+void audio_init(audio_fifo_t *af, char * audio_playback_pcm)
 {
 	pthread_t tid;
 
@@ -231,6 +239,13 @@ void audio_init(audio_fifo_t *af)
 	pthread_mutex_init(&af->mutex, NULL);
 	pthread_cond_init(&af->cond, NULL);
 
-	pthread_create(&tid, NULL, alsa_audio_start, af);
+        struct arg_struct args;
+        args.af = af;
+        args.audio_playback_pcm= g_strdup(audio_playback_pcm);
+
+	pthread_create(&tid, NULL, alsa_audio_start, (void *) &args);
+	// The sleep ensures that the audio is initialized asynchronously before returning.
+	// We probably need to find a better way to do this
+	sleep(1);
 }
 

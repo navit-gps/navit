@@ -22,8 +22,8 @@ struct audio_priv {
 	struct navit *nav;
 };
 
-const char *card = "hw:1";
-const char *selem_name = "Headphone";
+char *card = "";
+char *selem_name = "";
 
 void
 enumerate_devices()
@@ -195,6 +195,8 @@ int audio_volume(audio_volume_action action, long* outvol)
             return -7;
         *outvol = (*outvol * (maxv - minv) / (100-1)) + minv;
 
+	dbg(lvl_error, "Setting volume to %li\n", outvol);
+
         if(snd_mixer_selem_set_playback_volume(elem, 0, *outvol) < 0) {
             snd_mixer_close(handle);
             return -8;
@@ -248,6 +250,20 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 	this=g_new(struct audio_priv,1);
 	this->nav=parent->u.navit;
 	*meth=output_alsa_meth;
+
+        if ((attr = attr_search (attrs, NULL, attr_audio_device)))
+          {
+ 	      card=g_strdup(attr->u.str);
+              dbg (lvl_error, "Will use alsa device %s\n", card);
+          }
+
+        if ((attr = attr_search (attrs, NULL, attr_audio_device_mixer)))
+          {
+ 	      selem_name=g_strdup(attr->u.str);
+              dbg (lvl_error, "Will use alsa mixer %s\n", selem_name);
+          }
+
+
 	dbg(lvl_error,"Real alsa init\n");
 	enumerate_devices(); 
 	return this;

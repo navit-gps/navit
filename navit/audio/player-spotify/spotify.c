@@ -19,6 +19,7 @@ struct spotify
     char *playlist;
     sp_playlistcontainer *pc;
     gboolean playing;
+    char * audio_playback_pcm;
 } *spotify;
 
 struct audio_priv {
@@ -377,24 +378,24 @@ playback(struct audio_priv *this, const int action)
 {
         dbg(lvl_error,"in spotify's playback control\n");
         switch(action){
-        case 0:
+        case AUDIO_PLAYBACK_TOGGLE:
                 toggle_playback();
                 break;
-        case -1:
+        case AUDIO_PLAYBACK_NEXT:
                 ++g_track_index;
                 try_jukebox_start ();
                 break;
-        case -2:
+        case AUDIO_PLAYBACK_PREVIOUS:
                 if (g_track_index > 0)
                         --g_track_index;
                 try_jukebox_start ();
                 break;
         default:
-                if ( action > 0 ) {
+                if ( action < 0 ) {
+                        dbg(lvl_error,"Don't know what to do with action '%i'. That's a bug\n", action);
+                } else {
                        g_track_index = action;
                        try_jukebox_start ();
-                } else {
-                        dbg(lvl_error,"Don't know what to do with action '%i'. That's a bug\n", action);
                 }
         }
         return 0;
@@ -433,6 +434,11 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
           spotify->playlist = g_strdup(attr->u.str);
           dbg (lvl_error, "found spotify_playlist %s\n", spotify->playlist);
       }
+    if ((attr = attr_search (attrs, NULL, attr_audio_playback_pcm)))
+      {
+          spotify->audio_playback_pcm = g_strdup(attr->u.str);
+          dbg (lvl_error, "found audio playback pcm %s\n", spotify->audio_playback_pcm);
+      }
     spconfig.application_key_size = spotify_apikey_size;
     error = sp_session_create (&spconfig, &session);
     if (error != SP_ERROR_OK)
@@ -444,7 +450,7 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     g_sess = session;
     g_logged_in = 0;
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
-    audio_init (&g_audiofifo);
+    audio_init (&g_audiofifo, spotify->audio_playback_pcm);
     // FIXME : we should maybe use a timer instead of the idle loop
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     event_add_idle (125, spotify->callback);

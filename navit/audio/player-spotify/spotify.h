@@ -50,7 +50,7 @@ typedef struct audio_fifo {
 
 
 /* --- Functions --- */
-extern void audio_init(audio_fifo_t *af);
+extern void audio_init(audio_fifo_t *af, char * audio_playback_pcm);
 extern void audio_fifo_flush(audio_fifo_t *af);
 audio_fifo_data_t* audio_get(audio_fifo_t *af);
 
