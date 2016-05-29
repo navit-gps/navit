@@ -40,7 +40,7 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
-    - sudo apt-get install libcurl-dev
+    - sudo apt-get install libcurl4-openssl-dev
     - bash ci/build_android.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
