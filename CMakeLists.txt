@@ -769,7 +769,7 @@ add_subdirectory (man)
 if (USE_NATIVE_LANGUAGE_SUPPORT)
    add_subdirectory (po)
 endif(USE_NATIVE_LANGUAGE_SUPPORT)
-
+IF(UNIX AND NOT ANDROID AND NOT APPLE)
 ########### Add uninstall target ###############
 CONFIGURE_FILE(
   "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake.in"
@@ -777,3 +777,4 @@ CONFIGURE_FILE(
   IMMEDIATE @ONLY)
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake") 
+ENDIF(UNIX AND NOT ANDROID AND NOT APPLE)
