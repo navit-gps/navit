@@ -1,5 +1,5 @@
 if(USE_SPOTIFY)
-	set(spotify_sources gui_internal_spotify.c )
+	set(spotify_sources gui_internal_media.c )
 endif(USE_SPOTIFY)
 if(USE_GOOGLEPLACES)
 	set(api_LIBS "-ljansson -lpthread")
