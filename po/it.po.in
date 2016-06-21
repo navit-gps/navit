@@ -1,5 +1,5 @@
 # Italian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # AndreaCr https://launchpad.net/~andij-cr
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"PO-Revision-Date: 2016-06-17 19:33+0000\n"
 "Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
@@ -323,7 +323,7 @@ msgstr "decisamente "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "poi prendere la %1$s strada a %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -2037,10 +2037,6 @@ msgstr "Cerca"
 msgid "Towns"
 msgstr "Paesini"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Percorso per questo punto"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Dati Mappa (c) Contributori OpenStreetMap, licenza ODBL"
 
@@ -2057,6 +2053,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Percorso per questo punto"
 
 msgid "Cancel"
 msgstr "Annulla"
