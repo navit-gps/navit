@@ -1,3 +1,7 @@
+wget https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
+tar xfz libspotify-12.1.51-Linux-x86_64-release.tar.gz
+sudo make install prefix=/usr/local
+
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
