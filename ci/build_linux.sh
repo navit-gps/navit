@@ -1,5 +1,7 @@
+set -e
 wget https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
 tar xfz libspotify-12.1.51-Linux-x86_64-release.tar.gz
+cd libspotify-12.1.51-Linux-x86_64-release
 sudo make install prefix=/usr/local
 
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
