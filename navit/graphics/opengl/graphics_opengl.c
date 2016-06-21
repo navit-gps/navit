@@ -451,7 +451,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 		width = FreeImage_GetWidth(image);
 		height = FreeImage_GetHeight(image);
 
-		if ((*w != width || *h != height) && 0 < *w && 0 < *h) {
+		if ((*w != width || *h != height) && *w != IMAGE_W_H_UNSET && *h != IMAGE_W_H_UNSET) {
 			FIBITMAP *image2;
 			image2 = FreeImage_Rescale(image, *w, *h, FILTER_BOX);
 			FreeImage_Unload(image);
@@ -921,7 +921,7 @@ display_text_draw(struct font_freetype_text *text,
 			if (color) {
 				shadow = g_malloc(stride * (g->h + 2));
 				gr->freetype_methods.get_shadow(g, shadow,
-								32, stride,
+								stride,
 								&white,
 								&transparent);
 #ifdef USE_OPENGLES
@@ -961,7 +961,6 @@ display_text_draw(struct font_freetype_text *text,
 					    g_malloc(stride * g->h * 4);
 					gr->freetype_methods.get_glyph(g,
 								       glyph,
-								       32,
 								       stride
 								       * 4,
 								       &black,
@@ -989,7 +988,7 @@ display_text_draw(struct font_freetype_text *text,
 				stride *= 4;
 				glyph = g_malloc(stride * g->h);
 				gr->freetype_methods.get_glyph(g, glyph,
-							       32, stride,
+							       stride,
 							       &black,
 							       &white,
 							       &transparent);
@@ -1433,6 +1432,8 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 	overlay_disable,
 	overlay_resize,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *

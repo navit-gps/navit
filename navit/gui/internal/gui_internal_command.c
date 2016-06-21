@@ -48,6 +48,17 @@
 
 extern char *version;
 
+/**
+ * @brief Converts a WGS84 coordinate pair to its string representation.
+ *
+ * This function takes a coordinate pair with latitude and longitude in degrees and converts them to a
+ * string of the form {@code 45°28'0" N 9°11'26" E}.
+ *
+ * @param gc A WGS84 coordinate pair
+ * @param sep The separator character to insert between latitude and longitude
+ *
+ * @return The coordinates as a formatted string
+ */
 static char *
 coordinates_geo(const struct coord_geo *gc, char sep)
 {
@@ -70,9 +81,21 @@ coordinates_geo(const struct coord_geo *gc, char sep)
 	lng_sec=fmod(g.lng*3600+0.5,60);
 	lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
 	lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
+
 	return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
 }
 
+/**
+ * @brief Converts a coordinate pair to its WGS84 string representation.
+ *
+ * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
+ * {@code 45°28'0" N 9°11'26" E}.
+ *
+ * @param gc A coordinate pair
+ * @param sep The separator character to insert between latitude and longitude
+ *
+ * @return The coordinates as a formatted string
+ */
 char *
 gui_internal_coordinates(struct pcoord *pc, char sep)
 {
@@ -279,8 +302,10 @@ gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, struct attr 
 	gui_internal_widget_append(wr,row);
 
 	if (this->keyboard)
-                gui_internal_widget_append(w, gui_internal_keyboard(this,56));
-       gui_internal_menu_render(this);
+		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_DEGREE));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_DEGREE, NULL);
+	gui_internal_menu_render(this);
 }
 
 static void
@@ -845,7 +870,9 @@ gui_internal_cmd_log(struct gui_priv *this)
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,2+gui_internal_keyboard_init_mode(getenv("LANG"))));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
 	gui_internal_menu_render(this);
 	gui_internal_leave(this);
 }

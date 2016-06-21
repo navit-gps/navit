@@ -114,15 +114,18 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
-/*
- * * Display image scaled to specific size
- * * searches for scaleable and pre-scaled image
- * * @param this Our gui context
- * * @param name image name
- * * @param w desired width of image
- * * @param h desired height of image
- * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
- * */
+/**
+ * @brief Displays an image scaled to a specific size
+ *
+ * Searches for scaleable and pre-scaled image
+ *
+ * @param this Our gui context
+ * @param name image name
+ * @param w desired width of image
+ * @param h desired height of image
+ *
+ * @return image_struct Ptr to scaled image struct or NULL if not scaled or found
+ */
 static struct graphics_image *
 image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 {
@@ -149,38 +152,43 @@ image_new_o(struct gui_priv *this, char *name)
 }
 #endif
 
-/*
- * * Display image scaled to xs (extra small) size
- * * This image size can be too small to click it on some devices.
- * * @param this Our gui context
- * * @param name image name
- * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
- * */
+/**
+ * @brief Displays an image scaled to xs (extra small) size
+ *
+ * This image size can be too small to click it on some devices.
+ *
+ * @param this Our gui context
+ * @param name image name
+ *
+ * @return image_struct Ptr to scaled image struct or NULL if not scaled or found
+ */
 struct graphics_image *
 image_new_xs(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_xs, this->icon_xs);
 }
 
-/*
- * * Display image scaled to s (small) size
- * * @param this Our gui context
- * * @param name image name
- * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
- * */
-
+/**
+ * @brief Displays an image scaled to s (small) size
+ *
+ * @param this Our gui context
+ * @param name image name
+ *
+ * @return image_struct Ptr to scaled image struct or NULL if not scaled or found
+ */
 struct graphics_image *
 image_new_s(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_s, this->icon_s);
 }
 
-/*
- * * Display image scaled to l (large) size
- * * @param this Our gui context
- * * @param name image name
- * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
- * */
+/**
+ * @brief Displays an image scaled to l (large) size
+ * @param this Our gui context
+ * @param name image name
+ *
+ * @return image_struct Ptr to scaled image struct or NULL if not scaled or found
+ */
 struct graphics_image *
 image_new_l(struct gui_priv *this, const char *name)
 {
@@ -298,8 +306,9 @@ gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum f
  * @param out p0 pointer to the point object, where gesture starting point coordinates should be placed. Can be NULL.
  * @param out dx pointer to variable to store horizontal movement of the gesture.
  * @param out dy pointer to variable to store vertical movement of the gesture.
- * @returns amount of time the actual movement took.
+ * @return amount of time the actual movement took.
  */
+/* FIXME where is the implementation? */
 
 
 static void gui_internal_motion_cb(struct gui_priv *this)
@@ -484,14 +493,14 @@ gui_internal_time_help(struct gui_priv *this)
 
 
 /**
- * Applys the configuration values to this based on the settings
+ * Applies the configuration values to this based on the settings
  * specified in the configuration file (this->config) and
  * the most approriate default profile based on screen resolution.
  *
  * This function should be run after this->root is setup and could
  * be rerun after the window is resized.
  *
- * @authors Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
+ * @author Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
  */
 void
 gui_internal_apply_config(struct gui_priv *this)
@@ -499,7 +508,7 @@ gui_internal_apply_config(struct gui_priv *this)
   struct gui_config_settings *  current_config=0;
 
   dbg(lvl_debug,"w=%d h=%d\n", this->root.w, this->root.h);
-  /**
+  /*
    * Select default values from profile based on the screen.
    */
   if((this->root.w > 320 || this->root.h > 320) && this->root.w > 240 && this->root.h > 240)
@@ -518,7 +527,7 @@ gui_internal_apply_config(struct gui_priv *this)
     current_config = &config_profiles[SMALL_PROFILE];
   }
 
-  /**
+  /*
    * Apply override values from config file
    */
   if(this->config.font_size == -1 )
@@ -618,17 +627,21 @@ gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm,
 }
 
 /*
- * @brief Display waypoint list to the user and let she choose one for the action specified as cmd parameter.
- * Widget passed as wm parameter of the called cmd function will have item set to user choosen waypoint item. Its datai will be set
+ * @brief Displays a waypoint list to the user.
+ *
+ * This display a waypoint list to the user. When the user chooses an item from the list, the callback
+ * function passed as {@code cmd} will be called.
+ *
+ * Widget passed as wm parameter of the called cmd function will have item set to user chosen waypoint item. Its data will be set
  *  to zero-based choosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
  *  waypoint coordinates will be copied to wm->c.
- * @param in this gui context
+ *
+ * @param this gui context
  * @param title Menu title
- * @param hint Text to dispaly above the waypoint list describing the action to be performed, can be NULL
- * @param wm The called widget pointer. Can be NULL.
- * @param cmd Function to call on item selection
- * @param data data argument to be passed to the cmd function
- * @returns nothing
+ * @param hint Text to display above the waypoint list describing the action to be performed, can be NULL
+ * @param wm_ The called widget pointer. Can be NULL.
+ * @param cmd Callback function which will be called on item selection
+ * @param data data argument to be passed to the callback function
  */
 void
 gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_, void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data)
@@ -730,9 +743,7 @@ gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, voi
 struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
 
 
-
-
-
+struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang);
 
 
 static void
@@ -749,10 +760,9 @@ gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widget *wm, void 
 
 
 
-/*
- *  Get a utf-8 string, return the same prepared for case insensetive search. Result shoud be g_free()d after use.
+/**
+ *  Get a utf-8 string, return the same prepared for case insensitive search. Result should be g_free()d after use.
  */
-
 char *
 removecase(char *s) 
 {
@@ -911,11 +921,11 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 
 
 /*
- * @brief Event to transfer search results to a map.
+ * @brief Transfers search results to a map.
  *
  * @param this The graphics context.
  * @param wm called widget.
- * @param data event data (pointer to the table widget containing results, or NULL if results map is only have to be cleaned).
+ * @param data event data (pointer to the table widget containing results, or NULL to clean the result map without adding any new data).
  */
 static void
 gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data)
@@ -1035,7 +1045,7 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
 }
 
 /*
- * @brief Event to remove search results from the a map.
+ * @brief Removes search results from a map.
  *
  * @param this The graphics context.
  * @param wm called widget.
@@ -1078,6 +1088,21 @@ gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void 
 }
 
 
+/**
+ * @brief Displays the commands available for a location.
+ *
+ * This displays the available commands for the given location in a dialog from which the user can
+ * choose an action. The location can be supplied either in projected coordinates via the {@code pc_in}
+ * argument or in WGS84 coordinates (i.e. latitude and longitude in degrees) via the {@code g_in}
+ * argument. One of these must be supplied, the other should be {@code NULL}.
+ *
+ * @param this The internal GUI instance
+ * @param pc_in Projected coordinates of the position
+ * @param g_in WGS84 coordinates of the position
+ * @param wm
+ * @param name The display name for the position
+ * @param flags Flags specifying the operations available from the GUI
+ */
 /* meaning of the bits in "flags":
  * 1: "Streets"
  * 2: "House numbers"
@@ -1441,7 +1466,6 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
   * The "Bookmarks" section of the OSD
   * 
   */
-
 void
 gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -1595,7 +1619,16 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 
 static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy);
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary);
+
+static int
+gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result);
+
+static int
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result);
+
+static struct widget*
+gui_internal_keynav_find_next_sensitive_child(struct widget *wi);
 
 void
 gui_internal_keypress_do(struct gui_priv *this, char *key)
@@ -2407,11 +2440,11 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 	attr_list_free(attr_list);
 }
 
-//##############################################################################################################
-//# Description: Convert one geo coordinate in human readable form to double value.
-//# Comment:
-//# Authors: Martin Bruns (05/2012), mdankov
-//##############################################################################################################
+/**
+ * @brief Converts one geo coordinate in human readable form to double value.
+ *
+ * @author Martin Bruns (05/2012), mdankov
+ */
 static int
 gui_internal_coordinate_parse(char *s, char plus, char minus, double *x)
 {
@@ -2511,17 +2544,11 @@ gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widge
         gui_internal_cmd_enter_coord_do(this, widget->data);
 }
 
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Bruns (05/2012)
-//##############################################################################################################
-
-//##############################################################################################################
-//# Description: Function to handle mouse clicks and scroll wheel movement
-//# Comment:
-//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
-//##############################################################################################################
+/**
+ * @brief Handles mouse clicks and scroll wheel movement
+ *
+ * @author Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+ */
 static void gui_internal_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this=data;
@@ -2639,6 +2666,12 @@ static void gui_internal_resize(void *data, int w, int h)
 		this->root.h=h;
 		changed=1;
 	}
+	/*
+	 * If we're drawing behind system bars on Android, watching for actual size changes will not catch
+	 * fullscreen toggle events. As a workaround, always assume a size change if padding is supplied.
+	 */
+	if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
+		changed = 1;
 	dbg(lvl_debug,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
@@ -2663,6 +2696,74 @@ gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
 		p->y=w->p.y;
 	if (dy > 0)
 		p->y=w->p.y+w->h;
+}
+
+static struct widget*
+gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
+	GList *l=wi->children;
+	if (wi->state & STATE_OFFSCREEN)
+		 return NULL;
+	if (wi->state & STATE_SENSITIVE)
+		 return wi;
+	while (l) {
+		struct widget* tmp = gui_internal_keynav_find_next_sensitive_child(l->data);
+		if (tmp)
+			return tmp;
+		l=g_list_next(l);
+	}
+	return NULL;
+}
+
+static int
+gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result) {
+	GList *l=wi->children;
+	if (wi == current_highlight)
+	    return 1;
+	while (l) {
+		struct widget *child=l->data;
+		l=g_list_next(l);
+		if (gui_internal_keynav_find_next(child, current_highlight, result)) {
+			while (l) {
+				struct widget *new = gui_internal_keynav_find_next_sensitive_child(l->data);
+				if (new) {
+					*result = new;
+					/* Found one! */
+					return 0;
+				}
+				l=g_list_next(l);
+			}
+			/* Try parent */
+			return 1;
+		}
+	}
+	return 0;
+}
+
+#define RESULT_FOUND 1
+#define NO_RESULT_YET 0
+
+static int
+gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result) {
+	if (wi == current_highlight && *result) {
+		// Reached current widget; last widget found is the result.
+		return RESULT_FOUND;
+	}
+	// If widget is off-screen, do not recurse into it.
+        if (wi->state & STATE_OFFSCREEN)
+		return NO_RESULT_YET;
+	if (wi->state & STATE_SENSITIVE)
+		*result= wi;
+	GList *l=wi->children;
+	while (l) {
+		struct widget *child=l->data;
+		if (gui_internal_keynav_find_prev(child, current_highlight, result) == RESULT_FOUND) {
+			return RESULT_FOUND;
+		}
+		l=g_list_next(l);
+	}
+	// If no sensitive widget is found before "current_highlight", return the last sensitive widget when
+	// recursion terminates.
+	return NO_RESULT_YET;
 }
 
 static void
@@ -2707,14 +2808,29 @@ gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int
 	}
 }
 
+/**
+ * @brief Move keyboard focus to the next widget.
+ *
+ * Move keyboard focus to the appropriate next widget, depending on the direction of focus
+ * movement.
+ *
+ * @param this GUI context
+ * @param this dx horizontal movement (-1=left, +1=right), unless rotary==1
+ * @param this dy vertical movement (+1=up, -1=down)
+ * @param rotary (0/1) input from rotary encoder - dx indicates forwards/backwards movement
+ *        through all widgets
+ */
 static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary)
 {
 	struct widget *result,*menu=g_list_last(this->root.children)->data;
+	struct widget *current_highlight = NULL;
 	struct point p;
 	int distance;
-	if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
+	if (this->highlighted && this->highlighted_menu == menu) {
 		gui_internal_keynav_point(this->highlighted, dx, dy, &p);
+		current_highlight = this->highlighted;
+	}
 	else {
 		p.x=0;
 		p.y=0;
@@ -2724,17 +2840,27 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		if (result) {
 			gui_internal_keynav_point(result, dx, dy, &p);
 			dbg(lvl_debug,"result origin=%p p=%d,%d\n", result, p.x, p.y);
+			current_highlight = result;
 		}
 	}
 	result=NULL;
 	distance=INT_MAX;
-	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
+	if (rotary && dx > 0)
+		gui_internal_keynav_find_next(menu, current_highlight, &result);
+	else if (rotary && dx < 0)
+		gui_internal_keynav_find_prev(menu, current_highlight, &result);
+	else
+		gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
 	dbg(lvl_debug,"result=%p\n", result);
 	if (! result) {
-		if (dx < 0)
+		if (dx < 0) {
 			p.x=this->root.w;
-		if (dx > 0)
+			if (rotary) p.y = this->root.h;
+		}
+		if (dx > 0) {
 			p.x=0;
+			if (rotary) p.y = 0;
+		}
 		if (dy < 0)
 			p.y=this->root.h;
 		if (dy > 0)
@@ -2798,17 +2924,23 @@ static void gui_internal_keypress(void *data, char *key)
 	}
 	graphics_draw_mode(this->gra, draw_mode_begin);
 	switch (*key) {
+	case NAVIT_KEY_PAGE_DOWN:
+		gui_internal_keynav_highlight_next(this,1,0,1);
+		break;
+	case NAVIT_KEY_PAGE_UP:
+		gui_internal_keynav_highlight_next(this,-1,0,1);
+		break;
 	case NAVIT_KEY_LEFT:
-		gui_internal_keynav_highlight_next(this,-1,0);
+		gui_internal_keynav_highlight_next(this,-1,0,0);
 		break;
 	case NAVIT_KEY_RIGHT:
-		gui_internal_keynav_highlight_next(this,1,0);
+		gui_internal_keynav_highlight_next(this,1,0,0);
 		break;
 	case NAVIT_KEY_UP:
-		gui_internal_keynav_highlight_next(this,0,-1);
+		gui_internal_keynav_highlight_next(this,0,-1,0);
 		break;
 	case NAVIT_KEY_DOWN:
-		gui_internal_keynav_highlight_next(this,0,1);
+		gui_internal_keynav_highlight_next(this,0,1,0);
 		break;
 	case NAVIT_KEY_BACK:
 		if (g_list_length(this->root.children) > 1)
@@ -2980,9 +3112,10 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 };
 
 
-/**
+/*
  * @brief Displays Route information
  */
+/* FIXME where is the implementation? */
 
 int
 line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res)
@@ -3043,14 +3176,14 @@ item_get_heightline(struct item *item)
 }
 
 
-/**
+/*
  * @brief Displays Route Height Profile
  *
  * @li The name of the active vehicle
  * @param wm The button that was pressed.
  * @param v Unused
  */
-
+/* FIXME where is the implementation? */
 
 
 
@@ -3090,7 +3223,7 @@ gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w)
 }
 
 /**
- * @brief Populates the route  table with route information
+ * @brief Populates the route table with route information
  *
  * @param this The gui context
  * @param navit The navit object

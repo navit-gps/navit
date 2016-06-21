@@ -336,8 +336,8 @@ write_item(char *tile, struct item_bin *ib, FILE *reference)
 		}
 		if (reference) {
 			int offset=th->total_size_used/4;
-			fwrite(&th->zipnum, sizeof(th->zipnum), 1, reference);
-			fwrite(&offset, sizeof(th->total_size_used), 1, reference);
+			dbg_assert(fwrite(&th->zipnum, sizeof(th->zipnum), 1, reference)==1);
+			dbg_assert(fwrite(&offset, sizeof(th->total_size_used), 1, reference)==1);
 		}
 		if (th->zip_data)
 			memcpy(th->zip_data+th->total_size_used, ib, size);

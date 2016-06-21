@@ -103,7 +103,9 @@ gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *d
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,2+gui_internal_keyboard_init_mode(getenv("LANG"))));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 
@@ -131,7 +133,9 @@ gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, 
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,2+gui_internal_keyboard_init_mode(getenv("LANG"))));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 
@@ -160,7 +164,9 @@ gui_internal_cmd_rename_bookmark(struct gui_priv *this, struct widget *wm, void 
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,2+gui_internal_keyboard_init_mode(getenv("LANG"))));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
+	else
+		gui_internal_keyboard_show_native(this, w, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 

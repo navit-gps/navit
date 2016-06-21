@@ -17,6 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file
+ *
+ * @brief Exported functions / structures for the graphics subsystem.
+ */
+
 #ifndef NAVIT_GRAPHICS_H
 #define NAVIT_GRAPHICS_H
 
@@ -59,6 +64,56 @@ struct graphics_image_buffer {
 	int len;
 };
 
+struct graphics_keyboard_priv;
+
+/**
+ * Describes an instance of the native on-screen keyboard or other input method.
+ */
+struct graphics_keyboard {
+	int w;										/**< The width of the area obscured by the keyboard (-1 for full width) */
+	int h;										/**< The height of the area obscured by the keyboard (-1 for full height) */
+	/* TODO mode is currently a copy of the respective value in the internal GUI and uses the same values.
+	 * This may need to be changed to something with globally available enum, possibly with revised values.
+	 * The Android implementation (the first to support a native on-screen keyboard) does not use this field
+	 * due to limitations of the platform. */
+	int mode;									/**< Mode flags for the keyboard */
+	char *lang;									/**< The preferred language for text input, may be {@code NULL}. */
+	void *gui_priv;								/**< Private data determined by the GUI. The GUI may store
+												 *   a pointer to a data structure of its choice here. It is
+												 *   the responsibility of the GUI to free the data structure
+												 *   when it is no longer needed. The graphics plugin should
+												 *   not access this member. */
+	struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin. The
+												 *   graphics plugin is responsible for its management. If it
+												 *   uses this member, it must free the associated data in
+												 *   its {@code hide_native_keyboard} method. */
+};
+
+/** Magic value for unset/unspecified width/height. */
+#define IMAGE_W_H_UNSET (-1)
+
+/** @brief The functions to be implemented by graphics plugins.
+ *
+ * This struct lists the functions that Navit graphics plugins must implement.
+ * The plugin must supply its list of function implementations from its plugin_init() function.
+ * @see graphics_gtk_drawing_area#plugin_init()
+ * @see graphics_android#plugin_init()
+ */
+
+/**
+ * Describes areas at each edge of the application window which may be obstructed by the system UI.
+ *
+ * This allows the map to use all available space, including areas which may be obscured by system UI
+ * elements, while constraining other elements such as OSDs or UI controls to an area that is guaranteed
+ * to be visible as long as Navit is in the foreground.
+ */
+struct padding {
+	int left;
+	int top;
+	int right;
+	int bottom;
+};
+
 struct graphics_methods {
 	void (*graphics_destroy)(struct graphics_priv *gr);
 	void (*draw_mode)(struct graphics_priv *gr, enum draw_mode_num mode);
@@ -74,6 +129,19 @@ struct graphics_methods {
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+	/** @brief Load an image from a file.
+	 *
+	 * @param gr graphics object
+	 * @param meth output parameter for graphics methods object
+	 * @param path file name/path of image to load
+	 * @param w In: width to scale image to, or IMAGE_W_H_UNSET for original width.
+	 * Out: Actual width of returned image.
+	 * @param h heigth; see w
+	 * @param hot output parameter for image hotspot
+	 * @param rotate angle to rotate the image, in 90 degree steps (not supported by all plugins).
+	 * @return pointer to allocated image, to be freed by image_free()
+	 * @see image_free()
+	 */
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, const char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
@@ -81,6 +149,8 @@ struct graphics_methods {
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound);
 	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
+	int (*show_native_keyboard)(struct graphics_keyboard *kbd);
+	void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
 };
 
 
@@ -210,6 +280,9 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
+int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+
 /* end of prototypes */
 #ifdef __cplusplus
 }

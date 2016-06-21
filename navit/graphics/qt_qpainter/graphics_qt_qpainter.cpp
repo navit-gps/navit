@@ -420,7 +420,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 				unsigned char *data;
 				QImage img(g->w+2, g->h+2, QImage::Format_ARGB32_Premultiplied);
 				data=img.bits();
-				gr->freetype_methods.get_shadow(g,(unsigned char *)data,32,img.bytesPerLine(),bgc,&transparent);
+				gr->freetype_methods.get_shadow(g,(unsigned char *)data,img.bytesPerLine(),bgc,&transparent);
 
 				painter->drawImage(((x+g->x)>>6)-1, ((y+g->y)>>6)-1, img);
 			}
@@ -439,7 +439,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 			unsigned char *data;
 			QImage img(g->w, g->h, QImage::Format_ARGB32_Premultiplied);
 			data=img.bits();
-			gr->freetype_methods.get_glyph(g,(unsigned char *)data,32,img.bytesPerLine(),fgc,bgc,&transparent);
+			gr->freetype_methods.get_glyph(g,(unsigned char *)data,img.bytesPerLine(),fgc,bgc,&transparent);
 			painter->drawImage((x+g->x)>>6, (y+g->y)>>6, img);
 		}
                 x+=g->dx;
@@ -696,7 +696,8 @@ static struct graphics_methods graphics_methods = {
         overlay_disable,
 	NULL,
 	set_attr,
-	
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 //##############################################################################################################

@@ -8,7 +8,7 @@
 
 struct cache_entry {
 	int usage;
-	int size;
+	unsigned int size;
 	struct cache_entry_list *where;
 	struct cache_entry *next;
 	struct cache_entry *prev;
@@ -24,8 +24,8 @@ struct cache {
 	struct cache_entry_list t1,b1,t2,b2,*insert;
 	int size,id_size,entry_size;
 	int t1_target;
-	int misses;
-	int hits;
+	unsigned int misses;
+	unsigned int hits;
 	GHashTable *hash;
 };
 

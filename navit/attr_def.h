@@ -193,14 +193,11 @@ ATTR(turn_around_count)
 ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
 ATTR(autozoom_max)
+ATTR(nav_status)
 ATTR2(0x00027500,type_rel_abs_begin)
-/* These attributes are int that can either hold relative		*
- * or absolute values. A relative value is indicated by 		*
- * adding 0x60000000.											*
- *																*
- * The range of valid absolute values is -0x40000000 to			*
- * 0x40000000, the range of relative values is from				*
- * -0x20000000 to 0x20000000.									*/
+/* These attributes are int that can either hold relative or absolute values. See the
+ * documentation of ATTR_REL_RELSHIFT for details.
+ */
 ATTR(h)
 ATTR(w)
 ATTR(x)
@@ -256,6 +253,7 @@ ATTR(persistent)
 ATTR(waypoints_flag) /* toggle for "set as destination" to switch between start a new route or add */
 ATTR(no_warning_if_map_file_missing)
 ATTR(duplicate)
+ATTR(has_menu_button)
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)
@@ -436,6 +434,7 @@ ATTR2(0x00070000,type_color_begin)
 ATTR(color)
 ATTR_UNUSED
 ATTR(background_color)
+ATTR(foreground_color)
 ATTR(text_color)
 ATTR(idle_color)
 ATTR(background_color2)

@@ -205,7 +205,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		GdkPixbufLoader *loader=gdk_pixbuf_loader_new();
 		if (!loader)
 			return NULL;
-		if (*w != -1 || *h != -1)
+		if (*w != IMAGE_W_H_UNSET || *h != IMAGE_W_H_UNSET)
 			gdk_pixbuf_loader_set_size(loader, *w, *h);
 		gdk_pixbuf_loader_write(loader, buffer->start, buffer->len, NULL);
 		gdk_pixbuf_loader_close(loader, NULL);
@@ -213,7 +213,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		g_object_ref(pixbuf);
 		g_object_unref(loader);
 	} else {
-		if (*w == -1 && *h == -1)
+		if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 		else
 			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
@@ -366,7 +366,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 			unsigned char *shadow;
 			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w+2);
 			shadow=g_malloc(stride*(g->h+2));
-			gr->freetype_methods.get_shadow(g, shadow, 32, stride, &bg->c, &transparent);
+			gr->freetype_methods.get_shadow(g, shadow, stride, &bg->c, &transparent);
 			draw_rgb_image_buffer(gr->cairo, g->w+2, g->h+2, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, stride, shadow);
 			g_free(shadow);
 		}
@@ -384,7 +384,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 			unsigned char *glyph;
 			stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
 			glyph=g_malloc(stride*g->h);
-			gr->freetype_methods.get_glyph(g, glyph, 32, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
+			gr->freetype_methods.get_glyph(g, glyph, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
 			draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x+g->x)>>6, (y+g->y)>>6, stride, glyph);
 			g_free(glyph);
 		}
@@ -821,6 +821,14 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]=NAVIT_KEY_ZOOM_OUT;
 		key[1]='\0';
 		break;
+	case GDK_Page_Up:
+		key[0]=NAVIT_KEY_PAGE_UP;
+		key[1]='\0';
+		break;
+	case GDK_Page_Down:
+		key[0]=NAVIT_KEY_PAGE_DOWN;
+		key[1]='\0';
+		break;
 	}
 	if (key[0])
 		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
@@ -1065,6 +1073,8 @@ static struct graphics_methods graphics_methods = {
 	overlay_disable,
 	overlay_resize,
 	set_attr,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *

@@ -1,5 +1,5 @@
 # Hungarian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Bernath Marci https://launchpad.net/~bernath-marci
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
-"Last-Translator: György Balló <ballogyor@gmail.com>\n"
+"PO-Revision-Date: 2016-01-04 19:56+0000\n"
+"Last-Translator: Nagy Attila <tylla_at_launchpad.net@tylla.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +191,7 @@ msgstr "Amint lehet, fordujon meg"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "%s irányába"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -203,12 +203,10 @@ msgstr "Hajtson be a körforgalomba hamarosan."
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Hajtson be a körforgalomba %s múlva"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "majd hagyja el a körforgalmat a(z) %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr "majd hajtson be a körforgalomba"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -253,19 +251,19 @@ msgstr ""
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "%3$s múlva hajtson ki %2$s a %1$s kihajtón"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "%2$s múlva hajtson ki %1$s %3$s irányába"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "a csomópontnál"
 
 msgid "at exit"
-msgstr ""
+msgstr "a kijáratnál"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -314,6 +312,10 @@ msgid "strongly "
 msgstr "élesen "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "A(z) %1$s útnál forduljon %2$s"
 
@@ -321,7 +323,6 @@ msgstr "A(z) %1$s útnál forduljon %2$s"
 msgid "after %i roads"
 msgstr "%i út után"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -352,7 +353,7 @@ msgstr "Fordujon meg %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -549,7 +550,7 @@ msgstr "Bolívia"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Karib tengeri Bonaire, Sint Eustatius és Saba"
 
 #. 076
 msgid "Brazil"
@@ -641,7 +642,7 @@ msgstr "Zöldfoki-szigetek"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Curacao"
 
 #. 162
 msgid "Christmas Island"
@@ -1273,7 +1274,7 @@ msgstr "Salvador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Sint Maarten (Holland rész)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1441,6 +1442,16 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
 msgstr ""
+"navit használata:\n"
+"navit [opciók] [konfigurációs fájl]\n"
+"\t-c <fájl>: a <fájl> használata konfigurációs fájlként az alapértelmezett "
+"helyett\n"
+"\t-d <n>: a globális hibakeresési kimenet szintjét <n>-re állítja (0=hiba, "
+"1=figyelmeztetés, 2=információ, 3=hibakeresés)\n"
+"\tA konfigurációs állománybeli beállítások ennek ellenére érvényre jutnak "
+"amennyiben nagyobb értéket állítanak be.\n"
+"\t-h: jelen használati információ megjelenítése és kilépés.\n"
+"\t-v: verzióinformáció megjelenítése és kilépés.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1456,7 +1467,7 @@ msgstr "A következő konfigurációs állomány használata: %s\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Hiba: Nem található konfigurációs beállítás a fájlban '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1579,10 +1590,10 @@ msgid "Opens address search dialog"
 msgstr "Címkeresés"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_POI keresés"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "POI keresés megnyitása"
 
 msgid "_Stop Navigation"
 msgstr "Navigálás vége"
@@ -1627,49 +1638,49 @@ msgid "Data"
 msgstr "Adat"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Gyógyszertár"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Étterem"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Étterem. Gyorsétterem"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Szálloda"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Parkoló"
 
 msgid "Fuel station"
 msgstr ""
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Kórház"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Mozi"
 
 msgid "Train station"
-msgstr ""
+msgstr "Vasútállomás"
 
 msgid "School"
-msgstr ""
+msgstr "Iskola"
 
 msgid "Police"
-msgstr ""
+msgstr "Rendőrség"
 
 msgid "Justice"
-msgstr ""
+msgstr "Bíróság"
 
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Bevásárlás"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1691,31 +1702,31 @@ msgid "Set next visit to %ld, %ld \n"
 msgstr ""
 
 msgid "POI search"
-msgstr ""
+msgstr "POI keresés"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Válasszon egy kategóriát"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Válasszon keresési távolságot (km)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "POI kiválasztása"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 msgid "Direction"
-msgstr ""
+msgstr "Irány"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Távolság (km)"
 
 msgid "Name"
-msgstr ""
+msgstr "Név:"
 
 msgid "Visit Before"
 msgstr ""
@@ -2044,6 +2055,8 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Jelenleg Androidon a 3.8GB-nál nagyobb térképek nem támogatottak, kérem "
+"válasszon egy kisebbet."
 
 msgid "Cancel"
 msgstr "Mégse"
@@ -2129,7 +2142,7 @@ msgid "Corse"
 msgstr "Korzika"
 
 msgid "Franche-Comte"
-msgstr ""
+msgstr "Franche-Comté"
 
 msgid "Haute-Normandie"
 msgstr "Felső-Normandia"
@@ -2165,7 +2178,7 @@ msgid "Provence-Alpes-Cote-d-Azur"
 msgstr "Provence-Alpes-Cote-d-Azur"
 
 msgid "Rhone-Alpes"
-msgstr ""
+msgstr "Rhone-Alpes"
 
 msgid "Baden-Wuerttemberg"
 msgstr "Baden-Württemberg"
@@ -2174,25 +2187,25 @@ msgid "Bayern"
 msgstr "Bajorország"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Közép-Frankföld"
 
 msgid "Niederbayern"
 msgstr "Niederbayern"
 
 msgid "Oberbayern"
-msgstr ""
+msgstr "Felső-Bajorország"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "Felső-Frankföld"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "Felső-Pfalz"
 
 msgid "Schwaben"
-msgstr ""
+msgstr "Svábföld"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "Alsó-Frankföld"
 
 msgid "Berlin"
 msgstr "Berlin"
@@ -2207,40 +2220,40 @@ msgid "Hamburg"
 msgstr "Hamburg"
 
 msgid "Hessen"
-msgstr ""
+msgstr "Hessen"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "Mecklenburg-Előpomeránia"
 
 msgid "Niedersachsen"
 msgstr "Alsó-Szászország"
 
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "Észak-Rajna-Vesztfália"
 
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "Rajna-vidék-Pfalz"
 
 msgid "Saarland"
 msgstr "Saar-vidék"
 
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "Szász-Anhalt"
 
 msgid "Sachsen"
 msgstr "Szászország"
 
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "Schleswig-Holstein"
 
 msgid "Thueringen"
 msgstr "Türingia"
 
 msgid "Mallorca"
-msgstr ""
+msgstr "Mallorca"
 
 msgid "Galicia"
-msgstr ""
+msgstr "Galicia"
 
 msgid "Scandinavia"
 msgstr "Skandinávia"
@@ -2249,67 +2262,67 @@ msgid "England"
 msgstr "Anglia"
 
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "Buckinghamshire"
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "Cambridgeshire"
 
 msgid "Cumbria"
-msgstr ""
+msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "East Yorkshire, Hull"
 
 msgid "Essex"
-msgstr ""
+msgstr "Essex"
 
 msgid "Herefordshire"
-msgstr ""
+msgstr "Herefordshire"
 
 msgid "Kent"
-msgstr ""
+msgstr "Kent"
 
 msgid "Lancashire"
-msgstr ""
+msgstr "Lancashire"
 
 msgid "Leicestershire"
-msgstr ""
+msgstr "Leicestershire"
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolk"
 
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "Nottinghamshire"
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "Oxfordshire"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "Shropshire"
 
 msgid "Somerset"
-msgstr ""
+msgstr "Somerset"
 
 msgid "South yorkshire"
-msgstr ""
+msgstr "South yorkshire"
 
 msgid "Suffolk"
-msgstr ""
+msgstr "Suffolk"
 
 msgid "Surrey"
-msgstr ""
+msgstr "Surrey"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "Wiltshire"
 
 msgid "Scotland"
-msgstr ""
+msgstr "Skócia"
 
 msgid "Wales"
-msgstr ""
+msgstr "Wales"
 
 msgid "Crete"
-msgstr ""
+msgstr "Kréta"
 
 msgid "North America"
 msgstr "Észak-Amerika"
@@ -2318,7 +2331,7 @@ msgid "Alaska"
 msgstr "Alaszka"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Hawaii"
 
 msgid "USA"
 msgstr "Amerikai Egyesült Államok"
@@ -2327,97 +2340,97 @@ msgid " (except Alaska and Hawaii)"
 msgstr " (kivéve Alaszka és Hawaii)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "Midwest"
 
 msgid "Michigan"
-msgstr ""
+msgstr "Michigan"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Ohio"
 
 msgid "Northeast"
 msgstr ""
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "Massachusetts"
 
 msgid "Vermont"
-msgstr ""
+msgstr "Vermont"
 
 msgid "Pacific"
 msgstr ""
 
 msgid "South"
-msgstr ""
+msgstr "Dél"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkansas"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "District of Columbia"
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Louisiana"
 
 msgid "Maryland"
-msgstr ""
+msgstr "Maryland"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Mississippi"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Texas"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Virginia"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "Nyugat-Virginia"
 
 msgid "West"
-msgstr ""
+msgstr "Nyugat"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Arizona"
 
 msgid "California"
-msgstr ""
+msgstr "California"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Colorado"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Idaho"
 
 msgid "Montana"
-msgstr ""
+msgstr "Montana"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "New Mexico"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Oregon"
 
 msgid "Utah"
-msgstr ""
+msgstr "Utah"
 
 msgid "Washington State"
-msgstr ""
+msgstr "Washington Állam"
 
 msgid "South+Middle America"
 msgstr "Dél és Közép-Amerika"
 
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "Francia Guyana"
 
 msgid "downloading"
 msgstr "letöltés"
@@ -2427,7 +2440,7 @@ msgid "ready"
 msgstr "kész"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "A térkép tárolására kijelölt hordozó nem elérhető"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2750,3 +2763,7 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "majd hagyja el a körforgalmat a(z) %1$s %2$s"

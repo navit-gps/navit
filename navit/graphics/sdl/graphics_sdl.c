@@ -96,8 +96,6 @@ struct graphics_priv {
     /* </main> */
 };
 
-static int dummy;
-
 #ifdef USE_WEBOS
 # define WEBOS_KEY_SHIFT 0x130
 # define WEBOS_KEY_SYM 0x131
@@ -650,7 +648,7 @@ display_text_draw(struct font_freetype_text *text,
 	    stride = (g->w + 2) * 4;
 	    if (color) {
 		resize_ft_buffer(stride * (g->h + 2));
-		gr->freetype_methods.get_shadow(g, ft_buffer, 32, stride, &white, &transparent);
+		gr->freetype_methods.get_shadow(g, ft_buffer, stride, &white, &transparent);
 
 		SDL_Surface *glyph_surface =
 		    SDL_CreateRGBSurfaceFrom(ft_buffer, g->w + 2, g->h + 2,
@@ -684,7 +682,7 @@ display_text_draw(struct font_freetype_text *text,
 		stride = g->w;
 		if (bg) {
 		    resize_ft_buffer(stride * g->h * 4);
-		    gr->freetype_methods.get_glyph(g, ft_buffer, 32,
+		    gr->freetype_methods.get_glyph(g, ft_buffer,
 			    stride * 4, &black,
 			    &white, &transparent);
 		    SDL_Surface *glyph_surface =
@@ -704,7 +702,7 @@ display_text_draw(struct font_freetype_text *text,
 		}
 		stride *= 4;
 		resize_ft_buffer(stride * g->h);
-		gr->freetype_methods.get_glyph(g, ft_buffer, 32, stride,
+		gr->freetype_methods.get_glyph(g, ft_buffer, stride,
 			&black, &white,
 			&transparent);
 		int ii, jj;
@@ -875,7 +873,7 @@ get_data(struct graphics_priv *this, char const *type)
 	win->disable_suspend=NULL;
 	return win;
     } else {
-	return &dummy;
+	return NULL;
     }
 }
 
@@ -909,6 +907,8 @@ static struct graphics_methods graphics_methods = {
     overlay_disable,
     NULL, /* overlay_resize */
     NULL, /* set_attr */
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *

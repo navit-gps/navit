@@ -1304,6 +1304,31 @@ navit_object_attr_iter_destroy(struct attr_iter *iter)
 	g_free(iter);
 }
 
+/**
+ * @brief Generic get function
+ *
+ * This function searches an attribute list for an attribute of a given type and stores it in the {@code attr}
+ * parameter. Internally it calls
+ * {@link attr_generic_get_attr(struct attr **, struct attr **, enum attr_type, struct attr *, struct attr_iter *)}
+ * to retrieve the attribute; see its documentation for details.
+ * <p>
+ * Searching for attr_any or attr_any_xml is supported.
+ * <p>
+ * An iterator can be specified to get multiple attributes of the same type:
+ * The first call will return the first match; each subsequent call
+ * with the same iterator will return the next match. If no more matching
+ * attributes are found in either of them, false is returned.
+ *
+ * @param obj The object to return an attribute for. This can be any Navit object type, but the parameter should
+ * be cast to {@code struct navit_object *} to avoid compiler warnings.
+ * @param type The attribute type to search for. Searching for {@code attr_any} or {@code attr_any_xml} is
+ * possible.
+ * @param attr Points to a {@code struct attr} which will receive the attribute
+ * @param iter An iterator to receive multiple attributes of the same type with subsequent calls. If {@code NULL},
+ * the first matching attribute will be retrieved.
+ *
+ * @return True if a matching attribute was found, false if not.
+ */
 int
 navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
@@ -1320,6 +1345,7 @@ navit_object_callbacks(struct navit_object *obj, struct attr *attr)
 int
 navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 {
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
 	obj->attrs=attr_generic_set_attr(obj->attrs, attr);
 	navit_object_callbacks(obj, attr);
 	return 1;
@@ -1328,6 +1354,7 @@ navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 int
 navit_object_add_attr(struct navit_object *obj, struct attr *attr)
 {
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
 	if (attr->type == attr_callback) {
 		struct callback_list *cbl;
 		if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) 

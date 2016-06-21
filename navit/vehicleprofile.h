@@ -21,13 +21,22 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+enum maxspeed_handling {
+	maxspeed_enforce = 0,		/*!< Always enforce maxspeed of segment */
+	maxspeed_restrict = 1,		/*!< Enforce maxspeed of segment only if it restricts the speed */
+	maxspeed_ignore = 2,		/*!< Ignore maxspeed of segment, always use {@code route_weight} of road profile */
+};
+
+
 struct vehicleprofile {
 	NAVIT_OBJECT
 	int mode;				/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
 	int flags_forward_mask;			/**< Flags mask for moving in positive direction */
 	int flags_reverse_mask;			/**< Flags mask for moving in reverse direction */
 	int flags;				/**< Required flags to move through a segment */
-	int maxspeed_handling;			/**< 0 = Always, 1 = Only if lower, 2 = Never */
+	int maxspeed_handling;			/**< How to handle maxspeed of segment, see {@code enum maxspeed_handling} */
 	int static_speed;			/**< Maximum speed of vehicle to consider it stationary */
 	int static_distance;			/**< Maximum distance of previous position of vehicle to consider it stationary */
 	char *name;				/**< the vehicle profile name */

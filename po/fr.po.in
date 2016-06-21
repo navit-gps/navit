@@ -1,5 +1,5 @@
 # French (fr) translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Arnaud https://launchpad.net/~arnaud-lemeur
@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-08-13 20:49+0000\n"
-"Last-Translator: tuxi <Unknown>\n"
+"PO-Revision-Date: 2016-03-21 16:49+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,11 +45,11 @@ msgstr "Éxecution depuis le dossier d'origine\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "Paramètre '%s' changé en '%s'\n"
+msgstr "Paramètre « %s » changé en « %s »\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr "zéroième"
+msgstr "prochaine"
 
 msgid "first"
 msgstr "première"
@@ -71,7 +71,7 @@ msgstr "sixième"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr "zéroième sortie"
+msgstr "prochaine sortie"
 
 msgid "first exit"
 msgstr "première sortie"
@@ -101,11 +101,11 @@ msgstr "dans %d pieds"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr "%d.%d milles"
+msgstr "%d.%d miles"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "dans %d.%d milles"
+msgstr "dans %d.%d miles"
 
 #, c-format
 msgid "one mile"
@@ -174,7 +174,7 @@ msgstr "%1$svers l'%2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "vers la bretelle"
+msgstr "et prendre la bretelle"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -219,12 +219,10 @@ msgstr "Préparez vous à vous engager dans le rond-point"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "à %s Entrez dans le rond-point"
+msgstr "%s Entrez dans le rond-point"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "puis sortez du rond-point à la %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr "puis engagez-vous dans le rond-point"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -243,22 +241,22 @@ msgstr "puis"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr "Puis prendre à droite sur %1$s"
+msgstr "Puis prendre à droite %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr "à %1$s prendre à droite sur %2$s"
+msgstr "%1$s prendre à droite %2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr "Puis prendre à gauche sur %1$s"
+msgstr "Puis prendre à gauche %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr "à %1$s prendre à gauche sur %2$s"
+msgstr "%1$s prendre à gauche %2$s"
 
 msgid "on your left"
 msgstr "sur votre gauche"
@@ -286,32 +284,32 @@ msgstr "à la sortie"
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr "Puis continuez tout droit sur %1$s"
+msgstr "puis continuez tout droit %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr "à %1$s continuez tout droit sur %2$s en direction de %3$s"
+msgstr "%1$s continuez tout droit %2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr "Puis restez sur la voie de droite sur %1$s"
+msgstr "puis restez sur les voies de droite %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr "à %1$s Restez sur la voie de droite sur %2$s en direction de %3$s"
+msgstr "%1$s Restez sur les voies de droite %2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr "Puis restez sur la voie de gauche sur %1$s"
+msgstr "puis restez sur les voies de gauche %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr "à %1$s Restez sur la voie de gauche sur %2$s en direction de %3$s"
+msgstr "%1$s Restez sur les voies de gauche %2$s%3$s"
 
 # tournez à droite
 #. TRANSLATORS: "right" as in "turn right"
@@ -333,6 +331,10 @@ msgid "strongly "
 msgstr "fortement "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "puis prenez la %1$s route à %2$s"
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Empreintez la %1$s rue en direction de %2$s"
 
@@ -340,11 +342,10 @@ msgstr "Empreintez la %1$s rue en direction de %2$s"
 msgid "after %i roads"
 msgstr "après %i rues"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "à %3$s Tournez %1$s sur %2$s en direction de %4$s"
+msgstr "%3$s, tournez %1$s%2$s %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -371,13 +372,13 @@ msgstr "Faites demi-tour %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
 #. 
 msgid "follow"
-msgstr "suivez"
+msgstr "suivre"
 
 msgid "then you have reached your destination."
 msgstr "puis vous arriverez à destination"
@@ -1601,7 +1602,7 @@ msgid "_POI search"
 msgstr "recherche de points d'intérêt"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Ouvrir la recherche des points d'intérêts"
 
 msgid "_Stop Navigation"
 msgstr "Annuler le trajet"
@@ -1688,14 +1689,14 @@ msgid "Taxi"
 msgstr "Taxi"
 
 msgid "Shopping"
-msgstr "Courses"
+msgstr "Achats"
 
 msgid "Distance from screen center (km)"
-msgstr "Distance du centre de l'ecran (Kilomètre)"
+msgstr "Distance du centre de l'écran (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr "point d'intérêt %s. %s"
+msgstr "Point d'intérêt %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
@@ -1707,7 +1708,7 @@ msgstr "sélectionner la carte de  %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Définir la prochaine visite à %ld, %ld \n"
 
 msgid "POI search"
 msgstr "recherche de point d'intérêt"
@@ -1716,7 +1717,7 @@ msgid "Select a category"
 msgstr "Sélectionnez une catégorie"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Sélectionnez une distance à chercher (km)"
 
 msgid "Select a POI"
 msgstr "Sélectionnez un point d'intérêt"
@@ -2022,11 +2023,11 @@ msgid "Prev"
 msgstr "Précédent"
 
 msgid "Return to route!"
-msgstr "Retour à la route!"
+msgstr "Retournez sur la route"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr "Attention! Radar!"
+msgstr "Attention ! Contrôle radar !"
 
 #. warning told
 msgid "Please decrease your speed"
@@ -2042,10 +2043,6 @@ msgstr "Chercher"
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
 msgstr "Villes"
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Conduire ici"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
@@ -2063,6 +2060,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Conduire ici"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -2447,6 +2448,7 @@ msgstr "prêt"
 
 msgid "Media selected for map storage is not available"
 msgstr ""
+"Le support sélectionné pour le stockage de la carte n'est pas disponible"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2676,7 +2678,7 @@ msgstr "Correspondance partielle"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr "Recherche en cours..."
+msgstr "Recherche..."
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2692,7 +2694,7 @@ msgstr "Chargement des résultats de recherche"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr "Pas de résultats trouvés"
+msgstr "Aucun résultat trouvé"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
@@ -2712,7 +2714,7 @@ msgstr "Veuillez insérer une carte SD"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Sauvegarde en cours..."
+msgstr "Sauvegarde..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
@@ -2776,3 +2778,15 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "puis sortez du rond-point à la %1$s %2$s"
+
+#, c-format
+#~ msgid "in %d m"
+#~ msgstr "dans %d m"
+
+#, c-format
+#~ msgid "%d m"
+#~ msgstr "%d m"

@@ -639,6 +639,14 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 }
 
 
+/**
+ * @brief Processes a position update.
+ *
+ * @param tr The {@code struct tracking} which will receive the position update
+ * @param v The vehicle whose position has changed
+ * @param vehicleprofile The vehicle profile to use
+ * @param pro The projection to use for transformations
+ */
 void
 tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro)
 {

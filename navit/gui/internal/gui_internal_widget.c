@@ -108,6 +108,12 @@ gui_internal_image_render(struct gui_priv *this, struct widget *w)
 	}
 }
 
+/**
+ * @brief Renders a label.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
 static void
 gui_internal_label_render(struct gui_priv *this, struct widget *w)
 {
@@ -138,9 +144,15 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 }
 
 /**
- * @brief A text box is a widget that renders a text string containing newlines.
+ * @brief Creates a text box.
+ *
+ * A text box is a widget that renders a text string containing newlines.
  * The string will be broken up into label widgets at each newline with a vertical layout.
  *
+ * @param this The internal GUI instance
+ * @param text The text to be displayed in the text box
+ * @param font The font to use for the text
+ * @param flags
  */
 struct widget *
 gui_internal_text_font_new(struct gui_priv *this, const char *text, int font, enum flags flags)
@@ -308,32 +320,25 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	GList *l;
 
 	gui_internal_background_render(this, w);
-#if 0
-	w->border=1;
-	w->foreground=this->foreground;
-#endif
-#if 1
 	if (w->foreground && w->border) {
-	struct point pnt[5];
-	pnt[0]=w->p;
-        pnt[1].x=pnt[0].x+w->w;
-        pnt[1].y=pnt[0].y;
-        pnt[2].x=pnt[0].x+w->w;
-        pnt[2].y=pnt[0].y+w->h;
-        pnt[3].x=pnt[0].x;
-        pnt[3].y=pnt[0].y+w->h;
-        pnt[4]=pnt[0];
-	graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
-	graphics_draw_lines(this->gra, w->foreground, pnt, 5);
-	graphics_gc_set_linewidth(w->foreground, 1);
+		struct point pnt[5];
+		pnt[0]=w->p;
+		pnt[1].x=pnt[0].x+w->w;
+		pnt[1].y=pnt[0].y;
+		pnt[2].x=pnt[0].x+w->w;
+		pnt[2].y=pnt[0].y+w->h;
+		pnt[3].x=pnt[0].x;
+		pnt[3].y=pnt[0].y+w->h;
+		pnt[4]=pnt[0];
+		graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
+		graphics_draw_lines(this->gra, w->foreground, pnt, 5);
+		graphics_gc_set_linewidth(w->foreground, 1);
 	}
-#endif
 
 	l=w->children;
 	while (l) {
 		wc=l->data;
-		if (!(wc->state & STATE_OFFSCREEN))
-			gui_internal_widget_render(this, wc);
+		gui_internal_widget_render(this, wc);
 		l=g_list_next(l);
 	}
 	if (w->scroll_buttons) 
@@ -342,9 +347,10 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 
 
 /**
- * @brief Compute the size and location for the widget.
+ * @brief Computes the size and location for the widget.
  *
- *
+ * @param this The internal GUI instance
+ * @param w The widget to render
  */
 static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
@@ -366,7 +372,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	}
 
 
-	/**
+	/*
 	 * count the number of children
 	 */
 	l=w->children;
@@ -378,7 +384,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		orientation=orientation_horizontal;
 	switch (orientation) {
 	case orientation_horizontal:
-		/**
+		/*
 		 * For horizontal orientation:
 		 * pack each child and find the largest height and
 		 * compute the total width. x spacing (spx) is considered
@@ -407,7 +413,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			expandd=expand=1;
 		break;
 	case orientation_vertical:
-		/**
+		/*
 		 * For vertical layouts:
 		 * We pack each child and compute the largest width and
 		 * the total height.  y spacing (spy) is considered
@@ -436,7 +442,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			expandd=expand=1;
 		break;
 	case orientation_horizontal_vertical:
-		/**
+		/*
 		 * For horizontal_vertical orientation
 		 * pack the children.
 		 * Compute the largest height and largest width.
@@ -467,7 +473,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		expandd=expand=1;
 		break;
 	default:
-		/**
+		/*
 		 * No orientation was specified.
 		 * width and height are both 0.
 		 * The width & height of this widget
@@ -487,7 +493,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		expand=100;
 #endif
 
-	/**
+	/*
 	 * At this stage the width and height of this
 	 * widget has been computed.
 	 * We now make a second pass assigning heights,
@@ -548,14 +554,6 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				wc->p.x=x-wc->w/2;
 			if (w->flags & gravity_right)
 				wc->p.x=x-wc->w;
-#if 0
-			if (w->flags & flags_scrolly)
-				dbg(lvl_debug,"%d - %d vs %d - %d\n",y,y+wc->h,w->p.y,w->p.y+w->h-hb);
-			if (y+wc->h > w->p.y+w->h-hb || y+wc->h < w->p.y)
-				wc->state |= STATE_OFFSCREEN;
-			else
-				wc->state &= ~STATE_OFFSCREEN;
-#endif
 			y+=wc->h+w->spy;
 			l=g_list_next(l);
 		}
@@ -609,7 +607,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		gui_internal_box_pack(this, w);
 		return;
 	}
-	/**
+	/*
 	 * Call pack again on each child,
 	 * the child has now had its size and coordinates
 	 * set so they can repack their children.
@@ -640,6 +638,12 @@ gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w)
 	}
 }
 
+/**
+ * @brief Adds a child widget to a parent widget, making it the last child.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ */
 void
 gui_internal_widget_append(struct widget *parent, struct widget *child)
 {
@@ -651,6 +655,12 @@ gui_internal_widget_append(struct widget *parent, struct widget *child)
 	child->parent=parent;
 }
 
+/**
+ * @brief Adds a child widget to a parent widget, making it the first child.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ */
 void
 gui_internal_widget_prepend(struct widget *parent, struct widget *child)
 {
@@ -660,6 +670,15 @@ gui_internal_widget_prepend(struct widget *parent, struct widget *child)
 	child->parent=parent;
 }
 
+/**
+ * @brief Adds a child widget to a parent widget.
+ *
+ * Placement of the child widget among its siblings depends on the comparison function {@code func}.
+ *
+ * @param parent The parent widget
+ * @param child The child widget
+ * @param func The comparison function
+ */
 void
 gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func)
 {
@@ -671,6 +690,14 @@ gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, G
 }
 
 
+/**
+ * @brief Destroys all child widgets.
+ *
+ * This function is recursive, destroying all widgets in the child hierarchy of {@code w}.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget whose children are to be destroyed
+ */
 void
 gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 {
@@ -688,6 +715,15 @@ gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 }
 
 
+/**
+ * @brief Destroys a widget.
+ *
+ * This function also takes care of recursively destroying the entire child widget hierarchy of
+ * {@code w} prior to destroying {@code w} itself.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to destroy
+ */
 void
 gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 {
@@ -783,6 +819,9 @@ gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, s
 		 	gravity_center|orientation_horizontal, gui_internal_table_button_prev, widget);
 
 	sb->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
+	sb->button_box->background=this->background;
+	sb->prev_button->state &= ~STATE_SENSITIVE;
+	sb->next_button->state &= ~STATE_SENSITIVE;
 	gui_internal_widget_append(sb->button_box, sb->prev_button);
 	gui_internal_widget_append(sb->button_box, sb->next_button);
 
@@ -798,7 +837,7 @@ gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, s
  *
  * @param this The graphics context.
  * @param flags widget sizing flags.
- * @returns The newly created widget
+ * @return The newly created widget
  */
 struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons)
 {
@@ -828,8 +867,12 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 
 /**
  * @brief Clears all the rows from the table.
+ *
  * This function removes all rows from a table.
  * New rows can later be added to the table.
+ *
+ * @param this The internal GUI instance
+ * @param table The table widget
  */
 void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * table)
 {
@@ -858,9 +901,11 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
 }
 
 /**
- * @brief Move GList pointer to the next table row, skipping other table children (button box, for example).
- * @param row GList pointer into the children list 
- * @returns GList pointer to the next row in the children list, or NULL if there are no any rows left.
+ * @brief Moves GList pointer to the next table row, skipping other table children (button box, for example).
+ *
+ * @param row GList pointer into the children list
+ *
+ * @return GList pointer to the next row in the children list, or NULL if there are no any rows left.
  */
 GList *
 gui_internal_widget_table_next_row(GList * row)
@@ -873,9 +918,11 @@ gui_internal_widget_table_next_row(GList * row)
 }
 
 /**
- * @brief Move GList pointer to the previous table row, skipping other table children (button box, for example).
- * @param row GList pointer into the children list 
- * @returns GList pointer to the previous row in the children list, or NULL if there are no any rows left.
+ * @brief Moves GList pointer to the previous table row, skipping other table children (button box, for example).
+ *
+ * @param row GList pointer into the children list
+ *
+ * @return GList pointer to the previous row in the children list, or NULL if there are no any rows left.
  */
 GList *
 gui_internal_widget_table_prev_row(GList * row)
@@ -888,9 +935,11 @@ gui_internal_widget_table_prev_row(GList * row)
 }
 
 /**
- * @brief Move GList pointer to the first table row, skipping other table children (button box, for example).
- * @param row GList pointer into the children list 
- * @returns GList pointer to the first row in the children list, or NULL if table is empty.
+ * @brief Moves GList pointer to the first table row, skipping other table children (button box, for example).
+ *
+ * @param row GList pointer into the children list
+ *
+ * @return GList pointer to the first row in the children list, or NULL if table is empty.
  */
 GList *
 gui_internal_widget_table_first_row(GList * row)
@@ -905,8 +954,9 @@ gui_internal_widget_table_first_row(GList * row)
 }
 
 /**
- * @brief Get GList pointer to the table row drawn on the top of the screen.
- * @returns GList pointer to the top row in the children list, or NULL.
+ * @brief Gets GList pointer to the table row drawn on the top of the screen.
+ *
+ * @return GList pointer to the top row in the children list, or NULL.
  */
 GList *
 gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table)
@@ -919,8 +969,9 @@ gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table)
 }
 
 /**
- * @brief Set internal top row pointer of the table to point to a given row widget.
- * @returns GList pointer to the top row in the children list of the table.
+ * @brief Sets internal top row pointer of the table to point to a given row widget.
+ *
+ * @return GList pointer to the top row in the children list of the table.
  */
 GList *
 gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * table, struct widget *row)
@@ -939,10 +990,12 @@ gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * tab
 
 
 /**
- * Creates a new table_row widget.
+ * @brief Creates a new table_row widget.
+ *
  * @param this The graphics context
  * @param flags Sizing flags for the row
- * @returns The new table_row widget.
+ *
+ * @return The new table_row widget.
  */
 struct widget *
 gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags)
@@ -958,6 +1011,7 @@ gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags)
 /**
  * @brief Computes the column dimensions for the table.
  *
+ * @param this The internal GUI instance
  * @param w The table widget to compute dimensions for.
  *
  * This function examines all of the rows and columns for the table w
@@ -983,7 +1037,7 @@ gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w)
 	int total_width=0;
 	int column_count=0;
 
-	/**
+	/*
 	 * Scroll through the the table and
 	 * 1. Compute the maximum width + height of each column across all rows.
 	 */
@@ -1038,7 +1092,7 @@ gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w)
 	} /*row loop */
 
 
-	/**
+	/*
 	 * If the width of all columns is less than the width off
 	 * the table expand each cell proportionally.
 	 *
@@ -1057,12 +1111,11 @@ gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w)
 /**
  * @brief Computes the height and width for the table.
  *
- * The height and widht are computed to display all cells in the table
+ * The height and width are computed to display all cells in the table
  * at the requested height/width.
  *
  * @param this The graphics context
  * @param w The widget to pack.
- *
  */
 void
 gui_internal_table_pack(struct gui_priv * this, struct widget * w)
@@ -1109,7 +1162,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 	if(w->h + w->c.y   > this->root.h   )
 	{
-		/**
+		/*
 		 * Do not allow the widget to exceed the screen.
 		 *
 		 */
@@ -1122,7 +1175,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 	}
 
 
-	/**
+	/*
 	 * Deallocate column descriptions.
 	 */
 	g_list_foreach(column_data,(GFunc)g_free,NULL);
@@ -1133,7 +1186,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 
 /**
- * @brief Invalidates coordinates for previosly rendered table widget rows.
+ * @brief Invalidates coordinates for previously rendered table widget rows.
  *
  * @param table_data Data from the table object.
  */
@@ -1172,8 +1225,8 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	GList * cur_row = NULL;
 	GList * current_desc=NULL;
 	struct table_data * table_data = (struct table_data*)w->data;
-	int is_skipped=0;
-	int is_first_page=1;
+	int drawing_space_left=1;
+	int is_first_page;
 	struct table_column_desc * dim=NULL;
 
 	dbg_assert(table_data);
@@ -1182,18 +1235,41 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		return;
 	y=w->p.y;
 	gui_internal_table_hide_rows(table_data);
-	/**
+	/*
 	 * Skip rows that are on previous pages.
 	 */
-	cur_row = w->children;
 	if(table_data->top_row && table_data->top_row != w->children && !table_data->scroll_buttons.button_box_hide)
 	{
 		cur_row = table_data->top_row;
 		is_first_page=0;
 	} else {
+		cur_row = w->children;
 		table_data->top_row=NULL;
+		is_first_page=1;
 	}
-	/**
+
+	/* First, let's mark all columns as off-screen that are in rows which are *before*
+	 * our current page.
+	 * */
+	GList *row = w->children;
+	while (row != cur_row) {
+		struct widget * cur_row_widget = (struct widget*)row->data;
+		GList * cur_column=NULL;
+		if(cur_row_widget == table_data->scroll_buttons.button_box)
+		{
+			row = g_list_next(row);
+			continue;
+		}
+		for(cur_column = cur_row_widget->children; cur_column;
+		    cur_column=g_list_next(cur_column))
+		{
+			struct  widget * cur_widget = (struct widget*) cur_column->data;
+			cur_widget->state |= STATE_OFFSCREEN;
+		}
+		row = g_list_next(row);
+	}
+
+	/*
 	 * Loop through each row.  Drawing each cell with the proper sizes,
 	 * at the proper positions.
 	 */
@@ -1205,7 +1281,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		current_desc = column_desc;
 		cur_row_widget = (struct widget*)cur_row->data;
 		x =w->p.x+this->spacing;
-		if(cur_row_widget == table_data->scroll_buttons.button_box )
+		if(cur_row_widget == table_data->scroll_buttons.button_box)
 		{
 			continue;
 		}
@@ -1216,48 +1292,55 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 
 		if( y + dim->height + bbox_height + this->spacing >= w->p.y + w->h )
 		{
-			/*
-			 * No more drawing space left.
-			 */
-			is_skipped=1;
-			break;
+			drawing_space_left=0;
 		}
 		for(cur_column = cur_row_widget->children; cur_column;
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			dim = (struct table_column_desc*)current_desc->data;
-
-			cur_widget->p.x=x;
-			cur_widget->w=dim->width;
-			cur_widget->p.y=y;
-			cur_widget->h=dim->height;
-			x=x+cur_widget->w;
-			max_height = dim->height;
-			/* We pack the widget before rendering to ensure that the x and y
-			 * coordinates get pushed down.
-			 */
-			gui_internal_widget_pack(this,cur_widget);
-			gui_internal_widget_render(this,cur_widget);
-
-			if(dim->height > max_height)
-			{
+			if (drawing_space_left) {
+				cur_widget->p.x=x;
+				cur_widget->w=dim->width;
+				cur_widget->p.y=y;
+				cur_widget->h=dim->height;
+				x=x+cur_widget->w;
 				max_height = dim->height;
+				/* We pack the widget before rendering to ensure that the x and y
+				 * coordinates get pushed down.
+				 */
+				cur_widget->state &= ~STATE_OFFSCREEN;
+				gui_internal_widget_pack(this,cur_widget);
+				gui_internal_widget_render(this,cur_widget);
+
+				if(dim->height > max_height)
+				{
+				    max_height = dim->height;
+				}
+			} else {
+				/* Mark contents that we don't have space for. */
+				cur_widget->state |= STATE_OFFSCREEN;
 			}
 		}
-		
-		/* Row object should have its coordinates in actual
-		 * state to be able to pass mouse clicks to Column objects
-		 */
-		cur_row_widget->p.x=w->p.x;
-		cur_row_widget->w=w->w;
-		cur_row_widget->p.y=y;
-		cur_row_widget->h=max_height;
-		y = y + max_height;
-		table_data->bottom_row=cur_row;
-		current_desc = g_list_next(current_desc);
+
+		if (drawing_space_left) {
+			/* Row object should have its coordinates in actual
+			 * state to be able to pass mouse clicks to Column objects
+			 */
+			cur_row_widget->p.x=w->p.x;
+			cur_row_widget->w=w->w;
+			cur_row_widget->p.y=y;
+			cur_row_widget->h=max_height;
+			y = y + max_height;
+			table_data->bottom_row=cur_row;
+			current_desc = g_list_next(current_desc);
+		}
 	}
-	if(table_data->scroll_buttons.button_box && (is_skipped || !is_first_page) && !table_data->scroll_buttons.button_box_hide )
+
+	/* By default, hide all scroll buttons. */
+	table_data->scroll_buttons.next_button->state&= ~STATE_SENSITIVE;
+	table_data->scroll_buttons.prev_button->state&= ~STATE_SENSITIVE;
+
+	if(table_data->scroll_buttons.button_box && (!drawing_space_left || !is_first_page) && !table_data->scroll_buttons.button_box_hide )
 	{
 		table_data->scroll_buttons.button_box->p.y =w->p.y+w->h-table_data->scroll_buttons.button_box->h -
 			this->spacing;
@@ -1267,38 +1350,25 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		}
 		table_data->scroll_buttons.button_box->p.x = w->p.x;
 		table_data->scroll_buttons.button_box->w = w->w;
-		//    table_data->button_box->h = w->h - y;
-		//    table_data->next_button->h=table_data->button_box->h;
-		//    table_data->prev_button->h=table_data->button_box->h;
-		//    table_data->next_button->c.y=table_data->button_box->c.y;
-		//    table_data->prev_button->c.y=table_data->button_box->c.y;
 		gui_internal_widget_pack(this,table_data->scroll_buttons.button_box);
 		if(table_data->scroll_buttons.next_button->p.y > w->p.y + w->h + table_data->scroll_buttons.next_button->h)
 		{
 			table_data->scroll_buttons.button_box->p.y = w->p.y + w->h -
 				table_data->scroll_buttons.button_box->h;
 		}
-		if(is_skipped)
+		if(!drawing_space_left)
 	        {
 			table_data->scroll_buttons.next_button->state|= STATE_SENSITIVE;
-		}
-		else
-		{
-			table_data->scroll_buttons.next_button->state&= ~STATE_SENSITIVE;
 		}
 
 		if(table_data->top_row != w->children)
 		{
 			table_data->scroll_buttons.prev_button->state|= STATE_SENSITIVE;
 		}
-		else
-		{
-			table_data->scroll_buttons.prev_button->state&= ~STATE_SENSITIVE;
-		}
 		gui_internal_widget_render(this,table_data->scroll_buttons.button_box);
 	}
 
-	/**
+	/*
 	 * Deallocate column descriptions.
 	 */
 	g_list_foreach(column_desc,(GFunc)g_free,NULL);
@@ -1306,12 +1376,14 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 }
 
 /**
- * @brief handles the 'next page' table event.
+ * @brief Handles the 'next page' table event.
+ *
  * A callback function that is invoked when the 'next page' button is pressed
  * to advance the contents of a table widget.
  *
  * @param this The graphics context.
  * @param wm The button widget that was pressed.
+ * @param data
  */
 void
 gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data)
@@ -1345,7 +1417,8 @@ gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void 
 
 
 /**
- * @brief handles the 'previous page' table event.
+ * @brief Handles the 'previous page' table event.
+ *
  * A callback function that is invoked when the 'previous page' button is pressed
  * to go back in the contents of a table widget.
  *
@@ -1386,18 +1459,14 @@ gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void 
 
 
 /**
- * @brief deallocates a table_data structure.
+ * @brief Deallocates a table_data structure.
  *
+ * @note button_box and its children (next_button,prev_button)
+ * have their memory managed by the table itself.
+ *
+ * @param p The table_data structure
  */
 void gui_internal_table_data_free(void * p)
 {
-
-
-	/**
-	 * @note button_box and its children (next_button,prev_button)
-	 * have their memory managed by the table itself.
-	 */
 	g_free(p);
-
-
 }

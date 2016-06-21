@@ -22,6 +22,7 @@
 # Mathias Klein https://launchpad.net/~ma-klein
 # Paulodile https://launchpad.net/~stuff4tschaka
 # Roadrunner IN https://launchpad.net/~online
+# Robotaxi https://launchpad.net/~robotaxi
 # Roschkor https://launchpad.net/~bound-one2000
 # S.E. https://launchpad.net/~stephan-evert
 # Stefan Sordon https://launchpad.net/~stefan-sordon
@@ -34,20 +35,18 @@
 # singesang https://launchpad.net/~singesang
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~riedel-andre
+
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-09 05:18+0000\n"
-"PO-Revision-Date: 2015-08-11 10:56+0000\n"
-"Last-Translator: Robotaxi <robotaxi@arcor.de>\n"
+"PO-Revision-Date: 2015-09-14 07:17+0000\n"
+"Last-Translator: Mathias Klein <ma_klein@gmx.de>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-09-11 16:12+0000\n"
-"X-Generator: Launchpad (build 17720)\n"
 "Language: de\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -116,7 +115,7 @@ msgstr "%d,%d Meilen"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "In %d,%d Meilen"
+msgstr "in %d,%d Meilen"
 
 #, c-format
 msgid "one mile"
@@ -340,6 +339,10 @@ msgid "strongly "
 msgstr "scharf "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "dann die %1$s Straße %2$s abbiegen"
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Die %1$s Straße %2$s abbiegen"
 
@@ -347,7 +350,6 @@ msgstr "Die %1$s Straße %2$s abbiegen"
 msgid "after %i roads"
 msgstr "nach %i Straßen"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -378,7 +380,7 @@ msgstr "Wenden Sie %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -1618,10 +1620,10 @@ msgid "Opens address search dialog"
 msgstr "Öffnet Adresssuche-Dialog"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_POI Suche"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Öffnet POI Suche"
 
 msgid "_Stop Navigation"
 msgstr "Navigation be_enden"
@@ -1716,7 +1718,7 @@ msgstr "Entfernung vom Bildschirmmittelpunkt (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
@@ -2094,7 +2096,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "Dateipfad"
 
 msgid ""
 "New location set to %s\n"
@@ -2305,7 +2307,7 @@ msgid "Cumbria"
 msgstr "Cumbria"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "East Yorkshire und Hull"
 
 msgid "Essex"
 msgstr "Essex"
@@ -2475,6 +2477,7 @@ msgstr "Fertig in"
 
 msgid "Media selected for map storage is not available"
 msgstr ""
+"Der eingestellte Speicherort für das Kartenmaterial ist nicht verfügbar."
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2796,7 +2799,7 @@ msgstr "Wiederherstellen"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "System-Sprachausgabedaten sind nicht verfügbar"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""
@@ -2807,3 +2810,15 @@ msgstr ""
 "Navit kann jede text-to-speech Engine nutzen, die installiert ist. Die "
 "derzeit angewählte Engine kann Ihre Sprache nicht wiedergeben. Soll das "
 "System den Voice-Download Dialog öffnen?"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "anschließend verlassen Sie den Kreisverkehr an der %1$s %2$s"
+
+#, c-format
+#~ msgid "in %d m"
+#~ msgstr "in %d m"
+
+#, c-format
+#~ msgid "%d m"
+#~ msgstr "%d m"

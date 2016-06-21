@@ -195,9 +195,7 @@ msgstr "로타리에 곧 진입합니다"
 msgid "Enter the roundabout %s"
 msgstr "%s 로타리에 진입합니다"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
+msgid "then enter the roundabout"
 msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
@@ -304,6 +302,10 @@ msgid "strongly "
 msgstr "크게 "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "%1$s 번째 출구에서 %2$s 로 나가세요"
 
@@ -311,7 +313,6 @@ msgstr "%1$s 번째 출구에서 %2$s 로 나가세요"
 msgid "after %i roads"
 msgstr "%i 도로 이후에"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -342,7 +343,7 @@ msgstr ""
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *

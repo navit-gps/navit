@@ -118,6 +118,14 @@ Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobj
 }
 
 JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback(JNIEnv* env, jobject thiz, int id, int left, int top, int right, int bottom)
+{
+	dbg(lvl_debug,"enter %p %d %d %d %d\n",(struct callback *)id, left, top, right, bottom);
+	if (id)
+		callback_call_4((struct callback *)id, left, top, right, bottom);
+}
+
+JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz, int id, int pressed, int button, int x, int y)
 {
 	dbg(lvl_debug,"enter %p %d %d\n",(struct callback *)id,pressed,button);

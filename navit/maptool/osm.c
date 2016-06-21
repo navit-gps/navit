@@ -106,6 +106,8 @@ enum attr_strings_type {
 	attr_string_ref,
 	attr_string_exit_to,
 	attr_string_street_destination,
+	attr_string_street_destination_forward,
+	attr_string_street_destination_backward,
 	attr_string_house_number,
 	attr_string_label,
 	attr_string_postal,
@@ -519,6 +521,7 @@ static char *attrmap={
 	"?	shop=photo		poi_shop_photo\n"
 	"?	shop=shoes		poi_shop_shoes\n"
 	"?	shop=supermarket	poi_shopping\n"
+        "?      shop=mall               poi_mall\n" 
 	"?	sport=10pin		poi_bowling\n"
 	"?	sport=baseball		poi_baseball\n"
 	"?	sport=basketball	poi_basketball\n"
@@ -1048,6 +1051,8 @@ osm_add_tag(char *k, char *v)
 			flagsa[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
 		else
 			flags[0] |= AF_THROUGH_TRAFFIC_LIMIT;
+		if (! strcmp(v,"hov")) 	
+			flags[0] |= AF_HIGH_OCCUPANCY_CAR_ONLY;
 		level=5;
 	}
 	if (! strcmp(k,"vehicle")) {
@@ -1184,6 +1189,18 @@ osm_add_tag(char *k, char *v)
 			if (in_way)
 				attr_strings_save(attr_string_street_destination, v);
 			level=5;
+	}
+	if (! strcmp(k,"destination:forward")) 
+	{
+		if (in_way)
+			attr_strings_save(attr_string_street_destination_forward, v);
+		level=5;
+	}
+	if (! strcmp(k,"destination:backward")) 
+	{
+		if (in_way)
+			attr_strings_save(attr_string_street_destination_backward, v);
+		level=5;
 	}
 	if (! strcmp(k,"exit_to")) {
 			attr_strings_save(attr_string_exit_to, v);
@@ -1778,6 +1795,8 @@ osm_end_way(struct maptool_osm *osm)
 		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
 		item_bin_add_attr_string(item_bin, attr_street_name_systematic_nat, attr_strings[attr_string_street_name_systematic_nat]);
 		item_bin_add_attr_string(item_bin, attr_street_destination, attr_strings[attr_string_street_destination]);
+		item_bin_add_attr_string(item_bin, attr_street_destination_forward, attr_strings[attr_string_street_destination_forward]);
+		item_bin_add_attr_string(item_bin, attr_street_destination_backward, attr_strings[attr_string_street_destination_backward]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
 			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
@@ -2977,6 +2996,23 @@ osm_add_nd(osmid ref)
 }
 
 static void
+write_item_way_subsection_index(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, long long *last_id)
+{
+	osmid idx[2];
+	idx[0]=item_bin_get_wayid(orig);
+	idx[1]=ftello(out);
+	if (way_hash) {
+		if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
+			g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
+	} else {
+		if (!last_id || *last_id != idx[0])
+			dbg_assert(fwrite(idx, sizeof(idx), 1, out_index)==1);
+		if (last_id)
+			*last_id=idx[0];
+	}
+}
+
+static void
 write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
 {
 	struct item_bin new;
@@ -2987,27 +3023,14 @@ write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct it
 	new.type=orig->type;
 	new.clen=(last-first+1)*2;
 	new.len=new.clen+attr_len+2;
-	if (out_index) {
-		osmid idx[2];
-		idx[0]=item_bin_get_wayid(orig);
-		idx[1]=ftello(out);
-		if (way_hash) {
-			if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
-				g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
-		} else {
-			if (!last_id || *last_id != idx[0])
-				fwrite(idx, sizeof(idx), 1, out_index);
-			if (last_id)
-				*last_id=idx[0];
-		}
-
-	}
+	if (out_index)
+		write_item_way_subsection_index(out, out_index, out_graph, orig, last_id);
 #if 0
 	fprintf(stderr,"first %d last %d type 0x%x len %d clen %d attr_len %d\n", first, last, new.type, new.len, new.clen, attr_len);
 #endif
-	fwrite(&new, sizeof(new), 1, out);
-	fwrite(c+first, new.clen*4, 1, out);
-	fwrite(attr, attr_len*4, 1, out);
+	dbg_assert(fwrite(&new, sizeof(new), 1, out)==1);
+	dbg_assert(fwrite(c+first, new.clen*4, 1, out)==1);
+	dbg_assert(fwrite(attr, attr_len*4, 1, out)==1);
 #if 0
 		fwrite(&new, sizeof(new), 1, out_graph);
 		fwrite(c+first, new.clen*4, 1, out_graph);

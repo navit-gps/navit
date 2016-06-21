@@ -28,14 +28,26 @@ osd[@type=="xxx"].active=0;osd[@type=="yyy"].active=0
 */
 
 
+/**
+ * The result, or interim result, of evaluating a saved command.
+ */
 struct result {
-	struct attr attr;
+	struct attr attr;	/**< The attribute. If {@code allocated} is true, it stores an object that was
+						 *   successfully retrieved. Else it is either a placeholder or a constant value.
+						 */
 	double val;
-	const char *var;
-	int varlen;
-	const char *attrn;
-	int attrnlen;
-	int allocated;
+	const char *var;	/**< If {@code allocated} is false, the name of the object to be resolved.
+						 *   Else, it is the name of the object successfully retrieved and stored in
+						 *   {@code attr}, or {@code NULL} if retrieval failed.
+						 *   Only the first {@code varlen} characters are significant.
+						 */
+	int varlen;			/**< Number of significant characters in {@code var} */
+	const char *attrn;	/**< The name of an object that has been resolved but not yet retrieved,
+						 *   {@code NULL} otherwise. Only the first {@code attrnlen} characters are
+						 *   significant.
+						 */
+	int attrnlen;		/**< Number of significant characters in {@code attrn} */
+	int allocated;		/**< Whether the result has been calculated */
 };
 
 struct result_list {
@@ -50,11 +62,17 @@ struct context {
 	struct result res;
 };
 
+/**
+ * Information about a callback function for a saved command.
+ */
 struct command_saved_cb {
-	struct callback *cb;
+	struct callback *cb;	/**< The callback function */
 	struct attr attr;
 };
 
+/**
+ * A saved command.
+ */
 struct command_saved {
 	struct context ctx;
 	struct result res;
@@ -63,8 +81,10 @@ struct command_saved {
 	struct callback *idle_cb;
 	struct callback *register_cb;			/**< Callback to register all the callbacks **/
 	struct event_idle *register_ev;		/**< Idle event to register all the callbacks **/
-	struct attr context_attr;
-	int num_cbs;
+	struct attr context_attr;			/**< The root of the object hierarchy, which will be assumed as
+										 *   the parent of all unqualified or partially qualified object
+										 *   references. **/
+	int num_cbs;						/**< Number of entries in {@code cbs} **/
 	struct command_saved_cb *cbs;		/**< List of callbacks for this saved command **/
 	struct callback *cb; /**< Callback that should be called when we re-evaluate **/
 	int error;
@@ -87,6 +107,51 @@ enum set_type {
 
 static void eval_comma(struct context *ctx, struct result *res);
 static struct attr ** eval_list(struct context *ctx);
+
+/**
+ * @brief Converts an error to human-readable text.
+ *
+ * @param err The error code
+ *
+ * @return A string containing the error description. The caller is responsible for freeing up the string by
+ * calling {@code g_free()} when it is no longer needed.
+ */
+char *command_error_to_text(int err) {
+	switch (err) {
+	case no_error:
+		return g_strdup("no_error");
+	case missing_double_quote:
+		return g_strdup("missing_double_quote");
+	case missing_opening_parenthesis:
+		return g_strdup("missing_opening_parenthesis");
+	case missing_closing_parenthesis:
+		return g_strdup("missing_closing_parenthesis");
+	case missing_closing_brace:
+		return g_strdup("missing_closing_brace");
+	case missing_colon:
+		return g_strdup("missing_colon");
+	case missing_semicolon:
+		return g_strdup("missing_semicolon");
+	case wrong_type:
+		return g_strdup("wrong_type");
+	case illegal_number_format:
+		return g_strdup("illegal_number_format");
+	case illegal_character:
+		return g_strdup("illegal_character");
+	case missing_closing_bracket:
+		return g_strdup("missing_closing_bracket");
+	case invalid_type:
+		return g_strdup("invalid_type");
+	case not_ready:
+		return g_strdup("not_ready");
+	case internal:
+		return g_strdup("internal");
+	case eof_reached:
+		return g_strdup("eof_reached");
+	default:
+		return g_strdup("unknown");
+	}
+}
 
 static void
 result_free(struct result *res)
@@ -167,17 +232,36 @@ command_attr_type(struct result *res)
 	return attr_from_name(attrn);
 }
 
+/**
+ * @brief Retrieves an attribute from an object.
+ *
+ * This function will retrieve the first matching attribute by calling the {@code get_attr} method for
+ * the object type. If {@code object} does not refer to a valid object, or the {@code get_attr} method
+ * for the object type could not be defined, the function fails and zero is returned.
+ *
+ * @param ctx The context (ignored)
+ * @param object The object for which the attribute is to be retrieved.
+ * @param attr_type The type of attribute to retrieve
+ * @param ret Points to a {@code struct attr} to which the attribute will be copied
+ *
+ * @return True if a matching attribute was found, false if no matching attribute was found or an error
+ * occurred
+ */
 static int
 command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type attr_type, struct attr *ret)
 {
 	int r;
 	struct attr dup;
 	struct object_func *func=object_func_lookup(object->type);
-	if (!object->u.data || !func || !func->get_attr)
+	if (!object->u.data || !func || !func->get_attr) {
+		dbg(lvl_warning, "cannot retrieve attributes from %s (%p), func=%p\n", attr_to_name(object->type), object->u.data, func)
 		return 0;
+	}
 	r=func->get_attr(object->u.data, attr_type, &dup, NULL);
 	if(r)
 		attr_dup_content(&dup,ret);
+	else
+		dbg(lvl_warning, "%s (%p) has no attribute %s\n", attr_to_name(object->type), object->u.data, attr_to_name(attr_type))
 	return r;
 }
 
@@ -200,12 +284,34 @@ command_object_remove_attr(struct context *ctx, struct attr *object, struct attr
 }
 
 
+/**
+ * @brief Retrieves the current value of an attribute and stores it in {@code res}.
+ *
+ * If {@code ctx->skip} is true, the function aborts and no action is taken.
+ *
+ * Before calling this function, object references in {@code res} must be resolved. That is,
+ * {@code res->attr} holds a copy of {@code ctx->attr} and the first {@code res->attrnlen} characters of
+ * {@code res->attrn} correspond to the object name.
+ *
+ * After this function completes, {@code res->allocated} is true, and {@code res->attrn} and
+ * {@code res->attrnlen} are reset.
+ *
+ * If the attribute was successfully retrieved, the first {@code res->varlen} characters of
+ * {@code res->var} correspond to an object name and {@code res->attr} holds the attribute.
+ *
+ * If the attribute could not be retrieved, {@code res->attr.type} is set to {@code attr_none}, and
+ * {@code res->var} and {@code res->varlen} are reset.
+ *
+ * @param ctx The context
+ * @param res The result
+ */
 static void
 command_get_attr(struct context *ctx, struct result *res)
 {
 	int result;
 	struct result tmp={{0,},};
 	enum attr_type attr_type=command_attr_type(res);
+	enum attr_type parent_type = res->attr.type; /* for debugging only */
 	if (ctx->skip)
 		return;
 	result=command_object_get_attr(ctx, &res->attr, attr_type, &tmp.attr);
@@ -213,9 +319,11 @@ command_get_attr(struct context *ctx, struct result *res)
 	*res=tmp;
 	res->allocated=1;
 	if (result) {
+		dbg(lvl_debug, "successfully retrieved '%s' from '%s'\n", attr_to_name(attr_type), attr_to_name(parent_type));
 		res->var=res->attrn;
 		res->varlen=res->attrnlen;
 	} else {
+		dbg(lvl_warning, "could not retrieve '%s' from '%s'\n", attr_to_name(attr_type), attr_to_name(parent_type));
 		result_free(res);
 		res->attr.type=attr_none;
 		res->var=NULL;
@@ -251,6 +359,20 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 	*res=*newres;
 }
 
+/**
+ * @brief Resolves an object reference.
+ *
+ * Prior to calling this function, {@code res} must contain a valid, unresolved object reference:
+ * {@code res->attr.type} must be {@code attr_none}, and the first {@code res->varlen} characters of
+ * {@code res->var} must correspond to an object name.
+ *
+ * After the function returns, {@code res->attr} holds a copy of {@code ctx->attr} and the first
+ * {@code res->attrnlen} characters of {@code res->attrn} correspond to the object name.
+ * {@code res->var} and {@code res->varlen} are reset.
+ *
+ * @param ctx The context
+ * @param res The result
+ */
 static void
 resolve_object(struct context *ctx, struct result *res)
 {
@@ -263,6 +385,24 @@ resolve_object(struct context *ctx, struct result *res)
 	}
 }
 
+/**
+ * @brief Resolves and retrieves an object and stores it in {@code res}.
+ *
+ * Prior to calling this function, {@code res} must contain a valid, unresolved object reference:
+ * {@code res->attr.type} must be {@code attr_none}, and the first {@code res->varlen} characters of
+ * {@code res->var} must correspond to an object name.
+ *
+ * If {@code ctx->skip} is true, the object reference will be resolved but the object will not be
+ * retrieved: the first {@code res->attrnlen} characters of {@code res->attrn} correspond to the object
+ * name after the function returns, while {@code res->var} and {@code res->varlen} are reset.
+ *
+ * If {@code ctx->skip} is false, {@code res->allocated} is true after this function completes. The
+ * object is stored in {@code res->attr} if it was successfully retrieved, otherwise {@code res->var}
+ * and {@code res->varlen} are reset.
+ *
+ * @param ctx The context
+ * @param res The result
+ */
 static void
 resolve(struct context *ctx, struct result *res)
 {
@@ -522,12 +662,41 @@ result_set(struct context *ctx, enum set_type set_type, const char *op, int len,
 	ctx->error=internal;
 }
 
+/**
+ * @brief Evaluates a value and stores its result.
+ *
+ * This function evaluates the first value in {@code ctx->expr}. A value can be either an object name
+ * (such as {@code vehicle.position_speed}) or a literal value.
+ *
+ * If evaluation is successful, the result is stored in {@code res->attr}.
+ *
+ * If an object name is encountered, the result has an attribute type of {@code attr_none} and the first
+ * {@code res->varlen} characters of {@code res->var} will point to the object name.
+ *
+ * If a literal value is encountered, the result's attribute type is set to the corresponding generic
+ * data type and its value is stored with the attribute.
+ *
+ * After this function returns, {@code ctx->expr} contains the rest of the expression string, which was
+ * not evaluated. Leading spaces before the value will be discarded with the value.
+ *
+ * If {@code ctx->expr}, after eliminating any leading whitespace, does not begin with a valid value,
+ * one of the following errors is stored in {@code ctx->error}:
+ * <ul>
+ * <li>{@code illegal_number_format} An illegal number format, such as a second decimal dot, was
+ * encountered.</li>
+ * <li>{@code missing_double_quote} A double quote without a matching second double quote was found.</li>
+ * <li>{@code eof_reached} The expression string is empty.</li>
+ * <li>{@code illegal_character} The expression string begins with a character which is illegal in a
+ * value. This may happen when the expression string begins with an operator.</li>
+ * </ul>
+ *
+ * @param ctx The context to evaluate
+ * @param res Points to a {@code struct res} in which the result will be stored
+ */
 static void
 eval_value(struct context *ctx, struct result *res) {
 	const char *op;
 	int dots=0;
-
-	op=ctx->expr;
 
 	result_free(res);
 
@@ -536,9 +705,11 @@ eval_value(struct context *ctx, struct result *res) {
 	res->attrnlen=0;
 	res->attrn=NULL;
 
-	while (g_ascii_isspace(*op)) {
-		op++;
+	while (g_ascii_isspace(*(ctx->expr))) {
+		ctx->expr++;
 	}
+	op = ctx->expr;
+
 	if ((op[0] >= 'a' && op[0] <= 'z') || (op[0] >= 'A' && op[0] <= 'Z') || op[0] == '_') {
 		const char *s=op;
 		for (;;) {
@@ -605,11 +776,37 @@ eval_value(struct context *ctx, struct result *res) {
 	if (!*op)
 		ctx->error=eof_reached;
 	else {
-		dbg(lvl_error,"illegal character 0x%x\n",*op);
+		/*
+		 * If we get here, ctx->expr does not begin with a variable or a literal value. This is not an
+		 * error if this function is being called to test if an expression begins with a value.
+		 */
+		dbg(lvl_debug, "character 0x%x is illegal in a value\n",*op);
 		ctx->error=illegal_character;
 	}
 }
 
+/**
+ * @brief Retrieves the next object reference from an expression.
+ *
+ * This function scans the expression string {@code ctx->expr} for the next object reference. Anything
+ * other than an object reference (whitespace characters, literal values, operators and even illegal
+ * characters) is discarded until either the end of the string is reached or an object reference is
+ * encountered.
+ *
+ * After this function completes successfully, {@code res->attr.type} is {@code attr_none} and the first
+ * {@code res->varlen} characters of {@code res->var} point to the object name.
+ *
+ * Object names retrieved by this function are unqualified, i.e. {@code vehicle.position_speed} will be
+ * retrieved as {@code vehicle} on the first call (return value 2) and {@code position_speed} on the
+ * second call (return value 1).
+ *
+ * @param ctx The context
+ * @param res Points to a {@code struct result} where the result will be stored.
+ *
+ * @return If a complete object name has been retrieved, the return value is 1. If a partial object name
+ * has been retrieved (e.g. {@code vehicle} from {@code vehicle.position_speed}), the return value is 2.
+ * If no object references were found, the return value is 0.
+ */
 static int
 get_next_object(struct context *ctx, struct result *res) {
 	
@@ -720,7 +917,7 @@ command_call_function(struct context *ctx, struct result *res)
 				callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
 				if (valid!=1){
 					dbg(lvl_error, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
-					    "The_Navit_Command_Interface for valid commands.\n", function);
+					    "OSD#Navit_commands for valid commands.\n", function);
 				}
 				if (out && out[0]) {
 					result_free(res);
@@ -1360,6 +1557,7 @@ command_evaluate(struct attr *attr, const char *expr)
 	 * subsequent command call. Hence the g_strdup. */
 
 	char *expr_dup;
+	char *err = NULL;	/* Error description */
 	struct context ctx={0,};
 	ctx.attr=attr;
 	ctx.error=0;
@@ -1372,7 +1570,9 @@ command_evaluate(struct attr *attr, const char *expr)
 		char expr[32];
 		strncpy(expr, ctx.expr, 32);
 		expr[31]='\0';
-		dbg(lvl_error,"error %d starting at %s\n",ctx.error,expr);
+		err = command_error_to_text(ctx.error);
+		dbg(lvl_error, "error %s starting at %s\n", err, expr);
+		g_free(err);
 	}
 	g_free(expr_dup);
 }
@@ -1447,9 +1647,20 @@ command_saved_error (struct command_saved *cs)
 	return cs->error;
 }
 
+/**
+ * @brief Idle function to evaluate a command
+ *
+ * This function is called from an idle loop for asynchronous evaluation but may also be called in-line.
+ *
+ * The result of the evaluation can be retrieved from {@code cs->res} after this function returns. If an
+ * error occurred, it will be stored in {@code cs->error}.
+ *
+ * @param cs The command to evaluate
+ */
 static void
 command_saved_evaluate_idle (struct command_saved *cs) 
 {
+	dbg(lvl_debug, "enter: cs=%p, cs->command=%s\n", cs, cs->command);
 	// Only run once at a time
 	if (cs->idle_ev) {
 		event_remove_idle(cs->idle_ev);
@@ -1469,9 +1680,21 @@ command_saved_evaluate_idle (struct command_saved *cs)
 	}
 }
 
+/**
+ * @brief Evaluates a command
+ *
+ * This function examines {@code cs->async} to determine if the command should be evaluated immediately.
+ * If {@code cs->async} is true, an idle event is registered to register the command. Else the command
+ * is evaluated immediately and the result can be retrieved immediately after this function returns.
+ *
+ * See {@link command_saved_evaluate_idle(struct command_saved *)} for details.
+ *
+ * @param cs The command to evaluate
+ */
 static void
 command_saved_evaluate(struct command_saved *cs)
 {	
+	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 	if (!cs->async) {
 		command_saved_evaluate_idle(cs);
 		return;
@@ -1488,6 +1711,11 @@ command_saved_evaluate(struct command_saved *cs)
 	cs->idle_ev = event_add_idle(100, cs->idle_cb);
 }
 
+/**
+ * @brief Recreates all callbacks for a saved command
+ *
+ * @param cs The saved command
+ */
 static void
 command_saved_callbacks_changed(struct command_saved *cs)
 {
@@ -1495,6 +1723,8 @@ command_saved_callbacks_changed(struct command_saved *cs)
 	int i;
 	struct object_func *func;
 	struct attr attr;
+
+	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 
 	if (cs->register_ev) {
 		event_remove_idle(cs->register_ev);
@@ -1525,24 +1755,52 @@ command_saved_callbacks_changed(struct command_saved *cs)
 	command_register_callbacks(cs);
 }
 
+/**
+ * @brief Registers callbacks for a saved command
+ *
+ * This function registers callbacks for each attribute used in a saved command, causing the command to
+ * be re-evaluated whenever its value might change.
+ *
+ * This function will fail if an object used in the expression could not be resolved. This may happen
+ * during startup if this function is called before all objects have been created. In this case, the
+ * caller should schedule the function to be called again at a later time.
+ *
+ * It will also fail if an error is encountered. This can be determined by examining
+ * {@code cs->ctx.error} after the function returns.
+ *
+ * @param cs The command
+ *
+ * @return True if all callbacks were successfully registered, false if the function failed
+ */
 static int
 command_register_callbacks(struct command_saved *cs)
 {
-	struct attr prev,cb_attr,attr;
+	struct attr prev;	/* The parent of the next object which will be retrieved. */
+	struct attr cb_attr;
 	int status;
 	struct object_func *func;
 	struct callback *cb;
+	int tmpoffset;	/* For debugging. Because we work with pointers into the same string instance.
+					 * we can figure out offsets by using simple pointer arithmetics.
+					 */
 	
-	attr = cs->context_attr;
+	dbg(lvl_debug, "enter: cs=%p, cs->async=%d, cs->command=%s\n", cs, cs->async, cs->command);
 	cs->ctx.expr = cs->command;
-	cs->ctx.attr = &attr;
 	prev = cs->context_attr;
 
 	while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
+		tmpoffset = cs->res.var - cs->command;
+		cs->ctx.attr = &prev;
 		resolve(&cs->ctx, &cs->res);
 
-		if (cs->ctx.error || (cs->res.attr.type == attr_none)) {
-			// We could not resolve an object, perhaps because it has not been created
+		if (cs->ctx.error) {
+			/* An error occurred while parsing the command */
+			tmpoffset = cs->ctx.expr - cs->command;
+			dbg(lvl_error, "parsing error: cs=%p, cs->ctx.error=%d\n\t%s\n\t%*s\n", cs, cs->ctx.error, cs->command, tmpoffset + 1, "^");
+			return 0;
+		} else if (cs->res.attr.type == attr_none) {
+			/* We could not resolve an object, perhaps because it has not been created */
+			dbg(lvl_error, "could not resolve object in cs=%p:\n\t%s\n\t%*s\n", cs, cs->command, tmpoffset + 1, "^");
 			return 0;
 		}
 
@@ -1552,7 +1810,6 @@ command_register_callbacks(struct command_saved *cs)
 			if (func->add_attr) {
 				if (status == 2) { // This is not the final attribute name
 					cb = callback_new_attr_1(callback_cast(command_saved_callbacks_changed), cs->res.attr.type, (void*)cs);
-					attr = cs->res.attr;
 				} else if (status == 1) { // This is the final attribute name
 					cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
 					cs->ctx.attr = &cs->context_attr;
@@ -1571,7 +1828,7 @@ command_register_callbacks(struct command_saved *cs)
 				func->add_attr(prev.u.data, &cb_attr);
 
 			} else {
-				dbg(lvl_error, "Could not add callback because add_attr is missing for type %i}n", prev.type);
+				dbg(lvl_error, "Could not add callback because add_attr is missing for type %i\n", prev.type);
 			}
 		}
 
@@ -1584,15 +1841,26 @@ command_register_callbacks(struct command_saved *cs)
 
 	command_saved_evaluate_idle(cs);
 
+	dbg(lvl_debug, "done: cs=%p, cs->command=%s\n", cs, cs->command);
 	return 1;
 }
 
+/**
+ * @brief Creates a new saved command.
+ *
+ * @param command The command string
+ * @param attr The context attribute for the saved command
+ * @param cb The callback to call whenver the command is re-evaluated
+ * @param async Whether the saved command should be flagged as asynchronous, causing it to be evaluated
+ * in an idle callback
+ */
 struct command_saved *
 command_saved_attr_new(char *command, struct attr *attr, struct callback *cb, int async)
 {
 	struct command_saved *ret;
 
 	ret = g_new0(struct command_saved, 1);
+	dbg(lvl_debug, "enter, ret=%p, command=%s\n", ret, command);
 	ret->command = g_strdup(command);
 	ret->context_attr = *attr;
 	ret->cb = cb;
@@ -1601,6 +1869,7 @@ command_saved_attr_new(char *command, struct attr *attr, struct callback *cb, in
 
 	if (!command_register_callbacks(ret)) {
 		// We try this as an idle call again
+		dbg(lvl_debug, "could not register callbacks, will retry as an idle call\n");
 		ret->register_cb = callback_new_1(callback_cast(command_saved_callbacks_changed), ret);
 		ret->register_ev = event_add_idle(300, ret->register_cb);
 	}		

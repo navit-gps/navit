@@ -35,11 +35,11 @@ struct route_data {
   int route_showing;
 };
 
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * Private data for the internal GUI.
+ *
+ * @author Martin Schaller (04/2008)
+ */
 struct gui_priv {
 	struct navit *nav;
 	struct attr self;
@@ -57,19 +57,11 @@ struct gui_priv {
 	char *font_name;
 	int fullscreen;
 	struct graphics_font *fonts[3];
-	/**
-	 * The size (in pixels) that xs style icons should be scaled to.
-	 * This icon size can be too small to click it on some devices.
-	 */
-	int icon_xs;
-	/**
-	 * The size (in pixels) that s style icons (small) should be scaled to
-	 */
-	int icon_s;
-	/**
-	 * The size (in pixels) that l style icons should be scaled to
-	 */
-	int icon_l;
+	int icon_xs;						/**< The size (in pixels) that xs style icons should be scaled to.
+										  *  This icon size can be too small to click it on some devices.
+										  */
+	int icon_s;							/**< The size (in pixels) that s style icons (small) should be scaled to */
+	int icon_l;							/**< The size (in pixels) that l style icons should be scaled to */
 	int pressed;
 	struct widget *widgets;
 	int widgets_count;
@@ -86,30 +78,29 @@ struct gui_priv {
 	int signal_on_map_click;
 	char *country_iso2;
 	int speech;
-	int keyboard;
-	int keyboard_required;
-	/**
-	 * The setting information read from the configuration file.
-	 * values of -1 indicate no value was specified in the config file.
-	 */
-	struct gui_config_settings config;
+	int keyboard;						/**< Whether the internal GUI keyboard is enabled */
+	int keyboard_required;				/**< Whether keyboard input is needed. This is only used by the
+										  *  HTML menu, text entry dialogs do not use this member.
+										  */
+	struct gui_config_settings config;	/**< The setting information read from the configuration file.
+										  *  values of -1 indicate no value was specified in the config file.
+										  */
 	struct event_idle *idle;
 	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*window_closed_cb,*idle_cb, *motion_timeout_callback;
 	struct event_timeout *motion_timeout_event;
 	struct point current;
 
 	struct callback * vehicle_cb;
-	  /**
-	   * Stores information about the route.
-	   */
-	struct route_data route_data;
+	struct route_data route_data;		/**< Stores information about the route. */
 
 	struct gui_internal_data data;
 	struct callback_list *cbl;
 	int flags;
 	int cols;
-	struct attr osd_configuration;
-	int pitch;
+	struct attr osd_configuration;		/**< The OSD configuration, a set of flags controlling which OSD
+	                                      *  items will be visible.
+	                                      */
+	int pitch;							/**< The pitch for the 3D map view. */
 	int flags_town,flags_street,flags_house_number;
 	int radius;
 	int mouse_button_clicked_on_map;

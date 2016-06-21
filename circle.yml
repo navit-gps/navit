@@ -1,11 +1,5 @@
 machine:
   environment:
-    ANDROID_HOME: /home/ubuntu/android
-    ANDROID_NDK_HOME: /home/ubuntu/android/android-ndk
-    ANDROID_SDK_CDN: https://dl.google.com/android
-    ANDROID_SDK_FILE: android-sdk_r24.3.4-linux.tgz
-    ANDROID_NDK_CDN: http://dl.google.com/android/ndk
-    ANDROID_NDK_FILE: android-ndk-r10e-linux-x86_64.bin
     CMAKE_FILE: ../Toolchain/arm-eabi.cmake
 dependencies:
   cache_directories:
@@ -19,28 +13,25 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install cmake
     - sudo apt-get install libpng12-dev
-#    - sudo apt-get install libgtk2.0-dev 
     - sudo apt-get install librsvg2-bin 
     - sudo apt-get install libfreetype6-dev
     - sudo apt-get install libdbus-glib-1-dev
     - sudo apt-get install g++
     - bash ci/update_version.sh prepare
-    - bash ci/import_translations.sh
     - bash ci/build_linux.sh
     - sed -i '/INTEGER/d' bin/po/navit.pot
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
-    - "curl \"https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -H \"$lp_cookie\" -H \"Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -F file=@bin/po/navit.pot | grep title"
+    - "[ $CIRCLE_PROJECT_USERNAME != navit-gps ] || curl \"https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -H \"$lp_cookie\" -H \"Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -F file=@bin/po/navit.pot | grep title"
 # Android build    
 #    - wget -c -N -q $ANDROID_SDK_CDN/$ANDROID_SDK_FILE -O $ANDROID_HOME/$ANDROID_SDK_FILE
 #    - wget -c -N -q $ANDROID_NDK_CDN/$ANDROID_NDK_FILE -O $ANDROID_HOME/$ANDROID_NDK_FILE
 #    - sudo apt-get install gettext
 #    - sudo apt-get install openjdk-8-jdk
-#    - sudo apt-get install ant
-#    - sudo apt-get install libsaxonb-java
 # for aapt
 #    - sudo apt-get install lib32stdc++6
 #    - sudo apt-get install lib32z1
 #    - bash ci/build_android.sh
+#    - bash ci/build_android_x86.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
@@ -52,6 +43,8 @@ dependencies:
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
     - sudo pip install junit-xml
+#
+    - ls -la $CIRCLE_ARTIFACTS
 test:
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
@@ -72,6 +65,7 @@ test:
 deployment:
   merge_into_master:
     branch: trunk
+    owner: navit-gps
     commands:
       - bash ci/update_version.sh push
       - git push origin $CIRCLE_SHA1:refs/heads/master

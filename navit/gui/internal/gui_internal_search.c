@@ -212,6 +212,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 {
 	struct menu_data *md;
 
+	if (!this->keyboard)
+		return;
+
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
 		GList *lk=md->keyboard->children;
@@ -225,9 +228,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 				if (child_->data && strcmp("\b", child_->data)) { // FIXME don't disable special keys
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
-						child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
+						child_->state|= STATE_HIGHLIGHTED|STATE_SENSITIVE|STATE_CLEAR ;
 					} else {
-						child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SELECTED) ;
+						child_->state&= ~STATE_HIGHLIGHTED;
 					}
 					gui_internal_widget_render(this,child_);
 				}
@@ -313,21 +316,24 @@ gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_r
 	return resultlist_entry;
 }
 
+/**
+ * @brief List of possible next keys/characters given the current result list of the incremental search.
+ */
+char possible_keys_incremental_search[256]="";
+
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
 	char *result_main_label=NULL,*result_sublabel=NULL,*item_name=NULL, *widget_name=NULL, *search_text;
 	struct search_list_result *res;
 	struct item *item=NULL;
-	static char possible_keys[256]="";
-        struct widget *search_input=NULL;
+	struct widget *search_input=NULL;
 	struct widget *menu, *resultlist_row, *resultlist_entry;
 
 	res=search_list_get_result(this->sl);
 	if (!res) {
 		gui_internal_search_idle_end(this);
-		gui_internal_highlight_possible_keys(this, possible_keys);
-		possible_keys[0]='\0';
+		gui_internal_highlight_possible_keys(this, possible_keys_incremental_search);
 		return;
 	}
 
@@ -364,7 +370,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	dbg_assert(search_input);
 	search_text=search_input->text;
 
-	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys, item_name);
+	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys_incremental_search, item_name);
 
 	resultlist_row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 	if (!result_sublabel)
@@ -401,9 +407,9 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	GList *l;
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
 	void *param=(void *)3;
-	int minlen=1;
 
 	gui_internal_widget_table_clear(this, search_list);
+	possible_keys_incremental_search[0]='\0';
 
 	if (! strcmp(wm->name,"Country"))
 		param=(void *)4;
@@ -414,7 +420,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	dbg(lvl_debug,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
-	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
+	if (wm->text && g_utf8_strlen(wm->text, -1) > 0) {
 		struct attr search_attr;
 
 		dbg(lvl_debug,"process\n");
@@ -428,7 +434,14 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 			search_attr.type=attr_house_number;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
+		// Text is not necessarily entered via the on-screen keyboard,
+		// but we now switch it to lower case anyway.
+		gui_internal_keyboard_to_lower_case(this);
 		gui_internal_search_idle_start(this, wm->name, search_list, param);
+	} else {
+		// If not enough content is entered, we highlight all keys.
+		gui_internal_keyboard_to_upper_case(this);
+		gui_internal_highlight_possible_keys(this, "");
 	}
 	l=g_list_last(this->root.children);
 	gui_internal_widget_render(this, l->data);
@@ -502,7 +515,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	char *country;
 	int keyboard_mode;
 	gui_internal_search_list_new(this);
-	keyboard_mode=2+gui_internal_keyboard_init_mode(this->country_iso2?this->country_iso2:getenv("LANG"));
+	keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(this->country_iso2 ? this->country_iso2 : getenv("LANG"));
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -543,7 +556,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_select_street")));
 		wb->state |= STATE_SENSITIVE;
 		wb->func = gui_internal_back;
-		keyboard_mode=18;
+		keyboard_mode = VKBD_NUMERIC | VKBD_FLAG_2;
 	}
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
 	if (wnext) {
@@ -559,7 +572,9 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
+	else
+		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 

@@ -449,6 +449,7 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 {
 	struct widget *w=data;
 	struct poi_param *param;
+	GList *l;
 	
 	if(!w->text)
 		return;
@@ -467,6 +468,9 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 		param->AddressFilterType=0;
 
 	gui_internal_poi_param_set_filter(param, w->text);
+
+	l = g_list_previous(g_list_last(this->root.children));
+	gui_internal_prune_menu(this, l->data);
 
 	gui_internal_cmd_pois(this,w,param);
 	gui_internal_poi_param_free(param);
@@ -499,7 +503,7 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
 {
 	struct widget *wb, *w, *wr, *wk, *we;
 	int keyboard_mode;
-	keyboard_mode=2+gui_internal_keyboard_init_mode(getenv("LANG"));
+	keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"));
 	wb=gui_internal_menu(this,"Filter");
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -532,7 +536,9 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
 	wb->data=wk;
 	
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
+	else
+		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
 	gui_internal_menu_render(this);
 
 

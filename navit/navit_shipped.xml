@@ -21,6 +21,9 @@
 	<debug name="navit:do_draw" dbg_level="error"/>
 	<!-- This is here so one can copy&paste the contents of popup menus --> 
 	<debug name="navit:popup_printf_cb" dbg_level="debug"/>
+	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
+	<debug name="profile:navit:do_draw" dbg_level="debug"/>
+	-->
 	<!-- segv: 1 - show backtrace with gdb and exit, 2 - stay in gdb -->
 	<debug name="segv" level="1"/>
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
@@ -179,7 +182,7 @@ Waypoint</text></img>
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>
 
-		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4040002" flags_reverse_mask="0x4040001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
 			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10" />
 			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30" />
 			<roadprofile item_types="street_3_city" speed="40" route_weight="40" />

@@ -339,9 +339,11 @@ main_init(const char *program)
 #ifdef HAVE_API_WIN32_BASE
 	win_set_nls();
 #endif
+#ifndef HAVE_API_ANDROID
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
+#endif
 #if !defined _WIN32 && !defined _WIN32_WCE
 	if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo") || file_exists("version.h")) {
 		char buffer[PATH_MAX];

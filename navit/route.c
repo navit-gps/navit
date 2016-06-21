@@ -78,13 +78,6 @@ struct map_priv {
 
 int debug_route=0;
 
-enum route_path_flags {
-	route_path_flag_none=0,
-	route_path_flag_cancel=1,
-	route_path_flag_async=2,
-	route_path_flag_no_rebuild=4,
-};
-
 /**
  * @brief A point in the route graph
  *
@@ -171,11 +164,18 @@ struct route_graph_segment {
 /**
  * @brief A traffic distortion
  *
- * This is distortion in the traffic where you can't drive as fast as usual or have to wait for some time
+ * Traffic distortions represent delays or closures on the route, which can occur for a variety of
+ * reasons such as roadworks, accidents or heavy traffic. They are also used internally by Navit to
+ * avoid using a particular segment.
+ *
+ * A traffic distortion can limit the speed on a segment, or introduce a delay. If both are given,
+ * at the same time, they are cumulative.
  */
 struct route_traffic_distortion {
-	int maxspeed;					/**< Maximum speed possible in km/h */
-	int delay;					/**< Delay in tenths of seconds */
+	int maxspeed;					/**< Maximum speed possible in km/h. Use {@code INT_MAX} to
+									     leave the speed unchanged, or 0 to mark the segment as
+									     impassable. */
+	int delay;					/**< Delay in tenths of seconds (0 for no delay) */
 };
 
 /**
@@ -239,7 +239,7 @@ struct route_path {
 struct route {
 	NAVIT_OBJECT
 	struct mapset *ms;			/**< The mapset this route is built upon */
-	unsigned flags;
+	enum route_path_flags flags;
 	struct route_info *pos;		/**< Current position within this route */
 	GList *destinations;		/**< Destinations of the route */
 	int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
@@ -749,6 +749,16 @@ route_destination_reached(struct route *this)
 		return 2;
 }
 
+/**
+ * @brief Returns the position from which to route to the current destination of the route.
+ *
+ * This function examines the destination list of the route. If present, it returns the destination
+ * which precedes the one indicated by the {@code current_dst} member of the route. Failing that,
+ * the current position of the route is returned.
+ *
+ * @param this The route object
+ * @return The previous destination or current position, see description
+ */
 static struct route_info *
 route_previous_destination(struct route *this)
 {
@@ -761,12 +771,25 @@ route_previous_destination(struct route *this)
 	return l->data;
 }
 
+/**
+ * @brief Updates or recreates the route graph.
+ *
+ * This function is called after the route graph has been changed or rebuilt and flooding has
+ * completed. It then updates the route path to reflect these changes.
+ *
+ * If multiple destinations are set, this function will reset and re-flood the route graph for each
+ * destination, thus recursively calling itself for each destination.
+ *
+ * @param this The route object
+ * @param new_graph FIXME Whether the route graph has been rebuilt from scratch
+ */
+/* FIXME Should we rename this function to route_graph_flood_done, in order to avoid confusion? */
 static void
 route_path_update_done(struct route *this, int new_graph)
 {
 	struct route_path *oldpath=this->path2;
 	struct attr route_status;
-	struct route_info *prev_dst;
+	struct route_info *prev_dst; /* previous destination or current position */
 	route_status.type=attr_route_status;
 	if (this->path2 && (this->path2->in_use>1)) {
 		this->path2->update_required=1+new_graph;
@@ -824,17 +847,28 @@ route_path_update_done(struct route *this, int new_graph)
  * @brief Updates the route graph and the route path if something changed with the route
  *
  * This will update the route graph and the route path of the route if some of the
- * route's settings (destination, position) have changed. 
+ * route's settings (destination, position) have changed.
+ *
+ * The behavior of this function can be controlled via flags:
+ * <ul>
+ * <li>{@code route_path_flag_cancel}: Cancel navigation, clear route graph and route path</li>
+ * <li>{@code route_path_flag_async}: Perform operations asynchronously</li>
+ * <li>{@code route_path_flag_no_rebuild}: Do not rebuild the route graph</li>
+ * </ul>
  * 
+ * These flags will be stored in the {@code flags} member of the route object.
+ *
  * @attention For this to work the route graph has to be destroyed if the route's 
  * @attention destination is changed somewhere!
  *
  * @param this The route to update
+ * @param flags Flags to control the behavior of this function, see description
  */
 static void
 route_path_update_flags(struct route *this, enum route_path_flags flags)
 {
 	dbg(lvl_debug,"enter %d\n", flags);
+	this->flags = flags;
 	if (! this->pos || ! this->destinations) {
 		dbg(lvl_debug,"destroy\n");
 		route_path_destroy(this->path2,1);
@@ -867,6 +901,15 @@ route_path_update_flags(struct route *this, enum route_path_flags flags)
 	}
 }
 
+/**
+ * @brief Updates the route graph and the route path if something changed with the route
+ *
+ * This function is a wrapper around {@link route_path_update_flags(route *, enum route_path)}.
+ *
+ * @param this The route to update
+ * @param cancel If true, cancel navigation, clear route graph and route path
+ * @param async If true, perform processing asynchronously
+ */
 static void
 route_path_update(struct route *this, int cancel, int async)
 {
@@ -1123,8 +1166,8 @@ route_clear_destinations(struct route *this_)
  *
  * @param this The route to set the destination for
  * @param dst Coordinates to set as destination
- * @param count: Number of destinations (last one is final)
- * @param async: If set, do routing asynchronously
+ * @param count Number of destinations (last one is final)
+ * @param async If set, do routing asynchronously
  */
 
 void
@@ -1253,8 +1296,8 @@ route_get_destination_description(struct route *this, int n)
  * @brief Start a route given set of coordinates
  *
  * @param this The route instance
- * @param c The coordinate to start routing to
- * @param async 1 for async
+ * @param dst The coordinate to start routing to
+ * @param async Set to 1 to do route calculation asynchronously
  * @return nothing
  */
 void
@@ -1336,11 +1379,12 @@ route_remove_waypoint(struct route *this)
 }
 
 /**
- * @brief Gets the route_graph_point with the specified coordinates
+ * @brief Gets the next route_graph_point with the specified coordinates
  *
  * @param this The route in which to search
  * @param c Coordinates to search for
- * @param last The last route graph point returned to iterate over multiple points with the same coordinates
+ * @param last The last route graph point returned to iterate over multiple points with the same coordinates,
+ * or {@code NULL} to return the first point
  * @return The point at the specified coordinates or NULL if not found
  */
 static struct route_graph_point *
@@ -1361,6 +1405,13 @@ route_graph_get_point_next(struct route_graph *this, struct coord *c, struct rou
 	return NULL;
 }
 
+/**
+ * @brief Gets the first route_graph_point with the specified coordinates
+ *
+ * @param this The route in which to search
+ * @param c Coordinates to search for
+ * @return The point at the specified coordinates or NULL if not found
+ */
 static struct route_graph_point *
 route_graph_get_point(struct route_graph *this, struct coord *c)
 {
@@ -1421,7 +1472,10 @@ route_graph_point_new(struct route_graph *this, struct coord *f)
  * This will insert a point into the route graph at the coordinates passed in f.
  * Note that the point is not yet linked to any segments.
  *
- * @param this The route to insert the point into
+ * If the route graph already contains a point at the specified coordinates, the existing point
+ * will be returned.
+ *
+ * @param this The route graph to insert the point into
  * @param f The coordinates at which the point should be inserted
  * @return The point inserted or NULL on failure
  */
@@ -1459,6 +1513,14 @@ route_graph_free_points(struct route_graph *this)
 
 /**
  * @brief Resets all nodes
+ *
+ * This iterates through all the points in the route graph, resetting them to their initial state.
+ * The {@code value} member of each point (cost to reach the destination) is reset to
+ * {@code INT_MAX}, the {@code seg} member (cheapest way to destination) is reset to {@code NULL}
+ * and the {@code el} member (pointer to element in Fibonacci heap) is also reset to {@code NULL}.
+ *
+ * References to elements of the route graph which were obtained prior to calling this function
+ * remain valid after it returns.
  *
  * @param this The route graph to reset
  */
@@ -1913,14 +1975,28 @@ route_graph_destroy(struct route_graph *this)
 }
 
 /**
- * @brief Returns the estimated speed on a segment
+ * @brief Returns the estimated speed on a segment, or 0 for an impassable segment
  *
- * This function returns the estimated speed to be driven on a segment, 0=not passable
+ * This function returns the estimated speed to be driven on a segment, calculated as follows:
+ * <ul>
+ * <li>Initially the route weight of the vehicle profile for the given item type is used. If the
+ * item type does not have a route weight in the vehicle profile given, it is considered impassable
+ * and 0 is returned.</li>
+ * <li>If the {@code maxspeed} attribute of the segment's item is set, either it or the previous
+ * speed estimate for the segment is used, as governed by the vehicle profile's
+ * {@code maxspeed_handling} attribute.</li>
+ * <li>If a traffic distortion is present, its {@code maxspeed} is taken into account in a similar
+ * manner. Unlike the regular {@code maxspeed}, a {@code maxspeed} resulting from a traffic
+ * distortion is always considered if it limits the speed, regardless of {@code maxspeed_handling}.
+ * </li>
+ * <li>Access restrictions for dangerous goods, size or weight are evaluated, and 0 is returned if
+ * the given vehicle profile violates one of them.</li>
+ * </ul>
  *
  * @param profile The routing preferences
  * @param over The segment which is passed
- * @param dist A traffic distortion if applicable
- * @return The estimated speed
+ * @param dist A traffic distortion if applicable, or {@code NULL}
+ * @return The estimated speed in km/h, or 0 if the segment is impassable
  */
 static int
 route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist)
@@ -1929,18 +2005,17 @@ route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
 	int speed,maxspeed;
 	if (!roadprofile || !roadprofile->route_weight)
 		return 0;
-	/* maxspeed_handling: 0=always, 1 only if maxspeed restricts the speed, 2 never */
 	speed=roadprofile->route_weight;
-	if (profile->maxspeed_handling != 2) {
+	if (profile->maxspeed_handling != maxspeed_ignore) {
 		if (over->flags & AF_SPEED_LIMIT) {
 			maxspeed=RSD_MAXSPEED(over);
-			if (!profile->maxspeed_handling)
+			if (profile->maxspeed_handling == maxspeed_enforce)
 				speed=maxspeed;
 		} else
 			maxspeed=INT_MAX;
 		if (dist && maxspeed > dist->maxspeed)
 			maxspeed=dist->maxspeed;
-		if (maxspeed != INT_MAX && (profile->maxspeed_handling != 1 || maxspeed < speed))
+		if (maxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || maxspeed < speed))
 			speed=maxspeed;
 	}
 	if (over->flags & AF_DANGEROUS_GOODS) {
@@ -1964,15 +2039,16 @@ route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
 }
 
 /**
- * @brief Returns the time needed to drive len on item
+ * @brief Returns the time needed to travel along a segment, or {@code INT_MAX} if the segment is impassable.
  *
- * This function returns the time needed to drive len meters on 
- * the item passed in item in tenth of seconds.
+ * This function returns the time needed to travel along the entire length of {@code over} in
+ * tenths of seconds. Restrictions for dangerous goods, weight or size are taken into account.
+ * Traffic distortions are also taken into account if a valid {@code dist} argument is given.
  *
- * @param profile The routing preferences
+ * @param profile The vehicle profile (routing preferences)
  * @param over The segment which is passed
- * @param dist A traffic distortion if applicable
- * @return The time needed to drive len on item in thenth of senconds
+ * @param dist A traffic distortion if applicable, or {@code NULL}
+ * @return The time needed in tenths of seconds
  */
 
 static int
@@ -1984,6 +2060,14 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
 	return over->len*36/speed+(dist ? dist->delay : 0);
 }
 
+/**
+ * @brief Returns the traffic distortion for a segment.
+ *
+ * @param seg The segment for which the traffic distortion is to be returned
+ * @param ret Points to a {@code struct route_traffic_distortion}, whose members will be filled
+ *
+ * @return true if a traffic distortion was found, 0 if not
+ */
 static int
 route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traffic_distortion *ret)
 {
@@ -2020,13 +2104,22 @@ route_through_traffic_allowed(struct vehicleprofile *profile, struct route_graph
 }
 
 /**
- * @brief Returns the "costs" of driving from point from over segment over in direction dir
+ * @brief Returns the "cost" of driving from point {@code from} along segment {@code over} in direction {@code dir}
+ *
+ * Cost is relative to time, indicated in tenths of seconds.
+ *
+ * This function considers traffic distortions as well as penalties. If the segment is impassable
+ * due to traffic distortions or restrictions, {@code INT_MAX} is returned in order to prevent use
+ * of this segment for routing.
  *
  * @param profile The routing preferences
  * @param from The point where we are starting
  * @param over The segment we are using
- * @param dir The direction of segment which we are driving
- * @return The "costs" needed to drive len on item
+ * @param dir The direction of segment which we are driving. Positive values indicate we are
+ * traveling in the direction of the segment, negative values indicate we are traveling against
+ * that direction. Values of +2 or -2 cause the function to ignore traffic distortions.
+ *
+ * @return The "cost" needed to travel along the segment
  */  
 
 static int
@@ -2066,6 +2159,15 @@ route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_seg
 		s1->end->c.x == s2->end->c.x && s1->end->c.y == s2->end->c.y);
 }
 
+/**
+ * @brief Sets or clears a traffic distortion for a segment.
+ *
+ * This sets or clears a delay. It cannot be used to set speed.
+ *
+ * @param this The route graph
+ * @param seg The segment to which the traffic distortion applies
+ * @param delay Delay in tenths of a second
+ */
 static void
 route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay)
 {
@@ -2193,8 +2295,8 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 #endif
 	int segmented = 0;
 	struct roadprofile *roadp;
-	struct route_graph_point *s_pnt,*e_pnt;
-	struct coord c,l;
+	struct route_graph_point *s_pnt,*e_pnt; /* Start and end point */
+	struct coord c,l; /* Current and previous point */
 	struct attr attr;
 	struct route_graph_segment_data data;
 	data.flags=0;
@@ -2204,7 +2306,7 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 
 	roadp = vehicleprofile_get_roadprofile(profile, item->type);
 	if (!roadp) {
-		// Don't include any roads that don't have a road profile in our vehicle profile
+		/* Don't include any roads that don't have a road profile in our vehicle profile */
 		return;
 	}
 
@@ -2295,6 +2397,16 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 	}
 }
 
+/**
+ * @brief Gets the next route_graph_segment belonging to the specified street
+ *
+ * @param graph The route graph in which to search
+ * @param sd The street to search for
+ * @param last The last route graph segment returned to iterate over multiple segments of the same
+ * item. If {@code NULL}, the first matching segment will be returned.
+ *
+ * @return The route graph segment, or {@code NULL} if none was found.
+ */
 static struct route_graph_segment *
 route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struct route_graph_segment *last)
 {
@@ -2327,6 +2439,15 @@ route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struc
  * 
  * This function uses Dijkstra's algorithm to do the routing. To understand it you should have a look
  * at this algorithm.
+ *
+ * References to elements of the route graph which were obtained prior to calling this function
+ * remain valid after it returns.
+ *
+ * @param this_ The route graph to flood
+ * @param dst The destination of the route
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable
+ * and how their costs are calculated.
+ * @param cb The callback function to call when flooding is complete
  */
 static void
 route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile, struct callback *cb)
@@ -2535,11 +2656,11 @@ route_get_coord_dist(struct route *this_, int dist)
 static struct route_path *
 route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile)
 {
-	struct route_graph_segment *s=NULL,*s1=NULL,*s2=NULL;
-	struct route_graph_point *start;
-	struct route_info *posinfo, *dstinfo;
-	int segs=0,dir;
-	int val1=INT_MAX,val2=INT_MAX;
+	struct route_graph_segment *s=NULL,*s1=NULL,*s2=NULL; /* candidate segments for cheapest path */
+	struct route_graph_point *start; /* point at which the next segment starts, i.e. up to which the path is complete */
+	struct route_info *posinfo, *dstinfo; /* same as pos and dst, but NULL if not part of current segment */
+	int segs=0,dir; /* number of segments added to graph, direction of first segment */
+	int val1=INT_MAX,val2=INT_MAX; /* total cost for s1 and s2, respectively */
 	int val,val1_new,val2_new;
 	struct route_path *ret;
 
@@ -2710,11 +2831,12 @@ static void
 route_graph_clone_segment(struct route_graph *this, struct route_graph_segment *s, struct route_graph_point *start, struct route_graph_point *end, int flags)
 {
 	struct route_graph_segment_data data;
-	data.flags=s->data.flags|flags;
-	data.offset=1;
-	data.maxspeed=-1;
 	data.item=&s->data.item;
+	data.offset=1;
+	data.flags=s->data.flags|flags;
 	data.len=s->data.len+1;
+	data.maxspeed=-1;
+	data.dangerous_goods=0;
 	if (s->data.flags & AF_SPEED_LIMIT)
 		data.maxspeed=RSD_MAXSPEED(&s->data);
 	if (s->data.flags & AF_SEGMENTED) 
@@ -2870,11 +2992,13 @@ route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile)
  * between c1 and c2.
  *
  * @param ms The mapset to build the route graph from
+ * @param c The coordinates of the destination or next waypoint
  * @param c1 Corner 1 of the rectangle to use from the map
  * @param c2 Corner 2 of the rectangle to use from the map
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
+// FIXME documentation does not match argument list
 static struct route_graph *
 route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async, struct vehicleprofile *profile)
 {
@@ -2910,6 +3034,8 @@ route_graph_update_done(struct route *this, struct callback *cb)
  * adds routing information afterwards by calling route_graph_flood().
  * 
  * @param this The route to update the graph for
+ * @param cb The callback function to call when the route graph update is complete (used only in asynchronous mode)
+ * @param async Set to nonzero in order to update the route graph asynchronously
  */
 static void
 route_graph_update(struct route *this, struct callback *cb, int async)
@@ -3614,7 +3740,7 @@ rm_rect_destroy(struct map_rect_priv *mr)
 	}
 	if (mr->path) {
 		mr->path->in_use--;
-		if (mr->path->update_required && (mr->path->in_use==1)) 
+		if (mr->path->update_required && (mr->path->in_use==1) && (mr->mpriv->route->route_status & ~route_status_destination_set))
 			route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
 		else if (!mr->path->in_use)
 			g_free(mr->path);
@@ -3892,6 +4018,24 @@ struct map *
 route_get_graph_map(struct route *this_)
 {
 	return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
+}
+
+
+/**
+ * @brief Returns the flags for the route.
+ */
+enum route_path_flags route_get_flags(struct route *this_) {
+	return this_->flags;
+}
+
+/**
+ * @brief Whether the route has a valid graph.
+ *
+ * @return True if the route has a graph, false if not.
+ */
+int
+route_has_graph(struct route *this_) {
+	return (this_->graph != NULL);
 }
 
 void

@@ -1,41 +1,3 @@
-/* some changes in navigation.c
- *
- *
- *
- * some relate to (partially or in whole)
- * #1265 from mvglaslow
- * #1271 from jandegr
- * #1274 from jandegr
- * #1174 from arnaud le meur
- * #1082 from robotaxi
- * #921 from psoding
- * #795 from user:ps333
- * #694 from user:nop
- * #660 from user:polarbear_n
- *
- * and an incomplete list of more navigation.c related tickets
- * #1190
- * #1160
- * #1161
- * #1095
- * #1087
- * #880
- * #870
- * (#519)
- *
- */
-
-/* KNOWN ISSUES
- *
- *
- *  in navigation_itm_new() : If a way splits in 2, exit_to info ends up on
- *	both continuations of the ramp, sometimes leading to wrong guidance
- *	The case where a ramp itself splits in 2 is already covered by ignoring exit_to info
- *	in such cases.
- *
- *
- */
-
 /**
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2015 Navit Team
@@ -73,6 +35,7 @@
 #include "projection.h"
 #include "map.h"
 #include "navit.h"
+#include "event.h"
 #include "callback.h"
 #include "speech.h"
 #include "vehicleprofile.h"
@@ -83,6 +46,10 @@
 
 /* #define DEBUG */
 
+/** @file
+ *
+ * Generates navigation messages for a calculated route.
+ */
 static int roundabout_extra_length=50;
 
 /* TODO: find out if this is being used elsewhere and, if so, move this definition somewhere more generic */
@@ -123,7 +90,7 @@ static int turn_2_limit = 45;
 static int sharp_turn_limit = 110;
 
 /** Minimum absolute delta for a U turn.
- * Maneuvers whose absolute delta is less than this (but at least {@code min_turn_limit}) will always be announced as turns.
+ * Maneuvers whose absolute delta is less than this (but at least #min_turn_limit) will always be announced as turns.
  * Note that, depending on other conditions, even maneuvers whose delta exceeds the threshold may still be announced as (sharp) turns. */
 static int u_turn_limit = 165;
 
@@ -146,6 +113,7 @@ struct suffix {
 	char *abbrev;
 	int gender;
 } suffixes[]= {
+	/* DE */
 	{"weg", NULL, masculine},
 /*	{"platz", "pl.", masculine}, collides with Lithuanian "plentas" (which is more frequent) */
 	{"platz", NULL, masculine},
@@ -155,18 +123,16 @@ struct suffix {
 	{"gasse", NULL, feminine},
 	{"straße", "str.", feminine},
 
-	/* some for the dutch lang. */
-	{"straat", NULL, neuter},
-/*	{"weg", NULL, neuter}, doubles-up with German */
-	{"baan", NULL, neuter},
-	{"laan", NULL, neuter},
-	{"wegel", NULL, neuter},
-
-	/* some for the english lang. */
+	/* EN */
 	{"street", NULL, masculine},
 	{"drive", NULL, masculine},
 
-	/* some for Lithuanian, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
+	/* FR */
+	{"boulevard", NULL, masculine},
+	{"chemin", NULL, neuter},
+	{"rue", NULL, feminine},
+
+	/* LT, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
 	{"gatvė", "g.", feminine},
 	{"plentas", "pl.", masculine},
 	{"prospektas", "pr.", masculine},
@@ -174,6 +140,21 @@ struct suffix {
 	{"skersgatvis", "skg.", masculine},
 	{"aikštė", "a.", feminine},
 
+	/* NL */
+	{"straat", NULL, neuter},
+/*	{"weg", NULL, neuter}, doubles-up with German */
+	{"baan", NULL, neuter},
+	{"laan", NULL, neuter},
+	{"wegel", NULL, neuter},
+
+};
+
+
+enum nav_status_int {
+	status_none = 0,
+	status_busy = 1,
+	status_has_ritem = 2,
+	status_has_sitem = 4
 };
 
 
@@ -203,6 +184,11 @@ struct navigation {
 	int curr_delay;
 	int turn_around_count;
 	int flags;
+	struct map_rect *route_mr;			/**< Map rect on the route map, used for maneuver generation */
+	enum nav_status_int status_int;		/**< Internal status information used during maneuver generation */
+	struct callback *idle_cb;			/**< Idle callback to process the route map */
+	struct event_idle *idle_ev;			/**< The pointer to the idle event */
+	int nav_status;						/**< Status of the navigation engine */
 };
 
 /** @brief Set of simplified distance values that are easy to be pronounced.
@@ -222,14 +208,14 @@ int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
 
 /** Merging into a motorway-like road, direction undefined.
  * This value is not intended to be set directly but can be used for
- * comparisons, e.g. {@code merge_or_exit & mex_merge}. */
+ * comparisons, e.g. `merge_or_exit & mex_merge`. */
 #define mex_merge 1
 
 /** Exiting from a motorway-like road, direction undefined.
  * This should only be used for ramps leading to a non-motorway road.
- * For interchanges, use {@code mex_interchange} instead.
+ * For interchanges, use #mex_interchange instead.
  * This value is not intended to be set directly but can be used for
- * comparisons, e.g. {@code merge_or_exit & mex_exit}. */
+ * comparisons, e.g. `merge_or_exit & mex_merge`. */
 #define mex_exit 2
 
 /** Motorway-like road splits in two.
@@ -240,14 +226,14 @@ int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
 #define mex_merge_right 9
 
 /** Exiting from a motorway-like road to the right.
- * See {@code mex_exit} for usage. */
+ * @see mex_exit for usage */
 #define mex_exit_right 10
 
 /** Merging into a motorway-like road to the left (coming from the right) */
 #define mex_merge_left 17
 
 /** Exiting from a motorway-like road to the left.
- * See {@code mex_exit} for usage. */
+ * @see mex_exit for usage */
 #define mex_exit_left 18
 
 /**
@@ -690,6 +676,46 @@ select_announced_destinations(struct navigation_command *current_command)
 }
 
 
+/**
+ * @brief Converts navigation status to human-readable text.
+ *
+ * @param The status. This must be one of the values for {@code enum nav_status}.
+ *
+ * @return A string which corresponds to the constant value. The caller is responsible for calling
+ * {@code g_free()} when the result is no longer needed.
+ */
+char *nav_status_to_text(int status) {
+	char *ret;
+
+	switch (status) {
+	case status_invalid:
+		ret = g_strdup("status_invalid");
+		break;
+	case status_no_route:
+		ret = g_strdup("status_no_route");
+		break;
+	case status_no_destination:
+		ret = g_strdup("status_no_destination");
+		break;
+	case status_position_wait:
+		ret = g_strdup("status_position_wait");
+		break;
+	case status_calculating:
+		ret = g_strdup("status_calculating");
+		break;
+	case status_recalculating:
+		ret = g_strdup("status_recalculating");
+		break;
+	case status_routing:
+		ret = g_strdup("status_routing");
+		break;
+	default:
+		ret = g_strdup_printf("status_unknown_%d", status);
+	}
+	return ret;
+}
+
+
 int
 navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
@@ -726,6 +752,9 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 	case attr_turn_around_count:
 		attr->u.num=this_->turn_around_count;
 		break;
+	case attr_nav_status:
+		attr->u.num=this_->nav_status;
+		break;
 	default:
 		return navit_object_get_attr((struct navit_object *)this_, type, attr, iter);
 	}
@@ -750,6 +779,9 @@ navigation_set_attr(struct navigation *this_, struct attr *attr)
 	case attr_speech:
 		this_->speech=attr->u.speech;
 		break;
+	case attr_nav_status:
+		this_->nav_status = attr->u.num;
+		break;
 	default:
 		break;
 	}
@@ -771,6 +803,7 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	ret->turn_around_limit=3;
 	ret->navit=parent->u.navit;
 	ret->tell_street_name=1;
+	ret->route_mr = NULL;
 
 	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
 		for (i = 0 ; i < 3 ; i++) {
@@ -1016,7 +1049,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 			dist_feet = round_distance_reduced(dist_feet);
 		}
 
-		// check for statement in feet
+		/* check for statement in feet */
 		if (dist_feet <= 500)
 		{
 			if (is_length)
@@ -1167,158 +1200,6 @@ navigation_way_init(struct navigation_way *w)
 }
 
 
-#if 0
-// /home/michael/src/navit/navit/navit/navigation.c:1039:1: warning: ‘navigation_way_get_exit_angle’ defined but not used [-Wunused-function]
-/**
- * @brief Returns the bearing at the end of a way
- *
- * @param w The way to examine
- *
- * @return The bearing, {@code 0 <= bearing < 360}.
- */
-static int
-navigation_way_get_exit_angle(struct navigation_way *w) {
-	int ret = invalid_angle;
-	struct coord cbuf[2];
-	struct item *realitem;
-	struct coord c;
-	struct map_rect *mr;
-
-	mr = map_rect_new(w->item.map, NULL);
-	if (!mr)
-		return ret;
-
-	realitem = map_rect_get_item_byid(mr, w->item.id_hi, w->item.id_lo);
-	if (!realitem) {
-		dbg(lvl_warning,"Item from segment not found on map!\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (realitem->type < type_line || realitem->type >= type_area) {
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (w->dir < 0) {
-		if (item_coord_get(realitem, cbuf, 2) != 2) {
-			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-		c = cbuf[0];
-		cbuf[0] = cbuf[1];
-		cbuf[1] = c;
-	}
-	else {
-		if (item_coord_get(realitem, cbuf, 2) != 2) {
-			dbg(lvl_warning,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-
-		while (item_coord_get(realitem, &c, 1)) {
-			cbuf[0] = cbuf[1];
-			cbuf[1] = c;
-		}
-	}
-
-	map_rect_destroy(mr);
-
-	ret = road_angle(&cbuf[1],&cbuf[0],0);
-
-	return ret;
-}
-#endif
-
-
-#if 0
-// /home/michael/src/navit/navit/navit/navigation.c:1110:1: warning: ‘navigation_way_get_angle_at’ defined but not used [-Wunused-function]
-/**
- * @brief Returns the bearing of a way at a given distance from its start
- *
- * {@code invalid_angle} will be returned if one of the following errors occurs:
- * <ul>
- * <li>The item is not found on the map</li>
- * <li>The item is not of the correct type</li>
- * <li>The item is shorter than {@code distance}</li>
- * </ul>
- *
- * @param pro The projection used by the map
- * @param w The way to examine
- * @param dist The distance from the start of the way at which to determine bearing
- *
- * @return The bearing, {@code 0 <= bearing < 360}, or {@code invalid_angle} if an error occurred.
- */
-static int
-navigation_way_get_angle_at(struct navigation_way *w, enum projection pro, double dist) {
-	double dist_left = dist; /* distance from last examined point */
-	int ret = invalid_angle;
-	struct coord cbuf[2];
-	struct item *realitem;
-	struct coord c;
-	struct map_rect *mr;
-
-	mr = map_rect_new(w->item.map, NULL);
-	if (!mr)
-		return ret;
-
-	realitem = map_rect_get_item_byid(mr, w->item.id_hi, w->item.id_lo);
-	if (!realitem) {
-		dbg(lvl_warning,"Item from segment not found on map!\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (realitem->type < type_line || realitem->type >= type_area) {
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (item_coord_get(realitem, &cbuf[1], 1) != 1) {
-		dbg(lvl_warning,"item has no coords\n");
-		map_rect_destroy(mr);
-		return ret;
-	}
-
-	if (w->dir < 0) {
-		/* we're going against the direction of the item:
-		 * measure its total length and set distance_left to difference of total length and distance */
-		dist_left = 0;
-		while (item_coord_get(realitem, &c, 1)) {
-			cbuf[0] = cbuf[1];
-			cbuf[1] = c;
-			dist_left += transform_distance(pro, &cbuf[0], &cbuf[1]);
-		}
-
-		// FIXME: dist_left is now the complete length - subtract dist
-
-		item_coord_rewind(realitem);
-
-		if (item_coord_get(realitem, &cbuf[1], 1) != 1) {
-			dbg(lvl_warning,"item has no more coords after rewind\n");
-			map_rect_destroy(mr);
-			return ret;
-		}
-	}
-
-	while (item_coord_get(realitem, &c, 1)) {
-		cbuf[0] = cbuf[1];
-		cbuf[1] = c;
-		dist_left -= transform_distance(pro, &cbuf[0], &cbuf[1]);
-		if (dist_left <= 0) {
-			ret = road_angle(&cbuf[0], &cbuf[1], w->dir);
-			map_rect_destroy(mr);
-			return ret;
-		}
-	}
-
-	map_rect_destroy(mr);
-	return ret;
-}
-#endif
-
-
 /**
  * @brief Returns the maximum delta between a reference bearing and any segment of a given way, up to a given distance from its start
  *
@@ -1422,41 +1303,6 @@ navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int 
 
 	map_rect_destroy(mr);
 	return ret;
-}
-
-
-/**
- * @brief Returns the time (in seconds) one will drive between two navigation items
- *
- * This function returns the time needed to drive between two items, including both of them,
- * in seconds.
- *
- * @param from The first item
- * @param to The last item
- * @return The travel time in seconds, or -1 on error
- */
-static int
-navigation_time(struct navigation_itm *from, struct navigation_itm *to)
-{
-	struct navigation_itm *cur;
-	int time;
-
-	time = 0;
-	cur = from;
-	while (cur) {
-		time += cur->time;
-
-		if (cur == to) {
-			break;
-		}
-		cur = cur->next;
-	}
-
-	if (!cur) {
-		return -1;
-	}
-
-	return time;
 }
 
 /**
@@ -1639,7 +1485,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		return;
 	}
 	if (! item_attr_get(ritem, attr_speed, &speed)) {
-		dbg(lvl_error,"no time\n");
+		dbg(lvl_error,"no speed\n");
 		return;
 	}
 
@@ -1654,6 +1500,12 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
  *
  * routeitem has an attr. streetitem, but that is only and id and a map,
  * allowing to fetch the actual streetitem, that will live under the same name.
+ *
+ * Known issue:
+ * If a way splits in 2, exit_to info ends up on both continuations of the ramp, sometimes
+ * leading to wrong guidance.
+ * The case where a ramp itself splits in 2 is already covered by ignoring exit_to info
+ * in such cases.
  *
  * @param this_ the navigation object
  * @param routeitem the routeitem from which to create a navigation item
@@ -1691,7 +1543,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		item_hash_insert(this_->hash, streetitem, ret);
 
 		mr=map_rect_new(streetitem->map, NULL);
-
 		struct map *tmap = streetitem->map;
 
 		if (! (streetitem=map_rect_get_item_byid(mr, streetitem->id_hi, streetitem->id_lo))) {
@@ -1746,9 +1597,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 					}
 				}
 			}
-
 		navigation_itm_update(ret, routeitem);
-
 
 		while (item_coord_get(routeitem, &c[i], 1))
 		{
@@ -1771,6 +1620,15 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		ret->start=c[0];
 		ret->end=c[i];
 
+		if(item_attr_get(routeitem, attr_route, &route_attr))
+			graph_map = route_get_graph_map(route_attr.u.route);
+		if (graph_map )
+		{	
+			if (this_->last)
+				ret->prev=this_->last;
+			navigation_itm_ways_update(ret,graph_map);
+		}
+
 		/* If we have a ramp, check the map for higway_exit info,
 		 * but only on the first node of the ramp.
 		 * We are doing the same for motorway-like roads because some
@@ -1781,10 +1639,9 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 		 * If present, obtain exit_ref, exit_label and exit_to
 		 * from the map.
 		 */
-		if (   (streetitem->type == type_ramp)
-		    || (streetitem->type == type_highway_land)
-		    || (streetitem->type == type_highway_city)
-		    || (streetitem->type == type_street_n_lanes)) {
+		if (ret->way.next && ((streetitem->type == type_ramp) || (streetitem->type == type_highway_land)
+			|| (streetitem->type == type_highway_city) || (streetitem->type == type_street_n_lanes)))
+		{
 			struct map_selection mselexit;
 			struct item *rampitem;
 			dbg(lvl_debug,"test ramp\n");
@@ -1792,7 +1649,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 			mselexit.u.c_rect.lu = c[0] ;
 			mselexit.u.c_rect.rl = c[0] ;
 			mselexit.range = item_range_all;
-			mselexit.order = 18;
+			mselexit.order =18;
 
 			map_rect_destroy(mr);
 			mr = map_rect_new(tmap, &mselexit);
@@ -1807,12 +1664,12 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 						if (attr.type && attr.type == attr_label)
 						{
 							dbg(lvl_debug,"exit_label=%s\n",attr.u.str);
-							ret->way.exit_label= map_convert_string(streetitem->map,attr.u.str);
+							ret->way.exit_label= map_convert_string(tmap,attr.u.str);
 						}
 						if (attr.type == attr_ref)
 						{
 							dbg(lvl_debug,"exit_ref=%s\n",attr.u.str);
-							ret->way.exit_ref= map_convert_string(streetitem->map,attr.u.str);
+							ret->way.exit_ref= map_convert_string(tmap,attr.u.str);
 						}
 						if (attr.type == attr_exit_to)
 						{
@@ -1826,7 +1683,7 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 									&& (this_->last)
 									&& (!(this_->last->way.item.type == type_ramp))) {
 								char *destination_raw;
-								destination_raw=map_convert_string(streetitem->map,attr.u.str);
+								destination_raw=map_convert_string(tmap,attr.u.str);
 								dbg(lvl_debug,"destination_raw from exit_to =%s\n",destination_raw);
 								if ((split_string_to_list(&(ret->way),destination_raw, ';')) < 2)
 								/*
@@ -1843,10 +1700,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 				}
 			}
 		}
-
-		if(item_attr_get(routeitem, attr_route, &route_attr))
-			graph_map = route_get_graph_map(route_attr.u.route);
-
 		dbg(lvl_debug,"i=%d start %d end %d '%s' \n", i, ret->way.angle2, ret->angle_end, ret->way.name_systematic);
 		map_rect_destroy(mr);
 	} else {
@@ -1858,9 +1711,6 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem)
 	if (this_->last) {
 		this_->last->next=ret;
 		ret->prev=this_->last;
-		if (graph_map) {
-			navigation_itm_ways_update(ret,graph_map);
-		}
 	}
 	dbg(lvl_debug,"ret=%p\n", ret);
 	this_->last=ret;
@@ -2244,7 +2094,6 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 						 * side effects.
 						 */
 						if (m.is_same_street && is_same_street2(old->way.name, old->way.name_systematic, w->name, w->name_systematic) && (!is_motorway_like(&(old->way), 0) || (!is_motorway_like(w, 0) && w->item.type != type_ramp)) && is_way_allowed(nav,w,2))
-							//if (m.is_same_street && is_same_street2(old->way.name, old->way.name_systematic, w->name, w->name_systematic) && (!is_motorway_like(&(old->way), 0) || !is_motorway_like(w, 1)) && is_way_allowed(nav,w,2))
 							m.is_same_street=0;
 						/* If the route category changes to a lower one but another road has the same route category as old,
 						 * it is not clear which of the two the driver would perceive as the "same street", hence reset is_same_street */
@@ -2296,7 +2145,7 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 			int hist_dist = old->length; /* distance between previous and current maneuver */
 			ni = old;
 			while (ni && (hist_through_segments == 0) && (hist_dist <= junction_limit)) {
-				// TODO: shouldn't the condition be (hist_through_segments < 2) to catch through segments that are slightly offset??
+				/* TODO: shouldn't the condition be (hist_through_segments < 2) to catch through segments that are slightly offset?? */
 				struct navigation_way *w = ni->way.next;
 				while (w) {
 					if (is_same_street2(new->way.name, new->way.name_systematic, w->name, w->name_systematic)
@@ -2402,7 +2251,17 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 		if (!m.is_same_street && m.is_unambiguous < 1) { /* FIXME: why < 1? */
 			ret=1;
 			r="yes: different street and ambiguous";
-		} else
+		} 
+		/* we should have cat of the candidate within dlim
+		 * instead of testing against max_cat.
+		 * The highest cat road might be well outside dlim
+		 */
+		else if (m.max_cat >= m.new_cat && m.is_unambiguous < 1)
+		{
+			ret = 1;
+			r="yes: ambiguous because of other candidates within dlim";
+		}
+		else
 			r="no: same street or unambiguous";
 #ifdef DEBUG
 		r=g_strdup_printf("%s: d %d left %d right %d dlim=%d cat old:%d new:%d max:%d unambiguous=%d same_street=%d", ret==1?"yes":"no", m.delta, m.left, m.right, dlim, m.old_cat, m.new_cat, m.max_cat, m.is_unambiguous, m.is_same_street);
@@ -2883,10 +2742,10 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 				}
 
 
-				// Investigate the strengthening of announcement.
+				/* Investigate the strengthening of announcement. */
 				switch (more_ways_for_strength) {
 				case 0:
-					// Only one possibility to turn to this direction
+					/* Only one possibility to turn to this direction */
 					if (ret->delta < -sharp_turn_limit) {
 						ret->maneuver->type = type_nav_left_3; /* strongly left */
 					} else if (ret->delta <= 0) {
@@ -2900,7 +2759,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 				case 1:
 					/* One additional possibility to turn to the same direction */
 					if (turn_no_of_route_way == 0) {
-						// the route is less strong to turn
+						/* the route is less strong to turn */
 						if (ret->delta < -turn_2_limit) {
 							ret->maneuver->type = type_nav_left_2;  /* normally left */
 						} else if (ret->delta <= 0) {
@@ -2947,7 +2806,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
 						}
 					}
 					else if (turn_no_of_route_way > 1) {
-						// if the route is the strongest of all possible turns here
+						/* if the route is the strongest of all possible turns here */
 						if (ret->delta < -u_turn_limit) {
 							ret->maneuver->type = type_nav_turnaround_left; /* turn around left */
 						} else if (ret->delta < -sharp_turn_limit) {
@@ -3386,6 +3245,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			case level_now:
 				/* TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow */
 				return g_strdup_printf(_("Leave the roundabout at the %1$s %2$s"), get_exit_count_str(count_roundabout),street_destination_announce);
+			default :
+				dbg(lvl_error,"unexpected announcement level %d\n", level);
+				return g_strdup_printf("internal error");
 		}
 	}
 
@@ -3661,7 +3523,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			break;
 		default :
 			ret= g_strdup_printf(("%1$s %2$s"),instruction,street_destination_announce);
-			dbg(lvl_error,"unevaluated announcement level\n");
+			dbg(lvl_error,"unexpected announcement level %d\n", level);
 			break;
 	}
 
@@ -3700,7 +3562,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 static char *
 show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
 {
-	int distance = itm->dest_length-cmd->itm->dest_length; // distance from e.g. current GPS position to next announced turn position
+	int distance = itm->dest_length-cmd->itm->dest_length; /* distance from e.g. current GPS position to next announced turn position */
 	enum announcement_level level;
 	char *ret,*buf,*next;
 
@@ -3738,17 +3600,17 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	}
 
 	if (cmd->next && cmd->itm) {
-		// determine the level of the command that comes immediately after that.
+		/* determine the level of the command that comes immediately after that. */
 		enum announcement_level nextlevel = navigation_get_announce_level(nav, cmd->itm->way.item.type, cmd->itm->dest_length - cmd->next->itm->dest_length);
 
-		// If this level starts with 1 or 0 concatenate the following announcement to the current:
+		/* If this level starts with 1 or 0 concatenate the following announcement to the current: */
 		if (nextlevel <= level_soon) {
 			next = show_maneuver(nav, cmd->itm, cmd->next, type, level_connect);
 			if (*next != '\0') /* is the second announcement not an empty string? */
 			{
 				cmd->itm->told = 1;
 				buf = ret;
-				ret = g_strdup_printf("%s, %s", buf, next); // concatenate both announcements
+				ret = g_strdup_printf("%s, %s", buf, next); /* concatenate both announcements */
 				g_free(buf);
 			}
 			g_free(next);
@@ -3815,57 +3677,110 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	}
 }
 
+/**
+ * @brief Cleans up and initiates maneuver creation.
+ *
+ * This function is called by {@link navigation_update_idle(struct navigation *)}
+ * after it has retrieved all objects from the route map.
+ *
+ * It will reset the navigation object's idle event/callback, deallocate some temporary objects and
+ * reset the {@code busy} flag. Arguments correspond to those of
+ * {@link navigation_update_idle(struct navigation *)}.
+ *
+ * @param this_ Points to the navigation object. After the function returns, its {@code map_rect}
+ * member will no longer be valid.
+ * @param cancel If true, only cleanup (deallocation of objects) will be done and no maneuvers will be generated.
+ * If false, maneuvers will be generated.
+ */
 static void
-navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
-{
-	struct map *map;
-	struct map_rect *mr;
+navigation_update_done(struct navigation *this_, int cancel) {
+	int incr = 0;
+	struct map_rect *mr = this_->route_mr;
+	struct attr nav_status;
+
+	if (this_->idle_ev)
+		event_remove_idle(this_->idle_ev);
+	if (this_->idle_cb)
+		callback_destroy(this_->idle_cb);
+	this_->idle_ev=NULL;
+	this_->idle_cb=NULL;
+
+	if (!cancel) {
+		nav_status.type = attr_nav_status;
+		nav_status.u.num = status_routing;
+		if (!(this_->status_int & status_has_sitem))
+			navigation_destroy_itms_cmds(this_, NULL);
+		else {
+			if (!(this_->status_int & status_has_ritem)) {
+				navigation_itm_new(this_, NULL);
+				make_maneuvers(this_,this_->route);
+			}
+			calculate_dest_distance(this_, incr);
+			profile(0,"end");
+			navigation_call_callbacks(this_, FALSE);
+		}
+		navigation_set_attr(this_, &nav_status);
+	}
+	/*
+	 * In order to ensure that route_mr holds either NULL or a valid pointer at any given time,
+	 * always pass a copy of it to map_rect_destroy() and set route_mr to NULL prior to calling
+	 * map_rect_destroy(). The reason is that map_rect_destroy() for a route map may indirectly
+	 * call navigation_update(), which will modify the same members. For the same reason,
+	 * status_int must be reset before the call to map_rect_destroy().
+	 */
+	this_->status_int = status_none;
+	this_->route_mr = NULL;
+	map_rect_destroy(mr);
+}
+
+/**
+ * @brief Idle callback function to retrieve items from the route map.
+ *
+ * @param this_ Points to the navigation object. The caller is responsible for initializing its
+ * {@code route_mr} member. After processing completes, the {@code route_mr} member will no longer
+ * be valid.
+ */
+static void
+navigation_update_idle(struct navigation *this_) {
+	int count = 100;            /* Maximum number of items retrieved in one run of this function.
+	                             * This should be set low enough for each pass to complete in less
+	                             * than a second even on low-performance devices. */
 	struct item *ritem;			/* Holds an item from the route map */
-	struct item *sitem;			/* Holds the corresponding item from the actual map */
-	struct attr street_item,street_direction;
+	struct item *sitem;			/* Holds the item from the actual map which corresponds to ritem */
+	struct attr street_item, street_direction;
 	struct navigation_itm *itm;
-	struct attr vehicleprofile;
-	int mode=0, incr=0, first=1;
-	if (attr->type != attr_route_status)
-		return;
 
-	dbg(lvl_debug,"enter %d\n", mode);
-	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
-		navigation_flush(this_);
-	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
+	/* Do not use the route_path_flag_cancel flag here because it is also used whenever
+	 * destinations or waypoints change, not just when the user stops navigation altogether
+	 */
+	if (!route_has_graph(this_->route)) {
+		navigation_update_done(this_, 1);
 		return;
+	}
 
-	if (! this_->route)
-		return;
-	map=route_get_map(this_->route);
-	if (! map)
-		return;
-	mr=map_rect_new(map, NULL);
-	if (! mr)
-		return;
-	if (route_get_attr(route, attr_vehicleprofile, &vehicleprofile, NULL))
-		this_->vehicleprofile=vehicleprofile.u.vehicleprofile;
-	else
-		this_->vehicleprofile=NULL;
-	dbg(lvl_debug,"enter\n");
-	while ((ritem=map_rect_get_item(mr))) {
-		if (ritem->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
+	while (count > 0) {
+		if (!(ritem = map_rect_get_item(this_->route_mr))) {
+			this_->status_int &= ~(status_has_ritem);
+			break;
+		}
+		this_->status_int |= status_has_ritem;
+		if ((ritem)->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
 			this_->turn_around--;
-		if (ritem->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
+		if ((ritem)->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
 			this_->turn_around++;
-		if (ritem->type != type_street_route)
+		if ((ritem)->type != type_street_route)
 			continue;
-		if (first && item_attr_get(ritem, attr_street_item, &street_item)) {
-			first=0;
+		if ((!(this_->status_int & status_has_sitem)) && item_attr_get(ritem, attr_street_item, &street_item)) {
+			this_->status_int |= status_has_sitem;
 			if (!item_attr_get(ritem, attr_direction, &street_direction))
-				street_direction.u.num=0;
-			sitem=street_item.u.item;
+				street_direction.u.num = 0;
+			sitem = street_item.u.item;
 			dbg(lvl_debug,"sitem=%p\n", sitem);
-			itm=item_hash_lookup(this_->hash, sitem);
+			itm = item_hash_lookup(this_->hash, sitem);
 			dbg(lvl_info,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
 			if (itm && itm->way.dir != street_direction.u.num) {
 				dbg(lvl_info,"wrong direction\n");
-				itm=NULL;
+				itm = NULL;
 			}
 			navigation_destroy_itms_cmds(this_, itm);
 			if (itm) {
@@ -3875,20 +3790,90 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 			dbg(lvl_debug,"not on track\n");
 		}
 		navigation_itm_new(this_, ritem);
+		count--;
 	}
-	dbg(lvl_info,"turn_around=%d\n", this_->turn_around);
-	if (first)
-		navigation_destroy_itms_cmds(this_, NULL);
-	else {
-		if (! ritem) {
-			navigation_itm_new(this_, NULL);
-			make_maneuvers(this_,this_->route);
+	if (count > 0) {
+		/* if count > 0, one of the break conditions in the loop was true and we're done */
+		navigation_update_done(this_, 0);
+		return;
+	}
+}
+
+/**
+ * @brief Event handler for changes to the route.
+ *
+ * This function is added to the callback list of the current route. It is called whenever the
+ * status of the route changes and will either discard the current list of maneuvers or build a new
+ * list.
+ *
+ * @param this_ The navigation object
+ * @param route The route
+ * @param attr The route status attribute
+ */
+static void
+navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
+{
+	struct map *map;
+	struct attr vehicleprofile;
+	struct attr nav_status;
+
+	if (attr->type != attr_route_status)
+		return;
+
+	dbg(lvl_debug,"enter\n");
+
+	nav_status.type = attr_nav_status;
+	switch(attr->u.num) {
+	case route_status_not_found:
+		nav_status.u.num = status_no_route;
+		break;
+	case route_status_no_destination:
+		nav_status.u.num = status_no_destination;
+		break;
+	case route_status_destination_set:
+		nav_status.u.num = status_position_wait;
+		break;
+	case route_status_building_path:
+	case route_status_building_graph:
+	case route_status_path_done_new:
+	case route_status_path_done_incremental:
+		nav_status.u.num = (this_->nav_status >= status_recalculating) ? status_recalculating : status_calculating;
+	}
+	navigation_set_attr(this_, &nav_status);
+
+	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new)
+		navigation_flush(this_);
+	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental) {
+		if (this_->status_int & status_busy) {
+			navigation_update_done(this_, 1);
 		}
-		calculate_dest_distance(this_, incr);
-		profile(0,"end");
-		navigation_call_callbacks(this_, FALSE);
+		return;
 	}
-	map_rect_destroy(mr);
+
+	if (! this_->route)
+		return;
+	map=route_get_map(this_->route);
+	if (! map)
+		return;
+	this_->route_mr = map_rect_new(map, NULL);
+	if (! this_->route_mr)
+		return;
+	if (route_get_attr(route, attr_vehicleprofile, &vehicleprofile, NULL))
+		this_->vehicleprofile=vehicleprofile.u.vehicleprofile;
+	else
+		this_->vehicleprofile=NULL;
+	dbg(lvl_debug,"enter\n");
+
+	this_->status_int = status_busy;
+	if (route_get_flags(this_->route) & route_path_flag_async) {
+		this_->idle_cb = callback_new_1(callback_cast(navigation_update_idle), this_);
+		this_->idle_ev = event_add_idle(50, this_->idle_cb);
+	} else {
+		this_->idle_ev = NULL;
+		this_->idle_cb = NULL;
+		while (this_->status_int & status_busy)
+			navigation_update_idle(this_);
+	}
 }
 
 static void
@@ -3908,23 +3893,71 @@ navigation_destroy(struct navigation *this_)
 	g_free(this_);
 }
 
+/**
+ * @brief Registers a new callback function.
+ *
+ * Callback functions are called whenever the attribute for which they are registered changes.
+ * It is possible to register callbacks for {@code attr_any}, which will fire on any change.
+ *
+ * The {@code navigation} object has three callback lists. They differ by the arguments which are
+ * passed to the callback function and are selected based on the attribute type:
+ * <ul>
+ * <li>Callbacks for the {@code navigation_speech} attribute are added to the
+ * {@code callback_speech} list.</li>
+ * <li>Callbacks for the {@code navigation_long} attribute are added to the {@code callback} list.
+ * </li>
+ * <li>Callbacks for any other attribute, including {@code attr_any}, are added to the list stored
+ * in the {@code callback_list} attribute. This functionality is inherited from
+ * {@code navit_object}.</li>
+ * </ul>
+ *
+ * @param this_ The navigation object.
+ * @param type The attribute type
+ * @param cb The callback function
+ *
+ * @return true on success, false on failure
+ */
 int
 navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
+	struct attr attr_cbl;
+
 	if (type == attr_navigation_speech)
 		callback_list_add(this_->callback_speech, cb);
-	else
+	else if (type == attr_navigation_long)
 		callback_list_add(this_->callback, cb);
+	else {
+		if (navigation_get_attr(this_, attr_callback_list, &attr_cbl, NULL))
+			callback_list_add(attr_cbl.u.callback_list, cb);
+		else
+			return 0;
+	}
 	return 1;
 }
 
+/**
+ * @brief Unregisters a callback function.
+ *
+ * This function removes a previously registered callback function from the callback list to which
+ * it was added. See the documentation on
+ * {@link navigation_register_callback(struct navigation *, enum attr_type, struct callback *)} for
+ * details on callback lists.
+ *
+ * @param this_ The navigation object.
+ * @param type The attribute type
+ * @param cb The callback function
+ */
 void
 navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
+	struct attr attr_cbl;
+
 	if (type == attr_navigation_speech)
 		callback_list_remove(this_->callback_speech, cb);
-	else
+	else if (type == attr_navigation_long)
 		callback_list_remove(this_->callback, cb);
+	else if (navigation_get_attr(this_, attr_callback_list, &attr_cbl, NULL))
+		callback_list_remove(attr_cbl.u.callback_list, cb);
 }
 
 struct map *

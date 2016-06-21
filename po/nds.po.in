@@ -1,10 +1,11 @@
 # German, Low translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Christian Moll https://launchpad.net/~christian-chrmoll
 # KaZeR https://launchpad.net/~kazer
 # Lars Hennig https://launchpad.net/~elhennig
+# Marc0 https://launchpad.net/~z-ubuntuone-y
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Roadrunner IN https://launchpad.net/~online
 # Roschkor https://launchpad.net/~bound-one2000
@@ -15,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2016-04-03 18:48+0000\n"
+"Last-Translator: Marc0 <ubuntuone@hidden-primary.net>\n"
 "Language-Team: German, Low <nds@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,31 +79,31 @@ msgstr "sechste Ausfahrt"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d Fuss"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "in %d Fuss"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d,%d Meilen"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "in %d,%d Meilen"
 
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "eine Meile"
+msgstr[1] "%d Meilen"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "in einer Meile"
+msgstr[1] "in %d Meilen"
 
 #, c-format
 msgid "%d meters"
@@ -206,10 +207,8 @@ msgstr "In Kürze in den Kreisverkehr einfahren"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "dann den Kreisverkehr an der %1$s %2$s verlassen"
+msgid "then enter the roundabout"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -315,6 +314,10 @@ msgid "strongly "
 msgstr "straf "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Die %1$s Straße zur %2$s nehmen"
 
@@ -322,7 +325,6 @@ msgstr "Die %1$s Straße zur %2$s nehmen"
 msgid "after %i roads"
 msgstr "nach %i Straßen"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -353,7 +355,7 @@ msgstr ""
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -2023,10 +2025,6 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr ""
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2042,6 +2040,10 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2739,3 +2741,7 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "dann den Kreisverkehr an der %1$s %2$s verlassen"

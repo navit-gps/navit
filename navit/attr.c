@@ -35,6 +35,7 @@
 #include "coord.h"
 #include "transform.h"
 #include "color.h"
+#include "navigation.h"
 #include "attr.h"
 #include "map.h"
 #include "config.h"
@@ -222,7 +223,7 @@ attr_new_from_text(const char *name, const char *value)
 			ret->u.str=g_strdup(value);
 			break;
 		}
-		if (attr >= attr_type_int_begin && attr < attr_type_boolean_begin) {
+		if (attr >= attr_type_int_begin && attr < attr_type_rel_abs_begin) {
 			char *tail;
 			if (value[0] == '0' && value[1] == 'x')
 				ret->u.num=strtoul(value, &tail, 0);
@@ -231,21 +232,32 @@ attr_new_from_text(const char *name, const char *value)
 			if (*tail) {
 				dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number. "
 					"Defaulting to 0.\n", value, name);
+				ret->u.num=0;
 			}
-			
-			if (attr >= attr_type_rel_abs_begin) {
-				/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)
-					 Relative values are from 0x40000001 - 0x80000000, with 0x60000000 being 0 */
-				if (strchr(value, '%')) {
-					if ((ret->u.num > 0x20000000) || (ret->u.num < -0x1FFFFFFF)) {
-						dbg(lvl_error, "Relative possibly-relative attribute with invalid value %li\n", ret->u.num);
-					}
-
-					ret->u.num += 0x60000000;
+			break;
+		}
+		if (attr >= attr_type_rel_abs_begin && attr < attr_type_boolean_begin) {
+			char *tail;
+			int value_is_relative=0;
+			ret->u.num=strtol(value, &tail, 0);
+			if (*tail) {
+				if (!strcmp(tail, "%")) {
+					value_is_relative=1;
 				} else {
-					if ((ret->u.num > 0x40000000) || (ret->u.num < -0x40000000)) {
-						dbg(lvl_error, "Non-relative possibly-relative attribute with invalid value %li\n", ret->u.num);
-					}
+					dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number or a relative value in percent. "
+						"Defaulting to 0.\n", value, name);
+					ret->u.num=0;
+				}
+			}
+			if (value_is_relative) {
+				if ((ret->u.num > ATTR_REL_MAXREL) || (ret->u.num < ATTR_REL_MINREL)) {
+					dbg(lvl_error, "Relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
+				}
+
+				ret->u.num += ATTR_REL_RELSHIFT;
+			} else {
+				if ((ret->u.num > ATTR_REL_MAXABS) || (ret->u.num < ATTR_REL_MINABS)) {
+					dbg(lvl_error, "Non-relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
 				}
 			}
 			break;
@@ -354,6 +366,9 @@ flags_to_text(int flags)
  * @param map The translation map. This is only needed for string type attributes or group type
  * attributes which might contain strings. It can be NULL for other attribute types. If a string
  * type attribute is encountered and {@code map} is NULL, the string will be returned unchanged.
+ *
+ * @return The attribute data in human-readable form. The caller is responsible for calling {@code g_free()} on
+ * the result when it is no longer needed.
  */
 char *
 attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map)
@@ -463,6 +478,9 @@ attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_f
 	}
 	if (type >= attr_type_item_type_begin && type <= attr_type_item_type_end) {
 		return g_strdup_printf("0x%ld[%s]",attr->u.num,item_to_name(attr->u.num));
+	}
+	if (type == attr_nav_status) {
+		return nav_status_to_text(attr->u.num);
 	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
@@ -596,6 +614,7 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		if ((*curr)->type == attr->type) {
 			attr_free(*curr);
@@ -628,6 +647,7 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		curr++;
 		count++;
@@ -840,6 +860,8 @@ attr_dup_content(struct attr *src, struct attr *dst)
 	dst->type=src->type;
 	if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end) 
 		dst->u.num=src->u.num;
+	else if (src->type == attr_item_type)
+		dst->u.item_type=src->u.item_type;
 	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) {
 		if (HAS_OBJECT_FUNC(src->type)) {
 			struct navit_object *obj=src->u.data;

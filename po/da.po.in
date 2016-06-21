@@ -1,7 +1,8 @@
 # Danish translation for Navit translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
+# Esben Aaberg https://launchpad.net/~esben-aaberg
 # Fennek https://launchpad.net/~ng-fennek
 # Glenn https://launchpad.net/~glenn-mh-dk
 # Jørgen Elgaard Larsen https://launchpad.net/~jel-elgaard
@@ -16,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:57+0000\n"
-"Last-Translator: Lasse Luttermann <luttermann@silenzio.dk>\n"
+"PO-Revision-Date: 2016-01-29 16:53+0000\n"
+"Last-Translator: Esben Aaberg <esben_aaberg@yahoo.com>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,11 +80,11 @@ msgstr "sjette afkørsel"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d fod"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "om %d fod"
 
 #, c-format
 msgid "%d.%d miles"
@@ -207,10 +208,8 @@ msgstr "Kør snart ind i rundkørslen"
 msgid "Enter the roundabout %s"
 msgstr "Kør ind i rundkørslen %s"
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr "forlad så rundkørslen ved den %1$s %2$s"
+msgid "then enter the roundabout"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -316,6 +315,10 @@ msgid "strongly "
 msgstr "skarpt "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Tag den %1$s vej til %2$s"
 
@@ -323,7 +326,6 @@ msgstr "Tag den %1$s vej til %2$s"
 msgid "after %i roads"
 msgstr "efter %i veje"
 
-#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -354,7 +356,7 @@ msgstr "Vend om %1$s"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give usefull info to the driver.
+#. * and then we can give useful info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -603,7 +605,7 @@ msgstr "Congo"
 
 #. 756
 msgid "Switzerland"
-msgstr "Svejts"
+msgstr "Schweiz"
 
 #. 384
 msgid "Cote d'Ivoire"
@@ -975,7 +977,7 @@ msgstr "Letland"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Libyen"
 
 #. 504
 msgid "Morocco"
@@ -1627,40 +1629,40 @@ msgid "Data"
 msgstr "Data"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Apotek"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurant"
 
 msgid "Restaurant. Fast food"
 msgstr ""
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 msgid "Car parking"
 msgstr ""
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Tankstation"
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Hospital"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Biograf"
 
 msgid "Train station"
 msgstr ""
 
 msgid "School"
-msgstr ""
+msgstr "Skole"
 
 msgid "Police"
-msgstr ""
+msgstr "Politi"
 
 msgid "Justice"
 msgstr ""
@@ -1694,7 +1696,7 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Vælg en kategori"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
@@ -1703,10 +1705,10 @@ msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 msgid "Direction"
 msgstr ""
@@ -1715,7 +1717,7 @@ msgid "Distance(m)"
 msgstr ""
 
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 msgid "Visit Before"
 msgstr ""
@@ -2537,7 +2539,7 @@ msgid "horse"
 msgstr "hest"
 
 msgid "Truck"
-msgstr ""
+msgstr "Lastbil"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
@@ -2740,3 +2742,15 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#, c-format
+#~ msgid "then leave the roundabout at the %1$s %2$s"
+#~ msgstr "forlad så rundkørslen ved den %1$s %2$s"
+
+#, c-format
+#~ msgid "in %d m"
+#~ msgstr "om %d m"
+
+#, c-format
+#~ msgid "%d m"
+#~ msgstr "%d m"
