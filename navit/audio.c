@@ -137,37 +137,38 @@ audio_new(struct attr *parent, struct attr **attrs)
 	this_->attrs=attr_list_dup(attrs);
 	
 	dbg(lvl_debug, "Attrs: %p\n", this_->attrs);
+	//*
 	if (this_->meth.volume) {
-		dbg(lvl_info, "%s.volume=%p\n", attr->u.str, this_->meth.volume);
+		dbg(lvl_info, "%s.volume=%p\n", this_->name, this_->meth.volume);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot manage the volume\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot manage the volume\n", this_->name);
 	}
 	if (this_->meth.playback) {
-		dbg(lvl_info, "%s.playback=%p\n", attr->u.str, this_->meth.playback);
+		dbg(lvl_info, "%s.playback=%p\n", this_->name, this_->meth.playback);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot handle playback\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot handle playback\n", this_->name);
 	}
 	if (this_->meth.action_do) {
-		dbg(lvl_info, "%s.action_do=%p\n", attr->u.str, this_->meth.playback);
+		dbg(lvl_info, "%s.action_do=%p\n", this_->name, this_->meth.playback);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot handle action_do's\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot handle action_do's\n", this_->name);
 	}
 	if (this_->meth.tracks) {
-		dbg(lvl_info, "%s.tracks=%p\n", attr->u.str, this_->meth.tracks);
+		dbg(lvl_info, "%s.tracks=%p\n", this_->name, this_->meth.tracks);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot handle tracks\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot handle tracks\n", this_->name);
 	}
 	if (this_->meth.playlists) {
-		dbg(lvl_info, "%s.playlists=%p\n", attr->u.str, this_->meth.playlists);
+		dbg(lvl_info, "%s.playlists=%p\n", this_->name, this_->meth.playlists);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot handle playlists\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot handle playlists\n", this_->name);
 	}
      if (this_->meth.actions) {
-		dbg(lvl_info, "%s.actions=%p\n", attr->u.str, this_->meth.playlists);
+		dbg(lvl_info, "%s.actions=%p\n", this_->name, this_->meth.playlists);
 	} else {
-		dbg(lvl_error, "The plugin %s cannot handle actions\n", attr->u.str);
+		dbg(lvl_error, "The plugin %s cannot handle actions\n", this_->name);
 	}
-
+	//*/
 	dbg(lvl_debug,"return %p\n", this_);
 	
     return this_;

@@ -102,7 +102,8 @@ GList* get_entry_by_index(GList* list, int index);
 int mpd_get_playlists_count (void);
 void reload_playlists(struct audio_priv* this);
 struct audio_actions* get_specific_action(GList* actions, int specific_action);
-
+void mpd_toggle_repeat(struct audio_actions *action);
+void mpd_toggle_shuffle(struct audio_actions *action);
 int mpd_get_attr(struct audio_priv* priv, enum attr_type type, struct attr *attr){
 	int ret = 1;
 	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, type,attr_to_name(type), attr);
@@ -605,17 +606,28 @@ get_entry(GList* head, char *data)
 	{
 		dbg(lvl_debug,  "Search Entry: %s\n",data);
 		GList* current = head;
-		struct audio *currend_data = NULL;
+		struct audio_playlist *currend_data = NULL;
 		int cmp = -1;
 		while(cmp != 0){
+			dbg(lvl_debug, "%i\n", cmp);
 			currend_data = get_playlist_data(current);
+			dbg(lvl_debug, "%i, %p, %s\n", cmp, currend_data, currend_data->name);
 			if(currend_data){
 				if(currend_data->name){
 					dbg(lvl_debug,  "Got Entry: %s\n",currend_data->name);
 					cmp = strcmp(currend_data->name, data);
-					if(cmp != 0){			
+					if(cmp != 0){	
+						dbg(lvl_debug, "cmp != 0: %s ? %s\n",currend_data->name, data);		
 						current = current->next;
 					}
+					//*
+					else{
+						dbg(lvl_debug, "cmp == 0: %s ? %s\n",currend_data->name, data);	
+					}
+					//*/
+				}else{
+					dbg(lvl_debug,  "Nothing Found!\n");
+					return NULL; //nothing found!
 				}
 			}else{
 				dbg(lvl_debug,  "Nothing Found!\n");
@@ -914,7 +926,7 @@ get_last_playlist(struct audio_priv* this)
 		playlist_name = strtok(text, "/");
 		if(strstr(text, "volume:") != NULL){
 			load_playlist(mpd->playlists);
-			mpd_play();
+			//mpd_play();
 			fclose(fp);
 			return mpd->playlists;
 		}
@@ -1404,32 +1416,38 @@ void mpd_toggle_repeat(struct audio_actions *action){
 	if(mpd->single) toggle++;
 	if(mpd->repeat) toggle += 2;
 	switch(toggle){
-		case 0:// no repeat
-		case 1:{
+		case 0:{ // repeat playlist
 			system("mpc repeat on");
 			system("mpc single off");
+			mpd->single = FALSE;
+			mpd->repeat = TRUE;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_playlist");
 			}
-			dbg(lvl_debug, "\nrepeat playlist\n");
+			dbg(lvl_debug, " repeat playlist %i\n", toggle);
 			break;
 		}
-		case 2:{// repeat playlist
+		case 2:
+		case 1:{//repeat off -> repeat track
 			system("mpc single on");
 			system("mpc repeat on");
+			mpd->single = TRUE;
+			mpd->repeat = TRUE;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_track");
 			}
-			dbg(lvl_debug, "\nrepeat track\n");
+			dbg(lvl_debug, " repeat track %i\n", toggle);
 			break;
 		}
-		case 3:{// repeat track
+		case 3:{//repeat track -> repeat off
 			system("mpc repeat off");
 			system("mpc single off");
+			mpd->single = FALSE;
+			mpd->repeat = FALSE;
 			if(action != NULL){
 				action->icon = g_strdup("media_repeat_off");
 			}
-			dbg(lvl_debug, "\nrepeat off\n");
+			dbg(lvl_debug, " repeat off %i\n", toggle);
 			break;
 		}
 	}
@@ -1594,7 +1612,7 @@ tracks(struct audio_priv *this, int playlist_index)
                 t->name=g_strdup(mpd_get_track_name(i));
                 t->index=i;
                 t->status=0;
-                t->icon = "music-green"; //we init with the green icon - maybe we will use thsi for any kind of rating in the future
+                t->icon = "media_rating_full"; //we init with the green icon - maybe we will use thsi for any kind of rating in the future
                 tracks=g_list_append(tracks, t);
         }
 		dbg(lvl_debug, "Active playlist updated\n");
@@ -1876,8 +1894,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
     dbg(lvl_info,"Initializing mpd\n");
 	srandom(time(NULL));
 	mpd = g_new0 (struct audio_priv, 1);
-	
-	
+
 	attr=attr_search(attrs, NULL, attr_music_dir);
     if ((attr = attr_search (attrs, NULL, attr_music_dir)))
       {
@@ -1886,23 +1903,27 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
           dbg (lvl_info, "found music directory: %s\n", mpd->musicdir);
 
       }
-   
+ 
 	audio_init (&g_audiofifo);
-	
+
 	GList* pl = check_playlists();
 	if(pl == NULL){
 		reload_playlists(mpd);
 	}else{
 		mpd->playlists = sort_playlists(pl);
-
 		mpd->current_playlist = get_last_playlist(mpd);
 	}
+	if(mpd->idle)
+		mpd->idle = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
+
+	if(mpd->timeout)
+		mpd->timeout = event_add_timeout(1000, 1,  mpd->idle);
 	
+	if(mpd->callback)
+		mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
 	
-    mpd->idle = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
-    mpd->timeout = event_add_timeout(1000, 1,  mpd->idle);
-    mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
-    mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
+	if(mpd->timeout)
+		mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
 
     mpd->playing = false;
 	mpd->attrs=attrs;
@@ -1913,7 +1934,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
 		playing = g_new0( struct attr, 1);
 		playing->type = attr_playing;
 		mpd->attrs=attr_generic_add_attr(mpd->attrs, playing);
-		dbg (lvl_debug,"*\n");
+
 	}	
 	repeat = attr_search(mpd->attrs, NULL, attr_repeat);
 
@@ -1921,7 +1942,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
 		repeat = g_new0( struct attr, 1);
 		repeat->type = attr_repeat;
 		mpd->attrs=attr_generic_add_attr(mpd->attrs, repeat);
-		dbg (lvl_debug,"*\n");
+
 	}	
 	shuffle = attr_search(mpd->attrs, NULL, attr_shuffle);
 
@@ -1929,7 +1950,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
 		shuffle = g_new0( struct attr, 1);
 		shuffle->type = attr_shuffle;
 		mpd->attrs=attr_generic_add_attr(mpd->attrs, shuffle);
-		dbg (lvl_debug,"*\n");
+
 	}	
     //*/ 
 
@@ -1940,6 +1961,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
     *meth=player_mpd_meth;
     
     mpd_play();
+ 
     return mpd;
 }
 
