@@ -729,8 +729,9 @@ public class NavitGraphics
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
-			/* The navigational and status bar code is meaningful only on API17+ */
-			if(Build.VERSION.SDK_INT >= 17)
+
+			/* The navigational and status bar tinting code is meaningful only on API19+ */
+			if(Build.VERSION.SDK_INT >= 19)
 			{
 				frameLayout = new FrameLayout(activity);
 				frameLayout.addView(relativelayout);
