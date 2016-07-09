@@ -723,21 +723,26 @@ public class NavitGraphics
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
 			view.setKeepScreenOn(true);
-			frameLayout = new FrameLayout(activity);
 			relativelayout = new RelativeLayout(activity);
-			frameLayout.addView(relativelayout);
 			if (use_camera != 0)
 			{
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
-			
-			navigationTintView = new SystemBarTintView(activity);
-			statusTintView = new SystemBarTintView(activity);
-			frameLayout.addView(navigationTintView);
-			frameLayout.addView(statusTintView);
-
-			activity.setContentView(frameLayout);
+			if(Build.VERSION.SDK_INT >= 17)
+			{
+				frameLayout = new FrameLayout(activity);
+				frameLayout.addView(relativelayout);
+				navigationTintView = new SystemBarTintView(activity);
+				statusTintView = new SystemBarTintView(activity);
+				frameLayout.addView(navigationTintView);
+				frameLayout.addView(statusTintView);
+				activity.setContentView(frameLayout);
+			}
+			else
+			{
+			activity.setContentView(relativelayout);
+			}
 			
 			view.requestFocus();
 		}
