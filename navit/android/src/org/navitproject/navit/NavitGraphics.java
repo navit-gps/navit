@@ -1094,7 +1094,7 @@ public class NavitGraphics
 		//Log.e("NavitGraphics","draw_image");
 		//		float fx = x;
 		//		float fy = y;
-		draw_canvas.drawBitmap(bitmap, x, y, paint);
+		draw_canvas.drawBitmap(bitmap, x, y, null);
 	}
 
 	/* takes an image and draws it on the screen as a prerendered maptile
