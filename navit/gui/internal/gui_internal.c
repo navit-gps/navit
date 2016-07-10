@@ -88,6 +88,7 @@
 #include "gui_internal_gesture.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
+#include "gui_internal_keyboard.h"
 
 
 /**
@@ -1672,9 +1673,15 @@ gui_internal_keypress_do(struct gui_priv *this, char *key)
 				dbg(lvl_info,"wi->state=0x%x\n", wi->state);
 			}
 			text=g_strdup_printf("%s%s", wi->text ? wi->text : "", key);
+
+			gui_internal_keyboard_to_lower_case(this);
 		}
 		g_free(wi->text);
 		wi->text=text;
+
+		if(!wi->text || !*wi->text)
+			gui_internal_keyboard_to_upper_case(this);
+
 		if (wi->func) {
 			wi->reason=gui_internal_reason_keypress;
 			wi->func(this, wi, wi->data);
