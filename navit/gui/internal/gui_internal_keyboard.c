@@ -30,11 +30,11 @@ gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 	md=gui_internal_menu_data(this);
 
 	if (md->keyboard_mode == (VKBD_LATIN_LOWER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_UPPER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_UPPER | VKBD_FLAG_2, NULL);
 	if (md->keyboard_mode == (VKBD_UMLAUT_LOWER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_UPPER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_UPPER | VKBD_FLAG_2, NULL);
 	if (md->keyboard_mode == (VKBD_CYRILLIC_LOWER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_UPPER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_UPPER | VKBD_FLAG_2, NULL);
 }
 
 /**
@@ -55,11 +55,11 @@ gui_internal_keyboard_to_lower_case(struct gui_priv *this)
 	md=gui_internal_menu_data(this);
 
 	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2, NULL);
 	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2, NULL);
 	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2))
-		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2, NULL);
 }
 
 /**
@@ -155,7 +155,7 @@ struct gui_internal_keyb_mode {
  * @return {@code wkbdb} if a non-NULL value was passed, else a new keyboard widget will be returned.
  */
 struct widget *
-gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
+gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode, char *lang)
 {
 	struct widget *wkbd,*wk;
 	struct menu_data *md=gui_internal_menu_data(this);
@@ -198,9 +198,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		if(!this->kbd)
 			this->kbd=g_new0(struct graphics_keyboard,1);
 		this->kbd->mode = mode;
-		if(this->kbd->lang)
-			g_free(this->kbd->lang);
-		this->kbd->lang = g_strdup(getenv("LANG"));
+		g_free(this->kbd->lang);
+		this->kbd->lang = g_strdup(lang);
 		res = graphics_show_native_keyboard(this->gra, this->kbd);
 		if(res>0)
 			mode|=VKBD_FLAG_MINIMIZED;
@@ -414,17 +413,17 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
  * @return A new keyboard widget
  */
 struct widget *
-gui_internal_keyboard(struct gui_priv *this, int mode)
+gui_internal_keyboard(struct gui_priv *this, int mode, char *lang)
 {
 	if (! this->keyboard)
 		return NULL;
-	return gui_internal_keyboard_do(this, NULL, mode);
+	return gui_internal_keyboard_do(this, NULL, mode, lang);
 }
 
 static void
 gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data)
 {
-	gui_internal_keyboard_do(this, key->data, key->datai);
+	gui_internal_keyboard_do(this, key->data, key->datai, NULL);
 }
 
 /**
@@ -471,111 +470,3 @@ gui_internal_keyboard_init_mode(char *lang)
 	return ret;
 }
 
-
-/**
- * @brief Hides the platform's native on-screen keyboard or other input method
- *
- * This function is called as the {@code wfree} method of the placeholder widget for the platform's
- * native on-screen keyboard. It is a wrapper around the corresponding method of the graphics plugin,
- * which takes care of all platform-specific actions to hide the on-screen input method it previously
- * displayed.
- *
- * A call to this function indicates that Navit no longer needs the input method and is about to destroy
- * its placeholder widget. Navit will subsequently reclaim any screen real estate it may have previously
- * reserved for the input method.
- *
- * This function will free the {@code struct graphics_keyboard} pointed to by {@code w->data}
- *
- * @param this The internal GUI instance
- * @param w The placeholder widget
- */
-void 
-gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) 
-{
-	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
-
-	if (kbd) {
-		graphics_hide_native_keyboard(this_->gra, kbd);
-	} else
-		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed\n");
-	g_free(w);
-}
-
-static void 
-gui_internal_keyboard_destroy_native(struct gui_priv *this_, struct widget *w) 
-{
-	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
-	if(!kbd)
-		return;
-	gui_internal_keyboard_hide_native(this_, w);
-	g_free(kbd->lang);
-	g_free(kbd->gui_priv);
-}
-
-/**
- * @brief Shows the platform's native on-screen keyboard or other input method
- *
- * This method is a wrapper around the corresponding method of the graphics plugin, which takes care of
- * all platform-specific details. In particular, it is up to the graphics plugin to determine how to
- * handle the request: it may show its on-screen keyboard or another input method (such as stroke
- * recognition). It may choose to simply ignore the request, which will typically occur when a hardware
- * keyboard (or other hardware input) is available.
- *
- * The platform's native input method may obstruct parts of Navit's UI. To prevent parts of the UI from
- * becoming unreachable, this method will insert an empty box widget in the appropriate size at the
- * appropriate position, provided the graphics plugin reports the correct values. Otherwise a zero-size
- * widget is inserted. If the graphics driver decides not to display an on-screen input method, no
- * widget will be created and the return value will be {@code NULL}.
- *
- * The widget's {@code wfree} function, to be called when the widget is destroyed, will be used to hide
- * the platform keyboard when it is no longer needed.
- *
- * @param this The internal GUI instance
- * @param w The parent of the widget requiring text input
- * @param mode The requested keyboard mode
- * @param lang The language for text input, used to select a keyboard layout
- *
- * @return The placeholder widget for the on-screen keyboard, may be {@code NULL}
- */
-struct widget * 
-gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) 
-{
-	struct widget *ret = NULL;
-	struct menu_data *md = gui_internal_menu_data(this);
-	struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
-	int res;
-
-	kbd->mode = mode;
-	kbd->lang = g_strdup(lang);
-	res = graphics_show_native_keyboard(this->gra, kbd);
-
-	switch(res) {
-	case -1:
-		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard\n");
-		/* no break */
-	case 0:
-		g_free(kbd->lang);
-		g_free(kbd);
-		return NULL;
-	}
-
-	ret = gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
-	md->keyboard = ret;
-	md->keyboard_mode=mode;
-	ret->wfree = gui_internal_keyboard_hide_native;
-	if (kbd->h < 0) {
-		ret->h = w->h;
-		ret->hmin = w->hmin;
-	} else
-		ret->h = kbd->h;
-	if (kbd->w < 0) {
-		ret->w = w->w;
-		ret->wmin = w->wmin;
-	} else
-		ret->w = kbd->w;
-	dbg(lvl_error, "ret->w=%d, ret->h=%d\n", ret->w, ret->h);
-	ret->data = (void *) kbd;
-	gui_internal_widget_append(w, ret);
-	dbg(lvl_error, "return\n");
-	return ret;
-}

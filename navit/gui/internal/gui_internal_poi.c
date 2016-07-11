@@ -532,9 +532,7 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
 	wb->data=wk;
 	
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
-	else
-		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode,getenv("LANG")));
 	gui_internal_menu_render(this);
 
 

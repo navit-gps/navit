@@ -494,9 +494,7 @@ gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor
 	if (this->keyboard_required) {
 		this->html_container->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		if (this->keyboard)
-			gui_internal_widget_append(this->html_container, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"))));
-		else
-			gui_internal_keyboard_show_native(this, this->html_container, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG"));
+			gui_internal_widget_append(this->html_container, gui_internal_keyboard(this, VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG")), getenv("LANG")));
 	}
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);

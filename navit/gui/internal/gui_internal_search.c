@@ -510,8 +510,9 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
 	char *country;
 	int keyboard_mode;
+	char * lang=this->country_iso2 ? this->country_iso2 : getenv("LANG");
 	gui_internal_search_list_new(this);
-	keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(this->country_iso2 ? this->country_iso2 : getenv("LANG"));
+	keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(lang);
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -568,9 +569,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
-	else
-		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
+		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode, lang));
 	gui_internal_menu_render(this);
 }
 
