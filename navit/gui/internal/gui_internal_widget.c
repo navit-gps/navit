@@ -119,8 +119,10 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
 	gui_internal_background_render(this, w);
-	if (w->state & STATE_EDIT)
+	if (w->state & STATE_EDIT) {
+		this->keyboard_required=1;
 		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
+	}
 	if (w->text) {
 		char *text;
 		char *startext=(char*)g_alloca(strlen(w->text)+1);

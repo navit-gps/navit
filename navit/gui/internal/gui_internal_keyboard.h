@@ -15,7 +15,7 @@ enum vkbd_mode {
 	/* modifiers and masks */
 	VKBD_FLAG_2 = 2,			/* FIXME seems to show alpha/num switch (VKBD_NUMERIC and VKBD_LATIN_* only) and switches to lowercase after first character */
 	VKBD_MASK_7 = 7,			/* FIXME modifiers for layout? */
-	VKBD_FLAG_1024 = 1024,		/* FIXME what is this for? Seems to have to do something with scroll box visibility */
+	VKBD_FLAG_MINIMIZED = 1024,		/* Keyboard is minimized and only "unhide" button is shown instead */
 	VKBD_LAYOUT_MASK = ~7,		/* when XORed with the mode, preserves only the layout FIXME document properly */
 };
 

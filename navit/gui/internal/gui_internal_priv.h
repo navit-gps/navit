@@ -79,9 +79,8 @@ struct gui_priv {
 	char *country_iso2;
 	int speech;
 	int keyboard;						/**< Whether the internal GUI keyboard is enabled */
-	int keyboard_required;				/**< Whether keyboard input is needed. This is only used by the
-										  *  HTML menu, text entry dialogs do not use this member.
-										  */
+	int keyboard_required;				/**< Whether keyboard input is needed. */
+	struct graphics_keyboard *kbd;			/**< Pointer to graphics keyboard object filled by graphics_show_native_keyboard */
 	struct gui_config_settings config;	/**< The setting information read from the configuration file.
 										  *  values of -1 indicate no value was specified in the config file.
 										  */

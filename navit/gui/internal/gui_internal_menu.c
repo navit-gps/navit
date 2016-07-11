@@ -44,6 +44,8 @@ gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render)
 	GList *l;
 	struct widget *wr,*wd;
 	gui_internal_search_idle_end(this);
+	if(this->kbd)
+		graphics_hide_native_keyboard(this->gra, this->kbd);
 	while ((l = g_list_last(this->root.children))) {
 		wd=l->data;
 		if (wd == w) {
@@ -228,12 +230,14 @@ gui_internal_menu_render(struct gui_priv *this)
 {
 	GList *l;
 	struct widget *menu;
-
+	this->keyboard_required=0;
 	l=g_list_last(this->root.children);
 	menu=l->data;
 	gui_internal_say(this, menu, 0);
 	gui_internal_widget_pack(this, menu);
 	gui_internal_widget_render(this, menu);
+	if(!this->keyboard_required && this->kbd)
+		graphics_hide_native_keyboard(this->gra, this->kbd);
 }
 
 struct widget *

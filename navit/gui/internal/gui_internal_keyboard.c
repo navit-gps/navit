@@ -170,7 +170,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		this->current.x=-1;
 		this->current.y=-1;
 		gui_internal_highlight(this);
-		if (md->keyboard_mode & VKBD_FLAG_1024)
+		if (md->keyboard_mode & VKBD_FLAG_MINIMIZED)
 			render=2;
 		else
 			render=1;
@@ -193,6 +193,19 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		wkbd->cols=9;
 	}
 
+	if (!(mode & VKBD_FLAG_MINIMIZED)) {
+		int res;
+		if(!this->kbd)
+			this->kbd=g_new0(struct graphics_keyboard,1);
+		this->kbd->mode = mode;
+		if(this->kbd->lang)
+			g_free(this->kbd->lang);
+		this->kbd->lang = g_strdup(getenv("LANG"));
+		res = graphics_show_native_keyboard(this->gra, this->kbd);
+		if(res>0)
+			mode|=VKBD_FLAG_MINIMIZED;
+	}
+
 	if ((mode & VKBD_LAYOUT_MASK) == VKBD_LATIN_UPPER) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'A'+i,'\0'};
@@ -203,10 +216,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			KEY("-");
 			KEY("'");
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 		} else {
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 			SWCASE();
 			MODE(VKBD_NUMERIC);
 			
@@ -224,10 +237,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			KEY("-");
 			KEY("'");
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 		} else {
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 			SWCASE();
 			
 			MODE(VKBD_NUMERIC);
@@ -250,7 +263,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			KEY("-");
 			KEY("'");
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 			SPACER();
 			SPACER();
 		} else {
@@ -258,7 +271,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			MODE(VKBD_CYRILLIC_UPPER);
 			MODE(VKBD_CYRILLIC_LOWER);
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai = mode | VKBD_FLAG_1024;
+			wk->datai = mode | VKBD_FLAG_MINIMIZED;
 			MODE(VKBD_LATIN_UPPER);
 			MODE(VKBD_LATIN_LOWER);
 		}
@@ -294,7 +307,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
 
 		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-		wk->datai = mode | VKBD_FLAG_1024;
+		wk->datai = mode | VKBD_FLAG_MINIMIZED;
 
 		SWCASE();
 
@@ -313,7 +326,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
 		
 		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-		wk->datai = mode | VKBD_FLAG_1024;
+		wk->datai = mode | VKBD_FLAG_MINIMIZED;
 
 		SWCASE();
 
@@ -327,7 +340,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 
 	if(md->search_list && md->search_list->type==widget_table) {
 		struct table_data *td=(struct table_data*)(md->search_list->data);
-		td->scroll_buttons.button_box_hide = !(mode & VKBD_FLAG_1024);
+		td->scroll_buttons.button_box_hide = !(mode & VKBD_FLAG_MINIMIZED);
 	}
 
 	if ((mode & VKBD_LAYOUT_MASK) == VKBD_DEGREE) { /* special case for coordinates input screen (enter_coord) */
@@ -338,17 +351,17 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		SPACER();
 
 		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-		wk->datai = mode | VKBD_FLAG_1024;
+		wk->datai = mode | VKBD_FLAG_MINIMIZED;
 
 		SPACER();
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
-	}	
-
-	if (mode & VKBD_FLAG_1024) {
+	}
+	
+	if (mode & VKBD_FLAG_MINIMIZED) {
 		char *text=NULL;
 		int font=0;
 		struct widget *wkl;
-		mode &= ~VKBD_FLAG_1024;
+		mode &= ~VKBD_FLAG_MINIMIZED;
 		text=gui_internal_keyb_modes[mode/8].title;
 		font=gui_internal_keyb_modes[mode/8].font;
 		wk=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_fill);
@@ -476,18 +489,28 @@ gui_internal_keyboard_init_mode(char *lang)
  * @param this The internal GUI instance
  * @param w The placeholder widget
  */
-void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
+void 
+gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) 
+{
 	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
 
 	if (kbd) {
 		graphics_hide_native_keyboard(this_->gra, kbd);
-		g_free(kbd->lang);
-		g_free(kbd->gui_priv);
 	} else
 		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed\n");
 	g_free(w);
 }
 
+static void 
+gui_internal_keyboard_destroy_native(struct gui_priv *this_, struct widget *w) 
+{
+	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
+	if(!kbd)
+		return;
+	gui_internal_keyboard_hide_native(this_, w);
+	g_free(kbd->lang);
+	g_free(kbd->gui_priv);
+}
 
 /**
  * @brief Shows the platform's native on-screen keyboard or other input method
@@ -514,15 +537,16 @@ void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w)
  *
  * @return The placeholder widget for the on-screen keyboard, may be {@code NULL}
  */
-struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) {
+struct widget * 
+gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) 
+{
 	struct widget *ret = NULL;
 	struct menu_data *md = gui_internal_menu_data(this);
 	struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
 	int res;
 
 	kbd->mode = mode;
-	if (lang)
-		kbd->lang = g_strdup(lang);
+	kbd->lang = g_strdup(lang);
 	res = graphics_show_native_keyboard(this->gra, kbd);
 
 	switch(res) {
@@ -530,6 +554,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
 		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard\n");
 		/* no break */
 	case 0:
+		g_free(kbd->lang);
 		g_free(kbd);
 		return NULL;
 	}
