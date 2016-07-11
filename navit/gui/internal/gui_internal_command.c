@@ -36,6 +36,9 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
+#ifdef USE_GOOGLEPLACES
+#include "gui_internal_googlesearch.h"
+#endif
 
 extern char *version;
 
@@ -1230,7 +1233,9 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
-
+#ifdef USE_GOOGLEPLACES
+        {"googlesearch_search", command_cast (gui_internal_googlesearch_search)},
+#endif
 };
 
 void
