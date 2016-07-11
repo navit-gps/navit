@@ -149,8 +149,8 @@ struct graphics_methods {
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound);
 	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
-	int (*show_native_keyboard)(struct graphics_keyboard *kbd);
-	void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
+	int (*show_native_keyboard)(struct graphics_priv *gr, struct graphics_keyboard *kbd);
+	void (*hide_native_keyboard)(struct graphics_priv *gr, struct graphics_keyboard *kbd);
 };
 
 

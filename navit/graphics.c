@@ -1116,7 +1116,7 @@ int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keybo
 	if (!this_->meth.show_native_keyboard)
 		ret = -1;
 	else
-		ret = this_->meth.show_native_keyboard(kbd);
+		ret = this_->meth.show_native_keyboard(this_->priv, kbd);
 	dbg(lvl_debug, "return %d\n", ret);
 	return ret;
 }
@@ -1151,7 +1151,7 @@ int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keybo
 int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd) {
 	if (!this_->meth.hide_native_keyboard)
 		return 0;
-	this_->meth.hide_native_keyboard(kbd);
+	this_->meth.hide_native_keyboard(this_->priv, kbd);
 	return 1;
 }
 

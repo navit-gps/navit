@@ -486,9 +486,9 @@ set_attr(struct graphics_priv *gra, struct attr *attr)
 }
 
 
-int show_native_keyboard (struct graphics_keyboard *kbd);
+int show_native_keyboard (struct graphics_priv *gra, struct graphics_keyboard *kbd);
 
-void hide_native_keyboard (struct graphics_keyboard *kbd);
+void hide_native_keyboard (struct graphics_priv *gra, struct graphics_keyboard *kbd);
 
 
 static struct graphics_methods graphics_methods = {
@@ -1163,7 +1163,7 @@ event_android_new(struct event_methods *meth)
  *
  * @return True if the input method is going to be displayed, false if not.
  */
-int show_native_keyboard (struct graphics_keyboard *kbd) {
+int show_native_keyboard (struct graphics_priv *gra, struct graphics_keyboard *kbd) {
 	kbd->w = -1;
 	if (Navit_showNativeKeyboard == NULL) {
 		dbg(lvl_error, "method Navit.showNativeKeyboard() not found, cannot display keyboard\n");
@@ -1184,13 +1184,14 @@ int show_native_keyboard (struct graphics_keyboard *kbd) {
  * {@link show_native_keyboard(struct graphics_keyboard *)}. The {@code gra_priv} member of the struct
  * will be freed by this function.
  */
-void hide_native_keyboard (struct graphics_keyboard *kbd) {
+void hide_native_keyboard (struct graphics_priv *gra, struct graphics_keyboard *kbd) {
 	if (Navit_hideNativeKeyboard == NULL) {
 		dbg(lvl_error, "method Navit.hideNativeKeyboard() not found, cannot dismiss keyboard\n");
 		return;
 	}
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_hideNativeKeyboard);
 	g_free(kbd->gra_priv);
+	kbd->gra_priv=NULL;
 }
 
 

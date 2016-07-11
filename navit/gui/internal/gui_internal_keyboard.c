@@ -6,6 +6,7 @@
 #include "callback.h"
 #include "graphics.h"
 #include "debug.h"
+#include "gui.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
@@ -193,7 +194,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode, 
 		wkbd->cols=9;
 	}
 
-	if (!(mode & VKBD_FLAG_MINIMIZED)) {
+	if ((this->keyboard==gui_keyboard_system_or_own) && !(mode & VKBD_FLAG_MINIMIZED) ) {
 		int res;
 		if(!this->kbd)
 			this->kbd=g_new0(struct graphics_keyboard,1);

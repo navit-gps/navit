@@ -98,7 +98,10 @@ ATTR(checksum_ignore)
 ATTR(position_fix_type)
 ATTR(timeout)
 ATTR(orientation)
-ATTR(keyboard)
+ATTR(keyboard) /* 0 - gui won't show any keyboard,
+		* 1 - gui will draw own keyboard representation,
+		* 2 - gui will ask graphics module to show sw keyboard, falling back to own keyboard representation.
+		*/
 ATTR(position_sats_signal)
 ATTR(cps)
 ATTR_UNUSED

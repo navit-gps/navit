@@ -45,6 +45,14 @@ struct gui_methods {
 	int (*set_attr)(struct gui_priv *priv, struct attr *attr);
 };
 
+/*
+ *  Values for attr_keyboard when set on gui object
+ */
+enum gui_keyboard_types {
+	gui_keyboard_no=0,
+	gui_keyboard_own=1,
+	gui_keyboard_system_or_own=2
+};
 
 /* prototypes */
 enum attr_type;
