@@ -49,9 +49,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-
+import android.text.InputType;
 
 public class NavitGraphics
 {
@@ -389,6 +391,34 @@ public class NavitGraphics
 			}
 			return pos;
 		}
+		@Override
+		public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+			//Passing FALSE as the SECOND ARGUMENT (fullEditor) to the constructor
+			// will result in the key events continuing to be passed in to this
+			// view.  Use our special BaseInputConnection-derived view
+			InputConnectionAccomodatingLatinIMETypeNullIssues baseInputConnection =
+				new InputConnectionAccomodatingLatinIMETypeNullIssues(this, false);
+
+			//In some cases an IME may be able to display an arbitrary label for a 
+			// command the user can perform, which you can specify here.  A null value
+			// here asks for the default for this key, which is usually something 
+			// like Done.
+			outAttrs.actionLabel = null;
+
+			//Special content type for when no explicit type has been specified.
+			// This should be interpreted (by the IME that invoked
+			// onCreateInputConnection())to mean that the target InputConnection
+			// is not rich, it can not process and show things like candidate text
+			// nor retrieve the current text, so the input method will need to run
+			// in a limited "generate key events" mode.  This disables the more
+			// sophisticated kinds of editing that use a text buffer.
+			outAttrs.inputType = InputType.TYPE_NULL;
+
+			//This creates a Done key on the IME keyboard if you need one
+			outAttrs.imeOptions = EditorInfo.IME_ACTION_DONE;
+
+			return baseInputConnection;
+		}
 		
 		@Override
 		public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -397,8 +427,17 @@ public class NavitGraphics
 			String s = null;
 			boolean handled = true;
 			i = event.getUnicodeChar();
+
 			//Log.e("NavitGraphics", "onKeyDown " + keyCode + " " + i);
 			// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
+
+			if(i==(int)InputConnectionAccomodatingLatinIMETypeNullIssues.EditableAI.ONE_UNPROCESSED_CHARACTER.charAt(0))
+			{
+				//We are ignoring this character, and we want everyone else to ignore it, too, so 
+				// we return true indicating that we have handled it (by ignoring it).   
+				return true;
+			}
+
 			if (i == 0)
 			{
 				if (keyCode == android.view.KeyEvent.KEYCODE_DEL)
@@ -543,6 +582,13 @@ public class NavitGraphics
 			boolean handled = true;
 			i = event.getUnicodeChar();
 
+			if(i==(int)InputConnectionAccomodatingLatinIMETypeNullIssues.EditableAI.ONE_UNPROCESSED_CHARACTER.charAt(0))
+			{
+				//We are ignoring this character, and we want everyone else to ignore it, too, so 
+				// we return true indicating that we have handled it (by ignoring it).   
+				return true;
+			}
+
 			if (i == 0)
 			{
 				if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
@@ -636,7 +682,8 @@ public class NavitGraphics
 			String s = null;
 			if(keyCode == KeyEvent.KEYCODE_UNKNOWN) {
 				s=event.getCharacters();
-				KeypressCallback(KeypressCallbackID, s);
+				if(!s.equals(InputConnectionAccomodatingLatinIMETypeNullIssues.EditableAI.ONE_UNPROCESSED_CHARACTER))
+					KeypressCallback(KeypressCallbackID, s);
 				return true;
 			}
 			return super.onKeyMultiple(keyCode, count, event);
