@@ -109,8 +109,6 @@ gui_internal_media_playlist_toolbar (struct gui_priv *this)
 {
     struct widget *wl, *wb;
     int nitems, nrows;
-    int i;
-    char *icon;
     wl = gui_internal_box_new (this, gravity_left_center | orientation_horizontal_vertical | flags_fill);
     wl->background = this->background;
     wl->w = this->root.w;
@@ -205,7 +203,7 @@ gui_internal_media_show_rootlist (struct gui_priv *this, struct widget *wm, void
 void
 gui_internal_media_show_playlist (struct gui_priv *this, struct widget *wm, void *data)
 {
-    struct widget *wb, *w, *wbm;
+    struct widget *wb, *w;
     struct widget *tbl, *row;
     GList *tracks = audio_get_tracks(this->nav,currently_displayed_playlist);
     int index=0;
