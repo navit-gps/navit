@@ -49,12 +49,12 @@ static unsigned long long
 get_uval(unsigned char **p)
 {
 	unsigned char c;
-	long long ret=0;
+	unsigned long long ret=0;
 	int shift=0;
 
 	for (;;) {
 		c=*((*p)++);
-		ret+=((long long)c & 0x7f) << shift;
+		ret+=((unsigned long long)c & 0x7f) << shift;
 		if (!(c & 0x80)) 
 			return ret;
 		shift+=7;
@@ -64,9 +64,9 @@ get_uval(unsigned char **p)
 static unsigned long long
 get_sval(unsigned char **p)
 {
-	long long ret=get_uval(p);
+	unsigned long long ret=get_uval(p);
 	if (ret & 1) {
-		return -((ret >> 1)+1);
+		return -((long long)(ret >> 1)+1);
 	} else {
 		return ret >> 1;
 	}

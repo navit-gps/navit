@@ -120,10 +120,15 @@ char *attr_strings[attr_string_last];
 
 char *osm_types[]={"unknown","node","way","relation"};
 
-#define REF_MARKER (1 << 30)
-#define IS_REF(c) ((c).x == REF_MARKER)
-#define GET_REF(c) ((unsigned)(c).y)
-#define SET_REF(c,ref) do { (c).x = REF_MARKER; (c).y = ref ; } while(0)
+/*
+ * These macros are designed to handle maptool internal node id reference representation. This representation does not leak 
+ * to binfile, so it's safe to change it without breaking binfile binary compatibility.
+ * Currently it keeps low 31 bits in y coordinate and up to 30 high order bits in x coordinate, allowing for 61 bit osm node id in total.
+ */
+#define REF_MARKER (1ull << 30)
+#define IS_REF(c) (((c).x & REF_MARKER)!=0)
+#define GET_REF(c) ((((osmid)(c).x & ~REF_MARKER)<<31) + (c).y )
+#define SET_REF(c,ref) do { (c).x = REF_MARKER | ((osmid)(ref)>>31); (c).y = (osmid)(ref) & 0x7fffffffull; } while(0)
 
 /* Table of country codes with possible is_in spellings. 
  *  Note: If you update this list, check also country array in country.c 
@@ -793,7 +798,7 @@ build_attrmap_line(char *line)
 		kvl=NULL;
 		if (!(idx=(int)(long)g_hash_table_lookup(attr_hash, kv))) {
 			idx=attr_present_count++;
-			g_hash_table_insert(attr_hash, kv, (gpointer)(long)idx);
+			g_hash_table_insert(attr_hash, kv, (gpointer)(long long)idx);
 		}
 		attr_mapping=g_realloc(attr_mapping, sizeof(struct attr_mapping)+(attr_mapping_count+1)*sizeof(int));
 		attr_mapping->attr_present_idx[attr_mapping_count++]=idx;
@@ -1325,8 +1330,9 @@ node_buffer_to_hash(void)
 {
 	int i,count=node_buffer.size/sizeof(struct node_item);
 	struct node_item *ni=(struct node_item *)node_buffer.base;
+
 	for (i = 0 ; i < count ; i++)
-		g_hash_table_insert(node_hash, (gpointer)(long)(ni[i].id), (gpointer)(long)i);
+		g_hash_table_insert(node_hash, (gpointer)(long long)(ni[i].nd_id), (gpointer)(long long)i);
 }
 
 void
@@ -1374,23 +1380,24 @@ osm_add_node(osmid id, double lat, double lon)
       osmid_attr_value=id;
 
       current_node=allocate_node_item_in_buffer();
-      current_node->id=id;
+      dbg_assert(id < ((2ull<<NODE_ID_BITS)-1));
+      current_node->nd_id=id;
       current_node->ref_way=0;
       current_node->c.x=lon*6371000.0*M_PI/180;
       current_node->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
       if (! node_hash) {
-	      if (current_node->id > id_last_node) {
-		      id_last_node=current_node->id;
+	      if (current_node->nd_id > id_last_node) {
+		      id_last_node=current_node->nd_id;
 	      } else {
 		      fprintf(stderr,"INFO: Nodes out of sequence (new " OSMID_FMT " vs old " OSMID_FMT "), adding hash\n",
-			(osmid)current_node->id, id_last_node);
+			(osmid)current_node->nd_id, id_last_node);
 		      node_hash=g_hash_table_new(NULL, NULL);
 		      node_buffer_to_hash();
 	      }
       } else
-	      if (!g_hash_table_lookup(node_hash, (gpointer)(long)(current_node->id)))
-		      g_hash_table_insert(node_hash, (gpointer)(long)(current_node->id),
-			  (gpointer)(long)(current_node-(struct node_item *)node_buffer.base));
+	      if (!g_hash_table_lookup(node_hash, (gpointer)(long long)(current_node->nd_id)))
+		      g_hash_table_insert(node_hash, (gpointer)(long long)(current_node->nd_id),
+			  (gpointer)(long long)(current_node-(struct node_item *)node_buffer.base));
 	      else {
                       remove_last_node_item_from_buffer();
 		      nodeid=0;
@@ -1408,28 +1415,28 @@ clear_node_item_buffer(void)
       }
 }
 
-static long long
+static unsigned long long
 node_item_find_index_in_ordered_list(osmid id)
 {
       struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
       long long node_count=node_buffer.size/sizeof(struct node_item);
       long long search_step=node_count>4 ? node_count/4 : 1;
       long long search_index=node_count/2;
-      if (node_buffer_base[0].id > id)
+      if (node_buffer_base[0].nd_id > id)
 	      return -1;
-      if (node_buffer_base[node_count-1].id < id)
+      if (node_buffer_base[node_count-1].nd_id < id)
 	      return -1;
-      while (node_buffer_base[search_index].id != id) {
+      while (node_buffer_base[search_index].nd_id != id) {
 #if 0
 	      fprintf(stderr,"search_index=%d node_count=%d search_step=%d id=%d node_buffer_base[search_index].id=%d\n",
 		  search_index, node_count, search_step, id, node_buffer_base[search_index].id);
 #endif
-	      if (node_buffer_base[search_index].id < id) {
+	      if (node_buffer_base[search_index].nd_id < id) {
 		      search_index+=search_step;
 		      if (search_step == 1) {
 			      if (search_index >= node_count)
 				      return -1;
-			      if (node_buffer_base[search_index].id > id)
+			      if (node_buffer_base[search_index].nd_id > id)
 				      return -1;
 		      } else {
 			      if (search_index >= node_count)
@@ -1440,7 +1447,7 @@ node_item_find_index_in_ordered_list(osmid id)
 		      if (search_step == 1) {
 			      if (search_index < 0)
 				      return -1;
-			      if (node_buffer_base[search_index].id < id)
+			      if (node_buffer_base[search_index].nd_id < id)
 				      return -1;
 		      } else {
 			      if (search_index < 0)
@@ -1461,7 +1468,7 @@ node_item_get(osmid id)
       if (node_hash) {
             // Use g_hash_table_lookup_extended instead of g_hash_table_lookup
             // to distinguish a key with a value 0 from a missing key.
-            if (!g_hash_table_lookup_extended (node_hash, (gpointer)(long)(id), NULL,
+            if (!g_hash_table_lookup_extended (node_hash, (gpointer)(id), NULL,
                                            (gpointer)&result_index)) {
                   result_index=-1;
             }
@@ -1755,9 +1762,9 @@ osm_end_way(struct maptool_osm *osm)
 		return;
 
 	if (dedupe_ways_hash) {
-		if (g_hash_table_lookup(dedupe_ways_hash, (gpointer)(long)wayid))
+		if (g_hash_table_lookup(dedupe_ways_hash, (gpointer)(long long)wayid))
 			return;
-		g_hash_table_insert(dedupe_ways_hash, (gpointer)(long)wayid, (gpointer)1);
+		g_hash_table_insert(dedupe_ways_hash, (gpointer)(long long)wayid, (gpointer)1);
 	}
 
 	count=attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types)/sizeof(enum item_type));
@@ -3002,8 +3009,8 @@ write_item_way_subsection_index(FILE *out, FILE *out_index, FILE *out_graph, str
 	idx[0]=item_bin_get_wayid(orig);
 	idx[1]=ftello(out);
 	if (way_hash) {
-		if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
-			g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
+		if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long long)idx[0], NULL, NULL)))
+			g_hash_table_insert(way_hash, (gpointer)(long long)idx[0], (gpointer)(long long)idx[1]);
 	} else {
 		if (!last_id || *last_id != idx[0])
 			dbg_assert(fwrite(idx, sizeof(idx), 1, out_index)==1);
@@ -3067,6 +3074,7 @@ resolve_ways(FILE *in, FILE *out)
 				c[i].x=ni->c.x;
 				c[i].y=ni->c.y;
 			}
+
 		}
 		item_bin_write(ib,out);
 	}
@@ -3122,7 +3130,6 @@ map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out_ind
 	struct item_bin *ib;
 	struct node_item *ni;
 	long long last_id=0;
-
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	sig_alrm(0);
 	while ((ib=read_item(in))) {
