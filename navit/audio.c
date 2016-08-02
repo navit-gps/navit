@@ -19,8 +19,8 @@ struct attr *audio_default_attrs[]={
 
 /**
  * @brief audio_player_get_name
- * @param
- * @return
+ *
+ * @return the name of the audio plugin instance
  * 
  */
 char* audio_player_get_name (void)
@@ -81,11 +81,12 @@ audio_set_attr(struct audio *this_, struct attr *attr)
 }
 
 /**
-* @brief
+* @brief Creates a new audio plugin instance
 * 
-* @param
+* @param parent The parent attribute
+* @param attrs a list of attributes from navit.xml
 * 
-* @return
+* @return The created audio plugin instance
 */
 struct audio *
 audio_new(struct attr *parent, struct attr **attrs)
@@ -174,7 +175,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 
 
 /**
- * Creates an attribute iterator to be used with audios
+ * Creates an attribute iterator to be used with audio plugins
  */
 struct attr_iter *
 audio_attr_iter_new(void)
@@ -197,7 +198,7 @@ audio_attr_iter_destroy(struct attr_iter *iter)
 /**
  * Generic add function
  *
- * @param this_ A audio
+ * @param this_ The audio audio instance that holds the list of attributes
  * @param attr The attribute to add
  *
  * @return true if the attribute was added, false if not.
@@ -224,8 +225,9 @@ audio_add_attr(struct audio *this_, struct attr *attr)
  * @brief Generic remove function.
  *
  * Used to remove a callback from the audio.
- * @param this_ A audio
- * @param attr
+ * @param this_ The audio audio instance that holds the list of attributes
+ * @param attr the attribute to be removed
+ * @return True on success false on failure
  */
 int
 audio_remove_attr(struct audio *this_, struct attr *attr)

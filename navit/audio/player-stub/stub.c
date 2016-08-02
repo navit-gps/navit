@@ -116,6 +116,14 @@ void stub_toggle_repeat(struct audio_actions *action);
 void stub_toggle_shuffle(struct audio_actions *action);
 struct audio_actions* get_specific_action(GList* actions, int specific_action);
 
+/**
+ * Get function for attributes
+ *
+ * @param priv Pointer to the audio instance data
+ * @param type The attribute type to look for
+ * @param attr Pointer to a {@code struct attr} to store the attribute
+ * @return True for success, false for failure
+ */
 int stub_get_attr(struct audio_priv* priv, enum attr_type type, struct attr *attr){
 	int ret = 1;
 	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, type,attr_to_name(type), attr);
@@ -159,7 +167,13 @@ int stub_get_attr(struct audio_priv* priv, enum attr_type type, struct attr *att
 	attr->type = type;
 	return ret;
 }
-
+/**
+ * Set function for attributes
+ *
+ * @param priv An audio instance data
+ * @param attr The attribute to set
+ * @return False on success, true on failure
+ */
 int stub_set_attr(struct audio_priv *priv, struct attr *attr){
 	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, attr->type,attr_to_name(attr->type), attr);
 	if(priv != stub){
@@ -286,10 +300,14 @@ insert_right(GList* list, struct audio_playlist* playlist)
 	return g_list_append(list, (gpointer) playlist);
 }
 
+/**
+ * @brief Print all nodes of a list of playlists
+ * @param list the list of playlists
+ * 
+ */
 void
 print_all(GList* list)
 {
-	return;
 	int i = 0;
 	if(list==NULL) return;
 	GList* current = list;
@@ -474,6 +492,12 @@ sort_playlists(GList* list)
     return list;
 }
 
+/**
+ * @brief Save a playlist
+ * @param list the list element to be saved
+ * 
+ * Save a playlist in a proer way to be able to load it on next startup
+ */
 void 
 save_playlist(GList* list){
 	/*
@@ -585,7 +609,7 @@ load_prev_playlist(GList* current)
 GList*
 change_artist(GList* current, int next)
 {
-	/* this function iterates the playlists and checks the name
+	/** this function iterates the playlists and checks the name
 	 * it expects an "artist - album" named playlist
 	 * if loads the first playlist with a differing "artist" substring
 	 * the minus in the string is important 
@@ -595,7 +619,7 @@ change_artist(GList* current, int next)
     int i,j;
     for(i=0; i<32; i++)
 	{
-		if(get_playlist_data(current)->name[i] == '-') // <= note the minus separator
+		if(get_playlist_data(current)->name[i] == '-') /// <= note the minus separator
 		{
             ca[i] = 0x00;
             break;
@@ -614,7 +638,7 @@ change_artist(GList* current, int next)
 		}
         for(j=0; j<32; j++)
 		{
-            if(get_playlist_data(current)->name[j] == '-') // <= note the minus separator
+            if(get_playlist_data(current)->name[j] == '-') /// <= note the minus separator
 			{
                 na[j] = 0x00;
                 break;
@@ -631,12 +655,26 @@ change_artist(GList* current, int next)
     return current;
 }
 
+/**
+ * @brief wrapper for change next artist
+ * @param current the currently chosen playlist
+ * @returns the next chosen playlist
+ * 
+ * 
+ */
 GList*
 next_artist(GList* current)
 {
 	return change_artist(current, 1);
 }
 
+/**
+ * @brief wrapper for change previous artist
+ * @param current the currently chosen playlist
+ * @returns the previous chosen playlist
+ * 
+ * 
+ */
 GList*
 prev_artist(GList* current)
 {
@@ -653,7 +691,7 @@ prev_artist(GList* current)
 char *
 stub_get_track_name (int track_index)
 {
-	/* this function should return the 
+	/** this function should return the 
 	 * track "track_index" of the current loaded playlist
 	 */ 
 	 sprintf(str, "track %i",track_index);
@@ -765,7 +803,7 @@ stub_set_active_playlist (int playlist_index)
  */ 
 GList*
 stub_get_actions(void){
-	/*
+	/**
 	 * this function creates all actions your player is able to perform
 	 * except volume and choosing of a specific track
 	 * just remove the actions you do not need 
@@ -857,7 +895,7 @@ stub_get_actions(void){
 static void
 stub_stub_idle (struct audio_priv *stub)
 {
-	/*
+	/**
 	 * periodic called function
 	 * here you might get the current track and other information from
 	 * your player api or lib
@@ -1128,8 +1166,8 @@ playlists(struct audio_priv *this)
 			 * add function to create a playlists-list from the data of your api or lib
 			 */
 			 
-			/* this block is potentially rubbish you should provide a 
-			 * rubbish you should provide a function which cares about your playlists
+			/* this block is potentially rubbish you should provide a
+			 * function which cares about your playlists
 			 */ 
 			int i; 
 			for(i=0;i<9;i++){
@@ -1251,7 +1289,7 @@ static int
 action_do(struct audio_priv *this, const int action)
 {
 	dbg(lvl_debug, "In stub's action control\n");
-	/* methosd where the defined actions are mentioned
+	/** methosd where the defined actions are mentioned
 	 * remove the case blocks for actions you do not need
 	 */ 
 	switch(action)
@@ -1461,6 +1499,17 @@ static struct audio_methods player_stub_meth = {
         stub_set_attr,
 };
 
+/**
+* @brief Inizialisation of the audio plugin instance data
+*
+* @param meth The methods to be overidden by the plugins methods
+* @param cbl A list of callbacks which are called from the plugin
+* @param attrs A list of attributes which are generated from navit.xml
+* @param parent reference to the parant attribute
+* 
+* @return The audio plugin instance data
+* 
+*/
 static struct audio_priv *
 player_stub_new(struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent) 
 {
@@ -1479,7 +1528,7 @@ player_stub_new(struct audio_methods *meth, struct callback_list * cbl, struct a
 	}
    
 	audio_init (&g_audiofifo);
-	/*
+	/**
 	 * place init code for your player implementation here
 	 */
 	stub->idle = callback_new_1 (callback_cast (stub_stub_idle), stub);
