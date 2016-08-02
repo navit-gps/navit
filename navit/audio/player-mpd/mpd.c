@@ -246,14 +246,7 @@ get_playlist_data(GList* list)
 		}
 	}
 
-	dbg(lvl_error, "No playlists or data is corrupted\n");
-	sleep(2);
-	if(mpd->current_playlist == NULL){
-		load_playlist(mpd->current_playlist);
-	}
-	//mpd->current_playlist = NULL;
-	//mpd->playlists = NULL;
-	//reload_playlists(mpd);
+	dbg(lvl_error, "No playlists or data is corrupted: %p\n", list);
 
 	return NULL;
 }
@@ -620,15 +613,7 @@ get_entry(GList* head, char *data)
 				if(currend_data->name){
 					dbg(lvl_debug,  "Got Entry: %s\n",currend_data->name);
 					cmp = strcmp(currend_data->name, data);
-
-					if(current == NULL)
-					{
-						dbg(lvl_debug,  "Did not find Entry\n");
-						return NULL; //nothing found!
-					}
-
-					if(cmp != 0){
-						
+					if(cmp != 0){			
 						current = current->next;
 					}
 				}
@@ -938,12 +923,6 @@ get_last_playlist(struct audio_priv* this)
         if(playlist == NULL){
 			dbg(lvl_debug, "Last Playlist not found! %p => %p\n",this->playlists, playlist);
 			playlist = this->playlists;
-
-			load_playlist(playlist);
-			mpd->current_playlist = playlist;
-		}else{
-			load_playlist(playlist);
-
 		}
 		mpd->current_playlist = playlist;
     }
@@ -1916,14 +1895,7 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
 	}else{
 		mpd->playlists = sort_playlists(pl);
 
-		pl = NULL;
-		pl = get_last_playlist(mpd);
-		dbg(lvl_debug, "Last playlist: %p\n", pl);
-		if(pl == NULL){
-			if(mpd->playlists)
-				load_playlist(mpd->playlists);
-		}
-
+		mpd->current_playlist = get_last_playlist(mpd);
 	}
 	
 	
