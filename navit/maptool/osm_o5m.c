@@ -16,7 +16,7 @@ struct o5m {
 	int error;
 
 	int lat, lon, uid, version;
-	long long id, rid[3], changeset;
+	unsigned long long id, rid[3], changeset;
 	time_t timestamp;
 	char *user;
 };
@@ -61,7 +61,7 @@ get_uval(unsigned char **p)
 	}
 }
 
-static unsigned long long
+static long long
 get_sval(unsigned char **p)
 {
 	unsigned long long ret=get_uval(p);

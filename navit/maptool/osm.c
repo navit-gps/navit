@@ -931,7 +931,7 @@ item_bin_get_nodeid(struct item_bin *ib)
 osmid
 item_bin_get_wayid(struct item_bin *ib)
 {
-	long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
+	unsigned long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
 	if (ret)
 		return *ret;
 	return 0;
@@ -1415,7 +1415,7 @@ clear_node_item_buffer(void)
       }
 }
 
-static unsigned long long
+static long long
 node_item_find_index_in_ordered_list(osmid id)
 {
       struct node_item *node_buffer_base=(struct node_item *)(node_buffer.base);
