@@ -126,7 +126,8 @@ char *osm_types[]={"unknown","node","way","relation"};
  * Currently it keeps low 31 bits in y coordinate and up to 30 high order bits in x coordinate, allowing for 61 bit osm node id in total.
  */
 #define REF_MARKER (1ull << 30)
-#define IS_REF(c) (((c).x & REF_MARKER)!=0)
+#define REF_MASK (3ull << 30)
+#define IS_REF(c) (((c).x & REF_MASK)==REF_MARKER)
 #define GET_REF(c) ((((osmid)(c).x & ~REF_MARKER)<<31) + (c).y )
 #define SET_REF(c,ref) do { (c).x = REF_MARKER | ((osmid)(ref)>>31); (c).y = (osmid)(ref) & 0x7fffffffull; } while(0)
 
