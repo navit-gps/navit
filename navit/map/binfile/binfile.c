@@ -234,8 +234,13 @@ static void eoc_to_cpu(struct zip_eoc *eoc) {
 
 static void binfile_check_version(struct map_priv *m);
 
-static struct zip_eoc *
-binfile_read_eoc(struct file *fi)
+/**
+ * @brief Read the "end of central directory" structure, verifying its signature
+ * @param fi file to read from
+ * @return structure read, or NULL if file cannot be read or eoc signature is wrong
+ */
+struct zip_eoc *
+zipfile_read_eoc(struct file *fi)
 {
 	struct zip_eoc *eoc;
 	eoc=(struct zip_eoc *)file_data_read(fi,fi->size-sizeof(struct zip_eoc), sizeof(struct zip_eoc));
@@ -251,8 +256,13 @@ binfile_read_eoc(struct file *fi)
 	return eoc;
 }
 
-static struct zip64_eoc *
-binfile_read_eoc64(struct file *fi)
+/**
+ * @brief Read the 64 bit "end of central directory" structure, verifying its signature
+ * @param fi file to read from
+ * @return structure read, or NULL if file cannot be read or eoc64 signature is wrong
+ */
+struct zip64_eoc *
+zipfile_read_eoc64(struct file *fi)
 {
 	struct zip64_eocl *eocl;
 	struct zip64_eoc *eoc;
@@ -269,7 +279,7 @@ binfile_read_eoc64(struct file *fi)
 	if (eoc) {
 		if (eoc->zip64esig != zip64_eoc_sig) {
 			file_data_free(fi,(unsigned char *)eoc);
-		dbg(lvl_warning,"map file %s: eoc wrong\n", fi->name);
+			dbg(lvl_warning,"map file %s: eoc wrong\n", fi->name);
 			eoc=NULL;
 		}
 		dbg(lvl_debug,"eoc64 ok 0x"LONGLONG_HEX_FMT " 0x"LONGLONG_HEX_FMT "\n",eoc->zip64eofst,eoc->zip64ecsz);
@@ -278,30 +288,45 @@ binfile_read_eoc64(struct file *fi)
 	return eoc;
 }
 
-static int
-binfile_cd_extra(struct zip_cd *cd)
+/**
+ * @brief Get size of data needed to read after a given central struct zip_cd to fetch
+ *    both file name and "extra field".
+ * @param cd zip_cd structure
+ * @return count of bytes in filename and extra field
+ */
+int
+zipfile_cd_name_and_extra_len(struct zip_cd *cd)
 {
 	return cd->zipcfnl+cd->zipcxtl;
 }
 
-static struct zip_cd *
-binfile_read_cd(struct map_priv *m, int offset, int len)
+/**
+ * @brief Get the zip central directory header, change byte order if needed and verify signature.
+ * @param fi zip file to read from
+ * @param eoc zip end of central directory structure (pre-fetched)
+ * @param eoc64 zip64 end of central directory structure (pre-fetched)
+ * @param offset offset relative to beginnning of the central directory to read from
+ * @param len amount of bytes to read, -1 to read struct zip_cd and following filename and extra field
+ * @return central directory data read
+ */
+struct zip_cd *
+zipfile_read_cd(struct file *fi, struct zip_eoc *eoc, struct zip64_eoc *eoc64, int offset, int len)
 {
 	struct zip_cd *cd;
-	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
+	long long cdoffset=eoc64?eoc64->zip64eofst:eoc->zipeofst;
 	if (len == -1) {
-		cd=(struct zip_cd *)file_data_read(m->fi,cdoffset+offset, sizeof(*cd));
+		cd=(struct zip_cd *)file_data_read(fi,cdoffset+offset, sizeof(*cd));
 		cd_to_cpu(cd);
-		len=binfile_cd_extra(cd);
-		file_data_free(m->fi,(unsigned char *)cd);
+		len=zipfile_cd_name_and_extra_len(cd);
+		file_data_free(fi,(unsigned char *)cd);
 	}
-	cd=(struct zip_cd *)file_data_read(m->fi,cdoffset+offset, sizeof(*cd)+len);
+	cd=(struct zip_cd *)file_data_read(fi,cdoffset+offset, sizeof(*cd)+len);
 	if (cd) {
 		dbg(lvl_debug,"cd at "LONGLONG_FMT" %zu bytes\n",cdoffset+offset, sizeof(*cd)+len);
 		cd_to_cpu(cd);
 		dbg(lvl_debug,"sig 0x%x\n", cd->zipcensig);
 		if (cd->zipcensig != zip_cd_sig) {
-			file_data_free(m->fi,(unsigned char *)cd);
+			file_data_free(fi,(unsigned char *)cd);
 			cd=NULL;
 		}
 	}
@@ -315,8 +340,8 @@ binfile_read_cd(struct map_priv *m, int offset, int len)
  * @param cd pointer to zip central directory structure
  * @return pointer to ZIP64 extra field, or NULL if not available
  */
-static struct zip_cd_ext *
-binfile_cd_ext(struct zip_cd *cd)
+struct zip_cd_ext *
+zipfile_cd_ext(struct zip_cd *cd)
 {
 	struct zip_cd_ext *ext;
 	if (cd->zipofst != zip_size_64bit_placeholder)
@@ -330,22 +355,29 @@ binfile_cd_ext(struct zip_cd *cd)
 }
 
 /**
+ * @brief Get local file header offset for a given central directory element.
+ * Will use ZIP64 data if present.
  * @param cd pointer to zip central directory structure
  * @return Offset of local file header in zip file.
- * Will use ZIP64 data if present.
  */
-static long long
-binfile_cd_offset(struct zip_cd *cd)
+long long
+zipfile_cd_offset(struct zip_cd *cd)
 {
-	struct zip_cd_ext *ext=binfile_cd_ext(cd);
+	struct zip_cd_ext *ext=zipfile_cd_ext(cd);
 	if (ext)
 		return ext->zipofst;
 	else
 		return cd->zipofst;
 }
 
-static struct zip_lfh *
-binfile_read_lfh(struct file *fi, long long offset)
+/**
+ * @brief Read local file header at a given offset, change byte order if needed and verify signature. 
+ * @param fi file to read from
+ * @param offset offset to read at
+ * @return local file header structure read.
+ */
+struct zip_lfh *
+zipfile_read_lfh(struct file *fi, long long offset)
 {
 	struct zip_lfh *lfh;
 
@@ -360,8 +392,8 @@ binfile_read_lfh(struct file *fi, long long offset)
 	return lfh;
 }
 
-static unsigned char *
-binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh)
+unsigned char *
+zipfile_read_content(struct file *fi, long long offset, struct zip_lfh *lfh, char *passwd)
 {
 	struct zip_enc *enc;
 	unsigned char *ret=NULL;
@@ -377,26 +409,39 @@ binfile_read_content(struct map_priv *m, struct file *fi, long long offset, stru
 		ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
 		break;
 	case 99:
-		if (!m->passwd)
+		if (!passwd)
 			break;
 		enc=(struct zip_enc *)file_data_read(fi, offset, sizeof(*enc));
 		offset+=lfh->zipxtraln;
 		switch (enc->compress_method) {
 		case 0:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, m->passwd);
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, passwd);
 			break;
 		case 8:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, passwd);
 			break;
 		default:
-			dbg(lvl_error,"map file %s: unknown encrypted compression method %d\n", fi->name, enc->compress_method);
+			dbg(lvl_error,"zip file %s: unknown encrypted compression method %d\n", fi->name, enc->compress_method);
 		}
 		file_data_free(fi, (unsigned char *)enc);
 		break;
 	default:
-		dbg(lvl_error,"map file %s: unknown compression method %d\n", fi->name, lfh->zipmthd);
+		dbg(lvl_error,"zip file %s: unknown compression method %d\n", fi->name, lfh->zipmthd);
 	}
 	return ret;
+}
+
+static unsigned char *
+binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh)
+{
+	return zipfile_read_content(fi, offset, lfh, m->passwd);
+}
+
+
+static struct zip_cd *
+binfile_read_cd(struct map_priv *m, int offset, int len)
+{
+	return zipfile_read_cd(m->fi, m->eoc, m->eoc64, offset, len);
 }
 
 static int
@@ -540,8 +585,8 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial)
 			file_mkdir(fulld, 1);
 		}
 		if (full[len-2] != '/') {
-			lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
-			start=binfile_read_content(m, m->fi, binfile_cd_offset(cd), lfh);
+			lfh=zipfile_read_lfh(m->fi, zipfile_cd_offset(cd));
+			start=binfile_read_content(m, m->fi, zipfile_cd_offset(cd), lfh);
 			dbg(lvl_debug,"fopen '%s'\n", full);
 			f=fopen(full,"w");
 			fwrite(start, lfh->zipuncmp, 1, f);
@@ -926,18 +971,18 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	char *zipfn;
 	struct file *fi;
 	dbg(lvl_debug,"enter %p %p %p\n", m, cd, t);
-	dbg(lvl_debug,"cd->zipofst=0x"LONGLONG_HEX_FMT "\n", binfile_cd_offset(cd));
+	dbg(lvl_debug,"cd->zipofst=0x"LONGLONG_HEX_FMT "\n", zipfile_cd_offset(cd));
 	t->start=NULL;
 	t->mode=1;
 	if (m->fis)
 		fi=m->fis[cd->zipdsk];
 	else
 		fi=m->fi;
-	lfh=binfile_read_lfh(fi, binfile_cd_offset(cd));
-	zipfn=(char *)(file_data_read(fi,binfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
+	lfh=zipfile_read_lfh(fi, zipfile_cd_offset(cd));
+	zipfn=(char *)(file_data_read(fi,zipfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	t->start=(int *)binfile_read_content(m, fi, binfile_cd_offset(cd), lfh);
+	t->start=(int *)binfile_read_content(m, fi, zipfile_cd_offset(cd), lfh);
 	t->end=t->start+lfh->zipuncmp/4;
 	t->fi=fi;
 	file_data_free(fi, (unsigned char *)zipfn);
@@ -1091,7 +1136,7 @@ download_request(struct map_download *download)
 		url.u.str=g_strdup_printf("%smemberid=%d",download->m->url,download->zipfile);
 		download->dl_size=-1;
 	} else {
-		long long offset=binfile_cd_offset(download->cd_copy);
+		long long offset=zipfile_cd_offset(download->cd_copy);
 		int size=download->cd_copy->zipcsiz+sizeof(struct zip_lfh)+download->cd_copy->zipcfnl;
 		url.u.str=g_strdup(download->m->url);
 		http_header.u.str=g_strdup_printf("Range: bytes="LONGLONG_FMT"-"LONGLONG_FMT,offset,offset+size-1);
@@ -1170,7 +1215,7 @@ download_finish(struct map_download *download)
 	long long lfh_offset;
 	file_data_write(download->file, download->offset, sizeof(struct zip_eoc), (void *)download->zip_eoc);
 	lfh=(struct zip_lfh *)(file_data_read(download->file,download->start_offset, sizeof(struct zip_lfh)));
-	ext=binfile_cd_ext(download->cd_copy);
+	ext=zipfile_cd_ext(download->cd_copy);
 	if (ext)
 		ext->zipofst=download->start_offset;
 	else
@@ -1178,12 +1223,12 @@ download_finish(struct map_download *download)
 	download->cd_copy->zipcsiz=lfh->zipsize;
 	download->cd_copy->zipcunc=lfh->zipuncmp;
 	download->cd_copy->zipccrc=lfh->zipcrc;
-	lfh_offset = binfile_cd_offset(download->cd_copy)+sizeof(struct zip_lfh);
+	lfh_offset = zipfile_cd_offset(download->cd_copy)+sizeof(struct zip_lfh);
 	lfh_filename=(char *)file_data_read(download->file,lfh_offset,lfh->zipfnln);
 	memcpy(download->cd_copy+1,lfh_filename,lfh->zipfnln);
 	file_data_remove(download->file,(void *)lfh_filename);
 	file_data_remove(download->file,(void *)lfh);
-	file_data_write(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, binfile_cd_extra(download->cd_copy)+sizeof(struct zip_cd), (void *)download->cd_copy);
+	file_data_write(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, zipfile_cd_name_and_extra_len(download->cd_copy)+sizeof(struct zip_cd), (void *)download->cd_copy);
 	file_data_flush(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, sizeof(struct zip_cd));
 
 	g_free(download->cd_copy);
@@ -2563,8 +2608,8 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 {
 	struct zip_cd *first_cd;
 	int i;
-	if (!(m->eoc=binfile_read_eoc(m->fi))) {
-		dbg(lvl_error,"map file %s: unable to read eoc\n", filename);
+	if (!(m->eoc=zipfile_read_eoc(m->fi))) {
+		dbg(lvl_error,"zip file %s: unable to read eoc\n", filename);
 		return 0;
 	}
 	dbg_assert(m->eoc->zipedsk == m->eoc->zipecen);
@@ -2581,7 +2626,7 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 		g_free(tmpfilename);
 	}
 	dbg(lvl_debug,"num_disk %d\n",m->eoc->zipedsk);
-	m->eoc64=binfile_read_eoc64(m->fi);
+	m->eoc64=zipfile_read_eoc64(m->fi);
 	if (!binfile_get_index(m)) {
 		dbg(lvl_error,"map file %s: no index found\n", filename);
 		return 0;
