@@ -104,6 +104,7 @@ int main_real(int argc, char * const* argv)
 	}
 #endif
 	file_init();
+	zipfile_init();
 #ifndef USE_PLUGINS
 	builtin_init();
 #endif

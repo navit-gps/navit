@@ -52,7 +52,7 @@ lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c comma
 	event.c event_glib.h file.c geom.c graphics.c gui.c item.c layout.c log.c main.c map.c maps.c \
 	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c bookmarks.h navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c profile_option.c projection.c roadprofile.c route.c search.c search_houseno_interpol.c script.c speech.c start_real.c \
-	transform.c track.c util.c vehicle.c vehicleprofile.c xmlconfig.c \
+	transform.c track.c util.c vehicle.c vehicleprofile.c xmlconfig.c zipfile.c \
 	announcement.h atom.h attr.h attr_def.h cache.h callback.h color.h command.h config_.h coord.h country.h \
 	android.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h endianess.h event.h \
 	file.h geom.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h linguistics.h main.h map-share.h map.h\

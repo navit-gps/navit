@@ -20,6 +20,8 @@
 #ifndef __ZIPFILE_H__
 #define __ZIPFILE_H__
 
+#include "file.h"
+
 #ifdef HAVE_PRAGMA_PACK
 #pragma pack(push)
 #pragma pack(1)
@@ -174,4 +176,14 @@ struct zip_alignment_check {
 #ifdef HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif
+struct zip_eoc *zipfile_read_eoc(struct file *fi);
+struct zip64_eoc *zipfile_read_eoc64(struct file *fi);
+int zipfile_cd_name_and_extra_len(struct zip_cd *cd);
+struct zip_cd *zipfile_read_cd(struct file *fi, struct zip_eoc *eoc, struct zip64_eoc *eoc64, int offset, int len);
+struct zip_cd_ext *zipfile_cd_ext(struct zip_cd *cd);
+long long zipfile_cd_offset(struct zip_cd *cd);
+struct zip_lfh *zipfile_read_lfh(struct file *fi, long long offset);
+unsigned char *zipfile_read_content(struct file *fi, long long offset, struct zip_lfh *lfh, char *passwd);
+void cd_to_cpu(struct zip_cd *zcd);
+void zipfile_init(void);
 #endif
