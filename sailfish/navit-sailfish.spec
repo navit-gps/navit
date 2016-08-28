@@ -65,6 +65,7 @@ mkdir navit-build
 %{__rm} -rf %{buildroot}
 #cmake git files directly 
 cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+       -DBUILD_MAPTOOL:BOOL=FALSE \
        -Dspeech/dbus:BOOL=FALSE \
        -Dbinding/dbus:BOOL=FALSE \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
@@ -89,7 +90,6 @@ cp %{navit_real_source}/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 %{_datadir}/locale/
 %{_bindir}/navit
 %{_bindir}/say_de_DE.sh
-%{_bindir}/maptool
 %{_libdir}/navit/gui/libgui_internal.so
 %{_libdir}/navit/map/libmap_mg.so
 %{_libdir}/navit/map/libmap_csv.so
@@ -108,8 +108,8 @@ cp %{navit_real_source}/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 %{_libdir}/navit/vehicle/libvehicle_serial.so
 %{_libdir}/navit/vehicle/libvehicle_demo.so
 %{_libdir}/navit/vehicle/libvehicle_qt5.so
-%doc %{_mandir}/man1/maptool.1.gz
 %doc %{_mandir}/man1/navit.1.gz
+%doc %{_mandir}/man1/maptool.1.gz
 
 
 %changelog
