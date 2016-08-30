@@ -1086,7 +1086,6 @@ error:
 	return;
 }
 
-
 static void
 gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
