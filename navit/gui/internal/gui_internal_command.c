@@ -446,6 +446,16 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
 	navit_attr_iter_destroy(iter);
 	gui_internal_menu_render(this);
 }
+
+/*
+ * @brief Displays Route Height Profile
+ *
+ * displays a heightprofile if a route is active and 
+ * some heightinfo is provided by means of a map
+ *
+ * todo: fix a division by zero bug, provide a scale,
+ * improve the representation
+ */
 static void
 gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -465,11 +475,11 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 	struct map_selection sel;
 	struct heightline *heightline,*heightlines=NULL;
 	struct diagram_point *min,*diagram_point,*diagram_points=NULL;
+	struct point p[2];
 	sel.next=NULL;
 	sel.order=18;
 	sel.range.min=type_height_line_1;
 	sel.range.max=type_height_line_3;
-
 
 	menu=gui_internal_menu(this,_("Height Profile"));
 	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
@@ -553,7 +563,6 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 
 		}
 	}
-
 	if(mr)
 		map_rect_destroy(mr);
 
@@ -573,16 +582,15 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			coord_rect_extend(&dbbox, &diagram_point->c);
 		diagram_point=diagram_point->next;
 	}
-	dbg(lvl_info,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	dbg(lvl_debug,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
 	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
 		dbbox.lu.x=0;
 	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
 		dbbox.rl.y=0;
-	dbg(lvl_info,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	dbg(lvl_debug,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
 	x=dbbox.lu.x;
 	first=1;
 	for (;;) {
-		struct point p[2];
 		min=NULL;
 		diagram_point=diagram_points;
 		while (diagram_point) {
@@ -592,9 +600,10 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 		}
 		if (! min)
 			break;
+		/*fixme: sometimes division by zero below*/
 		p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
-		p[1].y=(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y+5;
-		dbg(lvl_info,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+		p[1].y=(box->h)-5-(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y;
+		dbg(lvl_debug,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
 		graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
 		if (first)
 			first=0;
@@ -603,8 +612,6 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 		p[0]=p[1];
 		x=min->c.x+1;
 	}
-
-
 }
 
 static void
