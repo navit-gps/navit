@@ -460,6 +460,7 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
  * the name of the file providing the heightlines must
  * comply with *.heightlines.bin
  * 
+ * todo : make it show a flat segment when using a tunnel
  */
 static void
 gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
