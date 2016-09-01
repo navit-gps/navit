@@ -41,7 +41,7 @@ enumerate_devices()
 
               if (name != NULL && 0 != strcmp ("null", name))
                 {
-                    dbg (lvl_error, "Found audio device %s\n", name);
+                    dbg (lvl_info, "Found audio playback device %s\n", name);
                     free (name);
                 }
               n++;
@@ -254,17 +254,17 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
         if ((attr = attr_search (attrs, NULL, attr_audio_device)))
           {
  	      card=g_strdup(attr->u.str);
-              dbg (lvl_error, "Will use alsa device %s\n", card);
+              dbg (lvl_info, "Will use alsa device %s\n", card);
           }
 
         if ((attr = attr_search (attrs, NULL, attr_audio_device_mixer)))
           {
  	      selem_name=g_strdup(attr->u.str);
-              dbg (lvl_error, "Will use alsa mixer %s\n", selem_name);
+              dbg (lvl_info, "Will use alsa mixer %s\n", selem_name);
           }
 
 
-	dbg(lvl_error,"Real alsa init\n");
+	dbg(lvl_debug,"Real alsa init\n");
 	enumerate_devices(); 
 	return this;
 }
@@ -272,6 +272,6 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 void
 plugin_init(void)
 {
-	dbg(lvl_error,"output-alsa plugin init\n");
+	dbg(lvl_debug,"output-alsa plugin init\n");
 	plugin_register_audio_type("output-alsa", output_alsa_new);
 }

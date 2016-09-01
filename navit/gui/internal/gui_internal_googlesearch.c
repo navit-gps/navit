@@ -24,7 +24,7 @@
 
 #include "jansson.h"
 
-extern const char *googleplaces_apikey;
+const char *googleplaces_apikey="";
 
 struct googleplace {
     char * id;

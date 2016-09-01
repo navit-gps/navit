@@ -47,25 +47,25 @@ extern const size_t spotify_apikey_size;
 static void
 try_jukebox_start (void)
 {
-    dbg (lvl_error, "Starting the jukebox\n");
+    dbg (lvl_info, "Starting the jukebox\n");
     sp_track *t;
     spotify->playing = 0;
 
     if (!g_jukeboxlist)
       {
-      dbg (lvl_error, "jukebox: No playlist. Waiting\n");
+      dbg (lvl_info, "jukebox: No playlist. Waiting\n");
       return;
       }
 
     if (!sp_playlist_num_tracks (g_jukeboxlist))
       {
-      dbg (lvl_error, "jukebox: No tracks in playlist. Waiting\n");
+      dbg (lvl_info, "jukebox: No tracks in playlist. Waiting\n");
       return;
       }
 
     if (sp_playlist_num_tracks (g_jukeboxlist) < g_track_index)
       {
-      dbg (lvl_error, "jukebox: No more tracks in playlist. Waiting\n");
+      dbg (lvl_info, "jukebox: No more tracks in playlist. Waiting\n");
       return;
       }
 
@@ -90,19 +90,17 @@ try_jukebox_start (void)
 
     g_currenttrack = t;
 
-    dbg (lvl_error, "jukebox: Now playing \"%s\"... g_sess=%p\n", sp_track_name (t), g_sess);
+    dbg (lvl_info, "jukebox: Now playing \"%s\"... g_sess=%p\n", sp_track_name (t), g_sess);
 
     // Ensure that the playlist is "offline" if we play a track
     sp_playlist_set_offline_mode (g_sess, g_jukeboxlist, 1);
-    dbg(lvl_error, "Forced offline mode for the playlist\n");
+    dbg(lvl_info, "Forced offline mode for the playlist\n");
         
     sp_session_player_load (g_sess, t);
-    dbg(lvl_error, "loaded\n");
     spotify->playing = 1;
-    dbg(lvl_error, "playing\n");
     if (g_sess) {
         sp_session_player_play (g_sess, 1);
-        dbg(lvl_error, "sp_session_player_play called\n");
+        dbg(lvl_info, "sp_session_player_play called\n");
     } else {
         dbg(lvl_error, "g_sess is null\n");
     }
@@ -120,7 +118,7 @@ try_jukebox_start (void)
 static void
 tracks_added (sp_playlist * pl, sp_track * const *tracks, int num_tracks, int position, void *userdata)
 {
-    dbg (lvl_error, "jukebox: %d tracks were added to %s\n", num_tracks, sp_playlist_name (pl));
+    dbg (lvl_info, "jukebox: %d tracks were added to %s\n", num_tracks, sp_playlist_name (pl));
 
     if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
       {
@@ -154,7 +152,7 @@ static void
 playlist_added (sp_playlistcontainer * pc, sp_playlist * pl, int position, void *userdata)
 {
     sp_playlist_add_callbacks (pl, &pl_callbacks, NULL);
-    dbg (lvl_error, "List name: %s\n", sp_playlist_name (pl));
+    dbg (lvl_info, "List name: %s\n", sp_playlist_name (pl));
 
     if (!strcasecmp (sp_playlist_name (pl), spotify->playlist))
       {
@@ -175,7 +173,7 @@ playlist_added (sp_playlistcontainer * pc, sp_playlist * pl, int position, void 
 static void
 container_loaded (sp_playlistcontainer * pc, void *userdata)
 {
-    dbg (lvl_error, "jukebox: Rootlist synchronized (%d playlists)\n", sp_playlistcontainer_num_playlists (pc));
+    dbg (lvl_info, "jukebox: Rootlist synchronized (%d playlists)\n", sp_playlistcontainer_num_playlists (pc));
         // FIXME : should we implement autostart?
 }
 
@@ -196,7 +194,7 @@ on_login (sp_session * session, sp_error error)
       dbg (lvl_error, "Error: unable to log in: %s\n", sp_error_message (error));
       return;
      } else {
-      dbg (lvl_error, "Logged in!\n");
+      dbg (lvl_info, "Logged in!\n");
      }
      
     g_logged_in = 1;
@@ -236,7 +234,7 @@ on_music_delivered (sp_session * session, const sp_audioformat * format, const v
 static void
 on_end_of_track (sp_session * session)
 {
-    dbg (lvl_error, "end of track\n");
+    dbg (lvl_debug, "end of track\n");
     ++g_track_index;
     try_jukebox_start ();
 }
@@ -291,9 +289,9 @@ playlists(struct audio_priv *this)
         GList * playlists=NULL;
         struct audio_playlist *pl;
         int i;
-        dbg(lvl_error,"Spotify's playlists method\n");
+        dbg(lvl_debug,"Listing playlists via Spotify\n");
         sp_playlistcontainer *pc = sp_session_playlistcontainer(g_sess);
-        dbg(lvl_error,"get_playlists: Looking at %d playlists\n", sp_playlistcontainer_num_playlists(pc)); 
+        dbg(lvl_info,"get_playlists: Looking at %d playlists\n", sp_playlistcontainer_num_playlists(pc)); 
         for (i = 0; i < sp_playlistcontainer_num_playlists(pc); ++i) {
                 sp_playlist *spl = sp_playlistcontainer_playlist(pc, i);
                 // fixme : should we enable this callback?
@@ -340,7 +338,7 @@ tracks(struct audio_priv *this, int playlist_index)
         if ( playlist_index < 0 ) {
                 playlist_index = current_playlist_index;
         }
-        dbg(lvl_error,"Spotify's tracks method\n");
+        dbg(lvl_debug,"Spotify's tracks method\n");
         sp_playlistcontainer *pc = sp_session_playlistcontainer(g_sess);
         spl = sp_playlistcontainer_playlist(pc, playlist_index);
         for (i = 0; i < sp_playlist_num_tracks(spl); i++) {
@@ -369,14 +367,14 @@ tracks(struct audio_priv *this, int playlist_index)
                 tracks=g_list_append(tracks, t);
         }
 	g_jukeboxlist=spl;
-	dbg(lvl_error,"Active playlist updated\n");
+	dbg(lvl_debug,"Active playlist updated\n");
         return tracks;
 }
 
 static int
 playback(struct audio_priv *this, const int action)
 {
-        dbg(lvl_error,"in spotify's playback control\n");
+        dbg(lvl_debug,"in spotify's playback control\n");
         switch(action){
         case AUDIO_PLAYBACK_TOGGLE:
                 toggle_playback();
@@ -416,28 +414,28 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     sp_error error;
     sp_session *session;
     attr=attr_search(attrs, NULL, attr_spotify_password);
-    dbg(lvl_error,"Initializing spotify\n");
+    dbg(lvl_debug,"Initializing spotify\n");
 
     spotify = g_new0 (struct spotify, 1);
     if ((attr = attr_search (attrs, NULL, attr_spotify_login)))
       {
           spotify->login = g_strdup(attr->u.str);
-          dbg (lvl_error, "found spotify_login %s\n", spotify->login);
+          dbg (lvl_info, "found spotify_login %s\n", spotify->login);
       }
     if ((attr = attr_search (attrs, NULL, attr_spotify_password)))
       {
           spotify->password = g_strdup(attr->u.str);
-          dbg (lvl_error, "found spotify_password %s\n", spotify->password);
+          dbg (lvl_info, "found spotify_password %s\n", spotify->password);
       }
     if ((attr = attr_search (attrs, NULL, attr_spotify_playlist)))
       {
           spotify->playlist = g_strdup(attr->u.str);
-          dbg (lvl_error, "found spotify_playlist %s\n", spotify->playlist);
+          dbg (lvl_info, "found spotify_playlist %s\n", spotify->playlist);
       }
     if ((attr = attr_search (attrs, NULL, attr_audio_playback_pcm)))
       {
           spotify->audio_playback_pcm = g_strdup(attr->u.str);
-          dbg (lvl_error, "found audio playback pcm %s\n", spotify->audio_playback_pcm);
+          dbg (lvl_info, "found audio playback pcm %s\n", spotify->audio_playback_pcm);
       }
     spconfig.application_key_size = spotify_apikey_size;
     error = sp_session_create (&spconfig, &session);
@@ -446,7 +444,7 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
       dbg (lvl_error, "Can't create spotify session :(\n");
       return NULL;
       }
-    dbg (lvl_error, "Session created successfully :)\n");
+    dbg (lvl_info, "Session created successfully :)\n");
     g_sess = session;
     g_logged_in = 0;
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
@@ -454,7 +452,7 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     // FIXME : we should maybe use a timer instead of the idle loop
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     event_add_idle (125, spotify->callback);
-    dbg (lvl_error, "Callback created successfully\n");
+    dbg (lvl_info, "Callback created successfully\n");
     this=g_new(struct audio_priv,1);
 
     *meth=player_spotify_meth;

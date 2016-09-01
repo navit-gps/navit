@@ -16,7 +16,7 @@ init_string (struct string *s)
   s->ptr = malloc (s->len + 1);
   if (s->ptr == NULL)
     {
-      dbg(0, "malloc() failed\n");
+      dbg(lvl_error, "malloc() failed\n");
     }
   s->ptr[0] = '\0';
 }
@@ -28,7 +28,7 @@ writefunc (void *ptr, size_t size, size_t nmemb, struct string *s)
   s->ptr = realloc (s->ptr, new_len + 1);
   if (s->ptr == NULL)
     {
-      dbg (0, "realloc() failed\n");
+      dbg (lvl_error, "realloc() failed\n");
     }
   memcpy (s->ptr + s->len, ptr, size * nmemb);
   s->ptr[new_len] = '\0';
@@ -91,8 +91,8 @@ fetch_url_to_string(char * url)
   curl_easy_setopt (curl, CURLOPT_WRITEDATA, &s);
   curl_easy_perform (curl);
   curl_easy_cleanup (curl);
-  dbg (1, "url %s gave %s\n", sanitized_url, s.ptr);
-  dbg (0, "url %s gave js of size %i\n", sanitized_url, strlen(s.ptr));
+  dbg (lvl_debug, "url %s gave %s\n", sanitized_url, s.ptr);
+  dbg (lvl_info, "url %s gave js of size %i\n", sanitized_url, strlen(s.ptr));
   free(sanitized_url);
   return strdup(s.ptr);
   // FIXME : we have a memleak here
@@ -149,11 +149,11 @@ download_icon (char *prefix, char *img_size, char *suffix)
   strcpy (icon_url, prefix);
   strcat (icon_url, suffix);
 
-  dbg (0, "About to download %s to %s\n", icon_url, filename);
+  dbg (lvl_info, "About to download %s to %s\n", icon_url, filename);
   // FIXME : switch to navit's code to check for icon presence
   if (access (filename, F_OK) != -1)
     {
-      dbg (0, "We have %s in cache already, skipping download\n", filename);
+      dbg (lvl_info, "We have %s in cache already, skipping download\n", filename);
     }
   else
     {
