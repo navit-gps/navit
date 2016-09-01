@@ -434,13 +434,9 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 			search_attr.type=attr_house_number;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
-		// Text is not necessarily entered via the on-screen keyboard,
-		// but we now switch it to lower case anyway.
-		gui_internal_keyboard_to_lower_case(this);
 		gui_internal_search_idle_start(this, wm->name, search_list, param);
 	} else {
 		// If not enough content is entered, we highlight all keys.
-		gui_internal_keyboard_to_upper_case(this);
 		gui_internal_highlight_possible_keys(this, "");
 	}
 	l=g_list_last(this->root.children);

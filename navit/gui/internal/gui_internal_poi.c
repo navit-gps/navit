@@ -449,7 +449,6 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 {
 	struct widget *w=data;
 	struct poi_param *param;
-	GList *l;
 	
 	if(!w->text)
 		return;
@@ -468,9 +467,6 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
 		param->AddressFilterType=0;
 
 	gui_internal_poi_param_set_filter(param, w->text);
-
-	l = g_list_previous(g_list_last(this->root.children));
-	gui_internal_prune_menu(this, l->data);
 
 	gui_internal_cmd_pois(this,w,param);
 	gui_internal_poi_param_free(param);

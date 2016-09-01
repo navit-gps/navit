@@ -3,6 +3,7 @@
    <xsl:template match="/config/navit/osd[1]">
       <xsl:param name="NEXT_TURN_SIZE"><xsl:value-of select="round(12*number($OSD_SIZE)+number($ICON_BIG))"/></xsl:param>
       <xsl:param name="NEXT_TURN_TEXT_HIGHT"><xsl:value-of select="round(20*number($OSD_SIZE))"/></xsl:param>
+      <xsl:param name="OSD_USE_OVERLAY"><xsl:value-of select="$OSD_USE_OVERLAY='yes' or $OSD_USE_OVERLAY='true' or $OSD_USE_OVERLAY='1'"/></xsl:param>
       
       <osd type="compass" enabled="yes" x="{round(-60*number($OSD_SIZE))}" y="{round(-80*number($OSD_SIZE))}" w="{round(60*number($OSD_SIZE))}" h="{round(80*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
       <xsl:text>&#x0A;        </xsl:text>
@@ -14,11 +15,11 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{navigation.item[1].length[named]}}" x="0" y="{-$NEXT_TURN_TEXT_HIGHT}" w="{$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" h="{$NEXT_TURN_TEXT_HIGHT}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="navigation.nav_status>=3"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="gui_zoom_in_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_in()" x="0" y="0" osd_configuration="1"/>
+      <osd type="button" src="gui_zoom_in_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_in()" x="0" y="0" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="gui_zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="0" y="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" osd_configuration="1"/>
+      <osd type="button" src="gui_zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="0" y="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="cursor_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" y="0" enable_expression="follow>1"/>
+      <osd type="button" src="cursor_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" y="0" enable_expression="follow>1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <xsl:copy><xsl:copy-of select="@*|node()"/></xsl:copy>
    </xsl:template>

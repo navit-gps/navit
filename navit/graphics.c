@@ -1718,6 +1718,7 @@ graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphic
 		dbg(lvl_debug,"%d,%d width %d\n",pnt[i].x,pnt[i].y,width[i]);
 #endif
 	ctx.shape.l=0;
+	ctx.shape.wi=0;
 	ctx.res=g_alloca(sizeof(struct point)*maxpoints);
 	i=0;
 	draw_init_ctx(&ctx, maxpoints);
