@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 #include <stdint.h>
-#include "queue.h"
+#include "audio/queue.h"
 
 void enumerate_devices();
 

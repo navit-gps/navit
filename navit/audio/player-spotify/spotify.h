@@ -29,7 +29,7 @@
 
 #include <pthread.h>
 #include <stdint.h>
-#include "queue.h"
+#include "audio/queue.h"
 
 
 /* --- Types --- */
