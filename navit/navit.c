@@ -1396,10 +1396,10 @@ audio_volume_do(struct navit *this, int direction)
                 dbg(lvl_debug,"Went thru one plugin at %p with name %s\n", a, a->name);
                 if(a->meth.volume && a->meth.volume != 0xffffffff ) {
                         dbg(lvl_debug,"Found a volume method at %p in plugin %s\n", a->meth.volume, a->name);
-			int (*f)(struct audio_priv *this, const int direction)=a->meth.volume+1;
+                        int (*f)(struct audio_priv *this, const int direction)=a->meth.volume+1;
                         dbg(lvl_debug,"Relocating at %p \n", f);
-			f(a->priv, direction);
-		}
+                        f(a->priv, direction);
+                }
                 l=g_list_next(l);
         }
 }
@@ -1408,21 +1408,21 @@ static void
 audio_volume_down(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_info,"Volume down\n");
-	audio_volume_do(this,-1);
+        audio_volume_do(this,-1);
 }
 
 static void
 audio_volume_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_info,"Toggle mute\n");
-	audio_volume_do(this,0);
+        audio_volume_do(this,0);
 }
 
 static void
 audio_volume_up(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_info,"Volume up\n");
-	audio_volume_do(this,1);
+        audio_volume_do(this,1);
 }
 
 
@@ -1448,35 +1448,35 @@ static void
 audio_playback_previous(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_debug,"playback previous\n");
-	audio_playback_do(this,AUDIO_PLAYBACK_PREVIOUS);
+        audio_playback_do(this,AUDIO_PLAYBACK_PREVIOUS);
 }
 
 static void
 audio_playback_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_debug,"playback toggle\n");
-	audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
+        audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
 }
 
 static void
 audio_playback_next(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
         dbg(lvl_debug,"playback next\n");
-	audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
+        audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
 }
 
 int
 audio_play_track(struct navit *this, int track_index)
 {
         dbg(lvl_debug,"playback track %i\n", track_index);
-	audio_playback_do(this,track_index);
+        audio_playback_do(this,track_index);
 }
 
 GList *
 audio_get_playlists(struct navit *this)
 {
         GList *l;
-	GList *ret;
+        GList *ret;
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
@@ -1490,8 +1490,8 @@ audio_get_playlists(struct navit *this)
                 }
                 l=g_list_next(l);
         }
-	dbg(lvl_debug,"Playlists method enumeration done\n");
-	return(ret);
+        dbg(lvl_debug,"Playlists method enumeration done\n");
+        return(ret);
 }
 
 
@@ -1499,7 +1499,7 @@ GList *
 audio_get_tracks(struct navit *this, const int playlist_index)
 {
         GList *l;
-	GList *ret;
+        GList *ret;
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
@@ -1513,8 +1513,8 @@ audio_get_tracks(struct navit *this, const int playlist_index)
                 }
                 l=g_list_next(l);
         }
-	dbg(lvl_debug,"Playlists method enumeration done\n");
-	return(ret);
+        dbg(lvl_debug,"Playlists method enumeration done\n");
+        return(ret);
 }
 
 static struct command_table commands[] = {
