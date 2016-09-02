@@ -414,7 +414,12 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     sp_error error;
     sp_session *session;
     attr=attr_search(attrs, NULL, attr_spotify_password);
+    if ( spotify_apikey_size == 0 ) {
+        dbg(lvl_error,"You need to set your spotify api key. Cannot initialize plugin\n");
+	return NULL;
+    }
     dbg(lvl_debug,"Initializing spotify\n");
+
 
     spotify = g_new0 (struct spotify, 1);
     if ((attr = attr_search (attrs, NULL, attr_spotify_login)))
