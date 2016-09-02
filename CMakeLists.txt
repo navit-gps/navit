@@ -441,7 +441,7 @@ add_feature(USE_ROUTING "default" TRUE)
 add_feature(USE_SVG "default" TRUE)
 add_feature(SVG2PNG "default" TRUE)
 add_feature(SAMPLE_MAP "default" TRUE)
-add_feature(USE_SPOTIFY "default" FALSE)
+add_feature(USE_AUDIO_FRAMEWORK "default" FALSE)
 
 if (ALSA_FOUND)
 	set_with_reason(audio/output-alsa "alsalib found" TRUE)
@@ -449,7 +449,7 @@ endif (ALSA_FOUND)
 
 if (LIBSPOTIFY_FOUND)
       if (ALSA_FOUND)
-	      set_with_reason(USE_SPOTIFY "spotify gui internal enabled" TRUE)
+	      set_with_reason(USE_AUDIO_FRAMEWORK "spotify gui internal enabled" TRUE)
 	      set_with_reason(audio/player-spotify "libspotify and alsa found" TRUE)
               # FIXME : this is a bad way to do it as maptool also gets linked
               list(APPEND NAVIT_LIBS "-lasound -lspotify -lpthread")
