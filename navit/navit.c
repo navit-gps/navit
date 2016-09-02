@@ -1407,21 +1407,21 @@ audio_volume_do(struct navit *this, int direction)
 static void
 audio_volume_down(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-        dbg(lvl_error,"Volume down\n");
+        dbg(lvl_info,"Volume down\n");
 	audio_volume_do(this,-1);
 }
 
 static void
 audio_volume_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-        dbg(lvl_error,"Volume up\n");
+        dbg(lvl_info,"Toggle mute\n");
 	audio_volume_do(this,0);
 }
 
 static void
 audio_volume_up(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-        dbg(lvl_error,"Volume up\n");
+        dbg(lvl_info,"Volume up\n");
 	audio_volume_do(this,1);
 }
 
