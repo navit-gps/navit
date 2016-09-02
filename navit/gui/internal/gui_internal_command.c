@@ -39,9 +39,6 @@
 #ifdef USE_SPOTIFY
 #include "gui_internal_media.h"
 #endif
-#ifdef USE_FOURSQUARE
-#include "gui_internal_foursquare.h"
-#endif
 
 extern char *version;
 
