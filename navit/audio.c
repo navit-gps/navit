@@ -15,11 +15,25 @@ struct attr *audio_default_attrs[]={
 	NULL,
 };
 
-char *
-audio_player_get_current_playlist_name ()
-{
-        return "OK!";
-}
+/**
+ * @brief instantiates an audio plugin
+ *
+ * This function initializes an audio plugin according to the settings 
+ * from navit.xml. Plugins can have different capabilities:
+ * - they can manage the global audio volume
+ * - they can manage the playback (previous/next, play/pause)
+ * - they can support a list of tracks
+ * - they can support a list of playlists
+ * 
+ * A plugin does not need to have all capabilities. Usually,
+ * an output plugin will support setting up the volume, and
+ * a playback plugin should not need to care about the volume.
+ *
+ * @param attr *parent the parent attribute object
+ * @param attr *attrs the currents attributes object
+ * 
+ * @return the audio object if initialization was successful
+ */
 
 struct audio *
 audio_new(struct attr *parent, struct attr **attrs)
@@ -42,7 +56,6 @@ audio_new(struct attr *parent, struct attr **attrs)
                 return NULL;
         }
         this_=g_new0(struct audio, 1);
-	//this_->name = g_strdup(attr->u.str);
 	this_->priv = audiotype_new(&this_->meth, attrs, parent);
 	if (!this_->priv) {
 		dbg(lvl_error, "audio_new failed\n");
