@@ -42,9 +42,6 @@
 #ifdef USE_FOURSQUARE
 #include "gui_internal_foursquare.h"
 #endif
-#ifdef USE_GOOGLEPLACES
-#include "gui_internal_googlesearch.h"
-#endif
 
 extern char *version;
 
@@ -1268,12 +1265,6 @@ static struct command_table commands[] = {
 	{"about",command_cast(gui_internal_cmd2)},
 #ifdef USE_SPOTIFY
         {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
-#endif
-#ifdef USE_FOURSQUARE
-	{"foursquare_show_pois", command_cast (gui_internal_foursquare_show_pois)},
-#endif
-#ifdef USE_GOOGLEPLACES
-	{"googlesearch_search", command_cast (gui_internal_googlesearch_search)},
 #endif
 
 };
