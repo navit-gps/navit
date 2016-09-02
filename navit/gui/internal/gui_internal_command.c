@@ -215,7 +215,7 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
 	g_free(text);
-	
+
 	//Authors
 	text=g_strdup_printf("%s:",_("By"));
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
