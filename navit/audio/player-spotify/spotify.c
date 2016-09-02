@@ -305,23 +305,23 @@ playlists(struct audio_priv *this)
                 switch (sp_playlist_get_offline_status (g_sess, spl))
                   {
                   case SP_PLAYLIST_OFFLINE_STATUS_NO:
-                      pl->icon = "playlist-no-offline";
+                      pl->icon = "playlist_no_offline";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_YES:
-                      pl->icon = "playlist-offline";
+                      pl->icon = "playlist_offline";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_DOWNLOADING:
-                      pl->icon = "playlist-downloading";
+                      pl->icon = "playlist_downloading";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_WAITING:
-                      pl->icon = "playlist-pending";
+                      pl->icon = "playlist_pending";
                       break;
             
                   default:
-                      pl->icon = "music-red";
+                      pl->icon = "music_red";
                       break;
                   }
         }
@@ -351,16 +351,16 @@ tracks(struct audio_priv *this, int playlist_index)
                 switch (sp_track_offline_get_status (track))
                   {
                   case SP_TRACK_OFFLINE_DONE:
-            	  t->icon = "music-green";
+            	  t->icon = "music_green";
             	  break;
                   case SP_TRACK_OFFLINE_DOWNLOADING:
-            	  t->icon = "music-orange";
+            	  t->icon = "music_orange";
             	  break;
                   case SP_TRACK_OFFLINE_NO:
-            	  t->icon = "music-blue";
+            	  t->icon = "music_blue";
             	  break;
                   default:
-            	  t->icon = "music-red";
+            	  t->icon = "music_red";
                   }
                 t->icon=g_strdup ((i == g_track_index) ? "play" : t->icon);
 
