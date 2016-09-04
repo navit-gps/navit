@@ -453,10 +453,6 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
  * displays a heightprofile if a route is active and 
  * some heightinfo is provided by means of a map
  *
- * the drawing is simplified by assuming straight
- * roads between the crossings of the route and the 
- * heightlines.
- *
  * the name of the file providing the heightlines must
  * comply with *.heightlines.bin
  * 
