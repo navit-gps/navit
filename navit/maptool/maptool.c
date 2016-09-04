@@ -46,6 +46,7 @@
 #include "plugin.h"
 #include "util.h"
 #include "maptool.h"
+#include "debug.h"
 
 #define SLIZE_SIZE_DEFAULT_GB 1
 long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
@@ -285,9 +286,11 @@ usage(FILE *f)
 #ifdef HAVE_POSTGRESQL
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
+	fprintf(f,"-g (--debug) <level>              : set global debug level to a given value\n");
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
 	fprintf(f,"-E (--experimental)               : Enable experimental features (%s)\n",
 		experimental_feature_description ? experimental_feature_description : "-not available in this version-");
+	fprintf(f,"-F (--reference-map) <file>       : compare resulting map to its previous version to preserve timestamps of unmodified tiles\n");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n");
 	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
@@ -343,6 +346,7 @@ struct maptool_params {
 	int countries_loaded;
 	int tilesdir_loaded;
 	int max_index_size;
+	char *reference_map;
 };
 
 static int
@@ -362,11 +366,13 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 #ifdef HAVE_POSTGRESQL
 		{"db", 1, 0, 'd'},
 #endif
+		{"debug", 1, 0, 'g'},
 		{"dedupe-ways", 0, 0, 'w'},
 		{"dump", 0, 0, 'D'},
 		{"dump-coordinates", 0, 0, 'c'},
 		{"end", 1, 0, 'e'},
 		{"experimental", 0, 0, 'E'},
+		{"reference-map", 1, 0, 'F'},
 		{"help", 0, 0, 'h'},
 		{"keep-tmpfiles", 0, 0, 'k'},
 		{"nodes-only", 0, 0, 'N'},
@@ -386,7 +392,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"index-size", 0, 0, 'x'},
 		{0, 0, 0, 0}
 	};
-	c = getopt_long (argc, argv, "5:6B:DEMNO:PS:Wa:bc"
+	c = getopt_long (argc, argv, "5:6B:DEF:g:MNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 				      "d:"
 #endif
@@ -408,6 +414,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'E':
 		experimental=1;
+		break;
+	case 'g':
+		debug_set_global_level(atoi(optarg),1);
 		break;
 	case 'M':
 		p->o5m=1;
@@ -450,6 +459,9 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 #endif
 	case 'e':
 		p->end=atoi(optarg);
+		break;
+	case 'F':
+		p->reference_map=g_strdup(optarg);
 		break;
 	case 'h':
 		return 2;
@@ -789,7 +801,7 @@ maptool_generate_tiles(struct maptool_params *p, char *suffix, char **filenames,
 }
 
 static void
-maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, char **referencenames, int filename_count, int first, int last, char *suffix0)
+maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, char **referencenames, int filename_count, int first, int last, char *suffix0, struct zip_hashed_cd *zhc)
 {
 	FILE *files[10];
 	FILE *references[10];
@@ -810,11 +822,14 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 			fprintf(stderr,"Fatal: Could not write output file.\n");
 			exit(1);
 		}
+		zip_set_reference_map(zip_info, zhc);
 		if (p->url) {
 			map_information_attrs[1].type=attr_url;
 			map_information_attrs[1].u.str=p->url;
 		}
 		index_init(zip_info, 1);
+		g_free(zipindex);
+		g_free(zipdir);
 	}
 	if (!strcmp(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
 		ch_assemble_map(suffix0,suffix,zip_info);
@@ -861,6 +876,7 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		zip_write_index(zip_info);
 		zip_write_directory(zip_info);
 		zip_close(zip_info);
+		zip_destroy(zip_info);
 		if (p->md5file && zip_get_md5(zip_info, md5_data)) {
 			FILE *md5=fopen(p->md5file,"w");
 			int i;
@@ -921,7 +937,9 @@ int main(int argc, char **argv)
 	int i;
 	int suffix_start=0;
 	int option_index=0;
+	struct zip_hashed_cd *zhc=NULL;
 	main_init(argv[0]);
+	debug_init(argv[0]);
 #ifndef HAVE_GLIB
 	_g_slice_thread_init_nomessage();
 #endif
@@ -1100,12 +1118,15 @@ int main(int argc, char **argv)
 			p.tilesdir_loaded=1;
 		}
 		if (start_phase(&p,"assembling map")) {
+			if(!zhc && p.reference_map)
+				zhc=zip_hashed_cd_new(p.reference_map);
 			maptool_load_countries(&p);
 			maptool_load_tilesdir(&p, suffix);
-			maptool_assemble_map(&p, suffix, filenames, referencenames, filename_count, i == suffix_start, i == suffix_count-1, suffixes[0]);
+			maptool_assemble_map(&p, suffix, filenames, referencenames, filename_count, i == suffix_start, i == suffix_count-1, suffixes[0], zhc);
 		}
 		phase-=2;
 	}
+	zip_hashed_cd_free(zhc);
 	phase+=2;
 	start_phase(&p,"done");
 	return 0;

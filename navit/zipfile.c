@@ -156,6 +156,8 @@ zipfile_read_cd(struct file *fi, struct zip_eoc *eoc, struct zip64_eoc *eoc64, i
 	long long cdoffset=eoc64?eoc64->zip64eofst:eoc->zipeofst;
 	if (len == -1) {
 		cd=(struct zip_cd *)file_data_read(fi,cdoffset+offset, sizeof(*cd));
+		if(!cd)
+			return NULL;
 		cd_to_cpu(cd);
 		len=zipfile_cd_name_and_extra_len(cd);
 		file_data_free(fi,(unsigned char *)cd);
@@ -201,7 +203,7 @@ zipfile_cd_ext(struct zip_cd *cd)
  * @return Offset of local file header in zip file.
  */
 long long
-zipfile_cd_offset(struct zip_cd *cd)
+zipfile_lfh_offset(struct zip_cd *cd)
 {
 	struct zip_cd_ext *ext=zipfile_cd_ext(cd);
 	if (ext)

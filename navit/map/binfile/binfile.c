@@ -340,8 +340,8 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial)
 			file_mkdir(fulld, 1);
 		}
 		if (full[len-2] != '/') {
-			lfh=zipfile_read_lfh(m->fi, zipfile_cd_offset(cd));
-			start=binfile_read_content(m, m->fi, zipfile_cd_offset(cd), lfh);
+			lfh=zipfile_read_lfh(m->fi, zipfile_lfh_offset(cd));
+			start=binfile_read_content(m, m->fi, zipfile_lfh_offset(cd), lfh);
 			dbg(lvl_debug,"fopen '%s'\n", full);
 			f=fopen(full,"w");
 			fwrite(start, lfh->zipuncmp, 1, f);
@@ -726,18 +726,18 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	char *zipfn;
 	struct file *fi;
 	dbg(lvl_debug,"enter %p %p %p\n", m, cd, t);
-	dbg(lvl_debug,"cd->zipofst=0x"LONGLONG_HEX_FMT "\n", zipfile_cd_offset(cd));
+	dbg(lvl_debug,"cd->zipofst=0x"LONGLONG_HEX_FMT "\n", zipfile_lfh_offset(cd));
 	t->start=NULL;
 	t->mode=1;
 	if (m->fis)
 		fi=m->fis[cd->zipdsk];
 	else
 		fi=m->fi;
-	lfh=zipfile_read_lfh(fi, zipfile_cd_offset(cd));
-	zipfn=(char *)(file_data_read(fi,zipfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
+	lfh=zipfile_read_lfh(fi, zipfile_lfh_offset(cd));
+	zipfn=(char *)(file_data_read(fi,zipfile_lfh_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	t->start=(int *)binfile_read_content(m, fi, zipfile_cd_offset(cd), lfh);
+	t->start=(int *)binfile_read_content(m, fi, zipfile_lfh_offset(cd), lfh);
 	t->end=t->start+lfh->zipuncmp/4;
 	t->fi=fi;
 	file_data_free(fi, (unsigned char *)zipfn);
@@ -891,7 +891,7 @@ download_request(struct map_download *download)
 		url.u.str=g_strdup_printf("%smemberid=%d",download->m->url,download->zipfile);
 		download->dl_size=-1;
 	} else {
-		long long offset=zipfile_cd_offset(download->cd_copy);
+		long long offset=zipfile_lfh_offset(download->cd_copy);
 		int size=download->cd_copy->zipcsiz+sizeof(struct zip_lfh)+download->cd_copy->zipcfnl;
 		url.u.str=g_strdup(download->m->url);
 		http_header.u.str=g_strdup_printf("Range: bytes="LONGLONG_FMT"-"LONGLONG_FMT,offset,offset+size-1);
@@ -978,7 +978,7 @@ download_finish(struct map_download *download)
 	download->cd_copy->zipcsiz=lfh->zipsize;
 	download->cd_copy->zipcunc=lfh->zipuncmp;
 	download->cd_copy->zipccrc=lfh->zipcrc;
-	lfh_offset = zipfile_cd_offset(download->cd_copy)+sizeof(struct zip_lfh);
+	lfh_offset = zipfile_lfh_offset(download->cd_copy)+sizeof(struct zip_lfh);
 	lfh_filename=(char *)file_data_read(download->file,lfh_offset,lfh->zipfnln);
 	memcpy(download->cd_copy+1,lfh_filename,lfh->zipfnln);
 	file_data_remove(download->file,(void *)lfh_filename);

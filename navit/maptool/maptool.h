@@ -417,7 +417,12 @@ FILE *zip_get_index(struct zip_info *info);
 int zip_get_zipnum(struct zip_info *info);
 void zip_set_zipnum(struct zip_info *info, int num);
 void zip_close(struct zip_info *info);
+int zip_load_reference_map(struct zip_info *info, char *reference_map_name);
 void zip_destroy(struct zip_info *info);
+struct zip_hashed_cd;
+void zip_set_reference_map(struct zip_info *zip_info, struct zip_hashed_cd *zhc);
+struct zip_hashed_cd *zip_hashed_cd_new(char *map_filename);
+void zip_hashed_cd_free(struct zip_hashed_cd *zhc);
 
 /* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to GHashTable's */
 struct maptool_force_64 {char s[sizeof(gpointer)<sizeof(osmid)?-1:1];};

@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <glib.h>
 #include <zlib.h>
 #include <string.h>
 #include <stdlib.h>
@@ -24,6 +25,7 @@
 #include "maptool.h"
 #include "config.h"
 #include "zipfile.h"
+#include "attr.h"
 
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/sha.h>
@@ -51,7 +53,119 @@ struct zip_info {
 	MD5_CTX md5_ctx;
 #endif
 	int md5;
+	struct zip_hashed_cd *reference_map;
 };
+/*
+ * Helper structure to zip file handle with hashtable of local file header pointers
+*/
+struct zip_hashed_cd {
+	struct file *fi;
+	/* hash table to access zip_lfh offsets by file name */
+	GHashTable *lfh_offsets;
+};
+
+void
+zip_set_reference_map(struct zip_info *zip_info, struct zip_hashed_cd *zhc)
+{
+	zip_info->reference_map=zhc;
+}
+
+/**
+ * @brief fill zip_hashed_cd structure with references to tile file local file headers.
+ * @param map_filename name of file holding reference map
+ * @return Pointer to allocated and filled zip_hashed_cd structure. Free with zip_hashed_cd_free().
+ */
+struct zip_hashed_cd *
+zip_hashed_cd_new(char *map_filename)
+{
+	struct zip_eoc *eoc;
+	struct zip64_eoc *eoc64;
+	struct zip_cd *cd;
+	struct attr a={attr_cache, {0}};
+	struct attr *opts[]={&a, NULL};
+	struct zip_hashed_cd *zhc=g_new(struct zip_hashed_cd,1);
+	unsigned long long offset=0;
+	zhc->fi=file_create(map_filename,opts);
+	if(!zhc->fi) {
+		g_free(zhc);
+		return NULL;
+	}
+	eoc=zipfile_read_eoc(zhc->fi);
+	if(!eoc) {
+		file_destroy(zhc->fi);
+		g_free(zhc);
+		return NULL;
+	}
+
+	eoc64=zipfile_read_eoc64(zhc->fi);
+
+	zhc->lfh_offsets=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
+	while((cd=zipfile_read_cd(zhc->fi, eoc, eoc64, offset,-1))!=NULL) {
+		char *filename=g_strndup(cd->zipcfn, cd->zipcfnl);
+		if(!g_hash_table_insert(zhc->lfh_offsets, filename, (void*)zipfile_lfh_offset(cd)))
+			dbg(lvl_error,"Duplicate tile name: %s\n", filename);
+		offset+=sizeof(*cd)+zipfile_cd_name_and_extra_len(cd);
+		file_data_free(zhc->fi, (unsigned char *)cd);
+	}
+
+	file_data_free(zhc->fi, (unsigned char *)eoc64);
+	file_data_free(zhc->fi, (unsigned char *)eoc);
+
+	return zhc;
+}
+
+void
+zip_hashed_cd_free(struct zip_hashed_cd *zhc)
+{
+	if(zhc) {
+		file_destroy(zhc->fi);
+		g_hash_table_destroy(zhc->lfh_offsets);
+		g_free(zhc);
+	}
+}
+
+/**
+ * @brief Adjust timestamp of a given file if it was already known in the reference version of mapfile. 
+ * @param filename name of tile file being examined
+ * @param new_data uncompressed contents of the tile file being written
+ * @param new_len uncompressed size of the tile file being written
+ * @param zhc pointer to structure used to access reference map
+ * @param @out date pointer to variable containing date to adjust
+ * @param @out time pointer to variable containing time to adjust
+ * @return nothing.
+ */
+static void
+adjust_timestamp(char *filename, void *new_data, int new_len, struct zip_hashed_cd *zhc, short *date, short *time)
+{
+	long long offset;
+	struct zip_lfh *lfh;
+
+	if( !zhc || !zhc->fi || !zhc->lfh_offsets )
+		return;
+
+	if( !g_hash_table_lookup_extended(zhc->lfh_offsets, filename, NULL, (void **)&offset)) {
+		dbg(lvl_info,"Tile not found in reference map: %s\n",filename);
+		return;
+	}
+
+	if( (lfh=zipfile_read_lfh(zhc->fi,offset)) == NULL ) {
+		dbg(lvl_error,"Error reading tile header %s from reference map at offset "LONGLONG_FMT"\n",filename, offset);
+		return;
+	}
+
+	if( lfh->zipuncmp==new_len ) {
+		void *old_data=zipfile_read_content(zhc->fi, offset, lfh, NULL);
+		if( old_data && memcmp(old_data, new_data, new_len)==0 ) {
+			dbg(lvl_debug,"Adjusting timestamp for tile %s\n",filename);
+			*date=lfh->zipdate;
+			*time=lfh->ziptime;
+		}
+		file_data_free(zhc->fi, (unsigned char *)old_data);
+	}
+
+	file_data_free(zhc->fi, (unsigned char *)lfh);
+}
 
 static int
 zip_write(struct zip_info *info, void *data, int len)
@@ -97,6 +211,17 @@ compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen,
 }
 #endif
 
+/**
+ * @brief Write a single member file to the zip file, compressing and encrypting it on the way.
+ *  Supports zip64 in the sense of handling zip files above 4Gb, but does not allow individual files above zip32 limits.
+ *  Does not support writing multivolume zip files.
+ * @param zip_info pointer to structure holding global zip file informations
+ * @param name name of file being written (not necessarily nul-terminated)
+ * @param filelen length of file name to pad to
+ * @param data uncopmpressed contents of file being written
+ * @param data_size uncopmpressed length of file being written
+ * @return nothing.
+ */
 void
 write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size)
 {
@@ -121,8 +246,8 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		0x00,
 		0x0000,
 		0x0,
-		zip_info->time,
-		zip_info->date,
+		0,
+		0,
 		0x0,
 		0x0,
 		0x0,
@@ -154,6 +279,18 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	int crc=0,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
+
+	filename=g_alloca(filelen+1);
+	g_strlcpy(filename, name, filelen+1);
+	len=strlen(filename);
+	while (len < filelen) {
+		filename[len++]='_';
+	}
+	filename[filelen]='\0';
+
+	adjust_timestamp(filename, data, data_size, zip_info->reference_map, &lfh.zipdate, &lfh.ziptime);
+	cd.zipdat=lfh.zipdate;
+	cd.ziptim=lfh.ziptime;
 
 	compbuffer = malloc(destlen);
 	if (!compbuffer) {
@@ -215,13 +352,6 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		cd.zipcflg|=1;
 	}
 #endif
-	filename=g_alloca(filelen+1);
-	strcpy(filename, name);
-	len=strlen(filename);
-	while (len < filelen) {
-		filename[len++]='_';
-	}
-	filename[filelen]='\0';
 	zip_write(zip_info, &lfh, sizeof(lfh));
 	zip_write(zip_info, filename, filelen);
 	zip_info->offset+=sizeof(lfh)+filelen;
