@@ -4,6 +4,7 @@
    <xsl:param name="ICON_SMALL" select="32"/>
    <xsl:param name="ICON_MEDIUM" select="32"/>
    <xsl:param name="ICON_BIG" select="64"/>
+   <xsl:param name="OSD_USE_OVERLAY">yes</xsl:param>
    
    <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
    <xsl:include href="osd_minimum.xslt"/>
