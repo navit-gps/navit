@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2016-05-15 07:14+0000\n"
+"PO-Revision-Date: 2016-09-12 15:23+0000\n"
 "Last-Translator: icefirewu <icefirewu@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -146,7 +146,7 @@ msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "往交流道斜坡"
+msgstr "往交流道匝道"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -309,7 +309,7 @@ msgstr "進入 %1$s 往 %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "經過 %i 條路"
+msgstr "經過 %i 路"
 
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
@@ -2502,6 +2502,9 @@ msgstr "全螢幕"
 
 msgid "Window Mode"
 msgstr "視窗模式"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "備註"
