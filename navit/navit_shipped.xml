@@ -95,7 +95,7 @@ Navigation</text></img>
 			</a>
 			<a name='Route'><text>Route</text>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
-				<img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
+				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
 Waypoint</text></img>
@@ -657,14 +657,28 @@ Waypoint</text></img>
 				<itemgra item_types="border_state" order="0-">
 					<polyline color="#808080" width="1"/>
 				</itemgra>
-				<itemgra item_types="height_line_1" order="0-">
-					<polyline color="#000000" width="4"/>
-				</itemgra>
-				<itemgra item_types="height_line_2" order="0-">
-					<polyline color="#000000" width="2"/>
-				</itemgra>
-				<itemgra item_types="height_line_3" order="0-">
+			</layer>
+			<layer name="heightlines">
+				<itemgra item_types="height_line_1" order="7">
 					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_1" order="8-">
+					<polyline color="#000000" width="3"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="height_line_2" order="8">
+					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_2" order="9-">
+					<polyline color="#000000" width="2"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="height_line_3" order="9-11">
+					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_3" order="12-">
+					<polyline color="#000000" width="1"/>
+					<text text_size="8"/>
 				</itemgra>
 			</layer>
 			<layer name="streets">
