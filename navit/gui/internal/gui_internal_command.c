@@ -540,6 +540,8 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 				gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
 				w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
 				g_free(text);
+				gui_internal_menu_render(this);
+				return;
 			}
 		}
 	}
@@ -584,14 +586,28 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			}
 		}
 	}
+	while (heightlines){
+		heightline=heightlines;
+		heightlines=heightlines->next;
+		g_free(heightline);
+	}
 	if(mr)
 		map_rect_destroy(mr);
 
-	gui_internal_menu_render(this);
-
-	if(diagram_points_count < 2) /*fixme: maybe show a flatline in such cases*/
+	if(diagram_points_count < 2){
+		char *text;
+		struct widget *w;
+		text=g_strdup_printf("%s",_("The route must cross at least 2 heightlines"));
+		gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
+		w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+		g_free(text);
+		gui_internal_menu_render(this);
+		if(diagram_points)
+			g_free(diagram_points);
 		return;
+	}
 
+	gui_internal_menu_render(this);
 	first=1;
 	diagram_point=diagram_points;
 	while (diagram_point) {
@@ -633,6 +649,11 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			p[0]=p[1];
 			x=min->c.x+1;
 		}
+	}
+	while (diagram_points){
+		diagram_point=diagram_points;
+		diagram_points=diagram_points->next;
+		g_free(diagram_point);
 	}
 }
 
