@@ -206,24 +206,24 @@ j1850_idle(struct j1850 *j1850)
                     // noise
                 } else if (strcmp(j1850->message, "3D1120009B") == 0) {
                     dbg(lvl_error,"L1\n");
-                    command_evaluate(&navit, "gui.spotify_volume_up()" );
+                    command_evaluate(&navit, "volume_up()" );
                 } else if (strcmp(j1850->message, "3D110080C8") == 0) {
                     dbg(lvl_error,"L2\n");
-                    command_evaluate(&navit, "gui.spotify_volume_toggle()" );
+                    command_evaluate(&navit, "volume_toggle()" );
                 } else if (strcmp(j1850->message, "3D1110005A") == 0) {
                     dbg(lvl_error,"L3\n");
-                    command_evaluate(&navit, "gui.spotify_volume_down()" );
+                    command_evaluate(&navit, "volume_down()" );
                 } else if (strcmp(j1850->message, "3D110400C3") == 0) {
                     dbg(lvl_error,"R1\n");
-                    command_evaluate(&navit, "gui.spotify_next_track()" );
+                    command_evaluate(&navit, "audio_playback_next()" );
                 } else if (strcmp(j1850->message, "3D110002D4") == 0) {
                     dbg(lvl_error,"R2\n");
-                    command_evaluate(&navit, "gui.spotify_toggle()" );
+                    command_evaluate(&navit, "audio_playback_toggle()" );
                 } else if (strcmp(j1850->message, "3D11020076") == 0) {
                     dbg(lvl_error,"R3\n");
-                    command_evaluate(&navit, "gui.spotify_previous_track()" );
+                    command_evaluate(&navit, "audio_playback_previous()" );
                 } else {
-                    dbg(lvl_error,"Got button from %s\n", j1850->message);
+                    dbg(lvl_error,"Got unknown button from %s\n", j1850->message);
                 }
             } else if( strncmp(header,"72",2)==0 ) {
             	char * data=strndup(j1850->message+2, 8);
@@ -276,7 +276,7 @@ static void
 osd_j1850_draw(struct j1850 *this, struct navit *nav,
         struct vehicle *v)
 {
-    osd_std_draw(&this->osd_item);
+    //osd_std_draw(&this->osd_item);
 
     struct point p, bbox[4];
 
@@ -397,7 +397,7 @@ j1850_init_serial_port(struct j1850 *j1850)
 {
 	j1850->callback=callback_new_1(callback_cast(j1850_idle), j1850);
 	// Fixme : we should read the device path from the config file
-	j1850->device = open( "/dev/ttyUSB0", O_RDWR| O_NOCTTY );
+	j1850->device = open( "/dev/serial/by-id/usb-ScanTool.net_LLC_ElmScan_5_Compact_STXIEE6Q-if00-port0", O_RDWR| O_NOCTTY );
 	if ( j1850->device < 0 ) 
 	{
 		dbg(lvl_error,"Can't open port\n");
