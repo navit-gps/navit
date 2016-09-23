@@ -144,6 +144,7 @@ struct navit {
 	int autozoom_min;
 	int autozoom_max;
 	int autozoom_active;
+	int autozoom_paused;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -661,12 +662,17 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 		return;
 	}
 
+	if(this_->autozoom_paused){
+		this_->autozoom_paused--;
+		return;
+	}
+	
 	distance = speed * this_->autozoom_secs;
 
 	transform_get_size(this_->trans, &w, &h);
 	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
 	scale = transform_get_scale(this_->trans);
-
+	
 	/* We make sure that the point we want to see is within a certain range
 	 * around the vehicle. The radius of this circle is the size of the
 	 * screen. This doesn't necessarily mean the point is visible because of
@@ -701,6 +707,9 @@ void
 navit_zoom_in(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)/factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	if (scale < 1)
 		scale=1;
 	navit_scale(this_, scale, p, 1);
@@ -718,6 +727,9 @@ void
 navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)*factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	navit_scale(this_, scale, p, 1);
 }
 
@@ -746,6 +758,7 @@ navit_zoom_out_cursor(struct navit *this_, int factor)
 static int
 navit_cmd_zoom_in(struct navit *this_)
 {
+	
 	navit_zoom_in_cursor(this_, 2);
 	return 0;
 }
@@ -1428,6 +1441,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_secs = 10;
 	this_->autozoom_min = 7;
 	this_->autozoom_active = 0;
+	this_->autozoom_paused = 0;
 	this_->zoom_min = 1;
 	this_->zoom_max = 2097152;
 	this_->autozoom_max = this_->zoom_max;

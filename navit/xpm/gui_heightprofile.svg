@@ -1,0 +1,20 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ for Navit -->
+ <defs>
+  <linearGradient y2="0%" x2="100%" y1="0%" x1="0%" id="grad1">
+   <stop stop-color="rgb(90,90,90)" offset="0%"/>
+   <stop stop-color="rgb(175,175,175)" offset="100%"/>
+  </linearGradient>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <polygon transform="translate(0, -3)" id="svg_2" fill="url(#grad1)" points="10,165 30,165 60,80 75,120 85,120 115,20 160,180 190,180 190,190 10,190"/>
+  <line id="svg_3" fill="none" stroke="gainsboro" stroke-width="6" y2="165" x2="30" y1="165" x1="10"/>
+  <line id="svg_4" fill="none" stroke="gainsboro" stroke-width="6" y2="80" x2="60" y1="165" x1="30" stroke-linecap="round"/>
+  <line id="svg_5" fill="none" stroke="gainsboro" stroke-width="6" y2="120" x2="75" y1="80" x1="60" stroke-linecap="round"/>
+  <line id="svg_6" fill="none" stroke="gainsboro" stroke-width="6" y2="120" x2="85" y1="120" x1="75" stroke-linecap="round"/>
+  <line id="svg_7" fill="none" stroke="gainsboro" stroke-width="6" y2="20" x2="115" y1="120" x1="85" stroke-linecap="round"/>
+  <line id="svg_8" fill="none" stroke="gainsboro" stroke-width="6" y2="180" x2="160" y1="20" x1="115" stroke-linecap="round"/>
+  <line id="svg_9" fill="none" stroke="gainsboro" stroke-width="6" y2="180" x2="190" y1="180" x1="160"/>
+ </g>
+</svg>

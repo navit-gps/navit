@@ -1,15 +1,14 @@
-struct widget; // defined in gui_internal.c
+struct widget;
 struct graphics_image;
 struct gui_priv;
 
-#define STATE_VISIBLE 1
-#define STATE_SELECTED 2
 #define STATE_HIGHLIGHTED 4
 #define STATE_SENSITIVE 8
 #define STATE_EDIT 16
 #define STATE_CLEAR 32
 #define STATE_EDITABLE 64
 #define STATE_SCROLLABLE 128
+#define STATE_OFFSCREEN 256
 
 #define GESTURE_RINGSIZE 100
 

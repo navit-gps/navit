@@ -1,5 +1,5 @@
 # German translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Achim Behrens https://launchpad.net/~k1l
@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-09-14 07:17+0000\n"
+"PO-Revision-Date: 2016-08-25 22:29+0000\n"
 "Last-Translator: Mathias Klein <ma_klein@gmx.de>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1730,7 +1730,7 @@ msgstr "Setze Karte auf %ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Setze nächsten Besuch auf %ld, %ld \n"
 
 msgid "POI search"
 msgstr "POI Suche"
@@ -2066,10 +2066,6 @@ msgstr "Suche"
 msgid "Towns"
 msgstr "Städte"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Ziel setzen"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Kartendaten (c) von OpenStreetMap unter ODbL"
 
@@ -2091,6 +2087,10 @@ msgid ""
 msgstr ""
 "Entschuldigung. Derzeit untestützen wir auf Android keine Karten die größer "
 "als 3,8Gigabyte sind. Bitte wählen Sie eine kleinere Karte aus."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Ziel setzen"
 
 msgid "Cancel"
 msgstr "Abbrechen"

@@ -213,6 +213,7 @@ if SOURCE_MODE_SVN
 else
 	echo "#define SVN_VERSION \"@SOURCE_MODE@\"" >>version.h.tmp
 endif
+	echo "#define GIT_VERSION \"$(shell git describe --abbrev=8 --dirty --always --tags)\"" >>version.h.tmp
 	echo "#define NAVIT_VARIANT \"@NAVIT_VARIANT@\"" >>version.h.tmp
 	if ! diff version.h.tmp version.h >/dev/null 2>/dev/null; \
 	then \

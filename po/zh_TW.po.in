@@ -1,360 +1,338 @@
-# Italian translations for navit
+# Chinese (Traditional) translations for navit
 # Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
-# AndreaCr https://launchpad.net/~andij-cr
-# Davide Gobbi https://launchpad.net/~hobbie
-# Marco Ciampa https://launchpad.net/~ciampix
-# Marco Lazzaroni https://launchpad.net/~marcolazzaroni
-# Matteo Zaffo &#x27;80 https://launchpad.net/~zaffo80
-# MeltingShell https://launchpad.net/~meltingshell
-# Michael von Glasow https://launchpad.net/~michael-vonglasow
-# Michele Olivo https://launchpad.net/~micheleolivo
-# Niccolo Rigacci https://launchpad.net/~niccolo
-# Stefano Angeleri https://launchpad.net/~weltall
-# Stemby https://launchpad.net/~carlo-stemberger
-# amedeo https://launchpad.net/~amedeo-lanza
-# b3784098 https://launchpad.net/~b3784098
-# ernia https://launchpad.net/~monghitri
-# giardia https://launchpad.net/~fabriziosm
-# jackyes https://launchpad.net/~jackthebest
-# tomas https://launchpad.net/~tracks-tomyt
+# icefirewu https://launchpad.net/~icefirewu
 
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.0\n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-06-17 19:33+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Italiano\n"
+"Project-Id-Version: navit\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2016-09-12 15:23+0000\n"
+"Last-Translator: icefirewu <icefirewu@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: it\n"
-"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Running from source directory\n"
-msgstr "Esecuzione dalla cartella di compilazione\n"
+msgstr "自源目錄執行\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "impostazione di '%s' a '%s'\n"
+msgstr "將 '%s' 設為 '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr "zero"
+msgstr "第零條"
 
 msgid "first"
-msgstr "primo"
+msgstr "第一條"
 
 msgid "second"
-msgstr "secondo"
+msgstr "第二條"
 
 msgid "third"
-msgstr "terzo"
+msgstr "第三條"
 
 msgid "fourth"
-msgstr "quarto"
+msgstr "第四條"
 
 msgid "fifth"
-msgstr "quinto"
+msgstr "第五條"
 
 msgid "sixth"
-msgstr "sesto"
+msgstr "第六條"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr "Uscita zero"
+msgstr "第零條出口"
 
 msgid "first exit"
-msgstr "prima uscita"
+msgstr "第一條出口"
 
 msgid "second exit"
-msgstr "seconda uscita"
+msgstr "第二條出口"
 
 msgid "third exit"
-msgstr "terza uscita"
+msgstr "第三條出口"
 
 msgid "fourth exit"
-msgstr "quarta uscita"
+msgstr "第四條出口"
 
 msgid "fifth exit"
-msgstr "quinta uscita"
+msgstr "第五條出口"
 
 msgid "sixth exit"
-msgstr "sesta uscita"
+msgstr "第六條出口"
 
 #, c-format
 msgid "%d feet"
-msgstr "%d piedi"
+msgstr "%d 英尺"
 
 #, c-format
 msgid "in %d feet"
-msgstr "tra %d piedi"
+msgstr "在 %d 英尺"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr "%d.%d miglia"
+msgstr "%d 點 %d 英里"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr "tra %d.%d miglia"
+msgstr "在 %d 點 %d 英里"
 
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "un miglio"
-msgstr[1] "%d miglia"
+msgstr[0] "%d 英里"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "tra un miglio"
-msgstr[1] "tra %d miglia"
+msgstr[0] "在 %d 英里"
 
 #, c-format
 msgid "%d meters"
-msgstr "%d metri"
+msgstr "%d 公尺"
 
 #, c-format
 msgid "in %d meters"
-msgstr "tra %d metri"
+msgstr "在 %d 公尺"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d chilometri"
+msgstr "%d 點 %d 公里"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "tra %d,%d chilometri"
+msgstr "在 %d 點 %d 公里"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "un chilometro"
-msgstr[1] "%d chilometri"
+msgstr[0] "%d 公里"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "tra un chilometro"
-msgstr[1] "tra %d chilometri"
+msgstr[0] "在 %d 公里"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr "%1$ssulla %2$s%3$s%4$s"
+msgstr "%1$s 往 %2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr "%1$ssulla strada %2$s"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr "%1$ssul %2$s"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr "%1$ssulla %2$s"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr "%1$ssulla strada %2$s"
+msgstr "%1$s 往 %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr "nella rampa"
+msgstr "往交流道匝道"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sin %s%s%s"
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr "%sin %s%s%s"
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr "%sin %s%s%s"
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sin %s%s%s"
+msgstr "%s 往 %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%sin %s"
+msgstr "%s 往 %s"
 
 msgid "When possible, please turn around"
-msgstr "Appena possibile, invertire il senso di marcia"
+msgstr "請盡可能迴轉"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr "verso %s"
+msgstr "朝向 %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Seguire la strada per i prossimi %s"
+msgstr "沿著路到下一個 %s"
 
 msgid "Enter the roundabout soon"
-msgstr "Tra poco si entrerà in rotonda"
+msgstr "即將進入圓環"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "在 %s 進入圓環"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "然後進入圓環"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
-msgstr "Alla rotonda prendere la %1$s %2$s"
+msgstr "於 %1$s 脫離圓環 %2$s"
 
 msgid "soon"
-msgstr "tra poco"
+msgstr "即將"
 
 msgid "now"
-msgstr "adesso"
+msgstr "立即"
 
 msgid "then"
-msgstr "poi"
+msgstr "然後"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr "poi entrare%1$s"
+msgstr "然後匯入右方車道 %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr "Entrare %1$s%2$s"
+msgstr "%1$s 靠 %2$s 行駛"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr "poi entrare%1$s"
+msgstr "然後并入左線 %1$s 行駛"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr "Entrare %1$s%2$s"
+msgstr "在 %1$s 併入%2$s 線行駛 |left"
 
 msgid "on your left"
-msgstr "a sinistra"
+msgstr "切入右線"
 
 msgid "on your right"
-msgstr "a destra"
+msgstr "切入左線"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr "Prendere l'uscita %1$s %2$s %3$s"
+msgstr "下 %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr "Prendere l'uscita %1$s %2$s%3$s"
+msgstr "%2$s 靠 %1$s 下 %3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr "all'intersezione"
+msgstr "於交流道處"
 
 msgid "at exit"
-msgstr "all'uscita"
+msgstr "於出口處"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr "poi procedere dritto%1$s"
+msgstr "然後繼續朝 %1$s 直行"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr "Procedere dritto %1$s%2$s%3$s"
+msgstr "繼續直行 %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr "poi tenere la destra%1$s"
+msgstr "然後繼續靠右 %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr "Tenere la destra %1$s%2$s%3$s"
+msgstr "繼續靠右 %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr "poi tenere la sinistra%1$s"
+msgstr "然後繼續靠左 %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr "Tenere la sinistra %1$s%2$s%3$s"
+msgstr "在 %1$s 繼續靠左 下 %2$s 往 %3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr "destra"
+msgstr "右"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr "sinistra"
+msgstr "左"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr "leggermente "
+msgstr "微 "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr "decisamente "
+msgstr "急 "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "poi prendere la %1$s strada a %2$s"
+msgstr "然後進入 %1$s 往 %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr "Prendere la %1$s strada a %2$s"
+msgstr "進入 %1$s 往 %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr "tra %i strade"
+msgstr "經過 %i 路"
 
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Svoltare %1$s %2$s %3$s %4$s"
+msgstr "%3$s 向 %2$s %1$s 轉 %4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "poi invertire il senso di marcia"
+msgstr "然後左迴轉"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr "Invertire il senso di marcia %1$s"
+msgstr "%1$s 左迴轉"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "poi invertire il senso di marcia"
+msgstr "然後右迴轉"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr "Invertire il senso di marcia %1$s"
+msgstr "%1$s 右迴轉"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -369,1077 +347,1077 @@ msgstr "Invertire il senso di marcia %1$s"
 #. *
 #. 
 msgid "follow"
-msgstr "seguire"
+msgstr "沿著"
 
 msgid "then you have reached your destination."
-msgstr "poi sarete arrivati a destinazione"
+msgstr "然後你將抵達目的地"
 
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Siete arrivati a destinazione %s"
+msgstr "%s 你將抵達目的地"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr "Intersezione"
+msgstr "交流道"
 
 msgid "Exit"
-msgstr "Uscita"
+msgstr "出口"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
-msgstr "Posizione"
+msgstr "位置"
 
 msgid "Command"
-msgstr "Indicazione"
+msgstr "指令"
 
 msgid "Length"
-msgstr "Distanza"
+msgstr "距離"
 
 msgid "km"
-msgstr "km"
+msgstr "公里"
 
 msgid "m"
-msgstr "m"
+msgstr "公尺"
 
 msgid "Time"
-msgstr "Tempo"
+msgstr "時間"
 
 msgid "Destination Length"
-msgstr "Distanza all'arrivo"
+msgstr "抵達距離"
 
 msgid "Destination Time"
-msgstr "Orario di arrivo"
+msgstr "抵達時間"
 
 msgid "Roadbook"
-msgstr "Quaderno di viaggio"
+msgstr "Roadbook"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr "Waypoint %d"
+msgstr "航點 %d"
 
 msgid "Visit before..."
-msgstr "Visitare prima..."
+msgstr "歷經"
 
 msgid "Set as position"
-msgstr "Imposta come posizione"
+msgstr "設為起點"
 
 msgid "Set as destination"
-msgstr "Imposta come destinazione"
+msgstr "設為目的地"
 
 msgid "Add as bookmark"
-msgstr "Aggiungi come segnalibro"
+msgstr "增為書籤"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr "Punto 0x%x, 0x%x"
+msgstr "點 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr "Coordinate schermo: %d, %d"
+msgstr "螢幕座標 : %d %d"
 
 #. 020
 msgid "Andorra"
-msgstr "Andorra"
+msgstr "安道爾"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr "Emirati Arabi Uniti"
+msgstr "阿拉伯聯合大公國"
 
 #. 004
 msgid "Afghanistan"
-msgstr "Afghanistan"
+msgstr "阿富汗"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr "Antigua e Barbuda"
+msgstr "安提瓜和巴布達"
 
 #. 660
 msgid "Anguilla"
-msgstr "Anguilla"
+msgstr "英屬安圭拉"
 
 #. 008
 msgid "Albania"
-msgstr "Albania"
+msgstr "阿爾巴尼亞"
 
 #. 051
 msgid "Armenia"
-msgstr "Armenia"
+msgstr "亞美尼亞"
 
 #. 530
 msgid "Netherlands Antilles"
-msgstr "Antille olandesi"
+msgstr "荷屬安地列斯群島"
 
 #. 024
 msgid "Angola"
-msgstr "Angola"
+msgstr "安哥拉"
 
 #. 010
 msgid "Antarctica"
-msgstr "Antartide"
+msgstr "南極洲"
 
 #. 032
 msgid "Argentina"
-msgstr "Argentina"
+msgstr "阿根廷"
 
 #. 016
 msgid "American Samoa"
-msgstr "Samoa Americane"
+msgstr "美屬薩摩亞"
 
 #. 040
 msgid "Austria"
-msgstr "Austria"
+msgstr "奧地利"
 
 #. 036
 msgid "Australia"
-msgstr "Australia"
+msgstr "澳洲"
 
 #. 533
 msgid "Aruba"
-msgstr "Aruba"
+msgstr "阿鲁巴"
 
 #. 248
 msgid "Aland Islands"
-msgstr "Isole Åland"
+msgstr "奧蘭群島"
 
 #. 031
 msgid "Azerbaijan"
-msgstr "Azerbaigian"
+msgstr "亞塞拜然"
 
 #. 070
 msgid "Bosnia and Herzegovina"
-msgstr "Bosnia - Herzegovina"
+msgstr "波士尼亞與赫塞哥維納"
 
 #. 052
 msgid "Barbados"
-msgstr "Barbados"
+msgstr "巴貝多"
 
 #. 050
 msgid "Bangladesh"
-msgstr "Bangladesh"
+msgstr "孟加拉"
 
 #. 056
 msgid "Belgium"
-msgstr "Belgio"
+msgstr "比利時"
 
 #. 854
 msgid "Burkina Faso"
-msgstr "Burkina Faso"
+msgstr "布吉納法索"
 
 #. 100
 msgid "Bulgaria"
-msgstr "Bulgaria"
+msgstr "保加利亞"
 
 #. 048
 msgid "Bahrain"
-msgstr "Bahrain"
+msgstr "巴林"
 
 #. 108
 msgid "Burundi"
-msgstr "Burundi"
+msgstr "蒲隆地"
 
 #. 204
 msgid "Benin"
-msgstr "Benin"
+msgstr "貝南"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr "Saint-Barthélemy"
+msgstr "聖巴托洛繆"
 
 #. 060
 msgid "Bermuda"
-msgstr "Bermuda"
+msgstr "百慕達群島"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr "Brunei"
+msgstr "汶萊"
 
 #. 068
 msgid "Bolivia"
-msgstr "Bolivia"
+msgstr "玻利維亞"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "Bonaire, Sint Eustatius e Saba"
+msgstr "荷蘭加勒比區"
 
 #. 076
 msgid "Brazil"
-msgstr "Brasile"
+msgstr "巴西"
 
 #. 044
 msgid "Bahamas"
-msgstr "Bahamas"
+msgstr "巴哈馬群島"
 
 #. 064
 msgid "Bhutan"
-msgstr "Bhutan"
+msgstr "不丹"
 
 #. 074
 msgid "Bouvet Island"
-msgstr "Isola Bouvet"
+msgstr "布威島"
 
 #. 072
 msgid "Botswana"
-msgstr "Botswana"
+msgstr "波札那"
 
 #. 112
 msgid "Belarus"
-msgstr "Bielorussia"
+msgstr "白俄羅斯"
 
 #. 084
 msgid "Belize"
-msgstr "Belize"
+msgstr "貝里斯"
 
 #. 124
 msgid "Canada"
-msgstr "Canada"
+msgstr "加拿大"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr "Isole Cocos"
+msgstr "科科斯 (基林) 群島"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr "Congo, Repubblica Democratica del"
+msgstr "剛果民主共和國"
 
 #. 140
 msgid "Central African Republic"
-msgstr "Repubblica Centrafricana"
+msgstr "中非共和國"
 
 #. 178
 msgid "Congo"
-msgstr "Congo"
+msgstr "剛果共和國"
 
 #. 756
 msgid "Switzerland"
-msgstr "Svizzera"
+msgstr "瑞士"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr "Costa d'Avorio"
+msgstr "象牙海岸"
 
 #. 184
 msgid "Cook Islands"
-msgstr "Isole Cook"
+msgstr "庫克群島"
 
 #. 152
 msgid "Chile"
-msgstr "Cile"
+msgstr "智利"
 
 #. 120
 msgid "Cameroon"
-msgstr "Camerun"
+msgstr "喀麥隆"
 
 #. 156
 msgid "China"
-msgstr "Cina"
+msgstr "中國"
 
 #. 170
 msgid "Colombia"
-msgstr "Colombia"
+msgstr "哥倫比亞"
 
 #. 188
 msgid "Costa Rica"
-msgstr "Costa Rica"
+msgstr "哥斯大黎加"
 
 #. 192
 msgid "Cuba"
-msgstr "Cuba"
+msgstr "古巴"
 
 #. 132
 msgid "Cape Verde"
-msgstr "Capo Verde"
+msgstr "維德角"
 
 #. 531
 msgid "Curacao"
-msgstr "Curaçao"
+msgstr "古拉索"
 
 #. 162
 msgid "Christmas Island"
-msgstr "Isola di Natale"
+msgstr "聖誕島"
 
 #. 196
 msgid "Cyprus"
-msgstr "Cipro"
+msgstr "賽普勒斯"
 
 #. 203
 msgid "Czech Republic"
-msgstr "Repubblica Ceca"
+msgstr "捷克"
 
 #. 276
 msgid "Germany"
-msgstr "Germania"
+msgstr "德國"
 
 #. 262
 msgid "Djibouti"
-msgstr "Gibuti"
+msgstr "吉布地"
 
 #. 208
 msgid "Denmark"
-msgstr "Danimarca"
+msgstr "丹麥"
 
 #. 212
 msgid "Dominica"
-msgstr "Dominica"
+msgstr "多米尼克"
 
 #. 214
 msgid "Dominican Republic"
-msgstr "Repubblica Dominicana"
+msgstr "多明尼加"
 
 #. 012
 msgid "Algeria"
-msgstr "Algeria"
+msgstr "阿爾及利亞"
 
 #. 218
 msgid "Ecuador"
-msgstr "Ecuador"
+msgstr "厄瓜多"
 
 #. 233
 msgid "Estonia"
-msgstr "Estonia"
+msgstr "愛沙尼亞"
 
 #. 818
 msgid "Egypt"
-msgstr "Egitto"
+msgstr "埃及"
 
 #. 732
 msgid "Western Sahara"
-msgstr "Sahara Occidentale"
+msgstr "西撒哈拉"
 
 #. 232
 msgid "Eritrea"
-msgstr "Eritrea"
+msgstr "厄利垂亞"
 
 #. 724
 msgid "Spain"
-msgstr "Spagna"
+msgstr "西班牙"
 
 #. 231
 msgid "Ethiopia"
-msgstr "Etiopia"
+msgstr "衣索披亞"
 
 #. 246
 msgid "Finland"
-msgstr "Finlandia"
+msgstr "芬蘭"
 
 #. 242
 msgid "Fiji"
-msgstr "Figi"
+msgstr "斐濟"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr "Isole Falkland (Malvinas)"
+msgstr "福克蘭群島 (馬爾維納斯)"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr "Stati Federati di Micronesia"
+msgstr "密克羅尼西亞聯邦"
 
 #. 234
 msgid "Faroe Islands"
-msgstr "Isole Fær Øer"
+msgstr "法羅群島"
 
 #. 250
 msgid "France"
-msgstr "Francia"
+msgstr "法國"
 
 #. 266
 msgid "Gabon"
-msgstr "Gabon"
+msgstr "加彭"
 
 #. 826
 msgid "United Kingdom"
-msgstr "Regno Unito"
+msgstr "英國"
 
 #. 308
 msgid "Grenada"
-msgstr "Grenada"
+msgstr "格瑞那達"
 
 #. 268
 msgid "Georgia"
-msgstr "Georgia"
+msgstr "喬治亞州"
 
 #. 254
 msgid "French Guiana"
-msgstr "Guyana Francese"
+msgstr "法屬圭亞那"
 
 #. 831
 msgid "Guernsey"
-msgstr "Guernsey"
+msgstr "耿西"
 
 #. 288
 msgid "Ghana"
-msgstr "Ghana"
+msgstr "迦納"
 
 #. 292
 msgid "Gibraltar"
-msgstr "Gibilterra"
+msgstr "直布羅陀"
 
 #. 304
 msgid "Greenland"
-msgstr "Groenlandia"
+msgstr "格陵蘭"
 
 #. 270
 msgid "Gambia"
-msgstr "Gambia"
+msgstr "甘比亞"
 
 #. 324
 msgid "Guinea"
-msgstr "Guinea"
+msgstr "幾內亞"
 
 #. 312
 msgid "Guadeloupe"
-msgstr "Guadalupa"
+msgstr "瓜德羅普"
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr "Guinea Equatoriale"
+msgstr "赤道幾內亞"
 
 #. 300
 msgid "Greece"
-msgstr "Grecia"
+msgstr "希臘"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr "Georgia del Sud e Isole delle Sandwich meridionali"
+msgstr "南喬治亞及南桑威奇群島"
 
 #. 320
 msgid "Guatemala"
-msgstr "Guatemala"
+msgstr "瓜地馬拉"
 
 #. 316
 msgid "Guam"
-msgstr "Guam"
+msgstr "關島"
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr "Guinea-Bissau"
+msgstr "幾內亞比索"
 
 #. 328
 msgid "Guyana"
-msgstr "Guyana"
+msgstr "蓋亞那"
 
 #. 344
 msgid "Hong Kong"
-msgstr "Hong Kong"
+msgstr "香港"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr "Isole Heard e McDonald"
+msgstr "赫德及麥當勞群島"
 
 #. 340
 msgid "Honduras"
-msgstr "Honduras"
+msgstr "宏都拉斯"
 
 #. 191
 msgid "Croatia"
-msgstr "Croazia"
+msgstr "克羅埃西亞"
 
 #. 332
 msgid "Haiti"
-msgstr "Haiti"
+msgstr "海地"
 
 #. 348
 msgid "Hungary"
-msgstr "Ungheria"
+msgstr "匈牙利"
 
 #. 360
 msgid "Indonesia"
-msgstr "Indonesia"
+msgstr "印尼"
 
 #. 372
 msgid "Ireland"
-msgstr "Irlanda"
+msgstr "愛爾蘭"
 
 #. 376
 msgid "Israel"
-msgstr "Israele"
+msgstr "以色列"
 
 #. 833
 msgid "Isle of Man"
-msgstr "Isola di Man"
+msgstr "英屬曼島"
 
 #. 356
 msgid "India"
-msgstr "India"
+msgstr "印度"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr "Territorio Britannico dell'Oceano Indiano"
+msgstr "英屬印度洋地區"
 
 #. 368
 msgid "Iraq"
-msgstr "Iraq"
+msgstr "伊拉克"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr "Iran, Repubblica Islamica dell'"
+msgstr "伊朗"
 
 #. 352
 msgid "Iceland"
-msgstr "Islanda"
+msgstr "冰島"
 
 #. 380
 msgid "Italy"
-msgstr "Italia"
+msgstr "義大利"
 
 #. 832
 msgid "Jersey"
-msgstr "Jersey"
+msgstr "澤西島"
 
 #. 388
 msgid "Jamaica"
-msgstr "Giamaica"
+msgstr "牙買加"
 
 #. 400
 msgid "Jordan"
-msgstr "Giordania"
+msgstr "約旦"
 
 #. 392
 msgid "Japan"
-msgstr "Giappone"
+msgstr "日本"
 
 #. 404
 msgid "Kenya"
-msgstr "Kenya"
+msgstr "肯亞"
 
 #. 417
 msgid "Kyrgyzstan"
-msgstr "Kirghizistan"
+msgstr "吉爾吉斯"
 
 #. 116
 msgid "Cambodia"
-msgstr "Cambogia"
+msgstr "柬埔寨"
 
 #. 296
 msgid "Kiribati"
-msgstr "Kiribati"
+msgstr "吉里巴斯"
 
 #. 174
 msgid "Comoros"
-msgstr "Comore"
+msgstr "葛摩"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr "Saint Kitts e Nevis"
+msgstr "聖克里斯多福與尼維斯聯邦"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr "Corea, Repubblica Democratica Popolare di"
+msgstr "北韓"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr "Corea, Repubblica di"
+msgstr "南韓"
 
 #. 414
 msgid "Kuwait"
-msgstr "Kuwait"
+msgstr "科威特"
 
 #. 136
 msgid "Cayman Islands"
-msgstr "Isole Cayman"
+msgstr "開曼群島"
 
 #. 398
 msgid "Kazakhstan"
-msgstr "Kazakistan"
+msgstr "哈薩克"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr "Laos, Repubblica popolare democratica del"
+msgstr "寮國"
 
 #. 422
 msgid "Lebanon"
-msgstr "Libano"
+msgstr "黎巴嫩"
 
 #. 662
 msgid "Saint Lucia"
-msgstr "Santa Lucia"
+msgstr "聖露西亞"
 
 #. 438
 msgid "Liechtenstein"
-msgstr "Liechtenstein"
+msgstr "列支敦斯登"
 
 #. 144
 msgid "Sri Lanka"
-msgstr "Sri Lanka"
+msgstr "斯里蘭卡"
 
 #. 430
 msgid "Liberia"
-msgstr "Liberia"
+msgstr "賴比瑞亞"
 
 #. 426
 msgid "Lesotho"
-msgstr "Lesotho"
+msgstr "賴索托"
 
 #. 440
 msgid "Lithuania"
-msgstr "Lituania"
+msgstr "立陶宛"
 
 #. 442
 msgid "Luxembourg"
-msgstr "Lussemburgo"
+msgstr "盧森堡"
 
 #. 428
 msgid "Latvia"
-msgstr "Lettonia"
+msgstr "拉脫維亞"
 
 #. 434
 msgid "Libya"
-msgstr "Libia"
+msgstr "利比亞"
 
 #. 504
 msgid "Morocco"
-msgstr "Marocco"
+msgstr "摩洛哥"
 
 #. 492
 msgid "Monaco"
-msgstr "Principato di Monaco"
+msgstr "摩納哥"
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr "Moldavia"
+msgstr "摩爾多瓦"
 
 #. 499
 msgid "Montenegro"
-msgstr "Montenegro"
+msgstr "蒙特內哥羅"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr "Saint-Martin (parte francese)"
+msgstr "法屬聖馬丁"
 
 #. 450
 msgid "Madagascar"
-msgstr "Madagascar"
+msgstr "馬達加斯加"
 
 #. 584
 msgid "Marshall Islands"
-msgstr "Isole Marshall"
+msgstr "馬紹爾群島"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "Repubblica di Macedonia"
+msgstr "馬其頓"
 
 #. 466
 msgid "Mali"
-msgstr "Mali"
+msgstr "馬利"
 
 #. 104
 msgid "Myanmar"
-msgstr "Myanmar"
+msgstr "緬甸"
 
 #. 496
 msgid "Mongolia"
-msgstr "Mongolia"
+msgstr "蒙古"
 
 #. 446
 msgid "Macao"
-msgstr "Macao"
+msgstr "澳門"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr "Isole Marianne Settentrionali"
+msgstr "北馬里安納群島"
 
 #. 474
 msgid "Martinique"
-msgstr "Martinica"
+msgstr "法屬馬丁尼克"
 
 #. 478
 msgid "Mauritania"
-msgstr "Mauritania"
+msgstr "茅利塔尼亞"
 
 #. 500
 msgid "Montserrat"
-msgstr "Montserrat"
+msgstr "蒙特塞拉特"
 
 #. 470
 msgid "Malta"
-msgstr "Malta"
+msgstr "馬爾他"
 
 #. 480
 msgid "Mauritius"
-msgstr "Mauritius"
+msgstr "模里西斯"
 
 #. 462
 msgid "Maldives"
-msgstr "Maldive"
+msgstr "馬爾地夫"
 
 #. 454
 msgid "Malawi"
-msgstr "Malawi"
+msgstr "馬拉威"
 
 #. 484
 msgid "Mexico"
-msgstr "Messico"
+msgstr "墨西哥"
 
 #. 458
 msgid "Malaysia"
-msgstr "Malesia"
+msgstr "馬來西亞"
 
 #. 508
 msgid "Mozambique"
-msgstr "Mozambico"
+msgstr "莫三比克"
 
 #. 516
 msgid "Namibia"
-msgstr "Namibia"
+msgstr "納米比亞"
 
 #. 540
 msgid "New Caledonia"
-msgstr "Nuova Caledonia"
+msgstr "新喀里多尼亞"
 
 #. 562
 msgid "Niger"
-msgstr "Niger"
+msgstr "尼日"
 
 #. 574
 msgid "Norfolk Island"
-msgstr "Isola Norfolk"
+msgstr "諾福克島"
 
 #. 566
 msgid "Nigeria"
-msgstr "Nigeria"
+msgstr "奈及利亞"
 
 #. 558
 msgid "Nicaragua"
-msgstr "Nicaragua"
+msgstr "尼加拉瓜"
 
 #. 528
 msgid "Netherlands"
-msgstr "Olanda"
+msgstr "荷蘭"
 
 #. 578
 msgid "Norway"
-msgstr "Norvegia"
+msgstr "挪威"
 
 #. 524
 msgid "Nepal"
-msgstr "Nepal"
+msgstr "尼泊爾"
 
 #. 520
 msgid "Nauru"
-msgstr "Nauru"
+msgstr "諾魯"
 
 #. 570
 msgid "Niue"
-msgstr "Niue"
+msgstr "紐埃"
 
 #. 554
 msgid "New Zealand"
-msgstr "Nuova Zelanda"
+msgstr "紐西蘭"
 
 #. 512
 msgid "Oman"
-msgstr "Oman"
+msgstr "阿曼"
 
 #. 591
 msgid "Panama"
-msgstr "Panama"
+msgstr "巴拿馬"
 
 #. 604
 msgid "Peru"
-msgstr "Perù"
+msgstr "秘魯"
 
 #. 258
 msgid "French Polynesia"
-msgstr "Polinesia francese"
+msgstr "法屬玻里尼西亞"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr "Papua Nuova Guinea"
+msgstr "巴布亞紐幾內亞"
 
 #. 608
 msgid "Philippines"
-msgstr "Filippine"
+msgstr "菲律賓"
 
 #. 586
 msgid "Pakistan"
-msgstr "Pakistan"
+msgstr "巴基斯坦"
 
 #. 616
 msgid "Poland"
-msgstr "Polonia"
+msgstr "波蘭"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr "Saint-Pierre e Miquelon"
+msgstr "聖皮耶與密克隆群島"
 
 #. 612
 msgid "Pitcairn"
-msgstr "Isole Pitcairn"
+msgstr "皮特肯群島"
 
 #. 630
 msgid "Puerto Rico"
-msgstr "Porto Rico"
+msgstr "波多黎各"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr "Palestina"
+msgstr "巴勒斯坦"
 
 #. 620
 msgid "Portugal"
-msgstr "Portogallo"
+msgstr "葡萄牙"
 
 #. 585
 msgid "Palau"
-msgstr "Palau"
+msgstr "帛琉"
 
 #. 600
 msgid "Paraguay"
-msgstr "Paraguay"
+msgstr "巴拉圭"
 
 #. 634
 msgid "Qatar"
-msgstr "Qatar"
+msgstr "卡達"
 
 #. 638
 msgid "Reunion"
-msgstr "Isola della Riunione"
+msgstr "留尼旺"
 
 #. 642
 msgid "Romania"
-msgstr "Romania"
+msgstr "羅馬尼亞"
 
 #. 688
 msgid "Serbia"
-msgstr "Serbia"
+msgstr "塞爾維亞"
 
 #. 643
 msgid "Russian Federation"
-msgstr "Federazione Russa"
+msgstr "俄羅斯"
 
 #. 646
 msgid "Rwanda"
-msgstr "Ruanda"
+msgstr "盧安達"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr "Arabia Saudita"
+msgstr "沙烏地阿拉伯"
 
 #. 090
 msgid "Solomon Islands"
-msgstr "Isole Salomone"
+msgstr "索羅門群島"
 
 #. 690
 msgid "Seychelles"
-msgstr "Seychelles"
+msgstr "塞席爾"
 
 #. 736
 msgid "Sudan"
-msgstr "Sudan"
+msgstr "蘇丹"
 
 #. 752
 msgid "Sweden"
-msgstr "Svezia"
+msgstr "瑞典"
 
 #. 702
 msgid "Singapore"
-msgstr "Singapore"
+msgstr "新加坡"
 
 #. 654
 msgid "Saint Helena"
-msgstr "Sant'Elena"
+msgstr "聖赫勒那島"
 
 #. 705
 msgid "Slovenia"
-msgstr "Slovenia"
+msgstr "斯洛維尼亞"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard e Jan Mayen"
+msgstr "斯瓦巴和揚馬延"
 
 #. 703
 msgid "Slovakia"
-msgstr "Slovacchia"
+msgstr "斯洛伐克"
 
 #. 694
 msgid "Sierra Leone"
-msgstr "Sierra Leone"
+msgstr "獅子山"
 
 #. 674
 msgid "San Marino"
-msgstr "San Marino"
+msgstr "聖馬利諾"
 
 #. 686
 msgid "Senegal"
-msgstr "Senegal"
+msgstr "塞內加爾"
 
 #. 706
 msgid "Somalia"
-msgstr "Somalia"
+msgstr "索馬利亞"
 
 #. 740
 msgid "Suriname"
-msgstr "Suriname"
+msgstr "蘇利南"
 
 #. 728
 msgid "South Sudan"
-msgstr "Sudan del Sud"
+msgstr "南蘇丹"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr "São Tomé e Príncipe"
+msgstr "聖多美普林西比"
 
 #. 222
 msgid "El Salvador"
-msgstr "El Salvador"
+msgstr "薩爾瓦多"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr "Sint Maarten (parte danese)"
+msgstr "荷屬聖馬丁"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr "Siria"
+msgstr "敘利亞"
 
 #. 748
 msgid "Swaziland"
-msgstr "Swaziland"
+msgstr "史瓦濟蘭"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr "Turks e Caicos"
+msgstr "土克凱可群島"
 
 #. 148
 msgid "Chad"
-msgstr "Ciad"
+msgstr "查德"
 
 #. 260
 msgid "French Southern Territories"
-msgstr "Terre Australi e Antartiche Francesi"
+msgstr "法屬南部和南極領地"
 
 #. 768
 msgid "Togo"
-msgstr "Togo"
+msgstr "多哥"
 
 #. 764
 msgid "Thailand"
-msgstr "Thailandia"
+msgstr "泰國"
 
 #. 762
 msgid "Tajikistan"
-msgstr "Tagikistan"
+msgstr "塔吉克"
 
 #. 772
 msgid "Tokelau"
-msgstr "Tokelau"
+msgstr "托克勞"
 
 #. 626
 msgid "Timor-Leste"
-msgstr "Timor Est"
+msgstr "東帝汶"
 
 #. 795
 msgid "Turkmenistan"
-msgstr "Turkmenistan"
+msgstr "土庫曼"
 
 #. 788
 msgid "Tunisia"
-msgstr "Tunisia"
+msgstr "突尼西亞"
 
 #. 776
 msgid "Tonga"
-msgstr "Tonga"
+msgstr "東加"
 
 #. 792
 msgid "Turkey"
-msgstr "Turchia"
+msgstr "土耳其"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr "Trinidad e Tobago"
+msgstr "千里達及托巴哥"
 
 #. 798
 msgid "Tuvalu"
-msgstr "Tuvalu"
+msgstr "吐瓦魯"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr "Taiwan"
+msgstr "臺灣省"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr "Tanzania"
+msgstr "坦尚尼亞"
 
 #. 804
 msgid "Ukraine"
-msgstr "Ucraina"
+msgstr "烏克蘭"
 
 #. 800
 msgid "Uganda"
-msgstr "Uganda"
+msgstr "烏干達"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr "Isole minori esterne degli Stati Uniti"
+msgstr "美國本土以外小島嶼"
 
 #. 840
 msgid "United States"
-msgstr "Stati Uniti"
+msgstr "美國"
 
 #. 858
 msgid "Uruguay"
-msgstr "Uruguay"
+msgstr "烏拉圭"
 
 #. 860
 msgid "Uzbekistan"
-msgstr "Uzbekistan"
+msgstr "烏茲別克"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr "Città del Vaticano"
+msgstr "梵蒂岡"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr "Saint Vincent e Grenadine"
+msgstr "聖文森及格瑞那丁"
 
 #. 862
 msgid "Venezuela"
-msgstr "Venezuela"
+msgstr "委內瑞拉"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr "Isole Vergini britanniche"
+msgstr "英屬維京群島"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr "Isole Vergini americane"
+msgstr "美屬維京群島"
 
 #. 704
 msgid "Viet Nam"
-msgstr "Vietnam"
+msgstr "越南"
 
 #. 548
 msgid "Vanuatu"
-msgstr "Vanuatu"
+msgstr "萬那杜"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr "Wallis e Futuna"
+msgstr "瓦利斯和富圖納群島"
 
 #. 882
 msgid "Samoa"
-msgstr "Samoa"
+msgstr "薩摩亞"
 
 #. 887
 msgid "Yemen"
-msgstr "Yemen"
+msgstr "葉門"
 
 #. 175
 msgid "Mayotte"
-msgstr "Mayotte"
+msgstr "馬約特"
 
 #. 710
 msgid "South Africa"
-msgstr "Sudafrica"
+msgstr "南非"
 
 #. 894
 msgid "Zambia"
-msgstr "Zambia"
+msgstr "尚比亞"
 
 #. 716
 msgid "Zimbabwe"
-msgstr "Zimbabwe"
+msgstr "辛巴威"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "* Sconosciuto, aggiungi tag is_in a quelle città"
+msgstr "* 未知, 於這些城市新增 is_in 標籤"
 
 msgid ""
 "navit usage:\n"
@@ -1452,46 +1430,50 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
 msgstr ""
+"navit 用法:\n"
+"navit [選項] [設定檔]\n"
+"\t-c <檔名>: 取代預設檔, 使用 <檔名> 為設定檔.\n"
+"\t-d <n>:  全域除錯輸出等級設為 <n> (0=錯誤, 1=警告, 2=訊息, 3=除錯).\n"
+"\t設定檔內之設定若等級較高則以為準.\n"
+"\t-h: 顯示用法資訊後停止.\n"
+"\t-v: 顯示版本資訊後停止.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-"Non è stato trovato alcun file di configurazione navit.xml, navit.xml.local\n"
+msgstr "設定檔 navit.xml, navit.xml.local 未發現\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr "Errore nel parsing del file di configurazione '%s': %s\n"
+msgstr "設定檔 '%s' 解讀錯誤 : %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr "Usando il file di configurazione '%s'\n"
+msgstr "採用設定檔 '%s'\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr "Errore: Nessuna configurazione trovata nel file config '%s'\n"
+msgstr "錯誤: 設定檔 '%s' 內無設定\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr ""
-"Inizializzazione interna fallita, uscendo. Controlla i messaggi di errore "
-"precedenti.\n"
+msgstr "通用初始化失敗, 正在脫出. 檢查之前的錯誤訊息.\n"
 
 msgid "unknown street"
-msgstr "strada sconosciuta"
+msgstr "未知街道"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr "Veicolo senza nome"
+msgstr "無名車輛"
 
 msgid "Failed to write bookmarks file"
-msgstr "Fallita scrittura file luogo preferito"
+msgstr "寫入書籤檔失敗"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr "Punto sulla mappa"
+msgstr "地圖點"
 
 msgid "Car"
-msgstr "Automobile"
+msgstr "汽車"
 
 msgid "Iso2"
 msgstr "Iso2"
@@ -1500,238 +1482,237 @@ msgid "Iso3"
 msgstr "Iso3"
 
 msgid "Country"
-msgstr "Nazione"
+msgstr "國家/地區"
 
 msgid "Postal"
-msgstr "Postale"
+msgstr "郵遞區號"
 
 msgid "Town"
-msgstr "Centro abitato"
+msgstr "鄉/鎮"
 
 msgid "District"
-msgstr "Regione"
+msgstr "區"
 
 msgid "Street"
-msgstr "Via"
+msgstr "路/街"
 
 msgid "Number"
-msgstr "Numero"
+msgstr "門牌號碼"
 
 msgid "Enter Destination"
-msgstr "Inserire la destinazione"
+msgstr "輸入目的地"
 
 msgid "Zip Code"
-msgstr "C.A.P."
+msgstr "郵遞區號"
 
 msgid "City"
-msgstr "Città"
+msgstr "縣市"
 
 msgid "District/Township"
-msgstr "Regione/provincia"
+msgstr "市區/鄉鎮"
 
 msgid "Map"
-msgstr "Mappa"
+msgstr "地圖"
 
 msgid "Bookmark"
-msgstr "Posto"
+msgstr "書籤"
 
 msgid "Destination"
-msgstr "Destinazione"
+msgstr "目的地"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Visualizza"
+msgstr "_顯示"
 
 msgid "_Route"
-msgstr "Percorso"
+msgstr "_路徑"
 
 msgid "_Former Destinations"
-msgstr "Destinazioni precedenti"
+msgstr "_歷來目的地"
 
 msgid "_Bookmarks"
-msgstr "_Luoghi preferiti"
+msgstr "_書籤"
 
 msgid "_Map"
-msgstr "Mappa"
+msgstr "_圖資"
 
 msgid "_Layout"
-msgstr "Layout"
+msgstr "_畫面配置"
 
 msgid "_Projection"
-msgstr "Proiezione"
+msgstr "_規劃"
 
 msgid "_Vehicle"
-msgstr "Veicolo"
+msgstr "_車輛"
 
 msgid "Zoom_Out"
-msgstr "Zoom -"
+msgstr "拉遠"
 
 msgid "Decrease zoom level"
-msgstr "Riduci zoom"
+msgstr "降低縮放等級"
 
 msgid "Zoom_In"
-msgstr "Zoom +"
+msgstr "拉近"
 
 msgid "Increase zoom level"
-msgstr "Aumenta zoom"
+msgstr "提高縮放等級"
 
 msgid "_Recalculate"
-msgstr "Ricalcola"
+msgstr "_重新計算"
 
 msgid "Redraw map"
-msgstr "Ridisegna la mappa"
+msgstr "地圖重繪"
 
 msgid "_Info"
-msgstr "Informazioni"
+msgstr "_資訊"
 
 msgid "Set _destination"
-msgstr "Imposta_destinazione"
+msgstr "設定_目的地"
 
 msgid "Opens address search dialog"
-msgstr "Apri la finestra di ricerca indirizzo"
+msgstr "開啟地址搜尋介面"
 
 msgid "_POI search"
-msgstr "_Ricerca POI"
+msgstr "_趣點搜尋"
 
 msgid "Opens POI search dialog"
-msgstr "Apri la finestra di ricerca POI"
+msgstr "開啟趣點搜尋介面"
 
 msgid "_Stop Navigation"
-msgstr "Interrompi la navigazione"
+msgstr "_停止導航"
 
 msgid "Test"
-msgstr "Prova"
+msgstr "測試"
 
 msgid "_Quit"
-msgstr "_Esci"
+msgstr "_退出"
 
 msgid "Quit the application"
-msgstr "Esci dal programma"
+msgstr "結束本程式"
 
 msgid "Show position _cursor"
-msgstr "Mostra posizione_cursore"
+msgstr "_顯示游標"
 
 msgid "_Lock on Road"
-msgstr "Prosegui su questa strada"
+msgstr "_鎖定道路"
 
 msgid "_Keep orientation to the North"
-msgstr "_Mantieni orientamento verso Nord"
+msgstr "_保持地圖朝北"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
-"Cambia l'orientamento della mappa tra il nord e la direzione del veicolo"
+msgstr "切換地圖固定朝北或隨車轉"
 
 msgid "_Roadbook"
-msgstr "Quaderno di viaggio"
+msgstr "_Roadbook"
 
 msgid "Show/hide route description"
-msgstr "Visualizza/Nascondi la decrizione del percorso"
+msgstr "顯示/隱藏 路徑敘述"
 
 msgid "_Autozoom"
-msgstr "Zoom automatico"
+msgstr "_自動縮放"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr "Abilita/disabilita il cambiamento automatico del livello di zoom"
+msgstr "啟用/停用 自動縮放"
 
 msgid "_Fullscreen"
-msgstr "Schermo intero"
+msgstr "_全螢幕"
 
 msgid "Data"
-msgstr "Dati"
+msgstr "數據"
 
 msgid "Pharmacy"
-msgstr "Farmacia"
+msgstr "藥局"
 
 msgid "Restaurant"
-msgstr "Ristorante"
+msgstr "餐廳"
 
 msgid "Restaurant. Fast food"
-msgstr "Ristorante. Fast food"
+msgstr "速食店"
 
 msgid "Hotel"
-msgstr "Albergo"
+msgstr "旅館"
 
 msgid "Car parking"
-msgstr "Parcheggio per auto"
+msgstr "停車場"
 
 msgid "Fuel station"
-msgstr "Benzinaio"
+msgstr "加油站"
 
 msgid "Bank"
-msgstr "Banca"
+msgstr "銀行"
 
 msgid "Hospital"
-msgstr "Ospedale"
+msgstr "醫院"
 
 msgid "Cinema"
-msgstr "Cinema"
+msgstr "電影院"
 
 msgid "Train station"
-msgstr "Stazione ferroviaria"
+msgstr "火車站"
 
 msgid "School"
-msgstr "Scuola"
+msgstr "學校"
 
 msgid "Police"
-msgstr "Polizia"
+msgstr "警局"
 
 msgid "Justice"
-msgstr "Tribunale"
+msgstr "法院"
 
 msgid "Taxi"
-msgstr "Taxi"
+msgstr "計程車"
 
 msgid "Shopping"
-msgstr "Negozi"
+msgstr "購物處"
 
 msgid "Distance from screen center (km)"
-msgstr "Distanza dal centro dello schermo (km)"
+msgstr "距螢幕中心的距離 (公里)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr "POI %s. %s"
+msgstr "趣點 %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr "Imposta la destinazione a %ld, %ld \n"
+msgstr "將  %ld, %ld 設為目的地 \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr "Imposta la mappa a %ld, %ld \n"
+msgstr "將 %ld, %ld 設為地圖 \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr "Imposta la prossima tappa a %ld, %ld \n"
+msgstr "設定接下來經過 %ld, %ld \n"
 
 msgid "POI search"
-msgstr "Ricerca POI"
+msgstr "趣點搜尋"
 
 msgid "Select a category"
-msgstr "Selezionare una categoria"
+msgstr "選取類別"
 
 msgid "Select a distance to look for (km)"
-msgstr "Selezionare la distanza in cui cercare (km)"
+msgstr "選擇搜尋範圍 (公里)"
 
 msgid "Select a POI"
-msgstr "Selezionare un POI"
+msgstr "擇一趣點"
 
 msgid " "
 msgstr " "
 
 msgid "Category"
-msgstr "Categoria"
+msgstr "類別"
 
 msgid "Direction"
-msgstr "Direzione"
+msgstr "方向"
 
 msgid "Distance(m)"
-msgstr "Distanza (m)"
+msgstr "距離(公尺)"
 
 msgid "Name"
-msgstr "Nome"
+msgstr "名稱"
 
 msgid "Visit Before"
-msgstr "Visita prima"
+msgstr "歷經"
 
 msgid "N"
 msgstr "N"
@@ -1749,17 +1730,17 @@ msgid "S"
 msgstr "S"
 
 msgid "SW"
-msgstr "SO"
+msgstr "SW"
 
 msgid "W"
-msgstr "O"
+msgstr "W"
 
 msgid "NW"
-msgstr "NO"
+msgstr "NW"
 
 #. Android resource: @strings/no
 msgid "No"
-msgstr "No"
+msgstr "否"
 
 msgid "2D"
 msgstr "2D"
@@ -1772,176 +1753,176 @@ msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Percorso %4.0f km, %02d:%02d ETA"
+msgstr "路徑 %4.0fkm    %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr "Percorso 0000 km, 00:00 ETA"
+msgstr "路徑 0000公里 0+00:00 ETA"
 
 msgid "Help"
-msgstr "Aiuto"
+msgstr "幫助"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr "Waypoint %s"
+msgstr "航點 %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr "Selezionare waypoint per inserire il nuovo prima"
+msgstr ""
 
 msgid "View in Browser"
-msgstr "Visualizza nel browser"
+msgstr "列表顯示"
 
 msgid "Item type"
-msgstr "Tipo elemento"
+msgstr "物件類型"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
-msgstr "Strade"
+msgstr "街道"
 
 msgid "House numbers"
-msgstr "Numeri civici"
+msgstr "門牌號碼"
 
 msgid "View Attributes"
-msgstr "Visualizza attributi"
+msgstr "顯示屬性"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr "Impostare come posizione (e disattivare veicolo)"
+msgstr "設為起點"
 
 msgid "POIs"
-msgstr "Punti d'interesse"
+msgstr "趣點"
 
 msgid "View on map"
-msgstr "Visualizza sulla mappa"
+msgstr "於地圖上顯示"
 
 msgid "Remove search results from the map"
-msgstr "Elimina i risultati della ricerca dalla mappa"
+msgstr "於地圖上移除搜尋結果"
 
 msgid "Show results on the map"
-msgstr "Mostra risultati sulla mappa"
+msgstr "於地圖上顯示結果"
 
 msgid "Cut Bookmark"
-msgstr "Taglia posto"
+msgstr "剪下書籤"
 
 msgid "Copy Bookmark"
-msgstr "Copia posto"
+msgstr "複製書籤"
 
 msgid "Rename Bookmark"
-msgstr "Rinomina posto"
+msgstr "書籤改名"
 
 msgid "Paste Bookmark"
-msgstr "Incolla posto"
+msgstr "貼上書籤"
 
 msgid "Delete Bookmark"
-msgstr "Cancella posto"
+msgstr "刪除書籤"
 
 msgid "Delete waypoint"
-msgstr "Cancella waypoint"
+msgstr "刪除航點"
 
 msgid "Bookmarks"
-msgstr "Luoghi preferiti"
+msgstr "書籤"
 
 msgid "Bookmarks as waypoints"
-msgstr "Luoghi preferiti come waypoints"
+msgstr "標記為航點"
 
 msgid "Save waypoints"
-msgstr "Salva waypoints"
+msgstr "儲存這些航點"
 
 msgid "Replace with waypoints"
-msgstr "Rimpiazza con waypoint"
+msgstr "置換航點"
 
 msgid "Delete Folder"
-msgstr "Elimina Cartella"
+msgstr "刪除目錄"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr "Aggiungere una cartella di posti"
+msgstr "新增書籤目錄"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr "Incolla posto"
+msgstr "貼上書籤"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr "Posto %s"
+msgstr "書籤 %s"
 
 #, c-format
 msgid "Download %s"
-msgstr "Scarica %s"
+msgstr "下載 %s"
 
 msgid "Map Download"
-msgstr "Scarica Mappa"
+msgstr "下載地圖"
 
 msgid "Active"
-msgstr "Attivo"
+msgstr "動作"
 
 msgid "Download Enabled"
-msgstr "Scaricamento abilitato"
+msgstr "允許下載"
 
 msgid "Download completely"
-msgstr "Scarica completamente"
+msgstr "下載完畢"
 
 msgid "Show Satellite Status"
-msgstr "Mostra stato satellite"
+msgstr "顯示衛星狀態"
 
 msgid " Elevation "
-msgstr " Elevazione "
+msgstr " 海拔 "
 
 msgid " Azimuth "
-msgstr " Azimuth "
+msgstr " 仰角 "
 
 msgid "Show NMEA Data"
-msgstr "Mostra dati NMEA"
+msgstr "顯示GPS協定資料"
 
 msgid "car"
-msgstr "Automobile"
+msgstr "汽車"
 
 msgid "bike"
-msgstr "Bicicletta"
+msgstr "機踏車"
 
 msgid "pedestrian"
-msgstr "Pedone"
+msgstr "步行"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr "Profilo corrente: %s"
+msgstr "現用設定檔：%s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr "Cambia profilo con: %s"
+msgstr "改用設定檔：%s"
 
 msgid "Set as active"
-msgstr "Imposta come attivo"
+msgstr "設為啟用"
 
 msgid "Show Satellite status"
-msgstr "Mostra stato satellite"
+msgstr "顯示衛星狀態"
 
 msgid "Show NMEA data"
-msgstr "Mostra dati NMEA"
+msgstr "顯示GPS協定資料"
 
 msgid "Add Bookmark"
-msgstr "Aggiungere un posto"
+msgstr "加入書籤"
 
 msgid "Rename"
-msgstr "Rinomina"
+msgstr "改名"
 
 msgid "About Navit"
-msgstr "Info su Navit"
+msgstr "關於 Navit"
 
 #. Authors
 msgid "By"
-msgstr "di"
+msgstr "由"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr "e tutta la squadra Navit"
+msgstr "及 Navit 團隊全體"
 
 msgid "members and contributors."
-msgstr "membri e contributori."
+msgstr "成員及協力者們"
 
 msgid "Waypoints"
-msgstr "Waypoints"
+msgstr "航點"
 
 msgid "Enter Coordinates"
-msgstr "Inserire Coordinate"
+msgstr "輸入座標"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1950,95 +1931,95 @@ msgstr "Inserire Coordinate"
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr "Latitudine Longitudine"
+msgstr "經緯"
 
 msgid "Enter coordinates, for example:"
-msgstr "Inserire coordinate, ad esempio:"
+msgstr "輸入座標, 例如:"
 
 msgid "Vehicle"
-msgstr "Veicolo"
+msgstr "車輛"
 
 msgid "Rules"
-msgstr "Regole"
+msgstr "規則"
 
 msgid "Lock on road"
-msgstr "Blocca sulla strada"
+msgstr "鎖定道路"
 
 msgid "Northing"
-msgstr "Visione verso nord"
+msgstr "保持朝北"
 
 msgid "Map follows Vehicle"
-msgstr "La mappa segue il veicolo"
+msgstr "圖隨車轉"
 
 msgid "Plan with Waypoints"
-msgstr "Pianifica con Waypoints"
+msgstr "依這些航點規劃路徑"
 
 msgid "Maps"
-msgstr "Mappe"
+msgstr "圖資"
 
 msgid "Layout"
-msgstr "Layout"
+msgstr "版面佈局"
 
 msgid "Height Profile"
-msgstr "Altimetria"
+msgstr "高度資料"
 
 msgid "Route Description"
-msgstr "Descrizione del percorso"
+msgstr "路徑敘述"
 
 msgid "Show Locale"
-msgstr "Mostra la localizzazione"
+msgstr "顯示語言環境"
 
 msgid "Former Destinations"
-msgstr "Destinazioni precedenti"
+msgstr "歷來目的地"
 
 msgid "- No former destinations available -"
-msgstr "-Nessuna destinazione precedente disponibile-"
+msgstr "- 無歷來目的地 -"
 
 msgid "Message"
-msgstr "Messaggio"
+msgstr "訊息"
 
 msgid "Back"
-msgstr "Indietro"
+msgstr "返回"
 
 msgid "Back to map"
-msgstr "Torna alla mappa"
+msgstr "回到地圖"
 
 msgid "Main Menu"
-msgstr "Menù principale"
+msgstr "主選單"
 
 msgid "House number"
-msgstr "Numero civico"
+msgstr "門牌號碼"
 
 msgid "Next"
-msgstr "Successivo"
+msgstr "下一頁"
 
 msgid "Prev"
-msgstr "Precedente"
+msgstr "前一頁"
 
 msgid "Return to route!"
-msgstr "Ritornare sul percorso!"
+msgstr "回導航路徑"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr "Attenzione! Autovelox!"
+msgstr "注意! 拍照!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr "Prego rallenta"
+msgstr "請減速"
 
 msgid "partial match"
-msgstr "corrispondemza parziale"
+msgstr "局部符合"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr "Cerca"
+msgstr "搜尋"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr "Paesini"
+msgstr "鄉鎮市區"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr "Dati Mappa (c) Contributori OpenStreetMap, licenza ODBL"
+msgstr "圖資 (c) OpenStreetMap 創作群, ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
@@ -2047,531 +2028,538 @@ msgid ""
 msgstr ""
 
 msgid "Downloaded maps"
-msgstr "Mappe scaricate"
+msgstr "下載地圖"
 
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
-msgstr ""
+msgstr "抱歉, 我們現今於安卓系統上不支援大於3.8G的圖資, 請另選一個較小的."
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr "Percorso per questo punto"
+msgstr "導航至此"
 
 msgid "Cancel"
-msgstr "Annulla"
+msgstr "取消"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "檔名路徑"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"重新定位至 %s\n"
+"套用變更請重啟 Navit ."
 
 msgid "Whole Planet"
-msgstr "Intero Pianeta"
+msgstr "全球"
 
 msgid "Africa"
-msgstr "Africa"
+msgstr "非洲"
 
 msgid "Canary Islands"
-msgstr "Isole Canarie"
+msgstr "加那利群島"
 
 msgid "Asia"
-msgstr "Asia"
+msgstr "亞洲"
 
 msgid "Korea"
-msgstr "Corea"
+msgstr "南韓"
 
 msgid "Taiwan"
-msgstr "Taiwan"
+msgstr "臺灣"
 
 msgid "UAE+Other"
-msgstr "Emirati Arabi Uniti+altro"
+msgstr "阿拉伯聯合大公國+其他"
 
 msgid "Oceania"
-msgstr "Oceania"
+msgstr "大洋洲"
 
 msgid "Tasmania"
-msgstr "Tasmania"
+msgstr "塔斯馬尼亞"
 
 msgid "Victoria"
-msgstr "Victoria"
+msgstr "維多利亞"
 
 msgid "New South Wales"
-msgstr "Nuovo Galles del Sud"
+msgstr "新南威爾斯"
 
 msgid "Europe"
-msgstr "Europa"
+msgstr "歐洲"
 
 msgid "Western Europe"
-msgstr "Europa occidentale"
+msgstr "西歐"
 
 msgid "Azores"
-msgstr "Azzorre"
+msgstr "亞速爾群島"
 
 msgid "BeNeLux"
-msgstr "BeNeLux"
+msgstr "比荷盧聯盟"
 
 msgid "Alsace"
-msgstr "Alsazia"
+msgstr "亞爾薩斯"
 
 msgid "Aquitaine"
-msgstr "Aquitania"
+msgstr "亞奎丹"
 
 msgid "Auvergne"
-msgstr "Alvernia"
+msgstr "奧文尼"
 
 msgid "Basse-Normandie"
-msgstr "Bassa Normandia"
+msgstr "下諾曼第"
 
 msgid "Bourgogne"
-msgstr "Borgogna"
+msgstr "勃艮第"
 
 msgid "Bretagne"
-msgstr "Bretagna"
+msgstr "布列塔尼"
 
 msgid "Centre"
-msgstr "Centro"
+msgstr "中央區"
 
 msgid "Champagne-Ardenne"
-msgstr "Champagne-Ardenne"
+msgstr "香檳-阿登"
 
 msgid "Corse"
-msgstr "Corsica"
+msgstr "科西嘉"
 
 msgid "Franche-Comte"
-msgstr "Franca Contea"
+msgstr "法蘭琪-康堤"
 
 msgid "Haute-Normandie"
-msgstr "Alta Normandia"
+msgstr "上諾曼第"
 
 msgid "Ile-de-France"
-msgstr "Ile-de-France"
+msgstr "法蘭西島"
 
 msgid "Languedoc-Roussillon"
-msgstr "Linguadoca-Rossiglione"
+msgstr "朗格多克-魯西永"
 
 msgid "Limousin"
-msgstr "Limosino"
+msgstr "利木森"
 
 msgid "Lorraine"
-msgstr "Lorena"
+msgstr "洛林"
 
 msgid "Midi-Pyrenees"
-msgstr "Midi-Pirenei"
+msgstr "南部-庇里牛斯"
 
 msgid "Nord-pas-de-Calais"
-msgstr "Nord-Passo di Calais"
+msgstr "北部-加來海峽"
 
 msgid "Pays-de-la-Loire"
-msgstr "Paesi della Loira"
+msgstr "羅亞爾河地區"
 
 msgid "Picardie"
-msgstr "Picardia"
+msgstr "皮卡第區"
 
 msgid "Poitou-Charentes"
-msgstr "Poitou-Charentes"
+msgstr "普瓦圖-夏朗德區"
 
 msgid "Provence-Alpes-Cote-d-Azur"
-msgstr "Provenza-Alpi-Costa Azzurra"
+msgstr "普羅旺斯-阿爾卑斯-藍色海岸區"
 
 msgid "Rhone-Alpes"
-msgstr "Rodano-Alpi"
+msgstr "隆河-阿爾卑斯區"
 
 msgid "Baden-Wuerttemberg"
-msgstr "Baden-Wuerttemberg"
+msgstr "巴登-符登堡邦"
 
 msgid "Bayern"
-msgstr "Baviera"
+msgstr "拜仁"
 
 msgid "Mittelfranken"
-msgstr "Media Franconia"
+msgstr "中法蘭克尼亞"
 
 msgid "Niederbayern"
-msgstr "Bassa Baviera"
+msgstr "下巴伐利亞"
 
 msgid "Oberbayern"
-msgstr "Alta Baviera"
+msgstr "上巴伐利亞"
 
 msgid "Oberfranken"
-msgstr "Alta Franconia"
+msgstr "上法蘭克尼亞"
 
 msgid "Oberpfalz"
-msgstr "Alto Palatinato"
+msgstr "上法爾茲"
 
 msgid "Schwaben"
-msgstr "Svevia"
+msgstr "士瓦本"
 
 msgid "Unterfranken"
-msgstr "Bassa Franconia"
+msgstr "下法蘭克尼亞"
 
 msgid "Berlin"
-msgstr "Berlino"
+msgstr "柏林"
 
 msgid "Brandenburg"
-msgstr "Brandeburgo"
+msgstr "布蘭登堡"
 
 msgid "Bremen"
-msgstr "Brema"
+msgstr "不來梅"
 
 msgid "Hamburg"
-msgstr "Amburgo"
+msgstr "漢堡"
 
 msgid "Hessen"
-msgstr "Assia"
+msgstr "黑森"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr "Meclemburgo-Pomerania Anteriore"
+msgstr "梅克倫堡-前波莫瑞"
 
 msgid "Niedersachsen"
-msgstr "Bassa Sassonia"
+msgstr "下薩克森"
 
 msgid "Nordrhein-westfalen"
-msgstr "Renania Settentrionale-Vestfalia"
+msgstr "北萊茵-西伐利亞"
 
 msgid "Rheinland-Pfalz"
-msgstr "Renania-Palatinato"
+msgstr "萊茵蘭-普法茲"
 
 msgid "Saarland"
-msgstr "Saarland"
+msgstr "薩爾蘭"
 
 msgid "Sachsen-Anhalt"
-msgstr "Sassonia-Anhalt"
+msgstr "薩克森-安哈特"
 
 msgid "Sachsen"
-msgstr "Sassonia"
+msgstr "薩克森"
 
 msgid "Schleswig-Holstein"
-msgstr "Schleswig-Holstein"
+msgstr "什列斯威-好斯敦"
 
 msgid "Thueringen"
-msgstr "Turingia"
+msgstr "圖林根"
 
 msgid "Mallorca"
-msgstr "Maiorca"
+msgstr "馬約卡"
 
 msgid "Galicia"
-msgstr "Galizia"
+msgstr "加利西亞"
 
 msgid "Scandinavia"
-msgstr "Scandinavia"
+msgstr "斯堪地那維亞"
 
 msgid "England"
-msgstr "Inghilterra"
+msgstr "英格蘭"
 
 msgid "Buckinghamshire"
-msgstr "Buckinghamshire"
+msgstr "白金漢郡"
 
 msgid "Cambridgeshire"
-msgstr "Cambridgeshire"
+msgstr "劍橋郡"
 
 msgid "Cumbria"
-msgstr "Cumbria"
+msgstr "坎布里亞郡"
 
 msgid "East yorkshire with hull"
-msgstr "East yorkshire with hull"
+msgstr "東約克郡及赫爾"
 
 msgid "Essex"
-msgstr "Essex"
+msgstr "艾塞克斯郡"
 
 msgid "Herefordshire"
-msgstr "Herefordshire"
+msgstr "禧福郡"
 
 msgid "Kent"
-msgstr "Kent"
+msgstr "肯特郡"
 
 msgid "Lancashire"
-msgstr "Lancashire"
+msgstr "蘭開夏郡"
 
 msgid "Leicestershire"
-msgstr "Leicestershire"
+msgstr "萊斯特郡"
 
 msgid "Norfolk"
-msgstr "Norfolk"
+msgstr "諾福克郡"
 
 msgid "Nottinghamshire"
-msgstr "Nottinghamshire"
+msgstr "諾丁漢郡"
 
 msgid "Oxfordshire"
-msgstr "Oxfordshire"
+msgstr "牛津郡"
 
 msgid "Shropshire"
-msgstr "Shropshire"
+msgstr "施洛普郡"
 
 msgid "Somerset"
-msgstr "Somerset"
+msgstr "索美塞特郡"
 
 msgid "South yorkshire"
-msgstr "South yorkshire"
+msgstr "南約克郡"
 
 msgid "Suffolk"
-msgstr "Suffolk"
+msgstr "薩福克郡"
 
 msgid "Surrey"
-msgstr "Surrey"
+msgstr "薩里"
 
 msgid "Wiltshire"
-msgstr "Wiltshire"
+msgstr "威爾特郡"
 
 msgid "Scotland"
-msgstr "Scozia"
+msgstr "蘇格蘭"
 
 msgid "Wales"
-msgstr "Galles"
+msgstr "威爾斯"
 
 msgid "Crete"
-msgstr "Creta"
+msgstr "克里特"
 
 msgid "North America"
-msgstr "America del Nord"
+msgstr "北美"
 
 msgid "Alaska"
-msgstr "Alaska"
+msgstr "阿拉斯加"
 
 msgid "Hawaii"
-msgstr "Hawaii"
+msgstr "夏威夷"
 
 msgid "USA"
-msgstr "Stati Uniti d'America"
+msgstr "美國"
 
 msgid " (except Alaska and Hawaii)"
-msgstr " (eccetto Alaska e Hawaii)"
+msgstr " (阿拉斯加及夏威夷除外)"
 
 msgid "Midwest"
-msgstr "Stati Uniti medio occidentali"
+msgstr "中西部"
 
 msgid "Michigan"
-msgstr "Michigan"
+msgstr "密西根"
 
 msgid "Ohio"
-msgstr "Ohio"
+msgstr "俄亥俄"
 
 msgid "Northeast"
-msgstr "Stati Uniti d'America nord-orientali"
+msgstr "東北"
 
 msgid "Massachusetts"
-msgstr "Massachusetts"
+msgstr "麻塞諸塞"
 
 msgid "Vermont"
-msgstr "Vermont"
+msgstr "佛蒙特"
 
 msgid "Pacific"
-msgstr "Pacific"
+msgstr "太平洋"
 
 msgid "South"
-msgstr "Stati Uniti d'America meridionali"
+msgstr "南"
 
 msgid "Arkansas"
-msgstr "Arkansas"
+msgstr "阿肯色"
 
 msgid "District of Columbia"
-msgstr "District of Columbia"
+msgstr "哥倫比亞特區"
 
 msgid "Florida"
-msgstr "Florida"
+msgstr "佛羅里達"
 
 msgid "Louisiana"
-msgstr "Louisiana"
+msgstr "路易斯安那"
 
 msgid "Maryland"
-msgstr "Maryland"
+msgstr "馬里蘭"
 
 msgid "Mississippi"
-msgstr "Mississippi"
+msgstr "密西西比"
 
 msgid "Oklahoma"
-msgstr "Oklahoma"
+msgstr "奧克拉荷馬"
 
 msgid "Texas"
-msgstr "Texas"
+msgstr "德克薩斯"
 
 msgid "Virginia"
-msgstr "Virginia"
+msgstr "維吉尼亞"
 
 msgid "West Virginia"
-msgstr "Virginia Occidentale"
+msgstr "西維吉尼亞"
 
 msgid "West"
-msgstr "Stati Uniti d'America occidentali"
+msgstr "西"
 
 msgid "Arizona"
-msgstr "Arizona"
+msgstr "亞利桑那"
 
 msgid "California"
-msgstr "California"
+msgstr "加利福尼亞"
 
 msgid "Colorado"
-msgstr "Colorado"
+msgstr "科羅拉多"
 
 msgid "Idaho"
-msgstr "Idaho"
+msgstr "愛達荷"
 
 msgid "Montana"
-msgstr "Montana"
+msgstr "蒙大拿"
 
 msgid "New Mexico"
-msgstr "Nuovo Messico"
+msgstr "新墨西哥"
 
 msgid "Nevada"
-msgstr "Nevada"
+msgstr "內華達"
 
 msgid "Oregon"
-msgstr "Oregon"
+msgstr "奧勒岡"
 
 msgid "Utah"
-msgstr "Utah"
+msgstr "猶他"
 
 msgid "Washington State"
-msgstr "Washington (stato)"
+msgstr "華盛頓州"
 
 msgid "South+Middle America"
-msgstr "America Centrale"
+msgstr "中南美洲"
 
 msgid "Guyane Francaise"
-msgstr "Guyana francese"
+msgstr "法屬圭亞那"
 
 msgid "downloading"
-msgstr "download in corso"
+msgstr "下載中"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr "pronto"
+msgstr "就緒"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "儲存空間不足以下載已選資源"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
-msgstr "Spazio libero non sufficiente"
+msgstr "空間不足"
 
 msgid "Error downloading map!"
-msgstr "Errore nello scaricamento della mappa!"
+msgstr "下載地圖發生錯誤!"
 
 msgid "Error writing map!"
-msgstr "Errore nel salvataggio della mappa!"
+msgstr "寫入地圖發生錯誤!"
 
 msgid "Map download aborted!"
-msgstr "Scaricamento mappa annullato!"
+msgstr "中止下載地圖!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr "Tempo stimato"
+msgstr "ETA"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr "Scaricamento mappa"
+msgstr "下載地圖"
 
 msgid "Vehicle Position"
-msgstr "Posizione del veicolo"
+msgstr "車輛位置"
 
 msgid "Main menu"
-msgstr "Menù principale"
+msgstr "主選單"
 
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-"Mostra\n"
-"Mappa"
+"顯示\n"
+"地圖"
 
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "設定值"
 
 msgid "Tools"
-msgstr "Strumenti"
+msgstr "工具箱"
 
 msgid "Route"
-msgstr "Percorso"
+msgstr "路徑"
 
 msgid "About"
-msgstr "Info"
+msgstr "關於"
 
 msgid "Quit"
-msgstr "Esci"
+msgstr "退出"
 
 msgid "Actions"
-msgstr "Azioni"
+msgstr "行動"
 
 msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
-"Destinazioni\n"
-"precedenti"
+"歷來的\n"
+"目的地"
 
 msgid "Coordinates"
-msgstr "Coordinate"
+msgstr "座標"
 
 msgid ""
 "Stop\n"
 "Navigation"
-msgstr "Stop"
+msgstr ""
+"停止\n"
+"導航"
 
 msgid "Display"
-msgstr "Visualizza"
+msgstr "顯示"
 
 msgid "Fullscreen"
-msgstr "Schermo intero"
+msgstr "全螢幕"
 
 msgid "Window Mode"
-msgstr "Modalità finestra"
+msgstr "視窗模式"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
-msgstr "Descrizione"
+msgstr "備註"
 
 msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
-"Togli l'ultimo \n"
-"Waypoint"
+"捨棄前一\n"
+"航點"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
 msgstr ""
-"Togli il prossimo \n"
-"Waypoint"
+"捨棄次一\n"
+"航點"
 
 msgid "Satellite Status"
-msgstr "Stato dei Satelliti"
+msgstr "衛星狀態"
 
 msgid "NMEA Data"
-msgstr "Dati NMEA"
+msgstr "GPS協定資料"
 
 msgid "car_shortest"
-msgstr "Automobile (strada più corta)"
+msgstr "汽車_最短路徑"
 
 msgid "car_avoid_tolls"
-msgstr "Automobile (evita pedaggi)"
+msgstr "汽車_避付費路徑"
 
 msgid "car_pedantic"
-msgstr "Automobile (include strade minori)"
+msgstr "步行"
 
 msgid "horse"
-msgstr "Cavallo"
+msgstr "馬"
 
 msgid "Truck"
-msgstr "Mezzi pesanti/Camion"
+msgstr "卡車"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr "Si"
+msgstr "確定"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
-msgstr "Navit partito"
+msgstr "Navit 啟動"
 
 #. Android resource: @strings/notification_event_default
 msgid "Navit running"
-msgstr "Navit in funzione"
+msgstr "Navit 執行中"
 
 #. Android resource: @strings/initial_info_box_title
 msgid "Welcome to Navit"
-msgstr "Benvenuti in Navit"
+msgstr "歡迎使用 Navit"
 
 #. Android resource: @strings/initial_info_box_message
 msgid ""
@@ -2584,15 +2572,13 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Grazie per aver installato Navit!\n"
+"感謝您安裝 Navit!\n"
 "\n"
-"Per iniziare, seleziona \"Scarica mappe\" dal menu per scaricare una mappa. "
-"Nota: Il file scaricato potrebbe essere grande (>50MB) - si consiglia una "
-"connessione wifi.\n"
+"剛開始, 從選單選擇 \"下載圖資\" 來下載地圖. 注意: 地圖檔可能很大 (>50MB) - 建議使用 wifi 網路連線.\n"
 "\n"
-"Dati mappe: (c) Contributori OpenStreetMap\n"
+"圖資: (c) OpenStreetMap 建構群\n"
 "\n"
-"Divertiti con Navit!"
+"請享用 Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2600,175 +2586,171 @@ msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr "Maggiori informazioni"
+msgstr "更多資訊"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr "Ingrandisci"
+msgstr "拉近"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr "Riduci"
+msgstr "拉遠"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
-msgstr "Scarica mappe"
+msgstr "下載圖資"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr "Mostra/nascondi POI"
+msgstr "切換趣點"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
-msgstr "Esci da Navit"
+msgstr "離開 Navit"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr "Backup / Ripristino"
+msgstr "備份/回復"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "設定地圖區域"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
-msgstr "Cancellare questa mappa?"
+msgstr "刪除此圖資?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr "Download in corso:"
+msgstr "下載中:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
-msgstr "Errore nello scaricamento della mappa"
+msgstr "圖資下載錯誤"
 
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
-msgstr "Scaricamento mappa annullato"
+msgstr "已中止地圖下載"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
-msgstr "Nessuna posizione. Riaprire dopo il fix della posizione."
+msgstr "圖資不含現在位置. 修正後重啟."
 
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
-msgstr "Mappe contenenti la posizione attuale"
+msgstr "圖資含現在位置"
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
-msgstr "Cerca indirizzo"
+msgstr "地址搜尋"
 
 #. Android resource: @strings/address_enter_destination
 msgid "Enter destination"
-msgstr "Inserisci destinazione"
+msgstr "輸入目的地"
 
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
-msgstr "Confronta indirizzo parziale"
+msgstr "符合部分地址"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr "Ricerca in corso..."
+msgstr "搜尋中…"
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
-msgstr "Indirizzo non trovato"
+msgstr "查無地址"
 
 #. Android resource: @strings/address_search_getting_results
 msgid "Getting search results"
-msgstr "Recupero risultati ricerca"
+msgstr "取得搜尋結果"
 
 #. Android resource: @strings/address_search_loading_results
 msgid "Loading search results"
-msgstr "Caricamento risultati ricerca"
+msgstr "載入搜尋結果"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr "Nessun risultato trovato"
+msgstr "搜尋無結果"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
-msgstr "Non è stato immesso alcun testo"
+msgstr "未鍵入文字"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
-msgstr "Imposto destinazione su:"
+msgstr "將目的地設為:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr "Scegliere un'azione"
+msgstr "選擇動作"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr "Per favore inserire una memory card SD"
+msgstr "請插入SD卡"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Backup in corso..."
+msgstr "正在備份..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr "Ripristino in corso..."
+msgstr "正在還原..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr "Creazione directory di backup fallita"
+msgstr "建立備份檔目錄失敗"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr "Backup fallito"
+msgstr "備份失敗"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr "Nessun Backup trovato"
+msgstr "未找到備份"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr "Ripristino fallito"
+msgstr "回復失敗"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr "Backup avvenuto con successo"
+msgstr "備份成功"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
-"Ripristino avvenuto con successo\n"
-"Per favore riavviare Navit"
+"回復成功\n"
+"請重啟 Navit"
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr "Backup non trovato"
+msgstr "未找到備份"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr "Ripristino fallito"
+msgstr "回復失敗"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr "Selezionare il backup"
+msgstr "選擇備份"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr "Backup"
+msgstr "備份"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr "Ripristino"
+msgstr "回復"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "系統文轉音引擎資料遺失"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""
 "Navit can use any text to speech engine installed on your device. The "
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
-msgstr ""
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "e alla rotonda prendere la %1$s %2$s"
+msgstr "Navit 可使用所有已安裝之文轉音引擎. 現在選定的引擎表示無法依照您的語言發音. 要顯示語音下載對話框嗎?"

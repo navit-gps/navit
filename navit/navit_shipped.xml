@@ -88,13 +88,14 @@ Navigation</text></img>
 				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
 				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
 				<img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img>
+				<a href='#Settings Layers'><img src='gui_layers'><text>Layers</text></img></a>
 			</a>
 			<a name='Tools'><text>Tools</text>
 				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
 			</a>
 			<a name='Route'><text>Route</text>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
-				<img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
+				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
 Waypoint</text></img>
@@ -120,6 +121,17 @@ Waypoint</text></img>
 						else
 							img("centry",map.active?"gui_active":"gui_inactive", map.type+":"+map.data,
 								"","navit.mapset.map[@data==%{se}].active=%{d}*",map.data,!map.active,"redraw_map();refresh();");
+				</script>
+			</a>
+			<a name='Settings Layers' class='clist'><text>Layers</text>
+				<script>
+					foreach(layer;navit.layout.layer)
+						if (layer.name)
+							img("centry",layer.active?"gui_active":"gui_inactive",layer.name,
+							"","navit.layout.layer[@name==%{se}].active=%{d}*",layer.name,!layer.active,"redraw_map();refresh();");
+						else
+							img("centry",layer.active?"gui_active":"gui_inactive",
+								"","navit.layout.layer[@name==%{se}].active=%{d}*",layer.name,!layer.active,"redraw_map();refresh();");
 				</script>
 			</a>
 			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
@@ -152,7 +164,9 @@ Waypoint</text></img>
 		]]></gui>
 		<!-- for a debug log -->
 		<log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
-		<!-- osd items allow to position display and control items directly on top of the map: -->
+		<!-- osd items allow to position display and control items directly on top of the map.
+		You can find a list of all the available OSDs items here:
+		http://wiki.navit-project.org/index.php/OSD -->
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/> 
 
@@ -643,14 +657,28 @@ Waypoint</text></img>
 				<itemgra item_types="border_state" order="0-">
 					<polyline color="#808080" width="1"/>
 				</itemgra>
-				<itemgra item_types="height_line_1" order="0-">
-					<polyline color="#000000" width="4"/>
-				</itemgra>
-				<itemgra item_types="height_line_2" order="0-">
-					<polyline color="#000000" width="2"/>
-				</itemgra>
-				<itemgra item_types="height_line_3" order="0-">
+			</layer>
+			<layer name="heightlines">
+				<itemgra item_types="height_line_1" order="7">
 					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_1" order="8-">
+					<polyline color="#000000" width="3"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="height_line_2" order="8">
+					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_2" order="9-">
+					<polyline color="#000000" width="2"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="height_line_3" order="9-11">
+					<polyline color="#000000" width="1"/>
+				</itemgra>
+				<itemgra item_types="height_line_3" order="12-">
+					<polyline color="#000000" width="1"/>
+					<text text_size="8"/>
 				</itemgra>
 			</layer>
 			<layer name="streets">

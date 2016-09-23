@@ -12,6 +12,13 @@
 #include "gui_internal_menu.h"
 #include "gui_internal_keyboard.h"
 
+/**
+ * @brief Switch keyboard mode to uppercase if it's in lowercase mode and  {@code VKBD_MODE_2} is set.
+ *
+ * Called when there's no input left in the input field.
+ *
+ * @param this The internal GUI instance
+ */
 void
 gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 {
@@ -19,16 +26,24 @@ gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 
 	if (!this->keyboard)
 		return;
+
 	md=gui_internal_menu_data(this);
-	// Switch to lowercase after the first key is pressed
-	if (md->keyboard_mode == 10) // Latin
-		gui_internal_keyboard_do(this, md->keyboard, 2);
-	if (md->keyboard_mode == 34) // Umlaut
-		gui_internal_keyboard_do(this, md->keyboard, 26);
-	if (md->keyboard_mode == 50) // Russian/Ukrainian/Belorussian
-		gui_internal_keyboard_do(this, md->keyboard, 42);
+
+	if (md->keyboard_mode == (VKBD_LATIN_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_UPPER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_UMLAUT_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_UPPER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_CYRILLIC_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_UPPER | VKBD_FLAG_2);
 }
 
+/**
+ * @brief Switch keyboard mode to lowercase if it's in uppercase mode and  {@code VKBD_MODE_2} is set.
+ *
+ * Called on each alphanumeric input.
+ *
+ * @param this The internal GUI instance
+ */
 void
 gui_internal_keyboard_to_lower_case(struct gui_priv *this)
 {
@@ -36,21 +51,22 @@ gui_internal_keyboard_to_lower_case(struct gui_priv *this)
 
 	if (!this->keyboard)
 		return;
+
 	md=gui_internal_menu_data(this);
-	// Switch to lowercase after the first key is pressed
-	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2)) // Latin
+
+	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2)) // Umlaut
+	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2)) // Russian/Ukrainian/Belorussian
+	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
 }
 
 /**
  * @brief Processes a key press on the internal GUI keyboard
  *
- * If the keyboard is currently in uppercase mode and {@code VKBD_MODE_2} is set, it is then switched to
- * the corresponding lowercase mode.
+ * If the keyboard is currently in uppercase mode and {@code VKBD_MODE_2} is set, it is tswitched to
+ * the corresponding lowercase mode in {@code gui_internal_keypress_do}.
  *
  * @param this The internal GUI instance
  * @param wm
@@ -107,7 +123,7 @@ struct gui_internal_keyb_mode {
 	/*16: VKBD_NUMERIC       */ {"123", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_UPPER},
 	/*24: VKBD_UMLAUT_UPPER  */ {"ÄÖÜ", 2, VKBD_UMLAUT_LOWER,   VKBD_LATIN_UPPER},
 	/*32: VKBD_UMLAUT_LOWER  */ {"äöü", 2, VKBD_UMLAUT_UPPER,   VKBD_LATIN_LOWER},
-	/*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_UPPER},
+	/*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_LOWER, VKBD_LATIN_UPPER},
 	/*48: VKBD_CYRILLIC_LOWER*/ {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER},
 	/*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2}
 };

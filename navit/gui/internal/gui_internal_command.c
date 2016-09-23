@@ -446,13 +446,21 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
 	navit_attr_iter_destroy(iter);
 	gui_internal_menu_render(this);
 }
+
+/*
+ * @brief Displays Route Height Profile
+ *
+ * displays a heightprofile if a route is active and 
+ * some heightinfo is provided by means of a map
+ *
+ * the name of the file providing the heightlines must
+ * comply with *.heightlines.bin
+ * 
+ */
 static void
 gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-
-
 	struct widget * menu, *box;
-
 	struct map * map=NULL;
 	struct map_rect * mr=NULL;
 	struct route * route;
@@ -460,16 +468,17 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 	struct mapset *ms;
 	struct mapset_handle *msh;
 	int x,i,first=1,dist=0;
+	int diagram_points_count = 0;
 	struct coord c,last,res;
 	struct coord_rect rbbox,dbbox;
 	struct map_selection sel;
 	struct heightline *heightline,*heightlines=NULL;
 	struct diagram_point *min,*diagram_point,*diagram_points=NULL;
+	struct point p[2];
 	sel.next=NULL;
 	sel.order=18;
 	sel.range.min=type_height_line_1;
 	sel.range.max=type_height_line_3;
-
 
 	menu=gui_internal_menu(this,_("Height Profile"));
 	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
@@ -491,11 +500,24 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			}
 		}
 		map_rect_destroy(mr);
+		mr = NULL;
 		ms=navit_get_mapset(this->nav);
 		if (!first && ms) {
+			int heightmap_installed = FALSE;
 			msh=mapset_open(ms);
 			while ((map=mapset_next(msh, 1))) {
-				mr=map_rect_new(map, &sel);
+				struct attr name_attr;
+				if (map_get_attr(map, attr_name, &name_attr, NULL)){
+					dbg(lvl_debug,"map name = %s\n",name_attr.u.str);
+					if (strstr(name_attr.u.str,".heightlines.bin")){
+						dbg(lvl_info,"reading heightlines from map %s\n",name_attr.u.str);
+						mr=map_rect_new(map, &sel);
+						heightmap_installed = TRUE;
+					}
+					else {
+						dbg(lvl_debug,"ignoring map %s\n",name_attr.u.str);
+					}
+				}
 				if (mr) {
 					while((item = map_rect_get_item(mr))) {
 						if (item->type >= sel.range.min && item->type <= sel.range.max) {
@@ -507,9 +529,20 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 						}
 					}
 					map_rect_destroy(mr);
+					mr = NULL;
 				}
 			}
 			mapset_close(msh);
+			if (!heightmap_installed){
+				char *text;
+				struct widget *w;
+				text=g_strdup_printf("%s",_("please install a map *.heightlines.bin to provide elevationdata"));
+				gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
+				w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+				g_free(text);
+				gui_internal_menu_render(this);
+				return;
+			}
 		}
 	}
 	map=NULL;
@@ -539,7 +572,8 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_point->c.y=heightline->height;
 										diagram_point->next=diagram_points;
 										diagram_points=diagram_point;
-										dbg(lvl_info,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+										diagram_points_count ++;
+										dbg(lvl_debug,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
 									}
 								}
 							}
@@ -550,18 +584,30 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 				}
 				last=c;
 			}
-
 		}
 	}
-
+	while (heightlines){
+		heightline=heightlines;
+		heightlines=heightlines->next;
+		g_free(heightline);
+	}
 	if(mr)
 		map_rect_destroy(mr);
 
-	gui_internal_menu_render(this);
-
-	if(!diagram_points) 
+	if(diagram_points_count < 2){
+		char *text;
+		struct widget *w;
+		text=g_strdup_printf("%s",_("The route must cross at least 2 heightlines"));
+		gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
+		w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+		g_free(text);
+		gui_internal_menu_render(this);
+		if(diagram_points)
+			g_free(diagram_points);
 		return;
+	}
 
+	gui_internal_menu_render(this);
 	first=1;
 	diagram_point=diagram_points;
 	while (diagram_point) {
@@ -573,38 +619,42 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			coord_rect_extend(&dbbox, &diagram_point->c);
 		diagram_point=diagram_point->next;
 	}
-	dbg(lvl_info,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	dbg(lvl_debug,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
 	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
 		dbbox.lu.x=0;
 	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
 		dbbox.rl.y=0;
-	dbg(lvl_info,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	dbg(lvl_debug,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
 	x=dbbox.lu.x;
 	first=1;
-	for (;;) {
-		struct point p[2];
-		min=NULL;
-		diagram_point=diagram_points;
-		while (diagram_point) {
-			if (diagram_point->c.x >= x && (!min || min->c.x > diagram_point->c.x))
-				min=diagram_point;
-			diagram_point=diagram_point->next;
+	if (diagram_points_count > 1 && dbbox.rl.x != dbbox.lu.x && dbbox.lu.y != dbbox.rl.y){
+		for (;;) {
+			min=NULL;
+			diagram_point=diagram_points;
+			while (diagram_point) {
+				if (diagram_point->c.x >= x && (!min || min->c.x > diagram_point->c.x))
+					min=diagram_point;
+				diagram_point=diagram_point->next;
+			}
+			if (! min)
+				break;
+			p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
+			p[1].y=(box->h)-5-(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y;
+			dbg(lvl_debug,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+			graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
+			if (first)
+				first=0;
+			else
+				graphics_draw_lines(this->gra, this->foreground, p, 2);
+			p[0]=p[1];
+			x=min->c.x+1;
 		}
-		if (! min)
-			break;
-		p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
-		p[1].y=(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y+5;
-		dbg(lvl_info,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
-		graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
-		if (first)
-			first=0;
-		else
-			graphics_draw_lines(this->gra, this->foreground, p, 2);
-		p[0]=p[1];
-		x=min->c.x+1;
 	}
-
-
+	while (diagram_points){
+		diagram_point=diagram_points;
+		diagram_points=diagram_points->next;
+		g_free(diagram_point);
+	}
 }
 
 static void
@@ -1078,7 +1128,6 @@ error:
 	g_free(args);
 	return;
 }
-
 
 static void
 gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
