@@ -414,7 +414,6 @@ export TZ="CEDT-01:00:00CEST-02:00:00,M3.4.0,M10.4.0"
 
 # Set language.
 export LANG=en_US
-export LANGUAGE=en_US
 
 export ESPEAK_DATA_PATH=/mnt/sdcard/navit/share
 
