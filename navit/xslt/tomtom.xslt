@@ -50,10 +50,8 @@
 			<xsl:copy-of select="navigation"/>
 
 			<xsl:comment>Use espeak.</xsl:comment>
-			<speech type="cmdline" data="/mnt/sdcard/navit/bin/espeakdsp -v nl '%s'"/>
-			<xsl:comment>Use one of TomTom's voices.</xsl:comment>
-			<xsl:comment>speech type="cmdline" data="speak Simon '%s'"/</xsl:comment>
-			
+			<speech type="cmdline" data="/mnt/sdcard/navit/bin/espeakdsp -v en '%s'"/>
+
 			<mapset enabled="yes">
 				<map type="binfile" enabled="yes" data="$NAVIT_SHAREDIR/maps/*.bin"/>
 			</mapset>

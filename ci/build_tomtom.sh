@@ -1,13 +1,8 @@
 #!/bin/sh
 
-# installs tomtom toolchain according instructions from:
-# http://wiki.navit-project.org/index.php/TomTom_development
-
-# also read this thread:
-# http://sourceforge.net/p/navit/discussion/512959/thread/c8bcd427
-
 # in case you want to build a standalone system
 # https://github.com/george-hopkins/opentom
+# https://github.com/gefin/opentom
 
 set -e
 
@@ -43,11 +38,6 @@ if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.
   wget -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
 fi
 
-# if ! test -f "~/tomtom_assets/flite-2.0.0-release.tar.bz2"
-# then 
-#   wget -c www.festvox.org/flite/packed/flite-2.0/flite-2.0.0-release.tar.bz2 -P ~/tomtom_assets
-# fi
-
 if ! test -f "~/tomtom_assets/libpng-1.6.25.tar.gz"
 then 
   wget -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.25.tar.gz -P ~/tomtom_assets
@@ -69,7 +59,6 @@ sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src
 sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
 sed -i "s/-fvisibility=hidden//g" src/Makefile
 cat src/Makefile
-ls -la
 make -C src
 cd src
 make install
@@ -253,23 +242,20 @@ make install
 
 
 # tslib
-if ! test -f "$PREFIX/include/tslib.h"
-then
-  cd /tmp
-  rm -rf tslib-svn
-  git clone https://github.com/playya/tslib-svn.git
-  cd tslib-svn
-  sed -i "s|AM_CONFIG_HEADER|AC_CONFIG_HEADERS|g" configure.ac
-  sed -i "119i\#ifdef EVIOCGRAB" plugins/input-raw.c
-  sed -i "124i\#endif" plugins/input-raw.c
-  sed -i "290i\#ifdef EVIOCGRAB" plugins/input-raw.c
-  sed -i "294i\#endif" plugins/input-raw.c
-  sed -i "s|# module_raw h3600|module_raw h3600|g" etc/ts.conf # tomtom go 710
-  ./autogen.sh
-  ./configure --prefix=$PREFIX --host=$ARCH
-  make -j$JOBS
-  make install
-fi
+cd /tmp
+rm -rf tslib-svn
+git clone https://github.com/playya/tslib-svn.git
+cd tslib-svn
+sed -i "s|AM_CONFIG_HEADER|AC_CONFIG_HEADERS|g" configure.ac
+sed -i "119i\#ifdef EVIOCGRAB" plugins/input-raw.c
+sed -i "124i\#endif" plugins/input-raw.c
+sed -i "290i\#ifdef EVIOCGRAB" plugins/input-raw.c
+sed -i "294i\#endif" plugins/input-raw.c
+sed -i "s|# module_raw h3600|module_raw h3600|g" etc/ts.conf # tomtom go 710
+./autogen.sh
+./configure --prefix=$PREFIX --host=$ARCH
+make -j$JOBS
+make install
 
 
 cd /tmp
@@ -291,22 +277,18 @@ cd test
 ./configure --prefix=$PREFIX --host=$ARCH
 make testvidinfo
 cp testvidinfo $PREFIX/usr/bin/
-ls -la
 
 # to find sdl-config
 export PATH=$PREFIX/bin:$PATH
 
 # sdl image
- if ! test -f "$PREFIX/include/SDL/SDL_image.h"
- then
-   cd /tmp
-   wget -c http://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.tar.gz
-   tar xzf SDL_image-1.2.12.tar.gz
-   cd SDL_image-1.2.12
-   ./configure --prefix=$PREFIX --host=$ARCH
-   make -j$JOBS
-   make install
- fi
+cd /tmp
+wget -c http://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.tar.gz
+tar xzf SDL_image-1.2.12.tar.gz
+cd SDL_image-1.2.12
+./configure --prefix=$PREFIX --host=$ARCH
+make -j$JOBS
+make install
 
 # sdl ttf
 # cd /tmp
@@ -319,7 +301,8 @@ export PATH=$PREFIX/bin:$PATH
 
 # flite 
 # cd /tmp
-# tar jxvf ~/tomtom_assets/flite-2.0.0-release.tar.bz2
+# wget -c www.festvox.org/flite/packed/flite-2.0/flite-2.0.0-release.tar.bz2
+# tar jxvf flite-2.0.0-release.tar.bz2
 # cd flite-2.0.0-release
 # ./configure --prefix=$PREFIX --host=$ARCH
 # make -j$JOBS
@@ -346,14 +329,15 @@ cat > ~/navit/navit/xpm/tomtom_plus.svg << EOF
 </svg>
 EOF
 
+
 # navit
 cd ~/navit
 sed -i "s|set ( TOMTOM_SDK_DIR /opt/tomtom-sdk )|set ( TOMTOM_SDK_DIR $TOMTOM_SDK_DIR )|g" /tmp/$ARCH.cmake
 mkdir -p build
 cd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE -DHAVE_API_TOMTOM=TRUE -DXSLTS=tomtom -DAVOID_FLOAT=TRUE -Dmap/mg=FALSE -DUSE_PLUGINS=0 -DCMAKE_TOOLCHAIN_FILE=/tmp/$ARCH.cmake -DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
-cat config.h
-cat navit/xpm/Makefile
+cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE \
+-DHAVE_API_TOMTOM=TRUE -DXSLTS=tomtom -DAVOID_FLOAT=TRUE -Dmap/mg=FALSE -DUSE_PLUGINS=0 -DCMAKE_TOOLCHAIN_FILE=/tmp/$ARCH.cmake \
+-DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
 make -j$JOBS
 make install
 cd ..
@@ -371,10 +355,6 @@ cd share
 mkdir -p fonts
 cd ..
 
-# libraries
-ls -la $PREFIX/lib
-ls -la $PREFIX/bin
-ls -la $PREFIX/usr
 
 cp $PREFIX/lib/libfreetype.so.6 lib
 cp $PREFIX/lib/libSDL-1.2.so.0 lib
@@ -433,18 +413,19 @@ export SDL_AUDIODRIVER=dsp
 export TZ="CEDT-01:00:00CEST-02:00:00,M3.4.0,M10.4.0"
 
 # Set language.
-export LANG=nl_BE
-export LANGUAGE=nl_BE
+export LANG=en_US
+export LANGUAGE=en_US
 
 export ESPEAK_DATA_PATH=/mnt/sdcard/navit/share
 
 # Run Navit.
 if /mnt/sdcard/navit/sdl/testvidinfo | grep 480x272
 then
-	/mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/config/tomtom480.xml 2>/mnt/sdcard/navit/navit.log&
-elif  /mnt/sdcard/navit/sdl/testvidinfo | grep 320x240
-then
-	/mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/config/tomtom320.xml 2>/mnt/sdcard/navit/navit.log&
+	/mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/tomtom480.xml 2>/mnt/sdcard/navit/navit.log&
+# tomtom320xml is not provided yet
+# elif  /mnt/sdcard/navit/sdl/testvidinfo | grep 320x240
+# then
+# 	/mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/config/tomtom320.xml 2>/mnt/sdcard/navit/navit.log&
 else
 	exit 1
 fi
@@ -456,7 +437,6 @@ while [ $? -eq 0 ]
 do
 echo "\0" > /dev/watchdog
 sleep 10
-#cat /dev/fb > /mnt/sdcard/navit/`date +%s`.raw
 ps | grep -v grep | grep -v wrapper | grep navit
 done
 
@@ -472,7 +452,7 @@ cp -r ~/navit/navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
 cp -r $PREFIX/lib/ts $OUT_PATH/navit/lib/
 cp $PREFIX/bin/ts_* $OUT_PATH/navit/ts/
 
-# images 
+# images and xml
 cd share
 mkdir xpm
 cd xpm
@@ -483,7 +463,7 @@ cp $PREFIX/share/navit/xpm/*64.png ./
 cp $PREFIX/share/navit/xpm/nav*.* ./
 cp $PREFIX/share/navit/xpm/country*.png ./
 cd ..
-cp $PREFIX/share/navit/navit.xml ./
+cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
 mkdir -p maps
 
 
