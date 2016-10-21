@@ -1,5 +1,5 @@
 # Portuguese translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # CaioNavas https://launchpad.net/~webmaster-caiomnavas
@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-09-19 14:04+0000\n"
+"PO-Revision-Date: 2016-10-11 10:00+0000\n"
 "Last-Translator: João Pirralha <joaopirralha@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1987,6 +1987,13 @@ msgstr "Esquema"
 msgid "Height Profile"
 msgstr "Perfil de altitude"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+"por favor instale um mapa *.heightlines.bin para fornecer dados de elevação"
+
+msgid "The route must cross at least 2 heightlines"
+msgstr "A rota deve cruzar pelo menos 2 linhas de altura"
+
 msgid "Route Description"
 msgstr "Descrição da rota"
 
@@ -2042,10 +2049,6 @@ msgstr "Procura"
 msgid "Towns"
 msgstr "Cidades"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Rota para aqui"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Dados do mapa (c) Colaboradores OpenStreetMap, ODBL"
 
@@ -2067,6 +2070,10 @@ msgid ""
 msgstr ""
 "Infelizmente não suportamos mapas maiores que 3.8G no Android, por favor "
 "selecione um mais pequeno."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Rota para aqui"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -2531,6 +2538,9 @@ msgstr "Ecrã completo"
 
 msgid "Window Mode"
 msgstr "Modo de janela"
+
+msgid "Layers"
+msgstr "Camadas"
 
 msgid "Description"
 msgstr "Descrição"
