@@ -55,6 +55,7 @@
 			<mapset enabled="yes">
 				<map type="binfile" enabled="yes" data="$NAVIT_SHAREDIR/maps/*.bin"/>
 			</mapset>
+			<xsl:copy-of select="layer"/>
 			<xsl:copy-of select="layout"/>
 		</xsl:copy>
 	</xsl:template>
