@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# this builds a plugin for tomtom
 # in case you want to build a standalone system
 # https://github.com/george-hopkins/opentom
 # https://github.com/gefin/opentom
@@ -32,6 +32,7 @@ JOBS=`getconf _NPROCESSORS_ONLN`
 echo "Jobs"
 echo $JOBS
 
+mkdir -p ~/tomtom_assets
 
 if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
  then 
@@ -199,18 +200,7 @@ cd libpng-1.6.25/
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install
-  
-# libjpeg
-# if ! test -f "$PREFIX/include/jpeglib.h"
-# then
-#  cd /tmp
-#  wget -c http://www.ijg.org/files/jpegsrc.v9b.tar.gz
-#  tar xzf jpegsrc.v9b.tar.gz
-#  cd jpeg-9b
-#  ./configure --prefix=$PREFIX --host=$ARCH
-#  make -j$JOBS
-#  make install
-#fi
+
 
 cd /tmp
 wget -c http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.tar.gz
@@ -290,23 +280,6 @@ cd SDL_image-1.2.12
 make -j$JOBS
 make install
 
-# sdl ttf
-# cd /tmp
-# wget -c http://www.libsdl.org/projects/SDL_ttf/release/SDL_ttf-2.0.11.tar.gz
-# tar xzf SDL_ttf-2.0.11.tar.gz
-# cd SDL_ttf-2.0.11
-# ./configure --prefix=$PREFIX --host=$ARCH --with-sdl-prefix=$PREFIX
-# make -j$JOBS
-# make install
-
-# flite 
-# cd /tmp
-# wget -c www.festvox.org/flite/packed/flite-2.0/flite-2.0.0-release.tar.bz2
-# tar jxvf flite-2.0.0-release.tar.bz2
-# cd flite-2.0.0-release
-# ./configure --prefix=$PREFIX --host=$ARCH
-# make -j$JOBS
-# make install
 
 # in the end we only want Navit locale
 rm -r $PREFIX/share/locale

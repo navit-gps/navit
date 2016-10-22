@@ -10,7 +10,6 @@ dependencies:
   pre:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
-    - "[ -d ~/tomtom_assets ] || mkdir ~/tomtom_assets"
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
     - sudo apt-get update
     - sudo apt-get install cmake
@@ -33,7 +32,7 @@ dependencies:
     - bash ci/build_android.sh
     - bash ci/build_android_x86.sh
 # Tomtom build
-    - bash ci/build_tomtom.sh
+    - bash ci/build_tomtom_plugin.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
