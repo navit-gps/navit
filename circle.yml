@@ -6,6 +6,7 @@ dependencies:
     - ~/.android
     - ~/android
     - "~/assets/"
+    - ~/tomtom_assets
   pre:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
@@ -30,6 +31,8 @@ dependencies:
     - sudo apt-get install lib32z1
     - bash ci/build_android.sh
     - bash ci/build_android_x86.sh
+# Tomtom minimal build
+    - bash ci/build_tomtom_minimal.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
