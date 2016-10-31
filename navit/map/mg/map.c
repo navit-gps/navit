@@ -609,5 +609,5 @@ map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *
 void
 plugin_init(void)
 {
-	plugin_register_map_type("mg", map_new_mg);
+	plugin_register_category_map("mg", map_new_mg);
 }

@@ -1081,7 +1081,7 @@ static struct graphics_priv *
 graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 {
 	struct font_priv * (*font_freetype_new)(void *meth);
-	font_freetype_new=plugin_get_font_type("freetype");
+	font_freetype_new=plugin_get_category_font("freetype");
 	if (!font_freetype_new)
 		return NULL;
 	struct graphics_priv *this=g_new0(struct graphics_priv,1);
@@ -1150,5 +1150,5 @@ plugin_init(void)
 #ifdef HAVE_API_WIN32
 	setlocale(LC_NUMERIC, "C"); /* WIN32 gtk resets LC_NUMERIC */
 #endif
-	plugin_register_graphics_type("gtk_drawing_area", graphics_gtk_drawing_area_new);
+	plugin_register_category_graphics("gtk_drawing_area", graphics_gtk_drawing_area_new);
 }

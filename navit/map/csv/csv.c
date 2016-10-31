@@ -878,6 +878,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"csv: plugin_init\n");
-	plugin_register_map_type("csv", map_new_csv);
+	plugin_register_category_map("csv", map_new_csv);
 }
 

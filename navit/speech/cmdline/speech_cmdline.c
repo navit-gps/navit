@@ -261,5 +261,5 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 void
 plugin_init(void)
 {
-	plugin_register_speech_type("cmdline", speechd_new);
+	plugin_register_category_speech("cmdline", speechd_new);
 }

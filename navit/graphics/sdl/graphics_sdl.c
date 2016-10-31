@@ -986,7 +986,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 
 
     struct font_priv *(*font_freetype_new) (void *meth);
-    font_freetype_new = plugin_get_font_type ("freetype");
+    font_freetype_new = plugin_get_category_font ("freetype");
 
     if (!font_freetype_new)
     {
@@ -1407,7 +1407,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     this->cbl = cbl;
 
     /* initialize fonts */
-    font_freetype_new = plugin_get_font_type("freetype");
+    font_freetype_new = plugin_get_category_font("freetype");
 
 	if (!font_freetype_new) {
 			g_free(this);
@@ -1852,9 +1852,9 @@ void
 plugin_init(void)
 {
 #ifdef USE_WEBOS
-    plugin_register_event_type("sdl", event_sdl_new);
+    plugin_register_category_event("sdl", event_sdl_new);
 #endif
-    plugin_register_graphics_type("sdl", graphics_sdl_new);
+    plugin_register_category_graphics("sdl", graphics_sdl_new);
 }
 
 // vim: sw=4 ts=8

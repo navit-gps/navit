@@ -129,7 +129,7 @@ event_request_system(const char *system, const char *requestor)
 		}
 		return 1;
 	}
-	event_type_new=plugin_get_event_type(system);
+	event_type_new=plugin_get_category_event(system);
         if (! event_type_new) {
 		dbg(lvl_error,"unsupported event system '%s' requested from '%s'\n", system, requestor);
                 return 0;

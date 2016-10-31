@@ -993,5 +993,5 @@ gmap_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cb
 void
 plugin_init(void)
 {
-	plugin_register_map_type("garmin", gmap_new);
+	plugin_register_category_map("garmin", gmap_new);
 }

@@ -1845,6 +1845,6 @@ static struct event_priv *
 void
 plugin_init(void)
 {
-    plugin_register_graphics_type("win32", graphics_win32_new);
-    plugin_register_event_type("win32", event_win32_new);
+    plugin_register_category_graphics("win32", graphics_win32_new);
+    plugin_register_category_event("win32", event_win32_new);
 }

@@ -502,5 +502,5 @@ plugin_init(void)
 	struct attr callback,navit;
 	struct attr_iter *iter;
 
-	plugin_register_osd_type("j1850", osd_j1850_new);
+	plugin_register_category_osd("j1850", osd_j1850_new);
 }

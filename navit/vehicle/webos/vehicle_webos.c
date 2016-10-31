@@ -381,6 +381,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("webos", vehicle_webos_new);
+	plugin_register_category_vehicle("webos", vehicle_webos_new);
 }
 

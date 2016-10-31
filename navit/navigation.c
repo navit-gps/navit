@@ -4444,7 +4444,7 @@ navigation_set_route(struct navigation *this_, struct route *route)
 void
 navigation_init(void)
 {
-	plugin_register_map_type("navigation", navigation_map_new);
+	plugin_register_category_map("navigation", navigation_map_new);
 }
 
 struct object_func navigation_func = {

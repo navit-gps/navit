@@ -808,5 +808,5 @@ plugin_init(void)
 #endif
 
 
-	plugin_register_gui_type("gtk", gui_gtk_new);
+	plugin_register_category_gui("gtk", gui_gtk_new);
 }

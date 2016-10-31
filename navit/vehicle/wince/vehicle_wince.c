@@ -949,6 +949,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("wince", vehicle_wince_new);
-	plugin_register_vehicle_type("file", vehicle_wince_new);
+	plugin_register_category_vehicle("wince", vehicle_wince_new);
+	plugin_register_category_vehicle("file", vehicle_wince_new);
 }
