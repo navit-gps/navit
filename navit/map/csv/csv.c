@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <errno.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -864,7 +865,8 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
 	  	fclose(fp);
 	  }
 	  else {
-		dbg(lvl_error,"Error opening csv map file %s, starting with empty map\n", m->filename);
+		dbg(lvl_error,"Error opening csv map file '%s': %s\n", m->filename, strerror(errno));
+		return NULL;
 	  }
 	} else {
 	  	dbg(lvl_debug,"No data attribute, starting with in-memory map\n");
