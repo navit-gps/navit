@@ -29,6 +29,7 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
+    - wget http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip && unzip -d ~ android-ndk-r13-linux-x86_64.zip
     - bash ci/build_android.sh
 #    - bash ci/build_android_x86.sh
 # Tomtom minimal build
