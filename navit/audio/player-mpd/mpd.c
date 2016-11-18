@@ -34,7 +34,6 @@
 #include <dirent.h>
 #include <sys/ioctl.h>
 
-
 #include <navit/map.h>
 #include <navit/navit.h>
 #include <navit/file.h>
