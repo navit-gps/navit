@@ -69,6 +69,7 @@
 #include "sunriset.h"
 #include "audio.h"
 #include "bookmarks.h"
+#include "audio.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #include "util.h"
@@ -111,7 +112,13 @@ struct navit_vehicle {
 
 struct navit_audio_plugin {
         int active;
+//* <<<<<<< HEAD
         struct attr callback;
+//*/
+/*=======*/
+/*
+//*/
+//>>>>>>> audio_framework
         struct audio *audio;
 };
 
@@ -1394,6 +1401,7 @@ audio_volume_do(struct navit *this, int direction)
         while(l) {
                 struct navit_audio_plugin * na=l->data;
                 struct audio *a=na->audio;
+//* <<<<<<< HEAD
                 dbg(lvl_info,"Went thru one plugin at %p with name %s\n", a, a->name);
                 if(a->meth.volume && a->meth.volume != 0xffffffff ) {
                         dbg(lvl_info,"Found a volume method at %p in plugin %s\n", a->meth.volume, a->name);
@@ -1401,6 +1409,18 @@ audio_volume_do(struct navit *this, int direction)
                         dbg(lvl_info,"Relocating at %p \n", f);
 			f(a->priv, direction);
 		}
+//*/
+/*=======*/
+/*
+                dbg(lvl_debug,"Went thru one plugin at %p with name %s\n", a, a->name);
+                if(a->meth.volume && a->meth.volume != 0xffffffff ) {
+                        dbg(lvl_debug,"Found a volume method at %p in plugin %s\n", a->meth.volume, a->name);
+                        int (*f)(struct audio_priv *this, const int direction)=a->meth.volume+1;
+                        dbg(lvl_debug,"Relocating at %p \n", f);
+                        f(a->priv, direction);
+                }
+//*/
+//>>>>>>> audio_framework
                 l=g_list_next(l);
         }
 }
@@ -1408,20 +1428,37 @@ audio_volume_do(struct navit *this, int direction)
 static void
 audio_volume_down(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
     dbg(lvl_info,"Volume down\n");
 	audio_volume_do(this,-1);
+//*/
+/*=======*/
+/*
+        dbg(lvl_info,"Volume down\n");
+        audio_volume_do(this,-1);
+//*/
+//>>>>>>> audio_framework
 }
 
 static void
 audio_volume_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
     dbg(lvl_info,"Volume toggle\n");
 	audio_volume_do(this,0);
+//*/
+/*=======*/
+/*
+        dbg(lvl_info,"Toggle mute\n");
+        audio_volume_do(this,0);
+//*/
+//>>>>>>> audio_framework
 }
 
 static void
 audio_volume_up(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
     dbg(lvl_info,"Volume up\n");
 	audio_volume_do(this,1);
 }
@@ -1451,12 +1488,20 @@ audio_do_action(struct navit *this, int action)
 		}
 		l=g_list_next(l);
 	}
+//*/
+/*=======*/
+/*
+        dbg(lvl_info,"Volume up\n");
+        audio_volume_do(this,1);
+//*/
+//>>>>>>> audio_framework
 }
 
 
 static void
 audio_playback_do(struct navit *this, int action)
 {
+//* <<<<<<< HEAD
 	GList *l;
 	l=this->audio_plugins;
 	while(l) {
@@ -1470,17 +1515,44 @@ audio_playback_do(struct navit *this, int action)
 		}
 		l=g_list_next(l);
 	}
+//*/
+/*=======*/
+/*
+        GList *l;
+        l=this->audio_plugins;
+        while(l) {
+                struct navit_audio_plugin * na=l->data;
+                struct audio *a=na->audio;
+                dbg(lvl_debug,"Went thru one plugin at %p with name %s\n", a, a->name);
+                if(a->meth.playback && a->meth.playback != 0xffffffff ) {
+                        dbg(lvl_debug,"Found a playback method at %p in plugin %s\n", a->meth.playback, a->name);
+			int (*f)(struct audio_priv *this, const int action)=a->meth.playback;
+			f(a->priv, action);
+		}
+                l=g_list_next(l);
+        }
+//*/
+//>>>>>>> audio_framework
 }
 
 static void
 audio_playback_previous(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
 	audio_do_action(this,AUDIO_PLAYBACK_PREVIOUS_TRACK);
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"playback previous\n");
+        audio_playback_do(this,AUDIO_PLAYBACK_PREVIOUS);
+//*/
+//>>>>>>> audio_framework
 }
 
 static void
 audio_playback_toggle(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
 	audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
 }
 
@@ -1494,11 +1566,19 @@ static void
 audio_playback_pause(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	audio_do_action(this,AUDIO_PLAYBACK_TOGGLE);
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"playback toggle\n");
+        audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
+//*/
+//>>>>>>> audio_framework
 }
 
 static void
 audio_playback_next(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+//* <<<<<<< HEAD
 	audio_do_action(this,AUDIO_PLAYBACK_NEXT_TRACK);
 }
 static void
@@ -1563,26 +1643,59 @@ audio_get_actions(struct navit *this)
         }
 	dbg(lvl_info,"Actions method enumeration done\n");
 	return(ret);
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"playback next\n");
+        audio_playback_do(this,AUDIO_PLAYBACK_TOGGLE);
+}
+
+int
+audio_play_track(struct navit *this, int track_index)
+{
+        dbg(lvl_debug,"playback track %i\n", track_index);
+        audio_playback_do(this,track_index);
+//*/
+//>>>>>>> audio_framework
 }
 
 GList *
 audio_get_playlists(struct navit *this)
 {
         GList *l;
+//* <<<<<<< HEAD
 	GList *ret = NULL;
+//*/
+/*=======*/
+/*
+        GList *ret;
+//*/
+//>>>>>>> audio_framework
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
                 struct audio *a=na->audio;
+//* <<<<<<< HEAD
                 dbg(lvl_info,"Went thru one plugin at %p with name %s\n", a, a->name);
                 if(a->meth.playlists && a->meth.playlists != 0xffffffff ) {
                         dbg(lvl_info,"Found a playlists method at %p in plugin %s\n", a->meth.playlists, a->name);
                         GList * (*f)(struct audio_priv *this)=a->meth.playlists+0;
                         dbg(lvl_info,"Relocating at %p \n", f);
+//*/
+/*=======*/
+/*
+                dbg(lvl_debug,"Went thru one plugin at %p with name %s\n", a, a->name);
+                if(a->meth.playlists && a->meth.playlists != 0xffffffff ) {
+                        dbg(lvl_debug,"Found a playlists method at %p in plugin %s\n", a->meth.playlists, a->name);
+                        GList * (*f)(struct audio_priv *this)=a->meth.playlists+0;
+                        dbg(lvl_debug,"Relocating at %p \n", f);
+//*/
+//>>>>>>> audio_framework
                         ret=f(a->priv);
                 }
                 l=g_list_next(l);
         }
+//* <<<<<<< HEAD
 	dbg(lvl_info,"Playlists method enumeration done\n");
 	return(ret);
 }
@@ -1635,6 +1748,13 @@ audio_get_current_track(struct navit *this)
 		return(ret);
 	else
 		return "";
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"Playlists method enumeration done\n");
+        return(ret);
+//*/
+//>>>>>>> audio_framework
 }
 
 
@@ -1642,22 +1762,48 @@ GList *
 audio_get_tracks(struct navit *this, const int playlist_index)
 {
         GList *l;
+//* <<<<<<< HEAD
 	GList *ret = NULL;
+//*/
+/*=======*/
+/*
+        GList *ret;
+//*/
+//>>>>>>> audio_framework
         l=this->audio_plugins;
         while(l) {
                 struct navit_audio_plugin * na=l->data;
                 struct audio *a=na->audio;
+//* <<<<<<< HEAD
                 //dbg(lvl_error,"Went thru one plugin at %p with name %s\n", a, a->name);
                 if(a->meth.tracks && a->meth.tracks != 0xffffffff ) {
                         dbg(lvl_info,"Found a tracks method at %p in plugin %s\n", a->meth.tracks, a->name);
                         GList * (*f)(struct audio_priv *this, const int playlist_index)=a->meth.tracks+0;
                         dbg(lvl_info,"Relocating at %p \n", f);
+//*/
+/*=======*/
+/*
+                dbg(lvl_debug,"Went thru one plugin at %p with name %s\n", a, a->name);
+                if(a->meth.tracks && a->meth.tracks != 0xffffffff ) {
+                        dbg(lvl_debug,"Found a tracks method at %p in plugin %s\n", a->meth.tracks, a->name);
+                        GList * (*f)(struct audio_priv *this, const int playlist_index)=a->meth.tracks+0;
+                        dbg(lvl_debug,"Relocating at %p \n", f);
+//*/
+//>>>>>>> audio_framework
                         ret=f(a->priv, playlist_index);
                 }
                 l=g_list_next(l);
         }
+//* <<<<<<< HEAD
 	dbg(lvl_info,"Playlists method enumeration done\n");
 	return(ret);
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"Playlists method enumeration done\n");
+        return(ret);
+//*/
+//>>>>>>> audio_framework
 }
 
 static struct command_table commands[] = {
@@ -1691,6 +1837,7 @@ static struct command_table commands[] = {
 	{"volume_up",command_cast(audio_volume_up)},
 	{"audio_playback_previous",command_cast(audio_playback_previous)},
 	{"audio_playback_toggle",command_cast(audio_playback_toggle)},
+//* <<<<<<< HEAD
 	{"audio_playback_play",command_cast(audio_playback_play)},
 	{"audio_playback_pause",command_cast(audio_playback_pause)},
 	{"audio_playback_next",command_cast(audio_playback_next)},
@@ -1700,6 +1847,12 @@ static struct command_table commands[] = {
 	{"audio_playback_next_artist",command_cast(audio_playback_next_artist)},
 	{"audio_playback_toggle_repeat",command_cast(audio_playback_toggle_repeat)},
 	{"audio_playback_toggle_shuffle",command_cast(audio_playback_toggle_shuffle)},
+//*/
+/*=======*/
+/*
+	{"audio_playback_next",command_cast(audio_playback_next)},
+//*/
+//>>>>>>> audio_framework
 	{"switch_layout_day_night",command_cast(navit_cmd_switch_layout_day_night)},
 };
 	
@@ -3657,13 +3810,21 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 static int
 navit_add_audio(struct navit *this_, struct audio *a)
 {
+//* <<<<<<< HEAD
         dbg(lvl_info,"starting navit_add_audio\n");
         if(!a) return 0;
         if(!this_) return 0;
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"starting navit_add_audio\n");
+//*/
+//>>>>>>> audio_framework
         struct navit_audio_plugin *na=g_new0(struct navit_audio_plugin, 1);
         struct attr active;
         na->audio=a;
         na->active=0;
+//* <<<<<<< HEAD
         na->callback.type=attr_callback;
 		na->callback.u.callback=callback_new_attr_3(callback_cast(navit_audio_update_status), attr_playing, this_, na, attr_playing);
 		audio_add_attr(na->audio, &na->callback);
@@ -3677,6 +3838,18 @@ navit_add_audio(struct navit *this_, struct audio *a)
         return 1;
 }
 
+//*/
+/*=======*/
+/*
+        dbg(lvl_debug,"Adding one plugin at %p\n", a);
+        this_->audio_plugins=g_list_append(this_->audio_plugins, na);
+        dbg(lvl_debug,"Done adding one plugin at %p\n", a);
+        return 1;
+}
+
+
+//*/
+//>>>>>>> audio_framework
 /**
  * @brief Registers a new vehicle.
  *

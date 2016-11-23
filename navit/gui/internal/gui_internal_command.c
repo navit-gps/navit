@@ -1283,8 +1283,17 @@ static struct command_table commands[] = {
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
 #ifdef USE_AUDIO_FRAMEWORK
+//* <<<<<<< HEAD
     {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
 #endif
+//*/
+/*=======*/
+/*
+        {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
+#endif
+
+//*/
+//>>>>>>> audio_framework
 };
 
 void

@@ -193,8 +193,8 @@ struct attr {
 		struct arrows *arrows;
 		struct element *element;
 		struct speech *speech;
-		struct cursor *cursor;
 		struct audio *audio;
+		struct cursor *cursor;
 		struct displaylist *displaylist;
 		struct transformation *transformation;
 		struct vehicleprofile *vehicleprofile;

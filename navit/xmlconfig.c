@@ -287,10 +287,10 @@ object_func_lookup(enum attr_type type)
 		return &tracking_func;
 	case attr_speech:
 		return &speech_func;
-	case attr_vehicle:
-		return &vehicle_func;
 	case attr_audio:
 		return &audio_func;
+	case attr_vehicle:
+		return &vehicle_func;
 	case attr_vehicleprofile:
 		return &vehicleprofile_func;
 	default:
@@ -342,7 +342,14 @@ static char *element_fixmes[]={
 };
 
 static void initStatic(void) {
+//* <<<<<<< HEAD
 	elements=g_new0(struct element_func,45); //44 is a number of elements + ending NULL element
+//*/
+/*=======*/
+/*
+	elements=g_new0(struct element_func,45); //43 is a number of elements + ending NULL element
+//*/
+//>>>>>>> audio_framework
 
 	elements[0].name="config";
 	elements[0].parent=NULL;
@@ -557,7 +564,14 @@ static void initStatic(void) {
 	elements[42].parent="navit";
 	elements[42].func=NULL;
 	elements[42].type=attr_script;
+//* <<<<<<< HEAD
 	
+//*/
+/*=======*/
+/*
+
+//*/
+//>>>>>>> audio_framework
 	elements[43].name="audio";
 	elements[43].parent="navit";
 	elements[43].func=NULL;
@@ -1280,7 +1294,15 @@ navit_object_unref(struct navit_object *obj)
 {
 	if (obj && obj->refcount>0) {
 		obj->refcount--;
+//* <<<<<<< HEAD
 		//dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+//*/
+/*=======*/
+/*
+		// dbg(lvl_error, "refcount %s\n", attr_to_name(obj->func->type));
+		// dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+//*/
+//>>>>>>> audio_framework
 		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
 			obj->func->destroy(obj);
 	}

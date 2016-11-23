@@ -22,8 +22,16 @@ struct audio_priv {
 	struct navit *nav;
 };
 
+//* <<<<<<< HEAD
 const char *card = "hw:1";
 const char *selem_name = "Headphone";
+//*/
+/*=======*/
+/*
+char *card = "";
+char *selem_name = "";
+//*/
+//>>>>>>> audio_framework
 
 void
 enumerate_devices()
@@ -41,7 +49,14 @@ enumerate_devices()
 
               if (name != NULL && 0 != strcmp ("null", name))
                 {
+//* <<<<<<< HEAD
                     dbg (lvl_error, "Found audio device %s\n", name);
+//*/
+/*=======*/
+/*
+                    dbg (lvl_info, "Found audio playback device %s\n", name);
+//*/
+//>>>>>>> audio_framework
                     free (name);
                 }
               n++;
@@ -195,6 +210,14 @@ int audio_volume(audio_volume_action action, long* outvol)
             return -7;
         *outvol = (*outvol * (maxv - minv) / (100-1)) + minv;
 
+//* <<<<<<< HEAD
+//*/
+/*=======*/
+/*
+	dbg(lvl_error, "Setting volume to %li\n", outvol);
+
+//*/
+//>>>>>>> audio_framework
         if(snd_mixer_selem_set_playback_volume(elem, 0, *outvol) < 0) {
             snd_mixer_close(handle);
             return -8;
@@ -235,6 +258,7 @@ alsa_volume(struct audio_priv *this, const int direction)
 
 static struct audio_methods output_alsa_meth = {
 	alsa_volume,
+//* <<<<<<< HEAD
 	NULL, //playback 
         NULL, //action_do, 
         NULL, //tracks, 
@@ -242,6 +266,13 @@ static struct audio_methods output_alsa_meth = {
         NULL, //actions, 
         NULL, //current_track, 
         NULL, //current_playlist, 
+//*/
+/*=======*/
+/*
+	NULL,  // playback
+	NULL,  // playlists
+//*/
+//>>>>>>> audio_framework
 };
 
 static struct audio_priv *
@@ -253,7 +284,28 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 	this=g_new(struct audio_priv,1);
 	this->nav=parent->u.navit;
 	*meth=output_alsa_meth;
+//* <<<<<<< HEAD
 	dbg(lvl_error,"Real alsa init\n");
+//*/
+/*=======*/
+/*
+
+        if ((attr = attr_search (attrs, NULL, attr_audio_device)))
+          {
+ 	      card=g_strdup(attr->u.str);
+              dbg (lvl_info, "Will use alsa device %s\n", card);
+          }
+
+        if ((attr = attr_search (attrs, NULL, attr_audio_device_mixer)))
+          {
+ 	      selem_name=g_strdup(attr->u.str);
+              dbg (lvl_info, "Will use alsa mixer %s\n", selem_name);
+          }
+
+
+	dbg(lvl_debug,"Real alsa init\n");
+//*/
+//>>>>>>> audio_framework
 	enumerate_devices(); 
 	return this;
 }
@@ -261,6 +313,13 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 void
 plugin_init(void)
 {
+//* <<<<<<< HEAD
 	dbg(lvl_error,"output-alsa plugin init\n");
+//*/
+/*=======*/
+/*
+	dbg(lvl_debug,"output-alsa plugin init\n");
+//*/
+//>>>>>>> audio_framework
 	plugin_register_audio_type("output-alsa", output_alsa_new);
 }
