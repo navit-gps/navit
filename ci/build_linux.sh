@@ -1,3 +1,5 @@
+sudo apt-get install cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev
+
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
