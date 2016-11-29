@@ -3341,84 +3341,84 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	gui_internal_command_init(this, attrs);
 
 	if( (attr=attr_search(attrs,NULL,attr_font_size)))
-        {
-	  this->config.font_size=attr->u.num;
+	{
+		this->config.font_size=attr->u.num;
 	}
 	else
 	{
-	  this->config.font_size=-1;
+		this->config.font_size=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_icon_xs)))
 	{
-	  this->config.icon_xs=attr->u.num;
+		this->config.icon_xs=attr->u.num;
 	}
 	else
 	{
-	  this->config.icon_xs=-1;
+		this->config.icon_xs=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_icon_l)))
 	{
-	  this->config.icon_l=attr->u.num;
+		this->config.icon_l=attr->u.num;
 	}
 	else
-        {
-	  this->config.icon_l=-1;
+	{
+		this->config.icon_l=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_icon_s)))
 	{
-	  this->config.icon_s=attr->u.num;
+		this->config.icon_s=attr->u.num;
 	}
 	else
-        {
-	  this->config.icon_s=-1;
+	{
+		this->config.icon_s=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_spacing)))
 	{
-	  this->config.spacing=attr->u.num;
+		this->config.spacing=attr->u.num;
 	}
 	else
 	{
-	  this->config.spacing=-1;
+		this->config.spacing=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_gui_speech)))
 	{
-	  this->speech=attr->u.num;
+		this->speech=attr->u.num;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_keyboard)))
-	  this->keyboard=attr->u.num;
-        else
-	  this->keyboard=1;
+		this->keyboard=attr->u.num;
+	else
+		this->keyboard=1;
 
-    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
-      this->fullscreen=attr->u.num;
+	if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
+		this->fullscreen=attr->u.num;
 
 	if( (attr=attr_search(attrs,NULL,attr_flags)))
-	      this->flags=attr->u.num;
+		this->flags=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_background_color)))
-	      this->background_color=*attr->u.color;
+		this->background_color=*attr->u.color;
 	else
-	      this->background_color=color_black;
+		this->background_color=color_black;
 	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
 		this->background2_color=*attr->u.color;
 	else
 		this->background2_color=back2_color;
 	if( (attr=attr_search(attrs,NULL,attr_text_color)))
-	      this->text_foreground_color=*attr->u.color;
+		this->text_foreground_color=*attr->u.color;
 	else
-	      this->text_foreground_color=color_white;
+		this->text_foreground_color=color_white;
 	if( (attr=attr_search(attrs,NULL,attr_text_background)))
-	      this->text_background_color=*attr->u.color;
+		this->text_background_color=*attr->u.color;
 	else
-	      this->text_background_color=color_black;
+		this->text_background_color=color_black;
 	if( (attr=attr_search(attrs,NULL,attr_columns)))
-	      this->cols=attr->u.num;
+		this->cols=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
-	      this->osd_configuration=*attr;
+		this->osd_configuration=*attr;
 
 	if( (attr=attr_search(attrs,NULL,attr_pitch)))
-	      this->pitch=attr->u.num;
+		this->pitch=attr->u.num;
 	else
-		this->pitch=20;
+		this->pitch=10;
 	if( (attr=attr_search(attrs,NULL,attr_flags_town)))
 		this->flags_town=attr->u.num;
 	else
