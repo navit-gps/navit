@@ -13,7 +13,7 @@ dependencies:
     - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
     - sudo apt-get update
     - bash ci/update_version.sh prepare
-    - bash ci/build_linux.sh
+#    - bash ci/build_linux.sh
     - sed -i '/INTEGER/d' bin/po/navit.pot
     - cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
     - "[ $CIRCLE_PROJECT_USERNAME != navit-gps ] || curl \"https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -H \"$lp_cookie\" -H \"Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload\" -F file=@bin/po/navit.pot | grep title"
@@ -24,25 +24,21 @@ dependencies:
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
     - wget http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip && unzip -d ~ android-ndk-r13-linux-x86_64.zip
-    - bash ci/build_android.sh
-    - bash ci/build_android_x86.sh
-# Tomtom minimal build
-    - bash ci/build_tomtom_minimal.sh
 # Windows build
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
-# for sys/select.h
-#    - sudo apt-get install -y libc6-dev
-    - mkdir win32
-    - cmake -Dbinding/python:BOOL=FALSE -DSAMPLE_MAP=n -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw32.cmake ../ && make && make package:
-        pwd: win32/
-    - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
     - sudo pip install junit-xml
     - sudo apt-get install python-dbus
 #
     - ls -la $CIRCLE_ARTIFACTS
 test:
+
+  override:
+    - bash
+        parallel: true
+        files:
+          - ci/build_*.sh
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
         pwd: bin/navit/
