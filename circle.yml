@@ -39,6 +39,7 @@ dependencies:
     - cp win32/*.exe $CIRCLE_ARTIFACTS/
 # For python testing with junit reporting
     - sudo pip install junit-xml
+    - sudo apt-get install python-dbus
 #
     - ls -la $CIRCLE_ARTIFACTS
 test:
