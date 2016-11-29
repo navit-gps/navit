@@ -18,4 +18,6 @@ else
 	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE || exit -1
 	make  || exit -1
 fi
-cp -r navit/xpm $CIRCLE_ARTIFACTS
+if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
+	cp -r navit/xpm $CIRCLE_ARTIFACTS
+fi
