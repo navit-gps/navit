@@ -4,6 +4,9 @@ grn='\e[0;32m'
 yel='\e[1;33m'
 off='\e[0m'
 
+wget -nv -c wget http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip
+unzip -d ~ android-ndk-r13-linux-x86_64.zip
+
 # setup var's to perform environment setup and cmake
 export START_PATH=~/
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
