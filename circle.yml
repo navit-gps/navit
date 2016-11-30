@@ -28,7 +28,7 @@ dependencies:
     - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
     - sudo apt-get install default-jdk nsis
 # For python testing with junit reporting
-    - sudo apt-get install python-gobject libdbus-glib-1-dev
+    - sudo apt-get install python-gobject libdbus-glib-1-dev python-dev
     - sudo pip install junit-xml dbus-python
     - ln -s /usr/lib/python2.7/dist-packages/gobject /opt/circleci/python/2.7.11/lib/python2.7/site-packages/
     - ln -s /usr/lib/python2.7/dist-packages/glib /opt/circleci/python/2.7.11/lib/python2.7/site-packages/
