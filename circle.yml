@@ -10,7 +10,6 @@ dependencies:
   pre:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
-    - wget -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
     - sudo apt-get update
     - bash ci/update_version.sh prepare
 #    - bash ci/build_linux.sh
@@ -28,8 +27,6 @@ dependencies:
     - pip install junit-xml dbus-python
     - ln -s /usr/lib/python2.7/dist-packages/gobject /opt/circleci/python/2.7.11/lib/python2.7/site-packages/
     - ln -s /usr/lib/python2.7/dist-packages/glib /opt/circleci/python/2.7.11/lib/python2.7/site-packages/
-#
-    - ls -la $CIRCLE_ARTIFACTS
 test:
 
   override:
