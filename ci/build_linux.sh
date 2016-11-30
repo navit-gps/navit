@@ -21,9 +21,9 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
   https://scan.coverity.com/builds?project=$CIRCLE_PROJECT_USERNAME
 
 	# Then update the translation template on launchpad
-	sed -i '/INTEGER/d' bin/po/navit.pot
-	cp bin/po/navit.pot $CIRCLE_ARTIFACTS/
-	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@bin/po/navit.pot | grep title
+	sed -i '/INTEGER/d' po/navit.pot
+	cp po/navit.pot $CIRCLE_ARTIFACTS/
+	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
 
 else
 	mkdir bin && cd bin
