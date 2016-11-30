@@ -493,5 +493,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("gypsy", vehicle_gypsy_new_gypsy);
+	plugin_register_category_vehicle("gypsy", vehicle_gypsy_new_gypsy);
 }

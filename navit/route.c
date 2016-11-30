@@ -4202,8 +4202,8 @@ route_attr_iter_destroy(struct attr_iter *iter)
 void
 route_init(void)
 {
-	plugin_register_map_type("route", route_map_new);
-	plugin_register_map_type("route_graph", route_graph_map_new);
+	plugin_register_category_map("route", route_map_new);
+	plugin_register_category_map("route_graph", route_graph_map_new);
 }
 
 void

@@ -1440,7 +1440,7 @@ static struct graphics_priv *
 graphics_opengl_new_helper(struct graphics_methods *meth)
 {
 	struct font_priv *(*font_freetype_new) (void *meth);
-	font_freetype_new = plugin_get_font_type("freetype");
+	font_freetype_new = plugin_get_category_font("freetype");
 
 	if (!font_freetype_new) {
 		return NULL;
@@ -1817,6 +1817,6 @@ event_opengl_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-	plugin_register_graphics_type("opengl", graphics_opengl_new);
-	plugin_register_event_type("opengl", event_opengl_new);
+	plugin_register_category_graphics("opengl", graphics_opengl_new);
+	plugin_register_category_event("opengl", event_opengl_new);
 }

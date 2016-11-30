@@ -403,7 +403,6 @@ struct country_table {
 
 static char *attrmap={
 	"n	*=*			point_unkn\n"
-//	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
 	"?	addr:housenumber=*	house_number\n"
 	"?	aeroway=aerodrome	poi_airport\n"
 	"?	aeroway=airport		poi_airport\n"
@@ -514,7 +513,7 @@ static char *attrmap={
 	"?	shop=car_repair		poi_repair_service\n"
 	"?	shop=clothes		poi_shop_apparel\n"
 	"?	shop=convenience	poi_shop_grocery\n"
-	"?	shop=drogist		poi_shop_drugstore\n"
+	"?	shop=chemist		poi_shop_drugstore\n"
 	"?	shop=florist		poi_shop_florist\n"
 	"?	shop=fruit		poi_shop_fruit\n"
 	"?	shop=furniture		poi_shop_furniture\n"

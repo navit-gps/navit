@@ -161,5 +161,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("iphone", vehicle_iphone_new);
+	plugin_register_category_vehicle("iphone", vehicle_iphone_new);
 }

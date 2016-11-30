@@ -826,7 +826,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	dbg(lvl_debug,"enter\n");
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
-        font_freetype_new=plugin_get_font_type("freetype");
+        font_freetype_new=plugin_get_category_font("freetype");
         if (!font_freetype_new)
                 return NULL;
         font_freetype_new(&ret->freetype_methods);
@@ -855,7 +855,7 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
 	event_request_system("glib","graphics_gd_new");
-        font_freetype_new=plugin_get_font_type("freetype");
+        font_freetype_new=plugin_get_category_font("freetype");
         if (!font_freetype_new)
                 return NULL;
 	*meth=graphics_methods;
@@ -881,5 +881,5 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 void
 plugin_init(void)
 {
-        plugin_register_graphics_type("gd", graphics_gd_new);
+        plugin_register_category_graphics("gd", graphics_gd_new);
 }

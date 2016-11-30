@@ -73,5 +73,5 @@ speech_dbus_new(struct speech_methods *meth, struct attr **attrs, struct attr *p
 void
 plugin_init(void)
 {
-	plugin_register_speech_type("dbus", speech_dbus_new);
+	plugin_register_category_speech("dbus", speech_dbus_new);
 }

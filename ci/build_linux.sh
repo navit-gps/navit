@@ -18,9 +18,10 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
   https://scan.coverity.com/builds?project=$CIRCLE_PROJECT_USERNAME
 else
 	mkdir bin && cd bin
-	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE || exit -1
+	cmake ../ -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE|| exit -1
 	make  || exit -1
 fi
+
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	cp -r navit/xpm $CIRCLE_ARTIFACTS
 fi

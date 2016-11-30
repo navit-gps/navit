@@ -639,5 +639,5 @@ static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *me
 
 void plugin_init(void)
 {
-	plugin_register_gui_type("win32", win32_gui_new);
+	plugin_register_category_gui("win32", win32_gui_new);
 }

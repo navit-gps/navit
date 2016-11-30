@@ -1198,6 +1198,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"enter\n");
-        plugin_register_graphics_type("android", graphics_android_new);
-	plugin_register_event_type("android", event_android_new);
+        plugin_register_category_graphics("android", graphics_android_new);
+	plugin_register_category_event("android", event_android_new);
 }

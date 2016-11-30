@@ -682,7 +682,7 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"shapefile: plugin_init\n");
-	plugin_register_map_type("shapefile", map_new_shapefile);
+	plugin_register_category_map("shapefile", map_new_shapefile);
 }
 
 /************************************************************************/

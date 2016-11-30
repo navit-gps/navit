@@ -394,6 +394,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"textfile: plugin_init\n");
-	plugin_register_map_type("textfile", map_new_textfile);
+	plugin_register_category_map("textfile", map_new_textfile);
 }
 

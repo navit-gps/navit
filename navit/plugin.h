@@ -25,16 +25,32 @@ extern "C" {
 
 struct plugin;
 
-enum plugin_type {
-	plugin_type_graphics,
-	plugin_type_gui,
-	plugin_type_map,
-	plugin_type_osd,
-	plugin_type_speech,
-	plugin_type_vehicle,
-	plugin_type_event,
-	plugin_type_font,
-	plugin_type_last,
+/**
+ * @brief All existing plugin categories.
+ *
+ * Plugins are grouped into categories. Plugins within one category offer the same
+ * functionality (GUI, graphics, map etc.). Consequently the category determines the API
+ * offered by a plugin.
+ */
+enum plugin_category {
+	/** Category for plugins which implement a graphics backend. */
+	plugin_category_graphics,
+	/** Category for plugins which implement a GUI frontend. */
+	plugin_category_gui,
+	/** Category for plugins which implement a driver for providing/loading map data. */
+	plugin_category_map,
+	/** Category for plugins which implement an OSD. */
+	plugin_category_osd,
+	/** Category for plugins which implement speech output. */
+	plugin_category_speech,
+	/** Category for plugins which supply position data (typically from a GPS receiver). */
+	plugin_category_vehicle,
+	/** Category for plugins which implement/wrap an event subsystem. */
+	plugin_category_event,
+	/** Category for plugins which load fonts. */
+	plugin_category_font,
+	/** Dummy for last entry. */
+	plugin_category_last,
 };
 #endif
 
@@ -44,7 +60,7 @@ struct popup_item;
 #undef PLUGIN_FUNC1
 #undef PLUGIN_FUNC3
 #undef PLUGIN_FUNC4
-#undef PLUGIN_TYPE
+#undef PLUGIN_CATEGORY
 #define PLUGIN_PROTO(name,...) void name(__VA_ARGS__)
 
 #ifdef PLUGIN_C
@@ -81,25 +97,25 @@ struct name_val {
 	void *val;
 };
 
-GList *plugin_types[plugin_type_last];
+GList *plugin_categories[plugin_category_last];
 
-#define PLUGIN_TYPE(type,newargs) \
-struct type##_priv; \
-struct type##_methods; \
+#define PLUGIN_CATEGORY(category,newargs) \
+struct category##_priv; \
+struct category##_methods; \
 void \
-plugin_register_##type##_type(const char *name, struct type##_priv *(*new_) newargs) \
+plugin_register_category_##category(const char *name, struct category##_priv *(*new_) newargs) \
 { \
         struct name_val *nv; \
         nv=g_new(struct name_val, 1); \
         nv->name=g_strdup(name); \
 	nv->val=new_; \
-	plugin_types[plugin_type_##type]=g_list_append(plugin_types[plugin_type_##type], nv); \
+	plugin_categories[plugin_category_##category]=g_list_append(plugin_categories[plugin_category_##category], nv); \
 } \
  \
 void * \
-plugin_get_##type##_type(const char *name) \
+plugin_get_category_##category(const char *name) \
 { \
-	return plugin_get_type(plugin_type_##type, #type, name); \
+	return plugin_get_category(plugin_category_##category, #category, name); \
 } 
 
 #else
@@ -115,11 +131,11 @@ void plugin_call_##name(t1 p1,t2 p2,t3 p3);
 void plugin_register_##name(void(*func)(t1 p1,t2 p2,t3 p3,t4 p4));	\
 void plugin_call_##name(t1 p1,t2 p2,t3 p3,t4 p4);
 
-#define PLUGIN_TYPE(type,newargs) \
-struct type##_priv; \
-struct type##_methods; \
-void plugin_register_##type##_type(const char *name, struct type##_priv *(*new_) newargs); \
-void *plugin_get_##type##_type(const char *name);
+#define PLUGIN_CATEGORY(category,newargs) \
+struct category##_priv; \
+struct category##_methods; \
+void plugin_register_category_##category(const char *name, struct category##_priv *(*new_) newargs); \
+void *plugin_get_category_##category(const char *name);
 
 #endif
 
@@ -148,7 +164,7 @@ struct plugins *plugins_new(void);
 struct plugin *plugin_new(struct attr *parent, struct attr ** attrs);
 void plugins_init(struct plugins *pls);
 void plugins_destroy(struct plugins *pls);
-void *plugin_get_type(enum plugin_type type, const char *type_name, const char *name);
+void *plugin_get_category(enum plugin_category category, const char *category_name, const char *name);
 /* end of prototypes */
 
 #ifdef __cplusplus
