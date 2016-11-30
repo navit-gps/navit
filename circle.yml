@@ -33,7 +33,7 @@ dependencies:
 test:
 
   override:
-    - bash:
+    - bash ci/build.sh:
         parallel: true
         files:
           - ci/build_*.sh
