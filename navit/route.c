@@ -2831,11 +2831,12 @@ static void
 route_graph_clone_segment(struct route_graph *this, struct route_graph_segment *s, struct route_graph_point *start, struct route_graph_point *end, int flags)
 {
 	struct route_graph_segment_data data;
-	data.flags=s->data.flags|flags;
-	data.offset=1;
-	data.maxspeed=-1;
 	data.item=&s->data.item;
+	data.offset=1;
+	data.flags=s->data.flags|flags;
 	data.len=s->data.len+1;
+	data.maxspeed=-1;
+	data.dangerous_goods=0;
 	if (s->data.flags & AF_SPEED_LIMIT)
 		data.maxspeed=RSD_MAXSPEED(&s->data);
 	if (s->data.flags & AF_SEGMENTED) 
@@ -4201,8 +4202,8 @@ route_attr_iter_destroy(struct attr_iter *iter)
 void
 route_init(void)
 {
-	plugin_register_map_type("route", route_map_new);
-	plugin_register_map_type("route_graph", route_graph_map_new);
+	plugin_register_category_map("route", route_map_new);
+	plugin_register_category_map("route_graph", route_graph_map_new);
 }
 
 void

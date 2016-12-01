@@ -205,7 +205,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		GdkPixbufLoader *loader=gdk_pixbuf_loader_new();
 		if (!loader)
 			return NULL;
-		if (*w != -1 || *h != -1)
+		if (*w != IMAGE_W_H_UNSET || *h != IMAGE_W_H_UNSET)
 			gdk_pixbuf_loader_set_size(loader, *w, *h);
 		gdk_pixbuf_loader_write(loader, buffer->start, buffer->len, NULL);
 		gdk_pixbuf_loader_close(loader, NULL);
@@ -213,7 +213,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		g_object_ref(pixbuf);
 		g_object_unref(loader);
 	} else {
-		if (*w == -1 && *h == -1)
+		if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
 			pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 		else
 			pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
@@ -1073,13 +1073,15 @@ static struct graphics_methods graphics_methods = {
 	overlay_disable,
 	overlay_resize,
 	set_attr,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *
 graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 {
 	struct font_priv * (*font_freetype_new)(void *meth);
-	font_freetype_new=plugin_get_font_type("freetype");
+	font_freetype_new=plugin_get_category_font("freetype");
 	if (!font_freetype_new)
 		return NULL;
 	struct graphics_priv *this=g_new0(struct graphics_priv,1);
@@ -1148,5 +1150,5 @@ plugin_init(void)
 #ifdef HAVE_API_WIN32
 	setlocale(LC_NUMERIC, "C"); /* WIN32 gtk resets LC_NUMERIC */
 #endif
-	plugin_register_graphics_type("gtk_drawing_area", graphics_gtk_drawing_area_new);
+	plugin_register_category_graphics("gtk_drawing_area", graphics_gtk_drawing_area_new);
 }

@@ -77,5 +77,5 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr)
 void
 plugin_init(void)
 {
-	plugin_register_speech_type("speech_dispatcher", speechd_new);
+	plugin_register_category_speech("speech_dispatcher", speechd_new);
 }

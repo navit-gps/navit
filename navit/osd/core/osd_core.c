@@ -156,9 +156,9 @@ format_distance(double distance, char *sep, int imperial)
 			return g_strdup_printf("%.1f%smi", distance / FEET_PER_MILE, sep);
 		}
 	} else {
-		if (distance >= 100000)
+		if (distance >= 10000)
 			return g_strdup_printf("%.0f%skm", distance / 1000, sep);
-		else if (distance >= 10000)
+		else if (distance >= 1000)
 			return g_strdup_printf("%.1f%skm", distance / 1000, sep);
 		else if (distance >= 300)
 			return g_strdup_printf("%.0f%sm", round(distance / 25) * 25, sep);
@@ -1412,12 +1412,29 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 
 struct osd_button {
 	int use_overlay;
+	/* FIXME: do we need navit_init_cb? It is set in two places but never read.
+	 * osd_button_new sets it to osd_button_init (init callback), and
+	 * osd_button_init sets it to osd_std_click (click callback). */
 	struct callback *draw_cb,*navit_init_cb;
 	struct graphics_image *img;
 	char *src_dir,*src;
 };
 
 
+/**
+ * @brief Adjusts width and height of an OSD item to fit the image it displays.
+ *
+ * A width or height of 0%, stored in relative attributes as {@code ATTR_REL_RELSHIFT}, is used as a flag
+ * indicating that the respective dimension is unset, i.e. determined by the dimensions of its image.
+ *
+ * If this is the case for height and/or width, the respective dimension will be updated to fit the image.
+ *
+ * Note that this method is used by several OSD items, notably {@code osd_image}, {@code osd_button} and
+ * {@code osd_android_menu}.
+ *
+ * @param opc The OSD item
+ * @param img The image displayed by the item
+ */
 static void 
 osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img)
 {
@@ -1440,7 +1457,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 
 	if (this->use_overlay) {
 		struct graphics_image *img;
-		img=graphics_image_new(opc->osd_item.gr, this->src);
+		img=graphics_image_new_scaled(opc->osd_item.gr, this->src, opc->osd_item.w, opc->osd_item.h);
 		osd_button_adjust_sizes(opc, img);
 		p.x=(opc->osd_item.w-img->width)/2;
 		p.y=(opc->osd_item.h-img->height)/2;
@@ -1450,7 +1467,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 	} else {
 		struct graphics *gra;
 		gra = navit_get_graphics(nav);
-		this->img = graphics_image_new(gra, this->src);
+		this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 
 		if (!this->img) {
 			dbg(lvl_warning, "failed to load '%s'\n", this->src);
@@ -1477,18 +1494,32 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 	struct osd_button *this = (struct osd_button *)opc->data;
 
 	struct graphics *gra = navit_get_graphics(nav);
+
+	/* translate properties to real size */
+	osd_std_calculate_sizes(&opc->osd_item, navit_get_width(nav), navit_get_height(nav));
+	/* most graphics plugins cannot accept w=0 or h=0. They require special w=-1 or h=-1 for "no size"*/
+	if((opc->osd_item.w <= 0) || (opc->osd_item.h <=0))
+	{
+		opc->osd_item.w = -1;
+		opc->osd_item.h = -1;
+	}
 	dbg(lvl_debug, "enter\n");
-	this->img = graphics_image_new(gra, this->src);
+	dbg(lvl_debug, "Get: %s, %d, %d, %d, %d\n", this->src, opc->osd_item.rel_w, opc->osd_item.rel_h, opc->osd_item.w, opc->osd_item.h);
+	this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 	if (!this->img) {
 		dbg(lvl_warning, "failed to load '%s'\n", this->src);
 		return;
 	}
+        else
+        {
+		dbg(lvl_debug,"Got %s: %d, %d\n", this->src, this->img->width, this->img->height);
+        }
 	osd_button_adjust_sizes(opc, this->img);
 	if (this->use_overlay) {
 		struct graphics_image *img;
 		struct point p;
 		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-		img=graphics_image_new(opc->osd_item.gr, this->src);
+		img=graphics_image_new_scaled(opc->osd_item.gr, this->src, opc->osd_item.w, opc->osd_item.h);
 		p.x=(opc->osd_item.w-this->img->width)/2;
 		p.y=(opc->osd_item.h-this->img->height)/2;
 		osd_fill_with_bgcolor(&opc->osd_item);
@@ -1511,7 +1542,7 @@ osd_button_icon_path(struct osd_button *this_, char *src)
 {
 	if (!this_->src_dir)
 		return graphics_icon_path(src);
-	return g_strdup_printf("%s%s%s",this_->src_dir, G_DIR_SEPARATOR_S, src);
+	return g_strdup_printf("%s%s%s", this_->src_dir, G_DIR_SEPARATOR_S, src);
 }
  
 int
@@ -1533,7 +1564,7 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 		}
 		nav = opc->osd_item.navit;
 		gra = navit_get_graphics(nav);
-		this_->img = graphics_image_new(gra, this_->src);
+	        this_->img = graphics_image_new_scaled(gra, this_->src, opc->osd_item.w, opc->osd_item.h);
 		if (!this_->img) {
 			dbg(lvl_warning, "failed to load '%s'\n", this_->src);
 			return 0;
@@ -1692,12 +1723,16 @@ struct navigation_status {
 
 
 /**
- * @brief Draws a {@code navigation_status} OSD.
+ * @brief Draws a `navigation_status` OSD.
+ *
+ * This method performs the actual operation of selecting and drawing the image. It can be called
+ * directly as a callback method for the `navigation.nav_status` attribute, or indirectly through the
+ * draw method.
  *
  * @param opc The OSD to draw
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
-static void osd_navigation_status_draw(struct osd_priv_common *opc, int status) {
+static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int status) {
 	struct navigation_status *this = (struct navigation_status *)opc->data;
 	struct point p;
 	int do_draw = opc->osd_item.do_draw;
@@ -1757,6 +1792,29 @@ static void osd_navigation_status_draw(struct osd_priv_common *opc, int status) 
 
 
 /**
+ * @brief Draws a `navigation_status` OSD.
+ *
+ * This is the draw method for the OSD. It exposes the standard signature for the `draw` method and acts
+ * as a wrapper around `osd_navigation_status_draw_do()`.
+ *
+ * @param osd The OSD to draw.
+ * @param navit The navit instance
+ * @param v The vehicle (not used but part of the prototype)
+ */
+static void osd_navigation_status_draw(struct osd_priv *osd, struct navit *navit, struct vehicle *v) {
+	struct navigation *nav = NULL;
+	struct attr attr;
+
+	if (navit)
+		nav = navit_get_navigation(navit);
+	if (nav) {
+		if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
+			osd_navigation_status_draw_do((struct osd_priv_common *) osd, attr.u.num);
+	}
+}
+
+
+/**
  * @brief Initializes a new {@code navigation_status} OSD.
  *
  * This function is registered as a callback function in {@link osd_navigation_status_new(struct navit *, struct osd_methods *, struct attr **)}.
@@ -1775,9 +1833,9 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 	if (navit)
 		nav = navit_get_navigation(navit);
 	if (nav) {
-		navigation_register_callback(nav, attr_nav_status, callback_new_attr_1(callback_cast(osd_navigation_status_draw), attr_nav_status, opc));
+		navigation_register_callback(nav, attr_nav_status, callback_new_attr_1(callback_cast(osd_navigation_status_draw_do), attr_nav_status, opc));
 		if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
-			osd_navigation_status_draw(opc, attr.u.num);
+			osd_navigation_status_draw_do(opc, attr.u.num);
 	}
 	else
 		dbg(lvl_error, "navigation instance is NULL, OSD will never update\n");
@@ -2001,6 +2059,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 struct nav_toggle_announcer
 {
 	int w,h;
+	/* FIXME this is actually the click callback, which is set once but never read. Do we need this? */
 	struct callback *navit_init_cb;
 	char *icon_src;
 	int icon_h, icon_w, active, last_state;
@@ -2438,6 +2497,8 @@ struct osd_speed_warner {
 	int bTextOnly;
 	struct graphics_image *img_active,*img_passive,*img_off;
 	char* label_str;
+	int timeout;
+	int wait_before_warn;
 };
 
 static void
@@ -2503,9 +2564,16 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
             if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
-                    this->announce_state=eWarningTold; //warning told
-                    navit_say(navit,_("Please decrease your speed"));
+                    if(this->wait_before_warn>0){
+                    	this->wait_before_warn--;
+                    }else{
+                    	this->announce_state=eWarningTold; //warning told
+                    	navit_say(navit,_("Please decrease your speed"));
+                    }
                 }
+            }else{
+    		/* reset speed warning */
+            	this->wait_before_warn = this->timeout;	
             }
             if( tracking_speed <= routespeed ) {
                 this->announce_state=eNoWarn; //no warning
@@ -2560,7 +2628,7 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 	if (opc->osd_item.h < this->d)
 		this->d=opc->osd_item.h;
 	this->width=this->d/10;
-
+	this->wait_before_warn = this->timeout;
         if(this->label_str && !strncmp("images:",this->label_str,7)) {
           char *tok1=NULL, *tok2=NULL, *tok3=NULL;
           strtok(this->label_str,":");
@@ -2645,7 +2713,12 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
             this->bTextOnly = 1;
           }
        }
-
+	attr = attr_search(attrs, NULL, attr_timeout);
+	if (attr)
+		this->timeout = attr->u.num;
+	else
+		this->timeout = 10;    // 10s timeout by default
+		
 	attr = attr_search(attrs, NULL, attr_announce_on);
 	if (attr)
 		this->announce_on = attr->u.num;
@@ -3807,21 +3880,21 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 void
 plugin_init(void)
 {
-	plugin_register_osd_type("compass", osd_compass_new);
-	plugin_register_osd_type("navigation_next_turn", osd_nav_next_turn_new);
-	plugin_register_osd_type("button", osd_button_new);
-	plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
-	plugin_register_osd_type("speed_warner", osd_speed_warner_new);
-	plugin_register_osd_type("speed_cam", osd_speed_cam_new);
-	plugin_register_osd_type("text", osd_text_new);
-	plugin_register_osd_type("gps_status", osd_gps_status_new);
-	plugin_register_osd_type("volume", osd_volume_new);
-	plugin_register_osd_type("scale", osd_scale_new);
-	plugin_register_osd_type("image", osd_image_new);
-	plugin_register_osd_type("stopwatch", osd_stopwatch_new);
-	plugin_register_osd_type("odometer", osd_odometer_new);
-	plugin_register_osd_type("auxmap", osd_auxmap_new);
-	plugin_register_osd_type("cmd_interface", osd_cmd_interface_new);
-	plugin_register_osd_type("route_guard", osd_route_guard_new);
-	plugin_register_osd_type("navigation_status", osd_navigation_status_new);
+	plugin_register_category_osd("compass", osd_compass_new);
+	plugin_register_category_osd("navigation_next_turn", osd_nav_next_turn_new);
+	plugin_register_category_osd("button", osd_button_new);
+	plugin_register_category_osd("toggle_announcer", osd_nav_toggle_announcer_new);
+	plugin_register_category_osd("speed_warner", osd_speed_warner_new);
+	plugin_register_category_osd("speed_cam", osd_speed_cam_new);
+	plugin_register_category_osd("text", osd_text_new);
+	plugin_register_category_osd("gps_status", osd_gps_status_new);
+	plugin_register_category_osd("volume", osd_volume_new);
+	plugin_register_category_osd("scale", osd_scale_new);
+	plugin_register_category_osd("image", osd_image_new);
+	plugin_register_category_osd("stopwatch", osd_stopwatch_new);
+	plugin_register_category_osd("odometer", osd_odometer_new);
+	plugin_register_category_osd("auxmap", osd_auxmap_new);
+	plugin_register_category_osd("cmd_interface", osd_cmd_interface_new);
+	plugin_register_category_osd("route_guard", osd_route_guard_new);
+	plugin_register_category_osd("navigation_status", osd_navigation_status_new);
 }

@@ -1445,9 +1445,9 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         /* Hash_key will be freed ater the hash table, so set it to NULL here to disable freing it on this function return */
         hash_key=NULL;
         if(ret) {
-            if (*w==-1)
+            if (*w==IMAGE_W_H_UNSET)
                 *w=ret->width;
-            if (*h==-1)
+            if (*h==IMAGE_W_H_UNSET)
                 *h=ret->height;
             if (*w!=ret->width || *h!=ret->height) {
                 if(ret->png_pixels && ret->hBitmap)
@@ -1582,6 +1582,8 @@ static struct graphics_methods graphics_methods =
     get_text_bbox,
     overlay_disable,
     overlay_resize,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 
@@ -1843,6 +1845,6 @@ static struct event_priv *
 void
 plugin_init(void)
 {
-    plugin_register_graphics_type("win32", graphics_win32_new);
-    plugin_register_event_type("win32", event_win32_new);
+    plugin_register_category_graphics("win32", graphics_win32_new);
+    plugin_register_category_event("win32", event_win32_new);
 }

@@ -835,7 +835,8 @@ attr_free_content_do(struct attr *attr)
 			obj->func->unref(obj);
 	}
 	if (!(attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) && 
-	    !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end))
+	    !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) &&
+	    attr->type != attr_item_type)
 		g_free(attr->u.data);
 }
 
@@ -860,6 +861,8 @@ attr_dup_content(struct attr *src, struct attr *dst)
 	dst->type=src->type;
 	if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end) 
 		dst->u.num=src->u.num;
+	else if (src->type == attr_item_type)
+		dst->u.item_type=src->u.item_type;
 	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) {
 		if (HAS_OBJECT_FUNC(src->type)) {
 			struct navit_object *obj=src->u.data;

@@ -4,12 +4,15 @@ grn='\e[0;32m'
 yel='\e[1;33m'
 off='\e[0m'
 
+wget -nv -c http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip
+unzip -q -d ~ android-ndk-r13-linux-x86_64.zip
+
 # setup var's to perform environment setup and cmake
 export START_PATH=~/
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
 export CMAKE_FILE=$SOURCE_PATH"/Toolchain/arm-eabi.cmake"
 
-export ANDROID_NDK="/usr/local/android-ndk/"
+export ANDROID_NDK=~/android-ndk-r13
 export ANDROID_NDK_BIN=$ANDROID_NDK"/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
  
 export ANDROID_SDK="/usr/local/android-sdk-linux/"
@@ -39,17 +42,14 @@ else
   echo
 fi
 
-mkdir -p $BUILD_PATH
+[ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
 cd $BUILD_PATH
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_TOOLS:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 android list targets
-# The value comes from ( last_svn_rev - max_build_id ) at the time of the git migration
-svn_rev=$(( 5658 + $CIRCLE_BUILD_NUM )) 
-sed -i -e "s/ANDROID_VERSION_INT=\"0\"/ANDROID_VERSION_INT=\"${svn_rev}\"/g" ~/navit/navit/android/CMakeLists.txt
 mkdir $CIRCLE_ARTIFACTS/android/
 cp ~/navit/navit/android/CMakeLists.txt $CIRCLE_ARTIFACTS/android/
 
-cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=19 $SOURCE_PATH
+cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=23 -DANDROID_NDK_API_VERSION=19 $SOURCE_PATH
 make || exit 1
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
   make apkg-release && mv navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-release-unsigned.apk || exit 1

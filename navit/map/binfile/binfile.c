@@ -2848,6 +2848,6 @@ plugin_init(void)
 	if (sizeof(struct zip_cd) != 46) {
 		dbg(lvl_error,"error: sizeof(struct zip_cd)=%zu\n",sizeof(struct zip_cd));
 	}
-	plugin_register_map_type("binfile", map_new_binfile);
+	plugin_register_category_map("binfile", map_new_binfile);
 }
 

@@ -339,5 +339,5 @@ event_sdl_new(struct event_methods* methods)
 void
 event_sdl_register(void)
 {
-   plugin_register_event_type("sdl", event_sdl_new);
+   plugin_register_category_event("sdl", event_sdl_new);
 }

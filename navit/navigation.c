@@ -46,6 +46,10 @@
 
 /* #define DEBUG */
 
+/** @file
+ *
+ * Generates navigation messages for a calculated route.
+ */
 static int roundabout_extra_length=50;
 
 /* TODO: find out if this is being used elsewhere and, if so, move this definition somewhere more generic */
@@ -86,7 +90,7 @@ static int turn_2_limit = 45;
 static int sharp_turn_limit = 110;
 
 /** Minimum absolute delta for a U turn.
- * Maneuvers whose absolute delta is less than this (but at least {@code min_turn_limit}) will always be announced as turns.
+ * Maneuvers whose absolute delta is less than this (but at least #min_turn_limit) will always be announced as turns.
  * Note that, depending on other conditions, even maneuvers whose delta exceeds the threshold may still be announced as (sharp) turns. */
 static int u_turn_limit = 165;
 
@@ -204,14 +208,14 @@ int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
 
 /** Merging into a motorway-like road, direction undefined.
  * This value is not intended to be set directly but can be used for
- * comparisons, e.g. {@code merge_or_exit & mex_merge}. */
+ * comparisons, e.g. `merge_or_exit & mex_merge`. */
 #define mex_merge 1
 
 /** Exiting from a motorway-like road, direction undefined.
  * This should only be used for ramps leading to a non-motorway road.
- * For interchanges, use {@code mex_interchange} instead.
+ * For interchanges, use #mex_interchange instead.
  * This value is not intended to be set directly but can be used for
- * comparisons, e.g. {@code merge_or_exit & mex_exit}. */
+ * comparisons, e.g. `merge_or_exit & mex_merge`. */
 #define mex_exit 2
 
 /** Motorway-like road splits in two.
@@ -222,14 +226,14 @@ int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
 #define mex_merge_right 9
 
 /** Exiting from a motorway-like road to the right.
- * See {@code mex_exit} for usage. */
+ * @see mex_exit for usage */
 #define mex_exit_right 10
 
 /** Merging into a motorway-like road to the left (coming from the right) */
 #define mex_merge_left 17
 
 /** Exiting from a motorway-like road to the left.
- * See {@code mex_exit} for usage. */
+ * @see mex_exit for usage */
 #define mex_exit_left 18
 
 /**
@@ -706,7 +710,7 @@ char *nav_status_to_text(int status) {
 		ret = g_strdup("status_routing");
 		break;
 	default:
-		ret = g_strdup_printf("status_unknown_%d)", status);
+		ret = g_strdup_printf("status_unknown_%d", status);
 	}
 	return ret;
 }
@@ -4440,7 +4444,7 @@ navigation_set_route(struct navigation *this_, struct route *route)
 void
 navigation_init(void)
 {
-	plugin_register_map_type("navigation", navigation_map_new);
+	plugin_register_category_map("navigation", navigation_map_new);
 }
 
 struct object_func navigation_func = {

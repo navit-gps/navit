@@ -244,5 +244,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("gpsd_dbus", vehicle_gpsd_dbus_new);
+	plugin_register_category_vehicle("gpsd_dbus", vehicle_gpsd_dbus_new);
 }

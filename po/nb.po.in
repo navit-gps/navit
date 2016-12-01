@@ -1,5 +1,5 @@
 # Norwegian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
@@ -9,13 +9,14 @@
 # Skippern https://launchpad.net/~gay-today
 # Thor H. Johansen https://launchpad.net/~thorhajo
 # burner https://launchpad.net/~bendik-xplore
+# kingu https://launchpad.net/~comradekingu
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2016-10-02 20:18+0000\n"
+"Last-Translator: kingu <comradekingu@gmail.com>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,11 +78,11 @@ msgstr "sjette avkjøring"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d fot"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "om %d fot"
 
 #, c-format
 msgid "%d.%d miles"
@@ -100,8 +101,8 @@ msgstr[1] ""
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "om ei mil"
+msgstr[1] "om %d engelske mil"
 
 #, c-format
 msgid "%d meters"
@@ -225,28 +226,28 @@ msgstr "så"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "flett sp%1$s|høyre"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Flett %1$s%2$s|høyre"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "flett så%1$s|venstre"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Flett %1$s%2$s|venstre"
 
 msgid "on your left"
-msgstr ""
+msgstr "på venstresiden"
 
 msgid "on your right"
-msgstr ""
+msgstr "på høyresiden"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
@@ -1968,6 +1969,12 @@ msgstr "Utseende"
 msgid "Height Profile"
 msgstr "Høydeprofil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr ""
 
@@ -2023,10 +2030,6 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr ""
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2042,6 +2045,10 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2503,6 +2510,9 @@ msgstr "Fullskjerm"
 
 msgid "Window Mode"
 msgstr "Vindusmodus"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Beskrivelse"

@@ -451,7 +451,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 		width = FreeImage_GetWidth(image);
 		height = FreeImage_GetHeight(image);
 
-		if ((*w != width || *h != height) && 0 < *w && 0 < *h) {
+		if ((*w != width || *h != height) && *w != IMAGE_W_H_UNSET && *h != IMAGE_W_H_UNSET) {
 			FIBITMAP *image2;
 			image2 = FreeImage_Rescale(image, *w, *h, FILTER_BOX);
 			FreeImage_Unload(image);
@@ -1432,13 +1432,15 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 	overlay_disable,
 	overlay_resize,
+	NULL, /* show_native_keyboard */
+	NULL, /* hide_native_keyboard */
 };
 
 static struct graphics_priv *
 graphics_opengl_new_helper(struct graphics_methods *meth)
 {
 	struct font_priv *(*font_freetype_new) (void *meth);
-	font_freetype_new = plugin_get_font_type("freetype");
+	font_freetype_new = plugin_get_category_font("freetype");
 
 	if (!font_freetype_new) {
 		return NULL;
@@ -1815,6 +1817,6 @@ event_opengl_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-	plugin_register_graphics_type("opengl", graphics_opengl_new);
-	plugin_register_event_type("opengl", event_opengl_new);
+	plugin_register_category_graphics("opengl", graphics_opengl_new);
+	plugin_register_category_event("opengl", event_opengl_new);
 }

@@ -471,5 +471,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("gpsd", vehicle_gpsd_new_gpsd);
+	plugin_register_category_vehicle("gpsd", vehicle_gpsd_new_gpsd);
 }

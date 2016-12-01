@@ -362,9 +362,10 @@ country_search_new(struct attr *search, int partial)
 {
 	struct country_search *ret=g_new(struct country_search, 1);
 	ret->search=*search;
-	ret->search.u.str=linguistics_casefold(ret->search.u.str);
-	if (search->type != attr_country_id)
+	if (search->type != attr_country_id) {
+		ret->search.u.str=linguistics_casefold(ret->search.u.str);
 		ret->len=strlen(ret->search.u.str);
+	}
 	else
 		ret->len=0;
 	ret->partial=partial;

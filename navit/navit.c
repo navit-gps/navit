@@ -144,6 +144,7 @@ struct navit {
 	int autozoom_min;
 	int autozoom_max;
 	int autozoom_active;
+	int autozoom_paused;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -176,6 +177,7 @@ struct navit {
 	int imperial;
 	int waypoints_flag;
 	struct coord_geo center;
+	int auto_switch; /*auto switching between day/night layout enabled ?*/
 };
 
 struct gui *main_loop_gui;
@@ -199,6 +201,7 @@ static void navit_cmd_set_center_cursor(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
+static void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out, int valid);
 struct object_func navit_func;
 
 struct navit *global_navit;
@@ -659,12 +662,17 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 		return;
 	}
 
+	if(this_->autozoom_paused){
+		this_->autozoom_paused--;
+		return;
+	}
+	
 	distance = speed * this_->autozoom_secs;
 
 	transform_get_size(this_->trans, &w, &h);
 	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
 	scale = transform_get_scale(this_->trans);
-
+	
 	/* We make sure that the point we want to see is within a certain range
 	 * around the vehicle. The radius of this circle is the size of the
 	 * screen. This doesn't necessarily mean the point is visible because of
@@ -699,6 +707,9 @@ void
 navit_zoom_in(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)/factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	if (scale < 1)
 		scale=1;
 	navit_scale(this_, scale, p, 1);
@@ -716,6 +727,9 @@ void
 navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)*factor;
+	if(this_->autozoom_active){
+		this_->autozoom_paused = 10;
+	}
 	navit_scale(this_, scale, p, 1);
 }
 
@@ -744,6 +758,7 @@ navit_zoom_out_cursor(struct navit *this_, int factor)
 static int
 navit_cmd_zoom_in(struct navit *this_)
 {
+	
 	navit_zoom_in_cursor(this_, 2);
 	return 0;
 }
@@ -770,7 +785,7 @@ static GHashTable *cmd_attr_var_hash = NULL;
  * Store key value pair for the  command system (for int typed values)
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] is the key string, in[1] is the integer value to store
  * @param out output attributes, unused 
  * @param valid unused 
@@ -799,7 +814,7 @@ navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, stru
  * Store key value pair for the  command system (for attr typed values, can be used as opaque handles)
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] is the key string, in[1] is the attr* value to store
  * @param out output attributes, unused 
  * @param valid unused 
@@ -830,7 +845,7 @@ navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, str
  * command to toggle the active state of a named layer of the current layout
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the name of the layer
  * @param out output unused
  * @param valid unused 
@@ -859,7 +874,7 @@ navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, str
  * adds an item with the current coordinate of the vehicle to a named map
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the name of the map 
  * @param out output attribute, 0 on error or the id of the created item on success
  * @param valid unused 
@@ -950,7 +965,7 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
  * sets an attribute (name value pair) of a map item specified by map name and item id
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] - name of the map  ; in[1] - item  ; in[2] - attr name ; in[3] - attr value
  * @param out output attribute, 0 on error, 1 on success
  * @param valid unused 
@@ -1015,7 +1030,7 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
  * Get attr variable given a key string for the command system (for opaque usage)
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the key string
  * @param out output attribute, the attr for the given key string if exists or NULL  
  * @param valid unused 
@@ -1053,7 +1068,7 @@ navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, str
  * Get value given a key string for the command system
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the key string
  * @param out output attribute, the value for the given key string if exists or 0  
  * @param valid unused 
@@ -1092,7 +1107,7 @@ GList *cmd_int_var_stack = NULL;
  * Push an integer to the stack for the command system
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the integer attibute to push
  * @param out output attributes, unused 
  * @param valid unused 
@@ -1112,7 +1127,7 @@ navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct 
  * Pop an integer from the command system's integer stack
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes unused
  * @param out output attribute, the value popped if stack isn't empty or 0
  * @param valid unused 
@@ -1140,7 +1155,7 @@ navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct a
  * Get current size of command system's integer stack
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes unused
  * @param out output attribute, the size of stack
  * @param valid unused 
@@ -1268,7 +1283,7 @@ navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, 
  * Join several string attributes into one
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] - separator, in[1..] - attributes to join
  * @param out output attribute joined attribute as string
  * @param valid unused 
@@ -1305,7 +1320,7 @@ navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct a
  * Call external program
  *
  * @param navit The navit instance
- * @param function unused (needed to match command function signiture)
+ * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] - name of executable, in[1..] - parameters
  * @param out output attribute unused
  * @param valid unused 
@@ -1370,6 +1385,7 @@ static struct command_table commands[] = {
 	{"set_center",command_cast(navit_cmd_set_center)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
+	{"set_position",command_cast(navit_cmd_set_position)},
 	{"route_remove_next_waypoint",command_cast(navit_cmd_route_remove_next_waypoint)},
 	{"route_remove_last_waypoint",command_cast(navit_cmd_route_remove_last_waypoint)},
 	{"set_position",command_cast(navit_cmd_set_position)},
@@ -1387,6 +1403,7 @@ static struct command_table commands[] = {
 	{"map_item_set_attr",command_cast(navit_cmd_map_item_set_attr)},
 	{"set_attr_var",command_cast(navit_cmd_set_attr_var)},
 	{"get_attr_var",command_cast(navit_cmd_get_attr_var)},
+	{"switch_layout_day_night",command_cast(navit_cmd_switch_layout_day_night)},
 };
 	
 void 
@@ -1424,12 +1441,14 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_secs = 10;
 	this_->autozoom_min = 7;
 	this_->autozoom_active = 0;
+	this_->autozoom_paused = 0;
 	this_->zoom_min = 1;
 	this_->zoom_max = 2097152;
 	this_->autozoom_max = this_->zoom_max;
 	this_->follow_cursor = 1;
 	this_->radius = 30;
 	this_->border = 16;
+	this_->auto_switch = TRUE;
 
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
@@ -2041,22 +2060,22 @@ navit_init(struct navit *this_)
 	dbg(lvl_info,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 
 	if (!this_->gui && !(this_->flags & 2)) {
-		dbg(lvl_error,"Warning: No GUI available.\n");
-		return;
+		dbg(lvl_error,"FATAL: No GUI available.\n");
+		exit(1);
 	}
 	if (!this_->gra && !(this_->flags & 1)) {
-		dbg(lvl_error,"Warning: No graphics subsystem available.\n");
-		return;
+		dbg(lvl_error,"FATAL: No graphics subsystem available.\n");
+		exit(1);
 	}
 	dbg(lvl_info,"Connecting gui to graphics\n");
 	if (this_->gui && this_->gra && gui_set_graphics(this_->gui, this_->gra)) {
 		struct attr attr_type_gui, attr_type_graphics;
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
 		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-		dbg(lvl_error,"failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
-		dbg(lvl_error," Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
-		dbg(lvl_error," for explanations and solutions\n");
-		return;
+		dbg(lvl_error,"FATAL: Failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
+		dbg(lvl_error,"Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui "
+			"for explanations and solutions\n");
+		exit(1);
 	}
 	if (this_->speech && this_->navigation) {
 		struct attr speech;
@@ -2314,18 +2333,35 @@ navit_set_cursors(struct navit *this_)
 	return;
 }
 
+
+/**
+ * @brief Calculates the position of the cursor on the screen.
+ *
+ * This method considers padding if supported by the graphics plugin. In that case, the inner rectangle
+ * (i.e. screen size minus padding) will be used to center the cursor and to determine cursor offset (as
+ * specified in `this_->radius`).
+ *
+ * @param this_ The navit object
+ * @param p Receives the screen coordinates for the cursor
+ * @param keep_orientation Whether to maintain the current map orientation. If false, the map will be
+ * rotated so that the bearing of the vehicle is up.
+ * @param dir Receives the new map orientation as requested by `screen_orientation` (can be `NULL`)
+ *
+ * @return Always 1
+ */
 static int
 navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir)
 {
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
+	struct padding *padding = NULL;
 
         float offset=this_->radius;      // Cursor offset from the center of the screen (percent).
 #if 0 /* Better improve track.c to get that issue resolved or make it configurable with being off the default, the jumping back to the center is a bit annoying */
         float min_offset = 0.;      // Percent offset at min_offset_speed.
         float max_offset = 30.;     // Percent offset at max_offset_speed.
         int min_offset_speed = 2;   // Speed in km/h
-        int max_offset_speed = 50;  // Speed ini km/h
+        int max_offset_speed = 50;  // Speed in km/h
         // Calculate cursor offset from the center of the screen, upon speed.
         if (nv->speed <= min_offset_speed) {
             offset = min_offset;
@@ -2336,7 +2372,20 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
         }
 #endif
 
+	if (this_->gra) {
+		padding = graphics_get_data(this_->gra, "padding");
+	} else
+		dbg(lvl_warning, "cannot get padding: this->gra is NULL\n");
+
 	transform_get_size(this_->trans, &width, &height);
+	dbg(lvl_debug, "width=%d height=%d\n", width, height);
+
+	if (padding) {
+		width -= (padding->left + padding->right);
+		height -= (padding->top + padding->bottom);
+		dbg(lvl_debug, "corrected for padding: width=%d height=%d\n", width, height);
+	}
+
 	if (this_->orientation == -1 || keep_orientation) {
 		p->x=50*width/100;
 		p->y=(50 + offset)*height/100;
@@ -2355,6 +2404,14 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
 		if (dir)
 			*dir=this_->orientation;
 	}
+
+	if (padding) {
+		p->x += padding->left;
+		p->y += padding->top;
+	}
+
+	dbg(lvl_debug, "x=%d y=%d, offset=%f\n", p->x, p->y, offset);
+
 	return 1;
 }
 
@@ -3323,24 +3380,27 @@ navit_get_displaylist(struct navit *this_)
 	return this_->displaylist;
 }
 
+/*todo : make it switch to nightlayout when we are in a tunnel */
 void
 navit_layout_switch(struct navit *n) 
 {
 
-    int currTs=0;
-    struct attr iso8601_attr,geo_attr,valid_attr,layout_attr;
-    double trise,tset,trise_actual;
-    struct layout *l;
-    int year, month, day;
-    
-    if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
-	return; //No layout - nothing to switch
-    }
-    if (!n->vehicle)
-	return;
-    l=layout_attr.u.layout;
-    
-    if (l->dayname || l->nightname) {
+	int currTs=0;
+	struct attr iso8601_attr,geo_attr,valid_attr,layout_attr;
+	double trise,tset,trise_actual;
+	struct layout *l;
+	int year, month, day;
+	int after_sunrise = FALSE;
+	int after_sunset = FALSE;
+
+	if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
+		return; //No layout - nothing to switch
+	}
+	if (!n->vehicle)
+		return;
+	l=layout_attr.u.layout;
+
+	if (l->dayname || l->nightname) {
 	//Ok, we know that we have profile to switch
 	
 	//Check that we aren't calculating too fast
@@ -3348,10 +3408,13 @@ navit_layout_switch(struct navit *n)
 		currTs=iso8601_to_secs(iso8601_attr.u.str);
 		dbg(lvl_debug,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 	}
+	dbg(lvl_debug,"prevTs: %u:%u\n",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
 	if (currTs-(n->prevTs)<60) {
-	    //We've have to wait a little
-	    return;
+		//We've have to wait a little
+		return;
 	}
+	if (n->auto_switch == FALSE)
+		return;
 	if (sscanf(iso8601_attr.u.str,"%d-%02d-%02dT",&year,&month,&day) != 3)
 		return;
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
@@ -3361,47 +3424,112 @@ navit_layout_switch(struct navit *n)
 		//No position - no sun
 		return;
 	}
-	
 	//We calculate sunrise anyway, cause it is needed both for day and for night
-        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
+	if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
-		dbg(lvl_warning,"trise: %u:%u, sun never visible, never switch profile\n",HOURS(trise),MINUTES(trise));
+		dbg(lvl_debug,"trise: %u:%u, sun never visible, never switch profile\n",HOURS(trise),MINUTES(trise));
 		n->prevTs=currTs;
 		return;
-	    }
-	
-        trise_actual=trise;
+		}
+	trise_actual=trise;
 	dbg(lvl_debug,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
-	if (l->dayname) {
-	
-	    if ((HOURS(trise)*60+MINUTES(trise)==(currTs%86400)/60) || 
-		    (n->prevTs==0 && ((HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60)))) {
-		//The sun is rising now!
-		if (strcmp(l->name,l->dayname)) {
-		    navit_set_layout_by_name(n,l->dayname);
-		}
-	    }
+	dbg(lvl_debug,"dayname = %s, name =%s \n",l->dayname, l->name);
+	if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
+		after_sunrise = TRUE;
 	}
-	if (l->nightname) {
-	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
+	dbg(lvl_debug,"nightname = %s, name = %s \n",l->nightname, l->name);
+	if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
-		dbg(lvl_warning,"tset: %u:%u, sun always visible, never switch profile\n",HOURS(tset),MINUTES(tset));
+		dbg(lvl_debug,"tset: %u:%u, sun always visible, never switch profile\n",HOURS(tset),MINUTES(tset));
 		n->prevTs=currTs;
 		return;
-	    }
-	    dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
-	    if (HOURS(tset)*60+MINUTES(tset)==((currTs%86400)/60)
-		|| (n->prevTs==0 && (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) || 
-			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))))) {
-		//Time to sleep
-		if (strcmp(l->name,l->nightname)) {
-		    navit_set_layout_by_name(n,l->nightname);
-		}
-	    }	
 	}
-	
+	dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
+	if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
+			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
+		after_sunset = TRUE;
+	}	
+	if (after_sunrise && !after_sunset && l->dayname) {
+		navit_set_layout_by_name(n,l->dayname);
+			dbg(lvl_debug,"layout set to day\n");
+	}
+	else if (after_sunset && l->nightname) {
+		navit_set_layout_by_name(n,l->nightname);
+		dbg(lvl_debug,"layout set to night\n");
+	}
 	n->prevTs=currTs;
-    }
+	}
+}
+
+/**
+ * @brief this command is used to change the layout and enable/disable the automatic layout switcher
+ *
+ * @param this_ The navit instance
+ * @param function unused
+ * @param in input attributes in[0], a string, see usage below
+ * @param out output attribute unused
+ * @param valid unused
+ *
+ *
+ * usage :
+ * manual        : disable autoswitcher
+ * auto          : enable autoswitcher
+ * manual_toggle : disable autoswitcher and toggle between day / night layout
+ * manual_day    : disable autoswitcher and set to day layout
+ * manual_night  : disable autoswitcher and set to night layout
+ *
+ * todo : make it return the state of the autoswitcher and
+ * the version of the active layout (day/night/undefined)
+ */
+static
+void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out, int valid)
+{
+
+	if (!(in && in[0] && ATTR_IS_STRING(in[0]->type))) {
+		return;
+	}
+
+	dbg(lvl_debug," called with mode =%s\n",in[0]->u.str);
+
+	if (!this_->layout_current)
+		return;
+
+    if (!this_->vehicle)
+    	return;
+
+	if (!strcmp(in[0]->u.str,"manual")) {
+		this_->auto_switch = FALSE;
+	}
+	else if (!strcmp(in[0]->u.str,"auto")) {
+		this_->auto_switch = TRUE;
+		this_->prevTs = 0;
+		navit_layout_switch(this_);
+	}
+	else if (!strcmp(in[0]->u.str,"manual_toggle")) {
+		if (this_->layout_current->dayname) {
+			navit_set_layout_by_name(this_,this_->layout_current->dayname);
+			this_->auto_switch = FALSE;
+			dbg(lvl_debug,"toggeled layout to = %s\n",this_->layout_current->name);
+		}
+		else if (this_->layout_current->nightname) {
+			navit_set_layout_by_name(this_,this_->layout_current->nightname);
+			this_->auto_switch = FALSE;
+			dbg(lvl_debug,"toggeled layout to = %s\n",this_->layout_current->name);
+		}
+	}
+	else if (!strcmp(in[0]->u.str,"manual_day") && this_->layout_current->dayname) {
+		navit_set_layout_by_name(this_,this_->layout_current->dayname);
+		this_->auto_switch = FALSE;
+		dbg(lvl_debug,"switched layout to = %s\n",this_->layout_current->name);
+	}
+	else if (!strcmp(in[0]->u.str,"manual_night") && this_->layout_current->nightname) {
+		navit_set_layout_by_name(this_,this_->layout_current->nightname);
+		this_->auto_switch = FALSE;
+		dbg(lvl_debug,"switched layout to = %s\n",this_->layout_current->name);
+	}
+
+	dbg(lvl_debug,"auto = %i\n",this_->auto_switch);
+	return;
 }
 
 int 

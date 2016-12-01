@@ -1227,5 +1227,5 @@ tracking_map_new(struct map_methods *meth, struct attr **attrs, struct callback_
 void
 tracking_init(void)
 {
-	plugin_register_map_type("tracking", tracking_map_new);
+	plugin_register_category_map("tracking", tracking_map_new);
 }
