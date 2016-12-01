@@ -5,6 +5,7 @@
 # Esben Aaberg https://launchpad.net/~esben-aaberg
 # Fennek https://launchpad.net/~ng-fennek
 # Glenn https://launchpad.net/~glenn-mh-dk
+# Glenn Sommer https://launchpad.net/~glemsom
 # Jørgen Elgaard Larsen https://launchpad.net/~jel-elgaard
 # Kennet https://launchpad.net/~kharpsoe
 # Lasse Luttermann https://launchpad.net/~lasse-luttermann
@@ -1971,6 +1972,12 @@ msgstr "Layout"
 msgid "Height Profile"
 msgstr "Lodret profil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Route Beskrivelse"
 
@@ -2026,10 +2033,6 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr ""
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2045,6 +2048,10 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2506,6 +2513,9 @@ msgstr "Fuldskærm"
 
 msgid "Window Mode"
 msgstr "Vinduestilstand"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Beskrivelse"
