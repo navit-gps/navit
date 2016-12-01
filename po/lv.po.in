@@ -1,5 +1,5 @@
 # Latvian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Janis https://launchpad.net/~janis-zl
@@ -1972,6 +1972,12 @@ msgstr "Izklājums"
 msgid "Height Profile"
 msgstr "Augstuma profils"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Maršruta apraksts"
 
@@ -2027,10 +2033,6 @@ msgstr "Meklēt"
 msgid "Towns"
 msgstr "Pilsētas"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Ceļš uz šejieni"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Karte (c) OpenStreetMap contributors, ODBL"
 
@@ -2047,6 +2049,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Ceļš uz šejieni"
 
 msgid "Cancel"
 msgstr "Atcelt"
@@ -2509,6 +2515,9 @@ msgstr "Pilnekrāns"
 
 msgid "Window Mode"
 msgstr "Loga režīms"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Apraksts"
