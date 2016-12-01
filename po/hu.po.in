@@ -1980,6 +1980,12 @@ msgstr "Elrendezés"
 msgid "Height Profile"
 msgstr "Magassági profil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Útvonalleírás"
 
@@ -2035,10 +2041,6 @@ msgstr "Keres"
 msgid "Towns"
 msgstr "Városok"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Útvonal ide"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Térkép adatok (c) OpenStreeMap közreműködők, ODBL"
 
@@ -2057,6 +2059,10 @@ msgid ""
 msgstr ""
 "Jelenleg Androidon a 3.8GB-nál nagyobb térképek nem támogatottak, kérem "
 "válasszon egy kisebbet."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Útvonal ide"
 
 msgid "Cancel"
 msgstr "Mégse"
@@ -2517,6 +2523,9 @@ msgstr "Teljes képernyő"
 
 msgid "Window Mode"
 msgstr "Ablak mód"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Leírás"
