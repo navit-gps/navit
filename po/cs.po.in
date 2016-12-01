@@ -1982,6 +1982,12 @@ msgstr "Rozvržení"
 msgid "Height Profile"
 msgstr "Výškový profil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Popis trasy"
 
@@ -2521,6 +2527,9 @@ msgstr "Celá obrazovka"
 
 msgid "Window Mode"
 msgstr "V okně"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Popis"
