@@ -1,5 +1,5 @@
 # Greek translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
@@ -1968,6 +1968,12 @@ msgstr "Διάταξη"
 msgid "Height Profile"
 msgstr "Ύψος προφίλ"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Περιγραφή Διαδρομής"
 
@@ -2023,10 +2029,6 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr ""
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2042,6 +2044,10 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2501,6 +2507,9 @@ msgstr "Πλήρης Οθόνη"
 
 msgid "Window Mode"
 msgstr "Λειτουργία παραθύρων"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Περιγραφή"
