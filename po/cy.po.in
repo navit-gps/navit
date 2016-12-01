@@ -1966,6 +1966,12 @@ msgstr ""
 msgid "Height Profile"
 msgstr ""
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr ""
 
@@ -2496,6 +2502,9 @@ msgid "Fullscreen"
 msgstr ""
 
 msgid "Window Mode"
+msgstr ""
+
+msgid "Layers"
 msgstr ""
 
 msgid "Description"
