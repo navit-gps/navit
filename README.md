@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/master.svg)](https://circleci.com/gh/navit-gps/navit)
+[![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit)
 
 NavIT
 =====
