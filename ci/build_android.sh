@@ -5,7 +5,7 @@ yel='\e[1;33m'
 off='\e[0m'
 
 wget -nv -c http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip
-unzip -q -d ~ android-ndk-r13-linux-x86_64.zip
+[ -d ~/android-ndk-r13 ] || unzip -q -d ~ android-ndk-r13-linux-x86_64.zip
 
 # setup var's to perform environment setup and cmake
 export START_PATH=~/
