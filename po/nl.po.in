@@ -1984,6 +1984,12 @@ msgstr "Opmaak"
 msgid "Height Profile"
 msgstr "Hoogteprofiel"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Routebeschrijving"
 
@@ -2528,6 +2534,9 @@ msgstr "Beeldvullend"
 
 msgid "Window Mode"
 msgstr "Venstermodus"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Beschrijving"
