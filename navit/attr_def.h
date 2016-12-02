@@ -397,19 +397,13 @@ ATTR(street_destination)
 ATTR(exit_to)
 ATTR(street_destination_forward)
 ATTR(street_destination_backward)
-//* <<<<<<< HEAD
 ATTR(music_dir)
-//*/
-/*=======*/
-/*
 ATTR(spotify_login)
 ATTR(spotify_password)
 ATTR(spotify_playlist)
 ATTR(audio_device)
 ATTR(audio_device_mixer)
 ATTR(audio_playback_pcm)
-//*/
-//>>>>>>> audio_framework
 ATTR2(0x0003ffff,type_string_end)
 ATTR2(0x00040000,type_special_begin)
 ATTR(order)

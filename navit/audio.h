@@ -1,20 +1,16 @@
 #ifndef NAVIT_AUDIO_H
 #define NAVIT_AUDIO_H
 #include "glib_slice.h"
-//* <<<<<<< HEAD
+#include "attr.h"
 #include "item.h"
 #include "xmlconfig.h"
 #include <callback.h>
-//*/
-/*=======*/
-/*
-//*/
-//>>>>>>> audio_framework
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//* <<<<<<< HEAD
+
 #define AUDIO_PLAYBACK_TOGGLE -1
 #define AUDIO_PLAYBACK_NEXT_TRACK -2
 #define AUDIO_PLAYBACK_PREVIOUS_TRACK -3
@@ -64,21 +60,6 @@ struct audio {
 };
 
 
-
-//*/
-/*=======*/
-/*
-// Values from 0+ are also used to reference tracks
-// in playlists, so we can use negative values to
-// control the playback
-#define AUDIO_PLAYBACK_TOGGLE -1
-#define AUDIO_PLAYBACK_NEXT -2
-#define AUDIO_PLAYBACK_PREVIOUS -3
-
-struct audio_priv;
-
-//*/
-//>>>>>>> audio_framework
 struct audio_playlist {
 	char * name;
 	char * icon;
@@ -93,7 +74,7 @@ struct audio_track {
 	int status;
 };
 
-//* <<<<<<< HEAD
+
 /** actions which will be visible as a player toolbar in gui
  * 
  * */
@@ -121,30 +102,7 @@ void audio_set_volume(struct navit *this, int action);
 void audio_do_action(struct navit *this, int action);
 char *audio_get_current_playlist(struct navit *this);
 char *audio_get_current_track(struct navit *this);
-//*/
-/*=======*/
-/*
 
-struct audio_methods {
-	int (*volume)(struct audio_priv *this_, const int direction);
-	int (*playback)(struct audio_priv  *this_, const int action);
-	GList * (*tracks)(struct audio_priv *this_);
-	GList * (*playlists)(struct audio_priv *this_);
-};
-
-struct audio {
-        char * name;
-        struct audio_methods meth;
-        struct audio_priv *priv;
-};
-
-struct audio * audio_new(struct attr *parent, struct attr **attrs);
-int change_volume(struct audio *this_, const int direction);
-int audio_play_track(struct navit *this, int track_index);
-GList * audio_get_playlists(struct navit *this);
-GList * audio_get_tracks(struct navit *this, const int playlist_index);
-//*/
-//>>>>>>> audio_framework
 
 #ifdef __cplusplus
 }

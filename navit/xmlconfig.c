@@ -342,14 +342,8 @@ static char *element_fixmes[]={
 };
 
 static void initStatic(void) {
-//* <<<<<<< HEAD
+
 	elements=g_new0(struct element_func,45); //44 is a number of elements + ending NULL element
-//*/
-/*=======*/
-/*
-	elements=g_new0(struct element_func,45); //43 is a number of elements + ending NULL element
-//*/
-//>>>>>>> audio_framework
 
 	elements[0].name="config";
 	elements[0].parent=NULL;
@@ -564,14 +558,7 @@ static void initStatic(void) {
 	elements[42].parent="navit";
 	elements[42].func=NULL;
 	elements[42].type=attr_script;
-//* <<<<<<< HEAD
-	
-//*/
-/*=======*/
-/*
 
-//*/
-//>>>>>>> audio_framework
 	elements[43].name="audio";
 	elements[43].parent="navit";
 	elements[43].func=NULL;

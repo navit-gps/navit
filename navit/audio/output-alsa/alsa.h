@@ -3,14 +3,8 @@
 
 #include <pthread.h>
 #include <stdint.h>
-//* <<<<<<< HEAD
 #include "queue.h"
-//*/
-/*=======*/
-/*
-#include "audio/queue.h"
-//*/
-//>>>>>>> audio_framework
+
 
 void enumerate_devices();
 
