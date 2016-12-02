@@ -456,22 +456,14 @@ gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct a
  * displays a heightprofile if a route is active and 
  * some heightinfo is provided by means of a map
  *
- * the drawing is simplified by assuming straight
- * roads between the crossings of the route and the 
- * heightlines.
- *
  * the name of the file providing the heightlines must
  * comply with *.heightlines.bin
  * 
- * todo : make it show a flat segment when using a tunnel
  */
 static void
 gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-
-
 	struct widget * menu, *box;
-
 	struct map * map=NULL;
 	struct map_rect * mr=NULL;
 	struct route * route;
@@ -514,6 +506,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 		mr = NULL;
 		ms=navit_get_mapset(this->nav);
 		if (!first && ms) {
+			int heightmap_installed = FALSE;
 			msh=mapset_open(ms);
 			while ((map=mapset_next(msh, 1))) {
 				struct attr name_attr;
@@ -522,6 +515,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 					if (strstr(name_attr.u.str,".heightlines.bin")){
 						dbg(lvl_info,"reading heightlines from map %s\n",name_attr.u.str);
 						mr=map_rect_new(map, &sel);
+						heightmap_installed = TRUE;
 					}
 					else {
 						dbg(lvl_debug,"ignoring map %s\n",name_attr.u.str);
@@ -542,6 +536,16 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 				}
 			}
 			mapset_close(msh);
+			if (!heightmap_installed){
+				char *text;
+				struct widget *w;
+				text=g_strdup_printf("%s",_("please install a map *.heightlines.bin to provide elevationdata"));
+				gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
+				w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+				g_free(text);
+				gui_internal_menu_render(this);
+				return;
+			}
 		}
 	}
 	map=NULL;
@@ -583,17 +587,30 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 				}
 				last=c;
 			}
-
 		}
+	}
+	while (heightlines){
+		heightline=heightlines;
+		heightlines=heightlines->next;
+		g_free(heightline);
 	}
 	if(mr)
 		map_rect_destroy(mr);
 
-	gui_internal_menu_render(this);
-
-	if(diagram_points_count < 2) /*fixme: maybe show a flatline in such cases*/
+	if(diagram_points_count < 2){
+		char *text;
+		struct widget *w;
+		text=g_strdup_printf("%s",_("The route must cross at least 2 heightlines"));
+		gui_internal_widget_append(box, w=gui_internal_label_new(this, text));
+		w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+		g_free(text);
+		gui_internal_menu_render(this);
+		if(diagram_points)
+			g_free(diagram_points);
 		return;
+	}
 
+	gui_internal_menu_render(this);
 	first=1;
 	diagram_point=diagram_points;
 	while (diagram_point) {
@@ -635,6 +652,11 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			p[0]=p[1];
 			x=min->c.x+1;
 		}
+	}
+	while (diagram_points){
+		diagram_point=diagram_points;
+		diagram_points=diagram_points->next;
+		g_free(diagram_point);
 	}
 }
 
@@ -1261,7 +1283,7 @@ static struct command_table commands[] = {
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
 #ifdef USE_AUDIO_FRAMEWORK
-        {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
+    {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
 #endif
 
 };

@@ -97,7 +97,15 @@ add_module(binding/python "python libraries not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
 add_module(audio/output-alsa "alsalib not found" FALSE)
-add_module(audio/player-spotify "libspotify not found" FALSE)
+#//* <<<<<<< HEAD
+add_module(audio/player-mpd "mpd not found" FALSE)
+add_module(audio/player-stub "default" FALSE)
+#//*/
+#/*=======*/
+#/*
+#add_module(audio/player-spotify "libspotify not found" FALSE)
+#//*/
+#//>>>>>>> audio_framework
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
@@ -150,8 +158,17 @@ find_package(DBusGLib)
 find_package(PythonLibs)
 find_package(OpenSSL)
 find_package(Threads)
-find_package(libspotify)
+#//* <<<<<<< HEAD
+#find_package(libasound2)
 find_package(ALSA)
+
+#//*/
+#/*=======*/
+#/*
+#find_package(libspotify)
+#find_package(ALSA)
+#//*/
+#//>>>>>>> audio_framework
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
@@ -443,19 +460,43 @@ add_feature(SVG2PNG "default" TRUE)
 add_feature(SAMPLE_MAP "default" TRUE)
 add_feature(USE_AUDIO_FRAMEWORK "default" FALSE)
 
-if (ALSA_FOUND)
-	set_with_reason(audio/output-alsa "alsalib found" TRUE)
-endif (ALSA_FOUND)
+#//* <<<<<<< HEAD
+find_program(MPD NAMES mpd)
+find_program(MPC NAMES mpc)
 
-if (LIBSPOTIFY_FOUND)
-      if (ALSA_FOUND)
-	      set_with_reason(audio/player-spotify "libspotify and alsa found" TRUE)
-              # FIXME : this is a bad way to do it as maptool also gets linked
-              list(APPEND NAVIT_LIBS "-lasound -lspotify -lpthread")
-      else (ALSA_FOUND)
-              set_with_reason(audio/player-spotify "libspotify found but alsalib is missing" FALSE)
-      endif (ALSA_FOUND)
-endif(LIBSPOTIFY_FOUND)
+
+if (ALSA_FOUND)
+	if(UNIX AND NOT ANDROID AND NOT APPLE)
+	#list(APPEND NAVIT_LIBS ${ALSA_LIBRARY})
+	set_with_reason(audio/output-alsa "alsa found: ${ALSA_VERSION_STRING}" TRUE)
+	#include_directories(${ALSA_INCLUDE_DIR})
+	if(MPD)
+		if(MPC)
+			set_with_reason(audio/player-mpd "mpd and mpc found" TRUE)
+		endif(MPC)
+	endif(MPD)
+	set_with_reason(audio/player-stub "alsa found - the stub has no additional dependecies" TRUE)
+	set_with_reason(USE_AUDIO_FRAMEWORK "alsa found" TRUE)
+	endif(UNIX AND NOT ANDROID AND NOT APPLE)
+endif (ALSA_FOUND)
+#//*/
+#/*=======*/
+#/*
+#if (ALSA_FOUND)
+#	set_with_reason(audio/output-alsa "alsalib found" TRUE)
+#endif (ALSA_FOUND)
+#
+#if (LIBSPOTIFY_FOUND)
+#      if (ALSA_FOUND)#
+#	      set_with_reason(audio/player-spotify "libspotify and alsa found" TRUE)
+#              # FIXME : this is a bad way to do it as maptool also gets linked
+#              list(APPEND NAVIT_LIBS "-lasound -lspotify -lpthread")
+#      else (ALSA_FOUND)
+#              set_with_reason(audio/player-spotify "libspotify found but alsalib is missing" FALSE)
+#      endif (ALSA_FOUND)
+#endif(LIBSPOTIFY_FOUND)
+#//*/
+#//>>>>>>> audio_framework
 
 IF(NOT svg2png_scaling)
    IF(NOT ANDROID)

@@ -782,7 +782,7 @@ attr_data_size(struct attr *attr)
 		while (attr->u.attr_types[i++] != attr_none);
 		return i*sizeof(enum attr_type);
 	}
-	dbg(lvl_error,"size for %s unknown\n", attr_to_name(attr->type));
+	dbg(lvl_error,"size for %s unknown (%p)\n", attr_to_name(attr->type), attr);
 	return 0;
 }
 

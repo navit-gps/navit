@@ -237,8 +237,14 @@ alsa_volume(struct audio_priv *this, const int direction)
 
 static struct audio_methods output_alsa_meth = {
 	alsa_volume,
-	NULL,  // playback
-	NULL,  // playlists
+	NULL, //playback 
+	NULL, //action_do, 
+	NULL, //tracks, 
+	NULL, //playlists, 
+	NULL, //actions, 
+	NULL, //current_track, 
+	NULL, //current_playlist, 
+
 };
 
 static struct audio_priv *
@@ -250,6 +256,8 @@ output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *pa
 	this=g_new(struct audio_priv,1);
 	this->nav=parent->u.navit;
 	*meth=output_alsa_meth;
+
+	dbg(lvl_error,"Real alsa init\n");
 
         if ((attr = attr_search (attrs, NULL, attr_audio_device)))
           {

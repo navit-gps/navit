@@ -79,6 +79,7 @@
 #include "debug.h"
 #include "fib.h"
 #include "types.h"
+#include "audio.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_html.h"
@@ -2926,6 +2927,44 @@ static void gui_internal_keypress(void *data, char *key)
 			gui_internal_set_click_coord(this, NULL);
 			gui_internal_cmd_menu(this, 0, NULL);
 			break;
+#ifdef USE_AUDIO_FRAMEWORK
+		case NAVIT_KEY_AUDIO_PLAY:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PLAY); 
+			break;
+		case NAVIT_KEY_AUDIO_STOP:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PAUSE); 
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_TRACK: 
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_TRACK);
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_PLAYLIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_PLAYLIST);
+			break;
+		case NAVIT_KEY_AUDIO_NEXT_ARTIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_NEXT_ARTIST);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_TRACK:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_TRACK);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_PLAYLIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_PLAYLIST);
+			break;
+		case NAVIT_KEY_AUDIO_PREV_ARTIST:
+			audio_do_action(this->nav, AUDIO_PLAYBACK_PREVIOUS_ARTIST);
+			break;
+		case NAVIT_KEY_AUDIO_RAISE_VOLUME: 
+			audio_set_volume(this->nav, AUDIO_RAISE_VOLUME);
+			break;
+		case NAVIT_KEY_AUDIO_LOWER_VOLUME:
+			audio_set_volume(this->nav, AUDIO_LOWER_VOLUME);
+			break;
+		case NAVIT_KEY_AUDIO_MUTE:
+			audio_set_volume(this->nav, AUDIO_MUTE);
+			break;
+		case NAVIT_KEY_RELOAD_PLAYLISTS:
+			audio_do_action(this->nav, AUDIO_MISC_RELOAD_PLAYLISTS);
+			break;
+#endif
 		}
 		return;
 	}
@@ -3118,12 +3157,14 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 	gui_internal_set_default_background,
 };
 
-
-/*
- * @brief Displays Route information
+/**
+ * @brief finds the intersection point of 2 lines
+ *
+ * @param coord a1, a2, b1, b2 : coords of the start and 
+ * end of the first and the second line
+ * @param coord res, will become the coords of the intersection if found
+ * @return : TRUE if intersection found, otherwise FALSE
  */
-/* FIXME where is the implementation? */
-
 int
 line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res)
 {
@@ -3141,18 +3182,19 @@ line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct 
                 b = -b;
         }
         if (a < 0 || b < 0)
-                return 0;
+                return FALSE;
         if (a > n || b > n)
-                return 0;
+                return FALSE;
 	if (n == 0) {
 		dbg(lvl_info,"a=%d b=%d n=%d\n", a, b, n);
 		dbg(lvl_info,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
 		dbg(lvl_info,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
-		dbg_assert(n != 0);
+		dbg(lvl_info,"No intersection found, lines assumed parallel ?\n");
+		return FALSE;
 	}
         res->x = a1->x + a * adx / n;
         res->y = a1->y + a * ady / n;
-        return 1;
+        return TRUE;
 }
 
 struct heightline *
@@ -3181,18 +3223,6 @@ item_get_heightline(struct item *item)
 	}
 	return ret;
 }
-
-
-/*
- * @brief Displays Route Height Profile
- *
- * @li The name of the active vehicle
- * @param wm The button that was pressed.
- * @param v Unused
- */
-/* FIXME where is the implementation? */
-
-
 
 /**
  * @brief Called when the route is updated.
