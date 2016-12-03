@@ -9,8 +9,7 @@
 #include <navit/audio.h>
 #include "spotify.h"
 
-struct spotify
-{
+struct audio_priv {
     struct callback *callback;
     struct event_idle *idle;
     struct attr **attrs;
@@ -22,9 +21,6 @@ struct spotify
     char * audio_playback_pcm;
 } *spotify;
 
-struct audio_priv {
-    struct spotify *spotify;
-};
 
 const bool autostart = 0;
 
@@ -42,6 +38,287 @@ int next_timeout = 0;
 
 extern const uint8_t spotify_apikey[];
 extern const size_t spotify_apikey_size;
+
+
+/**
+ * Get function for attributes
+ *
+ * @param priv Pointer to the audio instance data
+ * @param type The attribute type to look for
+ * @param attr Pointer to a {@code struct attr} to store the attribute
+ * @return True for success, false for failure
+ */
+int spotify_get_attr(struct audio_priv* priv, enum attr_type type, struct attr *attr){
+	int ret = 1;
+	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, type,attr_to_name(type), attr);
+	if(priv != spotify) {
+		dbg(lvl_debug, "failed\n");
+		return -1;
+	}
+	switch(type){
+		case attr_playing:{
+			attr->u.num = spotify->playing;
+			dbg(lvl_debug, "Status: %ld\n", attr->u.num);
+			break;
+		}
+		case attr_name:{
+			attr->u.str = g_strdup("spotify");
+			dbg(lvl_debug, "%s\n", attr->u.str);
+			break;
+		}
+		case attr_shuffle:{			
+			int toggle = 0;	
+			if(spotify->random_track) toggle++;
+			if(spotify->random_playlist) toggle += 2;
+			attr->u.num = toggle;
+			dbg(lvl_debug, "%ld\n", attr->u.num);
+			break;
+		}
+		case attr_repeat:{
+			int toggle = 0;	
+			if(spotify->single) toggle++;
+			if(spotify->repeat) toggle += 2;
+			attr->u.num = toggle;
+			dbg(lvl_debug, "%ld\n", attr->u.num);
+			break;
+		}
+		default:{
+			dbg(lvl_error, "Don't know what to do with ATTR type %s\n", attr_to_name(attr->type));
+			ret = 0;
+			break;
+		}
+	}
+	attr->type = type;
+	return ret;
+}
+/**
+ * Set function for attributes
+ *
+ * @param priv An audio instance data
+ * @param attr The attribute to set
+ * @return False on success, true on failure
+ */
+int spotify_set_attr(struct audio_priv *priv, struct attr *attr){
+	dbg(lvl_debug, "priv: %p, type: %i (%s), attr: %p\n", priv, attr->type,attr_to_name(attr->type), attr);
+	if(priv != spotify){
+		dbg(lvl_debug, "failed\n");
+		return -1;
+	}
+	if(attr){
+		switch(attr->type){
+			case attr_name:{
+				dbg(lvl_debug, "%s\n", attr->u.str);
+				break;
+			}
+			case attr_playing:{
+				dbg(lvl_debug, "attr->u.num: %ld\n", attr->u.num);
+
+				if(attr->u.num == 0){
+					dbg(lvl_debug, "spotify_pause();%ld\n", attr->u.num);
+					spotify_pause();
+				}else{
+					dbg(lvl_debug, "spotify_play();%ld\n", attr->u.num);
+					spotify_play();
+				}
+
+				break;
+			}
+			case attr_shuffle:{
+
+				spotify_toggle_shuffle(get_specific_action(spotify->actions, AUDIO_MODE_TOGGLE_SHUFFLE));
+				break;
+			}
+			case attr_repeat:{
+				
+				spotify_toggle_repeat(get_specific_action(spotify->actions, AUDIO_MODE_TOGGLE_REPEAT));
+				break;
+			}
+			default:{
+				dbg(lvl_error, "Don't know what to do with ATTR type %s", attr_to_name(attr->type));
+				return 0;
+				break;
+			}
+		}
+
+		return 1;
+	}
+	return 0;
+}
+
+/**
+* @brief this function returns the list of possible actions
+*
+* @param this the audio player object
+*
+* @return the list of actions
+* 
+* if there are no actions present, the command inits the action list
+*/
+GList*
+actions(struct audio_priv *this){
+	dbg(lvl_debug, "In spotify's actions\n");
+	GList *act = NULL;
+	act = spotify->actions;
+	if(act){
+		return act;
+	}else{
+		spotify->actions = spotify_get_actions();
+	}
+	return spotify->actions;
+}
+
+/**
+* @brief this function iterates over all possible actions for this player and searches for an action
+*
+* @param actions the list of actions 
+* @param action the action we want to find
+*
+* @return the audio action object wh searched or NULL if its not present
+*/
+struct audio_actions*
+get_specific_action(GList* actions, int specific_action)
+{
+	GList* result = g_list_first(actions);
+	while(result != NULL && result->next != NULL){
+		struct audio_actions *aa = result->data;
+		if(aa->action == specific_action)
+			return aa;
+		result = g_list_next(result);
+	}
+	return NULL;
+}
+/**
+* @brief this function provides the action control for the audio player
+*
+* @param this the audio player object
+* @param action the action to be performed on the player
+*
+* @return returns the action
+* 
+* possible actions:
+* AUDIO_PLAYBACK_PLAY
+* AUDIO_PLAYBACK_PAUSE
+* AUDIO_PLAYBACK_TOGGLE
+* AUDIO_PLAYBACK_NEXT_TRACK
+* AUDIO_PLAYBACK_PREVIOUS_TRACK
+* AUDIO_PLAYBACK_NEXT_PLAYLIST
+* AUDIO_PLAYBACK_PREVIOUS_PLAYLIST
+* AUDIO_PLAYBACK_NEXT_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - "
+* AUDIO_PLAYBACK_PREVIOUS_ARTIST: switches to the next playlist that differs before the Artist - Track delimiter " - " but backwards
+* AUDIO_MISC_DELETE_PLAYLIST
+* AUDIO_MODE_TOGGLE_REPEAT: switches through the repeat modes
+* AUDIO_MODE_TOGGLE_SHUFFLE: switches through the shuffle modes
+* AUDIO_MISC_RELOAD_PLAYLISTS: reload all playlists (delete and reload)
+*/
+static int
+action_do(struct audio_priv *this, const int action)
+{
+	dbg(lvl_debug, "In spotify's action control\n");
+	/** methosd where the defined actions are mentioned
+	 * remove the case blocks for actions you do not need
+	 */ 
+	switch(action)
+	{
+		case AUDIO_PLAYBACK_PAUSE:{
+			//spotify_pause();
+			break;
+		}
+		case AUDIO_PLAYBACK_PLAY:{
+			//spotify_play();
+			break;
+		}
+		case AUDIO_PLAYBACK_TOGGLE:{
+			spotify_toggle_playback(get_specific_action(spotify->actions, AUDIO_PLAYBACK_TOGGLE));
+			break;
+		}
+		case AUDIO_PLAYBACK_NEXT_TRACK:{
+			++g_track_index;
+			// call next track here
+			 
+			break;
+		}
+		case AUDIO_PLAYBACK_PREVIOUS_TRACK:{
+			if (g_track_index > 0)
+			{
+				--g_track_index;
+				// call previous track here
+			}
+			break;
+		}
+		case AUDIO_PLAYBACK_NEXT_PLAYLIST:{
+			//spotify_next_playlist();
+			break;
+		}
+		case AUDIO_PLAYBACK_PREVIOUS_PLAYLIST:{
+			//spotify_prev_playlist();
+			break;
+		}		
+		case AUDIO_PLAYBACK_NEXT_ARTIST:{
+			//spotify_next_artist();
+			break;
+		}
+		case AUDIO_PLAYBACK_PREVIOUS_ARTIST:{
+			//spotify_prev_artist();
+			break;
+		}	
+		case AUDIO_MISC_DELETE_PLAYLIST:{
+			//spotify_delete_playlist();
+			break;
+		}
+		case AUDIO_MODE_TOGGLE_REPEAT:{
+			/* if your player has different repeat modes
+			 * you can have different icons for each mode
+			 */ 
+			spotify_toggle_repeat(get_specific_action(spotify->actions, AUDIO_MODE_TOGGLE_REPEAT));
+			break;
+		}
+		case AUDIO_MODE_TOGGLE_SHUFFLE:{
+			/* if your player has different shuffle modes
+			 * you can have different icons for each mode
+			 */
+			spotify_toggle_shuffle(get_specific_action(spotify->actions, AUDIO_MODE_TOGGLE_SHUFFLE));
+			break;
+		}
+		case AUDIO_MISC_RELOAD_PLAYLISTS:{
+			/* maybe you'll never need this
+			 */ 
+			//reload_playlists(spotify);
+			break;
+		}
+		default:{
+			dbg(lvl_error,"Don't know what to do with action '%i'. That's a bug\n", action);
+			break;
+		}
+	}
+	return action;
+}
+
+/**
+* @brief this function returns the currently playing trsck
+*
+* @param this the audio player object
+*
+* @return the track name of the current track
+*/
+char*
+current_track(struct audio_priv *this)
+{
+	return g_currenttrack;
+}
+
+/**
+* @brief this function returns the currently loaded playlist
+*
+* @param this the audio player object
+*
+* @return the playlist name
+*/
+char*
+current_playlist(struct audio_priv *this)
+{
+	return g_jukeboxlist;
+}
+
 
 
 static void
@@ -261,26 +538,154 @@ static sp_session_config spconfig = {
 };
 
 static void
-spotify_spotify_idle (struct spotify *spotify)
+spotify_spotify_idle (struct audio_priv *spotify)
 {
     sp_session_process_events (g_sess, &next_timeout);
 }
 
+
+/**
+* @brief this function toggles the repeat mode
+*
+* @param action the action that owns the toggle
+*/
+void spotify_toggle_repeat(struct audio_actions *action){
+	int toggle = 0;
+	if(spotify->single) toggle++;
+	if(spotify->repeat) toggle += 2;
+	switch(toggle){
+		case 0:// no repeat
+		case 1:{
+			spotify->single = 0;
+			spotify->repeat = 1;
+			if(action != NULL){
+				action->icon = g_strdup("media_repeat_playlist");
+			}
+			dbg(lvl_debug, "\nrepeat playlist\n");
+			break;
+		}
+		case 2:{// repeat playlist
+			spotify->single = 1;
+			spotify->repeat = 1;
+			if(action != NULL){
+				action->icon = g_strdup("media_repeat_track");
+			}
+			dbg(lvl_debug, "\nrepeat track\n");
+			break;
+		}
+		case 3:{// repeat track
+			spotify->single = 0;
+			spotify->repeat = 0;
+			if(action != NULL){
+				action->icon = g_strdup("media_repeat_off");
+			}
+			dbg(lvl_debug, "\nrepeat off\n");
+			break;
+		}
+	}
+	callback_list_call_attr_0(spotify->cbl, attr_repeat);
+}
+/**
+* @brief this function toggles the shuffle mode
+*
+* @param action the action that owns the toggle
+*/
+void spotify_toggle_shuffle(struct audio_actions *action){
+	
+	int toggle = 0;
+	if(spotify->random_track) toggle++;
+	if(spotify->random_playlist) toggle += 2;
+	dbg(lvl_debug,  "Toggle Shuffle: %i\n", toggle);
+	switch(toggle){
+		case 0:{ 
+			
+			spotify->random_track = TRUE;
+			spotify->random_playlist = FALSE;
+			if(action != NULL){
+				action->icon = g_strdup("media_shuffle_playlists");
+			}
+			dbg(lvl_debug,  "Toggle Shuffle Playlists: %i\n", toggle);
+			break;
+		}
+		case 1:{
+			
+			spotify->random_track = TRUE;
+			spotify->random_playlist = TRUE;
+			if(action != NULL){
+				action->icon = g_strdup("media_shuffle_tracks_playlists");
+			}
+			dbg(lvl_debug,  "Toggle Shuffle Tracks & Playlists: %i\n", toggle);
+			break;
+		}
+		case 3:{
+			
+			spotify->random_track = FALSE;
+			spotify->random_playlist = TRUE;
+			if(action != NULL){
+				action->icon = g_strdup("media_shuffle_tracks");
+			}
+			dbg(lvl_debug,  "Toggle Shuffle Tracks: %i\n", toggle);
+			break;
+		}
+		case 2:{
+			
+			spotify->random_track = FALSE;
+			spotify->random_playlist = FALSE;
+			if(action != NULL){
+				action->icon = g_strdup("media_shuffle_off");
+			}
+			dbg(lvl_debug,  "Toggle Shuffle OFF: %i\n", toggle);
+			break;
+		}
+	}
+	callback_list_call_attr_0(spotify->cbl, attr_shuffle);
+}
+
+/**
+* @brief command to toggle playback
+*
+* @param action the action that owns the toggle
+*
+* the action must be passed because the playback action keeps the icon. This icon changes dependent on the playback state
+*/
 void
-toggle_playback ()
+spotify_toggle_playback (struct audio_actions *action)
 {
-    if (spotify->playing)
-      {
-      dbg (lvl_error, "pausing playback\n");
-      sp_session_player_play (g_sess, 0);
-      }
-    else
-      {
-      dbg (lvl_error, "resuming playback\n");
-      sp_session_player_play (g_sess, 1);
+
+	struct attr* playing = attr_search(spotify->attrs,NULL, attr_playing);
+	if(playing){
+		spotify_get_attr(spotify, attr_playing, playing);
+		playing->u.num = spotify->playing;
+		if(spotify_get_attr(spotify, attr_playing, playing) && playing->u.num)
+			spotify->playing = 1;
+	}
+	else
+		dbg (lvl_debug, "No such Attr in: %p\n", spotify->attrs);
+	if (spotify->playing)
+	{
+		dbg (lvl_debug, "pausing playback\n");
+		// pause your playback here
+		sp_session_player_play (g_sess, 0);
+		if(action != NULL){
+			action->icon = g_strdup("media_play");
+		}
+	}
+	else
+	{
+		dbg (lvl_debug, "resuming playback\n");
+		// resume your playback here
+		sp_session_player_play (g_sess, 1);
       try_jukebox_start ();
-      }
-    spotify->playing = !spotify->playing;
+		if(action != NULL){
+			action->icon = g_strdup("media_pause");
+		}
+	}
+	spotify->playing = !spotify->playing;
+	if(playing){
+		playing->u.num = spotify->playing;
+		spotify_set_attr(spotify, playing);
+	}
+	callback_list_call_attr_0(spotify->cbl, attr_playing);
 }
 
 GList *
@@ -400,14 +805,21 @@ playback(struct audio_priv *this, const int action)
 }
 
 static struct audio_methods player_spotify_meth = {
-        NULL,
+		NULL,
         playback,
+        action_do,
         tracks,
         playlists,
+        actions,
+        current_track,
+        current_playlist,
+        spotify_get_attr,
+        spotify_set_attr,
 };
 
+
 static struct audio_priv *
-player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr *parent) 
+player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent) 
 {
     struct audio_priv *this;
     struct attr *attr;
@@ -455,6 +867,40 @@ player_spotify_new(struct audio_methods *meth, struct attr **attrs, struct attr 
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
     audio_init (&g_audiofifo, spotify->audio_playback_pcm);
     // FIXME : we should maybe use a timer instead of the idle loop
+    spotify->idle = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
+    spotify->timeout = event_add_timeout(1000, 1,  spotify->idle);
+    spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
+    spotify->timeout = event_add_timeout(1000, 1,  spotify->callback);
+
+    spotify->playing = false;
+	spotify->attrs=attrs;
+    //*
+    playing = attr_search(spotify->attrs, NULL, attr_playing);
+
+    if(!playing){
+		playing = g_new0( struct attr, 1);
+		playing->type = attr_playing;
+		spotify->attrs=attr_generic_add_attr(spotify->attrs, playing);
+		dbg (lvl_debug,"*\n");
+	}	
+	repeat = attr_search(spotify->attrs, NULL, attr_repeat);
+
+    if(!repeat){
+		repeat = g_new0( struct attr, 1);
+		repeat->type = attr_repeat;
+		spotify->attrs=attr_generic_add_attr(spotify->attrs, repeat);
+		dbg (lvl_debug,"*\n");
+	}	
+	shuffle = attr_search(spotify->attrs, NULL, attr_shuffle);
+
+    if(!shuffle){
+		shuffle = g_new0( struct attr, 1);
+		shuffle->type = attr_shuffle;
+		spotify->attrs=attr_generic_add_attr(spotify->attrs, shuffle);
+		dbg (lvl_debug,"*\n");
+	}	
+    
+    
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     event_add_idle (125, spotify->callback);
     dbg (lvl_info, "Callback created successfully\n");
