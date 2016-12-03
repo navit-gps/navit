@@ -179,6 +179,94 @@ int spotify_set_attr(struct audio_priv *priv, struct attr *attr){
 }
 
 /**
+ * @brief this function creates all possible actions for the player
+ * 
+ * @return the list of actions
+ * 
+ * Function to provide all possible audio actions for the player. These 
+ * actions are acessible inside the media gui as a toolbar, so they 
+ * might provide an icon. Their order will be applied to the toolbar too.
+ * It is possible to change the icon depending on the actions state
+ */ 
+GList*
+spotify_get_actions(void){
+	/**
+	 * this function creates all actions your player is able to perform
+	 * except volume and choosing of a specific track
+	 * just remove the actions you do not need 
+	 * all listed actions will be put into a player toolbar with its icon
+	 * so you should define one for each action
+	 */ 
+	GList* actions = NULL;
+	struct audio_actions *aa;
+	if(spotify->actions){
+		return spotify->actions;
+	}else{
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_PREVIOUS_ARTIST;
+		aa->icon = g_strdup("media_prev_artist");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_PREVIOUS_PLAYLIST;
+		aa->icon = g_strdup("media_prev");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_PREVIOUS_TRACK;
+		aa->icon = g_strdup("media_minus");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_TOGGLE;
+		if(spotify->playing){
+			aa->icon = g_strdup("media_pause");
+		}else{
+			aa->icon = g_strdup("media_play");
+		}
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_NEXT_TRACK;
+		aa->icon = g_strdup("media_plus");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_NEXT_PLAYLIST;
+		aa->icon = g_strdup("media_next");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_PLAYBACK_NEXT_ARTIST;
+		aa->icon = g_strdup("media_next_artist");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_MODE_TOGGLE_REPEAT;
+		aa->icon = g_strdup("media_repeat_off");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_MODE_TOGGLE_SHUFFLE;
+		aa->icon = g_strdup("media_shuffle_off");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_MISC_DELETE_PLAYLIST;
+		aa->icon = g_strdup("media_trash");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+		
+		aa = g_new0(struct audio_actions, 1);
+		aa->action = AUDIO_MISC_RELOAD_PLAYLISTS;
+		aa->icon = g_strdup("media_close");//todo: make beautiful icon
+		actions = g_list_append(actions, aa);
+	}
+	return actions;
+}
+
+
+
+/**
 * @brief this function returns the list of possible actions
 *
 * @param this the audio player object
@@ -815,7 +903,7 @@ playback(struct audio_priv *this, const int action)
         dbg(lvl_debug,"in spotify's playback control\n");
         switch(action){
         case AUDIO_PLAYBACK_TOGGLE:
-                toggle_playback();
+                spotify_toggle_playback();
                 break;
         case AUDIO_PLAYBACK_NEXT:
                 ++g_track_index;
