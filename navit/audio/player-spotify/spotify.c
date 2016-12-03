@@ -59,6 +59,16 @@ extern const uint8_t spotify_apikey[];
 extern const size_t spotify_apikey_size;
 
 
+char * spotify_get_playlist_name (int playlist_index);
+char* get_playlist_name(GList* list);
+void spotify_play(void);
+void spotify_pause(void);
+void spotify_play_track(int track);
+GList* get_entry_by_index(GList* list, int index);
+void spotify_toggle_repeat(struct audio_actions *action);
+void spotify_toggle_shuffle(struct audio_actions *action);
+struct audio_actions* get_specific_action(GList* actions, int specific_action);
+
 /**
  * Get function for attributes
  *
