@@ -903,7 +903,7 @@ playback(struct audio_priv *this, const int action)
         dbg(lvl_debug,"in spotify's playback control\n");
         switch(action){
         case AUDIO_PLAYBACK_TOGGLE:
-                spotify_toggle_playback();
+                spotify_toggle_playback(get_specific_action(spotify->actions, AUDIO_PLAYBACK_TOGGLE));
                 break;
         case AUDIO_PLAYBACK_NEXT:
                 ++g_track_index;
