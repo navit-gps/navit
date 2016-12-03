@@ -10,15 +10,34 @@
 #include "spotify.h"
 
 struct audio_priv {
+	/* this is the data structure for the audio plugin
+	 * you might not need every element of it
+	 */ 
+    struct navit *navit;
     struct callback *callback;
     struct event_idle *idle;
+    struct callback_list *cbl;
+    struct event_timeout *timeout;
     struct attr **attrs;
-    char *login;
+    GList* current_playlist;
+    GList* playlists;
+    GList* actions;
+    gboolean random_track;
+    gboolean random_playlist;
+    gboolean repeat;
+    gboolean single;
+    gboolean shuffle;
+    char current_track[64];
+    int volume;
+    int width;
+    gboolean muted;
+    int playing;
+	char *login;
     char *password;
     char *playlist;
     sp_playlistcontainer *pc;
-    gboolean playing;
     char * audio_playback_pcm;
+
 } *spotify;
 
 
