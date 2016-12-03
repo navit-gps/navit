@@ -28,7 +28,8 @@
 	<debug name="segv" level="1"/>
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
-
+	<!-- <debug name="audio_player-mpd" dbg_level="debug"/>-->
+	<debug name="audio_player-stub" dbg_level="debug"/>
 	<!-- center= defines which map location Navit will show after first start.
 		It will only be used for the first start; subsequent starts will remember the
 		last position (in center.txt).
@@ -60,7 +61,9 @@ Map</text></img>
 				<a href='#Tools'><img src='gui_tools'><text>Tools</text></img></a>
 				<a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
 				<img src='gui_about' onclick='about()'><text>About</text></img>
+				<img src='media_audio' onclick='media_show_playlist()'><text>Media Player</text></img>
 				<img src='gui_quit' onclick='quit()'><text>Quit</text></img>
+				
 				</a>
 			<a name='Actions'><text>Actions</text>
 				<img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
@@ -188,6 +191,8 @@ Waypoint</text></img>
 			<log enabled="no" type="gpx" attr_types="position_time_iso8601,position_direction,position_speed,profilename,position_radius" data="track_%Y%m%d-%%i.gpx" flush_size="1000" flush_time="30"/>
 		</vehicle>
 	<audio type="player-stub" music_dir="/tmp"/>
+	<audio type="player-mpd" music_dir="/tmp"/>
+	
 		<!-- For SDL, you should add follow="1" to have the view centered on your position -->
 		<!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
 

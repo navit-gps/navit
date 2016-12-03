@@ -208,12 +208,14 @@ audio_new(struct attr *parent, struct attr **attrs)
 		return NULL;
 	}
 	dbg(lvl_error, "Attrs: %p\n", attrs);
+	/*
 	if(attrs != NULL){
 		dbg(lvl_error, "*Attrs: %p\n", *attrs);
 		if(*attrs != NULL){
 			this_->attrs=attr_list_dup(attrs);
 		}
 	}
+	//*/
 	dbg(lvl_error, "Attrs: %p\n", this_->attrs);
 	//*
 	if (this_->meth.volume) {
