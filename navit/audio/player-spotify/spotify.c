@@ -9,6 +9,10 @@
 #include <navit/audio.h>
 #include "spotify.h"
 
+#define AUDIO_PLAYBACK_NEXT AUDIO_PLAYBACK_NEXT_TRACK
+#define AUDIO_PLAYBACK_PREVIOUS AUDIO_PLAYBACK_PREVIOUS_TRACK
+
+
 struct audio_priv {
 	/* this is the data structure for the audio plugin
 	 * you might not need every element of it
@@ -851,7 +855,7 @@ static struct audio_priv *
 player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent) 
 {
     struct audio_priv *this;
-    struct attr *attr;
+    struct attr *attr, *playing, *shuffle, *repeat;
     sp_error error;
     sp_session *session;
     attr=attr_search(attrs, NULL, attr_spotify_password);
@@ -862,7 +866,7 @@ player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struc
     dbg(lvl_debug,"Initializing spotify\n");
 
 
-    spotify = g_new0 (struct spotify, 1);
+    spotify = g_new0 (struct audio_priv, 1);
     if ((attr = attr_search (attrs, NULL, attr_spotify_login)))
       {
           spotify->login = g_strdup(attr->u.str);
@@ -896,8 +900,7 @@ player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struc
     sp_session_login (session, spotify->login, spotify->password, 0, NULL);
     audio_init (&g_audiofifo, spotify->audio_playback_pcm);
     // FIXME : we should maybe use a timer instead of the idle loop
-    spotify->idle = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
-    spotify->timeout = event_add_timeout(1000, 1,  spotify->idle);
+    
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     spotify->timeout = event_add_timeout(1000, 1,  spotify->callback);
 
