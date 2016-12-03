@@ -904,7 +904,7 @@ player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struc
     spotify->callback = callback_new_1 (callback_cast (spotify_spotify_idle), spotify);
     spotify->timeout = event_add_timeout(1000, 1,  spotify->callback);
 
-    spotify->playing = false;
+    spotify->playing = FALSE;
 	spotify->attrs=attrs;
     //*
     playing = attr_search(spotify->attrs, NULL, attr_playing);
