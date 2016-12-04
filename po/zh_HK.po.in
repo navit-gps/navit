@@ -1,11 +1,12 @@
 # Chinese (Hong Kong) translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
 # Kyle https://launchpad.net/~kylelover
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Walter Cheuk https://launchpad.net/~wwycheuk
+# icefirewu https://launchpad.net/~icefirewu
 
 msgid ""
 msgstr ""
@@ -1963,6 +1964,12 @@ msgstr ""
 msgid "Height Profile"
 msgstr ""
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "路線說明"
 
@@ -2018,10 +2025,6 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr ""
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2037,6 +2040,10 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
+msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2498,6 +2505,9 @@ msgstr "全屏"
 
 msgid "Window Mode"
 msgstr "視窗模式"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "說明"
