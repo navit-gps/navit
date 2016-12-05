@@ -4047,6 +4047,7 @@ osd_audio_player_new(struct navit *nav, struct osd_methods *meth, struct attr **
 void
 plugin_init(void)
 {
+/*<<<<<<< HEAD
 	plugin_register_osd_type("compass", osd_compass_new);
 	plugin_register_osd_type("navigation_next_turn", osd_nav_next_turn_new);
 	plugin_register_osd_type("button", osd_button_new);
@@ -4067,4 +4068,26 @@ plugin_init(void)
 #ifdef USE_AUDIO_FRAMEWORK
 	plugin_register_osd_type("audio_player", osd_audio_player_new);
 #endif
+=======*/
+	plugin_register_category_osd("compass", osd_compass_new);
+	plugin_register_category_osd("navigation_next_turn", osd_nav_next_turn_new);
+	plugin_register_category_osd("button", osd_button_new);
+	plugin_register_category_osd("toggle_announcer", osd_nav_toggle_announcer_new);
+	plugin_register_category_osd("speed_warner", osd_speed_warner_new);
+	plugin_register_category_osd("speed_cam", osd_speed_cam_new);
+	plugin_register_category_osd("text", osd_text_new);
+	plugin_register_category_osd("gps_status", osd_gps_status_new);
+	plugin_register_category_osd("volume", osd_volume_new);
+	plugin_register_category_osd("scale", osd_scale_new);
+	plugin_register_category_osd("image", osd_image_new);
+	plugin_register_category_osd("stopwatch", osd_stopwatch_new);
+	plugin_register_category_osd("odometer", osd_odometer_new);
+	plugin_register_category_osd("auxmap", osd_auxmap_new);
+	plugin_register_category_osd("cmd_interface", osd_cmd_interface_new);
+	plugin_register_category_osd("route_guard", osd_route_guard_new);
+	plugin_register_category_osd("navigation_status", osd_navigation_status_new);
+#ifdef USE_AUDIO_FRAMEWORK
+	plugin_register_category_osd("audio_player", osd_audio_player_new);
+#endif
+//>>>>>>> navit/trunk
 }

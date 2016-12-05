@@ -369,7 +369,7 @@ public class NavitGraphics
 		{
 			float x = a.x - b.x;
 			float y = a.y - b.y;
-			return FloatMath.sqrt(x * x + y * y);
+			return (float)Math.sqrt(x * x + y * y);
 		}
 
 		private PointF getFloatValue(Object instance, Object argument)

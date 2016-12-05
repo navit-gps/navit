@@ -430,6 +430,6 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"filter: plugin_init\n");
-	plugin_register_map_type("filter", map_filter_new);
+	plugin_register_category_map("filter", map_filter_new);
 }
 

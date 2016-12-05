@@ -473,5 +473,5 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 }
 
 void plugin_init(void) {
-    plugin_register_gui_type("qml",gui_qml_new);
+    plugin_register_category_gui("qml",gui_qml_new);
 }

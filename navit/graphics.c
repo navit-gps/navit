@@ -274,7 +274,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
                 return NULL;
         }
 
-	graphicstype_new=plugin_get_graphics_type(type_attr->u.str);
+	graphicstype_new=plugin_get_category_graphics(type_attr->u.str);
 	if (! graphicstype_new) {
 		dbg(lvl_error,"Failed to load graphics plugin %s.\n", type_attr->u.str);
 		return NULL;

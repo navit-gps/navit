@@ -179,7 +179,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 			return NULL;
 	}
 	dbg(lvl_error,"type='%s'\n", attr->u.str);
-	audiotype_new=plugin_get_audio_type(attr->u.str);
+	audiotype_new=plugin_get_category_audio(attr->u.str);
 	dbg(lvl_error,"new=%p\n", audio_new);
 	if (! audiotype_new) {
 			dbg(lvl_error,"wrong type '%s'\n", attr->u.str);

@@ -854,7 +854,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		return NULL;
 #endif
 #ifdef QT_QPAINTER_USE_FREETYPE
-	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
+	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_category_font("freetype");
 	if (!font_freetype_new) {
 		dbg(lvl_error,"no freetype\n");
 		return NULL;
@@ -921,9 +921,9 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 //##############################################################################################################
 void plugin_init(void)
 {
-        plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
+        plugin_register_category_graphics("qt_qpainter", graphics_qt_qpainter_new);
 #ifdef QT_QPAINTER_USE_EVENT_QT
-        plugin_register_event_type("qt", event_qt_new);
+        plugin_register_category_event("qt", event_qt_new);
 #endif
 }
 

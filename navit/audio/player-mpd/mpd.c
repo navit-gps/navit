@@ -1971,5 +1971,5 @@ void
 plugin_init(void)
 { 
 	dbg (lvl_debug,  "player-mpd\n");
-    plugin_register_audio_type("player-mpd", player_mpd_new);
+    plugin_register_category_audio("player-mpd", player_mpd_new);
 }

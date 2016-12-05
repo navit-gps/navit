@@ -354,6 +354,6 @@ event_null_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-        plugin_register_graphics_type("null", graphics_null_new);
-	plugin_register_event_type("null", event_null_new);
+        plugin_register_category_graphics("null", graphics_null_new);
+	plugin_register_category_event("null", event_null_new);
 }

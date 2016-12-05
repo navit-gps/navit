@@ -15,7 +15,7 @@
 # Stemby https://launchpad.net/~carlo-stemberger
 # amedeo https://launchpad.net/~amedeo-lanza
 # b3784098 https://launchpad.net/~b3784098
-# ernia https://launchpad.net/~monghitri
+# ernia https://launchpad.net/~ernia
 # giardia https://launchpad.net/~fabriziosm
 # jackyes https://launchpad.net/~jackthebest
 # tomas https://launchpad.net/~tracks-tomyt
@@ -1982,6 +1982,12 @@ msgstr "Layout"
 msgid "Height Profile"
 msgstr "Altimetria"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Descrizione del percorso"
 
@@ -2517,6 +2523,9 @@ msgstr "Schermo intero"
 
 msgid "Window Mode"
 msgstr "Modalità finestra"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Descrizione"

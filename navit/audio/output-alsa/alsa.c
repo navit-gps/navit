@@ -281,5 +281,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug,"output-alsa plugin init\n");
-	plugin_register_audio_type("output-alsa", output_alsa_new);
+	plugin_register_category_audio("output-alsa", output_alsa_new);
 }

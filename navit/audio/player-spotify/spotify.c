@@ -1034,5 +1034,5 @@ player_spotify_new(struct audio_methods *meth, struct callback_list * cbl, struc
 void
 plugin_init(void)
 {
-        plugin_register_audio_type("player-spotify", player_spotify_new);
+        plugin_register_category_audio("player-spotify", player_spotify_new);
 }

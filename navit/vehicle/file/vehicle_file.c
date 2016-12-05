@@ -1046,8 +1046,8 @@ vehicle_file_new_file(struct vehicle_methods
 void plugin_init(void)
 {
 	dbg(lvl_debug, "vehicle_file:plugin_init:enter\n");
-	plugin_register_vehicle_type("file", vehicle_file_new_file);
-	plugin_register_vehicle_type("pipe", vehicle_file_new_file);
-	plugin_register_vehicle_type("socket", vehicle_file_new_file);
-	plugin_register_vehicle_type("serial", vehicle_file_new_file);
+	plugin_register_category_vehicle("file", vehicle_file_new_file);
+	plugin_register_category_vehicle("pipe", vehicle_file_new_file);
+	plugin_register_category_vehicle("socket", vehicle_file_new_file);
+	plugin_register_category_vehicle("serial", vehicle_file_new_file);
 }

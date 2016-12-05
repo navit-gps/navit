@@ -145,5 +145,5 @@ speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr
 void
 plugin_init(void)
 {
-	plugin_register_speech_type("android", speech_android_new);
+	plugin_register_category_speech("android", speech_android_new);
 }

@@ -3491,5 +3491,5 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 //##############################################################################################################
 void plugin_init(void)
 {
-	plugin_register_gui_type("internal", gui_internal_new);
+	plugin_register_category_gui("internal", gui_internal_new);
 }

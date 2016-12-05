@@ -325,5 +325,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("maemo", vehicle_maemo_new_maemo);
+	plugin_register_category_vehicle("maemo", vehicle_maemo_new_maemo);
 }

@@ -11,4 +11,6 @@ github.com:
   protocol: https
 EOF
 
-hub pull-request -b trunk -m "Automatic translation import"
+message=`git log -1 --pretty=%B`
+
+echo "Automatic translation import" | hub pull-request -b trunk -m "$message" -F -

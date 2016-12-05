@@ -292,5 +292,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("android", vehicle_android_new_android);
+	plugin_register_category_vehicle("android", vehicle_android_new_android);
 }

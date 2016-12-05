@@ -6,6 +6,7 @@
 #cmakedefine HAVE_API_WIN32_BASE 1
 #cmakedefine HAVE_API_WIN32 1
 #cmakedefine HAVE_API_WIN32_CE 1
+#cmakedefine HAVE_API_TOMTOM 1
 #cmakedefine HAVE_GLIB 1
 #cmakedefine HAVE_GMODULE 1
 #cmakedefine HAVE_GETCWD 1

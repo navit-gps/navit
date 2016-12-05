@@ -1581,5 +1581,5 @@ void
 plugin_init(void)
 { 
 	dbg (lvl_debug,  "player-stub\n");
-    plugin_register_audio_type("player-stub", player_stub_new);
+    plugin_register_category_audio("player-stub", player_stub_new);
 }
