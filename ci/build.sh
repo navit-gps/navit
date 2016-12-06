@@ -1,3 +1,5 @@
+set -e
+
 echo "$# build script (s) to run"
 
 for i in $(seq 1 $#); do

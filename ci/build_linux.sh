@@ -1,6 +1,4 @@
-set -e 
-sudo apt-get install cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev
-mkdir ~/linux-bin && pushd ~/linux-bin
+sudo apt-get install cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev libqt5svg5-dev
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
 
@@ -10,8 +8,9 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
 	
-	cov-build --dir cov-int cmake ~/navit/ ${cmake_opts}
-	cov-build --dir cov-int make
+	mkdir ~/linux-bin && cd ~/linux-bin
+	cov-build --dir cov-int cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts}
+	cov-build --dir cov-int make || exit -1
 	tar czvf navit.tgz cov-int
 	
 	curl --form token=$COVERITY_TOKEN \
@@ -28,9 +27,9 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	popd
 
 else
-	cmake ~/navit/ ${cmake_opts}
-	make
-	popd
+	mkdir ~/linux-bin && cd ~/linux-bin
+	cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts} || exit -1
+	make  || exit -1
 fi
 
 if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
@@ -65,4 +64,4 @@ fi
 
 
 # Done with the builds tests. Running some app tests 
-bash ci/run_linux_tests.sh
+bash ~/navit/ci/run_linux_tests.sh
