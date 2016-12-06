@@ -1253,7 +1253,7 @@ mpd_mpd_idle (struct audio_priv *mpd)
 					return;
 				}else{
 					strcpy(mpd->current_track, text);
-					dbg(lvl_debug, "%s\n",mpd->current_track);
+					dbg(lvl_debug, "Current track: %s\n",mpd->current_track);
 				}
 			}
 		}else{
@@ -1845,10 +1845,10 @@ volume(struct audio_priv *this, const int action)
 * @return the track name of the current track
 */
 char*
-current_track(struct audio_priv *this)
+get_current_track(struct audio_priv *this)
 {
-	if(mpd->current_track[0] != NO_TRACK){
-		return mpd->current_track;
+	if(this->current_track[0] != NO_TRACK){
+		return this->current_track;
 	}else{
 		return "";
 	}
@@ -1862,7 +1862,7 @@ current_track(struct audio_priv *this)
 * @return the playlist name
 */
 char*
-current_playlist(struct audio_priv *this)
+get_current_playlist(struct audio_priv *this)
 {
 	return mpd_get_current_playlist_name();
 }
@@ -1879,8 +1879,8 @@ static struct audio_methods player_mpd_meth = {
         tracks,
         playlists,
         actions,
-        current_track,
-        current_playlist,
+        get_current_track,
+        get_current_playlist,
         mpd_get_attr,
         mpd_set_attr,
 };
@@ -1912,16 +1912,16 @@ player_mpd_new(struct audio_methods *meth, struct callback_list * cbl, struct at
 		mpd->playlists = sort_playlists(pl);
 		mpd->current_playlist = get_last_playlist(mpd);
 	}
-	if(mpd->idle)
+	if(!mpd->idle)
 		mpd->idle = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
 
-	if(mpd->timeout)
+	if(!mpd->timeout)
 		mpd->timeout = event_add_timeout(1000, 1,  mpd->idle);
 	
-	if(mpd->callback)
+	if(!mpd->callback)
 		mpd->callback = callback_new_1 (callback_cast (mpd_mpd_idle), mpd);
 	
-	if(mpd->timeout)
+	if(!mpd->timeout)
 		mpd->timeout = event_add_timeout(1000, 1,  mpd->callback);
 
     mpd->playing = false;
