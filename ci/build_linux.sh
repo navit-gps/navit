@@ -1,15 +1,7 @@
-#<<<<<<< HEAD
-set -e
-wget https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
-tar xfz libspotify-12.1.51-Linux-x86_64-release.tar.gz
-pushd libspotify-12.1.51-Linux-x86_64-release
-sudo make install prefix=/usr/local
-popd
-#=======
+set -e 
 sudo apt-get install cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
-#>>>>>>> navit/trunk
 
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	# If we are building the official trunk code, push an update to coverity
@@ -17,9 +9,9 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
 	
-	mkdir bin && cd bin
+	mkdir coverity-bin && pushd coverity-bin
 	cov-build --dir cov-int cmake ../ ${cmake_opts}
-	cov-build --dir cov-int make || exit -1
+	cov-build --dir cov-int make
 	tar czvf navit.tgz cov-int
 	
 	curl --form token=$COVERITY_TOKEN \
@@ -33,13 +25,38 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	sed -i '/INTEGER/d' po/navit.pot
 	cp po/navit.pot $CIRCLE_ARTIFACTS/
 	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
+	popd
 
 else
-	mkdir bin && cd bin
-	cmake ../ ${cmake_opts} || exit -1
-	make  || exit -1
+	mkdir linux-bin && pushd linux-bin
+	cmake ../ ${cmake_opts}
+	make
+	popd
+fi
+
+if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
+	# Test the mpd audio plugin
+	mkdir linux_audio_mpd && pushd linux_audio_mpd
+	cmake ../ ${cmake_opts}
+	make
+	[ -f navit/audio/player-mpd/.libs/libaudio_player-mpd.so ] || exit -1
+	popd
+
+
+	# Test the spotify audio plugin
+        wget https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
+        tar xfz libspotify-12.1.51-Linux-x86_64-release.tar.gz
+        pushd libspotify-12.1.51-Linux-x86_64-release
+        sudo make install prefix=/usr/local
+        popd
+
+	mkdir linux_audio_spotify && pushd linux_audio_spotify
+	cmake ../ ${cmake_opts}
+	make
+	[ -f navit/audio/player-spotify/.libs/libaudio_player-spotify.so ] || exit -1
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	cp -r navit/xpm $CIRCLE_ARTIFACTS
 fi
+
