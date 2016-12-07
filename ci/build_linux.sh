@@ -35,11 +35,16 @@ else
 fi
 
 if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
+	sudo apt-get install libasound2-dev libasound2
+
 	# Test the mpd audio plugin
+	sudo apt-get install mpc
 	mkdir linux_audio_mpd && pushd linux_audio_mpd
 	cmake ../ ${cmake_opts}
 	make
+	echo "Checking if the libaudio_player-mpd.so was built"
 	[ -f navit/audio/player-mpd/.libs/libaudio_player-mpd.so ] || exit -1
+	echo "SUCCESS"
 	popd
 
 
@@ -53,7 +58,10 @@ if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
 	mkdir linux_audio_spotify && pushd linux_audio_spotify
 	cmake ../ ${cmake_opts}
 	make
+	echo "Checking if the libaudio_player-spotify.so was built"
 	[ -f navit/audio/player-spotify/.libs/libaudio_player-spotify.so ] || exit -1
+	echo "SUCCESS"
+	popd
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
