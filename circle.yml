@@ -11,16 +11,6 @@ dependencies:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
     - sudo apt-get update
-#<<<<<<< HEAD
-#    - sudo apt-get install cmake
-#    - sudo apt-get install libpng12-dev
- #   - sudo apt-get install librsvg2-bin 
- #   - sudo apt-get install libfreetype6-dev
- #   - sudo apt-get install libdbus-glib-1-dev
- #   - sudo apt-get install g++
-    - sudo apt-get install mpd mpc
-#=======
-#>>>>>>> navit/trunk
     - bash ci/update_version.sh prepare
 # Android build    
     - sudo apt-get install gettext
@@ -28,20 +18,6 @@ dependencies:
 # for aapt
     - sudo apt-get install lib32stdc++6
     - sudo apt-get install lib32z1
-#<<<<<<< HEAD
-#    - bash ci/build_android.sh
-#    - bash ci/build_android_x86.sh
-# Windows build
-#    - sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
-#    - sudo apt-get install default-jdk nsis
-# for sys/select.h
-#    - sudo apt-get install -y libc6-dev
-#    - mkdir win32
-#    - cmake -Dbinding/python:BOOL=FALSE -DSAMPLE_MAP=n -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw32.cmake ../ && make && make package:
-#        pwd: win32/
-#    - cp win32/*.exe $CIRCLE_ARTIFACTS/
-#=======
-#>>>>>>> navit/trunk
 # For python testing with junit reporting
     - sudo apt-get install python-gobject libdbus-glib-1-dev python-dev
     - pip install junit-xml dbus-python
@@ -56,15 +32,15 @@ test:
           - ci/build_*.sh
   post:
     - sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="Local GPS" profilename="car" enabled="no" active="0"@' navit.xml:
-        pwd: bin/navit/
+        pwd: linux-bin/navit/
     - sed -i -e 's@name="Demo" profilename="car" enabled="no" active="yes"@name="Demo" profilename="car" enabled="yes" active="yes" follow="1" refresh="1"@' navit.xml:
-        pwd: bin/navit/
+        pwd: linux-bin/navit/
     - sed -i -e 's@type="internal" enabled@type="internal" fullscreen="1" font_size="350" enabled@' navit.xml:
-        pwd: bin/navit/
+        pwd: linux-bin/navit/
     - sed -i -e 's@libbinding_dbus.so" active="no"@libbinding_dbus.so" active="yes"@' navit.xml:
-        pwd: bin/navit/
+        pwd: linux-bin/navit/
     - ./navit:
-        pwd: bin/navit/
+        pwd: linux-bin/navit/
         background: true
     - sleep 5
     - import -window root $CIRCLE_ARTIFACTS/default.png

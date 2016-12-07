@@ -9,7 +9,7 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
 	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
 	
-	mkdir coverity-bin && pushd coverity-bin
+	mkdir linux-bin && pushd linux-bin
 	cov-build --dir cov-int cmake ../ ${cmake_opts}
 	cov-build --dir cov-int make
 	tar czvf navit.tgz cov-int
@@ -38,7 +38,7 @@ if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
 	sudo apt-get install libasound2-dev libasound2
 
 	# Test the mpd audio plugin
-	sudo apt-get install mpc
+	sudo apt-get install mpc mpd
 	mkdir linux_audio_mpd && pushd linux_audio_mpd
 	cmake ../ ${cmake_opts}
 	make
