@@ -36,7 +36,7 @@ struct audio_priv {
     int width;
     gboolean muted;
     int playing;
-	char *login;
+    char *login;
     char *password;
     char *playlist;
     sp_playlistcontainer *pc;
@@ -341,11 +341,11 @@ action_do(struct audio_priv *this, const int action)
 	switch(action)
 	{
 		case AUDIO_PLAYBACK_PAUSE:{
-			//spotify_pause();
+			spotify_pause();
 			break;
 		}
 		case AUDIO_PLAYBACK_PLAY:{
-			//spotify_play();
+			spotify_play();
 			break;
 		}
 		case AUDIO_PLAYBACK_TOGGLE:{
@@ -809,6 +809,14 @@ spotify_toggle_playback (struct audio_actions *action)
 	callback_list_call_attr_0(spotify->cbl, attr_playing);
 }
 
+void spotify_play(){
+	try_jukebox_start ();
+}
+
+void spotify_pause(){
+	try_jukebox_start ();
+}
+
 GList *
 playlists(struct audio_priv *this)
 {
@@ -831,23 +839,23 @@ playlists(struct audio_priv *this)
                 switch (sp_playlist_get_offline_status (g_sess, spl))
                   {
                   case SP_PLAYLIST_OFFLINE_STATUS_NO:
-                      pl->icon = "playlist_no_offline";
+                      pl->icon = "media_playlist_no_offline";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_YES:
-                      pl->icon = "playlist_offline";
+                      pl->icon = "media_playlist_offline";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_DOWNLOADING:
-                      pl->icon = "playlist_downloading";
+                      pl->icon = "media_playlist_downloading";
                       break;
             
                   case SP_PLAYLIST_OFFLINE_STATUS_WAITING:
-                      pl->icon = "playlist_pending";
+                      pl->icon = "media_playlist_pending";
                       break;
             
                   default:
-                      pl->icon = "music_red";
+                      pl->icon = "media_playlist_no_offline";
                       break;
                   }
         }
@@ -877,16 +885,16 @@ tracks(struct audio_priv *this, int playlist_index)
                 switch (sp_track_offline_get_status (track))
                   {
                   case SP_TRACK_OFFLINE_DONE:
-            	  t->icon = "music_green";
+            	  t->icon = "media_track_offline_done";
             	  break;
                   case SP_TRACK_OFFLINE_DOWNLOADING:
-            	  t->icon = "music_orange";
+            	  t->icon = "media_track_downloading";
             	  break;
                   case SP_TRACK_OFFLINE_NO:
-            	  t->icon = "music_blue";
+            	  t->icon = "media_track_pending";
             	  break;
                   default:
-            	  t->icon = "music_red";
+            	  t->icon = "media_track_offline";
                   }
                 t->icon=g_strdup ((i == g_track_index) ? "play" : t->icon);
 
