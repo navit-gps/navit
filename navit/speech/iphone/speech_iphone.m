@@ -70,5 +70,5 @@ void
 plugin_init(void)
 {
 	dbg(0,"enter\n");
-	plugin_register_speech_type("iphone", speech_iphone_new);
+	plugin_register_category_speech("iphone", speech_iphone_new);
 }
