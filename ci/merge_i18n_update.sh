@@ -1,4 +1,8 @@
-git rebase master
-git checkout master
+message=`git log -1 --pretty=%B`
+git config --global user.name "CircleCI"
+git config --global user.email circleci@navit-project.org
+git rebase trunk
+git checkout trunk
 git merge --squash ${CIRCLE_BRANCH}
-git commit
+git commit -m ${message}
+git push
