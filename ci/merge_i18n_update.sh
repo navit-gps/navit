@@ -4,5 +4,5 @@ git config --global user.email circleci@navit-project.org
 git rebase trunk
 git checkout trunk
 git merge --squash ${CIRCLE_BRANCH}
-git commit -m ${message}
+git commit -m "${message}"
 git push
