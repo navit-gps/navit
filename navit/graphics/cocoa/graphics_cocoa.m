@@ -800,6 +800,6 @@ void
 plugin_init(void)
 {
 	dbg(0,"enter\n");
-	plugin_register_graphics_type("cocoa", graphics_cocoa_new);
-	plugin_register_event_type("cocoa", event_cocoa_new);
+	plugin_register_category_graphics("cocoa", graphics_cocoa_new);
+	plugin_register_category_event("cocoa", event_cocoa_new);
 }

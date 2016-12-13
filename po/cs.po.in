@@ -1,5 +1,5 @@
 # Čeština translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # 72ka https://launchpad.net/~2hp
@@ -7,7 +7,9 @@
 # Ivan Kološ https://launchpad.net/~ivan-kolos
 # Jakuje https://launchpad.net/~jakuje
 # MMlosh https://launchpad.net/~mmlosh
+# Marc0 https://launchpad.net/~z-ubuntuone-y
 # Mike Crash https://launchpad.net/~mike-mikecrash
+# Pavel Borecki https://launchpad.net/~pavel-borecki
 # T.lama https://launchpad.net/~klacl
 # Tomas Kukol https://launchpad.net/~tomas-kukol
 # Vaclav Cerny https://launchpad.net/~vatoz
@@ -20,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:57+0000\n"
-"Last-Translator: Jakuje <jakuje@gmail.com>\n"
+"PO-Revision-Date: 2016-07-12 16:13+0000\n"
+"Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,7 +218,7 @@ msgid "Enter the roundabout %s"
 msgstr ""
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "poté vjeďte na kruhový objezd"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -253,32 +255,32 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr ""
+msgstr "na levé straně"
 
 msgid "on your right"
-msgstr ""
+msgstr "na pravé straně"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
-msgstr ""
+msgstr "Opusťte komunikaci na sjezdu %1$s %2$s %3$s"
 
 #. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
-msgstr ""
+msgstr "Opusťte komunikaci na sjezdu %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr ""
 
 msgid "at exit"
-msgstr ""
+msgstr "na konci"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then continue straight%1$s"
-msgstr ""
+msgstr "poté pokračujte přímo %1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
@@ -288,7 +290,7 @@ msgstr ""
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep right%1$s"
-msgstr ""
+msgstr "poté se držte vpravo%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
@@ -298,7 +300,7 @@ msgstr ""
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
 msgid "then keep left%1$s"
-msgstr ""
+msgstr "poté se držte vlevo%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
@@ -319,11 +321,11 @@ msgstr "mírně "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr "silně "
+msgstr "ostře "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "poté jeďte %1$s silnici %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -340,7 +342,7 @@ msgstr "Zabočte %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr "pak otočte se"
+msgstr "poté se otočte"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
@@ -349,7 +351,7 @@ msgstr "Otočte se %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr "pak otočte se"
+msgstr "poté se otočte"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
@@ -409,7 +411,7 @@ msgid "Destination Length"
 msgstr "Cílová vzdálenost"
 
 msgid "Destination Time"
-msgstr "Cílový čas"
+msgstr "Čas dojezdu do cíle"
 
 msgid "Roadbook"
 msgstr "Itinerář"
@@ -425,10 +427,10 @@ msgid "Set as position"
 msgstr "Použít jako pozici"
 
 msgid "Set as destination"
-msgstr "Nastavit jako cíl"
+msgstr "Použít jako cíl"
 
 msgid "Add as bookmark"
-msgstr "Použít jako záložku"
+msgstr "Přidat jako záložku"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
@@ -1683,7 +1685,7 @@ msgid "Shopping"
 msgstr "Nakupování"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "Vzdálenost od středu mapy (km)"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1980,6 +1982,12 @@ msgstr "Rozvržení"
 msgid "Height Profile"
 msgstr "Výškový profil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Popis trasy"
 
@@ -2002,7 +2010,7 @@ msgid "Back to map"
 msgstr "Zpět na mapu"
 
 msgid "Main Menu"
-msgstr "Hlavní menu"
+msgstr "Hlavní nabídka"
 
 msgid "House number"
 msgstr "Číslo domu"
@@ -2014,15 +2022,15 @@ msgid "Prev"
 msgstr "Předchozí"
 
 msgid "Return to route!"
-msgstr "Vraťte se zpět!"
+msgstr "Vraťte se na komunikaci!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr "Podívejte se! Kamera!"
+msgstr "Pozor! Kamera!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr "Prosím snižte rychlost"
+msgstr "Zpomalte"
 
 msgid "partial match"
 msgstr "Částečná shoda"
@@ -2034,10 +2042,6 @@ msgstr "Vyhledat"
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
 msgstr "Města"
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Cestovat sem"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Mapová data (c) přispěvatelé OpenStreetMap, ODBL"
@@ -2055,6 +2059,12 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Omlouváme se, ale na systému Android tato aplikace v současnosti nepodporuje "
+"mapy větší, než 3,8 GiB – vyberte takovou, která nepřekračuje tuto hranici."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Cestovat sem"
 
 msgid "Cancel"
 msgstr "Storno"
@@ -2206,7 +2216,7 @@ msgid "Unterfranken"
 msgstr "Dolní Franky"
 
 msgid "Berlin"
-msgstr "Berlin"
+msgstr "Berlín"
 
 msgid "Brandenburg"
 msgstr "Braniborsko"
@@ -2425,13 +2435,13 @@ msgid "Washington State"
 msgstr "Stát Washington"
 
 msgid "South+Middle America"
-msgstr "Jižní+Střední Amerika"
+msgstr "Jižní a Střední Amerika"
 
 msgid "Guyane Francaise"
 msgstr "Francouzská Guyana"
 
 msgid "downloading"
-msgstr "stahuji"
+msgstr "stahování…"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
@@ -2465,13 +2475,13 @@ msgid "Vehicle Position"
 msgstr "Poloha vozidla"
 
 msgid "Main menu"
-msgstr "Hlavní menu"
+msgstr "Hlavní nabídka"
 
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-"Ukázat\n"
+"Zobrazit\n"
 "mapu"
 
 msgid "Settings"
@@ -2484,10 +2494,10 @@ msgid "Route"
 msgstr "Trasa"
 
 msgid "About"
-msgstr "O programu"
+msgstr "O aplikaci"
 
 msgid "Quit"
-msgstr "Konec"
+msgstr "Ukončit"
 
 msgid "Actions"
 msgstr "Akce"
@@ -2506,8 +2516,8 @@ msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
-"Ukonči\n"
-"Navigaci"
+"Ukončit\n"
+"navigaci"
 
 msgid "Display"
 msgstr "Zobrazit"
@@ -2517,6 +2527,9 @@ msgstr "Celá obrazovka"
 
 msgid "Window Mode"
 msgstr "V okně"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Popis"
@@ -2539,7 +2552,7 @@ msgid "Satellite Status"
 msgstr "Stav satelitu"
 
 msgid "NMEA Data"
-msgstr "NMEA Data"
+msgstr "NMEA údaje"
 
 msgid "car_shortest"
 msgstr "auto nejkratší"
@@ -2554,7 +2567,7 @@ msgid "horse"
 msgstr "kůň"
 
 msgid "Truck"
-msgstr "kamión"
+msgstr "Nákladní vůz"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
@@ -2567,7 +2580,7 @@ msgstr "Startuje Navit"
 
 #. Android resource: @strings/notification_event_default
 msgid "Navit running"
-msgstr "Navit běží"
+msgstr "Navit je spuštěný"
 
 #. Android resource: @strings/initial_info_box_title
 msgid "Welcome to Navit"
@@ -2636,7 +2649,7 @@ msgstr "Smazat tuto mapu?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr "Stahuji:"
+msgstr "Stahování:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2668,7 +2681,7 @@ msgstr "Shoda částí adresy"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr "Vyhledávám..."
+msgstr "Vyhledávání…"
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2688,11 +2701,11 @@ msgstr "Výsledky nenalezeny."
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
-msgstr "Text nebyl zadán"
+msgstr "Nebyl zadán žádný text"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
-msgstr "Nastavení cíle v:"
+msgstr "Nastavování cíle na:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
@@ -2700,15 +2713,15 @@ msgstr "Vyberte akci"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr "Prosím vložte SD kartu"
+msgstr "Vložte SD kartu"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Zálohuji..."
+msgstr "Zálohování…"
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr "Obnovuji..."
+msgstr "Obnovování…"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2760,7 +2773,7 @@ msgstr "Obnova"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "Chybí data systémového převodníku textu na řeč"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""

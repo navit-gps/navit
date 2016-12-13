@@ -1,5 +1,5 @@
 # Estonian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Andres Kaaber https://launchpad.net/~imapi
@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
+"PO-Revision-Date: 2015-12-22 07:09+0000\n"
 "Last-Translator: Manuel Hohmann <mhohmann@physnet.uni-hamburg.de>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -201,10 +201,10 @@ msgstr "Sõida varsti ringteele"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Sõida ringteele %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "siis sõida ringteele"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -1968,6 +1968,12 @@ msgstr "Paigutus"
 msgid "Height Profile"
 msgstr "Kõrgusprofiil"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Teekonna kirjeldus"
 
@@ -2023,10 +2029,6 @@ msgstr "Otsing"
 msgid "Towns"
 msgstr "Linnad"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Teekond siia"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Kaardi andmed (c) OpenStreetMap kaasautorid, ODBL"
 
@@ -2043,6 +2045,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Teekond siia"
 
 msgid "Cancel"
 msgstr "Keeldu"
@@ -2505,6 +2511,9 @@ msgstr "Täisekraan"
 
 msgid "Window Mode"
 msgstr "Aknarežiim"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Kirjeldus"

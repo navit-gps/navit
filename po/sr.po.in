@@ -1,5 +1,5 @@
 # Serbian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Ivan Janjić https://launchpad.net/~milandd
@@ -1976,6 +1976,12 @@ msgstr "Распоред"
 msgid "Height Profile"
 msgstr "Висински профил"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Опис путање"
 
@@ -2031,10 +2037,6 @@ msgstr "Претражи"
 msgid "Towns"
 msgstr "Градове"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Путања довде"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Подаци карте (c) доприносиоци Отворене карте улица, ОДБЛ"
 
@@ -2051,6 +2053,10 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Путања довде"
 
 msgid "Cancel"
 msgstr "Откажи"
@@ -2513,6 +2519,9 @@ msgstr "Цео екран"
 
 msgid "Window Mode"
 msgstr "Режим прозора"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Опис"

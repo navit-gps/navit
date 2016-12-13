@@ -1,5 +1,5 @@
 # Dutch translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Bert de Bruijn https://launchpad.net/~lpdebruijn
@@ -18,14 +18,15 @@
 # bafplus https://launchpad.net/~bart-cockheyt
 # jan https://launchpad.net/~jandegr1
 # rob https://launchpad.net/~rvdb
+# wb9688 https://launchpad.net/~wb9688
 # worldcitizen https://launchpad.net/~joop-boonen
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-10-05 13:45+0000\n"
-"Last-Translator: jan <jandegr1@hotmail.com>\n"
+"PO-Revision-Date: 2016-05-04 15:48+0000\n"
+"Last-Translator: wb9688 <Unknown>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1605,7 +1606,7 @@ msgid "Test"
 msgstr "Test"
 
 msgid "_Quit"
-msgstr ""
+msgstr "_Afsluiten"
 
 msgid "Quit the application"
 msgstr "Het programma afsluiten"
@@ -1983,6 +1984,12 @@ msgstr "Opmaak"
 msgid "Height Profile"
 msgstr "Hoogteprofiel"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Routebeschrijving"
 
@@ -2038,10 +2045,6 @@ msgstr "Zoek"
 msgid "Towns"
 msgstr "Steden"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "route hiernaartoe"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "kaart gegevens (c) OpenStreetMap contributeurs, ODBL"
 
@@ -2063,6 +2066,10 @@ msgid ""
 msgstr ""
 "Kaarten gorter dan 3,8GB zijn momenteel niet ondersteund op Android.\r\n"
 "Kies a.u.b. een kleinere kaart."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "route hiernaartoe"
 
 msgid "Cancel"
 msgstr "Annuleer"
@@ -2527,6 +2534,9 @@ msgstr "Beeldvullend"
 
 msgid "Window Mode"
 msgstr "Venstermodus"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Beschrijving"

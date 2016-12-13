@@ -115,11 +115,11 @@ struct item_bin_sink {
 	void *priv_data[8];
 	GList *sink_funcs;
 };
-
+#define NODE_ID_BITS 56
 struct node_item {
-	unsigned int id;
-	char ref_way;
 	struct coord c;
+	unsigned long long int nd_id:NODE_ID_BITS;
+	char ref_way;
 };
 
 struct zip_info;
@@ -131,7 +131,7 @@ struct country_table;
  * Must be at least 64 bit wide because IDs will soon exceed 32 bit.
  */
 typedef unsigned long long int osmid;
-#define OSMID_FMT LONGLONG_FMT
+#define OSMID_FMT ULONGLONG_FMT
 
 /** Files needed for processing a relation. */
 struct files_relation_processing {
@@ -418,3 +418,6 @@ int zip_get_zipnum(struct zip_info *info);
 void zip_set_zipnum(struct zip_info *info, int num);
 void zip_close(struct zip_info *info);
 void zip_destroy(struct zip_info *info);
+
+/* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to GHashTable's */
+struct maptool_force_64 {char s[sizeof(gpointer)<sizeof(osmid)?-1:1];};

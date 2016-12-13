@@ -658,7 +658,7 @@ font_freetype_new(void *meth)
 void
 plugin_init(void)
 {
-	plugin_register_font_type("freetype", font_freetype_new);
+	plugin_register_category_font("freetype", font_freetype_new);
 #ifdef HAVE_FONTCONFIG
 	FcInit();
 #endif

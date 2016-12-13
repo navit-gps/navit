@@ -12,39 +12,61 @@
 #include "gui_internal_menu.h"
 #include "gui_internal_keyboard.h"
 
+/**
+ * @brief Switch keyboard mode to uppercase if it's in lowercase mode and  {@code VKBD_MODE_2} is set.
+ *
+ * Called when there's no input left in the input field.
+ *
+ * @param this The internal GUI instance
+ */
 void
 gui_internal_keyboard_to_upper_case(struct gui_priv *this)
 {
 	struct menu_data *md;
+
+	if (!this->keyboard)
+		return;
+
 	md=gui_internal_menu_data(this);
-	// Switch to lowercase after the first key is pressed
-	if (md->keyboard_mode == 10) // Latin
-		gui_internal_keyboard_do(this, md->keyboard, 2);
-	if (md->keyboard_mode == 34) // Umlaut
-		gui_internal_keyboard_do(this, md->keyboard, 26);
-	if (md->keyboard_mode == 50) // Russian/Ukrainian/Belorussian
-		gui_internal_keyboard_do(this, md->keyboard, 42);
+
+	if (md->keyboard_mode == (VKBD_LATIN_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_UPPER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_UMLAUT_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_UPPER | VKBD_FLAG_2);
+	if (md->keyboard_mode == (VKBD_CYRILLIC_LOWER | VKBD_FLAG_2))
+		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_UPPER | VKBD_FLAG_2);
 }
 
+/**
+ * @brief Switch keyboard mode to lowercase if it's in uppercase mode and  {@code VKBD_MODE_2} is set.
+ *
+ * Called on each alphanumeric input.
+ *
+ * @param this The internal GUI instance
+ */
 void
 gui_internal_keyboard_to_lower_case(struct gui_priv *this)
 {
 	struct menu_data *md;
+
+	if (!this->keyboard)
+		return;
+
 	md=gui_internal_menu_data(this);
-	// Switch to lowercase after the first key is pressed
-	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2)) // Latin
+
+	if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2)) // Umlaut
+	if (md->keyboard_mode == (VKBD_UMLAUT_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
-	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2)) // Russian/Ukrainian/Belorussian
+	if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2))
 		gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
 }
 
 /**
  * @brief Processes a key press on the internal GUI keyboard
  *
- * If the keyboard is currently in uppercase mode and {@code VKBD_MODE_2} is set, it is then switched to
- * the corresponding lowercase mode.
+ * If the keyboard is currently in uppercase mode and {@code VKBD_MODE_2} is set, it is tswitched to
+ * the corresponding lowercase mode in {@code gui_internal_keypress_do}.
  *
  * @param this The internal GUI instance
  * @param wm
@@ -101,7 +123,7 @@ struct gui_internal_keyb_mode {
 	/*16: VKBD_NUMERIC       */ {"123", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_UPPER},
 	/*24: VKBD_UMLAUT_UPPER  */ {"ÄÖÜ", 2, VKBD_UMLAUT_LOWER,   VKBD_LATIN_UPPER},
 	/*32: VKBD_UMLAUT_LOWER  */ {"äöü", 2, VKBD_UMLAUT_UPPER,   VKBD_LATIN_LOWER},
-	/*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_UPPER},
+	/*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_LOWER, VKBD_LATIN_UPPER},
 	/*48: VKBD_CYRILLIC_LOWER*/ {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER},
 	/*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2}
 };
@@ -433,5 +455,102 @@ gui_internal_keyboard_init_mode(char *lang)
 	else if (strstr(lang,"MN"))
 	    ret = VKBD_CYRILLIC_UPPER;
 	g_free(lang);
+	return ret;
+}
+
+
+/**
+ * @brief Hides the platform's native on-screen keyboard or other input method
+ *
+ * This function is called as the {@code wfree} method of the placeholder widget for the platform's
+ * native on-screen keyboard. It is a wrapper around the corresponding method of the graphics plugin,
+ * which takes care of all platform-specific actions to hide the on-screen input method it previously
+ * displayed.
+ *
+ * A call to this function indicates that Navit no longer needs the input method and is about to destroy
+ * its placeholder widget. Navit will subsequently reclaim any screen real estate it may have previously
+ * reserved for the input method.
+ *
+ * This function will free the {@code struct graphics_keyboard} pointed to by {@code w->data}
+ *
+ * @param this The internal GUI instance
+ * @param w The placeholder widget
+ */
+void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
+	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
+
+	if (kbd) {
+		graphics_hide_native_keyboard(this_->gra, kbd);
+		g_free(kbd->lang);
+		g_free(kbd->gui_priv);
+	} else
+		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed\n");
+	g_free(w);
+}
+
+
+/**
+ * @brief Shows the platform's native on-screen keyboard or other input method
+ *
+ * This method is a wrapper around the corresponding method of the graphics plugin, which takes care of
+ * all platform-specific details. In particular, it is up to the graphics plugin to determine how to
+ * handle the request: it may show its on-screen keyboard or another input method (such as stroke
+ * recognition). It may choose to simply ignore the request, which will typically occur when a hardware
+ * keyboard (or other hardware input) is available.
+ *
+ * The platform's native input method may obstruct parts of Navit's UI. To prevent parts of the UI from
+ * becoming unreachable, this method will insert an empty box widget in the appropriate size at the
+ * appropriate position, provided the graphics plugin reports the correct values. Otherwise a zero-size
+ * widget is inserted. If the graphics driver decides not to display an on-screen input method, no
+ * widget will be created and the return value will be {@code NULL}.
+ *
+ * The widget's {@code wfree} function, to be called when the widget is destroyed, will be used to hide
+ * the platform keyboard when it is no longer needed.
+ *
+ * @param this The internal GUI instance
+ * @param w The parent of the widget requiring text input
+ * @param mode The requested keyboard mode
+ * @param lang The language for text input, used to select a keyboard layout
+ *
+ * @return The placeholder widget for the on-screen keyboard, may be {@code NULL}
+ */
+struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) {
+	struct widget *ret = NULL;
+	struct menu_data *md = gui_internal_menu_data(this);
+	struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
+	int res;
+
+	kbd->mode = mode;
+	if (lang)
+		kbd->lang = g_strdup(lang);
+	res = graphics_show_native_keyboard(this->gra, kbd);
+
+	switch(res) {
+	case -1:
+		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard\n");
+		/* no break */
+	case 0:
+		g_free(kbd);
+		return NULL;
+	}
+
+	ret = gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	md->keyboard = ret;
+	md->keyboard_mode=mode;
+	ret->wfree = gui_internal_keyboard_hide_native;
+	if (kbd->h < 0) {
+		ret->h = w->h;
+		ret->hmin = w->hmin;
+	} else
+		ret->h = kbd->h;
+	if (kbd->w < 0) {
+		ret->w = w->w;
+		ret->wmin = w->wmin;
+	} else
+		ret->w = kbd->w;
+	dbg(lvl_error, "ret->w=%d, ret->h=%d\n", ret->w, ret->h);
+	ret->data = (void *) kbd;
+	gui_internal_widget_append(w, ret);
+	dbg(lvl_error, "return\n");
 	return ret;
 }

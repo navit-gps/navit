@@ -298,5 +298,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-	plugin_register_vehicle_type("demo", vehicle_demo_new);
+	plugin_register_category_vehicle("demo", vehicle_demo_new);
 }

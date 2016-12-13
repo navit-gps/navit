@@ -378,9 +378,9 @@ plugins_destroy(struct plugins *pls)
 }
 
 static void *
-find_by_name(enum plugin_type type, const char *name)
+find_by_name(enum plugin_category category, const char *name)
 {
-	GList *name_list=plugin_types[type];
+	GList *name_list=plugin_categories[category];
 	while (name_list) {
 		struct name_val *nv=name_list->data;
 		if (!g_ascii_strcasecmp(nv->name, name))
@@ -391,23 +391,23 @@ find_by_name(enum plugin_type type, const char *name)
 }
 
 void *
-plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
+plugin_get_category(enum plugin_category category, const char *category_name, const char *name)
 {
 	GList *plugin_list;
 	struct plugin *pl;
 	char *mod_name, *filename=NULL, *corename=NULL;
 	void *result=NULL;
 
-	dbg(lvl_debug, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(lvl_debug, "category=\"%s\", name=\"%s\"\n", category_name, name);
 
-	if ((result=find_by_name(type, name))) {
+	if ((result=find_by_name(category, name))) {
 		return result;
 	}
 	if (!pls)
 		return NULL;
 	plugin_list=pls->list;
-	filename=g_strjoin("", "lib", type_name, "_", name, NULL);
-	corename=g_strjoin("", "lib", type_name, "_", "core", NULL);
+	filename=g_strjoin("", "lib", category_name, "_", name, NULL);
+	corename=g_strjoin("", "lib", category_name, "_", "core", NULL);
 	while (plugin_list) {
 		pl=plugin_list->data;
 		if ((mod_name=g_strrstr(pl->name, "/")))
@@ -421,7 +421,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 					plugin_set_active(pl, 0);
 			if (plugin_get_active(pl)) 
 				plugin_call_init(pl);
-			if ((result=find_by_name(type, name))) {
+			if ((result=find_by_name(category, name))) {
 				g_free(filename);
 				g_free(corename);
 				return result;

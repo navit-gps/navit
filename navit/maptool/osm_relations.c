@@ -135,7 +135,7 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways)
 {
 	char buffer[128];
 	struct item_bin *ib=(struct item_bin *)buffer;
-	long long *id;
+	osmid *id;
 	struct coord *c=(struct coord *)(ib+1),cn={0,0};
 	struct node_item *ni;
 	GList *l;
@@ -146,7 +146,7 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways)
 		item_bin_add_attr_longlong(ib, attr_osm_nodeid, 0);
 		id=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
 		while ((ni=read_node_item(nodes))) {
-			*id=ni->id;
+			*id=ni->nd_id;
 			*c=ni->c;
 			l=g_hash_table_lookup(rel->member_hash[0], id);
 			while (l) {

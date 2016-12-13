@@ -1,5 +1,5 @@
 # Spanish translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Benjamín Valero Espinosa https://launchpad.net/~benjavalero
@@ -10,6 +10,7 @@
 # Inaki Saez https://launchpad.net/~inaki-saez
 # Jonay https://launchpad.net/~jonay-santana
 # KaZeR https://launchpad.net/~kazer
+# Kenneth Belitzky https://launchpad.net/~r-kenny
 # Luis Alejandro Rangel Sánchez https://launchpad.net/~xlarsx
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Paco Molinero https://launchpad.net/~franciscomol
@@ -25,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2016-06-21 22:51+0000\n"
+"Last-Translator: Kenneth Belitzky <kenny@belitzky.com>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -213,10 +214,10 @@ msgstr "Entre en la próxima rotonda"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Entrar en la rotonda de %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "luego entrar en la rotonda"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -323,7 +324,7 @@ msgstr "bruscamente "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "luego tomar la carretera de %1$s a la %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1594,7 +1595,7 @@ msgid "_POI search"
 msgstr ""
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Abre la búsqueda de puntos de interés"
 
 msgid "_Stop Navigation"
 msgstr "_Detener navegación"
@@ -1645,7 +1646,7 @@ msgid "Restaurant"
 msgstr "Restaurante"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restaurante. Comida rápida"
 
 msgid "Hotel"
 msgstr "Hotel"
@@ -1654,19 +1655,19 @@ msgid "Car parking"
 msgstr "Estacionamiento"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Estación de Combustibles"
 
 msgid "Bank"
-msgstr ""
+msgstr "Banco"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Hospital"
 
 msgid "Cinema"
 msgstr "Cine"
 
 msgid "Train station"
-msgstr ""
+msgstr "Estación de trenes"
 
 msgid "School"
 msgstr "Escuela"
@@ -1678,59 +1679,59 @@ msgid "Justice"
 msgstr "Juzgado"
 
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Shopping"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "Distancia del centro de la pantalla (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "Cambiar destino a %ld, %ld \n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "Cambiar mapa a % ld, %ld \n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Conjunto siguiente visita a %ld, %ld \n"
 
 msgid "POI search"
-msgstr ""
+msgstr "Búsqueda de puntos de interés"
 
 msgid "Select a category"
-msgstr ""
+msgstr "Elige una categoría"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Seleccione una distancia para buscar (km)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "Seleccionar un POI"
 
 msgid " "
 msgstr ""
 
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 msgid "Direction"
-msgstr ""
+msgstr "Dirección"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distancia(m)"
 
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "Visita Antes"
 
 msgid "N"
 msgstr "N"
@@ -1949,7 +1950,7 @@ msgstr "Introduzca coordenadas"
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "Latitud Longitud"
 
 msgid "Enter coordinates, for example:"
 msgstr "Introduzca coordenadas, por ejemplo:"
@@ -1980,6 +1981,12 @@ msgstr "Diseño"
 
 msgid "Height Profile"
 msgstr "Perfil de altura"
+
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Descripción de ruta"
@@ -2023,7 +2030,7 @@ msgstr "¡Atención! Radar"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr "Reduzca velocidad por favor"
+msgstr "Por favor, disminuya su velocidad"
 
 msgid "partial match"
 msgstr "Coincidencia parcial"
@@ -2036,10 +2043,6 @@ msgstr "Búsqueda"
 msgid "Towns"
 msgstr "Ciudades"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Ruta hasta aquí"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Datos de Mapa (c) contribuyentes de OpenStreetMap,  ODBL"
 
@@ -2048,6 +2051,9 @@ msgid ""
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"Ubicación actual del mapa %s no se encuentra disponible\n"
+"Por favor reiniciar Navit después de conectar una tarjeta SD o seleccione "
+"una ubicación del mapa diferente."
 
 msgid "Downloaded maps"
 msgstr "Mapas descargados"
@@ -2056,6 +2062,12 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Lo sentimos, actualmente no permitimos mapas por encima de 3,8 G en Android, "
+"por favor, seleccione una versión más pequeña."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Ruta hasta aquí"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -2067,6 +2079,8 @@ msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Nueva ubicación cambiada a %s\n"
+"Reinicie Navit para aplicar los cambios."
 
 msgid "Whole Planet"
 msgstr "Todo el Planeta"
@@ -2440,6 +2454,8 @@ msgstr "listo"
 
 msgid "Media selected for map storage is not available"
 msgstr ""
+"Los medios de comunicación seleccionados para el almacenamiento del mapa no "
+"está disponible"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2518,6 +2534,9 @@ msgstr "Pantalla completa"
 
 msgid "Window Mode"
 msgstr "Modo ventana"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Descripción"
@@ -2629,7 +2648,7 @@ msgstr "Respaldar / Restaurar"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Establecer ubicación en mapa"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"

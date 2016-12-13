@@ -4,11 +4,13 @@
    <xsl:param name="ICON_SMALL" select="32"/>
    <xsl:param name="ICON_MEDIUM" select="32"/>
    <xsl:param name="ICON_BIG" select="64"/>
+   <xsl:param name="OSD_USE_OVERLAY">yes</xsl:param>
 
    <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
    <xsl:include href="default_plugins.xslt"/>
    <xsl:include href="map_sdcard_navitmap_bin.xslt"/>
    <xsl:include href="osd_minimum.xslt"/>
+   <xsl:include href="osd_android.xslt"/>
    <xsl:include href="cursor_scale.xslt"/>
    <xsl:template match="/config/plugins/plugin[1]" priority="100">
       <plugin path="$NAVIT_PREFIX/lib/lib*.so" ondemand="yes"/>

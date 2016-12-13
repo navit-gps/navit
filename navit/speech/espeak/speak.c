@@ -514,5 +514,5 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 void
 plugin_init(void)
 {
-	plugin_register_speech_type("espeak", espeak_new);
+	plugin_register_category_speech("espeak", espeak_new);
 }

@@ -23,5 +23,5 @@
 void
 plugin_init(void)
 {
-	plugin_get_vehicle_type("file");
+	plugin_get_category_vehicle("file");
 }

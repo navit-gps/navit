@@ -6,6 +6,7 @@ for i in po/import_queue/*.po; do
 	b=`basename $i`;
 	po=${b#*-};
 	code=${po%.*}
+        git checkout -b i18n/$code
 	lname=`head -n1 ${i} | sed 's/# \(.*\) translation.\{0,1\} for navit/\1/'`
         if [[ $lname == "" ]]; then
                 echo "Cannot find the language name in the header of $i"
@@ -37,12 +38,7 @@ for i in po/import_queue/*.po; do
         mv po/${po}.header po/${po}.in
         sed '1,/msgid ""/ d' ${i} >> po/${po}.in
 
-	git rm -f $i
-
-	# Archive the po
-	[ -d $CIRCLE_ARTIFACTS/po ] || mkdir $CIRCLE_ARTIFACTS/po
-	cp po/${po}.in $CIRCLE_ARTIFACTS/po/
-	# Yay, we should have a clean .po file now!
-	git --no-pager diff po/${po}.in
+	git add po/${po}.in && rm $i
+	git commit -m "Updated ${lname} translation from launchpad" po/${po}.in
+        git push --set-upstream origin i18n/${code}
 done
-

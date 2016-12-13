@@ -1,5 +1,5 @@
 # Lithuanian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Aidas Kasparas https://launchpad.net/~a-kasparas
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
+"PO-Revision-Date: 2016-06-17 20:36+0000\n"
 "Last-Translator: Michael von Glasow <Unknown>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -317,7 +317,7 @@ msgstr "stipriai "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "tada važiuokite %1$s keliu į %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1449,11 +1449,11 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Konfiguracijos failai navit.xml, navit.xml.local nerasti\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Klaida konfiguracijos faile '%s': %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
@@ -1461,11 +1461,13 @@ msgstr "Naudojamas konfigūracijos failas „%s”\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Klaida: Konfigūracija nerasta faile '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Vidinis inicializavimas nepavyko, baigiame darbą. Žiūrėkite prieš tai "
+"pateiktas klaidas.\n"
 
 msgid "unknown street"
 msgstr "nežinoma gatvė"
@@ -1642,7 +1644,7 @@ msgid "Hotel"
 msgstr "Viešbutis"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Stovėjimo aikštelė"
 
 msgid "Fuel station"
 msgstr "Degalinė"
@@ -1858,13 +1860,13 @@ msgid "Download %s"
 msgstr "Atsisiųsti %s"
 
 msgid "Map Download"
-msgstr ""
+msgstr "Žemėlapio parsiuntimas"
 
 msgid "Active"
 msgstr "Aktyvus"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "Parsiuntimas leidžiamas"
 
 msgid "Download completely"
 msgstr ""
@@ -1925,7 +1927,7 @@ msgid "And all the Navit Team"
 msgstr "Ir visa Navit komanda"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "nariai ir pagalbininkai."
 
 msgid "Waypoints"
 msgstr ""
@@ -1972,6 +1974,12 @@ msgstr "Išdėstymas"
 msgid "Height Profile"
 msgstr "Aukščio profilis"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Maršruto aprašymas"
 
@@ -2010,14 +2018,14 @@ msgstr "Grįžti į maršrutą!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "Dėmesio! Kamera!"
 
 #. warning told
 msgid "Please decrease your speed"
 msgstr "Prašom sumažinti greitį"
 
 msgid "partial match"
-msgstr ""
+msgstr "dalinis sutapimas"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
@@ -2027,12 +2035,8 @@ msgstr "Paieška"
 msgid "Towns"
 msgstr "Miestai"
 
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Maršrutas iki čia"
-
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Žemėlapio duomenys (c) OpenStreetMap pagalbininkai, ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
@@ -2047,9 +2051,15 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"Atleiskite, bet šiuo metu didesni nei 3,8GB žemėlapiai Androide nepalaikomi, "
+"pasirinkite mažesnį žemėlapį."
+
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Maršrutas iki čia"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 msgid "filenamePath"
 msgstr ""
@@ -2058,21 +2068,23 @@ msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Nauja vieta nustatyta į %s\n"
+"Perstartuokite Navit, kad pakeitimai įsigaliotų."
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "Visa planeta"
 
 msgid "Africa"
-msgstr ""
+msgstr "Afrika"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Kanarų salos"
 
 msgid "Asia"
-msgstr ""
+msgstr "Azija"
 
 msgid "Korea"
-msgstr ""
+msgstr "Korėja"
 
 msgid "Taiwan"
 msgstr ""
@@ -2081,25 +2093,25 @@ msgid "UAE+Other"
 msgstr ""
 
 msgid "Oceania"
-msgstr ""
+msgstr "Okeanija"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmanija"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Viktorija"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "Naujasis Pietų Velsas"
 
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "Vakarų Europa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azorai"
 
 msgid "BeNeLux"
 msgstr ""
@@ -2120,10 +2132,10 @@ msgid "Bourgogne"
 msgstr ""
 
 msgid "Bretagne"
-msgstr ""
+msgstr "Bretanė"
 
 msgid "Centre"
-msgstr ""
+msgstr "Centras"
 
 msgid "Champagne-Ardenne"
 msgstr ""
@@ -2198,16 +2210,16 @@ msgid "Unterfranken"
 msgstr ""
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlynas"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburgas"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Brėmenas"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburgas"
 
 msgid "Hessen"
 msgstr ""
@@ -2240,16 +2252,16 @@ msgid "Thueringen"
 msgstr ""
 
 msgid "Mallorca"
-msgstr ""
+msgstr "Maljorka"
 
 msgid "Galicia"
 msgstr ""
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Skandinavija"
 
 msgid "England"
-msgstr ""
+msgstr "Anglija"
 
 msgid "Buckinghamshire"
 msgstr ""
@@ -2258,19 +2270,19 @@ msgid "Cambridgeshire"
 msgstr ""
 
 msgid "Cumbria"
-msgstr ""
+msgstr "Kambrija"
 
 msgid "East yorkshire with hull"
 msgstr ""
 
 msgid "Essex"
-msgstr ""
+msgstr "Eseksas"
 
 msgid "Herefordshire"
 msgstr ""
 
 msgid "Kent"
-msgstr ""
+msgstr "Kentas"
 
 msgid "Lancashire"
 msgstr ""
@@ -2279,7 +2291,7 @@ msgid "Leicestershire"
 msgstr ""
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolkas"
 
 msgid "Nottinghamshire"
 msgstr "Notingemšyras"
@@ -2309,31 +2321,31 @@ msgid "Scotland"
 msgstr "Škotija"
 
 msgid "Wales"
-msgstr ""
+msgstr "Velsas"
 
 msgid "Crete"
-msgstr ""
+msgstr "Kreta"
 
 msgid "North America"
-msgstr ""
+msgstr "Šiaurės Amerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Aliaska"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Havajai"
 
 msgid "USA"
-msgstr ""
+msgstr "JAV"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr " (išskyrus Aliaską ir Havajus)"
 
 msgid "Midwest"
 msgstr ""
 
 msgid "Michigan"
-msgstr ""
+msgstr "Mičiganas"
 
 msgid "Ohio"
 msgstr ""
@@ -2354,28 +2366,28 @@ msgid "South"
 msgstr ""
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkanzasas"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "Kolumbijos apygarda"
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Luiziana"
 
 msgid "Maryland"
 msgstr ""
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Misisipė"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Teksasas"
 
 msgid "Virginia"
 msgstr "Virdžinija"
@@ -2420,7 +2432,7 @@ msgid "South+Middle America"
 msgstr ""
 
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "Prancūzų gvinėja"
 
 msgid "downloading"
 msgstr "siunčiama"
@@ -2437,13 +2449,13 @@ msgid "Not enough free space"
 msgstr "Nepakanka laisvos vietos"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Klaida parsiunčiant žemėlapį!"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "Klaida įrašant žemėlapį!"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Žemėlapio parsiuntimas nutrauktas!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2510,6 +2522,9 @@ msgstr "Visas ekranas"
 msgid "Window Mode"
 msgstr "Langų režimas"
 
+msgid "Layers"
+msgstr ""
+
 msgid "Description"
 msgstr "Aprašas"
 
@@ -2527,13 +2542,13 @@ msgid "Satellite Status"
 msgstr "Palydovų būsena"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "NMEA duomenys"
 
 msgid "car_shortest"
 msgstr "Automobilis (trumpiausias maršrutas)"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "D"
 
 msgid "car_pedantic"
 msgstr ""
@@ -2572,6 +2587,15 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
+"Dėkui, kad suinstaliavote Navit!\n"
+"\n"
+"Pradėkite pasirinkdami „Parsiųsti žemėlapius“ pagrindiniame meniu. Dėmesio: "
+"Žemėlapių failai gali būti dideli (>50MB) -- rekomenduojame naudoti WiFi "
+"ryšį.\n"
+"\n"
+"Žemėlapių duomenys: (c) OpenStreetMap pagalbininkai\n"
+"\n"
+"Sėkmės naudojant Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2603,7 +2627,7 @@ msgstr "Išeiti iš Navit"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr ""
+msgstr "Atsarginė kopija / Atstatymas"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
@@ -2619,11 +2643,11 @@ msgstr "Siunčiama:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
-msgstr ""
+msgstr "Klaida parsiunčiant žemėlapį."
 
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
-msgstr ""
+msgstr "Žemėlapio parsiuntimas nutrauktas"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
@@ -2643,7 +2667,7 @@ msgstr "Įveskite tikslą"
 
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
-msgstr ""
+msgstr "Dalinis adreso sutapimas"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
@@ -2655,7 +2679,7 @@ msgstr "Adresas nerastas"
 
 #. Android resource: @strings/address_search_getting_results
 msgid "Getting search results"
-msgstr ""
+msgstr "Gaunami paieškos rezultatai"
 
 #. Android resource: @strings/address_search_loading_results
 msgid "Loading search results"
@@ -2695,7 +2719,7 @@ msgstr ""
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "Nepavyko padaryti atsarginės kopijos"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
@@ -2703,7 +2727,7 @@ msgstr "Nerasta atsarginių kopijų"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "Nepavyko atstatyti"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
@@ -2714,6 +2738,8 @@ msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
+"Atstatymas pavyko\n"
+"Paleiskite Navit iš naujo"
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
@@ -2721,7 +2747,7 @@ msgstr "Atsarginė kopija neaptikta"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "Atstatymas nepavyko"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
@@ -2733,7 +2759,7 @@ msgstr ""
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "Atstatyti atasrginę kopiją"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"

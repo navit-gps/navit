@@ -1,5 +1,5 @@
 # Norwegian translations for navit
-# Copyright (C) 2006-2015 The Navit Team
+# Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
@@ -7,15 +7,17 @@
 # Kurt Nielsen https://launchpad.net/~kurtn-penguins
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Skippern https://launchpad.net/~gay-today
+# Svein Jakobsen https://launchpad.net/~svein-jakobsen
 # Thor H. Johansen https://launchpad.net/~thorhajo
 # burner https://launchpad.net/~bendik-xplore
+# kingu https://launchpad.net/~comradekingu
 
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2016-11-20 19:22+0000\n"
+"Last-Translator: Svein Jakobsen <svein.jakobsen@gmail.com>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,11 +79,11 @@ msgstr "sjette avkjøring"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d fot"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "om %d fot"
 
 #, c-format
 msgid "%d.%d miles"
@@ -94,14 +96,14 @@ msgstr ""
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "engelsk mil"
+msgstr[1] "%d engelske mil"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "om ei mil"
+msgstr[1] "om %d engelske mil"
 
 #, c-format
 msgid "%d meters"
@@ -191,7 +193,7 @@ msgstr "Snu når det er mulig"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "mot %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -206,7 +208,7 @@ msgid "Enter the roundabout %s"
 msgstr "Kjør inn i rundkjøringen %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "kjør inn i rundkjøringen"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -225,28 +227,28 @@ msgstr "så"
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "flett sp%1$s|høyre"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Flett %1$s%2$s|høyre"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "flett så%1$s|venstre"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Flett %1$s%2$s|venstre"
 
 msgid "on your left"
-msgstr ""
+msgstr "på venstresiden"
 
 msgid "on your right"
-msgstr ""
+msgstr "på høyresiden"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
@@ -260,10 +262,10 @@ msgstr ""
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "avkjøring"
 
 msgid "at exit"
-msgstr ""
+msgstr "Ved utgang"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -313,7 +315,7 @@ msgstr "skarpt "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "ta deretter %1$s til %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -642,7 +644,7 @@ msgstr "Kapp Verde"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "Curacao"
 
 #. 162
 msgid "Christmas Island"
@@ -974,7 +976,7 @@ msgstr "Latvia"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "Libya"
 
 #. 504
 msgid "Morocco"
@@ -1262,7 +1264,7 @@ msgstr "Surinam"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "Sør-Sudan"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1274,7 +1276,7 @@ msgstr "El Salvador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Saint Martin (Nederlandsk del)"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1464,7 +1466,7 @@ msgid ""
 msgstr ""
 
 msgid "unknown street"
-msgstr ""
+msgstr "Ukjent adresse"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
@@ -1566,7 +1568,7 @@ msgid "_Recalculate"
 msgstr "Omberegn"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "Tegn kartet på nytt"
 
 msgid "_Info"
 msgstr "Info"
@@ -1575,7 +1577,7 @@ msgid "Set _destination"
 msgstr ""
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "Åpne søkedialog for adresser"
 
 msgid "_POI search"
 msgstr ""
@@ -1605,7 +1607,7 @@ msgid "_Keep orientation to the North"
 msgstr ""
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "Bytt kartorientering mellom nord eller kjøretøy"
 
 msgid "_Roadbook"
 msgstr "Kjørebok"
@@ -1626,49 +1628,49 @@ msgid "Data"
 msgstr "Data"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "Apotek"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurant"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "Restaurant / Gatekjøkken"
 
 msgid "Hotel"
-msgstr ""
+msgstr "Hotell"
 
 msgid "Car parking"
-msgstr ""
+msgstr "Parkering"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "Bensinstasjon"
 
 msgid "Bank"
-msgstr ""
+msgstr "Bank"
 
 msgid "Hospital"
-msgstr ""
+msgstr "Sykehus"
 
 msgid "Cinema"
-msgstr ""
+msgstr "Kino"
 
 msgid "Train station"
-msgstr ""
+msgstr "Togstasjon"
 
 msgid "School"
-msgstr ""
+msgstr "Skole"
 
 msgid "Police"
-msgstr ""
+msgstr "Politi"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "Drosje"
 
 msgid "Shopping"
-msgstr ""
+msgstr "Handleområde"
 
 msgid "Distance from screen center (km)"
 msgstr ""
@@ -1693,7 +1695,7 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "Velg en kategori"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
@@ -1702,19 +1704,19 @@ msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "Kategori."
 
 msgid "Direction"
-msgstr ""
+msgstr "Retning"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "Avstand"
 
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 msgid "Visit Before"
 msgstr ""
@@ -1835,7 +1837,7 @@ msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "Slett mappe"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1851,13 +1853,13 @@ msgstr "Bokmerk %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "Last ned %s"
 
 msgid "Map Download"
 msgstr ""
 
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 msgid "Download Enabled"
 msgstr ""
@@ -1968,8 +1970,14 @@ msgstr "Utseende"
 msgid "Height Profile"
 msgstr "Høydeprofil"
 
-msgid "Route Description"
+msgid "please install a map *.heightlines.bin to provide elevationdata"
 msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
+msgid "Route Description"
+msgstr "Rutebeskrivelse"
 
 msgid "Show Locale"
 msgstr ""
@@ -1996,10 +2004,10 @@ msgid "House number"
 msgstr "Husnummer"
 
 msgid "Next"
-msgstr ""
+msgstr "Neste."
 
 msgid "Prev"
-msgstr ""
+msgstr "Forrige"
 
 msgid "Return to route!"
 msgstr ""
@@ -2017,14 +2025,10 @@ msgstr ""
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
 msgstr ""
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
@@ -2044,8 +2048,12 @@ msgid ""
 "a smaller one."
 msgstr ""
 
-msgid "Cancel"
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
 msgstr ""
+
+msgid "Cancel"
+msgstr "Avbryt."
 
 msgid "filenamePath"
 msgstr ""
@@ -2059,73 +2067,73 @@ msgid "Whole Planet"
 msgstr ""
 
 msgid "Africa"
-msgstr ""
+msgstr "Afrika"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "Kanariøyene"
 
 msgid "Asia"
-msgstr ""
+msgstr "Asia"
 
 msgid "Korea"
-msgstr ""
+msgstr "Korea"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 msgid "UAE+Other"
 msgstr ""
 
 msgid "Oceania"
-msgstr ""
+msgstr "Oceania"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmania"
 
 msgid "Victoria"
-msgstr ""
+msgstr "Victoria"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "New South Wales"
 
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "Vest-Europa"
 
 msgid "Azores"
-msgstr ""
+msgstr "Azorene"
 
 msgid "BeNeLux"
 msgstr ""
 
 msgid "Alsace"
-msgstr ""
+msgstr "Alsace"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "Aquitaine"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "Auvergne"
 
 msgid "Basse-Normandie"
 msgstr ""
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "Bourgogne"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "Bretagne"
 
 msgid "Centre"
-msgstr ""
+msgstr "Midtstill"
 
 msgid "Champagne-Ardenne"
 msgstr ""
 
 msgid "Corse"
-msgstr ""
+msgstr "Corse"
 
 msgid "Franche-Comte"
 msgstr ""
@@ -2140,10 +2148,10 @@ msgid "Languedoc-Roussillon"
 msgstr ""
 
 msgid "Limousin"
-msgstr ""
+msgstr "Limousin"
 
 msgid "Lorraine"
-msgstr ""
+msgstr "Lorraine"
 
 msgid "Midi-Pyrenees"
 msgstr ""
@@ -2155,10 +2163,10 @@ msgid "Pays-de-la-Loire"
 msgstr ""
 
 msgid "Picardie"
-msgstr ""
+msgstr "Picardie"
 
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "Poitou-Charentes"
 
 msgid "Provence-Alpes-Cote-d-Azur"
 msgstr ""
@@ -2173,7 +2181,7 @@ msgid "Bayern"
 msgstr ""
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "Mittelfranken"
 
 msgid "Niederbayern"
 msgstr ""
@@ -2194,16 +2202,16 @@ msgid "Unterfranken"
 msgstr ""
 
 msgid "Berlin"
-msgstr ""
+msgstr "Berlin"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "Brandenburg"
 
 msgid "Bremen"
-msgstr ""
+msgstr "Bremen"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "Hamburg"
 
 msgid "Hessen"
 msgstr ""
@@ -2221,7 +2229,7 @@ msgid "Rheinland-Pfalz"
 msgstr ""
 
 msgid "Saarland"
-msgstr ""
+msgstr "Saarland"
 
 msgid "Sachsen-Anhalt"
 msgstr ""
@@ -2230,7 +2238,7 @@ msgid "Sachsen"
 msgstr ""
 
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "Schleswig-Holstein"
 
 msgid "Thueringen"
 msgstr ""
@@ -2242,16 +2250,16 @@ msgid "Galicia"
 msgstr ""
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "Skandinavia"
 
 msgid "England"
-msgstr ""
+msgstr "England"
 
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "Buckinghamshire"
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "Cambridgeshire"
 
 msgid "Cumbria"
 msgstr ""
@@ -2260,67 +2268,67 @@ msgid "East yorkshire with hull"
 msgstr ""
 
 msgid "Essex"
-msgstr ""
+msgstr "Essex"
 
 msgid "Herefordshire"
-msgstr ""
+msgstr "Herefordshire"
 
 msgid "Kent"
-msgstr ""
+msgstr "Kent"
 
 msgid "Lancashire"
-msgstr ""
+msgstr "Lancashire"
 
 msgid "Leicestershire"
-msgstr ""
+msgstr "Leicestershire"
 
 msgid "Norfolk"
-msgstr ""
+msgstr "Norfolk"
 
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "Nottinghamshire"
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "Oxfordshire"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "Shropshire"
 
 msgid "Somerset"
-msgstr ""
+msgstr "Somerset"
 
 msgid "South yorkshire"
 msgstr ""
 
 msgid "Suffolk"
-msgstr ""
+msgstr "Suffolk"
 
 msgid "Surrey"
-msgstr ""
+msgstr "Surrey"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "Wiltshire"
 
 msgid "Scotland"
-msgstr ""
+msgstr "Skottland"
 
 msgid "Wales"
-msgstr ""
+msgstr "Wales"
 
 msgid "Crete"
-msgstr ""
+msgstr "Kreta"
 
 msgid "North America"
-msgstr ""
+msgstr "Nord-Amerika"
 
 msgid "Alaska"
-msgstr ""
+msgstr "Alaska"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "Hawaii"
 
 msgid "USA"
-msgstr ""
+msgstr "USA"
 
 msgid " (except Alaska and Hawaii)"
 msgstr ""
@@ -2329,85 +2337,85 @@ msgid "Midwest"
 msgstr ""
 
 msgid "Michigan"
-msgstr ""
+msgstr "Michigan"
 
 msgid "Ohio"
-msgstr ""
+msgstr "Ohio"
 
 msgid "Northeast"
-msgstr ""
+msgstr "Nordøst"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "Massachusetts"
 
 msgid "Vermont"
-msgstr ""
+msgstr "Vermont"
 
 msgid "Pacific"
-msgstr ""
+msgstr "Stillehavet"
 
 msgid "South"
-msgstr ""
+msgstr "Sør"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "Arkansas"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "District of Columbia"
 
 msgid "Florida"
-msgstr ""
+msgstr "Florida"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "Louisiana"
 
 msgid "Maryland"
-msgstr ""
+msgstr "Maryland"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "Mississippi"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "Oklahoma"
 
 msgid "Texas"
-msgstr ""
+msgstr "Texas"
 
 msgid "Virginia"
-msgstr ""
+msgstr "Virginia"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "West Virginia"
 
 msgid "West"
-msgstr ""
+msgstr "Vest"
 
 msgid "Arizona"
-msgstr ""
+msgstr "Arizona"
 
 msgid "California"
-msgstr ""
+msgstr "California"
 
 msgid "Colorado"
-msgstr ""
+msgstr "Colorado"
 
 msgid "Idaho"
-msgstr ""
+msgstr "Idaho"
 
 msgid "Montana"
-msgstr ""
+msgstr "Montana"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "New Mexico"
 
 msgid "Nevada"
-msgstr ""
+msgstr "Nevada"
 
 msgid "Oregon"
-msgstr ""
+msgstr "Oregon"
 
 msgid "Utah"
-msgstr ""
+msgstr "Utah"
 
 msgid "Washington State"
 msgstr ""
@@ -2419,11 +2427,11 @@ msgid "Guyane Francaise"
 msgstr ""
 
 msgid "downloading"
-msgstr ""
+msgstr "laster ned"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr ""
+msgstr "klar"
 
 msgid "Media selected for map storage is not available"
 msgstr ""
@@ -2433,7 +2441,7 @@ msgid "Not enough free space"
 msgstr ""
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Feil under nedlastning av kart!"
 
 msgid "Error writing map!"
 msgstr ""
@@ -2443,7 +2451,7 @@ msgstr ""
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr ""
+msgstr "Beregnet sluttid"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
@@ -2486,7 +2494,7 @@ msgid ""
 msgstr ""
 
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordinater"
 
 msgid ""
 "Stop\n"
@@ -2503,6 +2511,9 @@ msgstr "Fullskjerm"
 
 msgid "Window Mode"
 msgstr "Vindusmodus"
+
+msgid "Layers"
+msgstr ""
 
 msgid "Description"
 msgstr "Beskrivelse"
@@ -2536,12 +2547,12 @@ msgid "horse"
 msgstr "hest"
 
 msgid "Truck"
-msgstr ""
+msgstr "Lastebil"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr ""
+msgstr "Ja."
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
@@ -2577,11 +2588,11 @@ msgstr ""
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr ""
+msgstr "Zoom inn"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr ""
+msgstr "Zoom ut"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
@@ -2641,7 +2652,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr ""
+msgstr "Søker ..."
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2657,7 +2668,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr ""
+msgstr "Fant ingen resultater"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
@@ -2669,7 +2680,7 @@ msgstr ""
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr ""
+msgstr "Velg en handling"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
@@ -2677,11 +2688,11 @@ msgstr ""
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr ""
+msgstr "Sikkerhetskopierer..."
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr ""
+msgstr "Gjenoppretter..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2689,7 +2700,7 @@ msgstr ""
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "Sikkerhetskopiering feilet"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
@@ -2723,11 +2734,11 @@ msgstr ""
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "Ta sikkerhetskopi"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "Gjenopprett"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"

@@ -217,6 +217,9 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 	struct menu_data *md;
 	int first_available_key_found = 0;
 
+	if (!this->keyboard)
+		return;
+
 	md=gui_internal_menu_data(this);
 	if (md && md->keyboard && !(this->flags & 2048)) {
 		GList *lk=md->keyboard->children;
@@ -328,21 +331,24 @@ gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_r
 	return resultlist_entry;
 }
 
+/**
+ * @brief List of possible next keys/characters given the current result list of the incremental search.
+ */
+char possible_keys_incremental_search[256]="";
+
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
 	char *result_main_label=NULL,*result_sublabel=NULL,*item_name=NULL, *widget_name=NULL, *search_text;
 	struct search_list_result *res;
 	struct item *item=NULL;
-	static char possible_keys[256]="";
-        struct widget *search_input=NULL;
+	struct widget *search_input=NULL;
 	struct widget *menu, *resultlist_row, *resultlist_entry;
 
 	res=search_list_get_result(this->sl);
 	if (!res) {
 		gui_internal_search_idle_end(this);
-		gui_internal_highlight_possible_keys(this, possible_keys);
-		possible_keys[0]='\0';
+		gui_internal_highlight_possible_keys(this, possible_keys_incremental_search);
 		return;
 	}
 
@@ -379,7 +385,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	dbg_assert(search_input);
 	search_text=search_input->text;
 
-	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys, item_name);
+	gui_internal_find_next_possible_key(search_text, wm_name, possible_keys_incremental_search, item_name);
 
 	resultlist_row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill);
 	if (!result_sublabel)
@@ -418,6 +424,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 	void *param=(void *)3;
 
 	gui_internal_widget_table_clear(this, search_list);
+	possible_keys_incremental_search[0]='\0';
 
 	if (! strcmp(wm->name,"Country"))
 		param=(void *)4;
@@ -442,13 +449,9 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 			search_attr.type=attr_house_number;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
-		// Text is not necessarily entered via the on-screen keyboard,
-		// but we now switch it to lower case anyway.
-		gui_internal_keyboard_to_lower_case(this);
 		gui_internal_search_idle_start(this, wm->name, search_list, param);
 	} else {
 		// If not enough content is entered, we highlight all keys.
-		gui_internal_keyboard_to_upper_case(this);
 		gui_internal_highlight_possible_keys(this, "");
 	}
 	l=g_list_last(this->root.children);
@@ -581,6 +584,8 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 	wk->name=g_strdup(type);
 	if (this->keyboard)
 		gui_internal_widget_append(w, gui_internal_keyboard(this, keyboard_mode));
+	else
+		gui_internal_keyboard_show_native(this, w, keyboard_mode, getenv("LANG"));
 	gui_internal_menu_render(this);
 }
 

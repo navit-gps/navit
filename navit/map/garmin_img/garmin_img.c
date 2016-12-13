@@ -1508,6 +1508,6 @@ map_new_garmin_img(struct map_methods *meth, struct attr **attrs)
 void
 plugin_init(void)
 {
-	plugin_register_map_type("garmin_img", map_new_garmin_img);
+	plugin_register_category_map("garmin_img", map_new_garmin_img);
 }
 
