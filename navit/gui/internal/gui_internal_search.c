@@ -192,7 +192,11 @@ gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *poss
 {
 	gchar* trunk_name;
 	if (item_name) {
-		trunk_name = g_strrstr(item_name, search_text);
+		char* tmp = g_strrstr(item_name, search_text);
+		trunk_name = linguistics_expand_special(tmp?tmp:item_name,1);
+		if(!trunk_name){
+			trunk_name = tmp;
+		}
 		if (trunk_name) {
 			char next_char = trunk_name[strlen(search_text)];
 			int i;
