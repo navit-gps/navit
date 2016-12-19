@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2016 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
+# Anton https://launchpad.net/~goooglist
 # KaZeR https://launchpad.net/~kazer
 # Knedlyk https://launchpad.net/~yupadmin
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
@@ -12,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:01+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
+"PO-Revision-Date: 2016-12-17 00:03+0000\n"
+"Last-Translator: Anton <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2703,41 +2704,43 @@ msgstr ""
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr ""
+msgstr "Резервної копії не знайдено"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "Помилка відновлення"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr ""
+msgstr "Відновлення вдале"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
+"Відновлення вдале. \n"
+"Будь ласка, перезавантажте Navit"
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr ""
+msgstr "Резервної копії не знайдено"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "Відновлення невдале"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "Оберіть резервну копію"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "Резервна копія"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "Відновлення"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
