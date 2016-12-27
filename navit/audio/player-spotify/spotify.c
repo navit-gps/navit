@@ -354,15 +354,14 @@ action_do(struct audio_priv *this, const int action)
 		}
 		case AUDIO_PLAYBACK_NEXT_TRACK:{
 			++g_track_index;
-			// call next track here
-			 
+			try_jukebox_start();
 			break;
 		}
 		case AUDIO_PLAYBACK_PREVIOUS_TRACK:{
 			if (g_track_index > 0)
 			{
 				--g_track_index;
-				// call previous track here
+				try_jukebox_start();
 			}
 			break;
 		}
