@@ -436,7 +436,7 @@ current_track(struct audio_priv *this)
 char*
 current_playlist(struct audio_priv *this)
 {
-	return g_jukeboxlist;
+	return sp_playlist_name(g_jukeboxlist);
 }
 
 
