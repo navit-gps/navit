@@ -248,7 +248,7 @@ static struct audio_methods output_alsa_meth = {
 };
 
 static struct audio_priv *
-output_alsa_new(struct audio_methods *meth, struct attr **attrs, struct attr *parent) {
+output_alsa_new(struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent) {
 	struct audio_priv *this;
 	struct attr *attr;
 	if (!parent || parent->type != attr_navit)

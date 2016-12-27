@@ -1398,8 +1398,7 @@ audio_volume_do(struct navit *this, int direction)
 		dbg(lvl_info,"Went thru one plugin at %p with name %s\n", a, a->name);
 		if(a->meth.volume && a->meth.volume != 0xffffffff ) {
 			dbg(lvl_info,"Found a volume method at %p in plugin %s\n", a->meth.volume, a->name);
-			int (*f)(struct audio_priv *this, const int direction)=a->meth.volume+1;
-			dbg(lvl_info,"Relocating at %p \n", f);
+			int (*f)(struct audio_priv *this, const int direction)=a->meth.volume;
 			f(a->priv, direction);
 		}
 		l=g_list_next(l);
