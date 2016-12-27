@@ -1602,8 +1602,7 @@ audio_get_current_playlist(struct navit *this)
 		dbg(lvl_info,"Went thru one plugin at %p with name %s\n", a, a->name);
 		if(a->meth.current_playlist && a->meth.current_playlist != 0xffffffff ) {
 			dbg(lvl_info,"Found a current_playlist method at %p in plugin %s\n", a->meth.current_playlist, a->name);
-			GList * (*f)(struct audio_priv *this)=a->meth.current_playlist+0;
-			dbg(lvl_info,"Relocating at %p \n", f);
+			GList * (*f)(struct audio_priv *this)=a->meth.current_playlist;
 			ret=f(a->priv);
 		}
 		l=g_list_next(l);
