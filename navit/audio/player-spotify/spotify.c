@@ -423,7 +423,11 @@ action_do(struct audio_priv *this, const int action)
 char*
 current_track(struct audio_priv *this)
 {
-	return g_currenttrack;
+    if (g_currenttrack) {
+	return sp_track_name(g_currenttrack);
+    } else {
+	return "";
+    }
 }
 
 /**
@@ -436,7 +440,11 @@ current_track(struct audio_priv *this)
 char*
 current_playlist(struct audio_priv *this)
 {
+    if (g_jukeboxlist) {
 	return sp_playlist_name(g_jukeboxlist);
+    } else {
+	return "";
+    }
 }
 
 
