@@ -29,7 +29,7 @@ else
   make apkg && mv $BUILD_PATH/navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
 fi
 
-cp $BUILD_PATH/navit/android/bin/navit/*.xml $CIRCLE_ARTIFACTS/android/
+cp $BUILD_PATH/navit/*.xml $CIRCLE_ARTIFACTS/android-${ARCH}/
 
 echo
 echo "Build leftovers :"
