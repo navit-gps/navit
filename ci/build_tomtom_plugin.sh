@@ -36,12 +36,12 @@ mkdir -p ~/tomtom_assets
 
 if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
  then 
-  wget -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
+  wget -nv -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
 fi
 
 if ! test -f "~/tomtom_assets/libpng-1.6.27.tar.gz"
 then 
-  wget -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.27.tar.gz -P ~/tomtom_assets
+  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.27.tar.gz -P ~/tomtom_assets
 fi
 
 # toolchain
@@ -52,7 +52,7 @@ tar xzf ~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz 
 # espeak
 cd /tmp
 # this one includes the precompiled voices
-wget -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
+wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
 unzip espeak-1.48.04-source.zip
 cd espeak-1.48.04-source
 sed -i "s/PREFIX=\/usr//g" src/Makefile
@@ -177,7 +177,7 @@ arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include espeakdsp.c -o espeakd
 
 # zlib
 cd /tmp
-wget -c http://zlib.net/zlib-1.2.8.tar.gz
+wget -nv -c http://zlib.net/zlib-1.2.8.tar.gz
 tar xzf zlib-1.2.8.tar.gz
 cd zlib-1.2.8
 ./configure --prefix=$PREFIX
@@ -186,7 +186,7 @@ make install
 
 # libxml
 cd /tmp/
-wget -c http://xmlsoft.org/sources/libxml2-2.7.8.tar.gz
+wget -nv -c http://xmlsoft.org/sources/libxml2-2.7.8.tar.gz
 tar xzf libxml2-2.7.8.tar.gz
 cd libxml2-2.7.8/
 ./configure --prefix=$PREFIX --host=$ARCH --without-python
@@ -203,7 +203,7 @@ make install
 
 
 cd /tmp
-wget -c http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.tar.gz
+wget -nv -c http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.tar.gz
 tar xzf freetype-2.5.0.tar.gz
 cd freetype-2.5.0
 ./configure --prefix=$PREFIX --host=$ARCH
@@ -214,7 +214,7 @@ freetype-config --cflags
 
 # glib
 cd /tmp
-wget -c http://ftp.gnome.org/pub/gnome/sources/glib/2.25/glib-2.25.17.tar.gz
+wget -nv -c http://ftp.gnome.org/pub/gnome/sources/glib/2.25/glib-2.25.17.tar.gz
 tar xzf glib-2.25.17.tar.gz
 cd glib-2.25.17
 cat > tomtom.cache << EOF
@@ -249,10 +249,10 @@ make install
 
 
 cd /tmp
-wget -c http://www.libsdl.org/release/SDL-1.2.15.tar.gz
+wget -nv -c http://www.libsdl.org/release/SDL-1.2.15.tar.gz
 tar xzf SDL-1.2.15.tar.gz
 cd SDL-1.2.15
-wget -c http://tracks.yaina.de/source/sdl-fbcon-notty.patch
+wget -nv -c http://tracks.yaina.de/source/sdl-fbcon-notty.patch
 patch -p0 -i sdl-fbcon-notty.patch
 ./configure --prefix=$PREFIX --host=$ARCH \
   --disable-esd --disable-cdrom --disable-joystick --disable-video-x11 \
@@ -273,7 +273,7 @@ export PATH=$PREFIX/bin:$PATH
 
 # sdl image
 cd /tmp
-wget -c http://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.tar.gz
+wget -nv -c http://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.tar.gz
 tar xzf SDL_image-1.2.12.tar.gz
 cd SDL_image-1.2.12
 ./configure --prefix=$PREFIX --host=$ARCH
