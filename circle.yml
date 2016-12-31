@@ -58,6 +58,3 @@ deployment:
     owner: navit-gps
     commands:
       - bash ci/merge_i18n_update.sh
-notify:
-  webhooks:
-    - url: http://62.210.125.30:8000/
