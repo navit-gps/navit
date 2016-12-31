@@ -57,7 +57,4 @@ deployment:
     branch: /i18n.*/
     owner: navit-gps
     commands:
-      - bash ci/submit_i18n_pr.sh
-notify:
-  webhooks:
-    - url: http://62.210.125.30:8000/
+      - bash ci/merge_i18n_update.sh
