@@ -37,4 +37,4 @@ fi
 
 
 # Done with the builds tests. Running some app tests 
-bash run_linux_tests.sh
+bash ci/run_linux_tests.sh
