@@ -34,3 +34,7 @@ fi
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	cp -r navit/xpm $CIRCLE_ARTIFACTS
 fi
+
+
+# Done with the builds tests. Running some app tests 
+bash ~/navit/ci/run_linux_tests.sh
