@@ -62,3 +62,7 @@ if [[ "${CIRCLE_BRANCH}" == "audio_framework" ]]; then
 	echo "SUCCESS"
 	popd
 fi
+
+
+# Done with the builds tests. Running some app tests 
+bash run_linux_tests.sh
