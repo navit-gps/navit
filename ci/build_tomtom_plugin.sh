@@ -6,7 +6,27 @@
 
 set -e
 
-bash ~/navit/ci/setup_tomtom_requirements.sh
+# espeak
+cd /tmp
+# this one includes the precompiled voices
+wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
+unzip espeak-1.48.04-source.zip
+cd espeak-1.48.04-source
+sed -i "s/PREFIX=\/usr//g" src/Makefile
+sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src/Makefile
+sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
+sed -i "s/-fvisibility=hidden//g" src/Makefile
+cat src/Makefile
+make -C src
+cd src
+make install
+
+# http://forum.navit-project.org/viewtopic.php?f=17&t=568
+cd /tmp
+arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ~/navit/contrib/tomtom/espeakdsp.c -o espeakdsp
+
+
+source ~/navit/ci/setup_tomtom_requirements.sh
 
 # sdl test utilities
 cd test
@@ -31,51 +51,6 @@ cat > ~/navit/navit/xpm/tomtom_plus.svg << EOF
 <path fill="none" stroke="#ffffff" stroke-width="20" stroke-linecap="round" d="M 0 60 L 0 -60 M 60 0 L -60 0"/>
 </svg>
 EOF
-
-# espeak
-cd /tmp
-# this one includes the precompiled voices
-wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
-unzip espeak-1.48.04-source.zip
-cd espeak-1.48.04-source
-sed -i "s/PREFIX=\/usr//g" src/Makefile
-sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src/Makefile
-sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
-sed -i "s/-fvisibility=hidden//g" src/Makefile
-cat src/Makefile
-make -C src
-cd src
-make install
-
-# http://forum.navit-project.org/viewtopic.php?f=17&t=568
-cd /tmp
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ~/navit/contrib/tomtom/espeakdsp.c -o espeakdsp
-
-
-# navit
-cd ~/navit
-sed -i "s|set ( TOMTOM_SDK_DIR /opt/tomtom-sdk )|set ( TOMTOM_SDK_DIR $TOMTOM_SDK_DIR )|g" /tmp/$ARCH.cmake
-mkdir -p build
-cd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE \
--DHAVE_API_TOMTOM=TRUE -DXSLTS=tomtom -DAVOID_FLOAT=TRUE -Dmap/mg=FALSE -DUSE_PLUGINS=0 -DCMAKE_TOOLCHAIN_FILE=/tmp/$ARCH.cmake \
--DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
-make -j$JOBS
-make install
-cd ..
-
-
-# creating directories
-OUT_PATH="/tmp/tomtom/sdcard"
-rm -rf $OUT_PATH
-mkdir -p $OUT_PATH
-cd $OUT_PATH
-mkdir -p navit SDKRegistry
-cd navit
-mkdir -p bin lib share sdl ts
-cd share 
-mkdir -p fonts
-cd ..
 
 
 cp $PREFIX/lib/libfreetype.so.6 lib
