@@ -7,7 +7,7 @@
 
 set -e
 
-bash setup_tomtom_requirements.sh
+bash ~/navit/ci/setup_tomtom_requirements.sh
 
 
 # navit

@@ -6,7 +6,6 @@ dependencies:
     - ~/.android
     - ~/android
     - "~/assets/"
-    - ~/tomtom_assets
   pre:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
