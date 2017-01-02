@@ -15,7 +15,7 @@ wget http://sd-55475.dedibox.fr/berkeley.bin -O maps/berkeley.bin
 
 mkdir $CIRCLE_ARTIFACTS/logs
 
-./navit >$CIRCLE_ARTIFACTS/logs/stdout.txt 2>$CIRCLE_ARTIFACTS/logs/stderr.txt
+./navit >$CIRCLE_ARTIFACTS/logs/stdout.txt 2>$CIRCLE_ARTIFACTS/logs/stderr.txt &
 pid=$!
 
 sleep 5
