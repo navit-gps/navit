@@ -1,4 +1,6 @@
-sudo apt-get install xdotools
+sudo apt-get install xdotool
+
+[ -d $CIRCLE_ARTIFACTS/frames/ ] || mkdir $CIRCLE_ARTIFACTS/frames/
 
 event=0
 
@@ -6,7 +8,13 @@ send_event (){
     xdotool $@
     sleep 1
     file=`printf "%05d\n" $event`
-    import -window root $CIRCLE_ARTIFACTS/frames/${file}.png
+
+    import -window root $CIRCLE_ARTIFACTS/frames/tmp.png
+    if [[ "$1" == "mousemove" ]]; then
+    	composite -geometry +$2+$3 ~/navit/ci/pointer-64.png $CIRCLE_ARTIFACTS/frames/tmp.png $CIRCLE_ARTIFACTS/frames/${file}.png
+    else
+	mv $CIRCLE_ARTIFACTS/frames/tmp.png $CIRCLE_ARTIFACTS/frames/${file}.png
+    fi
     event=$((event+1))
 }
 
@@ -32,4 +40,4 @@ send_event mousemove 150 100 click 1
 send_event mousemove 150 280 click 1
 
 # Assemble the gif
-convert   -delay 200 -loop 0 $CIRCLE_ARTIFACTS/frames/*.png $CIRCLE_ARTIFACTS/town_search.gif
+convert   -delay 100 -loop 0 $CIRCLE_ARTIFACTS/frames/*.png $CIRCLE_ARTIFACTS/town_search.gif
