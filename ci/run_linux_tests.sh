@@ -17,6 +17,8 @@ sleep 5
 
 import -window root $CIRCLE_ARTIFACTS/default.png
 
+bash ~/navit/ci/xdotools.sh
+
 python ~/navit/ci/dbus_tests.py $CIRCLE_TEST_REPORTS/
 
 dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.quit
