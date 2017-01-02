@@ -19,7 +19,7 @@ sed -i "s/-fvisibility=hidden//g" src/Makefile
 cat src/Makefile
 make -C src
 cd src
-make install
+sudo make install
 
 # http://forum.navit-project.org/viewtopic.php?f=17&t=568
 cd /tmp
