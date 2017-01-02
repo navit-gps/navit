@@ -8,8 +8,12 @@ sed -i -e 's@name="Demo" profilename="car" enabled="no" active="yes"@name="Demo"
 sed -i -e 's@type="internal" enabled@type="internal" fullscreen="1" font_size="350" enabled@' navit.xml
 sed -i -e 's@libbinding_dbus.so" active="no"@libbinding_dbus.so" active="yes"@' navit.xml
 
-./navit &
+mkdir $CIRCLE_ARTIFACTS/logs
+
+./navit >$CIRCLE_ARTIFACTS/logs/stdout.txt 2>$CIRCLE_ARTIFACTS/logs/stderr.txt
 pid=$!
+
+sleep 5
 
 import -window root $CIRCLE_ARTIFACTS/default.png
 
