@@ -137,6 +137,12 @@ patch -p0 -i sdl-fbcon-notty.patch
 make -j$JOBS
 make install
 
+# sdl test utilities
+cd test
+./configure --prefix=$PREFIX --host=$ARCH
+make testvidinfo
+cp testvidinfo $PREFIX/usr/bin/
+
 # to find sdl-config
 export PATH=$PREFIX/bin:$PATH
 
@@ -148,6 +154,8 @@ cd SDL_image-1.2.12
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install
+
+
 
 # espeak
 cd /tmp

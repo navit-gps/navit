@@ -8,12 +8,6 @@ set -e
 
 source ~/navit/ci/setup_tomtom_requirements.sh
 
-# sdl test utilities
-cd test
-./configure --prefix=$PREFIX --host=$ARCH
-make testvidinfo
-cp testvidinfo $PREFIX/usr/bin/
-
 cat > ~/navit/navit/xpm/tomtom_minus.svg << EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
