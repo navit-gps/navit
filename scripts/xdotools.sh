@@ -56,8 +56,11 @@ send_event mousemove 640 450 click 1 # Click 'Settings'
 send_event mousemove 475 450 click 1 # Click 'Display'
 send_event mousemove 870 450 click 1 # Click '3D'
 
-# capture the last image
-import -window root $CIRCLE_ARTIFACTS/frames/99999.png
+# capture 5 seconds of usage
+for i in `seq 99994 99999`; do
+	import -window root $CIRCLE_ARTIFACTS/frames/${i}.png
+	sleep 1
+done
 
 # Assemble the gif
 convert   -delay 100 -loop 0 $CIRCLE_ARTIFACTS/frames/*.png $CIRCLE_ARTIFACTS/town_search.gif
