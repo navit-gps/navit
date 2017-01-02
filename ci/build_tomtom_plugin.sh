@@ -6,26 +6,6 @@
 
 set -e
 
-# espeak
-cd /tmp
-# this one includes the precompiled voices
-wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
-unzip espeak-1.48.04-source.zip
-cd espeak-1.48.04-source
-sed -i "s/PREFIX=\/usr//g" src/Makefile
-sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src/Makefile
-sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
-sed -i "s/-fvisibility=hidden//g" src/Makefile
-cat src/Makefile
-make -C src
-cd src
-sudo make install
-
-# http://forum.navit-project.org/viewtopic.php?f=17&t=568
-cd /tmp
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ~/navit/contrib/tomtom/espeakdsp.c -o espeakdsp
-
-
 source ~/navit/ci/setup_tomtom_requirements.sh
 
 # sdl test utilities
