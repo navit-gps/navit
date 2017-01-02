@@ -53,8 +53,8 @@ tar xzf ~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz 
 
 # zlib
 cd /tmp
-wget -nv -c http://zlib.net/zlib-1.2.9.tar.gz
-tar xzf zlib-1.2.9.tar.gz
+wget -nv -c https://github.com/madler/zlib/archive/v1.2.9.zip -O zlib-1.2.9.zip
+unzip zlib-1.2.9.zip
 cd zlib-1.2.9
 ./configure --prefix=$PREFIX
 make -j$JOBS
