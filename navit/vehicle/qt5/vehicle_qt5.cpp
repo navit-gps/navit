@@ -296,5 +296,5 @@ void
 plugin_init(void)
 {
 	dbg(lvl_debug, "enter\n");
-        plugin_register_vehicle_type("qt5", vehicle_qt5_new_qt5);
+        plugin_register_category_vehicle("qt5", vehicle_qt5_new_qt5);
 }
