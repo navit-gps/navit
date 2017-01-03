@@ -733,7 +733,7 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
         /* get font plugin if present */
-	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
+	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_category_font("freetype");
 	if (!font_freetype_new) {
 		dbg(lvl_error,"no freetype\n");
 		return NULL;
@@ -774,6 +774,6 @@ void
 plugin_init(void)
 {
 //        dbg(lvl_debug,"enter\n");
-        plugin_register_graphics_type("qt5", graphics_qt5_new);
+        plugin_register_category_graphics("qt5", graphics_qt5_new);
         qt5_event_init();
 }
