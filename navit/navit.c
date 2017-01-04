@@ -3662,7 +3662,7 @@ static int
 navit_add_audio(struct navit *this_, struct audio *a)
 {
 
-        dbg(lvl_error,"starting navit_add_audio\n");
+        dbg(lvl_info,"starting navit_add_audio\n");
         if(!a) return 0;
         if(!this_) return 0;
         struct navit_audio_plugin *na=g_new0(struct navit_audio_plugin, 1);
@@ -3676,7 +3676,7 @@ navit_add_audio(struct navit *this_, struct audio *a)
 		audio_add_attr(na->audio, &na->callback);
 		na->callback.u.callback=callback_new_attr_3(callback_cast(navit_audio_update_status), attr_repeat, this_, na, attr_repeat);
 		audio_add_attr(na->audio, &na->callback);
-        dbg(lvl_error,"Adding one plugin at %p\n", a);
+        dbg(lvl_info,"Adding one plugin at %p\n", a);
         this_->audio_plugins=g_list_append(this_->audio_plugins, na);
         audio_set_attr(na->audio, &this_->self);
         return 1;
