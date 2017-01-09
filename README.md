@@ -1,5 +1,13 @@
 [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit)
 
+Navit on Android tablet:
+
+![navit on android](http://wiki.openstreetmap.org/w/images/2/25/Navit_android.png)
+
+Navit on Linux based Carputer:
+
+![navit-nuc-osd](https://github.com/pgrandin/navit-nuc-layout/raw/master/screenshot.png)
+
 NavIT
 =====
 
