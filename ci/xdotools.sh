@@ -21,40 +21,60 @@ send_event (){
 
 
 # Center the view
-send_event mousemove 450 475 click 1 # Open main menu
-send_event mousemove 450 475 click 1 # Click 'Actions'
-send_event mousemove 420 600 click 1 # Click 'Town'
+send_event key KP_Enter # Open main menu
+send_event key Down     # Select 'Actions'
+send_event key KP_Enter # Validate
+send_event key Down     # Scroll to 'Bookmarks'
+send_event key Right    # Scroll to 'Former destinations'
+send_event key Right    # Select 'Town'
+send_event key KP_Enter # Validate
 # Send 'Berk'
 send_event key b
 send_event key e
 send_event key r
 send_event key k
-send_event mousemove 100 100 click 1 # Click on the first result
-send_event mousemove 150 280 click 1 # Click 'view on map'
+send_event key Down     # Highlight search area
+send_event key Down     # Highlight first result
+send_event key KP_Enter # Validate
 
 # Set the position
 send_event mousemove 482 318 click 1 # Open main menu, clicking on a somewhat random position on the map
-send_event mousemove 450 475 click 1 # Click 'Actions'
-send_event mousemove 850 430 click 1 # Click 'Coordinates'
-send_event mousemove 180 120 click 1 # Click 'Set as position'
+send_event key Down     # Select 'Actions'
+send_event key KP_Enter # Validate
+send_event key Down     # Scroll to 'Bookmarks'
+send_event key Right    # Scroll to 'Former destinations'
+send_event key Right    # Select current coordinates
+send_event key KP_Enter # Validate
 
 # Set a destination
-send_event mousemove 450 475 click 1 # Open main menu
-send_event mousemove 450 475 click 1 # Click 'Actions'
-send_event mousemove 420 600 click 1 # Click 'Town'
+send_event key KP_Enter # Open main menu
+send_event key Down     # Select 'Actions'
+send_event key KP_Enter # Validate
+send_event key Down     # Scroll to 'Bookmarks'
+send_event key Right    # Scroll to 'Former destinations'
+send_event key Right    # Select 'Town'
+send_event key KP_Enter # Validate
 # Send 'oakl'
 send_event key o
 send_event key a
 send_event key k
 send_event key l
-send_event mousemove 100 100 click 1 # Click on the first result
-send_event mousemove 150 150 click 1 # Click 'set as destination'
+send_event key Down     # Highlight search area
+send_event key Down     # Highlight first result
+send_event key KP_Enter # Validate
 
 # Switch to 3d view
-send_event mousemove 640 450 click 1 # Open main menu
-send_event mousemove 640 450 click 1 # Click 'Settings'
-send_event mousemove 475 450 click 1 # Click 'Display'
-send_event mousemove 870 450 click 1 # Click '3D'
+send_event key KP_Enter # Open main menu
+send_event key Down     # Select 'Actions'
+send_event key Right    # Select 'Settings'
+send_event key KP_Enter # Validate
+send_event key Down     # Select 'Display'
+send_event key KP_Enter # Validate
+send_event key Down     # Scroll to 'Layout'
+send_event key Right    # Scroll to 'Fullscreen'
+send_event key Right    # Select '3d'
+send_event key KP_Enter # Validate
+# Send 'Berk'
 
 # capture 5 seconds of usage
 for i in `seq 99994 99999`; do
