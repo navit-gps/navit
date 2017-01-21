@@ -7,7 +7,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <libgen.h>
 
+#define espeakpath "/mnt/sdcard/navit/bin/espeak"
 #define IBUFFERLEN 1024
 #define MAXARGC 30
 
@@ -51,9 +53,9 @@ int  main(int argc, char *argv[],char *envp[])
 	{    /* Child writes to pipe */
 
 		close(pipefd[0]);          /* Close unused read end */
-		dup2(pipefd[1],1);	
-		execve("/mnt/sdcard/navit/bin/espeak",newargv,envp);	      
-		perror("exec /mnt/sdcard/navit/bin/espeak");	
+		dup2(pipefd[1],1);
+		execve(espeakpath,newargv,envp);	      
+		perror(espeakpath);	
 		close(pipefd[1]);          /* Reader will see EOF */
 		wait(NULL);                /* Wait for child */
 		exit(EXIT_SUCCESS);
@@ -73,12 +75,6 @@ int  main(int argc, char *argv[],char *envp[])
 			exit(EXIT_SUCCESS);
 		}
 		l=read(pipefd[0],bufi,IBUFFERLEN);
-		if(l<500)
-		{
-			printf("espeakdsp: avoid noise speaking a empty string\n");
-			exit(EXIT_SUCCESS); 	
-		} 			
-		usleep (50000);
 
 		fh=open("/dev/dsp",O_WRONLY);
 		if(fh<0)
@@ -90,7 +86,7 @@ int  main(int argc, char *argv[],char *envp[])
 		ioctl(fh, SNDCTL_DSP_SYNC, 0);
 		while(l)
 		{
-			for(co=0,wp=0;co<IBUFFERLEN;co++)
+			for(co=0,wp=0;(co<IBUFFERLEN)&&(co<l);co++)
 			{
 				bufo[wp++]=bufi[co]; /* mono->stereo */
 				bufo[wp++]=bufi[co];
