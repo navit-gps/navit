@@ -148,6 +148,7 @@ find_package(DBusGLib)
 find_package(PythonLibs)
 find_package(OpenSSL)
 find_package(Threads)
+find_package(CURL)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
@@ -398,6 +399,12 @@ endif(LIBOSSO_FOUND)
 if (GETTEXT_FOUND)
     set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
+
+if (CURL_FOUND)
+    list(APPEND NAVIT_LIBS "-lcurl")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u download_map")
+    set(HAVE_CURL 1)
+endif(CURL_FOUND)
 
 #Independent modules
 add_module(graphics/null "Default" TRUE)

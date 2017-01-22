@@ -35,6 +35,12 @@ struct route_data {
   int route_showing;
 };
 
+struct download_data {
+  struct widget * download_table;
+  int download_showing;
+};
+
+
 /**
  * Private data for the internal GUI.
  *
@@ -91,7 +97,10 @@ struct gui_priv {
 	struct point current;
 
 	struct callback * vehicle_cb;
+	struct event_timeout * download_cb;
+
 	struct route_data route_data;		/**< Stores information about the route. */
+	struct download_data download_data; /**< Stores information about the map downloads */
 
 	struct gui_internal_data data;
 	struct callback_list *cbl;
@@ -224,5 +233,9 @@ struct heightline *item_get_heightline(struct item *item);
 void gui_internal_route_update(struct gui_priv *this, struct navit *navit, struct vehicle *v);
 void gui_internal_route_screen_free(struct gui_priv *this_, struct widget *w);
 void gui_internal_populate_route_table(struct gui_priv *this, struct navit *navit);
+void gui_internal_download_update(struct gui_priv *this);
+void gui_internal_populate_download_table(struct gui_priv *this);
+void gui_internal_download_screen_free(struct gui_priv *this_, struct widget *w);
+
 void plugin_init(void);
 /* end of prototypes */
