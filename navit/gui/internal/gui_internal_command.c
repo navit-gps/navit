@@ -40,6 +40,9 @@
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #endif
+#ifdef HAVE_CURL
+#include "gui_internal_map_downloader.h"
+#endif
 
 static int gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
     struct attr escaped;
@@ -1182,6 +1185,7 @@ static int gui_internal_cmd2(struct gui_priv *this, char *function, struct attr 
 }
 
 static struct command_table commands[] = {
+<<<<<<< HEAD
     {"E",command_cast(gui_internal_cmd_escape)},
     {"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
     {"back",command_cast(gui_internal_cmd2_back)},
@@ -1213,6 +1217,9 @@ static struct command_table commands[] = {
     {"about",command_cast(gui_internal_cmd2)},
 #if HAS_IFADDRS
     {"network_info",command_cast(gui_internal_cmd2)},
+#endif
+#ifdef HAVE_CURL
+    {"map_downloader", command_cast (gui_internal_map_downloader)},
 #endif
 };
 

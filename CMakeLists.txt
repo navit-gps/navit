@@ -238,6 +238,7 @@ find_package(Gettext)
 find_package(PNG)
 find_package(PythonLibs)
 find_package(Threads)
+find_package(CURL)
 
 #Qt detection
 if (NOT DISABLE_QT)
@@ -510,6 +511,12 @@ endif(HAVE_CREATEPROCESS)
 if (GETTEXT_FOUND)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
+
+if (CURL_FOUND)
+    list(APPEND NAVIT_LIBS "-lcurl")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u download_map")
+    set(HAVE_CURL 1)
+endif(CURL_FOUND)
 
 #Independent modules
 add_module(graphics/null "Default" TRUE)
