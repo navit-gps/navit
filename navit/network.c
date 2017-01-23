@@ -15,7 +15,6 @@ ultotal, double ulnow)
   // Could be use to trigger a cancel from the UI
 } 
 
-
 void * download_map(void * arguments)
 {
   struct map_download_info * dl_info = arguments;
@@ -27,20 +26,23 @@ void * download_map(void * arguments)
   handle = curl_easy_init();
 
   curl_easy_setopt(handle, CURLOPT_URL, dl_info->url);
+  // Map server might redirect to a mirror
+  curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
 
   curl_easy_setopt(handle, CURLOPT_PROGRESSDATA, dl_info);
   curl_easy_setopt(handle, CURLOPT_NOPROGRESS, 0); 
   curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION, progressCallBack); 
 
   FILE* file = fopen( "out.bin", "w");
-
   curl_easy_setopt( handle, CURLOPT_WRITEDATA, file) ;
-  curl_easy_perform( handle );
+  res = curl_easy_perform( handle );
+  fclose(file);
 
   if(res != CURLE_OK)
-      fprintf(stderr, "%s\n", curl_easy_strerror(res));
+      dbg(lvl_error, "%s\n", curl_easy_strerror(res));
 
   curl_easy_cleanup(handle);
+  dbg(lvl_error, "download complete\n");
 
   dl_info->downloading = 0;
   return (int)res;;
