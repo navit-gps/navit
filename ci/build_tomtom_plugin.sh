@@ -177,9 +177,9 @@ arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include espeakdsp.c -o espeakd
 
 # zlib
 cd /tmp
-wget -nv -c http://zlib.net/zlib-1.2.10.tar.gz
-tar xzf zlib-1.2.10.tar.gz
-cd zlib-1.2.10
+wget -nv -c http://zlib.net/zlib-1.2.11.tar.gz
+tar xzf zlib-1.2.11.tar.gz
+cd zlib-1.2.11
 ./configure --prefix=$PREFIX
 make -j$JOBS
 make install
