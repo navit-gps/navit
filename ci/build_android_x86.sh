@@ -12,7 +12,7 @@ export ANDROID_SDK_PLATFORM_TOOLS=$ANDROID_SDK"/platform-tools"
 export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
 export BUILD_PATH=$START_PATH"/android-${ARCH}"
 
-wget -nv -c http://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip
+wget -nv -c http://dl.google.com/android/repository/android-ndk-r11c-linux-x86_64.zip
 [ -d ~/android-ndk-r13 ] || unzip -q -d ~ android-ndk-r13-linux-x86_64.zip
 
 [ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
