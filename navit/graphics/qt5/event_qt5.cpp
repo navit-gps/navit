@@ -61,15 +61,15 @@ void qt5_navit_timer :: timerEvent (QTimerEvent * event)
 	int id=event->timerId();
         void* multi = NULL;
 //        dbg(lvl_debug, "TimerEvent (%d)\n", id);
-	struct callback *cb=(struct callback *)g_hash_table_lookup(timer_callback, (void *)id);
+	struct callback *cb=(struct callback *)g_hash_table_lookup(timer_callback, (void *)(long)id);
 	if (cb) 
 		callback_call_0(cb);
         /* remove timer if it was oneshot timer */
-	if (g_hash_table_lookup_extended(timer_type, (void *)id, NULL, &multi))
+	if (g_hash_table_lookup_extended(timer_type, (void *)(long)id, NULL, &multi))
         {
             /* it's still in the list */
-            if(((int)multi) == 0)
-		event_qt5_remove_timeout((struct event_timeout *)id);
+            if(((int)(long)multi) == 0)
+		event_qt5_remove_timeout((struct event_timeout *)(long)id);
         }
 //        dbg(lvl_debug, "TimerEvent (%d) leave\n", id);
 }
@@ -122,9 +122,9 @@ event_qt5_add_timeout(int timeout, int multi, struct callback *cb)
         dbg(lvl_debug,"add timeout %d, mul %d, %p ==",timeout, multi, cb);
 	id=qt5_timer->startTimer(timeout);
         dbg(lvl_debug,"%d\n", id);
-	g_hash_table_insert(qt5_timer->timer_callback, (void *)id, cb);
-	g_hash_table_insert(qt5_timer->timer_type, (void *)id, (void *)!!multi);
-	return (struct event_timeout *)id;
+	g_hash_table_insert(qt5_timer->timer_callback, (void *)(long)id, cb);
+	g_hash_table_insert(qt5_timer->timer_type, (void *)(long)id, (void *)(long)!!multi);
+	return (struct event_timeout *)(long)id;
 }
 
 static void
