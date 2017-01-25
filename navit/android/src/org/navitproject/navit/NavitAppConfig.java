@@ -12,7 +12,7 @@ import org.acra.*;
 import org.acra.annotation.*;
 
 //@ReportsCrashes(formKey = "dGlrNVRIOVVKYjB0UGVoLUZPanlzWFE6MQ")
-@ReportsCrashes(mailTo = "navitcrashing@navitcrashmail.com",
+@ReportsCrashes(mailTo = "android@navit-project.org",
 		mode = ReportingInteractionMode.TOAST,
                 resToastText = R.string.app_name)
 
