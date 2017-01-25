@@ -7,7 +7,12 @@ extern "C" {
 
 struct map_download_info{
 	char url[256];
+	char *name;
+	char *path;
+	char *xml;
 	int downloading;
+	int resume;
+	FILE * stream;
 	double dl_now;
 	double dl_total;
 };
