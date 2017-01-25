@@ -303,8 +303,8 @@ public class Navit extends Activity
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 //		FIXME : needs a fix for sdk 23
 //		NavitNotification.setLatestEventInfo(getApplicationContext(), "Navit", getString(R.string.notification_event_default), appIntent);	// Set the text in the notification
-		NavitNotification.flags|=Notification.FLAG_ONGOING_EVENT;	// Ensure that the notification appears in Ongoing
-		nm.notify(R.string.app_name, NavitNotification);	// Set the notification
+//		NavitNotification.flags|=Notification.FLAG_ONGOING_EVENT;	// Ensure that the notification appears in Ongoing
+//		nm.notify(R.string.app_name, NavitNotification);	// Set the notification
 		
 		// Status and navigation bar sizes
 		// These are platform defaults and do not change with rotation, but we have to figure out which ones apply
@@ -864,8 +864,8 @@ public class Navit extends Activity
 
 	public void exit()
 	{
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		nm.cancel(R.string.app_name);
+//		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//		nm.cancel(R.string.app_name);
 		NavitVehicle.removeListener();
 		NavitDestroy();
 	}
