@@ -91,9 +91,12 @@ graphics_destroy(struct graphics_priv *gr)
         /* destroy overlays hash */
         g_hash_table_destroy(gr->overlays);
         /* destroy global application if destroying the last */
-        if(gr->argc > 0 && navit_app != NULL)
+        if(gr->argc > 0)
         {
-                delete (navit_app);
+                if(navit_app != NULL)
+                {
+                        delete (navit_app);
+                }
                 navit_app = NULL;
                 /* destroy argv if any */
                 while(gr->argc > 0)
