@@ -90,6 +90,19 @@ graphics_destroy(struct graphics_priv *gr)
 #endif
         /* destroy overlays hash */
         g_hash_table_destroy(gr->overlays);
+        /* destroy global application if destroying the last */
+        if(gr->argc > 0 && navit_app != NULL)
+        {
+                delete (navit_app);
+                navit_app = NULL;
+                /* destroy argv if any */
+                while(gr->argc > 0)
+                {
+                        gr->argc --;
+                        if(gr->argv[gr->argc] != NULL)
+                                g_free(gr->argv[gr->argc]);
+                }
+        }
         /* destroy self */
         g_free(gr);
 }
@@ -701,6 +714,8 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
         graphics_priv->use_count = 0;
         graphics_priv->parent = gr;
         graphics_priv->overlays=g_hash_table_new(NULL, NULL);
+        graphics_priv->argc=0;
+        graphics_priv->argv[0] = NULL;
         /* register on parent */
         g_hash_table_insert(gr->overlays, graphics_priv, graphics_priv);
 //        dbg(lvl_debug,"New overlay: %p\n", graphics_priv);
@@ -708,15 +723,13 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	return graphics_priv;
 }
 
-static int argc=3;
-static char *argv[]={"navit","-platform","wayland", NULL};
-
 /* create application and initial graphics context */
 static struct graphics_priv *
 graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
         struct graphics_priv * graphics_priv = NULL;
 	struct attr *event_loop_system = NULL;
+	struct attr * platform=NULL;
 	*meth=graphics_methods;
 //        dbg(lvl_debug,"enter\n");
 
@@ -730,6 +743,7 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 		if (!event_request_system("qt5", "graphics_qt5"))
                         return NULL;
 	}
+
 #ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
         /* get font plugin if present */
@@ -741,10 +755,21 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #endif
 
         
-        /* create surrounding application */
-        navit_app = new QApplication(argc, argv);
         /* create root graphics layer */
         graphics_priv = g_new0(struct graphics_priv, 1);
+        /* Prepare QT argc and argv */
+        graphics_priv->argc = 0;
+        graphics_priv->argv[graphics_priv->argc] = g_strdup("navit");
+        graphics_priv->argc ++;
+        if ((platform=attr_search(attrs, NULL, attr_qt5_platform)))
+        {
+                graphics_priv->argv[graphics_priv->argc] = g_strdup("-platform");
+                graphics_priv->argc ++;
+                graphics_priv->argv[graphics_priv->argc] = g_strdup(platform->u.str);
+                graphics_priv->argc ++;
+        }
+        /* create surrounding application */
+        navit_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
 
 #ifdef QT_QPAINTER_USE_FREETYPE
 	graphics_priv->font_freetype_new=font_freetype_new;
