@@ -6,9 +6,19 @@
 
 #include "sys/stat.h"
 
+/**
+ * Curl callback to provide download updates
+ *
+ * @param dl_info a pointer to a map_download_info where the download updates will be stored
+ * @param dltotal number of total bytes to download, required by libcurl
+ * @param dlnow number of bytes currently downloaded, required by libcurl
+ * @param ultotal number of total bytes to upload, required by libcurl
+ * @param ulnow number of bytes currently downloaded, required by libcurl
+ *
+ * @returns Returns 0 by default, until we implement 'cancel'
+ */
 
-int progressCallBack(struct map_download_info *dl_info, double dltotal, double dlnow, double 
-ultotal, double ulnow) 
+int progressCallBack(struct map_download_info *dl_info, double dltotal, double dlnow, double ultotal, double ulnow)
 { 
   dl_info->dl_now = (curl_off_t)dlnow;
   dl_info->dl_total = (curl_off_t)dltotal;
@@ -17,6 +27,16 @@ ultotal, double ulnow)
   // Could be use to trigger a cancel from the UI
 } 
 
+
+
+/**
+ * Download a map using libcurl
+ *
+ * @param arguments a void * that we can cast to a map_download_info * as this function is intended to be run
+ * 		  within a thread
+ *
+ * @returns Returns curl's result
+ */
 
 void * download_map(void * arguments)
 {
