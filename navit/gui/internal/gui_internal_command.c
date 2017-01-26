@@ -36,7 +36,7 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
-#ifdef HAVE_CURL
+#ifdef USE_DOWNLOAD
 #include "gui_internal_map_downloader.h"
 #endif
 
@@ -1282,7 +1282,7 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
-#ifdef HAVE_CURL
+#ifdef USE_DOWNLOAD
        {"map_downloader", command_cast (gui_internal_map_downloader)},
 #endif
 };

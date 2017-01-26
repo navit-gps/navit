@@ -94,4 +94,4 @@
 
 #cmakedefine HAVE_IMLIB2 1
 
-#cmakedefine HAVE_CURL 1
+#cmakedefine USE_DOWNLOAD 1
