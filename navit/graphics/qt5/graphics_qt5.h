@@ -40,6 +40,8 @@ struct graphics_priv {
 #endif
         GHashTable *overlays;
         struct graphics_priv * parent;
+        int argc;
+        char * argv[4];
 };
 
 struct graphics_gc_priv {
@@ -57,3 +59,4 @@ void
 resize_callback(int w, int h);
 
 #endif
+
