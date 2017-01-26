@@ -69,17 +69,25 @@ void QNavitWidget :: paintEvent(QPaintEvent * event)
         
 }
 
-void QNavitWidget :: do_resize(QSize size)
+void QNavitWidget::resizeEvent(QResizeEvent * event)
 {
-    delete graphics_priv->pixmap;
-    graphics_priv->pixmap=new QPixmap(size);
-    graphics_priv->pixmap->fill();
-    QPainter painter(graphics_priv->pixmap);
-    QBrush brush;
-    painter.fillRect(0, 0, size.width(), size.height(), brush);
-    dbg(lvl_debug,"size %dx%d\n", size.width(), size.height());
-    dbg(lvl_debug,"pixmap %p %dx%d\n", graphics_priv->pixmap, graphics_priv->pixmap->width(), graphics_priv->pixmap->height());
-    resize_callback(size.width(),size.height());
+        QPainter * painter = NULL;
+        if(graphics_priv->pixmap != NULL)
+        {
+                delete graphics_priv->pixmap;
+                graphics_priv->pixmap = NULL;
+        }
+    
+        graphics_priv->pixmap=new QPixmap(size());
+        graphics_priv->pixmap->fill();
+        painter = new QPainter(graphics_priv->pixmap);
+        QBrush brush;
+        painter->fillRect(0, 0, width(), height(), brush);
+        if(painter != NULL)
+           delete painter;
+        dbg(lvl_debug,"size %dx%d\n", width(), height());
+        dbg(lvl_debug,"pixmap %p %dx%d\n", graphics_priv->pixmap, graphics_priv->pixmap->width(), graphics_priv->pixmap->height());
+        resize_callback(width(),height());
 }
 
 void QNavitWidget::mouseEvent(int pressed, QMouseEvent *event)
