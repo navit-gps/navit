@@ -24,6 +24,58 @@
 pthread_t dl_thread;
 struct map_download_info dl_info;
 
+
+/**
+ * Enable a given map
+ *
+ * @param the navit object from which we can fetch the mapset to enable
+ *
+ * @returns Returns mapset_add_attr() result
+ */
+
+int
+enable_map(struct navit *navit, char * map_path)
+{
+    int ret;
+    struct attr attr;
+
+    dbg(lvl_error, "Enabling map %s\n", map_path);
+
+	struct mapset *ms = navit_get_mapset(navit);
+	struct attr type, name, data, *attrs[4];
+	type.type=attr_type;
+	type.u.str="binfile";
+
+	data.type=attr_data;
+	data.u.str=g_strdup(map_path);
+
+	name.type=attr_name;
+	name.u.str=g_strdup(map_path);
+
+	attrs[0]=&type; attrs[1]=&data; attrs[2]=&name; attrs[3]=NULL;
+
+	struct map * new_map = map_new(NULL, attrs);
+	if (new_map) {
+		struct attr map_a;
+		map_a.type=attr_map;
+		map_a.u.map=new_map;
+		ret = mapset_add_attr(ms, &map_a);
+		dbg(lvl_error, "Enabled map %s with result %i\n", map_path, ret);
+		navit_draw(navit);
+	}
+	return ret;
+
+}
+
+
+/**
+ * Updates (refresh) the map download information screen
+ *
+ * @param this a gui_priv object to use for the refresh
+ *
+ * @returns nothing
+ */
+
 void
 gui_internal_download_update(struct gui_priv * this)
 {
@@ -34,6 +86,7 @@ gui_internal_download_update(struct gui_priv * this)
 		if(pthread_join(dl_thread, NULL)) {
 		    dbg(lvl_error, "Error joining download thread\n");
 		}
+		enable_map(this->nav, dl_info.path);
    }
 
     if(this->download_data.download_showing) {
@@ -44,10 +97,19 @@ gui_internal_download_update(struct gui_priv * this)
     }
 }
 
+
+/**
+ * Displays the map download menu
+ *
+ * @param this a gui_priv object to use
+ *
+ * @returns nothing
+ */
+
 void
 gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data)
 {
-    struct widget *wb, *w, *wr, *wk, *we, *wl;
+    struct widget *wb, *w, *wr, *we;
     wb=gui_internal_menu(this,"Map download");
     w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
     gui_internal_widget_append(wb, w);
@@ -96,7 +158,7 @@ gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data
 
       if(pthread_create(&dl_thread, NULL, download_map, &dl_info)) {
           dbg(lvl_error, "Error creating download thread\n");
-          return 1;
+          return;
       }
 
 	}
@@ -104,15 +166,21 @@ gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data
     gui_internal_menu_render(this);
 }
 
+
+/**
+ * Populates the map download table, called with a timeout
+ *
+ * @param this a gui_priv object to use
+ *
+ * @returns nothing
+ */
+
 void
 gui_internal_populate_download_table(struct gui_priv * this)
 {   
-    struct navigation * nav = NULL;
-    struct item * item =NULL;
-    struct attr attr,route; 
+    struct mapset * mapset = NULL;
     struct widget * label = NULL;
     struct widget * row = NULL;
-    struct coord c;
 
 	if(this->download_data.download_showing){
         GList *toprow;
@@ -127,9 +195,15 @@ gui_internal_populate_download_table(struct gui_priv * this)
                               | flags_fill
                               | orientation_horizontal);
         gui_internal_widget_append(this->download_data.download_table,row);
-      double percent = dl_info.dl_now / dl_info.dl_total * 100;
+      double percent = ( dl_info.dl_total > 0 ? dl_info.dl_now / dl_info.dl_total * 100 : 0 );
       char * text;
-      text=g_strdup_printf("Download is %s %lf / %lf = %lf% \n", dl_info.downloading == 1 ? "active" : "inactive" ,dl_info.dl_now, dl_info.dl_total, percent);
+      text=g_strdup_printf(
+		"Download of %s is %s %1.0lf Mb / %1.0lf Mb = %1.0f% \n",
+			dl_info.name,
+			dl_info.downloading == 1 ? "active" : "inactive" ,
+			dl_info.dl_now / 1024 / 1024,
+			dl_info.dl_total / 1024 / 1024,
+			percent);
       label = gui_internal_label_new(this,text);
       gui_internal_widget_append(row,label);
 	  g_free(text);
