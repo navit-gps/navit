@@ -91,7 +91,7 @@ graphics_destroy(struct graphics_priv *gr)
         /* destroy overlays hash */
         g_hash_table_destroy(gr->overlays);
         /* destroy global application if destroying the last */
-        if(gr->argc > 0)
+        if(gr->root)
         {
                 if(navit_app != NULL)
                 {
@@ -719,7 +719,8 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
         graphics_priv->use_count = 0;
         graphics_priv->parent = gr;
         graphics_priv->overlays=g_hash_table_new(NULL, NULL);
-        graphics_priv->argc=0;
+        graphics_priv->root = false;
+        graphics_priv->argc = 0;
         graphics_priv->argv[0] = NULL;
         /* register on parent */
         g_hash_table_insert(gr->overlays, graphics_priv, graphics_priv);
@@ -766,6 +767,7 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         /* create root graphics layer */
         graphics_priv = g_new0(struct graphics_priv, 1);
         /* Prepare argc and argv to call Qt application*/
+        graphics_priv->root = true;
         graphics_priv->argc = 0;
         graphics_priv->argv[graphics_priv->argc] = g_strdup("navit");
         graphics_priv->argc ++;
@@ -820,12 +822,6 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
         /* tell Navit our geometry */
         resize_callback(graphics_priv->widget->width(),graphics_priv->widget->height());
-
-        /* Workaround: Qt doesnt seem to get geometry right if there is no resize event.
-         * queue one. */
-        QSize newSize(graphics_priv->widget->width(),graphics_priv->widget->height());
-        QResizeEvent *myResizeEvent = new QResizeEvent(newSize,newSize);
-        QCoreApplication::postEvent(graphics_priv->widget,myResizeEvent);
 
         /* show our window */
         graphics_priv->widget->show();

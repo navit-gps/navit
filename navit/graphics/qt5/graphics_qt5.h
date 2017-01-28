@@ -40,6 +40,7 @@ struct graphics_priv {
 #endif
         GHashTable *overlays;
         struct graphics_priv * parent;
+        bool root;
         int argc;
         char * argv[4];
 };
