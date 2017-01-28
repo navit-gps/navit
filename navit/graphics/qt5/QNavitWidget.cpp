@@ -87,7 +87,9 @@ void QNavitWidget::resizeEvent(QResizeEvent * event)
            delete painter;
         dbg(lvl_debug,"size %dx%d\n", width(), height());
         dbg(lvl_debug,"pixmap %p %dx%d\n", graphics_priv->pixmap, graphics_priv->pixmap->width(), graphics_priv->pixmap->height());
-        resize_callback(width(),height());
+        /* if the root window got resized, tell navit about it */
+        if(graphics_priv->root)
+                resize_callback(width(),height());
 }
 
 void QNavitWidget::mouseEvent(int pressed, QMouseEvent *event)
