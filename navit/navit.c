@@ -3403,63 +3403,59 @@ navit_layout_switch(struct navit *n)
 	if (l->dayname || l->nightname) {
 	//Ok, we know that we have profile to switch
 	
-	//Check that we aren't calculating too fast
-	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
-		currTs=iso8601_to_secs(iso8601_attr.u.str);
-		dbg(lvl_debug,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
-	}
-
-
-	dbg(lvl_debug,"prevTs: %u:%u\n",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
-
-	if (n->auto_switch == FALSE)
-		return;
-
-	if (currTs-(n->prevTs)<60) {
-			//We've have to wait a little
-			return;
+		//Check that we aren't calculating too fast
+		if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
+			currTs=iso8601_to_secs(iso8601_attr.u.str);
+			dbg(lvl_debug,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 		}
+		dbg(lvl_debug,"prevTs: %u:%u\n",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
 
+		if (n->auto_switch == FALSE)
+			return;
 
-	if (sscanf(iso8601_attr.u.str,"%d-%02d-%02dT",&year,&month,&day) != 3)
-		return;
-	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
-		return; //No valid fix yet
-	}
-	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
+		if (currTs-(n->prevTs)<60) {
+				//We've have to wait a little
+				return;
+			}
+
+		if (sscanf(iso8601_attr.u.str,"%d-%02d-%02dT",&year,&month,&day) != 3)
+			return;
+		if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
+			return; //No valid fix yet
+		}
+		if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
 		//No position - no sun
 		return;
-	}
-	//We calculate sunrise anyway, cause it is needed both for day and for night
-	if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
-		dbg(lvl_debug,"near the pole sun never rises/sets, so we should never switch profiles\n");
+		}
+		//We calculate sunrise anyway, cause it is needed both for day and for night
+		if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
+			dbg(lvl_debug,"near the pole sun never rises/sets, so we should never switch profiles\n");
+			dbg(lvl_debug,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
+			dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
+			n->prevTs=currTs;
+			return;
+		}
+		trise_actual=trise;
 		dbg(lvl_debug,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
 		dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
-		n->prevTs=currTs;
-		return;
+		dbg(lvl_debug,"dayname = %s, name =%s \n",l->dayname, l->name);
+		dbg(lvl_debug,"nightname = %s, name = %s \n",l->nightname, l->name);
+		if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
+			after_sunrise = TRUE;
 		}
-	trise_actual=trise;
-	dbg(lvl_debug,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
-	dbg(lvl_debug,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
-	dbg(lvl_debug,"dayname = %s, name =%s \n",l->dayname, l->name);
-	dbg(lvl_debug,"nightname = %s, name = %s \n",l->nightname, l->name);
-	if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
-		after_sunrise = TRUE;
-	}
 	
-	if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
-			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
-		after_sunset = TRUE;
-	}
-	if (after_sunrise && !after_sunset && l->dayname) {
-		navit_set_layout_by_name(n,l->dayname);
+		if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
+				((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
+			after_sunset = TRUE;
+		}
+		if (after_sunrise && !after_sunset && l->dayname) {
+			navit_set_layout_by_name(n,l->dayname);
 			dbg(lvl_debug,"layout set to day\n");
-	}
-	else if (after_sunset && l->nightname) {
-		navit_set_layout_by_name(n,l->nightname);
-		dbg(lvl_debug,"layout set to night\n");
-	}
-	n->prevTs=currTs;
+		}else if (after_sunset && l->nightname) {
+			navit_set_layout_by_name(n,l->nightname);
+			dbg(lvl_debug,"layout set to night\n");
+			}
+		n->prevTs=currTs;
 	}
 }
 
