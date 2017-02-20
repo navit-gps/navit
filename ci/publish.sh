@@ -1,6 +1,6 @@
 cd ~/
 git clone git@github.com:navit-gps/infrastructure-blackbox.git
-cd infrastructure-blackbox/
+cd infrastructure-blackbox/keyrings/
 openssl aes-256-cbc -d -in keystore.gpg -k $KEY > ~/.keystore
 openssl aes-256-cbc -d -in clientsecret.gpg -k $KEY > client_secrets.json
 openssl aes-256-cbc -d -in androidpublisher.gpg -k $KEY > androidpublisher.dat
