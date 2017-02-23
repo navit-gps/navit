@@ -37,5 +37,15 @@
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
         <activity android:name=".NavitAddressResultListActivity"></activity>
         <activity android:name=".FileBrowserActivity"></activity>
+        <activity
+                android:name="org.acra.dialog.CrashReportDialog"
+                android:theme="@android:style/Theme.Dialog"
+                android:launchMode="singleInstance"
+                android:excludeFromRecents="true"
+                android:finishOnTaskLaunch="true"/>
+        <service
+                android:name="org.acra.sender.SenderService"
+                android:exported="false"
+                android:process=":acra" />
     </application>
 </manifest> 

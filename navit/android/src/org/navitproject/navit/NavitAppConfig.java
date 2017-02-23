@@ -8,10 +8,14 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
-
+import org.acra.*;
 import org.acra.annotation.*;
 
-@ReportsCrashes(formKey = "dGlrNVRIOVVKYjB0UGVoLUZPanlzWFE6MQ")
+//@ReportsCrashes(formKey = "dGlrNVRIOVVKYjB0UGVoLUZPanlzWFE6MQ")
+@ReportsCrashes(mailTo = "android@navit-project.org",
+		mode = ReportingInteractionMode.TOAST,
+                resToastText = R.string.app_name)
+
 public class NavitAppConfig extends Application {
 
 	private static final int         MAX_LAST_ADDRESSES = 10;
