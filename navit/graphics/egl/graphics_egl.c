@@ -42,8 +42,6 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
-int debug = 0;
-
 /*
     * This is work in progress *
     * Remainng issues :
@@ -71,6 +69,8 @@ struct graphics_gc_priv {
 } graphics_gc_priv;
 
 struct graphics_priv {
+    int fill_poly;
+    int show_overlays;
     int button_timeout;
     struct point p;
     int width;
@@ -114,6 +114,12 @@ struct graphics_opengl_platform {
     EGLConfig config[1];
 };
 
+struct contour
+{
+   struct point *p;
+   unsigned int count;
+};
+
 static GHashTable *hImageData;
 static int      USERWANTSTOQUIT = 0;
 static struct   graphics_priv *graphics_priv_root;
@@ -121,6 +127,10 @@ static struct   graphics_priv *graphics_opengl_new_helper(struct
                 graphics_methods
                 *meth);
 
+/*
+ * GLES 2 Compatible vertex and fragment shaders
+ * Taken from opengl driver
+ */
 const char vertex_src [] =
 "                                        \
    attribute vec2        position;       \
@@ -151,6 +161,152 @@ const char fragment_src [] =
    }                                                   \
 ";
 
+/*
+* C conversion of Efficient Polygon Triangulation
+* Found at http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
+* Adapted and debugged for this use
+*/
+float area(const struct contour* contour)
+{
+   int p, q;
+   int n = contour->count - 1;
+   float A = 0.f;
+
+   for (p=n-1, q=0; q < n; p=q++)
+   {
+       A += contour->p[p].x * contour->p[q].y - contour->p[q].x * contour->p[p].y;
+   }
+   return A * .5f;
+}
+
+int
+inside_triangle(float Ax, float Ay,
+               float Bx, float By,
+               float Cx, float Cy,
+               float Px, float Py)
+{
+   float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
+   float cCROSSap, bCROSScp, aCROSSbp;
+
+   ax = Cx - Bx;  ay = Cy - By;
+   bx = Ax - Cx;  by = Ay - Cy;
+   cx = Bx - Ax;  cy = By - Ay;
+   apx= Px - Ax;  apy= Py - Ay;
+   bpx= Px - Bx;  bpy= Py - By;
+   cpx= Px - Cx;  cpy= Py - Cy;
+
+   aCROSSbp = ax*bpy - ay*bpx;
+   cCROSSap = cx*apy - cy*apx;
+   bCROSScp = bx*cpy - by*cpx;
+
+   return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
+}
+
+int
+snip(const struct point* pnt,int u,int v,int w,int n,int *V)
+{
+   int p;
+   float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
+
+   Ax = pnt[V[u]].x;
+   Ay = pnt[V[u]].y;
+
+   Bx = pnt[V[v]].x;
+   By = pnt[V[v]].y;
+
+   Cx = pnt[V[w]].x;
+   Cy = pnt[V[w]].y;
+
+   if ( (((Bx-Ax)*(Cy-Ay)) - ((By-Ay)*(Cx-Ax))) < 0.f )
+       return 0;
+
+   for (p=0;p<n;p++)
+   {
+       if( (p == u) || (p == v) || (p == w) )
+           continue;
+       Px = pnt[V[p]].x;
+       Py = pnt[V[p]].y;
+       if (inside_triangle(Ax,Ay,Bx,By,Cx,Cy,Px,Py))
+           return 0;
+   }
+
+   return 1;
+}
+
+int
+process_triangles(const struct contour* contour, struct contour* result)
+{
+   int v;
+   int contour_size = contour->count - 1;
+   int polygon_temp_size = contour_size * 80;
+   int final_count = 0;
+   result->p = malloc(sizeof(struct point) * polygon_temp_size);
+
+   int n = contour_size;
+   if ( n < 3 ) return 0;
+
+   int *V = alloca(sizeof(int)*n);
+
+   if ( 0.0f < area(contour) )
+       for (v=0; v<n; v++) V[v] = v;
+   else
+       for(v=0; v<n; v++) V[v] = (n-1)-v;
+
+   int nv = n;
+
+   int count = 2*nv;
+
+   for(v=nv-1; nv>2; )
+   {
+       /* if we loop, it is probably a non-simple polygon */
+       if (0 >= (count--))
+       {
+           //** Triangulate: ERROR - probable bad polygon!
+           break;
+       }
+
+       /* three consecutive vertices in current polygon, <u,v,w> */
+       int u = v  ; if (nv <= u) u = 0;     /* previous */
+       v = u+1; if (nv <= v) v = 0;         /* new v    */
+       int w = v+1; if (nv <= w) w = 0;     /* next     */
+
+       if ( snip(contour->p,u,v,w,nv,V) )
+       {
+           int a,b,c,s,t;
+
+           /* true names of the vertices */
+           a = V[u]; b = V[v]; c = V[w];
+
+           /* output Triangle */
+           result->p[final_count++] = contour->p[a];
+           result->p[final_count++] = contour->p[b];
+           result->p[final_count++] = contour->p[c];
+
+           if (final_count >= polygon_temp_size){
+               free(result->p);
+               return 0;
+           }
+
+           /* remove v from remaining polygon */
+           for(s=v,t=v+1;t<nv;s++,t++)
+               V[s] = V[t];
+           nv--;
+
+           /* resest error detection counter */
+           count = 2*nv;
+       }
+   }
+
+   result->count = final_count;
+
+   return 1;
+}
+
+// ** Efficient Polygon Triangulation **
+
+/*
+ * Destroys SDL/EGL context
+ */
 static void
 sdl_egl_destroy(struct graphics_opengl_platform *egl)
 {
@@ -162,12 +318,18 @@ sdl_egl_destroy(struct graphics_opengl_platform *egl)
     SDL_Quit();
 }
 
+/*
+ * Swap EGL buffer
+ */
 static void
 sdl_egl_swap_buffers(struct graphics_opengl_platform *egl)
 {
     SDL_GL_SwapWindow(egl->eglwindow);
 }
 
+/*
+ * Main graphic destroy
+ */
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
@@ -357,7 +519,7 @@ set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc)
     col[0]=gc->fr;
     col[1]=gc->fg;
     col[2]=gc->fb;
-    col[3]=1.0;
+    col[3]=gc->fa;
     glUniform4fv(gr->color_location, 1, col);
 }
 
@@ -449,10 +611,8 @@ draw_overlay(struct graphics_priv *gr)
 {
     struct point p_eff;
     GLf x[8];
-    get_overlay_pos(gr, &p_eff);
 
-    if(debug)
-        printf("Drawing overlay %i\n", gr->use_texture_location);
+    get_overlay_pos(gr, &p_eff);
 
     memset(x, 0, 8*sizeof(GLf));
     x[0]+=glF(1);
@@ -468,14 +628,12 @@ draw_overlay(struct graphics_priv *gr)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindTexture(GL_TEXTURE_2D, gr->overlay_texture);
 
-    draw_rectangle_do(gr, &p_eff, gr->width, gr->height);
+    draw_rectangle_do(graphics_priv_root, &p_eff, gr->width, gr->height);
 
     glUniform1i(gr->use_texture_location, 0);
     glDisableVertexAttribArray(gr->texture_position_location);
 
     glDisable(GL_BLEND);
-    if(debug)
-        printf("End drawing overlay %i\n", gr->use_texture_location);
 }
 
 static void
@@ -501,6 +659,7 @@ static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
          struct point *p, int count)
 {
+    int ok;
     if ((gr->parent && !gr->parent->overlay_enabled)
         || (gr->parent && gr->parent->overlay_enabled
         && !gr->overlay_enabled)) {
@@ -508,7 +667,16 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
     }
     set_color(gr, gc);
     graphics_priv_root->dirty = 1;
-    draw_array(gr, p, count, GL_LINE_STRIP);
+    struct contour contour, result;
+    contour.count = count;
+    contour.p = p;
+    ok = process_triangles(&contour, &result);
+    if (ok && gr->fill_poly){
+        draw_array(gr, result.p, result.count, GL_TRIANGLES);
+        free(result.p);
+    } else {
+        draw_array(gr, p, count, GL_LINE_STRIP);
+    }
 }
 
 static void
@@ -689,7 +857,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
-
     if (p) {
         gr->p.x = p->x;
         gr->p.y = p->y;
@@ -702,6 +869,9 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
     gr->background_gc = gc;
 }
 
+/*
+ * Draws map in background
+ */
 static void
 draw_background(struct graphics_priv *gr)
 {
@@ -710,7 +880,9 @@ draw_background(struct graphics_priv *gr)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, gr->width, gr->height);
-    get_overlay_pos(gr, &p_eff);
+    //get_overlay_pos(gr, &p_eff);
+    p_eff.x = gr->p.x;
+    p_eff.y = gr->p.y;
 
     memset(x, 0, 8*sizeof(GLf));
     x[0]+=glF(1);
@@ -722,16 +894,13 @@ draw_background(struct graphics_priv *gr)
     glEnableVertexAttribArray(gr->texture_position_location);
     glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_BLEND);
     glBindTexture(GL_TEXTURE_2D, gr->overlay_texture);
 
     draw_rectangle_do(gr, &p_eff, gr->width, gr->height);
 
     glUniform1i(gr->use_texture_location, 0);
     glDisableVertexAttribArray(gr->texture_position_location);
-
-    glDisable(GL_BLEND);
 }
 
 /*
@@ -743,11 +912,19 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
     GLfloat matrix[16];
-    struct graphics_priv *overlay;
+    struct graphics_priv *overlay = NULL;
     int i;
 
     if (mode == draw_mode_begin){
+        // Should not be necessary...
         SDL_GL_MakeCurrent(gr->platform->eglwindow, gr->platform->eglcontext);
+
+        if (gr->parent == NULL){
+            // Full redraw, reset drag position
+            gr->p.x = 0;
+            gr->p.y = 0;
+        }
+
         // Need to setup appropriate projection matrix
         for (i = 0; i < 16 ; i++){
             matrix[i] = 0.0;
@@ -763,46 +940,22 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
         glBindFramebuffer(GL_FRAMEBUFFER, gr->framebuffer_name);
         glViewport(0,0,gr->width,gr->height);
-        if(debug)
-            printf("Setting FB %i\n", gr->framebuffer_name);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    if (gr->parent) {
-        // Overlay
-        // We are starting rendering to an offscreen framebuffer
-        if (mode == draw_mode_begin) {
-            // :)
-            if(debug)
-                printf("Overlay Draw mode begin %ix%i\n",gr->width, gr->height);
+    if (mode == draw_mode_end && gr->parent == NULL) {
+        overlay = gr->overlays;
+        draw_background(gr);
+        while(overlay){
+            if (gr->overlay_enabled)
+                draw_overlay(overlay);
+            overlay = overlay->next;
         }
-        if (mode == draw_mode_end) {
-            // :P
-            if(debug)
-                printf("Overlay Draw mode end\n");
-        }
-    } else {
-        // Root graphics
-        if (mode == draw_mode_begin) {
-            // :/
-            if(debug)
-                printf("Root Draw mode begin %i\n");
-        }
-
-        if (mode == draw_mode_end) {
-            if (gr->mode == draw_mode_begin){
-                draw_background(gr);
-
-                overlay = gr->overlays;
-                while(overlay){
-                    if (gr->overlay_enabled)
-                        draw_overlay(overlay);
-                    overlay = overlay->next;
-                }
-
-                sdl_egl_swap_buffers(gr->platform);
-            }
-        }
+        sdl_egl_swap_buffers(gr->platform);
     }
+
     gr->mode = mode;
 }
 
@@ -894,7 +1047,6 @@ overlay_disable(struct graphics_priv *gr, int disable)
 }
 
 // Need more testing
-/*
 static void
 overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
            int wraparound)
@@ -937,8 +1089,8 @@ overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
             glGenTextures(1, &gr->overlay_texture);
             glBindTexture(GL_TEXTURE_2D,  gr->overlay_texture);
             glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, gr->width, gr->height, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gr->overlay_texture, 0);
         }
 
@@ -947,7 +1099,7 @@ overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
                       GINT_TO_POINTER(gr->height));
     }
 }
-*/
+
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr,
                      struct graphics_methods *meth,
@@ -974,7 +1126,7 @@ static struct graphics_methods graphics_methods = {
     image_free,
     NULL,
     overlay_disable,
-    NULL, /* overlay_resize, */
+    overlay_resize,
     NULL, /* set_attr, */
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
@@ -1016,13 +1168,13 @@ create_framebuffer_texture(struct graphics_priv *gr)
     glGenTextures(1, &gr->overlay_texture);
     glBindTexture(GL_TEXTURE_2D,  gr->overlay_texture);
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, gr->width, gr->height, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gr->overlay_texture, 0);
 
     status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE) {
-        printf("Error creating FBO for overlay, exiting.\n");
+        printf("Error creating texture framebuffer for overlay, exiting.\n");
         SDL_Quit();
         exit(1);
     }
@@ -1034,14 +1186,22 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 {
     struct graphics_priv *this = graphics_opengl_new_helper(meth);
 
-    this->p = *p;
+    this->p.x = p->x;
+    this->p.y = p->y;
+
     this->width = w;
     this->height = h;
     this->parent = gr;
     this->overlays = NULL;
+    this->fill_poly = 1;
 
-    if(debug)
-        printf("Creating overlay %ix%i\n", w, h);
+    // Copy shader locations parameters
+    this->mvp_location              = graphics_priv_root->mvp_location;
+    this->position_location         = graphics_priv_root->position_location;
+    this->texture_position_location = graphics_priv_root->texture_position_location;
+    this->color_location            = graphics_priv_root->color_location;
+    this->texture_location          = graphics_priv_root->texture_location;
+    this->use_texture_location      = graphics_priv_root->use_texture_location;
 
     if ((w == 0) || (h == 0)) {
         this->overlay_autodisabled = 1;
@@ -1055,8 +1215,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 
     create_framebuffer_texture(this);
 
-    if(debug)
-        printf("Overlay ok %ix%i\n", w, h);
     return this;
 }
 
@@ -1069,6 +1227,7 @@ static gboolean graphics_sdl_idle(void *data)
     int ret;
     char key_mod = 0;
     char keybuf[8];
+    char keycode;
 
     // Process SDL events (KEYS + MOUSE)
     while(1)
@@ -1084,6 +1243,7 @@ static gboolean graphics_sdl_idle(void *data)
         {
             p.x = ev.motion.x;
             p.y = ev.motion.y;
+            //gr->force_redraw = 1;
             callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
             break;
         }
@@ -1093,6 +1253,12 @@ static gboolean graphics_sdl_idle(void *data)
             memset(keybuf, 0, sizeof(keybuf));
             switch(ev.key.keysym.sym)
             {
+            case SDLK_F1:
+                graphics_priv_root->fill_poly = !graphics_priv_root->fill_poly;
+                break;
+            case SDLK_F2:
+                graphics_priv_root->show_overlays = !graphics_priv_root->show_overlays;
+                break;
             case SDLK_LEFT:
                 {
                 keybuf[0] = NAVIT_KEY_LEFT;
@@ -1141,17 +1307,14 @@ static gboolean graphics_sdl_idle(void *data)
             default:
                 {
                 /* return unicode chars when they can be converted to ascii */
-                // CEDRIC TODO :
-                //keybuf[0] = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
-
+                // Need more work...
+                keycode = ev.key.keysym.sym;
+                keybuf[0] = keycode <= 127 ? keycode : 0;
                 break;
                 }
             }
-
-            dbg(lvl_info,"key mod: 0x%x\n", key_mod);
-
             if (keybuf[0]) {
-            callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
+                callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
             }
             break;
         }
@@ -1161,28 +1324,15 @@ static gboolean graphics_sdl_idle(void *data)
         }
         case SDL_MOUSEBUTTONDOWN:
         {
-            dbg(lvl_debug, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d\n",
-                ev.button.which,
-                ev.button.button,
-                ev.button.state,
-                ev.button.x,
-                ev.button.y);
-
             p.x = ev.button.x;
             p.y = ev.button.y;
+            graphics_priv_root->force_redraw = 1;
             callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
             break;
         }
 
         case SDL_MOUSEBUTTONUP:
         {
-            dbg(lvl_debug, "SDL_MOUSEBUTTONUP %d %d %d %d %d\n",
-                ev.button.which,
-                ev.button.button,
-                ev.button.state,
-                ev.button.x,
-                ev.button.y);
-
             p.x = ev.button.x;
             p.y = ev.button.y;
             callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
@@ -1195,7 +1345,6 @@ static gboolean graphics_sdl_idle(void *data)
         }
         default:
         {
-            dbg(lvl_debug, "SDL_Event %d\n", ev.type);
             break;
         }
     }
@@ -1227,6 +1376,8 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
     this->overlay_enabled = 1;
     this->framebuffer_name = 0;
     this->overlays = NULL;
+    this->fill_poly = 1;
+    this->show_overlays = 1;
 
     this->width = SCREEN_WIDTH;
     if ((attr = attr_search(attrs, NULL, attr_w)))
@@ -1265,14 +1416,9 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    // Not necessary anymore
-    // SDL_GL_SetAttribute(SDL_GL_PRESERVE_BUFFER, 0);
-
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-    SDL_GL_SetSwapInterval(1);
-    // The mouse cursor seems to crash the app sometimes
-    // SDL_ShowCursor(0);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+    // I think it's not necessary to sync vblank, update is quite slow
+    SDL_GL_SetSwapInterval(0);
 
     ret->eglwindow = SDL_CreateWindow(
         "Navit EGL",                       // window title
@@ -1297,7 +1443,7 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
     this->platform = ret;
     create_framebuffer_texture(this);
     g_timeout_add(G_PRIORITY_DEFAULT+10, graphics_sdl_idle, this);
-
+    glDisable(GL_DEPTH_TEST);
     return this;
 error:
     SDL_Quit();
@@ -1307,6 +1453,6 @@ error:
 void
 plugin_init(void)
 {
-    plugin_register_category_graphics("rpi", graphics_opengl_new);
+    plugin_register_category_graphics("egl", graphics_opengl_new);
 }
 
