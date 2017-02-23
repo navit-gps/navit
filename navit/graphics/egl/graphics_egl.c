@@ -917,7 +917,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
     if (mode == draw_mode_begin){
         // Should not be necessary...
-        SDL_GL_MakeCurrent(gr->platform->eglwindow, gr->platform->eglcontext);
+        // SDL_GL_MakeCurrent(gr->platform->eglwindow, gr->platform->eglcontext);
 
         if (gr->parent == NULL){
             // Full redraw, reset drag position
