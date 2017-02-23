@@ -82,5 +82,13 @@ for i in `seq 99994 99999`; do
 	sleep 1
 done
 
+# Quit
+send_event key KP_Enter # Open main menu
+send_event key Down     # Select 'Actions'
+send_event key Down     # Select 'Route'
+send_event key Right    # Select 'About'
+send_event key Right    # Select 'Quit'
+send_event key KP_Enter # Validate
+
 # Assemble the gif
 convert   -delay 100 -loop 0 $CIRCLE_ARTIFACTS/frames/*.png $CIRCLE_ARTIFACTS/town_search.gif
