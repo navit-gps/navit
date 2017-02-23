@@ -1,3 +1,5 @@
+ARCH="arm"
+
 cd ~/
 git clone git@github.com:navit-gps/infrastructure-blackbox.git
 cd infrastructure-blackbox/keyrings/
