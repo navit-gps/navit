@@ -76,5 +76,9 @@
 	<!-- TTS -->
 	<string name="TTS_title_data_missing">System text to speech engine data is missing</string>
 	<string name="TTS_qery_install_data">Navit can use any text to speech engine installed on your device. The currently selected engine reports it is unable to speak in your language. Should we ask the system to show voice download dialog?</string>
+	
+	<!-- Permissions dialog-->
+	<string name="permissions_not_granted">Navit needs permission to access GPS and read the map.\nIf you change your mind please restart Navit and grant the permissions</string>
+	<string name="permissions_info_box_title">One or more ungranted permissions</string>
 </resources>
 
