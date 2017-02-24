@@ -31,7 +31,7 @@ test:
           - ci/build_*.sh
 deployment:
   publish_to_playstore:
-    branch: jandegr-patch-1
+    branch: master
     owner: navit-gps
     commands:
       - bash ci/publish.sh
