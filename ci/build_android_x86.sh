@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export arch="x86"
+export ARCH="x86"
 export START_PATH=~/
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
 export CMAKE_FILE=$SOURCE_PATH"/Toolchain/i686-android.cmake"
