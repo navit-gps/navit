@@ -55,6 +55,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.Manifest;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
