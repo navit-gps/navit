@@ -172,15 +172,14 @@ audio_new(struct attr *parent, struct attr **attrs)
 						struct attr **attrs,
 						struct attr *parent
 	);
-	/*struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent*/
 	attr=attr_search(attrs, NULL, attr_type);
 	if (! attr) {
 			dbg(lvl_error,"type missing\n");
 			return NULL;
 	}
-	dbg(lvl_info,"type='%s'\n", attr->u.str);
+	
 	audiotype_new=plugin_get_category_audio(attr->u.str);
-	dbg(lvl_info,"new=%p\n", audio_new);
+
 	if (! audiotype_new) {
 			dbg(lvl_error,"wrong type '%s'\n", attr->u.str);
 			return NULL;
@@ -207,16 +206,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 		g_free(this_);
 		return NULL;
 	}
-	dbg(lvl_info, "Attrs: %p\n", attrs);
-	/*
-	if(attrs != NULL){
-		dbg(lvl_info, "*Attrs: %p\n", *attrs);
-		if(*attrs != NULL){
-			this_->attrs=attr_list_dup(attrs);
-		}
-	}
-	//*/
-	dbg(lvl_info, "Attrs: %p\n", this_->attrs);
+
 	//*
 	if (this_->meth.volume) {
 		dbg(lvl_info, "%s.volume=%p\n", this_->name, this_->meth.volume);
