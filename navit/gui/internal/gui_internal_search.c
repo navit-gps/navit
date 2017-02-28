@@ -240,16 +240,24 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 				if (child_->data && strcmp("\b", child_->data) && child_->data_free) {
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
-						child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
-						child_->state&= ~(STATE_INVISIBLE);
+						if(this->hide_keys){
+							child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
+							child_->state&= ~(STATE_INVISIBLE);
+						}else{
+							child_->state|= STATE_SENSITIVE|STATE_CLEAR|STATE_HIGHLIGHTED ;
+						}
 						// Select and highlight the first possible button.
 						if (!first_available_key_found) {
 							gui_internal_highlight_do(this, child_);
 							first_available_key_found=1;
 						}
 					} else {
-						child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
-						child_->state|= STATE_INVISIBLE;
+						if(this->hide_keys){
+							child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
+							child_->state|= STATE_INVISIBLE;
+						}else{
+							child_->state&= ~(STATE_HIGHLIGHTED);
+						}
 					}
 					gui_internal_widget_render(this,child_);
 				}
