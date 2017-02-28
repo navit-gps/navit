@@ -29,6 +29,9 @@ struct graphics_priv {
         QPixmap * pixmap;
         QPainter * painter;
         int use_count;
+        int disable;
+        int x;
+        int y;
         struct graphics_gc_priv * background_graphics_gc_priv;
 #ifdef QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
