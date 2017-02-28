@@ -38,6 +38,7 @@ struct graphics_priv {
         struct callback *display_on_cb;
         struct event_timeout *display_on_ev;
 #endif
+        struct callback_list* callbacks;
         GHashTable *overlays;
         struct graphics_priv * parent;
         bool root;
@@ -53,11 +54,7 @@ struct graphics_gc_priv {
 /* central exported application info */
 extern QApplication * navit_app;
 
-/* navit callback list */
-extern struct callback_list* callbacks;
-
-void
-resize_callback(int w, int h);
+void resize_callback(struct graphics_priv * gr, int w, int h);
 
 #endif
 
