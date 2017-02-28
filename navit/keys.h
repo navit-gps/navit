@@ -1,3 +1,8 @@
+/**
+ * The values listed here are used for a mapping between the graphics and the gui or osd
+ * It is neccessary due to char limitation of the keypress. 
+ * TODO: Evaluate if utf-8 values would be usable (extent to 16 or 32bit values)
+ */
 #define NAVIT_KEY_MENU 1 	/* ^A */
 #define NAVIT_KEY_LEFT 2	/* ^B */
 #define NAVIT_KEY_RIGHT 6	/* ^R */
@@ -11,8 +16,8 @@
 #define NAVIT_KEY_BACK 27	/* Esc */
 #define NAVIT_KEY_DELETE 127
 #define NAVIT_KEY_TAB 9 /* TAB */
-#define NAVIT_KEY_PAGE_UP 33
-#define NAVIT_KEY_PAGE_DOWN 34
+#define NAVIT_KEY_PAGE_UP 64
+#define NAVIT_KEY_PAGE_DOWN 33
 #define NAVIT_KEY_AUDIO_PLAY			108
 #define NAVIT_KEY_AUDIO_STOP			109
 #define NAVIT_KEY_AUDIO_MUTE			110

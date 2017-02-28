@@ -2916,11 +2916,11 @@ static void gui_internal_keypress(void *data, char *key)
 			p.y=h/2;
 			navit_set_center_screen(this->nav, &p, 1);
 			break;
-		case NAVIT_KEY_PAGE_DOWN:
+		//case NAVIT_KEY_PAGE_DOWN:
 		case NAVIT_KEY_ZOOM_IN:
 			navit_zoom_in(this->nav, 2, NULL);
 			break;
-		case NAVIT_KEY_PAGE_UP:
+		//case NAVIT_KEY_PAGE_UP:
 		case NAVIT_KEY_ZOOM_OUT:
 			navit_zoom_out(this->nav, 2, NULL);
 			break;
