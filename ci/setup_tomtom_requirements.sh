@@ -33,29 +33,28 @@ JOBS=`getconf _NPROCESSORS_ONLN`
 echo "Jobs"
 echo $JOBS
 
-mkdir -p ~/tomtom_assets
+mkdir -p ~/assets/tomtom/
 
-if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
+if ! [ -e "~/assets/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
  then 
-  wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
+  wget -nv -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/assets/tomtom
 fi
 
-if ! test -f "~/tomtom_assets/libpng-1.6.28.tar.gz"
+if ! test -f "~/assets/tomtom/libpng-1.6.27.tar.gz"
 then 
-  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.28.tar.gz -P ~/tomtom_assets
+  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.27.tar.gz -P ~/assets/tomtom
 fi
 
 # toolchain
 cd /tmp
 mkdir -p $TOMTOM_SDK_DIR
-tar xzf ~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -C $TOMTOM_SDK_DIR
-
+tar xzf ~/assets/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -C $TOMTOM_SDK_DIR
 
 # zlib
 cd /tmp
-wget -nv -c http://zlib.net/zlib-1.2.11.tar.gz
-tar xzf zlib-1.2.11.tar.gz
-cd zlib-1.2.11
+wget -nv -c http://zlib.net/zlib-1.2.9.tar.gz
+tar xzf zlib-1.2.9.tar.gz
+cd zlib-1.2.9
 ./configure --prefix=$PREFIX
 make -j$JOBS
 make install
@@ -71,8 +70,8 @@ make install
 
 # libpng
 cd /tmp/
-tar xzf ~/tomtom_assets/libpng-1.6.28.tar.gz
-cd libpng-1.6.28/ 
+tar xzf ~/assets/tomtom/libpng-1.6.27.tar.gz
+cd libpng-1.6.27/ 
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install
@@ -138,6 +137,12 @@ patch -p0 -i sdl-fbcon-notty.patch
 make -j$JOBS
 make install
 
+# sdl test utilities
+cd test
+./configure --prefix=$PREFIX --host=$ARCH
+make testvidinfo
+cp testvidinfo $PREFIX/usr/bin/
+
 # to find sdl-config
 export PATH=$PREFIX/bin:$PATH
 
@@ -151,9 +156,30 @@ make -j$JOBS
 make install
 
 
+
+# espeak
+cd /tmp
+# this one includes the precompiled voices
+wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
+unzip espeak-1.48.04-source.zip
+cd espeak-1.48.04-source
+sed -i "s/PREFIX=\/usr//g" src/Makefile
+sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src/Makefile
+sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
+sed -i "s/-fvisibility=hidden//g" src/Makefile
+cat src/Makefile
+make -C src
+cd src
+sudo make install
+
+# http://forum.navit-project.org/viewtopic.php?f=17&t=568
+cd /tmp
+arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ~/navit/contrib/tomtom/espeakdsp.c -o espeakdsp
+
+
+
 # in the end we only want Navit locale
 rm -r $PREFIX/share/locale
-
 
 # navit
 cd ~/navit
@@ -173,39 +199,10 @@ OUT_PATH="/tmp/tomtom/sdcard"
 rm -rf $OUT_PATH
 mkdir -p $OUT_PATH
 cd $OUT_PATH
-mkdir -p navit
+mkdir -p navit SDKRegistry
 cd navit
-mkdir -p bin share
-cd share 
+mkdir -p bin lib share sdl ts
+cd share
 mkdir -p fonts
 cd ..
 
-
-# navit executable
-cp $PREFIX/bin/navit bin/
-
-
-# fonts
-cp -r ~/navit/navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
-
-# images and xml
-cd share
-mkdir xpm
-cd xpm
-cp $PREFIX/share/navit/xpm/*16.png ./
-cp $PREFIX/share/navit/xpm/*32.png ./
-cp $PREFIX/share/navit/xpm/*48.png ./
-cp $PREFIX/share/navit/xpm/*64.png ./
-cp $PREFIX/share/navit/xpm/nav*.* ./
-cp $PREFIX/share/navit/xpm/country*.png ./
-cd ..
-cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
-mkdir -p maps
-
-
-# locale
-cp -r $PREFIX/share/locale ./
-
-
-cd $OUT_PATH
-zip -r $CIRCLE_ARTIFACTS/navitom_minimal.zip navit

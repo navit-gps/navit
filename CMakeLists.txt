@@ -85,7 +85,9 @@ add_module(graphics/gd "FreeType library not found" FALSE)
 add_module(graphics/gtk_drawing_area "FreeType library not found" FALSE)
 add_module(graphics/opengl "FreeType library not found" FALSE)
 add_module(graphics/sdl "Required library not found" FALSE)
+add_module(graphics/egl "Required library not found" FALSE)
 add_module(graphics/qt_qpainter "Qt libraries not found" FALSE)
+add_module(graphics/qt5 "Qt5 libraries not found" FALSE)
 add_module(gui/qml "Qt Declarative not found" FALSE)
 add_module(gui/gtk "GTK libs not found" FALSE)
 add_module(vehicle/gpsd "gpsd lib not found" FALSE)
@@ -97,6 +99,7 @@ add_module(binding/python "python libraries not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
+add_module(vehicle/qt5 "Qt5 libraries not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
 add_module(autoload/osso "Default" FALSE)
 add_module(map/garmin "Garmin library not found" FALSE)
@@ -136,6 +139,9 @@ find_package(Glib)
 find_package(Gmodule)
 find_package(ZLIB)
 find_package(Freetype)
+find_library(SDL2MAIN SDL2)
+find_library(SDL2IMAGE SDL2_image)
+find_library(GLES2 GLESv2)
 find_package(SDL)
 find_package(SDL_ttf)
 find_package(SDL_image)
@@ -151,11 +157,21 @@ find_package(Threads)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
-  # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
-  # and actually requires all components to be installed. Maybe this can
-  # be fixed later...
-  find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
+  find_package(Qt5Widgets)
+  find_package(Qt5Svg)
+  find_package(Qt5DBus)
+  find_package(Qt5Positioning)
+  find_package(Qt5Sensors)
+  #find_package(Qt5Declarative)
+  if (Qt5Widgets_FOUND)
+  else (Qt5Widgets_FOUND)
+    # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
+    # and actually requires all components to be installed. Maybe this can
+    # be fixed later...
+    find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
+  endif (Qt5Widgets_FOUND)      
 endif (NOT DISABLE_QT)
+
 #pkg-config based detection
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
@@ -274,6 +290,7 @@ else(FREETYPE_FOUND)
    set_with_reason(graphics/gtk_drawing_area "FreeType library not found" FALSE)
    set_with_reason(graphics/opengl "FreeType library not found" FALSE)
    set_with_reason(graphics/sdl "FreeType library not found" FALSE)
+   set_with_reason(graphics/egl "FreeType library not found" FALSE)
 endif(FREETYPE_FOUND)
 
 if(FONTCONFIG_FOUND)
@@ -296,7 +313,17 @@ if (QT_FOUND)
       endif()
    endif()
 endif(QT_FOUND)
-
+if (Qt5Widgets_FOUND)
+	set_with_reason(graphics/qt5 "Qt5 found" TRUE ${Qt5Widgets_LIBRARIES}
+		${Qt5Declarative_LIBRARIES}
+		${Qt5Svg_LIBRARIES}
+		${Qt5DBus_LIBRARIES})
+endif ()
+if (Qt5Positioning_FOUND)
+	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
+		${Qt5Positioning_LIBRARIES}
+		${Qt5Sensors_LIBRARIES}) 
+endif ()
 if(GTK2_FOUND)
    # Include gtk.h with "SYSTEM" to avoid GCC compiler warning for gtkitemfactory.h.
    include_directories(SYSTEM ${GTK2_GTK_INCLUDE_DIR})
@@ -345,6 +372,11 @@ if(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
    endif(SDLTTF_FOUND)
    set_with_reason(graphics/sdl "SDL/SDL_image libs found" TRUE ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY})
 endif(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
+
+if(SDL2MAIN AND SDL2IMAGE AND GLES2)
+    set_with_reason(graphics/egl "SDL2/SDL2_image libs found" TRUE ${SDL2MAIN} ${SDL2IMAGE} ${GLES2})
+    message(STATUS "EGL libs found : ${SDL2MAIN} ${SDL2IMAGE} ${GLES2}")
+endif(SDL2_FOUND AND SDL2IMAGE_FOUND AND GLES2)
 
 if (LIBGPS_FOUND)
    if (LIBGPS_NEW_FOUND)
@@ -600,9 +632,6 @@ if (SAMPLE_MAP)
 endif(SAMPLE_MAP)
 
 if(ANDROID)
-   # for android API 3 compatiblity
-   SET(CMAKE_SHARED_LIBRARY_SONAME_C_FLAG "-Wl,-soname,/data/data/org.navitproject.navit/lib/")
-
    find_program(ANDROID_LOCATION NAMES android android.bat)
    find_program(ANT_LOCATION NAMES ant)
    if (NOT ANT_LOCATION)

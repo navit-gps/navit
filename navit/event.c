@@ -77,6 +77,15 @@ event_remove_watch(struct event_watch *ev)
 	event_methods.remove_watch(ev);
 }
 
+/**
+ * Add an event timeout
+ *
+ * @param the timeout itself in msec
+ * @param multi 0 means that the timeout will fire only once, 1 means that it will repeat
+ * @param the callback to call when the timeout expires
+ *
+ * @returns the result of the event_methods.add_timeout() call
+ */
 struct event_timeout *
 event_add_timeout(int timeout, int multi, struct callback *cb)
 {
