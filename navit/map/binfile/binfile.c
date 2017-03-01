@@ -2075,8 +2075,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			msp->mr = map_rec;
 			return msp;
 			break;
-		case attr_town_postal:
-			break;
 		case attr_street_name:
 			if (! item->map)
 				break;
