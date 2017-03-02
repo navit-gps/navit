@@ -192,14 +192,22 @@ gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *poss
 {
 	gchar* trunk_name;
 	if (item_name) {
-		trunk_name = g_strrstr(item_name, search_text);
+	
+		trunk_name = linguistics_expand_special(item_name,1);
+		if(!trunk_name){
+			trunk_name = g_strrstr(item_name, search_text);
+		}
+		
 		if (trunk_name) {
-			char next_char = trunk_name[strlen(search_text)];
+			int next_char_pos = strlen(search_text);
+			char next_char = trunk_name[next_char_pos];
 			int i;
 			int len = strlen(possible_keys);
+			
 			for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
-			if (i==len || !len) {
-				possible_keys[len]=trunk_name[strlen(search_text)];
+			
+			if ((i==len || !len) && !strncmp(trunk_name, search_text, next_char_pos)) {
+				possible_keys[len]=trunk_name[next_char_pos];
 				possible_keys[len+1]='\0';
 			}
 			dbg(lvl_info,"searching for %s, found: %s, currently possible_keys: %s \n", search_text, item_name, possible_keys);
@@ -211,6 +219,7 @@ static void
 gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 {
 	struct menu_data *md;
+	int first_available_key_found = 0;
 
 	if (!this->keyboard)
 		return;
@@ -225,12 +234,30 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 			while (lk2) {
 				struct widget *child_=lk2->data;
 				lk2=g_list_next(lk2);
-				if (child_->data && strcmp("\b", child_->data)) { // FIXME don't disable special keys
+				// The data_free part is an evil hack based on the observation that
+				// regular keys have set it to non-NULL whereas special keys appear
+				// to have it set to NULL.
+				if (child_->data && strcmp("\b", child_->data) && child_->data_free) {
 					if ( (strlen(possible_keys) == 0) ||
 					     (g_strrstr(possible_keys, child_->data)!=NULL ) ) {
-						child_->state|= STATE_HIGHLIGHTED|STATE_SENSITIVE|STATE_CLEAR ;
+						if(this->hide_keys){
+							child_->state|= STATE_SENSITIVE|STATE_CLEAR ;
+							child_->state&= ~(STATE_INVISIBLE);
+						}else{
+							child_->state|= STATE_SENSITIVE|STATE_CLEAR|STATE_HIGHLIGHTED ;
+						}
+						// Select and highlight the first possible button.
+						if (!first_available_key_found) {
+							gui_internal_highlight_do(this, child_);
+							first_available_key_found=1;
+						}
 					} else {
-						child_->state&= ~STATE_HIGHLIGHTED;
+						if(this->hide_keys){
+							child_->state&= ~(STATE_SELECTED|STATE_SENSITIVE) ;
+							child_->state|= STATE_INVISIBLE;
+						}else{
+							child_->state&= ~(STATE_HIGHLIGHTED);
+						}
 					}
 					gui_internal_widget_render(this,child_);
 				}
