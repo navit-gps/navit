@@ -3438,7 +3438,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_font)))
 		this->font_name=g_strdup(attr->u.str);
 		
-	if((attr=attr_search(attrs, NULL, attr_hide_possible_next_keys)))
+	if((attr=attr_search(attrs, NULL, attr_hide_impossible_next_keys)))
 		this->hide_keys = attr->u.num;
 	else
 		this->hide_keys = 0;
