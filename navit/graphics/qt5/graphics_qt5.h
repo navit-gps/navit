@@ -1,12 +1,26 @@
 #ifndef __graphics_qt_h
 #define __graphics_qt_h
+
+#ifndef USE_QWIDGET
+#define USE_QWIDGET 1
+#endif
+
+#ifndef USE_QML
+#define USE_QML 0
+#endif
+
 #include <glib.h>
 #include <QApplication>
 #include <QPixmap>
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
+#if USE_QML
+#include <QQuickWindow>
+#endif
+#if USE_QWIDGET
 #include "QNavitWidget.h"
+#endif
 
 #ifndef QT_QPAINTER_USE_FREETYPE
 #define QT_QPAINTER_USE_FREETYPE 1
@@ -25,7 +39,12 @@ struct graphics_gc_priv;
 struct graphics_priv;
 
 struct graphics_priv {
+#if USE_QML
+	QQuickWindow * window;
+#endif
+#if USE_QWIDGET
         QNavitWidget * widget;
+#endif
         QPixmap * pixmap;
         QPainter * painter;
         int use_count;
