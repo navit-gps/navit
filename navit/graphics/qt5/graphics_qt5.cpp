@@ -836,7 +836,9 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         graphics_priv->disable = 0;
 #if USE_QML
 	graphics_priv->window = NULL;
-	QQmlApplicationEngine * engine = new QQmlApplicationEngine("graphics_qt5.qml");
+   gchar* url = g_strjoin(NULL,getenv("NAVIT_LIBDIR"),"/graphics/graphics_qt5.qml",NULL);
+	QQmlApplicationEngine * engine = new QQmlApplicationEngine(url);
+   g_free (url);
 	if(engine != NULL)
 	{
 	        //engine->load(QUrl::fromLocalFile("graphics_qt5.qml"));
