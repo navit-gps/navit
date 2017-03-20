@@ -837,14 +837,14 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         graphics_priv->disable = 0;
 #if USE_QML
 	graphics_priv->window = NULL;
-   qmlRegisterType<QNavitQuick>("com.navit.graphics_qml", 1, 0, "QNavitQuick");
-   gchar* url = g_strjoin(NULL,getenv("NAVIT_LIBDIR"),"/graphics/graphics_qt5.qml",NULL);
-//	QQmlApplicationEngine * engine = new QQmlApplicationEngine(url);
+	/* register our QtQuick widget to allow it's usage within QML */
+	qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
+	/* get our qml application from embedded resources. May be replaced by the
+	 * QtQuick gui component if enabled */
 	QQmlApplicationEngine * engine = new QQmlApplicationEngine(QUrl("qrc:///graphics_qt5.qml"));
-   g_free (url);
 	if(engine != NULL)
 	{
-	        //engine->load(QUrl::fromLocalFile("graphics_qt5.qml"));
+		/* Get the engine's root window (for resizing) */
 	        QObject *toplevel = engine->rootObjects().value(0);
 	        graphics_priv->window = qobject_cast<QQuickWindow *> (toplevel);
 	}

@@ -1,4 +1,4 @@
-import com.navit.graphics_qml 1.0
+import com.navit.graphics_qt5 1.0
 import QtQuick 2.3
 import QtQuick.Window 2.2
 
