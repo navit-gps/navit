@@ -17,6 +17,7 @@
 #include <QBrush>
 #if USE_QML
 #include <QQuickWindow>
+#include <QObject>
 #endif
 #if USE_QWIDGET
 #include "QNavitWidget.h"
@@ -38,8 +39,25 @@
 struct graphics_gc_priv;
 struct graphics_priv;
 
+#if USE_QML
+class GraphicsPriv : public QObject
+{
+   Q_OBJECT
+public:
+   GraphicsPriv(struct graphics_priv * gp);
+   ~GraphicsPriv();
+   void emit_update();
+
+   struct graphics_priv * gp;
+
+signals:
+   void update();
+};
+#endif
+
 struct graphics_priv {
 #if USE_QML
+   GraphicsPriv * GPriv;
 	QQuickWindow * window;
 #endif
 #if USE_QWIDGET
@@ -67,6 +85,7 @@ struct graphics_priv {
         int argc;
         char * argv[4];
 };
+
 
 struct graphics_gc_priv {
         struct graphics_priv * graphics_priv;

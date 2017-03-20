@@ -3,11 +3,12 @@ import QtQuick 2.3
 import QtQuick.Window 2.2
 
 Window {
+   width: 200; height: 200
    QNavitQuick {
-       id: aPieChart
-       anchors.centerIn: parent
-       width: 100; height: 100
-       name: "A simple pie chart"
-       color: "red"
+       id: navit1
+       anchors.fill: parent
+       Component.onCompleted: {
+          navit1.setGraphicContext(graphics_qt5_context)
+       }
    }
 }

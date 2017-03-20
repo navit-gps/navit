@@ -47,12 +47,29 @@
 #if USE_QML
 #include <QQuickWindow>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "QNavitQuick.h"
 #endif
 #if USE_QWIDGET
 #include <QApplication>
 #include <QDesktopWidget>
 #include "QNavitWidget.h"
+#endif
+
+#if USE_QML
+GraphicsPriv::GraphicsPriv(struct graphics_priv * gp)
+{
+   this->gp = gp;
+}
+
+GraphicsPriv::~GraphicsPriv()
+{
+}
+
+void GraphicsPriv::emit_update()
+{
+   emit update();
+}
 #endif
 
 QGuiApplication * navit_app = NULL;
@@ -84,6 +101,10 @@ graphics_destroy(struct graphics_priv *gr)
 #if USE_QWIDGET
 	        if(gr->widget != NULL)
                         delete(gr->widget);
+#endif
+#if USE_QML
+           if(gr->GPriv != NULL)
+                        delete(gr->GPriv);
 #endif
 	}
         /* unregister from parent, if any */
@@ -549,6 +570,11 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			    if(gr->widget != NULL)
                                     gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
+#if USE_QML
+			    if(gr->GPriv != NULL)
+                                    gr->GPriv->emit_update();
+
+#endif
                     }
                     else
                        dbg(lvl_debug, "Context %p not active!\n", gr)
@@ -744,6 +770,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 #endif
 #if USE_QML
         graphics_priv->window = gr->window;
+        graphics_priv->GPriv = gr->GPriv;
 #endif
 #if USE_QWIDGET
         graphics_priv->widget = gr->widget;
@@ -847,9 +874,13 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 	qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
 	/* get our qml application from embedded resources. May be replaced by the
 	 * QtQuick gui component if enabled */
-	QQmlApplicationEngine * engine = new QQmlApplicationEngine(QUrl("qrc:///graphics_qt5.qml"));
+	QQmlApplicationEngine * engine = new QQmlApplicationEngine();
 	if(engine != NULL)
 	{
+      graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
+      QQmlContext *context = engine->rootContext();
+      context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
+      engine->load(QUrl("qrc:///graphics_qt5.qml"));
 		/* Get the engine's root window (for resizing) */
 	        QObject *toplevel = engine->rootObjects().value(0);
 	        graphics_priv->window = qobject_cast<QQuickWindow *> (toplevel);
