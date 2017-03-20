@@ -10,7 +10,7 @@
 #endif
 
 #include <glib.h>
-#include <QApplication>
+#include <QGuiApplication>
 #include <QPixmap>
 #include <QPainter>
 #include <QPen>
@@ -74,7 +74,7 @@ struct graphics_gc_priv {
         QBrush * brush;
 };
 /* central exported application info */
-extern QApplication * navit_app;
+extern QGuiApplication * navit_app;
 
 void resize_callback(struct graphics_priv * gr, int w, int h);
 

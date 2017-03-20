@@ -36,7 +36,7 @@
 #endif
 #include "graphics_qt5.h"
 #include "event_qt5.h"
-#include <QApplication>
+#include <QGuiApplication>
 #include <QPixmap>
 #include <QPainter>
 #include <QFont>
@@ -50,11 +50,12 @@
 #include "QNavitQuick.h"
 #endif
 #if USE_QWIDGET
+#include <QApplication>
 #include <QDesktopWidget>
 #include "QNavitWidget.h"
 #endif
 
-QApplication * navit_app = NULL;
+QGuiApplication * navit_app = NULL;
 
 struct graphics_font_priv {
 	QFont * font;
@@ -818,7 +819,12 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
                 graphics_priv->argc ++;
         }
         /* create surrounding application */
-        navit_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
+#if USE_QWIDGET
+	QApplication * internal_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
+	navit_app = internal_app;
+#else
+        navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
+#endif
 
 #ifdef QT_QPAINTER_USE_FREETYPE
         graphics_priv->font_freetype_new=font_freetype_new;
@@ -871,7 +877,7 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
                 /* default to desktop size if nothing else is given */
                 QRect geomet;
 #if USE_QWIDGET
-                geomet = navit_app->desktop()->screenGeometry(graphics_priv->widget);
+                geomet = internal_app->desktop()->screenGeometry(graphics_priv->widget);
 #endif
                 /* check for height */
                 if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))

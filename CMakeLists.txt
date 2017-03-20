@@ -320,15 +320,21 @@ if (QT_FOUND)
    endif()
 endif(QT_FOUND)
 if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
+   set(Qt5_ADDITIONAL_LIBRARIES "")
    if(Qt5Widgets_FOUND)
 	   set_with_reason(USE_QWIDGET "Qt5Widgets found" TRUE)
+	   if(USE_QWIDGET)
+	   	set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+           endif()
    endif()
    if(Qt5Quick_FOUND)
 	   set_with_reason(USE_QML "Qt5Quick found" TRUE)
+	   if(USE_QML)
+	   	set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
+	   endif()
    endif()
    set_with_reason(graphics/qt5 "Qt5 found" TRUE
-		${Qt5Widgets_LIBRARIES}
-		${Qt5Quick_LIBRARIES}
+		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
 endif ()
