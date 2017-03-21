@@ -1,6 +1,6 @@
 #ifndef QNAVITQUICK_H
 #define QNAVITQUICK_H
-
+class QNavitQuick;
 #include <QtQuick/QQuickPaintedItem>
 #include <QColor>
 
