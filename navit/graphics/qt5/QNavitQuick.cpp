@@ -24,6 +24,7 @@ QNavitQuick::QNavitQuick(QQuickItem *parent)
     : QQuickPaintedItem(parent)
 {
     setAcceptedMouseButtons(Qt::AllButtons);
+    graphics_priv = NULL;
 }
 
 void QNavitQuick::setGraphicContext(GraphicsPriv *gp)
@@ -89,6 +90,11 @@ void QNavitQuick::geometryChanged(const QRectF &newGeometry, const QRectF &oldGe
     dbg(lvl_debug,"enter\n");
     QQuickPaintedItem::geometryChanged(newGeometry,oldGeometry);
     QPainter * painter = NULL;
+    if(graphics_priv == NULL)
+    {
+        dbg(lvl_debug,"Context not set, aborting\n");
+	return;
+    }
     if(graphics_priv->pixmap != NULL)
     {
             delete graphics_priv->pixmap;

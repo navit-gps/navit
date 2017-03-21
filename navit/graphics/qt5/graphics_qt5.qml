@@ -1,6 +1,6 @@
 import com.navit.graphics_qt5 1.0
-import QtQuick 2.3
-import QtQuick.Window 2.2
+import QtQuick 2.2
+import QtQuick.Window 2.0
 
 Window {
    width: 200; height: 200
