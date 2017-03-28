@@ -144,7 +144,7 @@ struct gui_priv {
 	} gesture_ring[GESTURE_RINGSIZE];
 	int gesture_ring_last, gesture_ring_first;
 
-
+	int hide_keys; //Flag to set the keyboard mode 1: hide impossible keys on search; 0: highlight them.
 	int results_map_population;
 };
 
