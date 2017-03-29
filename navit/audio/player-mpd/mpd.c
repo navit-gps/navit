@@ -324,7 +324,7 @@ print_all(GList* list)
 	{
 		if(get_playlist_data(current)!=NULL)
 		{
-			printf("List element %i, %s. Index %i (%p)\n", i++, get_playlist_name(current), get_playlist_data(current)->index, current );
+			dbg(lvl_info, "List element %i, %s. Index %i (%p)\n", i++, get_playlist_name(current), get_playlist_data(current)->index, current );
 		}else{
 			dbg(lvl_error, "%i: This appears to be an empty list. That's probably a Bug!\n",i);
 		}

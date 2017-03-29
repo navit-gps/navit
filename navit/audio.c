@@ -164,7 +164,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 struct audio *
 audio_new(struct attr *parent, struct attr **attrs)
 {
-	dbg(lvl_error,"Initializing audio plugin\nParent: %p, Attrs: %p\n", parent, attrs);
+	dbg(lvl_info,"Initializing audio plugin\nParent: %p, Attrs: %p\n", parent, attrs);
 	struct audio *this_;
 	struct attr *attr;
 	struct audio_priv *(*audiotype_new)(struct audio_methods *meth,
@@ -172,15 +172,14 @@ audio_new(struct attr *parent, struct attr **attrs)
 						struct attr **attrs,
 						struct attr *parent
 	);
-	/*struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent*/
 	attr=attr_search(attrs, NULL, attr_type);
 	if (! attr) {
 			dbg(lvl_error,"type missing\n");
 			return NULL;
 	}
-	dbg(lvl_error,"type='%s'\n", attr->u.str);
+	
 	audiotype_new=plugin_get_category_audio(attr->u.str);
-	dbg(lvl_error,"new=%p\n", audio_new);
+
 	if (! audiotype_new) {
 			dbg(lvl_error,"wrong type '%s'\n", attr->u.str);
 			return NULL;
@@ -195,7 +194,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 	if(attr){
 		
 		this_->name = g_strdup(attr->u.str);
-		dbg(lvl_error, "audio name: %s \n", this_->name);
+		dbg(lvl_info, "audio name: %s \n", this_->name);
 	}
 	
 	this_->cbl=callback_list_new();
@@ -207,16 +206,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 		g_free(this_);
 		return NULL;
 	}
-	dbg(lvl_error, "Attrs: %p\n", attrs);
-	/*
-	if(attrs != NULL){
-		dbg(lvl_error, "*Attrs: %p\n", *attrs);
-		if(*attrs != NULL){
-			this_->attrs=attr_list_dup(attrs);
-		}
-	}
-	//*/
-	dbg(lvl_error, "Attrs: %p\n", this_->attrs);
+
 	//*
 	if (this_->meth.volume) {
 		dbg(lvl_info, "%s.volume=%p\n", this_->name, this_->meth.volume);
@@ -249,7 +239,7 @@ audio_new(struct attr *parent, struct attr **attrs)
 		dbg(lvl_error, "The plugin %s cannot handle actions\n", this_->name);
 	}
 	//*/
-	dbg(lvl_error,"return %p\n", this_);
+	dbg(lvl_info,"return %p\n", this_);
 	
     return this_;
 }

@@ -6,7 +6,6 @@ dependencies:
     - ~/.android
     - ~/android
     - "~/assets/"
-    - ~/tomtom_assets
   pre:
     - "[ -d ~/assets ] || mkdir ~/assets"
     - "[ -d ~/android ] || mkdir ~/android"
@@ -31,6 +30,11 @@ test:
         files:
           - ci/build_*.sh
 deployment:
+  publish_to_playstore:
+    branch: master
+    owner: navit-gps
+    commands:
+      - bash ci/publish.sh
   merge_into_master:
     branch: trunk
     owner: navit-gps

@@ -753,7 +753,7 @@ gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 void
 gui_internal_widget_render(struct gui_priv *this, struct widget *w)
 {
-	if(w->p.x > this->root.w || w->p.y > this->root.h)
+	if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
 		return;
 
 	switch (w->type) {
@@ -820,6 +820,10 @@ gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, s
 
 	sb->button_box=gui_internal_box_new(this, gravity_center|orientation_horizontal);
 	sb->button_box->background=this->background;
+	if(this->hide_keys){
+		sb->prev_button->state |= STATE_INVISIBLE;
+		sb->next_button->state |= STATE_INVISIBLE;
+	}
 	sb->prev_button->state &= ~STATE_SENSITIVE;
 	sb->next_button->state &= ~STATE_SENSITIVE;
 	gui_internal_widget_append(sb->button_box, sb->prev_button);
@@ -1264,7 +1268,12 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
-			cur_widget->state |= STATE_OFFSCREEN;
+			if(this->hide_keys){
+				cur_widget->state |= STATE_INVISIBLE;
+				cur_widget->state &= ~STATE_SENSITIVE;
+			}else{
+				cur_widget->state |= STATE_OFFSCREEN;
+			}
 		}
 		row = g_list_next(row);
 	}
@@ -1308,7 +1317,12 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				/* We pack the widget before rendering to ensure that the x and y
 				 * coordinates get pushed down.
 				 */
-				cur_widget->state &= ~STATE_OFFSCREEN;
+				if(this->hide_keys){
+					cur_widget->state &= ~STATE_INVISIBLE;
+					cur_widget->state |= STATE_SENSITIVE;
+				}else{
+					cur_widget->state &= ~STATE_OFFSCREEN;
+				}
 				gui_internal_widget_pack(this,cur_widget);
 				gui_internal_widget_render(this,cur_widget);
 
@@ -1317,8 +1331,13 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				    max_height = dim->height;
 				}
 			} else {
-				/* Mark contents that we don't have space for. */
-				cur_widget->state |= STATE_OFFSCREEN;
+				/* Deactivate contents that we don't have space for. */
+				if(this->hide_keys){
+					cur_widget->state |= STATE_INVISIBLE;
+					cur_widget->state &= ~STATE_SENSITIVE;
+				}else{
+					cur_widget->state |= STATE_OFFSCREEN;
+				}
 			}
 		}
 
@@ -1337,6 +1356,10 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	}
 
 	/* By default, hide all scroll buttons. */
+	if(this->hide_keys){
+		table_data->scroll_buttons.next_button->state|= STATE_INVISIBLE;
+		table_data->scroll_buttons.prev_button->state|= STATE_INVISIBLE;
+	}
 	table_data->scroll_buttons.next_button->state&= ~STATE_SENSITIVE;
 	table_data->scroll_buttons.prev_button->state&= ~STATE_SENSITIVE;
 
@@ -1359,11 +1382,13 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		if(!drawing_space_left)
 	        {
 			table_data->scroll_buttons.next_button->state|= STATE_SENSITIVE;
+			table_data->scroll_buttons.next_button->state&= ~STATE_INVISIBLE;
 		}
 
 		if(table_data->top_row != w->children)
 		{
 			table_data->scroll_buttons.prev_button->state|= STATE_SENSITIVE;
+			table_data->scroll_buttons.prev_button->state&= ~STATE_INVISIBLE;
 		}
 		gui_internal_widget_render(this,table_data->scroll_buttons.button_box);
 	}
