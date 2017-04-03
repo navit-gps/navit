@@ -52,7 +52,6 @@
 #endif
 #if USE_QWIDGET
 #include <QApplication>
-#include <QDesktopWidget>
 #include "QNavitWidget.h"
 #endif
 
@@ -803,8 +802,32 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         struct attr * event_loop_system = NULL;
         struct attr * platform = NULL;
         struct attr * fullscreen = NULL;
-        //dbg(lvl_debug,"enter\n");
+	struct attr * attr_widget = NULL;
+	bool use_qml = USE_QML;
+	bool use_qwidget = USE_QWIDGET;
 
+        //dbg(lvl_debug,"enter\n");
+        
+	/* get qt widget attr */
+	if((attr_widget=attr_search(attrs, NULL, attr_qt5_widget)))
+	{
+	        /* check if we shall use qml */
+	        if(strcmp (attr_widget->u.str, "qwidget") == 0)
+		{
+		        use_qml = false;
+		}
+		/* check if we shall use qwidget */
+	        if(strcmp (attr_widget->u.str, "qml") == 0)
+		{
+		        use_qwidget = false;
+		}
+	}
+	if(use_qml && use_qwidget)
+	{
+                /* both are possible, default to QML */
+		use_qwidget = false;
+	}
+	
         /*register graphic methods by copying in our predefined ones */
         *meth=graphics_methods;
 
@@ -847,8 +870,8 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         }
         /* create surrounding application */
 #if USE_QWIDGET
-	QApplication * internal_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
-	navit_app = internal_app;
+        QApplication * internal_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
+        navit_app = internal_app;
 #else
         navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
 #endif
@@ -870,29 +893,37 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         graphics_priv->disable = 0;
 #if USE_QML
 	graphics_priv->window = NULL;
-	/* register our QtQuick widget to allow it's usage within QML */
-	qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
-	/* get our qml application from embedded resources. May be replaced by the
-	 * QtQuick gui component if enabled */
-	QQmlApplicationEngine * engine = new QQmlApplicationEngine();
-	if(engine != NULL)
+	graphics_priv->GPriv = NULL;
+	if(use_qml)
 	{
-      graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
-      QQmlContext *context = engine->rootContext();
-      context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
-      engine->load(QUrl("qrc:///graphics_qt5.qml"));
-		/* Get the engine's root window (for resizing) */
-	        QObject *toplevel = engine->rootObjects().value(0);
-	        graphics_priv->window = qobject_cast<QQuickWindow *> (toplevel);
-	}
+	        /* register our QtQuick widget to allow it's usage within QML */
+	        qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
+	        /* get our qml application from embedded resources. May be replaced by the
+	         * QtQuick gui component if enabled */
+	        QQmlApplicationEngine * engine = new QQmlApplicationEngine();
+	        if(engine != NULL)
+	        {
+                        graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
+                        QQmlContext *context = engine->rootContext();
+                        context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
+                        engine->load(QUrl("qrc:///graphics_qt5.qml"));
+		        /* Get the engine's root window (for resizing) */
+	                QObject *toplevel = engine->rootObjects().value(0);
+	                graphics_priv->window = qobject_cast<QQuickWindow *> (toplevel);
+                }
+        }
 #endif
-#if USE_QWIDGET 
-	graphics_priv->widget = new QNavitWidget(graphics_priv,NULL,Qt::Window);
+#if USE_QWIDGET
+        graphics_priv->widget = NULL;
+	if(use_qwidget)
+	{
+	        graphics_priv->widget = new QNavitWidget(graphics_priv,NULL,Qt::Window);
+        }
 #endif
         if ((fullscreen=attr_search(attrs, NULL, attr_fullscreen)) && (fullscreen->u.num)) {
                 /* show this maximized */
 #if USE_QML
-	        if(graphics_priv->window != NULL)
+                if(graphics_priv->window != NULL)
                         graphics_priv->window->setWindowState(Qt::WindowFullScreen);
 #endif
 #if USE_QWIDGET
@@ -907,9 +938,8 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
                 struct attr * h = NULL;
                 /* default to desktop size if nothing else is given */
                 QRect geomet;
-#if USE_QWIDGET
-                geomet = internal_app->desktop()->screenGeometry(graphics_priv->widget);
-#endif
+		geomet.setHeight(100);
+		geomet.setWidth(100);
                 /* check for height */
                 if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))
                                 geomet.setHeight(h->u.num);
