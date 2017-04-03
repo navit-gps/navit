@@ -44,6 +44,7 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QFile>
+#include <QScreen>
 #if USE_QML
 #include <QQuickWindow>
 #include <QQmlApplicationEngine>
@@ -940,6 +941,12 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
                 QRect geomet;
 		geomet.setHeight(100);
 		geomet.setWidth(100);
+		/* get desktop size */
+		QScreen *primary = navit_app->primaryScreen();
+		if(primary != NULL)
+		{
+                        geomet = primary->availableGeometry();
+                }
                 /* check for height */
                 if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))
                                 geomet.setHeight(h->u.num);
