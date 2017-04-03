@@ -52,7 +52,7 @@ sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="L
 sed -i -e 's@name="Demo" profilename="car" enabled="no" @name="Demo" profilename="car" enabled="yes" follow="1" refresh="1"@' navit.xml
 sed -i -e 's@type="internal" enabled@type="internal" fullscreen="1" font_size="350" enabled@' navit.xml
 sed -i -e 's@libbinding_dbus.so" active="no"@libbinding_dbus.so" active="yes"@' navit.xml
-linux_test qt5
+linux_test qt5_widget
 
 # restore config
 cp navit.xml.bak navit.xml
@@ -62,5 +62,5 @@ sed -i -e 's@name="Local GPS" profilename="car" enabled="yes" active="1"@name="L
 sed -i -e 's@name="Demo" profilename="car" enabled="no" @name="Demo" profilename="car" enabled="yes" follow="1" refresh="1"@' navit.xml
 sed -i -e 's@type="internal" enabled@type="internal" fullscreen="1" font_size="350" enabled@' navit.xml
 sed -i -e 's@libbinding_dbus.so" active="no"@libbinding_dbus.so" active="yes"@' navit.xml
-linux_test qt5
+linux_test qt5_qml
 
