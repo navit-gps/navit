@@ -1,18 +1,18 @@
 sudo apt-get install xdotool
 # Use xinput test 4 when running x11vnc on the circleci server to find mouse coordinates
 
-[ -d $CIRCLE_ARTIFACTS/frames/ ] || mkdir $CIRCLE_ARTIFACTS/frames/
+[ -d $CIRCLE_ARTIFACTS/logs_${1}/frames/ ] || mkdir $CIRCLE_ARTIFACTS/logs_${1}/frames/
 
 event=0
 
 send_event (){
     file=`printf "%05d\n" $event`
 
-    import -window root $CIRCLE_ARTIFACTS/frames/tmp.png
+    import -window root $CIRCLE_ARTIFACTS/logs_${1}/frames/tmp.png
     if [[ "$1" == "mousemove" ]]; then
-        composite -gravity NorthWest -geometry +$2+$3 ~/navit/ci/pointer-64.png $CIRCLE_ARTIFACTS/frames/tmp.png $CIRCLE_ARTIFACTS/frames/${file}.png
+        composite -gravity NorthWest -geometry +$2+$3 ~/navit/ci/pointer-64.png $CIRCLE_ARTIFACTS/logs_${1}/frames/tmp.png $CIRCLE_ARTIFACTS/logs_${1}/frames/${file}.png
     else
-        mv $CIRCLE_ARTIFACTS/frames/tmp.png $CIRCLE_ARTIFACTS/frames/${file}.png
+        mv $CIRCLE_ARTIFACTS/logs_${1}/frames/tmp.png $CIRCLE_ARTIFACTS/logs_${1}/frames/${file}.png
     fi
     event=$((event+1))
     xdotool $@
@@ -78,7 +78,7 @@ send_event key KP_Enter # Validate
 
 # capture 5 seconds of usage
 for i in `seq 99994 99999`; do
-	import -window root $CIRCLE_ARTIFACTS/frames/${i}.png
+	import -window root $CIRCLE_ARTIFACTS/logs_${1}/frames/${i}.png
 	sleep 1
 done
 
@@ -91,4 +91,4 @@ send_event key Right    # Select 'Quit'
 send_event key KP_Enter # Validate
 
 # Assemble the gif
-convert   -delay 100 -loop 0 $CIRCLE_ARTIFACTS/frames/*.png $CIRCLE_ARTIFACTS/town_search.gif
+convert   -delay 100 -loop 0 $CIRCLE_ARTIFACTS/logs_${1}/frames/*.png $CIRCLE_ARTIFACTS/logs_${1}/town_search.gif
