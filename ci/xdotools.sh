@@ -92,6 +92,6 @@ send_event key Down     # Select 'Route'
 send_event key Right    # Select 'About'
 send_event key Right    # Select 'Quit'
 send_event key KP_Enter # Validate
-01
+
 # Assemble the gif
 convert   -delay 100 -loop 0 $FRAME_DIR/*.png $LOGS_DIR/town_search.gif
