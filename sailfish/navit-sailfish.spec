@@ -21,7 +21,6 @@ BuildRequires: gettext-devel
 BuildRequires: freetype-devel
 BuildRequires: zlib-devel
 BuildRequires: qt5-qtcore-devel
-BuildRequires: qt5-qtwidgets-devel
 BuildRequires: qt5-qtdeclarative-devel
 BuildRequires: qt5-qtdbus-devel
 BuildRequires: qt5-qtpositioning-devel
@@ -33,7 +32,6 @@ Requires: gettext-libs
 Requires: freetype
 Requires: zlib
 Requires: qt5-qtcore
-Requires: qt5-qtwidgets
 Requires: qt5-qtdeclarative
 Requires: qt5-qtdbus
 Requires: qt5-qtpositioning
@@ -69,6 +67,8 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -Dspeech/dbus:BOOL=FALSE \
        -Dbinding/dbus:BOOL=FALSE \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
+       -DUSE_QWIDGET:BOOL=FALSE \
+       -DSAMPLE_MAP=n \
          %{navit_real_source}
 %{__make}
 
@@ -83,7 +83,7 @@ cp %{navit_real_source}/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 %defattr(-, root, root, -)
 %{_datadir}/navit/navit.xml
 %{_datadir}/navit/xpm/
-%{_datadir}/navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
+#%{_datadir}/navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/applications/navit.desktop
 %{_datadir}/icons/hicolor/128x128/apps/navit.png
 %{_datadir}/icons/hicolor/22x22/apps/navit.png
