@@ -7,6 +7,7 @@ Window {
    QNavitQuick {
        id: navit1
        anchors.fill: parent
+       focus: true
        Component.onCompleted: {
           navit1.setGraphicContext(graphics_qt5_context)
        }
