@@ -3437,6 +3437,12 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->radius=10;
 	if( (attr=attr_search(attrs,NULL,attr_font)))
 		this->font_name=g_strdup(attr->u.str);
+		
+	if((attr=attr_search(attrs, NULL, attr_hide_impossible_next_keys)))
+		this->hide_keys = attr->u.num;
+	else
+		this->hide_keys = 0;
+		
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;

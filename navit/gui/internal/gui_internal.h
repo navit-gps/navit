@@ -2,6 +2,8 @@ struct widget;
 struct graphics_image;
 struct gui_priv;
 
+#define STATE_INVISIBLE 1
+#define STATE_SELECTED 2
 #define STATE_HIGHLIGHTED 4
 #define STATE_SENSITIVE 8
 #define STATE_EDIT 16

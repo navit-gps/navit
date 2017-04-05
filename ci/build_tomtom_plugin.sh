@@ -39,9 +39,9 @@ if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.
   wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
 fi
 
-if ! test -f "~/tomtom_assets/libpng-1.6.28.tar.gz"
+if ! test -f "~/tomtom_assets/libpng-1.6.29.tar.gz"
 then 
-  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.28.tar.gz -P ~/tomtom_assets
+  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.29.tar.gz -P ~/tomtom_assets
 fi
 
 # toolchain
@@ -195,8 +195,8 @@ make install
 
 # libpng
 cd /tmp/
-tar xzf ~/tomtom_assets/libpng-1.6.28.tar.gz
-cd libpng-1.6.28/ 
+tar xzf ~/tomtom_assets/libpng-1.6.29.tar.gz
+cd libpng-1.6.29/ 
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install

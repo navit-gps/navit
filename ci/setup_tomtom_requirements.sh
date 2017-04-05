@@ -40,9 +40,9 @@ if ! [ -e "~/assets/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.
   wget -nv -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/assets/tomtom
 fi
 
-if ! test -f "~/assets/tomtom/libpng-1.6.27.tar.gz"
+if ! test -f "~/assets/tomtom/libpng-1.6.29.tar.gz"
 then 
-  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.27.tar.gz -P ~/assets/tomtom
+  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.29.tar.gz -P ~/assets/tomtom
 fi
 
 # toolchain
@@ -70,8 +70,8 @@ make install
 
 # libpng
 cd /tmp/
-tar xzf ~/assets/tomtom/libpng-1.6.27.tar.gz
-cd libpng-1.6.27/ 
+tar xzf ~/assets/tomtom/libpng-1.6.29.tar.gz
+cd libpng-1.6.29/ 
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install

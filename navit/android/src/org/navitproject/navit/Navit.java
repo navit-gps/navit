@@ -55,6 +55,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.Manifest;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -62,6 +63,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -115,6 +118,7 @@ public class Navit extends Activity
 	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
 	Boolean                          isFullscreen                   = false;
+	private static final int         MY_PERMISSIONS_REQUEST_ALL     = 101;
 
 	
 	/**
@@ -322,7 +326,12 @@ public class Navit extends Activity
 		navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
 		Log.d(TAG, String.format("status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, navigation_bar_height_landscape=%d, navigation_bar_width=%d", 
 				status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape, navigation_bar_width));
-
+		if ((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
+				(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+			Log.d (TAG,"ask for permission(s)");
+			ActivityCompat.requestPermissions(this,
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_ALL);
+		}
 		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
 		String lang = locale.getLanguage();
@@ -481,7 +490,40 @@ public class Navit extends Activity
 			show_soft_keyboard_now_showing = true;
 		}
 	}
-
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_ALL: {
+				if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+						&& grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+						// ok, we got permissions
+				} else {
+					AlertDialog.Builder infobox = new AlertDialog.Builder(this);
+					infobox.setTitle(getString(R.string.permissions_info_box_title)); // TRANS
+					infobox.setCancelable(false);
+					final TextView message = new TextView(this);
+					message.setFadingEdgeLength(20);
+					message.setVerticalFadingEdgeEnabled(true);
+					RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+					message.setLayoutParams(rlp);
+					final SpannableString s = new SpannableString(getString(R.string.permissions_not_granted)); // TRANS
+					message.setText(s);
+					message.setMovementMethod(LinkMovementMethod.getInstance());
+					infobox.setView(message);
+					// TRANS
+					infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface arg0, int arg1) {
+							exit();
+						}
+					});
+					infobox.show();
+				}
+				return;
+			}
+		}
+	}
+	
 	private void parseNavigationURI(String schemeSpecificPart) {
 		String naviData[]= schemeSpecificPart.split("&");
 		Pattern p = Pattern.compile("(.*)=(.*)");

@@ -53,20 +53,42 @@ bool QNavitWidget::event(QEvent *event)
     return QWidget::event(event);
 }
 
+static void paintOverlays(QPainter * painter, struct graphics_priv * gp, QPaintEvent * event)
+{
+        GHashTableIter iter;
+        struct graphics_priv * key, * value;
+        g_hash_table_iter_init (&iter, gp->overlays);
+        while (g_hash_table_iter_next (&iter, (void **)&key, (void **)&value))
+        {
+                if(! value->disable)
+                {
+                         QRect rr(value->x, value->y, value->pixmap->width(), value->pixmap->height());
+                         if(event->rect().intersects(rr))
+                         {
+                                 dbg(lvl_debug,"draw overlay (%d, %d, %d, %d)\n",value->x, value->y, value->pixmap->width(), value->pixmap->height());
+                                 painter->drawPixmap(value->x, value->y, *value->pixmap);
+                                 /* draw overlays of overlay if any by recursive calling */
+                                 paintOverlays(painter, value, event);
+                         }
+                }
+        }
+        
+}
+
 void QNavitWidget :: paintEvent(QPaintEvent * event)
 {
-//        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter (%d, %d, %d, %d)\n",event->rect().x(), event->rect().y(), event->rect().width(), event->rect().height());
         QPainter painter(this);
         /* color background if any */
-    	if (graphics_priv->background_graphics_gc_priv != NULL)
+        if (graphics_priv->background_graphics_gc_priv != NULL)
         {
                 painter.setPen(*graphics_priv->background_graphics_gc_priv->pen);
-                painter.fillRect(0, 0, graphics_priv->pixmap->width(),
-                                       graphics_priv->pixmap->height(),
-                                       *graphics_priv->background_graphics_gc_priv->brush);
+                painter.fillRect(event->rect(),*graphics_priv->background_graphics_gc_priv->brush);
         }
-        painter.drawPixmap(0,0,*graphics_priv->pixmap);
-        
+        painter.drawPixmap(0,0,*graphics_priv->pixmap,
+                           event->rect().x(), event->rect().y(),
+                           event->rect().width(), event->rect().height());
+        paintOverlays(&painter, graphics_priv, event);
 }
 
 void QNavitWidget::resizeEvent(QResizeEvent * event)
@@ -79,17 +101,18 @@ void QNavitWidget::resizeEvent(QResizeEvent * event)
         }
     
         graphics_priv->pixmap=new QPixmap(size());
-        graphics_priv->pixmap->fill();
         painter = new QPainter(graphics_priv->pixmap);
-        QBrush brush;
-        painter->fillRect(0, 0, width(), height(), brush);
         if(painter != NULL)
-           delete painter;
+        {
+                QBrush brush;
+                painter->fillRect(0, 0, width(), height(), brush);
+                delete painter;
+        }
         dbg(lvl_debug,"size %dx%d\n", width(), height());
         dbg(lvl_debug,"pixmap %p %dx%d\n", graphics_priv->pixmap, graphics_priv->pixmap->width(), graphics_priv->pixmap->height());
         /* if the root window got resized, tell navit about it */
         if(graphics_priv->root)
-                resize_callback(width(),height());
+                resize_callback(graphics_priv,width(),height());
 }
 
 void QNavitWidget::mouseEvent(int pressed, QMouseEvent *event)
@@ -100,13 +123,13 @@ void QNavitWidget::mouseEvent(int pressed, QMouseEvent *event)
 	p.y=event->y();
 	switch (event->button()) {
 	case Qt::LeftButton:
-		callback_list_call_attr_3(callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(1), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(1), GINT_TO_POINTER(&p));
 		break;
 	case Qt::MidButton:
-		callback_list_call_attr_3(callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(2), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(2), GINT_TO_POINTER(&p));
 		break;
 	case Qt::RightButton:
-		callback_list_call_attr_3(callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(3), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(3), GINT_TO_POINTER(&p));
 		break;
 	default:
 		break;
@@ -131,14 +154,14 @@ void QNavitWidget::mouseMoveEvent(QMouseEvent *event)
 //        dbg(lvl_debug,"enter\n");
 	p.x=event->x();
 	p.y=event->y();
-	callback_list_call_attr_1(callbacks, attr_motion, (void *)&p);
+	callback_list_call_attr_1(graphics_priv->callbacks, attr_motion, (void *)&p);
 }
 
 void QNavitWidget::wheelEvent(QWheelEvent *event)
 {
 	struct point p;
 	int button;
-	dbg(lvl_debug,"enter");
+	dbg(lvl_debug,"enter\n");
 	p.x=event->x();	// xy-coordinates of the mouse pointer
 	p.y=event->y();
 	
@@ -150,8 +173,8 @@ void QNavitWidget::wheelEvent(QWheelEvent *event)
 		button=-1;
 	
 	if (button != -1) {
-		callback_list_call_attr_3(callbacks, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
-		callback_list_call_attr_3(callbacks, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
+		callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button), GINT_TO_POINTER(&p));
 	}
 	
 	event->accept();

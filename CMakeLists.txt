@@ -158,18 +158,24 @@ libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 if (NOT DISABLE_QT)
   find_package(Qt5Widgets)
-  find_package(Qt5Svg)
-  find_package(Qt5DBus)
+  find_package(Qt5Quick)
   find_package(Qt5Positioning)
-  find_package(Qt5Sensors)
-  #find_package(Qt5Declarative)
-  if (Qt5Widgets_FOUND)
-  else (Qt5Widgets_FOUND)
+  if (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)
+    add_feature (USE_QWIDGET "Qt5 Qt5Widget not found" FALSE)
+    add_feature (USE_QML "Qt5 Qt5Quick not found" FALSE)
+    if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
+      find_package(Qt5Svg REQUIRED)
+      find_package(Qt5DBus REQUIRED)
+    endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
+    if (Qt5Positioning_FOUND)
+      find_package(Qt5Sensors REQUIRED)
+    endif (Qt5Positioning_FOUND)
+  else (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)
     # Unfortunately, CMake seems to ignore the "OPTIONAL_COMPONENTS" flag,
     # and actually requires all components to be installed. Maybe this can
     # be fixed later...
     find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
-  endif (Qt5Widgets_FOUND)      
+  endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)      
 endif (NOT DISABLE_QT)
 
 #pkg-config based detection
@@ -313,14 +319,27 @@ if (QT_FOUND)
       endif()
    endif()
 endif(QT_FOUND)
-if (Qt5Widgets_FOUND)
-	set_with_reason(graphics/qt5 "Qt5 found" TRUE ${Qt5Widgets_LIBRARIES}
-		${Qt5Declarative_LIBRARIES}
+if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
+   set(Qt5_ADDITIONAL_LIBRARIES "")
+   if(Qt5Widgets_FOUND)
+	   set_with_reason(USE_QWIDGET "Qt5Widgets found" TRUE)
+	   if(USE_QWIDGET)
+	   	set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+           endif()
+   endif()
+   if(Qt5Quick_FOUND)
+	   set_with_reason(USE_QML "Qt5Quick found" TRUE)
+	   if(USE_QML)
+	   	set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
+	   endif()
+   endif()
+   set_with_reason(graphics/qt5 "Qt5 found" TRUE
+		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
 endif ()
 if (Qt5Positioning_FOUND)
-	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
+   set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
 		${Qt5Positioning_LIBRARIES}
 		${Qt5Sensors_LIBRARIES}) 
 endif ()

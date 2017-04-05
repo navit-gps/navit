@@ -188,7 +188,7 @@ ATTR_UNUSED
 ATTR_UNUSED
 ATTR_UNUSED
 ATTR_UNUSED
-ATTR_UNUSED
+ATTR(hide_impossible_next_keys)
 ATTR(turn_around_count)
 ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
@@ -282,7 +282,7 @@ ATTR_UNUSED
 ATTR_UNUSED
 ATTR(window_title)
 ATTR(qt5_platform)
-ATTR_UNUSED
+ATTR(qt5_widget)
 /* poi */
 ATTR_UNUSED
 ATTR(info_html)
