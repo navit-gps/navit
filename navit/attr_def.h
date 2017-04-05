@@ -282,7 +282,7 @@ ATTR_UNUSED
 ATTR_UNUSED
 ATTR(window_title)
 ATTR(qt5_platform)
-ATTR_UNUSED
+ATTR(qt5_widget)
 /* poi */
 ATTR_UNUSED
 ATTR(info_html)
