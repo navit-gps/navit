@@ -1003,6 +1003,9 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 void
 plugin_init(void)
 {
+#if USE_QML
+	 Q_INIT_RESOURCE(graphics_qt5);
+#endif
 //        dbg(lvl_debug,"enter\n");
         plugin_register_category_graphics("qt5", graphics_qt5_new);
         qt5_event_init();
