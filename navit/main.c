@@ -81,7 +81,7 @@ setenv(char *var, char *val, int overwrite)
  * '~'  replaced with HOME
 */
 static char *environment_vars[][5]={
-	{"NAVIT_LIBDIR",      ":",          ":/"LIB_DIR"/navit",":\\lib",   ":/lib"},
+	{"NAVIT_LIBDIR",      ":",          ":/"LIB_DIR,     ":\\lib",      ":/lib"},
 	{"NAVIT_SHAREDIR",    ":",          ":/"SHARE_DIR,   ":",           ":/share"},
 	{"NAVIT_LOCALEDIR",   ":/../locale",":/"LOCALE_DIR,  ":\\locale",   ":/locale"},
 	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data",     ":/home"},
