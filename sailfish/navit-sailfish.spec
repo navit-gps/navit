@@ -99,7 +99,10 @@ cp %{navit_real_source}/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 %{_datadir}/harbour-navit/xpm/
 %{_datadir}/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/applications/harbour-navit.desktop
+%{_datadir}/icons/hicolor/256x256/apps/harbour-navit.png
 %{_datadir}/icons/hicolor/128x128/apps/harbour-navit.png
+%{_datadir}/icons/hicolor/108x108/apps/harbour-navit.png
+%{_datadir}/icons/hicolor/86x86/apps/harbour-navit.png
 %{_datadir}/icons/hicolor/22x22/apps/harbour-navit.png
 %{_datadir}/harbour-navit/locale/
 %attr(755, root, root) %{_bindir}/harbour-navit
