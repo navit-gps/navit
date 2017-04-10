@@ -17,6 +17,7 @@ public:
                              Qt::WindowFlags flags);
 protected:
         virtual bool event(QEvent *event);
+        virtual void keyPressEvent(QKeyEvent *event);
         virtual void paintEvent(QPaintEvent * event);
         virtual void resizeEvent(QResizeEvent * event);
         virtual void mouseEvent(int pressed, QMouseEvent *event);
