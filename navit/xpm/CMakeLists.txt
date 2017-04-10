@@ -66,8 +66,8 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
    endforeach()
 endmacro()
 
-if(NOT DEFINED ${NAVIT_BINARY})
-   set(NAVIT_BINARY navit)
+if(NOT DEFINED NAVIT_BINARY)
+   set(NAVIT_BINARY navit CACHE STRING "Navit binary name  not defined")
 endif()
 #patch binary name in desktop file
 configure_file(desktop_icons/navit.desktop.in desktop_icons/${PACKAGE}.desktop)
