@@ -29,7 +29,7 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 # binary name
-set(NAVIT_BINARY navit CACHE PATH "Navit binary name")
+set(NAVIT_BINARY navit CACHE STRING "Navit binary name")
 # install path
 set(BIN_DIR bin CACHE PATH "Navit bin path")
 add_definitions ("-DBIN_DIR=\"${BIN_DIR}\"")
