@@ -14,4 +14,4 @@ Type=Application
 Categories=GTK;Utility;Geography;
 GenericName=Navit
 GenericName[de]=Navit
-X-Nemo-Application-Type=silica-qt5
+X-Nemo-Application-Type=no-invoker
