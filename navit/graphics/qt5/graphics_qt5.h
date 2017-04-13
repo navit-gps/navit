@@ -16,6 +16,7 @@
 #include <QPen>
 #include <QBrush>
 #if USE_QML
+#include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include <QObject>
 #endif
@@ -57,7 +58,8 @@ signals:
 
 struct graphics_priv {
 #if USE_QML
-   GraphicsPriv * GPriv;
+	QQmlApplicationEngine * engine;
+	GraphicsPriv * GPriv;
 	QQuickWindow * window;
 #endif
 #if USE_QWIDGET
