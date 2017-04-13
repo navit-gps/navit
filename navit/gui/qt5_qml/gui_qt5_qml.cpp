@@ -1,6 +1,5 @@
 #include <glib.h>
 #include <QQmlApplicationEngine>
-#include <QQuickWindow>
 
 #include "config.h"
 #include "plugin.h"
@@ -60,9 +59,7 @@ struct gui_priv {
 
     /* Qt application instance */
     QQmlApplicationEngine * engine;
-//    QApplication *app;
-//    /* Root (window) widget of Qt5 graphics */
-//    QWidget * qt_root_window;
+    QObject * loader; /* Loader QML component to load our QML parts to the QML engine */
 
     /* configuration */
     int menu_on_map_click;
@@ -84,8 +81,7 @@ static void gui_qt5_qml_button(void *data, int pressed, int button, struct point
     /* check if user requested menu */
     if ( button == 1 && gui_priv->menu_on_map_click ) {
         dbg(lvl_debug,"navit wants us to enter menu\n");
-//	if(gui_priv->qt_root_window != NULL)
-//            gui_priv->app->setActiveWindow(gui_priv->qt_root_window);
+	/*TODO: want to emit a signal somewhere? */
     }
 }
 
@@ -145,14 +141,14 @@ static int gui_qt5_qml_set_graphics(struct gui_priv *gui_priv, struct graphics *
         return 1;
     }
     
-    /* replace graphics qml script by our own */
-    dbg(lvl_debug,"Re load QML code\n");
-    gui_priv->engine->clearComponentCache();
-    gui_priv->engine->load(QUrl("qrc:///gui_qt5_qml.qml"));
-
-    /* since we got the root window, we are in qt environment. So get application insance */
-//    gui_priv->app=(QApplication *) QApplication::instance();
-//    dbg(lvl_debug, "Got QT app %p and window %p\n", gui_priv->app, gui_priv->qt_root_window);
+    /* find the loader component */
+    gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject*>("navit_loader");
+    if(gui_priv->loader != NULL)
+    {
+        dbg(lvl_debug, "navit_loader found\n");
+        /* load our root window into the loader component */
+        gui_priv->loader->setProperty("source", "qrc:///gui_qt5_qml.qml");
+    }
 
     transform_get_size(trans, &gui_priv->w, &gui_priv->h);
     dbg(lvl_debug, "navit provided geometry: (%d, %d)\n", gui_priv->w, gui_priv->h);

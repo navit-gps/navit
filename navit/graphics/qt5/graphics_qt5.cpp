@@ -912,7 +912,7 @@ graphics_qt5_new(struct navit *nav, struct graphics_methods *meth, struct attr *
                         graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
                         QQmlContext *context = graphics_priv->engine->rootContext();
                         context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
-                        graphics_priv->engine->load(QUrl("qrc:///graphics_qt5.qml"));
+                        graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
 		        /* Get the engine's root window (for resizing) */
 	                QObject *toplevel = graphics_priv->engine->rootObjects().value(0);
 	                graphics_priv->window = qobject_cast<QQuickWindow *> (toplevel);
