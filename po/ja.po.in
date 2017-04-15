@@ -20,11 +20,11 @@ msgstr ""
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "ソースディレクトリから実行中\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr ""
+msgstr "'%s' から '%s' へ設定\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -72,31 +72,31 @@ msgstr ""
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d フィート"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "%d フィート以内"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d マイル"
 
 #, c-format
 msgid "in %d.%d miles"
-msgstr ""
+msgstr "%d.%d マイル以内"
 
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 マイル"
+msgstr[1] "%d マイル"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 マイル以内"
+msgstr[1] "%d マイル以内"
 
 #, c-format
 msgid "%d meters"
@@ -104,27 +104,27 @@ msgstr "%d メートル"
 
 #, c-format
 msgid "in %d meters"
-msgstr ""
+msgstr "%d メートル以内"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d km"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr ""
+msgstr "%d.%d km 以内"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 km"
+msgstr[1] "%d km"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 km 以内"
+msgstr[1] "%d km 以内"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
@@ -181,16 +181,16 @@ msgid "%sinto the %s"
 msgstr ""
 
 msgid "When possible, please turn around"
-msgstr ""
+msgstr "可能であればUターンして下さい"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "%s へ"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr ""
+msgstr "次の %s へ向かいます"
 
 msgid "Enter the roundabout soon"
 msgstr ""
@@ -215,7 +215,7 @@ msgid "now"
 msgstr "今"
 
 msgid "then"
-msgstr ""
+msgstr "次に"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -238,10 +238,10 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr ""
+msgstr "左手に"
 
 msgid "on your right"
-msgstr ""
+msgstr "右手に"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
@@ -255,10 +255,10 @@ msgstr ""
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "インターチェンジで"
 
 msgid "at exit"
-msgstr ""
+msgstr "出口で"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -300,11 +300,11 @@ msgstr "左"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr ""
+msgstr "緩やかに"
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr ""
+msgstr "素早く"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
@@ -325,21 +325,21 @@ msgstr ""
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "次に左Uターンして下さい"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "%1$s で左Uターンして下さい"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "次に右Uターンして下さい"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "%1$s で右Uターンして下さい"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -357,7 +357,7 @@ msgid "follow"
 msgstr ""
 
 msgid "then you have reached your destination."
-msgstr ""
+msgstr "目的地に到着しました"
 
 #. TRANSLATORS: the arg. is distance
 #, c-format
@@ -366,20 +366,20 @@ msgstr "目的地の%sにつきました"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "インターチェンジ"
 
 msgid "Exit"
-msgstr ""
+msgstr "出口"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
-msgstr ""
+msgstr "地点"
 
 msgid "Command"
 msgstr "コマンド"
 
 msgid "Length"
-msgstr ""
+msgstr "長さ"
 
 msgid "km"
 msgstr "km"
@@ -388,23 +388,23 @@ msgid "m"
 msgstr "m"
 
 msgid "Time"
-msgstr ""
+msgstr "時間"
 
 msgid "Destination Length"
-msgstr ""
+msgstr "目的地への距離"
 
 msgid "Destination Time"
-msgstr ""
+msgstr "目的地への時間"
 
 msgid "Roadbook"
-msgstr ""
+msgstr "道路案内"
 
 #, c-format
 msgid "Waypoint %d"
-msgstr ""
+msgstr "地点 %d"
 
 msgid "Visit before..."
-msgstr ""
+msgstr "以前訪れた…"
 
 msgid "Set as position"
 msgstr "現在地として設定"
@@ -413,15 +413,15 @@ msgid "Set as destination"
 msgstr "目的地として設定"
 
 msgid "Add as bookmark"
-msgstr ""
+msgstr "ブックマークに追加"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "地点 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "画面座標: %d %d"
 
 #. 020
 msgid "Andorra"
@@ -529,7 +529,7 @@ msgstr "ベナン"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "サン・バルテルミー島"
 
 #. 060
 msgid "Bermuda"
@@ -545,7 +545,7 @@ msgstr "ボリビア"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "ボネール、シント・ユースタティウスおよびサバ"
 
 #. 076
 msgid "Brazil"
@@ -637,7 +637,7 @@ msgstr "カーボベルデ"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "キュラソー島"
 
 #. 162
 msgid "Christmas Island"
@@ -905,7 +905,7 @@ msgstr "コモロ"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "セントクリストファー・ネイビス連邦"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
@@ -969,7 +969,7 @@ msgstr "ラトビア"
 
 #. 434
 msgid "Libya"
-msgstr ""
+msgstr "リビア"
 
 #. 504
 msgid "Morocco"
@@ -989,7 +989,7 @@ msgstr "モンテネグロ"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "サン・マルタン"
 
 #. 450
 msgid "Madagascar"
@@ -1001,7 +1001,7 @@ msgstr "マーシャル諸島"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "マケドニア共和国"
 
 #. 466
 msgid "Mali"
@@ -1229,7 +1229,7 @@ msgstr "スロベニア"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "スヴァールバル諸島およびヤンマイエン島"
 
 #. 703
 msgid "Slovakia"
@@ -1257,7 +1257,7 @@ msgstr "スリナム"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "南スーダン"
 
 #. 678
 msgid "Sao Tome and Principe"
@@ -1269,7 +1269,7 @@ msgstr "エルサルバドル"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "シント・マールテン"
 
 #. 760
 msgid "Syrian Arab Republic"
@@ -1337,7 +1337,7 @@ msgstr "ツバル"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "台湾省"
 
 #. 834
 msgid "Tanzania, United Republic of"
@@ -1369,11 +1369,11 @@ msgstr "ウズベキスタン"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "バチカン"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "セントビンセント及びグレナディーン諸島"
 
 #. 862
 msgid "Venezuela"
@@ -1397,7 +1397,7 @@ msgstr "バヌアツ"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "ウォリス・フツナ"
 
 #. 882
 msgid "Samoa"
@@ -1409,7 +1409,7 @@ msgstr "イエメン"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "マヨット"
 
 #. 710
 msgid "South Africa"
@@ -1424,7 +1424,7 @@ msgid "Zimbabwe"
 msgstr "ジンバブエ"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "未知, 都市を追加するために is_in タグを追加して下さい"
 
 msgid ""
 "navit usage:\n"
@@ -1440,64 +1440,65 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "設定ファイル navit.xml, navit.xml.local が見つかりません\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "エラー: 設定ファイル '%s': %s の読み込み失敗\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "設定ファイル '%s' を使用中…\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "エラー: 設定ファイル '%s' に有効な設定が存在しません\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"初期化に失敗したため終了します、直前のエラーメッセージを確認して下さい。\n"
 
 msgid "unknown street"
-msgstr ""
+msgstr "不明な通り"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "未定義の移動手段"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "ブックマークの保存に失敗"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr ""
+msgstr "地点"
 
 msgid "Car"
-msgstr ""
+msgstr "自動車"
 
 msgid "Iso2"
-msgstr ""
+msgstr "ISO2"
 
 msgid "Iso3"
-msgstr ""
+msgstr "ISO3"
 
 msgid "Country"
 msgstr "国"
 
 msgid "Postal"
-msgstr ""
+msgstr "郵便"
 
 msgid "Town"
-msgstr ""
+msgstr "町"
 
 msgid "District"
-msgstr ""
+msgstr "区"
 
 msgid "Street"
-msgstr ""
+msgstr "通"
 
 msgid "Number"
-msgstr ""
+msgstr "番地"
 
 msgid "Enter Destination"
 msgstr "目的地を入力"
@@ -1506,10 +1507,10 @@ msgid "Zip Code"
 msgstr "郵便番号"
 
 msgid "City"
-msgstr ""
+msgstr "都市"
 
 msgid "District/Township"
-msgstr ""
+msgstr "区/行政区"
 
 msgid "Map"
 msgstr "地図"
@@ -1522,7 +1523,7 @@ msgstr "目的地"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr ""
+msgstr "表示"
 
 msgid "_Route"
 msgstr "ルート"
@@ -1537,46 +1538,46 @@ msgid "_Map"
 msgstr "地図"
 
 msgid "_Layout"
-msgstr ""
+msgstr "レイアウト"
 
 msgid "_Projection"
-msgstr ""
+msgstr "投影"
 
 msgid "_Vehicle"
-msgstr ""
+msgstr "移動手段"
 
 msgid "Zoom_Out"
 msgstr "ズームアウト"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "ズームレベルを下げる"
 
 msgid "Zoom_In"
 msgstr "ズームイン"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "ズームレベルを上げる"
 
 msgid "_Recalculate"
 msgstr "再計算"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "地図を再描画"
 
 msgid "_Info"
-msgstr ""
+msgstr "情報"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "目的地に設定"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "住所検索ダイアログを表示"
 
 msgid "_POI search"
-msgstr ""
+msgstr "場所を検索"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "場所検索ダイアログを表示"
 
 msgid "_Stop Navigation"
 msgstr "案内中止"
@@ -1585,134 +1586,134 @@ msgid "Test"
 msgstr "テスト"
 
 msgid "_Quit"
-msgstr ""
+msgstr "終了"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "アプリを終了"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "地点カーソルを表示"
 
 msgid "_Lock on Road"
-msgstr ""
+msgstr "道路に追従"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "方向を北に固定"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "地図の方向を北向きか移動手段に切り替え"
 
 msgid "_Roadbook"
-msgstr ""
+msgstr "走行経路"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "経路情報を表示ON/OFF"
 
 msgid "_Autozoom"
-msgstr ""
+msgstr "自動ズーム"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "自動ズームレベル潮静ON/OFF"
 
 msgid "_Fullscreen"
 msgstr "全画面表示"
 
 msgid "Data"
-msgstr ""
+msgstr "情報"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "ドラッグストア"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "レストラン"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "レストラン, ファーストフード"
 
 msgid "Hotel"
-msgstr ""
+msgstr "ホテル"
 
 msgid "Car parking"
-msgstr ""
+msgstr "駐車場"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "ガソリンスタンド"
 
 msgid "Bank"
-msgstr ""
+msgstr "銀行"
 
 msgid "Hospital"
-msgstr ""
+msgstr "病院"
 
 msgid "Cinema"
-msgstr ""
+msgstr "映画館"
 
 msgid "Train station"
-msgstr ""
+msgstr "駅"
 
 msgid "School"
-msgstr ""
+msgstr "学校"
 
 msgid "Police"
-msgstr ""
+msgstr "警察"
 
 msgid "Justice"
-msgstr ""
+msgstr "裁判所"
 
 msgid "Taxi"
-msgstr ""
+msgstr "タクシー"
 
 msgid "Shopping"
-msgstr ""
+msgstr "ショッピング"
 
 msgid "Distance from screen center (km)"
-msgstr ""
+msgstr "画面中央からの距離 (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "場所 %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "目的地を %ld, %ld に設定\n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "地図を %ld, %ld に設定\n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "次の場所を %ld, %ld に設定\n"
 
 msgid "POI search"
-msgstr ""
+msgstr "場所検索"
 
 msgid "Select a category"
-msgstr ""
+msgstr "カテゴリを選択"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "検索距離を選択 (km)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "場所を選択"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "カテゴリ"
 
 msgid "Direction"
-msgstr ""
+msgstr "方向"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "距離(m)"
 
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "以前訪れた"
 
 msgid "N"
 msgstr "北"
@@ -1740,189 +1741,189 @@ msgstr "北西"
 
 #. Android resource: @strings/no
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 msgid "2D"
-msgstr ""
+msgstr "2D"
 
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "経路 %4.0fkm    %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "経路 0000km  0+00:00 ETA"
 
 msgid "Help"
-msgstr ""
+msgstr "ヘルプ"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "地点 %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "以前訪れた地点を選択"
 
 msgid "View in Browser"
-msgstr ""
+msgstr "ブラウザで表示"
 
 msgid "Item type"
-msgstr ""
+msgstr "場所の種類"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
-msgstr ""
+msgstr "通り"
 
 msgid "House numbers"
-msgstr ""
+msgstr "番地"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "情報を表示"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "地点に設定(移動手段を無効化)"
 
 msgid "POIs"
-msgstr ""
+msgstr "場所"
 
 msgid "View on map"
-msgstr ""
+msgstr "地図上に表示"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "検索結果を地図上から消去"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "地図上に結果を表示"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "ブックマークを切り取り"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "ブックマークをコピー"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "ブックマークの名前を変更"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "ブックマークを貼付け"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "ブックマークを削除"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "地点を削除"
 
 msgid "Bookmarks"
 msgstr "ブックマーク"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "地点としてブックマーク"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "地点を保存"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "地点として置き換え"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "フォルダを削除"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "ブックマークフォルダを追加"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "ブックマークを貼付け"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "ブックマーク %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "%s をダウンロード"
 
 msgid "Map Download"
-msgstr ""
+msgstr "地図をダウンロード"
 
 msgid "Active"
-msgstr ""
+msgstr "有効"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "ダウンロード有効"
 
 msgid "Download completely"
-msgstr ""
+msgstr "ダウンロード完了"
 
 msgid "Show Satellite Status"
-msgstr ""
+msgstr "衛星情報を表示"
 
 msgid " Elevation "
-msgstr ""
+msgstr "高度 "
 
 msgid " Azimuth "
-msgstr ""
+msgstr "方位"
 
 msgid "Show NMEA Data"
-msgstr ""
+msgstr "NMEA情報を表示"
 
 msgid "car"
-msgstr ""
+msgstr "自動車"
 
 msgid "bike"
-msgstr ""
+msgstr "自転車"
 
 msgid "pedestrian"
-msgstr ""
+msgstr "徒歩"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "現在の設定: %s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr ""
+msgstr "設定を切り替え: %s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "有効に設定"
 
 msgid "Show Satellite status"
-msgstr ""
+msgstr "衛星情報の表示"
 
 msgid "Show NMEA data"
-msgstr ""
+msgstr "NMEA情報を表示"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "ブックマークを追加"
 
 msgid "Rename"
-msgstr ""
+msgstr "名称変更"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Navitについて"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "開発者"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "全ての Navit Team"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "開発者と貢献者"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "地点"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "座標を入力"
 
 #. 
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1931,629 +1932,644 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "緯度 経度"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "座標を入力、例："
 
 msgid "Vehicle"
-msgstr ""
+msgstr "移動手段"
 
 msgid "Rules"
-msgstr ""
+msgstr "ルール"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "道路に追従"
 
 msgid "Northing"
-msgstr ""
+msgstr "北距"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "移動手段に地図が追従"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "地点をもとに計画"
 
 msgid "Maps"
-msgstr ""
+msgstr "地図"
 
 msgid "Layout"
-msgstr ""
+msgstr "レイアウト"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "高度情報"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
+msgstr "高度情報取得のために *.heightlines.bin をインストールして下さい"
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "経路は最低でも2等高線を越える必要があります"
 
 msgid "Route Description"
-msgstr ""
+msgstr "経路情報"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "地域を表示"
 
 msgid "Former Destinations"
 msgstr "前の目的地"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "前の目的地は存在しません"
 
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 msgid "Back to map"
-msgstr ""
+msgstr "地図に戻る"
 
 msgid "Main Menu"
-msgstr ""
+msgstr "ホーム"
 
 msgid "House number"
-msgstr ""
+msgstr "住所"
 
 msgid "Next"
-msgstr ""
+msgstr "次へ"
 
 msgid "Prev"
-msgstr ""
+msgstr "前へ"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "経路に戻る!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "外を見て! カメラ!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "速度を落として下さい"
 
 msgid "partial match"
-msgstr ""
+msgstr "部分一致"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "検索"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
+msgstr "町"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "地図情報 (c) OpenStreetMap の貢献者, ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"現在の地図地点 %s は有効ではありません。\n"
+"SDカードを入れるか別の地図地点を選択し、Navit を再起動して下さい。"
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "ダウンロードした地図"
 
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"申し訳ありません、3.8 GB を超える地図情報は Android 端末で現在サポートしていません、小さいサイズのものを選択して下さい。"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "ここを経路に"
 
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "ファイルの場所"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"%s を新しい場所に設定\n"
+"変更を有効にするため Navit を再起動して下さい"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "地球全体"
 
 msgid "Africa"
-msgstr ""
+msgstr "アフリカ"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "カナリア諸島"
 
 msgid "Asia"
-msgstr ""
+msgstr "アジア"
 
 msgid "Korea"
-msgstr ""
+msgstr "韓国"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "台湾"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "アラブ首長国連邦他"
 
 msgid "Oceania"
-msgstr ""
+msgstr "オセアニア"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "タスマニア"
 
 msgid "Victoria"
-msgstr ""
+msgstr "ビクトリア"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "ニューサウスウェールズ州"
 
 msgid "Europe"
-msgstr ""
+msgstr "ヨーロッパ"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "西ヨーロッパ"
 
 msgid "Azores"
-msgstr ""
+msgstr "アゾレス諸島"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "ベネルクス"
 
 msgid "Alsace"
-msgstr ""
+msgstr "アルザス地域圏"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "アキテーヌ地域圏"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "オーヴェルニュ地域圏"
 
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "バス＝ノルマンディー地域圏"
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "ブルゴーニュ地域圏"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "ブルターニュ"
 
 msgid "Centre"
-msgstr ""
+msgstr "中心"
 
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "シャンパーニュ＝アルデンヌ地域圏"
 
 msgid "Corse"
-msgstr ""
+msgstr "コルス島"
 
 msgid "Franche-Comte"
-msgstr ""
+msgstr "フランシュ＝コンテ地域圏"
 
 msgid "Haute-Normandie"
-msgstr ""
+msgstr "オート＝ノルマンディー地域圏"
 
 msgid "Ile-de-France"
-msgstr ""
+msgstr "イル＝ド＝フランス地域圏"
 
 msgid "Languedoc-Roussillon"
-msgstr ""
+msgstr "ラングドック＝ルシヨン地域圏"
 
 msgid "Limousin"
-msgstr ""
+msgstr "リムーザン地域圏"
 
 msgid "Lorraine"
-msgstr ""
+msgstr "ロレーヌ地域圏"
 
 msgid "Midi-Pyrenees"
-msgstr ""
+msgstr "ミディ＝ピレネー地域圏"
 
 msgid "Nord-pas-de-Calais"
-msgstr ""
+msgstr "ノール＝パ・ド・カレー地域圏"
 
 msgid "Pays-de-la-Loire"
-msgstr ""
+msgstr "ペイ・ド・ラ・ロワール地域圏"
 
 msgid "Picardie"
-msgstr ""
+msgstr "ピカルディ地域圏"
 
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "ポワトゥー＝シャラント地域圏"
 
 msgid "Provence-Alpes-Cote-d-Azur"
-msgstr ""
+msgstr "プロヴァンス＝アルプ＝コート・ダジュール地域圏"
 
 msgid "Rhone-Alpes"
-msgstr ""
+msgstr "ローヌ＝アルプ地域圏"
 
 msgid "Baden-Wuerttemberg"
-msgstr ""
+msgstr "バーデン＝ヴュルテンベルク州"
 
 msgid "Bayern"
-msgstr ""
+msgstr "バイエルン"
 
 msgid "Mittelfranken"
-msgstr ""
+msgstr "ミッテルフランケン"
 
 msgid "Niederbayern"
-msgstr ""
+msgstr "ニーダーバイエルン行政管区"
 
 msgid "Oberbayern"
-msgstr ""
+msgstr "オーバーバイエルン"
 
 msgid "Oberfranken"
-msgstr ""
+msgstr "オーバーフランケン"
 
 msgid "Oberpfalz"
-msgstr ""
+msgstr "オーバープファルツ行政管区"
 
 msgid "Schwaben"
-msgstr ""
+msgstr "シュヴァーベン"
 
 msgid "Unterfranken"
-msgstr ""
+msgstr "ウンターフランケン"
 
 msgid "Berlin"
-msgstr ""
+msgstr "ベルリン"
 
 msgid "Brandenburg"
-msgstr ""
+msgstr "ブランデンブルク州"
 
 msgid "Bremen"
-msgstr ""
+msgstr "ブレーメン"
 
 msgid "Hamburg"
-msgstr ""
+msgstr "ハンブルク"
 
 msgid "Hessen"
-msgstr ""
+msgstr "ヘッセン州"
 
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "メクレンブルク＝フォアポンメルン州"
 
 msgid "Niedersachsen"
-msgstr ""
+msgstr "ニーダーザクセン州"
 
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "ノルトライン＝ヴェストファーレン州"
 
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "ラインラント＝プファルツ州"
 
 msgid "Saarland"
-msgstr ""
+msgstr "ザールラント州"
 
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "ザクセン＝アンハルト州"
 
 msgid "Sachsen"
-msgstr ""
+msgstr "ザクセン州"
 
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "シュレースヴィヒ＝ホルシュタイン州"
 
 msgid "Thueringen"
-msgstr ""
+msgstr "テューリンゲン州"
 
 msgid "Mallorca"
-msgstr ""
+msgstr "マヨルカ島"
 
 msgid "Galicia"
-msgstr ""
+msgstr "ガリシア州"
 
 msgid "Scandinavia"
-msgstr ""
+msgstr "スカンディナヴィア"
 
 msgid "England"
-msgstr ""
+msgstr "イングランド"
 
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "バッキンガムシャー"
 
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "ケンブリッジシャー"
 
 msgid "Cumbria"
-msgstr ""
+msgstr "カンブリア"
 
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "ハル・アンド・イースト・ヨークシャー"
 
 msgid "Essex"
-msgstr ""
+msgstr "エセックス"
 
 msgid "Herefordshire"
-msgstr ""
+msgstr "ヘレフォードシャー"
 
 msgid "Kent"
-msgstr ""
+msgstr "ケント"
 
 msgid "Lancashire"
-msgstr ""
+msgstr "ランカシャー"
 
 msgid "Leicestershire"
-msgstr ""
+msgstr "レスターシャー"
 
 msgid "Norfolk"
-msgstr ""
+msgstr "ノーフォーク"
 
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "ノッティンガムシャー"
 
 msgid "Oxfordshire"
-msgstr ""
+msgstr "オックスフォードシャー"
 
 msgid "Shropshire"
-msgstr ""
+msgstr "シュロップシャー"
 
 msgid "Somerset"
-msgstr ""
+msgstr "サマセット"
 
 msgid "South yorkshire"
-msgstr ""
+msgstr "サウス・ヨークシャー"
 
 msgid "Suffolk"
-msgstr ""
+msgstr "サフォーク"
 
 msgid "Surrey"
-msgstr ""
+msgstr "サリー"
 
 msgid "Wiltshire"
-msgstr ""
+msgstr "ウィルトシャー"
 
 msgid "Scotland"
-msgstr ""
+msgstr "スコットランド"
 
 msgid "Wales"
-msgstr ""
+msgstr "ウェールズ"
 
 msgid "Crete"
-msgstr ""
+msgstr "クレタ島"
 
 msgid "North America"
-msgstr ""
+msgstr "北アメリカ"
 
 msgid "Alaska"
-msgstr ""
+msgstr "アラスカ"
 
 msgid "Hawaii"
-msgstr ""
+msgstr "ハワイ"
 
 msgid "USA"
-msgstr ""
+msgstr "米国"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr "(アラスカとハワイを除く)"
 
 msgid "Midwest"
-msgstr ""
+msgstr "中西部"
 
 msgid "Michigan"
-msgstr ""
+msgstr "ミシガン州"
 
 msgid "Ohio"
-msgstr ""
+msgstr "オハイオ州"
 
 msgid "Northeast"
-msgstr ""
+msgstr "北東部"
 
 msgid "Massachusetts"
-msgstr ""
+msgstr "マサチューセッツ州"
 
 msgid "Vermont"
-msgstr ""
+msgstr "バーモント州"
 
 msgid "Pacific"
-msgstr ""
+msgstr "パシフィック"
 
 msgid "South"
-msgstr ""
+msgstr "北部"
 
 msgid "Arkansas"
-msgstr ""
+msgstr "アーカンソー州"
 
 msgid "District of Columbia"
-msgstr ""
+msgstr "ワシントンD.C."
 
 msgid "Florida"
-msgstr ""
+msgstr "フロリダ州"
 
 msgid "Louisiana"
-msgstr ""
+msgstr "ルイジアナ州"
 
 msgid "Maryland"
-msgstr ""
+msgstr "メリーランド州"
 
 msgid "Mississippi"
-msgstr ""
+msgstr "ミシシッピ州"
 
 msgid "Oklahoma"
-msgstr ""
+msgstr "オクラホマ州"
 
 msgid "Texas"
-msgstr ""
+msgstr "テキサス州"
 
 msgid "Virginia"
-msgstr ""
+msgstr "バージニア"
 
 msgid "West Virginia"
-msgstr ""
+msgstr "ウェストバージニア州"
 
 msgid "West"
-msgstr ""
+msgstr "ウェスト"
 
 msgid "Arizona"
-msgstr ""
+msgstr "アリゾナ州"
 
 msgid "California"
-msgstr ""
+msgstr "カリフォルニア州"
 
 msgid "Colorado"
-msgstr ""
+msgstr "コロラド州"
 
 msgid "Idaho"
-msgstr ""
+msgstr "アイダホ州"
 
 msgid "Montana"
-msgstr ""
+msgstr "モンタナ州"
 
 msgid "New Mexico"
-msgstr ""
+msgstr "ニューメキシコ州"
 
 msgid "Nevada"
-msgstr ""
+msgstr "ネバダ州"
 
 msgid "Oregon"
-msgstr ""
+msgstr "オレゴン州"
 
 msgid "Utah"
-msgstr ""
+msgstr "ユタ州"
 
 msgid "Washington State"
-msgstr ""
+msgstr "ワシントン州"
 
 msgid "South+Middle America"
-msgstr ""
+msgstr "中南米"
 
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "フランス領ギアナ"
 
 msgid "downloading"
-msgstr ""
+msgstr "ダウンロード中"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr ""
+msgstr "準備完了"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "地図の保存場所が有効ではありません"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
-msgstr ""
+msgstr "空き容量が足りません"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "エラー: 地図のダウンロード"
 
 msgid "Error writing map!"
-msgstr ""
+msgstr "エラー: 地図の書き込み"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "地図のダウンロードが中断"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr ""
+msgstr "ETA"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr ""
+msgstr "地図のダウンロード"
 
 msgid "Vehicle Position"
-msgstr ""
+msgstr "移動手段の場所"
 
 msgid "Main menu"
-msgstr ""
+msgstr "ホーム"
 
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
+"地図を\n"
+"表示"
 
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 msgid "Tools"
-msgstr ""
+msgstr "ツール"
 
 msgid "Route"
 msgstr "ルート"
 
 msgid "About"
-msgstr ""
+msgstr "情報"
 
 msgid "Quit"
-msgstr ""
+msgstr "終了"
 
 msgid "Actions"
-msgstr ""
+msgstr "行動/計画"
 
 msgid ""
 "Former\n"
 "Destinations"
 msgstr ""
+"以前\n"
+"訪れた場所"
 
 msgid "Coordinates"
-msgstr ""
+msgstr "座標"
 
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
+"ナビを\n"
+"停止"
 
 msgid "Display"
-msgstr ""
+msgstr "ディスプレイ"
 
 msgid "Fullscreen"
 msgstr "全画面表示"
 
 msgid "Window Mode"
-msgstr ""
+msgstr "ウィンドウモード"
 
 msgid "Layers"
-msgstr ""
+msgstr "レイヤー"
 
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
+"最後の地点を\n"
+"削除"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
 msgstr ""
+"次の地点を\n"
+"削除"
 
 msgid "Satellite Status"
-msgstr ""
+msgstr "衛星情報"
 
 msgid "NMEA Data"
-msgstr ""
+msgstr "NMEA情報"
 
 msgid "car_shortest"
-msgstr ""
+msgstr "自動車(最短)"
 
 msgid "car_avoid_tolls"
-msgstr ""
+msgstr "自動車(有料道路を除く)"
 
 msgid "car_pedantic"
-msgstr ""
+msgstr "自動車(おまかせ)"
 
 msgid "horse"
-msgstr ""
+msgstr "馬"
 
 msgid "Truck"
-msgstr ""
+msgstr "トラック"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
-msgstr ""
+msgstr "Navitが起動"
 
 #. Android resource: @strings/notification_event_default
 msgid "Navit running"
-msgstr ""
+msgstr "Navitは起動中"
 
 #. Android resource: @strings/initial_info_box_title
 msgid "Welcome to Navit"
-msgstr ""
+msgstr "Navitへようこそ"
 
 #. Android resource: @strings/initial_info_box_message
 msgid ""
@@ -2569,169 +2585,171 @@ msgstr ""
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr ""
+msgstr "詳しい情報"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr ""
+msgstr "拡大"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr ""
+msgstr "縮小"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
-msgstr ""
+msgstr "地図を談ロード"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr ""
+msgstr "場所を切り替え"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
-msgstr ""
+msgstr "Navitを終了"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
-msgstr ""
+msgstr "バックアップ / 復元"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "地図位置を設定"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
-msgstr ""
+msgstr "この地図を削除しますか?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr ""
+msgstr "ダウンロード中:"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
-msgstr ""
+msgstr "エラー: 地図のダウンロード"
 
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
-msgstr ""
+msgstr "地図のダウンロード中断"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
-msgstr ""
+msgstr "位置情報なし. 位置が確定してから開きます"
 
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
-msgstr ""
+msgstr "現在位置を含む地図"
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
-msgstr ""
+msgstr "住所検索"
 
 #. Android resource: @strings/address_enter_destination
 msgid "Enter destination"
-msgstr ""
+msgstr "目的地を入力"
 
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
-msgstr ""
+msgstr "住所に部分一致"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
-msgstr ""
+msgstr "検索中…"
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
-msgstr ""
+msgstr "住所が見つかりませんでした"
 
 #. Android resource: @strings/address_search_getting_results
 msgid "Getting search results"
-msgstr ""
+msgstr "検索結果を取得中"
 
 #. Android resource: @strings/address_search_loading_results
 msgid "Loading search results"
-msgstr ""
+msgstr "検索結果を読み込み中"
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr ""
+msgstr "結果が見つかりませんでした"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
-msgstr ""
+msgstr "テキストが入力されていません"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
-msgstr ""
+msgstr "目的地を設定:"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
-msgstr ""
+msgstr "行動を選択"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr ""
+msgstr "SDカードを挿入して下さい"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr ""
+msgstr "バックアップ中…"
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr ""
+msgstr "復元中…"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
-msgstr ""
+msgstr "バックアップフォルダの作成に失敗"
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "バックアップ失敗"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
-msgstr ""
+msgstr "バックアップが見つかりません"
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "復元に失敗"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
-msgstr ""
+msgstr "バックアップ成功"
 
 #. Android resource: @strings/restore_successful_please_restart_navit
 msgid ""
 "Restore Successful\n"
 "Please restart Navit"
 msgstr ""
+"復元成功\n"
+"Navitを再起動して下さい"
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr ""
+msgstr "バックアップが見つかりません"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "復元失敗"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "バックアップを選択"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "バックアップ"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "復元"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
-msgstr ""
+msgstr "音声ガイドデータが見つかりません"
 
 #. Android resource: @strings/TTS_qery_install_data
 msgid ""
