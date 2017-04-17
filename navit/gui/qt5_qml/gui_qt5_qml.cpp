@@ -65,8 +65,6 @@ struct gui_priv {
     int menu_on_map_click;
 };
 
-//Meta object
-#include "gui_qt5_qml.moc"
 static void gui_qt5_qml_button(void *data, int pressed, int button, struct point *p)
 {
     struct gui_priv *gui_priv=(struct gui_priv*)data;
