@@ -117,6 +117,7 @@ struct navigation *navit_get_navigation(struct navit *this_);
 struct displaylist *navit_get_displaylist(struct navit *this_);
 void navit_layout_switch(struct navit *n);
 int navit_set_vehicle_by_name(struct navit *n, const char *name);
+int navit_set_vehicleprofile_name(struct navit *this_, char *name);
 int navit_set_layout_by_name(struct navit *n, const char *name);
 void navit_disable_suspend(void);
 int navit_block(struct navit *this_, int block);
