@@ -1,4 +1,6 @@
 [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit)
+[![OpenCollective](https://opencollective.com/navit/backers/badge.svg)](#backers) 
+[![OpenCollective](https://opencollective.com/navit/sponsors/badge.svg)](#sponsors)
 
 Navit on Android tablet:
 
@@ -87,4 +89,75 @@ The search is repeated until the origin is found.
 
 Once the origin is reached, all that needs to be done is to follow the
 points with the lowest values to the destination.
+
+
+Backers
+=======
+Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/navit#backer)]
+
+<a href="https://opencollective.com/navit/backer/0/website" target="_blank"><img src="https://opencollective.com/navit/backer/0/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/1/website" target="_blank"><img src="https://opencollective.com/navit/backer/1/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/2/website" target="_blank"><img src="https://opencollective.com/navit/backer/2/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/3/website" target="_blank"><img src="https://opencollective.com/navit/backer/3/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/4/website" target="_blank"><img src="https://opencollective.com/navit/backer/4/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/5/website" target="_blank"><img src="https://opencollective.com/navit/backer/5/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/6/website" target="_blank"><img src="https://opencollective.com/navit/backer/6/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/7/website" target="_blank"><img src="https://opencollective.com/navit/backer/7/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/8/website" target="_blank"><img src="https://opencollective.com/navit/backer/8/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/9/website" target="_blank"><img src="https://opencollective.com/navit/backer/9/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/10/website" target="_blank"><img src="https://opencollective.com/navit/backer/10/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/11/website" target="_blank"><img src="https://opencollective.com/navit/backer/11/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/12/website" target="_blank"><img src="https://opencollective.com/navit/backer/12/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/13/website" target="_blank"><img src="https://opencollective.com/navit/backer/13/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/14/website" target="_blank"><img src="https://opencollective.com/navit/backer/14/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/15/website" target="_blank"><img src="https://opencollective.com/navit/backer/15/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/16/website" target="_blank"><img src="https://opencollective.com/navit/backer/16/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/17/website" target="_blank"><img src="https://opencollective.com/navit/backer/17/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/18/website" target="_blank"><img src="https://opencollective.com/navit/backer/18/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/19/website" target="_blank"><img src="https://opencollective.com/navit/backer/19/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/20/website" target="_blank"><img src="https://opencollective.com/navit/backer/20/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/21/website" target="_blank"><img src="https://opencollective.com/navit/backer/21/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/22/website" target="_blank"><img src="https://opencollective.com/navit/backer/22/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/23/website" target="_blank"><img src="https://opencollective.com/navit/backer/23/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/24/website" target="_blank"><img src="https://opencollective.com/navit/backer/24/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/25/website" target="_blank"><img src="https://opencollective.com/navit/backer/25/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/26/website" target="_blank"><img src="https://opencollective.com/navit/backer/26/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/27/website" target="_blank"><img src="https://opencollective.com/navit/backer/27/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/28/website" target="_blank"><img src="https://opencollective.com/navit/backer/28/avatar.svg"></a>
+<a href="https://opencollective.com/navit/backer/29/website" target="_blank"><img src="https://opencollective.com/navit/backer/29/avatar.svg"></a>
+
+Sponsors
+=========
+Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/navit#sponsor)]
+
+<a href="https://opencollective.com/navit/sponsor/0/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/1/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/2/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/3/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/4/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/5/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/6/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/7/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/8/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/9/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/10/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/10/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/11/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/11/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/12/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/12/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/13/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/13/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/14/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/14/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/15/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/15/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/16/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/16/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/17/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/17/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/18/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/18/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/19/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/19/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/20/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/20/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/21/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/21/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/22/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/22/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/23/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/23/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/24/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/24/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/25/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/25/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/26/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/26/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/27/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/27/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/28/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/28/avatar.svg"></a>
+<a href="https://opencollective.com/navit/sponsor/29/website" target="_blank"><img src="https://opencollective.com/navit/sponsor/29/avatar.svg"></a>
 
