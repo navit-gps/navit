@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-08-25 22:29+0000\n"
-"Last-Translator: Mathias Klein <ma_klein@gmx.de>\n"
+"PO-Revision-Date: 2017-01-12 18:37+0000\n"
+"Last-Translator: Steffen <zintor@lycos.com>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2014,9 +2014,10 @@ msgstr "Höhenprofil"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
 msgstr ""
+"Bitte installiere eine Karte *.heightlines.bin, um Höhendaten bereitzustellen"
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "Die Route muss mindestens zwei Höhenlinien kreuzen"
 
 msgid "Route Description"
 msgstr "Wegbeschreibung"
@@ -2565,7 +2566,7 @@ msgid "Window Mode"
 msgstr "Fenstermodus"
 
 msgid "Layers"
-msgstr ""
+msgstr "Ebenen"
 
 msgid "Description"
 msgstr "Beschreibung"
@@ -2820,6 +2821,16 @@ msgstr ""
 "Navit kann jede text-to-speech Engine nutzen, die installiert ist. Die "
 "derzeit angewählte Engine kann Ihre Sprache nicht wiedergeben. Soll das "
 "System den Voice-Download Dialog öffnen?"
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr ""
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"
