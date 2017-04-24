@@ -89,9 +89,9 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %install
 %make_install
 #copy in sailfish config
-cp %{navit_real_source}/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
+cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 #copy in espeak script
-cp %{navit_real_source}/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
+cp %{navit_real_source}/contrib/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 
 %files
 %defattr(644, root, root, 755)
