@@ -2042,6 +2042,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	struct attr vehicle_name_attr;
 	char *vehicle_name = NULL;
 	struct attr profilename_attr;
+	struct attr vehicle;
 
 	// Get the vehicle name
 	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
@@ -2057,15 +2058,23 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 		dbg(lvl_error, "Unable to set the vehicle's profile name\n");
 	}
 
+	navit_set_vehicleprofile_name(this->nav,profilename);
+	
+	save_vehicle_xml(v);
+
     // Notify Navit that the routing should be re-done if this is the
     // active vehicle.
 	if (gui_internal_is_active_vehicle(this, v)) {
-		struct attr vehicle;
-		vehicle.type=attr_vehicle;
 		vehicle.u.vehicle=v;
-		navit_set_attr(this->nav, &vehicle);
 	}
-	save_vehicle_xml(v);
+	else {
+
+		vehicle.u.vehicle=NULL;
+	}
+	
+	vehicle.type=attr_vehicle;
+	navit_set_attr(this->nav, &vehicle);
+
 	
 	gui_internal_prune_menu_count(this, 1, 0);
 	gui_internal_menu_vehicle_settings(this, v, vehicle_name);

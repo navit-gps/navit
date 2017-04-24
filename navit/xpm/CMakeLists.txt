@@ -66,9 +66,14 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
    endforeach()
 endmacro()
 
-install(FILES  desktop_icons/navit.desktop DESTINATION share/applications)
-install(FILES  desktop_icons/22x22/navit.png DESTINATION share/icons/hicolor/22x22/apps)
-install(FILES  desktop_icons/128x128/navit.png DESTINATION share/icons/hicolor/128x128/apps)
+if(NOT DEFINED NAVIT_BINARY)
+   set(NAVIT_BINARY navit CACHE STRING "Navit binary name  not defined")
+endif()
+#patch binary name in desktop file
+configure_file(desktop_icons/navit.desktop.in desktop_icons/${PACKAGE}.desktop)
+install(FILES  ${CMAKE_CURRENT_BINARY_DIR}/desktop_icons/${PACKAGE}.desktop DESTINATION share/applications)
+install(FILES  desktop_icons/22x22/navit.png DESTINATION share/icons/hicolor/22x22/apps RENAME ${PACKAGE}.png)
+install(FILES  desktop_icons/128x128/navit.png DESTINATION share/icons/hicolor/128x128/apps RENAME ${PACKAGE}.png)
 #install(FILES  bench.xpm DESTINATION )
 
 if (USE_SVG OR SVG2PNG)

@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "window.h"
 #include "callback.h"
+#include "keys.h"
 #if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
 #include <windows.h>
 #endif
@@ -135,6 +136,73 @@ void QNavitWidget::mouseEvent(int pressed, QMouseEvent *event)
 		break;
 	}
 }
+
+void QNavitWidget::keyPressEvent(QKeyEvent *event)
+{
+   dbg(lvl_debug,"enter\n");
+	char key[2];
+   int keycode;
+   char * text = NULL;
+	
+   keycode = event->key();
+   key[0] = '\0';
+   key[1] = '\0';
+	switch (keycode) {
+	case Qt::Key_Up:
+		key[0]=NAVIT_KEY_UP;
+		break;
+	case Qt::Key_Down:
+		key[0]=NAVIT_KEY_DOWN;
+		break;
+	case Qt::Key_Left:
+		key[0]=NAVIT_KEY_LEFT;
+		break;
+	case Qt::Key_Right:
+		key[0]=NAVIT_KEY_RIGHT;
+		break;
+	case Qt::Key_Backspace:
+		key[0]=NAVIT_KEY_BACKSPACE;
+		break;
+	case Qt::Key_Tab:
+		key[0]=NAVIT_KEY_TAB;
+		break;
+	case Qt::Key_Delete:
+		key[0]=NAVIT_KEY_DELETE;
+		break;
+	case Qt::Key_Escape:
+		key[0]=NAVIT_KEY_BACK;
+		break;
+	case Qt::Key_Return:
+   case Qt::Key_Enter:
+		key[0]=NAVIT_KEY_RETURN;
+		break;
+	case Qt::Key_ZoomIn:
+		key[0]=NAVIT_KEY_ZOOM_IN;
+		break;
+	case Qt::Key_ZoomOut:
+		key[0]=NAVIT_KEY_ZOOM_OUT;
+		break;
+	case Qt::Key_PageUp:
+		key[0]=NAVIT_KEY_PAGE_UP;
+		break;
+	case Qt::Key_PageDown:
+		key[0]=NAVIT_KEY_PAGE_DOWN;
+		break;
+   default:
+      QString str=event->text();
+      if((str != NULL) && (str.size() != 0))
+      {
+         text=str.toUtf8().data();
+      }
+	}
+   if(text != NULL)
+		callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void *)text);
+   else if (key[0])
+		callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void *)key);
+	else
+		dbg(lvl_debug,"keyval 0x%x\n", keycode);
+}
+
 
 void QNavitWidget::mousePressEvent(QMouseEvent *event)
 {
