@@ -1,8 +1,8 @@
 # $Id$
 # Authority: dries
-#%global navit_version_minor %(grep NAVIT_VERSION_MINOR ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
-#%global navit_version_major %(grep NAVIT_VERSION_MAJOR ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
-#%global navit_version_patch %(grep NAVIT_VERSION_PATCH ../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+#%global navit_version_minor %(grep NAVIT_VERSION_MINOR ../../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+#%global navit_version_major %(grep NAVIT_VERSION_MAJOR ../../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
+#%global navit_version_patch %(grep NAVIT_VERSION_PATCH ../../CMakeLists.txt |head -1| sed -e s/[^0-9]//g)
 #%global navit_version %{navit_version_major}.%{navit_version_minor}.%{navit_version_patch}
 #%global git_version %(git describe --tags | sed y/-/_/)
 
