@@ -3138,7 +3138,7 @@ Waypoint</text></img>
 					<circle color="#00a0a0" radius="530" width="8" background_color="#000000" text_size="48"/>
 				</itemgra>
 			</layer>
-			<layer name="points">
+			<layer name="POI Symbols">
 				<itemgra item_types="mini_roundabout" order="12-">
 					<icon src="mini_roundabout.png"/>
 				</itemgra>
