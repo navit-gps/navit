@@ -14,3 +14,4 @@ Type=Application
 Categories=GTK;Utility;Geography;
 GenericName=Navit
 GenericName[de]=Navit
+X-Nemo-Application-Type=no-invoker
