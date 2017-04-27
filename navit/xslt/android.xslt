@@ -49,6 +49,7 @@
       <xsl:copy>
          <xsl:copy-of select="@*"/>
          <xsl:attribute name="zoom">32</xsl:attribute>
+         <xsl:attribute name="autozoom_active">1</xsl:attribute>
          <xsl:attribute name="timeout">86400</xsl:attribute>
          <xsl:attribute name="drag_bitmap">1</xsl:attribute>
          <xsl:apply-templates/>
