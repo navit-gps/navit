@@ -112,7 +112,7 @@
    <xsl:template match="/config/navit/layout">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
-         <xsl:if test="@name='Car-Android'">
+         <xsl:if test="@name='Car'">
 		<xsl:attribute name="active">1</xsl:attribute>
 	 </xsl:if>
          <xsl:if test="number($OSD_SIZE)>3">
