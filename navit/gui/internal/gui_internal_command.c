@@ -36,6 +36,10 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
+#ifndef OS_WINDOWS
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#endif
 
 extern char *version;
 
@@ -776,6 +780,52 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
+/**
+ * @brief display basic networking information
+ *
+ * @return nothing
+ *
+ * This function displays basic networking information, currently
+ * only the interface name and the associated IP address(es).
+ * Currently only works on non Windows systems.
+ *
+ */
+static void
+gui_internal_cmd2_network_info(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct widget *menu,*wb,*w;
+	char *text;
+
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	menu=gui_internal_menu(this, _("Network info"));
+	menu->spx=this->spacing*10;
+	wb=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(menu, wb);
+
+	struct ifaddrs *addrs, *tmp;
+	getifaddrs(&addrs);
+	tmp = addrs;
+
+	while (tmp)
+	{
+		if (tmp->ifa_addr && tmp->ifa_addr->sa_family == AF_INET)
+		{
+			struct sockaddr_in *pAddr = (struct sockaddr_in *)tmp->ifa_addr;
+			if(g_ascii_strncasecmp(tmp->ifa_name,"lo",2 ) ) {
+				text=g_strdup_printf("%s: %s", tmp->ifa_name, inet_ntoa(pAddr->sin_addr));
+				gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+				w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+				g_free(text);
+			}
+		}
+		tmp = tmp->ifa_next;
+	}
+	freeifaddrs(addrs);
+
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
+
 static void
 gui_internal_cmd_formerdests(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -1220,6 +1270,8 @@ gui_internal_cmd2(struct gui_priv *this, char *function, struct attr **in, struc
 		gui_internal_cmd_formerdests(this, function, in, out, valid);
 	else if(!strcmp(function, "locale"))
 		gui_internal_cmd2_locale(this, function, in, out, valid);
+	else if(!strcmp(function, "network_info"))
+		gui_internal_cmd2_network_info(this, function, in, out, valid);
 	else if(!strcmp(function, "position"))
 		gui_internal_cmd2_position(this, function, in, out, valid);
 	else if(!strcmp(function, "pois"))
@@ -1279,7 +1331,9 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
-
+#ifndef OS_WINDOWS
+	{"network_info",command_cast(gui_internal_cmd2)},
+#endif
 };
 
 void
