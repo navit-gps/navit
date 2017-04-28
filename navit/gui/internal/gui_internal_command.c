@@ -36,7 +36,7 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
-#ifndef OS_WINDOWS
+#if HAS_IFADDRS
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #endif
@@ -1331,7 +1331,7 @@ static struct command_table commands[] = {
 	{"waypoints",command_cast(gui_internal_cmd2)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2)},
-#ifndef OS_WINDOWS
+#if HAS_IFADDRS
 	{"network_info",command_cast(gui_internal_cmd2)},
 #endif
 };
