@@ -793,6 +793,7 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 static void
 gui_internal_cmd2_network_info(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+#if HAS_IFADDRS
 	struct widget *menu,*wb,*w;
 	char *text;
 
@@ -824,6 +825,9 @@ gui_internal_cmd2_network_info(struct gui_priv *this, char *function, struct att
 
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
+#else
+	dbg(lvl_error, "Cannot show network info: ifaddr.h not found\n");
+#endif
 }
 
 static void
