@@ -93,6 +93,7 @@ Navigation</text></img>
 			</a>
 			<a name='Tools'><text>Tools</text>
 				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
+            <img src='gui_tools' onclick='network_info()'><text>Network info</text></img>
 			</a>
 			<a name='Route'><text>Route</text>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
