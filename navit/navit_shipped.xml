@@ -2090,6 +2090,9 @@ Waypoint</text></img>
 				<itemgra item_types="poi_picnic" order="12-">
 					<icon src="picnic.png"/>
 				</itemgra>
+				<itemgra item_types="poi_playground" order="12-">
+					<icon src="playground.png"/>
+				</itemgra>
 				<itemgra item_types="poi_gc_multi" order="12-">
 					<icon src="gc_multi.xpm"/>
 				</itemgra>
@@ -3583,6 +3586,9 @@ Waypoint</text></img>
 				<itemgra item_types="poi_picnic" order="11-">
 					<icon src="picnic.png"/>
 				</itemgra>
+				<itemgra item_types="poi_playground" order="12-">
+					<icon src="playground.png"/>
+				</itemgra>
 				<itemgra item_types="poi_gc_multi" order="0-">
 					<icon src="gc_multi.xpm"/>
 				</itemgra>
@@ -4969,6 +4975,9 @@ Waypoint</text></img>
         </itemgra>
         <itemgra item_types="poi_picnic" order="12-">
           <icon src="picnic.png" />
+        </itemgra>
+        <itemgra item_types="poi_playground" order="12-">
+          <icon src="playground.png"/>
         </itemgra>
         <itemgra item_types="poi_gc_multi" order="12-">
           <icon src="gc_multi.xpm" />
