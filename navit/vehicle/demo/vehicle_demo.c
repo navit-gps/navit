@@ -168,6 +168,8 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr)
 	case attr_profilename:
 	case attr_source:
 	case attr_name:
+	case attr_follow:
+	case attr_active:
 		// Ignore; used by Navit's infrastructure, but not relevant for this vehicle.
 		break;
 	default:
