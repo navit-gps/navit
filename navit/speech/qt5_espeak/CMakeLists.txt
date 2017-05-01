@@ -1,0 +1,7 @@
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+module_add_library(speech_qt5_espeak qt5_espeak.cpp Qt5EspeakAudioOut.cpp)
+target_link_libraries(speech_qt5_espeak espeak)
