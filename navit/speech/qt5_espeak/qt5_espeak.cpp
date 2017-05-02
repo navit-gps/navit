@@ -90,8 +90,12 @@ static bool qt5_espeak_init_espeak(struct speech_priv *sr, struct attr ** attrs)
 #endif
    }
    dbg(lvl_debug,"path_home set to %s\n",sr->path_home);
-
+#if INTERNAL_ESPEAK
+   /*internal espeak is configured to support only synchronous modes */
+   sr->sample_rate = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, BUFFERLENGTH, sr->path_home, 0);
+#else
    sr->sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUFFERLENGTH, sr->path_home, 0);
+#endif
    if(sr->sample_rate == EE_INTERNAL_ERROR)
    {
       printf("Init failed %d\n", sr->sample_rate);

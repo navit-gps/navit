@@ -351,12 +351,13 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		${Qt5DBus_LIBRARIES})
    if (Qt5Multimedia_FOUND)
       if (espeak_FOUND)
+	 set_with_reason(support/espeak "native espeak found" FALSE)
          set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
 	           ${Qt5Multimedia_LIBRARIES}
 	           ${espeak_LIBRARIES})
       else()
-         set_with_reason(support/espeak "Qt5Multimedia found" TRUE)
-	 set_with_reason(INTERNAL_ESPEAK "QtMultimedia found" TRUE)
+         set_with_reason(support/espeak "native espeak missing" TRUE)
+	 set_with_reason(INTERNAL_ESPEAK "speech_qt5_espeak requires full libespeak" TRUE)
          set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
                    ${Qt5Multimedia_LIBRARIES})
       endif()
