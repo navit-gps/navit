@@ -26,7 +26,7 @@
 /*************************************************************/
 
 #include <stdio.h>
-
+#include <wchar.h>
 #define ESPEAK_API_REVISION  5
 /*
 Revision 2
