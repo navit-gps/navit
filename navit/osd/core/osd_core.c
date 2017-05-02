@@ -492,7 +492,7 @@ struct odometer {
 	char *text;                 //text of label attribute for this osd
 	char *name;                 //unique name of the odometer (needed for handling multiple odometers persistently)
 	struct color idle_color;    //text color when counter is idle
-
+	int align;
 	int bDisableReset;         
 	int bAutoStart;         
 	int bActive;                //counting or not
@@ -642,6 +642,92 @@ static void draw_multiline_osd_text(char *buffer,struct osd_item *osd_item, stru
   g_free(bufvec);
 }
 
+static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_item, struct graphics_gc *curr_color)
+{
+
+	int height=osd_item->font_size*13/256;
+	int yspacing=height/2;
+	int xspacing=height/4;
+	char *next, *last, *absbegin;
+	struct point p, p2[4];
+	int lines;
+	int do_draw = osd_item->do_draw;
+
+	osd_fill_with_bgcolor(osd_item);
+	lines=0;
+	next=buffer;
+	last=buffer;
+	while ((next=strstr(next, "\\n"))) {
+		last = next;
+		lines++;
+		next++;
+	}
+
+	while (*last) {
+		if (! g_ascii_isspace(*last)) {
+			lines++;
+			break;
+		}
+		last++;
+	}
+
+	dbg(lvl_debug,"align=%d\n", align);
+	switch (align & 51) {
+	case 1:
+		p.y=0;
+		break;
+	case 2:
+		p.y=(osd_item->h-lines*(height+yspacing)-yspacing);
+		break;
+	case 16: // Grow from top to bottom
+		p.y = 0;
+		if (lines != 0) {
+			osd_item->h = (lines-1) * (height+yspacing) + height;
+		} else {
+			osd_item->h = 0;
+		}
+
+		if (do_draw) {
+			osd_std_resize(osd_item);
+		}
+	default:
+		p.y=(osd_item->h-lines*(height+yspacing)-yspacing)/2;
+	}
+
+	while (buffer) {
+		next=strstr(buffer, "\\n");
+		if (next) {
+			*next='\0';
+			next+=2;
+		}
+		graphics_get_text_bbox(osd_item->gr,
+					   osd_item->font,
+					   buffer, 0x10000,
+					   0x0, p2, 0);
+		switch (align & 12) {
+		case 4:
+			p.x=xspacing;
+			break;
+		case 8:
+			p.x=osd_item->w-(p2[2].x-p2[0].x)-xspacing;
+			break;
+		default:
+			p.x = ((p2[0].x - p2[2].x) / 2) + (osd_item->w / 2);
+		}
+		p.y += height+yspacing;
+		graphics_draw_text(osd_item->gr,
+				   curr_color,
+				   NULL, osd_item->font,
+				   buffer, &p, 0x10000,
+				   0);
+		buffer=next;
+
+		graphics_draw_mode(osd_item->gr, draw_mode_end);
+
+	}
+
+}
+
 
 static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v)
 {
@@ -754,8 +840,8 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
   g_free(time_buffer);
 
   curr_color = this->bActive?opc->osd_item.graphic_fg:this->orange;
-  draw_multiline_osd_text(buffer,&opc->osd_item, curr_color);
 
+  draw_aligned_osd_text(buffer, this->align, &opc->osd_item, curr_color);
   g_free(dist_buffer);
   g_free(spd_buffer);
   g_free(max_spd_buffer);
@@ -949,6 +1035,10 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		this->autosave_period = attr->u.num;
 	else
 		this->autosave_period = -1;  //disabled by default
+
+	attr = attr_search(attrs, NULL, attr_align);
+	if (attr)
+		this->align=attr->u.num;
 
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
