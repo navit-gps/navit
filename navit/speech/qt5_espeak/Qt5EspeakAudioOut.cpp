@@ -26,6 +26,7 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate)
    }
    audio = new QAudioOutput(format, this);
    connect(audio, SIGNAL(stateChanged(QAudio::State)), this, SLOT(handleStateChanged(QAudio::State)));
+   /* to cope with resume coming from other thread (of libespeak)*/
    connect(this, SIGNAL(call_resume(int)), this, SLOT(resume(int)));
 }
 
@@ -51,6 +52,9 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState)
       case QAudio::StoppedState:
       break;
       case QAudio::IdleState:
+         /*remove all data that was already read*/
+         data->remove(0, buffer->pos());
+         buffer->seek(0);
          dbg(lvl_debug,"Size %d\n",data->size());
       break;
    }
@@ -66,6 +70,11 @@ void Qt5EspeakAudioOut::resume(int state)
 void Qt5EspeakAudioOut::addSamples(short *wav, int numsamples)
 {
    dbg(lvl_debug, "Enter (%d samples)\n", numsamples);
+
+   /*remove all data that was already read (if any)*/
+   data->remove(0, buffer->pos());
+   buffer->seek(0);
+
    if(numsamples > 0)
    {
       data->append((const char *) wav, numsamples * sizeof(short));
