@@ -70,7 +70,11 @@ int LookupMnem(MNEM_TAB *table, char *string);
 #define ESPEAK_API
 #else
 #define N_PATH_HOME  150
+#ifdef __cplusplus
 #define ESPEAK_API  extern "C"
+#else
+#define ESPEAK_API
+#endif
 #endif
 
 extern char path_home[N_PATH_HOME];    // this is the espeak-data directory

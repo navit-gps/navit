@@ -82,7 +82,7 @@ static bool qt5_espeak_init_espeak(struct speech_priv *sr, struct attr ** attrs)
    else
    {
 #if INTERNAL_ESPEAK
-      sr->path_home = g_strdup_printf("%s/espeak-data",getenv("NAVIT_SHAREDIR"));
+      sr->path_home = g_strdup_printf("%s",getenv("NAVIT_SHAREDIR"));
 #else
       /* since no path was given by config, we don't know the path to external espeak data.
        * so give NULL to use default path */

@@ -81,7 +81,7 @@ endif(EXTRA_LIBDIR)
 ### Detect environment
 
 add_plugin(support/espeak "Default" FALSE)
-set(INTERNAL_ESPEAK 0 CACHE BOOL "build complete internal libespeak")
+add_feature(INTERNAL_ESPEAK "build complete internal libespeak" FALSE)
 add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
@@ -349,17 +349,17 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
-   if (Qt5Multimedia_FOUND AND espeak_FOUND)
-      set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
-		   ${Qt5Multimedia_LIBRARIES}
-		   ${espeak_LIBRARIES})
-   endif()
-   if (Qt5Multimedia_FOUND AND NOT espeak_FOUND)
-      set_with_reason(support/espeak "Qt5Multimedia found" TRUE)
-      set_with_reason(INTERNAL_ESPEAK "QtMultimedia found" 1)
-      add_definitions ("-DINTERNAL_ESPEAK=${INTERNAL_ESPEAK}")
-      set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
+   if (Qt5Multimedia_FOUND)
+      if (espeak_FOUND)
+         set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
+	           ${Qt5Multimedia_LIBRARIES}
+	           ${espeak_LIBRARIES})
+      else()
+         set_with_reason(support/espeak "Qt5Multimedia found" TRUE)
+	 set_with_reason(INTERNAL_ESPEAK "QtMultimedia found" TRUE)
+         set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
                    ${Qt5Multimedia_LIBRARIES})
+      endif()
    endif()
 endif ()
 if (Qt5Positioning_FOUND)
@@ -579,6 +579,9 @@ if(WIN32 OR WINCE)
    SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -I ${CMAKE_CURRENT_SOURCE_DIR}/navit/gui/win32/resources <DEFINES> -i <SOURCE> -o <OBJECT>")
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
+   #speech/espeak does use windows threads, and therefore needs only parts of
+   #espeak lib. INTERNAL_ESPEAK controls this.
+   set_with_reason(INTERNAL_ESPEAK "Windows detected" FALSE)
    set_with_reason(support/espeak "Windows detected" TRUE)
    set_with_reason(binding/win32 "Windows detected" TRUE)
 
