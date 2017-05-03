@@ -1760,7 +1760,7 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 		graphics_image_free(opc->osd_item.gr, img);
 	} else {
-		opc->osd_item.configured=1;
+		osd_set_std_config(nav, &opc->osd_item);
 		opc->osd_item.gr=gra;
 		opc->osd_item.graphic_bg=graphics_gc_new(opc->osd_item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
@@ -3203,6 +3203,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 	}
 
 	absbegin=str;
+
 	if (do_draw) {
 		//osd_fill_with_bgcolor(&opc->osd_item);
 	}
@@ -3828,7 +3829,7 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 	if (this->use_overlay) {
 		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	} else {
-		opc->osd_item.configured=1;
+		osd_set_std_config(nav, &opc->osd_item);
 		opc->osd_item.gr=gra;
 		opc->osd_item.font = graphics_font_new(opc->osd_item.gr, opc->osd_item.font_size, 1);
 		opc->osd_item.graphic_fg=graphics_gc_new(opc->osd_item.gr);
