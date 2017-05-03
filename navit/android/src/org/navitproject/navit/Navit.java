@@ -676,10 +676,16 @@ public class Navit extends Activity
 				startActivityForResult(map_download_list_activity, Navit.NavitDownloaderSelectMap_id);
 				break;
 			case 5 :
-				// toggle the normal POI layers (to avoid double POIs)
+				// toggle the normal POI layers and labels (to avoid double POIs)
 				Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
 				Bundle b = new Bundle();
 				b.putString("cmd", "toggle_layer(\"POI Symbols\");");
+				msg.setData(b);
+				msg.sendToTarget();
+
+				msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+				b = new Bundle();
+				b.putString("cmd", "toggle_layer(\"POI Labels\");");
 				msg.setData(b);
 				msg.sendToTarget();
 
