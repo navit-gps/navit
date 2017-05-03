@@ -90,8 +90,6 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %make_install
 #copy in sailfish config
 cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
-#copy in espeak script
-#cp %{navit_real_source}/contrib/sailfish/say_de_DE.sh %{buildroot}/usr/bin/say_de_DE.sh
 
 %files
 %defattr(644, root, root, 755)
@@ -107,12 +105,12 @@ cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbou
 %{_datadir}/icons/hicolor/22x22/apps/harbour-navit.png
 %{_datadir}/harbour-navit/locale/
 %attr(755, root, root) %{_bindir}/harbour-navit
-%attr(755, root, root) %{_bindir}/say_de_DE.sh
 %doc %{_mandir}/man1/harbour-navit.1.gz
 %doc %{_mandir}/man1/maptool.1.gz
 
 
 %changelog
-*Mon Dec 14 2015 Initial sailfish release
+*Wed May 03 2017 Use qt5_espeak
 *Mon Apr 10 2017 Almost harbour valid
+*Mon Dec 14 2015 Initial sailfish release
 - Initial package.
