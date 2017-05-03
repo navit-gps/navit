@@ -25,10 +25,10 @@
 
 #include <glib.h>
 extern "C" {
+#include "item.h"
 #include "attr.h"
 #include "debug.h"
 #include "file.h"
-#include "item.h"
 #include "plugin.h"
 #include "speech.h"
 #include "util.h"
