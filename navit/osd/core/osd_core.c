@@ -642,6 +642,15 @@ static void draw_multiline_osd_text(char *buffer,struct osd_item *osd_item, stru
   g_free(bufvec);
 }
 
+/**
+ * * draw osd text based on the given alignment setting on a osd_item
+ * *
+ * * @param buffer pointer to a string containing the text to be displayed
+ * * @param align alignment setting (to be taken form the osd attribute)
+ * * @param osd_item the osd item to work on
+ * * @param curr_color the color in which the osd text should be visible (defaults to osd_items foreground color)
+ * * @returns nothing
+ * */
 static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_item, struct graphics_gc *curr_color)
 {
 
@@ -716,7 +725,7 @@ static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_
 		}
 		p.y += height+yspacing;
 		graphics_draw_text(osd_item->gr,
-				   curr_color,
+				   curr_color?curr_color:osd_item->graphic_fg_text,
 				   NULL, osd_item->font,
 				   buffer, &p, 0x10000,
 				   0);
