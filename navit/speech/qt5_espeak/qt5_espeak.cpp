@@ -44,6 +44,7 @@ extern "C" {
 
 // --------------------------------------------------------------------
 
+/* private context handle type */
 struct speech_priv {
    gchar * path_home;
    int sample_rate;
@@ -53,10 +54,11 @@ struct speech_priv {
    Qt5EspeakAudioOut * audio;
 };
 
+/* callback from espeak to transfer generated samples */
 int qt5_espeak_SynthCallback(short *wav, int numsamples, espeak_EVENT *events)
 {
    struct speech_priv *pr = NULL;
-   printf("Callback %d samples\n", numsamples);
+   dbg(lvl_debug, "Callback %d samples\n", numsamples);
    if(events != NULL)
       pr = (struct speech_priv *) events->user_data;
    if((pr != NULL) && (pr->audio != NULL))
@@ -69,6 +71,7 @@ int qt5_espeak_SynthCallback(short *wav, int numsamples, espeak_EVENT *events)
    /* 1 - abort synthesis */
 }
 
+/* set up espeak */
 static bool qt5_espeak_init_espeak(struct speech_priv *sr, struct attr ** attrs)
 {
    struct attr *path;
@@ -99,15 +102,16 @@ static bool qt5_espeak_init_espeak(struct speech_priv *sr, struct attr ** attrs)
 #endif
    if(sr->sample_rate == EE_INTERNAL_ERROR)
    {
-      printf("Init failed %d\n", sr->sample_rate);
+      dbg(lvl_error,"Init failed %d\n", sr->sample_rate);
       return 1;
    }
-   printf("Sample rate is %d\n", sr->sample_rate);
+   dbg(lvl_error,"Sample rate is %d\n", sr->sample_rate);
 
    espeak_SetSynthCallback(qt5_espeak_SynthCallback);
    return TRUE;
 }
 
+/* set language to espeak */
 static bool qt5_espeak_init_language(struct speech_priv *pr, struct attr ** attrs)
 {
    struct attr * language;
@@ -159,10 +163,11 @@ static bool qt5_espeak_init_language(struct speech_priv *pr, struct attr ** attr
    return true;
 }
 
-static bool qt5_espeak_init_audio(struct speech_priv *sr)
+/* init audio system */
+static bool qt5_espeak_init_audio(struct speech_priv *sr, const char * category)
 {
    try {
-      sr->audio = new Qt5EspeakAudioOut(sr->sample_rate);
+      sr->audio = new Qt5EspeakAudioOut(sr->sample_rate, category);
    }
    catch (void * exception)
    {
@@ -172,6 +177,10 @@ static bool qt5_espeak_init_audio(struct speech_priv *sr)
    return true;
 }
 
+/* will be called to say new text.
+ * sr - private handle
+ * text - new (utf8) text
+ */
 static int qt5_espeak_say(struct speech_priv * sr, const char *text)
 {
    espeak_ERROR error;
@@ -183,6 +192,7 @@ static int qt5_espeak_say(struct speech_priv * sr, const char *text)
    return 0;
 }
 
+/* destructor */
 static void qt5_espeak_destroy(struct speech_priv *sr)
 {
    dbg(lvl_debug, "Enter\n");
@@ -193,11 +203,17 @@ static void qt5_espeak_destroy(struct speech_priv *sr)
    g_free(sr);
 }
 
+/* the plugin interface for speech */
 static struct speech_methods qt5_espeak_meth = {
 	qt5_espeak_destroy,
 	qt5_espeak_say,
 };
 
+/* create new instance of this.
+ * meth - return plugin interface
+ * attr - get decoded attributes from config
+ * parent - get parent attributes from config
+ */
 static struct speech_priv * qt5_espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent)
 {
    struct speech_priv * sr = NULL;
@@ -225,14 +241,15 @@ static struct speech_priv * qt5_espeak_new(struct speech_methods *meth, struct a
       dbg(lvl_error, "Unable to initialize espeak language\n");
    }
 
-   /* init qt5 audio */
-   if(!(sr->audio_ok = qt5_espeak_init_audio(sr)))
+   /* init qt5 audio using default category*/
+   if(!(sr->audio_ok = qt5_espeak_init_audio(sr, NULL)))
    {
       dbg(lvl_error, "Unable to initialize audio\n");
    }
    return sr;
 }
 
+/* initialize this as plugin */
 void plugin_init(void)
 {
    dbg(lvl_debug, "Enter\n");
