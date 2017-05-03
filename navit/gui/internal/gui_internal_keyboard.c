@@ -429,6 +429,10 @@ int
 gui_internal_keyboard_init_mode(char *lang)
 {
 	int ret=0;
+	/* do not crash if lang is NULL, which may be returned by getenv*/
+	if(lang == NULL)
+	    return VKBD_LATIN_UPPER;
+
 	/* Converting to upper case here is required for Android */
 	lang=g_ascii_strup(lang,-1);
 	/*
