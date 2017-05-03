@@ -1,5 +1,5 @@
 
-if(INTERNAL_ESPEAK)
+if(INTERNAL_ESPEAK_COMPLETE)
 	set(ESPEAK_LIBRARY_ADDITIONAL speak_lib.c)
 endif()
 supportlib_add_library(support_espeak compiledict.c dictionary.c intonation.c readclause.c setlengths.c 

@@ -81,7 +81,7 @@ endif(EXTRA_LIBDIR)
 ### Detect environment
 
 add_plugin(support/espeak "Default" FALSE)
-add_feature(INTERNAL_ESPEAK "build complete internal libespeak" FALSE)
+add_feature(INTERNAL_ESPEAK_COMPLETE "build complete internal libespeak" FALSE)
 add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
@@ -357,7 +357,7 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 	           ${espeak_LIBRARIES})
       else()
          set_with_reason(support/espeak "native espeak missing" TRUE)
-	 set_with_reason(INTERNAL_ESPEAK "speech_qt5_espeak requires full libespeak" TRUE)
+         set_with_reason(INTERNAL_ESPEAK_COMPLETE "speech_qt5_espeak requires full libespeak" TRUE)
          set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
                    ${Qt5Multimedia_LIBRARIES})
       endif()
@@ -581,8 +581,8 @@ if(WIN32 OR WINCE)
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
    #speech/espeak does use windows threads, and therefore needs only parts of
-   #espeak lib. INTERNAL_ESPEAK controls this.
-   set_with_reason(INTERNAL_ESPEAK "Windows detected" FALSE)
+   #espeak lib. INTERNAL_ESPEAK_COMPLETE controls this.
+   set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
    set_with_reason(support/espeak "Windows detected" TRUE)
    set_with_reason(binding/win32 "Windows detected" TRUE)
 
