@@ -20,7 +20,10 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern "C" {
 #include "config.h"
+
 #include "navit/point.h"
 #include "navit/item.h"
 #include "navit/graphics.h"
@@ -32,6 +35,8 @@
 #include "navit/window.h"
 #include "navit/keys.h"
 #include "navit/navit.h"
+}
+
 #if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
 #include <windows.h>
 #endif

@@ -18,10 +18,12 @@
  */
 
 #include <glib.h>
-#include "config.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+extern "C" {
+#include "config.h"
+
 #include "item.h"
 #include "point.h"
 #include "graphics.h"
@@ -31,9 +33,8 @@
 #include "debug.h"
 #include "window.h"
 #include "callback.h"
-#if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
-#include <windows.h>
-#endif
+}
+
 #include "graphics_qt5.h"
 #include "event_qt5.h"
 #include <QGuiApplication>
@@ -54,6 +55,9 @@
 #if USE_QWIDGET
 #include <QApplication>
 #include "QNavitWidget.h"
+#endif
+#if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
+#include <windows.h>
 #endif
 
 #if USE_QML
