@@ -88,7 +88,9 @@ Navigation</text></img>
 				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
 				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
 				<img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img>
-				<a href='#Settings Layers'><img src='gui_layers'><text>Layers</text></img></a>
+				<img cond='navit.autozoom_active==0' src='gui_zoom_auto' onclick='navit.autozoom_active=1;redraw_map();back_to_map()'><text>Auto zoom</text></img>
+				<img cond='navit.autozoom_active==1' src='gui_zoom_manual' onclick='navit.autozoom_active=0;redraw_map();back_to_map()'><text>Manual zoom</text></img>
+  				<a href='#Settings Layers'><img src='gui_layers'><text>Layers</text></img></a>
 			</a>
 			<a name='Tools'><text>Tools</text>
 				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
