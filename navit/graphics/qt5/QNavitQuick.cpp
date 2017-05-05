@@ -18,10 +18,12 @@
  */
 
 #include <glib.h>
-#include "config.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+extern"C" {
+#include "config.h"
+
 #include "item.h"
 #include "point.h"
 #include "graphics.h"
@@ -32,6 +34,7 @@
 #include "window.h"
 #include "callback.h"
 #include "keys.h"
+}
 #if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
 #include <windows.h>
 #endif

@@ -96,6 +96,7 @@ add_module(graphics/egl "Required library not found" FALSE)
 add_module(graphics/qt_qpainter "Qt libraries not found" FALSE)
 add_module(graphics/qt5 "Qt5 libraries not found" FALSE)
 add_module(gui/qml "Qt Declarative not found" FALSE)
+add_module(gui/qt5_qml "Qt5 Declarative not found" FALSE)
 add_module(gui/gtk "GTK libs not found" FALSE)
 add_module(vehicle/gpsd "gpsd lib not found" FALSE)
 add_module(vehicle/gypsy "gypsy lib not found" FALSE)
@@ -339,6 +340,9 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 	   if(USE_QML)
 	   	set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
 	   endif()
+	   set_with_reason(gui/qt5_qml "Qt5 found" TRUE
+		${Qt5Quick_LIBRARIES})
+
    endif()
    set_with_reason(graphics/qt5 "Qt5 found" TRUE
 		${Qt5_ADDITIONAL_LIBRARIES}

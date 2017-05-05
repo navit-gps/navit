@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>loader.qml</file>
         <file>graphics_qt5.qml</file>
     </qresource>
 </RCC>
