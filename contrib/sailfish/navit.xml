@@ -384,7 +384,7 @@ Waypoint</text></img>
 			If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
 			The default is text output to the shell -->
 		<!-- speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/ -->
-		<speech type="cmdline" data="say_de_DE.sh '%s'" cps="15"/>
+		<speech type="qt5_espeak" cps="15"/>
 		<!--
 		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
 		See http://wiki.navit-project.org/index.php/Configuration for details.

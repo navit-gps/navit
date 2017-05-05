@@ -80,6 +80,8 @@ endif(EXTRA_LIBDIR)
 
 ### Detect environment
 
+add_plugin(support/espeak "Default" FALSE)
+add_feature(INTERNAL_ESPEAK_COMPLETE "build complete internal libespeak" FALSE)
 add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
@@ -106,6 +108,7 @@ add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(binding/python "python libraries not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/cmdline "neither system() nor CreateProcess() found" FALSE)
+add_module(speech/qt5_espeak "Qt5 multimedia not found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(vehicle/qt5 "Qt5 libraries not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
@@ -174,6 +177,8 @@ if (NOT DISABLE_QT)
     if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
       find_package(Qt5Svg REQUIRED)
       find_package(Qt5DBus REQUIRED)
+      find_package(Qt5Multimedia)
+      find_package(espeak)
     endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
     if (Qt5Positioning_FOUND)
       find_package(Qt5Sensors REQUIRED)
@@ -348,6 +353,19 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
+   if (Qt5Multimedia_FOUND)
+      if (espeak_FOUND)
+	 set_with_reason(support/espeak "native espeak found" FALSE)
+         set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
+	           ${Qt5Multimedia_LIBRARIES}
+	           ${espeak_LIBRARIES})
+      else()
+         set_with_reason(support/espeak "native espeak missing" TRUE)
+         set_with_reason(INTERNAL_ESPEAK_COMPLETE "speech_qt5_espeak requires full libespeak" TRUE)
+         set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
+                   ${Qt5Multimedia_LIBRARIES})
+      endif()
+   endif()
 endif ()
 if (Qt5Positioning_FOUND)
    set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
@@ -487,7 +505,6 @@ add_module(plugin/j1850 "Default" FALSE)
 add_module(speech/android "Default" FALSE)
 add_module(speech/espeak "Default" FALSE)
 add_module(speech/iphone "Default" FALSE)
-add_plugin(support/espeak "Default" FALSE)
 add_module(vehicle/android "Default" FALSE)
 add_module(vehicle/iphone "Default" FALSE)
 add_module(vehicle/wince "Default" FALSE)
@@ -567,6 +584,9 @@ if(WIN32 OR WINCE)
    SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -I ${CMAKE_CURRENT_SOURCE_DIR}/navit/gui/win32/resources <DEFINES> -i <SOURCE> -o <OBJECT>")
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
+   #speech/espeak does use windows threads, and therefore needs only parts of
+   #espeak lib. INTERNAL_ESPEAK_COMPLETE controls this.
+   set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
    set_with_reason(support/espeak "Windows detected" TRUE)
    set_with_reason(binding/win32 "Windows detected" TRUE)
 
