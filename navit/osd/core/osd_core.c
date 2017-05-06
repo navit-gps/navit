@@ -3203,81 +3203,79 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 	}
 
 	absbegin=str;
+
 	if (do_draw) {
-		//osd_fill_with_bgcolor(&opc->osd_item);
-	}
-	if (do_draw && str) {
 		osd_fill_with_bgcolor(&opc->osd_item);
-		lines=0;
-		next=str;
-		last=str;
-		while ((next=strstr(next, "\\n"))) {
-			last = next;
-			lines++;
-			next++;
-		}
-
-		while (*last) {
-			if (! g_ascii_isspace(*last)) {
+		if (str) {
+			lines=0;
+			next=str;
+			last=str;
+			while ((next=strstr(next, "\\n"))) {
+				last = next;
 				lines++;
-				break;
-			}
-			last++;
-		}
-
-		dbg(lvl_debug,"this->align=%d\n", this->align);
-		switch (this->align & 51) {
-		case 1:
-			p.y=0;
-			break;
-		case 2:
-			p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing);
-			break;
-		case 16: // Grow from top to bottom
-			p.y = 0;
-			if (lines != 0) {
-				opc->osd_item.h = (lines-1) * (height+yspacing) + height;
-			} else {
-				opc->osd_item.h = 0;
+				next++;
 			}
 
-			if (do_draw) {
-				osd_std_resize(&opc->osd_item);
+			while (*last) {
+				if (! g_ascii_isspace(*last)) {
+					lines++;
+					break;
+				}
+				last++;
 			}
-		default:
-			p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing)/2;
-		}
 
-		while (str) {
-			next=strstr(str, "\\n");
-			if (next) {
-				*next='\0';
-				next+=2;
-			}
-			graphics_get_text_bbox(opc->osd_item.gr,
-					       opc->osd_item.font,
-					       str, 0x10000,
-					       0x0, p2, 0);
-			switch (this->align & 12) {
-			case 4:
-				p.x=xspacing;
+			dbg(lvl_debug,"this->align=%d\n", this->align);
+			switch (this->align & 51) {
+			case 1:
+				p.y=0;
 				break;
-			case 8:
-				p.x=opc->osd_item.w-(p2[2].x-p2[0].x)-xspacing;
+			case 2:
+				p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing);
 				break;
+			case 16: // Grow from top to bottom
+				p.y = 0;
+				if (lines != 0) {
+					opc->osd_item.h = (lines-1) * (height+yspacing) + height;
+				} else {
+					opc->osd_item.h = 0;
+				}
+
+				if (do_draw) {
+					osd_std_resize(&opc->osd_item);
+				}
 			default:
-				p.x = ((p2[0].x - p2[2].x) / 2) + (opc->osd_item.w / 2);
+				p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing)/2;
 			}
-			p.y += height+yspacing;
-			graphics_draw_text(opc->osd_item.gr,
-					   opc->osd_item.graphic_fg_text,
-					   NULL, opc->osd_item.font,
-					   str, &p, 0x10000,
-					   0);
-			str=next;
+
+			while (str) {
+				next=strstr(str, "\\n");
+				if (next) {
+					*next='\0';
+					next+=2;
+				}
+				graphics_get_text_bbox(opc->osd_item.gr,
+							   opc->osd_item.font,
+							   str, 0x10000,
+							   0x0, p2, 0);
+				switch (this->align & 12) {
+				case 4:
+					p.x=xspacing;
+					break;
+				case 8:
+					p.x=opc->osd_item.w-(p2[2].x-p2[0].x)-xspacing;
+					break;
+				default:
+					p.x = ((p2[0].x - p2[2].x) / 2) + (opc->osd_item.w / 2);
+				}
+				p.y += height+yspacing;
+				graphics_draw_text(opc->osd_item.gr,
+						   opc->osd_item.graphic_fg_text,
+						   NULL, opc->osd_item.font,
+						   str, &p, 0x10000,
+						   0);
+				str=next;
+			}
 		}
-	}
-	if(do_draw) {
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 	}
 	g_free(absbegin);
