@@ -1931,8 +1931,14 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 linkold:
 	segment->data->len=len;
 	segment->next=NULL;
-	item_hash_insert(this->path_hash,  &rgs->data.item, segment);
-
+        if (!pos) {
+	        item_hash_insert(this->path_hash,  &rgs->data.item, segment);
+	} else {
+	        /* Don't cache the route_path_segment if it was the first one.
+                 * This prevents the route_path_segment from having incorrect coordinates
+                 * when updating it after current GPS position jumed back or
+                 * played back GPS recording again without resetting Destination. */
+	}
 	route_path_add_segment(this, segment);
 
 	return ret;
