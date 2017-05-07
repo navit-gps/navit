@@ -448,6 +448,14 @@ Waypoint</text></img>
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
+				<itemgra item_types="poly_town" order="0-">
+					<polygon color="#ffc895"/>
+					<polyline color="#ebb481"/>
+				</itemgra>
+				<itemgra item_types="poly_university" order="8-">
+					<polygon color="#d68fb8"/>
+					<polyline color="#881155"/>
+				</itemgra>
 				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#8ec78d"/>
 					<text text_size="5"/>
@@ -460,22 +468,6 @@ Waypoint</text></img>
 				<itemgra item_types="poly_meadow" order="0-">
 					<polygon color="#c7f1a3"/>
 					<polyline color="#79c691"/>
-				</itemgra>
-				<itemgra item_types="poly_town" order="0-">
-					<polygon color="#ffc895"/>
-					<polyline color="#ebb481"/>
-				</itemgra>
-				<itemgra item_types="poly_university" order="8-">
-					<polygon color="#d68fb8"/>
-					<polyline color="#881155"/>
-				</itemgra>
-				<itemgra item_types="poly_water_tiled" order="0-">
-					<polygon color="#82c8ea"/>
-				</itemgra>
-				<itemgra item_types="poly_water" order="0-">
-					<polygon color="#82c8ea"/>
-					<polyline color="#5096b8"/>
-					<text text_size="5"/>
 				</itemgra>
 				<itemgra item_types="poly_land" order="0-">
 					<polygon color="#ffefb7"/>
@@ -583,6 +575,14 @@ Waypoint</text></img>
 				<itemgra item_types="poly_street_3" order="16-18">
 					<polygon color="#ffff00"/>
 					<polyline color="#a0a0a0" width="3"/>
+				</itemgra>
+				<itemgra item_types="poly_water_tiled" order="0-">
+					<polygon color="#82c8ea"/>
+				</itemgra>
+				<itemgra item_types="poly_water" order="0-">
+					<polygon color="#82c8ea"/>
+					<polyline color="#5096b8"/>
+					<text text_size="5"/>
 				</itemgra>
 				<itemgra item_types="water_line" order="0-">
 					<polyline color="#5096b8" width="1"/>
@@ -2209,11 +2209,13 @@ Waypoint</text></img>
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
-				<itemgra item_types="poly_wood" order="0-">
-					<polygon color="#041a06"/>
-					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				<itemgra item_types="poly_town" order="0-">
+					<polygon color="#191711"/>
 				</itemgra>
-				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
+				<itemgra item_types="poly_university" order="8-">
+					<polygon color="#140f14"/>
+				</itemgra>
+				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
@@ -2224,18 +2226,12 @@ Waypoint</text></img>
 				<itemgra item_types="poly_meadow" order="0-">
 					<polygon color="#041a06"/>
 				</itemgra>
-				<itemgra item_types="poly_town" order="0-">
-					<polygon color="#191711"/>
-				</itemgra>
-				<itemgra item_types="poly_university" order="8-">
-					<polygon color="#140f14"/>
-				</itemgra>
-				<itemgra item_types="poly_water" order="0-">
-					<polygon color="#010321"/>
-					<text color="#55c4bd" background_color="#000000" text_size="5"/>
-				</itemgra>
 				<itemgra item_types="poly_land" order="0-">
 					<polygon color="#011001"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
+					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
 				<itemgra item_types="poly_park" order="0-">
@@ -2323,6 +2319,10 @@ Waypoint</text></img>
 					<polygon color="#c5c300"/>
 					<polyline color="#a0a0a0" width="3"/>
 				</itemgra>
+				<itemgra item_types="poly_water" order="0-">
+					<polygon color="#010321"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
 				<itemgra item_types="water_line" order="0-">
 					<polyline color="#010321" width="1"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
@@ -2403,6 +2403,8 @@ Waypoint</text></img>
 				<itemgra item_types="border_state" order="0-">
 					<polyline color="#808080" width="1"/>
 				</itemgra>
+			</layer>
+			<layer name="heightlines">
 				<itemgra item_types="height_line_1" order="0-">
 					<polyline color="#000000" width="1"/>
 				</itemgra>
