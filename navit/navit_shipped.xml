@@ -482,6 +482,14 @@ Waypoint</text></img>
 					<polygon color="#7cc334"/>
 					<text text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_beach" order="0-">
+					<polygon color="#fbed66"/>
+					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_mud" order="0-">
+					<polygon color="#553f23"/>
+					<text text_size="5"/>
+				</itemgra>
 				<itemgra item_types="poly_pedestrian" order="10">
 					<polyline color="#d2d2d2" width="3"/>
 					<polyline color="#dddddd" width="1"/>
@@ -2236,6 +2244,14 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="poly_park" order="0-">
 					<polygon color="#041a06"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_beach" order="0-">
+					<polygon color="#081f0b"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_mud" order="0-">
+					<polygon color="#020803"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
 				<itemgra item_types="poly_pedestrian" order="10">
