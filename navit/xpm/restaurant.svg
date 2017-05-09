@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -12,7 +13,7 @@
    height="22"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.91 r13725"
    version="1.0"
    sodipodi:docname="restaurant.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -61,7 +62,8 @@
      inkscape:window-x="0"
      inkscape:window-y="39"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -83,13 +85,6 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#0000a9;stroke-width:2.64169335;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect3210"
-       width="19.235533"
-       height="19.235533"
-       x="1.3360755"
-       y="1.4283922" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 5.9346462,4.7555282 L 13.668627,12.110702 L 17.361997,15.677803 C 17.361997,15.677803 17.708606,16.39417 17.298863,16.940493 C 16.825353,17.571839 15.973037,17.3193 15.973037,17.3193 L 12.184965,13.341825 C 12.184965,13.341825 12.015475,13.122769 11.806158,13.152421 C 11.302183,13.223814 11.048544,13.089287 11.048544,13.089287 L 5.42957,7.2809096 C 5.42957,7.2809096 5.1999493,6.9813178 5.2243828,6.0340025 C 5.2396325,5.442752 5.265468,4.3923122 5.9346462,4.7555282 z"
