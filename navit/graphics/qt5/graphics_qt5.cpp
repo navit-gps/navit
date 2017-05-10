@@ -93,7 +93,7 @@ static void
 graphics_destroy(struct graphics_priv* gr)
 {
 //        dbg(lvl_debug,"enter\n");
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     gr->freetype_methods.destroy();
 #endif
     /* destroy painter */
@@ -156,16 +156,55 @@ static struct graphics_font_methods font_methods = {
     font_destroy
 };
 
+/**
+ * List of font families to use, in order of preference
+ */
+static const char* fontfamilies[] = {
+    "Liberation Sans",
+    "Arial",
+    "NcrBI4nh",
+    "luximbi",
+    "FreeSans",
+    "DejaVu Sans",
+    NULL,
+};
+
 static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags)
 {
+    int a = 0;
     struct graphics_font_priv* font_priv;
-    dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
+    dbg(lvl_debug, "enter (font %s, %d, 0x%x)\n", font, size, flags);
     font_priv = g_new0(struct graphics_font_priv, 1);
+    font_priv->font = new QFont(fontfamilies[0]);
     if (font != NULL)
-        font_priv->font = new QFont(font, size / 16);
-    else
-        font_priv->font = new QFont("Arial", size / 16);
-    //font_priv->font->setStyleStrategy(QFont::NoAntialias);
+        font_priv->font->setFamily(font);
+    /* search for exact font match */
+    while ((!font_priv->font->exactMatch()) && (fontfamilies[a] != NULL)) {
+        font_priv->font->setFamily(fontfamilies[a]);
+        a++;
+    }
+    if (font_priv->font->exactMatch()) {
+        dbg(lvl_debug, "Exactly matching font: %s\n", font_priv->font->family().toUtf8().data());
+    }
+    else {
+        /* set any font*/
+        if (font != NULL) {
+            font_priv->font->setFamily(font);
+        }
+        else {
+            font_priv->font->setFamily(fontfamilies[0]);
+        }
+        dbg(lvl_debug, "No matching font. Resort to: %s\n", font_priv->font->family().toUtf8().data());
+    }
+
+    /* No clue why factor 20. Found this by comparing to Freetype rendering. */
+    font_priv->font->setPointSize(size / 20);
+    font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
+    /* Check for bold font */
+    if (flags) {
+        font_priv->font->setBold(true);
+    }
+
     *meth = font_methods;
     return font_priv;
 }
@@ -281,7 +320,8 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
             /*file doesn't exist. give up */
             dbg(lvl_debug, "File %s does not exist\n", path);
             return NULL;
-        } else {
+        }
+        else {
             /* add ".svg" for renderer to try .svg file first in renderer */
             dbg(lvl_debug, "Guess extension on %s\n", path);
             renderer_key += ".svg";
@@ -318,7 +358,8 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
     if (image_priv->pixmap->isNull()) {
         g_free(image_priv);
         return NULL;
-    } else {
+    }
+    else {
         /* check if we need to scale this */
         if ((*w > 0) && (*h > 0)) {
             if ((image_priv->pixmap->width() != *w) || (image_priv->pixmap->height() != *h)) {
@@ -412,7 +453,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     QPainter* painter = gr->painter;
     if (painter == NULL)
         return;
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     struct font_freetype_text* t;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
@@ -434,7 +475,8 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
         bgc.g = bg->pen->color().green() << 8;
         bgc.b = bg->pen->color().blue() << 8;
         bgc.a = bg->pen->color().alpha() << 8;
-    } else {
+    }
+    else {
         bgc = transparent;
     }
 
@@ -477,19 +519,21 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     gr->freetype_methods.text_destroy(t);
 #else
     QString tmp = QString::fromUtf8(text);
+    qreal m_dx = ((qreal)dx) / 65536.0;
+    qreal m_dy = ((qreal)dy) / 65536.0;
     QMatrix sav = gr->painter->worldMatrix();
-    QMatrix m(dx / 65535.0, dy / 65535.0, -dy / 65535.0, dx / 65535.0, p->x, p->y);
+    QMatrix m(m_dx, m_dy, -m_dy, m_dx, p->x, p->y);
+    //QMatrix m(dx / 65535.0, dy / 65535.0, -dy / 65535.0, dx / 65535.0, p->x, p->y);
     painter->setWorldMatrix(m, TRUE);
     painter->setFont(*font->font);
-    if(bg)
-    {
-    	QPen shadow;
-	QPainterPath path;
-	shadow.setColor(bg->pen->color());
-	shadow.setWidth(2);
-	painter->setPen(shadow);
-    	path.addText(0, 0, *font->font, tmp);
-	painter->drawPath(path);
+    if (bg) {
+        QPen shadow;
+        QPainterPath path;
+        shadow.setColor(bg->pen->color());
+        shadow.setWidth(2);
+        painter->setPen(shadow);
+        path.addText(0, 0, *font->font, tmp);
+        painter->drawPath(path);
     }
     painter->setPen(*fg->pen);
     painter->drawText(0, 0, tmp);
@@ -513,7 +557,8 @@ static void draw_drag(struct graphics_priv* gr, struct point* p)
         //            dbg(lvl_debug,"enter %p (%d,%d)\n", gr, p->x, p->y);
         gr->x = p->x;
         gr->y = p->y;
-    } else {
+    }
+    else {
         //            dbg(lvl_debug,"enter %p (NULL)\n", gr);
     }
 }
@@ -542,7 +587,8 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
         gr->use_count--;
         if (gr->use_count > 0) {
             dbg(lvl_debug, "drawing on %p still in use\n", gr);
-        } else if (gr->painter != NULL) {
+        }
+        else if (gr->painter != NULL) {
             gr->painter->end();
             delete (gr->painter);
             gr->painter = NULL;
@@ -556,7 +602,8 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
                 gr->GPriv->emit_update();
 
 #endif
-        } else
+        }
+        else
             dbg(lvl_debug, "Context %p not active!\n", gr)
 
                 break;
@@ -737,7 +784,7 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
     struct graphics_priv* graphics_priv = NULL;
     graphics_priv = g_new0(struct graphics_priv, 1);
     *meth = graphics_methods;
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     if (gr->font_freetype_new) {
         graphics_priv->font_freetype_new = gr->font_freetype_new;
         gr->font_freetype_new(&graphics_priv->freetype_methods);
@@ -811,13 +858,14 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         //dbg(lvl_debug, "event_system is %s\n", event_loop_system->u.str);
         if (!event_request_system(event_loop_system->u.str, "graphics_qt5"))
             return NULL;
-    } else {
+    }
+    else {
         /* no event system requested by config. Default to our own */
         if (!event_request_system("qt5", "graphics_qt5"))
             return NULL;
     }
 
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     struct font_priv* (*font_freetype_new)(void* meth);
     /* get font plugin if present */
     font_freetype_new = (struct font_priv * (*)(void*))plugin_get_category_font("freetype");
@@ -849,7 +897,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
 #endif
 
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     graphics_priv->font_freetype_new = font_freetype_new;
     font_freetype_new(&graphics_priv->freetype_methods);
     meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int, int))graphics_priv->freetype_methods.font_new;
@@ -901,7 +949,8 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         if (graphics_priv->widget != NULL)
             graphics_priv->widget->setWindowState(Qt::WindowFullScreen);
 #endif
-    } else {
+    }
+    else {
         /* not maximized. Check what size to use then */
         struct attr* w = NULL;
         struct attr* h = NULL;
