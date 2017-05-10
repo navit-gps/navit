@@ -448,53 +448,53 @@ Waypoint</text></img>
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
-				<itemgra item_types="poly_nature_reserve" order="0-"><polygon color="#cedec6"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_glacier" order="0-"><polygon color="#ddecec"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_nature_reserve" order="10-"><polygon color="#cedec6"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_glacier" order="10-"><polygon color="#ddecec"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#ffc895"/>
 					<polyline color="#ebb481"/>
 				</itemgra>
-				<itemgra item_types="poly_naval_base" order="0-"><polygon color="#6a9993"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_airfield" order="0-"><polygon color="#ecd3cf"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_naval_base" order="10-"><polygon color="#6a9993"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_airfield" order="10-"><polygon color="#ecd3cf"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_university" order="8-">
 					<polygon color="#d68fb8"/>
 					<polyline color="#881155"/>
 				</itemgra>
-				<itemgra item_types="poly_college" order="0-"><polygon color="#f4f4f4"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_attraction" order="0-"><polygon color="#01a36c"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_theme_park" order="0-"><polygon color="#01a36c"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_water_park" order="0-"><polygon color="#8cc1c8"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_zoo" order="0-"><polygon color="#ccbda5"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_railway" order="0-"><polygon color="#b3b9c5"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_marina" order="0-"><polygon color="#aac4d2"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_commercial" order="0-"><polygon color="#eaeed3"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_retail" order="0-"><polygon color="#d6b690"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_plaza" order="0-"><polygon color="#cac4bc"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_battlefield" order="0-"><polygon color="#373d1c"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_archaeological_site" order="0-"><polygon color="#d9cfb6"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_ruins" order="0-"><polygon color="#d9cfb6"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_camp_site" order="0-"><polygon color="#339900"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_caravan_site" order="0-"><polygon color="#8d9723"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_golf_course" order="0-"><polygon color="#419a22"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_marsh" order="0-"><polygon color="#553f23"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_fell" order="0-"><polygon color="#bbb56b"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_greenfield" order="0-"><polygon color="#f1eee8"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_brownfield" order="0-"><polygon color="#b6b690"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_heath" order="0-"><polygon color="#d6d99f"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_scree" order="0-"><polygon color="#eee5dc"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_quarry" order="0-"><polygon color="#e4caad"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_landfill" order="0-"><polygon color="#999893"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_construction" order="0-"><polygon color="#f47216"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_range" order="0-"><polygon color="#6d6b63"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_danger_area" order="0-"><polygon color="#f2ba1b"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_common" order="0-"><polygon color="#7bab36"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_recreation_ground" order="0-"><polygon color="#8fa400"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_playground" order="0-"><polygon color="#b4c479"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_fishing" order="0-"><polygon color="#713907"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_allotments" order="0-"><polygon color="#eecfb3"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_garden" order="0-"><polygon color="#cfeca8"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_village_green" order="0-"><polygon color="#93ac47"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_picnic_site" order="0-"><polygon color="#797548"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_college" order="10-"><polygon color="#f4f4f4"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_attraction" order="10-"><polygon color="#01a36c"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_theme_park" order="10-"><polygon color="#01a36c"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_water_park" order="10-"><polygon color="#8cc1c8"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_zoo" order="10-"><polygon color="#ccbda5"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_railway" order="10-"><polygon color="#b3b9c5"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_marina" order="10-"><polygon color="#aac4d2"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_commercial" order="10-"><polygon color="#eaeed3"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_retail" order="10-"><polygon color="#d6b690"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_plaza" order="10-"><polygon color="#cac4bc"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_battlefield" order="10-"><polygon color="#373d1c"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_archaeological_site" order="10-"><polygon color="#d9cfb6"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_ruins" order="10-"><polygon color="#d9cfb6"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_camp_site" order="10-"><polygon color="#339900"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_caravan_site" order="10-"><polygon color="#8d9723"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_golf_course" order="10-"><polygon color="#419a22"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_marsh" order="10-"><polygon color="#553f23"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_fell" order="10-"><polygon color="#bbb56b"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_greenfield" order="10-"><polygon color="#f1eee8"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_brownfield" order="10-"><polygon color="#b6b690"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_heath" order="10-"><polygon color="#d6d99f"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_scree" order="10-"><polygon color="#eee5dc"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_quarry" order="10-"><polygon color="#e4caad"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_landfill" order="10-"><polygon color="#999893"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_construction" order="10-"><polygon color="#f47216"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_range" order="10-"><polygon color="#6d6b63"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_danger_area" order="10-"><polygon color="#f2ba1b"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_common" order="10-"><polygon color="#7bab36"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_recreation_ground" order="10-"><polygon color="#8fa400"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_playground" order="10-"><polygon color="#b4c479"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_fishing" order="10-"><polygon color="#713907"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_allotments" order="10-"><polygon color="#eecfb3"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_garden" order="10-"><polygon color="#cfeca8"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_village_green" order="10-"><polygon color="#93ac47"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_picnic_site" order="10-"><polygon color="#797548"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#8ec78d"/>
 					<text text_size="5"/>
@@ -691,10 +691,10 @@ Waypoint</text></img>
 				<itemgra item_types="poly_car_parking" order="1-">
 					<polygon color="#e7cf87"/>
 				</itemgra>
-				<itemgra item_types="poly_artwork" order="0-"><polygon color="#fefbc5"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_sports_stadium" order="0-"><polygon color="#6eb85d"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_sports_track" order="0-"><polygon color="#b6554e"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_barracks" order="0-"><polygon color="#b6a6a6"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_artwork" order="10-"><polygon color="#fefbc5"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_sports_stadium" order="10-"><polygon color="#6eb85d"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_sports_track" order="10-"><polygon color="#b6554e"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_barracks" order="10-"><polygon color="#b6a6a6"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_building" order="0-">
 					<polygon color="#b6a6a6"/>
 				</itemgra>
@@ -2260,51 +2260,51 @@ Waypoint</text></img>
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
-				<itemgra item_types="poly_nature_reserve" order="0-"><polygon color="#061d15"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_glacier" order="0-"><polygon color="#071e19"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_nature_reserve" order="10-"><polygon color="#061d15"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_glacier" order="10-"><polygon color="#071e19"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#191711"/>
 				</itemgra>
-				<itemgra item_types="poly_naval_base" order="0-"><polygon color="#03140f"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_airfield" order="0-"><polygon color="#071b16"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_naval_base" order="10-"><polygon color="#03140f"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_airfield" order="10-"><polygon color="#071b16"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_university" order="8-">
 					<polygon color="#140f14"/>
 				</itemgra>
-				<itemgra item_types="poly_college" order="0-"><polygon color="#071f1a"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_attraction" order="0-"><polygon color="#00150b"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_theme_park" order="0-"><polygon color="#00150b"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_water_park" order="0-"><polygon color="#041915"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_zoo" order="0-"><polygon color="#061811"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_railway" order="0-"><polygon color="#051815"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_marina" order="0-"><polygon color="#051916"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_commercial" order="0-"><polygon color="#071f16"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_retail" order="0-"><polygon color="#06170f"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_plaza" order="0-"><polygon color="#061914"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_battlefield" order="0-"><polygon color="#010703"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_archaeological_site" order="0-"><polygon color="#061b13"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_ruins" order="0-"><polygon color="#061b13"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_camp_site" order="0-"><polygon color="#011400"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_caravan_site" order="0-"><polygon color="#041303"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_golf_course" order="0-"><polygon color="#021403"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_marsh" order="0-"><polygon color="#020803"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_fell" order="0-"><polygon color="#05170b"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_greenfield" order="0-"><polygon color="#071f19"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_brownfield" order="0-"><polygon color="#05170f"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_heath" order="0-"><polygon color="#061c11"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_scree" order="0-"><polygon color="#071d17"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_quarry" order="0-"><polygon color="#071a12"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_landfill" order="0-"><polygon color="#04130f"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_construction" order="0-"><polygon color="#070e02"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_range" order="0-"><polygon color="#030d0a"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_danger_area" order="0-"><polygon color="#071802"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_common" order="0-"><polygon color="#031605"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_recreation_ground" order="0-"><polygon color="#041500"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_playground" order="0-"><polygon color="#05190d"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_fishing" order="0-"><polygon color="#030700"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_allotments" order="0-"><polygon color="#071b13"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_garden" order="0-"><polygon color="#061e12"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_village_green" order="0-"><polygon color="#041607"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_picnic_site" order="0-"><polygon color="#030f07"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_college" order="10-"><polygon color="#071f1a"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_attraction" order="10-"><polygon color="#00150b"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_theme_park" order="10-"><polygon color="#00150b"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_water_park" order="10-"><polygon color="#041915"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_zoo" order="10-"><polygon color="#061811"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_railway" order="10-"><polygon color="#051815"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_marina" order="10-"><polygon color="#051916"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_commercial" order="10-"><polygon color="#071f16"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_retail" order="10-"><polygon color="#06170f"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_plaza" order="10-"><polygon color="#061914"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_battlefield" order="10-"><polygon color="#010703"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_archaeological_site" order="10-"><polygon color="#061b13"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_ruins" order="10-"><polygon color="#061b13"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_camp_site" order="10-"><polygon color="#011400"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_caravan_site" order="10-"><polygon color="#041303"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_golf_course" order="10-"><polygon color="#021403"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_marsh" order="10-"><polygon color="#020803"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_fell" order="10-"><polygon color="#05170b"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_greenfield" order="10-"><polygon color="#071f19"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_brownfield" order="10-"><polygon color="#05170f"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_heath" order="10-"><polygon color="#061c11"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_scree" order="10-"><polygon color="#071d17"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_quarry" order="10-"><polygon color="#071a12"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_landfill" order="10-"><polygon color="#04130f"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_construction" order="10-"><polygon color="#070e02"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_range" order="10-"><polygon color="#030d0a"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_danger_area" order="10-"><polygon color="#071802"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_common" order="10-"><polygon color="#031605"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_recreation_ground" order="10-"><polygon color="#041500"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_playground" order="10-"><polygon color="#05190d"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_fishing" order="10-"><polygon color="#030700"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_allotments" order="10-"><polygon color="#071b13"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_garden" order="10-"><polygon color="#061e12"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_village_green" order="10-"><polygon color="#041607"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_picnic_site" order="10-"><polygon color="#030f07"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
@@ -2481,10 +2481,10 @@ Waypoint</text></img>
 				<itemgra item_types="poly_car_parking" order="8-">
 					<polygon color="#1a170f"/>
 				</itemgra>
-				<itemgra item_types="poly_artwork" order="0-"><polygon color="#082015"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_sports_stadium" order="0-"><polygon color="#03180a"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_sports_track" order="0-"><polygon color="#050b08"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_barracks" order="0-"><polygon color="#051511"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_artwork" order="10-"><polygon color="#082015"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_sports_stadium" order="10-"><polygon color="#03180a"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_sports_track" order="10-"><polygon color="#050b08"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_barracks" order="10-"><polygon color="#051511"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_building" order="8-">
 					<polygon color="#282424"/>
 				</itemgra>
