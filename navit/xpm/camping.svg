@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -12,7 +13,7 @@
    height="22"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.91 r13725"
    version="1.0"
    sodipodi:docname="camping.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -77,17 +78,18 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="16.000001"
-     inkscape:cx="13.389998"
-     inkscape:cy="12.68308"
+     inkscape:cx="10.464673"
+     inkscape:cy="12.714329"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="943"
-     inkscape:window-height="682"
-     inkscape:window-x="231"
-     inkscape:window-y="59"
+     inkscape:window-width="1366"
+     inkscape:window-height="722"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -109,6 +111,11 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:3;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 10.5625,4.1250002 -0.46875,0.375 L 11,5.7187502 3.3125001,17 l -1.3125,0 0,0.59375 18.5937499,-0.03125 0,-0.59375 L 19.3125,17 11.65625,5.7500002 l 0.875,-1.21875 -0.4375,-0.375 -0.78125,1.0625 -0.75,-1.09375 z M 11.34375,11.75 14.8125,16.90625 7.7187501,16.9375 11.34375,11.75 Z"
+       id="path3246-5" />
     <path
        style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.10000000000000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
        d="M 10.5625 4.0625 L 10.09375 4.4375 L 11 5.65625 L 3.3125 16.9375 L 2 16.9375 L 2 17.53125 L 20.59375 17.5 L 20.59375 16.90625 L 19.3125 16.9375 L 11.65625 5.6875 L 12.53125 4.46875 L 12.09375 4.09375 L 11.3125 5.15625 L 10.5625 4.0625 z M 11.34375 11.6875 L 14.8125 16.84375 L 7.71875 16.875 L 11.34375 11.6875 z "
