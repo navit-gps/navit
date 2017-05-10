@@ -45,7 +45,7 @@
 #endif
 
 #ifndef QT_QPAINTER_USE_FREETYPE
-#define QT_QPAINTER_USE_FREETYPE 1
+//#define QT_QPAINTER_USE_FREETYPE 1
 #endif
 
 #ifndef SAILFISH_OS

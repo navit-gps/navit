@@ -159,13 +159,13 @@ static struct graphics_font_methods font_methods = {
 static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags)
 {
     struct graphics_font_priv* font_priv;
-    //        dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
+    dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
     font_priv = g_new0(struct graphics_font_priv, 1);
     if (font != NULL)
         font_priv->font = new QFont(font, size / 16);
     else
         font_priv->font = new QFont("Arial", size / 16);
-    font_priv->font->setStyleStrategy(QFont::NoAntialias);
+    //font_priv->font->setStyleStrategy(QFont::NoAntialias);
     *meth = font_methods;
     return font_priv;
 }
@@ -408,7 +408,7 @@ draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point*
 static void
 draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg, struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy)
 {
-    dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) %s\n", gr, fg, bg, p->x, p->y, text);
+    dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) d(%d, %d) %s\n", gr, fg, bg, p->x, p->y, dx, dy, text);
     QPainter* painter = gr->painter;
     if (painter == NULL)
         return;
@@ -480,8 +480,18 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     QMatrix sav = gr->painter->worldMatrix();
     QMatrix m(dx / 65535.0, dy / 65535.0, -dy / 65535.0, dx / 65535.0, p->x, p->y);
     painter->setWorldMatrix(m, TRUE);
-    painter->setPen(*fg->pen);
     painter->setFont(*font->font);
+    if(bg)
+    {
+    	QPen shadow;
+	QPainterPath path;
+	shadow.setColor(bg->pen->color());
+	shadow.setWidth(2);
+	painter->setPen(shadow);
+    	path.addText(0, 0, *font->font, tmp);
+	painter->drawPath(path);
+    }
+    painter->setPen(*fg->pen);
     painter->drawText(0, 0, tmp);
     painter->setWorldMatrix(sav);
 #endif
