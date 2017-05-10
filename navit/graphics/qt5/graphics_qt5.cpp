@@ -199,7 +199,7 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
 
     /* No clue why factor 20. Found this by comparing to Freetype rendering. */
     font_priv->font->setPointSize(size / 20);
-    font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
+    //font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
     /* Check for bold font */
     if (flags) {
         font_priv->font->setBold(true);
@@ -523,7 +523,6 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     qreal m_dy = ((qreal)dy) / 65536.0;
     QMatrix sav = gr->painter->worldMatrix();
     QMatrix m(m_dx, m_dy, -m_dy, m_dx, p->x, p->y);
-    //QMatrix m(dx / 65535.0, dy / 65535.0, -dy / 65535.0, dx / 65535.0, p->x, p->y);
     painter->setWorldMatrix(m, TRUE);
     painter->setFont(*font->font);
     if (bg) {
