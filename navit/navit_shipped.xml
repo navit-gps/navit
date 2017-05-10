@@ -469,6 +469,9 @@ Waypoint</text></img>
 					<polygon color="#c7f1a3"/>
 					<polyline color="#79c691"/>
 				</itemgra>
+				<itemgra item_types="poly_water_tiled" order="0-">
+					<polygon color="#82c8ea"/>
+				</itemgra>
 				<itemgra item_types="poly_land" order="0-">
 					<polygon color="#ffefb7"/>
 					<polyline color="#ffefb7"/>
@@ -480,6 +483,14 @@ Waypoint</text></img>
 				</itemgra>
 				<itemgra item_types="poly_park" order="0-">
 					<polygon color="#7cc334"/>
+					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_beach" order="0-">
+					<polygon color="#fbed66"/>
+					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_mud" order="0-">
+					<polygon color="#553f23"/>
 					<text text_size="5"/>
 				</itemgra>
 				<itemgra item_types="poly_pedestrian" order="10">
@@ -576,10 +587,7 @@ Waypoint</text></img>
 					<polygon color="#ffff00"/>
 					<polyline color="#a0a0a0" width="3"/>
 				</itemgra>
-				<itemgra item_types="poly_water_tiled" order="0-">
-					<polygon color="#82c8ea"/>
-				</itemgra>
-				<itemgra item_types="poly_water" order="0-">
+				<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 					<polygon color="#82c8ea"/>
 					<polyline color="#5096b8"/>
 					<text text_size="5"/>
@@ -2238,6 +2246,14 @@ Waypoint</text></img>
 					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_beach" order="0-">
+					<polygon color="#081f0b"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_mud" order="0-">
+					<polygon color="#020803"/>
+					<text color="#55c4bd" background_color="#000000" text_size="5"/>
+				</itemgra>
 				<itemgra item_types="poly_pedestrian" order="10">
 					<polygon color="#202020"/>
 				</itemgra>
@@ -2319,7 +2335,7 @@ Waypoint</text></img>
 					<polygon color="#c5c300"/>
 					<polyline color="#a0a0a0" width="3"/>
 				</itemgra>
-				<itemgra item_types="poly_water" order="0-">
+				<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 					<polygon color="#010321"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
