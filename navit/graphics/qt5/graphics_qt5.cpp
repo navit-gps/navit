@@ -152,6 +152,11 @@ static void font_destroy(struct graphics_font_priv* font)
     g_free(font);
 }
 
+/**
+ * @brief	font interface structure
+ * This structure is preset with all function pointers provided by this implemention
+ * to be returned as interface.
+ */
 static struct graphics_font_methods font_methods = {
     font_destroy
 };
@@ -169,6 +174,18 @@ static const char* fontfamilies[] = {
     NULL,
 };
 
+/**
+ * @brief	Allocate a font context
+ * @param	gr	own private context
+ * @param	meth	fill this structure with correct functions to be called with handle as interface to font
+ * @param	font	font family e.g. "Arial"
+ * @param	size	Font size in ???
+ * @param	flags	Font flags (currently 1 if bold and 0 if not)
+ *
+ * @return	font handle
+ *
+ * Allocates a font handle and returnes filled interface stucture
+ */
 static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags)
 {
     int a = 0;
@@ -185,13 +202,11 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
     }
     if (font_priv->font->exactMatch()) {
         dbg(lvl_debug, "Exactly matching font: %s\n", font_priv->font->family().toUtf8().data());
-    }
-    else {
+    } else {
         /* set any font*/
         if (font != NULL) {
             font_priv->font->setFamily(font);
-        }
-        else {
+        } else {
             font_priv->font->setFamily(fontfamilies[0]);
         }
         dbg(lvl_debug, "No matching font. Resort to: %s\n", font_priv->font->family().toUtf8().data());
@@ -320,8 +335,7 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
             /*file doesn't exist. give up */
             dbg(lvl_debug, "File %s does not exist\n", path);
             return NULL;
-        }
-        else {
+        } else {
             /* add ".svg" for renderer to try .svg file first in renderer */
             dbg(lvl_debug, "Guess extension on %s\n", path);
             renderer_key += ".svg";
@@ -358,8 +372,7 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
     if (image_priv->pixmap->isNull()) {
         g_free(image_priv);
         return NULL;
-    }
-    else {
+    } else {
         /* check if we need to scale this */
         if ((*w > 0) && (*h > 0)) {
             if ((image_priv->pixmap->width() != *w) || (image_priv->pixmap->height() != *h)) {
@@ -446,6 +459,19 @@ draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point*
     gr->painter->drawArc(p->x - r / 2, p->y - r / 2, r, r, 0, 360 * 16);
 }
 
+/**
+ * @brief	Render given text
+ * @param	gr	own private context
+ * @param	fg	foreground drawing context (for color)
+ * @param	bg	background drawing context (for color)
+ * @param	font	font context to use (allocated by font_new)
+ * @param	text	String to calculate bbox for
+ * @param	p	offset on gr context to place this text.
+ * @param	dx	transformation matrix (16.16 fixpoint)
+ * @param	dy	transformation matrix (16.16 fixpoint)
+ *
+ * Renders given text on gr surface. Draws nice contrast outline around text.
+ */
 static void
 draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg, struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy)
 {
@@ -475,8 +501,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
         bgc.g = bg->pen->color().green() << 8;
         bgc.b = bg->pen->color().blue() << 8;
         bgc.a = bg->pen->color().alpha() << 8;
-    }
-    else {
+    } else {
         bgc = transparent;
     }
 
@@ -521,7 +546,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     QString tmp = QString::fromUtf8(text);
     qreal m_dx = ((qreal)dx) / 65536.0;
     qreal m_dy = ((qreal)dy) / 65536.0;
-    QMatrix sav = gr->painter->worldMatrix();
+    QMatrix sav = painter->worldMatrix();
     QMatrix m(m_dx, m_dy, -m_dy, m_dx, p->x, p->y);
     painter->setWorldMatrix(m, TRUE);
     painter->setFont(*font->font);
@@ -529,7 +554,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
         QPen shadow;
         QPainterPath path;
         shadow.setColor(bg->pen->color());
-        shadow.setWidth(2);
+        shadow.setWidth(3);
         painter->setPen(shadow);
         path.addText(0, 0, *font->font, tmp);
         painter->drawPath(path);
@@ -556,8 +581,7 @@ static void draw_drag(struct graphics_priv* gr, struct point* p)
         //            dbg(lvl_debug,"enter %p (%d,%d)\n", gr, p->x, p->y);
         gr->x = p->x;
         gr->y = p->y;
-    }
-    else {
+    } else {
         //            dbg(lvl_debug,"enter %p (NULL)\n", gr);
     }
 }
@@ -586,8 +610,7 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
         gr->use_count--;
         if (gr->use_count > 0) {
             dbg(lvl_debug, "drawing on %p still in use\n", gr);
-        }
-        else if (gr->painter != NULL) {
+        } else if (gr->painter != NULL) {
             gr->painter->end();
             delete (gr->painter);
             gr->painter = NULL;
@@ -601,8 +624,7 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
                 gr->GPriv->emit_update();
 
 #endif
-        }
-        else
+        } else
             dbg(lvl_debug, "Context %p not active!\n", gr)
 
                 break;
@@ -701,27 +723,50 @@ static void image_free(struct graphics_priv* gr, struct graphics_image_priv* pri
     g_free(priv);
 }
 
+/**
+ * @brief	Calculate pixel space required for font display.
+ * @param	gr	own private context
+ * @param	font	font context to use (allocated by font_new)
+ * @param	text	String to calculate bbox for
+ * @param	dx	transformation matrix (16.16 fixpoint)
+ * @param	dy	transformation matrix (16.16 fixpoint)
+ * @param	ret	point array to fill. (low left, top left, top right, low right)
+ * @param	estimate	???
+ *
+ * Calculates the bounding box around the given text.
+ */
 static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy, struct point* ret, int estimate)
 {
-    //        dbg(lvl_debug,"enter %s %d %d\n", text, dx, dy);
+    int i;
+    struct point pt;
     QPainter* painter = gr->painter;
     QString tmp = QString::fromUtf8(text);
-    if (gr->painter != NULL) {
-        gr->painter->setFont(*font->font);
-        QRect r = painter->boundingRect(0, 0, gr->pixmap->width(), gr->pixmap->height(), 0, tmp);
-        //            dbg (lvl_debug, "Text bbox: %d %d (%d,%d),(%d,%d)\n",dx, dy, r.left(), r.top(), r.right(), r.bottom());
-        /* low left */
-        ret[0].x = r.left();
-        ret[0].y = r.bottom();
-        /* top left */
-        ret[1].x = r.left();
-        ret[1].y = r.top();
-        /* top right */
-        ret[2].x = r.right();
-        ret[2].y = r.top();
-        /* low right */
-        ret[3].x = r.right();
-        ret[3].y = r.bottom();
+    QRect r;
+    //        dbg(lvl_debug,"enter %s %d %d\n", text, dx, dy);
+
+    /* use QFontMetrix for bbox calculation as we do not always have a painter */
+    QFontMetrics fm(*font->font);
+    r = fm.boundingRect(tmp);
+
+    /* low left */
+    ret[0].x = r.left();
+    ret[0].y = r.bottom();
+    /* top left */
+    ret[1].x = r.left();
+    ret[1].y = r.top();
+    /* top right */
+    ret[2].x = r.right();
+    ret[2].y = r.top();
+    /* low right */
+    ret[3].x = r.right();
+    ret[3].y = r.bottom();
+    /* transform bbox if rotated */
+    if (dy != 0 || dx != 0x10000) {
+        for (i = 0; i < 4; i++) {
+            pt = ret[i];
+            ret[i].x = (pt.x * dx - pt.y * dy) / 0x10000;
+            ret[i].y = (pt.y * dx + pt.x * dy) / 0x10000;
+        }
     }
 }
 
@@ -857,8 +902,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         //dbg(lvl_debug, "event_system is %s\n", event_loop_system->u.str);
         if (!event_request_system(event_loop_system->u.str, "graphics_qt5"))
             return NULL;
-    }
-    else {
+    } else {
         /* no event system requested by config. Default to our own */
         if (!event_request_system("qt5", "graphics_qt5"))
             return NULL;
@@ -948,8 +992,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         if (graphics_priv->widget != NULL)
             graphics_priv->widget->setWindowState(Qt::WindowFullScreen);
 #endif
-    }
-    else {
+    } else {
         /* not maximized. Check what size to use then */
         struct attr* w = NULL;
         struct attr* h = NULL;
