@@ -2146,7 +2146,7 @@ Waypoint</text></img>
 					<icon src="ruins.png"/>
 				</itemgra>
 				<itemgra item_types="poi_hunting_stand" order="12-">
-					<icon src="hunting_stand.xpm"/>
+					<icon src="hunting_stand.png"/>
 				</itemgra>
 				<itemgra item_types="poi_memorial" order="12-">
 					<icon src="memorial.png"/>
@@ -3633,7 +3633,7 @@ Waypoint</text></img>
 					<icon src="castle.png"/>
 				</itemgra>
 				<itemgra item_types="poi_hunting_stand" order="13-">
-					<icon src="hunting_stand.xpm"/>
+					<icon src="hunting_stand.png"/>
 				</itemgra>
 				<itemgra item_types="poi_memorial" order="12-">
 					<icon src="memorial.png"/>
@@ -5028,7 +5028,7 @@ Waypoint</text></img>
           <icon src="ruins.png" />
         </itemgra>
         <itemgra item_types="poi_hunting_stand" order="12-">
-          <icon src="hunting_stand.xpm" />
+          <icon src="hunting_stand.png" />
         </itemgra>
         <itemgra item_types="poi_memorial" order="12-">
           <icon src="memorial.png" />
