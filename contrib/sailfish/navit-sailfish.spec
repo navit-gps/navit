@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.1
-Release: 2
+Release: 3
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-projet.org/
@@ -19,7 +19,7 @@ BuildRequires: gcc
 BuildRequires: cmake
 BuildRequires: glib2-devel
 BuildRequires: gettext-devel
-BuildRequires: freetype-devel
+#BuildRequires: freetype-devel
 BuildRequires: zlib-devel
 BuildRequires: qt5-qtcore-devel
 BuildRequires: qt5-qtdeclarative-devel
@@ -30,7 +30,7 @@ BuildRequires: qt5-qtsvg-devel
 
 #Requires: glib2
 #Requires: gettext-libs
-Requires: freetype
+#Requires: freetype
 #Requires: zlib
 #Requires: qt5-qtcore
 #Requires: qt5-qtdeclarative
@@ -71,6 +71,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DIMAGE_DIR:PATH=share/harbour-navit/xpm \
        -DLIB_DIR:PATH=share/harbour-navit/lib \
        -DBUILD_MAPTOOL:BOOL=FALSE \
+       -Dfont/freetype:BOOL=FALSE \
        -Dbinding/dbus:BOOL=FALSE \
        -Dgraphics/gtk_drawing_area:BOOL=FALSE \
        -Dgraphics/null:BOOL=FALSE \
@@ -110,7 +111,16 @@ cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbou
 
 
 %changelog
-*Wed May 03 2017 Use qt5_espeak
-*Mon Apr 10 2017 Almost harbour valid
-*Mon Dec 14 2015 Initial sailfish release
+*Wed May 11 2017 metalstrolch 0.5.1-3
+- Switch to QT font rendering. Remove freetype dep.
+
+*Wed May 03 2017 metalstrolch 0.5.1-2
+- Use qt5_espeak
+
+*Mon Apr 10 2017 metalstrolch 0.5.1-1
+- Almost harbour valid
+
+*Mon Dec 14 2015 metalstrolch 0.5.1-0 
+- Initial sailfish release
 - Initial package.
+
