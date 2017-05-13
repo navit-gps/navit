@@ -53,4 +53,3 @@ void PoiObject::setDistance(const int distance)
         emit distanceChanged();
     }
 }
-

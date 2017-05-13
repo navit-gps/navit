@@ -3,26 +3,30 @@
 
 #include <QObject>
 
-class MapObject:public QObject {
-	Q_OBJECT Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-	Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
+class MapObject : public QObject
+{
+    Q_OBJECT
 
-      public:
-	MapObject(QObject * parent = 0);
-	MapObject(const QString & name, const bool & active, QObject * parent = 0);
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
 
-	QString name() const;
-	void setName(const QString & name);
+public:
+    MapObject(QObject *parent=0);
+    MapObject(const QString &name, const bool &active, QObject *parent=0);
 
-	bool active() const;
-	void setActive(const bool & active);
+    QString name() const;
+    void setName(const QString &name);
 
-	 signals:void nameChanged();
-	void activeChanged();
+    bool active() const;
+    void setActive(const bool &active);
 
-      private:
-	 QString m_name;
-	bool m_active;
+signals:
+    void nameChanged();
+    void activeChanged();
+
+private:
+    QString m_name;
+    bool m_active;
 };
 
-#endif				// MAPOBJECT_H
+#endif // MAPOBJECT_H

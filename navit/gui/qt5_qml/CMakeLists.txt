@@ -2,9 +2,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON) 
-# 
-# file(COPY "skins" DESTINATION ".")
 
 qt5_add_resources(GUI_QT5_QML_QRC "gui_qt5_qml.qrc")
 

@@ -34,28 +34,17 @@ void
 	this->c.y = co.y;
 	dbg(lvl_debug, "c : %x %x\n", this->c.x, this->c.y);
 
-	emit
-	displayMenu();
+	emit displayMenu();
 }
 
 void
  Backend::list_maps(int cause)
 {
 	dbg(lvl_debug, "listing maps cause %i\n", cause);
-	struct attr
-	    attr,
-	    on,
-	    off,
-	    description,
-	    type,
-	    data,
-	    active;
-	char *
-	    label;
-	bool
-	    is_active;
-	struct attr_iter *
-	    iter;
+	struct attr attr, on, off, description, type, data, active;
+	char * label;
+	bool is_active;
+	struct attr_iter * iter;
 	QList < QObject * >dataList;
 
 	iter = navit_attr_iter_new();

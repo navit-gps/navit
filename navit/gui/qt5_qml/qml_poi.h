@@ -3,32 +3,37 @@
 
 #include <QObject>
 
-class PoiObject:public QObject {
-	Q_OBJECT Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-	Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
-	Q_PROPERTY(int distance READ distance WRITE setDistance NOTIFY distanceChanged)
+class PoiObject : public QObject
+{
+    Q_OBJECT
 
-      public:
-	 PoiObject(QObject * parent = 0);
-	 PoiObject(const QString & name, const bool & active, const int distance, QObject * parent = 0);
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(int distance READ distance WRITE setDistance NOTIFY distanceChanged)
 
-	QString name() const;
-	void setName(const QString & name);
+public:
+    PoiObject(QObject *parent=0);
+    PoiObject(const QString &name, const bool &active, const int distance, QObject *parent=0);
 
-	bool active() const;
-	void setActive(const bool & active);
+    QString name() const;
+    void setName(const QString &name);
 
-	int distance() const;
-	void setDistance(const int distance);
+    bool active() const;
+    void setActive(const bool &active);
 
-	 signals:void nameChanged();
-	void activeChanged();
-	void distanceChanged();
+    int distance() const;
+    void setDistance(const int distance);
 
-      private:
-	 QString m_name;
-	bool m_active;
-	int m_distance;
+signals:
+    void nameChanged();
+    void activeChanged();
+    void distanceChanged();
+
+private:
+    QString m_name;
+    bool m_active;
+    int m_distance;
 };
 
-#endif				// POIOBJECT_H
+#endif // POIOBJECT_H
+
