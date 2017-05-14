@@ -40,7 +40,6 @@ void
 void
  Backend::list_maps(int cause)
 {
-	dbg(lvl_debug, "listing maps cause %i\n", cause);
 	struct attr attr, on, off, description, type, data, active;
 	char * label;
 	bool is_active;
@@ -51,7 +50,6 @@ void
 	on.type = off.type = attr_active;
 	on.u.num = 1;
 	off.u.num = 0;
-	srand(time(NULL));
 	while (navit_get_attr(this->nav, attr_map, &attr, iter)) {
 		if (map_get_attr(attr.u.map, attr_description, &description, NULL)) {
 			label = g_strdup(description.u.str);

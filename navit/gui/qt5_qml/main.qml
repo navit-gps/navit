@@ -7,7 +7,6 @@ Rectangle {
     height: 480
 	Connections {
 		target: backend
-		onSetTextField: textField1.text = text
 		onDisplayMenu: {
 			mainMenu.source = "skins/menu.qml"
 			mainMenu.state = 'visible'
