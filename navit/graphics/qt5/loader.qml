@@ -4,17 +4,36 @@ import QtQuick.Window 2.0
 
 Window {
    width: 200; height: 200
-
-   Loader {
-       id: navit_loader
-       focus: true
-       source: "graphics_qt5.qml"
-       anchors.fill: parent
-       objectName: "navit_loader"
-   }
+    
+   Screen.orientationUpdateMask: Qt.PortraitOrientation + Qt.LandscapeOrientation + Qt.InvertedPortraitOrientation + Qt.InvertedLandscapeOrientation
 
    Item {
-       id: root_item
+       id: root
        anchors.fill: parent
+       Loader {
+           width: root.width
+	   height: root.height
+	   anchors.centerIn: parent
+	   Screen.onOrientationChanged: {
+	       rotation = Screen.angleBetween(Screen.orientation , Screen.primaryOrientation)
+	       switch(Screen.angleBetween(Screen.orientation , Screen.primaryOrientation))
+	       {
+	           case 0:
+		   case 180:
+		       width = root.width
+		       height = root.height
+		   break
+		   case 90:
+		   case 270:
+		   width = root.height
+		   height = root.width
+		   break
+	       }
+           }
+           id: navit_loader
+           focus: true
+           source: "graphics_qt5.qml"
+           objectName: "navit_loader"
+       }
    }
 }
