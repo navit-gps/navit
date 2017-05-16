@@ -5,8 +5,6 @@ import QtQuick.Window 2.0
 Window {
    width: 200; height: 200
     
-   Screen.orientationUpdateMask: Qt.PortraitOrientation + Qt.LandscapeOrientation + Qt.InvertedPortraitOrientation + Qt.InvertedLandscapeOrientation
-
    Item {
        id: root
        anchors.fill: parent
@@ -34,6 +32,13 @@ Window {
            focus: true
            source: "graphics_qt5.qml"
            objectName: "navit_loader"
+       }
+       Component.onCompleted: {
+           // orientation update mask is defined since QML 5.4 So make this compatible to 5.2
+	   // by just calling this if available
+           if(Screen.hasOwnProperty('orientationUpdateMask')) {
+               Screen.orientationUpdateMask = Qt.PortraitOrientation + Qt.LandscapeOrientation + Qt.InvertedPortraitOrientation + Qt.InvertedLandscapeOrientation;
+	   }
        }
    }
 }
