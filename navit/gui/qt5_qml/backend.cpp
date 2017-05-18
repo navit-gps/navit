@@ -38,13 +38,13 @@ void
 }
 
 void
- Backend::list_maps(int cause)
+ Backend::get_maps()
 {
 	struct attr attr, on, off, description, type, data, active;
 	char * label;
 	bool is_active;
 	struct attr_iter * iter;
-	QList < QObject * >dataList;
+    _maps.clear();
 
 	iter = navit_attr_iter_new();
 	on.type = off.type = attr_active;
@@ -66,11 +66,10 @@ void
 				is_active = true;
 			}
 		}
-		dataList.append(new MapObject(label, is_active));
+		_maps.append(new MapObject(label, is_active));
 	}
 
-	this->engine->rootContext()->setContextProperty("maps", QVariant::fromValue(dataList));
-
+    emit mapsChanged();
 }
 
 void
@@ -85,10 +84,68 @@ void
 	this->engine = engine;
 }
 
+
+QString Backend::get_icon(struct item *item)
+{
+    return "gui_active.svg";
+
+#if 0
+
+    struct attr layout;
+    struct attr icon_src;
+    GList *layer;
+    navit_get_attr(this->nav, attr_layout, &layout, NULL);
+    layer=layout.u.layout->layers;
+
+    while(layer) {
+        GList *itemgra=((struct layer *)layer->data)->itemgras;
+        while(itemgra) {
+            GList *types=((struct itemgra *)itemgra->data)->type;
+            while(types) {
+                if((long)types->data==item->type) {
+                    GList *element=((struct itemgra *)itemgra->data)->elements;
+                    while(element) {
+                        struct element * el=element->data;
+                        if(el->type==element_icon) {
+                            char *src;
+                            char *icon;
+                            struct graphics_image *img;
+                            if(item_is_custom_poi(*item)) {
+                                struct map_rect *mr=map_rect_new(item->map, NULL);
+                                item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+                                if(item_attr_get(item, attr_icon_src, &icon_src)) {
+                                    src=el->u.icon.src;
+                                    if(!src || !src[0])
+                                        src="%s";
+                                    icon=g_strdup_printf(src,map_convert_string_tmp(item->map,icon_src.u.str));
+                                }
+                                else {
+                                    icon=g_strdup(el->u.icon.src);
+                                }
+                            }
+                            else {
+                                icon=g_strdup(el->u.icon.src);
+                            }
+                            dbg(lvl_debug,"%s %s\n", item_to_name(item->type),icon);
+                            return QString(icon);
+                            g_free(icon);
+                        }
+                        element=g_list_next(element);
+                    }
+                }
+                types=g_list_next(types);
+            }
+            itemgra=g_list_next(itemgra);
+        }
+        layer=g_list_next(layer);
+    }
+    return NULL;
+#endif
+}
+
 void
  Backend::get_pois()
 {
-
 	struct map_selection * sel, * selm;
 	struct coord c, center;
 	struct mapset_handle * h;
@@ -97,8 +154,7 @@ void
 	struct item * item;
 	enum projection pro = this->c.pro;
 	int idist, dist;
-
-	QList < QObject * >dataList;
+    _pois.clear();
 
 	sel = map_selection_rect_new(&(this->c), dist * transform_scale(abs(this->c.y) + dist * 1.5), 18);
 	center.x = this->c.x;
@@ -113,14 +169,14 @@ void
 		dbg(lvl_debug, "mr=%p\n", mr);
 		if (mr) {
 			while ((item = map_rect_get_item(mr))) {
-				struct attr
-				    attr;
-				char *
-				    label;
+				struct attr attr;
+				char * label;
+                QString icon;
+                icon = get_icon(item);
 				idist = transform_distance(pro, &center, &c);
 				if (item_attr_get(item, attr_label, &attr)) {
 					label = map_convert_string(item->map, attr.u.str);
-					dataList.append(new PoiObject(label, true, idist));
+					_pois.append(new PoiObject(label, idist, icon));
 				}
 			}
 			map_rect_destroy(mr);
@@ -129,7 +185,26 @@ void
 	}
 	map_selection_destroy(sel);
 	mapset_close(h);
-
-	this->engine->rootContext()->setContextProperty("pois", QVariant::fromValue(dataList));
+    emit poisChanged();
 
 }
+
+QQmlListProperty<QObject> Backend::getPois(){
+    return QQmlListProperty<QObject>(this, _pois);
+}
+
+QQmlListProperty<QObject> Backend::getMaps(){
+    return QQmlListProperty<QObject>(this, _maps);
+}
+
+void Backend::show_poi(int index){
+    dbg(lvl_debug, "#%i : %s\n",
+        index,
+        ((PoiObject *)_pois.at(index))->name().toUtf8().data()
+    );
+}
+
+QString Backend::get_icon_path(){
+    return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",NULL));
+}
+

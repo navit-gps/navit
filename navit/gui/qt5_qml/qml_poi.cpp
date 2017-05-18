@@ -8,10 +8,10 @@ PoiObject::PoiObject(QObject *parent)
 
 PoiObject::PoiObject(
     const QString &name,
-    const bool &active,
-    const int idist,
+    const int distance,
+    const QString &icon,
     QObject *parent)
-    : QObject(parent), m_name(name), m_active(active)
+    : QObject(parent), m_name(name), m_icon(icon)
 {
 }
 
@@ -28,22 +28,9 @@ void PoiObject::setName(const QString &name)
     }
 }
 
-bool PoiObject::active() const
+float PoiObject::distance() const
 {
-    return m_active;
-}
-
-void PoiObject::setActive(const bool &active)
-{
-    if (active != m_active) {
-        m_active = active;
-        emit activeChanged();
-    }
-}
-
-int PoiObject::distance() const
-{
-    return m_distance;
+    return m_distance/1000;
 }
 
 void PoiObject::setDistance(const int distance)
@@ -53,3 +40,18 @@ void PoiObject::setDistance(const int distance)
         emit distanceChanged();
     }
 }
+
+void PoiObject::setIcon(const QString &icon)
+{
+    qDebug() << icon;
+    if (icon != m_icon) {
+        m_icon = icon;
+        emit iconChanged();
+    }
+}
+
+QString PoiObject::icon() const
+{
+    return m_icon;
+}
+
