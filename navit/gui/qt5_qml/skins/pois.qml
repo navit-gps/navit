@@ -17,7 +17,11 @@ Item {
                 Image {
                     id: image1
                     height: parent.height - 4;
+                    width: height
+//                    smooth: true
                     source : backend.get_icon_path() + icon
+                    sourceSize.width: parent.width
+                    sourceSize.height: parent.height
                 }
 
                 Text {

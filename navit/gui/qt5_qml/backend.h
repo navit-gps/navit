@@ -48,7 +48,6 @@ private:
     QQmlApplicationEngine* engine;
     QList<QObject *> _pois;
     QList<QObject *> _maps;
-    QString get_icon(struct item *item);
 
 };
 

@@ -1,8 +1,11 @@
+#include <glib.h>
+
 #include "item.h"
 #include "attr.h"
 #include "navit.h"
+#include "xmlconfig.h" // for NAVIT_OBJECT
+#include "layout.h"
 #include "map.h"
-#include "glib.h"
 #include "transform.h"
 #include "backend.h"
 
@@ -11,7 +14,12 @@
 
 #include "mapset.h"
 
+
 #include <QQmlContext>
+
+extern "C" {
+#include "proxy.h"
+}
 
 
 Backend::Backend(QObject * parent):QObject(parent)
@@ -84,65 +92,6 @@ void
 	this->engine = engine;
 }
 
-
-QString Backend::get_icon(struct item *item)
-{
-    return "gui_active.svg";
-
-#if 0
-
-    struct attr layout;
-    struct attr icon_src;
-    GList *layer;
-    navit_get_attr(this->nav, attr_layout, &layout, NULL);
-    layer=layout.u.layout->layers;
-
-    while(layer) {
-        GList *itemgra=((struct layer *)layer->data)->itemgras;
-        while(itemgra) {
-            GList *types=((struct itemgra *)itemgra->data)->type;
-            while(types) {
-                if((long)types->data==item->type) {
-                    GList *element=((struct itemgra *)itemgra->data)->elements;
-                    while(element) {
-                        struct element * el=element->data;
-                        if(el->type==element_icon) {
-                            char *src;
-                            char *icon;
-                            struct graphics_image *img;
-                            if(item_is_custom_poi(*item)) {
-                                struct map_rect *mr=map_rect_new(item->map, NULL);
-                                item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-                                if(item_attr_get(item, attr_icon_src, &icon_src)) {
-                                    src=el->u.icon.src;
-                                    if(!src || !src[0])
-                                        src="%s";
-                                    icon=g_strdup_printf(src,map_convert_string_tmp(item->map,icon_src.u.str));
-                                }
-                                else {
-                                    icon=g_strdup(el->u.icon.src);
-                                }
-                            }
-                            else {
-                                icon=g_strdup(el->u.icon.src);
-                            }
-                            dbg(lvl_debug,"%s %s\n", item_to_name(item->type),icon);
-                            return QString(icon);
-                            g_free(icon);
-                        }
-                        element=g_list_next(element);
-                    }
-                }
-                types=g_list_next(types);
-            }
-            itemgra=g_list_next(itemgra);
-        }
-        layer=g_list_next(layer);
-    }
-    return NULL;
-#endif
-}
-
 void
  Backend::get_pois()
 {
@@ -171,12 +120,13 @@ void
 			while ((item = map_rect_get_item(mr))) {
 				struct attr attr;
 				char * label;
-                QString icon;
-                icon = get_icon(item);
+                char * icon = get_icon(this->nav, item);
 				idist = transform_distance(pro, &center, &c);
 				if (item_attr_get(item, attr_label, &attr)) {
 					label = map_convert_string(item->map, attr.u.str);
-					_pois.append(new PoiObject(label, idist, icon));
+                    if (icon) {
+    					_pois.append(new PoiObject(label, idist, icon));
+                    }
 				}
 			}
 			map_rect_destroy(mr);
