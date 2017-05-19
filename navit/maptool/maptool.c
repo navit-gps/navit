@@ -285,19 +285,20 @@ usage(FILE *f)
 #ifdef HAVE_POSTGRESQL
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
+	fprintf(f,"-D (--dump)                       : dump map data to standard output in Navit textfile format\n");
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
 	fprintf(f,"-E (--experimental)               : Enable experimental features (%s)\n",
 		experimental_feature_description ? experimental_feature_description : "-not available in this version-");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n");
-	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
+	fprintf(f,"-M (--o5m)                        : input data is in o5m format\n");
+	fprintf(f,"-n (--ignore-unknown)             : do not output ways and nodes with unknown type\n");
 	fprintf(f,"-N (--nodes-only)                 : process only nodes\n");
-	fprintf(f,"-o (--coverage)                   : map every street to item coverage\n");
-	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
+	fprintf(f,"-P (--protobuf)                   : input data is in pbf (Protocol Buffer) format\n");
 	fprintf(f,"-r (--rule-file) <file>           : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
 	fprintf(f,"-S (--slice-size) <size>          : limit memory to use for some large internal buffers, in bytes. Default is %dGB.\n", SLIZE_SIZE_DEFAULT_GB);
-	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
+	fprintf(f,"-t (--timestamp) <y-m-dTh:m:s>    : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
 	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
@@ -309,6 +310,7 @@ usage(FILE *f)
 	fprintf(f,"-m (--map) \n");                                                                                           
 	fprintf(f,"-O \n");                                                                                                   
 	fprintf(f,"-p (--plugin) \n");                                                                                        
+	fprintf(f,"-u (--url) \n");
 	
 	exit(1);
 }
