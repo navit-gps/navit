@@ -1784,7 +1784,7 @@ osm_end_way(struct maptool_osm *osm)
 		add_flags=0;
 		if (types[i] == type_none)
 			continue;
-		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
+		if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		if (types[i] != type_street_unkn) {
 			if(types[i]<type_area) 	
@@ -1874,7 +1874,7 @@ osm_end_node(struct maptool_osm *osm)
 	for (i = 0 ; i < count ; i++) {
 		if (types[i] == type_none)
 			continue;
-		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
+		if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		item_bin=init_item(types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population])

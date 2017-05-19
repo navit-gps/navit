@@ -50,7 +50,7 @@
 #define SLIZE_SIZE_DEFAULT_GB 1
 long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
 int attr_debug_level=1;
-int ignore_unkown = 0;
+int ignore_unknown = 0;
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -324,7 +324,7 @@ struct maptool_params {
 	char *md5file;
 	int start;
 	int end;
-	int output;
+	int dump;
 	int o5m;
 	int compression_level;
 	int protobuf;
@@ -404,7 +404,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		p->protobufdb=optarg;
 		break;
 	case 'D':
-		p->output=1;
+		p->dump=1;
 		break;
 	case 'E':
 		experimental=1;
@@ -420,7 +420,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'O':
 		p->protobufdb_operation=optarg;
-		p->output=1;
+		p->dump=1;
 		break;
 	case 'P':
 		p->protobuf=1;
@@ -480,7 +480,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'n':
 		fprintf(stderr,"I will IGNORE unknown types\n");
-		ignore_unkown=1;
+		ignore_unknown=1;
 		break;
 	case 'k':
 		fprintf(stderr,"I will KEEP tmp files\n");
@@ -965,7 +965,7 @@ int main(int argc, char **argv)
 		fprintf(stderr,"No experimental features available in this version, aborting. \n");
 		exit(1);
 	}
-	if (optind != argc-(p.output == 1 ? 0:1))
+	if (optind != argc-(p.dump == 1 ? 0:1))
 		usage(stderr);
 	p.result=argv[optind];
 
@@ -1070,7 +1070,7 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	if (p.output == 1 && start_phase(&p,"dumping")) {
+	if (p.dump == 1 && start_phase(&p,"dumping")) {
 		maptool_dump(&p, suffix);
 		exit(0);
 	}
