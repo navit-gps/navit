@@ -23,5 +23,6 @@
         <file>skins/icons/appbar.transit.car.svg</file>
         <file>skins/icons/appbar.location.checkin.svg</file>
         <file>skins/icons/appbar.cogs.svg</file>
+        <file>skins/poi.qml</file>
     </qresource>
 </RCC>

@@ -31,7 +31,6 @@ char * get_icon(struct navit *nav, struct item *item)
                         if(el->type==element_icon) {
                             char *src;
                             char *icon;
-                            dbg(lvl_debug, "%s\n", el->u.icon.src);
                             struct graphics_image *img;
                             if(item_is_custom_poi(*item)) {
                                 struct map_rect *mr=map_rect_new(item->map, NULL);
@@ -52,8 +51,8 @@ char * get_icon(struct navit *nav, struct item *item)
                             icon[strlen(icon)-3]='s';
                             icon[strlen(icon)-2]='v';
                             icon[strlen(icon)-1]='g';
-                            dbg(lvl_debug,"%s %s\n", item_to_name(item->type),icon);
                             return icon;
+                            // FIXME
                             g_free(icon);
                         }
                         element=g_list_next(element);

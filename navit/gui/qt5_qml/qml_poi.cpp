@@ -8,10 +8,12 @@ PoiObject::PoiObject(QObject *parent)
 
 PoiObject::PoiObject(
     const QString &name,
+    const QString &type,
     const int distance,
     const QString &icon,
+    struct pcoord &coords,
     QObject *parent)
-    : QObject(parent), m_name(name), m_icon(icon)
+    : QObject(parent), m_name(name), m_type(type), m_icon(icon), m_coords(coords)
 {
 }
 
@@ -25,6 +27,19 @@ void PoiObject::setName(const QString &name)
     if (name != m_name) {
         m_name = name;
         emit nameChanged();
+    }
+}
+
+QString PoiObject::type() const
+{
+    return m_type;
+}
+
+void PoiObject::setType(const QString &type)
+{
+    if (type != m_type) {
+        m_type = type;
+        emit typeChanged();
     }
 }
 
@@ -43,7 +58,6 @@ void PoiObject::setDistance(const int distance)
 
 void PoiObject::setIcon(const QString &icon)
 {
-    qDebug() << icon;
     if (icon != m_icon) {
         m_icon = icon;
         emit iconChanged();
@@ -55,3 +69,7 @@ QString PoiObject::icon() const
     return m_icon;
 }
 
+struct pcoord PoiObject::coords() const
+{
+    return m_coords;
+}

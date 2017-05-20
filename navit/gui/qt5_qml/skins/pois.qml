@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 Item {
+    id: poiList
     ListView {
         anchors.fill: parent
         id: listView
@@ -50,7 +51,8 @@ Item {
 
                     onClicked:{
                         listView.currentIndex = index
-                        backend.show_poi(index);
+                        backend.setActivePoi(index);
+                        menucontent.source = "poi.qml"
                     }
                 }
             }

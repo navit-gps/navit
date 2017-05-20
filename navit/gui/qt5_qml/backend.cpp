@@ -42,6 +42,9 @@ void
 	this->c.y = co.y;
 	dbg(lvl_debug, "c : %x %x\n", this->c.x, this->c.y);
 
+    // As a test, set the Demo vehicle position to wherever we just clicked
+    navit_set_position(this->nav, &c);
+
 	emit displayMenu();
 }
 
@@ -92,6 +95,17 @@ void
 	this->engine = engine;
 }
 
+int
+ Backend::filter_pois(struct item *item)
+{
+    enum item_type *types;
+    enum item_type type=item->type;
+    if (type >= type_line)
+        return 0;
+    return 1;
+}
+
+
 void
  Backend::get_pois()
 {
@@ -104,7 +118,7 @@ void
 	enum projection pro = this->c.pro;
 	int idist, dist;
     _pois.clear();
-
+    dist = 10000;
 	sel = map_selection_rect_new(&(this->c), dist * transform_scale(abs(this->c.y) + dist * 1.5), 18);
 	center.x = this->c.x;
 	center.y = this->c.y;
@@ -118,16 +132,27 @@ void
 		dbg(lvl_debug, "mr=%p\n", mr);
 		if (mr) {
 			while ((item = map_rect_get_item(mr))) {
-				struct attr attr;
-				char * label;
-                char * icon = get_icon(this->nav, item);
-				idist = transform_distance(pro, &center, &c);
-				if (item_attr_get(item, attr_label, &attr)) {
-					label = map_convert_string(item->map, attr.u.str);
-                    if (icon) {
-    					_pois.append(new PoiObject(label, idist, icon));
-                    }
-				}
+                if ( filter_pois(item) &&
+                    item_coord_get_pro(item, &c, 1, pro) &&
+                    coord_rect_contains(&sel->u.c_rect, &c)  &&
+                    (idist=transform_distance(pro, &center, &c)) < dist) {
+
+    				struct attr attr;
+    				char * label;
+                    char * icon = get_icon(this->nav, item);
+                    struct pcoord item_coord;
+                    item_coord.pro = transform_get_projection(navit_get_trans(nav));
+                    item_coord.x = c.x;
+                    item_coord.y = c.y;
+
+    				idist = transform_distance(pro, &center, &c);
+    				if (item_attr_get(item, attr_label, &attr)) {
+    					label = map_convert_string(item->map, attr.u.str);
+                        if (icon) {
+        					_pois.append(new PoiObject(label, item_to_name(item->type), idist, icon, item_coord));
+                        }
+    				}
+                }
 			}
 			map_rect_destroy(mr);
 		}
@@ -136,7 +161,6 @@ void
 	map_selection_destroy(sel);
 	mapset_close(h);
     emit poisChanged();
-
 }
 
 QQmlListProperty<QObject> Backend::getPois(){
@@ -147,14 +171,30 @@ QQmlListProperty<QObject> Backend::getMaps(){
     return QQmlListProperty<QObject>(this, _maps);
 }
 
-void Backend::show_poi(int index){
-    dbg(lvl_debug, "#%i : %s\n",
-        index,
-        ((PoiObject *)_pois.at(index))->name().toUtf8().data()
-    );
+
+PoiObject * Backend::activePoi() {
+    dbg(lvl_debug, "name : %s\n", m_activePoi->name().toUtf8().data());
+    dbg(lvl_debug, "type : %s\n", m_activePoi->type().toLatin1().data());
+    return m_activePoi;
+}
+
+void Backend::setActivePoi(int index)
+{
+    m_activePoi = (PoiObject *)_pois.at(index);
+    emit activePoiChanged();
 }
 
 QString Backend::get_icon_path(){
     return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",NULL));
 }
 
+
+void Backend::setActivePoiAsDestination(){
+   struct pcoord c;
+   c = m_activePoi->coords();
+   dbg(lvl_debug, "Destination : %s c=%d:0x%x,0x%x\n",
+       m_activePoi->name().toUtf8().data(),
+       c.pro, c.x, c.y);
+    navit_set_destination(this->nav, &c,  m_activePoi->name().toUtf8().data(), 1);
+	emit hideMenu();
+}

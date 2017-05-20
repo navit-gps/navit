@@ -7,6 +7,11 @@ Rectangle {
     height: 480
 	Connections {
 		target: backend
+        onHideMenu: {
+            mainMenu.source = ''
+            mainMenu.state = 'default'
+			console.log("hiding menu")
+        }
 		onDisplayMenu: {
 			mainMenu.source = "skins/menu.qml"
 			mainMenu.state = 'visible'
