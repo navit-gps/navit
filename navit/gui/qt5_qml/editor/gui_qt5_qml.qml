@@ -7,14 +7,14 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 480
-    title: qsTr("Hello World 2")
+    title: qsTr("Navit Stub")
 
     MouseArea {
         id: mouseArea
         z: -1
         anchors.fill: parent
         onClicked: {
-            mainMenu.source = "skins/menu.qml"
+            mainMenu.source = "skins/modern/menu.qml"
             mainMenu.state = 'visible'
             console.log("showing menu")
         }

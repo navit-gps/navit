@@ -1,6 +1,5 @@
 import com.navit.graphics_qt5 1.0
 import QtQuick 2.2
-// import QtQuick.Controls 1.2
 
 Rectangle {
     width: 800
@@ -13,7 +12,7 @@ Rectangle {
 			console.log("hiding menu")
         }
 		onDisplayMenu: {
-			mainMenu.source = "skins/menu.qml"
+			mainMenu.source = "menu.qml"
 			mainMenu.state = 'visible'
 			console.log("showing menu")
 		}

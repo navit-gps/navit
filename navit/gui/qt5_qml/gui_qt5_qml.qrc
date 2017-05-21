@@ -1,28 +1,28 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>skins/menu.qml</file>
-        <file>skins/MainMenu.qml</file>
-        <file>skins/navit.svg</file>
         <file>map.png</file>
-        <file>skins/MainButton.qml</file>
-        <file>skins/settings.qml</file>
-        <file>skins/maps.qml</file>
-        <file>skins/pois.qml</file>
-        <file>skins/icons/appbar.home.variant.svg</file>
-        <file>skins/icons/appbar.rocket.svg</file>
-        <file>skins/icons/appbar.power.svg</file>
-        <file>skins/icons/appbar.cog.svg</file>
-        <file>skins/icons/appbar.layer.svg</file>
-        <file>skins/icons/appbar.layer.delete.svg</file>
-        <file>skins/icons/appbar.map.svg</file>
-        <file>skins/icons/appbar.information.circle.svg</file>
-        <file>skins/icons/appbar.chevron.up.svg</file>
-        <file>skins/icons/appbar.chevron.down.svg</file>
-        <file>skins/icons/appbar.fullscreen.box.svg</file>
-        <file>skins/icons/appbar.transit.car.svg</file>
-        <file>skins/icons/appbar.location.checkin.svg</file>
-        <file>skins/icons/appbar.cogs.svg</file>
-        <file>skins/poi.qml</file>
+        <file>skins/modern/main.qml</file>
+        <file>skins/modern/menu.qml</file>
+        <file>skins/modern/MainMenu.qml</file>
+        <file>skins/modern/navit.svg</file>
+        <file>skins/modern/MainButton.qml</file>
+        <file>skins/modern/settings.qml</file>
+        <file>skins/modern/maps.qml</file>
+        <file>skins/modern/pois.qml</file>
+        <file>skins/modern/icons/appbar.home.variant.svg</file>
+        <file>skins/modern/icons/appbar.rocket.svg</file>
+        <file>skins/modern/icons/appbar.power.svg</file>
+        <file>skins/modern/icons/appbar.cog.svg</file>
+        <file>skins/modern/icons/appbar.layer.svg</file>
+        <file>skins/modern/icons/appbar.layer.delete.svg</file>
+        <file>skins/modern/icons/appbar.map.svg</file>
+        <file>skins/modern/icons/appbar.information.circle.svg</file>
+        <file>skins/modern/icons/appbar.chevron.up.svg</file>
+        <file>skins/modern/icons/appbar.chevron.down.svg</file>
+        <file>skins/modern/icons/appbar.fullscreen.box.svg</file>
+        <file>skins/modern/icons/appbar.transit.car.svg</file>
+        <file>skins/modern/icons/appbar.location.checkin.svg</file>
+        <file>skins/modern/icons/appbar.cogs.svg</file>
+        <file>skins/modern/poi.qml</file>
     </qresource>
 </RCC>
