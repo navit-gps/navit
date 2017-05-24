@@ -267,9 +267,10 @@ maptool_init(FILE* rule_file)
 }
 
 static void
-usage(FILE *f)
+usage()
 {
-	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
+	FILE *f = stdout;
+	/* DEVELOPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
 	fprintf(f,"maptool - parse osm textfile and convert to Navit binfile format\n\n");
 	fprintf(f,"Usage (for OSM XML data):\n");
@@ -312,7 +313,7 @@ usage(FILE *f)
 	fprintf(f,"-p (--plugin) \n");                                                                                        
 	fprintf(f,"-u (--url) \n");
 	
-	exit(1);
+	exit(0);
 }
 
 struct maptool_params {
@@ -505,7 +506,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		if (p->input_file ==  NULL )
 		{
 		    fprintf( stderr, "\nInput file (%s) not found\n", optarg );
-		    exit( -1 );
+		    exit( 1 );
 		}
 		break;
 	case 'r':
@@ -513,7 +514,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		if (p->rule_file ==  NULL )
 		{
 		    fprintf( stderr, "\nRule file (%s) not found\n", optarg );
-		    exit( -1 );
+		    exit( 1 );
 		}
 		break;
 	case 'u':
@@ -547,6 +548,12 @@ start_phase(struct maptool_params *p, char *str)
 		return 1;
 	} else
 		return 0;
+}
+
+static void
+exit_with_error(char* error_message) {
+	fprintf(stderr, error_message);
+	exit(1);
 }
 
 static void
@@ -585,8 +592,7 @@ osm_read_input_data(struct maptool_params *p, char *suffix)
 	}
 	else if (p->protobuf) {
 #ifdef _MSC_VER
-		fprintf(stderr,"Option -P not yet supported on MSVC\n");
-		exit(1);
+		exit_with_error("Option -P not yet supported on MSVC\n");
 #else
 		map_collect_data_osm_protobuf(p->input_file,&p->osm);
 #endif
@@ -909,7 +915,6 @@ maptool_load_tilesdir(struct maptool_params *p, char *suffix)
 	}
 }
 
-
 int main(int argc, char **argv)
 {
 	struct maptool_params p;
@@ -953,22 +958,28 @@ int main(int argc, char **argv)
 	while (1) {
 		int parse_result=parse_option(&p, argv, argc, &option_index);
 		if (!parse_result) {
-			usage(stderr);
 			exit(1);
 		}
 		if (parse_result == 1)
 			break;
 		if (parse_result == 2) {
-			usage(stdout);
+			usage();
 			exit(0);
 		}
 	}
 	if (experimental && (!experimental_feature_description )) {
-		fprintf(stderr,"No experimental features available in this version, aborting. \n");
-		exit(1);
+		exit_with_error("No experimental features available in this version, aborting. \n");
 	}
-	if (optind != argc-(p.dump == 1 ? 0:1))
-		usage(stderr);
+	if (optind < argc -1) {
+		exit_with_error("Only one non-option argument allowed.\n");
+	}
+	if (p.dump == 0 && optind != argc -1) {
+		exit_with_error("Please specify an output file.\n");
+	}
+	if (p.dump == 1 && optind != argc) {
+		exit_with_error("Please do not specify an output file in dump mode.\n");
+	}
+
 	p.result=argv[optind];
 
 
@@ -976,8 +987,7 @@ int main(int argc, char **argv)
 	maptool_init(p.rule_file);
 	if (p.protobufdb_operation) {
 #ifdef _MSC_VER
-		fprintf(stderr,"Option -O not yet supported on MSVC\n");
-		exit(1);
+		exit_with_error("Option -O not yet supported on MSVC\n");
 #else
 		osm_protobufdb_load(p.input_file, p.protobufdb);
 		return 0;
