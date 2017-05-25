@@ -14,6 +14,17 @@ GridLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
         icon: "icons/appbar.location.checkin.svg"
+        onClicked: {
+            menucontent.source = "search.qml"
+            console.log("showing search")
+        }
+    }
+
+    MainButton {
+        text: "My position"
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        icon: "icons/appbar.location.checkin.svg"
     }
 
     MainButton {

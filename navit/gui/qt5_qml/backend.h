@@ -17,6 +17,7 @@ class Backend : public QObject
     Q_PROPERTY(QQmlListProperty<QObject> pois READ getPois NOTIFY poisChanged)
     Q_PROPERTY(QQmlListProperty<QObject> maps READ getMaps NOTIFY mapsChanged)
     Q_PROPERTY(PoiObject * activePoi READ activePoi NOTIFY activePoiChanged)
+    Q_PROPERTY(QQmlListProperty<QObject> searchresults READ getSearchResults NOTIFY searchResultsChanged)
 
 public:
     explicit Backend(QObject *parent = 0);
@@ -30,6 +31,7 @@ public:
     QList < MapObject * > maps;
     QQmlListProperty<QObject> getMaps();
     PoiObject * activePoi();
+    QQmlListProperty<QObject> getSearchResults();
 
 
 signals:
@@ -38,13 +40,17 @@ signals:
     void poisChanged();
     void activePoiChanged();
     void mapsChanged();
+    void searchResultsChanged();
 
 public slots:
     void get_maps();
     void get_pois();
     QString get_icon_path();
+    QString get_country_icon();
     void setActivePoi(int index);
     void setActivePoiAsDestination();
+    void updateSearch(QString text);
+    void gotoTown(int index);
 
 private:
     struct navit *nav;
@@ -56,6 +62,8 @@ private:
     QList<QObject *> _pois;
     QList<QObject *> _maps;
     PoiObject * m_activePoi;
+    QList<QObject *> _search_results;
+    char * _country_iso2;
 
 };
 

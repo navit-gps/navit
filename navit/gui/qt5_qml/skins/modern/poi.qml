@@ -1,24 +1,13 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
+import com.navit.graphics_qt5 1.0
+
 
 Item {
     id: poiItem
     visible: true
+    property var small_font_size : 16
 
-    Text {
-        x: 261
-        y: 80
-        color: "#ffffff"
-        text: qsTr("Type")
-        font.pixelSize: 24
-    }
-
-    Text {
-        x: 261
-        y: 162
-        color: "#ffffff"
-        text: qsTr("Distance")
-        font.pixelSize: 24
-    }
 
     Text {
         x: 8
@@ -29,50 +18,86 @@ Item {
     }
 
     Text {
-        x: 404
-        y: 80
+        x: 80
+        y: 64
         color: "#ffffff"
-        text: backend.activePoi.type
-        font.pixelSize: 24
+        text: qsTr("Type")
+        font.pixelSize: small_font_size
     }
 
     Text {
-        x: 484
-        y: 162
+        x: 80
+        y: 96
+        color: "#ffffff"
+        text: qsTr("Distance")
+        font.pixelSize: small_font_size
+    }
+
+    Text {
+        x: 160
+        y: 64
+        color: "#ffffff"
+        text: backend.activePoi.type
+        font.pixelSize: small_font_size
+    }
+
+    Text {
+        x: 160
+        y: 96
         color: "#ffffff"
         text: backend.activePoi.distance
-        font.pixelSize: 24
+        font.pixelSize: small_font_size
     }
 
-    Image {
+    Rectangle {
+        id: rectangle
         x: 8
-        y: 78
-        height: parent.height /2 ;
+        y: 64
+        height: 64
         width: height
-        source : backend.get_icon_path() + backend.activePoi.icon
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
+        color: "#ffffff"
+        radius: 8
+        border.width: 1
+        Image {
+            height: parent.width
+            width: parent.height
+            source : backend.get_icon_path() + backend.activePoi.icon
+            sourceSize.width: parent.width
+            sourceSize.height: parent.height
+        }
     }
 
+    ColumnLayout {
+        id: columnLayout
+        width: parent.width/2
+        height: parent.height
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        QNavitQuick {
+            id: navit1
+            width: 300
+            height: 240
+            Component.onCompleted: {
+                navit1.setGraphicContext(graphics_qt5_context)
+            }
+        }
+    }
 
     MainButton {
         id: mainButton3
-        x: 161
-        y: 373
-        width: 260
-        height: 80
+        x: 8
+        y: parent.height-78
+        width: parent.width/2 - 16
+        height: 64
         radius: 1
         text: "Set as destination"
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: 50
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 27
         icon: "icons/appbar.location.checkin.svg"
         onClicked: {
             backend.setActivePoiAsDestination()
         }
 
     }
+
+
 
 }
