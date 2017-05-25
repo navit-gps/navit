@@ -224,17 +224,21 @@ PoiObject * Backend::activePoi() {
         return m_activePoi;
 }
 
+
+void Backend::resize(int width, int height){
+        navit_handle_resize(nav, width, height);
+}
+
 /**
  * @brief set the active POI. Used when clicking on a POI list to display one single POI
  * @param int index the index of the POI in the m_pois list
  * @returns nothing
  */ 
-void Backend::setActivePoi(int index)
-{
+void Backend::setActivePoi(int index) {
         struct pcoord c;
         m_activePoi = (PoiObject *)_pois.at(index);
         c = m_activePoi->coords();
-        // navit_handle_resize(nav, 300, 240);
+        resize(320, 240);
         navit_set_center(this->nav, &c, 1);
         emit activePoiChanged();
 }

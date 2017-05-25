@@ -46,8 +46,7 @@ Rectangle {
             Layout.fillWidth: true
             icon: "icons/appbar.map.svg"
             onClicked: {
-                mainMenu.state = ''
-                mainMenu.source = ""
+                 container.hideMainMenu()
             }
 
         }

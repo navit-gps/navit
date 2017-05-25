@@ -4,12 +4,11 @@ import QtQuick 2.2
 Rectangle {
     width: 800
     height: 480
+
 	Connections {
 		target: backend
         onHideMenu: {
-            mainMenu.source = ''
-            mainMenu.state = 'default'
-			console.log("hiding menu")
+               hideMainMenu()
         }
 		onDisplayMenu: {
 			mainMenu.source = "menu.qml"
@@ -17,6 +16,14 @@ Rectangle {
 			console.log("showing menu")
 		}
 	}
+
+    function hideMainMenu(){
+            mainMenu.source = ''
+            mainMenu.state = 'default'
+            backend.resize(navit1.width, navit1.height);
+	    console.log("hiding menu window size " + navit1.width + " x " + navit1.height)
+     }
+
 	color: "black"
 	id: container
 
@@ -27,6 +34,7 @@ Rectangle {
 		focus: true
 		opacity: 0;
 		Component.onCompleted: {
+                        console.log(width + "x" + height)
 			navit1.setGraphicContext(graphics_qt5_context);
 			navit1.opacity = 1;
 		}

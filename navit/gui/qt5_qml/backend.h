@@ -51,6 +51,7 @@ public slots:
     void setActivePoiAsDestination();
     void updateSearch(QString text);
     void gotoTown(int index);
+    void resize(int width, int height);
 
 private:
     struct navit *nav;
