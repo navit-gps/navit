@@ -465,7 +465,9 @@ Waypoint</text></img>
 				<itemgra item_types="poly_theme_park" order="10-"><polygon color="#01a36c"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_water_park" order="10-"><polygon color="#8cc1c8"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_zoo" order="10-"><polygon color="#ccbda5"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_depot" order="10-"><polygon color="#c2b098"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_railway" order="10-"><polygon color="#b3b9c5"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_port" order="10-"><polygon color="#8188a0"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_marina" order="10-"><polygon color="#aac4d2"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_commercial" order="10-"><polygon color="#eaeed3"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_retail" order="10-"><polygon color="#d6b690"/><text text_size="5"/></itemgra>
@@ -499,6 +501,9 @@ Waypoint</text></img>
 					<polygon color="#8ec78d"/>
 					<text text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_greenhouse" order="10-"><polygon color="#f9e8cb"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_orchard" order="10-"><polygon color="#9edc90"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_plantnursery" order="10-"><polygon color="#addea2"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_farm" order="0-">
 					<polygon color="#c7f1a3"/>
 					<polyline color="#79c691"/>
@@ -626,6 +631,7 @@ Waypoint</text></img>
 					<polygon color="#ffff00"/>
 					<polyline color="#a0a0a0" width="3"/>
 				</itemgra>
+				<itemgra item_types="poly_saltpond" order="10-"><polygon color="#d7804a"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 					<polygon color="#82c8ea"/>
 					<polyline color="#5096b8"/>
@@ -695,6 +701,7 @@ Waypoint</text></img>
 				<itemgra item_types="poly_sports_stadium" order="10-"><polygon color="#6eb85d"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_sports_track" order="10-"><polygon color="#b6554e"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_barracks" order="10-"><polygon color="#b6a6a6"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_garages" order="10-"><polygon color="#deddcc"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_building" order="0-">
 					<polygon color="#b6a6a6"/>
 				</itemgra>
@@ -2259,7 +2266,7 @@ Waypoint</text></img>
 				</itemgra>
 			</cursor>
 
-			<layer name="polygons">
+			<layer name="polygons"><!-- Colors based on Car layout; R/34 G/8 B/9 -->
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
@@ -2278,7 +2285,9 @@ Waypoint</text></img>
 				<itemgra item_types="poly_theme_park" order="10-"><polygon color="#00150b"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_water_park" order="10-"><polygon color="#041915"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_zoo" order="10-"><polygon color="#061811"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_depot" order="10-"><polygon color="#051610"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_railway" order="10-"><polygon color="#051815"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_port" order="10-"><polygon color="#031111"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_marina" order="10-"><polygon color="#051916"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_commercial" order="10-"><polygon color="#071f16"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_retail" order="10-"><polygon color="#06170f"/><text text_size="5"/></itemgra>
@@ -2312,6 +2321,9 @@ Waypoint</text></img>
 					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
 				</itemgra>
+				<itemgra item_types="poly_greenhouse" order="10-"><polygon color="#071d16"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_orchard" order="10-"><polygon color="#041b10"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_plantnursery" order="10-"><polygon color="#051b12"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_farm" order="0-">
 					<polygon color="#041a06"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
@@ -2420,6 +2432,7 @@ Waypoint</text></img>
 					<polygon color="#c5c300"/>
 					<polyline color="#a0a0a0" width="3"/>
 				</itemgra>
+				<itemgra item_types="poly_saltpond" order="10-"><polygon color="#061008"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 					<polygon color="#010321"/>
 					<text color="#55c4bd" background_color="#000000" text_size="5"/>
@@ -2488,6 +2501,7 @@ Waypoint</text></img>
 				<itemgra item_types="poly_sports_stadium" order="10-"><polygon color="#03180a"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_sports_track" order="10-"><polygon color="#050b08"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_barracks" order="10-"><polygon color="#051511"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_garages" order="10-"><polygon color="#061b16"/><text text_size="5"/></itemgra>
 				<itemgra item_types="poly_building" order="8-">
 					<polygon color="#282424"/>
 				</itemgra>
