@@ -1436,6 +1436,59 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 }
 
 /**
+ * @brief Look for the bookmark passed in parameters, and route to it if found
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the 'bookmark_name' parameter
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
+static DBusHandlerResult
+request_bookmarks_set_as_destination(DBusConnection *connection, DBusMessage *message)
+{
+        char * bookmark_name;
+        struct navit *navit;
+        DBusMessageIter iter;
+
+        struct attr attr,mattr;
+	struct navigation * nav = NULL;
+	struct item *item;
+	struct coord c;
+	struct pcoord pc;
+
+        navit = object_get_from_message(message, "navit");
+        if (! navit)
+                return dbus_error_invalid_object_path(connection, message);
+
+	pc.pro = transform_get_projection(navit_get_trans(navit));
+
+        dbus_message_iter_init(message, &iter);
+        dbus_message_iter_get_basic(&iter, &bookmark_name);
+
+        dbg(lvl_debug, "Looking for %s\n", bookmark_name);
+
+        if(navit_get_attr(navit, attr_bookmarks, &mattr, NULL) ) {
+                bookmarks_item_rewind(mattr.u.bookmarks);
+                while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
+                        dbg(lvl_debug, "trying to get label for %p\n", item);
+                        if (!item_attr_get(item, attr_label, &attr)) continue;
+                        dbg(lvl_debug,"full_label: %s\n", attr.u.str);
+			if (!strcmp(attr.u.str, bookmark_name)) {
+				dbg(lvl_debug, "Bookmark found, setting as destination\n");
+                        	if (item_coord_get(item, &c, 1)) {
+					pc.x = c.x;
+					pc.y = c.y;
+                        	        dbg(lvl_debug, "coords : %i x %i\n", pc.x, pc.y);
+                        	        navit_set_destination(navit, &pc, attr.u.str, 1);
+                                        break;
+				}
+                        }
+                }
+        }
+         
+        return empty_reply(connection, message);
+}
+
+
+/**
  * @brief Exports the current route as a GeoJSON file
  * @param connection The DBusConnection object through which a message arrived
  * @param message The DBusMessage including the 'filename' parameter
@@ -1950,6 +2003,7 @@ struct dbus_method {
 	{"",	    "callback_new",	   "s",       "signalname",                              "o",  "callback",request_callback_new},
 	{"",	    "callback_attr_new",   "ss",       "signalname,attribute",                   "o",  "callback",request_callback_new},
 	{"",	    "search_list_new",	   "o",       "mapset",                                  "o",  "search",request_search_list_new},
+        {".bookmarks", "set_as_destination", "s",       "bookmark_name",                         "",   "",      request_bookmarks_set_as_destination},
 	{".callback","destroy",            "",        "",                                        "",   "",      request_callback_destroy},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
