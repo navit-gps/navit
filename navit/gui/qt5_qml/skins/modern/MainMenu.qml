@@ -13,10 +13,9 @@ GridLayout {
         text: "Where To?"
         Layout.fillHeight: true
         Layout.fillWidth: true
-        icon: "icons/appbar.location.checkin.svg"
+        icon: "icons/appbar.rocket.svg"
         onClicked: {
-            menucontent.source = "search.qml"
-            console.log("showing search")
+            menucontent.source = "destination.qml"
         }
     }
 
@@ -38,21 +37,20 @@ GridLayout {
     }
 
     MainButton {
-        text: "Go Home"
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-    }
-
-
-    MainButton {
         text: "Settings"
         Layout.fillHeight: true
         Layout.fillWidth: true
         icon: "icons/appbar.cog.svg"
         onClicked: {
             menucontent.source = "settings.qml"
-            console.log("showing settings")
         }
+    }
+
+    MainButton {
+        text: "My route"
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        icon: "icons/appbar.book.list.svg"
     }
 
     MainButton {

@@ -27,5 +27,10 @@
         <file>skins/modern/poi.qml</file>
         <file>gui_qt5_qml.qml</file>
         <file>skins/modern/search.qml</file>
+        <file>skins/modern/destination.qml</file>
+        <file>skins/modern/icons/appbar.city.svg</file>
+        <file>skins/modern/icons/appbar.location.svg</file>
+        <file>skins/modern/icons/appbar.timer.rewind.svg</file>
+        <file>skins/modern/icons/appbar.book.list.svg</file>
     </qresource>
 </RCC>

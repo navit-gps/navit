@@ -225,6 +225,12 @@ PoiObject * Backend::activePoi() {
 }
 
 
+/**
+ * @brief set the canvas size to use when drawing the map
+ * @param int width
+ * @param int height
+ * @returns nothing
+ */ 
 void Backend::resize(int width, int height){
         navit_handle_resize(nav, width, height);
 }
