@@ -93,7 +93,7 @@ static void
 graphics_destroy(struct graphics_priv* gr)
 {
 //        dbg(lvl_debug,"enter\n");
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     gr->freetype_methods.destroy();
 #endif
     /* destroy painter */
@@ -152,20 +152,74 @@ static void font_destroy(struct graphics_font_priv* font)
     g_free(font);
 }
 
+/**
+ * @brief	font interface structure
+ * This structure is preset with all function pointers provided by this implemention
+ * to be returned as interface.
+ */
 static struct graphics_font_methods font_methods = {
     font_destroy
 };
 
+/**
+ * List of font families to use, in order of preference
+ */
+static const char* fontfamilies[] = {
+    "Liberation Sans",
+    "Arial",
+    "NcrBI4nh",
+    "luximbi",
+    "FreeSans",
+    "DejaVu Sans",
+    NULL,
+};
+
+/**
+ * @brief	Allocate a font context
+ * @param	gr	own private context
+ * @param	meth	fill this structure with correct functions to be called with handle as interface to font
+ * @param	font	font family e.g. "Arial"
+ * @param	size	Font size in ???
+ * @param	flags	Font flags (currently 1 if bold and 0 if not)
+ *
+ * @return	font handle
+ *
+ * Allocates a font handle and returnes filled interface stucture
+ */
 static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags)
 {
+    int a = 0;
     struct graphics_font_priv* font_priv;
-    //        dbg(lvl_debug,"enter (font %s, %d)\n", font, size);
+    dbg(lvl_debug, "enter (font %s, %d, 0x%x)\n", font, size, flags);
     font_priv = g_new0(struct graphics_font_priv, 1);
+    font_priv->font = new QFont(fontfamilies[0]);
     if (font != NULL)
-        font_priv->font = new QFont(font, size / 16);
-    else
-        font_priv->font = new QFont("Arial", size / 16);
-    font_priv->font->setStyleStrategy(QFont::NoAntialias);
+        font_priv->font->setFamily(font);
+    /* search for exact font match */
+    while ((!font_priv->font->exactMatch()) && (fontfamilies[a] != NULL)) {
+        font_priv->font->setFamily(fontfamilies[a]);
+        a++;
+    }
+    if (font_priv->font->exactMatch()) {
+        dbg(lvl_debug, "Exactly matching font: %s\n", font_priv->font->family().toUtf8().data());
+    } else {
+        /* set any font*/
+        if (font != NULL) {
+            font_priv->font->setFamily(font);
+        } else {
+            font_priv->font->setFamily(fontfamilies[0]);
+        }
+        dbg(lvl_debug, "No matching font. Resort to: %s\n", font_priv->font->family().toUtf8().data());
+    }
+
+    /* No clue why factor 20. Found this by comparing to Freetype rendering. */
+    font_priv->font->setPointSize(size / 20);
+    //font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
+    /* Check for bold font */
+    if (flags) {
+        font_priv->font->setBold(true);
+    }
+
     *meth = font_methods;
     return font_priv;
 }
@@ -405,14 +459,27 @@ draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point*
     gr->painter->drawArc(p->x - r / 2, p->y - r / 2, r, r, 0, 360 * 16);
 }
 
+/**
+ * @brief	Render given text
+ * @param	gr	own private context
+ * @param	fg	foreground drawing context (for color)
+ * @param	bg	background drawing context (for color)
+ * @param	font	font context to use (allocated by font_new)
+ * @param	text	String to calculate bbox for
+ * @param	p	offset on gr context to place this text.
+ * @param	dx	transformation matrix (16.16 fixpoint)
+ * @param	dy	transformation matrix (16.16 fixpoint)
+ *
+ * Renders given text on gr surface. Draws nice contrast outline around text.
+ */
 static void
 draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg, struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy)
 {
-    dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) %s\n", gr, fg, bg, p->x, p->y, text);
+    dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) d(%d, %d) %s\n", gr, fg, bg, p->x, p->y, dx, dy, text);
     QPainter* painter = gr->painter;
     if (painter == NULL)
         return;
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     struct font_freetype_text* t;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
@@ -477,11 +544,22 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
     gr->freetype_methods.text_destroy(t);
 #else
     QString tmp = QString::fromUtf8(text);
-    QMatrix sav = gr->painter->worldMatrix();
-    QMatrix m(dx / 65535.0, dy / 65535.0, -dy / 65535.0, dx / 65535.0, p->x, p->y);
+    qreal m_dx = ((qreal)dx) / 65536.0;
+    qreal m_dy = ((qreal)dy) / 65536.0;
+    QMatrix sav = painter->worldMatrix();
+    QMatrix m(m_dx, m_dy, -m_dy, m_dx, p->x, p->y);
     painter->setWorldMatrix(m, TRUE);
-    painter->setPen(*fg->pen);
     painter->setFont(*font->font);
+    if (bg) {
+        QPen shadow;
+        QPainterPath path;
+        shadow.setColor(bg->pen->color());
+        shadow.setWidth(3);
+        painter->setPen(shadow);
+        path.addText(0, 0, *font->font, tmp);
+        painter->drawPath(path);
+    }
+    painter->setPen(*fg->pen);
     painter->drawText(0, 0, tmp);
     painter->setWorldMatrix(sav);
 #endif
@@ -645,27 +723,50 @@ static void image_free(struct graphics_priv* gr, struct graphics_image_priv* pri
     g_free(priv);
 }
 
+/**
+ * @brief	Calculate pixel space required for font display.
+ * @param	gr	own private context
+ * @param	font	font context to use (allocated by font_new)
+ * @param	text	String to calculate bbox for
+ * @param	dx	transformation matrix (16.16 fixpoint)
+ * @param	dy	transformation matrix (16.16 fixpoint)
+ * @param	ret	point array to fill. (low left, top left, top right, low right)
+ * @param	estimate	???
+ *
+ * Calculates the bounding box around the given text.
+ */
 static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy, struct point* ret, int estimate)
 {
-    //        dbg(lvl_debug,"enter %s %d %d\n", text, dx, dy);
+    int i;
+    struct point pt;
     QPainter* painter = gr->painter;
     QString tmp = QString::fromUtf8(text);
-    if (gr->painter != NULL) {
-        gr->painter->setFont(*font->font);
-        QRect r = painter->boundingRect(0, 0, gr->pixmap->width(), gr->pixmap->height(), 0, tmp);
-        //            dbg (lvl_debug, "Text bbox: %d %d (%d,%d),(%d,%d)\n",dx, dy, r.left(), r.top(), r.right(), r.bottom());
-        /* low left */
-        ret[0].x = r.left();
-        ret[0].y = r.bottom();
-        /* top left */
-        ret[1].x = r.left();
-        ret[1].y = r.top();
-        /* top right */
-        ret[2].x = r.right();
-        ret[2].y = r.top();
-        /* low right */
-        ret[3].x = r.right();
-        ret[3].y = r.bottom();
+    QRect r;
+    //        dbg(lvl_debug,"enter %s %d %d\n", text, dx, dy);
+
+    /* use QFontMetrix for bbox calculation as we do not always have a painter */
+    QFontMetrics fm(*font->font);
+    r = fm.boundingRect(tmp);
+
+    /* low left */
+    ret[0].x = r.left();
+    ret[0].y = r.bottom();
+    /* top left */
+    ret[1].x = r.left();
+    ret[1].y = r.top();
+    /* top right */
+    ret[2].x = r.right();
+    ret[2].y = r.top();
+    /* low right */
+    ret[3].x = r.right();
+    ret[3].y = r.bottom();
+    /* transform bbox if rotated */
+    if (dy != 0 || dx != 0x10000) {
+        for (i = 0; i < 4; i++) {
+            pt = ret[i];
+            ret[i].x = (pt.x * dx - pt.y * dy) / 0x10000;
+            ret[i].y = (pt.y * dx + pt.x * dy) / 0x10000;
+        }
     }
 }
 
@@ -727,7 +828,7 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
     struct graphics_priv* graphics_priv = NULL;
     graphics_priv = g_new0(struct graphics_priv, 1);
     *meth = graphics_methods;
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     if (gr->font_freetype_new) {
         graphics_priv->font_freetype_new = gr->font_freetype_new;
         gr->font_freetype_new(&graphics_priv->freetype_methods);
@@ -807,7 +908,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
             return NULL;
     }
 
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     struct font_priv* (*font_freetype_new)(void* meth);
     /* get font plugin if present */
     font_freetype_new = (struct font_priv * (*)(void*))plugin_get_category_font("freetype");
@@ -839,7 +940,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
 #endif
 
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     graphics_priv->font_freetype_new = font_freetype_new;
     font_freetype_new(&graphics_priv->freetype_methods);
     meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int, int))graphics_priv->freetype_methods.font_new;

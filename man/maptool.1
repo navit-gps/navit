@@ -20,7 +20,7 @@ maptool parses osm textfile and converts it to Navit binfile format
 \-h (\-\-help)
 display a short help message
 .TP
-\-4 (\-\-md5)
+\-5 (\-\-md5)
 set file where to write md5 sum
 .TP
 \-6 (\-\-64bit)
@@ -35,8 +35,15 @@ dump coordinates after phase 1
 \-d (\-\-db) <connect string>
 get osm data out of a postgresql database with osm simple scheme and given connect string
 .TP
+\-D (\-\-dump)
+dump map data to standard output in Navit textfile format
+If this option is specified, the output file parameter must be omitted.
+.TP
 \-e (\-\-end) <phase>
 end at specified phase
+.TP
+\-E (\-\-experimental)
+enable experimental features (if available)
 .TP
 \-i (\-\-input-file) <file>
 specify the input file name (OSM), overrules default stdin
@@ -44,16 +51,17 @@ specify the input file name (OSM), overrules default stdin
 \-k (\-\-keep-tmpfiles)
 do not delete tmp files after processing. useful to reuse them
 .TP
+\-M (\-\-o5m)
+input data is in o5m format
+.TP
+\-n (\-\-ignore-unknown)
+do not output ways and nodes with unknown type
+.TP
 \-N (\-\-nodes-only)
 process only nodes
 .TP
-\-o (\-\-coverage)
-converts every street to street_coverage, resulting in a big fat black line.
-You can overlay this map with another vector map or image map, and every street
-you will still see is missing in the \-o map
-.TP
 \-P (\-\-protobuf)
-input file is protobuf
+input data is in pbf (Protocol Buffer) format
 .TP
 \-r (\-\-rule-file) <file>
 read mapping rules from specified file
@@ -65,6 +73,9 @@ start at specified phase
 limit memory to use for some large internal buffers, in bytes. Default is 1 GB.
 Smaller slices reduce peak memory usage, at the cost of increased processing time.
 .TP
+\-t (\-\-timestamp) <y-m-dTh:m:s>
+set zip timestamp
+.TP
 \-w (\-\-dedupe-ways)
 ensure no duplicate ways or nodes. useful when using several input files
 .TP
@@ -73,6 +84,9 @@ process only ways
 .TP
 \-U (\-\-unknown-country)
 add objects with unknown country to index
+.TP
+\-x (\-\-index-size)
+set maximum country index size in bytes
 .TP
 \-z (\-\-compression-level) <level>
 set the compression level

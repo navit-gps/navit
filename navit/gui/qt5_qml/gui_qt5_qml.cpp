@@ -56,7 +56,6 @@ extern "C" {
 
 #include "layout.h"
 }
-
 struct gui_priv {
     /* navit internal handle */
     struct navit* nav;

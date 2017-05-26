@@ -17,7 +17,6 @@ class PoiObject : public QObject
 public:
     PoiObject(QObject *parent=0);
     PoiObject(const QString &name, const QString &type, const int distance, const QString &icon, struct pcoord &coords, QObject *parent=0);
-
     QString name() const;
     void setName(const QString &name);
 

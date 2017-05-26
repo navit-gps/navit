@@ -2598,6 +2598,7 @@ struct osd_speed_warner {
 	char* label_str;
 	int timeout;
 	int wait_before_warn;
+	struct callback *click_cb;
 };
 
 static void
@@ -2622,13 +2623,13 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
     if (navit) {
         tracking = navit_get_tracking(navit);
     }
-    if (tracking) {
+    if (tracking  && this->active ) {
 
         struct attr maxspeed_attr,speed_attr,imperial_attr;
         int *flags;
         double routespeed = -1;
         double tracking_speed = -1;
-	int osm_data = 0;
+        int osm_data = 0;
         struct item *item;
         int imperial=0;
 
@@ -2684,7 +2685,7 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
 		img = this->img_active;
             }
         } else {
-            osd_color = this->grey;
+            osd_color = this-> grey;
             img = this->img_off;
             this->announce_state = eNoWarn;
         }
@@ -2711,6 +2712,27 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
 }
 
 static void
+osd_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p)
+{
+    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
+
+    struct point bp = opc->osd_item.p;
+    osd_wrap_point(&bp, nav);
+    if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + opc->osd_item.w || p->y > bp.y + opc->osd_item.h || !opc->osd_item.configured ) && !opc->osd_item.pressed)
+      return;
+    if (button != 1)
+      return;
+    if (navit_ignore_button(nav))
+      return;
+    if (!!pressed == !!opc->osd_item.pressed)
+      return;
+
+    this->active = !this->active;
+	osd_speed_warner_draw(opc, nav, NULL);
+}
+
+
+static void
 osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 {
 	struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
@@ -2722,6 +2744,7 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav)
 
 	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, opc));
+    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_speed_warner_click), attr_button, opc));
 
 	this->d=opc->osd_item.w;
 	if (opc->osd_item.h < this->d)

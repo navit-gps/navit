@@ -44,15 +44,15 @@
 #include "QNavitWidget.h"
 #endif
 
-#ifndef QT_QPAINTER_USE_FREETYPE
-#define QT_QPAINTER_USE_FREETYPE 1
+#ifndef HAVE_FREETYPE
+#define HAVE_FREETYPE 0
 #endif
 
 #ifndef SAILFISH_OS
 #define SAILFISH_OS 1
 #endif
 
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
 #include "navit/font/freetype/font_freetype.h"
 #endif
 
@@ -90,7 +90,7 @@ struct graphics_priv {
     int x;
     int y;
     struct graphics_gc_priv* background_graphics_gc_priv;
-#ifdef QT_QPAINTER_USE_FREETYPE
+#if HAVE_FREETYPE
     struct font_priv* (*font_freetype_new)(void* meth);
     struct font_freetype_methods freetype_methods;
 #endif

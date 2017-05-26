@@ -65,7 +65,6 @@ private:
     PoiObject * m_activePoi;
     QList<QObject *> _search_results;
     char * _country_iso2;
-
 };
 
 #endif // BACKEND_H

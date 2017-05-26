@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -12,7 +13,7 @@
    height="22"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.92.1 r15371"
    version="1.0"
    sodipodi:docname="telephone.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -70,17 +71,18 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313709"
-     inkscape:cx="11.893652"
-     inkscape:cy="9.8015967"
+     inkscape:cx="-0.32675438"
+     inkscape:cy="7.3836008"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="943"
      inkscape:window-height="682"
-     inkscape:window-x="231"
-     inkscape:window-y="59"
+     inkscape:window-x="162"
+     inkscape:window-y="13"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -102,6 +104,12 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#f7f7f7;stroke-width:3.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 4.190641,5.6647526 c -0.2178301,2.1401644 1.4084714,5.3870244 3.1250002,7.9388004 1.7107562,2.543195 4.3255618,5.23545 6.2954938,5.529029 2.898519,0.431968 3.458947,-1.695083 3.458947,-1.695083 l -3.1875,-3.257582 c 0,0 -0.534189,0.787247 -1.736136,0.672335 C 11.566706,14.796826 9.1411734,12.501366 7.8276651,8.871859 7.4270935,7.764994 9,7 9,7 L 7.0883884,2.867417 c 0,0 -2.6325826,0.6786173 -2.8977474,2.7973356 z"
+       id="path2441-8"
+       sodipodi:nodetypes="cssccssccc" />
     <path
        style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:0.29999999999999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;opacity:1"
        d="M 4.4330581,5.6647531 C 4.215228,7.804918 5.8415295,11.051777 7.5580583,13.603554 C 9.2688145,16.146749 11.88362,18.839003 13.853552,19.132583 C 16.752071,19.564551 17.312499,17.4375 17.312499,17.4375 L 14.124999,14.179918 C 14.124999,14.179918 13.59081,14.967165 12.388863,14.852253 C 11.809123,14.796827 9.3835905,12.501366 8.0700822,8.8718598 C 7.6695106,7.7649945 9.2424171,7 9.2424171,7 L 7.3308055,2.8674175 C 7.3308055,2.8674175 4.6982229,3.5460348 4.4330581,5.6647531 z"

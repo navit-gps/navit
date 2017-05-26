@@ -23,7 +23,6 @@ extern "C" {
 #include "proxy.h"
 }
 
-
 Backend::Backend(QObject * parent):QObject(parent)
 {
 }

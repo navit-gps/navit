@@ -669,6 +669,7 @@ static char *attrmap={
 	"w	landuse=farmland	poly_farm\n"
 	"w	landuse=farmyard	poly_town\n"
 	"w	landuse=forest		poly_wood\n"
+	"w	landuse=grass		poly_meadow\n"
 	"w	landuse=greenfield	poly_greenfield\n"
 	"w	landuse=industrial	poly_industry\n"
 	"w	landuse=landfill	poly_landfill\n"
@@ -706,14 +707,17 @@ static char *attrmap={
 	"w	natural=coastline	water_line\n"
 	"w	natural=fell		poly_fell\n"
 	"w	natural=glacier		poly_glacier\n"
+	"w	natural=grassland	poly_meadow\n"
 	"w	natural=heath		poly_heath\n"
 	"w	natural=land		poly_land\n"
 	"w	natural=marsh		poly_marsh\n"
 	"w	natural=meadow		poly_meadow\n"
 	"w	natural=mud		poly_mud\n"
+	"w	natural=sand		poly_beach\n"
 	"w	natural=scree		poly_scree\n"
 	"w	natural=scrub		poly_scrub\n"
 	"w	natural=water		poly_water\n"
+	"w	natural=wetland		poly_mud\n"
 	"w	natural=wood		poly_wood\n"
 	"w	piste:type=downhill,piste:difficulty=advanced		piste_downhill_advanced\n"
 	"w	piste:type=downhill,piste:difficulty=easy		piste_downhill_easy\n"
@@ -1780,7 +1784,7 @@ osm_end_way(struct maptool_osm *osm)
 		add_flags=0;
 		if (types[i] == type_none)
 			continue;
-		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
+		if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		if (types[i] != type_street_unkn) {
 			if(types[i]<type_area) 	
@@ -1870,7 +1874,7 @@ osm_end_node(struct maptool_osm *osm)
 	for (i = 0 ; i < count ; i++) {
 		if (types[i] == type_none)
 			continue;
-		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
+		if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		item_bin=init_item(types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population])

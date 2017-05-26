@@ -239,7 +239,7 @@ extern struct item_bin *tmp_item_bin;
 extern long long slice_size;
 extern int attr_debug_level;
 extern char *suffix;
-extern int ignore_unkown;
+extern int ignore_unknown;
 extern GHashTable *dedupe_ways_hash;
 extern int slices;
 extern struct buffer node_buffer;
