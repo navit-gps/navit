@@ -97,7 +97,7 @@ Navigation</text></img>
 				<img src='gui_tools' onclick='network_info()'><text>Network info</text></img>
 			</a>
 			<a name='Route'><text>Route</text>
-				<img src='gui_zoom_route' onclick='zoom_to_route()'><text>Zoom to route</text></img>
+				<img src='gui_zoom_route' onclick='navit.zoom_to_route();redraw_map();back_to_map()'><text>Zoom to route</text></img>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
 				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
