@@ -25,7 +25,6 @@
         <file>skins/modern/icons/appbar.cogs.svg</file>
         <file>skins/modern/icons/bigcity.png</file>
         <file>skins/modern/poi.qml</file>
-        <file>gui_qt5_qml.qml</file>
         <file>skins/modern/search.qml</file>
         <file>skins/modern/destination.qml</file>
         <file>skins/modern/icons/appbar.city.svg</file>
