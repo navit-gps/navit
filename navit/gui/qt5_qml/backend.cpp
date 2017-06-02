@@ -321,6 +321,16 @@ static struct search_param {
         void *entry_street, *entry_number;
 } search_param;
 
+/**
+  * @brief set the default country
+  * @param none
+  * returns nothing
+  */
+void Backend::set_default_country(){
+        _current_country = "Germany";
+        _country_iso2 = "DE";
+}
+
 
 /**
  * @brief update the current search results according to new inputs. Currently only works to search for towns
@@ -339,7 +349,7 @@ void Backend::updateSearch(QString text){
                 search->sl=search_list_new(search->ms);
                 search->partial = 1;
                 if ( _country_iso2 == NULL ){
-                        _country_iso2 = "US";
+                        set_default_country();
                 }
                 dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
                 search_attr.type=attr_country_iso2;
@@ -413,11 +423,18 @@ void Backend::setSearchContext(QString text){
 
 QString Backend::currentCountry() {
         if (_current_country == NULL) {
-                _current_country = "US";
-                _country_iso2 = "US";
+                set_default_country();
         }
         dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
         return QString(_current_country);
+}
+
+QString Backend::currentCountryIso2() {
+        if (_country_iso2 == NULL) {
+                set_default_country();
+        }
+        dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
+        return QString(_country_iso2);
 }
 
 QString Backend::currentTown() {

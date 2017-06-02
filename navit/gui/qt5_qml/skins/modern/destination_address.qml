@@ -35,7 +35,7 @@ GridLayout {
         id: countrySearchButton
         height: 100
         text: backend.currentCountry
-        icon: backend.get_icon_path() + 'country_' + backend.currentCountry + ".svg"
+        icon: backend.get_icon_path() + 'country_' + backend.currentCountryIso2 + ".svg"
         Layout.fillWidth: true
         onClicked: {
             backend.setSearchContext('country')

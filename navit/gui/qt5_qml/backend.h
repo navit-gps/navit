@@ -22,6 +22,7 @@ class Backend : public QObject
     Q_PROPERTY(QQmlListProperty<QObject> searchresults READ getSearchResults NOTIFY searchResultsChanged)
     // Search properties
     Q_PROPERTY(QString currentCountry READ currentCountry NOTIFY currentCountryChanged)
+    Q_PROPERTY(QString currentCountryIso2 READ currentCountryIso2 NOTIFY currentCountryIso2Changed)
     Q_PROPERTY(QString currentTown READ currentTown NOTIFY currentTownChanged)
     Q_PROPERTY(QString currentStreet READ currentStreet NOTIFY currentStreetChanged)
 
@@ -39,6 +40,7 @@ public:
     PoiObject * activePoi();
     QQmlListProperty<QObject> getSearchResults();
     QString currentCountry();
+    QString currentCountryIso2();
     QString currentTown();
     QString currentStreet();
 
@@ -50,6 +52,7 @@ signals:
     void mapsChanged();
     void searchResultsChanged();
     void currentCountryChanged();
+    void currentCountryIso2Changed();
     void currentTownChanged();
     void currentStreetChanged();
 
@@ -76,6 +79,7 @@ private:
     QList<QObject *> _maps;
     PoiObject * m_activePoi;
     QList<QObject *> _search_results;
+    void set_default_country();
     char * _country_iso2;
     char * _current_country;
     char * _current_town;
