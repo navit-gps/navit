@@ -49,7 +49,7 @@ void Backend::showMenu(struct point *p)
 
         // As a test, set the Demo vehicle position to wherever we just clicked
         navit_set_position(this->nav, &c);
-        emit displayMenu();
+        emit displayMenu("MainMenu.qml");
 }
 
 /**
@@ -273,17 +273,29 @@ void Backend::setActivePoiAsDestination(){
 }
 
 /**
- * @brief set the view to the town at the given index in the m_search_results list
+ * @brief save the search result for the next search step
  * @param int index the index of the result in the m_search_results list
  * @returns nothing
  */ 
-void Backend::gotoTown(int index){
+void Backend::searchValidateResult(int index){
         SearchObject * r = (SearchObject *)_search_results.at(index);
-        dbg(lvl_debug, "Going to %s [%i] %x %x\n", 
+        dbg(lvl_debug, "Saving %s [%i] %x %x\n", 
                         r->name().toUtf8().data(),
                         index, r->getCoords()->x, r->getCoords()->y);
-        navit_set_center(this->nav, r->getCoords(), 1);
-        emit hideMenu();
+        if (_search_context == attr_country_all) {
+                _current_country = g_strdup(r->name().toUtf8().data());
+                _current_town = NULL;
+                _current_street = NULL;
+        } else if (_search_context == attr_town_name) {
+                _current_town = g_strdup(r->name().toUtf8().data());
+                _current_street = NULL;
+        } else if (_search_context == attr_street_name) {
+                _current_street = g_strdup(r->name().toUtf8().data());
+        } else {
+                dbg(lvl_error, "Unknown search context for '%s'\n", r->name().toUtf8().data());
+        }
+        // navit_set_center(this->nav, r->getCoords(), 1);
+        emit displayMenu("destination_address.qml");
 }
 
 /**
@@ -291,11 +303,11 @@ void Backend::gotoTown(int index){
  * @param none
  * @returns an absolute path for the country icon
  */ 
-QString Backend::get_country_icon(){
-        if ( _country_iso2 == NULL ){
-                _country_iso2 = "DE";
-        }
-        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/country_",_country_iso2,".svgz",NULL));
+QString Backend::get_country_icon(char * country_iso_code){
+//        if ( country_iso_code == "" ) {
+//                country_iso_code = _country_iso2;
+//        }
+        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",country_iso_code,".svg",NULL));
 }
 
 
@@ -316,56 +328,110 @@ static struct search_param {
  * @returns nothing
  */ 
 void Backend::updateSearch(QString text){
-        struct search_param *search=&search_param;
         struct search_list_result *res;
+        struct attr search_attr;
+
+        if (search == NULL){
+                search=&search_param;
+                dbg(lvl_debug, "search = %p\n", search);
+                search->nav=this->nav;
+                search->ms=navit_get_mapset(this->nav);
+                search->sl=search_list_new(search->ms);
+                search->partial = 1;
+                if ( _country_iso2 == NULL ){
+                        _country_iso2 = "US";
+                }
+                dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
+                search_attr.type=attr_country_iso2;
+                search_attr.u.str=_country_iso2;
+                search_list_search(search->sl, &search_attr, 0);
+
+                while((res=search_list_get_result(search->sl)));
+        }
+
         _search_results.clear();
         //  search->attr.type=attr_country_all;
         //  search->attr.type=attr_town_postal;
         //  search->attr.type=attr_town_name;
         //  search->attr.type=attr_street_name;
 
-        search->attr.type=attr_town_name;
-        search->nav=this->nav;
-        search->ms=navit_get_mapset(this->nav);
-        search->sl=search_list_new(search->ms);
-        search->partial = 1;
-
-        struct attr search_attr;
-
-        if ( _country_iso2 == NULL ){
-                _country_iso2 = "DE";
-        }
-
-        dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
-        search_attr.type=attr_country_iso2;
-        search_attr.u.str=_country_iso2;
-        search_list_search(search->sl, &search_attr, 0);
-        while((res=search_list_get_result(search->sl)));
+//        search->attr.type=attr_town_name;
+//        search->attr.u.str="Oberhaching";
+//        search_list_search(search->sl, &search->attr, search->partial);
+//        while((res=search_list_get_result(search->sl)));
 
         search->attr.u.str = text.toUtf8().data();
-        dbg(lvl_debug, "searching for %s partial %d\n", search->attr.u.str, search->partial);
+        dbg(lvl_error, "searching for %s partial %d\n", search->attr.u.str, search->partial);
 
+        search->attr.type = _search_context;
         search_list_search(search->sl, &search->attr, search->partial);
         int count = 0;
         while((res=search_list_get_result(search->sl))) {
-                dbg(lvl_debug, "res %p\n", res);
-                if (res->country) {
-                        dbg(lvl_debug, "country : '%s'\n", res->country->name);
+                if ( _search_context == attr_country_all && res->country) {
+                        char * label;
+                        label = g_strdup(res->country->name);
+                        dbg(lvl_debug, "country result %s\n", label);
+                        _search_results.append(
+                                        new SearchObject(label, get_country_icon(res->country->flag) , res->c)
+                                        );
                 }
-                if (res->town) {
+                if ( _search_context == attr_town_name && res->town) {
                         char * label;
                         label = g_strdup(res->town->common.town_name);
-                        dbg(lvl_debug, "got result %s\n", label);
+                        dbg(lvl_debug, "town result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, "icons/bigcity.png", res->c)
                                         );
                 }
                 if (res->street) {
-                        dbg(lvl_debug, "street\n");
+                        char * label;
+                        label = g_strdup(res->street->name);
+                        dbg(lvl_debug, "street result %s\n", label);
+                        _search_results.append(
+                                        new SearchObject(label, "icons/smallcity.png", res->c)
+                                        );
                 }
                 if (count ++ > 50) {
                         break;
                 }
         }
         emit searchResultsChanged();
+}
+
+void Backend::setSearchContext(QString text){
+        if (text == "country") {
+                _search_context = attr_country_all;
+        } else if (text == "town") {
+                _search_context = attr_town_name;
+        } else if (text == "street") {
+                _search_context = attr_street_name;
+        } else {
+                dbg(lvl_error, "Unhandled search context '%s'\n", text.toUtf8().data());
+        }
+               
+}
+
+QString Backend::currentCountry() {
+        if (_current_country == NULL) {
+                _current_country = "US";
+                _country_iso2 = "US";
+        }
+        dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
+        return QString(_current_country);
+}
+
+QString Backend::currentTown() {
+        if (_current_town == NULL) {
+                _current_town = "Enter City";
+        }
+        dbg(lvl_debug, "Current town : %s\n", _current_town);
+        return QString(_current_town);
+}
+
+QString Backend::currentStreet() {
+        if (_current_street == NULL) {
+                _current_street = "Enter Street";
+        }
+        dbg(lvl_debug, "Current street : %s\n", _current_street);
+        return QString(_current_street);
 }

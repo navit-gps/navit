@@ -11,17 +11,19 @@ Rectangle {
                hideMainMenu()
         }
 		onDisplayMenu: {
-			mainMenu.source = "menu.qml"
+            mainMenu.submenu = source
 			mainMenu.state = 'visible'
-			console.log("showing menu")
-		}
+            console.log("showing menu with submenu " + mainMenu.submenu)
+            mainMenu.source = '' // Needed when switching submenus from the code to refresh the menu
+            mainMenu.source = "menu.qml"
+        }
 	}
 
     function hideMainMenu(){
             mainMenu.source = ''
             mainMenu.state = 'default'
             backend.resize(navit1.width, navit1.height);
-	    console.log("hiding menu window size " + navit1.width + " x " + navit1.height)
+            console.log("hiding menu window size " + navit1.width + " x " + navit1.height)
      }
 
 	color: "black"
@@ -31,10 +33,10 @@ Rectangle {
 		id: navit1
 		width: parent.width
 		height: parent.height
-		focus: true
+        // focus: true
 		opacity: 0;
 		Component.onCompleted: {
-                        console.log(width + "x" + height)
+            console.log(width + "x" + height)
 			navit1.setGraphicContext(graphics_qt5_context);
 			navit1.opacity = 1;
 		}
@@ -50,7 +52,8 @@ Rectangle {
 		width: parent.width
 		height: parent.height
 		x: parent.width
-		opacity: 0
+        opacity: 0
+        property string submenu
 
 		states: [
 			State {

@@ -46,9 +46,10 @@ Rectangle {
             scale: 1
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-//            anchors.leftMargin: 8
-            sourceSize.width: parent.width
-            sourceSize.height: parent.height
+            // anchors.leftMargin: 8
+            // sourceSize.width: parent.width
+            // sourceSize.height: parent.height
+            fillMode: Image.PreserveAspectFit
         }
     }
 

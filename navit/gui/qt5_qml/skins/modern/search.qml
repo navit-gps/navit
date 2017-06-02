@@ -22,11 +22,12 @@ Item {
 
                     Image {
                         id: image1
-                        height: parent.height - 4;
-                        width: height
+                        height: 36;
+                        width: 64
                         source : icon
-                        sourceSize.width: parent.width
-                        sourceSize.height: parent.height
+                        fillMode: Image.PreserveAspectFit
+                        // sourceSize.width: parent.width
+                        // sourceSize.height: parent.height
                     }
 
                     Text {
@@ -45,7 +46,7 @@ Item {
 
                         onClicked:{
                             listView.currentIndex = index
-                            backend.gotoTown(index)
+                            backend.searchValidateResult(index)
 //                            backend.setActivePoi(index);
                             //                            menucontent.source = "poi.qml"
                         }
@@ -53,7 +54,9 @@ Item {
                 }
 
             }
-            Component.onCompleted: backend.updateSearch("")
+            Component.onCompleted: {
+                backend.updateSearch("")
+            }
 
         }
 
@@ -127,9 +130,9 @@ Item {
         x: 16
         y: 16
         width: parent.width-32
-        height: 36
+        height: 50
         color: "#35322f"
-        radius: 8
+        radius: 3
         border.width: 1
 
         Image {
@@ -137,8 +140,9 @@ Item {
             x: 16
             y: 2
             width: 64
-            height: 32
-            source: backend.get_country_icon()
+            height: 48
+            fillMode: Image.PreserveAspectFit
+            source: backend.get_country_icon("")
         }
 
 

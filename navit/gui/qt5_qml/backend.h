@@ -10,6 +10,8 @@
 #include "qml_poi.h"
 
 #include "coord.h"
+#include "item.h"
+#include "attr.h"
 
 class Backend : public QObject
 {
@@ -18,6 +20,10 @@ class Backend : public QObject
     Q_PROPERTY(QQmlListProperty<QObject> maps READ getMaps NOTIFY mapsChanged)
     Q_PROPERTY(PoiObject * activePoi READ activePoi NOTIFY activePoiChanged)
     Q_PROPERTY(QQmlListProperty<QObject> searchresults READ getSearchResults NOTIFY searchResultsChanged)
+    // Search properties
+    Q_PROPERTY(QString currentCountry READ currentCountry NOTIFY currentCountryChanged)
+    Q_PROPERTY(QString currentTown READ currentTown NOTIFY currentTownChanged)
+    Q_PROPERTY(QString currentStreet READ currentStreet NOTIFY currentStreetChanged)
 
 public:
     explicit Backend(QObject *parent = 0);
@@ -32,26 +38,32 @@ public:
     QQmlListProperty<QObject> getMaps();
     PoiObject * activePoi();
     QQmlListProperty<QObject> getSearchResults();
-
+    QString currentCountry();
+    QString currentTown();
+    QString currentStreet();
 
 signals:
-    void displayMenu();
+    void displayMenu(QString source);
     void hideMenu();
     void poisChanged();
     void activePoiChanged();
     void mapsChanged();
     void searchResultsChanged();
+    void currentCountryChanged();
+    void currentTownChanged();
+    void currentStreetChanged();
 
 public slots:
     void get_maps();
     void get_pois();
     QString get_icon_path();
-    QString get_country_icon();
+    QString get_country_icon(char * country_iso_code);
     void setActivePoi(int index);
     void setActivePoiAsDestination();
     void updateSearch(QString text);
-    void gotoTown(int index);
+    void searchValidateResult(int index);
     void resize(int width, int height);
+    void setSearchContext(QString text);
 
 private:
     struct navit *nav;
@@ -65,6 +77,11 @@ private:
     PoiObject * m_activePoi;
     QList<QObject *> _search_results;
     char * _country_iso2;
+    char * _current_country;
+    char * _current_town;
+    char * _current_street;
+    struct search_param *search;
+    enum attr_type _search_context;
 };
 
 #endif // BACKEND_H

@@ -1,24 +1,22 @@
 import QtQuick.Layouts 1.0
 import QtQuick 2.2
 
-Rectangle {
-    id: rectangle
-    visible: true
-    height: 480
-    color: "#000000"
-
+Item {
     Rectangle {
         id: menuArea
         color: "#1e1b18"
         width: parent.width
         y: topBar.height
-        height: rectangle.height - ( topBar.height + bottomBar.height )
+        height: parent.height - ( topBar.height + bottomBar.height )
         
         Loader {
             id: menucontent
             width: parent.width
             height: parent.height
-            Component.onCompleted: menucontent.source = "MainMenu.qml"
+            Component.onCompleted: {
+                console.log("submenu : " + mainMenu.submenu)
+                menucontent.source = mainMenu.submenu
+            }
         }
     }
 

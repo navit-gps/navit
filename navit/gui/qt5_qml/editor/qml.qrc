@@ -32,5 +32,7 @@
         <file>skins/modern/icons/appbar.location.svg</file>
         <file>skins/modern/icons/appbar.timer.rewind.svg</file>
         <file>skins/modern/icons/appbar.book.list.svg</file>
+        <file>skins/modern/icons/smallcity.png</file>
+        <file>skins/modern/destination_address.qml</file>
     </qresource>
 </RCC>

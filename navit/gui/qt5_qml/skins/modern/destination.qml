@@ -15,7 +15,7 @@ GridLayout {
         Layout.fillWidth: true
         icon: "icons/appbar.city.svg"
         onClicked: {
-            menucontent.source = "search.qml"
+            menucontent.source = "destination_address.qml"
         }
     }
 
