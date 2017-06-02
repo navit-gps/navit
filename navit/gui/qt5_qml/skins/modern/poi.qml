@@ -80,6 +80,10 @@ Item {
             Component.onCompleted: {
                 navit1.setGraphicContext(graphics_qt5_context)
             }
+            Component.onDestruction: {
+                console.log("Destroying a navit widget. Blocking draw operations")
+                backend.block_draw()
+            }
         }
     }
 

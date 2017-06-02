@@ -67,6 +67,7 @@ public slots:
     void searchValidateResult(int index);
     void resize(int width, int height);
     void setSearchContext(QString text);
+    void block_draw();
 
 private:
     struct navit *nav;

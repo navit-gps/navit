@@ -49,6 +49,7 @@ void Backend::showMenu(struct point *p)
 
         // As a test, set the Demo vehicle position to wherever we just clicked
         navit_set_position(this->nav, &c);
+        navit_block(this->nav, 1);
         emit displayMenu("MainMenu.qml");
 }
 
@@ -223,6 +224,10 @@ PoiObject * Backend::activePoi() {
         return m_activePoi;
 }
 
+void Backend::block_draw(){
+        navit_block(this->nav, 1);
+        dbg(lvl_debug, "Draw operations blocked per UI request\n");
+}
 
 /**
  * @brief set the canvas size to use when drawing the map
@@ -231,6 +236,10 @@ PoiObject * Backend::activePoi() {
  * @returns nothing
  */ 
 void Backend::resize(int width, int height){
+        // If we need to resize the canvas, it means that something (the main map,
+        // or a menu item) wants to display a map. Ensure that draw operations
+        // are not blocked then.
+        navit_block(this->nav, -1);
         navit_handle_resize(nav, width, height);
 }
 
