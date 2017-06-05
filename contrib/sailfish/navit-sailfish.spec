@@ -82,6 +82,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
        -DUSE_PLUGINS=n \
        -DUSE_QWIDGET:BOOL=FALSE \
+       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_mapset;sailfish_svg" \
          %{navit_real_source}
 %{__make}
 
@@ -90,7 +91,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %install
 %make_install
 #copy in sailfish config
-cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
+#cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 
 %files
 %defattr(644, root, root, 755)
@@ -111,8 +112,11 @@ cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbou
 
 
 %changelog
-*Wed May 11 2017 metalstrolch 0.5.1-3
-- Switch to QT font rendering. Remove freetype dep.
+*Wed Jun 05 2017 metalstrolch 0.5.1-3
+- Enable rotating.
+- Create default config from xlst
+- Switch to QT font rendering.
+- Remove freetype dep.
 
 *Wed May 03 2017 metalstrolch 0.5.1-2
 - Use qt5_espeak
