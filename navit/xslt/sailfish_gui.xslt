@@ -12,6 +12,14 @@
       </xsl:copy>
    </xsl:template>
 
+   <xsl:template match="/config/navit">
+      <xsl:copy>
+         <xsl:apply-templates select="@*"/>
+         <xsl:attribute name="drag_bitmap">1</xsl:attribute>
+         <xsl:apply-templates select="node()"/>
+      </xsl:copy>
+   </xsl:template>
+
    <xsl:template match="/config/navit/gui[@type='internal']">
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
