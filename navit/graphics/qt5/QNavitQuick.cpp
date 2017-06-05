@@ -68,7 +68,7 @@ static void paintOverlays(QPainter* painter, struct graphics_priv* gp, QPaintEve
         if (!value->disable) {
             QRect rr(value->x, value->y, value->pixmap->width(), value->pixmap->height());
             if (event->rect().intersects(rr)) {
-                dbg(lvl_debug, "draw overlay (%d, %d, %d, %d)\n", value->x, value->y, value->pixmap->width(), value->pixmap->height());
+                dbg(lvl_debug, "draw overlay (%d, %d, %d, %d)\n", value->x + value->scroll_x, value->y + value->scroll_y, value->pixmap->width(), value->pixmap->height());
                 painter->drawPixmap(value->x, value->y, *value->pixmap);
                 /* draw overlays of overlay if any by recursive calling */
                 paintOverlays(painter, value, event);
@@ -89,7 +89,7 @@ void QNavitQuick::paint(QPainter* painter)
         painter->fillRect(boundingRect(), *graphics_priv->background_graphics_gc_priv->brush);
     }
     /* draw base */
-    painter->drawPixmap(0, 0, *graphics_priv->pixmap,
+    painter->drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap,
         boundingRect().x(), boundingRect().y(),
         boundingRect().width(), boundingRect().height());
     paintOverlays(painter, graphics_priv, &event);
