@@ -235,7 +235,7 @@ gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
     if (gui_priv->loader != NULL) {
         dbg(lvl_debug, "navit_loader found\n");
         /* load our root window into the loader component */
-        gui_priv->loader->setProperty("source", "qrc:///main.qml");
+        gui_priv->loader->setProperty("source", "qrc:///skins/modern/main.qml");
     }
 
     transform_get_size(trans, &gui_priv->w, &gui_priv->h);
