@@ -82,7 +82,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
        -DUSE_PLUGINS=n \
        -DUSE_QWIDGET:BOOL=FALSE \
-       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_mapset;sailfish_svg" \
+       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_mapset;sailfish_svg;sailfish_gui" \
          %{navit_real_source}
 %{__make}
 
