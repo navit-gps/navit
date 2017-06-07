@@ -576,25 +576,48 @@ draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* 
 }
 
 /**
- * @brief	Enable drag offset for layer.
+ * @brief	Drag layer.
  * @param   gr private handle
- * @param	p	vector the bitmap is moved from base to start drag, or NULL to indicate end of drag
+ * @param	p	vector the bitmap is moved from base, or NULL to indicate 0:0 vector
  *
- * Enable drag offset for layer. Dragging the screen will be
- * done this way if drag_bitmap is enabled. This is called with
- * a vector given in p to start the drag, and as long as the
- * drag is active. It is called with NULL to end drag.
+ * Move layer to new position. If drag_bitmap is enabled this may also be
+ * called for root layer. There the content of the root layer is to be moved
+ * by given vector. On root layer, NULL indicates the end of a drag.
  */
 static void draw_drag(struct graphics_priv* gr, struct point* p)
 {
+    struct point vector;
+
     if (p != NULL) {
         dbg(lvl_debug, "enter %p (%d,%d)\n", gr, p->x, p->y);
-        gr->scroll_x = p->x;
-        gr->scroll_y = p->y;
+        vector = *p;
     } else {
         dbg(lvl_debug, "enter %p (NULL)\n", gr);
-        gr->scroll_x = 0;
-        gr->scroll_y = 0;
+        vector.x = 0;
+        vector.y = 0;
+    }
+    if (gr->root) {
+        gr->scroll_x = vector.x;
+        gr->scroll_y = vector.y;
+    } else {
+#if USE_QWIDGET
+        int damage_x = gr->x;
+        int damage_y = gr->y;
+        int damage_w = gr->pixmap->width();
+        int damage_h = gr->pixmap->height();
+#endif
+        gr->x = vector.x;
+        gr->y = vector.y;
+#if USE_QWIDGET
+        /* call repaint on widget for stale area. */
+        if (gr->widget != NULL)
+            gr->widget->repaint(damage_x, damage_y, damage_w, damage_h);
+#endif
+#if USE_QML
+// No need to emit update, as QNavitQuic always repaints everything.
+//    if (gr->GPriv != NULL)
+//        gr->GPriv->emit_update();
+#endif
     }
 }
 
