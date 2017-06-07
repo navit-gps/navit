@@ -3762,7 +3762,7 @@ Waypoint</text></img>
 		</layout>
 
     <layout name="Car-Android" color="#fef9ee" font="Liberation Sans">
-      <cursor w="49" h="49">
+      <cursor w="57" h="57">
         <itemgra speed_range="-2">
           <polyline color="#00BC00" radius="0" width="4">
             <coord x="0" y="0" />
