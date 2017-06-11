@@ -1,2 +1,3 @@
 /.gitk-tmp.*
 /CMakeLists.txt.user*
+/build
