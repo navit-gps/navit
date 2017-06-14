@@ -27,6 +27,17 @@ BuildRequires: qt5-qtdbus-devel
 BuildRequires: qt5-qtpositioning-devel
 BuildRequires: qt5-qtxml-devel
 BuildRequires: qt5-qtsvg-devel
+BuildRequires: qt5-qtmultimedia
+BuildRequires: qt5-qtmultimedia-devel
+BuildRequires: qt5-qtmultimedia-gsttools
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstcamerabin
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediacapture
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
+BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
+BuildRequires: qt5-qtmultimedia-plugin-audio-alsa
+BuildRequires: qt5-qtmultimedia-plugin-playlistformats-m3u
+BuildRequires: qt5-qtmultimedia-plugin-audio-pulseaudio
 
 #Requires: glib2
 #Requires: gettext-libs
@@ -82,7 +93,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
        -DUSE_PLUGINS=n \
        -DUSE_QWIDGET:BOOL=FALSE \
-       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish-cursor;sailfish_mapset;sailfish_svg;sailfish_gui" \
+       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_cursor;sailfish_mapset;sailfish_svg;sailfish_gui" \
          %{navit_real_source}
 %{__make}
 
