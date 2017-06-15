@@ -25,6 +25,10 @@ extern "C" {
 
 Backend::Backend(QObject * parent):QObject(parent)
 {
+	set_default_country();
+	this->search = NULL;
+	_current_town = NULL;
+	_current_street = NULL;
 }
 
 /**
@@ -357,9 +361,6 @@ void Backend::updateSearch(QString text){
                 search->ms=navit_get_mapset(this->nav);
                 search->sl=search_list_new(search->ms);
                 search->partial = 1;
-                if ( _country_iso2 == NULL ){
-                        set_default_country();
-                }
                 dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
                 search_attr.type=attr_country_iso2;
                 search_attr.u.str=_country_iso2;
@@ -389,7 +390,6 @@ void Backend::updateSearch(QString text){
                 if ( _search_context == attr_country_all && res->country) {
                         char * label;
                         label = g_strdup(res->country->name);
-                        dbg(lvl_debug, "country result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, get_country_icon(res->country->flag) , res->c)
                                         );
@@ -397,7 +397,6 @@ void Backend::updateSearch(QString text){
                 if ( _search_context == attr_town_name && res->town) {
                         char * label;
                         label = g_strdup(res->town->common.town_name);
-                        dbg(lvl_debug, "town result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, "icons/bigcity.png", res->c)
                                         );
@@ -405,7 +404,6 @@ void Backend::updateSearch(QString text){
                 if (res->street) {
                         char * label;
                         label = g_strdup(res->street->name);
-                        dbg(lvl_debug, "street result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, "icons/smallcity.png", res->c)
                                         );
@@ -431,17 +429,11 @@ void Backend::setSearchContext(QString text){
 }
 
 QString Backend::currentCountry() {
-        if (_current_country == NULL) {
-                set_default_country();
-        }
         dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
         return QString(_current_country);
 }
 
 QString Backend::currentCountryIso2() {
-        if (_country_iso2 == NULL) {
-                set_default_country();
-        }
         dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
         return QString(_country_iso2);
 }
