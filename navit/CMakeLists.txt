@@ -132,9 +132,14 @@ macro(process_xslt SRC_XML DEST_XML)
           list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename ${DEST_XML}.tmp ${DEST_XML})
        endforeach()
    endif()
+   # Depend on all XSLT files, because the main XSLT file may pull in other files.
+   # Ideally we'd parse the main XSLT file for includes, but that is tricky to do reliably.
+   # Note that this list of files is only updated when (re)running CMake, so if files are
+   # added/deleted, CMake must be re-run manually.
+   file(GLOB ALL_XSLT_FILES "${PROJECT_SOURCE_DIR}/navit/xslt/*.xslt")
    ADD_CUSTOM_COMMAND(
       OUTPUT ${DEST_XML}
-      DEPENDS ${SRC_XML} ${XSLT_FILES}
+      DEPENDS ${SRC_XML} ${ALL_XSLT_FILES}
       ${XSLT_COMMANDS}
    )
 endmacro()
