@@ -88,8 +88,8 @@ void QNavitWidget::paintEvent(QPaintEvent* event)
         painter.setPen(*graphics_priv->background_graphics_gc_priv->pen);
         painter.fillRect(event->rect(), *graphics_priv->background_graphics_gc_priv->brush);
     }
-    painter.drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap,
-        event->rect().x(), event->rect().y(),
+    painter.drawPixmap(event->rect().x(), event->rect().y(), *graphics_priv->pixmap,
+        event->rect().x() - graphics_priv->scroll_x, event->rect().y() - graphics_priv->scroll_y,
         event->rect().width(), event->rect().height());
     paintOverlays(&painter, graphics_priv, event);
 }
