@@ -1,4 +1,4 @@
-module_add_library(vehicle_gpsd vehicle_gpsd.c)
+module_add_library(vehicle_gpsd vehicle-gpsd vehicle_gpsd.c)
 if (LIBGPS19_FOUND)
    set_property(
       TARGET vehicle_gpsd

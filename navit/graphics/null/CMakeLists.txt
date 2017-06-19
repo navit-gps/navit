@@ -1,1 +1,1 @@
-module_add_library(graphics_null graphics_null.c)
+module_add_library(graphics_null Unspecified graphics_null.c)

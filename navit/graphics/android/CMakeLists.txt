@@ -1,1 +1,1 @@
-module_add_library(graphics_android graphics_android.c)
+module_add_library(graphics_android graphics-android graphics_android.c)
