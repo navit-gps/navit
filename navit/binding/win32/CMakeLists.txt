@@ -6,4 +6,4 @@ module_add_library(binding_win32 bindings binding_win32.c)
 
 add_executable(tell_navit tell_navit.c)
 target_link_libraries(tell_navit  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} ) 
-install(TARGETS tell_navit DESTINATION ${BIN_DIR} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE binding)
+install(TARGETS tell_navit DESTINATION ${BIN_DIR} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE COMPONENT binding)
