@@ -1,4 +1,4 @@
-module_add_library(font_freetype font_freetype.c)
+module_add_library(font_freetype font-freetype font_freetype.c)
 
 if (FRIBIDI_FOUND)
    include_directories(${FRIBIDI_INCLUDE_DIRS})
