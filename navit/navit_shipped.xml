@@ -449,8 +449,14 @@ Waypoint</text></img>
 				<itemgra item_types="image" order="0-">
 					<image/>
 				</itemgra>
-				<itemgra item_types="poly_nature_reserve" order="10-"><polygon color="#cedec6"/><text text_size="5"/></itemgra>
-				<itemgra item_types="poly_glacier" order="10-"><polygon color="#ddecec"/><text text_size="5"/></itemgra>
+				<itemgra item_types="poly_nature_reserve" order="10-">
+					<polygon color="#cedec6"/>
+					<text text_size="5"/>
+				</itemgra>
+				<itemgra item_types="poly_glacier" order="10-">
+					<polygon color="#ddecec"/>
+					<text text_size="5"/>
+				</itemgra>
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#ffc895"/>
 					<polyline color="#ebb481"/>
