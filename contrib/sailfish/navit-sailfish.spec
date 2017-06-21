@@ -27,6 +27,17 @@ BuildRequires: qt5-qtdbus-devel
 BuildRequires: qt5-qtpositioning-devel
 BuildRequires: qt5-qtxml-devel
 BuildRequires: qt5-qtsvg-devel
+BuildRequires: qt5-qtmultimedia
+BuildRequires: qt5-qtmultimedia-devel
+BuildRequires: qt5-qtmultimedia-gsttools
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstcamerabin
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediacapture
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
+BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
+BuildRequires: qt5-qtmultimedia-plugin-audio-alsa
+BuildRequires: qt5-qtmultimedia-plugin-playlistformats-m3u
+BuildRequires: qt5-qtmultimedia-plugin-audio-pulseaudio
 
 #Requires: glib2
 #Requires: gettext-libs
@@ -82,6 +93,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -Dvehicle/gpsd_dbus:BOOL=FALSE \
        -DUSE_PLUGINS=n \
        -DUSE_QWIDGET:BOOL=FALSE \
+       -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_cursor;sailfish_mapset;sailfish_svg;sailfish_gui" \
          %{navit_real_source}
 %{__make}
 
@@ -90,7 +102,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %install
 %make_install
 #copy in sailfish config
-cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
+#cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 
 %files
 %defattr(644, root, root, 755)
@@ -111,8 +123,11 @@ cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbou
 
 
 %changelog
-*Wed May 11 2017 metalstrolch 0.5.1-3
-- Switch to QT font rendering. Remove freetype dep.
+*Wed Jun 05 2017 metalstrolch 0.5.1-3
+- Enable rotating.
+- Create default config from xlst
+- Switch to QT font rendering.
+- Remove freetype dep.
 
 *Wed May 03 2017 metalstrolch 0.5.1-2
 - Use qt5_espeak
