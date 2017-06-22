@@ -364,6 +364,7 @@ public class NavitMapDownloader extends Thread
 
 		if (success) {
 			toast(map_values.map_name + " " + Navit._("ready"));
+			getMapInfoFile().delete();
 			Log.d(TAG, "success");
 		}
 
