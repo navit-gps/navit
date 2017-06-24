@@ -28,7 +28,7 @@ export STRIP=$ARCH-strip
 export OBJCOPY=$ARCH-objcopy
 export LN_S="ln -s"
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
-JOBS=`getconf _NPROCESSORS_ONLN`
+JOBS=$(nproc --all) 
 
 echo "Jobs"
 echo $JOBS

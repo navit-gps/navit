@@ -10,7 +10,7 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	
 	mkdir ~/linux-bin && cd ~/linux-bin
 	cov-build --dir cov-int cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts}
-	cov-build --dir cov-int make || exit -1
+	cov-build --dir cov-int make -j $(nproc --all) || exit -1
 	tar czvf navit.tgz cov-int
 	
 	curl --form token=$COVERITY_TOKEN \
@@ -28,7 +28,7 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 else
 	mkdir ~/linux-bin && cd ~/linux-bin
 	cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts} || exit -1
-	make  || exit -1
+	make -j $(nproc --all) || exit -1
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then

@@ -21,12 +21,12 @@ cd $BUILD_PATH
 android list targets
 
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_FILE -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=25 -DANDROID_NDK_API_VERSION=19 -DDISABLE_CXX=1 -DDISABLE_QT=1 $SOURCE_PATH
-make
+make -j $(nproc --all)
 
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-  make apkg-release && mv $BUILD_PATH/navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk || exit 1
+  make -j $(nproc --all) apkg-release && mv $BUILD_PATH/navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk || exit 1
 else
-  make apkg && mv $BUILD_PATH/navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
+  make -j $(nproc --all) apkg && mv $BUILD_PATH/navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
 fi
 
 [ -d $CIRCLE_ARTIFACTS/android-${ARCH}/ ] || mkdir $CIRCLE_ARTIFACTS/android-${ARCH}/
