@@ -39,7 +39,6 @@ deployment:
     branch: trunk
     owner: navit-gps
     commands:
-      - bash ci/update_version.sh push
       - git push origin $CIRCLE_SHA1:refs/heads/master
   merge_translations:
     branch: /i18n.*/
