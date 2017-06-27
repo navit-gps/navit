@@ -2,14 +2,17 @@
 set -u
 
 # #####################################################################################################################
-# This script runs on circle CI to verify that the code of the PR has been
-# sanitized before push.
+# This script runs on CI to verify that the code of the PR has been sanitized before push.
+# It has one Optional Parameter. If a filename is passed as the first parameter a "git diff" will be generated into
+# the path given. This can be used to provide the user with the diff from the on CI run of this script which the User
+# can then import and commit.
 #
 # WARNING: make sure you commit ALL your changes before running it locally if you ever do it because it will run a git
 # checkout -- which will reset your changes on all files...
 # #####################################################################################################################
 
 return_code=0
+GIT_DIFF_OUTPUT="${1:-/dev/stdout}"
 
 cleanup() {
 	rm -rf build-locale-$$
@@ -20,6 +23,7 @@ trap cleanup EXIT
 # Check if any file has been modified. If yes, that means the best practices
 # have not been followed, so we will fail the job later but print a message here.
 check_diff(){
+    git diff > "${GIT_DIFF_OUTPUT}"
     git diff --exit-code --stat
     code=$?
     if [[ $code -ne 0 ]]; then
