@@ -292,9 +292,10 @@ void Backend::setActivePoiAsDestination(){
  */ 
 void Backend::searchValidateResult(int index){
         SearchObject * r = (SearchObject *)_search_results.at(index);
-        dbg(lvl_debug, "Saving %s [%i] %x %x\n", 
-                        r->name().toUtf8().data(),
-                        index, r->getCoords()->x, r->getCoords()->y);
+        dbg(lvl_debug, "Saving %s [%i] as search result\n", r->name().toUtf8().data(), index);
+	if (r->getCoords()){
+                dbg(lvl_debug, "Item is at %x x %x\n", r->getCoords()->x, r->getCoords()->y);
+	}
         if (_search_context == attr_country_all) {
                 _current_country = g_strdup(r->name().toUtf8().data());
                 _current_town = NULL;
