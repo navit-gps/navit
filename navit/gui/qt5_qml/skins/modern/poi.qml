@@ -99,9 +99,6 @@ Item {
         onClicked: {
             backend.setActivePoiAsDestination()
         }
-
     }
-
-
 
 }
