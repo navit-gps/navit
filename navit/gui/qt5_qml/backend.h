@@ -2,7 +2,6 @@
 #define BACKEND_H
 
 #include <QObject>
-#include <QDebug>
 #include <QQmlApplicationEngine>
 #include <QQmlListProperty>
 
