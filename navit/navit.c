@@ -582,6 +582,10 @@ navit_handle_motion(struct navit *this_, struct point *p)
 		dx=(p->x-this_->pressed.x);
 		dy=(p->y-this_->pressed.y);
 		if (dx < -8 || dx > 8 || dy < -8 || dy > 8) {
+			//FIXME: Super experimental! Basically makes map moving very hard.
+			//TODO: Fix me
+			update_transformation(this_->trans, &this_->pressed, p);
+			navit_draw(this_);
 			this_->moved=1;
 			if (this_->button_timeout) {
 				event_remove_timeout(this_->button_timeout);
@@ -591,7 +595,7 @@ navit_handle_motion(struct navit *this_, struct point *p)
 			if (! this_->motion_timeout_callback)
 				this_->motion_timeout_callback=callback_new_1(callback_cast(navit_motion_timeout), this_);
 			if (! this_->motion_timeout)
-				this_->motion_timeout=event_add_timeout(this_->drag_bitmap?10:100, 0, this_->motion_timeout_callback);
+				this_->motion_timeout=event_add_timeout(0, 0, this_->motion_timeout_callback);
 		}
 	}
 }
