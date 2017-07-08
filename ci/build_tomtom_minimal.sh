@@ -42,7 +42,7 @@ fi
 
 if ! test -f "~/tomtom_assets/libpng-1.6.29.tar.gz"
 then 
-  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.29.tar.gz -P ~/tomtom_assets
+  wget -nv -c http://download.sourceforge.net/libpng/libpng-1.6.29.tar.gz -P ~/tomtom_assets
 fi
 
 # toolchain
