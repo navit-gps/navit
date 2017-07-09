@@ -190,14 +190,14 @@ cp -r ~/navit/navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
 
 # images and xml
 cd share
-mkdir xpm
-cd xpm
-cp $PREFIX/share/navit/xpm/*16.png ./
-cp $PREFIX/share/navit/xpm/*32.png ./
-cp $PREFIX/share/navit/xpm/*48.png ./
-cp $PREFIX/share/navit/xpm/*64.png ./
-cp $PREFIX/share/navit/xpm/nav*.* ./
-cp $PREFIX/share/navit/xpm/country*.png ./
+mkdir icons
+cd icons
+cp $PREFIX/share/navit/icons/*16.png ./
+cp $PREFIX/share/navit/icons/*32.png ./
+cp $PREFIX/share/navit/icons/*48.png ./
+cp $PREFIX/share/navit/icons/*64.png ./
+cp $PREFIX/share/navit/icons/nav*.* ./
+cp $PREFIX/share/navit/icons/country*.png ./
 cd ..
 cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
 mkdir -p maps

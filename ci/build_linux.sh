@@ -32,7 +32,7 @@ else
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
-	cp -r navit/xpm $CIRCLE_ARTIFACTS
+	cp -r navit/icons $CIRCLE_ARTIFACTS
 fi
 
 
