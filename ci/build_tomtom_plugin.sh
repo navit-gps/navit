@@ -41,7 +41,7 @@ fi
 
 if ! test -f "~/tomtom_assets/libpng-1.6.29.tar.gz"
 then 
-  wget -nv -c http://download.sourceforge.net/libpng/libpng-1.6.29.tar.gz -P ~/tomtom_assets
+  wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/libpng-1.6.29.tar.gz -P ~/tomtom_assets
 fi
 
 # toolchain
