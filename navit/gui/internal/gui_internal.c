@@ -3427,7 +3427,11 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_pitch)))
 	      this->pitch=attr->u.num;
 	else
+#ifdef HAVE_API_ANDROID
+		this->pitch=10;
+#else
 		this->pitch=20;
+#endif
 	if( (attr=attr_search(attrs,NULL,attr_flags_town)))
 		this->flags_town=attr->u.num;
 	else
