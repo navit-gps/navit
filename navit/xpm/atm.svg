@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,9 +14,9 @@
    height="22"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.91 r13725"
    version="1.0"
-   sodipodi:docname="bank.svg"
+   sodipodi:docname="atm.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/jeff/projets/navit/icons/png/bank.png"
    inkscape:export-xdpi="90"
@@ -85,7 +86,8 @@
      inkscape:window-width="943"
      inkscape:window-height="682"
      inkscape:window-x="0"
-     inkscape:window-y="25">
+     inkscape:window-y="25"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -107,13 +109,6 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.98289597;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect2382"
-       width="21.056721"
-       height="21.056721"
-       x="0.48869637"
-       y="0.4886966" />
     <path
        style="fill:url(#linearGradient3182);fill-opacity:1;fill-rule:evenodd;stroke:#0d4300;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        d="M 2.193369,8.2755965 C 4.6236295,5.398295 7.8351628,5.6503419 11,5.7153499 C 13.825482,6.0742653 16.729468,5.5684517 19.806631,3.1551033 L 19.806631,10.456547 C 17.082066,12.683193 14.226857,14.059491 11,13.016794 C 8.0644563,12.535247 5.1289127,13.033062 2.193369,15.577041 L 2.193369,8.2755965 z"
