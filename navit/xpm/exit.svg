@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -12,7 +13,7 @@
    height="22"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.91 r13725"
    version="1.0"
    sodipodi:docname="exit.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -119,8 +120,9 @@
      showgrid="true"
      inkscape:window-width="943"
      inkscape:window-height="682"
-     inkscape:window-x="-5"
-     inkscape:window-y="24">
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -152,13 +154,6 @@
        d="M 3.0843991,0.26423648 L 10,0.35295939 L 10,21.88409 L 3.0843991,21.795367 L 3.0843991,0.26423648 z"
        id="rect2383"
        sodipodi:nodetypes="ccccc" />
-    <rect
-       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.98289597;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect2382"
-       width="21.141155"
-       height="21.141155"
-       x="0.49144804"
-       y="0.49144825" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#fdff03;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.00000002, 2.00000002;stroke-dashoffset:0;stroke-opacity:1"
        d="M 6.4586472,1.9742322 L 6.4586472,21.227102"
