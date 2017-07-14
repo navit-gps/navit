@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="22"
-   height="22"
-   viewBox="0 0 22 22"
+   width="100"
+   height="100"
+   viewBox="0 0 100 100"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -27,17 +27,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32"
-     inkscape:cx="11.977989"
-     inkscape:cy="10.453719"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="100.82816"
+     inkscape:cy="70.402438"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1054"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-width="890"
+     inkscape:window-height="593"
+     inkscape:window-x="50"
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
      units="px" />
   <metadata
      id="metadata7">
@@ -72,35 +72,35 @@
      id="layer2"
      inkscape:label="Layer 2"
      style="display:inline"
-     transform="translate(0,2)">
+     transform="translate(0,80)">
     <g
-       id="g3337"
-       transform="translate(0.375,-0.03125)">
+       id="g3496"
+       transform="matrix(1.1271115,0,0,1.1271115,-11.82143,5.2222046)">
       <rect
-         y="1.03125"
-         x="7.625"
-         height="19"
-         width="6"
-         id="rect3335-6"
+         y="-61.238087"
+         x="46.136364"
+         height="74.349297"
+         width="18.454546"
+         id="rect3335-6-1"
          style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <circle
-         r="4"
-         cy="2.03125"
-         cx="10.625"
-         id="path4137-3"
+         r="14"
+         cy="-61.611156"
+         cx="55.363636"
+         id="path4137-3-2"
          style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none" />
       <rect
-         y="3.03125"
-         x="9.625"
-         height="15"
-         width="2"
-         id="rect3335"
+         y="-57.454544"
+         x="50.954544"
+         height="66.13636"
+         width="8.818182"
+         id="rect3335-7"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <circle
-         r="2"
-         cy="2.03125"
-         cx="10.625"
-         id="path4137"
+         r="8.818182"
+         cy="-61.611156"
+         cx="55.363636"
+         id="path4137-0"
          style="fill:#000000;fill-opacity:1;stroke:none" />
     </g>
   </g>
