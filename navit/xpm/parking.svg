@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -8,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="22"
-   height="22"
+   width="100"
+   height="100"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.91 r13725"
    version="1.0"
    sodipodi:docname="parking.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -36,16 +37,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.839192"
-     inkscape:cx="3.4504037"
-     inkscape:cy="13.224308"
+     inkscape:zoom="5.6"
+     inkscape:cx="25.745481"
+     inkscape:cy="46.331242"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="943"
-     inkscape:window-height="682"
+     inkscape:window-width="1440"
+     inkscape:window-height="874"
      inkscape:window-x="0"
-     inkscape:window-y="5">
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid2380"
@@ -60,31 +62,49 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:description>jfitie@gmail.com</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
-     id="layer1">
-    <rect
-       style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:#ffffff;stroke-width:1.68599999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect2402"
-       width="20.263691"
-       height="20.315996"
-       x="0.84497529"
-       y="0.94812441"
-       ry="0" />
-    <text
-       xml:space="preserve"
-       style="font-size:22px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="4.3562827"
-       y="17.580584"
-       id="text3174"><tspan
-         sodipodi:role="line"
-         id="tspan3176"
-         x="4.3562827"
+     id="layer1"
+     transform="translate(0,78)">
+    <g
+       id="g4402"
+       transform="matrix(3.75305,0,0,3.75305,8.7052905,-69.681833)">
+      <rect
+         ry="0"
+         y="0.94812441"
+         x="0.84497529"
+         height="20.315996"
+         width="20.263691"
+         id="rect2402"
+         style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text3174"
          y="17.580584"
-         style="font-size:18px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Bitstream Vera Sans Bold">P</tspan></text>
+         x="4.3562827"
+         style="font-style:normal;font-weight:normal;font-size:22px;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-weight:bold;font-size:18px;-inkscape-font-specification:'Bitstream Vera Sans Bold';fill:#ffffff"
+           y="17.580584"
+           x="4.3562827"
+           id="tspan3176"
+           sodipodi:role="line">P</tspan></text>
+    </g>
   </g>
 </svg>
