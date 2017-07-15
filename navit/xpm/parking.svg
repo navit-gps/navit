@@ -38,7 +38,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6"
-     inkscape:cx="25.745481"
+     inkscape:cx="30.903287"
      inkscape:cy="46.331242"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -62,7 +62,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
@@ -83,28 +83,18 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,78)">
-    <g
-       id="g4402"
-       transform="matrix(3.75305,0,0,3.75305,8.7052905,-69.681833)">
-      <rect
-         ry="0"
-         y="0.94812441"
-         x="0.84497529"
-         height="20.315996"
-         width="20.263691"
-         id="rect2402"
-         style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         id="text3174"
-         y="17.580584"
-         x="4.3562827"
-         style="font-style:normal;font-weight:normal;font-size:22px;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           style="font-weight:bold;font-size:18px;-inkscape-font-specification:'Bitstream Vera Sans Bold';fill:#ffffff"
-           y="17.580584"
-           x="4.3562827"
-           id="tspan3176"
-           sodipodi:role="line">P</tspan></text>
-    </g>
+    <rect
+       style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:#ffffff;stroke-width:3.75305009;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2402"
+       width="76.050644"
+       height="76.246948"
+       x="11.876525"
+       y="-66.123474"
+       ry="13.123474" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3343"
+       style="font-style:normal;font-weight:bold;font-size:67.55490112px;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans Bold';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 31.255967,-52.948811 21.077921,0 q 9.40095,0 14.41479,4.189196 5.046827,4.15621 5.046827,11.874885 0,7.751661 -5.046827,11.940856 -5.01384,4.15621 -14.41479,4.15621 l -8.378392,0 0,17.0866402 -12.699529,0 0,-49.2477872 z m 12.699529,9.203036 0,13.755075 7.025974,0 q 3.694409,0 5.706542,-1.781232 2.012133,-1.814219 2.012133,-5.112798 0,-3.298579 -2.012133,-5.079812 -2.012133,-1.781233 -5.706542,-1.781233 l -7.025974,0 z" />
   </g>
 </svg>
