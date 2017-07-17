@@ -3428,7 +3428,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->pitch=attr->u.num;
 	else
 #ifdef HAVE_API_ANDROID
-		this->pitch=10;
+		this->pitch=5;
 #else
 		this->pitch=20;
 #endif
