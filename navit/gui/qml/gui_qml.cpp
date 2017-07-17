@@ -435,7 +435,7 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	if( (attr=attr_search(attrs,NULL,attr_radius)))
 			  this_->radius=attr->u.num;
 #ifdef HAVE_API_ANDROID
-	this_->pitch = 10; //Default value
+	this_->pitch = 5; //Default value
 #else
 	this_->pitch = 20; //Default value
 #endif
