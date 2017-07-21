@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="55.042996"
-     inkscape:cy="70.402438"
+     inkscape:zoom="2"
+     inkscape:cx="-38.147512"
+     inkscape:cy="70.594566"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -76,16 +76,17 @@
     <rect
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect3335-6-1"
-       width="16.55769"
-       height="73.829231"
-       x="40.532944"
-       y="-55.950542" />
-    <circle
+       width="17.971903"
+       height="77.364769"
+       x="39.82584"
+       y="-58.843311" />
+    <ellipse
        style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none"
        id="path4137-3-2"
        cx="48.81179"
        cy="-62.452667"
-       r="13.304688" />
+       rx="15.072455"
+       ry="14.718902" />
     <rect
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect3335-7"
