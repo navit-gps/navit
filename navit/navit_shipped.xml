@@ -440,13 +440,6 @@ Waypoint</text></img>
 					</circle>
 				</itemgra>
 				<itemgra speed_range="3-">
-					<!-- <polygon color="#00000066">
-						<coord x="-21" y="-27" />
-						<coord x="0" y="12" />
-						<coord x="21" y="-27" />
-						<coord x="0" y="-12" />
-						<coord x="-21" y="-27" />
-					</polygon> -->
 					<polygon color="#008500">
 						<coord x="-21" y="-18" />
 						<coord x="0" y="21" />
@@ -459,6 +452,18 @@ Waypoint</text></img>
 						<coord x="0" y="-3" />
 						<coord x="21" y="-18" />
 					</polygon>
+					<polygon color="#009C00">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#006500">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
+					</polygon>
 					<polyline color="#008500" width="1">
 						<coord x="-21" y="-18" />
 						<coord x="0" y="21" />
@@ -469,6 +474,18 @@ Waypoint</text></img>
 						<coord x="21" y="-18" />
 						<coord x="0" y="21" />
 						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polyline>
+					<polyline color="#008500" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#008500" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
 						<coord x="21" y="-18" />
 					</polyline>
 				</itemgra>
@@ -2441,13 +2458,6 @@ Waypoint</text></img>
 					</circle>
 				</itemgra>
 				<itemgra speed_range="3-">
-					<!-- <polygon color="#00000066">
-						<coord x="-21" y="-27" />
-						<coord x="0" y="12" />
-						<coord x="21" y="-27" />
-						<coord x="0" y="-12" />
-						<coord x="-21" y="-27" />
-					</polygon> -->
 					<polygon color="#000085">
 						<coord x="-21" y="-18" />
 						<coord x="0" y="21" />
@@ -2460,6 +2470,18 @@ Waypoint</text></img>
 						<coord x="0" y="-3" />
 						<coord x="21" y="-18" />
 					</polygon>
+					<polygon color="#00009C">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#000065">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
+					</polygon>
 					<polyline color="#000085" width="1">
 						<coord x="-21" y="-18" />
 						<coord x="0" y="21" />
@@ -2470,6 +2492,18 @@ Waypoint</text></img>
 						<coord x="21" y="-18" />
 						<coord x="0" y="21" />
 						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polyline>
+					<polyline color="#000085" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#000085" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
 						<coord x="21" y="-18" />
 					</polyline>
 				</itemgra>
