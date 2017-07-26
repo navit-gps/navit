@@ -3427,7 +3427,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_pitch)))
 	      this->pitch=attr->u.num;
 	else
-		this->pitch=20
+		this->pitch=20;
 	if( (attr=attr_search(attrs,NULL,attr_flags_town)))
 		this->flags_town=attr->u.num;
 	else
