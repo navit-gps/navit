@@ -42,7 +42,6 @@
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
-	double corrpitch;       /* Pitch corrected for window resolution */
 	int ddd;                /* 3d mode/isometric view active? (0/1) */
  	int m00,m01,m02;	/* 3d transformation matrix */
  	int m10,m11,m12;	
@@ -88,6 +87,10 @@ transform_set_screen_dist(struct transformation *t, int dist)
 static void
 transform_setup_matrix(struct transformation *t)
 {
+	int w = 240; // TODO FIXME
+	int h = 320; // TODO FIXME
+	double corrpitch = t->pitch*sqrt(240*320)/sqrt(w*h) // Pitch corrected for window resolution
+
 	navit_float det;
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
@@ -105,7 +108,7 @@ transform_setup_matrix(struct transformation *t)
 	int scale=t->scale;
 	int order_dir=-1;
 
-	dbg(lvl_debug,"yaw=%d pitch=%d corrpitch=%.3f center=0x%x,0x%x\n", t->yaw, t->pitch, t->corrpitch, t->map_center.x, t->map_center.y);
+	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
 	t->znear=1 << POST_SHIFT;
 	t->zfar=300*t->znear;
 	t->scale_shift=0;
@@ -137,7 +140,7 @@ transform_setup_matrix(struct transformation *t)
 
 	t->offx=t->screen_center.x;
 	t->offy=t->screen_center.y;
-	if (t->corrpitch) {
+	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
 		dbg(lvl_debug,"near %d far %d\n",t->znear,t->zfar);
@@ -812,10 +815,7 @@ transform_get_yaw(struct transformation *this_)
 void
 transform_set_pitch(struct transformation *this_,int pitch)
 {
-	int w = 240; // TODO FIXME
-	int h = 320; // TODO FIXME
 	this_->pitch=pitch;
-	this_->corrpitch=20*sqrt(240*320)/sqrt(w*h); // pitch corrected for window resolution
 	transform_setup_matrix(this_);
 }
 int
