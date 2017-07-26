@@ -3427,7 +3427,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_pitch)))
 	      this->pitch=attr->u.num;
 	else
-		this->pitch=round(20*sqrt(320*240)/sqrt(this->root.w*this->root.h)); // pitch corrected for window resolution
+		this->pitch=round(20*sqrt(240*320)/sqrt(this->root.w*this->root.h)); // pitch corrected for window resolution
 		dbg(lvl_debug,"w=%d h=%d pitch=%d\n", this->root.w, this->root.h, this->pitch);
 	if( (attr=attr_search(attrs,NULL,attr_flags_town)))
 		this->flags_town=attr->u.num;
