@@ -42,6 +42,7 @@
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
+	double corrpitch;       /* Pitch corrected for window resolution */
 	int ddd;                /* 3d mode/isometric view active? (0/1) */
  	int m00,m01,m02;	/* 3d transformation matrix */
  	int m10,m11,m12;	
@@ -91,8 +92,8 @@ transform_setup_matrix(struct transformation *t)
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
-	navit_float pitchc=navit_cos(-M_PI*t->pitch/180);
-	navit_float pitchs=navit_sin(-M_PI*t->pitch/180);
+	navit_float pitchc=navit_cos(-M_PI*t->corrpitch/180);
+	navit_float pitchs=navit_sin(-M_PI*t->corrpitch/180);
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
@@ -104,7 +105,7 @@ transform_setup_matrix(struct transformation *t)
 	int scale=t->scale;
 	int order_dir=-1;
 
-	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+	dbg(lvl_debug,"yaw=%d pitch=%d corrpitch=%.3f center=0x%x,0x%x\n", t->yaw, t->pitch, t->corrpitch, t->map_center.x, t->map_center.y);
 	t->znear=1 << POST_SHIFT;
 	t->zfar=300*t->znear;
 	t->scale_shift=0;
@@ -136,7 +137,7 @@ transform_setup_matrix(struct transformation *t)
 
 	t->offx=t->screen_center.x;
 	t->offy=t->screen_center.y;
-	if (t->pitch) {
+	if (t->corrpitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
 		dbg(lvl_debug,"near %d far %d\n",t->znear,t->zfar);
@@ -811,7 +812,10 @@ transform_get_yaw(struct transformation *this_)
 void
 transform_set_pitch(struct transformation *this_,int pitch)
 {
+	int w = 240; // TODO FIXME
+	int h = 320; // TODO FIXME
 	this_->pitch=pitch;
+	this_->corrpitch=round(20*sqrt(240*320)/sqrt(w*h)); // pitch corrected for window resolution
 	transform_setup_matrix(this_);
 }
 int
