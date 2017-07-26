@@ -815,7 +815,7 @@ transform_set_pitch(struct transformation *this_,int pitch)
 	int w = 240; // TODO FIXME
 	int h = 320; // TODO FIXME
 	this_->pitch=pitch;
-	this_->corrpitch=round(20*sqrt(240*320)/sqrt(w*h)); // pitch corrected for window resolution
+	this_->corrpitch=20*sqrt(240*320)/sqrt(w*h); // pitch corrected for window resolution
 	transform_setup_matrix(this_);
 }
 int
