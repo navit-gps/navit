@@ -89,7 +89,7 @@ transform_setup_matrix(struct transformation *t)
 {
 	int w = 240; // TODO FIXME
 	int h = 320; // TODO FIXME
-	double corrpitch = t->pitch*sqrt(240*320)/sqrt(w*h); // Pitch corrected for window resolution
+	navit_float corrpitch = t->pitch*navit_sqrt(240*320)/navit_sqrt(w*h); // Pitch corrected for window resolution
 
 	navit_float det;
 	navit_float fac;
