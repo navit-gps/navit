@@ -3428,9 +3428,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->pitch=attr->u.num;
 	else
 #ifdef HAVE_API_ANDROID
-		this->pitch=20;
-		// TO DO: Pitch needs to be corrected for window resolution.
-		//        Pseudocode:  p=ROUND(20*SQRT(320*240)/SQRT(x*y))
+		this->pitch=round(20*sqrt(320*240)/sqrt(this->root.w*this->root.h));
 #else
 		this->pitch=20;
 #endif
