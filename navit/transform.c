@@ -67,7 +67,6 @@ struct transformation {
 	int scale_shift;
 	int order;
 	int order_base;
-	int w,h;
 };
 
 #ifdef ENABLE_ROLL
