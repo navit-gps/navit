@@ -105,7 +105,7 @@ transform_setup_matrix(struct transformation *t)
 	int scale=t->scale;
 	int order_dir=-1;
 
-	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x w=%d h=%d\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y, t->w, t->h);
 	t->znear=1 << POST_SHIFT;
 	t->zfar=300*t->znear;
 	t->scale_shift=0;
