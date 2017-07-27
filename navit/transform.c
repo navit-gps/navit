@@ -67,6 +67,8 @@ struct transformation {
 	int scale_shift;
 	int order;
 	int order_base;
+	int w = 240; // TODO
+	int h = 320; // TODO
 };
 
 #ifdef ENABLE_ROLL
@@ -91,8 +93,8 @@ transform_setup_matrix(struct transformation *t)
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
-	navit_float pitchc=navit_cos(-M_PI*t->pitch*277/sqrt(240*320)/180); // Pitch corrected for window resolution
-	navit_float pitchs=navit_sin(-M_PI*t->pitch*277/sqrt(240*320)/180); //   sqrt(240*320)=277
+	navit_float pitchc=navit_cos(-M_PI*t->pitch*277/sqrt(t->w*t->h)/180); // Pitch corrected for window resolution
+	navit_float pitchs=navit_sin(-M_PI*t->pitch*277/sqrt(y->w*t->h)/180); //   sqrt(240*320)=277
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
