@@ -35,8 +35,6 @@
 #include "point.h"
 
 #define POST_SHIFT 8
-#define DEFRESX 240
-#define DEFRESY 320
 
 /**
  * @brief The parameters needed to transform a map for display.
@@ -94,8 +92,8 @@ transform_setup_matrix(struct transformation *t)
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
-	navit_float pitchc=navit_cos(-M_PI*t->pitch*sqrt(DEFRESX*DEFRESY)/sqrt(t->w*t->h)/180); // Pitch corrected for window resolution
-	navit_float pitchs=navit_sin(-M_PI*t->pitch*sqrt(DEFRESX*DEFRESY)/sqrt(t->w*t->h)/180);
+	navit_float pitchc=navit_cos(-M_PI*t->pitch/180);
+	navit_float pitchs=navit_sin(-M_PI*t->pitch/180);
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
@@ -107,7 +105,7 @@ transform_setup_matrix(struct transformation *t)
 	int scale=t->scale;
 	int order_dir=-1;
 
-	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x w=%d h=%d\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y, t->w, t->h);
+	dbg(lvl_debug,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
 	t->znear=1 << POST_SHIFT;
 	t->zfar=300*t->znear;
 	t->scale_shift=0;
@@ -183,8 +181,6 @@ transform_new(struct pcoord *center, int scale, int yaw)
 	this_->map_center.x=center->x;
 	this_->map_center.y=center->y;
 	this_->scale=scale/16.0;
-	this_->w=DEFRESX;
-	this_->h=DEFRESY;
 	transform_set_yaw(this_, yaw);
 	return this_;
 }
