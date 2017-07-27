@@ -346,7 +346,7 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	this_->w=w;
 	this_->h=h;
 	if (this_->pitch != 0) {
-		this_->pitch=20*sqrt(240*320)/sqrt(w*h); // Pitch corrected for window resolution
+		this_->pitch=round(20*sqrt(240*320)/sqrt(w*h)); // Pitch corrected for window resolution
 	}
 	sel.u.p_rect.rl.x=w;
 	sel.u.p_rect.rl.y=h;
