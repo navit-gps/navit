@@ -10,14 +10,14 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="shop_department.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata2975">
     <rdf:RDF>
@@ -29,7 +29,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -351,7 +351,7 @@
   </g>
   <g
      id="g3580"
-     transform="matrix(0.94075845,0,0,0.94075443,3.7551548,1.2246527)">
+     transform="matrix(0.20696688,0,0,0.20696125,0.82613317,0.26991825)">
     <path
        sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccc"
        inkscape:connector-curvature="0"

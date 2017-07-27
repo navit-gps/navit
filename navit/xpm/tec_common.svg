@@ -12,8 +12,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg1961"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -38,7 +38,7 @@
 camera by KDE e.V.</dc:title>
           </cc:Agent>
         </dc:contributor>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -2237,10 +2237,10 @@ camera by KDE e.V.</dc:title>
   </defs>
   <g
      id="g4989"
-     transform="translate(-134.01451,53.204584)" />
+     transform="matrix(0.22,0,0,0.22,-29.483193,11.805007)" />
   <g
      id="g5306"
-     transform="matrix(0.86428567,0,0,0.8642853,3.4523079,5.2910625)">
+     transform="matrix(0.19014285,0,0,0.19014277,0.75950753,1.2640333)">
     <g
        id="g5095"
        transform="translate(-134.01451,53.204584)">
@@ -3577,14 +3577,14 @@ camera by KDE e.V.</dc:title>
   <use
      xlink:href="#reflex"
      id="use3399-4"
-     transform="matrix(1.8478337,0,0,1.8478337,1496.1438,-856.03162)"
+     transform="matrix(0.40652342,0,0,0.40652342,329.15164,-188.22696)"
      x="0"
      y="0"
      width="600"
      height="600" />
   <use
      xlink:href="#reflex"
-     transform="matrix(1.8478337,0,0,1.8478337,1496.1438,-671.24825)"
+     transform="matrix(0.40652342,0,0,0.40652342,329.15164,-147.57462)"
      id="use3401-8"
      x="0"
      y="0"
@@ -3592,7 +3592,7 @@ camera by KDE e.V.</dc:title>
      height="600" />
   <use
      xlink:href="#reflex"
-     transform="matrix(1.8478337,0,0,1.8478337,1496.1438,-486.46489)"
+     transform="matrix(0.40652342,0,0,0.40652342,329.15164,-106.92228)"
      id="use3403-7"
      x="0"
      y="0"

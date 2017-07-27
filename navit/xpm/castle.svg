@@ -9,14 +9,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="castle.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata2975">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -49,7 +49,7 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="54.621451"
+     inkscape:cx="55.005049"
      inkscape:cy="43.549644"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
@@ -431,7 +431,7 @@
   </g>
   <g
      id="g4738"
-     transform="matrix(0.93430891,0,0,0.93431381,3.5346496,-9.0089761)">
+     transform="matrix(0.20554798,0,0,0.20554796,0.7776223,-1.6818662)">
     <path
        inkscape:connector-curvature="0"
        id="path2958-8"

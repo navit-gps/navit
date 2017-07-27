@@ -9,14 +9,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="car_dealer.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -49,7 +49,7 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="143.42875"
+     inkscape:cx="144.13586"
      inkscape:cy="59.366766"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
@@ -128,7 +128,7 @@
   </defs>
   <g
      id="g4447"
-     transform="matrix(0.93575258,0,0,0.93575299,3.5510565,-2.969573)">
+     transform="matrix(0.20586556,0,0,0.20586832,0.78123304,-1.0035774)">
     <path
        inkscape:connector-curvature="0"
        id="path4440"

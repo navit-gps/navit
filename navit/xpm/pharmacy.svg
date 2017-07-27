@@ -10,8 +10,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
@@ -41,8 +41,8 @@
     </rdf:RDF>
   </metadata>
   <sodipodi:namedview
-     inkscape:window-height="975"
-     inkscape:window-width="1473"
+     inkscape:window-height="871"
+     inkscape:window-width="1432"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0"
      borderopacity="1.0"
@@ -50,7 +50,7 @@
      pagecolor="#ff23ff"
      id="base"
      inkscape:zoom="2.8157956"
-     inkscape:cx="131.86788"
+     inkscape:cx="132.57816"
      inkscape:cy="68.514694"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -61,7 +61,7 @@
      id="defs4" />
   <g
      id="g3387"
-     transform="matrix(0.93562898,0,0,0.93562898,27.455649,1.3786995)">
+     transform="matrix(0.20583838,0,0,0.20583838,6.0902428,0.30331343)">
     <g
        transform="translate(-53.981191,44.747566)"
        id="g3383">

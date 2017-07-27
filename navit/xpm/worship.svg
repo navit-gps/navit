@@ -9,14 +9,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="worship.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata2975">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -159,7 +159,7 @@
   </g>
   <g
      id="g3519"
-     transform="matrix(1.1826892,0,0,1.1826937,0.52869081,-17.488812)">
+     transform="matrix(0.26019156,0,0,0.26019255,-0.07368931,-3.8475348)">
     <g
        id="g3500"
        transform="translate(-69.605823,-5.8004852)">

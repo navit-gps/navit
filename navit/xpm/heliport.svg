@@ -10,8 +10,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    inkscape:version="0.91 r13725"
    sodipodi:docname="heliport.svg">
@@ -23,7 +23,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
@@ -49,21 +49,21 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1291"
-     inkscape:window-height="926"
+     inkscape:window-height="871"
      id="namedview5"
      showgrid="false"
      inkscape:zoom="5.2149125"
-     inkscape:cx="64.641906"
+     inkscape:cx="65.025422"
      inkscape:cy="43.302771"
-     inkscape:window-x="360"
-     inkscape:window-y="61"
+     inkscape:window-x="141"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <defs
      id="defs6" />
   <g
      id="g3517"
-     transform="matrix(0.92800673,0,0,0.92800297,3.2972194,2.6076235)">
+     transform="matrix(0.20416148,0,0,0.20416238,0.7253889,1.4235293)">
     <g
        transform="translate(115.82169,-51.391083)"
        id="g3502">

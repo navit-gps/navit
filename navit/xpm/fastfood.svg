@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -118,7 +118,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:description>jfitie@gmail.com</dc:description>
@@ -141,7 +141,7 @@
      transform="translate(0,78)">
     <g
        id="g8334"
-       transform="matrix(0.96290289,0,0,0.96290694,2.4332895,-5.9670056)">
+       transform="matrix(0.21183869,0,0,0.21183752,0.53532012,-62.052696)">
       <g
          transform="translate(108.18734,25.455844)"
          id="g7700">
