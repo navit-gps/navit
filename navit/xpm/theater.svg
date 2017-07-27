@@ -9,14 +9,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="theater.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata2975">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -145,7 +145,7 @@
   </g>
   <g
      id="g8445"
-     transform="matrix(0.97498531,0,0,0.97498705,0.79062378,5.8235475)">
+     transform="matrix(0.21449677,0,0,0.21449738,0.17393709,0.93116062)">
     <g
        transform="translate(153.52448,0)"
        id="g8129">

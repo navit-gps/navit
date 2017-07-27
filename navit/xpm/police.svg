@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -45,8 +45,8 @@
      showgrid="true"
      inkscape:window-width="918"
      inkscape:window-height="483"
-     inkscape:window-x="919"
-     inkscape:window-y="425"
+     inkscape:window-x="200"
+     inkscape:window-y="221"
      inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
@@ -62,7 +62,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
@@ -85,7 +85,7 @@
      transform="translate(0,78)">
     <g
        id="g3361"
-       transform="matrix(0.96440795,0,0,0.9644054,6.3713132,-6.6777967)">
+       transform="matrix(0.21216975,0,0,0.2121694,1.4016894,-62.319121)">
       <path
          inkscape:connector-curvature="0"
          id="rect2383-3"

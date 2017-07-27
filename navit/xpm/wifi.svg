@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    id="svg2"
@@ -41,7 +41,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.2068773"
-     inkscape:cx="88.569321"
+     inkscape:cx="88.953428"
      inkscape:cy="54.165141"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -69,7 +69,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
@@ -92,7 +92,7 @@
      transform="translate(0,78)">
     <g
        id="g3519"
-       transform="matrix(0.97163712,0,0,0.97163712,9.9737216,-0.34684646)">
+       transform="matrix(0.21376017,0,0,0.21376017,2.3242187,-60.916306)">
       <g
          transform="translate(95.641022,-33.507806)"
          id="g3509">

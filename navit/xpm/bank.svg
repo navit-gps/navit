@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -77,16 +77,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="4"
-     inkscape:cx="102.52749"
-     inkscape:cy="10.720137"
+     inkscape:zoom="8"
+     inkscape:cx="26.166924"
+     inkscape:cy="-1.0638383"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1447"
-     inkscape:window-height="932"
-     inkscape:window-x="151"
-     inkscape:window-y="26"
+     inkscape:window-width="1432"
+     inkscape:window-height="871"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
@@ -121,11 +121,10 @@
   <g
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,78)">
+     id="layer1">
     <g
        id="g3706"
-       transform="matrix(1.0525682,0,0,1.0525697,-5.998535,-0.27752514)">
+       transform="matrix(0.23156491,0,0,0.23156879,-1.3196731,16.811686)">
       <path
          inkscape:connector-curvature="0"
          id="rect3171-3"

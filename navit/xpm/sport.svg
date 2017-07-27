@@ -8,12 +8,12 @@
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:version="0.91 r13725"
    sodipodi:docname="sport.svg"
    version="1.0"
-   width="100">
+   width="22">
   <sodipodi:namedview
      bordercolor="#666666"
      borderopacity="1"
@@ -21,13 +21,13 @@
      guidetolerance="10"
      id="namedview12"
      inkscape:current-layer="svg2"
-     inkscape:cx="1.1784294"
+     inkscape:cx="1.7318645"
      inkscape:cy="30.589243"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-height="1054"
+     inkscape:window-height="874"
      inkscape:window-maximized="1"
-     inkscape:window-width="1920"
+     inkscape:window-width="1440"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:zoom="3.613793"
@@ -73,7 +73,7 @@
      id="defs4" />
   <svg:g
      id="g4180"
-     transform="matrix(0.97636178,0,0,0.97636178,1.6384147,0.99558064)">
+     transform="matrix(0.21479959,0,0,0.21479959,0.36045122,0.2190279)">
     <svg:circle
        style="fill:none;stroke:#ffffff;stroke-width:12;stroke-miterlimit:4;stroke-dasharray:none"
        r="45.210526"

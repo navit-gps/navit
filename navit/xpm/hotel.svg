@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
@@ -112,14 +112,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="5.6"
      inkscape:cx="68.181417"
-     inkscape:cy="64.388583"
+     inkscape:cy="42.960012"
      inkscape:document-units="px"
      inkscape:current-layer="g3421"
      showgrid="true"
-     inkscape:window-width="1491"
+     inkscape:window-width="1432"
      inkscape:window-height="855"
-     inkscape:window-x="90"
-     inkscape:window-y="83"
+     inkscape:window-x="0"
+     inkscape:window-y="16"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-maximized="0">
@@ -137,7 +137,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
@@ -180,13 +180,13 @@ Author	Picol.org</dc:title>
        id="g3421"
        transform="matrix(0.9283947,0,0,0.92839336,4.2315074,0.70276789)">
       <path
-         style="fill:#ffffff;stroke:#ffffff"
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:0.21999738"
          inkscape:connector-curvature="0"
          id="path3379-7"
-         d="m -1.4452623,-59.505028 c 4.381267,0.04757 13.1148493,-2.033912 12.7934393,5.109101 0.25094,1.96378 -1.5289103,6.09576 1.76562,3.462891 7.90769,-3.161339 17.82322,-1.19156 23.54297,5.232422 15.18515,-8.703994 34.43591,-8.505156 50.33594,-1.84375 1.07651,-6.811238 9.763199,-4.757492 14.523353,-4.846518 2.2614,4.083959 0.33475,12.302454 0.9747,17.987143 l 0,32.0722653 c -5.042264,-0.03104 -15.492748,2.65163121 -14.763836,-4.7534367 -1.036663,-3.2700566 1.425344,-8.7518766 -2.480317,-9.4086726 -24.76231,0.468589 -49.63012,0.02427 -74.3496,0.226563 -0.0866,4.360626 2.71404,12.4109733 -3.3711003,14.0449223 -3.96366,0.462362 -9.879009,1.57558599 -11.128899,-3.691407 -1.13064,-10.6889553 0.27984,-21.6095533 -0.26368,-32.3769533 l -0.14426,-21.024802 z"
+         d="m -3.8731017,-78.190535 c 0.9638788,0.01046 2.88526699,-0.44745 2.8145568,1.123976 0.055207,0.432021 -0.3363603,1.341035 0.38843641,0.761818 1.73969189,-0.695479 3.92110869,-0.262137 5.17945369,1.151105 3.3407333,-1.914833 7.5759008,-1.87109 11.0739068,-0.405615 0.236833,-1.498437 2.147905,-1.046624 3.195139,-1.066209 0.497508,0.89845 0.07364,2.706475 0.214434,3.957077 l 0,7.055731 c -1.109298,-0.0068 -3.408405,0.583345 -3.248045,-1.045731 -0.228066,-0.719396 0.313576,-1.925368 -0.54567,-2.069859 -5.4477078,0.103087 -10.9186263,0.0053 -16.3569123,0.04984 -0.019052,0.959315 0.59708882,2.730349 -0.7416421,3.089809 -0.8720053,0.101717 -2.1733822,0.346621 -2.448358,-0.81209 -0.2487408,-2.351514 0.061565,-4.753989 -0.05801,-7.12276 l -0.031737,-4.625347 z"
          sodipodi:nodetypes="cccccccccccccccc" />
       <g
-         transform="matrix(-3.5127551,0,0,3.5127551,105.33735,-91.091837)"
+         transform="matrix(-0.77280617,0,0,0.77278772,19.619075,-85.139467)"
          id="bed">
         <path
            id="path3379"

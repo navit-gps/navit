@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="22"
+   height="22"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    id="svg2"
@@ -70,7 +70,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date>26.06.2008</dc:date>
         <dc:creator>
           <cc:Agent>
@@ -107,7 +107,7 @@
      transform="translate(-235,60.63782)">
     <g
        id="g8461"
-       transform="matrix(0.96425653,0,0,0.96425224,11.648093,-9.4050751)">
+       transform="matrix(0.21213643,0,0,0.21213478,185.86258,-49.386587)">
       <g
          transform="translate(112.69607,34.331253)"
          id="g8181">

@@ -9,14 +9,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="100"
+   height="22"
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.91 r13725"
    sodipodi:docname="picnic.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="100">
+   width="22">
   <metadata
      id="metadata2975">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <cc:license
            rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
         <dc:language>en</dc:language>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>jfitie@gmail.com</dc:description>
       </cc:Work>
       <cc:License
@@ -49,7 +49,7 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="27.460872"
+     inkscape:cx="27.84447"
      inkscape:cy="54.066506"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
@@ -138,7 +138,7 @@
   </g>
   <g
      id="g3366"
-     transform="matrix(0.93347289,0,0,0.93347586,4.5635164,-9.2141664)">
+     transform="matrix(0.20536404,0,0,0.20535957,1.0039722,-1.9465945)">
     <path
        inkscape:connector-curvature="0"
        id="flowRoot3192-3"
