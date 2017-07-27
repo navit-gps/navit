@@ -67,8 +67,7 @@ struct transformation {
 	int scale_shift;
 	int order;
 	int order_base;
-	int w = 240; // TODO
-	int h = 320; // TODO
+	int w,h;
 };
 
 #ifdef ENABLE_ROLL
@@ -182,6 +181,8 @@ transform_new(struct pcoord *center, int scale, int yaw)
 	this_->map_center.x=center->x;
 	this_->map_center.y=center->y;
 	this_->scale=scale/16.0;
+	this_->w=240; // TODO
+	this_->h=320; // TODO
 	transform_set_yaw(this_, yaw);
 	return this_;
 }
