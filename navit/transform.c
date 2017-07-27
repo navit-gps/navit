@@ -87,14 +87,12 @@ transform_set_screen_dist(struct transformation *t, int dist)
 static void
 transform_setup_matrix(struct transformation *t)
 {
-	double corrpitch = t->pitch*sqrt(240*320)/sqrt(240*320); // Pitch corrected for window resolution
-
 	navit_float det;
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
-	navit_float pitchc=navit_cos(-M_PI*t->corrpitch/180);
-	navit_float pitchs=navit_sin(-M_PI*t->corrpitch/180);
+	navit_float pitchc=navit_cos(-M_PI*(t->pitch*sqrt(240*320)/sqrt(240*320))/180);
+	navit_float pitchs=navit_sin(-M_PI*(t->pitch*sqrt(240*320)/sqrt(240*320))/180);
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
