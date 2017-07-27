@@ -2213,7 +2213,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		{
 			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
 			char *dup=strdup(townname);
-			g_hash_table_insert(town_hash, dup, dup);
+			g_hash_table_replace(town_hash, dup, dup);
 		}
 	}
 	fseek(in, 0, SEEK_SET);
