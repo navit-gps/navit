@@ -345,7 +345,9 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	memset(&sel, 0, sizeof(sel));
 	this_->w=w;
 	this_->h=h;
-	this_->pitch=20*sqrt(240*320)/sqrt(w*h); // Pitch corrected for window resolution
+	if (this_->pitch != 0) {
+		this_->pitch=20*sqrt(240*320)/sqrt(w*h); // Pitch corrected for window resolution
+	}
 	sel.u.p_rect.rl.x=w;
 	sel.u.p_rect.rl.y=h;
 	transform_set_screen_selection(this_->trans, &sel);
