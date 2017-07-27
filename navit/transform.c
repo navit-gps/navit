@@ -183,8 +183,8 @@ transform_new(struct pcoord *center, int scale, int yaw)
 	this_->map_center.x=center->x;
 	this_->map_center.y=center->y;
 	this_->scale=scale/16.0;
-	this_->w=DEFRESX; // TODO
-	this_->h=DEFRESY; // TODO
+	this_->w=DEFRESX;
+	this_->h=DEFRESY;
 	transform_set_yaw(this_, yaw);
 	return this_;
 }
