@@ -35,6 +35,8 @@
 #include "point.h"
 
 #define POST_SHIFT 8
+#define DEFRESX 240
+#define DEFRESY 320
 
 /**
  * @brief The parameters needed to transform a map for display.
@@ -92,8 +94,8 @@ transform_setup_matrix(struct transformation *t)
 	navit_float fac;
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
-	navit_float pitchc=navit_cos(-M_PI*t->pitch*sqrt(240*320)/sqrt(t->w*t->h)/180); // Pitch corrected for window resolution
-	navit_float pitchs=navit_sin(-M_PI*t->pitch*sqrt(240*320)/sqrt(t->w*t->h)/180);
+	navit_float pitchc=navit_cos(-M_PI*t->pitch*sqrt(DEFRESX*DEFRESY)/sqrt(t->w*t->h)/180); // Pitch corrected for window resolution
+	navit_float pitchs=navit_sin(-M_PI*t->pitch*sqrt(DEFRESX*DEFRESY)/sqrt(t->w*t->h)/180);
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
@@ -181,8 +183,8 @@ transform_new(struct pcoord *center, int scale, int yaw)
 	this_->map_center.x=center->x;
 	this_->map_center.y=center->y;
 	this_->scale=scale/16.0;
-	this_->w=240; // TODO
-	this_->h=320; // TODO
+	this_->w=DEFRESX; // TODO
+	this_->h=DEFRESY; // TODO
 	transform_set_yaw(this_, yaw);
 	return this_;
 }
