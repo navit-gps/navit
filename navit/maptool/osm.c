@@ -34,6 +34,7 @@
 #include "file.h"
 #include "profile.h"
 #include "types.h"
+#include "transform.h"
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -885,26 +886,60 @@ build_countrytable(void)
 	}
 }
 
+static void
+osm_logv(char *prefix, char *objtype, osmid id, int cont, struct coord_geo *geo, char *fmt, va_list ap)
+{
+	char str[4096];
+	vsnprintf(str, sizeof(str), fmt, ap);
+	if(cont)
+		prefix="";
+	if(objtype)
+		fprintf(stderr,"%shttp://www.openstreetmap.org/%s/"OSMID_FMT" %s", prefix, objtype, id, str);
+	else if(geo)
+		fprintf(stderr,"%shttp://www.openstreetmap.org/#map=19/%.5f/%.5f %s",prefix, geo->lat, geo->lng, str);
+	else
+		fprintf(stderr,"%s[no osm object info] %s",prefix, str);
+}
+
 void
 osm_warning(char *type, osmid id, int cont, char *fmt, ...)
 {
-	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(str, sizeof(str), fmt, ap);
+	osm_logv("OSM Warning:", type, id, cont, NULL, fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
 void
 osm_info(char *type, osmid id, int cont, char *fmt, ...)
 {
-	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(str, sizeof(str), fmt, ap);
+	osm_logv("OSM Info:", type, id, cont, NULL, fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Info:",type,id,str);
+}
+
+void
+itembin_warning(struct item_bin *ib, int cont, char *fmt, ...)
+{
+	char *type=NULL;
+	osmid id;
+	struct coord_geo geo;
+	va_list ap;
+	if(0!=(id=item_bin_get_nodeid(ib))) {
+		type="node";
+	} else if(0!=(id=item_bin_get_wayid(ib))) {
+		type="way";
+	} else if(0!=(id=item_bin_get_relationid(ib))) {
+		type="relation";
+	} else {
+		struct coord *c=(struct coord *)(ib+1);
+		transform_to_geo(projection_mg, c, &geo);
+	}
+
+	va_start(ap, fmt);
+	osm_logv("OSM Warning:", type, id, cont, &geo, fmt, ap);
+	va_end(ap);
 }
 
 static void
@@ -2151,8 +2186,6 @@ osm_process_town_by_boundary(GList *bl, struct item_bin *town, struct coord *c)
 			struct town_country *tc=town_country_list_insert_if_new(&town_country_list, match->country);
 			if(tc)
 				osm_process_town_by_boundary_update_attrs(town, tc, matches);
-			fprintf(stderr, "Boundary %s town %s %s %s %p\n", match->country->names, item_bin_get_attr(town, attr_name, NULL), item_bin_get_attr(town, attr_town_name, NULL), item_bin_get_attr(town, attr_district_name, NULL), tc);
-
 		}
 	}
 
@@ -2223,22 +2256,19 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
 		GList *tc_list, *l;
-		int processed_by_is_in=0;
 		struct item_bin *ib_copy=NULL;
 
 		processed_nodes++;
 
 		tc_list=osm_process_town_by_boundary(bl, ib, c);
-		if (!tc_list) {
+		if (!tc_list)
 			tc_list=osm_process_town_by_is_in(ib);
-			processed_by_is_in=1;
-		}
 
 		if (!tc_list && unknown_country)
 			tc_list=osm_process_town_unknown_country();
 
 		if (!tc_list) {
-			fprintf(stderr, "Lost town %s %s %s\n", item_bin_get_attr(ib, attr_name, NULL), item_bin_get_attr(ib, attr_town_name, NULL), item_bin_get_attr(ib, attr_district_name, NULL));
+			itembin_warning(ib, 0, "Lost town %s %s\n", item_bin_get_attr(ib, attr_town_name, NULL), item_bin_get_attr(ib, attr_district_name, NULL));
 		}
 
 		if(tc_list && g_list_next(tc_list))
@@ -2252,11 +2282,9 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 			char *town_name=NULL;
 			int i;
 
-			fprintf(stderr, "Country %s town %s %s\n", tc->country->names, item_bin_get_attr(ib, attr_label, NULL), item_bin_get_attr(ib, attr_town_name, NULL));
 			if (!tc->country->file) {
 				char *name=g_strdup_printf("country_%d.unsorted.tmp", tc->country->countryid);
 				tc->country->file=fopen(name,"wb");
-				fprintf(stderr,"Creating unsorted file for %s\n",  tc->country->names);
 				g_free(name);
 			}
 
