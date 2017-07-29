@@ -1713,7 +1713,7 @@ relation_add_tag(char *k, char *v)
 		if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
 			boundary=1;
 		}
-	} else if (!strcmp(k,"ISO3166-1")) {
+	} else if (!strcmp(k,"ISO3166-1") || !strcmp(k,"ISO3166-1:alpha2")) {
 		g_strlcpy(iso_code, v, sizeof(iso_code));
 	}
 	if (add_tag) {
