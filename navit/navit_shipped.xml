@@ -19,8 +19,6 @@
 	<debug name="global" dbg_level="error"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
-	<!-- This is here so one can copy&paste the contents of popup menus --> 
-	<debug name="navit:popup_printf_cb" dbg_level="debug"/>
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
 	<debug name="profile:navit:do_draw" dbg_level="debug"/>
 	-->
