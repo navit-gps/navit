@@ -2596,7 +2596,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	case attr_pitch:
 		attr_updated=(this_->pitch != attr->u.num);
 		this_->pitch=attr->u.num;
-		transform_set_pitch(this_->trans, ceil(this_->pitch*sqrt(240*320)/sqrt(this_->w*this_->h))); // Pitch corrected for window resolution
+		transform_set_pitch(this_->trans, round(this_->pitch*sqrt(240*320)/sqrt(this_->w*this_->h))); // Pitch corrected for window resolution
 		if (!init && attr_updated && this_->ready == 3)
 			navit_draw(this_);
 		break;
@@ -2836,7 +2836,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->osd_configuration;
 		break;
 	case attr_pitch:
-		attr->u.num=transform_get_pitch(this_->trans);
+		attr->u.num=round(transform_get_pitch(this_->trans)*sqrt(this_->w*this_->h)/sqrt(240*320)); // Pitch corrected for window resolution
 		break;
 	case attr_projection:
 		if(this_->trans) {
