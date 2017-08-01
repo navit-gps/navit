@@ -23,7 +23,7 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="gui_zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="0" y="{round(2*(number($ICON_BIG)+8*number($OSD_SIZE)))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active==0||follow>1" />
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="cmd_interface" update_period="1" command="pitch=autozoom_active==0?(pitch==0?0:20):(follow>1?0:20);orientation=autozoom_active==0?orientation:(follow>1?0:-1)" x="-1" y="-1" w="1" h="1" />
+      <osd type="cmd_interface" update_period="1" command="pitch=autozoom_active==0?pitch:(follow>1?0:20);orientation=autozoom_active==0?orientation:(follow>1?0:-1)" x="-1" y="-1" w="1" h="1" />
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="cursor_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(number($ICON_BIG)+8*number($OSD_SIZE))}" y="0" enable_expression="follow>1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
