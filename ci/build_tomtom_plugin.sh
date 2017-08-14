@@ -284,7 +284,7 @@ make install
 # in the end we only want Navit locale
 rm -r $PREFIX/share/locale
 
-cat > ~/navit/navit/xpm/tomtom_minus.svg << EOF
+cat > ~/navit/navit/icons/tomtom_minus.svg << EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="64px" height="64px" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -293,7 +293,7 @@ cat > ~/navit/navit/xpm/tomtom_minus.svg << EOF
 </svg>
 EOF
 
-cat > ~/navit/navit/xpm/tomtom_plus.svg << EOF
+cat > ~/navit/navit/icons/tomtom_plus.svg << EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="64px" height="64px" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -426,14 +426,14 @@ cp $PREFIX/bin/ts_* $OUT_PATH/navit/ts/
 
 # images and xml
 cd share
-mkdir xpm
-cd xpm
-cp $PREFIX/share/navit/xpm/*16.png ./
-cp $PREFIX/share/navit/xpm/*32.png ./
-cp $PREFIX/share/navit/xpm/*48.png ./
-cp $PREFIX/share/navit/xpm/*64.png ./
-cp $PREFIX/share/navit/xpm/nav*.* ./
-cp $PREFIX/share/navit/xpm/country*.png ./
+mkdir icons
+cd icons
+cp $PREFIX/share/navit/icons/*16.png ./
+cp $PREFIX/share/navit/icons/*32.png ./
+cp $PREFIX/share/navit/icons/*48.png ./
+cp $PREFIX/share/navit/icons/*64.png ./
+cp $PREFIX/share/navit/icons/nav*.* ./
+cp $PREFIX/share/navit/icons/country*.png ./
 cd ..
 cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
 mkdir -p maps
@@ -462,8 +462,8 @@ EOF
 
 
 convert $PREFIX/share/icons/hicolor/128x128/apps/navit.png  -type truecolor -crop 100x100+12+28 -resize 48x48 $OUT_PATH/SDKRegistry/navit.bmp
-convert -background none ~/navit/navit/xpm/tomtom_plus.svg -resize 80x80 $OUT_PATH/navit/share/xpm/tomtom_plus_80_80.png
-convert -background none ~/navit/navit/xpm/tomtom_minus.svg -resize 80x80 $OUT_PATH/navit/share/xpm/tomtom_minus_80_80.png
+convert -background none ~/navit/navit/icons/tomtom_plus.svg -resize 80x80 $OUT_PATH/navit/share/icons/tomtom_plus_80_80.png
+convert -background none ~/navit/navit/icons/tomtom_minus.svg -resize 80x80 $OUT_PATH/navit/share/icons/tomtom_minus_80_80.png
 
 cat > $OUT_PATH/SDKRegistry/ts.cap << EOF
 Version|100|

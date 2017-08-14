@@ -55,7 +55,7 @@ if (ANDROID)
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
       COMMAND ${CMAKE_COMMAND}
-                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/xpm/*.png"
+                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/icons/*.png"
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/drawable-nodpi
                      -D LOWER=1
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake

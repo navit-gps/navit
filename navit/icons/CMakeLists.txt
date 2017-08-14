@@ -136,7 +136,7 @@ foreach (IMAGE_FILE ${IMAGES_TO_COPY})
 endforeach()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
-add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/xpm COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)
+add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/icons COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/icons)
 add_dependencies(images_resource images)
 
 install(
