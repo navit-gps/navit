@@ -1013,8 +1013,10 @@ osm_add_tag(char *k, char *v)
 		relation_add_tag(k,v);
 		return;
 	}
-	if (! strcmp(k,"ele"))
+	if (! strcmp(k,"ele")){
+		attr_strings_save(attr_string_label, v);
 		level=9;
+	}
 	if (! strcmp(k,"time"))
 		level=9;
 	if (! strcmp(k,"created_by"))
@@ -1711,7 +1713,7 @@ relation_add_tag(char *k, char *v)
 		if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
 			boundary=1;
 		}
-	} else if (!strcmp(k,"ISO3166-1")) {
+	} else if (!strcmp(k,"ISO3166-1") || !strcmp(k,"ISO3166-1:alpha2")) {
 		g_strlcpy(iso_code, v, sizeof(iso_code));
 	}
 	if (add_tag) {

@@ -19,8 +19,6 @@
 	<debug name="global" dbg_level="error"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
-	<!-- This is here so one can copy&paste the contents of popup menus --> 
-	<debug name="navit:popup_printf_cb" dbg_level="debug"/>
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
 	<debug name="profile:navit:do_draw" dbg_level="debug"/>
 	-->
@@ -424,23 +422,69 @@ Waypoint</text></img>
 
 		<layout name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
 
-			<cursor w="26" h="26">
-				<itemgra>
-					<circle color="#0000ff" radius="24" width="2">
-						<coord x="0" y="0"/>
+			<cursor w="57" h="57">
+				<itemgra speed_range="-2">
+					<polyline color="#00BC00" radius="0" width="4">
+						<coord x="0" y="0" />
+					</polyline>
+					<circle color="#008500" radius="9" width="3">
+						<coord x="0" y="0" />
+					</circle>
+					<circle color="#00BC00" radius="13" width="3">
+						<coord x="0" y="0" />
+					</circle>
+					<circle color="#008500" radius="18" width="3">
+						<coord x="0" y="0" />
 					</circle>
 				</itemgra>
-				<itemgra speed_range="-2">
-					<polyline color="#0000ff" width="2">
-						<coord x="0" y="0"/>
-						<coord x="0" y="0"/>
-					</polyline>
-				</itemgra>
 				<itemgra speed_range="3-">
-					<polyline color="#0000ff" width="2">
-						<coord x="-7" y="-10"/>
-						<coord x="0" y="12"/>
-						<coord x="7" y="-10"/>
+					<polygon color="#008500">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#00BC00">
+						<coord x="21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polygon>
+					<polygon color="#009C00">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#006500">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
+					</polygon>
+					<polyline color="#008500" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#008500" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polyline>
+					<polyline color="#008500" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#008500" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
 					</polyline>
 				</itemgra>
 			</cursor>
@@ -2396,23 +2440,69 @@ Waypoint</text></img>
 
 		<layout name="Car-dark" daylayout="Car" color="#011001">
 
-			<cursor w="26" h="26">
-				<itemgra>
-					<circle color="#00ff00" radius="24" width="2">
-						<coord x="0" y="0"/>
+			<cursor w="57" h="57">
+				<itemgra speed_range="-2">
+					<polyline color="#0000BC" radius="0" width="4">
+						<coord x="0" y="0" />
+					</polyline>
+					<circle color="#000085" radius="9" width="3">
+						<coord x="0" y="0" />
+					</circle>
+					<circle color="#0000BC" radius="13" width="3">
+						<coord x="0" y="0" />
+					</circle>
+					<circle color="#000085" radius="18" width="3">
+						<coord x="0" y="0" />
 					</circle>
 				</itemgra>
-				<itemgra speed_range="-2">
-					<polyline color="#00ff00" width="2">
-						<coord x="0" y="0"/>
-						<coord x="0" y="0"/>
-					</polyline>
-				</itemgra>
 				<itemgra speed_range="3-">
-					<polyline color="#00ff00" width="2">
-						<coord x="-7" y="-10"/>
-						<coord x="0" y="12"/>
-						<coord x="7" y="-10"/>
+					<polygon color="#000085">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#0000BC">
+						<coord x="21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polygon>
+					<polygon color="#00009C">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polygon>
+					<polygon color="#000065">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
+					</polygon>
+					<polyline color="#000085" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#000085" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="21" />
+						<coord x="0" y="-3" />
+						<coord x="21" y="-18" />
+					</polyline>
+					<polyline color="#000085" width="1">
+						<coord x="-21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="-21" y="-18" />
+					</polyline>
+					<polyline color="#000085" width="1">
+						<coord x="21" y="-18" />
+						<coord x="0" y="-3" />
+						<coord x="0" y="-9" />
+						<coord x="21" y="-18" />
 					</polyline>
 				</itemgra>
 			</cursor>
