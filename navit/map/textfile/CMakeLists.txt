@@ -1,1 +1,1 @@
-module_add_library(map_textfile textfile.c)
+module_add_library(map_textfile map-textfile textfile.c)

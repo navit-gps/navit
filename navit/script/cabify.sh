@@ -52,7 +52,7 @@ done
 for i in $SRCDIR/navit/xpm/*.xpm
 do
 	bn="`basename "$i"`"
-	echo "$i $BASEDIR/xpm/" >> $CABLIST.$$
+	echo "$i $BASEDIR/icons/" >> $CABLIST.$$
 done
 
 echo "$SRCDIR/navit/navit.exe $BASEDIR/" >> $CABLIST.$$

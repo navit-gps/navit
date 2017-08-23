@@ -76,8 +76,8 @@ if(NOT ANDROID)
    endif()
    if (BUILD_BUNDLE)
       list(APPEND NAVIT_START_SRC resources/share resources/Icon.png resources/Default.png)
-      add_custom_command(OUTPUT resources/Icon.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/xpm/desktop_icons/128x128/navit.png resources/Icon.png)
-      add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/xpm/desktop_icons/128x128/navit.png resources/Default.png)
+      add_custom_command(OUTPUT resources/Icon.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Icon.png)
+      add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Default.png)
    endif()
    add_executable(navit ${NAVIT_START_SRC})
    target_link_libraries (navit ${NAVIT_LIBNAME})
@@ -166,7 +166,7 @@ endif()
 
 
 add_subdirectory (maptool)
-add_subdirectory (xpm)
+add_subdirectory (icons)
 add_subdirectory (maps)
 if(ANDROID)
    add_subdirectory (android)
@@ -178,7 +178,7 @@ install(TARGETS navit
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/navit.xml
         DESTINATION ${SHARE_DIR}
-        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ COMPONENT data)
 
 get_directory_property(INCLUDE_DIRECTORIES INCLUDE_DIRECTORIES)
 WRITE_FILE("cmake_plugin_settings.txt"
