@@ -2070,7 +2070,7 @@ graphics_icon_path(const char *icon)
 #else
 		if (! navit_sharedir)
 			navit_sharedir = getenv("NAVIT_SHAREDIR");
-		ret=g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
+		ret=g_strdup_printf("%s/icons/%s", navit_sharedir, icon);
 #endif
 	}
 	if (wordexp)
