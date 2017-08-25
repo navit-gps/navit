@@ -13,6 +13,6 @@ jobs:
           exclusive: false
 
       - run:
-          name: Prepare build
+          name: Build for Linux
           command: |
-            bash ci/build.sh
+            bash ci/build_linux.sh
