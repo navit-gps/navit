@@ -1,7 +1,7 @@
 set -e
 
 apt-get update
-apt-get install -y cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev libqt5svg5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-window-plugin qtmultimedia5-dev
+apt-get install -y cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
 
