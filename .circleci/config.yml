@@ -52,3 +52,14 @@ jobs:
           name: Build for Tomtom as a plugin
           command: |
             bash ci/build_tomtom_plugin.sh
+
+workflows:
+  version: 2
+  build_all:
+    jobs:
+      - build_linux
+      - build_android_arm
+      - build_android_x86
+      - build_win32
+      - build_tomtom
+      - build_tomtom_plugin
