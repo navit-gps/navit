@@ -49,10 +49,10 @@ do
 	echo "$i $BASEDIR/$d" >> $CABLIST.$$
 done
 
-for i in $SRCDIR/navit/xpm/*.xpm
+for i in $SRCDIR/navit/icons/*.xpm
 do
 	bn="`basename "$i"`"
-	echo "$i $BASEDIR/xpm/" >> $CABLIST.$$
+	echo "$i $BASEDIR/icons/" >> $CABLIST.$$
 done
 
 echo "$SRCDIR/navit/navit.exe $BASEDIR/" >> $CABLIST.$$
