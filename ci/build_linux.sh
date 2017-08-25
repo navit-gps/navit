@@ -27,15 +27,11 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
 
 else
-	mkdir ~/linux-bin && cd ~/linux-bin
-	cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts} || exit -1
+	mkdir ${$CIRCLE_WORKING_DIRECTORY}/linux-bin && cd ${$CIRCLE_WORKING_DIRECTORY}/linux-bin
+	cmake ${$CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts} || exit -1
 	make -j $(nproc --all) || exit -1
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	cp -r navit/icons $CIRCLE_ARTIFACTS
 fi
-
-
-# Done with the builds tests. Running some app tests 
-bash ~/navit/ci/run_linux_tests.sh
