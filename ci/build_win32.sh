@@ -1,4 +1,4 @@
-sudo apt-get install mingw32 mingw32-binutils mingw32-runtime default-jdk nsis
+apt-get install mingw32 mingw32-binutils mingw32-runtime default-jdk nsis
 
 mkdir win32
 pushd win32
