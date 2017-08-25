@@ -4,15 +4,51 @@ defaults: &defaults
     - image: ubuntu:16.04
 
 jobs:
-  build:
+  build_linux:
     <<: *defaults
     steps:
       - checkout
-      - setup_remote_docker:
-          reusable: true
-          exclusive: false
-
       - run:
           name: Build for Linux
           command: |
             bash ci/build_linux.sh
+  build_android_arm:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Android ARM
+          command: |
+            bash ci/build_android.sh
+  build_android_x86:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Android x86
+          command: |
+            bash ci/build_android_x86.sh
+  build_win32:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Windows
+          command: |
+            bash ci/build_win32.sh
+  build_tomtom:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Tomtom
+          command: |
+            bash ci/build_tomtom_minimal.sh
+  build_tomtom_plugin:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Tomtom as a plugin
+          command: |
+            bash ci/build_tomtom_plugin.sh
