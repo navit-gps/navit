@@ -1,4 +1,4 @@
-apt-get update && apt-get install -y mingw32 mingw32-binutils mingw32-runtime default-jdk nsis
+apt-get update && apt-get install -y mingw32 mingw32-binutils mingw32-runtime default-jdk nsis cmake
 
 mkdir win32
 pushd win32
