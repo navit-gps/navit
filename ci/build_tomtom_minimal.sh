@@ -7,7 +7,7 @@
 
 set -e
 
-apt-get update && apt-get install -y wget
+apt-get update && apt-get install -y wget unzip
 
 export ARCH=arm-linux
 cp Toolchain/$ARCH.cmake /tmp
