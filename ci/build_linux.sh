@@ -1,3 +1,5 @@
+set -e
+
 apt-get update
 apt-get install -y cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev libqt5svg5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-window-plugin qtmultimedia5-dev
 
@@ -27,8 +29,8 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
 
 else
-	mkdir ${$CIRCLE_WORKING_DIRECTORY}/linux-bin && cd ${$CIRCLE_WORKING_DIRECTORY}/linux-bin
-	cmake ${$CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts} || exit -1
+	mkdir ${CIRCLE_WORKING_DIRECTORY}/linux-bin && cd ${CIRCLE_WORKING_DIRECTORY}/linux-bin
+	cmake ${CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts} || exit -1
 	make -j $(nproc --all) || exit -1
 fi
 
