@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+apt-get update && apt-get install -y wget
+
 export ARCH="x86"
 export START_PATH=~/
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
