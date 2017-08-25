@@ -3,4 +3,4 @@ set(graphics_cocoa_LIBS "-framework Foundation" "-framework UIKit" "-framework C
 else()
 set(graphics_cocoa_LIBS "-framework Cocoa" "-liconv")
 endif()
-module_add_library(graphics_cocoa graphics_cocoa.m)
+module_add_library(graphics_cocoa graphics-cocoa graphics_cocoa.m)

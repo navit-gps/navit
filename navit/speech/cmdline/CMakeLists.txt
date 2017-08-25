@@ -1,1 +1,1 @@
-module_add_library(speech_cmdline speech_cmdline.c)
+module_add_library(speech_cmdline Unspecified speech_cmdline.c)

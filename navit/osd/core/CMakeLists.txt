@@ -1,1 +1,1 @@
-module_add_library(osd_core osd_core.c)
+module_add_library(osd_core Unspecified osd_core.c)

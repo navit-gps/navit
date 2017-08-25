@@ -1,1 +1,1 @@
-module_add_library(vehicle_webos vehicle_webos.c)
+module_add_library(vehicle_webos vehicle-webos vehicle_webos.c)
