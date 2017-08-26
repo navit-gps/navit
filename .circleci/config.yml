@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Build for Linux
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_linux.sh
   build_android_arm:
     <<: *defaults
@@ -19,6 +20,7 @@ jobs:
       - run:
           name: Build for Android ARM
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_android.sh
   build_android_x86:
     <<: *defaults
@@ -27,6 +29,7 @@ jobs:
       - run:
           name: Build for Android x86
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_android_x86.sh
   build_win32:
     <<: *defaults
@@ -35,6 +38,7 @@ jobs:
       - run:
           name: Build for Windows
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
   build_tomtom:
     <<: *defaults
@@ -43,6 +47,7 @@ jobs:
       - run:
           name: Build for Tomtom
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_tomtom_minimal.sh
   build_tomtom_plugin:
     <<: *defaults
@@ -51,6 +56,7 @@ jobs:
       - run:
           name: Build for Tomtom as a plugin
           command: |
+            bash ci/setup_common_requirements.sh
             bash ci/build_tomtom_plugin.sh
 
 workflows:

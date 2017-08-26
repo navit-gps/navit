@@ -6,8 +6,6 @@
 
 set -e
 
-apt-get update && apt-get install -y wget unzip cmake build-essential
-
 export ARCH=arm-linux
 cp Toolchain/$ARCH.cmake /tmp
 
