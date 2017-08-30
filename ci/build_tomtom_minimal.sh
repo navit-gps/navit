@@ -42,6 +42,7 @@ mkdir -p $OUT_PATH/navit/bin
 mkdir -p $OUT_PATH/navit/share/fonts
 mkdir -p $OUT_PATH/navit/share/icons
 mkdir -p $OUT_PATH/navit/share/maps
+mkdir -p $OUT_PATH/navit/share/locale
 
 # navit executable
 cp navit/navit $OUT_PATH/navit/bin
@@ -50,17 +51,17 @@ cp navit/navit $OUT_PATH/navit/bin
 cp -r ../navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
 
 # images and xml
-cp $PREFIX/share/navit/icons/*16.png ./
-cp $PREFIX/share/navit/icons/*32.png ./
-cp $PREFIX/share/navit/icons/*48.png ./
-cp $PREFIX/share/navit/icons/*64.png ./
-cp $PREFIX/share/navit/icons/nav*.* ./
-cp $PREFIX/share/navit/icons/country*.png ./
+cp $PREFIX/share/navit/icons/*16.png $OUT_PATH/navit/share/icons
+cp $PREFIX/share/navit/icons/*32.png $OUT_PATH/navit/share/icons
+cp $PREFIX/share/navit/icons/*48.png $OUT_PATH/navit/share/icons
+cp $PREFIX/share/navit/icons/*64.png $OUT_PATH/navit/share/icons
+cp $PREFIX/share/navit/icons/nav*.* $OUT_PATH/navit/share/icons
+cp $PREFIX/share/navit/icons/country*.png $OUT_PATH/navit/share/icons
 cd ..
 cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
 
 # locale
-cp -r $PREFIX/share/locale ./
+cp -r $PREFIX/share/locale $OUT_PATH/navit/share/locale
 
 
 cd $OUT_PATH
