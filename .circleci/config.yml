@@ -48,6 +48,7 @@ jobs:
           name: Build for Tomtom
           command: |
             bash ci/setup_common_requirements.sh
+            bash ci/setup_tomtom_requirements.sh
             bash ci/build_tomtom_minimal.sh
   build_tomtom_plugin:
     <<: *defaults
