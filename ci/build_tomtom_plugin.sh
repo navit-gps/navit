@@ -50,8 +50,6 @@ popd # src
 popd # espeak-*
 popd # /tmp
 
-# http://forum.navit-project.org/viewtopic.php?f=17&t=568
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include contrib/tomtom/espeakdsp.c -o contrib/tomtom/espeakdsp
 
 # navit
 mkdir -p build
@@ -93,6 +91,9 @@ cp $PREFIX/etc/ts.conf $OUT_PATH/navit/ts
 # flite
 # cp $PREFIX/bin/flite* bin/
 
+# http://forum.navit-project.org/viewtopic.php?f=17&t=568
+arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include contrib/tomtom/espeakdsp.c -o $OUT_PATH/navit/bin/
+
 # SDL testvidinfo
 cp $PREFIX/usr/bin/testvidinfo $OUT_PATH/navit/sdl
 
@@ -124,8 +125,6 @@ cp -r $PREFIX/share/locale $OUT_PATH/navit/share/locale
 cp -r ~/share/espeak-data $OUT_PATH/navit/share/
 cp $PREFIX/bin/espeak $OUT_PATH/navit/bin/
 cp $PREFIX/lib/libespeak.so.1 $OUT_PATH/navit/lib
-
-mv /tmp/espeakdsp $OUT_PATH/navit/bin/
 
 # add a menu button
 cp ../contrib/tomtom/SDKRegistry/navit.cap $OUT_PATH/SDKRegistry/navit.cap
