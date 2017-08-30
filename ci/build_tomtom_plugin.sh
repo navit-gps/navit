@@ -61,8 +61,6 @@ cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include
 -DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
 make -j$JOBS
 make install
-popd
-
 
 # creating directories
 OUT_PATH="/tmp/tomtom/sdcard"
