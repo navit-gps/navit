@@ -64,4 +64,4 @@ cp -r $PREFIX/share/locale ./
 
 
 cd $OUT_PATH
-zip -r $CIRCLE_ARTIFACTS/navitom_minimal.zip navit
+zip -r navitom_minimal.zip navit
