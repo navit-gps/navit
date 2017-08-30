@@ -85,5 +85,5 @@ workflows:
       - build_android_arm
       - build_android_x86
       - build_win32
-      - build_tomtom
+      - build_tomtom_minimal
       - build_tomtom_plugin
