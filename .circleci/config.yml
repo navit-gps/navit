@@ -45,10 +45,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build for Tomtom
+          name: Setup common requirements
           command: |
             bash ci/setup_common_requirements.sh
+      - run:
+          name: Build the Tomtom toolchain
+          command: |
             bash ci/setup_tomtom_requirements.sh
+      - run:
+          name: Build for Tomtom
+          command: |
             bash ci/build_tomtom_minimal.sh
   build_tomtom_plugin:
     <<: *defaults
