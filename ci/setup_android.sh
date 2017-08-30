@@ -1,4 +1,4 @@
-apt-get update && apt-get install -y openjdk-7-jdk wget expect git curl
+apt-get update && apt-get install -y openjdk-7-jdk wget expect git curl libsaxonb-java ant
 
 export ANDROID_SDK_HOME=/opt/android-sdk-linux
 export ANDROID_HOME=/opt/android-sdk-linux
