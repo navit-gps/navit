@@ -51,7 +51,7 @@ popd # espeak-*
 popd # /tmp
 
 # http://forum.navit-project.org/viewtopic.php?f=17&t=568
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include espeakdsp.c -o contrib/tomtom/espeakdsp
+arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include contrib/tomtom/espeakdsp.c -o contrib/tomtom/espeakdsp
 
 # navit
 mkdir -p build
