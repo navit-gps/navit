@@ -128,49 +128,14 @@ cp $PREFIX/lib/libespeak.so.1 $OUT_PATH/navit/lib
 mv /tmp/espeakdsp $OUT_PATH/navit/bin/
 
 # add a menu button
-cat > $OUT_PATH/SDKRegistry/navit.cap << EOF
-Version|100|
-AppName|navit-wrapper|
-AppPath|/mnt/sdcard/navit/bin/|
-AppIconFile|navit.bmp|
-AppMainTitle|Navit|
-AppPort|2001|
-COMMAND|CMD|hallo|navit.bmp|Navit|
-EOF
-
+cp ../contrib/tomtom/SDKRegistry/navit.cap $OUT_PATH/SDKRegistry/navit.cap
+cp ../contrib/tomtom/SDKRegistry/ts.cap $OUT_PATH/SDKRegistry/ts.cap
+cp ../contrib/tomtom/ts/ts-wrapper $OUT_PATH/navit/ts/ts-wrapper
 
 convert $PREFIX/share/icons/hicolor/128x128/apps/navit.png  -type truecolor -crop 100x100+12+28 -resize 48x48 $OUT_PATH/SDKRegistry/navit.bmp
 convert -background none ~/navit/navit/icons/tomtom_plus.svg -resize 80x80 $OUT_PATH/navit/share/icons/tomtom_plus_80_80.png
 convert -background none ~/navit/navit/icons/tomtom_minus.svg -resize 80x80 $OUT_PATH/navit/share/icons/tomtom_minus_80_80.png
 
-cat > $OUT_PATH/SDKRegistry/ts.cap << EOF
-Version|100|
-AppName|ts-wrapper|
-AppPath|/mnt/sdcard/navit/ts/|
-AppIconFile||
-AppMainTitle|Touchscreen|
-AppPort||
-COMMAND|CMD|hallo||Touchscreen|
-EOF
-
-
-cat > $OUT_PATH/navit/ts/ts-wrapper << EOF
-#!/bin/sh
-
-cd /mnt/sdcard
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib
-
-export TSLIB_CONSOLEDEVICE=none
-export TSLIB_FBDEVICE=/dev/fb
-export TSLIB_TSDEVICE=/dev/ts
-export TSLIB_CALIBFILE=/mnt/sdcard/navit/ts/pointercal
-export TSLIB_CONFFILE=/mnt/sdcard/navit/ts/ts.conf
-export TSLIB_PLUGINDIR=/mnt/sdcard/navit/lib/ts
-
-/mnt/sdcard/navit/ts/ts_calibrate
-/mnt/sdcard/navit/ts/ts_test
-EOF
 
 cd $OUT_PATH
 zip -r $CIRCLE_ARTIFACTS/navitom.zip navit SDKRegistry
