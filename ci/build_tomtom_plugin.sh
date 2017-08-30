@@ -98,7 +98,7 @@ cp $PREFIX/usr/bin/testvidinfo $OUT_PATH/navit/sdl
 
 # navit executable and wrapper
 cp $PREFIX/bin/navit $OUT_PATH/navit/bin
-cp contrib/tomtom/navit-wrapper $OUT_PATH/navit/bin/navit-wrapper 
+cp ../contrib/tomtom/navit-wrapper $OUT_PATH/navit/bin/navit-wrapper 
 
 # fonts
 cp -r ../navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
