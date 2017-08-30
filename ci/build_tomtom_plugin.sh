@@ -92,7 +92,7 @@ cp $PREFIX/etc/ts.conf $OUT_PATH/navit/ts
 # cp $PREFIX/bin/flite* bin/
 
 # http://forum.navit-project.org/viewtopic.php?f=17&t=568
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include contrib/tomtom/espeakdsp.c -o $OUT_PATH/navit/bin/
+arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ../contrib/tomtom/espeakdsp.c -o $OUT_PATH/navit/bin/
 
 # SDL testvidinfo
 cp $PREFIX/usr/bin/testvidinfo $OUT_PATH/navit/sdl
