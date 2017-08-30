@@ -40,7 +40,7 @@ jobs:
           command: |
             bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
-  build_tomtom:
+  build_tomtom_minimal:
     <<: *defaults
     steps:
       - checkout
@@ -53,7 +53,7 @@ jobs:
           command: |
             bash ci/setup_tomtom_requirements.sh
       - run:
-          name: Build for Tomtom
+          name: Build for Tomtom (minimal)
           command: |
             bash ci/build_tomtom_minimal.sh
       - store_artifacts:
@@ -63,10 +63,19 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build for Tomtom as a plugin
+          name: Setup common requirements
           command: |
             bash ci/setup_common_requirements.sh
+      - run:
+          name: Build the Tomtom toolchain
+          command: |
+            bash ci/setup_tomtom_requirements.sh
+      - run:
+          name: Build for Tomtom (plugin)
+          command: |
             bash ci/build_tomtom_plugin.sh
+      - store_artifacts:
+          path: /tmp/tomtom/sdcard
 
 workflows:
   version: 2
