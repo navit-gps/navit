@@ -8,6 +8,24 @@
 set -e
 
 export ARCH=arm-linux
+export TOMTOM_SDK_DIR=/opt/tomtom-sdk
+mkdir -p $TOMTOM_SDK_DIR >/dev/null 2>&1 || export TOMTOM_SDK_DIR=$HOME/tomtom-sdk
+export PREFIX=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/$ARCH/sys-root
+export PATH=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/bin:$PREFIX/bin/:$PATH
+export CFLAGS="-O2 -I$PREFIX/include -I$PREFIX/usr/include"
+export CPPFLAGS="-I$PREFIX/include -I$PREFIX/usr/include"
+export LDFLAGS="-L$PREFIX/lib -L$PREFIX/usr/lib"
+export CC=$ARCH-gcc
+export CXX=$ARCH-g++
+export LD=$ARCH-ld
+export NM="$ARCH-nm -B"
+export AR=$ARCH-ar
+export RANLIB=$ARCH-ranlib
+export STRIP=$ARCH-strip
+export OBJCOPY=$ARCH-objcopy
+export LN_S="ln -s"
+export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
+JOBS=$(nproc --all)
 
 mkdir -p build
 pushd build
