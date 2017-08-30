@@ -127,9 +127,8 @@ cp $PREFIX/bin/espeak $OUT_PATH/navit/bin/
 cp $PREFIX/lib/libespeak.so.1 $OUT_PATH/navit/lib
 
 # add a menu button
-cp ../contrib/tomtom/SDKRegistry/navit.cap $OUT_PATH/SDKRegistry/navit.cap
-cp ../contrib/tomtom/SDKRegistry/ts.cap $OUT_PATH/SDKRegistry/ts.cap
-cp ../contrib/tomtom/ts/ts-wrapper $OUT_PATH/navit/ts/ts-wrapper
+cp -r ../contrib/tomtom/SDKRegistry/ $OUT_PATH/
+cp -r ../contrib/tomtom/ts $OUT_PATH/
 
 convert $PREFIX/share/icons/hicolor/128x128/apps/navit.png  -type truecolor -crop 100x100+12+28 -resize 48x48 $OUT_PATH/SDKRegistry/navit.bmp
 convert -background none ~/navit/navit/icons/tomtom_plus.svg -resize 80x80 $OUT_PATH/navit/share/icons/tomtom_plus_80_80.png
