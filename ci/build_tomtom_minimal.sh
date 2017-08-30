@@ -7,6 +7,15 @@
 
 set -e
 
+# install additional packages to build TT evitonment and navit
+apt-get install -y libglib2.0-dev git autogen autoconf libtool
+dpkg --add-architecture i386
+apt-get update
+apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
+
+#remove disturbing build artefact for second run
+rm -f /opt/tomtom-sdk/gcc-3.3.4_glibc-2.3.2/arm-linux/sys-root/bin//glib-genmarshal
+
 export ARCH=arm-linux
 cp Toolchain/$ARCH.cmake /tmp
 
@@ -156,7 +165,7 @@ rm -r $PREFIX/share/locale
 
 
 # navit
-cd ~/navit
+cd ~/project/navit
 sed -i "s|set ( TOMTOM_SDK_DIR /opt/tomtom-sdk )|set ( TOMTOM_SDK_DIR $TOMTOM_SDK_DIR )|g" /tmp/$ARCH.cmake
 mkdir -p build
 cd build
