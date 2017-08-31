@@ -30,7 +30,7 @@ jobs:
           command: |
             bash ci/build_android.sh
       - store_artifacts:
-          path: project/android-arm/navit/
+          path: android-arm/navit
   build_android_x86:
     <<: *defaults
     steps:
