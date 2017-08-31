@@ -1,4 +1,5 @@
-apt-get update && apt-get install -y openjdk-7-jdk wget expect git curl libsaxonb-java ant
+add-apt-repository ppa:openjdk-r/ppa
+apt-get update && apt-get install -y openjdk-8-jdk wget expect git curl libsaxonb-java ant
 
 export ANDROID_SDK_HOME=/opt/android-sdk-linux
 export ANDROID_HOME=/opt/android-sdk-linux
@@ -12,16 +13,16 @@ export PATH=${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools
 echo y | android update sdk --no-ui --all --filter platform-tools | grep 'package installed'
 #RUN echo y | android update sdk --no-ui --all --filter extra-android-support | grep 'package installed'
 
-# echo y | android update sdk --no-ui --all --filter android-25 | grep 'package installed'
+echo y | android update sdk --no-ui --all --filter android-25 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter android-24 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter android-23 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter android-18 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter android-16 | grep 'package installed'
 
-# echo y | android update sdk --no-ui --all --filter build-tools-25.0.3 | grep 'package installed'
-# echo y | android update sdk --no-ui --all --filter build-tools-25.0.2 | grep 'package installed'
-# echo y | android update sdk --no-ui --all --filter build-tools-25.0.1 | grep 'package installed'
-# echo y | android update sdk --no-ui --all --filter build-tools-25.0.0 | grep 'package installed'
+echo y | android update sdk --no-ui --all --filter build-tools-25.0.3 | grep 'package installed'
+echo y | android update sdk --no-ui --all --filter build-tools-25.0.2 | grep 'package installed'
+echo y | android update sdk --no-ui --all --filter build-tools-25.0.1 | grep 'package installed'
+echo y | android update sdk --no-ui --all --filter build-tools-25.0.0 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter build-tools-24.0.3 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter build-tools-24.0.2 | grep 'package installed'
 echo y | android update sdk --no-ui --all --filter build-tools-24.0.1 | grep 'package installed'
