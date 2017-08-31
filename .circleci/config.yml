@@ -29,6 +29,8 @@ jobs:
           name: Build for Android ARM
           command: |
             bash ci/build_android.sh
+      - store_artifacts:
+          path: project/android-arm/navit/
   build_android_x86:
     <<: *defaults
     steps:

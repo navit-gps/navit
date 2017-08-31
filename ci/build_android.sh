@@ -31,13 +31,10 @@ cmake -DCMAKE_TOOLCHAIN_FILE=../Toolchain/arm-eabi.cmake -DCACHE_SIZE='(20*1024*
 make -j $(nproc --all)
 
 if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-  make -j $(nproc --all) apkg-release && mv $BUILD_PATH/navit/android/bin/Navit-release-unsigned.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk || exit 1
+  make -j $(nproc --all) apkg-release && mv $BUILD_PATH/navit/android/bin/Navit-release-unsigned.apk $BUILD_PATH/navit/android/bin/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk || exit 1
 else
-  make -j $(nproc --all) apkg && mv $BUILD_PATH/navit/android/bin/Navit-debug.apk $CIRCLE_ARTIFACTS/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
+  make -j $(nproc --all) apkg && mv $BUILD_PATH/navit/android/bin/Navit-debug.apk $BUILD_PATH/navit/android/bin/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
 fi
-
-[ -d $CIRCLE_ARTIFACTS/android-${ARCH}/ ] || mkdir $CIRCLE_ARTIFACTS/android-${ARCH}/
-cp $BUILD_PATH/navit/*.xml $CIRCLE_ARTIFACTS/android-${ARCH}/
 
 echo
 echo "Build leftovers :"
