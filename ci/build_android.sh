@@ -38,4 +38,4 @@ fi
 
 echo
 echo "Build leftovers :"
-ls $BUILD_PATH
+find .
