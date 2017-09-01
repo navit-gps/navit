@@ -47,6 +47,8 @@ jobs:
           name: Build for Android X86
           command: |
             bash ci/build_android_x86.sh
+      - store_artifacts:
+          path: android-x86/navit
   build_win32:
     <<: *defaults
     steps:
