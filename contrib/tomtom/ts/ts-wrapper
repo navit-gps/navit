@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd /mnt/sdcard
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib
+
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_FBDEVICE=/dev/fb
+export TSLIB_TSDEVICE=/dev/ts
+export TSLIB_CALIBFILE=/mnt/sdcard/navit/ts/pointercal
+export TSLIB_CONFFILE=/mnt/sdcard/navit/ts/ts.conf
+export TSLIB_PLUGINDIR=/mnt/sdcard/navit/lib/ts
+
+/mnt/sdcard/navit/ts/ts_calibrate
+/mnt/sdcard/navit/ts/ts_test
