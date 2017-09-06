@@ -65,4 +65,4 @@ cp -r $PREFIX/share/locale $OUT_PATH/navit/share/locale
 
 
 cd $OUT_PATH
-zip -r navitom_minimal.zip navit
+zip -r /output/navitom_minimal.zip navit

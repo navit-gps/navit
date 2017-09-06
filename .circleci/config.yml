@@ -73,7 +73,7 @@ jobs:
           command: |
             bash ci/build_tomtom_minimal.sh
       - store_artifacts:
-          path: /tmp/tomtom/sdcard
+          path: /output
   build_tomtom_plugin:
     <<: *defaults
     docker:
@@ -89,7 +89,7 @@ jobs:
           command: |
             bash ci/build_tomtom_plugin.sh
       - store_artifacts:
-          path: /tmp/tomtom/sdcard
+          path: /output
 
 workflows:
   version: 2
