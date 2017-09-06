@@ -60,16 +60,14 @@ jobs:
             bash ci/build_win32.sh
   build_tomtom_minimal:
     <<: *defaults
+    docker:
+      - image: navit/tomtom-build-image
     steps:
       - checkout
       - run:
           name: Setup common requirements
           command: |
             bash ci/setup_common_requirements.sh
-      - run:
-          name: Build the Tomtom toolchain
-          command: |
-            bash ci/setup_tomtom_requirements.sh
       - run:
           name: Build for Tomtom (minimal)
           command: |
@@ -78,16 +76,14 @@ jobs:
           path: /tmp/tomtom/sdcard
   build_tomtom_plugin:
     <<: *defaults
+    docker:
+      - image: navit/tomtom-build-image
     steps:
       - checkout
       - run:
           name: Setup common requirements
           command: |
             bash ci/setup_common_requirements.sh
-      - run:
-          name: Build the Tomtom toolchain
-          command: |
-            bash ci/setup_tomtom_requirements.sh
       - run:
           name: Build for Tomtom (plugin)
           command: |

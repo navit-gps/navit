@@ -136,4 +136,4 @@ convert -background none ../navit/icons/tomtom_minus.svg -resize 80x80 $OUT_PATH
 
 
 cd $OUT_PATH
-zip -r $CIRCLE_ARTIFACTS/navitom.zip navit SDKRegistry
+zip -r navitom_plugin.zip navit SDKRegistry
