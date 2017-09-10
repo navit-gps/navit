@@ -32,6 +32,10 @@ extern "C" {
 #include "plugin.h"
 #include "speech.h"
 #include "util.h"
+
+//Undefine the min and max macros (they conflict with functions of the same name in <alorithm>)
+#undef min
+#undef max
 }
 #include <espeak/speak_lib.h>
 
