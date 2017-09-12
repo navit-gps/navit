@@ -2,7 +2,7 @@ set -e
 
 COVERITY_VERSION="2017.07"
 
-apt-get install -y libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev
+apt-get install -y libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
 
