@@ -1,14 +1,16 @@
 set -e
 
+COVERITY_VERSION="2017.07"
+
 apt-get install -y libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
 
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	# If we are building the official trunk code, push an update to coverity
-	wget -nv -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
-	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
-	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
+	wget -nv -c -O ~/assets/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz
+	tar xfz ~/assets/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz
+	export PATH=~/navit/cov-analysis-linux64-${COVERITY_VERSION}/bin:$PATH
 	
 	mkdir ~/linux-bin && cd ~/linux-bin
 	cov-build --dir cov-int cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts}
