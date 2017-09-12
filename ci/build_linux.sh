@@ -11,7 +11,7 @@ mkdir ${CIRCLE_WORKING_DIRECTORY}/linux-bin && cd ${CIRCLE_WORKING_DIRECTORY}/li
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "coverity_upgrade" ]]; then
 	# If we are building the official trunk code, push an update to coverity
 	wget -nv -c -O /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz
-	tar xfz /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz -C /usr/local/share/
+	tar xfz /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz --no-same-owner -C /usr/local/share/
 	export PATH=/usr/local/share/cov-analysis-linux64-${COVERITY_VERSION}/bin:$PATH
 	
 	cov-build --dir cov-int cmake ${CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts}
