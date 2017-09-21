@@ -58,6 +58,15 @@ jobs:
           command: |
             bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
+  build_wince:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Windows CE
+          command: |
+            bash ci/setup_common_requirements.sh
+            bash ci/build_wince.sh
   build_tomtom_minimal:
     <<: *defaults
     docker:
