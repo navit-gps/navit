@@ -2353,7 +2353,7 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
  * @return The adjusted delta, which is numerically within +/-180 degrees of the reference. If {@code delta} or {@code reference}
  * are outside of their specified range, the result is undefined.
  */
-int adjust_delta(int delta, int reference) {
+static int adjust_delta(int delta, int reference) {
 	if ((delta >= 0) && (delta - reference) > 180) {
 		dbg(lvl_debug,"adjusting delta from %d to %d\n", delta, delta - 360);
 		return delta - 360;
@@ -2402,7 +2402,7 @@ int adjust_delta(int delta, int reference) {
  * this function
  * @param itm The navigation item for the maneuver to exit the roundabout
  */
-void navigation_analyze_roundabout(struct navigation *this_, struct navigation_command *cmd, struct navigation_itm *itm) {
+static void navigation_analyze_roundabout(struct navigation *this_, struct navigation_command *cmd, struct navigation_itm *itm) {
 	enum item_type r = type_none, l = type_none;
 	int len = 0;                 /* length of roundabout segment */
 	int roundabout_length;       /* estimated total length of roundabout */

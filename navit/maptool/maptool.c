@@ -80,7 +80,7 @@ static struct timespec start_ts;
 /*
   Asynchronous signal safe lltoa function (note: no trailing \0 char!)
 */
-int assafe_lltoa(long long n, int maxlen, char *buf)
+static int assafe_lltoa(long long n, int maxlen, char *buf)
 {
 	int i;
 	int out_length;
@@ -114,7 +114,7 @@ int assafe_lltoa(long long n, int maxlen, char *buf)
 /*
   Asynchronous signal safe string copy to buffer function (note: no trailing \0 char!)
 */
-int assafe_strcp2buf(char *str, int maxlen, char *buf)
+static int assafe_strcp2buf(char *str, int maxlen, char *buf)
 {
 	int i;
 	for(i=0;str[i] && i<maxlen;i++)
@@ -159,7 +159,7 @@ progress_memory(void)
 #endif
 }
 
-void
+static void
 sig_alrm_do(int sig)
 {
 	const int buflen=1024;
