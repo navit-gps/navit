@@ -267,7 +267,7 @@ maptool_init(FILE* rule_file)
 }
 
 static void
-usage()
+usage(void)
 {
 	FILE *f = stdout;
 	/* DEVELOPERS : don't forget to update the manpage if you modify theses options */

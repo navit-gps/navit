@@ -969,7 +969,7 @@ round_distance(int dist)
 *   @return value with the highest distance.
 */
 static int
-distance_set_last()
+distance_set_last(void)
 {
 	static int i=0;
 	if (i == 0) {
