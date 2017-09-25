@@ -34,7 +34,29 @@
 #include "projection.h"
 #include "point.h"
 
-#define POST_SHIFT 8
+/** @file
+ *
+ * Coordinate transformations and projections.
+ */
+
+/**
+ * @brief Bitshift to apply during coordinate transformation.
+ *
+ * This bitshift is applied (left shift) during coordinate transformation (and later reversed).
+ * The transformation is performed with integer arithmetic, and this shift reduces rounding
+ * errors when converting floating point numbers to integers, particularly because some input
+ * values are fairly small (for example, the entries in the transformation matrix, <tt>struct
+ * transformation</tt>).
+ *
+ * This works because the transformations involve only multiplications, so the shift can be
+ * applied to one factor and removed from the result.
+ *
+ * The value is a compromise; if it is too small, rounding errors increase, if it is too large,
+ * signed integer calculations will overflow at high zoom levels (which is undefined behavior).
+ *
+ * @see transformation
+ */
+#define POST_SHIFT 5
 
 /**
  * @brief The parameters needed to transform a map for display.
