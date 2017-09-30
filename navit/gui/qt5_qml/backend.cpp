@@ -409,12 +409,12 @@ void Backend::setCurrentVehicle(int index) {
 }
 
 /**
- * @brief returns the icon (xpm) absolute path
+ * @brief returns the icon absolute path
  * @param none
- * @returns the icon (xpm) absolute path as a QString
+ * @returns the icon absolute path as a QString
  */ 
 QString Backend::get_icon_path(){
-        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",NULL));
+        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/icons/",NULL));
 }
 
 /**
@@ -468,7 +468,7 @@ QString Backend::get_country_icon(char * country_iso_code){
 //        if ( country_iso_code == "" ) {
 //                country_iso_code = _country_iso2;
 //        }
-        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",country_iso_code,".svg",NULL));
+        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/icons/",country_iso_code,".svg",NULL));
 }
 
 
