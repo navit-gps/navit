@@ -206,7 +206,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 //		dbg(lvl_info,"delta(%i)\n",priv->delta);
 //	}
 
-	if (!strncmp(buffer, "$GPGGA", 6)) {
+	if (!strncmp(&buffer[3], "GGA", 3)) {
 		/*                                                           1 1111
 		   0      1          2         3 4          5 6 7  8   9     0 1234
 		   $GPGGA,184424.505,4924.2811,N,01107.8846,E,1,05,2.5,408.6,M,,,,0000*0C
@@ -262,7 +262,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 #endif
 		ret = 1;
 	}
-	if (!strncmp(buffer, "$GPVTG", 6)) {
+	if (!strncmp(&buffer[3], "VTG", 3)) {
 		/* 0      1      2 34 5    6 7   8
 		   $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
@@ -278,7 +278,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			dbg(lvl_info,"direction %lf, speed %2.1lf\n", priv->track, priv->speed);
 		}
 	}
-	if (!strncmp(buffer, "$GPRMC", 6)) {
+	if (!strncmp(&buffer[3], "RMC", 3)) {
 		/*                                                           1     1
 		   0      1      2 3        4 5         6 7     8     9      0     1
 		   $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
@@ -352,7 +352,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 #endif
 	}
 #if 0
-	if (!strncmp(buffer, "$GPZDA", 6)) {
+	if (!strncmp(&buffer[3], "ZDA", 3)) {
 	/*
 		0        1        2  3  4    5  6
 		$GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
