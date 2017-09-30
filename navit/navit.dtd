@@ -9,6 +9,7 @@
 <!ELEMENT debug EMPTY>
 <!ATTLIST debug name CDATA #REQUIRED>
 <!ATTLIST debug level CDATA "0">
+<!ATTLIST debug dbg_level (error|warning|info|debug) "error">
 <!ELEMENT log EMPTY>
 <!ATTLIST log enabled CDATA #IMPLIED>
 <!ATTLIST log type CDATA #REQUIRED>
@@ -16,7 +17,7 @@
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
 <!ATTLIST log attr_types CDATA #IMPLIED>
-<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking,vehicleprofile*,route,navigation,speech,mapset+,layout+)>
+<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking,vehicleprofile*,route,navigation,speech,mapset+,layout+)*>
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
@@ -51,6 +52,13 @@
 <!ATTLIST vehicleprofile maxspeed_handling CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_mode CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_depth CDATA #IMPLIED>
+<!ATTLIST vehicleprofile static_distance CDATA #IMPLIED>
+<!ATTLIST vehicleprofile static_speed CDATA #IMPLIED>
+<!ATTLIST vehicleprofile vehicle_width CDATA #IMPLIED>
+<!ATTLIST vehicleprofile vehicle_height CDATA #IMPLIED>
+<!ATTLIST vehicleprofile vehicle_length CDATA #IMPLIED>
+<!ATTLIST vehicleprofile vehicle_weight CDATA #IMPLIED>
+<!ATTLIST vehicleprofile vehicle_axle_weight CDATA #IMPLIED>
 <!ELEMENT coord EMPTY>
 <!ATTLIST coord x CDATA #REQUIRED>
 <!ATTLIST coord y CDATA #REQUIRED>
@@ -90,7 +98,7 @@
 <!ATTLIST map active CDATA #IMPLIED>
 <!ATTLIST map data CDATA #REQUIRED>
 <!ATTLIST map debug CDATA #IMPLIED>
-<!ELEMENT layout (cursor*,xi:include*,layer*)>
+<!ELEMENT layout (cursor*,xi:include*,layer+)*>
 <!ATTLIST layout name CDATA #REQUIRED>
 <!ATTLIST layout active CDATA #IMPLIED>
 <!ATTLIST layout color CDATA #IMPLIED>
@@ -101,6 +109,9 @@
 <!ATTLIST layer enabled CDATA #IMPLIED>
 <!ATTLIST layer name CDATA #IMPLIED>
 <!ATTLIST layer details CDATA #IMPLIED>
+<!ATTLIST layer order CDATA #IMPLIED>
+<!ATTLIST layer ref CDATA #IMPLIED>
+<!ATTLIST layer active CDATA #IMPLIED>
 <!ELEMENT osd EMPTY>
 <!ATTLIST osd enabled CDATA #IMPLIED>
 <!ATTLIST osd type CDATA #REQUIRED>
@@ -119,18 +130,23 @@
 <!ATTLIST polyline width CDATA #IMPLIED>
 <!ATTLIST polyline dash CDATA #IMPLIED>
 <!ATTLIST polyline offset CDATA #IMPLIED>
+<!ATTLIST polyline radius CDATA #IMPLIED>
 <!ELEMENT text EMPTY>
 <!ATTLIST text text_size CDATA #REQUIRED>
 <!ATTLIST text color CDATA #IMPLIED>
+<!ATTLIST text background_color CDATA #IMPLIED>
 <!ELEMENT circle (coord*)>
 <!ATTLIST circle color CDATA #REQUIRED>
 <!ATTLIST circle radius CDATA #REQUIRED>
 <!ATTLIST circle width CDATA #IMPLIED>
 <!ATTLIST circle text_size CDATA #IMPLIED>
+<!ATTLIST circle background_color CDATA #IMPLIED>
 <!ELEMENT icon EMPTY>
 <!ATTLIST icon src CDATA #REQUIRED>
 <!ATTLIST icon w CDATA #IMPLIED>
 <!ATTLIST icon h CDATA #IMPLIED>
+<!ATTLIST icon x CDATA #IMPLIED>
+<!ATTLIST icon y CDATA #IMPLIED>
 <!ELEMENT arrows EMPTY>
 <!ATTLIST arrows color CDATA #REQUIRED>
 <!ATTLIST arrows width CDATA #IMPLIED>
