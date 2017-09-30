@@ -510,16 +510,16 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			int heightmap_installed = FALSE;
 			msh=mapset_open(ms);
 			while ((map=mapset_next(msh, 1))) {
-				struct attr name_attr;
-				if (map_get_attr(map, attr_name, &name_attr, NULL)){
-					dbg(lvl_debug,"map name = %s\n",name_attr.u.str);
-					if (strstr(name_attr.u.str,".heightlines.bin")){
-						dbg(lvl_info,"reading heightlines from map %s\n",name_attr.u.str);
+				struct attr data_attr;
+				if (map_get_attr(map, attr_data, &data_attr, NULL)){
+					dbg(lvl_debug,"map name = %s\n",data_attr.u.str);
+					if (strstr(data_attr.u.str,".heightlines.bin")){
+						dbg(lvl_info,"reading heightlines from map %s\n",data_attr.u.str);
 						mr=map_rect_new(map, &sel);
 						heightmap_installed = TRUE;
 					}
 					else {
-						dbg(lvl_debug,"ignoring map %s\n",name_attr.u.str);
+						dbg(lvl_debug,"ignoring map %s\n",data_attr.u.str);
 					}
 				}
 				if (mr) {

@@ -89,6 +89,8 @@ struct graphics_priv {
     int disable;
     int x;
     int y;
+    int scroll_x;
+    int scroll_y;
     struct graphics_gc_priv* background_graphics_gc_priv;
 #if HAVE_FREETYPE
     struct font_priv* (*font_freetype_new)(void* meth);

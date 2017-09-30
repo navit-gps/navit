@@ -76,8 +76,8 @@ if(NOT ANDROID)
    endif()
    if (BUILD_BUNDLE)
       list(APPEND NAVIT_START_SRC resources/share resources/Icon.png resources/Default.png)
-      add_custom_command(OUTPUT resources/Icon.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/xpm/desktop_icons/128x128/navit.png resources/Icon.png)
-      add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/xpm/desktop_icons/128x128/navit.png resources/Default.png)
+      add_custom_command(OUTPUT resources/Icon.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Icon.png)
+      add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Default.png)
    endif()
    add_executable(navit ${NAVIT_START_SRC})
    target_link_libraries (navit ${NAVIT_LIBNAME})
@@ -132,9 +132,14 @@ macro(process_xslt SRC_XML DEST_XML)
           list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename ${DEST_XML}.tmp ${DEST_XML})
        endforeach()
    endif()
+   # Depend on all XSLT files, because the main XSLT file may pull in other files.
+   # Ideally we'd parse the main XSLT file for includes, but that is tricky to do reliably.
+   # Note that this list of files is only updated when (re)running CMake, so if files are
+   # added/deleted, CMake must be re-run manually.
+   file(GLOB ALL_XSLT_FILES "${PROJECT_SOURCE_DIR}/navit/xslt/*.xslt")
    ADD_CUSTOM_COMMAND(
       OUTPUT ${DEST_XML}
-      DEPENDS ${SRC_XML} ${XSLT_FILES}
+      DEPENDS ${SRC_XML} ${ALL_XSLT_FILES}
       ${XSLT_COMMANDS}
    )
 endmacro()
@@ -161,7 +166,7 @@ endif()
 
 
 add_subdirectory (maptool)
-add_subdirectory (xpm)
+add_subdirectory (icons)
 add_subdirectory (maps)
 if(ANDROID)
    add_subdirectory (android)

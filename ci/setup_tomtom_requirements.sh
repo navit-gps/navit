@@ -1,11 +1,16 @@
 #!/bin/sh
 # this builds navit for tomtom
-# in case you want to build a plugin for tomtom use build_tomtom_plugin.sh instead
-# in case you want to build a standalone system
-# https://github.com/george-hopkins/opentom
-# https://github.com/gefin/opentom
 
 set -e
+
+# install additional packages to build TT evitonment and navit
+apt-get install -y libglib2.0-dev git autogen autoconf libtool imagemagick zip
+dpkg --add-architecture i386
+apt-get update
+apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
+
+#remove disturbing build artefact for second run
+rm -f /opt/tomtom-sdk/gcc-3.3.4_glibc-2.3.2/arm-linux/sys-root/bin//glib-genmarshal
 
 export ARCH=arm-linux
 cp Toolchain/$ARCH.cmake /tmp
@@ -28,33 +33,34 @@ export STRIP=$ARCH-strip
 export OBJCOPY=$ARCH-objcopy
 export LN_S="ln -s"
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
-JOBS=`getconf _NPROCESSORS_ONLN`
+JOBS=$(nproc --all) 
 
 echo "Jobs"
 echo $JOBS
 
-mkdir -p ~/assets/tomtom/
+mkdir -p ~/tomtom_assets
 
-if ! [ -e "~/assets/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
+if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
  then 
-  wget -nv -c http://www.tomtom.com/gpl/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/assets/tomtom
+  wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
 fi
 
-if ! test -f "~/assets/tomtom/libpng-1.6.29.tar.gz"
+if ! test -f "~/tomtom_assets/libpng-1.6.29.tar.gz"
 then 
-  wget -nv -c ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.29.tar.gz -P ~/assets/tomtom
+  wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/libpng-1.6.29.tar.gz -P ~/tomtom_assets
 fi
 
 # toolchain
 cd /tmp
 mkdir -p $TOMTOM_SDK_DIR
-tar xzf ~/assets/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -C $TOMTOM_SDK_DIR
+tar xzf ~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -C $TOMTOM_SDK_DIR
+
 
 # zlib
 cd /tmp
-wget -nv -c http://zlib.net/zlib-1.2.9.tar.gz
-tar xzf zlib-1.2.9.tar.gz
-cd zlib-1.2.9
+wget -nv -c http://zlib.net/zlib-1.2.11.tar.gz
+tar xzf zlib-1.2.11.tar.gz
+cd zlib-1.2.11
 ./configure --prefix=$PREFIX
 make -j$JOBS
 make install
@@ -70,7 +76,7 @@ make install
 
 # libpng
 cd /tmp/
-tar xzf ~/assets/tomtom/libpng-1.6.29.tar.gz
+tar xzf ~/tomtom_assets/libpng-1.6.29.tar.gz
 cd libpng-1.6.29/ 
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
@@ -156,53 +162,6 @@ make -j$JOBS
 make install
 
 
-
-# espeak
-cd /tmp
-# this one includes the precompiled voices
-wget -nv -c http://freefr.dl.sourceforge.net/project/espeak/espeak/espeak-1.48/espeak-1.48.04-source.zip
-unzip espeak-1.48.04-source.zip
-cd espeak-1.48.04-source
-sed -i "s/PREFIX=\/usr//g" src/Makefile
-sed -i "s/DATADIR=\/usr\/share\/espeak-data/DATADIR=~\/share\/espeak-data/g" src/Makefile
-sed -i "s/AUDIO = portaudio/#AUDIO = portaudio/g" src/Makefile
-sed -i "s/-fvisibility=hidden//g" src/Makefile
-cat src/Makefile
-make -C src
-cd src
-sudo make install
-
-# http://forum.navit-project.org/viewtopic.php?f=17&t=568
-cd /tmp
-arm-linux-gcc -O2 -I$PREFIX/include -I$PREFIX/usr/include ~/navit/contrib/tomtom/espeakdsp.c -o espeakdsp
-
-
-
 # in the end we only want Navit locale
 rm -r $PREFIX/share/locale
-
-# navit
-cd ~/navit
-sed -i "s|set ( TOMTOM_SDK_DIR /opt/tomtom-sdk )|set ( TOMTOM_SDK_DIR $TOMTOM_SDK_DIR )|g" /tmp/$ARCH.cmake
-mkdir -p build
-cd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE \
--DHAVE_API_TOMTOM=TRUE -DXSLTS=tomtom -DAVOID_FLOAT=TRUE -Dmap/mg=FALSE -DUSE_PLUGINS=0 -DCMAKE_TOOLCHAIN_FILE=/tmp/$ARCH.cmake \
--DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
-make -j$JOBS
-make install
-cd ..
-
-
-# creating directories
-OUT_PATH="/tmp/tomtom/sdcard"
-rm -rf $OUT_PATH
-mkdir -p $OUT_PATH
-cd $OUT_PATH
-mkdir -p navit SDKRegistry
-cd navit
-mkdir -p bin lib share sdl ts
-cd share
-mkdir -p fonts
-cd ..
 

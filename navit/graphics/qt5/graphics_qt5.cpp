@@ -575,14 +575,49 @@ draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* 
         dbg(lvl_debug, "Try to draw image, but no painter\n");
 }
 
+/**
+ * @brief	Drag layer.
+ * @param   gr private handle
+ * @param	p	vector the bitmap is moved from base, or NULL to indicate 0:0 vector
+ *
+ * Move layer to new position. If drag_bitmap is enabled this may also be
+ * called for root layer. There the content of the root layer is to be moved
+ * by given vector. On root layer, NULL indicates the end of a drag.
+ */
 static void draw_drag(struct graphics_priv* gr, struct point* p)
 {
+    struct point vector;
+
     if (p != NULL) {
-        //            dbg(lvl_debug,"enter %p (%d,%d)\n", gr, p->x, p->y);
-        gr->x = p->x;
-        gr->y = p->y;
+        dbg(lvl_debug, "enter %p (%d,%d)\n", gr, p->x, p->y);
+        vector = *p;
     } else {
-        //            dbg(lvl_debug,"enter %p (NULL)\n", gr);
+        dbg(lvl_debug, "enter %p (NULL)\n", gr);
+        vector.x = 0;
+        vector.y = 0;
+    }
+    if (gr->root) {
+        gr->scroll_x = vector.x;
+        gr->scroll_y = vector.y;
+    } else {
+#if USE_QWIDGET
+        int damage_x = gr->x;
+        int damage_y = gr->y;
+        int damage_w = gr->pixmap->width();
+        int damage_h = gr->pixmap->height();
+#endif
+        gr->x = vector.x;
+        gr->y = vector.y;
+#if USE_QWIDGET
+        /* call repaint on widget for stale area. */
+        if (gr->widget != NULL)
+            gr->widget->repaint(damage_x, damage_y, damage_w, damage_h);
+#endif
+#if USE_QML
+// No need to emit update, as QNavitQuic always repaints everything.
+//    if (gr->GPriv != NULL)
+//        gr->GPriv->emit_update();
+#endif
     }
 }
 
@@ -608,26 +643,29 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
     case draw_mode_end:
         dbg(lvl_debug, "End drawing on context %p (use == %d)\n", gr, gr->use_count);
         gr->use_count--;
+        if (gr->use_count < 0)
+            gr->use_count = 0;
         if (gr->use_count > 0) {
             dbg(lvl_debug, "drawing on %p still in use\n", gr);
         } else if (gr->painter != NULL) {
             gr->painter->end();
             delete (gr->painter);
             gr->painter = NULL;
+        } else {
+            dbg(lvl_debug, "Context %p not active!\n", gr)
+        }
 #if USE_QWIDGET
-            /* call repaint on widget */
-            if (gr->widget != NULL)
-                gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
+        /* call repaint on widget */
+        if (gr->widget != NULL)
+            gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-            if (gr->GPriv != NULL)
-                gr->GPriv->emit_update();
+        if (gr->GPriv != NULL)
+            gr->GPriv->emit_update();
 
 #endif
-        } else
-            dbg(lvl_debug, "Context %p not active!\n", gr)
 
-                break;
+        break;
     default:
         dbg(lvl_debug, "Unknown drawing %d on context %p\n", mode, gr);
         break;
@@ -739,7 +777,6 @@ static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* f
 {
     int i;
     struct point pt;
-    QPainter* painter = gr->painter;
     QString tmp = QString::fromUtf8(text);
     QRect r;
     //        dbg(lvl_debug,"enter %s %d %d\n", text, dx, dy);
@@ -853,6 +890,8 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
     graphics_priv->use_count = 0;
     graphics_priv->parent = gr;
     graphics_priv->overlays = g_hash_table_new(NULL, NULL);
+    graphics_priv->scroll_x = 0;
+    graphics_priv->scroll_y = 0;
     graphics_priv->root = false;
     graphics_priv->argc = 0;
     graphics_priv->argv[0] = NULL;
@@ -955,6 +994,8 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     graphics_priv->x = 0;
     graphics_priv->y = 0;
     graphics_priv->disable = 0;
+    graphics_priv->scroll_x = 0;
+    graphics_priv->scroll_y = 0;
 #if USE_QML
     graphics_priv->engine = NULL;
     graphics_priv->window = NULL;

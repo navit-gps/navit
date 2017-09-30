@@ -1,16 +1,21 @@
-sudo apt-get install cmake libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev g++ libgtk2.0-dev libqt5svg5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-window-plugin qtmultimedia5-dev
+set -e
+
+COVERITY_VERSION="2017.07"
+
+apt-get install -y libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
 
 cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
 
+mkdir ${CIRCLE_WORKING_DIRECTORY}/linux-bin && cd ${CIRCLE_WORKING_DIRECTORY}/linux-bin
+
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	# If we are building the official trunk code, push an update to coverity
-	wget -nv -c -O ~/assets/cov-analysis-linux64-7.6.0.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-7.6.0.tar.gz
-	tar xfz ~/assets/cov-analysis-linux64-7.6.0.tar.gz
-	export PATH=~/navit/cov-analysis-linux64-7.6.0/bin:$PATH
+	wget -nv -c -O /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz http://sd-55475.dedibox.fr/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz
+	tar xfz /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz --no-same-owner -C /usr/local/share/
+	export PATH=/usr/local/share/cov-analysis-linux64-${COVERITY_VERSION}/bin:$PATH
 	
-	mkdir ~/linux-bin && cd ~/linux-bin
-	cov-build --dir cov-int cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts}
-	cov-build --dir cov-int make || exit -1
+	cov-build --dir cov-int cmake ${CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts}
+	cov-build --dir cov-int make -j $(nproc --all) || exit -1
 	tar czvf navit.tgz cov-int
 	
 	curl --form token=$COVERITY_TOKEN \
@@ -26,15 +31,10 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
 
 else
-	mkdir ~/linux-bin && cd ~/linux-bin
-	cmake ~/${CIRCLE_PROJECT_REPONAME}/ ${cmake_opts} || exit -1
-	make  || exit -1
+	cmake ${CIRCLE_WORKING_DIRECTORY}/ ${cmake_opts} || exit -1
+	make -j $(nproc --all) || exit -1
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
-	cp -r navit/xpm $CIRCLE_ARTIFACTS
+	cp -r navit/icons $CIRCLE_ARTIFACTS
 fi
-
-
-# Done with the builds tests. Running some app tests 
-bash ~/navit/ci/run_linux_tests.sh

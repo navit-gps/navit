@@ -552,7 +552,7 @@ start_phase(struct maptool_params *p, char *str)
 
 static void
 exit_with_error(char* error_message) {
-	fprintf(stderr, error_message);
+	fprintf(stderr, "%s", error_message);
 	exit(1);
 }
 
