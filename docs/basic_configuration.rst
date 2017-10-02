@@ -56,7 +56,5 @@ See furthermore: [[Configuration]]
 Enable Map
 ----------
 Just change the map entry corresponding to your local folders
-<source lang="xml"> <map type="binfile" enabled="yes" data="/var/navit/maps/uk.bin" /></source>
-
-[[Category:Customizing]]
-[[Category:Support]]
+.. code-block:: xml
+  <source lang="xml"> <map type="binfile" enabled="yes" data="/var/navit/maps/uk.bin" /></source>
