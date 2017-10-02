@@ -10,11 +10,7 @@ the OpenSource vector based navigation software.
     :numbered:
     :maxdepth: 2
 
-    intro
-    get_started
-    stand_phot
-    crowd_phot
-    transf
+    basic_configuration
 
 
 .. Indices and tables
