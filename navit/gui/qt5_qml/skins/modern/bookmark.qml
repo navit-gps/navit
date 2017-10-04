@@ -4,7 +4,7 @@ import com.navit.graphics_qt5 1.0
 
 
 Item {
-    id: poiItem
+    id: bookmarkItem
     visible: true
     property var small_font_size : 16
 
@@ -13,7 +13,7 @@ Item {
         x: 8
         y: 8
         color: "#ffffff"
-        text: backend.activePoi.name
+        text: backend.currentBookmark.name
         font.pixelSize: 32
     }
 
@@ -37,7 +37,7 @@ Item {
         x: 160
         y: 64
         color: "#ffffff"
-        text: backend.activePoi.type
+        text: backend.currentBookmark.type
         font.pixelSize: small_font_size
     }
 
@@ -45,7 +45,7 @@ Item {
         x: 160
         y: 96
         color: "#ffffff"
-        text: backend.activePoi.distance
+        text: backend.currentBookmark.distance
         font.pixelSize: small_font_size
     }
 
@@ -61,7 +61,7 @@ Item {
         Image {
             height: parent.width
             width: parent.height
-            source : backend.get_icon_path() + backend.activePoi.icon
+            source : backend.get_icon_path() + backend.currentBookmark.icon
             sourceSize.width: parent.width
             sourceSize.height: parent.height
         }
@@ -97,7 +97,7 @@ Item {
         text: "Set as destination"
         icon: "icons/appbar.location.checkin.svg"
         onClicked: {
-            backend.setActivePoiAsDestination()
+            backend.setCurrentBookmarkAsDestination()
         }
     }
 
