@@ -30,6 +30,9 @@ GridLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
         icon: "icons/appbar.location.svg"
+        onClicked: {
+            menucontent.source = "bookmarks.qml"
+        }
     }
 
     MainButton {
