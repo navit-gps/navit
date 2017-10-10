@@ -1,6 +1,4 @@
-/** @file vehicle_gypsy.c
- * @brief gypsy uses dbus signals
- *
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -18,8 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  *
- * @Author Tim Niemeyer <reddog@mastersword.de>
- * @date 2008-2009
  */
 
 #include <config.h>
@@ -46,6 +42,16 @@
 #include "coord.h"
 #include "item.h"
 #include "vehicle.h"
+
+/**
+ * @defgroup vehicle-gypsy Vehicle gypsy
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from gypsy. gypsy uses dbus signals
+ * @Author Tim Niemeyer <reddog@mastersword.de>
+ * @date 2008-2009
+ *
+ * @{
+ */
 
 static struct vehicle_priv {
 	char *source;

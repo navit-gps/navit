@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -37,6 +37,13 @@
 #include "plugin.h"
 #include "item.h"
 #include "debug.h"
+
+/**
+ * @defgroup plugins
+ * @brief A interface to handle all plugins inside navit
+ *
+ * @{
+ */
 
 #ifdef USE_PLUGINS
 #ifndef HAVE_GMODULE

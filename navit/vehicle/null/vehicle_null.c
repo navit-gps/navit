@@ -1,4 +1,4 @@
-/** @file vehicle_null.c
+/*
  * @brief null uses dbus signals
  *
  * Navit, a modular navigation system.
@@ -33,6 +33,14 @@
 #include "coord.h"
 #include "item.h"
 #include "vehicle.h"
+
+/**
+ * @defgroup vehicle-null Vehicle Null
+ * @ingroup vehicle-plugins
+ * @brief A dummy Vehicle to have a null movement.
+ *
+ * @{
+ */
 
 struct vehicle_priv {
 	struct callback_list *cbl;

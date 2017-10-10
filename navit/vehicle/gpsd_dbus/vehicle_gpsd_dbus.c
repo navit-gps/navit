@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -33,6 +33,14 @@
 #include "item.h"
 #include "vehicle.h"
 #include "event.h"
+
+/**
+ * @defgroup vehicle-gpsd-dbus Vehicle Gpsd DBus
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from Gpsd over DBus
+ *
+ * @{
+ */
 
 static char *vehicle_gpsd_dbus_prefix="gpsd_dbus:";
 

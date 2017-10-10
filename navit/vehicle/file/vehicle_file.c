@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -58,6 +58,14 @@ int inet_aton(const char *cp, struct in_addr *inp)
 	return addr!=-1;
 }
 #endif
+
+/**
+ * @defgroup vehicle-file Vehicle File
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from a file, pipe, serial interface or a socket
+ *
+ * @{
+ */
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);

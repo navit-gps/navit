@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -43,6 +43,14 @@
 #include <winbase.h>
 #include <wchar.h>
 #include "support/win32/ConvertUTF.h"
+
+/**
+ * @defgroup vehicle-wince Vehicle WinCE
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from WinCE
+ *
+ * @{
+ */
 
 #define SwitchToThread() Sleep(0)
 
