@@ -18,10 +18,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install doxygen
+          command: apt-get update && apt-get install doxygen
+      - run:
           name: Run doxygen
-          command: |
-            apt-get install doxygen
-            doxygen
+          command: doxygen
   build_android_arm:
     <<: *defaults
     steps:
