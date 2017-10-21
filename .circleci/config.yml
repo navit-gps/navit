@@ -22,7 +22,9 @@ jobs:
           command: apt-get update && apt-get install doxygen
       - run:
           name: Run doxygen
-          command: doxygen
+          command: cd navit && doxygen
+      - store_artifacts:
+          path: /root/project/doc
   build_android_arm:
     <<: *defaults
     steps:
