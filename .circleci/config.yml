@@ -19,7 +19,7 @@ jobs:
       - checkout
       - run:
           name: Install doxygen
-          command: apt-get update && apt-get install doxygen ca-certificates
+          command: apt-get update && apt-get -y install doxygen ca-certificates
       - run:
           name: Run doxygen
           command: cd navit && doxygen
