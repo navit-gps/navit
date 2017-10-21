@@ -13,6 +13,15 @@ jobs:
           command: |
             bash ci/setup_common_requirements.sh
             bash ci/build_linux.sh
+  run_doxygen:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Run doxygen
+          command: |
+            apt-get install doxygen
+            doxygen
   build_android_arm:
     <<: *defaults
     steps:
@@ -105,6 +114,9 @@ workflows:
   build_all:
     jobs:
       - build_linux
+      - run_doxygen
+          requires:
+            - build_linux
       - build_android_arm
       - build_android_x86
       - build_win32
