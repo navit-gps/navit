@@ -114,7 +114,7 @@ workflows:
   build_all:
     jobs:
       - build_linux
-      - run_doxygen
+      - run_doxygen:
           requires:
             - build_linux
       - build_android_arm
