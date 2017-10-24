@@ -23,6 +23,14 @@ jobs:
       - run:
           name: Run doxygen
           command: cd navit && doxygen
+      - run:
+          name: Update results to Github
+          command: |
+            git clone git@github.com:navit-gps/doxygen.git
+            rsync -vrtza --delete /root/project/doc doxygen/
+            git add doxygen/
+            git commit -m "Documentation update"
+            git push
       - store_artifacts:
           path: /root/project/doc
   build_android_arm:
