@@ -2,12 +2,15 @@
 #!/bin/bash
 set -x
 
-find .
+apt-get update && apt-get upgrade -y && apt-get install libc6-i386
 
-export MING_PATH=$(pwd)/opt/mingw32ce
+# Dirty hack due to mingw32ce being so old
+ln -s /usr/lib/x86_64-linux-gnu/libmpfr.4 /usr/lib/libmpfr.so.1
+
+export MING_PATH=$(pwd)/opt/mingw32ce/bin
 export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
 export CMAKE_FILE=$SOURCE_PATH"/Toolchain/arm-mingw32ce.cmake"
-export PATH=$PATH:$MING_PATH/bin
+export PATH=$PATH:$MING_PATH
 
 echo "#####PATH IS:" $PATH
 
