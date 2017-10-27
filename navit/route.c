@@ -217,7 +217,8 @@ struct route_info {
 /**
  * @brief A complete route path
  *
- * This structure describes a whole routing path
+ * A route path is an ordered set of segments describing the route from the current position (or previous
+ * destination) to the next destination.
  */
 struct route_path {
 	int in_use;						/**< The path is in use and can not be updated */
@@ -265,7 +266,8 @@ struct route {
 /**
  * @brief A complete route graph
  *
- * This structure describes a whole routing graph
+ * The route graph holds all routable segments along with the connections between them and the cost of
+ * each segment.
  */
 struct route_graph {
 	int busy;					/**< The graph is being built */
