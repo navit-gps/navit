@@ -94,7 +94,9 @@ struct route_graph_point {
 										  *  least costs */
 	struct fibheap_el *el;				 /**< When this point is put on a Fibonacci heap, this is a pointer
 										  *  to this point's heap-element */
-	int value;							 /**< The cost at which one can reach the destination from this point on */
+	int value;							 /**< The cost at which one can reach the destination from this point on.
+	                                      *  {@code INT_MAX} indicates that the destination is unreachable from this
+	                                      *  point, or that this point has not yet been examined. */
 	struct coord c;						 /**< Coordinates of this point */
 	int flags;						/**< Flags for this point (eg traffic distortion) */
 };
@@ -1165,8 +1167,9 @@ route_clear_destinations(struct route *this_)
  * and updates the route.
  *
  * @param this The route to set the destination for
- * @param dst Coordinates to set as destination
- * @param count Number of destinations (last one is final)
+ * @param dst Points to an array of coordinates to set as destinations, which will be visited in the
+ * order in which they appear in the array (the last one is the final destination)
+ * @param count Number of items in {@code dst}, 0 to clear all destinations
  * @param async If set, do routing asynchronously
  */
 
@@ -2932,6 +2935,15 @@ route_graph_process_restrictions(struct route_graph *this)
 	}
 }
 
+/**
+ * @brief Releases all resources needed to build the route graph.
+ *
+ * If {@code cancel} is false, this function will start processing restrictions and ultimately call
+ * the route graph's {@code done_cb} callback.
+ *
+ * @param rg Points to the route graph
+ * @param cancel True if the process was aborted before completing, false if it completed normally
+ */
 static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
