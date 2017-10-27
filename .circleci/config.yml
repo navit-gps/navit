@@ -110,3 +110,4 @@ workflows:
       - build_win32
       - build_tomtom_minimal
       - build_tomtom_plugin
+      - build_wince
