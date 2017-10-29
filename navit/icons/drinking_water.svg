@@ -52,15 +52,15 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="63.25448"
-     inkscape:cy="84.317601"
+     inkscape:cx="24.94017"
+     inkscape:cy="6.5543801"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="705"
      inkscape:window-width="1366"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:zoom="2.1796875"
+     inkscape:zoom="1.2239456"
      objecttolerance="10.0"
      pagecolor="#ffffff"
      showgrid="false"
@@ -68,15 +68,6 @@
      inkscape:measure-start="0,0"
      inkscape:measure-end="0,0"
      inkscape:lockguides="true" />
-  <g
-     id="g1327"
-     transform="matrix(0.04083073,0,0,0.04083073,-0.1767767,176.93977)">
-    <path
-       d="M 66.275,1.768 C 24.94,1.768 1.704,23.139 1.704,66.804 v 450.123 c 0,40.844 20.894,62.229 62.192,62.229 H 515.92 c 41.307,0 62.229,-20.316 62.229,-62.229 V 66.804 c 0,-42.601 -20.922,-65.036 -63.522,-65.036 -0.003,0 -448.494,-0.143 -448.352,0 z"
-       id="path1329"
-       style="fill:#111111;fill-opacity:0;stroke:#eeeeee;stroke-width:3.40799999;stroke-opacity:0"
-       inkscape:connector-curvature="0" />
-  </g>
   <g
      id="g2319"
      transform="matrix(0.04083073,0,0,0.04083073,35.725326,178.44255)">
@@ -95,12 +86,6 @@
        style="fill:#0089cd;stroke:none"
        inkscape:connector-curvature="0" />
   </g>
-  <circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:11.37379169;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path1494"
-     cx="101.23385"
-     cy="83.203079"
-     r="63.333332" />
   <path
      style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:10.13824272;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 62.783034,3.5735704 V 17.236455 h 14.94995 v 11.38778 H 18.27971 L 3.8247918,16.892039 V 72.335481 L 17.735175,61.048734 h 49.948669 c 0,0 2.33359,13.446294 16.48455,12.722288 11.60169,-0.593114 12.7718,-12.722288 12.7718,-12.722288 0,0 11.035676,-0.184073 19.553746,0 3.42,0.08181 4.25383,2.558569 4.20776,4.900756 -0.26158,13.293515 0,19.108279 0,19.108279 0,0 16.20905,-0.184073 26.13764,0 0.094,-15.012933 0.28634,-26.772332 0,-39.949066 -0.24583,-11.342378 -17.94482,-16.249267 -29.15731,-16.484468 -11.21251,-0.235201 -29.305866,0 -29.305866,0 l 8e-5,-11.38778 H 105.20721 V 3.5735704 Z"
