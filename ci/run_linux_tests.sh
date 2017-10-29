@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 pushd ~/linux-bin/navit/
