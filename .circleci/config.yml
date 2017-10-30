@@ -37,7 +37,7 @@ jobs:
             rsync -vrtza --exclude '.git' --delete /root/project/doc/html/ /root/navit-doc/
             echo "" > .nojekyll
             git add .
-            git commit -am "Update doc for commit ${CIRCLE_SHA1} [ci skip]" || true
+            git commit -am "update:doc:Doxygen update for commit ${CIRCLE_SHA1} [ci skip]" || true
             git push
       - store_artifacts:
           path: /root/project/doc
