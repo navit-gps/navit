@@ -1,1 +1,0 @@
-module_add_library(vehicle_webos vehicle_webos.c)

@@ -1,1 +1,0 @@
-module_add_library(plugin_pedestrian pedestrian.c)

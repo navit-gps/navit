@@ -1,2 +1,0 @@
-#cmakedefine GIT_VERSION "@GIT_VERSION@"
-#cmakedefine NAVIT_VARIANT "@NAVIT_VARIANT@"

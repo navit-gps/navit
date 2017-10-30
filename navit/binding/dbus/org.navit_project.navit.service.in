@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.navit_project.navit
-Exec=@bindir@/navit

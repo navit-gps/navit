@@ -1,7 +1,0 @@
-Version|100|
-AppName|navit-wrapper|
-AppPath|/mnt/sdcard/navit/bin/|
-AppIconFile|navit.bmp|
-AppMainTitle|Navit|
-AppPort|2001|
-COMMAND|CMD|hallo|navit.bmp|Navit|
