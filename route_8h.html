@@ -882,8 +882,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>route_destroy</b> (st
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">this</td><td>The route to set the destination for </td></tr>
-    <tr><td class="paramname">dst</td><td>Coordinates to set as destination </td></tr>
-    <tr><td class="paramname">count</td><td>Number of destinations (last one is final) </td></tr>
+    <tr><td class="paramname">dst</td><td>Points to an array of coordinates to set as destinations, which will be visited in the order in which they appear in the array (the last one is the final destination) </td></tr>
+    <tr><td class="paramname">count</td><td>Number of items in<div class="fragment"><div class="line">dst </div>
+</div><!-- fragment --> , 0 to clear all destinations </td></tr>
     <tr><td class="paramname">async</td><td>If set, do routing asynchronously </td></tr>
   </table>
   </dd>

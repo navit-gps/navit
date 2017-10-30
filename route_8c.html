@@ -68,7 +68,6 @@ $(document).ready(function(){initNavTree('route_8c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -149,30 +148,6 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__rect__priv.html">map_rect_priv</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a155f7919b34af0a15191d0fac83bd7ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a155f7919b34af0a15191d0fac83bd7ef"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RP_TRAFFIC_DISTORTION</b>&#160;&#160;&#160;1</td></tr>
-<tr class="separator:a155f7919b34af0a15191d0fac83bd7ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa438cdb1fc7b3387237d2b26bb8018f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa438cdb1fc7b3387237d2b26bb8018f9"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RP_TURN_RESTRICTION</b>&#160;&#160;&#160;2</td></tr>
-<tr class="separator:aa438cdb1fc7b3387237d2b26bb8018f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad25243fa153d0c1b79a8c95808e158fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad25243fa153d0c1b79a8c95808e158fb"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RP_TURN_RESTRICTION_RESOLVED</b>&#160;&#160;&#160;4</td></tr>
-<tr class="separator:ad25243fa153d0c1b79a8c95808e158fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e4294db3fbb31870103d69bffec7205"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e4294db3fbb31870103d69bffec7205"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RSD_OFFSET</b>(x)&#160;&#160;&#160;*((int *)route_segment_data_field_pos((x), attr_offset))</td></tr>
-<tr class="separator:a6e4294db3fbb31870103d69bffec7205"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3ec9a2172bb385ab6deda0260d01f0c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3ec9a2172bb385ab6deda0260d01f0c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RSD_MAXSPEED</b>(x)&#160;&#160;&#160;*((int *)route_segment_data_field_pos((x), attr_maxspeed))</td></tr>
-<tr class="separator:ae3ec9a2172bb385ab6deda0260d01f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a043664048192f29757f5995cbf1a202a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a043664048192f29757f5995cbf1a202a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RSD_SIZE_WEIGHT</b>(x)&#160;&#160;&#160;*((struct <a class="el" href="structsize__weight__limit.html">size_weight_limit</a> *)route_segment_data_field_pos((x), attr_vehicle_width))</td></tr>
-<tr class="separator:a043664048192f29757f5995cbf1a202a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc4091925e9044d94a577da7eeaa30b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abc4091925e9044d94a577da7eeaa30b6"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RSD_DANGEROUS_GOODS</b>(x)&#160;&#160;&#160;*((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))</td></tr>
-<tr class="separator:abc4091925e9044d94a577da7eeaa30b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -960,8 +935,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>debug_route</b> =0</td
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">this</td><td>The route to set the destination for </td></tr>
-    <tr><td class="paramname">dst</td><td>Coordinates to set as destination </td></tr>
-    <tr><td class="paramname">count</td><td>Number of destinations (last one is final) </td></tr>
+    <tr><td class="paramname">dst</td><td>Points to an array of coordinates to set as destinations, which will be visited in the order in which they appear in the array (the last one is the final destination) </td></tr>
+    <tr><td class="paramname">count</td><td>Number of items in<div class="fragment"><div class="line">dst </div>
+</div><!-- fragment --> , 0 to clear all destinations </td></tr>
     <tr><td class="paramname">async</td><td>If set, do routing asynchronously </td></tr>
   </table>
   </dd>
@@ -1231,8 +1207,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>debug_route</b> =0</td
 <div class="line">        (object_func_ref)navit_object_ref,</div>
 <div class="line">        (object_func_unref)navit_object_unref,</div>
 <div class="line">}</div>
-<div class="ttc" id="route_8c_html_a15fb35208d5234b2f334d31f930b3c4c"><div class="ttname"><a href="route_8c.html#a15fb35208d5234b2f334d31f930b3c4c">route_new</a></div><div class="ttdeci">struct route * route_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a completely new route structure. </div><div class="ttdef"><b>Definition:</b> route.c:474</div></div>
-<div class="ttc" id="route_8c_html_acd539fe25796de904f57342b14dde071"><div class="ttname"><a href="route_8c.html#acd539fe25796de904f57342b14dde071">route_dup</a></div><div class="ttdeci">struct route * route_dup(struct route *orig)</div><div class="ttdoc">Duplicates a route object. </div><div class="ttdef"><b>Definition:</b> route.c:499</div></div>
+<div class="ttc" id="route_8c_html_a15fb35208d5234b2f334d31f930b3c4c"><div class="ttname"><a href="route_8c.html#a15fb35208d5234b2f334d31f930b3c4c">route_new</a></div><div class="ttdeci">struct route * route_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a completely new route structure. </div><div class="ttdef"><b>Definition:</b> route.c:478</div></div>
+<div class="ttc" id="route_8c_html_acd539fe25796de904f57342b14dde071"><div class="ttname"><a href="route_8c.html#acd539fe25796de904f57342b14dde071">route_dup</a></div><div class="ttdeci">struct route * route_dup(struct route *orig)</div><div class="ttdoc">Duplicates a route object. </div><div class="ttdef"><b>Definition:</b> route.c:503</div></div>
 </div><!-- fragment -->
 </div>
 </div>

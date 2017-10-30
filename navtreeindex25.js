@@ -1,12 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structwavegen__peaks__t.html":[3,0,555],
-"structwavegen__peaks__t.html#a100bd8edf31d3f3401929f3c388b201c":[3,0,555,9],
-"structwavegen__peaks__t.html#a229f7e690a66b87392696c8fd3aaa551":[3,0,555,1],
-"structwavegen__peaks__t.html#a4bb39481a4301859cd715cb56240a8f9":[3,0,555,11],
-"structwavegen__peaks__t.html#a73c1c09b3ef111510c94fba13b15144d":[3,0,555,3],
-"structwavegen__peaks__t.html#a9db7a2de165d1c04bdaf374d624092cd":[3,0,555,8],
-"structwavegen__peaks__t.html#aa3694fc5e4cdb37841f6748367851d1b":[3,0,555,2],
 "structwavegen__peaks__t.html#ac72c7f663875d9c488593af53bb100b6":[3,0,555,4],
 "structwavegen__peaks__t.html#ac8a2b8e7d4c24ce92b9d4f8130271ab8":[3,0,555,10],
 "structwavegen__peaks__t.html#ad5b4562b61114563f7af78283675cf23":[3,0,555,0],
@@ -249,5 +242,12 @@ var NAVTREEINDEX25 =
 "support_2espeak_2speech_8h_source.html":[4,0,9,0,12],
 "support_2libc_2sys_2types_8h_source.html":[4,0,9,4,0,2],
 "synthesize_8h_source.html":[4,0,9,0,14],
-"textfile_8h_source.html":[4,0,6,3,0]
+"textfile_8h_source.html":[4,0,6,3,0],
+"time_8h_source.html":[4,0,9,4,0,1],
+"timeutil_8h_source.html":[4,0,9,4,11],
+"todo.html":[0],
+"track_8h_source.html":[4,0,80],
+"transform_8c.html":[4,0,81],
+"transform_8c.html#a0503d516e333c5c990b7bce55bc1a7af":[4,0,81,35],
+"transform_8c.html#a102a8bc4eefd800e69039ed3d4972c63":[4,0,81,59]
 };

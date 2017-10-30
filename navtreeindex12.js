@@ -1,12 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"structg2sprop.html#a3475a56ed9e00b7dbd1d752cba30270d":[3,0,187,1],
-"structg2sprop.html#a3fc6e7de626012954aa1eea223690f17":[3,0,187,3],
-"structg2sprop.html#a42b29369ca8a22da64f529ce2a313f09":[3,0,187,7],
-"structg2sprop.html#a452f2be61795a19d9a5f98333f38183a":[3,0,187,8],
-"structg2sprop.html#a4ac3a5c763c6a2d971a014381489dce8":[3,0,187,11],
-"structg2sprop.html#a6320c80bd7de59dcea824ea609fc4f7e":[3,0,187,19],
-"structg2sprop.html#a786cde9bf34899be4af0deeab004898e":[3,0,187,21],
 "structg2sprop.html#a7eb7b0563d9ae33ead30c3b05190f745":[3,0,187,10],
 "structg2sprop.html#a854972b3bb024b253818441130f31722":[3,0,187,14],
 "structg2sprop.html#a89c087b49ecd6118a3ca78c0940bea5f":[3,0,187,6],
@@ -249,5 +242,12 @@ var NAVTREEINDEX12 =
 "structgraphics__opengl__platform.html#ae01219a2220936d1b648253da2d6c346":[3,0,210,0],
 "structgraphics__opengl__platform__methods.html":[3,0,211],
 "structgraphics__opengl__platform__methods.html#a494f651bf62b6c851a7355865f9bcf1e":[3,0,211,1],
-"structgraphics__opengl__platform__methods.html#affe5f4abcaee38e226d375ab33f64b82":[3,0,211,0]
+"structgraphics__opengl__platform__methods.html#affe5f4abcaee38e226d375ab33f64b82":[3,0,211,0],
+"structgraphics__opengl__window__system.html":[3,0,212],
+"structgraphics__opengl__window__system.html#a0fd246d58dca00e6bff68a149203635f":[3,0,212,7],
+"structgraphics__opengl__window__system.html#a28cc4fcf7813b69956c25452e6d7d3c8":[3,0,212,12],
+"structgraphics__opengl__window__system.html#a45f66d3a0cca9c764c80700f9eee87a2":[3,0,212,1],
+"structgraphics__opengl__window__system.html#a477a6c99ca7a9999a2235174215bcf33":[3,0,212,3],
+"structgraphics__opengl__window__system.html#a4f141f1497b37bb76264526da560bdb4":[3,0,212,10],
+"structgraphics__opengl__window__system.html#a5aeb04c960bda06ef99b9d0010788f88":[3,0,212,4]
 };

@@ -1,12 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"structgui__methods.html#ae4e55184e44cdcd779b4656df207a535":[3,0,223,1],
-"structgui__methods.html#af995d9fd279289b937bc97f1bf4f4c22":[3,0,223,0],
-"structgui__priv.html":[3,0,224],
-"structgui__priv.html#a0056fb687954c06a0bb1845490a5cc88":[3,0,224,62],
-"structgui__priv.html#a0244c9e52decb190f5c39ae1d11adda8":[3,0,224,18],
-"structgui__priv.html#a029f51aa3f8cc1e7153e17db2c9ade56":[3,0,224,104],
-"structgui__priv.html#a0559949a41ad1a11c7063f2fc0151d19":[3,0,224,113],
 "structgui__priv.html#a055cdc970c6f7f17e452a3b7ad71ab7c":[3,0,224,22],
 "structgui__priv.html#a0668be54ecba2541e26d8840f30ad484":[3,0,224,75],
 "structgui__priv.html#a0ae5d7524cdfaf5dc0266ea6b5567fdf":[3,0,224,64],
@@ -249,5 +242,12 @@ var NAVTREEINDEX14 =
 "structinflate__state.html#a62b5ea8559856b315b6c89d9114c2109":[3,0,234,18],
 "structinflate__state.html#a6b56aabe80412784eadc1068981c9d00":[3,0,234,25],
 "structinflate__state.html#a71f844b589ac450f17d69f3692a8c5cc":[3,0,234,24],
-"structinflate__state.html#a85403907f7f5b9d355821ffa2591456c":[3,0,234,27]
+"structinflate__state.html#a85403907f7f5b9d355821ffa2591456c":[3,0,234,27],
+"structinflate__state.html#a872bf267d91efb4143e9cfb812e670bb":[3,0,234,20],
+"structinflate__state.html#a8b89588c1a322e622ebb694d8daa644c":[3,0,234,29],
+"structinflate__state.html#a98952f3f8f420a05b567f080aca0eb4b":[3,0,234,3],
+"structinflate__state.html#a990d157b5c0d4ba178c3361de9ce6561":[3,0,234,28],
+"structinflate__state.html#a9c7906fee7eeeb450b13576531ca639d":[3,0,234,17],
+"structinflate__state.html#a9cc4c0bde426383731394dcf91c40673":[3,0,234,26],
+"structinflate__state.html#a9dcf6151443750d75b2283d0a3e62c39":[3,0,234,7]
 };
