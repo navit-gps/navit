@@ -1,0 +1,28 @@
+var classNGQProxySearch =
+[
+    [ "NGQProxySearch", "classNGQProxySearch.html#abc1fd530f3eededafbebff60f2e39b7a", null ],
+    [ "~NGQProxySearch", "classNGQProxySearch.html#a94e9627226644327025cbf0d6515069e", null ],
+    [ "countryISO2", "classNGQProxySearch.html#a0401e2a72d5662c4819ed0afeaeb969a", null ],
+    [ "countryISO2Signal", "classNGQProxySearch.html#a59e31b1464dc45dc35289f67f89c0e12", null ],
+    [ "countryName", "classNGQProxySearch.html#a32700856ec45ff0dacd64a1793ec4826", null ],
+    [ "countryNameSignal", "classNGQProxySearch.html#a75ee70f11887784b5e7e29c84e734fc4", null ],
+    [ "getAttrFunc", "classNGQProxySearch.html#accea50c0c7b309763690d84b02d6b417", null ],
+    [ "searchContext", "classNGQProxySearch.html#ac6154d6ce2016c941ffef089ff5f7705", null ],
+    [ "searchXml", "classNGQProxySearch.html#adebc58a93709825cf4bed28e6085a58e", null ],
+    [ "setAttrFunc", "classNGQProxySearch.html#a0cfca20c3d51222bca31ad58a7dacc7b", null ],
+    [ "setCountryISO2", "classNGQProxySearch.html#a4f4e24f9b9bc5f5b1b269582f32dba7d", null ],
+    [ "setCountryName", "classNGQProxySearch.html#a666e9e3ea6e0f1eeceba6922941cd91a", null ],
+    [ "setPointToResult", "classNGQProxySearch.html#abd534dd732c21060cef651956beb6f1c", null ],
+    [ "setSearchContext", "classNGQProxySearch.html#a2e03a39cc213e26d973240aacc0d023e", null ],
+    [ "setStreetName", "classNGQProxySearch.html#a726f18e7accb48308a2641641ce2a134", null ],
+    [ "setTownName", "classNGQProxySearch.html#a412bf7ee916753d40b523befc4462aef", null ],
+    [ "streetName", "classNGQProxySearch.html#a5f647214943318341a6693755233b40c", null ],
+    [ "streetNameSignal", "classNGQProxySearch.html#ae8125a979fbc827e3f0a8109b6c7a5fd", null ],
+    [ "townName", "classNGQProxySearch.html#af5418e8098464ef651077386ba7bd90d", null ],
+    [ "townNameSignal", "classNGQProxySearch.html#a470e5358a086abf38955ef5e720bdb11", null ],
+    [ "countryISO2", "classNGQProxySearch.html#ae6763b5c253bb92a910263a6b903121e", null ],
+    [ "countryName", "classNGQProxySearch.html#ad47511db0ed77ce409c47cd4d0e5413e", null ],
+    [ "searchContext", "classNGQProxySearch.html#a7253f5dac987543847dab4a09a8c0a68", null ],
+    [ "streetName", "classNGQProxySearch.html#afc513d4f537ceabbcc86649ba2517595", null ],
+    [ "townName", "classNGQProxySearch.html#a37f16b95a945fe45d562cca7d64a43a8", null ]
+];

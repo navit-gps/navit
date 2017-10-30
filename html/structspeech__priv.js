@@ -1,0 +1,26 @@
+var structspeech__priv =
+[
+    [ "audio", "structspeech__priv.html#a7eddb6a1540b5a5903e5bec96da6cc34", null ],
+    [ "audio_ok", "structspeech__priv.html#a1dde0b21de51d151a86bbb34876f506f", null ],
+    [ "cmdline", "structspeech__priv.html#a61beeca400a0b1bf8b628e1b4d066e78", null ],
+    [ "conn", "structspeech__priv.html#a7e66e740726a719225ba2a6fef251245", null ],
+    [ "espeak_ok", "structspeech__priv.html#a67006f4f26282dd6d45956333deb8f85", null ],
+    [ "flags", "structspeech__priv.html#a14cf5adc6f225786a4ccfa2b3900fc68", null ],
+    [ "free_buffers", "structspeech__priv.html#aec7e763754a46095e3a6ec93a09ee595", null ],
+    [ "h_message_thread", "structspeech__priv.html#abc900d48c24daae4852e660e82b71800", null ],
+    [ "h_queue", "structspeech__priv.html#ac30d770c0e902a547791c6e7d49a3f0b", null ],
+    [ "h_wave_out", "structspeech__priv.html#a5d7de3e2a3ea1a4dfcd98ffcd5c0b38f", null ],
+    [ "nav", "structspeech__priv.html#a5e290992baeeb27d532a4747a5c09fdc", null ],
+    [ "NavitSpeech", "structspeech__priv.html#a1ac8a9ddd97b83b33595d8acbe7a711e", null ],
+    [ "NavitSpeech_say", "structspeech__priv.html#a822e2855a5b0d0a68c495d6ba60755cf", null ],
+    [ "NavitSpeechClass", "structspeech__priv.html#a677ed907666fe013067d8f0bb22d52eb", null ],
+    [ "path_home", "structspeech__priv.html#a5408efc14387258ed9d64f7729503a9c", null ],
+    [ "phrases", "structspeech__priv.html#af35628554664222c75209e0f748a6089", null ],
+    [ "sample_dir", "structspeech__priv.html#ae0e850f80a013cad640bdc05d9443be5", null ],
+    [ "sample_rate", "structspeech__priv.html#a66307e60ef36aa83ef070fef617fdee4", null ],
+    [ "sample_suffix", "structspeech__priv.html#a584914e40ce3480b9c68b8c644224c00", null ],
+    [ "samples", "structspeech__priv.html#a5489c61b47e93c9d63d4fdc9b31718e2", null ],
+    [ "speech", "structspeech__priv.html#ad5615554111588dfb1fb4ed6a5a5f6d2", null ],
+    [ "spi", "structspeech__priv.html#ab9414596ddb2730d85552059af05424e", null ],
+    [ "state", "structspeech__priv.html#a6dfa84218fcf0eb7db8e150188c5ac01", null ]
+];

@@ -1,0 +1,27 @@
+var structg2scolumns =
+[
+    [ "ageofdgpsdata", "structg2scolumns.html#a3d3306ce289ef66f5835290aa0dfffc9", null ],
+    [ "cmt", "structg2scolumns.html#aa29e420f400262cfd25054250204e342", null ],
+    [ "desc", "structg2scolumns.html#a1a06c8ec02ad693a75ddec8bcac137cf", null ],
+    [ "dgpsid", "structg2scolumns.html#a5f1032d218e9b478f12e06b6712645ba", null ],
+    [ "ele", "structg2scolumns.html#a45b62173a57e5fe4a9a47c263818dbe3", null ],
+    [ "fix", "structg2scolumns.html#a519c2360fe4052ed8127125a237902e7", null ],
+    [ "geoidheight", "structg2scolumns.html#a0648d308ad7afedf6ed4cef979992c8a", null ],
+    [ "gpxline", "structg2scolumns.html#a82b06e11df542bade839863278f4de1a", null ],
+    [ "hdop", "structg2scolumns.html#a203da629876ced54070b2de61feea467", null ],
+    [ "interval", "structg2scolumns.html#a647b3ef1123296e34798c8196dbd7d3a", null ],
+    [ "length", "structg2scolumns.html#a8821a10a79777e8e4b79a34dd65e4339", null ],
+    [ "link", "structg2scolumns.html#aa5f44b058d6b4fae766eda3f030e6f0d", null ],
+    [ "magvar", "structg2scolumns.html#a24d0c4798c510557e9bef44f2626f997", null ],
+    [ "name", "structg2scolumns.html#aa09d4a279e290082abcee4a2a84a218b", null ],
+    [ "number", "structg2scolumns.html#a8ed200f15bbb692dce32899eaa940050", null ],
+    [ "pdop", "structg2scolumns.html#a83c65d379ea19b4c44805f60a391897b", null ],
+    [ "points", "structg2scolumns.html#a8c9d43c5f6b80c472fd23572f37117c1", null ],
+    [ "sat", "structg2scolumns.html#a4b4829916932cc7944e77ec114707a95", null ],
+    [ "speed", "structg2scolumns.html#ac44c8adca5dd8fe1c6c84a7a72fea6f8", null ],
+    [ "src", "structg2scolumns.html#ab1af76664348fcae645473e62f84c4c0", null ],
+    [ "sym", "structg2scolumns.html#ae518b638f1c143dc0e36fb1e19e17650", null ],
+    [ "time", "structg2scolumns.html#af901503735eb8ba9e711b8c0a7f254cd", null ],
+    [ "type", "structg2scolumns.html#a8e23440f28bcf0fb1238cb108dc55a3c", null ],
+    [ "vdop", "structg2scolumns.html#a7f4c449332bba0ea0bfef914df8ef66d", null ]
+];

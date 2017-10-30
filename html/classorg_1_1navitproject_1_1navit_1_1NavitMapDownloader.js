@@ -1,0 +1,25 @@
+var classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader =
+[
+    [ "NavitMapDownloader", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4", null ],
+    [ "checkFreeSpace", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aaa3bdd3fb3f6a3a3c55611dd8acb1dd3", null ],
+    [ "deleteMap", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a12a0b560b4368a8c8bb07dbface8f541", null ],
+    [ "download_osm_map", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa77d95b27ab3d03b40659c69414be6c8", null ],
+    [ "downloadData", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a5d7e86978946bbf505512a623ab0da3a", null ],
+    [ "getDestinationFile", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a9308f7cdb963228bc0b18634dcf50e33", null ],
+    [ "getDownloadURL", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a3b5a0e66e91dd0266bd0bbb791b16a34", null ],
+    [ "getFreeSpace", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a836205772661cff8ede526001a35af4e", null ],
+    [ "getInputStream", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#acc71ac4664b9518772050c4e272ee8c5", null ],
+    [ "getMapFile", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#afad30d4787df3deb268cffc82fa6fdd9", null ],
+    [ "getMapInfoFile", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a0eb85b69005fdd0808e782d9bf8e3e9b", null ],
+    [ "getOutputStream", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a19f99106970949ff18862954fcfac3a7", null ],
+    [ "initConnection", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ae071e6be599dd6108fcd70ec9a40f86c", null ],
+    [ "readData", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2b852166ad13522ce9cb51e46e1f9583", null ],
+    [ "readFileInfo", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a96c829a1aef563fe69237fbcab4de0da", null ],
+    [ "run", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8f208cba6608cf9fdb06512951dccd65", null ],
+    [ "stop_thread", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ab8ec89fc35d3236496b202c23a4bc84c", null ],
+    [ "toast", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#afc2d40c368d53c2ecec8b98441f06fa8", null ],
+    [ "updateProgress", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ac1f7d07449815a0be3173471500a2733", null ],
+    [ "updateProgress", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#af5b522f2ba4df330837369d4ea100c6a", null ],
+    [ "writeFileInfo", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#abea98518e1b8936435adf49e8787af74", null ],
+    [ "retry_counter", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c", null ]
+];
