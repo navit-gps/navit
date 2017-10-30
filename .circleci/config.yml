@@ -135,7 +135,7 @@ workflows:
       - run_doxygen:
           filters:
             branches:
-              only: /^doxygen$/
+              only: /^trunk$/
   build_all:
     jobs:
       - build_linux
