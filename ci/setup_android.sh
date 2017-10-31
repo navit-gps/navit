@@ -13,6 +13,14 @@ cd /opt && rm -f android-sdk.tgz
 export PATH=${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
 
 echo y | android update sdk --no-ui --all --filter platform-tools | grep 'package installed'
+
+# This is only an workaround to make sure the platform tools are installed
+if [ ! -d ${ANDROID_SDK_HOME}/platform-tools ] && [ -f ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip ]; then
+	if [ "$(md5sum ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip | cut -d" " -f1)" -eq "668ff8e319715175ff628ad52b124f154275fe2d" ]; then
+		cd ${ANDROID_SDK_HOME} && unzip ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip
+	fi
+fi
+
 #RUN echo y | android update sdk --no-ui --all --filter extra-android-support | grep 'package installed'
 
 echo y | android update sdk --no-ui --all --filter android-25 | grep 'package installed'
