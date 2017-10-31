@@ -16,7 +16,7 @@ echo y | android update sdk --no-ui --all --filter platform-tools | grep 'packag
 
 # This is only an workaround to make sure the platform tools are installed
 if [ ! -d ${ANDROID_SDK_HOME}/platform-tools ] && [ -f ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip ]; then
-	if [ "$(md5sum ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip | cut -d" " -f1)" -eq "668ff8e319715175ff628ad52b124f154275fe2d" ]; then
+	if [ "$(md5sum ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip | cut -d" " -f1)" == "ef952bb31497f7535e061ad0e712bed8" ]; then
 		cd ${ANDROID_SDK_HOME} && unzip ${ANDROID_SDK_HOME}/temp/platform-tools_r26.0.2-linux.zip
 	fi
 fi
