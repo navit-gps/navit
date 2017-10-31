@@ -94,7 +94,9 @@ struct route_graph_point {
 										  *  least costs */
 	struct fibheap_el *el;				 /**< When this point is put on a Fibonacci heap, this is a pointer
 										  *  to this point's heap-element */
-	int value;							 /**< The cost at which one can reach the destination from this point on */
+	int value;							 /**< The cost at which one can reach the destination from this point on.
+	                                      *  {@code INT_MAX} indicates that the destination is unreachable from this
+	                                      *  point, or that this point has not yet been examined. */
 	struct coord c;						 /**< Coordinates of this point */
 	int flags;						/**< Flags for this point (eg traffic distortion) */
 };
@@ -112,7 +114,7 @@ struct route_graph_point {
 struct route_segment_data {
 	struct item item;							/**< The item (e.g. street) that this segment represents. */
 	int flags;
-	int len;									/**< Length of this segment */
+	int len;									/**< Length of this segment, in meters */
 	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
 				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
 				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
@@ -215,7 +217,8 @@ struct route_info {
 /**
  * @brief A complete route path
  *
- * This structure describes a whole routing path
+ * A route path is an ordered set of segments describing the route from the current position (or previous
+ * destination) to the next destination.
  */
 struct route_path {
 	int in_use;						/**< The path is in use and can not be updated */
@@ -263,7 +266,8 @@ struct route {
 /**
  * @brief A complete route graph
  *
- * This structure describes a whole routing graph
+ * The route graph holds all routable segments along with the connections between them and the cost of
+ * each segment.
  */
 struct route_graph {
 	int busy;					/**< The graph is being built */
@@ -1165,8 +1169,9 @@ route_clear_destinations(struct route *this_)
  * and updates the route.
  *
  * @param this The route to set the destination for
- * @param dst Coordinates to set as destination
- * @param count Number of destinations (last one is final)
+ * @param dst Points to an array of coordinates to set as destinations, which will be visited in the
+ * order in which they appear in the array (the last one is the final destination)
+ * @param count Number of items in {@code dst}, 0 to clear all destinations
  * @param async If set, do routing asynchronously
  */
 
@@ -2932,6 +2937,15 @@ route_graph_process_restrictions(struct route_graph *this)
 	}
 }
 
+/**
+ * @brief Releases all resources needed to build the route graph.
+ *
+ * If {@code cancel} is false, this function will start processing restrictions and ultimately call
+ * the route graph's {@code done_cb} callback.
+ *
+ * @param rg Points to the route graph
+ * @param cancel True if the process was aborted before completing, false if it completed normally
+ */
 static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
