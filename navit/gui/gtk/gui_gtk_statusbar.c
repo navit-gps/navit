@@ -22,7 +22,6 @@
 #include <time.h>
 #include <math.h>
 #include <gtk/gtk.h>
-/* #include <gps.h>                /\* Not the same as gpsd.h. Get converion constants. *\/ */
 #include "item.h"
 #include "coord.h"
 #include "debug.h"
