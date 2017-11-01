@@ -919,7 +919,7 @@ osm_info(char *type, osmid id, int cont, char *fmt, ...)
 	va_end(ap);
 }
 
-void
+static void
 itembin_warning(struct item_bin *ib, int cont, char *fmt, ...)
 {
 	char *type=NULL;
