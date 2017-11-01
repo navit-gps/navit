@@ -16,10 +16,7 @@
    sodipodi:docname="height.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="200"
-   inkscape:export-filename="C:\Users\jeremy\Pictures\svg\heigt.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   width="200">
   <defs
      id="defs22">
     <inkscape:perspective
@@ -52,15 +49,15 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="63.25448"
-     inkscape:cy="80.553825"
+     inkscape:cx="100"
+     inkscape:cy="115.71171"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="705"
      inkscape:window-width="1366"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:zoom="2.1796875"
+     inkscape:zoom="2.775"
      objecttolerance="10.0"
      pagecolor="#ffffff"
      showgrid="false"
@@ -95,36 +92,34 @@
        style="fill:#0089cd;stroke:none"
        inkscape:connector-curvature="0" />
   </g>
+  <rect
+     style="fill:#edee00;fill-opacity:1;stroke:#000000;stroke-width:2.248;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect821"
+     width="134.10661"
+     height="134.59427"
+     x="75.133667"
+     y="-69.261604"
+     transform="rotate(44.968214)" />
   <path
-     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:10.5320406px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="M 104.33151,5.29824 C 58.180085,5.8971924 24.093259,38.55955 24.016049,85.91343 c -0.0703,43.10485 80.315461,109.38481 80.315461,109.38481 0,0 75.99996,-64.4356 76.11988,-109.38481 C 180.56331,43.953469 150.48292,5.29824 104.33151,5.29824 Z"
-     id="path1492"
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 89.009009,35.495496 12.972971,20 12.61261,-20 z"
+     id="path825"
      inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cscsc" />
+     sodipodi:nodetypes="cccc" />
   <path
-     style="fill:#0089cd;fill-opacity:1;stroke:#ffffff;stroke-width:2.71428585;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="M 104.17497,12.181578 C 61.467538,12.736197 29.924393,42.960764 29.852945,86.780916 29.787893,126.66924 104.17497,188.00314 104.17497,188.00314 c 0,0 70.32858,-59.62724 70.43954,-101.222224 0.1036,-38.828762 -27.73211,-74.599338 -70.43954,-74.599338 z"
-     id="path1492-2"
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 87.38739,158.46847 12.97297,-20 12.61261,20 z"
+     id="path825-8"
      inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cscsc"
-     inkscape:transform-center-x="-11.911717"
-     inkscape:transform-center-y="28.11166" />
-  <circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:11.37379169;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path1494"
-     cx="102.23385"
-     cy="82.203079"
-     r="63.333332" />
-  <path
-     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="M 88.241018,69.935484 60.255357,114.89605 H 144.21234 L 116.22668,69.935484 Z"
-     id="path821"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <circle
-     style="fill:none;fill-opacity:1;stroke:#0089cd;stroke-width:5.45300007;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path823"
-     cx="102.23385"
-     cy="57.894268"
-     r="12.5" />
+     sodipodi:nodetypes="cccc" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:32px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="40"
+     y="110.27027"
+     id="text848"><tspan
+       sodipodi:role="line"
+       id="tspan846"
+       x="40"
+       y="110.27027">HEIGHT</tspan></text>
 </svg>
