@@ -48,7 +48,6 @@ var structmap__priv =
     [ "nShapeType", "structmap__priv.html#a4324d3781a70c421a0ac07d5fd12b978", null ],
     [ "offset", "structmap__priv.html#a3e638867c198007fc6cf8c1d60438151", null ],
     [ "parent", "structmap__priv.html#a6b968bbb834c8c69218ae34819e2bbec", null ],
-    [ "passwd", "structmap__priv.html#a49726c3b8d16c86f47ea07d4c41b2ef7", null ],
     [ "pro", "structmap__priv.html#a6e69c32e296cdb367316db2826ea9093", null ],
     [ "progress", "structmap__priv.html#a5969b541561f4f3c0a4c1cbf961a93f1", null ],
     [ "qitem_hash", "structmap__priv.html#a39d758f9ea4993462318811d865ad42b", null ],

@@ -50,16 +50,16 @@ var NAVTREEINDEX =
 "structgui__priv.html#a055cdc970c6f7f17e452a3b7ad71ab7c",
 "structinflate__state.html#aa0620e64487c48635f6c3a11a0aeb99d",
 "structlog.html#a0d43a53196011720af9bb416f1420b05",
-"structmap__rect__priv.html#a8a32ae43b35e8897a6d59b4990fef88d",
-"structnavigation.html#a61f6723e0c62ff2f05a0b7fd28d7a38c",
-"structosd__button.html#a0e07f1b8517e3daf7e37dec6af9aebb2",
-"structpng__info__struct.html#a870761f88d3c0aa9d7bc5b91190e5e9f",
-"structquadtree__data.html#ab6bfed7923ef80f0bbe203d794b5c0a6",
-"structsearch__list.html#ad175c3a42a8002914765f9519578a39f",
-"structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111",
-"structtree__hdr__v.html",
-"structwavegen__peaks__t.html#ac72c7f663875d9c488593af53bb100b6",
-"transform_8c.html#a142f183c856d187544d5beb8db7b564f"
+"structmap__rect__priv.html#a8aa824c12f02d34118258ab6d70e383d",
+"structnavigation.html#a748c380840715de6cfd65ab9992394b6",
+"structosd__button.html#a2a75003dd7a4e4fb72695364bdb30f3d",
+"structpng__info__struct.html#a8f5174bd85ca4fb3c861218308b251cf",
+"structquadtree__item.html#a22e7062f04439b63cccc8e96e2a8c333",
+"structsearch__list.html#af120cd82a17750db136b421a6b38824d",
+"structsysdep__segment.html#a3de09bd36a01e87df4c3b9a7539e4831",
+"structtree__header.html",
+"structwavegen__peaks__t.html#ad5b4562b61114563f7af78283675cf23",
+"transform_8c.html#a21c9763d0694cbf3dd25e7b780434144"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111":[3,0,501,0],
-"structsysdep__segment.html":[3,0,503],
 "structsysdep__segment.html#a3de09bd36a01e87df4c3b9a7539e4831":[3,0,503,0],
 "structsysdep__segment.html#adfb64f2ca1d8a9213e8452e6fecdbd2c":[3,0,503,1],
 "structsysdep__string.html":[3,0,504],
@@ -249,5 +247,7 @@ var NAVTREEINDEX23 =
 "structtree__hdr.html":[3,0,536],
 "structtree__hdr.html#af9ee78863afe9a95fa22d5d97a668e50":[3,0,536,0],
 "structtree__hdr__h.html":[3,0,537],
-"structtree__hdr__h.html#a176f5a1958af6c739de44222f18a695d":[3,0,537,0]
+"structtree__hdr__h.html#a176f5a1958af6c739de44222f18a695d":[3,0,537,0],
+"structtree__hdr__v.html":[3,0,538],
+"structtree__hdr__v.html#ab8391dd2893c2b0b54d19b4f5e61d288":[3,0,538,0]
 };

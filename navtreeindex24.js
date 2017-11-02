@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structtree__hdr__v.html":[3,0,538],
-"structtree__hdr__v.html#ab8391dd2893c2b0b54d19b4f5e61d288":[3,0,538,0],
 "structtree__header.html":[3,0,539],
 "structtree__header.html#a1f2368b8f30e6c22356a09a95ddb2597":[3,0,539,5],
 "structtree__header.html#a351838b55467db203e6ad9631e965124":[3,0,539,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX24 =
 "structwavegen__peaks__t.html#a4bb39481a4301859cd715cb56240a8f9":[3,0,555,11],
 "structwavegen__peaks__t.html#a73c1c09b3ef111510c94fba13b15144d":[3,0,555,3],
 "structwavegen__peaks__t.html#a9db7a2de165d1c04bdaf374d624092cd":[3,0,555,8],
-"structwavegen__peaks__t.html#aa3694fc5e4cdb37841f6748367851d1b":[3,0,555,2]
+"structwavegen__peaks__t.html#aa3694fc5e4cdb37841f6748367851d1b":[3,0,555,2],
+"structwavegen__peaks__t.html#ac72c7f663875d9c488593af53bb100b6":[3,0,555,4],
+"structwavegen__peaks__t.html#ac8a2b8e7d4c24ce92b9d4f8130271ab8":[3,0,555,10]
 };

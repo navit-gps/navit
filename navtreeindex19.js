@@ -1,7 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"structosd__button.html#a0e07f1b8517e3daf7e37dec6af9aebb2":[3,0,350,2],
-"structosd__button.html#a15df6e888fc205f1e7ab0c0fae995dbe":[3,0,350,0],
 "structosd__button.html#a2a75003dd7a4e4fb72695364bdb30f3d":[3,0,350,3],
 "structosd__button.html#a85c82035f89577c01ce7825e80258bcc":[3,0,350,1],
 "structosd__button.html#a94712aad92b499ae47898267f2bdc002":[3,0,350,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX19 =
 "structpng__info__struct.html#a7ee89c5ae94b74467e8fc7d550139e79":[3,0,389,42],
 "structpng__info__struct.html#a834367da72c7dee66161ce4cdabe3d9a":[3,0,389,10],
 "structpng__info__struct.html#a8543337f34aa4a2226b8097060846f6f":[3,0,389,33],
-"structpng__info__struct.html#a85faa4b47eed4fb1195956f915a5a211":[3,0,389,16]
+"structpng__info__struct.html#a85faa4b47eed4fb1195956f915a5a211":[3,0,389,16],
+"structpng__info__struct.html#a870761f88d3c0aa9d7bc5b91190e5e9f":[3,0,389,36],
+"structpng__info__struct.html#a87ad6f4d5e29d5c264ca8381ff0161ae":[3,0,389,13]
 };

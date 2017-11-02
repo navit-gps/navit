@@ -11,7 +11,6 @@ var structmaptool__params =
     [ "keep_tmpfiles", "structmaptool__params.html#a39c73cf3df1ef8ced4ecb8e07244de79", null ],
     [ "map_handles", "structmaptool__params.html#a74cbc3e2118c575de7d310e8c4a9568d", null ],
     [ "max_index_size", "structmaptool__params.html#ad34d8ca7da99189414c600150d2ac8b8", null ],
-    [ "md5file", "structmaptool__params.html#a10517f3a2b9d30274b3ff646e6192e39", null ],
     [ "node_table_loaded", "structmaptool__params.html#ae4bbc7c2706c32b67bbc947571331983", null ],
     [ "o5m", "structmaptool__params.html#a9c0c00ea762a07c3f666bf4fc4716c88", null ],
     [ "osm", "structmaptool__params.html#ad560c1737904315422fb5ba3b5516457", null ],
