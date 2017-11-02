@@ -25,10 +25,6 @@
 #include "config.h"
 #include "zipfile.h"
 
-#ifdef HAVE_LIBCRYPTO
-#include <openssl/md5.h>
-#endif
-
 struct zip_info {
 	int zipnum;
 	int dir_size;
@@ -41,10 +37,6 @@ struct zip_info {
 	FILE *res2;
 	FILE *index;
 	FILE *dir;
-#ifdef HAVE_LIBCRYPTO
-	MD5_CTX md5_ctx;
-#endif
-	int md5;
 };
 
 static int
@@ -52,10 +44,6 @@ zip_write(struct zip_info *info, void *data, int len)
 {
 	if (fwrite(data, len, 1, info->res2) != 1)
 		return 0;
-#ifdef HAVE_LIBCRYPTO
-	if (info->md5) 
-		MD5_Update(&info->md5_ctx, data, len);
-#endif
 	return 1;
 }
 
@@ -276,28 +264,6 @@ struct zip_info *
 zip_new(void)
 {
 	return g_new0(struct zip_info, 1);
-}
-
-void
-zip_set_md5(struct zip_info *info, int on)
-{
-#ifdef HAVE_LIBCRYPTO
-	info->md5=on;
-	if (on) 
-		MD5_Init(&info->md5_ctx);
-#endif
-}
-
-int
-zip_get_md5(struct zip_info *info, unsigned char *out)
-{
-	if (!info->md5)
-		return 0;
-#ifdef HAVE_LIBCRYPTO
-	MD5_Final(out, &info->md5_ctx);
-	return 1;
-#endif
-	return 0;
 }
 
 void
