@@ -126,6 +126,15 @@ tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	}
 }
 
+/** @brief Toggles the ability to follow the vehicle at the
+ *  cursor. Suitable for use in the GTK menu as below.
+ *
+ *  @param GtkWidget is the generic storage type for widgets.
+ *  @param The gui. I think, I'm new here.
+ *  @param Ignore the pointer behind the curtain.
+ *  @return void
+ */
+
 static void
 follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
