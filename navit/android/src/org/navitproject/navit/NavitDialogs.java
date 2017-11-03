@@ -148,7 +148,7 @@ public class NavitDialogs extends Handler{
 				mapdownloader_dialog.setOnDismissListener(onDismissListener);
 				// show license for OSM maps
 				Toast.makeText(mActivity.getApplicationContext(),
-						Navit._("Map data (c) OpenStreetMap contributors, ODBL"),
+						Navit.T("Map data (c) OpenStreetMap contributors, ODBL"),
 						Toast.LENGTH_LONG).show(); //TRANS
 				return mapdownloader_dialog;
 				
