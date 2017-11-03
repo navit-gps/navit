@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('gprintfint_8h_source.html','');});
 <div class="title">gprintfint.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
+<a href="gprintfint_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This library is free software; you can redistribute it and/or</span></div>
@@ -99,10 +99,10 @@ $(document).ready(function(){initNavTree('gprintfint_8h_source.html','');});
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#ifndef __G_PRINTFINT_H__</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_PRINTFINT_H__</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef HAVE_API_WIN32_BASE</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;glibintl.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;<a class="code" href="glibintl_8h.html">glibintl.h</a>&gt;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef HAVE_API_WIN32_CE</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;libc.h&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;<a class="code" href="libc_8h.html">libc.h</a>&quot;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifdef HAVE_GOOD_PRINTF</span></div>
@@ -125,26 +125,28 @@ $(document).ready(function(){initNavTree('gprintfint_8h_source.html','');});
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;gnulib/printf.h&quot;</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define _g_printf    _g_gnulib_printf</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_fprintf   _g_gnulib_fprintf</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_sprintf   _g_gnulib_sprintf</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_snprintf  _g_gnulib_snprintf</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#a587f33ad0836e150758f5faf14a97149">   56</a></span>&#160;<span class="preprocessor">#define _g_printf    _g_gnulib_printf</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#aa2a187116956c0f56735f48fa715dcb7">   57</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_fprintf   _g_gnulib_fprintf</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#a1d139672b0ee5cf581ce8434d7dac8be">   58</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_sprintf   _g_gnulib_sprintf</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#a3abc4af1b0c4f94b8d182a9b9e76cf91">   59</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_snprintf  _g_gnulib_snprintf</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define _g_vprintf   _g_gnulib_vprintf</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vfprintf  _g_gnulib_vfprintf</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vsprintf  _g_gnulib_vsprintf</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vsnprintf _g_gnulib_vsnprintf</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#af4a144dd00a6f267ade247de7d9a6d61">   61</a></span>&#160;<span class="preprocessor">#define _g_vprintf   _g_gnulib_vprintf</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#ac4764d8931f095c14af62aa5bad8100f">   62</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vfprintf  _g_gnulib_vfprintf</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#a98cc11fca2ba36316f8756b32dfade7f">   63</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vsprintf  _g_gnulib_vsprintf</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="gprintfint_8h.html#ae92797c268abec6dacd1ceb95e095ca2">   64</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _g_vsnprintf _g_gnulib_vsnprintf</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __G_PRINTF_H__ */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="glibintl_8h_html"><div class="ttname"><a href="glibintl_8h.html">glibintl.h</a></div></div>
+<div class="ttc" id="libc_8h_html"><div class="ttname"><a href="libc_8h.html">libc.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>gprintfint.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="gprintfint_8h.html">gprintfint.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

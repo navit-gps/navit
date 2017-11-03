@@ -70,26 +70,26 @@ $(document).ready(function(){initNavTree('time_8h_source.html','');});
 <div class="title">time.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _SYS_TIME_H_</span></div>
+<a href="time_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _SYS_TIME_H_</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _SYS_TIME_H_</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;time.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;<a class="code" href="time_8h.html">time.h</a>&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifdef  __cplusplus</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef _TIMEVAL_DEFINED </span><span class="comment">/* also in winsock[2].h */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _TIMEVAL_DEFINED</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="time_8h.html#a88d5919da507a687bc328b9b978488b5">   10</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _TIMEVAL_DEFINED</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="structtimeval.html">   11</a></span>&#160;<span class="preprocessor"></span><span class="keyword">struct </span><a class="code" href="structtimeval.html">timeval</a> {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;  <span class="keywordtype">long</span> tv_sec;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  <span class="keywordtype">long</span> tv_usec;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="structtimeval.html#a3599199839a89e99a2ce29d45312b5cf">   12</a></span>&#160;  <span class="keywordtype">long</span> <a class="code" href="structtimeval.html#a3599199839a89e99a2ce29d45312b5cf">tv_sec</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structtimeval.html#aa8396731f2914f9ed2a457d3da602b80">   13</a></span>&#160;  <span class="keywordtype">long</span> <a class="code" href="structtimeval.html#aa8396731f2914f9ed2a457d3da602b80">tv_usec</a>;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;};</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#define timerisset(tvp)  ((tvp)-&gt;tv_sec || (tvp)-&gt;tv_usec)</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define timercmp(tvp, uvp, cmp) \</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="time_8h.html#a7a6810e8127f008279242fba997a26a3">   15</a></span>&#160;<span class="preprocessor">#define timerisset(tvp)  ((tvp)-&gt;tv_sec || (tvp)-&gt;tv_usec)</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="time_8h.html#a7e45765b715ffb3f756ea5d3c71d24ee">   16</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define timercmp(tvp, uvp, cmp) \</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">        (((tvp)-&gt;tv_sec != (uvp)-&gt;tv_sec) ? \</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">        ((tvp)-&gt;tv_sec cmp (uvp)-&gt;tv_sec) : \</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">        ((tvp)-&gt;tv_usec cmp (uvp)-&gt;tv_usec))</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define timerclear(tvp)  (tvp)-&gt;tv_sec = (tvp)-&gt;tv_usec = 0</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="time_8h.html#ab95d90a9147b65d4ec1fab6bd2db6d1f">   20</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define timerclear(tvp)  (tvp)-&gt;tv_sec = (tvp)-&gt;tv_usec = 0</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _TIMEVAL_DEFINED */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">/* Provided for compatibility with code that assumes that</span></div>
@@ -98,10 +98,10 @@ $(document).ready(function(){initNavTree('time_8h_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifndef _TIMEZONE_DEFINED</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structtimezone.html">   27</a></span>&#160;<span class="preprocessor"></span><span class="keyword">struct </span><a class="code" href="structtimezone.html">timezone</a></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keywordtype">int</span> tz_minuteswest; <span class="comment">/* of Greenwich */</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordtype">int</span> tz_dsttime;     <span class="comment">/* type of dst correction to apply */</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structtimezone.html#a3042f7eff6e1b980728def76b1fa0eb7">   29</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="structtimezone.html#a3042f7eff6e1b980728def76b1fa0eb7">tz_minuteswest</a>; <span class="comment">/* of Greenwich */</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structtimezone.html#a85259977aeb63b17e6ce94f19afdfd99">   30</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="structtimezone.html#a85259977aeb63b17e6ce94f19afdfd99">tz_dsttime</a>;     <span class="comment">/* type of dst correction to apply */</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;};</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define _TIMEZONE_DEFINED</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="time_8h.html#a01220ed28ed73dce01c14c6fb42adb49">   32</a></span>&#160;<span class="preprocessor">#define _TIMEZONE_DEFINED</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/*</span></div>
@@ -114,10 +114,10 @@ $(document).ready(function(){initNavTree('time_8h_source.html','');});
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#if 0</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __restrict__</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span><span class="keywordtype">int</span> __cdecl __MINGW_NOTHROW gettimeofday(<span class="keyword">struct</span> <a class="code" href="structtimeval.html">timeval</a> *__restrict__,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span><span class="keywordtype">int</span> <a class="code" href="compiledict_8c.html#a238347d7669f8f1e9c83bfe63a2730c4">__cdecl</a> <a class="code" href="__mingw_8h.html#a6297f08fa76e93d77877485679f98ac4">__MINGW_NOTHROW</a> <a class="code" href="time_8h.html#add67bc5b46e95580ff7fcc5fe611208a">gettimeofday</a>(<span class="keyword">struct</span> <a class="code" href="structtimeval.html">timeval</a> *__restrict__,</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                         <span class="keywordtype">void</span> *__restrict__  <span class="comment">/* tzp (unused) */</span>);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span><span class="keywordtype">int</span> gettimeofday(<span class="keyword">struct</span> <a class="code" href="structtimeval.html">timeval</a> *, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span><span class="keywordtype">int</span> <a class="code" href="time_8h.html#add67bc5b46e95580ff7fcc5fe611208a">gettimeofday</a>(<span class="keyword">struct</span> <a class="code" href="structtimeval.html">timeval</a> *, <span class="keywordtype">void</span> *);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#ifdef  __cplusplus</span></div>
@@ -126,14 +126,22 @@ $(document).ready(function(){initNavTree('time_8h_source.html','');});
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _SYS_TIME_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="structtimezone_html_a85259977aeb63b17e6ce94f19afdfd99"><div class="ttname"><a href="structtimezone.html#a85259977aeb63b17e6ce94f19afdfd99">timezone::tz_dsttime</a></div><div class="ttdeci">int tz_dsttime</div><div class="ttdef"><b>Definition:</b> time.h:30</div></div>
+<div class="ttc" id="time_8h_html"><div class="ttname"><a href="time_8h.html">time.h</a></div></div>
+<div class="ttc" id="structtimeval_html_a3599199839a89e99a2ce29d45312b5cf"><div class="ttname"><a href="structtimeval.html#a3599199839a89e99a2ce29d45312b5cf">timeval::tv_sec</a></div><div class="ttdeci">long tv_sec</div><div class="ttdef"><b>Definition:</b> time.h:12</div></div>
+<div class="ttc" id="structtimeval_html_aa8396731f2914f9ed2a457d3da602b80"><div class="ttname"><a href="structtimeval.html#aa8396731f2914f9ed2a457d3da602b80">timeval::tv_usec</a></div><div class="ttdeci">long tv_usec</div><div class="ttdef"><b>Definition:</b> time.h:13</div></div>
+<div class="ttc" id="compiledict_8c_html_a238347d7669f8f1e9c83bfe63a2730c4"><div class="ttname"><a href="compiledict_8c.html#a238347d7669f8f1e9c83bfe63a2730c4">__cdecl</a></div><div class="ttdeci">#define __cdecl</div><div class="ttdef"><b>Definition:</b> compiledict.c:55</div></div>
 <div class="ttc" id="structtimeval_html"><div class="ttname"><a href="structtimeval.html">timeval</a></div><div class="ttdef"><b>Definition:</b> time.h:11</div></div>
+<div class="ttc" id="__mingw_8h_html_a6297f08fa76e93d77877485679f98ac4"><div class="ttname"><a href="__mingw_8h.html#a6297f08fa76e93d77877485679f98ac4">__MINGW_NOTHROW</a></div><div class="ttdeci">#define __MINGW_NOTHROW</div><div class="ttdef"><b>Definition:</b> _mingw.h:268</div></div>
 <div class="ttc" id="structtimezone_html"><div class="ttname"><a href="structtimezone.html">timezone</a></div><div class="ttdef"><b>Definition:</b> time.h:27</div></div>
+<div class="ttc" id="time_8h_html_add67bc5b46e95580ff7fcc5fe611208a"><div class="ttname"><a href="time_8h.html#add67bc5b46e95580ff7fcc5fe611208a">gettimeofday</a></div><div class="ttdeci">int gettimeofday(struct timeval *, void *)</div></div>
+<div class="ttc" id="structtimezone_html_a3042f7eff6e1b980728def76b1fa0eb7"><div class="ttname"><a href="structtimezone.html#a3042f7eff6e1b980728def76b1fa0eb7">timezone::tz_minuteswest</a></div><div class="ttdeci">int tz_minuteswest</div><div class="ttdef"><b>Definition:</b> time.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><a class="el" href="dir_63b52ddf23d778bbcd97539fd18c8c48.html">sys</a></li><li class="navelem"><b>time.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><a class="el" href="dir_63b52ddf23d778bbcd97539fd18c8c48.html">sys</a></li><li class="navelem"><a class="el" href="time_8h.html">time.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

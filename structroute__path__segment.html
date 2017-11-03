@@ -83,7 +83,7 @@ Data Fields</h2></td></tr>
 <tr class="separator:a01084799d02765c27c0afd8aa08c53fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4a507112d5aa2d6fc1e49d11e363f33"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__segment__data.html">route_segment_data</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__path__segment.html#ab4a507112d5aa2d6fc1e49d11e363f33">data</a></td></tr>
 <tr class="separator:ab4a507112d5aa2d6fc1e49d11e363f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1934342c63ea6d7b41759892ad6700cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__path__segment.html#a1934342c63ea6d7b41759892ad6700cf">direction</a></td></tr>
+<tr class="memitem:a1934342c63ea6d7b41759892ad6700cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__path__segment.html#a1934342c63ea6d7b41759892ad6700cf">direction</a></td></tr>
 <tr class="separator:a1934342c63ea6d7b41759892ad6700cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b431f8ff7b84bcb005fcbc46e08f270"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__path__segment.html#a0b431f8ff7b84bcb005fcbc46e08f270">ncoords</a></td></tr>
 <tr class="separator:a0b431f8ff7b84bcb005fcbc46e08f270"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,7 +105,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to the ncoords coordinates of this segment </p>
 
-<p>Referenced by <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>.</p>
+<p>Referenced by <a class="el" href="route_8c.html#af725826ed9e5e2d79e5349ab59082005">rm_coord_get()</a>, <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, <a class="el" href="route_8c.html#a7ae66de72b358891d640598ec8db1e07">route_path_add_line()</a>, and <a class="el" href="route_8c.html#ad85854f9378c225ded5d5a1c20f1274f">route_path_get_distances()</a>.</p>
 
 </div>
 </div>
@@ -120,7 +120,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The segment data </p>
 
-<p>Referenced by <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>.</p>
+<p>Referenced by <a class="el" href="route_8c.html#aee1c15a1967b729232323b77491787a1">rm_attr_get()</a>, <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, <a class="el" href="route_8c.html#a7ae66de72b358891d640598ec8db1e07">route_path_add_line()</a>, and <a class="el" href="route_8c.html#a56ef9e532732c0c68ae20e5ae75786b2">route_path_update_done()</a>.</p>
 
 </div>
 </div>
@@ -129,12 +129,14 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_path_segment::direction</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_path_segment::direction</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Order in which the coordinates are ordered. &gt;0 means "First
                coordinate of the segment is the first coordinate of the item", &lt;=0 means reverse. </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#aee1c15a1967b729232323b77491787a1">rm_attr_get()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, and <a class="el" href="route_8c.html#a7ae66de72b358891d640598ec8db1e07">route_path_add_line()</a>.</p>
 
 </div>
 </div>
@@ -149,7 +151,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>How many coordinates does this segment have? </p>
 
-<p>Referenced by <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>.</p>
+<p>Referenced by <a class="el" href="route_8c.html#af725826ed9e5e2d79e5349ab59082005">rm_coord_get()</a>, <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, <a class="el" href="route_8c.html#a7ae66de72b358891d640598ec8db1e07">route_path_add_line()</a>, and <a class="el" href="route_8c.html#ad85854f9378c225ded5d5a1c20f1274f">route_path_get_distances()</a>.</p>
 
 </div>
 </div>
@@ -164,7 +166,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to the next segment in the path </p>
 
-<p>Referenced by <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>.</p>
+<p>Referenced by <a class="el" href="route_8c.html#ae925f1285ba7bb44564f039d493e4e84">rm_get_item()</a>, <a class="el" href="route_8c.html#a796b824a70a622f9af49563335a898f6">route_extract_segment_from_path()</a>, <a class="el" href="route_8h.html#a03a2c87fe7268b8a6aef10b431813a27">route_get_coord_dist()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, <a class="el" href="route_8c.html#a6e1aa0391d211238eaa3455b6847ad3c">route_path_add_segment()</a>, <a class="el" href="route_8c.html#a1354d6ea67bf906d0a4e44e3424aafd9">route_path_destroy()</a>, <a class="el" href="route_8c.html#ad85854f9378c225ded5d5a1c20f1274f">route_path_get_distances()</a>, and <a class="el" href="route_8c.html#a56ef9e532732c0c68ae20e5ae75786b2">route_path_update_done()</a>.</p>
 
 </div>
 </div>

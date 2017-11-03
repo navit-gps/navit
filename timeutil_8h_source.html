@@ -70,29 +70,38 @@ $(document).ready(function(){initNavTree('timeutil_8h_source.html','');});
 <div class="title">timeutil.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __TIMEUTIL_H</span></div>
+<a href="timeutil_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __TIMEUTIL_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __TIMEUTIL_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;windows.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;sys/time.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;_mingw.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="time_8h.html">sys/time.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="__mingw_8h.html">_mingw.h</a>&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#define _onesec_in100ns 10000000LL</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="timeutil_8h.html#a8bcb62792a5941f1f9627d032a9aa39e">    8</a></span>&#160;<span class="preprocessor">#define _onesec_in100ns 10000000LL</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> __FILETIME_to_ll (<span class="keyword">const</span> FILETIME *f);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> __ll_to_FILETIME (<span class="keywordtype">long</span> <span class="keywordtype">long</span> t, FILETIME* f);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> __tm_to_SYSTEMTIME (<span class="keyword">struct</span> tm *, SYSTEMTIME *);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> __SYSTEMTIME_to_tm (SYSTEMTIME *, <span class="keyword">struct</span> tm *);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">extern</span> time_t __FILETIME_to_time_t (<span class="keyword">const</span> FILETIME *);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> __time_t_to_FILETIME (time_t, FILETIME *);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <a class="code" href="timeutil_8h.html#a908a1d1bdb63853799a9c763b52e1756">__FILETIME_to_ll</a> (<span class="keyword">const</span> FILETIME *f);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="timeutil_8h.html#a55e159ddd96508bda5ab1a163bcfd4ef">__ll_to_FILETIME</a> (<span class="keywordtype">long</span> <span class="keywordtype">long</span> t, FILETIME* f);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="timeutil_8h.html#a82a0d83ae115ca802d8151d0ae606e6d">__tm_to_SYSTEMTIME</a> (<span class="keyword">struct</span> tm *, SYSTEMTIME *);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="timeutil_8h.html#a811f072bbea59dced692a39b290b9eca">__SYSTEMTIME_to_tm</a> (SYSTEMTIME *, <span class="keyword">struct</span> tm *);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">extern</span> <a class="code" href="support_2libc_2sys_2types_8h.html#a824afaa48b313f905546cf45822800fc">time_t</a> <a class="code" href="timeutil_8h.html#ae0a22a63aa35ebce29800f0a73322950">__FILETIME_to_time_t</a> (<span class="keyword">const</span> FILETIME *);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="timeutil_8h.html#a117b34b178644750ffce8d47e6475c7a">__time_t_to_FILETIME</a> (<a class="code" href="support_2libc_2sys_2types_8h.html#a824afaa48b313f905546cf45822800fc">time_t</a>, FILETIME *);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="timeutil_8h_html_a55e159ddd96508bda5ab1a163bcfd4ef"><div class="ttname"><a href="timeutil_8h.html#a55e159ddd96508bda5ab1a163bcfd4ef">__ll_to_FILETIME</a></div><div class="ttdeci">void __ll_to_FILETIME(long long t, FILETIME *f)</div><div class="ttdef"><b>Definition:</b> timeutil.c:47</div></div>
+<div class="ttc" id="time_8h_html"><div class="ttname"><a href="time_8h.html">time.h</a></div></div>
+<div class="ttc" id="timeutil_8h_html_a82a0d83ae115ca802d8151d0ae606e6d"><div class="ttname"><a href="timeutil_8h.html#a82a0d83ae115ca802d8151d0ae606e6d">__tm_to_SYSTEMTIME</a></div><div class="ttdeci">void __tm_to_SYSTEMTIME(struct tm *, SYSTEMTIME *)</div><div class="ttdef"><b>Definition:</b> timeutil.c:54</div></div>
+<div class="ttc" id="timeutil_8h_html_a811f072bbea59dced692a39b290b9eca"><div class="ttname"><a href="timeutil_8h.html#a811f072bbea59dced692a39b290b9eca">__SYSTEMTIME_to_tm</a></div><div class="ttdeci">void __SYSTEMTIME_to_tm(SYSTEMTIME *, struct tm *)</div><div class="ttdef"><b>Definition:</b> timeutil.c:94</div></div>
+<div class="ttc" id="timeutil_8h_html_a908a1d1bdb63853799a9c763b52e1756"><div class="ttname"><a href="timeutil_8h.html#a908a1d1bdb63853799a9c763b52e1756">__FILETIME_to_ll</a></div><div class="ttdeci">long long __FILETIME_to_ll(const FILETIME *f)</div><div class="ttdef"><b>Definition:</b> timeutil.c:38</div></div>
+<div class="ttc" id="support_2libc_2sys_2types_8h_html_a824afaa48b313f905546cf45822800fc"><div class="ttname"><a href="support_2libc_2sys_2types_8h.html#a824afaa48b313f905546cf45822800fc">time_t</a></div><div class="ttdeci">long time_t</div><div class="ttdef"><b>Definition:</b> types.h:27</div></div>
+<div class="ttc" id="timeutil_8h_html_ae0a22a63aa35ebce29800f0a73322950"><div class="ttname"><a href="timeutil_8h.html#ae0a22a63aa35ebce29800f0a73322950">__FILETIME_to_time_t</a></div><div class="ttdeci">time_t __FILETIME_to_time_t(const FILETIME *)</div><div class="ttdef"><b>Definition:</b> timeutil.c:108</div></div>
+<div class="ttc" id="__mingw_8h_html"><div class="ttname"><a href="__mingw_8h.html">_mingw.h</a></div></div>
+<div class="ttc" id="timeutil_8h_html_a117b34b178644750ffce8d47e6475c7a"><div class="ttname"><a href="timeutil_8h.html#a117b34b178644750ffce8d47e6475c7a">__time_t_to_FILETIME</a></div><div class="ttdeci">void __time_t_to_FILETIME(time_t, FILETIME *)</div><div class="ttdef"><b>Definition:</b> timeutil.c:117</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><b>timeutil.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><a class="el" href="timeutil_8h.html">timeutil.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

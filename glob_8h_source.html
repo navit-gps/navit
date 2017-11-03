@@ -70,32 +70,38 @@ $(document).ready(function(){initNavTree('glob_8h_source.html','');});
 <div class="title">glob.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _GLOB_H_</span></div>
+<a href="glob_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _GLOB_H_</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _GLOB_H_</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef HAVE_GLOB</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="structglob__t.html">    6</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;  <span class="keywordtype">size_t</span>   gl_pathc;  <span class="comment">/* count of file names */</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;  <span class="keywordtype">char</span>   **gl_pathv;  <span class="comment">/* list of file names */</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;  <span class="keywordtype">size_t</span>   gl_offs;   <span class="comment">/* slots to reserve in gl_pathv */</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="structglob__t.html#a69dc492f370a9793f06c11e3eb12f199">    7</a></span>&#160;  <span class="keywordtype">size_t</span>   <a class="code" href="structglob__t.html#a69dc492f370a9793f06c11e3eb12f199">gl_pathc</a>;  <span class="comment">/* count of file names */</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="structglob__t.html#abd9ba3e5bd7a4767af2cd3dd98a2a64f">    8</a></span>&#160;  <span class="keywordtype">char</span>   **<a class="code" href="structglob__t.html#abd9ba3e5bd7a4767af2cd3dd98a2a64f">gl_pathv</a>;  <span class="comment">/* list of file names */</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="structglob__t.html#ada6945e8f6ca53ecf82c9d736fb5307e">    9</a></span>&#160;  <span class="keywordtype">size_t</span>   <a class="code" href="structglob__t.html#ada6945e8f6ca53ecf82c9d736fb5307e">gl_offs</a>;   <span class="comment">/* slots to reserve in gl_pathv */</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;} <a class="code" href="structglob__t.html">glob_t</a>;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">int</span>  glob(<span class="keyword">const</span> <span class="keywordtype">char</span> *pattern, <span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> (*errfunc)(<span class="keyword">const</span> <span class="keywordtype">char</span> *epath, <span class="keywordtype">int</span> eerrno), <a class="code" href="structglob__t.html">glob_t</a> *pglob);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> globfree(<a class="code" href="structglob__t.html">glob_t</a> *pglob);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">int</span>  <a class="code" href="glob_8h.html#aaa60ab6187249bc38cf59137eb0d01b6">glob</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *pattern, <span class="keywordtype">int</span> <a class="code" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>, <span class="keywordtype">int</span> (*errfunc)(<span class="keyword">const</span> <span class="keywordtype">char</span> *epath, <span class="keywordtype">int</span> eerrno), <a class="code" href="structglob__t.html">glob_t</a> *pglob);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> <a class="code" href="glob_8h.html#aa43d417234c8572d6e98fb1dc12a4794">globfree</a>(<a class="code" href="structglob__t.html">glob_t</a> *pglob);</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#define GLOB_NOSPACE 1</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="glob_8h.html#ab53de39e075e6fb9a11678341772930b">   15</a></span>&#160;<span class="preprocessor">#define GLOB_NOSPACE 1</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _GLOB_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="structglob__t_html_ada6945e8f6ca53ecf82c9d736fb5307e"><div class="ttname"><a href="structglob__t.html#ada6945e8f6ca53ecf82c9d736fb5307e">glob_t::gl_offs</a></div><div class="ttdeci">size_t gl_offs</div><div class="ttdef"><b>Definition:</b> glob.h:9</div></div>
+<div class="ttc" id="structglob__t_html_abd9ba3e5bd7a4767af2cd3dd98a2a64f"><div class="ttname"><a href="structglob__t.html#abd9ba3e5bd7a4767af2cd3dd98a2a64f">glob_t::gl_pathv</a></div><div class="ttdeci">char ** gl_pathv</div><div class="ttdef"><b>Definition:</b> glob.h:8</div></div>
 <div class="ttc" id="structglob__t_html"><div class="ttname"><a href="structglob__t.html">glob_t</a></div><div class="ttdef"><b>Definition:</b> glob.h:6</div></div>
+<div class="ttc" id="gui__internal_8h_html_a977410f175f1b6ea314bf5b2c0788dfb"><div class="ttname"><a href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a></div><div class="ttdeci">flags</div><div class="ttdef"><b>Definition:</b> gui_internal.h:26</div></div>
+<div class="ttc" id="glob_8h_html_aaa60ab6187249bc38cf59137eb0d01b6"><div class="ttname"><a href="glob_8h.html#aaa60ab6187249bc38cf59137eb0d01b6">glob</a></div><div class="ttdeci">int glob(const char *pattern, int flags, int(*errfunc)(const char *epath, int eerrno), glob_t *pglob)</div><div class="ttdef"><b>Definition:</b> glob.c:172</div></div>
+<div class="ttc" id="structglob__t_html_a69dc492f370a9793f06c11e3eb12f199"><div class="ttname"><a href="structglob__t.html#a69dc492f370a9793f06c11e3eb12f199">glob_t::gl_pathc</a></div><div class="ttdeci">size_t gl_pathc</div><div class="ttdef"><b>Definition:</b> glob.h:7</div></div>
+<div class="ttc" id="glob_8h_html_aa43d417234c8572d6e98fb1dc12a4794"><div class="ttname"><a href="glob_8h.html#aa43d417234c8572d6e98fb1dc12a4794">globfree</a></div><div class="ttdeci">void globfree(glob_t *pglob)</div><div class="ttdef"><b>Definition:</b> glob.c:184</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6bdf73800134bb9604564d37aee1e29f.html">wordexp</a></li><li class="navelem"><b>glob.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6bdf73800134bb9604564d37aee1e29f.html">wordexp</a></li><li class="navelem"><a class="el" href="glob_8h.html">glob.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -70,38 +70,48 @@ $(document).ready(function(){initNavTree('messages_8h_source.html','');});
 <div class="title">messages.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="messages_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifndef NAVIT_MESSAGES_H</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_MESSAGES_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">struct </span><a class="code" href="structmessagelist.html">messagelist</a>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="structmessage.html">   25</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structmessage.html">message</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">struct </span><a class="code" href="structmessage.html">message</a> *next;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">int</span> id;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        time_t time;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">char</span> *text;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structmessage.html#ac3bc41a703c955fcc06c268b08ce632f">   26</a></span>&#160;        <span class="keyword">struct </span><a class="code" href="structmessage.html">message</a> *<a class="code" href="structmessage.html#ac3bc41a703c955fcc06c268b08ce632f">next</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structmessage.html#a739786b7eff412a7d23ef2f562b1b0cf">   27</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmessage.html#a739786b7eff412a7d23ef2f562b1b0cf">id</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structmessage.html#a1aac3e224cc7e3ed1815bf2d207776dc">   28</a></span>&#160;        <a class="code" href="support_2libc_2sys_2types_8h.html#a824afaa48b313f905546cf45822800fc">time_t</a> <a class="code" href="structmessage.html#a1aac3e224cc7e3ed1815bf2d207776dc">time</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structmessage.html#ac13ca9faad823a8734aa62b85f2f8c6f">   29</a></span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structmessage.html#ac13ca9faad823a8734aa62b85f2f8c6f">text</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/* Prototypes */</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">struct </span><a class="code" href="structattr.html">attr</a>;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">int</span> message_new(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_, <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="structmessage.html">message</a>);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">int</span> message_delete(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_, <span class="keywordtype">int</span> mid);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">struct </span><a class="code" href="structmessagelist.html">messagelist</a> *messagelist_new(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> **attrs);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> messagelist_init(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">struct </span><a class="code" href="structmessage.html">message</a> *message_get(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">int</span> <a class="code" href="messages_8h.html#ad26ef83f03f1bbb7bb91b15620d536a0">message_new</a>(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_, <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="structmessage.html">message</a>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">int</span> <a class="code" href="messages_8h.html#a35e4c4d431a4ecf95959b547b27772d6">message_delete</a>(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_, <span class="keywordtype">int</span> mid);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">struct </span><a class="code" href="structmessagelist.html">messagelist</a> *<a class="code" href="messages_8h.html#aefd77009e81bc2152a105e7e49c23d8e">messagelist_new</a>(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> **attrs);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> <a class="code" href="messages_8h.html#a4d5893fd28e03c28178b4900cdb0fb0c">messagelist_init</a>(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">struct </span><a class="code" href="structmessage.html">message</a> *<a class="code" href="messages_8h.html#a42342baaf9be47a8a8603ae48f404ed4">message_get</a>(<span class="keyword">struct</span> <a class="code" href="structmessagelist.html">messagelist</a> *this_);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="structmessage_html_ac13ca9faad823a8734aa62b85f2f8c6f"><div class="ttname"><a href="structmessage.html#ac13ca9faad823a8734aa62b85f2f8c6f">message::text</a></div><div class="ttdeci">char * text</div><div class="ttdef"><b>Definition:</b> messages.h:29</div></div>
+<div class="ttc" id="structmessage_html_ac3bc41a703c955fcc06c268b08ce632f"><div class="ttname"><a href="structmessage.html#ac3bc41a703c955fcc06c268b08ce632f">message::next</a></div><div class="ttdeci">struct message * next</div><div class="ttdef"><b>Definition:</b> messages.h:26</div></div>
 <div class="ttc" id="structmessage_html"><div class="ttname"><a href="structmessage.html">message</a></div><div class="ttdef"><b>Definition:</b> messages.h:25</div></div>
+<div class="ttc" id="messages_8h_html_a42342baaf9be47a8a8603ae48f404ed4"><div class="ttname"><a href="messages_8h.html#a42342baaf9be47a8a8603ae48f404ed4">message_get</a></div><div class="ttdeci">struct message * message_get(struct messagelist *this_)</div><div class="ttdef"><b>Definition:</b> messages.c:154</div></div>
+<div class="ttc" id="structmessage_html_a739786b7eff412a7d23ef2f562b1b0cf"><div class="ttname"><a href="structmessage.html#a739786b7eff412a7d23ef2f562b1b0cf">message::id</a></div><div class="ttdeci">int id</div><div class="ttdef"><b>Definition:</b> messages.h:27</div></div>
+<div class="ttc" id="messages_8h_html_a35e4c4d431a4ecf95959b547b27772d6"><div class="ttname"><a href="messages_8h.html#a35e4c4d431a4ecf95959b547b27772d6">message_delete</a></div><div class="ttdeci">int message_delete(struct messagelist *this_, int mid)</div><div class="ttdef"><b>Definition:</b> messages.c:53</div></div>
+<div class="ttc" id="messages_8h_html_aefd77009e81bc2152a105e7e49c23d8e"><div class="ttname"><a href="messages_8h.html#aefd77009e81bc2152a105e7e49c23d8e">messagelist_new</a></div><div class="ttdeci">struct messagelist * messagelist_new(struct attr **attrs)</div><div class="ttdef"><b>Definition:</b> messages.c:124</div></div>
+<div class="ttc" id="messages_8h_html_ad26ef83f03f1bbb7bb91b15620d536a0"><div class="ttname"><a href="messages_8h.html#ad26ef83f03f1bbb7bb91b15620d536a0">message_new</a></div><div class="ttdeci">int message_new(struct messagelist *this_, const char *message)</div><div class="ttdef"><b>Definition:</b> messages.c:37</div></div>
 <div class="ttc" id="structattr_html"><div class="ttname"><a href="structattr.html">attr</a></div><div class="ttdef"><b>Definition:</b> attr.h:156</div></div>
 <div class="ttc" id="structmessagelist_html"><div class="ttname"><a href="structmessagelist.html">messagelist</a></div><div class="ttdef"><b>Definition:</b> messages.c:27</div></div>
+<div class="ttc" id="structmessage_html_a1aac3e224cc7e3ed1815bf2d207776dc"><div class="ttname"><a href="structmessage.html#a1aac3e224cc7e3ed1815bf2d207776dc">message::time</a></div><div class="ttdeci">time_t time</div><div class="ttdef"><b>Definition:</b> messages.h:28</div></div>
+<div class="ttc" id="support_2libc_2sys_2types_8h_html_a824afaa48b313f905546cf45822800fc"><div class="ttname"><a href="support_2libc_2sys_2types_8h.html#a824afaa48b313f905546cf45822800fc">time_t</a></div><div class="ttdeci">long time_t</div><div class="ttdef"><b>Definition:</b> types.h:27</div></div>
+<div class="ttc" id="messages_8h_html_a4d5893fd28e03c28178b4900cdb0fb0c"><div class="ttname"><a href="messages_8h.html#a4d5893fd28e03c28178b4900cdb0fb0c">messagelist_init</a></div><div class="ttdeci">void messagelist_init(struct messagelist *this_)</div><div class="ttdef"><b>Definition:</b> messages.c:145</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>messages.h</b></li>
+    <li class="navelem"><a class="el" href="messages_8h.html">messages.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

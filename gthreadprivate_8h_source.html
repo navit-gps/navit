@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('gthreadprivate_8h_source.html','');});
 <div class="title">gthreadprivate.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
+<a href="gthreadprivate_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * gthreadprivate.h - GLib internal thread system related declarations.</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
@@ -95,13 +95,13 @@ $(document).ready(function(){initNavTree('gthreadprivate_8h_source.html','');});
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef __G_THREADPRIVATE_H__</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_THREADPRIVATE_H__</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;G_BEGIN_DECLS</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<a class="code" href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">/* System thread identifier comparision and assignment */</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#if GLIB_SIZEOF_SYSTEM_THREAD == SIZEOF_VOID_P</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_system_thread_equal_simple(thread1, thread2)                 \</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="gthreadprivate_8h.html#a5041ada4b3b9f8b898ac22190c74fed1">   30</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_system_thread_equal_simple(thread1, thread2)                 \</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">   ((thread1).dummy_pointer == (thread2).dummy_pointer)</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_system_thread_assign(dest, src)                              \</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="gthreadprivate_8h.html#abb6de5024394df34c092817dd5802989">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_system_thread_assign(dest, src)                              \</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">   ((dest).dummy_pointer = (src).dummy_pointer)</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else </span><span class="comment">/* GLIB_SIZEOF_SYSTEM_THREAD != SIZEOF_VOID_P */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_system_thread_equal_simple(thread1, thread2)                 \</span></div>
@@ -110,40 +110,52 @@ $(document).ready(function(){initNavTree('gthreadprivate_8h_source.html','');});
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">   (memcpy (&amp;(dest), &amp;(src), GLIB_SIZEOF_SYSTEM_THREAD))</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* GLIB_SIZEOF_SYSTEM_THREAD == SIZEOF_VOID_P */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define g_system_thread_equal(thread1, thread2)                         \</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="gthreadprivate_8h.html#aa6e347b8848f1a7074a3176dd5271d3e">   41</a></span>&#160;<span class="preprocessor">#define g_system_thread_equal(thread1, thread2)                         \</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">  (g_thread_functions_for_glib_use.thread_equal ?                       \</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">   g_thread_functions_for_glib_use.thread_equal (&amp;(thread1), &amp;(thread2)) :\</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">   g_system_thread_equal_simple((thread1), (thread2)))</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/* Is called from gthread/gthread-impl.c */</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> g_thread_init_glib (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#afaa9fb6ca41b67688ae958123820c7c7">g_thread_init_glib</a> (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/* base initializers, may only use g_mutex_new(), g_cond_new() */</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_mem_thread_init_noprivate_nomessage (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a140686a351d264d9b039f72e08a9ab38">_g_mem_thread_init_noprivate_nomessage</a> (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/* initializers that may also use g_private_new() */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_slice_thread_init_nomessage         (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_messages_thread_init_nomessage      (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#aeb8ef305a62136bfbb33e33d48d6e1d0">_g_slice_thread_init_nomessage</a>         (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a5d2b1329611d9a4aebf0b54520ff334f">_g_messages_thread_init_nomessage</a>      (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">/* full fledged initializers */</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_convert_thread_init (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_rand_thread_init (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_main_thread_init (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_atomic_thread_init (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_utils_thread_init (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a2a092308e060c326a4021235aab3e95d">_g_convert_thread_init</a> (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a40d494a7de5ea85d723823db38137348">_g_rand_thread_init</a> (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a47dfd977d2682613fd83ffc6eff70d97">_g_main_thread_init</a> (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#a6b8915a88c669b0d1bd64d4f2f891dd1">_g_atomic_thread_init</a> (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> <a class="code" href="gthreadprivate_8h.html#afc5b3e10c85ffad2dd940836045d1de9">_g_utils_thread_init</a> (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#ifdef G_OS_WIN32</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span>G_GNUC_INTERNAL <span class="keywordtype">void</span> _g_win32_thread_init (<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span><a class="code" href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a> <span class="keywordtype">void</span> _g_win32_thread_init (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* G_OS_WIN32 */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;G_END_DECLS</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<a class="code" href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __G_THREADPRIVATE_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="gthreadprivate_8h_html_afaa9fb6ca41b67688ae958123820c7c7"><div class="ttname"><a href="gthreadprivate_8h.html#afaa9fb6ca41b67688ae958123820c7c7">g_thread_init_glib</a></div><div class="ttdeci">void g_thread_init_glib(void)</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a6b8915a88c669b0d1bd64d4f2f891dd1"><div class="ttname"><a href="gthreadprivate_8h.html#a6b8915a88c669b0d1bd64d4f2f891dd1">_g_atomic_thread_init</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_atomic_thread_init(void)</div><div class="ttdef"><b>Definition:</b> gatomic.c:910</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_aeb8ef305a62136bfbb33e33d48d6e1d0"><div class="ttname"><a href="gthreadprivate_8h.html#aeb8ef305a62136bfbb33e33d48d6e1d0">_g_slice_thread_init_nomessage</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_slice_thread_init_nomessage(void)</div><div class="ttdef"><b>Definition:</b> gslice.c:383</div></div>
+<div class="ttc" id="gmacros_8h_html_a592df9359e90124ffc0d185505c9d567"><div class="ttname"><a href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div><div class="ttdeci">#define G_END_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:162</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a5d2b1329611d9a4aebf0b54520ff334f"><div class="ttname"><a href="gthreadprivate_8h.html#a5d2b1329611d9a4aebf0b54520ff334f">_g_messages_thread_init_nomessage</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_messages_thread_init_nomessage(void)</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a2a092308e060c326a4021235aab3e95d"><div class="ttname"><a href="gthreadprivate_8h.html#a2a092308e060c326a4021235aab3e95d">_g_convert_thread_init</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_convert_thread_init(void)</div></div>
+<div class="ttc" id="gmacros_8h_html_a72c1126856454c07c2f9ab131aa7f2a3"><div class="ttname"><a href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div><div class="ttdeci">#define G_BEGIN_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:161</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a47dfd977d2682613fd83ffc6eff70d97"><div class="ttname"><a href="gthreadprivate_8h.html#a47dfd977d2682613fd83ffc6eff70d97">_g_main_thread_init</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_main_thread_init(void)</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a40d494a7de5ea85d723823db38137348"><div class="ttname"><a href="gthreadprivate_8h.html#a40d494a7de5ea85d723823db38137348">_g_rand_thread_init</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_rand_thread_init(void)</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_afc5b3e10c85ffad2dd940836045d1de9"><div class="ttname"><a href="gthreadprivate_8h.html#afc5b3e10c85ffad2dd940836045d1de9">_g_utils_thread_init</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_utils_thread_init(void)</div></div>
+<div class="ttc" id="gthreadprivate_8h_html_a140686a351d264d9b039f72e08a9ab38"><div class="ttname"><a href="gthreadprivate_8h.html#a140686a351d264d9b039f72e08a9ab38">_g_mem_thread_init_noprivate_nomessage</a></div><div class="ttdeci">G_GNUC_INTERNAL void _g_mem_thread_init_noprivate_nomessage(void)</div><div class="ttdef"><b>Definition:</b> gmem.c:730</div></div>
+<div class="ttc" id="glibconfig_8h_html_a3c1d070628b5c29c7b5048b546077f00"><div class="ttname"><a href="glibconfig_8h.html#a3c1d070628b5c29c7b5048b546077f00">G_GNUC_INTERNAL</a></div><div class="ttdeci">#define G_GNUC_INTERNAL</div><div class="ttdef"><b>Definition:</b> glibconfig.h:195</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>gthreadprivate.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="gthreadprivate_8h.html">gthreadprivate.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

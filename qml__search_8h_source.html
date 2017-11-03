@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('qml__search_8h_source.html','');});
 <div class="title">qml_search.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef SEARCHOBJECT_H</span></div>
+<a href="qml__search_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef SEARCHOBJECT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SEARCHOBJECT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
@@ -79,40 +79,52 @@ $(document).ready(function(){initNavTree('qml__search_8h_source.html','');});
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    Q_PROPERTY(QString icon READ icon WRITE setIcon NOTIFY iconChanged)</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classSearchObject.html#a0bda9ef976dafc8a9ca1071912fbe0e3">   10</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">name</a> READ <a class="code" href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">name</a> WRITE <a class="code" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName</a> NOTIFY <a class="code" href="classSearchObject.html#aa288955f6179f863ce46225409bcc5a5">nameChanged</a>)</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSearchObject.html#a4242c889787ab8133a72e3cfa0e618a6">   11</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">icon</a> READ <a class="code" href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">icon</a> WRITE <a class="code" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon</a> NOTIFY <a class="code" href="classSearchObject.html#abfb6051d45898ed695d98de4e5547a75">iconChanged</a>)</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;public:</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="classSearchObject.html">SearchObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classSearchObject.html">SearchObject</a>(<span class="keyword">const</span> QString &amp;name, <span class="keyword">const</span> QString &amp;icon, <span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> *c, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classSearchObject.html">SearchObject</a>(<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">name</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">icon</a>, struct <a class="code" href="structpcoord.html">pcoord</a> *<a class="code" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, QObject *parent=0);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString name() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> setName(<span class="keyword">const</span> QString &amp;name);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString name() <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName</a>(const QString &amp;name);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString icon() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setIcon(<span class="keyword">const</span> QString &amp;icon);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> * getCoords() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString icon() const;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon</a>(const QString &amp;icon);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    struct <a class="code" href="structpcoord.html">pcoord</a> * <a class="code" href="classSearchObject.html#a7805f0ab19b432fb6c6fb6ee274118a7">getCoords</a>() const;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;signals:</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> nameChanged();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> iconChanged();</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSearchObject.html#abfb6051d45898ed695d98de4e5547a75">iconChanged</a>();</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    QString m_name;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    QString m_icon;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> *m_c;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;private:</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classSearchObject.html#a4df9770ddd80e63e286469532b74b346">   29</a></span>&#160;    QString <a class="code" href="classSearchObject.html#a4df9770ddd80e63e286469532b74b346">m_name</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classSearchObject.html#abb52eead32e7ae83d980b0c9077ee771">   30</a></span>&#160;    QString <a class="code" href="classSearchObject.html#abb52eead32e7ae83d980b0c9077ee771">m_icon</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSearchObject.html#abc57256c9890c725b6a3b101c5e5d50d">   31</a></span>&#160;    struct <a class="code" href="structpcoord.html">pcoord</a> *<a class="code" href="classSearchObject.html#abc57256c9890c725b6a3b101c5e5d50d">m_c</a>;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif // SEARCHOBJECT_H</span></div>
+<div class="ttc" id="classSearchObject_html_abb52eead32e7ae83d980b0c9077ee771"><div class="ttname"><a href="classSearchObject.html#abb52eead32e7ae83d980b0c9077ee771">SearchObject::m_icon</a></div><div class="ttdeci">QString m_icon</div><div class="ttdef"><b>Definition:</b> qml_search.h:30</div></div>
+<div class="ttc" id="classSearchObject_html_abfb6051d45898ed695d98de4e5547a75"><div class="ttname"><a href="classSearchObject.html#abfb6051d45898ed695d98de4e5547a75">SearchObject::iconChanged</a></div><div class="ttdeci">void iconChanged()</div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classSearchObject_html_a681055c0dfeacddd17b0fab925b0a8fb"><div class="ttname"><a href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">SearchObject::setIcon</a></div><div class="ttdeci">void setIcon(const QString &amp;icon)</div><div class="ttdef"><b>Definition:</b> qml_search.cpp:31</div></div>
+<div class="ttc" id="classSearchObject_html_a3c3f1d6373d54a6d75f6bb916c86a62b"><div class="ttname"><a href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">SearchObject::name</a></div><div class="ttdeci">QString name() const </div></div>
+<div class="ttc" id="popup_8c_html_aafe71b070668214be9b4b4849985dc6b"><div class="ttname"><a href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></div><div class="ttdeci">static struct pcoord c</div><div class="ttdef"><b>Definition:</b> popup.c:408</div></div>
+<div class="ttc" id="classSearchObject_html_aa288955f6179f863ce46225409bcc5a5"><div class="ttname"><a href="classSearchObject.html#aa288955f6179f863ce46225409bcc5a5">SearchObject::nameChanged</a></div><div class="ttdeci">void nameChanged()</div></div>
 <div class="ttc" id="classSearchObject_html"><div class="ttname"><a href="classSearchObject.html">SearchObject</a></div><div class="ttdef"><b>Definition:</b> qml_search.h:6</div></div>
+<div class="ttc" id="classSearchObject_html_a62d7966e9827adb60b9b938538a7cb88"><div class="ttname"><a href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">SearchObject::icon</a></div><div class="ttdeci">QString icon() const </div></div>
+<div class="ttc" id="classSearchObject_html_abc57256c9890c725b6a3b101c5e5d50d"><div class="ttname"><a href="classSearchObject.html#abc57256c9890c725b6a3b101c5e5d50d">SearchObject::m_c</a></div><div class="ttdeci">struct pcoord * m_c</div><div class="ttdef"><b>Definition:</b> qml_search.h:31</div></div>
+<div class="ttc" id="classSearchObject_html_a863c2ece1660369dd58dc1c7f57d537f"><div class="ttname"><a href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">SearchObject::setName</a></div><div class="ttdeci">void setName(const QString &amp;name)</div><div class="ttdef"><b>Definition:</b> qml_search.cpp:18</div></div>
+<div class="ttc" id="classSearchObject_html_a7805f0ab19b432fb6c6fb6ee274118a7"><div class="ttname"><a href="classSearchObject.html#a7805f0ab19b432fb6c6fb6ee274118a7">SearchObject::getCoords</a></div><div class="ttdeci">struct pcoord * getCoords() const </div><div class="ttdef"><b>Definition:</b> qml_search.cpp:39</div></div>
+<div class="ttc" id="classSearchObject_html_a4df9770ddd80e63e286469532b74b346"><div class="ttname"><a href="classSearchObject.html#a4df9770ddd80e63e286469532b74b346">SearchObject::m_name</a></div><div class="ttdeci">QString m_name</div><div class="ttdef"><b>Definition:</b> qml_search.h:29</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
 <div class="ttc" id="structpcoord_html"><div class="ttname"><a href="structpcoord.html">pcoord</a></div><div class="ttdef"><b>Definition:</b> coord.h:40</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><b>qml_search.h</b></li>
+    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><a class="el" href="qml__search_8h.html">qml_search.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

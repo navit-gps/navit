@@ -73,19 +73,61 @@ $(document).ready(function(){initNavTree('structgeom__poly__segment.html','');})
 <div class="title">geom_poly_segment Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="geom_8h_source.html">geom.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a5bba65a6c8c16287968a881bac0afc16"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5bba65a6c8c16287968a881bac0afc16"></a>
-enum geom_poly_segment_type&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="memitem:a5bba65a6c8c16287968a881bac0afc16"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6d">geom_poly_segment_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16">type</a></td></tr>
 <tr class="separator:a5bba65a6c8c16287968a881bac0afc16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a153a1deb23a8d3839f38b19cc0e35ebb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a153a1deb23a8d3839f38b19cc0e35ebb"></a>
-struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>first</b></td></tr>
+<tr class="memitem:a153a1deb23a8d3839f38b19cc0e35ebb"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb">first</a></td></tr>
 <tr class="separator:a153a1deb23a8d3839f38b19cc0e35ebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79eeb717775ae026a6fa6964537bf8f4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79eeb717775ae026a6fa6964537bf8f4"></a>
-struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>last</b></td></tr>
+<tr class="memitem:a79eeb717775ae026a6fa6964537bf8f4"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4">last</a></td></tr>
 <tr class="separator:a79eeb717775ae026a6fa6964537bf8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a153a1deb23a8d3839f38b19cc0e35ebb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord.html">coord</a>* geom_poly_segment::first</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="binfile_8c.html#af95d3ef12c9750bd8873d17be7063e9f">binmap_get_estimated_boundaries()</a>, <a class="el" href="binfile_8c.html#ae6a92a64ace269865cba80cc8d34868a">binmap_search_street_by_place()</a>, <a class="el" href="coastline_8c.html#ade85879f9ab727f5cb39badfadaab5a8">find_next()</a>, <a class="el" href="maptool_8h.html#a95eb61ab878d5cfec63a248452f133a5">free_boundaries()</a>, <a class="el" href="geom_8h.html#aea5efc3e53159805d880dc44654b099f">geom_poly_segment_compatible()</a>, <a class="el" href="geom_8h.html#afd04d923233140476074f51dd494555e">geom_poly_segment_destroy()</a>, <a class="el" href="geom_8h.html#a4255b43e23daee23c669d14e6f9d42a6">geom_poly_segments_insert()</a>, <a class="el" href="geom_8h.html#a80c630f1e476578403f8b20232208ff3">geom_poly_segments_point_inside()</a>, <a class="el" href="geom_8h.html#a9765e9bf9f71f76c462ad7636ebab50d">geom_poly_segments_sort()</a>, <a class="el" href="maptool_8h.html#ac6dc9dc518f687bc80fac1374ea4a4fa">item_bin_to_poly_segment()</a>, <a class="el" href="binfile_8c.html#aeaf8032e4a6ee19996a8c0ac91303e06">item_inside_poly_list()</a>, <a class="el" href="osm_8c.html#aa27dfada972591cab9df671600b89705">osm_town_relations_to_poly()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, and <a class="el" href="coastline_8c.html#af3a0a4faaba45261461b9607f99483ad">tile_collector_process_tile()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a79eeb717775ae026a6fa6964537bf8f4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord.html">coord</a> * geom_poly_segment::last</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="binfile_8c.html#af95d3ef12c9750bd8873d17be7063e9f">binmap_get_estimated_boundaries()</a>, <a class="el" href="binfile_8c.html#ae6a92a64ace269865cba80cc8d34868a">binmap_search_street_by_place()</a>, <a class="el" href="coastline_8c.html#ade85879f9ab727f5cb39badfadaab5a8">find_next()</a>, <a class="el" href="geom_8h.html#aea5efc3e53159805d880dc44654b099f">geom_poly_segment_compatible()</a>, <a class="el" href="geom_8h.html#a4255b43e23daee23c669d14e6f9d42a6">geom_poly_segments_insert()</a>, <a class="el" href="geom_8h.html#a80c630f1e476578403f8b20232208ff3">geom_poly_segments_point_inside()</a>, <a class="el" href="geom_8h.html#a9765e9bf9f71f76c462ad7636ebab50d">geom_poly_segments_sort()</a>, <a class="el" href="maptool_8h.html#ac6dc9dc518f687bc80fac1374ea4a4fa">item_bin_to_poly_segment()</a>, <a class="el" href="binfile_8c.html#aeaf8032e4a6ee19996a8c0ac91303e06">item_inside_poly_list()</a>, <a class="el" href="osm_8c.html#aa27dfada972591cab9df671600b89705">osm_town_relations_to_poly()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, and <a class="el" href="coastline_8c.html#af3a0a4faaba45261461b9607f99483ad">tile_collector_process_tile()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5bba65a6c8c16287968a881bac0afc16"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6d">geom_poly_segment_type</a> geom_poly_segment::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="binfile_8c.html#af95d3ef12c9750bd8873d17be7063e9f">binmap_get_estimated_boundaries()</a>, <a class="el" href="binfile_8c.html#ae6a92a64ace269865cba80cc8d34868a">binmap_search_street_by_place()</a>, <a class="el" href="geom_8h.html#aea5efc3e53159805d880dc44654b099f">geom_poly_segment_compatible()</a>, <a class="el" href="geom_8h.html#a4255b43e23daee23c669d14e6f9d42a6">geom_poly_segments_insert()</a>, <a class="el" href="geom_8h.html#a9765e9bf9f71f76c462ad7636ebab50d">geom_poly_segments_sort()</a>, <a class="el" href="maptool_8h.html#ac6dc9dc518f687bc80fac1374ea4a4fa">item_bin_to_poly_segment()</a>, <a class="el" href="osm_8c.html#aa27dfada972591cab9df671600b89705">osm_town_relations_to_poly()</a>, and <a class="el" href="coastline_8c.html#af3a0a4faaba45261461b9607f99483ad">tile_collector_process_tile()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="geom_8h_source.html">geom.h</a></li>
 </ul>

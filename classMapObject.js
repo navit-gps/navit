@@ -8,6 +8,8 @@ var classMapObject =
     [ "nameChanged", "classMapObject.html#a7961db701769348063d8e5c2147caf95", null ],
     [ "setActive", "classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020", null ],
     [ "setName", "classMapObject.html#a42104b2092dcbdbff328b9f23c80c842", null ],
+    [ "m_active", "classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c", null ],
+    [ "m_name", "classMapObject.html#aaaf01599496f3ac2057035525ad73aff", null ],
     [ "active", "classMapObject.html#a3ab652e15971fd18e1afb08dc52d5ce3", null ],
     [ "name", "classMapObject.html#ac97257b9ec2bf526a18b9bc4bbc5b2b8", null ]
 ];

@@ -79,7 +79,7 @@ $(document).ready(function(){initNavTree('structroute__graph.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:aec58763cd3c3fc228f6163729cb658a1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#aec58763cd3c3fc228f6163729cb658a1">busy</a></td></tr>
+<tr class="memitem:aec58763cd3c3fc228f6163729cb658a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#aec58763cd3c3fc228f6163729cb658a1">busy</a></td></tr>
 <tr class="separator:aec58763cd3c3fc228f6163729cb658a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a760dfcf1f660b1dea4e07c50cdb38a4b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__selection.html">map_selection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a760dfcf1f660b1dea4e07c50cdb38a4b">sel</a></td></tr>
 <tr class="separator:a760dfcf1f660b1dea4e07c50cdb38a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,26 +99,39 @@ Data Fields</h2></td></tr>
 <tr class="separator:ad09c527a69149fe25000b6fd4eaa8f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab2870efec1aa440237ba26ba2ce835c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__segment.html">route_graph_segment</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#aab2870efec1aa440237ba26ba2ce835c">route_segments</a></td></tr>
 <tr class="separator:aab2870efec1aa440237ba26ba2ce835c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c6fb1124f39dc3104207a652d489e3a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c6fb1124f39dc3104207a652d489e3a"></a>
-struct <a class="el" href="structroute__graph__segment.html">route_graph_segment</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>avoid_seg</b></td></tr>
+<tr class="memitem:a5c6fb1124f39dc3104207a652d489e3a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__segment.html">route_graph_segment</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a5c6fb1124f39dc3104207a652d489e3a">avoid_seg</a></td></tr>
 <tr class="separator:a5c6fb1124f39dc3104207a652d489e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71f996b6682827d379a25c77a4f4318b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__point.html">route_graph_point</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a71f996b6682827d379a25c77a4f4318b">hash</a> [HASH_SIZE]</td></tr>
+<tr class="memitem:a71f996b6682827d379a25c77a4f4318b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__point.html">route_graph_point</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a71f996b6682827d379a25c77a4f4318b">hash</a> [<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a>]</td></tr>
 <tr class="separator:a71f996b6682827d379a25c77a4f4318b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A complete route graph. </p>
 <p>The route graph holds all routable segments along with the connections between them and the cost of each segment. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a5c6fb1124f39dc3104207a652d489e3a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structroute__graph__segment.html">route_graph_segment</a>* route_graph::avoid_seg</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aec58763cd3c3fc228f6163729cb658a1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_graph::busy</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_graph::busy</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The graph is being built </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
 
 </div>
 </div>
@@ -133,6 +146,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 </div><div class="memdoc">
 <p>Callback when graph is done </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aece3ed03ea64579a695890f8f9928d7c"></a>
@@ -146,6 +161,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 </div><div class="memdoc">
 <p>Handle to the mapset </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a71f996b6682827d379a25c77a4f4318b"></a>
@@ -153,11 +170,13 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structroute__graph__point.html">route_graph_point</a>* route_graph::hash[HASH_SIZE]</td>
+          <td class="memname">struct <a class="el" href="structroute__graph__point.html">route_graph_point</a>* route_graph::hash[<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>A hashtable containing all route_graph_points in this graph </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#aff13b4b1b182e3ef05620ce10704f81b">rp_get_item()</a>.</p>
 
 </div>
 </div>
@@ -172,6 +191,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 </div><div class="memdoc">
 <p>Idle callback to process the graph </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ad09c527a69149fe25000b6fd4eaa8f81"></a>
@@ -184,6 +205,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
       </table>
 </div><div class="memdoc">
 <p>The pointer to the idle event </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
 
 </div>
 </div>
@@ -198,6 +221,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 </div><div class="memdoc">
 <p>Pointer to the currently active map </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a59d7174a8c5f408a78e372dc93968901"></a>
@@ -210,6 +235,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
       </table>
 </div><div class="memdoc">
 <p>Pointer to the currently active map rectangle </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, <a class="el" href="route_8c.html#af4ad986c4d197cffe6d7a0e1e3211463">route_graph_build_idle()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
 
 </div>
 </div>
@@ -224,6 +251,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
 </div><div class="memdoc">
 <p>Pointer to the first <a class="el" href="structroute__graph__segment.html" title="A segment in the route graph. ">route_graph_segment</a> in the linked list of all segments </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#aff13b4b1b182e3ef05620ce10704f81b">rp_get_item()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a760dfcf1f660b1dea4e07c50cdb38a4b"></a>
@@ -236,6 +265,8 @@ struct <a class="el" href="structroute__graph__segment.html">route_graph_segment
       </table>
 </div><div class="memdoc">
 <p>The rectangle selection for the graph </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
 
 </div>
 </div>

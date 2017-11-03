@@ -79,15 +79,15 @@ $(document).ready(function(){initNavTree('vehicle__null_8c.html','');});
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;config.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
-<code>#include &lt;glib.h&gt;</code><br/>
-<code>#include &lt;math.h&gt;</code><br/>
-<code>#include &lt;time.h&gt;</code><br/>
+<code>#include &lt;<a class="el" href="glib_8h_source.html">glib.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="math_8h_source.html">math.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="time_8h_source.html">time.h</a>&gt;</code><br/>
 <code>#include &quot;debug.h&quot;</code><br/>
-<code>#include &quot;callback.h&quot;</code><br/>
-<code>#include &quot;plugin.h&quot;</code><br/>
-<code>#include &quot;coord.h&quot;</code><br/>
-<code>#include &quot;item.h&quot;</code><br/>
-<code>#include &quot;vehicle.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br/>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -96,13 +96,24 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
+<tr class="memitem:a8fa145726ece5fd7029b30a0b05c6984"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a8fa145726ece5fd7029b30a0b05c6984">vehicle_null_destroy</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv)</td></tr>
+<tr class="memdesc:a8fa145726ece5fd7029b30a0b05c6984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the null_vehicle.  <a href="#a8fa145726ece5fd7029b30a0b05c6984">More...</a><br/></td></tr>
+<tr class="separator:a8fa145726ece5fd7029b30a0b05c6984"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39084aaffc3ae8199419d6ea26c26e74"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a39084aaffc3ae8199419d6ea26c26e74">vehicle_null_position_attr_get</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="png_8h.html#a31c258c425e1346a1cd21ffd48f58ace">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:a39084aaffc3ae8199419d6ea26c26e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide the outside with information.  <a href="#a39084aaffc3ae8199419d6ea26c26e74">More...</a><br/></td></tr>
+<tr class="separator:a39084aaffc3ae8199419d6ea26c26e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad95de197f76edf0d2752200ed7fcea4a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#ad95de197f76edf0d2752200ed7fcea4a">vehicle_null_set_attr</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="separator:ad95de197f76edf0d2752200ed7fcea4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9bcd7ba83133ffb0201a062b09481c"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a6a9bcd7ba83133ffb0201a062b09481c">vehicle_null_new_null</a> (struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *meth, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memdesc:a6a9bcd7ba83133ffb0201a062b09481c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create null_vehicle.  <a href="#a6a9bcd7ba83133ffb0201a062b09481c">More...</a><br/></td></tr>
+<tr class="separator:a6a9bcd7ba83133ffb0201a062b09481c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td></tr>
 <tr class="memdesc:a1eaae939034896b436dffbf5e93c0da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">register vehicle_null  <a href="#a1eaae939034896b436dffbf5e93c0da1">More...</a><br/></td></tr>
 <tr class="separator:a1eaae939034896b436dffbf5e93c0da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a1e4ebf7b5b46df20280bcfa4bf90aa05"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><b>vehicle_null_methods</b></td></tr>
+<tr class="memitem:a1e4ebf7b5b46df20280bcfa4bf90aa05"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__null_8c.html#a1e4ebf7b5b46df20280bcfa4bf90aa05">vehicle_null_methods</a></td></tr>
 <tr class="separator:a1e4ebf7b5b46df20280bcfa4bf90aa05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -125,9 +136,9 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plugin_init </td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> plugin_init </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
+          <td class="paramtype"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -137,6 +148,187 @@ Variables</h2></td></tr>
 <p>register vehicle_null </p>
 <p>The plugin entry point.</p>
 <dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
+
+<p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="vehicle__null_8c.html#a6a9bcd7ba83133ffb0201a062b09481c">vehicle_null_new_null()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8fa145726ece5fd7029b30a0b05c6984"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> vehicle_null_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Free the null_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
+
+<p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6a9bcd7ba83133ffb0201a062b09481c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a>* vehicle_null_new_null </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *&#160;</td>
+          <td class="paramname"><em>meth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td>
+          <td class="paramname"><em>cbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create null_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meth</td><td></td></tr>
+    <tr><td class="paramname">cbl</td><td></td></tr>
+    <tr><td class="paramname">attrs</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structvehicle__priv.html">vehicle_priv</a> </dd></dl>
+
+<p>References <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gmem_8h.html#a977287fca21d3e7683b4f214af02440c">g_new0</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="vehicle__null_8c.html#a1e4ebf7b5b46df20280bcfa4bf90aa05">vehicle_null_methods</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__null_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a39084aaffc3ae8199419d6ea26c26e74"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_null_position_attr_get </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provide the outside with information. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td></td></tr>
+    <tr><td class="paramname">type</td><td>TODO: What can this be? </td></tr>
+    <tr><td class="paramname">attr</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true/false </dd></dl>
+
+<p>References <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structvehicle__priv.html#a21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="structvehicle__priv.html#af1a2e9d790929c58b7a28b3abda9425c">vehicle_priv::fix_type</a>, <a class="el" href="structvehicle__priv.html#a97e40bb9ef83c327e9948eafb64257bf">vehicle_priv::fixiso8601</a>, <a class="el" href="structvehicle__priv.html#ad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="structvehicle__priv.html#a48bccd2ff6ab362cccc2d24da76a9223">vehicle_priv::have_coords</a>, <a class="el" href="structvehicle__priv.html#a24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="structvehicle__priv.html#a6e7bc6a0ff016b8ec0c50bcd54d0b18b">vehicle_priv::radius</a>, <a class="el" href="structvehicle__priv.html#a92c47ef55a96f5fd64541a93797233cf">vehicle_priv::sats</a>, <a class="el" href="structvehicle__priv.html#acaefff1b97ccc6fd75a94c89700fab94">vehicle_priv::sats_used</a>, <a class="el" href="structvehicle__priv.html#a6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="garmin__img_8c.html#ad9e6e5971e279e602a61a51d5c3a5b52">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad95de197f76edf0d2752200ed7fcea4a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_null_set_attr </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="callback_8h.html#a34b73107b42d822d5595bf2162f1c11a">callback_list_call_attr_0</a>, <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="structvehicle__priv.html#a21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="structvehicle__priv.html#ad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="structvehicle__priv.html#a48bccd2ff6ab362cccc2d24da76a9223">vehicle_priv::have_coords</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="structvehicle__priv.html#a6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 </div>
 </div>
@@ -151,11 +343,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        vehicle_null_destroy,</div>
-<div class="line">        vehicle_null_position_attr_get,</div>
-<div class="line">        vehicle_null_set_attr,</div>
+<div class="line">        <a class="code" href="vehicle__null_8c.html#a8fa145726ece5fd7029b30a0b05c6984">vehicle_null_destroy</a>,</div>
+<div class="line">        <a class="code" href="vehicle__null_8c.html#a39084aaffc3ae8199419d6ea26c26e74">vehicle_null_position_attr_get</a>,</div>
+<div class="line">        <a class="code" href="vehicle__null_8c.html#ad95de197f76edf0d2752200ed7fcea4a">vehicle_null_set_attr</a>,</div>
 <div class="line">}</div>
+<div class="ttc" id="vehicle__null_8c_html_a8fa145726ece5fd7029b30a0b05c6984"><div class="ttname"><a href="vehicle__null_8c.html#a8fa145726ece5fd7029b30a0b05c6984">vehicle_null_destroy</a></div><div class="ttdeci">static void vehicle_null_destroy(struct vehicle_priv *priv)</div><div class="ttdoc">Free the null_vehicle. </div><div class="ttdef"><b>Definition:</b> vehicle_null.c:60</div></div>
+<div class="ttc" id="vehicle__null_8c_html_ad95de197f76edf0d2752200ed7fcea4a"><div class="ttname"><a href="vehicle__null_8c.html#ad95de197f76edf0d2752200ed7fcea4a">vehicle_null_set_attr</a></div><div class="ttdeci">static int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> vehicle_null.c:123</div></div>
+<div class="ttc" id="vehicle__null_8c_html_a39084aaffc3ae8199419d6ea26c26e74"><div class="ttname"><a href="vehicle__null_8c.html#a39084aaffc3ae8199419d6ea26c26e74">vehicle_null_position_attr_get</a></div><div class="ttdeci">static int vehicle_null_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdoc">Provide the outside with information. </div><div class="ttdef"><b>Definition:</b> vehicle_null.c:75</div></div>
 </div><!-- fragment -->
+<p>Referenced by <a class="el" href="vehicle__null_8c.html#a6a9bcd7ba83133ffb0201a062b09481c">vehicle_null_new_null()</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->

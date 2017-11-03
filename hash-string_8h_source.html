@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('hash-string_8h_source.html','');});
 <div class="title">hash-string.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Description of GNU message catalog format: string hashing function.</span></div>
+<a href="hash-string_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Description of GNU message catalog format: string hashing function.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">   Copyright (C) 1995, 1997-1998, 2000-2003 Free Software Foundation, Inc.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   This program is free software; you can redistribute it and/or modify it</span></div>
@@ -91,14 +91,14 @@ $(document).ready(function(){initNavTree('hash-string_8h_source.html','');});
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/* @@ end of prolog @@ */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/* We assume to have `unsigned long int&#39; value with at least 32 bits.  */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define HASHWORDBITS 32</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="hash-string_8h.html#af4d3bb6f085b8aca1abf695f340aa1d2">   22</a></span>&#160;<span class="preprocessor">#define HASHWORDBITS 32</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">/* Defines the so called `hashpjw&#39; function by P.J. Weinberger</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">   [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">   1986, 1987 Bell Telephone Laboratories, Inc.]  */</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;hash_string (<span class="keyword">const</span> <span class="keywordtype">char</span> *str_param)</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="hash-string_8h.html#a53db52379dd3ad2e4d2d8f8eecaf9979">   29</a></span>&#160;<a class="code" href="hash-string_8h.html#a53db52379dd3ad2e4d2d8f8eecaf9979">hash_string</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *str_param)</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> hval, g;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">char</span> *str = str_param;</div>
@@ -109,21 +109,24 @@ $(document).ready(function(){initNavTree('hash-string_8h_source.html','');});
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      hval &lt;&lt;= 4;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      hval += (<span class="keywordtype">unsigned</span> char) *str++;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      g = hval &amp; ((<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> int) 0xf &lt;&lt; (HASHWORDBITS - 4));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      g = hval &amp; ((<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a>) 0xf &lt;&lt; (<a class="code" href="hash-string_8h.html#af4d3bb6f085b8aca1abf695f340aa1d2">HASHWORDBITS</a> - 4));</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <span class="keywordflow">if</span> (g != 0)</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;          hval ^= g &gt;&gt; (HASHWORDBITS - 8);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;          hval ^= g &gt;&gt; (<a class="code" href="hash-string_8h.html#af4d3bb6f085b8aca1abf695f340aa1d2">HASHWORDBITS</a> - 8);</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;          hval ^= g;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordflow">return</span> hval;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="ttc" id="hash-string_8h_html_a53db52379dd3ad2e4d2d8f8eecaf9979"><div class="ttname"><a href="hash-string_8h.html#a53db52379dd3ad2e4d2d8f8eecaf9979">hash_string</a></div><div class="ttdeci">static unsigned long int hash_string(const char *str_param)</div><div class="ttdef"><b>Definition:</b> hash-string.h:29</div></div>
+<div class="ttc" id="voices_8c_html_a4a950eb550194bd27837f94f61603d36"><div class="ttname"><a href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a></div><div class="ttdeci">#define int(x)</div><div class="ttdef"><b>Definition:</b> voices.c:45</div></div>
+<div class="ttc" id="hash-string_8h_html_af4d3bb6f085b8aca1abf695f340aa1d2"><div class="ttname"><a href="hash-string_8h.html#af4d3bb6f085b8aca1abf695f340aa1d2">HASHWORDBITS</a></div><div class="ttdeci">#define HASHWORDBITS</div><div class="ttdef"><b>Definition:</b> hash-string.h:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><b>hash-string.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><a class="el" href="hash-string_8h.html">hash-string.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

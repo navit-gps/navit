@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('galloca_8h_source.html','');});
 <div class="title">galloca.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
+<a href="galloca_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This library is free software; you can redistribute it and/or</span></div>
@@ -101,9 +101,9 @@ $(document).ready(function(){initNavTree('galloca_8h_source.html','');});
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifndef __G_ALLOCA_H__</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_ALLOCA_H__</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="galloca_8h.html#aa0f9c6469ba0488252fcd8cab5e552b9">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_ALLOCA_H__</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;glib/gtypes.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="gtypes_8h.html">glib/gtypes.h</a>&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifdef  __GNUC__</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span><span class="comment">/* GCC does the right thing */</span></div>
@@ -121,24 +121,28 @@ $(document).ready(function(){initNavTree('galloca_8h_source.html','');});
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#   pragma alloca</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  else </span><span class="comment">/* !_AIX */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#   ifndef alloca </span><span class="comment">/* predefined by HP cc +Olibcalls */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span>G_BEGIN_DECLS</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">char</span> *alloca ();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;G_END_DECLS</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span><a class="code" href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">char</span> *<a class="code" href="galloca_8h.html#a3acc74cb196612999c853d4203184bf8">alloca</a> ();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#   endif </span><span class="comment">/* !alloca */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  endif </span><span class="comment">/* !_AIX */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># endif </span><span class="comment">/* !_MSC_VER &amp;&amp; !__DMC__ */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* !__GNUC__ &amp;&amp; !GLIB_HAVE_ALLOCA_H */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define g_alloca(size)           alloca (size)</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define g_newa(struct_type, n_structs)  ((struct_type*) g_alloca (sizeof (struct_type) * (gsize) (n_structs)))</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="galloca_8h.html#a0b07338158ee4131cb5e2162d3bfdce5">   60</a></span>&#160;<span class="preprocessor">#define g_alloca(size)           alloca (size)</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="galloca_8h.html#a7dfae69e6a5817d9356b938e12e8b19f">   61</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define g_newa(struct_type, n_structs)  ((struct_type*) g_alloca (sizeof (struct_type) * (gsize) (n_structs)))</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __G_ALLOCA_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="galloca_8h_html_a3acc74cb196612999c853d4203184bf8"><div class="ttname"><a href="galloca_8h.html#a3acc74cb196612999c853d4203184bf8">alloca</a></div><div class="ttdeci">G_BEGIN_DECLS char * alloca()</div></div>
+<div class="ttc" id="gtypes_8h_html"><div class="ttname"><a href="gtypes_8h.html">gtypes.h</a></div></div>
+<div class="ttc" id="gmacros_8h_html_a592df9359e90124ffc0d185505c9d567"><div class="ttname"><a href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div><div class="ttdeci">#define G_END_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:162</div></div>
+<div class="ttc" id="gmacros_8h_html_a72c1126856454c07c2f9ab131aa7f2a3"><div class="ttname"><a href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div><div class="ttdeci">#define G_BEGIN_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:161</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>galloca.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="galloca_8h.html">galloca.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

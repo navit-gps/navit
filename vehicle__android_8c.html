@@ -79,16 +79,16 @@ $(document).ready(function(){initNavTree('vehicle__android_8c.html','');});
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;config.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
-<code>#include &lt;glib.h&gt;</code><br/>
-<code>#include &lt;math.h&gt;</code><br/>
-<code>#include &lt;time.h&gt;</code><br/>
+<code>#include &lt;<a class="el" href="glib_8h_source.html">glib.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="math_8h_source.html">math.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="time_8h_source.html">time.h</a>&gt;</code><br/>
 <code>#include &quot;debug.h&quot;</code><br/>
-<code>#include &quot;callback.h&quot;</code><br/>
-<code>#include &quot;plugin.h&quot;</code><br/>
-<code>#include &quot;coord.h&quot;</code><br/>
-<code>#include &quot;item.h&quot;</code><br/>
-<code>#include &quot;android.h&quot;</code><br/>
-<code>#include &quot;vehicle.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="android_8h_source.html">android.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br/>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -97,13 +97,34 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
+<tr class="memitem:a3df271ac2bb278c5f2d22b329fa247a5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a3df271ac2bb278c5f2d22b329fa247a5">vehicle_android_destroy</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv)</td></tr>
+<tr class="memdesc:a3df271ac2bb278c5f2d22b329fa247a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the android_vehicle.  <a href="#a3df271ac2bb278c5f2d22b329fa247a5">More...</a><br/></td></tr>
+<tr class="separator:a3df271ac2bb278c5f2d22b329fa247a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9fbb5a39327e7707442a394cb706ec"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a1a9fbb5a39327e7707442a394cb706ec">vehicle_android_position_attr_get</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="png_8h.html#a31c258c425e1346a1cd21ffd48f58ace">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:a1a9fbb5a39327e7707442a394cb706ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a vehicle attribute.  <a href="#a1a9fbb5a39327e7707442a394cb706ec">More...</a><br/></td></tr>
+<tr class="separator:a1a9fbb5a39327e7707442a394cb706ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b83b02eabd1c2ee0b170c376b5b915e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *v, jobject <a class="el" href="png_8h.html#a0cc6eaeed8c88bd2c1117d9a01070278">location</a>)</td></tr>
+<tr class="memdesc:a1b83b02eabd1c2ee0b170c376b5b915e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a new position has been reported.  <a href="#a1b83b02eabd1c2ee0b170c376b5b915e">More...</a><br/></td></tr>
+<tr class="separator:a1b83b02eabd1c2ee0b170c376b5b915e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bbfa6c118a23f28bf27039ab61f6d48"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a6bbfa6c118a23f28bf27039ab61f6d48">vehicle_android_status_callback</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *v, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> sats_in_view, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> sats_used)</td></tr>
+<tr class="memdesc:a6bbfa6c118a23f28bf27039ab61f6d48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a new GPS status has been reported.  <a href="#a6bbfa6c118a23f28bf27039ab61f6d48">More...</a><br/></td></tr>
+<tr class="separator:a6bbfa6c118a23f28bf27039ab61f6d48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81bc98fadf2c0912b0de153ca31f747f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *v, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> fix_type)</td></tr>
+<tr class="memdesc:a81bc98fadf2c0912b0de153ca31f747f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a change in GPS fix status has been reported.  <a href="#a81bc98fadf2c0912b0de153ca31f747f">More...</a><br/></td></tr>
+<tr class="separator:a81bc98fadf2c0912b0de153ca31f747f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1222b748368b7b5dfcedfb31100052"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *ret)</td></tr>
+<tr class="memdesc:adb1222b748368b7b5dfcedfb31100052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an Android vehicle.  <a href="#adb1222b748368b7b5dfcedfb31100052">More...</a><br/></td></tr>
+<tr class="separator:adb1222b748368b7b5dfcedfb31100052"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace72833b3af104032b26381a52a2ef1d"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android</a> (struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *meth, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memdesc:ace72833b3af104032b26381a52a2ef1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create android_vehicle.  <a href="#ace72833b3af104032b26381a52a2ef1d">More...</a><br/></td></tr>
+<tr class="separator:ace72833b3af104032b26381a52a2ef1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td></tr>
 <tr class="memdesc:a1eaae939034896b436dffbf5e93c0da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">register vehicle_android  <a href="#a1eaae939034896b436dffbf5e93c0da1">More...</a><br/></td></tr>
 <tr class="separator:a1eaae939034896b436dffbf5e93c0da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a50b6a3ad65e20167f5dbc420141d20f0"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><b>vehicle_android_methods</b></td></tr>
+<tr class="memitem:a50b6a3ad65e20167f5dbc420141d20f0"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__android_8c.html#a50b6a3ad65e20167f5dbc420141d20f0">vehicle_android_methods</a></td></tr>
 <tr class="separator:a50b6a3ad65e20167f5dbc420141d20f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -120,9 +141,9 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void plugin_init </td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> plugin_init </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
+          <td class="paramtype"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -132,6 +153,356 @@ Variables</h2></td></tr>
 <p>register vehicle_android </p>
 <p>The plugin entry point.</p>
 <dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
+
+<p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3df271ac2bb278c5f2d22b329fa247a5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> vehicle_android_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Free the android_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td><a class="el" href="structvehicle__priv.html">vehicle_priv</a> structure for the vehicle </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
+
+<p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81bc98fadf2c0912b0de153ca31f747f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> vehicle_android_fix_callback </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
+          <td class="paramname"><em>fix_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when a change in GPS fix status has been reported. </p>
+<p>This function is called by</p>
+<div class="fragment"><div class="line">NavitLocationListener </div>
+</div><!-- fragment --><p> upon receiving a new</p>
+<div class="fragment"><div class="line">android.location.GPS_FIX_CHANGE </div>
+</div><!-- fragment --><p> broadcast.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The<div class="fragment"><div class="line">struct_vehicle_priv </div>
+</div><!-- fragment --> for the vehicle </td></tr>
+    <tr><td class="paramname">fix_type</td><td>The fix type (1 = valid, 0 = invalid) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="attr_8h.html#a305f5066877295b76463240b9c19e531a5dff8932d0703f56c4f0969e9d4c5f15">attr_position_valid_extrapolated_time</a>, <a class="el" href="attr_8h.html#a305f5066877295b76463240b9c19e531aa41402ab2787d27a548c54d1de95ac81">attr_position_valid_valid</a>, <a class="el" href="callback_8h.html#a34b73107b42d822d5595bf2162f1c11a">callback_list_call_attr_0</a>, <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="structvehicle__priv.html#af1a2e9d790929c58b7a28b3abda9425c">vehicle_priv::fix_type</a>, and <a class="el" href="structvehicle__priv.html#aec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adb1222b748368b7b5dfcedfb31100052"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_android_init </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>ret</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes an Android vehicle. </p>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false on failure </dd></dl>
+
+<p>References <a class="el" href="android_8c.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a>, <a class="el" href="android_8c.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global()</a>, <a class="el" href="android_8c.html#a037be041befa134110ae94401eb71347">android_find_method()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structvehicle__priv.html#a082b9d2f1d6c70c8ed1eaa16ae08f799">vehicle_priv::fcb</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structvehicle__priv.html#a16204bc1954f9a5f8ec34e0cdabd1cfb">vehicle_priv::Location_getAccuracy</a>, <a class="el" href="structvehicle__priv.html#a73a472d935698545e5bf478f14be242d">vehicle_priv::Location_getAltitude</a>, <a class="el" href="structvehicle__priv.html#a5d5569759abe0ea7ed65d5101a7ff137">vehicle_priv::Location_getBearing</a>, <a class="el" href="structvehicle__priv.html#af8bd23d439d3c19bba1eb1309f56e9c0">vehicle_priv::Location_getLatitude</a>, <a class="el" href="structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8">vehicle_priv::Location_getLongitude</a>, <a class="el" href="structvehicle__priv.html#a30e935f3729f3d02f50f01a655466cdd">vehicle_priv::Location_getSpeed</a>, <a class="el" href="structvehicle__priv.html#a35663bd80dce1f9337fa7e64a3639f62">vehicle_priv::Location_getTime</a>, <a class="el" href="structvehicle__priv.html#af22770123725c578c5ef3b3cd1dadb64">vehicle_priv::LocationClass</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structvehicle__priv.html#a2341da6fc5e4b92589a093ff1dccf89f">vehicle_priv::NavitVehicle</a>, <a class="el" href="structvehicle__priv.html#ad1ba23a84cd7e33c629242a665b8705c">vehicle_priv::NavitVehicleClass</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structvehicle__priv.html#a40703cfd434cbe5e6d8631c66da220c9">vehicle_priv::pcb</a>, and <a class="el" href="structvehicle__priv.html#ab9b025e10c32c8efd3a994f446cbd588">vehicle_priv::scb</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ace72833b3af104032b26381a52a2ef1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a>* vehicle_android_new_android </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *&#160;</td>
+          <td class="paramname"><em>meth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td>
+          <td class="paramname"><em>cbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create android_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meth</td><td></td></tr>
+    <tr><td class="paramname">cbl</td><td></td></tr>
+    <tr><td class="paramname">attrs</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structvehicle__priv.html">vehicle_priv</a> </dd></dl>
+
+<p>References <a class="el" href="attr_8h.html#a305f5066877295b76463240b9c19e531aba4a986b48337f4862943d368cf581cf">attr_position_valid_invalid</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structvehicle__priv.html#a082b9d2f1d6c70c8ed1eaa16ae08f799">vehicle_priv::fcb</a>, <a class="el" href="gmem_8h.html#a977287fca21d3e7683b4f214af02440c">g_new0</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structvehicle__priv.html#a40703cfd434cbe5e6d8631c66da220c9">vehicle_priv::pcb</a>, <a class="el" href="structvehicle__priv.html#a92c47ef55a96f5fd64541a93797233cf">vehicle_priv::sats</a>, <a class="el" href="structvehicle__priv.html#acaefff1b97ccc6fd75a94c89700fab94">vehicle_priv::sats_used</a>, <a class="el" href="structvehicle__priv.html#ab9b025e10c32c8efd3a994f446cbd588">vehicle_priv::scb</a>, <a class="el" href="structvehicle__priv.html#aec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>, <a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback()</a>, <a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init()</a>, <a class="el" href="vehicle__android_8c.html#a50b6a3ad65e20167f5dbc420141d20f0">vehicle_android_methods</a>, <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>, and <a class="el" href="vehicle__android_8c.html#a6bbfa6c118a23f28bf27039ab61f6d48">vehicle_android_status_callback()</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1a9fbb5a39327e7707442a394cb706ec"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_android_position_attr_get </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves a vehicle attribute. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td><a class="el" href="structvehicle__priv.html">vehicle_priv</a> structure for the vehicle </td></tr>
+    <tr><td class="paramname">type</td><td>The attribute type to retrieve </td></tr>
+    <tr><td class="paramname">attr</td><td>Points to an attr structure that will receive the attribute data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True for success, false for failure </dd></dl>
+
+<p>References <a class="el" href="attr_8h.html#a305f5066877295b76463240b9c19e531aba4a986b48337f4862943d368cf581cf">attr_position_valid_invalid</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structvehicle__priv.html#a21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="structvehicle__priv.html#af1a2e9d790929c58b7a28b3abda9425c">vehicle_priv::fix_type</a>, <a class="el" href="structvehicle__priv.html#a97e40bb9ef83c327e9948eafb64257bf">vehicle_priv::fixiso8601</a>, <a class="el" href="structvehicle__priv.html#ad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="structvehicle__priv.html#a24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="structvehicle__priv.html#a6e7bc6a0ff016b8ec0c50bcd54d0b18b">vehicle_priv::radius</a>, <a class="el" href="structvehicle__priv.html#a92c47ef55a96f5fd64541a93797233cf">vehicle_priv::sats</a>, <a class="el" href="structvehicle__priv.html#acaefff1b97ccc6fd75a94c89700fab94">vehicle_priv::sats_used</a>, <a class="el" href="structvehicle__priv.html#a6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="garmin__img_8c.html#ad9e6e5971e279e602a61a51d5c3a5b52">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structvehicle__priv.html#aec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1b83b02eabd1c2ee0b170c376b5b915e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> vehicle_android_position_callback </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jobject&#160;</td>
+          <td class="paramname"><em>location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when a new position has been reported. </p>
+<p>This function is called by</p>
+<div class="fragment"><div class="line">NavitLocationListener </div>
+</div><!-- fragment --><p> upon receiving a new</p>
+<div class="fragment"><div class="line">Location </div>
+</div><!-- fragment --><p> .</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The<div class="fragment"><div class="line">struct_vehicle_priv </div>
+</div><!-- fragment --> for the vehicle </td></tr>
+    <tr><td class="paramname">location</td><td>A<div class="fragment"><div class="line">Location </div>
+</div><!-- fragment --> object describing the new position </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="attr_8h.html#a305f5066877295b76463240b9c19e531aa41402ab2787d27a548c54d1de95ac81">attr_position_valid_valid</a>, <a class="el" href="callback_8h.html#a34b73107b42d822d5595bf2162f1c11a">callback_list_call_attr_0</a>, <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structvehicle__priv.html#a21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="structvehicle__priv.html#a97e40bb9ef83c327e9948eafb64257bf">vehicle_priv::fixiso8601</a>, <a class="el" href="structvehicle__priv.html#ad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="gmtime_8c.html#a30d9732f32117a94652e28512905bfb9">gmtime()</a>, <a class="el" href="structvehicle__priv.html#a24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="structvehicle__priv.html#a16204bc1954f9a5f8ec34e0cdabd1cfb">vehicle_priv::Location_getAccuracy</a>, <a class="el" href="structvehicle__priv.html#a73a472d935698545e5bf478f14be242d">vehicle_priv::Location_getAltitude</a>, <a class="el" href="structvehicle__priv.html#a5d5569759abe0ea7ed65d5101a7ff137">vehicle_priv::Location_getBearing</a>, <a class="el" href="structvehicle__priv.html#af8bd23d439d3c19bba1eb1309f56e9c0">vehicle_priv::Location_getLatitude</a>, <a class="el" href="structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8">vehicle_priv::Location_getLongitude</a>, <a class="el" href="structvehicle__priv.html#a30e935f3729f3d02f50f01a655466cdd">vehicle_priv::Location_getSpeed</a>, <a class="el" href="structvehicle__priv.html#a35663bd80dce1f9337fa7e64a3639f62">vehicle_priv::Location_getTime</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structvehicle__priv.html#a6e7bc6a0ff016b8ec0c50bcd54d0b18b">vehicle_priv::radius</a>, <a class="el" href="structvehicle__priv.html#a6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, and <a class="el" href="structvehicle__priv.html#aec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6bbfa6c118a23f28bf27039ab61f6d48"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> vehicle_android_status_callback </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
+          <td class="paramname"><em>sats_in_view</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
+          <td class="paramname"><em>sats_used</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when a new GPS status has been reported. </p>
+<p>This function is called by</p>
+<div class="fragment"><div class="line">NavitLocationListener </div>
+</div><!-- fragment --><p> upon receiving a new</p>
+<div class="fragment"><div class="line">GpsStatus </div>
+</div><!-- fragment --><p> .</p>
+<p>Note that</p>
+<div class="fragment"><div class="line">sats_used </div>
+</div><!-- fragment --><p> should not be used to determine whether the vehicle's position is valid: some devices report non-zero numbers even when they do not have a fix. Position validity should be determined in</p>
+<div class="fragment"><div class="line"><a class="code" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback</a> </div>
+</div><!-- fragment --><p> (an invalid fix type means we have lost the fix) and</p>
+<div class="fragment"><div class="line"><a class="code" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback</a> </div>
+</div><!-- fragment --><p> (receiving a position means we have a fix).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The<div class="fragment"><div class="line">struct_vehicle_priv </div>
+</div><!-- fragment --> for the vehicle </td></tr>
+    <tr><td class="paramname">sats_in_view</td><td>The number of satellites in view </td></tr>
+    <tr><td class="paramname">sats_used</td><td>The number of satellites currently used to determine the position </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="callback_8h.html#a34b73107b42d822d5595bf2162f1c11a">callback_list_call_attr_0</a>, <a class="el" href="structvehicle__priv.html#ac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="structvehicle__priv.html#a92c47ef55a96f5fd64541a93797233cf">vehicle_priv::sats</a>, and <a class="el" href="structvehicle__priv.html#acaefff1b97ccc6fd75a94c89700fab94">vehicle_priv::sats_used</a>.</p>
+
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
 
 </div>
 </div>
@@ -146,10 +517,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        vehicle_android_destroy,</div>
-<div class="line">        vehicle_android_position_attr_get,</div>
+<div class="line">        <a class="code" href="vehicle__android_8c.html#a3df271ac2bb278c5f2d22b329fa247a5">vehicle_android_destroy</a>,</div>
+<div class="line">        <a class="code" href="vehicle__android_8c.html#a1a9fbb5a39327e7707442a394cb706ec">vehicle_android_position_attr_get</a>,</div>
 <div class="line">}</div>
+<div class="ttc" id="vehicle__android_8c_html_a3df271ac2bb278c5f2d22b329fa247a5"><div class="ttname"><a href="vehicle__android_8c.html#a3df271ac2bb278c5f2d22b329fa247a5">vehicle_android_destroy</a></div><div class="ttdeci">static void vehicle_android_destroy(struct vehicle_priv *priv)</div><div class="ttdoc">Free the android_vehicle. </div><div class="ttdef"><b>Definition:</b> vehicle_android.c:68</div></div>
+<div class="ttc" id="vehicle__android_8c_html_a1a9fbb5a39327e7707442a394cb706ec"><div class="ttname"><a href="vehicle__android_8c.html#a1a9fbb5a39327e7707442a394cb706ec">vehicle_android_position_attr_get</a></div><div class="ttdeci">static int vehicle_android_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdoc">Retrieves a vehicle attribute. </div><div class="ttdef"><b>Definition:</b> vehicle_android.c:83</div></div>
 </div><!-- fragment -->
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->

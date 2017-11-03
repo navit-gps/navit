@@ -78,13 +78,13 @@ $(document).ready(function(){initNavTree('structPaStreamInfo.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a5e053a3f0f6232a5d1ec0dee0f9a943b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a5e053a3f0f6232a5d1ec0dee0f9a943b">structVersion</a></td></tr>
+<tr class="memitem:a5e053a3f0f6232a5d1ec0dee0f9a943b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a5e053a3f0f6232a5d1ec0dee0f9a943b">structVersion</a></td></tr>
 <tr class="separator:a5e053a3f0f6232a5d1ec0dee0f9a943b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f5339e0fef75cea66d9153235698399"><td class="memItemLeft" align="right" valign="top"><a class="el" href="portaudio19_8h.html#af17a7e6d0471a23071acf8dbd7bbe4bd">PaTime</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a1f5339e0fef75cea66d9153235698399">inputLatency</a></td></tr>
 <tr class="separator:a1f5339e0fef75cea66d9153235698399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a372a81f39d90a85ae62225e9f57a7840"><td class="memItemLeft" align="right" valign="top"><a class="el" href="portaudio19_8h.html#af17a7e6d0471a23071acf8dbd7bbe4bd">PaTime</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a372a81f39d90a85ae62225e9f57a7840">outputLatency</a></td></tr>
 <tr class="separator:a372a81f39d90a85ae62225e9f57a7840"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9200fdee790d9155bc35d03be51ee2dd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a9200fdee790d9155bc35d03be51ee2dd">sampleRate</a></td></tr>
+<tr class="memitem:a9200fdee790d9155bc35d03be51ee2dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="voices_8c.html#a38a01c28a245417a5317d84372adb76a">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPaStreamInfo.html#a9200fdee790d9155bc35d03be51ee2dd">sampleRate</a></td></tr>
 <tr class="separator:a9200fdee790d9155bc35d03be51ee2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -100,7 +100,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The input latency of the stream in seconds. This value provides the most accurate estimate of input latency available to the implementation. It may differ significantly from the suggestedLatency value passed to <a class="el" href="portaudio19_8h.html#a443ad16338191af364e3be988014cbbe">Pa_OpenStream()</a>. The value of this field will be zero (0.) for output-only streams. </p>
+<p>The input latency of the stream in seconds. This value provides the most accurate estimate of input latency available to the implementation. It may differ significantly from the suggestedLatency value passed to <a class="el" href="portaudio_8h.html#aed373dfc4d5396fc87b549f05545dbef">Pa_OpenStream()</a>. The value of this field will be zero (0.) for output-only streams. </p>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="portaudio19_8h.html#af17a7e6d0471a23071acf8dbd7bbe4bd">PaTime</a> </dd></dl>
 
 </div>
@@ -114,7 +114,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The output latency of the stream in seconds. This value provides the most accurate estimate of output latency available to the implementation. It may differ significantly from the suggestedLatency value passed to <a class="el" href="portaudio19_8h.html#a443ad16338191af364e3be988014cbbe">Pa_OpenStream()</a>. The value of this field will be zero (0.) for input-only streams. </p>
+<p>The output latency of the stream in seconds. This value provides the most accurate estimate of output latency available to the implementation. It may differ significantly from the suggestedLatency value passed to <a class="el" href="portaudio_8h.html#aed373dfc4d5396fc87b549f05545dbef">Pa_OpenStream()</a>. The value of this field will be zero (0.) for input-only streams. </p>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="portaudio19_8h.html#af17a7e6d0471a23071acf8dbd7bbe4bd">PaTime</a> </dd></dl>
 
 </div>
@@ -124,11 +124,11 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double PaStreamInfo::sampleRate</td>
+          <td class="memname"><a class="el" href="voices_8c.html#a38a01c28a245417a5317d84372adb76a">double</a> PaStreamInfo::sampleRate</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The sample rate of the stream in Hertz (samples per second). In cases where the hardware sample rate is inaccurate and PortAudio is aware of it, the value of this field may be different from the sampleRate parameter passed to <a class="el" href="portaudio19_8h.html#a443ad16338191af364e3be988014cbbe">Pa_OpenStream()</a>. If information about the actual hardware sample rate is not available, this field will have the same value as the sampleRate parameter passed to <a class="el" href="portaudio19_8h.html#a443ad16338191af364e3be988014cbbe">Pa_OpenStream()</a>. </p>
+<p>The sample rate of the stream in Hertz (samples per second). In cases where the hardware sample rate is inaccurate and PortAudio is aware of it, the value of this field may be different from the sampleRate parameter passed to <a class="el" href="portaudio_8h.html#aed373dfc4d5396fc87b549f05545dbef">Pa_OpenStream()</a>. If information about the actual hardware sample rate is not available, this field will have the same value as the sampleRate parameter passed to <a class="el" href="portaudio_8h.html#aed373dfc4d5396fc87b549f05545dbef">Pa_OpenStream()</a>. </p>
 
 </div>
 </div>
@@ -137,7 +137,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int PaStreamInfo::structVersion</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> PaStreamInfo::structVersion</td>
         </tr>
       </table>
 </div><div class="memdoc">

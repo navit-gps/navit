@@ -71,11 +71,14 @@ $(document).ready(function(){initNavTree('classNGQPoint.html','');});
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#properties">Properties</a>  </div>
+<a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">NGQPoint Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="ngqpoint_8h_source.html">ngqpoint.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for NGQPoint:</div>
 <div class="dyncontent">
@@ -87,76 +90,917 @@ Inheritance diagram for NGQPoint:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
-<tr class="memitem:a9a4923671be87dc4e70ddfdd177c4421"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9a4923671be87dc4e70ddfdd177c4421"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setNewPoint</b> (QString <a class="el" href="structcoord.html">coord</a>, NGQPointTypes type=PointOfInterest)</td></tr>
+<tr class="memitem:a9a4923671be87dc4e70ddfdd177c4421"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint</a> (QString <a class="el" href="structcoord.html">coord</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>=<a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4aa4ee8b7b703a13592dc2bb0b06cdfa02">PointOfInterest</a>)</td></tr>
 <tr class="separator:a9a4923671be87dc4e70ddfdd177c4421"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2fd550bb235dfabaa8be49b87cda70c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2fd550bb235dfabaa8be49b87cda70c"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>pointName</b> ()</td></tr>
+<tr class="memitem:af2fd550bb235dfabaa8be49b87cda70c"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#af2fd550bb235dfabaa8be49b87cda70c">pointName</a> ()</td></tr>
 <tr class="separator:af2fd550bb235dfabaa8be49b87cda70c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04b9e2d80fd1a2a85eb40eae63795691"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04b9e2d80fd1a2a85eb40eae63795691"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>coordString</b> ()</td></tr>
+<tr class="memitem:a04b9e2d80fd1a2a85eb40eae63795691"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a04b9e2d80fd1a2a85eb40eae63795691">coordString</a> ()</td></tr>
 <tr class="separator:a04b9e2d80fd1a2a85eb40eae63795691"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f5f62dbcbb7cf73949da9298b842a06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f5f62dbcbb7cf73949da9298b842a06"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>pointType</b> ()</td></tr>
+<tr class="memitem:a2f5f62dbcbb7cf73949da9298b842a06"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a2f5f62dbcbb7cf73949da9298b842a06">pointType</a> ()</td></tr>
 <tr class="separator:a2f5f62dbcbb7cf73949da9298b842a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69e3470ebb1aab0122a6e56115a86677"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69e3470ebb1aab0122a6e56115a86677"></a>
-QUrl&#160;</td><td class="memItemRight" valign="bottom"><b>pointUrl</b> ()</td></tr>
+<tr class="memitem:a69e3470ebb1aab0122a6e56115a86677"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a69e3470ebb1aab0122a6e56115a86677">pointUrl</a> ()</td></tr>
 <tr class="separator:a69e3470ebb1aab0122a6e56115a86677"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d53afda2ecea29a7fdacd13074145c7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d53afda2ecea29a7fdacd13074145c7"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>getInformation</b> ()</td></tr>
+<tr class="memitem:a8d53afda2ecea29a7fdacd13074145c7"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7">getInformation</a> ()</td></tr>
 <tr class="separator:a8d53afda2ecea29a7fdacd13074145c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae78867c696a50e9f08c988283c04e2e8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae78867c696a50e9f08c988283c04e2e8"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>getPOI</b> (const QString &amp;<a class="el" href="structattr__name.html">attr_name</a>)</td></tr>
+<tr class="memitem:ae78867c696a50e9f08c988283c04e2e8"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">getPOI</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="structattr__name.html">attr_name</a>)</td></tr>
 <tr class="separator:ae78867c696a50e9f08c988283c04e2e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a31d0a811c12d8b1e0501c57ac242eca9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a31d0a811c12d8b1e0501c57ac242eca9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NGQPoint</b> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structpoint.html">point</a> *p, NGQPointTypes type=MapPoint, QObject *<a class="el" href="structparent.html">parent</a>=NULL)</td></tr>
+<tr class="memitem:a31d0a811c12d8b1e0501c57ac242eca9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="classNGQPoint.html#a2a6e0d410da6865b691f7b699d851b32">p</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>=<a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a844bd75af9a6a7871056f378121ee2f5">MapPoint</a>, QObject *<a class="el" href="structparent.html">parent</a>=<a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>)</td></tr>
 <tr class="separator:a31d0a811c12d8b1e0501c57ac242eca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dd6c372ef3da7a88679300518977edd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1dd6c372ef3da7a88679300518977edd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NGQPoint</b> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structcoord.html">coord</a> *c, NGQPointTypes type=Bookmark, QObject *<a class="el" href="structparent.html">parent</a>=NULL)</td></tr>
+<tr class="memitem:a1dd6c372ef3da7a88679300518977edd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a1dd6c372ef3da7a88679300518977edd">NGQPoint</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>=<a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a>, QObject *<a class="el" href="structparent.html">parent</a>=<a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>)</td></tr>
 <tr class="separator:a1dd6c372ef3da7a88679300518977edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49fc973e9ed3b65603f233ef8f2e8e48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49fc973e9ed3b65603f233ef8f2e8e48"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NGQPoint</b> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structpcoord.html">pcoord</a> *pc, NGQPointTypes type=Bookmark, QObject *<a class="el" href="structparent.html">parent</a>=NULL)</td></tr>
+<tr class="memitem:a49fc973e9ed3b65603f233ef8f2e8e48"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a49fc973e9ed3b65603f233ef8f2e8e48">NGQPoint</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structpcoord.html">pcoord</a> *<a class="el" href="classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e">pc</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>=<a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a>, QObject *<a class="el" href="structparent.html">parent</a>=<a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>)</td></tr>
 <tr class="separator:a49fc973e9ed3b65603f233ef8f2e8e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab060f4958a72baccb813b871d597bde1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab060f4958a72baccb813b871d597bde1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NGQPoint</b> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structcoord.html">coord</a> *c, QString name, NGQPointTypes type=Bookmark, QObject *<a class="el" href="structparent.html">parent</a>=NULL)</td></tr>
+<tr class="memitem:ab060f4958a72baccb813b871d597bde1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#ab060f4958a72baccb813b871d597bde1">NGQPoint</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this_, struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, QString <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>=<a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a>, QObject *<a class="el" href="structparent.html">parent</a>=<a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>)</td></tr>
 <tr class="separator:ab060f4958a72baccb813b871d597bde1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f3067d34e0478d4cc6f9173b196a44e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f3067d34e0478d4cc6f9173b196a44e"></a>
-struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pc</b> ()</td></tr>
+<tr class="memitem:a0f3067d34e0478d4cc6f9173b196a44e"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e">pc</a> ()</td></tr>
 <tr class="separator:a0f3067d34e0478d4cc6f9173b196a44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a514f30084f729c4d3ea8d8d3460f4b84"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a514f30084f729c4d3ea8d8d3460f4b84"></a>
-QDomElement&#160;</td><td class="memItemRight" valign="bottom"><b>_fieldValueHelper</b> (QDomDocument doc, QString field, QString value)</td></tr>
+<tr class="memitem:a514f30084f729c4d3ea8d8d3460f4b84"><td class="memItemLeft" align="right" valign="top">QDomElement&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a514f30084f729c4d3ea8d8d3460f4b84">_fieldValueHelper</a> (QDomDocument doc, QString field, QString <a class="el" href="png_8h.html#a58342413057d091672287c7522a6137f">value</a>)</td></tr>
 <tr class="separator:a514f30084f729c4d3ea8d8d3460f4b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7da219a8c9d42aa3b9fa8629cb953872"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7da219a8c9d42aa3b9fa8629cb953872"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>_coordString</b> ()</td></tr>
+<tr class="memitem:a7da219a8c9d42aa3b9fa8629cb953872"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString</a> ()</td></tr>
 <tr class="separator:a7da219a8c9d42aa3b9fa8629cb953872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05d5c21ee472eb8e7ee1f89bd8d0dbd2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05d5c21ee472eb8e7ee1f89bd8d0dbd2"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>_coordName</b> ()</td></tr>
+<tr class="memitem:a05d5c21ee472eb8e7ee1f89bd8d0dbd2"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName</a> ()</td></tr>
 <tr class="separator:a05d5c21ee472eb8e7ee1f89bd8d0dbd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a293702a301465b3c1014c769824e7d7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a293702a301465b3c1014c769824e7d7a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_setUrl</b> (struct <a class="el" href="structitem.html">item</a> *<a class="el" href="structitem.html">item</a>)</td></tr>
+<tr class="memitem:a293702a301465b3c1014c769824e7d7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a293702a301465b3c1014c769824e7d7a">_setUrl</a> (struct <a class="el" href="structitem.html">item</a> *<a class="el" href="structitem.html">item</a>)</td></tr>
 <tr class="separator:a293702a301465b3c1014c769824e7d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:ad96b404759ad7d5c5d82903e485dd328"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad96b404759ad7d5c5d82903e485dd328"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>coordString</b></td></tr>
+<tr class="memitem:ad96b404759ad7d5c5d82903e485dd328"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#ad96b404759ad7d5c5d82903e485dd328">coordString</a></td></tr>
 <tr class="separator:ad96b404759ad7d5c5d82903e485dd328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50cc1fd17dfc59b247a0821e09e54d97"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a50cc1fd17dfc59b247a0821e09e54d97"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>pointName</b></td></tr>
+<tr class="memitem:a50cc1fd17dfc59b247a0821e09e54d97"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a50cc1fd17dfc59b247a0821e09e54d97">pointName</a></td></tr>
 <tr class="separator:a50cc1fd17dfc59b247a0821e09e54d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a644dfce18a064d43567c7acb60d97ea7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a644dfce18a064d43567c7acb60d97ea7"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>pointType</b></td></tr>
+<tr class="memitem:a644dfce18a064d43567c7acb60d97ea7"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a644dfce18a064d43567c7acb60d97ea7">pointType</a></td></tr>
 <tr class="separator:a644dfce18a064d43567c7acb60d97ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2be9d91e059418bf049b59494313b94"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae2be9d91e059418bf049b59494313b94"></a>
-QUrl&#160;</td><td class="memItemRight" valign="bottom"><b>pointUrl</b></td></tr>
+<tr class="memitem:ae2be9d91e059418bf049b59494313b94"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#ae2be9d91e059418bf049b59494313b94">pointUrl</a></td></tr>
 <tr class="separator:ae2be9d91e059418bf049b59494313b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aba3ae95ebb38154301bab38f55f7d573"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a></td></tr>
+<tr class="separator:aba3ae95ebb38154301bab38f55f7d573"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99579024a17c575f8f1865364600306d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a></td></tr>
+<tr class="separator:a99579024a17c575f8f1865364600306d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a526a5902d11d3a353251c9bced9333fe"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord__geo.html">coord_geo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a></td></tr>
+<tr class="separator:a526a5902d11d3a353251c9bced9333fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa8721c4cdd2d8484005dfb28eae75b5"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a></td></tr>
+<tr class="separator:afa8721c4cdd2d8484005dfb28eae75b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab659b13168090b8b3608404a91a14ce4"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a></td></tr>
+<tr class="separator:ab659b13168090b8b3608404a91a14ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a6e0d410da6865b691f7b699d851b32"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpoint.html">point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a2a6e0d410da6865b691f7b699d851b32">p</a></td></tr>
+<tr class="separator:a2a6e0d410da6865b691f7b699d851b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45ef8ade72083b7c9586d3463d883c2d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem.html">item</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a45ef8ade72083b7c9586d3463d883c2d">item</a></td></tr>
+<tr class="separator:a45ef8ade72083b7c9586d3463d883c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b800053d6589636dd3d7acbb2197381"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a></td></tr>
+<tr class="separator:a1b800053d6589636dd3d7acbb2197381"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29ece446e1394efa434c2ede3a3f29d6"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a29ece446e1394efa434c2ede3a3f29d6">coord</a></td></tr>
+<tr class="separator:a29ece446e1394efa434c2ede3a3f29d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9aa728a9b1d4540fc63f03e27525900d"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNGQPoint.html#a9aa728a9b1d4540fc63f03e27525900d">url</a></td></tr>
+<tr class="separator:a9aa728a9b1d4540fc63f03e27525900d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a31d0a811c12d8b1e0501c57ac242eca9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NGQPoint::NGQPoint </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a844bd75af9a6a7871056f378121ee2f5">MapPoint</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code><a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1dd6c372ef3da7a88679300518977edd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NGQPoint::NGQPoint </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code><a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a49fc973e9ed3b65603f233ef8f2e8e48"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NGQPoint::NGQPoint </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
+          <td class="paramname"><em>pc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code><a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab060f4958a72baccb813b871d597bde1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NGQPoint::NGQPoint </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code><a class="el" href="gmacros_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a05d5c21ee472eb8e7ee1f89bd8d0dbd2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::_coordName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a293702a301465b3c1014c769824e7d7a">_setUrl()</a>, <a class="el" href="structstreet__data.html#aa1320249fcb1425f71d076eacb1bdb47">street_data::c</a>, <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="structmap__selection.html#ae00c4fb58fffa37688d33f864310a7b5">map_selection::c_rect</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="structstreet__data.html#aae566cd82e377cec86f6c98672e1cf19">street_data::count</a>, <a class="el" href="garmin__img_8c.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="classNGQPoint.html#a45ef8ade72083b7c9586d3463d883c2d">item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="item_8c.html#a9d74082234bf94fe04bd8585c40c7f90">item_range_all</a>, <a class="el" href="item_8c.html#adb033f52350446fc9cbb68f977b5047a">item_to_name()</a>, <a class="el" href="garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c">label</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, <a class="el" href="map_8c.html#a4615d67b2a27e13f2341f278e9631c54">map_convert_free()</a>, <a class="el" href="map_8c.html#af44c00a5c0938889e420cd8c5b87a92a">map_convert_string()</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#ae025c855207536977afd84d39b316e9c">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next()</a>, <a class="el" href="mapset_8c.html#a101513e5ab4c27dc04ba3e8f0a8bf19d">mapset_open()</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="structmap__selection.html#a1c83ff016741893133014d58cfc38e25">map_selection::next</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="structmap__selection.html#a1983d9d4a5df17d7a8d70fc7a7f1d9bf">map_selection::order</a>, <a class="el" href="structtransformation.html#a826bd5cb4af97a4f80331b57e04cf6d8">transformation::pro</a>, <a class="el" href="structmap__selection.html#a9b160a76565e6f18e27042d4f06feeaa">map_selection::range</a>, <a class="el" href="structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7">coord_rect::rl</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="route_8c.html#abbb407c7b7f4e713736961d6b6c121f0">street_data_free()</a>, <a class="el" href="street_8c.html#a62db20bbc91ea49e6f4b5392351a77eb">street_get_data()</a>, <a class="el" href="png_8h.html#a2a700f7aee8f983890af4334d3071064">trans</a>, <a class="el" href="transform_8c.html#a677e361bc2370ddd5203fabda516a1e3">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#aeb74e833a1968a5509cc19fe48d2d3d1">transform_within_dist_item()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f">map_selection::u</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7da219a8c9d42aa3b9fa8629cb953872"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::_coordString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, and <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>.</p>
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a514f30084f729c4d3ea8d8d3460f4b84"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QDomElement NGQPoint::_fieldValueHelper </td>
+          <td>(</td>
+          <td class="paramtype">QDomDocument&#160;</td>
+          <td class="paramname"><em>doc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7">getInformation()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a293702a301465b3c1014c769824e7d7a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> NGQPoint::_setUrl </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structitem.html">item</a> *&#160;</td>
+          <td class="paramname"><em>item</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="structattr.html#a0d3d1044686cbff653331809314976a5">attr::num64</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="classNGQPoint.html#a9aa728a9b1d4540fc63f03e27525900d">url</a>.</p>
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a04b9e2d80fd1a2a85eb40eae63795691"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::coordString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a29ece446e1394efa434c2ede3a3f29d6">coord</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8d53afda2ecea29a7fdacd13074145c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::getInformation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a514f30084f729c4d3ea8d8d3460f4b84">_fieldValueHelper()</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="attr_8c.html#aa0ebda0950efd7e0f64fecf36ae5c462">attr_to_text()</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a>, <a class="el" href="png_8h.html#a31a3a201dc0b810c2cd39f109f1e09fd">entries</a>, <a class="el" href="structitem.html#a193c3e2ec0076325a4f3139f9d33e06e">item::id_hi</a>, <a class="el" href="classNGQPoint.html#a45ef8ade72083b7c9586d3463d883c2d">item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#a9e27d0888db14bf9b88727ead943eaf6">map_rect_get_item_byid()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae78867c696a50e9f08c988283c04e2e8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::getPOI </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>attr_name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="structmap__selection.html#ae00c4fb58fffa37688d33f864310a7b5">map_selection::c_rect</a>, <a class="el" href="group__coord.html#gadf3c940d83ba637872b823ecb4f92555">coord_rect_contains()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="png_8h.html#a31a3a201dc0b810c2cd39f109f1e09fd">entries</a>, <a class="el" href="ngqpoint_8h.html#a56a72d46214e1735ec8c1b1dbd6bf993">get_direction()</a>, <a class="el" href="structgui__priv.html#ae5d9402f7e218085adad1c80599f142c">gui_priv::gui</a>, <a class="el" href="gui_8c.html#a5a1522548f59382880f17b0e05887817">gui_get_attr()</a>, <a class="el" href="classNGQPoint.html#a45ef8ade72083b7c9586d3463d883c2d">item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="item_8c.html#a088682cd8951907090cbf68b4c9e0f83">item_coord_get_pro()</a>, <a class="el" href="item_8c.html#adb033f52350446fc9cbb68f977b5047a">item_to_name()</a>, <a class="el" href="garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c">label</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="map_8c.html#a4615d67b2a27e13f2341f278e9631c54">map_convert_free()</a>, <a class="el" href="map_8c.html#af44c00a5c0938889e420cd8c5b87a92a">map_convert_string()</a>, <a class="el" href="map_8c.html#a956c6e8398f832e31fe90634fa982dbf">map_projection()</a>, <a class="el" href="map_8c.html#ae025c855207536977afd84d39b316e9c">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="map_8c.html#a51455e36692349b9fecdd677a40c6c4f">map_selection_destroy()</a>, <a class="el" href="map_8c.html#a95b6e2263b7e7aed66a4a5d8ce8028c8">map_selection_dup_pro()</a>, <a class="el" href="map_8c.html#ac0160cd214565dad3584739d44fafed8">map_selection_rect_new()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next()</a>, <a class="el" href="mapset_8c.html#a101513e5ab4c27dc04ba3e8f0a8bf19d">mapset_open()</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#abf0560a954a531f44ab7e05715da80f3">transform_distance()</a>, <a class="el" href="transform_8c.html#a957cf45974ab30e11fdba372af1468e6">transform_get_angle_delta()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f">map_selection::u</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0f3067d34e0478d4cc6f9173b196a44e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a>* NGQPoint::pc </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af2fd550bb235dfabaa8be49b87cda70c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::pointName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2f5f62dbcbb7cf73949da9298b842a06"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::pointType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a1964060b46aa47674fe62b5881641a77">Bookmark</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a234881e88555315ba9bcbf51a8edb0c5">Destination</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a844bd75af9a6a7871056f378121ee2f5">MapPoint</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4aa4ee8b7b703a13592dc2bb0b06cdfa02">PointOfInterest</a>, <a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a0ca2444163688098d8e674e31fb11397">Position</a>, and <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a69e3470ebb1aab0122a6e56115a86677"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QUrl NGQPoint::pointUrl </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a9aa728a9b1d4540fc63f03e27525900d">url</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9a4923671be87dc4e70ddfdd177c4421"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> NGQPoint::setNewPoint </td>
+          <td>(</td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>coord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4aa4ee8b7b703a13592dc2bb0b06cdfa02">PointOfInterest</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4">c</a>, <a class="el" href="classNGQPoint.html#afa8721c4cdd2d8484005dfb28eae75b5">co</a>, <a class="el" href="classNGQPoint.html#a526a5902d11d3a353251c9bced9333fe">g</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="classNGQPoint.html#a1b800053d6589636dd3d7acbb2197381">name</a>, <a class="el" href="structgui__priv.html#a70639d18916307d27d257d3f2b0f3955">gui_priv::nav</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573">object</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="classNGQPoint.html#a99579024a17c575f8f1865364600306d">type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="ab659b13168090b8b3608404a91a14ce4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a> NGQPoint::c</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">getPOI()</a>, <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, <a class="el" href="classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e">pc()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afa8721c4cdd2d8484005dfb28eae75b5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord.html">coord</a> NGQPoint::co</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a29ece446e1394efa434c2ede3a3f29d6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::coord</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a04b9e2d80fd1a2a85eb40eae63795691">coordString()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a526a5902d11d3a353251c9bced9333fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord__geo.html">coord_geo</a> NGQPoint::g</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a7da219a8c9d42aa3b9fa8629cb953872">_coordString()</a>, <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a45ef8ade72083b7c9586d3463d883c2d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structitem.html">item</a> NGQPoint::item</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7">getInformation()</a>, and <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">getPOI()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1b800053d6589636dd3d7acbb2197381"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, <a class="el" href="classNGQPoint.html#af2fd550bb235dfabaa8be49b87cda70c">pointName()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aba3ae95ebb38154301bab38f55f7d573"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structgui__priv.html">gui_priv</a>* NGQPoint::object</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">_coordName()</a>, <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">getPOI()</a>, <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2a6e0d410da6865b691f7b699d851b32"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpoint.html">point</a> NGQPoint::p</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a99579024a17c575f8f1865364600306d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4">NGQPointTypes</a> NGQPoint::type</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7">getInformation()</a>, <a class="el" href="classNGQPoint.html#a31d0a811c12d8b1e0501c57ac242eca9">NGQPoint()</a>, <a class="el" href="classNGQPoint.html#a2f5f62dbcbb7cf73949da9298b842a06">pointType()</a>, and <a class="el" href="classNGQPoint.html#a9a4923671be87dc4e70ddfdd177c4421">setNewPoint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9aa728a9b1d4540fc63f03e27525900d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QUrl NGQPoint::url</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a293702a301465b3c1014c769824e7d7a">_setUrl()</a>, and <a class="el" href="classNGQPoint.html#a69e3470ebb1aab0122a6e56115a86677">pointUrl()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a class="anchor" id="ad96b404759ad7d5c5d82903e485dd328"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::coordString</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQProxyRoute.html#ae8822d874839df2922519f07f158ae97">NGQProxyRoute::getDestinations()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a50cc1fd17dfc59b247a0821e09e54d97"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::pointName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a644dfce18a064d43567c7acb60d97ea7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString NGQPoint::pointType</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae2be9d91e059418bf049b59494313b94"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QUrl NGQPoint::pointUrl</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>gui/qml/<a class="el" href="ngqpoint_8h_source.html">ngqpoint.h</a></li>
 </ul>

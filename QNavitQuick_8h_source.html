@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('QNavitQuick_8h_source.html','');});
 <div class="title">QNavitQuick.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="QNavitQuick_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// style with: clang-format -style=WebKit -i *</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef QNAVITQUICK_H</span></div>
@@ -79,42 +79,54 @@ $(document).ready(function(){initNavTree('QNavitQuick_8h_source.html','');});
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;QColor&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;QtQuick/QQuickPaintedItem&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;graphics_qt5.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="graphics__qt5_8h.html">graphics_qt5.h</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classQNavitQuick.html">   29</a></span>&#160;<span class="keyword">class </span><a class="code" href="classQNavitQuick.html">QNavitQuick</a> : <span class="keyword">public</span> QQuickPaintedItem {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classQNavitQuick.html#aeeb25fa13bba4cca84b9156520c2f120">QNavitQuick</a>(QQuickItem* <a class="code" href="structparent.html">parent</a> = 0);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> paint(QPainter* painter);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d">paint</a>(QPainter* painter);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Q_INVOKABLE <span class="keywordtype">void</span> setGraphicContext(GraphicsPriv* gp);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Q_INVOKABLE <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a6a072be030ed5b1e14736eae8e095f37">setGraphicContext</a>(GraphicsPriv* gp);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> keyPressEvent(QKeyEvent* event);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> keyReleaseEvent(QKeyEvent* event);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> geometryChanged(<span class="keyword">const</span> QRectF&amp; newGeometry, <span class="keyword">const</span> QRectF&amp; oldGeometry);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseEvent(<span class="keywordtype">int</span> pressed, QMouseEvent* event);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mousePressEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseReleaseEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseMoveEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> wheelEvent(QWheelEvent* event);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a5312d7ffec66f54b208b9a424994a207">keyPressEvent</a>(QKeyEvent* event);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a518190a989ca469bc55e1b4533de35b0">keyReleaseEvent</a>(QKeyEvent* event);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a4159e09ec7edc25fca5908273b086b30">geometryChanged</a>(<span class="keyword">const</span> QRectF&amp; newGeometry, <span class="keyword">const</span> QRectF&amp; oldGeometry);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a2ccd96a43de0f71385e08fe2b77c48cf">mouseEvent</a>(<span class="keywordtype">int</span> pressed, QMouseEvent* event);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#ad12f5ac533519d46fb3ce88ca0d7266c">mousePressEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a0dc708f8792892e73332cd0bbd53eabf">mouseReleaseEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a22e6d5e852c709b08138bfb7c6b7219e">mouseMoveEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitQuick.html#a48423474f9eb99d28f133c1f3ab6f980">wheelEvent</a>(QWheelEvent* event);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">struct </span><a class="code" href="structgraphics__priv.html">graphics_priv</a>* <a class="code" href="structgraphics__priv.html">graphics_priv</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classQNavitQuick.html#a1b6190f096d650ff8756b3fbb42c88cc">   49</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structgraphics__priv.html">graphics_priv</a>* <a class="code" href="classQNavitQuick.html#a1b6190f096d650ff8756b3fbb42c88cc">graphics_priv</a>;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classQNavitQuick_html_a4159e09ec7edc25fca5908273b086b30"><div class="ttname"><a href="classQNavitQuick.html#a4159e09ec7edc25fca5908273b086b30">QNavitQuick::geometryChanged</a></div><div class="ttdeci">virtual void geometryChanged(const QRectF &amp;newGeometry, const QRectF &amp;oldGeometry)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:168</div></div>
+<div class="ttc" id="classQNavitQuick_html_a6a072be030ed5b1e14736eae8e095f37"><div class="ttname"><a href="classQNavitQuick.html#a6a072be030ed5b1e14736eae8e095f37">QNavitQuick::setGraphicContext</a></div><div class="ttdeci">Q_INVOKABLE void setGraphicContext(GraphicsPriv *gp)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:55</div></div>
+<div class="ttc" id="classQNavitQuick_html_a2e6df6fa3a7a6cad53a4303e0314265d"><div class="ttname"><a href="classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d">QNavitQuick::paint</a></div><div class="ttdeci">void paint(QPainter *painter)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:80</div></div>
+<div class="ttc" id="classQNavitQuick_html_ad12f5ac533519d46fb3ce88ca0d7266c"><div class="ttname"><a href="classQNavitQuick.html#ad12f5ac533519d46fb3ce88ca0d7266c">QNavitQuick::mousePressEvent</a></div><div class="ttdeci">virtual void mousePressEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:217</div></div>
 <div class="ttc" id="structgraphics__priv_html"><div class="ttname"><a href="structgraphics__priv.html">graphics_priv</a></div><div class="ttdef"><b>Definition:</b> graphics_android.c:37</div></div>
 <div class="ttc" id="classQNavitQuick_html_aeeb25fa13bba4cca84b9156520c2f120"><div class="ttname"><a href="classQNavitQuick.html#aeeb25fa13bba4cca84b9156520c2f120">QNavitQuick::QNavitQuick</a></div><div class="ttdeci">QNavitQuick(QQuickItem *parent=0)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:48</div></div>
 <div class="ttc" id="classQNavitQuick_html"><div class="ttname"><a href="classQNavitQuick.html">QNavitQuick</a></div><div class="ttdef"><b>Definition:</b> QNavitQuick.h:29</div></div>
+<div class="ttc" id="classQNavitQuick_html_a0dc708f8792892e73332cd0bbd53eabf"><div class="ttname"><a href="classQNavitQuick.html#a0dc708f8792892e73332cd0bbd53eabf">QNavitQuick::mouseReleaseEvent</a></div><div class="ttdeci">virtual void mouseReleaseEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:223</div></div>
+<div class="ttc" id="classQNavitQuick_html_a2ccd96a43de0f71385e08fe2b77c48cf"><div class="ttname"><a href="classQNavitQuick.html#a2ccd96a43de0f71385e08fe2b77c48cf">QNavitQuick::mouseEvent</a></div><div class="ttdeci">virtual void mouseEvent(int pressed, QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:196</div></div>
+<div class="ttc" id="classQNavitQuick_html_a5312d7ffec66f54b208b9a424994a207"><div class="ttname"><a href="classQNavitQuick.html#a5312d7ffec66f54b208b9a424994a207">QNavitQuick::keyPressEvent</a></div><div class="ttdeci">virtual void keyPressEvent(QKeyEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:98</div></div>
+<div class="ttc" id="classQNavitQuick_html_a518190a989ca469bc55e1b4533de35b0"><div class="ttname"><a href="classQNavitQuick.html#a518190a989ca469bc55e1b4533de35b0">QNavitQuick::keyReleaseEvent</a></div><div class="ttdeci">virtual void keyReleaseEvent(QKeyEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:163</div></div>
+<div class="ttc" id="classQNavitQuick_html_a48423474f9eb99d28f133c1f3ab6f980"><div class="ttname"><a href="classQNavitQuick.html#a48423474f9eb99d28f133c1f3ab6f980">QNavitQuick::wheelEvent</a></div><div class="ttdeci">virtual void wheelEvent(QWheelEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:238</div></div>
+<div class="ttc" id="classQNavitQuick_html_a1b6190f096d650ff8756b3fbb42c88cc"><div class="ttname"><a href="classQNavitQuick.html#a1b6190f096d650ff8756b3fbb42c88cc">QNavitQuick::graphics_priv</a></div><div class="ttdeci">struct graphics_priv * graphics_priv</div><div class="ttdef"><b>Definition:</b> QNavitQuick.h:49</div></div>
+<div class="ttc" id="graphics__qt5_8h_html"><div class="ttname"><a href="graphics__qt5_8h.html">graphics_qt5.h</a></div></div>
+<div class="ttc" id="classQNavitQuick_html_a22e6d5e852c709b08138bfb7c6b7219e"><div class="ttname"><a href="classQNavitQuick.html#a22e6d5e852c709b08138bfb7c6b7219e">QNavitQuick::mouseMoveEvent</a></div><div class="ttdeci">virtual void mouseMoveEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitQuick.cpp:229</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><b>QNavitQuick.h</b></li>
+    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><a class="el" href="QNavitQuick_8h.html">QNavitQuick.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -79,9 +79,9 @@ $(document).ready(function(){initNavTree('structroute__traffic__distortion.html'
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ad2053bf1ad0d9bcf9c0ff828ee0c56aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__traffic__distortion.html#ad2053bf1ad0d9bcf9c0ff828ee0c56aa">maxspeed</a></td></tr>
+<tr class="memitem:ad2053bf1ad0d9bcf9c0ff828ee0c56aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__traffic__distortion.html#ad2053bf1ad0d9bcf9c0ff828ee0c56aa">maxspeed</a></td></tr>
 <tr class="separator:ad2053bf1ad0d9bcf9c0ff828ee0c56aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcb9effca1acf0ed5899ae0729ab1fd2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__traffic__distortion.html#afcb9effca1acf0ed5899ae0729ab1fd2">delay</a></td></tr>
+<tr class="memitem:afcb9effca1acf0ed5899ae0729ab1fd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__traffic__distortion.html#afcb9effca1acf0ed5899ae0729ab1fd2">delay</a></td></tr>
 <tr class="separator:afcb9effca1acf0ed5899ae0729ab1fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -94,11 +94,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_traffic_distortion::delay</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_traffic_distortion::delay</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Delay in tenths of seconds (0 for no delay) </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a0a0d5043cf34568bc6d55d0fa7b2c516">route_get_traffic_distortion()</a>, and <a class="el" href="route_8c.html#af29b305b16e225421eba91604640f3af">route_time_seg()</a>.</p>
 
 </div>
 </div>
@@ -107,13 +109,15 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_traffic_distortion::maxspeed</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_traffic_distortion::maxspeed</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Maximum speed possible in km/h. Use</p>
 <div class="fragment"><div class="line">INT_MAX </div>
 </div><!-- fragment --><p> to leave the speed unchanged, or 0 to mark the segment as impassable. </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a0a0d5043cf34568bc6d55d0fa7b2c516">route_get_traffic_distortion()</a>, and <a class="el" href="route_8c.html#abc87446a125283884b059a5a6f765d72">route_seg_speed()</a>.</p>
 
 </div>
 </div>

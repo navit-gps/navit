@@ -1,0 +1,38 @@
+var debug_8h =
+[
+    [ "dbg", "debug_8h.html#aba3c0ccefe6daa8941b173073268729e", null ],
+    [ "dbg_assert", "debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f", null ],
+    [ "dbg_guard", "debug_8h.html#a22486e4059e2a356632d39b66f443015", null ],
+    [ "dbg_module", "debug_8h.html#a4170720203b058030370af11ee9267fa", null ],
+    [ "dbg_str1", "debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6", null ],
+    [ "dbg_str2", "debug_8h.html#a34e1f8f7f7c4c092929b4bd73b060ce3", null ],
+    [ "DEBUG_MODULE_GLOBAL", "debug_8h.html#ae3f2738185193d0a5ca09a7b2734c05e", null ],
+    [ "g_free_func", "debug_8h.html#a473ad2646fb4369e125569ef901da176", null ],
+    [ "dbg_level", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25", [
+      [ "lvl_unset", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aae2dc85ebf9ab0dd80152e134ee40c80", null ],
+      [ "lvl_error", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb", null ],
+      [ "lvl_warning", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25ae8f0c4875bfa25147150a74f41c86c53", null ],
+      [ "lvl_info", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707", null ],
+      [ "lvl_debug", "debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4", null ]
+    ] ],
+    [ "debug_assert_fail", "debug_8h.html#adf74b10840627ad7fda59d4ddb70abbd", null ],
+    [ "debug_destroy", "debug_8h.html#ac5bad2858fb5f4c693b12ac6dabd244e", null ],
+    [ "debug_dump_mallocs", "debug_8h.html#a13c790e8295c8cda1b8d14c68d70e317", null ],
+    [ "debug_finished", "debug_8h.html#aa82387ac32876840f698dcc7d14a4ad1", null ],
+    [ "debug_free", "debug_8h.html#ae528d3be392f0649f9776c46715c9d5a", null ],
+    [ "debug_free_func", "debug_8h.html#a87b286eb81ccfa732b9cdd28aae3a789", null ],
+    [ "debug_guard", "debug_8h.html#a5b91d5b696d837a3c0dd86a2350f5726", null ],
+    [ "debug_init", "debug_8h.html#af6d578b0504da81ebf1c0bb0b5d57952", null ],
+    [ "debug_level_get", "debug_8h.html#a9a8d30aba205c347a6c4533deda2b80f", null ],
+    [ "debug_level_set", "debug_8h.html#af9b547b2d788ff9d24e2ee9f25f5718e", null ],
+    [ "debug_malloc", "debug_8h.html#a8956444f05ebebfa1ca73a5c0ad320a6", null ],
+    [ "debug_malloc0", "debug_8h.html#abe91e8ac092949be49a3f58fd4c551db", null ],
+    [ "debug_new", "debug_8h.html#ae3316b1613ab58d3a26da3c4fdd710c0", null ],
+    [ "debug_printf", "debug_8h.html#a0216fe3aae211a3db82a5f53d20d62a1", null ],
+    [ "debug_realloc", "debug_8h.html#a9591c78d4b6f1e9a9f98583cc41a18cd", null ],
+    [ "debug_set_global_level", "debug_8h.html#a3db96d85ed654eaba09decf2ae318f42", null ],
+    [ "debug_set_logfile", "debug_8h.html#a44d763afb7f1839bbcea6048f1993b15", null ],
+    [ "debug_strdup", "debug_8h.html#a12bd8b009d2d2e0ba12e96d83ce2381b", null ],
+    [ "debug_vprintf", "debug_8h.html#a571b0687631593ccf85d2205e06229a1", null ],
+    [ "max_debug_level", "debug_8h.html#ae6a5410a3f6ce467cccb058b86ed663e", null ]
+];

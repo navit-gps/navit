@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('xsize_8h_source.html','');});
 <div class="title">xsize.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* xsize.h -- Checked size_t computations.</span></div>
+<a href="xsize_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* xsize.h -- Checked size_t computations.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">   Copyright (C) 2003 Free Software Foundation, Inc.</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"></span></div>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('xsize_8h_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">/* Get SIZE_MAX.  */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;limits.h&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#if HAVE_STDINT_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># include &lt;<a class="code" href="stdint_8h.html">stdint.h</a>&gt;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/* The size of memory objects is often computed through expressions of</span></div>
@@ -118,15 +118,15 @@ $(document).ready(function(){initNavTree('xsize_8h_source.html','');});
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/* Convert an arbitrary value &gt;= 0 to type size_t.  */</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#define xcast_size_t(N) \</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="xsize_8h.html#a165c0d8f9d98acf5a646e819217f33c5">   49</a></span>&#160;<span class="preprocessor">#define xcast_size_t(N) \</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">  ((N) &lt;= SIZE_MAX ? (size_t) (N) : SIZE_MAX)</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/* Sum of two sizes, with overflow check.  */</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#if __GNUC__ &gt;= 3</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span>__attribute__ ((__pure__))</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span><a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((__pure__))</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span>xsum (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2)</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">   57</a></span>&#160;<span class="preprocessor"></span><a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2)</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keywordtype">size_t</span> sum = size1 + size2;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordflow">return</span> (sum &gt;= size1 ? sum : SIZE_MAX);</div>
@@ -135,29 +135,29 @@ $(document).ready(function(){initNavTree('xsize_8h_source.html','');});
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">/* Sum of three sizes, with overflow check.  */</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#if __GNUC__ &gt;= 3</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span>__attribute__ ((__pure__))</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span><a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((__pure__))</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"></span>xsum3 (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2, <span class="keywordtype">size_t</span> size3)</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="xsize_8h.html#ad4a61b914ca4b4c7ec0c4201b6b52ac4">   68</a></span>&#160;<span class="preprocessor"></span><a class="code" href="xsize_8h.html#ad4a61b914ca4b4c7ec0c4201b6b52ac4">xsum3</a> (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2, <span class="keywordtype">size_t</span> size3)</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordflow">return</span> xsum (xsum (size1, size2), size3);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (<a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (size1, size2), size3);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/* Sum of four sizes, with overflow check.  */</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#if __GNUC__ &gt;= 3</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"></span>__attribute__ ((__pure__))</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"></span><a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((__pure__))</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span>xsum4 (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2, <span class="keywordtype">size_t</span> size3, <span class="keywordtype">size_t</span> size4)</div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="xsize_8h.html#a73caf82d36c70cccba9e7fbfe0da1740">   78</a></span>&#160;<span class="preprocessor"></span><a class="code" href="xsize_8h.html#a73caf82d36c70cccba9e7fbfe0da1740">xsum4</a> (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2, <span class="keywordtype">size_t</span> size3, <span class="keywordtype">size_t</span> size4)</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordflow">return</span> xsum (xsum (xsum (size1, size2), size3), size4);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (<a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (<a class="code" href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a> (size1, size2), size3), size4);</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">/* Maximum of two sizes, with overflow check.  */</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#if __GNUC__ &gt;= 3</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span>__attribute__ ((__pure__))</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span><a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((__pure__))</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"></span>xmax (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2)</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="xsize_8h.html#abbc149eec91255ae986355c8d554bf4e">   88</a></span>&#160;<span class="preprocessor"></span><a class="code" href="xsize_8h.html#abbc149eec91255ae986355c8d554bf4e">xmax</a> (<span class="keywordtype">size_t</span> size1, <span class="keywordtype">size_t</span> size2)</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="comment">/* No explicit check is needed here, because for any n:</span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">     max (SIZE_MAX, n) == SIZE_MAX and max (n, SIZE_MAX) == SIZE_MAX.  */</span></div>
@@ -168,23 +168,29 @@ $(document).ready(function(){initNavTree('xsize_8h_source.html','');});
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">   The count must be &gt;= 0 and the element size must be &gt; 0.</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">   This is a macro, not an inline function, so that it works correctly even</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">   when N is of a wider tupe and N &gt; SIZE_MAX.  */</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#define xtimes(N, ELSIZE) \</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="xsize_8h.html#a588668205a4c62987f68d63b83c08110">   99</a></span>&#160;<span class="preprocessor">#define xtimes(N, ELSIZE) \</span></div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">  ((N) &lt;= SIZE_MAX / (ELSIZE) ? (size_t) (N) * (ELSIZE) : SIZE_MAX)</span></div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">/* Check for overflow.  */</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#define size_overflow_p(SIZE) \</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="xsize_8h.html#a454aed3462a0d908f9e4b4bac5ca5c0d">  103</a></span>&#160;<span class="preprocessor">#define size_overflow_p(SIZE) \</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">  ((SIZE) == SIZE_MAX)</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor"></span><span class="comment">/* Check against overflow.  */</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#define size_in_bounds_p(SIZE) \</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="xsize_8h.html#a5993d36332a9aaf74bfee0f1ea6988be">  106</a></span>&#160;<span class="preprocessor">#define size_in_bounds_p(SIZE) \</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">  ((SIZE) != SIZE_MAX)</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _XSIZE_H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="xsize_8h_html_abbc149eec91255ae986355c8d554bf4e"><div class="ttname"><a href="xsize_8h.html#abbc149eec91255ae986355c8d554bf4e">xmax</a></div><div class="ttdeci">static size_t xmax(size_t size1, size_t size2)</div><div class="ttdef"><b>Definition:</b> xsize.h:88</div></div>
+<div class="ttc" id="xsize_8h_html_ad4a61b914ca4b4c7ec0c4201b6b52ac4"><div class="ttname"><a href="xsize_8h.html#ad4a61b914ca4b4c7ec0c4201b6b52ac4">xsum3</a></div><div class="ttdeci">static size_t xsum3(size_t size1, size_t size2, size_t size3)</div><div class="ttdef"><b>Definition:</b> xsize.h:68</div></div>
+<div class="ttc" id="xsize_8h_html_a73caf82d36c70cccba9e7fbfe0da1740"><div class="ttname"><a href="xsize_8h.html#a73caf82d36c70cccba9e7fbfe0da1740">xsum4</a></div><div class="ttdeci">static size_t xsum4(size_t size1, size_t size2, size_t size3, size_t size4)</div><div class="ttdef"><b>Definition:</b> xsize.h:78</div></div>
+<div class="ttc" id="vasnprintf_8h_html_a7542898d5be40c999bec6c243af33f58"><div class="ttname"><a href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a></div><div class="ttdeci">#define __attribute__(Spec)</div><div class="ttdef"><b>Definition:</b> vasnprintf.h:31</div></div>
+<div class="ttc" id="xsize_8h_html_aaf95cfbacb24e128a00f1692ca182cd4"><div class="ttname"><a href="xsize_8h.html#aaf95cfbacb24e128a00f1692ca182cd4">xsum</a></div><div class="ttdeci">static size_t xsum(size_t size1, size_t size2)</div><div class="ttdef"><b>Definition:</b> xsize.h:57</div></div>
+<div class="ttc" id="stdint_8h_html"><div class="ttname"><a href="stdint_8h.html">stdint.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><b>xsize.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><a class="el" href="xsize_8h.html">xsize.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

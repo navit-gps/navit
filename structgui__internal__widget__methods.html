@@ -73,55 +73,223 @@ $(document).ready(function(){initNavTree('structgui__internal__widget__methods.h
 <div class="title">gui_internal_widget_methods Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="gui__internal_8h_source.html">gui_internal.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ac26bb72521250c3dfe2bd58709cda1bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac26bb72521250c3dfe2bd58709cda1bf"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>append</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structwidget.html">widget</a> *child)</td></tr>
+<tr class="memitem:ac26bb72521250c3dfe2bd58709cda1bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#ac26bb72521250c3dfe2bd58709cda1bf">append</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structwidget.html">widget</a> *child)</td></tr>
 <tr class="separator:ac26bb72521250c3dfe2bd58709cda1bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1957eec688975a00eef0f12445113a61"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1957eec688975a00eef0f12445113a61"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>button_new</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, const char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *image, enum flags flags)</td></tr>
+<tr class="memitem:a1957eec688975a00eef0f12445113a61"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a1957eec688975a00eef0f12445113a61">button_new</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td></tr>
 <tr class="separator:a1957eec688975a00eef0f12445113a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa4d49d9bd62748b844770ae2951c3e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa4d49d9bd62748b844770ae2951c3e3"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>button_new_with_callback</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, const char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *image, enum flags flags, void(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, void *data), void *data)</td></tr>
+<tr class="memitem:aaa4d49d9bd62748b844770ae2951c3e3"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#aaa4d49d9bd62748b844770ae2951c3e3">button_new_with_callback</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>), <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>)</td></tr>
 <tr class="separator:aaa4d49d9bd62748b844770ae2951c3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affcca41c0acd0e4ca08b6ecbacc188d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="affcca41c0acd0e4ca08b6ecbacc188d3"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>box_new</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, enum flags flags)</td></tr>
+<tr class="memitem:affcca41c0acd0e4ca08b6ecbacc188d3"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#affcca41c0acd0e4ca08b6ecbacc188d3">box_new</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td></tr>
 <tr class="separator:affcca41c0acd0e4ca08b6ecbacc188d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69b3be6813d8261d54cb2625c69d498a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69b3be6813d8261d54cb2625c69d498a"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>label_new</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, const char *text)</td></tr>
+<tr class="memitem:a69b3be6813d8261d54cb2625c69d498a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a69b3be6813d8261d54cb2625c69d498a">label_new</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text)</td></tr>
 <tr class="separator:a69b3be6813d8261d54cb2625c69d498a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af204493f59d58a51e754240b1823a1fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af204493f59d58a51e754240b1823a1fb"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>image_new</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *image)</td></tr>
+<tr class="memitem:af204493f59d58a51e754240b1823a1fb"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#af204493f59d58a51e754240b1823a1fb">image_new</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>)</td></tr>
 <tr class="separator:af204493f59d58a51e754240b1823a1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab389707aa05ee420393495d42e89d5e9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab389707aa05ee420393495d42e89d5e9"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>keyboard</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, int mode)</td></tr>
+<tr class="memitem:ab389707aa05ee420393495d42e89d5e9"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#ab389707aa05ee420393495d42e89d5e9">keyboard</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td></tr>
 <tr class="separator:ab389707aa05ee420393495d42e89d5e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fc905faf8c6fe47362d7bb875c43e64"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fc905faf8c6fe47362d7bb875c43e64"></a>
-struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>menu</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, const char *label)</td></tr>
+<tr class="memitem:a7fc905faf8c6fe47362d7bb875c43e64"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a7fc905faf8c6fe47362d7bb875c43e64">menu</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c">label</a>)</td></tr>
 <tr class="separator:a7fc905faf8c6fe47362d7bb875c43e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c409ffb6f3d343a32051a153e1855b8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c409ffb6f3d343a32051a153e1855b8"></a>
-enum flags(*&#160;</td><td class="memItemRight" valign="bottom"><b>get_flags</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
+<tr class="memitem:a9c409ffb6f3d343a32051a153e1855b8"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a9c409ffb6f3d343a32051a153e1855b8">get_flags</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
 <tr class="separator:a9c409ffb6f3d343a32051a153e1855b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff352153a2071bb9f79854f4684bedef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff352153a2071bb9f79854f4684bedef"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_flags</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, enum flags flags)</td></tr>
+<tr class="memitem:aff352153a2071bb9f79854f4684bedef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#aff352153a2071bb9f79854f4684bedef">set_flags</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td></tr>
 <tr class="separator:aff352153a2071bb9f79854f4684bedef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9df53fca4be3d15b6526cb81c78034dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9df53fca4be3d15b6526cb81c78034dc"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>get_state</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
+<tr class="memitem:a9df53fca4be3d15b6526cb81c78034dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a9df53fca4be3d15b6526cb81c78034dc">get_state</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
 <tr class="separator:a9df53fca4be3d15b6526cb81c78034dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad05e94c59998a2b658924828173dfc95"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad05e94c59998a2b658924828173dfc95"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_state</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, int state)</td></tr>
+<tr class="memitem:ad05e94c59998a2b658924828173dfc95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#ad05e94c59998a2b658924828173dfc95">set_state</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> state)</td></tr>
 <tr class="separator:ad05e94c59998a2b658924828173dfc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdb545ab45e3b64637cf4b31d2296fa7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdb545ab45e3b64637cf4b31d2296fa7"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_func</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, void(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, void *data))</td></tr>
+<tr class="memitem:abdb545ab45e3b64637cf4b31d2296fa7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#abdb545ab45e3b64637cf4b31d2296fa7">set_func</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>))</td></tr>
 <tr class="separator:abdb545ab45e3b64637cf4b31d2296fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fef077f18bee56a60502a43582b9f4a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fef077f18bee56a60502a43582b9f4a"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_data</b> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, void *data)</td></tr>
+<tr class="memitem:a3fef077f18bee56a60502a43582b9f4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#a3fef077f18bee56a60502a43582b9f4a">set_data</a> )(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>)</td></tr>
 <tr class="separator:a3fef077f18bee56a60502a43582b9f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accfcc8dd7745e0a9bde55b6810f35ac7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="accfcc8dd7745e0a9bde55b6810f35ac7"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_default_background</b> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
+<tr class="memitem:accfcc8dd7745e0a9bde55b6810f35ac7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__widget__methods.html#accfcc8dd7745e0a9bde55b6810f35ac7">set_default_background</a> )(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
 <tr class="separator:accfcc8dd7745e0a9bde55b6810f35ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="ac26bb72521250c3dfe2bd58709cda1bf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::append)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structwidget.html">widget</a> *child)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="affcca41c0acd0e4ca08b6ecbacc188d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::box_new)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1957eec688975a00eef0f12445113a61"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::button_new)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aaa4d49d9bd62748b844770ae2951c3e3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::button_new_with_callback)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>), <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9c409ffb6f3d343a32051a153e1855b8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>(* gui_internal_widget_methods::get_flags)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9df53fca4be3d15b6526cb81c78034dc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* gui_internal_widget_methods::get_state)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af204493f59d58a51e754240b1823a1fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::image_new)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgraphics__image.html">graphics_image</a> *<a class="el" href="png_8h.html#a4a84becf999bb6d9e55899b71ed75bcf">image</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab389707aa05ee420393495d42e89d5e9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::keyboard)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a69b3be6813d8261d54cb2625c69d498a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::label_new)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *text)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7fc905faf8c6fe47362d7bb875c43e64"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structwidget.html">widget</a>*(* gui_internal_widget_methods::menu)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c">label</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3fef077f18bee56a60502a43582b9f4a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::set_data)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="accfcc8dd7745e0a9bde55b6810f35ac7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::set_default_background)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aff352153a2071bb9f79854f4684bedef"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::set_flags)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, enum <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abdb545ab45e3b64637cf4b31d2296fa7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::set_func)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*func)(struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad05e94c59998a2b658924828173dfc95"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* gui_internal_widget_methods::set_state)(struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> state)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>gui/internal/<a class="el" href="gui__internal_8h_source.html">gui_internal.h</a></li>
 </ul>

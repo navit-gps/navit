@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('fcntl_8h_source.html','');});
 <div class="title">fcntl.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="fcntl_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * fcntl.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * This file has no copyright assigned and is placed in the Public Domain.</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This file is a part of the mingw-runtime package.</span></div>
@@ -84,39 +84,39 @@ $(document).ready(function(){initNavTree('fcntl_8h_source.html','');});
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FCNTL_H_</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/* All the headers include this file. */</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;_mingw.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="__mingw_8h.html">_mingw.h</a>&gt;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * It appears that fcntl.h should include io.h for compatibility...</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;io.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="io_8h.html">io.h</a>&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">/* Specifiy one of these flags to define the access mode. */</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define _O_RDONLY       0</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_WRONLY       1</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_RDWR         2</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a4d457d93039cb26f27461c4af5868309">   23</a></span>&#160;<span class="preprocessor">#define _O_RDONLY       0</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="fcntl_8h.html#ac58f7734ab4dd8ae25bda2fba713ea56">   24</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_WRONLY       1</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a010187fb7398870cb57af650e65bded1">   25</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_RDWR         2</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">/* Mask for access mode bits in the _open flags. */</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#define _O_ACCMODE      (_O_RDONLY|_O_WRONLY|_O_RDWR)</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a2fe3a12061cbd8665ee26f5b1a22946a">   28</a></span>&#160;<span class="preprocessor">#define _O_ACCMODE      (_O_RDONLY|_O_WRONLY|_O_RDWR)</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define _O_APPEND       0x0008  </span><span class="comment">/* Writes will add to the end of the file. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a3639b6da1cf387c0af6a8a566a716062">   30</a></span>&#160;<span class="preprocessor">#define _O_APPEND       0x0008  </span><span class="comment">/* Writes will add to the end of the file. */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define _O_RANDOM       0x0010</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_SEQUENTIAL   0x0020</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_TEMPORARY    0x0040  </span><span class="comment">/* Make the file dissappear after closing.</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="fcntl_8h.html#ac422d99ef67064fd870e6694eb41162d">   32</a></span>&#160;<span class="preprocessor">#define _O_RANDOM       0x0010</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a0021c132afa3e6ff76ba289d6bfd5fa9">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_SEQUENTIAL   0x0020</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a32bf6eb9c42f6625deb164de8af817ca">   34</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_TEMPORARY    0x0040  </span><span class="comment">/* Make the file dissappear after closing.</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">                                 * WARNING: Even if not created by _open! */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_NOINHERIT    0x0080</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a24dc00b469da3e892489b3b83365619f">   36</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_NOINHERIT    0x0080</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define _O_CREAT        0x0100  </span><span class="comment">/* Create the file if it does not exist. */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_TRUNC        0x0200  </span><span class="comment">/* Truncate the file if it does exist. */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_EXCL         0x0400  </span><span class="comment">/* Open only if the file does not exist. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a774664d26ae1b1d55902562af5f1ec28">   38</a></span>&#160;<span class="preprocessor">#define _O_CREAT        0x0100  </span><span class="comment">/* Create the file if it does not exist. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a695223e667532dd799a1c5b56d9eae75">   39</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_TRUNC        0x0200  </span><span class="comment">/* Truncate the file if it does exist. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a87ebc39a5c9c3505fe9cb094ef40c838">   40</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_EXCL         0x0400  </span><span class="comment">/* Open only if the file does not exist. */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define _O_SHORT_LIVED  0x1000</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a0db1a81c6d192e84724a51a31a4a276a">   42</a></span>&#160;<span class="preprocessor">#define _O_SHORT_LIVED  0x1000</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/* NOTE: Text is the default even if the given _O_TEXT bit is not on. */</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define _O_TEXT         0x4000  </span><span class="comment">/* CR-LF in file becomes LF in memory. */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_BINARY       0x8000  </span><span class="comment">/* Input and output is not translated. */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_RAW          _O_BINARY</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a520b5ac1ca3f9a2bdd83f34a181623d5">   45</a></span>&#160;<span class="preprocessor">#define _O_TEXT         0x4000  </span><span class="comment">/* CR-LF in file becomes LF in memory. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a166a079a4990ddeb0a32475728bbacd0">   46</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_BINARY       0x8000  </span><span class="comment">/* Input and output is not translated. */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a123d806dc259d0da3e496995c3088f08">   47</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_RAW          _O_BINARY</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#if (__MSVCRT_VERSION__ &gt;= 0x0800)</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _O_WTEXT        0x10000</span></div>
@@ -127,30 +127,32 @@ $(document).ready(function(){initNavTree('fcntl_8h_source.html','');});
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifndef _NO_OLDNAMES</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/* POSIX/Non-ANSI names for increased portability */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define O_RDONLY        _O_RDONLY</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_WRONLY        _O_WRONLY</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_RDWR          _O_RDWR</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_ACCMODE       _O_ACCMODE</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_APPEND        _O_APPEND</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_CREAT         _O_CREAT</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TRUNC         _O_TRUNC</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_EXCL          _O_EXCL</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TEXT          _O_TEXT</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_BINARY        _O_BINARY</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TEMPORARY     _O_TEMPORARY</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_NOINHERIT     _O_NOINHERIT</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_SEQUENTIAL    _O_SEQUENTIAL</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_RANDOM        _O_RANDOM</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a7a68c9ffaac7dbcd652225dd7c06a54b">   58</a></span>&#160;<span class="preprocessor">#define O_RDONLY        _O_RDONLY</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a11b644a8526139c4cc1850dac1271ced">   59</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_WRONLY        _O_WRONLY</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="fcntl_8h.html#abb0586253488ee61072b73557eeb873b">   60</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_RDWR          _O_RDWR</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a4dc4d45e07d2abc899bcaf04b2846a87">   61</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_ACCMODE       _O_ACCMODE</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="fcntl_8h.html#ae036f789407d21f07b211552d67b3214">   62</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_APPEND        _O_APPEND</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a1cf6b1de1fffedaa1d26b189e9a8d2cc">   63</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_CREAT         _O_CREAT</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="fcntl_8h.html#ad1d67e453fb3031f40f8cd3403773813">   64</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TRUNC         _O_TRUNC</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a9f5acfe79fafe14b6694447bd0e9f10b">   65</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_EXCL          _O_EXCL</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a9abb6d01b83e0bc5a6e2adeceb7dffd7">   66</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TEXT          _O_TEXT</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a36fa9b2e726512bc17a7a6d3e39002be">   67</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_BINARY        _O_BINARY</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="fcntl_8h.html#afa73d851c2ac9d5eb925495196af6c0d">   68</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_TEMPORARY     _O_TEMPORARY</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a61a9992a2034070a7c26d2179acf946b">   69</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_NOINHERIT     _O_NOINHERIT</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="fcntl_8h.html#adf2f598556de4353777778250932e32a">   70</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_SEQUENTIAL    _O_SEQUENTIAL</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="fcntl_8h.html#a15efa7cf6cbb61c5013721c9d6b26512">   71</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_RANDOM        _O_RANDOM</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* Not _NO_OLDNAMES */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* Not _FCNTL_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="io_8h_html"><div class="ttname"><a href="io_8h.html">io.h</a></div></div>
+<div class="ttc" id="__mingw_8h_html"><div class="ttname"><a href="__mingw_8h.html">_mingw.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><b>fcntl.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_7f1ddf2750ccac222e58a0a92d422bde.html">libc</a></li><li class="navelem"><a class="el" href="fcntl_8h.html">fcntl.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

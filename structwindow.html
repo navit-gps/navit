@@ -78,11 +78,11 @@ $(document).ready(function(){initNavTree('structwindow.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:abd218172bfd214cd0dbf61afc6747f45"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#abd218172bfd214cd0dbf61afc6747f45">priv</a></td></tr>
+<tr class="memitem:abd218172bfd214cd0dbf61afc6747f45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#abd218172bfd214cd0dbf61afc6747f45">priv</a></td></tr>
 <tr class="separator:abd218172bfd214cd0dbf61afc6747f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadf319515876b36688dea6e7756032b6"><td class="memItemLeft" align="right" valign="top">int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#aadf319515876b36688dea6e7756032b6">fullscreen</a> )(struct <a class="el" href="structwindow.html">window</a> *win, int on)</td></tr>
+<tr class="memitem:aadf319515876b36688dea6e7756032b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#aadf319515876b36688dea6e7756032b6">fullscreen</a> )(struct <a class="el" href="structwindow.html">window</a> *win, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> on)</td></tr>
 <tr class="separator:aadf319515876b36688dea6e7756032b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa88360f6749e137b3976dbe9baea4ca2"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#aa88360f6749e137b3976dbe9baea4ca2">disable_suspend</a> )(struct <a class="el" href="structwindow.html">window</a> *win)</td></tr>
+<tr class="memitem:aa88360f6749e137b3976dbe9baea4ca2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structwindow.html#aa88360f6749e137b3976dbe9baea4ca2">disable_suspend</a> )(struct <a class="el" href="structwindow.html">window</a> *win)</td></tr>
 <tr class="separator:aa88360f6749e137b3976dbe9baea4ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -96,11 +96,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(* window::disable_suspend)(struct <a class="el" href="structwindow.html">window</a> *win)</td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* window::disable_suspend)(struct <a class="el" href="structwindow.html">window</a> *win)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Method to disable suspend mode or screen savers </p>
+
+<p>Referenced by <a class="el" href="graphics__egl_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data()</a>, and <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>.</p>
 
 </div>
 </div>
@@ -109,11 +111,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int(* window::fullscreen)(struct <a class="el" href="structwindow.html">window</a> *win, int on)</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* window::fullscreen)(struct <a class="el" href="structwindow.html">window</a> *win, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> on)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Method to toggle fullscreen mode </p>
+
+<p>Referenced by <a class="el" href="graphics__egl_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data()</a>, <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>, and <a class="el" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics()</a>.</p>
 
 </div>
 </div>
@@ -122,11 +126,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* window::priv</td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>* window::priv</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Private data of the graphics implementation </p>
+
+<p>Referenced by <a class="el" href="graphics__qt__qpainter_8cpp.html#a800b0dbf7cef29a4d034adee85b588f7">disable_suspend()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#ab1a5b7c09abf7d85e16b27d9f652314b">fullscreen()</a>, <a class="el" href="graphics__egl_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data()</a>, <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ac3c1e20efa0c6b6851b58212318406ee">graphics_gtk_drawing_area_disable_suspend()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a47604a4f3bdb88ec1602e9ce48acce08">graphics_gtk_drawing_area_fullscreen()</a>, <a class="el" href="graphics__qt5_8cpp.html#ac3029a25fa9c86603d852ac243f76013">graphics_qt5_disable_suspend()</a>, <a class="el" href="graphics__qt5_8cpp.html#a5cd7e326e2da71accea4eaccb4ea14b5">graphics_qt5_fullscreen()</a>, <a class="el" href="graphics__win32_8c.html#a15400066d547bea2c982ec1a06e964a7">graphics_win32_new()</a>, <a class="el" href="graphics__sdl_8c.html#ac7210e0356bd2ffa491bb3c5880af036">window_fullscreen()</a>, and <a class="el" href="graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef">WndProc()</a>.</p>
 
 </div>
 </div>

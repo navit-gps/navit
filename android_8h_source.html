@@ -70,26 +70,36 @@ $(document).ready(function(){initNavTree('android_8h_source.html','');});
 <div class="title">android.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;jni.h&gt;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">extern</span> JNIEnv *jnienv;</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">extern</span> jobject *android_activity;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> android_version;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keywordtype">int</span> android_find_class_global(<span class="keywordtype">char</span> *name, jclass *ret);</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keywordtype">int</span> android_find_method(jclass <span class="keyword">class</span>, <span class="keywordtype">char</span> *name, <span class="keywordtype">char</span> *args, jmethodID *ret);</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">int</span> android_find_static_method(jclass <span class="keyword">class</span>, <span class="keywordtype">char</span> *name, <span class="keywordtype">char</span> *args, jmethodID *ret);</div>
+<a href="android_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;jni.h&gt;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">extern</span> JNIEnv *<a class="code" href="android_8h.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">extern</span> jobject *<a class="code" href="android_8h.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a>;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="android_8h.html#a41ae714478042dc7ebbc275c4a766eeb">android_version</a>;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keywordtype">int</span> <a class="code" href="android_8h.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global</a>(<span class="keywordtype">char</span> *<a class="code" href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a>, jclass *ret);</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keywordtype">int</span> <a class="code" href="android_8h.html#a037be041befa134110ae94401eb71347">android_find_method</a>(jclass <span class="keyword">class</span>, <span class="keywordtype">char</span> *<a class="code" href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a>, <span class="keywordtype">char</span> *args, jmethodID *ret);</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">int</span> <a class="code" href="android_8h.html#ac09693f25474a6fba94239d7c3a91046">android_find_static_method</a>(jclass <span class="keyword">class</span>, <span class="keywordtype">char</span> *<a class="code" href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a>, <span class="keywordtype">char</span> *args, jmethodID *ret);</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="structjni__object.html">    9</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structjni__object.html">jni_object</a> {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        JNIEnv* env;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        jobject jo;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        jmethodID jm;</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="structjni__object.html#abfb06cf9f3374edd9b786d37d7d5f8a0">   10</a></span>&#160;        JNIEnv* <a class="code" href="structjni__object.html#abfb06cf9f3374edd9b786d37d7d5f8a0">env</a>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="structjni__object.html#a0de1ce3a6a57a919f451d74a6a372f43">   11</a></span>&#160;        jobject <a class="code" href="structjni__object.html#a0de1ce3a6a57a919f451d74a6a372f43">jo</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="structjni__object.html#a74a158cae9196106423dd937ea4da179">   12</a></span>&#160;        jmethodID <a class="code" href="structjni__object.html#a74a158cae9196106423dd937ea4da179">jm</a>;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;};</div>
+<div class="ttc" id="street_8c_html_aea4b5eaa20cb056bf06b1ed7969d1ae7"><div class="ttname"><a href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a></div><div class="ttdeci">char name[0]</div><div class="ttdef"><b>Definition:</b> street.c:559</div></div>
+<div class="ttc" id="structjni__object_html_a0de1ce3a6a57a919f451d74a6a372f43"><div class="ttname"><a href="structjni__object.html#a0de1ce3a6a57a919f451d74a6a372f43">jni_object::jo</a></div><div class="ttdeci">jobject jo</div><div class="ttdef"><b>Definition:</b> android.h:11</div></div>
+<div class="ttc" id="android_8h_html_ac09693f25474a6fba94239d7c3a91046"><div class="ttname"><a href="android_8h.html#ac09693f25474a6fba94239d7c3a91046">android_find_static_method</a></div><div class="ttdeci">int android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)</div><div class="ttdef"><b>Definition:</b> android.c:66</div></div>
 <div class="ttc" id="structjni__object_html"><div class="ttname"><a href="structjni__object.html">jni_object</a></div><div class="ttdef"><b>Definition:</b> android.h:9</div></div>
+<div class="ttc" id="structjni__object_html_abfb06cf9f3374edd9b786d37d7d5f8a0"><div class="ttname"><a href="structjni__object.html#abfb06cf9f3374edd9b786d37d7d5f8a0">jni_object::env</a></div><div class="ttdeci">JNIEnv * env</div><div class="ttdef"><b>Definition:</b> android.h:10</div></div>
+<div class="ttc" id="android_8h_html_a41ae714478042dc7ebbc275c4a766eeb"><div class="ttname"><a href="android_8h.html#a41ae714478042dc7ebbc275c4a766eeb">android_version</a></div><div class="ttdeci">int android_version</div><div class="ttdef"><b>Definition:</b> android.c:26</div></div>
+<div class="ttc" id="android_8h_html_a7e27fbc0cc2695097a90448bec80d140"><div class="ttname"><a href="android_8h.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global</a></div><div class="ttdeci">int android_find_class_global(char *name, jclass *ret)</div><div class="ttdef"><b>Definition:</b> android.c:42</div></div>
+<div class="ttc" id="structjni__object_html_a74a158cae9196106423dd937ea4da179"><div class="ttname"><a href="structjni__object.html#a74a158cae9196106423dd937ea4da179">jni_object::jm</a></div><div class="ttdeci">jmethodID jm</div><div class="ttdef"><b>Definition:</b> android.h:12</div></div>
+<div class="ttc" id="android_8h_html_a037be041befa134110ae94401eb71347"><div class="ttname"><a href="android_8h.html#a037be041befa134110ae94401eb71347">android_find_method</a></div><div class="ttdeci">int android_find_method(jclass class, char *name, char *args, jmethodID *ret)</div><div class="ttdef"><b>Definition:</b> android.c:54</div></div>
+<div class="ttc" id="android_8h_html_aa65e77e2c5c1dafdda5287a265f5c5ae"><div class="ttname"><a href="android_8h.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a></div><div class="ttdeci">JNIEnv * jnienv</div><div class="ttdef"><b>Definition:</b> android.c:24</div></div>
+<div class="ttc" id="android_8h_html_ab835292cb19f80d70d6c9f242630de09"><div class="ttname"><a href="android_8h.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a></div><div class="ttdeci">jobject * android_activity</div><div class="ttdef"><b>Definition:</b> android.c:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>android.h</b></li>
+    <li class="navelem"><a class="el" href="android_8h.html">android.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

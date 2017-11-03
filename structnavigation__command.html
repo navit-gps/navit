@@ -85,11 +85,11 @@ Data Fields</h2></td></tr>
 <tr class="separator:a670053bf31747eba971701838721bda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26b7ae432b31b380f75510d89413cc11"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structnavigation__command.html">navigation_command</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a26b7ae432b31b380f75510d89413cc11">prev</a></td></tr>
 <tr class="separator:a26b7ae432b31b380f75510d89413cc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef47412ccffaf8d792c2b2bb182222ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#aef47412ccffaf8d792c2b2bb182222ea">delta</a></td></tr>
+<tr class="memitem:aef47412ccffaf8d792c2b2bb182222ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#aef47412ccffaf8d792c2b2bb182222ea">delta</a></td></tr>
 <tr class="separator:aef47412ccffaf8d792c2b2bb182222ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5af2f5db45da7088be99d32eff88f926"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a5af2f5db45da7088be99d32eff88f926">roundabout_delta</a></td></tr>
+<tr class="memitem:a5af2f5db45da7088be99d32eff88f926"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a5af2f5db45da7088be99d32eff88f926">roundabout_delta</a></td></tr>
 <tr class="separator:a5af2f5db45da7088be99d32eff88f926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8442ef2b10014938111db201071ee91b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a8442ef2b10014938111db201071ee91b">length</a></td></tr>
+<tr class="memitem:a8442ef2b10014938111db201071ee91b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a8442ef2b10014938111db201071ee91b">length</a></td></tr>
 <tr class="separator:a8442ef2b10014938111db201071ee91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c8fc23bc766087057c78cd6e1519b6d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structnavigation__maneuver.html">navigation_maneuver</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavigation__command.html#a5c8fc23bc766087057c78cd6e1519b6d">maneuver</a></td></tr>
 <tr class="separator:a5c8fc23bc766087057c78cd6e1519b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,11 +103,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int navigation_command::delta</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> navigation_command::delta</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>bearing change at maneuver </p>
+
+<p>Referenced by <a class="el" href="navigation_8c.html#ad1105fc9d7acb7fdebd576d8f0e59d26">command_new()</a>, <a class="el" href="navigation_8c.html#a48b34454ac33e8860f9d78a1d5159696">navigation_analyze_roundabout()</a>, and <a class="el" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get()</a>.</p>
 
 </div>
 </div>
@@ -122,6 +124,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The navigation item following the maneuver </p>
 
+<p>Referenced by <a class="el" href="navigation_8c.html#ad1105fc9d7acb7fdebd576d8f0e59d26">command_new()</a>, <a class="el" href="navigation_8c.html#a30705285cb01cc6fee2afaf6fc13aacf">navigation_call_callbacks()</a>, <a class="el" href="navigation_8c.html#a47fbdb534e5f2d07c0a61b0af3eade42">navigation_cmd_get_exit_announce()</a>, <a class="el" href="navigation_8c.html#af6ffd500c5d98b4e2845f33f6a45ec25">navigation_destroy_itms_cmds()</a>, <a class="el" href="navigation_8c.html#a02f710ba1428ebdfbd2048a12e2eb1b0">navigation_get_announce_level_cmd()</a>, <a class="el" href="navigation_8c.html#ac3294e4de916bc186e053363ca31af76">navigation_item_destination()</a>, <a class="el" href="navigation_8c.html#aed5f113cda3969901d34685ef5052769">navigation_map_get_item()</a>, <a class="el" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get()</a>, <a class="el" href="navigation_8c.html#adba1f0f416a77b713b5be4f17fd6e3ea">select_announced_destinations()</a>, <a class="el" href="navigation_8c.html#a61af9070ec9db0fc0f1f4b1b6029c8af">set_highrank()</a>, <a class="el" href="navigation_8c.html#a0428c6acbea3a082a8d24f397bb1040f">show_maneuver()</a>, and <a class="el" href="navigation_8c.html#a4f9769b748989732e4782671c5282aa2">show_next_maneuvers()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a8442ef2b10014938111db201071ee91b"></a>
@@ -129,11 +133,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int navigation_command::length</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> navigation_command::length</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>if the maneuver is a roundabout, distance between entry and exit (plus penalty), else 0 </p>
+
+<p>Referenced by <a class="el" href="navigation_8c.html#a48b34454ac33e8860f9d78a1d5159696">navigation_analyze_roundabout()</a>, <a class="el" href="navigation_8c.html#a30705285cb01cc6fee2afaf6fc13aacf">navigation_call_callbacks()</a>, <a class="el" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get()</a>, and <a class="el" href="navigation_8c.html#a4f9769b748989732e4782671c5282aa2">show_next_maneuvers()</a>.</p>
 
 </div>
 </div>
@@ -148,6 +154,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Details on the maneuver to perform </p>
 
+<p>Referenced by <a class="el" href="navigation_8c.html#ad1105fc9d7acb7fdebd576d8f0e59d26">command_new()</a>, <a class="el" href="navigation_8c.html#a48b34454ac33e8860f9d78a1d5159696">navigation_analyze_roundabout()</a>, <a class="el" href="navigation_8c.html#af6ffd500c5d98b4e2845f33f6a45ec25">navigation_destroy_itms_cmds()</a>, <a class="el" href="navigation_8c.html#ac3294e4de916bc186e053363ca31af76">navigation_item_destination()</a>, <a class="el" href="navigation_8c.html#aed5f113cda3969901d34685ef5052769">navigation_map_get_item()</a>, <a class="el" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get()</a>, and <a class="el" href="navigation_8c.html#a0428c6acbea3a082a8d24f397bb1040f">show_maneuver()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a670053bf31747eba971701838721bda1"></a>
@@ -160,6 +168,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>next command in the list </p>
+
+<p>Referenced by <a class="el" href="navigation_8c.html#ad1105fc9d7acb7fdebd576d8f0e59d26">command_new()</a>, <a class="el" href="navigation_8c.html#af6ffd500c5d98b4e2845f33f6a45ec25">navigation_destroy_itms_cmds()</a>, <a class="el" href="navigation_8c.html#ac3294e4de916bc186e053363ca31af76">navigation_item_destination()</a>, <a class="el" href="navigation_8c.html#aed5f113cda3969901d34685ef5052769">navigation_map_get_item()</a>, <a class="el" href="navigation_8c.html#adba1f0f416a77b713b5be4f17fd6e3ea">select_announced_destinations()</a>, <a class="el" href="navigation_8c.html#a61af9070ec9db0fc0f1f4b1b6029c8af">set_highrank()</a>, and <a class="el" href="navigation_8c.html#a4f9769b748989732e4782671c5282aa2">show_next_maneuvers()</a>.</p>
 
 </div>
 </div>
@@ -174,6 +184,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>previous command in the list </p>
 
+<p>Referenced by <a class="el" href="navigation_8c.html#ad1105fc9d7acb7fdebd576d8f0e59d26">command_new()</a>, <a class="el" href="navigation_8c.html#af6ffd500c5d98b4e2845f33f6a45ec25">navigation_destroy_itms_cmds()</a>, and <a class="el" href="navigation_8c.html#a0428c6acbea3a082a8d24f397bb1040f">show_maneuver()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a5af2f5db45da7088be99d32eff88f926"></a>
@@ -181,11 +193,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int navigation_command::roundabout_delta</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> navigation_command::roundabout_delta</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>if we are leaving a roundabout, effective bearing change (between entry and exit) with some corrections applied </p>
+
+<p>Referenced by <a class="el" href="navigation_8c.html#a48b34454ac33e8860f9d78a1d5159696">navigation_analyze_roundabout()</a>.</p>
 
 </div>
 </div>

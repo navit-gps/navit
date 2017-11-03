@@ -70,66 +70,86 @@ $(document).ready(function(){initNavTree('qml__poi_8h_source.html','');});
 <div class="title">qml_poi.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef POIOBJECT_H</span></div>
+<a href="qml__poi_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef POIOBJECT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define POIOBJECT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;coord.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="coord_8h.html">coord.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classPoiObject.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="classPoiObject.html">PoiObject</a> : <span class="keyword">public</span> QObject</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Q_PROPERTY(<span class="keywordtype">int</span> distance READ distance WRITE setDistance NOTIFY distanceChanged)</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    Q_PROPERTY(QString icon READ icon WRITE setIcon NOTIFY iconChanged)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    Q_PROPERTY(<span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> coords NOTIFY coordsChanged)</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classPoiObject.html#a937f545633fb98057ffc334b6b121e3a">   11</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">name</a> READ <a class="code" href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">name</a> WRITE <a class="code" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName</a> NOTIFY <a class="code" href="classPoiObject.html#ab33186a19ea151f513ea7c5a28767d2a">nameChanged</a>)</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classPoiObject.html#ad46890cb669816aeb2ea754a13bd9363">   12</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">type</a> READ <a class="code" href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">type</a> WRITE <a class="code" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType</a> NOTIFY <a class="code" href="classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c">typeChanged</a>)</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classPoiObject.html#aecdac2f1cc61b0ce1a39bdb2606471a4">   13</a></span>&#160;    Q_PROPERTY(<span class="keywordtype">int</span> <a class="code" href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">distance</a> READ <a class="code" href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">distance</a> WRITE <a class="code" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance</a> NOTIFY <a class="code" href="classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6">distanceChanged</a>)</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classPoiObject.html#ad7d7eabd8b63f935401dfe9d7e32a785">   14</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">icon</a> READ <a class="code" href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">icon</a> WRITE <a class="code" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon</a> NOTIFY <a class="code" href="classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943">iconChanged</a>)</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    Q_PROPERTY(struct <a class="code" href="structpcoord.html">pcoord</a> <a class="code" href="classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12">coords</a> NOTIFY coordsChanged)</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;public:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classPoiObject.html">PoiObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classPoiObject.html">PoiObject</a>(<span class="keyword">const</span> QString &amp;name, <span class="keyword">const</span> QString &amp;type, <span class="keyword">const</span> <span class="keywordtype">int</span> distance, <span class="keyword">const</span> QString &amp;icon, <span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> &amp;coords, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString name() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setName(<span class="keyword">const</span> QString &amp;name);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classPoiObject.html">PoiObject</a>(<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">name</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">type</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <span class="keywordtype">int</span> <a class="code" href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">distance</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">icon</a>, struct <a class="code" href="structpcoord.html">pcoord</a> &amp;<a class="code" href="classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12">coords</a>, QObject *parent=0);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString name() <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName</a>(const QString &amp;name);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    QString type() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> setType(<span class="keyword">const</span> QString &amp;type);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    QString type() const;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType</a>(const QString &amp;type);</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">float</span> distance() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> setDistance(<span class="keyword">const</span> <span class="keywordtype">int</span> distance);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">float</span> distance() const;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance</a>(const <span class="keywordtype">int</span> distance);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    QString icon() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setIcon(<span class="keyword">const</span> QString &amp;icon);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    QString icon() const;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon</a>(const QString &amp;icon);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> coords() const;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    struct <a class="code" href="structpcoord.html">pcoord</a> coords() const;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//    void setcoords(const struct pcoord &amp;c);</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;signals:</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> nameChanged();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> typeChanged();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> distanceChanged();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> iconChanged();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c">typeChanged</a>();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6">distanceChanged</a>();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943">iconChanged</a>();</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">//    void coordsChanged();</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> m_coords;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    QString m_name;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    QString m_type;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> m_distance;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    QString m_icon;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;private:</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classPoiObject.html#ae4a19cb518c96145c03536781f3dcc41">   43</a></span>&#160;    struct <a class="code" href="structpcoord.html">pcoord</a> <a class="code" href="classPoiObject.html#ae4a19cb518c96145c03536781f3dcc41">m_coords</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881">   44</a></span>&#160;    QString <a class="code" href="classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881">m_name</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6">   45</a></span>&#160;    QString <a class="code" href="classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6">m_type</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classPoiObject.html#a4ca1c3592b164ac9699ab8cf9b825866">   46</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classPoiObject.html#a4ca1c3592b164ac9699ab8cf9b825866">m_distance</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae">   47</a></span>&#160;    QString <a class="code" href="classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae">m_icon</a>;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif // POIOBJECT_H</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="classPoiObject_html_a831ba33b305dbc2ac55580b29c258a35"><div class="ttname"><a href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">PoiObject::distance</a></div><div class="ttdeci">float distance() const </div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="coord_8h_html"><div class="ttname"><a href="coord_8h.html">coord.h</a></div></div>
+<div class="ttc" id="classPoiObject_html_a28e83a0754bf9ef5a94d1a254dc82889"><div class="ttname"><a href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">PoiObject::setDistance</a></div><div class="ttdeci">void setDistance(const int distance)</div><div class="ttdef"><b>Definition:</b> qml_poi.cpp:50</div></div>
+<div class="ttc" id="classPoiObject_html_a2f6fb30eaf2eca575dffe4b36ed95cae"><div class="ttname"><a href="classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae">PoiObject::m_icon</a></div><div class="ttdeci">QString m_icon</div><div class="ttdef"><b>Definition:</b> qml_poi.h:47</div></div>
+<div class="ttc" id="classPoiObject_html_a0ad10a5700c7b87b577c362fc39bd9d6"><div class="ttname"><a href="classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6">PoiObject::distanceChanged</a></div><div class="ttdeci">void distanceChanged()</div></div>
+<div class="ttc" id="classPoiObject_html_ae864d4686cfc7cd5671491e166cdca9e"><div class="ttname"><a href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">PoiObject::setIcon</a></div><div class="ttdeci">void setIcon(const QString &amp;icon)</div><div class="ttdef"><b>Definition:</b> qml_poi.cpp:58</div></div>
+<div class="ttc" id="classPoiObject_html_a59afe1bb5ac0ad97782cc833b09196a0"><div class="ttname"><a href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">PoiObject::type</a></div><div class="ttdeci">QString type() const </div></div>
+<div class="ttc" id="classPoiObject_html_ae4a19cb518c96145c03536781f3dcc41"><div class="ttname"><a href="classPoiObject.html#ae4a19cb518c96145c03536781f3dcc41">PoiObject::m_coords</a></div><div class="ttdeci">struct pcoord m_coords</div><div class="ttdef"><b>Definition:</b> qml_poi.h:43</div></div>
+<div class="ttc" id="classPoiObject_html_ab7852700b43e7ea53c29fc18ed386943"><div class="ttname"><a href="classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943">PoiObject::iconChanged</a></div><div class="ttdeci">void iconChanged()</div></div>
+<div class="ttc" id="classPoiObject_html_ab33186a19ea151f513ea7c5a28767d2a"><div class="ttname"><a href="classPoiObject.html#ab33186a19ea151f513ea7c5a28767d2a">PoiObject::nameChanged</a></div><div class="ttdeci">void nameChanged()</div></div>
 <div class="ttc" id="classPoiObject_html"><div class="ttname"><a href="classPoiObject.html">PoiObject</a></div><div class="ttdef"><b>Definition:</b> qml_poi.h:7</div></div>
+<div class="ttc" id="classPoiObject_html_a16070d8e0dc44f2430f69a0e3b876a73"><div class="ttname"><a href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">PoiObject::icon</a></div><div class="ttdeci">QString icon() const </div></div>
+<div class="ttc" id="classPoiObject_html_a4ca1c3592b164ac9699ab8cf9b825866"><div class="ttname"><a href="classPoiObject.html#a4ca1c3592b164ac9699ab8cf9b825866">PoiObject::m_distance</a></div><div class="ttdeci">int m_distance</div><div class="ttdef"><b>Definition:</b> qml_poi.h:46</div></div>
+<div class="ttc" id="classPoiObject_html_a352c7e0e8ce544419b8755dc33f26eed"><div class="ttname"><a href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">PoiObject::name</a></div><div class="ttdeci">QString name() const </div></div>
+<div class="ttc" id="classPoiObject_html_a4a1347fea47e887582c6911c6a6caf12"><div class="ttname"><a href="classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12">PoiObject::coords</a></div><div class="ttdeci">struct pcoord coords() const </div><div class="ttdef"><b>Definition:</b> qml_poi.cpp:71</div></div>
+<div class="ttc" id="classPoiObject_html_a5b30d44ab956291d1ae53a5fcc89a8da"><div class="ttname"><a href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">PoiObject::setType</a></div><div class="ttdeci">void setType(const QString &amp;type)</div><div class="ttdef"><b>Definition:</b> qml_poi.cpp:37</div></div>
+<div class="ttc" id="classPoiObject_html_ae8cb268e199a036ea5e633369cc1eba6"><div class="ttname"><a href="classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6">PoiObject::m_type</a></div><div class="ttdeci">QString m_type</div><div class="ttdef"><b>Definition:</b> qml_poi.h:45</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
 <div class="ttc" id="structpcoord_html"><div class="ttname"><a href="structpcoord.html">pcoord</a></div><div class="ttdef"><b>Definition:</b> coord.h:40</div></div>
+<div class="ttc" id="classPoiObject_html_acb42dfa9878f07d66ddc844cc63e84c2"><div class="ttname"><a href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">PoiObject::setName</a></div><div class="ttdeci">void setName(const QString &amp;name)</div><div class="ttdef"><b>Definition:</b> qml_poi.cpp:24</div></div>
+<div class="ttc" id="classPoiObject_html_a21d7b34c5a151e44470be5d5a1428881"><div class="ttname"><a href="classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881">PoiObject::m_name</a></div><div class="ttdeci">QString m_name</div><div class="ttdef"><b>Definition:</b> qml_poi.h:44</div></div>
+<div class="ttc" id="classPoiObject_html_a691a475b6d276c971f7bece3bc382e8c"><div class="ttname"><a href="classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c">PoiObject::typeChanged</a></div><div class="ttdeci">void typeChanged()</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><b>qml_poi.h</b></li>
+    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><a class="el" href="qml__poi_8h.html">qml_poi.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

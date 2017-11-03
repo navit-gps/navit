@@ -1,0 +1,38 @@
+var coord_8h =
+[
+    [ "coord", "structcoord.html", "structcoord" ],
+    [ "pcoord", "structpcoord.html", "structpcoord" ],
+    [ "coord_rect", "structcoord__rect.html", "structcoord__rect" ],
+    [ "coord_d", "structcoord__d.html", "structcoord__d" ],
+    [ "coord_geo", "structcoord__geo.html", "structcoord__geo" ],
+    [ "coord_geo_cart", "structcoord__geo__cart.html", "structcoord__geo__cart" ],
+    [ "coord_is_equal", "coord_8h.html#ab7fc727d53e80c018f1bea9a4ad5434b", null ],
+    [ "navit_acos", "coord_8h.html#acc85f4e10228d3b65e332dc60fe0f6e5", null ],
+    [ "navit_asin", "coord_8h.html#a0f1475ef41d025c35dbd1e32cddccf95", null ],
+    [ "navit_atan", "coord_8h.html#aef032d9661d8e821d35f6b3e1c3a2da3", null ],
+    [ "navit_cos", "coord_8h.html#a471b4a51ffb965afd18b407d7b7a9778", null ],
+    [ "navit_sin", "coord_8h.html#a07311124cec6ec2103e729fbb4ebcc5c", null ],
+    [ "navit_sqrt", "coord_8h.html#aae41641e415d4c65412d016224330e2b", null ],
+    [ "navit_tan", "coord_8h.html#addba39f52db590f088d67d9e7b4d2f3e", null ],
+    [ "navit_float", "coord_8h.html#aae1a07a93ec5038cab0efff724660598", null ],
+    [ "coord_format", "coord_8h.html#ab414d48bf3be54c39da88757cf788300", [
+      [ "DEGREES_DECIMAL", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72", null ],
+      [ "DEGREES_MINUTES", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c", null ],
+      [ "DEGREES_MINUTES_SECONDS", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d", null ]
+    ] ],
+    [ "coord_destroy", "coord_8h.html#gad191c6f8f958bfe80345f76549c00dea", null ],
+    [ "coord_equal", "coord_8h.html#ga06a6048dfc714dc5e591c2cf6551c6e1", null ],
+    [ "coord_format", "coord_8h.html#ga328d4ac6d4e7430fd75f89b48649e057", null ],
+    [ "coord_get", "coord_8h.html#ga070022fd4aaf0fd34bd7307078a4eeac", null ],
+    [ "coord_hash", "coord_8h.html#ga3972be1f6b7d3323209010d985086c42", null ],
+    [ "coord_new", "coord_8h.html#gaeb489edd13309353cb486f855c00dbe5", null ],
+    [ "coord_new_from_attrs", "coord_8h.html#gac1e499de39c791dcf39f1fe89c1351ff", null ],
+    [ "coord_parse", "coord_8h.html#ga5da12a5ec4414c17c5c845a46083ccfb", null ],
+    [ "coord_print", "coord_8h.html#ga5360dd50aed330d83233f0970fbfa2c4", null ],
+    [ "coord_rect_contains", "coord_8h.html#gadf3c940d83ba637872b823ecb4f92555", null ],
+    [ "coord_rect_destroy", "coord_8h.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3", null ],
+    [ "coord_rect_extend", "coord_8h.html#ga2c6d628b067bab6c56eb6504207e6feb", null ],
+    [ "coord_rect_new", "coord_8h.html#ga63815cc089c2d7107496a8eb8512ac27", null ],
+    [ "coord_rect_overlap", "coord_8h.html#ga738eb455670a0c22187903d0d97100f1", null ],
+    [ "pcoord_parse", "coord_8h.html#ga61bdcf26825ab8b41cfcf1a035800a75", null ]
+];

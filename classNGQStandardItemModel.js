@@ -7,5 +7,6 @@ var classNGQStandardItemModel =
       [ "ItemPath", "classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea05b6dc8499a00b790e1726012c89c4a2", null ],
       [ "ItemValue", "classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea17ac3d4990e19dbb3f2d28fba8e5c88d", null ]
     ] ],
-    [ "NGQStandardItemModel", "classNGQStandardItemModel.html#a06e32ca2fd3cf48353adc1372a62776e", null ]
+    [ "NGQStandardItemModel", "classNGQStandardItemModel.html#a06e32ca2fd3cf48353adc1372a62776e", null ],
+    [ "roleNames", "classNGQStandardItemModel.html#a51cd24ba8de4386829cbb10391142d43", null ]
 ];

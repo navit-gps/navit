@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('endianess_8h_source.html','');});
 <div class="title">endianess.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="endianess_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifndef __ENDIANESS_HANDLER__</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="comment">/* The following is based on xorg/xserver/GL/glx/glxbyteorder.h </span></div>
@@ -138,8 +138,8 @@ $(document).ready(function(){initNavTree('endianess_8h_source.html','');});
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __LITTLE_ENDIAN 1234</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __BYTE_ORDER __LITTLE_ENDIAN</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __bswap_16(__bsx) ((((__bsx) &gt;&gt; 8) &amp; 0xff) | (((__bsx) &amp; 0xff) &lt;&lt; 8))</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __bswap_32(__bsx) ((((__bsx) &amp; 0xff000000) &gt;&gt; 24) | \</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">   86</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __bswap_16(__bsx) ((((__bsx) &gt;&gt; 8) &amp; 0xff) | (((__bsx) &amp; 0xff) &lt;&lt; 8))</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">   87</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define __bswap_32(__bsx) ((((__bsx) &amp; 0xff000000) &gt;&gt; 24) | \</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">                             (((__bsx) &amp; 0x00ff0000) &gt;&gt;  8) |\</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">                             (((__bsx) &amp; 0x0000ff00) &lt;&lt;  8) | \</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">                             (((__bsx) &amp; 0x000000ff) &lt;&lt; 24))</span></div>
@@ -148,12 +148,12 @@ $(document).ready(function(){initNavTree('endianess_8h_source.html','');});
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#if  __BYTE_ORDER == __BIG_ENDIAN </span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le16_to_cpu(x)        __bswap_16 (x)</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le32_to_cpu(x)        __bswap_32 (x)</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le64_to_cpu(x)        __bswap_64 (x)</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le16(x)        __bswap_16 (x)</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le32(x)        __bswap_32 (x)</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le64(x)        __bswap_64 (x)</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="endianess_8h.html#a65e9510f535c1ee2f826d447471289fa">   96</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le16_to_cpu(x)        __bswap_16 (x)</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="endianess_8h.html#a48f527b00bc1d5e46366d720280a1039">   97</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le32_to_cpu(x)        __bswap_32 (x)</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="endianess_8h.html#a0987d88a4fac98f0b1d6355ef7aa77e2">   98</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le64_to_cpu(x)        __bswap_64 (x)</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="endianess_8h.html#aeda3065f344779edb9023e22d84d5f92">   99</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le16(x)        __bswap_16 (x)</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="endianess_8h.html#a1d5ae0c36d519a1b0a789db69a598f28">  100</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le32(x)        __bswap_32 (x)</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="endianess_8h.html#aa170dc4b2dae5b00bdec3a307427240f">  101</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define cpu_to_le64(x)        __bswap_64 (x)</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#elif __BYTE_ORDER == __LITTLE_ENDIAN </span></div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le16_to_cpu(x)        (x)</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #define le32_to_cpu(x)        (x)</span></div>
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('endianess_8h_source.html','');});
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor"></span><span class="preprocessor">  #error &quot;Unknown endianess&quot;</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#define __ENDIANESS_HANDLER__</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="endianess_8h.html#ac902be04badd9a68d9ebbce6be15a576">  111</a></span>&#160;<span class="preprocessor">#define __ENDIANESS_HANDLER__</span></div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('endianess_8h_source.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>endianess.h</b></li>
+    <li class="navelem"><a class="el" href="endianess_8h.html">endianess.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

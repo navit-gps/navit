@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('glibintl_8h_source.html','');});
 <div class="title">glibintl.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __GLIBINTL_H__</span></div>
+<a href="glibintl_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __GLIBINTL_H__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __GLIBINTL_H__</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#if NOT_NEEDED_FOR_NAVIT</span></div>
@@ -79,11 +79,11 @@ $(document).ready(function(){initNavTree('glibintl_8h_source.html','');});
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* NOT_NEEDED_FOR_NAVIT */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;G_CONST_RETURN gchar *glib_gettext (<span class="keyword">const</span> gchar *str);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<a class="code" href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<a class="code" href="glibintl_8h.html#a71f9d8d1a97fa59fb1a7c75f57aa1716">glib_gettext</a> (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *str);</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifdef USE_NATIVE_LANGUAGE_SUPPORT</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;navit_nls.h&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="navit__nls_8h.html">navit_nls.h</a>&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#undef _</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#undef gettext_noop</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#undef _n</span></div>
@@ -98,27 +98,31 @@ $(document).ready(function(){initNavTree('glibintl_8h_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_(String) (String)</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else </span><span class="comment">/* NLS is disabled */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _(String) (String)</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_(String) (String)</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define P_(String) (String)</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define textdomain(String) (String)</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define gettext(String) (String)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dgettext(Domain,String) (String)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dcgettext(Domain,String,Type) (String)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dngettext(Domain,String1,String2,N) ((N) == 1 ? (String1) : (String2))</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define bindtextdomain(Domain,Directory) (Domain) </span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a32a3cf3d9dd914f5aeeca5423c157934">   29</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _(String) (String)</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a75278405e7f034d2b1af80bfd94675fe">   30</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_(String) (String)</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a7337a1a766a30d38d282f021cf68f6f4">   31</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define P_(String) (String)</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a5f80e8482ab93869489531a8c7ce7006">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define textdomain(String) (String)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a83b8be0887dede025766d25e2bb884c6">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define gettext(String) (String)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="glibintl_8h.html#ae442907adce8f0c5db97b4a0bde4969d">   34</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dgettext(Domain,String) (String)</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a8f39d8f7f55f21d4a1ea40f1dfb7d79e">   35</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dcgettext(Domain,String,Type) (String)</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a85ffe50a22ce22695729b6bfdb40c29d">   36</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define dngettext(Domain,String1,String2,N) ((N) == 1 ? (String1) : (String2))</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="glibintl_8h.html#add6dfc1077058ff26d79cdb18099d58a">   37</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define bindtextdomain(Domain,Directory) (Domain) </span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/* not really I18N-related, but also a string marker macro */</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define I_(string) g_intern_static_string (string)</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="glibintl_8h.html#a98b0be6e232fdbc25552e3348408565b">   41</a></span>&#160;<span class="preprocessor">#define I_(string) g_intern_static_string (string)</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __GLIBINTL_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="glibintl_8h_html_a71f9d8d1a97fa59fb1a7c75f57aa1716"><div class="ttname"><a href="glibintl_8h.html#a71f9d8d1a97fa59fb1a7c75f57aa1716">glib_gettext</a></div><div class="ttdeci">G_CONST_RETURN gchar * glib_gettext(const gchar *str)</div></div>
+<div class="ttc" id="gmacros_8h_html_a95fb4ef7e7f405b070614c1ee9ab455f"><div class="ttname"><a href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a></div><div class="ttdeci">#define G_CONST_RETURN</div><div class="ttdef"><b>Definition:</b> gmacros.h:245</div></div>
+<div class="ttc" id="gtypes_8h_html_a7032b151d3b86839407074d8f0ab43eb"><div class="ttname"><a href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a></div><div class="ttdeci">G_BEGIN_DECLS typedef char gchar</div><div class="ttdef"><b>Definition:</b> gtypes.h:45</div></div>
+<div class="ttc" id="navit__nls_8h_html"><div class="ttname"><a href="navit__nls_8h.html">navit_nls.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>glibintl.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="glibintl_8h.html">glibintl.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

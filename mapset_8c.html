@@ -78,14 +78,14 @@ $(document).ready(function(){initNavTree('mapset_8c.html','');});
 <p>Contains code used for loading more than one map.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string.h&gt;</code><br/>
-<code>#include &lt;glib.h&gt;</code><br/>
-<code>#include &lt;glib/gprintf.h&gt;</code><br/>
-<code>#include &quot;debug.h&quot;</code><br/>
-<code>#include &quot;item.h&quot;</code><br/>
-<code>#include &quot;mapset.h&quot;</code><br/>
-<code>#include &quot;projection.h&quot;</code><br/>
+<code>#include &lt;<a class="el" href="glib_8h_source.html">glib.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="gprintf_8h_source.html">glib/gprintf.h</a>&gt;</code><br/>
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br/>
-<code>#include &quot;xmlconfig.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br/>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -106,52 +106,47 @@ Functions</h2></td></tr>
 <tr class="memitem:a174ded8e1926d9d3ea4089e9dd4f4325"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="memdesc:a174ded8e1926d9d3ea4089e9dd4f4325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new, empty mapset.  <a href="#a174ded8e1926d9d3ea4089e9dd4f4325">More...</a><br/></td></tr>
 <tr class="separator:a174ded8e1926d9d3ea4089e9dd4f4325"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae26894cfa5449b004fb75375ce4e2b8a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae26894cfa5449b004fb75375ce4e2b8a"></a>
-struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_dup</b> (struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
+<tr class="memitem:ae26894cfa5449b004fb75375ce4e2b8a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#ae26894cfa5449b004fb75375ce4e2b8a">mapset_dup</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
 <tr class="separator:ae26894cfa5449b004fb75375ce4e2b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97f5a5b2fc7bae728f36bd77850b5cd4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97f5a5b2fc7bae728f36bd77850b5cd4"></a>
-struct <a class="el" href="structattr__iter.html">attr_iter</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_attr_iter_new</b> (void)</td></tr>
+<tr class="memitem:a97f5a5b2fc7bae728f36bd77850b5cd4"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr__iter.html">attr_iter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a97f5a5b2fc7bae728f36bd77850b5cd4">mapset_attr_iter_new</a> (<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td></tr>
 <tr class="separator:a97f5a5b2fc7bae728f36bd77850b5cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dfe523f1ef32990ef3ff654798f7797"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1dfe523f1ef32990ef3ff654798f7797"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_attr_iter_destroy</b> (struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
+<tr class="memitem:a1dfe523f1ef32990ef3ff654798f7797"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a1dfe523f1ef32990ef3ff654798f7797">mapset_attr_iter_destroy</a> (struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
 <tr class="separator:a1dfe523f1ef32990ef3ff654798f7797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a9945ebe3171257d759ee3e7bd45790"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:a1a9945ebe3171257d759ee3e7bd45790"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="memdesc:a1a9945ebe3171257d759ee3e7bd45790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a map to a mapset.  <a href="#a1a9945ebe3171257d759ee3e7bd45790">More...</a><br/></td></tr>
 <tr class="separator:a1a9945ebe3171257d759ee3e7bd45790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3496e82d4fb896c2a1917e6ac11977d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3496e82d4fb896c2a1917e6ac11977d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_remove_attr</b> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:ac3496e82d4fb896c2a1917e6ac11977d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:ac3496e82d4fb896c2a1917e6ac11977d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7643a1959c34ccad2c2b0a768afe19e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7643a1959c34ccad2c2b0a768afe19e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_get_attr</b> (struct <a class="el" href="structmapset.html">mapset</a> *ms, enum attr_type type, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
+<tr class="memitem:ac7643a1959c34ccad2c2b0a768afe19e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#ac7643a1959c34ccad2c2b0a768afe19e">mapset_get_attr</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="png_8h.html#a31c258c425e1346a1cd21ffd48f58ace">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
 <tr class="separator:ac7643a1959c34ccad2c2b0a768afe19e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ce35b0b230f340967b7adccf5bdd0d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
+<tr class="memitem:a3ce35b0b230f340967b7adccf5bdd0d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
 <tr class="memdesc:a3ce35b0b230f340967b7adccf5bdd0d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a mapset.  <a href="#a3ce35b0b230f340967b7adccf5bdd0d2">More...</a><br/></td></tr>
 <tr class="separator:a3ce35b0b230f340967b7adccf5bdd0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a101513e5ab4c27dc04ba3e8f0a8bf19d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a101513e5ab4c27dc04ba3e8f0a8bf19d">mapset_open</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
 <tr class="memdesc:a101513e5ab4c27dc04ba3e8f0a8bf19d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new handle for a mapset.  <a href="#a101513e5ab4c27dc04ba3e8f0a8bf19d">More...</a><br/></td></tr>
 <tr class="separator:a101513e5ab4c27dc04ba3e8f0a8bf19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7514e385a1a1ad3a2d1c40b4fc7ccfd7"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap.html">map</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next</a> (struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *msh, int active)</td></tr>
+<tr class="memitem:a7514e385a1a1ad3a2d1c40b4fc7ccfd7"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap.html">map</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next</a> (struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *msh, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="speech_8c.html#a0924606e49ec00b2f1e75281f4a19694">active</a>)</td></tr>
 <tr class="memdesc:a7514e385a1a1ad3a2d1c40b4fc7ccfd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next map from a mapset handle.  <a href="#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">More...</a><br/></td></tr>
 <tr class="separator:a7514e385a1a1ad3a2d1c40b4fc7ccfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb098564156843a504fe8408c7051dd1"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap.html">map</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, const char *map_name)</td></tr>
+<tr class="memitem:adb098564156843a504fe8408c7051dd1"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap.html">map</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *map_name)</td></tr>
 <tr class="memdesc:adb098564156843a504fe8408c7051dd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a map from the mapset by name.  <a href="#adb098564156843a504fe8408c7051dd1">More...</a><br/></td></tr>
 <tr class="separator:adb098564156843a504fe8408c7051dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff7284837514c15ea5468463f9329435"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close</a> (struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *msh)</td></tr>
+<tr class="memitem:aff7284837514c15ea5468463f9329435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close</a> (struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *msh)</td></tr>
 <tr class="memdesc:aff7284837514c15ea5468463f9329435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes a mapset handle after it is no longer used.  <a href="#aff7284837514c15ea5468463f9329435">More...</a><br/></td></tr>
 <tr class="separator:aff7284837514c15ea5468463f9329435"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17f2463f3956b2a1496beb03510f299b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset__search.html">mapset_search</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a17f2463f3956b2a1496beb03510f299b">mapset_search_new</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structitem.html">item</a> *<a class="el" href="structitem.html">item</a>, struct <a class="el" href="structattr.html">attr</a> *search_attr, int partial)</td></tr>
+<tr class="memitem:a17f2463f3956b2a1496beb03510f299b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset__search.html">mapset_search</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a17f2463f3956b2a1496beb03510f299b">mapset_search_new</a> (struct <a class="el" href="structmapset.html">mapset</a> *ms, struct <a class="el" href="structitem.html">item</a> *<a class="el" href="structitem.html">item</a>, struct <a class="el" href="structattr.html">attr</a> *search_attr, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> partial)</td></tr>
 <tr class="memdesc:a17f2463f3956b2a1496beb03510f299b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a search on a mapset.  <a href="#a17f2463f3956b2a1496beb03510f299b">More...</a><br/></td></tr>
 <tr class="separator:a17f2463f3956b2a1496beb03510f299b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa44f7331590fa3b6f5af4e58283c6131"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem.html">item</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#aa44f7331590fa3b6f5af4e58283c6131">mapset_search_get_item</a> (struct <a class="el" href="structmapset__search.html">mapset_search</a> *this_)</td></tr>
 <tr class="memdesc:aa44f7331590fa3b6f5af4e58283c6131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next found item from a mapset search.  <a href="#aa44f7331590fa3b6f5af4e58283c6131">More...</a><br/></td></tr>
 <tr class="separator:aa44f7331590fa3b6f5af4e58283c6131"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5f0941ee0b5b5e32e76942b24d24f70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#ad5f0941ee0b5b5e32e76942b24d24f70">mapset_search_destroy</a> (struct <a class="el" href="structmapset__search.html">mapset_search</a> *this_)</td></tr>
+<tr class="memitem:ad5f0941ee0b5b5e32e76942b24d24f70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#ad5f0941ee0b5b5e32e76942b24d24f70">mapset_search_destroy</a> (struct <a class="el" href="structmapset__search.html">mapset_search</a> *this_)</td></tr>
 <tr class="memdesc:ad5f0941ee0b5b5e32e76942b24d24f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a mapset search.  <a href="#ad5f0941ee0b5b5e32e76942b24d24f70">More...</a><br/></td></tr>
 <tr class="separator:ad5f0941ee0b5b5e32e76942b24d24f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a522a581eccd4148fe31e144e6e0e1bce"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structobject__func.html">object_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mapset_func</b></td></tr>
+<tr class="memitem:a522a581eccd4148fe31e144e6e0e1bce"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structobject__func.html">object_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mapset_8c.html#a522a581eccd4148fe31e144e6e0e1bce">mapset_func</a></td></tr>
 <tr class="separator:a522a581eccd4148fe31e144e6e0e1bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -167,7 +162,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int mapset_add_attr </td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> mapset_add_attr </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td>
           <td class="paramname"><em>ms</em>, </td>
@@ -195,7 +190,49 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>References <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>.</p>
+<p>References <a class="el" href="attr_8c.html#a16f8181e76fc7339c0dde03da8b62e50">attr_generic_add_attr()</a>, <a class="el" href="glist_8c.html#a62f22a2386ab26eb3122f5cfc39f7542">g_list_append()</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+<p>Referenced by <a class="el" href="gui__internal_8c.html#a7c867bbd47d97507f36a622a11c23a66">gui_internal_cmd_results_to_map()</a>, <a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel()</a>, <a class="el" href="maps_8c.html#aac1b1796640454998c50c59c45350a87">maps_new()</a>, <a class="el" href="binding__python_8c.html#a48c6d3d6a4b472f983e64e63448b8d47">mapset_add_py()</a>, <a class="el" href="group__navit.html#ga359fb8a89c570167d2f7eaef272502ce">navit_init()</a>, and <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1dfe523f1ef32990ef3ff654798f7797"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> mapset_attr_iter_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structattr__iter.html">attr_iter</a> *&#160;</td>
+          <td class="paramname"><em>iter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>.</p>
+
+<p>Referenced by <a class="el" href="binding__dbus_8c.html#ab5b17771d418421f33dde0b21274492a">request_mapset_attr_iter_destroy()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a97f5a5b2fc7bae728f36bd77850b5cd4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structattr__iter.html">attr_iter</a>* mapset_attr_iter_new </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="gmem_8h.html#a977287fca21d3e7683b4f214af02440c">g_new0</a>.</p>
+
+<p>Referenced by <a class="el" href="binding__dbus_8c.html#ab90273cb0f394c55f3a69f0af414634e">request_mapset_attr_iter()</a>.</p>
 
 </div>
 </div>
@@ -204,7 +241,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void mapset_close </td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> mapset_close </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structmapset__handle.html">mapset_handle</a> *&#160;</td>
           <td class="paramname"><em>msh</em></td><td>)</td>
@@ -221,7 +258,9 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, and <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>.</p>
+<p>References <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>.</p>
+
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">NGQPoint::_coordName()</a>, <a class="el" href="graphics_8c.html#aaf0787db32faf380b8853fcd3b635252">do_draw()</a>, <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">NGQPoint::getPOI()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="mapset_8h.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492">model_poi()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga359fb8a89c570167d2f7eaef272502ce">navit_init()</a>, <a class="el" href="group__navit.html#gacd0ef4b110b76f6b7770312752862e49">navit_map_progress()</a>, <a class="el" href="osd__core_8c.html#a4f5922c0e7f4e1e1e7aef609a1c77553">osd_route_guard_init()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="route_8c.html#a1ffe6ed74a9a862b97a9258553399640">route_find_nearest_street()</a>, <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, and <a class="el" href="track_8c.html#a96845cb46a48a91280e9eba32af32b9d">tracking_doupdate_lines()</a>.</p>
 
 </div>
 </div>
@@ -230,7 +269,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void mapset_destroy </td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> mapset_destroy </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td>
           <td class="paramname"><em>ms</em></td><td>)</td>
@@ -248,7 +287,69 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>References <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>.</p>
+<p>References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>, <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>, <a class="el" href="glist_8c.html#a854e205ef31d2f09c72eecf87a697130">g_list_free()</a>, and <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>.</p>
+
+<p>Referenced by <a class="el" href="binding__python_8c.html#a77fc29ba90b642ff74c2ca6723f73b45">mapset_destroy_py()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae26894cfa5449b004fb75375ce4e2b8a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmapset.html">mapset</a>* mapset_dup </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td>
+          <td class="paramname"><em>ms</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="glist_8c.html#aa9ae55f47cd2bdfc0f4a6afda1356dc0">g_list_copy()</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="mapset_8c.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new()</a>, and <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac7643a1959c34ccad2c2b0a768afe19e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> mapset_get_attr </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td>
+          <td class="paramname"><em>ms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr__iter.html">attr_iter</a> *&#160;</td>
+          <td class="paramname"><em>iter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="struct__GList.html#aebf1ebe41eccfc68e7cf90ccc6fd6f60">_GList::data</a>, <a class="el" href="glist_8h.html#ad357081cc126f8f62210b1b7cfe052f8">g_list_next</a>, <a class="el" href="glist_8h.html#ace5a92b06a2bbca53a400bae2a512915">g_list_previous</a>, <a class="el" href="structattr__iter.html#a8c7b464a5dfaeaeae549f66ac912aef9">attr_iter::last</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="garmin__img_8c.html#ad9e6e5971e279e602a61a51d5c3a5b52">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+<p>Referenced by <a class="el" href="binding__dbus_8c.html#a3f8ac9cfd52dd9578a01a0b85504e7ee">request_mapset_get_attr()</a>, and <a class="el" href="binding__dbus_8c.html#a7819e40256a61cf5d8b54afc9c4f8261">resolve_object()</a>.</p>
 
 </div>
 </div>
@@ -265,7 +366,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *&#160;</td>
           <td class="paramname"><em>map_name</em>&#160;</td>
         </tr>
         <tr>
@@ -286,7 +387,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The next map </dd></dl>
 
-<p>References <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next()</a>, and <a class="el" href="mapset_8c.html#a101513e5ab4c27dc04ba3e8f0a8bf19d">mapset_open()</a>.</p>
+<p>References <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="mapset_8c.html#a7514e385a1a1ad3a2d1c40b4fc7ccfd7">mapset_next()</a>, <a class="el" href="mapset_8c.html#a101513e5ab4c27dc04ba3e8f0a8bf19d">mapset_open()</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+<p>Referenced by <a class="el" href="gui__internal_8c.html#a7c867bbd47d97507f36a622a11c23a66">gui_internal_cmd_results_to_map()</a>, <a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel()</a>, <a class="el" href="group__navit.html#gad8cddea4de665947ec2b957741e9a648">navit_cmd_map_add_curr_pos()</a>, and <a class="el" href="group__navit.html#ga4388fd187be0d0eb8641684023594f53">navit_cmd_map_item_set_attr()</a>.</p>
 
 </div>
 </div>
@@ -317,6 +420,10 @@ Variables</h2></td></tr>
 <p>Creates a new, empty mapset. </p>
 <dl class="section return"><dt>Returns</dt><dd>The new mapset </dd></dl>
 
+<p>References <a class="el" href="attr_8c.html#a78c8acc94b747237631b2e68f123c7fa">attr_list_dup()</a>, <a class="el" href="gmem_8h.html#a977287fca21d3e7683b4f214af02440c">g_new0</a>, <a class="el" href="mapset_8c.html#a522a581eccd4148fe31e144e6e0e1bce">mapset_func</a>, and <a class="el" href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref()</a>.</p>
+
+<p>Referenced by <a class="el" href="mapset_8h.html#ae26894cfa5449b004fb75375ce4e2b8a">mapset_dup()</a>, and <a class="el" href="binding__python_8c.html#accb786f3dccafa8b01364d7b46e8997a">mapset_new_py()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a7514e385a1a1ad3a2d1c40b4fc7ccfd7"></a>
@@ -332,7 +439,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
           <td class="paramname"><em>active</em>&#160;</td>
         </tr>
         <tr>
@@ -354,9 +461,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The next map </dd></dl>
 
-<p>References <a class="el" href="structmapset__handle.html#a0f53ed52141511e70184790e2863a357">mapset_handle::l</a>, and <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>.</p>
+<p>References <a class="el" href="struct__GList.html#aebf1ebe41eccfc68e7cf90ccc6fd6f60">_GList::data</a>, <a class="el" href="glist_8h.html#ad357081cc126f8f62210b1b7cfe052f8">g_list_next</a>, <a class="el" href="structmapset__handle.html#a0f53ed52141511e70184790e2863a357">mapset_handle::l</a>, <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
-<p>Referenced by <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, and <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>.</p>
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">NGQPoint::_coordName()</a>, <a class="el" href="graphics_8c.html#aaf0787db32faf380b8853fcd3b635252">do_draw()</a>, <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">NGQPoint::getPOI()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="pedestrian_8c.html#ab7249225385231913db5067ee0f11fb0">map_route_occluded_get_buildings()</a>, <a class="el" href="mapset_8h.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492">model_poi()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga359fb8a89c570167d2f7eaef272502ce">navit_init()</a>, <a class="el" href="group__navit.html#gacd0ef4b110b76f6b7770312752862e49">navit_map_progress()</a>, <a class="el" href="osd__core_8c.html#a4f5922c0e7f4e1e1e7aef609a1c77553">osd_route_guard_init()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="route_8c.html#a1ffe6ed74a9a862b97a9258553399640">route_find_nearest_street()</a>, <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>, and <a class="el" href="track_8c.html#a96845cb46a48a91280e9eba32af32b9d">tracking_doupdate_lines()</a>.</p>
 
 </div>
 </div>
@@ -384,9 +491,39 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The new mapset handle </dd></dl>
 
-<p>References <a class="el" href="structmapset__handle.html#a0f53ed52141511e70184790e2863a357">mapset_handle::l</a>, and <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>.</p>
+<p>References <a class="el" href="gmem_8h.html#ac739ac89405199dc467aa99803ec6804">g_new</a>, <a class="el" href="structmapset__handle.html#a0f53ed52141511e70184790e2863a357">mapset_handle::l</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, and <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
-<p>Referenced by <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, and <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>.</p>
+<p>Referenced by <a class="el" href="classNGQPoint.html#a05d5c21ee472eb8e7ee1f89bd8d0dbd2">NGQPoint::_coordName()</a>, <a class="el" href="graphics_8c.html#aaf0787db32faf380b8853fcd3b635252">do_draw()</a>, <a class="el" href="classBackend.html#a139da3a81c132887ce12937faaf8d864">Backend::get_pois()</a>, <a class="el" href="classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8">NGQPoint::getPOI()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="pedestrian_8c.html#ab7249225385231913db5067ee0f11fb0">map_route_occluded_get_buildings()</a>, <a class="el" href="mapset_8h.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492">model_poi()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga359fb8a89c570167d2f7eaef272502ce">navit_init()</a>, <a class="el" href="group__navit.html#gacd0ef4b110b76f6b7770312752862e49">navit_map_progress()</a>, <a class="el" href="osd__core_8c.html#a4f5922c0e7f4e1e1e7aef609a1c77553">osd_route_guard_init()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="route_8c.html#a1ffe6ed74a9a862b97a9258553399640">route_find_nearest_street()</a>, <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="track_8c.html#a96845cb46a48a91280e9eba32af32b9d">tracking_doupdate_lines()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac3496e82d4fb896c2a1917e6ac11977d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> mapset_remove_attr </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td>
+          <td class="paramname"><em>ms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="attr_8c.html#a0460f47ed4e34e7dc3104c354f6165b2">attr_generic_remove_attr()</a>, <a class="el" href="glist_8c.html#af50999802f999b56575af3e900ccd1d6">g_list_remove()</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+<p>Referenced by <a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel()</a>.</p>
 
 </div>
 </div>
@@ -395,7 +532,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void mapset_search_destroy </td>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> mapset_search_destroy </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structmapset__search.html">mapset_search</a> *&#160;</td>
           <td class="paramname"><em>this_</em></td><td>)</td>
@@ -412,7 +549,9 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>References <a class="el" href="map_8c.html#a17363cc27a950b21d4a10c1e4977f750">map_search_destroy()</a>, and <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>.</p>
+<p>References <a class="el" href="gmem_8c.html#adc1ccd7500cf30d2d250d5d753f6bbba">g_free()</a>, <a class="el" href="map_8c.html#a17363cc27a950b21d4a10c1e4977f750">map_search_destroy()</a>, and <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>.</p>
+
+<p>Referenced by <a class="el" href="search_8h.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>, and <a class="el" href="search_8c.html#a03a0f1b7356a1260d8cbc90fd888f1a3">search_list_search_free()</a>.</p>
 
 </div>
 </div>
@@ -440,7 +579,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The next found item or NULL if there are no more items found </dd></dl>
 
-<p>References <a class="el" href="structmapset__search.html#af73566fac55a7095d13ae24a5ca9b71d">mapset_search::item</a>, <a class="el" href="structmapset__search.html#a4c9a36286b82ffd12b8391d3ec89930c">mapset_search::map</a>, <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>, <a class="el" href="map_8c.html#a17363cc27a950b21d4a10c1e4977f750">map_search_destroy()</a>, <a class="el" href="map_8c.html#a2a6f7023b430cc03af1a8d72e8f6a09b">map_search_get_item()</a>, <a class="el" href="map_8c.html#a3192f982f537a0eb5cc0e32f306ead2d">map_search_new()</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="structmapset__search.html#a9559af646a9e15c85fa466bfecffb4c8">mapset_search::mapset</a>, <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>, <a class="el" href="structmapset__search.html#a6f0607987b897aad07ae800241754c6d">mapset_search::partial</a>, and <a class="el" href="structmapset__search.html#aa503d9d6431c9c96c8c6785615a05e15">mapset_search::search_attr</a>.</p>
+<p>References <a class="el" href="struct__GList.html#aebf1ebe41eccfc68e7cf90ccc6fd6f60">_GList::data</a>, <a class="el" href="glist_8h.html#ad357081cc126f8f62210b1b7cfe052f8">g_list_next</a>, <a class="el" href="structmapset__search.html#af73566fac55a7095d13ae24a5ca9b71d">mapset_search::item</a>, <a class="el" href="structmapset__search.html#a4c9a36286b82ffd12b8391d3ec89930c">mapset_search::map</a>, <a class="el" href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>, <a class="el" href="map_8c.html#a17363cc27a950b21d4a10c1e4977f750">map_search_destroy()</a>, <a class="el" href="map_8c.html#a2a6f7023b430cc03af1a8d72e8f6a09b">map_search_get_item()</a>, <a class="el" href="map_8c.html#a3192f982f537a0eb5cc0e32f306ead2d">map_search_new()</a>, <a class="el" href="structmapset.html#ad4d00bf392242956c1c63a919e06cc10">mapset::maps</a>, <a class="el" href="structmapset__search.html#a9559af646a9e15c85fa466bfecffb4c8">mapset_search::mapset</a>, <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structmapset__search.html#a6f0607987b897aad07ae800241754c6d">mapset_search::partial</a>, <a class="el" href="structmapset__search.html#aa503d9d6431c9c96c8c6785615a05e15">mapset_search::search_attr</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+<p>Referenced by <a class="el" href="search_8h.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>.</p>
 
 </div>
 </div>
@@ -469,7 +610,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
           <td class="paramname"><em>partial</em>&#160;</td>
         </tr>
         <tr>
@@ -495,7 +636,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new mapset search struct for this search </dd></dl>
 
-<p>References <a class="el" href="structmapset__search.html#af73566fac55a7095d13ae24a5ca9b71d">mapset_search::item</a>, <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>, <a class="el" href="structmapset__search.html#a6f0607987b897aad07ae800241754c6d">mapset_search::partial</a>, and <a class="el" href="structmapset__search.html#aa503d9d6431c9c96c8c6785615a05e15">mapset_search::search_attr</a>.</p>
+<p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gmem_8h.html#a977287fca21d3e7683b4f214af02440c">g_new0</a>, <a class="el" href="osm_8c.html#a1b6910c37842678ed6084354f57f6260">item</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structmapset__search.html#ad1ebe4561b70c482dc40ed9ab37ff788">mapset_search::ms</a>, <a class="el" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structmapset__search.html#a6f0607987b897aad07ae800241754c6d">mapset_search::partial</a>, and <a class="el" href="structmapset__search.html#aa503d9d6431c9c96c8c6785615a05e15">mapset_search::search_attr</a>.</p>
+
+<p>Referenced by <a class="el" href="search_8h.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>.</p>
 
 </div>
 </div>
@@ -511,23 +654,45 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
 <div class="line">        attr_mapset,</div>
-<div class="line">        (object_func_new)<a class="code" href="mapset_8c.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new</a>,</div>
-<div class="line">        (object_func_get_attr)mapset_get_attr,</div>
-<div class="line">        (object_func_iter_new)mapset_attr_iter_new,</div>
-<div class="line">        (object_func_iter_destroy)mapset_attr_iter_destroy,</div>
-<div class="line">        (object_func_set_attr)NULL,</div>
-<div class="line">        (object_func_add_attr)<a class="code" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr</a>,</div>
-<div class="line">        (object_func_remove_attr)mapset_remove_attr,</div>
-<div class="line">        (object_func_init)NULL,</div>
-<div class="line">        (object_func_destroy)<a class="code" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy</a>,</div>
-<div class="line">        (object_func_dup)mapset_dup,</div>
-<div class="line">        (object_func_ref)navit_object_ref,</div>
-<div class="line">        (object_func_unref)navit_object_unref,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#ac81207135f04874e385e31423db53dd1">object_func_new</a>)<a class="code" href="mapset_8c.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#ae9e477667b07b8540cb03a8dbfab1194">object_func_get_attr</a>)<a class="code" href="mapset_8c.html#ac7643a1959c34ccad2c2b0a768afe19e">mapset_get_attr</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a62e98f09044dd1cb14c1786db1a6ee52">object_func_iter_new</a>)<a class="code" href="mapset_8c.html#a97f5a5b2fc7bae728f36bd77850b5cd4">mapset_attr_iter_new</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a0078fefdd19df7414a8f31e5f715c6da">object_func_iter_destroy</a>)<a class="code" href="mapset_8c.html#a1dfe523f1ef32990ef3ff654798f7797">mapset_attr_iter_destroy</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a24e9432d6efe27c881bb77749bc1879c">object_func_set_attr</a>)<a class="code" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a5b15be5d4fcaf8d61b32ad26a5bbd615">object_func_add_attr</a>)<a class="code" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a60fb0dd5b7e3d5180265f13cf0c3dca0">object_func_remove_attr</a>)<a class="code" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a968269376ba0e1651ec5519f19798d5f">object_func_init</a>)NULL,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a6c7322fcd20ded61fbe44adf17b39b06">object_func_destroy</a>)<a class="code" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a1cd3fd5dbf8df120697ce35f8f4fed3a">object_func_dup</a>)<a class="code" href="mapset_8c.html#ae26894cfa5449b004fb75375ce4e2b8a">mapset_dup</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a5e98a3d5adcd0ff678190bd144ab8cca">object_func_ref</a>)<a class="code" href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref</a>,</div>
+<div class="line">        (<a class="code" href="xmlconfig_8h.html#a19932fea483ba3e4d58b044d53ba9e2a">object_func_unref</a>)<a class="code" href="xmlconfig_8c.html#a6430bef5b4ff56f67fe80bfee71ef896">navit_object_unref</a>,</div>
 <div class="line">}</div>
 <div class="ttc" id="mapset_8c_html_a1a9945ebe3171257d759ee3e7bd45790"><div class="ttname"><a href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr</a></div><div class="ttdeci">int mapset_add_attr(struct mapset *ms, struct attr *attr)</div><div class="ttdoc">Adds a map to a mapset. </div><div class="ttdef"><b>Definition:</b> mapset.c:97</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a6c7322fcd20ded61fbe44adf17b39b06"><div class="ttname"><a href="xmlconfig_8h.html#a6c7322fcd20ded61fbe44adf17b39b06">object_func_destroy</a></div><div class="ttdeci">void(* object_func_destroy)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:62</div></div>
 <div class="ttc" id="mapset_8c_html_a174ded8e1926d9d3ea4089e9dd4f4325"><div class="ttname"><a href="mapset_8c.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new</a></div><div class="ttdeci">struct mapset * mapset_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a new, empty mapset. </div><div class="ttdef"><b>Definition:</b> mapset.c:58</div></div>
+<div class="ttc" id="explodename_8c_html_a070d2ce7b6bb7e5c05602aa8c308d0c4"><div class="ttname"><a href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></div><div class="ttdeci">#define NULL</div><div class="ttdef"><b>Definition:</b> explodename.c:34</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a1cd3fd5dbf8df120697ce35f8f4fed3a"><div class="ttname"><a href="xmlconfig_8h.html#a1cd3fd5dbf8df120697ce35f8f4fed3a">object_func_dup</a></div><div class="ttdeci">void *(* object_func_dup)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:63</div></div>
+<div class="ttc" id="mapset_8c_html_a1dfe523f1ef32990ef3ff654798f7797"><div class="ttname"><a href="mapset_8c.html#a1dfe523f1ef32990ef3ff654798f7797">mapset_attr_iter_destroy</a></div><div class="ttdeci">void mapset_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition:</b> mapset.c:85</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a0078fefdd19df7414a8f31e5f715c6da"><div class="ttname"><a href="xmlconfig_8h.html#a0078fefdd19df7414a8f31e5f715c6da">object_func_iter_destroy</a></div><div class="ttdeci">void(* object_func_iter_destroy)(struct attr_iter *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:57</div></div>
+<div class="ttc" id="mapset_8c_html_ac7643a1959c34ccad2c2b0a768afe19e"><div class="ttname"><a href="mapset_8c.html#ac7643a1959c34ccad2c2b0a768afe19e">mapset_get_attr</a></div><div class="ttdeci">int mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition:</b> mapset.c:123</div></div>
+<div class="ttc" id="mapset_8c_html_a97f5a5b2fc7bae728f36bd77850b5cd4"><div class="ttname"><a href="mapset_8c.html#a97f5a5b2fc7bae728f36bd77850b5cd4">mapset_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * mapset_attr_iter_new(void)</div><div class="ttdef"><b>Definition:</b> mapset.c:79</div></div>
+<div class="ttc" id="xmlconfig_8c_html_a6430bef5b4ff56f67fe80bfee71ef896"><div class="ttname"><a href="xmlconfig_8c.html#a6430bef5b4ff56f67fe80bfee71ef896">navit_object_unref</a></div><div class="ttdeci">void navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1272</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a968269376ba0e1651ec5519f19798d5f"><div class="ttname"><a href="xmlconfig_8h.html#a968269376ba0e1651ec5519f19798d5f">object_func_init</a></div><div class="ttdeci">int(* object_func_init)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:61</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a5e98a3d5adcd0ff678190bd144ab8cca"><div class="ttname"><a href="xmlconfig_8h.html#a5e98a3d5adcd0ff678190bd144ab8cca">object_func_ref</a></div><div class="ttdeci">void *(* object_func_ref)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:64</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a62e98f09044dd1cb14c1786db1a6ee52"><div class="ttname"><a href="xmlconfig_8h.html#a62e98f09044dd1cb14c1786db1a6ee52">object_func_iter_new</a></div><div class="ttdeci">struct attr_iter *(* object_func_iter_new)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:56</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a19932fea483ba3e4d58b044d53ba9e2a"><div class="ttname"><a href="xmlconfig_8h.html#a19932fea483ba3e4d58b044d53ba9e2a">object_func_unref</a></div><div class="ttdeci">void *(* object_func_unref)(void *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:65</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a60fb0dd5b7e3d5180265f13cf0c3dca0"><div class="ttname"><a href="xmlconfig_8h.html#a60fb0dd5b7e3d5180265f13cf0c3dca0">object_func_remove_attr</a></div><div class="ttdeci">int(* object_func_remove_attr)(void *, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:60</div></div>
+<div class="ttc" id="xmlconfig_8h_html_ac81207135f04874e385e31423db53dd1"><div class="ttname"><a href="xmlconfig_8h.html#ac81207135f04874e385e31423db53dd1">object_func_new</a></div><div class="ttdeci">void *(* object_func_new)(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:54</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a24e9432d6efe27c881bb77749bc1879c"><div class="ttname"><a href="xmlconfig_8h.html#a24e9432d6efe27c881bb77749bc1879c">object_func_set_attr</a></div><div class="ttdeci">int(* object_func_set_attr)(void *, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:58</div></div>
+<div class="ttc" id="mapset_8c_html_ae26894cfa5449b004fb75375ce4e2b8a"><div class="ttname"><a href="mapset_8c.html#ae26894cfa5449b004fb75375ce4e2b8a">mapset_dup</a></div><div class="ttdeci">struct mapset * mapset_dup(struct mapset *ms)</div><div class="ttdef"><b>Definition:</b> mapset.c:70</div></div>
+<div class="ttc" id="xmlconfig_8h_html_ae9e477667b07b8540cb03a8dbfab1194"><div class="ttname"><a href="xmlconfig_8h.html#ae9e477667b07b8540cb03a8dbfab1194">object_func_get_attr</a></div><div class="ttdeci">int(* object_func_get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:55</div></div>
+<div class="ttc" id="xmlconfig_8c_html_acc1bc70fa25d7d81b1fa01fe6ef3a2f6"><div class="ttname"><a href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1264</div></div>
+<div class="ttc" id="xmlconfig_8h_html_a5b15be5d4fcaf8d61b32ad26a5bbd615"><div class="ttname"><a href="xmlconfig_8h.html#a5b15be5d4fcaf8d61b32ad26a5bbd615">object_func_add_attr</a></div><div class="ttdeci">int(* object_func_add_attr)(void *, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:59</div></div>
+<div class="ttc" id="mapset_8c_html_ac3496e82d4fb896c2a1917e6ac11977d"><div class="ttname"><a href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr</a></div><div class="ttdeci">int mapset_remove_attr(struct mapset *ms, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> mapset.c:110</div></div>
 <div class="ttc" id="mapset_8c_html_a3ce35b0b230f340967b7adccf5bdd0d2"><div class="ttname"><a href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy</a></div><div class="ttdeci">void mapset_destroy(struct mapset *ms)</div><div class="ttdoc">Destroys a mapset. </div><div class="ttdef"><b>Definition:</b> mapset.c:154</div></div>
 </div><!-- fragment -->
+<p>Referenced by <a class="el" href="mapset_8h.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new()</a>, and <a class="el" href="xmlconfig_8h.html#aa0aedbfd467d2009ac65a983734fc556">object_func_lookup()</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->

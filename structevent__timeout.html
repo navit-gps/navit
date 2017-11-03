@@ -73,40 +73,145 @@ $(document).ready(function(){initNavTree('structevent__timeout.html','');});
 <div class="title">event_timeout Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="event__sdl_8h_source.html">event_sdl.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a0d2933d724425bfcf9d53036671a0539"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d2933d724425bfcf9d53036671a0539"></a>
-guint&#160;</td><td class="memItemRight" valign="bottom"><b>source</b></td></tr>
+<tr class="memitem:a0d2933d724425bfcf9d53036671a0539"><td class="memItemLeft" align="right" valign="top"><a class="el" href="gtypes_8h.html#af0d5fc363adb00f8d725f36331ff0a12">guint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a0d2933d724425bfcf9d53036671a0539">source</a></td></tr>
 <tr class="separator:a0d2933d724425bfcf9d53036671a0539"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99f042b0b72b1555d1cf0f13812ac0fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a99f042b0b72b1555d1cf0f13812ac0fa"></a>
-struct <a class="el" href="structcallback.html">callback</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>cb</b></td></tr>
+<tr class="memitem:a99f042b0b72b1555d1cf0f13812ac0fa"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback.html">callback</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a99f042b0b72b1555d1cf0f13812ac0fa">cb</a></td></tr>
 <tr class="separator:a99f042b0b72b1555d1cf0f13812ac0fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a808cd9a7baafac7a46d916360e871e06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a808cd9a7baafac7a46d916360e871e06"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>handle_timeout</b> )(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *priv)</td></tr>
+<tr class="memitem:a808cd9a7baafac7a46d916360e871e06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a808cd9a7baafac7a46d916360e871e06">handle_timeout</a> )(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *priv)</td></tr>
 <tr class="separator:a808cd9a7baafac7a46d916360e871e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe459aabe84df921593ba96907132b16"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afe459aabe84df921593ba96907132b16"></a>
-jobject&#160;</td><td class="memItemRight" valign="bottom"><b>jni_timeout</b></td></tr>
+<tr class="memitem:afe459aabe84df921593ba96907132b16"><td class="memItemLeft" align="right" valign="top">jobject&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#afe459aabe84df921593ba96907132b16">jni_timeout</a></td></tr>
 <tr class="separator:afe459aabe84df921593ba96907132b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf8db0941d0ebeabefa8679ad044115c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adf8db0941d0ebeabefa8679ad044115c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>multi</b></td></tr>
+<tr class="memitem:adf8db0941d0ebeabefa8679ad044115c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#adf8db0941d0ebeabefa8679ad044115c">multi</a></td></tr>
 <tr class="separator:adf8db0941d0ebeabefa8679ad044115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70c8b7c83d5221e3f308595d4a4f208d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70c8b7c83d5221e3f308595d4a4f208d"></a>
-SDL_TimerID&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="memitem:a70c8b7c83d5221e3f308595d4a4f208d"><td class="memItemLeft" align="right" valign="top">SDL_TimerID&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a70c8b7c83d5221e3f308595d4a4f208d">id</a></td></tr>
 <tr class="separator:a70c8b7c83d5221e3f308595d4a4f208d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94b26dffe25882a9d49b81dfaec7beac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a94b26dffe25882a9d49b81dfaec7beac"></a>
-UINT_PTR&#160;</td><td class="memItemRight" valign="bottom"><b>timer_id</b></td></tr>
+<tr class="memitem:a94b26dffe25882a9d49b81dfaec7beac"><td class="memItemLeft" align="right" valign="top">UINT_PTR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a94b26dffe25882a9d49b81dfaec7beac">timer_id</a></td></tr>
 <tr class="separator:a94b26dffe25882a9d49b81dfaec7beac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b21c411e3dd493aec66c6310f78ecfc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b21c411e3dd493aec66c6310f78ecfc"></a>
-struct <a class="el" href="structevent__timeout.html">event_timeout</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b></td></tr>
+<tr class="memitem:a1b21c411e3dd493aec66c6310f78ecfc"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__timeout.html">event_timeout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__timeout.html#a1b21c411e3dd493aec66c6310f78ecfc">next</a></td></tr>
 <tr class="separator:a1b21c411e3dd493aec66c6310f78ecfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a99f042b0b72b1555d1cf0f13812ac0fa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcallback.html">callback</a> * event_timeout::cb</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>, <a class="el" href="graphics__android_8c.html#a235a92d71d08f5e86f4084ea8fa46dd7">event_android_handle_timeout()</a>, <a class="el" href="graphics__cocoa_8m.html#a7de1c55f171ffbd420c6e764ee88ef90">event_cocoa_add_timeout()</a>, <a class="el" href="event__glib_8c.html#a2164eede5e4783c45cebbc7b4bf5b036">event_glib_add_timeout()</a>, <a class="el" href="event__glib_8c.html#a97973529fcb39ea4aed81d611a626a60">event_glib_call_timeout_multi()</a>, <a class="el" href="event__glib_8c.html#ac371fd6e6118603d871fb753eeeca4c0">event_glib_call_timeout_single()</a>, <a class="el" href="graphics_2sdl_2event_8c.html#a9da56ab5c03d5adae8324f9202f77b66">event_sdl_add_timeout()</a>, <a class="el" href="graphics__win32_8c.html#a2a0748e480c08a2d855b735f31d42010">event_win32_add_timeout()</a>, <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, <a class="el" href="graphics__win32_8c.html#aef2a26909d8f7a7ccfc64c7ce689e183">run_timer()</a>, and <a class="el" href="graphics_2sdl_2event_8c.html#aced2e64936f18bbd59296d815753d06e">sdl_timer_callback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a808cd9a7baafac7a46d916360e871e06"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_timeout::handle_timeout)(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *priv)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a70c8b7c83d5221e3f308595d4a4f208d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_TimerID event_timeout::id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event__qt5_8cpp.html#ac44b836b60e1ed61fe5338fc31faeb2c">event_qt5_add_timeout()</a>, <a class="el" href="graphics_2sdl_2event_8c.html#a9da56ab5c03d5adae8324f9202f77b66">event_sdl_add_timeout()</a>, <a class="el" href="graphics_2sdl_2event_8c.html#a0a052b6a310ab13744a35d6d6576268e">event_sdl_remove_timeout()</a>, <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, and <a class="el" href="event__sdl_8c.html#aced2e64936f18bbd59296d815753d06e">sdl_timer_callback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afe459aabe84df921593ba96907132b16"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">jobject event_timeout::jni_timeout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>, and <a class="el" href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adf8db0941d0ebeabefa8679ad044115c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> event_timeout::multi</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>, <a class="el" href="graphics__android_8c.html#a235a92d71d08f5e86f4084ea8fa46dd7">event_android_handle_timeout()</a>, <a class="el" href="graphics_2sdl_2event_8c.html#a9da56ab5c03d5adae8324f9202f77b66">event_sdl_add_timeout()</a>, <a class="el" href="graphics__win32_8c.html#a2a0748e480c08a2d855b735f31d42010">event_win32_add_timeout()</a>, <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, <a class="el" href="graphics__win32_8c.html#aef2a26909d8f7a7ccfc64c7ce689e183">run_timer()</a>, and <a class="el" href="graphics_2sdl_2event_8c.html#aced2e64936f18bbd59296d815753d06e">sdl_timer_callback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1b21c411e3dd493aec66c6310f78ecfc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structevent__timeout.html">event_timeout</a>* event_timeout::next</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0d2933d724425bfcf9d53036671a0539"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="gtypes_8h.html#af0d5fc363adb00f8d725f36331ff0a12">guint</a> event_timeout::source</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event__glib_8c.html#a2164eede5e4783c45cebbc7b4bf5b036">event_glib_add_timeout()</a>, and <a class="el" href="event__glib_8c.html#a4106c5e0c2041e4e23a8378fefff77c2">event_glib_remove_timeout()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a94b26dffe25882a9d49b81dfaec7beac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT_PTR event_timeout::timer_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__win32_8c.html#a2a0748e480c08a2d855b735f31d42010">event_win32_add_timeout()</a>, <a class="el" href="graphics__win32_8c.html#a6e8fd17f25a413a872b77ba4eb94047c">event_win32_remove_timeout()</a>, and <a class="el" href="graphics__win32_8c.html#aef2a26909d8f7a7ccfc64c7ce689e183">run_timer()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>event_glib.c</li>
-<li>graphics/android/graphics_android.c</li>
-<li>graphics/sdl/event.c</li>
+<li><a class="el" href="event__glib_8c.html">event_glib.c</a></li>
+<li>graphics/android/<a class="el" href="graphics__android_8c.html">graphics_android.c</a></li>
+<li>graphics/sdl/<a class="el" href="graphics_2sdl_2event_8c.html">event.c</a></li>
 <li>graphics/sdl/<a class="el" href="event__sdl_8h_source.html">event_sdl.h</a></li>
-<li>graphics/win32/graphics_win32.c</li>
+<li>graphics/win32/<a class="el" href="graphics__win32_8c.html">graphics_win32.c</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

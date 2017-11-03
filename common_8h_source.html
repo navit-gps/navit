@@ -70,55 +70,71 @@ $(document).ready(function(){initNavTree('common_8h_source.html','');});
 <div class="title">common.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="common_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;Python.h&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;debug.h&quot;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#if defined(MS_WINDOWS) || defined(__CYGWIN__)</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Obj_HEAD PyObject_HEAD_INIT(NULL);</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Obj_HEAD PyObject_HEAD_INIT(&amp;PyType_Type)</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="common_8h.html#a6bb1ff01fab2f8a8bb023f584a5aa272">   26</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Obj_HEAD PyObject_HEAD_INIT(&amp;PyType_Type)</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">struct </span><a class="code" href="structnavit.html">navit</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">struct </span><a class="code" href="structmap.html">map</a>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;PyObject * python_object_from_attr(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> *<a class="code" href="structattr.html">attr</a>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;PyObject * <a class="code" href="common_8h.html#a321a9dadab68f7de5852bc9d93404e67">python_object_from_attr</a>(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> *<a class="code" href="structattr.html">attr</a>);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;PyObject * config_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;PyObject * <a class="code" href="common_8h.html#a931b4761df5d5e2e7cbf450fef1de350">config_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;PyObject * map_py_ref(<span class="keyword">struct</span> <a class="code" href="structmap.html">map</a> *<a class="code" href="structmap.html">map</a>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;PyObject * <a class="code" href="common_8h.html#a2b19e35a05b89f213fd4df40ad715341">map_py_ref</a>(<span class="keyword">struct</span> <a class="code" href="structmap.html">map</a> *<a class="code" href="structmap.html">map</a>);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">struct </span><a class="code" href="structnavigation.html">navigation</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;PyObject * navigation_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;PyObject * navigation_py_ref(<span class="keyword">struct</span> <a class="code" href="structnavigation.html">navigation</a> *<a class="code" href="structnavigation.html">navigation</a>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;PyObject * <a class="code" href="common_8h.html#a81a721734c495ad5d905cfc29d3b030f">navigation_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;PyObject * <a class="code" href="common_8h.html#a79614554b509115989b07ae3659c69d7">navigation_py_ref</a>(<span class="keyword">struct</span> <a class="code" href="structnavigation.html">navigation</a> *<a class="code" href="structnavigation.html">navigation</a>);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;PyObject * navit_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;PyObject * navit_py_ref(<span class="keyword">struct</span> <a class="code" href="structnavit.html">navit</a> *<a class="code" href="structnavit.html">navit</a>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">extern</span> PyTypeObject pcoord_Type;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;PyObject * pcoord_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> *pcoord_py_get(PyObject *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;PyObject * <a class="code" href="common_8h.html#a21c3f61fb17b0852a6a2c956c29908fe">navit_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;PyObject * <a class="code" href="common_8h.html#a732860c0a087a4e6e7d81928864f4afb">navit_py_ref</a>(<span class="keyword">struct</span> <a class="code" href="structnavit.html">navit</a> *<a class="code" href="structnavit.html">navit</a>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">extern</span> PyTypeObject <a class="code" href="common_8h.html#a770ddde01fbc685d1e5d2790159142f2">pcoord_Type</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;PyObject * <a class="code" href="common_8h.html#a7ad67bc2decc59dc3c5ef23ed5645fff">pcoord_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> *<a class="code" href="common_8h.html#a0932e385c56f1fc1b721fe3f3a4b283d">pcoord_py_get</a>(PyObject *<span class="keyword">self</span>);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">struct </span><a class="code" href="structroute.html">route</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;PyObject * route_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;PyObject * route_py_ref(<span class="keyword">struct</span> <a class="code" href="structroute.html">route</a> *<a class="code" href="structroute.html">route</a>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;PyObject * <a class="code" href="common_8h.html#a163e453fe8679bcc95ff33b3a6775d8b">route_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;PyObject * <a class="code" href="common_8h.html#ac58c22aba451e9a8285798c2cb5930f2">route_py_ref</a>(<span class="keyword">struct</span> <a class="code" href="structroute.html">route</a> *<a class="code" href="structroute.html">route</a>);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> PyTypeObject attr_Type;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;PyObject * attr_new_py(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;PyObject * attr_new_py_ref(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> *<a class="code" href="structattr.html">attr</a>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">struct </span><a class="code" href="structattr.html">attr</a> * attr_py_get(PyObject *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> PyTypeObject <a class="code" href="common_8h.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26">attr_Type</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;PyObject * <a class="code" href="common_8h.html#ada64218817709de1747fbb0f83cf55fa">attr_new_py</a>(PyObject *<span class="keyword">self</span>, PyObject *args);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;PyObject * <a class="code" href="common_8h.html#a8e45d2bca72c41bfdb2bdd69c11e51b9">attr_new_py_ref</a>(<span class="keyword">struct</span> <a class="code" href="structattr.html">attr</a> *<a class="code" href="structattr.html">attr</a>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">struct </span><a class="code" href="structattr.html">attr</a> * <a class="code" href="common_8h.html#a27be840595df2389a37d090153319e2e">attr_py_get</a>(PyObject *<span class="keyword">self</span>);</div>
 <div class="ttc" id="structnavigation_html"><div class="ttname"><a href="structnavigation.html">navigation</a></div><div class="ttdef"><b>Definition:</b> navigation.c:161</div></div>
+<div class="ttc" id="common_8h_html_a0932e385c56f1fc1b721fe3f3a4b283d"><div class="ttname"><a href="common_8h.html#a0932e385c56f1fc1b721fe3f3a4b283d">pcoord_py_get</a></div><div class="ttdeci">struct pcoord * pcoord_py_get(PyObject *self)</div><div class="ttdef"><b>Definition:</b> pcoord.c:84</div></div>
+<div class="ttc" id="common_8h_html_a9b7b6c0a6ddd0d8fdde79568cbd61b26"><div class="ttname"><a href="common_8h.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26">attr_Type</a></div><div class="ttdeci">PyTypeObject attr_Type</div><div class="ttdef"><b>Definition:</b> attr.c:62</div></div>
+<div class="ttc" id="common_8h_html_a27be840595df2389a37d090153319e2e"><div class="ttname"><a href="common_8h.html#a27be840595df2389a37d090153319e2e">attr_py_get</a></div><div class="ttdeci">struct attr * attr_py_get(PyObject *self)</div><div class="ttdef"><b>Definition:</b> attr.c:71</div></div>
+<div class="ttc" id="common_8h_html_ac58c22aba451e9a8285798c2cb5930f2"><div class="ttname"><a href="common_8h.html#ac58c22aba451e9a8285798c2cb5930f2">route_py_ref</a></div><div class="ttdeci">PyObject * route_py_ref(struct route *route)</div><div class="ttdef"><b>Definition:</b> route.c:75</div></div>
+<div class="ttc" id="common_8h_html_a931b4761df5d5e2e7cbf450fef1de350"><div class="ttname"><a href="common_8h.html#a931b4761df5d5e2e7cbf450fef1de350">config_py</a></div><div class="ttdeci">PyObject * config_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> config.c:65</div></div>
+<div class="ttc" id="common_8h_html_a81a721734c495ad5d905cfc29d3b030f"><div class="ttname"><a href="common_8h.html#a81a721734c495ad5d905cfc29d3b030f">navigation_py</a></div><div class="ttdeci">PyObject * navigation_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> navigation.c:64</div></div>
+<div class="ttc" id="common_8h_html_a7ad67bc2decc59dc3c5ef23ed5645fff"><div class="ttname"><a href="common_8h.html#a7ad67bc2decc59dc3c5ef23ed5645fff">pcoord_py</a></div><div class="ttdeci">PyObject * pcoord_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> pcoord.c:66</div></div>
+<div class="ttc" id="common_8h_html_a163e453fe8679bcc95ff33b3a6775d8b"><div class="ttname"><a href="common_8h.html#a163e453fe8679bcc95ff33b3a6775d8b">route_py</a></div><div class="ttdeci">PyObject * route_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> route.c:66</div></div>
+<div class="ttc" id="common_8h_html_a770ddde01fbc685d1e5d2790159142f2"><div class="ttname"><a href="common_8h.html#a770ddde01fbc685d1e5d2790159142f2">pcoord_Type</a></div><div class="ttdeci">PyTypeObject pcoord_Type</div><div class="ttdef"><b>Definition:</b> pcoord.c:57</div></div>
+<div class="ttc" id="common_8h_html_a21c3f61fb17b0852a6a2c956c29908fe"><div class="ttname"><a href="common_8h.html#a21c3f61fb17b0852a6a2c956c29908fe">navit_py</a></div><div class="ttdeci">PyObject * navit_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> navit.c:130</div></div>
+<div class="ttc" id="common_8h_html_ada64218817709de1747fbb0f83cf55fa"><div class="ttname"><a href="common_8h.html#ada64218817709de1747fbb0f83cf55fa">attr_new_py</a></div><div class="ttdeci">PyObject * attr_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> attr.c:77</div></div>
 <div class="ttc" id="structroute_html"><div class="ttname"><a href="structroute.html">route</a></div><div class="ttdoc">A complete route. </div><div class="ttdef"><b>Definition:</b> route.c:242</div></div>
 <div class="ttc" id="structattr_html"><div class="ttname"><a href="structattr.html">attr</a></div><div class="ttdef"><b>Definition:</b> attr.h:156</div></div>
+<div class="ttc" id="common_8h_html_a79614554b509115989b07ae3659c69d7"><div class="ttname"><a href="common_8h.html#a79614554b509115989b07ae3659c69d7">navigation_py_ref</a></div><div class="ttdeci">PyObject * navigation_py_ref(struct navigation *navigation)</div><div class="ttdef"><b>Definition:</b> navigation.c:73</div></div>
+<div class="ttc" id="common_8h_html_a321a9dadab68f7de5852bc9d93404e67"><div class="ttname"><a href="common_8h.html#a321a9dadab68f7de5852bc9d93404e67">python_object_from_attr</a></div><div class="ttdeci">PyObject * python_object_from_attr(struct attr *attr)</div><div class="ttdef"><b>Definition:</b> binding_python.c:338</div></div>
 <div class="ttc" id="structmap_html"><div class="ttname"><a href="structmap.html">map</a></div><div class="ttdoc">Holds information about a map. </div><div class="ttdef"><b>Definition:</b> map.c:60</div></div>
+<div class="ttc" id="common_8h_html_a8e45d2bca72c41bfdb2bdd69c11e51b9"><div class="ttname"><a href="common_8h.html#a8e45d2bca72c41bfdb2bdd69c11e51b9">attr_new_py_ref</a></div><div class="ttdeci">PyObject * attr_new_py_ref(struct attr *attr)</div><div class="ttdef"><b>Definition:</b> attr.c:90</div></div>
 <div class="ttc" id="structnavit_html"><div class="ttname"><a href="structnavit.html">navit</a></div><div class="ttdef"><b>Definition:</b> navit.c:111</div></div>
 <div class="ttc" id="structpcoord_html"><div class="ttname"><a href="structpcoord.html">pcoord</a></div><div class="ttdef"><b>Definition:</b> coord.h:40</div></div>
+<div class="ttc" id="common_8h_html_a732860c0a087a4e6e7d81928864f4afb"><div class="ttname"><a href="common_8h.html#a732860c0a087a4e6e7d81928864f4afb">navit_py_ref</a></div><div class="ttdeci">PyObject * navit_py_ref(struct navit *navit)</div><div class="ttdef"><b>Definition:</b> navit.c:140</div></div>
+<div class="ttc" id="common_8h_html_a2b19e35a05b89f213fd4df40ad715341"><div class="ttname"><a href="common_8h.html#a2b19e35a05b89f213fd4df40ad715341">map_py_ref</a></div><div class="ttdeci">PyObject * map_py_ref(struct map *map)</div><div class="ttdef"><b>Definition:</b> binding_python.c:233</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_62ed8f96c89320da3fd7e16a2b85192c.html">binding</a></li><li class="navelem"><a class="el" href="dir_b7007fe8f1dc2d1a9adfc8067bd6a2ee.html">python</a></li><li class="navelem"><b>common.h</b></li>
+    <li class="navelem"><a class="el" href="dir_62ed8f96c89320da3fd7e16a2b85192c.html">binding</a></li><li class="navelem"><a class="el" href="dir_b7007fe8f1dc2d1a9adfc8067bd6a2ee.html">python</a></li><li class="navelem"><a class="el" href="common_8h.html">common.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

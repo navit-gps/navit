@@ -70,44 +70,44 @@ $(document).ready(function(){initNavTree('sunriset_8h_source.html','');});
 <div class="title">sunriset.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* timezone_name;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> timezone_offset;</div>
+<a href="sunriset_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="sunriset_8h.html#a900e3a0e66c700ad1af3db5119ddf52b">timezone_name</a>;</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> <a class="code" href="sunriset_8h.html#a976c28e5b4b7d7b46500fcec5c4a1e37">timezone_offset</a>;</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#define TMOD(x) ((x)&lt;0?(x)+24:((x)&gt;=24?(x)-24:(x)))</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DAYSOFF(x) ((x)&lt;0?&quot;(-1) &quot;:((x)&gt;=24?&quot;(+1) &quot;:&quot;&quot;))</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1">    4</a></span>&#160;<span class="preprocessor">#define TMOD(x) ((x)&lt;0?(x)+24:((x)&gt;=24?(x)-24:(x)))</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="sunriset_8h.html#afc5a63df083c374936d1810953395411">    5</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DAYSOFF(x) ((x)&lt;0?&quot;(-1) &quot;:((x)&gt;=24?&quot;(+1) &quot;:&quot;&quot;))</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define HOURS(h) ((int)(floor(h)))</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MINUTES(h) ((int)(60*(h-floor(h))))</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="sunriset_8h.html#adddd21815fe708193316433d6e6fc5ae">    7</a></span>&#160;<span class="preprocessor">#define HOURS(h) ((int)(floor(h)))</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a7fe21947ab99e7dec580c3ff526394e9">    8</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MINUTES(h) ((int)(60*(h-floor(h))))</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef ABS</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ABS(x) ((x)&lt;0?-(x):(x)) </span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a996f7be338ccb40d1a2a5abc1ad61759">   11</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ABS(x) ((x)&lt;0?-(x):(x)) </span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/* A macro to compute the number of days elapsed since 2000 Jan 0.0 */</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/* (which is equal to 1999 Dec 31, 0h UT)                           */</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">/* Dan R sez: This is some pretty fucking high magic. */</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#define days_since_2000_Jan_0(y,m,d) \</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a7bd37054eab4de28d200fe630368a235">   17</a></span>&#160;<span class="preprocessor">#define days_since_2000_Jan_0(y,m,d) \</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">    (367L*(y)-((7*((y)+(((m)+9)/12)))/4)+((275*(m))/9)+(d)-730530L)</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/* Some conversion factors between radians and degrees */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef PI</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="preprocessor"> #define PI        3.1415926535897932384</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">   23</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"> #define PI        3.1415926535897932384</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define RADEG     ( 180.0 / PI )</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DEGRAD    ( PI / 180.0 )</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">   26</a></span>&#160;<span class="preprocessor">#define RADEG     ( 180.0 / PI )</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">   27</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DEGRAD    ( PI / 180.0 )</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/* The trigonometric functions in degrees */</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define sind(x)  sin((x)*DEGRAD)</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define cosd(x)  cos((x)*DEGRAD)</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tand(x)  tan((x)*DEGRAD)</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="sunriset_8h.html#ad0827f80a4727ba1e433b37a59b61571">   31</a></span>&#160;<span class="preprocessor">#define sind(x)  sin((x)*DEGRAD)</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a1625c90afe10ff713ffaa43a64e137ad">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define cosd(x)  cos((x)*DEGRAD)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a01a862be86e92b083de9bff9c0326769">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tand(x)  tan((x)*DEGRAD)</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define atand(x)    (RADEG*atan(x))</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define asind(x)    (RADEG*asin(x))</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define acosd(x)    (RADEG*acos(x))</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define atan2d(y,x) (RADEG*atan2(y,x))</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="sunriset_8h.html#aa7e632ef989b90ae1f316c7aa7e3d285">   35</a></span>&#160;<span class="preprocessor">#define atand(x)    (RADEG*atan(x))</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7">   36</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define asind(x)    (RADEG*asin(x))</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="sunriset_8h.html#ab6ba8c99d207e527579b6953498682a7">   37</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define acosd(x)    (RADEG*acos(x))</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a53d5f059d22537584b94fa671ec91cb1">   38</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define atan2d(y,x) (RADEG*atan2(y,x))</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/* Following are some macros around the &quot;workhorse&quot; function __daylen__ */</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/* They mainly fill in the desired values for the reference altitude    */</span></div>
@@ -121,25 +121,25 @@ $(document).ready(function(){initNavTree('sunriset_8h_source.html','');});
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/* of the Earth&#39;s atmosphere).                                        */</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/* The original version of the program used the value of 35 arc mins, */</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/* which is the accepted value in Sweden.                             */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define day_length(year,month,day,lon,lat)  \</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a8e1b43abb8674ff912def7b5b70b6f8a">   52</a></span>&#160;<span class="preprocessor">#define day_length(year,month,day,lon,lat)  \</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">        __daylen__( year, month, day, lon, lat, -50.0/60.0, 1 )</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">/* This macro computes the length of the day, including civil twilight. */</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">/* Civil twilight starts/ends when the Sun&#39;s center is 6 degrees below  */</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/* the horizon.                                                         */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define day_civil_twilight_length(year,month,day,lon,lat)  \</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a9c47a990544396c156411d02a443ae0b">   58</a></span>&#160;<span class="preprocessor">#define day_civil_twilight_length(year,month,day,lon,lat)  \</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">        __daylen__( year, month, day, lon, lat, -6.0, 0 )</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/* This macro computes the length of the day, incl. nautical twilight.  */</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">/* Nautical twilight starts/ends when the Sun&#39;s center is 12 degrees    */</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">/* below the horizon.                                                   */</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define day_nautical_twilight_length(year,month,day,lon,lat)  \</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="sunriset_8h.html#afe252bf3434d2105c0d2f13caf9e3568">   64</a></span>&#160;<span class="preprocessor">#define day_nautical_twilight_length(year,month,day,lon,lat)  \</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">        __daylen__( year, month, day, lon, lat, -12.0, 0 )</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">/* This macro computes the length of the day, incl. astronomical twilight. */</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">/* Astronomical twilight starts/ends when the Sun&#39;s center is 18 degrees   */</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">/* below the horizon.                                                      */</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define day_astronomical_twilight_length(year,month,day,lon,lat)  \</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="sunriset_8h.html#ad6a0e6132c420ab0f0430ac7c79dfc32">   70</a></span>&#160;<span class="preprocessor">#define day_astronomical_twilight_length(year,month,day,lon,lat)  \</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">        __daylen__( year, month, day, lon, lat, -18.0, 0 )</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
@@ -147,52 +147,62 @@ $(document).ready(function(){initNavTree('sunriset_8h_source.html','');});
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">/* Sunrise/set is considered to occur when the Sun&#39;s upper limb is    */</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">/* 35 arc minutes below the horizon (this accounts for the refraction */</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">/* of the Earth&#39;s atmosphere).                                        */</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#define sun_rise_set(year,month,day,lon,lat,rise,set)  \</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="sunriset_8h.html#a2636008bf742109698546b22b41b2de4">   78</a></span>&#160;<span class="preprocessor">#define sun_rise_set(year,month,day,lon,lat,rise,set)  \</span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">        __sunriset__( year, month, day, lon, lat, -35.0/60.0, 1, rise, set )</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/* This macro computes the start and end times of civil twilight.       */</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">/* Civil twilight starts/ends when the Sun&#39;s center is 6 degrees below  */</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">/* the horizon.                                                         */</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#define civil_twilight(year,month,day,lon,lat,start,end)  \</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="sunriset_8h.html#abb292c3b427fd0df1fe008d2b5224e09">   84</a></span>&#160;<span class="preprocessor">#define civil_twilight(year,month,day,lon,lat,start,end)  \</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">        __sunriset__( year, month, day, lon, lat, -6.0, 0, start, end )</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">/* This macro computes the start and end times of nautical twilight.    */</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">/* Nautical twilight starts/ends when the Sun&#39;s center is 12 degrees    */</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">/* below the horizon.                                                   */</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#define nautical_twilight(year,month,day,lon,lat,start,end)  \</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="sunriset_8h.html#ab7da82ee35cbcce25b751b1e16de70ec">   90</a></span>&#160;<span class="preprocessor">#define nautical_twilight(year,month,day,lon,lat,start,end)  \</span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">        __sunriset__( year, month, day, lon, lat, -12.0, 0, start, end )</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">/* This macro computes the start and end times of astronomical twilight.   */</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">/* Astronomical twilight starts/ends when the Sun&#39;s center is 18 degrees   */</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">/* below the horizon.                                                      */</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#define astronomical_twilight(year,month,day,lon,lat,start,end)  \</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="sunriset_8h.html#add9e41b2709b3851d453aaa9aa0c662a">   96</a></span>&#160;<span class="preprocessor">#define astronomical_twilight(year,month,day,lon,lat,start,end)  \</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">        __sunriset__( year, month, day, lon, lat, -18.0, 0, start, end )</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">/* Function prototypes */</span></div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">double</span> __daylen__( <span class="keywordtype">int</span> year, <span class="keywordtype">int</span> month, <span class="keywordtype">int</span> day, <span class="keywordtype">double</span> lon, <span class="keywordtype">double</span> lat,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">double</span> <a class="code" href="sunriset_8h.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( <span class="keywordtype">int</span> year, <span class="keywordtype">int</span> month, <span class="keywordtype">int</span> day, <span class="keywordtype">double</span> lon, <span class="keywordtype">double</span> <a class="code" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                   <span class="keywordtype">double</span> altit, <span class="keywordtype">int</span> upper_limb );</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">int</span> __sunriset__( <span class="keywordtype">int</span> year, <span class="keywordtype">int</span> month, <span class="keywordtype">int</span> day, <span class="keywordtype">double</span> lon, <span class="keywordtype">double</span> lat,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">int</span> <a class="code" href="sunriset_8h.html#a2e4ead36c26419cfd929c335b2c2ac48">__sunriset__</a>( <span class="keywordtype">int</span> year, <span class="keywordtype">int</span> month, <span class="keywordtype">int</span> day, <span class="keywordtype">double</span> lon, <span class="keywordtype">double</span> <a class="code" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                  <span class="keywordtype">double</span> altit, <span class="keywordtype">int</span> upper_limb, <span class="keywordtype">double</span> *rise, <span class="keywordtype">double</span> *set );</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">void</span> sunpos( <span class="keywordtype">double</span> d, <span class="keywordtype">double</span> *lon, <span class="keywordtype">double</span> *r );</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sunriset_8h.html#a0d26e7e0c51fdb377cad6ac7c2ba68b8">sunpos</a>( <span class="keywordtype">double</span> d, <span class="keywordtype">double</span> *lon, <span class="keywordtype">double</span> *r );</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> sun_RA_dec( <span class="keywordtype">double</span> d, <span class="keywordtype">double</span> *RA, <span class="keywordtype">double</span> *dec, <span class="keywordtype">double</span> *r );</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sunriset_8h.html#a9910e866c15e5dd400c1856a95d454cc">sun_RA_dec</a>( <span class="keywordtype">double</span> d, <span class="keywordtype">double</span> *RA, <span class="keywordtype">double</span> *dec, <span class="keywordtype">double</span> *r );</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">double</span> revolution( <span class="keywordtype">double</span> x );</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">double</span> <a class="code" href="sunriset_8h.html#a2130caa46c8fe4a4931dcee842e4adf1">revolution</a>( <span class="keywordtype">double</span> x );</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keywordtype">double</span> rev180( <span class="keywordtype">double</span> x );</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keywordtype">double</span> <a class="code" href="sunriset_8h.html#a393d656a96debefda2267531eab9f30a">rev180</a>( <span class="keywordtype">double</span> x );</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">double</span> GMST0( <span class="keywordtype">double</span> d );</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">double</span> <a class="code" href="sunriset_8h.html#a8c77aabe9264df7d2cca006a2b7b7cf6">GMST0</a>( <span class="keywordtype">double</span> d );</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="ttc" id="sunriset_8h_html_a0cddeee5e46ec5968eebf87fd85f045a"><div class="ttname"><a href="sunriset_8h.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a></div><div class="ttdeci">double __daylen__(int year, int month, int day, double lon, double lat, double altit, int upper_limb)</div><div class="ttdef"><b>Definition:</b> sunriset.c:112</div></div>
+<div class="ttc" id="sunriset_8h_html_a2e4ead36c26419cfd929c335b2c2ac48"><div class="ttname"><a href="sunriset_8h.html#a2e4ead36c26419cfd929c335b2c2ac48">__sunriset__</a></div><div class="ttdeci">int __sunriset__(int year, int month, int day, double lon, double lat, double altit, int upper_limb, double *rise, double *set)</div><div class="ttdef"><b>Definition:</b> sunriset.c:24</div></div>
+<div class="ttc" id="sunriset_8h_html_a9910e866c15e5dd400c1856a95d454cc"><div class="ttname"><a href="sunriset_8h.html#a9910e866c15e5dd400c1856a95d454cc">sun_RA_dec</a></div><div class="ttdeci">void sun_RA_dec(double d, double *RA, double *dec, double *r)</div><div class="ttdef"><b>Definition:</b> sunriset.c:209</div></div>
+<div class="ttc" id="sunriset_8h_html_a393d656a96debefda2267531eab9f30a"><div class="ttname"><a href="sunriset_8h.html#a393d656a96debefda2267531eab9f30a">rev180</a></div><div class="ttdeci">double rev180(double x)</div><div class="ttdef"><b>Definition:</b> sunriset.c:254</div></div>
+<div class="ttc" id="sunriset_8h_html_a0d26e7e0c51fdb377cad6ac7c2ba68b8"><div class="ttname"><a href="sunriset_8h.html#a0d26e7e0c51fdb377cad6ac7c2ba68b8">sunpos</a></div><div class="ttdeci">void sunpos(double d, double *lon, double *r)</div><div class="ttdef"><b>Definition:</b> sunriset.c:177</div></div>
+<div class="ttc" id="sunriset_8h_html_a900e3a0e66c700ad1af3db5119ddf52b"><div class="ttname"><a href="sunriset_8h.html#a900e3a0e66c700ad1af3db5119ddf52b">timezone_name</a></div><div class="ttdeci">const char * timezone_name</div></div>
+<div class="ttc" id="garmin__img_8c_html_a426867fb1e80a778a24f2a67841852f2"><div class="ttname"><a href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a></div><div class="ttdeci">struct triple lng lat</div><div class="ttdef"><b>Definition:</b> garmin_img.c:498</div></div>
+<div class="ttc" id="sunriset_8h_html_a8c77aabe9264df7d2cca006a2b7b7cf6"><div class="ttname"><a href="sunriset_8h.html#a8c77aabe9264df7d2cca006a2b7b7cf6">GMST0</a></div><div class="ttdeci">double GMST0(double d)</div><div class="ttdef"><b>Definition:</b> sunriset.c:289</div></div>
+<div class="ttc" id="sunriset_8h_html_a976c28e5b4b7d7b46500fcec5c4a1e37"><div class="ttname"><a href="sunriset_8h.html#a976c28e5b4b7d7b46500fcec5c4a1e37">timezone_offset</a></div><div class="ttdeci">long int timezone_offset</div></div>
+<div class="ttc" id="sunriset_8h_html_a2130caa46c8fe4a4931dcee842e4adf1"><div class="ttname"><a href="sunriset_8h.html#a2130caa46c8fe4a4931dcee842e4adf1">revolution</a></div><div class="ttdeci">double revolution(double x)</div><div class="ttdef"><b>Definition:</b> sunriset.c:246</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>sunriset.h</b></li>
+    <li class="navelem"><a class="el" href="sunriset_8h.html">sunriset.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

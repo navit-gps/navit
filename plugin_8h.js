@@ -1,0 +1,37 @@
+var plugin_8h =
+[
+    [ "PLUGIN_CATEGORY", "plugin_8h.html#a3b24ddfbf5b0453e71dface61c3ada39", null ],
+    [ "PLUGIN_FUNC1", "plugin_8h.html#a10d46f9607007f0f1618352a0952ac88", null ],
+    [ "PLUGIN_FUNC3", "plugin_8h.html#a8912cbf255b3c615a08c9c6283f33d66", null ],
+    [ "PLUGIN_FUNC4", "plugin_8h.html#aa295519398a5f294d261a152ee757718", null ],
+    [ "plugin_init", "plugin_8h.html#a19f69f75502fe229ad256d5f485c352e", null ],
+    [ "plugin_module_cat", "plugin_8h.html#ad888c2599192a99d7310178c396cec6f", null ],
+    [ "plugin_module_cat2", "plugin_8h.html#af83b45e2ac34539b67742516b4d16546", null ],
+    [ "plugin_module_cat3", "plugin_8h.html#a0f3715b35225c25b670bb9d763af0751", null ],
+    [ "PLUGIN_PROTO", "plugin_8h.html#a66000197dde75ea681645659dec1f3a7", null ],
+    [ "plugin_category", "plugin_8h.html#aaf2fec10fd7066df587b216658491532", [
+      [ "plugin_category_graphics", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a61064c70f60e5c2e88d1f177020b6df6", null ],
+      [ "plugin_category_gui", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a81ded041a6b9958ce940135f5f803de0", null ],
+      [ "plugin_category_map", "plugin_8h.html#aaf2fec10fd7066df587b216658491532adc2da9839a5c145d30dfd5f638f79cbb", null ],
+      [ "plugin_category_osd", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a2bf6d493a2fcd966d5a2effb8a56cd35", null ],
+      [ "plugin_category_speech", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a370d1a4d8618f8f20bcac91ac11f4e27", null ],
+      [ "plugin_category_vehicle", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a417af489b0bc116cc2e9c8494f484b09", null ],
+      [ "plugin_category_event", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a68f4b65161acd7b1dbc58ad005b61b6b", null ],
+      [ "plugin_category_font", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a3705add07c21ee50547080ec30645bfc", null ],
+      [ "plugin_category_last", "plugin_8h.html#aaf2fec10fd7066df587b216658491532abd2ef77b0ec920c3c4023771e5cfe176", null ]
+    ] ],
+    [ "plugin_call_init", "plugin_8h.html#a82f7feb9e3bb4cb8bf4de87e8113b28e", null ],
+    [ "plugin_destroy", "plugin_8h.html#afc5b0a4338dad8856b34b29895a6e737", null ],
+    [ "plugin_get_active", "plugin_8h.html#abed5f2c35cf99b78d26116f415394b00", null ],
+    [ "plugin_get_category", "plugin_8h.html#a701f281e06dd1782a7cb86301b82128a", null ],
+    [ "plugin_get_name", "plugin_8h.html#a24464c75a8865fd8cd94ed9d021ab48e", null ],
+    [ "plugin_init", "plugin_8h.html#a1eaae939034896b436dffbf5e93c0da1", null ],
+    [ "plugin_load", "plugin_8h.html#a13c8e90a535267c5e3204797595b9ed5", null ],
+    [ "plugin_new", "plugin_8h.html#a4b58f7c17849d07d37964c136e731008", null ],
+    [ "plugin_set_active", "plugin_8h.html#a9adccb89a7f4ad7bd46ad22b14fa0588", null ],
+    [ "plugin_set_lazy", "plugin_8h.html#abe372cf2cc6efa95f3e3222e8bd5acd9", null ],
+    [ "plugin_unload", "plugin_8h.html#a9e1aeae5081d2538162ec8154adc2c7d", null ],
+    [ "plugins_destroy", "plugin_8h.html#afa2ed379c854b20ec13846d3abf36a73", null ],
+    [ "plugins_init", "plugin_8h.html#ada5ff5f7ec8e4da87f38db6a0cb4846c", null ],
+    [ "plugins_new", "plugin_8h.html#a71694854a00eccff1b8387f065789557", null ]
+];

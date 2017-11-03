@@ -89,11 +89,11 @@ Data Fields</h2></td></tr>
 <tr class="separator:a1127ea4456120f96cabb020b431c7dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa08b3ec87a3705e666bd0d9f6057a8b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structfibheap__el.html">fibheap_el</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#afa08b3ec87a3705e666bd0d9f6057a8b">el</a></td></tr>
 <tr class="separator:afa08b3ec87a3705e666bd0d9f6057a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a722c19574cb0a910a5fe58a75a81f579"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#a722c19574cb0a910a5fe58a75a81f579">value</a></td></tr>
+<tr class="memitem:a722c19574cb0a910a5fe58a75a81f579"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#a722c19574cb0a910a5fe58a75a81f579">value</a></td></tr>
 <tr class="separator:a722c19574cb0a910a5fe58a75a81f579"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa84693edd76c369bd42a1d6d4afdbfad"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#aa84693edd76c369bd42a1d6d4afdbfad">c</a></td></tr>
 <tr class="separator:aa84693edd76c369bd42a1d6d4afdbfad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab86b7642dc04e805b3f7adb20429f7ed"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#ab86b7642dc04e805b3f7adb20429f7ed">flags</a></td></tr>
+<tr class="memitem:ab86b7642dc04e805b3f7adb20429f7ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__point.html#ab86b7642dc04e805b3f7adb20429f7ed">flags</a></td></tr>
 <tr class="separator:ab86b7642dc04e805b3f7adb20429f7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -111,6 +111,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Coordinates of this point </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#a3c5dd9bfabef70fa62830d1f2564c8a8">is_turn_allowed()</a>, <a class="el" href="route_8c.html#a134335a1616e3262437ab9d93e964f40">route_graph_add_segment()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, <a class="el" href="route_8c.html#a02f16fd7e8000e01bbdb3a815ad4ee0e">route_graph_get_point_last()</a>, <a class="el" href="route_8c.html#a98154d982615b0ebd9b6e5f5cc5d3f72">route_graph_get_point_next()</a>, <a class="el" href="route_8c.html#a30d498dd14201db653d7d3a8ed0b272e">route_graph_point_new()</a>, <a class="el" href="route_8c.html#a045ea2b9ae176377cd51df39b42070bf">route_graph_process_restriction_point()</a>, <a class="el" href="route_8c.html#a14e152bbf6b0011bcc0b07a9726b3740">route_graph_process_restriction_segment()</a>, <a class="el" href="route_8c.html#a7f31c95388afc998001c796b6dc78613">route_graph_segment_match()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, <a class="el" href="route_8c.html#a56c7262ade2f0b3b4a2339dfd572714b">route_path_add_item_from_graph()</a>, <a class="el" href="route_8c.html#abbb09e728912f41e6a132985d6ad4bf0">route_path_new()</a>, <a class="el" href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get()</a>, and <a class="el" href="route_8c.html#ae67805f4bb28d827a61a2bfb96b1f85b">rp_coord_get()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="afa08b3ec87a3705e666bd0d9f6057a8b"></a>
@@ -123,6 +125,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>When this point is put on a Fibonacci heap, this is a pointer to this point's heap-element </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, and <a class="el" href="route_8c.html#ac18de0a478270e92c94678432bb803ed">route_graph_reset()</a>.</p>
 
 </div>
 </div>
@@ -137,6 +141,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to a list of segments of which this pointer is the end. The links of this linked-list are in route_graph_segment-&gt;end_next. </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#a3c5dd9bfabef70fa62830d1f2564c8a8">is_turn_allowed()</a>, <a class="el" href="route_8c.html#a0a0d5043cf34568bc6d55d0fa7b2c516">route_get_traffic_distortion()</a>, <a class="el" href="route_8c.html#a134335a1616e3262437ab9d93e964f40">route_graph_add_segment()</a>, <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, <a class="el" href="route_8c.html#a045ea2b9ae176377cd51df39b42070bf">route_graph_process_restriction_point()</a>, <a class="el" href="route_8c.html#a14e152bbf6b0011bcc0b07a9726b3740">route_graph_process_restriction_segment()</a>, <a class="el" href="route_8c.html#abbb09e728912f41e6a132985d6ad4bf0">route_path_new()</a>, <a class="el" href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get()</a>, <a class="el" href="route_8c.html#ae980ec10c57f85b1f14cb78e011d3b9d">rp_iterator_end()</a>, and <a class="el" href="route_8c.html#a9b132b0214d6f199558a26684d10bbb5">rp_iterator_next()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ab86b7642dc04e805b3f7adb20429f7ed"></a>
@@ -144,11 +150,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_graph_point::flags</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_graph_point::flags</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Flags for this point (eg traffic distortion) </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a045ea2b9ae176377cd51df39b42070bf">route_graph_process_restriction_point()</a>, <a class="el" href="route_8c.html#ad3c3d4343c39056e23eafeb8b7d6b80a">route_graph_process_restrictions()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>, <a class="el" href="route_8c.html#a8b5f2356f443bf05ff856dd37609f3b5">route_process_turn_restriction()</a>, and <a class="el" href="route_8c.html#ab113f1f21a19febe2aac074f853e4766">route_value_seg()</a>.</p>
 
 </div>
 </div>
@@ -163,6 +171,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to a chained hashlist of all route_graph_points with this hash </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#a417ffc7742be1d350c963e72a07a8ad0">route_graph_free_points()</a>, <a class="el" href="route_8c.html#a02f16fd7e8000e01bbdb3a815ad4ee0e">route_graph_get_point_last()</a>, <a class="el" href="route_8c.html#a98154d982615b0ebd9b6e5f5cc5d3f72">route_graph_get_point_next()</a>, <a class="el" href="route_8c.html#a30d498dd14201db653d7d3a8ed0b272e">route_graph_point_new()</a>, <a class="el" href="route_8c.html#ad3c3d4343c39056e23eafeb8b7d6b80a">route_graph_process_restrictions()</a>, <a class="el" href="route_8c.html#ac18de0a478270e92c94678432bb803ed">route_graph_reset()</a>, and <a class="el" href="route_8c.html#aff13b4b1b182e3ef05620ce10704f81b">rp_get_item()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a1127ea4456120f96cabb020b431c7dc4"></a>
@@ -175,6 +185,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Pointer to the segment one should use to reach the destination at least costs </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, <a class="el" href="route_8c.html#ac18de0a478270e92c94678432bb803ed">route_graph_reset()</a>, <a class="el" href="route_8c.html#abbb09e728912f41e6a132985d6ad4bf0">route_path_new()</a>, <a class="el" href="route_8c.html#ab113f1f21a19febe2aac074f853e4766">route_value_seg()</a>, and <a class="el" href="route_8c.html#ae67805f4bb28d827a61a2bfb96b1f85b">rp_coord_get()</a>.</p>
 
 </div>
 </div>
@@ -189,6 +201,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to a list of segments of which this point is the start. The links of this linked-list are in route_graph_segment-&gt;start_next. </p>
 
+<p>Referenced by <a class="el" href="route_8c.html#a3c5dd9bfabef70fa62830d1f2564c8a8">is_turn_allowed()</a>, <a class="el" href="route_8c.html#a0a0d5043cf34568bc6d55d0fa7b2c516">route_get_traffic_distortion()</a>, <a class="el" href="route_8c.html#a134335a1616e3262437ab9d93e964f40">route_graph_add_segment()</a>, <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, <a class="el" href="route_8c.html#ae9039424a143a6789f5e17f8a90a31d9">route_graph_get_segment()</a>, <a class="el" href="route_8c.html#a045ea2b9ae176377cd51df39b42070bf">route_graph_process_restriction_point()</a>, <a class="el" href="route_8c.html#a14e152bbf6b0011bcc0b07a9726b3740">route_graph_process_restriction_segment()</a>, <a class="el" href="route_8c.html#aa7edb1faa0549d737b54a295442acc8e">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, <a class="el" href="route_8c.html#abbb09e728912f41e6a132985d6ad4bf0">route_path_new()</a>, and <a class="el" href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a722c19574cb0a910a5fe58a75a81f579"></a>
@@ -196,13 +210,15 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int route_graph_point::value</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> route_graph_point::value</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The cost at which one can reach the destination from this point on. </p>
 <div class="fragment"><div class="line">INT_MAX </div>
 </div><!-- fragment --><p> indicates that the destination is unreachable from this point, or that this point has not yet been examined. </p>
+
+<p>Referenced by <a class="el" href="route_8c.html#a37a93fc2e4e0c5f523df4a995a89de7b">route_graph_flood()</a>, <a class="el" href="route_8c.html#a30d498dd14201db653d7d3a8ed0b272e">route_graph_point_new()</a>, <a class="el" href="route_8c.html#ac18de0a478270e92c94678432bb803ed">route_graph_reset()</a>, <a class="el" href="route_8c.html#abbb09e728912f41e6a132985d6ad4bf0">route_path_new()</a>, and <a class="el" href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get()</a>.</p>
 
 </div>
 </div>

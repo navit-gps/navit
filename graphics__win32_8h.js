@@ -1,0 +1,27 @@
+var graphics__win32_8h =
+[
+    [ "menu_priv", "structmenu__priv.html", "structmenu__priv" ],
+    [ "gui_priv", "structgui__priv.html", "structgui__priv" ],
+    [ "_tprintf", "graphics__win32_8h.html#ac642483f39ee6964424790720b48aee3", null ],
+    [ "ID_CHILD_1", "graphics__win32_8h.html#a235fa7c299e7828a24f4127289f60f40", null ],
+    [ "ID_CHILD_2", "graphics__win32_8h.html#a058d2299e7999de526afe2ced9294c3e", null ],
+    [ "ID_CHILD_3", "graphics__win32_8h.html#a06bb4097de6ef52689d02218ad0db2d6", null ],
+    [ "ID_CHILD_4", "graphics__win32_8h.html#abe84a14e7e15bea92164a6b305806006", null ],
+    [ "ID_CHILD_GFX", "graphics__win32_8h.html#afd4d854e17234977b7392405da59903f", null ],
+    [ "ID_CHILD_TOOLBAR", "graphics__win32_8h.html#a6899321414179d86bb0b8bea57bce8b3", null ],
+    [ "ID_DISPLAY_CURSOR", "graphics__win32_8h.html#a91f2387df7c9dec917c1763f168c17ca", null ],
+    [ "ID_DISPLAY_DESTINATION", "graphics__win32_8h.html#abbb61301f1a4a92efd8c59ce9e0be045", null ],
+    [ "ID_DISPLAY_ORIENT", "graphics__win32_8h.html#aadae73726bfe067062b66c84d5e0f816", null ],
+    [ "ID_DISPLAY_REFRESH", "graphics__win32_8h.html#ad3c3273d5566f6cf2d84698e5c226f5b", null ],
+    [ "ID_DISPLAY_ZOOMIN", "graphics__win32_8h.html#a635cb4c0ff4fb17aaaa2fb83bf05350f", null ],
+    [ "ID_DISPLAY_ZOOMOUT", "graphics__win32_8h.html#a2b6e6326988f3c594132f4f05c5297f1", null ],
+    [ "ID_FILE_EXIT", "graphics__win32_8h.html#a3a6cb842433474b721f52d5f3d23ebd4", null ],
+    [ "ID_STUFF_GO", "graphics__win32_8h.html#a2d8997eb04d052b92d917e930c46d7e4", null ],
+    [ "POPUP_MENU_OFFSET", "graphics__win32_8h.html#aa619410a3ecf21cdb67bde8bc30bdae3", null ],
+    [ "gui_gtk_datawindow_new", "graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee", null ],
+    [ "gui_gtk_menubar_new", "graphics__win32_8h.html#a4bd6e0e2623df3c61f3cdd922c4ff76b", null ],
+    [ "gui_gtk_popup_new", "graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c", null ],
+    [ "gui_gtk_statusbar_new", "graphics__win32_8h.html#a91667ac564b0e000882ef76783f6d3fb", null ],
+    [ "gui_gtk_toolbar_new", "graphics__win32_8h.html#a5f906bddb85be3324185182353d6bbd7", null ],
+    [ "win32_graphics_new", "graphics__win32_8h.html#a6702a1c4b10a3e14e1d5557bbffc488b", null ]
+];

@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('getopt__long_8h_source.html','');});
 <div class="title">getopt_long.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="getopt__long_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Portions Copyright (c) 1987, 1993, 1994</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * The Regents of the University of California.  All rights reserved.</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
@@ -82,44 +82,56 @@ $(document).ready(function(){initNavTree('getopt__long_8h_source.html','');});
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define GETOPT_LONG_H</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifdef HAVE_GETOPT_H</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;getopt.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;<a class="code" href="getopt_8h.html">getopt.h</a>&gt;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">/* These are picked up from the system&#39;s getopt() facility. */</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      opterr;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      optind;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      optopt;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> *optarg;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      <a class="code" href="getopt__long_8h.html#ae30f05ee1e2e5652f174a35c7875d25e">opterr</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      <a class="code" href="getopt__long_8h.html#ad5e1c16213bbee2d5e8cc363309f418c">optind</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span>      <a class="code" href="getopt__long_8h.html#a475b8db98445da73e5f62a1ef6324b95">optopt</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> *<a class="code" href="getopt__long_8h.html#adb50a0eab9fed92fc3bfc7dfa4f2c410">optarg</a>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef HAVE_STRUCT_OPTION</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">struct </span><a class="code" href="structoption.html">option</a></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *name;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">int</span>                     has_arg;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">int</span>                *flag;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">int</span>                     val;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="structoption.html#ae02f2d0cea6af34951d9008be8bfa625">name</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">int</span>                     <a class="code" href="structoption.html#a90d7ee9a51eea5c002682dbd0af149e4">has_arg</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">int</span>                *<a class="code" href="structoption.html#a24ad4639d5d498fdc1c5b38bcaabc263">flag</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">int</span>                     <a class="code" href="structoption.html#a13bd155ec3b405d29c41ab8d0793be11">val</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define no_argument 0</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define required_argument 1</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="getopt__long_8h.html#a3bc1d5f667b5b4ca4b4abb685dc874ce">   32</a></span>&#160;<span class="preprocessor">#define no_argument 0</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="getopt__long_8h.html#a6ece8d8dfa8378778f7290fdaba5b8bc">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define required_argument 1</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef HAVE_GETOPT_LONG</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> getopt_long(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *<span class="keyword">const</span> argv[],</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="getopt__long_8h.html#a19a25d4c484d212220cad56a69c426b0">getopt_long</a>(<span class="keywordtype">int</span> <a class="code" href="graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e">argc</a>, <span class="keywordtype">char</span> *<span class="keyword">const</span> <a class="code" href="graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c">argv</a>[],</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                        <span class="keyword">const</span> <span class="keywordtype">char</span> *optstring,</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                        <span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structoption.html">option</a> * longopts, <span class="keywordtype">int</span> *longindex);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif   </span><span class="comment">/* GETOPT_LONG_H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="structoption_html_a13bd155ec3b405d29c41ab8d0793be11"><div class="ttname"><a href="structoption.html#a13bd155ec3b405d29c41ab8d0793be11">option::val</a></div><div class="ttdeci">int val</div><div class="ttdef"><b>Definition:</b> getopt.h:84</div></div>
+<div class="ttc" id="getopt__long_8h_html_a19a25d4c484d212220cad56a69c426b0"><div class="ttname"><a href="getopt__long_8h.html#a19a25d4c484d212220cad56a69c426b0">getopt_long</a></div><div class="ttdeci">int getopt_long(int argc, char *const argv[], const char *optstring, const struct option *longopts, int *longindex)</div><div class="ttdef"><b>Definition:</b> getopt_long.c:61</div></div>
+<div class="ttc" id="structoption_html_a24ad4639d5d498fdc1c5b38bcaabc263"><div class="ttname"><a href="structoption.html#a24ad4639d5d498fdc1c5b38bcaabc263">option::flag</a></div><div class="ttdeci">int * flag</div><div class="ttdef"><b>Definition:</b> getopt.h:83</div></div>
+<div class="ttc" id="structoption_html_ae02f2d0cea6af34951d9008be8bfa625"><div class="ttname"><a href="structoption.html#ae02f2d0cea6af34951d9008be8bfa625">option::name</a></div><div class="ttdeci">const char * name</div><div class="ttdef"><b>Definition:</b> getopt.h:81</div></div>
+<div class="ttc" id="getopt__long_8h_html_adb50a0eab9fed92fc3bfc7dfa4f2c410"><div class="ttname"><a href="getopt__long_8h.html#adb50a0eab9fed92fc3bfc7dfa4f2c410">optarg</a></div><div class="ttdeci">char * optarg</div><div class="ttdef"><b>Definition:</b> XGetopt.c:149</div></div>
+<div class="ttc" id="getopt_8h_html"><div class="ttname"><a href="getopt_8h.html">getopt.h</a></div></div>
 <div class="ttc" id="structoption_html"><div class="ttname"><a href="structoption.html">option</a></div><div class="ttdef"><b>Definition:</b> getopt.h:79</div></div>
+<div class="ttc" id="getopt__long_8h_html_ad5e1c16213bbee2d5e8cc363309f418c"><div class="ttname"><a href="getopt__long_8h.html#ad5e1c16213bbee2d5e8cc363309f418c">optind</a></div><div class="ttdeci">int optind</div><div class="ttdef"><b>Definition:</b> XGetopt.c:150</div></div>
+<div class="ttc" id="graphics__qt__qpainter_8cpp_html_ad1447518f4372828b8435ae82e48499e"><div class="ttname"><a href="graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e">argc</a></div><div class="ttdeci">static int argc</div><div class="ttdef"><b>Definition:</b> graphics_qt_qpainter.cpp:534</div></div>
+<div class="ttc" id="getopt__long_8h_html_ae30f05ee1e2e5652f174a35c7875d25e"><div class="ttname"><a href="getopt__long_8h.html#ae30f05ee1e2e5652f174a35c7875d25e">opterr</a></div><div class="ttdeci">int opterr</div><div class="ttdef"><b>Definition:</b> getopt_long.c:42</div></div>
+<div class="ttc" id="graphics__qt__qpainter_8cpp_html_abd1a2cf54950f450187ef24c1cdcac0c"><div class="ttname"><a href="graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c">argv</a></div><div class="ttdeci">static char * argv[]</div><div class="ttdef"><b>Definition:</b> graphics_qt_qpainter.cpp:535</div></div>
+<div class="ttc" id="getopt__long_8h_html_a475b8db98445da73e5f62a1ef6324b95"><div class="ttname"><a href="getopt__long_8h.html#a475b8db98445da73e5f62a1ef6324b95">optopt</a></div><div class="ttdeci">int optopt</div><div class="ttdef"><b>Definition:</b> getopt_long.c:43</div></div>
+<div class="ttc" id="structoption_html_a90d7ee9a51eea5c002682dbd0af149e4"><div class="ttname"><a href="structoption.html#a90d7ee9a51eea5c002682dbd0af149e4">option::has_arg</a></div><div class="ttdeci">int has_arg</div><div class="ttdef"><b>Definition:</b> getopt.h:82</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_720b853eee6f4465f2234e49d40a2650.html">xgetopt</a></li><li class="navelem"><b>getopt_long.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_720b853eee6f4465f2234e49d40a2650.html">xgetopt</a></li><li class="navelem"><a class="el" href="getopt__long_8h.html">getopt_long.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

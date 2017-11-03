@@ -1,0 +1,25 @@
+var pngtrans_8c =
+[
+    [ "PNG_INTERNAL", "pngtrans_8c.html#a9bcff9deb4fb18451aa71db87611f653", null ],
+    [ "png_do_bgr", "pngtrans_8c.html#a0c93ed1664534f6ba58326b1aae229e3", null ],
+    [ "png_do_invert", "pngtrans_8c.html#ad6a6f7e864a9754571ef7ff809bb27db", null ],
+    [ "png_do_packswap", "pngtrans_8c.html#a34b1e9a582bbeb827db329cb741ac2d4", null ],
+    [ "png_do_strip_filler", "pngtrans_8c.html#aa427a8f27e2f207618ddcd3942947d1c", null ],
+    [ "png_do_swap", "pngtrans_8c.html#a99033adb0eeeb092471e92783055df7b", null ],
+    [ "png_get_user_transform_ptr", "pngtrans_8c.html#a7276adb616c204cb4b4dfa4f6fe57e93", null ],
+    [ "png_set_add_alpha", "pngtrans_8c.html#aae3bd58403aba75bd5fbdad9d05e82c8", null ],
+    [ "png_set_bgr", "pngtrans_8c.html#a4b05fe94f001390dec332b50866b1c01", null ],
+    [ "png_set_filler", "pngtrans_8c.html#ae95f6336b5998c600e0027c8f0e1c886", null ],
+    [ "png_set_interlace_handling", "pngtrans_8c.html#a6211909b59058a533c54ff6e402b2951", null ],
+    [ "png_set_invert_alpha", "pngtrans_8c.html#aa00ab59626b9223531464c094367f81f", null ],
+    [ "png_set_invert_mono", "pngtrans_8c.html#a1424f8a7b240e0ce1ced3aa170567298", null ],
+    [ "png_set_packing", "pngtrans_8c.html#ade6c7fe787b2037d47f119909cba0ca0", null ],
+    [ "png_set_packswap", "pngtrans_8c.html#acdcffeb080dff927bd4c9d8b9c4a22e8", null ],
+    [ "png_set_shift", "pngtrans_8c.html#a2ec559cfee9c9a0ea15d8a8190216349", null ],
+    [ "png_set_swap", "pngtrans_8c.html#a5f4f50960c263a7bce3c79f61fabbbba", null ],
+    [ "png_set_swap_alpha", "pngtrans_8c.html#ac80a211fbb430cfc34ebb3814707d62c", null ],
+    [ "png_set_user_transform_info", "pngtrans_8c.html#aa4e725222af48bf2f33e68c3e95bf89c", null ],
+    [ "fourbppswaptable", "pngtrans_8c.html#a4212a81d22d540d7461910592df0382a", null ],
+    [ "onebppswaptable", "pngtrans_8c.html#a36a661a6d3caf23854d4a992fed0948b", null ],
+    [ "twobppswaptable", "pngtrans_8c.html#a330614f66c752199bc515332a485509d", null ]
+];

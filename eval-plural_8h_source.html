@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('eval-plural_8h_source.html','');});
 <div class="title">eval-plural.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Plural expression evaluation.</span></div>
+<a href="eval-plural_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Plural expression evaluation.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">   Copyright (C) 2000-2003 Free Software Foundation, Inc.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   This program is free software; you can redistribute it and/or modify it</span></div>
@@ -89,24 +89,24 @@ $(document).ready(function(){initNavTree('eval-plural_8h_source.html','');});
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">   USA.  */</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifndef STATIC</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define STATIC static</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="eval-plural_8h.html#a10b2d890d871e1489bb02b7e70d9bdfb">   20</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define STATIC static</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">/* Evaluate the plural expression and return an index value.  */</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;STATIC</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<a class="code" href="eval-plural_8h.html#a10b2d890d871e1489bb02b7e70d9bdfb">STATIC</a></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;internal_function</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;plural_eval (<span class="keyword">struct</span> <a class="code" href="structexpression.html">expression</a> *pexp, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n)</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<a class="code" href="loadinfo_8h.html#ac2518adec7569a78a2cd1f10bd670ad6">internal_function</a></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="plural-exp_8h.html#aa6b7ff66ae64d5f29804d5eed0c39d97">   27</a></span>&#160;<a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (<span class="keyword">struct</span> <a class="code" href="structexpression.html">expression</a> *pexp, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n)</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keywordflow">switch</span> (pexp-&gt;nargs)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keywordflow">switch</span> (pexp-&gt;<a class="code" href="structexpression.html#a231f8335262357a45053fdf96b080840">nargs</a>)</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">case</span> 0:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      <span class="keywordflow">switch</span> (pexp-&gt;operation)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      <span class="keywordflow">switch</span> (pexp-&gt;<a class="code" href="structexpression.html#a663ba9aa692e54bc1f618f5264b1bfba">operation</a>)</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">case</span> var:</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;          <span class="keywordflow">return</span> n;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">case</span> num:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;          <span class="keywordflow">return</span> pexp-&gt;val.num;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="png_8h.html#ac2d0018d5ab0817c8a1c83c69746a799">num</a>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;          <span class="keywordflow">return</span> pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aea78163799cf385b8d6ae9feceb6b023">num</a>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">default</span>:</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;          <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
@@ -115,34 +115,34 @@ $(document).ready(function(){initNavTree('eval-plural_8h_source.html','');});
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">case</span> 1:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="comment">/* pexp-&gt;operation must be lnot.  */</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> arg = plural_eval (pexp-&gt;val.args[0], n);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> arg = <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[0], n);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> ! arg;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">case</span> 2:</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> leftarg = plural_eval (pexp-&gt;val.args[0], n);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">if</span> (pexp-&gt;operation == lor)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;          <span class="keywordflow">return</span> leftarg || plural_eval (pexp-&gt;val.args[1], n);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pexp-&gt;operation == land)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;          <span class="keywordflow">return</span> leftarg &amp;&amp; plural_eval (pexp-&gt;val.args[1], n);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> leftarg = <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[0], n);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">if</span> (pexp-&gt;<a class="code" href="structexpression.html#a663ba9aa692e54bc1f618f5264b1bfba">operation</a> == lor)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;          <span class="keywordflow">return</span> leftarg || <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[1], n);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pexp-&gt;<a class="code" href="structexpression.html#a663ba9aa692e54bc1f618f5264b1bfba">operation</a> == land)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;          <span class="keywordflow">return</span> leftarg &amp;&amp; <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[1], n);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;          {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> rightarg = plural_eval (pexp-&gt;val.args[1], n);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> rightarg = <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[1], n);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keywordflow">switch</span> (pexp-&gt;operation)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keywordflow">switch</span> (pexp-&gt;<a class="code" href="structexpression.html#a663ba9aa692e54bc1f618f5264b1bfba">operation</a>)</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;              {</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;              <span class="keywordflow">case</span> mult:</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="keywordflow">return</span> leftarg * rightarg;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;              <span class="keywordflow">case</span> divide:</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#if !INTDIV0_RAISES_SIGFPE</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span>                <span class="keywordflow">if</span> (rightarg == 0)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                  <span class="keyword">raise</span> (SIGFPE);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                  <span class="keyword">raise</span> (<a class="code" href="signal_8h.html#a7fbba29aec3e4a8daae12935299df92d">SIGFPE</a>);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span>                <span class="keywordflow">return</span> leftarg / rightarg;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;              <span class="keywordflow">case</span> module:</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#if !INTDIV0_RAISES_SIGFPE</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span>                <span class="keywordflow">if</span> (rightarg == 0)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                  <span class="keyword">raise</span> (SIGFPE);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                  <span class="keyword">raise</span> (<a class="code" href="signal_8h.html#a7fbba29aec3e4a8daae12935299df92d">SIGFPE</a>);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span>                <span class="keywordflow">return</span> leftarg % rightarg;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;              <span class="keywordflow">case</span> plus:</div>
@@ -171,20 +171,30 @@ $(document).ready(function(){initNavTree('eval-plural_8h_source.html','');});
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">case</span> 3:</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      {</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">/* pexp-&gt;operation must be qmop.  */</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> boolarg = plural_eval (pexp-&gt;val.args[0], n);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> plural_eval (pexp-&gt;val.args[boolarg ? 1 : 2], n);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> boolarg = <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[0], n);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a> (pexp-&gt;<a class="code" href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">val</a>.<a class="code" href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">args</a>[boolarg ? 1 : 2], n);</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      }</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="comment">/* NOTREACHED */</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="ttc" id="eval-plural_8h_html_a1473c9ab3b8dcd3369f0370503f667da"><div class="ttname"><a href="eval-plural_8h.html#a1473c9ab3b8dcd3369f0370503f667da">plural_eval</a></div><div class="ttdeci">STATIC unsigned long int internal_function plural_eval(struct expression *pexp, unsigned long int n)</div><div class="ttdef"><b>Definition:</b> eval-plural.h:27</div></div>
+<div class="ttc" id="structexpression_html_a06284362ec4e3aa25046dd8a9ee09168"><div class="ttname"><a href="structexpression.html#a06284362ec4e3aa25046dd8a9ee09168">expression::val</a></div><div class="ttdeci">union expression::@13 val</div></div>
+<div class="ttc" id="structexpression_html_a231f8335262357a45053fdf96b080840"><div class="ttname"><a href="structexpression.html#a231f8335262357a45053fdf96b080840">expression::nargs</a></div><div class="ttdeci">int nargs</div><div class="ttdef"><b>Definition:</b> plural-exp.h:36</div></div>
+<div class="ttc" id="structexpression_html_a663ba9aa692e54bc1f618f5264b1bfba"><div class="ttname"><a href="structexpression.html#a663ba9aa692e54bc1f618f5264b1bfba">expression::operation</a></div><div class="ttdeci">enum expression::operator operation</div></div>
+<div class="ttc" id="structexpression_html_aea78163799cf385b8d6ae9feceb6b023"><div class="ttname"><a href="structexpression.html#aea78163799cf385b8d6ae9feceb6b023">expression::num</a></div><div class="ttdeci">unsigned long int num</div><div class="ttdef"><b>Definition:</b> plural-exp.h:63</div></div>
 <div class="ttc" id="structexpression_html"><div class="ttname"><a href="structexpression.html">expression</a></div><div class="ttdef"><b>Definition:</b> plural-exp.h:34</div></div>
+<div class="ttc" id="signal_8h_html_a7fbba29aec3e4a8daae12935299df92d"><div class="ttname"><a href="signal_8h.html#a7fbba29aec3e4a8daae12935299df92d">SIGFPE</a></div><div class="ttdeci">#define SIGFPE</div><div class="ttdef"><b>Definition:</b> signal.h:1</div></div>
+<div class="ttc" id="structexpression_html_aa724c9980ff803471cab24a4eee26c63"><div class="ttname"><a href="structexpression.html#aa724c9980ff803471cab24a4eee26c63">expression::args</a></div><div class="ttdeci">struct expression * args[3]</div><div class="ttdef"><b>Definition:</b> plural-exp.h:64</div></div>
+<div class="ttc" id="loadinfo_8h_html_ac2518adec7569a78a2cd1f10bd670ad6"><div class="ttname"><a href="loadinfo_8h.html#ac2518adec7569a78a2cd1f10bd670ad6">internal_function</a></div><div class="ttdeci">#define internal_function</div><div class="ttdef"><b>Definition:</b> loadinfo.h:36</div></div>
+<div class="ttc" id="png_8h_html_ac2d0018d5ab0817c8a1c83c69746a799"><div class="ttname"><a href="png_8h.html#ac2d0018d5ab0817c8a1c83c69746a799">num</a></div><div class="ttdeci">int num</div><div class="ttdef"><b>Definition:</b> png.h:1524</div></div>
+<div class="ttc" id="eval-plural_8h_html_a10b2d890d871e1489bb02b7e70d9bdfb"><div class="ttname"><a href="eval-plural_8h.html#a10b2d890d871e1489bb02b7e70d9bdfb">STATIC</a></div><div class="ttdeci">#define STATIC</div><div class="ttdef"><b>Definition:</b> eval-plural.h:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><b>eval-plural.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><a class="el" href="eval-plural_8h.html">eval-plural.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

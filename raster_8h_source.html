@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('raster_8h_source.html','');});
 <div class="title">raster.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* raster.h -- line/rect/circle/poly rasterization</span></div>
+<a href="raster_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* raster.h -- line/rect/circle/poly rasterization</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">   copyright (c) 2008 bryan rittmeyer &lt;bryanr@bryanr.org&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"></span></div>
@@ -80,27 +80,35 @@ $(document).ready(function(){initNavTree('raster_8h_source.html','');});
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef __RASTER_H</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __RASTER_H</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="stdint_8h.html">stdint.h</a>&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;SDL/SDL.h&gt;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keywordtype">void</span> raster_rect(SDL_Surface *s, int16_t x, int16_t y, int16_t w, int16_t h, uint32_t col);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#a94213299993c4a76fc3b34073e8259bb">raster_rect</a>(SDL_Surface *s, int16_t x, int16_t y, int16_t w, int16_t h, uint32_t col);</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> raster_line(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> raster_circle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">void</span> raster_polygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#a7d7e1a10e4d635e0bebd2485527529cd">raster_line</a>(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#a0c5194ef9bd6c455ecefd6b5931fab87">raster_circle</a>(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#ab6b5af94c090afaf69cb741bc225c51b">raster_polygon</a>(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">void</span> raster_aaline(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> raster_aapolygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#aaf937981932765026152bb2ee3722253">raster_aaline</a>(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#a0739b9ca93f1b4d0fb1651b59ab5b72f">raster_aacircle</a>(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> <a class="code" href="raster_8h.html#ac109eb9600b960ea3969fb26327021b2">raster_aapolygon</a>(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __RASTER_H */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="raster_8h_html_aaf937981932765026152bb2ee3722253"><div class="ttname"><a href="raster_8h.html#aaf937981932765026152bb2ee3722253">raster_aaline</a></div><div class="ttdeci">void raster_aaline(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:1149</div></div>
+<div class="ttc" id="raster_8h_html_a0c5194ef9bd6c455ecefd6b5931fab87"><div class="ttname"><a href="raster_8h.html#a0c5194ef9bd6c455ecefd6b5931fab87">raster_circle</a></div><div class="ttdeci">void raster_circle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:1158</div></div>
+<div class="ttc" id="raster_8h_html_ac109eb9600b960ea3969fb26327021b2"><div class="ttname"><a href="raster_8h.html#ac109eb9600b960ea3969fb26327021b2">raster_aapolygon</a></div><div class="ttdeci">void raster_aapolygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:1809</div></div>
+<div class="ttc" id="stdint_8h_html"><div class="ttname"><a href="stdint_8h.html">stdint.h</a></div></div>
+<div class="ttc" id="raster_8h_html_ab6b5af94c090afaf69cb741bc225c51b"><div class="ttname"><a href="raster_8h.html#ab6b5af94c090afaf69cb741bc225c51b">raster_polygon</a></div><div class="ttdeci">void raster_polygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:1803</div></div>
+<div class="ttc" id="raster_8h_html_a0739b9ca93f1b4d0fb1651b59ab5b72f"><div class="ttname"><a href="raster_8h.html#a0739b9ca93f1b4d0fb1651b59ab5b72f">raster_aacircle</a></div><div class="ttdeci">void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:1460</div></div>
+<div class="ttc" id="raster_8h_html_a94213299993c4a76fc3b34073e8259bb"><div class="ttname"><a href="raster_8h.html#a94213299993c4a76fc3b34073e8259bb">raster_rect</a></div><div class="ttdeci">void raster_rect(SDL_Surface *s, int16_t x, int16_t y, int16_t w, int16_t h, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:254</div></div>
+<div class="ttc" id="raster_8h_html_a7d7e1a10e4d635e0bebd2485527529cd"><div class="ttname"><a href="raster_8h.html#a7d7e1a10e4d635e0bebd2485527529cd">raster_line</a></div><div class="ttdeci">void raster_line(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col)</div><div class="ttdef"><b>Definition:</b> raster.c:789</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_9c614f9f6d85e2ed081007371a4f5142.html">sdl</a></li><li class="navelem"><b>raster.h</b></li>
+    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_9c614f9f6d85e2ed081007371a4f5142.html">sdl</a></li><li class="navelem"><a class="el" href="raster_8h.html">raster.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

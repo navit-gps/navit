@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('data_8h_source.html','');});
 <div class="title">data.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="data_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifndef NAVIT_DATA_H</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_DATA_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
@@ -81,25 +81,25 @@ $(document).ready(function(){initNavTree('data_8h_source.html','');});
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;get_u8(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p)</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">   30</a></span>&#160;<a class="code" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> *((*p)++);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;get_u16(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">   36</a></span>&#160;<a class="code" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        ret=*((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> *)*p);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        *p+=<span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> short);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> __bswap_16(ret);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> <a class="code" href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">__bswap_16</a>(ret);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;get_u16_unal(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">   48</a></span>&#160;<a class="code" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        ret=*(*p)++;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        ret|=(*(*p)++) &lt;&lt; 8;</div>
@@ -108,37 +108,37 @@ $(document).ready(function(){initNavTree('data_8h_source.html','');});
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;get_u24(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">   57</a></span>&#160;<a class="code" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        ret=get_u16(p);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        ret=<a class="code" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(p);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        ret|=*((*p)++) &lt;&lt; 16;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;get_u24_unal(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="data_8h.html#a0d17003775c32d4448822777601840d0">   66</a></span>&#160;<a class="code" href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        ret=get_u16_unal(p);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        ret=<a class="code" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(p);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        ret|=*((*p)++) &lt;&lt; 16;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;get_u32(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">   75</a></span>&#160;<a class="code" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        ret=*((<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> *)*p);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        *p+=<span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> int);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        *p+=<span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> <a class="code" href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a>);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> __bswap_32(ret);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> <a class="code" href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">__bswap_32</a>(ret);</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor"></span>        <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;get_u32_unal(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">   87</a></span>&#160;<a class="code" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        ret=*(*p)++;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        ret|=(*(*p)++) &lt;&lt; 8;</div>
@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('data_8h_source.html','');});
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">char</span> *</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;get_string(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **p)</div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="data_8h.html#acb81e1af5343340bdb35b6b749963000">   97</a></span>&#160;<a class="code" href="data_8h.html#acb81e1af5343340bdb35b6b749963000">get_string</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">char</span> *ret=(<span class="keywordtype">char</span> *)(*p);</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">while</span> (**p) (*p)++;</div>
@@ -156,16 +156,28 @@ $(document).ready(function(){initNavTree('data_8h_source.html','');});
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}      </div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#define L(x) ({ unsigned char *t=(unsigned char *)&amp;(x); t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24); })</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">  105</a></span>&#160;<span class="preprocessor">#define L(x) ({ unsigned char *t=(unsigned char *)&amp;(x); t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24); })</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="mg_8h_html_aaf29c41f2020649a36c2820ffa06119a"><div class="ttname"><a href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a></div><div class="ttdeci">unsigned char p[5]</div><div class="ttdef"><b>Definition:</b> mg.h:48</div></div>
+<div class="ttc" id="data_8h_html_abdaf132c02169057e06b2a285a20a58a"><div class="ttname"><a href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a></div><div class="ttdeci">static unsigned int get_u32_unal(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:87</div></div>
+<div class="ttc" id="data_8h_html_acb81e1af5343340bdb35b6b749963000"><div class="ttname"><a href="data_8h.html#acb81e1af5343340bdb35b6b749963000">get_string</a></div><div class="ttdeci">static char * get_string(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:97</div></div>
+<div class="ttc" id="data_8h_html_a0d17003775c32d4448822777601840d0"><div class="ttname"><a href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a></div><div class="ttdeci">static unsigned int get_u24_unal(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:66</div></div>
+<div class="ttc" id="endianess_8h_html_a8cccb4a214faded757990fdbc99a0cd3"><div class="ttname"><a href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">__bswap_16</a></div><div class="ttdeci">#define __bswap_16(__bsx)</div><div class="ttdef"><b>Definition:</b> endianess.h:86</div></div>
+<div class="ttc" id="data_8h_html_ad65492415c8bfd7c04c49b39d183495d"><div class="ttname"><a href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a></div><div class="ttdeci">static unsigned int get_u24(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:57</div></div>
+<div class="ttc" id="voices_8c_html_a4a950eb550194bd27837f94f61603d36"><div class="ttname"><a href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a></div><div class="ttdeci">#define int(x)</div><div class="ttdef"><b>Definition:</b> voices.c:45</div></div>
+<div class="ttc" id="data_8h_html_a319cfa136ceff5b6d18417a925034c28"><div class="ttname"><a href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a></div><div class="ttdeci">static unsigned char get_u8(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:30</div></div>
+<div class="ttc" id="data_8h_html_aee3c96cc781921203e4f9d6b3cc77ac7"><div class="ttname"><a href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a></div><div class="ttdeci">static unsigned short get_u16_unal(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:48</div></div>
+<div class="ttc" id="data_8h_html_a11e13edbfc422b1d2360bccada42170b"><div class="ttname"><a href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a></div><div class="ttdeci">static unsigned short get_u16(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:36</div></div>
+<div class="ttc" id="data_8h_html_a11acfaee6045a32738cc4e1e849eecb9"><div class="ttname"><a href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a></div><div class="ttdeci">static unsigned int get_u32(unsigned char **p)</div><div class="ttdef"><b>Definition:</b> data.h:75</div></div>
+<div class="ttc" id="endianess_8h_html_a130b07d1d1fcbc63e83b346dd74397d5"><div class="ttname"><a href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">__bswap_32</a></div><div class="ttdeci">#define __bswap_32(__bsx)</div><div class="ttdef"><b>Definition:</b> endianess.h:87</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>data.h</b></li>
+    <li class="navelem"><a class="el" href="data_8h.html">data.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

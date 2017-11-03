@@ -1,5 +1,7 @@
 var interfaceVSSpeechSynthesizer =
 [
+    [ "availableLanguageCodes", "interfaceVSSpeechSynthesizer.html#a5a7b3ef55ce44ef92b830d80c6da2f75", null ],
+    [ "isSystemSpeaking", "interfaceVSSpeechSynthesizer.html#a08b5b4954718a35846cb7952f36bf3d0", null ],
     [ "pitch", "interfaceVSSpeechSynthesizer.html#a34e515e08388f7f1be1dffc34764035e", null ],
     [ "rate", "interfaceVSSpeechSynthesizer.html#a3adf24f3a4f947468fa658d2eb81e495", null ],
     [ "setPitch:", "interfaceVSSpeechSynthesizer.html#a7f710e355dd58cfe7495ce254267559d", null ],

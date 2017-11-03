@@ -70,13 +70,13 @@ $(document).ready(function(){initNavTree('QNavitWidget_8h_source.html','');});
 <div class="title">QNavitWidget.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="QNavitWidget_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// style with: clang-format -style=WebKit -i *</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __QNavitWidget_h</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __QNavitWidget_h</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="keyword">class </span><a class="code" href="classQNavitWidget.html">QNavitWidget</a>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;graphics_qt5.h&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="graphics__qt5_8h.html">graphics_qt5.h</a>&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;QEvent&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;QMouseEvent&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;QPixmap&gt;</span></div>
@@ -88,33 +88,45 @@ $(document).ready(function(){initNavTree('QNavitWidget_8h_source.html','');});
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classQNavitWidget.html#a2b2db8e6b269fe7c12c21a4903b07df8">QNavitWidget</a>(<span class="keyword">struct</span> <a class="code" href="structgraphics__priv.html">graphics_priv</a>* my_graphics_priv,</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        QWidget* <a class="code" href="structparent.html">parent</a>,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        Qt::WindowFlags flags);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        Qt::WindowFlags <a class="code" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> event(QEvent* event);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> keyPressEvent(QKeyEvent* event);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> paintEvent(QPaintEvent* event);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> resizeEvent(QResizeEvent* event);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseEvent(<span class="keywordtype">int</span> pressed, QMouseEvent* event);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mousePressEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseReleaseEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> mouseMoveEvent(QMouseEvent* event);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> wheelEvent(QWheelEvent* event);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classQNavitWidget.html#ab5ca015c98764d392a6c9c9305c66cd3">event</a>(QEvent* <a class="code" href="classQNavitWidget.html#ab5ca015c98764d392a6c9c9305c66cd3">event</a>);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a87ff39fc76d75ff4f882df9d0b433b2f">keyPressEvent</a>(QKeyEvent* event);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a7296840d1e7a64c19cc69c0c644595ae">paintEvent</a>(QPaintEvent* event);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a9fbc2ecd646b92b07533bd60a69f3ce8">resizeEvent</a>(QResizeEvent* event);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#af51ec7f335b3bdeb69dc035f2b702962">mouseEvent</a>(<span class="keywordtype">int</span> pressed, QMouseEvent* event);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a0ee213a950a5efff337b15ad2f2ec45e">mousePressEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a49c5fddf5305dc38c1b4ced24c9f052d">mouseReleaseEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#a7eaf682d799b7570724061c31614142a">mouseMoveEvent</a>(QMouseEvent* event);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classQNavitWidget.html#ac35a00262f5851a32dc191606f8e3f64">wheelEvent</a>(QWheelEvent* event);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">struct </span><a class="code" href="structgraphics__priv.html">graphics_priv</a>* <a class="code" href="structgraphics__priv.html">graphics_priv</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classQNavitWidget.html#a1c0a8ddadec9e30ae09a9e52695783b5">   50</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structgraphics__priv.html">graphics_priv</a>* <a class="code" href="classQNavitWidget.html#a1c0a8ddadec9e30ae09a9e52695783b5">graphics_priv</a>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="classQNavitWidget_html_a7eaf682d799b7570724061c31614142a"><div class="ttname"><a href="classQNavitWidget.html#a7eaf682d799b7570724061c31614142a">QNavitWidget::mouseMoveEvent</a></div><div class="ttdeci">virtual void mouseMoveEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:217</div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classQNavitWidget_html_ab5ca015c98764d392a6c9c9305c66cd3"><div class="ttname"><a href="classQNavitWidget.html#ab5ca015c98764d392a6c9c9305c66cd3">QNavitWidget::event</a></div><div class="ttdeci">virtual bool event(QEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:56</div></div>
+<div class="ttc" id="classQNavitWidget_html_af51ec7f335b3bdeb69dc035f2b702962"><div class="ttname"><a href="classQNavitWidget.html#af51ec7f335b3bdeb69dc035f2b702962">QNavitWidget::mouseEvent</a></div><div class="ttdeci">virtual void mouseEvent(int pressed, QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:119</div></div>
+<div class="ttc" id="classQNavitWidget_html_ac35a00262f5851a32dc191606f8e3f64"><div class="ttname"><a href="classQNavitWidget.html#ac35a00262f5851a32dc191606f8e3f64">QNavitWidget::wheelEvent</a></div><div class="ttdeci">virtual void wheelEvent(QWheelEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:226</div></div>
+<div class="ttc" id="classQNavitWidget_html_a9fbc2ecd646b92b07533bd60a69f3ce8"><div class="ttname"><a href="classQNavitWidget.html#a9fbc2ecd646b92b07533bd60a69f3ce8">QNavitWidget::resizeEvent</a></div><div class="ttdeci">virtual void resizeEvent(QResizeEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:97</div></div>
+<div class="ttc" id="classQNavitWidget_html_a1c0a8ddadec9e30ae09a9e52695783b5"><div class="ttname"><a href="classQNavitWidget.html#a1c0a8ddadec9e30ae09a9e52695783b5">QNavitWidget::graphics_priv</a></div><div class="ttdeci">struct graphics_priv * graphics_priv</div><div class="ttdef"><b>Definition:</b> QNavitWidget.h:50</div></div>
+<div class="ttc" id="classQNavitWidget_html_a7296840d1e7a64c19cc69c0c644595ae"><div class="ttname"><a href="classQNavitWidget.html#a7296840d1e7a64c19cc69c0c644595ae">QNavitWidget::paintEvent</a></div><div class="ttdeci">virtual void paintEvent(QPaintEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:82</div></div>
+<div class="ttc" id="gui__internal_8h_html_a977410f175f1b6ea314bf5b2c0788dfb"><div class="ttname"><a href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a></div><div class="ttdeci">flags</div><div class="ttdef"><b>Definition:</b> gui_internal.h:26</div></div>
 <div class="ttc" id="classQNavitWidget_html_a2b2db8e6b269fe7c12c21a4903b07df8"><div class="ttname"><a href="classQNavitWidget.html#a2b2db8e6b269fe7c12c21a4903b07df8">QNavitWidget::QNavitWidget</a></div><div class="ttdeci">QNavitWidget(struct graphics_priv *my_graphics_priv, QWidget *parent, Qt::WindowFlags flags)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:48</div></div>
 <div class="ttc" id="structgraphics__priv_html"><div class="ttname"><a href="structgraphics__priv.html">graphics_priv</a></div><div class="ttdef"><b>Definition:</b> graphics_android.c:37</div></div>
+<div class="ttc" id="graphics__qt5_8h_html"><div class="ttname"><a href="graphics__qt5_8h.html">graphics_qt5.h</a></div></div>
+<div class="ttc" id="classQNavitWidget_html_a87ff39fc76d75ff4f882df9d0b433b2f"><div class="ttname"><a href="classQNavitWidget.html#a87ff39fc76d75ff4f882df9d0b433b2f">QNavitWidget::keyPressEvent</a></div><div class="ttdeci">virtual void keyPressEvent(QKeyEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:140</div></div>
+<div class="ttc" id="classQNavitWidget_html_a49c5fddf5305dc38c1b4ced24c9f052d"><div class="ttname"><a href="classQNavitWidget.html#a49c5fddf5305dc38c1b4ced24c9f052d">QNavitWidget::mouseReleaseEvent</a></div><div class="ttdeci">virtual void mouseReleaseEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:211</div></div>
+<div class="ttc" id="classQNavitWidget_html_a0ee213a950a5efff337b15ad2f2ec45e"><div class="ttname"><a href="classQNavitWidget.html#a0ee213a950a5efff337b15ad2f2ec45e">QNavitWidget::mousePressEvent</a></div><div class="ttdeci">virtual void mousePressEvent(QMouseEvent *event)</div><div class="ttdef"><b>Definition:</b> QNavitWidget.cpp:205</div></div>
 <div class="ttc" id="classQNavitWidget_html"><div class="ttname"><a href="classQNavitWidget.html">QNavitWidget</a></div><div class="ttdef"><b>Definition:</b> QNavitWidget.h:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><b>QNavitWidget.h</b></li>
+    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><a class="el" href="QNavitWidget_8h.html">QNavitWidget.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

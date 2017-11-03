@@ -76,9 +76,9 @@ $(document).ready(function(){initNavTree('structrelations.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a097bd66b09211b9a19240f10f5ba306c"><td class="memItemLeft" align="right" valign="top">GHashTable *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrelations.html#a097bd66b09211b9a19240f10f5ba306c">member_hash</a> [3]</td></tr>
+<tr class="memitem:a097bd66b09211b9a19240f10f5ba306c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrelations.html#a097bd66b09211b9a19240f10f5ba306c">member_hash</a> [3]</td></tr>
 <tr class="separator:a097bd66b09211b9a19240f10f5ba306c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab03a109c1dcf2f8d0b958de9697548d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__GList.html">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1">default_members</a></td></tr>
+<tr class="memitem:ab03a109c1dcf2f8d0b958de9697548d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1">default_members</a></td></tr>
 <tr class="separator:ab03a109c1dcf2f8d0b958de9697548d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -92,11 +92,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct__GList.html">GList</a>* relations::default_members</td>
+          <td class="memname"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a>* relations::default_members</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Default entries for processing items which are not a member of any relation. </p>
+
+<p>Referenced by <a class="el" href="osm__relations_8c.html#a64f4b76d6c0c19dcb155fdbc863a2fea">relations_add_relation_default_entry()</a>, and <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>.</p>
 
 </div>
 </div>
@@ -105,16 +107,18 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GHashTable* relations::member_hash[3]</td>
+          <td class="memname"><a class="el" href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a>* relations::member_hash[3]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Hashes for nodes, ways and relations which are members. </p>
 
+<p>Referenced by <a class="el" href="osm__relations_8c.html#a1c57b0d6bc2021c47bbbc29186e7a237">relations_add_relation_member_entry()</a>, <a class="el" href="osm__relations_8c.html#a1091bf6b11d70013b1353d417907262e">relations_destroy()</a>, <a class="el" href="osm__relations_8c.html#aaa84a5aa79b7f49621562fa6f5114d4a">relations_new()</a>, and <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>maptool/osm_relations.c</li>
+<li>maptool/<a class="el" href="osm__relations_8c.html">osm_relations.c</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

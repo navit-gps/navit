@@ -70,32 +70,35 @@ $(document).ready(function(){initNavTree('binding__win32_8h_source.html','');});
 <div class="title">binding_win32.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="binding__win32_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifndef BINDING_WIN32_H</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BINDING_WIN32_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define NAVIT_BINDING_W32_DWDATA 1</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_BINDING_W32_MAGIC &quot;NavIt&quot;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_BINDING_W32_VERSION 1</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="binding__win32_8h.html#acd65cf44de1c43c636a2f139b291263e">   23</a></span>&#160;<span class="preprocessor">#define NAVIT_BINDING_W32_DWDATA 1</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="binding__win32_8h.html#a0fa43bff31916a3c1051aab4b23be3e8">   24</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_BINDING_W32_MAGIC &quot;NavIt&quot;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="binding__win32_8h.html#aa9d8028fdf22adabe1efc9e8e7a51ce8">   25</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_BINDING_W32_VERSION 1</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structnavit__binding__w32__msg.html">   27</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structnavit__binding__w32__msg.html">navit_binding_w32_msg</a> {</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="comment">/* Structure version number, should be equal to NAVIT_BINDING_W32_VERSION */</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">int</span> version;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065">   29</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065">version</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="comment">/* Magic code to filter out packets directed to other applications and [mistakely] sent to us or broadcasted.</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">         * should be equal to NAVIT_BINDING_W32_MAGIC  */</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">char</span> magic[6];</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f">   32</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f">magic</a>[6];</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="comment">/* Command to be executed by Navit */</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">char</span> text[1];</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f">   34</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f">text</a>[1];</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="structnavit__binding__w32__msg_html"><div class="ttname"><a href="structnavit__binding__w32__msg.html">navit_binding_w32_msg</a></div><div class="ttdef"><b>Definition:</b> binding_win32.h:27</div></div>
+<div class="ttc" id="structnavit__binding__w32__msg_html_af3d22b6627ad5fa76b7fb4ae2f178065"><div class="ttname"><a href="structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065">navit_binding_w32_msg::version</a></div><div class="ttdeci">int version</div><div class="ttdef"><b>Definition:</b> binding_win32.h:29</div></div>
+<div class="ttc" id="structnavit__binding__w32__msg_html_a1239222bc8d52976eab363d875047a4f"><div class="ttname"><a href="structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f">navit_binding_w32_msg::text</a></div><div class="ttdeci">char text[1]</div><div class="ttdef"><b>Definition:</b> binding_win32.h:34</div></div>
+<div class="ttc" id="structnavit__binding__w32__msg_html_af60e3ad74a683e6f171bd06911f5f13f"><div class="ttname"><a href="structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f">navit_binding_w32_msg::magic</a></div><div class="ttdeci">char magic[6]</div><div class="ttdef"><b>Definition:</b> binding_win32.h:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_62ed8f96c89320da3fd7e16a2b85192c.html">binding</a></li><li class="navelem"><a class="el" href="dir_fb4e75ee58b189715b1a0f0bb7695a3d.html">win32</a></li><li class="navelem"><b>binding_win32.h</b></li>
+    <li class="navelem"><a class="el" href="dir_62ed8f96c89320da3fd7e16a2b85192c.html">binding</a></li><li class="navelem"><a class="el" href="dir_fb4e75ee58b189715b1a0f0bb7695a3d.html">win32</a></li><li class="navelem"><a class="el" href="binding__win32_8h.html">binding_win32.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

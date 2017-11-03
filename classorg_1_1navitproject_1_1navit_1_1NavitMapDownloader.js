@@ -1,10 +1,13 @@
 var classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader =
 [
+    [ "osm_map_values", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values" ],
     [ "NavitMapDownloader", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4", null ],
     [ "checkFreeSpace", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aaa3bdd3fb3f6a3a3c55611dd8acb1dd3", null ],
     [ "deleteMap", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a12a0b560b4368a8c8bb07dbface8f541", null ],
     [ "download_osm_map", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa77d95b27ab3d03b40659c69414be6c8", null ],
     [ "downloadData", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a5d7e86978946bbf505512a623ab0da3a", null ],
+    [ "enableRetry", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8c9d4b53cfa1eb21b3857d05686a6027", null ],
+    [ "getAvailableMaps", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa6e5d43000eeefad5d17d6171aece28f", null ],
     [ "getDestinationFile", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a9308f7cdb963228bc0b18634dcf50e33", null ],
     [ "getDownloadURL", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a3b5a0e66e91dd0266bd0bbb791b16a34", null ],
     [ "getFreeSpace", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a836205772661cff8ede526001a35af4e", null ],
@@ -21,5 +24,20 @@ var classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader =
     [ "updateProgress", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ac1f7d07449815a0be3173471500a2733", null ],
     [ "updateProgress", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#af5b522f2ba4df330837369d4ea100c6a", null ],
     [ "writeFileInfo", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#abea98518e1b8936435adf49e8787af74", null ],
-    [ "retry_counter", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c", null ]
+    [ "map_filename_path", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aec440dc240700691d54146b0cad02e9a", null ],
+    [ "map_id", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a66e5838b06299545e41baa92e7ff9c57", null ],
+    [ "MAP_READ_FILE_BUFFER", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a19eeeed01c68b5b6bfab53ffc9de9c24", null ],
+    [ "map_values", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a92897b92e478e3e4fcc1fb5ce4971872", null ],
+    [ "MAP_WRITE_FILE_BUFFER", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a9cc5cc1a819b79f088fe9c3808db07ca", null ],
+    [ "MAP_WRITE_MEM_BUFFER", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ac5760ff4f8b81317a87ab96af41dcbf7", null ],
+    [ "MAX_RETRIES", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aaca1e617deb2e83121892ff570c6adc1", null ],
+    [ "osm_maps", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a665709fdb680501039d2ddad95a52b45", null ],
+    [ "retry_counter", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c", null ],
+    [ "retryDownload", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a5ee1a91b21cb3ab241f7623fe03b84a1", null ],
+    [ "SOCKET_CONNECT_TIMEOUT", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a6fd0c506af37945c9ec24b5b5daba00e", null ],
+    [ "SOCKET_READ_TIMEOUT", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#adf18fedefb7f8dcc26aef1a03cb1c919", null ],
+    [ "stop_me", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2f47f12417c65e0d2fd9b24b54365101", null ],
+    [ "TAG", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8b0d071e741b4dde870679822d271971", null ],
+    [ "uiLastUpdated", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a41fd4b3da968b2efe9154697719c2bfc", null ],
+    [ "UPDATE_PROGRESS_TIME_NS", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ad3b4ab71a2ed3a1f911df923b36cedd6", null ]
 ];

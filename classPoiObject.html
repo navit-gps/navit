@@ -70,11 +70,14 @@ $(document).ready(function(){initNavTree('classPoiObject.html','');});
   <div class="summary">
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#properties">Properties</a>  </div>
+<a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">PoiObject Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="qml__poi_8h_source.html">qml_poi.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for PoiObject:</div>
 <div class="dyncontent">
@@ -86,73 +89,584 @@ Inheritance diagram for PoiObject:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:ab33186a19ea151f513ea7c5a28767d2a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab33186a19ea151f513ea7c5a28767d2a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>nameChanged</b> ()</td></tr>
+<tr class="memitem:ab33186a19ea151f513ea7c5a28767d2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ab33186a19ea151f513ea7c5a28767d2a">nameChanged</a> ()</td></tr>
 <tr class="separator:ab33186a19ea151f513ea7c5a28767d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a691a475b6d276c971f7bece3bc382e8c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a691a475b6d276c971f7bece3bc382e8c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>typeChanged</b> ()</td></tr>
+<tr class="memitem:a691a475b6d276c971f7bece3bc382e8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c">typeChanged</a> ()</td></tr>
 <tr class="separator:a691a475b6d276c971f7bece3bc382e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ad10a5700c7b87b577c362fc39bd9d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ad10a5700c7b87b577c362fc39bd9d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>distanceChanged</b> ()</td></tr>
+<tr class="memitem:a0ad10a5700c7b87b577c362fc39bd9d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6">distanceChanged</a> ()</td></tr>
 <tr class="separator:a0ad10a5700c7b87b577c362fc39bd9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7852700b43e7ea53c29fc18ed386943"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7852700b43e7ea53c29fc18ed386943"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>iconChanged</b> ()</td></tr>
+<tr class="memitem:ab7852700b43e7ea53c29fc18ed386943"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943">iconChanged</a> ()</td></tr>
 <tr class="separator:ab7852700b43e7ea53c29fc18ed386943"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a74966050a9d0b0538ef413265fcd97d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74966050a9d0b0538ef413265fcd97d9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PoiObject</b> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:a74966050a9d0b0538ef413265fcd97d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a74966050a9d0b0538ef413265fcd97d9">PoiObject</a> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:a74966050a9d0b0538ef413265fcd97d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c5039c01c2661025e4cdc47a871a172"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c5039c01c2661025e4cdc47a871a172"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PoiObject</b> (const QString &amp;name, const QString &amp;type, const int distance, const QString &amp;icon, struct <a class="el" href="structpcoord.html">pcoord</a> &amp;coords, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:a3c5039c01c2661025e4cdc47a871a172"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a3c5039c01c2661025e4cdc47a871a172">PoiObject</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#a937f545633fb98057ffc334b6b121e3a">name</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#ad46890cb669816aeb2ea754a13bd9363">type</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="classPoiObject.html#aecdac2f1cc61b0ce1a39bdb2606471a4">distance</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#ad7d7eabd8b63f935401dfe9d7e32a785">icon</a>, struct <a class="el" href="structpcoord.html">pcoord</a> &amp;<a class="el" href="classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12">coords</a>, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:a3c5039c01c2661025e4cdc47a871a172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a352c7e0e8ce544419b8755dc33f26eed"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a352c7e0e8ce544419b8755dc33f26eed"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const </td></tr>
+<tr class="memitem:a352c7e0e8ce544419b8755dc33f26eed"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">name</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a352c7e0e8ce544419b8755dc33f26eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb42dfa9878f07d66ddc844cc63e84c2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb42dfa9878f07d66ddc844cc63e84c2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const QString &amp;name)</td></tr>
+<tr class="memitem:acb42dfa9878f07d66ddc844cc63e84c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#a937f545633fb98057ffc334b6b121e3a">name</a>)</td></tr>
 <tr class="separator:acb42dfa9878f07d66ddc844cc63e84c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59afe1bb5ac0ad97782cc833b09196a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59afe1bb5ac0ad97782cc833b09196a0"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> () const </td></tr>
+<tr class="memitem:a59afe1bb5ac0ad97782cc833b09196a0"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">type</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a59afe1bb5ac0ad97782cc833b09196a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b30d44ab956291d1ae53a5fcc89a8da"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b30d44ab956291d1ae53a5fcc89a8da"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setType</b> (const QString &amp;type)</td></tr>
+<tr class="memitem:a5b30d44ab956291d1ae53a5fcc89a8da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#ad46890cb669816aeb2ea754a13bd9363">type</a>)</td></tr>
 <tr class="separator:a5b30d44ab956291d1ae53a5fcc89a8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a831ba33b305dbc2ac55580b29c258a35"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a831ba33b305dbc2ac55580b29c258a35"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b> () const </td></tr>
+<tr class="memitem:a831ba33b305dbc2ac55580b29c258a35"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">distance</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a831ba33b305dbc2ac55580b29c258a35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28e83a0754bf9ef5a94d1a254dc82889"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28e83a0754bf9ef5a94d1a254dc82889"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDistance</b> (const int distance)</td></tr>
+<tr class="memitem:a28e83a0754bf9ef5a94d1a254dc82889"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="classPoiObject.html#aecdac2f1cc61b0ce1a39bdb2606471a4">distance</a>)</td></tr>
 <tr class="separator:a28e83a0754bf9ef5a94d1a254dc82889"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16070d8e0dc44f2430f69a0e3b876a73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16070d8e0dc44f2430f69a0e3b876a73"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b> () const </td></tr>
+<tr class="memitem:a16070d8e0dc44f2430f69a0e3b876a73"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">icon</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a16070d8e0dc44f2430f69a0e3b876a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae864d4686cfc7cd5671491e166cdca9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae864d4686cfc7cd5671491e166cdca9e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setIcon</b> (const QString &amp;icon)</td></tr>
+<tr class="memitem:ae864d4686cfc7cd5671491e166cdca9e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classPoiObject.html#ad7d7eabd8b63f935401dfe9d7e32a785">icon</a>)</td></tr>
 <tr class="separator:ae864d4686cfc7cd5671491e166cdca9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a1347fea47e887582c6911c6a6caf12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a1347fea47e887582c6911c6a6caf12"></a>
-struct <a class="el" href="structpcoord.html">pcoord</a>&#160;</td><td class="memItemRight" valign="bottom"><b>coords</b> () const </td></tr>
+<tr class="memitem:a4a1347fea47e887582c6911c6a6caf12"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12">coords</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a4a1347fea47e887582c6911c6a6caf12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a937f545633fb98057ffc334b6b121e3a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a937f545633fb98057ffc334b6b121e3a"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="memitem:a937f545633fb98057ffc334b6b121e3a"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a937f545633fb98057ffc334b6b121e3a">name</a></td></tr>
 <tr class="separator:a937f545633fb98057ffc334b6b121e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad46890cb669816aeb2ea754a13bd9363"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad46890cb669816aeb2ea754a13bd9363"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="memitem:ad46890cb669816aeb2ea754a13bd9363"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ad46890cb669816aeb2ea754a13bd9363">type</a></td></tr>
 <tr class="separator:ad46890cb669816aeb2ea754a13bd9363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecdac2f1cc61b0ce1a39bdb2606471a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecdac2f1cc61b0ce1a39bdb2606471a4"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b></td></tr>
+<tr class="memitem:aecdac2f1cc61b0ce1a39bdb2606471a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#aecdac2f1cc61b0ce1a39bdb2606471a4">distance</a></td></tr>
 <tr class="separator:aecdac2f1cc61b0ce1a39bdb2606471a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7d7eabd8b63f935401dfe9d7e32a785"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7d7eabd8b63f935401dfe9d7e32a785"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b></td></tr>
+<tr class="memitem:ad7d7eabd8b63f935401dfe9d7e32a785"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ad7d7eabd8b63f935401dfe9d7e32a785">icon</a></td></tr>
 <tr class="separator:ad7d7eabd8b63f935401dfe9d7e32a785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ae4a19cb518c96145c03536781f3dcc41"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ae4a19cb518c96145c03536781f3dcc41">m_coords</a></td></tr>
+<tr class="separator:ae4a19cb518c96145c03536781f3dcc41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21d7b34c5a151e44470be5d5a1428881"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881">m_name</a></td></tr>
+<tr class="separator:a21d7b34c5a151e44470be5d5a1428881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8cb268e199a036ea5e633369cc1eba6"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6">m_type</a></td></tr>
+<tr class="separator:ae8cb268e199a036ea5e633369cc1eba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ca1c3592b164ac9699ab8cf9b825866"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a4ca1c3592b164ac9699ab8cf9b825866">m_distance</a></td></tr>
+<tr class="separator:a4ca1c3592b164ac9699ab8cf9b825866"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f6fb30eaf2eca575dffe4b36ed95cae"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae">m_icon</a></td></tr>
+<tr class="separator:a2f6fb30eaf2eca575dffe4b36ed95cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a74966050a9d0b0538ef413265fcd97d9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PoiObject::PoiObject </td>
+          <td>(</td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3c5039c01c2661025e4cdc47a871a172"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PoiObject::PoiObject </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
+          <td class="paramname"><em>distance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>icon</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> &amp;&#160;</td>
+          <td class="paramname"><em>coords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a4a1347fea47e887582c6911c6a6caf12"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a> PoiObject::coords </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classBackend.html#a134019c783a8709803053b45905e333f">Backend::setActivePoiAsDestination()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a831ba33b305dbc2ac55580b29c258a35"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float PoiObject::distance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0ad10a5700c7b87b577c362fc39bd9d6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::distanceChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a16070d8e0dc44f2430f69a0e3b876a73"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::icon </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab7852700b43e7ea53c29fc18ed386943"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::iconChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a352c7e0e8ce544419b8755dc33f26eed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab33186a19ea151f513ea7c5a28767d2a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::nameChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28e83a0754bf9ef5a94d1a254dc82889"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::setDistance </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td>
+          <td class="paramname"><em>distance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35">distance()</a>, <a class="el" href="classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6">distanceChanged()</a>, and <a class="el" href="classPoiObject.html#a4ca1c3592b164ac9699ab8cf9b825866">m_distance</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae864d4686cfc7cd5671491e166cdca9e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::setIcon </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>icon</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73">icon()</a>, <a class="el" href="classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943">iconChanged()</a>, and <a class="el" href="classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae">m_icon</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acb42dfa9878f07d66ddc844cc63e84c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::setName </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881">m_name</a>, <a class="el" href="classPoiObject.html#a352c7e0e8ce544419b8755dc33f26eed">name()</a>, and <a class="el" href="classPoiObject.html#ab33186a19ea151f513ea7c5a28767d2a">nameChanged()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5b30d44ab956291d1ae53a5fcc89a8da"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::setType </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6">m_type</a>, <a class="el" href="classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0">type()</a>, and <a class="el" href="classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c">typeChanged()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a59afe1bb5ac0ad97782cc833b09196a0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a691a475b6d276c971f7bece3bc382e8c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> PoiObject::typeChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="ae4a19cb518c96145c03536781f3dcc41"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a> PoiObject::m_coords</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4ca1c3592b164ac9699ab8cf9b825866"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> PoiObject::m_distance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a28e83a0754bf9ef5a94d1a254dc82889">setDistance()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2f6fb30eaf2eca575dffe4b36ed95cae"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::m_icon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#ae864d4686cfc7cd5671491e166cdca9e">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a21d7b34c5a151e44470be5d5a1428881"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::m_name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#acb42dfa9878f07d66ddc844cc63e84c2">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae8cb268e199a036ea5e633369cc1eba6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::m_type</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classPoiObject.html#a5b30d44ab956291d1ae53a5fcc89a8da">setType()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a class="anchor" id="aecdac2f1cc61b0ce1a39bdb2606471a4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float PoiObject::distance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad7d7eabd8b63f935401dfe9d7e32a785"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::icon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a937f545633fb98057ffc334b6b121e3a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classBackend.html#a134019c783a8709803053b45905e333f">Backend::setActivePoiAsDestination()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad46890cb669816aeb2ea754a13bd9363"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString PoiObject::type</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>gui/qt5_qml/<a class="el" href="qml__poi_8h_source.html">qml_poi.h</a></li>
-<li>gui/qt5_qml/qml_poi.cpp</li>
+<li>gui/qt5_qml/<a class="el" href="qml__poi_8cpp.html">qml_poi.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

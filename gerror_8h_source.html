@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('gerror_8h_source.html','');});
 <div class="title">gerror.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* gerror.h - Error reporting system</span></div>
+<a href="gerror_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* gerror.h - Error reporting system</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *  Copyright 2000 Red Hat, Inc.</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
@@ -95,82 +95,109 @@ $(document).ready(function(){initNavTree('gerror_8h_source.html','');});
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef __G_ERROR_H__</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_ERROR_H__</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="gerror_8h.html#aad3845736e428333d7358ff00dd8c3fa">   26</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_ERROR_H__</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;glib/gquark.h&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="gquark_8h.html">glib/gquark.h</a>&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;G_BEGIN_DECLS</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__GError.html">_GError</a> GError;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">   32</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__GError.html">_GError</a> <a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="struct__GError.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct__GError.html">_GError</a></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  GQuark       domain;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  gint         <a class="code" href="structcode.html">code</a>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  gchar       *<a class="code" href="structmessage.html">message</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="struct__GError.html#a7782b88ce5b9a8234c55c32c6473c20a">   36</a></span>&#160;  <a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>       <a class="code" href="struct__GError.html#a7782b88ce5b9a8234c55c32c6473c20a">domain</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="struct__GError.html#ac54da292e4716b54c56813d78ecadd0c">   37</a></span>&#160;  <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>         <a class="code" href="struct__GError.html#ac54da292e4716b54c56813d78ecadd0c">code</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="struct__GError.html#aba023ed273dafcfee04fe558a5796a7a">   38</a></span>&#160;  <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>       *<a class="code" href="struct__GError.html#aba023ed273dafcfee04fe558a5796a7a">message</a>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;GError*  g_error_new           (GQuark         domain,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                gint           <a class="code" href="structcode.html">code</a>,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                <span class="keyword">const</span> gchar   *format,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                ...) G_GNUC_PRINTF (3, 4);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>*  <a class="code" href="gerror_8h.html#a4eda09a28f9a94dec49315ce6bf6f4da">g_error_new</a>           (<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>         domain,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>           <a class="code" href="structcode.html">code</a>,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                <span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *format,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                ...) <a class="code" href="gmacros_8h.html#a67c43cba8993fb7f944d7fa1988d26bf">G_GNUC_PRINTF</a> (3, 4);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;GError*  g_error_new_literal   (GQuark         domain,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                gint           code,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                const gchar   *<a class="code" href="structmessage.html">message</a>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>*  <a class="code" href="gerror_8h.html#a4be61b8d66020227296a9927091eb9c5">g_error_new_literal</a>   (<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>         domain,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>           code,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *<a class="code" href="structmessage.html">message</a>);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span>     g_error_free          (GError        *error);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;GError*  g_error_copy          (const GError  *error);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a912d5c9c3258ce76bf892f50a25ec599">g_error_free</a>          (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>        *<a class="code" href="command_8c.html#af10dacfa214e2575bb2e0ee407c242e0">error</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>*  <a class="code" href="gerror_8h.html#a57162b8629e0779a1c3cc5450cbec588">g_error_copy</a>          (<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>  *error);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;gboolean g_error_matches       (const GError  *error,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                GQuark         domain,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                gint           code);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="gtypes_8h.html#a3fbd4b724cd3917d53d4b4204a4963e5">gboolean</a> <a class="code" href="gerror_8h.html#a40634b52b079fb0db52f8de0802b4cfe">g_error_matches</a>       (<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>  *error,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                <a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>         domain,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>           code);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/* if (err) *err = g_error_new(domain, code, format, ...), also has</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> * some sanity checks.</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span>     g_set_error           (GError       **err,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                                GQuark         domain,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                                gint           code,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                const gchar   *format,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                ...) G_GNUC_PRINTF (4, 5);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#ab1bc35dad2cee6b675c388045dbcd942">g_set_error</a>           (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **<a class="code" href="tell__navit_8c.html#ae4349ff695c2b3e4caf3cebbd1b95f78">err</a>,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                                <a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>         domain,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                                <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>           code,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *format,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                ...) <a class="code" href="gmacros_8h.html#a67c43cba8993fb7f944d7fa1988d26bf">G_GNUC_PRINTF</a> (4, 5);</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span>     g_set_error_literal   (GError       **err,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                GQuark         domain,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                gint           code,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                const gchar   *message);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a9518cc02b2dcc9f707880fe492759e09">g_set_error_literal</a>   (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **err,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                <a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>         domain,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                <a class="code" href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a>           code,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *message);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">/* if (dest) *dest = src; also has some sanity checks.</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span>     g_propagate_error     (GError       **dest,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                                GError        *src);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a47f035bff435ebf6902f6814defd89e1">g_propagate_error</a>     (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **<a class="code" href="namespacestartup.html#ad6086ef4176e1d5b4c19aea97bdc65eb">dest</a>,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                                <a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>        *src);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">/* if (err &amp;&amp; *err) { g_error_free(*err); *err = NULL; } */</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">void</span>     g_clear_error         (GError       **err);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a6dba6b21342c6bbfe505b9317e3b8c96">g_clear_error</a>         (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **err);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">/* if (err) prefix the formatted string to the -&gt;message */</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span>     g_prefix_error               (GError       **err,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                                       const gchar   *format,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a76cd1a56bdcc8f548714c80710f2e8df">g_prefix_error</a>               (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **err,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                                       <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *format,</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                                       ...) G_GNUC_PRINTF (2, 3);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">/* g_propagate_error then g_error_prefix on dest */</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span>     g_propagate_prefixed_error   (GError       **dest,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                                       GError        *src,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                                       const gchar   *format,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="gerror_8h.html#a2ddb6e6d1ae0f4589ab2b8fc70176add">g_propagate_prefixed_error</a>   (<a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>       **dest,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                                       <a class="code" href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a>        *src,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                                       <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>   *format,</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                                       ...) G_GNUC_PRINTF (3, 4);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;G_END_DECLS</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<a class="code" href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __G_ERROR_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="structmessage_html"><div class="ttname"><a href="structmessage.html">message</a></div><div class="ttdef"><b>Definition:</b> messages.h:25</div></div>
+<div class="ttc" id="struct__GError_html_a7782b88ce5b9a8234c55c32c6473c20a"><div class="ttname"><a href="struct__GError.html#a7782b88ce5b9a8234c55c32c6473c20a">_GError::domain</a></div><div class="ttdeci">GQuark domain</div><div class="ttdef"><b>Definition:</b> gerror.h:36</div></div>
+<div class="ttc" id="gerror_8h_html_a76cd1a56bdcc8f548714c80710f2e8df"><div class="ttname"><a href="gerror_8h.html#a76cd1a56bdcc8f548714c80710f2e8df">g_prefix_error</a></div><div class="ttdeci">void g_prefix_error(GError **err, const gchar *format,...) G_GNUC_PRINTF(2</div></div>
+<div class="ttc" id="gerror_8h_html_a47f035bff435ebf6902f6814defd89e1"><div class="ttname"><a href="gerror_8h.html#a47f035bff435ebf6902f6814defd89e1">g_propagate_error</a></div><div class="ttdeci">void g_propagate_error(GError **dest, GError *src)</div></div>
+<div class="ttc" id="gmacros_8h_html_a592df9359e90124ffc0d185505c9d567"><div class="ttname"><a href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div><div class="ttdeci">#define G_END_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:162</div></div>
+<div class="ttc" id="gerror_8h_html_ab1bc35dad2cee6b675c388045dbcd942"><div class="ttname"><a href="gerror_8h.html#ab1bc35dad2cee6b675c388045dbcd942">g_set_error</a></div><div class="ttdeci">void g_set_error(GError **err, GQuark domain, gint code, const gchar *format,...) G_GNUC_PRINTF(4</div></div>
+<div class="ttc" id="struct__GError_html_aba023ed273dafcfee04fe558a5796a7a"><div class="ttname"><a href="struct__GError.html#aba023ed273dafcfee04fe558a5796a7a">_GError::message</a></div><div class="ttdeci">gchar * message</div><div class="ttdef"><b>Definition:</b> gerror.h:38</div></div>
+<div class="ttc" id="gtypes_8h_html_a7032b151d3b86839407074d8f0ab43eb"><div class="ttname"><a href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a></div><div class="ttdeci">G_BEGIN_DECLS typedef char gchar</div><div class="ttdef"><b>Definition:</b> gtypes.h:45</div></div>
+<div class="ttc" id="gtypes_8h_html_a94f7fe39540fb07a3c09be37e16112b0"><div class="ttname"><a href="gtypes_8h.html#a94f7fe39540fb07a3c09be37e16112b0">gint</a></div><div class="ttdeci">int gint</div><div class="ttdef"><b>Definition:</b> gtypes.h:48</div></div>
+<div class="ttc" id="gmacros_8h_html_a72c1126856454c07c2f9ab131aa7f2a3"><div class="ttname"><a href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div><div class="ttdeci">#define G_BEGIN_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:161</div></div>
+<div class="ttc" id="gerror_8h_html_a57162b8629e0779a1c3cc5450cbec588"><div class="ttname"><a href="gerror_8h.html#a57162b8629e0779a1c3cc5450cbec588">g_error_copy</a></div><div class="ttdeci">GError * g_error_copy(const GError *error)</div></div>
+<div class="ttc" id="gerror_8h_html_a4eda09a28f9a94dec49315ce6bf6f4da"><div class="ttname"><a href="gerror_8h.html#a4eda09a28f9a94dec49315ce6bf6f4da">g_error_new</a></div><div class="ttdeci">GError * g_error_new(GQuark domain, gint code, const gchar *format,...) G_GNUC_PRINTF(3</div></div>
+<div class="ttc" id="gerror_8h_html_ae4b1c99e27dbe3c5e7ce1d287289bdee"><div class="ttname"><a href="gerror_8h.html#ae4b1c99e27dbe3c5e7ce1d287289bdee">GError</a></div><div class="ttdeci">typedefG_BEGIN_DECLS struct _GError GError</div><div class="ttdef"><b>Definition:</b> gerror.h:32</div></div>
 <div class="ttc" id="structcode_html"><div class="ttname"><a href="structcode.html">code</a></div><div class="ttdef"><b>Definition:</b> inftrees.h:24</div></div>
+<div class="ttc" id="tell__navit_8c_html_ae4349ff695c2b3e4caf3cebbd1b95f78"><div class="ttname"><a href="tell__navit_8c.html#ae4349ff695c2b3e4caf3cebbd1b95f78">err</a></div><div class="ttdeci">void err(char *fmt,...)</div><div class="ttdef"><b>Definition:</b> tell_navit.c:43</div></div>
+<div class="ttc" id="gtypes_8h_html_a3fbd4b724cd3917d53d4b4204a4963e5"><div class="ttname"><a href="gtypes_8h.html#a3fbd4b724cd3917d53d4b4204a4963e5">gboolean</a></div><div class="ttdeci">gint gboolean</div><div class="ttdef"><b>Definition:</b> gtypes.h:49</div></div>
+<div class="ttc" id="struct__GError_html_ac54da292e4716b54c56813d78ecadd0c"><div class="ttname"><a href="struct__GError.html#ac54da292e4716b54c56813d78ecadd0c">_GError::code</a></div><div class="ttdeci">gint code</div><div class="ttdef"><b>Definition:</b> gerror.h:37</div></div>
+<div class="ttc" id="gquark_8h_html"><div class="ttname"><a href="gquark_8h.html">gquark.h</a></div></div>
+<div class="ttc" id="gquark_8h_html_aca120c4186e7780b67a1d06ba4f56332"><div class="ttname"><a href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a></div><div class="ttdeci">G_BEGIN_DECLS typedef guint32 GQuark</div><div class="ttdef"><b>Definition:</b> gquark.h:38</div></div>
+<div class="ttc" id="namespacestartup_html_ad6086ef4176e1d5b4c19aea97bdc65eb"><div class="ttname"><a href="namespacestartup.html#ad6086ef4176e1d5b4c19aea97bdc65eb">startup.dest</a></div><div class="ttdeci">tuple dest</div><div class="ttdef"><b>Definition:</b> startup.py:4</div></div>
+<div class="ttc" id="gerror_8h_html_a6dba6b21342c6bbfe505b9317e3b8c96"><div class="ttname"><a href="gerror_8h.html#a6dba6b21342c6bbfe505b9317e3b8c96">g_clear_error</a></div><div class="ttdeci">void g_clear_error(GError **err)</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
 <div class="ttc" id="struct__GError_html"><div class="ttname"><a href="struct__GError.html">_GError</a></div><div class="ttdef"><b>Definition:</b> gerror.h:34</div></div>
+<div class="ttc" id="gerror_8h_html_a2ddb6e6d1ae0f4589ab2b8fc70176add"><div class="ttname"><a href="gerror_8h.html#a2ddb6e6d1ae0f4589ab2b8fc70176add">g_propagate_prefixed_error</a></div><div class="ttdeci">void void g_propagate_prefixed_error(GError **dest, GError *src, const gchar *format,...) G_GNUC_PRINTF(3</div></div>
+<div class="ttc" id="gmacros_8h_html_a67c43cba8993fb7f944d7fa1988d26bf"><div class="ttname"><a href="gmacros_8h.html#a67c43cba8993fb7f944d7fa1988d26bf">G_GNUC_PRINTF</a></div><div class="ttdeci">#define G_GNUC_PRINTF(format_idx, arg_idx)</div><div class="ttdef"><b>Definition:</b> gmacros.h:94</div></div>
+<div class="ttc" id="gerror_8h_html_a912d5c9c3258ce76bf892f50a25ec599"><div class="ttname"><a href="gerror_8h.html#a912d5c9c3258ce76bf892f50a25ec599">g_error_free</a></div><div class="ttdeci">void g_error_free(GError *error)</div></div>
+<div class="ttc" id="gerror_8h_html_a9518cc02b2dcc9f707880fe492759e09"><div class="ttname"><a href="gerror_8h.html#a9518cc02b2dcc9f707880fe492759e09">g_set_error_literal</a></div><div class="ttdeci">void void g_set_error_literal(GError **err, GQuark domain, gint code, const gchar *message)</div></div>
+<div class="ttc" id="gerror_8h_html_a40634b52b079fb0db52f8de0802b4cfe"><div class="ttname"><a href="gerror_8h.html#a40634b52b079fb0db52f8de0802b4cfe">g_error_matches</a></div><div class="ttdeci">gboolean g_error_matches(const GError *error, GQuark domain, gint code)</div></div>
+<div class="ttc" id="gerror_8h_html_a4be61b8d66020227296a9927091eb9c5"><div class="ttname"><a href="gerror_8h.html#a4be61b8d66020227296a9927091eb9c5">g_error_new_literal</a></div><div class="ttdeci">GError GError * g_error_new_literal(GQuark domain, gint code, const gchar *message)</div></div>
+<div class="ttc" id="command_8c_html_af10dacfa214e2575bb2e0ee407c242e0"><div class="ttname"><a href="command_8c.html#af10dacfa214e2575bb2e0ee407c242e0">error</a></div><div class="ttdeci">error</div><div class="ttdef"><b>Definition:</b> command.c:94</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>gerror.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="gerror_8h.html">gerror.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -73,10 +73,12 @@ $(document).ready(function(){initNavTree('structscroll__buttons.html','');});
 <div class="title">scroll_buttons Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="gui__internal__widget_8h_source.html">gui_internal_widget.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a004798f1f361de9b72f893b5afa73ac9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscroll__buttons.html#a004798f1f361de9b72f893b5afa73ac9">button_box_hide</a></td></tr>
+<tr class="memitem:a004798f1f361de9b72f893b5afa73ac9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscroll__buttons.html#a004798f1f361de9b72f893b5afa73ac9">button_box_hide</a></td></tr>
 <tr class="separator:a004798f1f361de9b72f893b5afa73ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ce5165082737685cfc52fec93f111fb"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structwidget.html">widget</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscroll__buttons.html#a3ce5165082737685cfc52fec93f111fb">button_box</a></td></tr>
 <tr class="separator:a3ce5165082737685cfc52fec93f111fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,6 +101,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>A container box that is the child of the table widget that contains+groups the next and previous button. </p>
 
+<p>Referenced by <a class="el" href="gui__internal__widget_8c.html#a7586837b0f556700196f185c08e248fa">gui_internal_box_pack()</a>, <a class="el" href="gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297">gui_internal_box_render()</a>, <a class="el" href="gui__internal__widget_8c.html#a4316e913cf7a32ec0ed669af738f49ba">gui_internal_compute_table_dimensions()</a>, <a class="el" href="gui__internal_8c.html#a2469723fa124da974054196d9c4bfbb1">gui_internal_motion_cb()</a>, <a class="el" href="gui__internal__widget_8c.html#a8cc60212389d11f0fed2ca4f533a62e3">gui_internal_scroll_buttons_init()</a>, <a class="el" href="gui__internal__widget_8h.html#a398189895cceaa99bcb2ae418f96bcba">gui_internal_table_button_prev()</a>, <a class="el" href="gui__internal__widget_8h.html#ae7135830c7cec3c97d041d2bc28a5e29">gui_internal_table_pack()</a>, <a class="el" href="gui__internal__widget_8h.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>, <a class="el" href="gui__internal__widget_8h.html#ad1402050a97dc3a962184dd0d5505959">gui_internal_widget_table_clear()</a>, and <a class="el" href="gui__internal__widget_8h.html#a6cfb3036a2d28e45d7dfa196d0947924">gui_internal_widget_table_new()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a004798f1f361de9b72f893b5afa73ac9"></a>
@@ -106,11 +110,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int scroll_buttons::button_box_hide</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> scroll_buttons::button_box_hide</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Button box should not be displayed if button_box_hide is not zero. </p>
+
+<p>Referenced by <a class="el" href="gui__internal__keyboard_8h.html#ace472a470dcb7f3505a37a32c270fd61">gui_internal_keyboard_do()</a>, and <a class="el" href="gui__internal__widget_8h.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>.</p>
 
 </div>
 </div>
@@ -125,6 +131,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>A button widget to handle 'next page' requests </p>
 
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__widget_8c.html#a8cc60212389d11f0fed2ca4f533a62e3">gui_internal_scroll_buttons_init()</a>, and <a class="el" href="gui__internal__widget_8h.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a57abac24ee89dbb89de3134be76f4ba9"></a>
@@ -137,6 +145,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>A button widget to handle 'previous page' requests. </p>
+
+<p>Referenced by <a class="el" href="gui__internal__widget_8c.html#a8cc60212389d11f0fed2ca4f533a62e3">gui_internal_scroll_buttons_init()</a>, and <a class="el" href="gui__internal__widget_8h.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>.</p>
 
 </div>
 </div>

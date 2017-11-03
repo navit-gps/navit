@@ -1,0 +1,87 @@
+var speak__lib_8h =
+[
+    [ "espeak_EVENT", "structespeak__EVENT.html", "structespeak__EVENT" ],
+    [ "espeak_VOICE", "structespeak__VOICE.html", "structespeak__VOICE" ],
+    [ "ESPEAK_API_REVISION", "speak__lib_8h.html#a4ebd80f609d68af61e9c2c82db32347f", null ],
+    [ "espeakCHARS_16BIT", "speak__lib_8h.html#abdada1a6f4000d761dfb5a0a0de63d35", null ],
+    [ "espeakCHARS_8BIT", "speak__lib_8h.html#a8eec0349847b778080421b525e22d475", null ],
+    [ "espeakCHARS_AUTO", "speak__lib_8h.html#a6e6b875c3cdd17e9b74e99f995578798", null ],
+    [ "espeakCHARS_UTF8", "speak__lib_8h.html#a8b7bbb23f50801d590758f5f25cdc52b", null ],
+    [ "espeakCHARS_WCHAR", "speak__lib_8h.html#af8c74623ab8d124c947e4d82a330454b", null ],
+    [ "espeakENDPAUSE", "speak__lib_8h.html#a8c981ed3b17f710b346bee5445d76059", null ],
+    [ "espeakKEEP_NAMEDATA", "speak__lib_8h.html#a000f8797c40def710716ec4fd4f04405", null ],
+    [ "espeakPHONEMES", "speak__lib_8h.html#a4eb4e1c81607264a58d563c1fa40e02e", null ],
+    [ "espeakSSML", "speak__lib_8h.html#a6216f72d2bd7168ad3e39d6005607de2", null ],
+    [ "t_espeak_callback", "speak__lib_8h.html#a565b12678d654c7b74acfd7e2c7aed0d", null ],
+    [ "espeak_AUDIO_OUTPUT", "speak__lib_8h.html#a23dea85b1ce61e5ce20312cf6512471b", [
+      [ "AUDIO_OUTPUT_PLAYBACK", "speak__lib_8h.html#a23dea85b1ce61e5ce20312cf6512471baf9276fb14cedc1f380452dc0d10a7af0", null ],
+      [ "AUDIO_OUTPUT_RETRIEVAL", "speak__lib_8h.html#a23dea85b1ce61e5ce20312cf6512471ba3f879b5e9a9f82c536a27747ae201a74", null ],
+      [ "AUDIO_OUTPUT_SYNCHRONOUS", "speak__lib_8h.html#a23dea85b1ce61e5ce20312cf6512471ba639877b8e2621b5897c487db183d19ac", null ],
+      [ "AUDIO_OUTPUT_SYNCH_PLAYBACK", "speak__lib_8h.html#a23dea85b1ce61e5ce20312cf6512471baefca8e2c4393d4ac3e1b0275d78fa3e3", null ]
+    ] ],
+    [ "espeak_ERROR", "speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5d", [
+      [ "EE_OK", "speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5da950dd5af648ddef4fd586c0db2a1dad6", null ],
+      [ "EE_INTERNAL_ERROR", "speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5da130c9ce94b70f542ac5cddc2fdd83ff4", null ],
+      [ "EE_BUFFER_FULL", "speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5da17817d21810de77cfb3aebda4f207382", null ],
+      [ "EE_NOT_FOUND", "speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5da067653f94e43fa692e0f220f7f6b9064", null ]
+    ] ],
+    [ "espeak_EVENT_TYPE", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3a", [
+      [ "espeakEVENT_LIST_TERMINATED", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa8fe2f8edc14729dfe7770c12dd5c7446", null ],
+      [ "espeakEVENT_WORD", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa1f4a469ea6c3228316ec615800f345d6", null ],
+      [ "espeakEVENT_SENTENCE", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa82fe00ad2a36ab7a2bfdf2fba1f92dfd", null ],
+      [ "espeakEVENT_MARK", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa09b24e282eaee025d499499c7fa49494", null ],
+      [ "espeakEVENT_PLAY", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aad8675c02305dbbf8df612cb2d9b59c95", null ],
+      [ "espeakEVENT_END", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa6085aa4a2bc45adabbe6cc87f44e3313", null ],
+      [ "espeakEVENT_MSG_TERMINATED", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa7a124d35f31b71ae4acca40aa542099b", null ],
+      [ "espeakEVENT_PHONEME", "speak__lib_8h.html#a733d14390c664816340338f3d4443e3aa87612fcf05c59d8b8966cd8ff144cf1d", null ]
+    ] ],
+    [ "espeak_PARAMETER", "speak__lib_8h.html#ad954721bea738a74e20120a828143dec", [
+      [ "espeakSILENCE", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca8fcc6eb4d7dd509891acb93a0f2b8b5e", null ],
+      [ "espeakRATE", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca8f530605c1777eebfb2b3053569d04c8", null ],
+      [ "espeakVOLUME", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca6f9f6b9e7de987713f881e8e0269abb7", null ],
+      [ "espeakPITCH", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca7cab746b6e0a53d82ca32a892ba51bd0", null ],
+      [ "espeakRANGE", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca0b2a8ba75516a6a5d3f2c241daf803e9", null ],
+      [ "espeakPUNCTUATION", "speak__lib_8h.html#ad954721bea738a74e20120a828143decaecc684f64b8f146e4ebf16a7279ce98f", null ],
+      [ "espeakCAPITALS", "speak__lib_8h.html#ad954721bea738a74e20120a828143decaea9310e49717c41c3c0ad231cc2755b3", null ],
+      [ "espeakWORDGAP", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca6ebccbda58716b2b891eaee31f4c82f7", null ],
+      [ "espeakOPTIONS", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca7ce72f21ca46c91344c4fe9daa7ea284", null ],
+      [ "espeakINTONATION", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca84b96ec238db50a6d69da9531a6c509e", null ],
+      [ "espeakRESERVED1", "speak__lib_8h.html#ad954721bea738a74e20120a828143decacee03d994dc2104096712ecba05486e9", null ],
+      [ "espeakRESERVED2", "speak__lib_8h.html#ad954721bea738a74e20120a828143decae77bd03ab7a2744a544310ee8354ca56", null ],
+      [ "espeakEMPHASIS", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca5b77ba9ce3c4703df4557c480c7c9fe0", null ],
+      [ "espeakLINELENGTH", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca6fc8a2a5638f775c01ae081aa8afb61c", null ],
+      [ "espeakVOICETYPE", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca5c03f6e4315bf92e987510c630089f18", null ],
+      [ "N_SPEECH_PARAM", "speak__lib_8h.html#ad954721bea738a74e20120a828143deca28aaf5337520edb910f38a2a4de2a48d", null ]
+    ] ],
+    [ "espeak_POSITION_TYPE", "speak__lib_8h.html#a346d1f0d723d42370ad1866189c571ce", [
+      [ "POS_CHARACTER", "speak__lib_8h.html#a346d1f0d723d42370ad1866189c571cea27fe2613c6be410a12b23de6de085e38", null ],
+      [ "POS_WORD", "speak__lib_8h.html#a346d1f0d723d42370ad1866189c571ceac33dcba5a7510c7b1ab4e6db0d57d677", null ],
+      [ "POS_SENTENCE", "speak__lib_8h.html#a346d1f0d723d42370ad1866189c571ceaa2ce87ecd833ec0126e8178908950d26", null ]
+    ] ],
+    [ "espeak_PUNCT_TYPE", "speak__lib_8h.html#a1fb70081343a9d94f86d371e640999bc", [
+      [ "espeakPUNCT_NONE", "speak__lib_8h.html#a1fb70081343a9d94f86d371e640999bca4f69e262e17934a0e1ad362f8e4645a3", null ],
+      [ "espeakPUNCT_ALL", "speak__lib_8h.html#a1fb70081343a9d94f86d371e640999bca5deb26b79fcdffec5d2cc1c2fa670dd3", null ],
+      [ "espeakPUNCT_SOME", "speak__lib_8h.html#a1fb70081343a9d94f86d371e640999bcab7c8d5db81cbfd48acbebd7e1d0425df", null ]
+    ] ],
+    [ "espeak_Cancel", "speak__lib_8h.html#a8d0e48de349009162376527c9e10a55b", null ],
+    [ "espeak_Char", "speak__lib_8h.html#a188cc5184c038128d822a672a27e5bd2", null ],
+    [ "espeak_CompileDictionary", "speak__lib_8h.html#a50ed40889e2f8a96d9ec8c21227aba91", null ],
+    [ "espeak_GetCurrentVoice", "speak__lib_8h.html#a0b0b95afde994470ff8c26f352b18670", null ],
+    [ "espeak_GetParameter", "speak__lib_8h.html#a7741613926f4d38b6d27999b8ff80d47", null ],
+    [ "espeak_Info", "speak__lib_8h.html#a20b24ab62af1756a5ab48f08b5fc2242", null ],
+    [ "espeak_Initialize", "speak__lib_8h.html#af5562abcb04f9866d131b0ced1f71e6a", null ],
+    [ "espeak_IsPlaying", "speak__lib_8h.html#a2ade8f73a4a653d7dc1680bb9e0960e1", null ],
+    [ "espeak_Key", "speak__lib_8h.html#a92d7918f7d832ebc9816bc0829e564f1", null ],
+    [ "espeak_ListVoices", "speak__lib_8h.html#a39a6f7cf8b9b65d31c278325476290a6", null ],
+    [ "espeak_SetParameter", "speak__lib_8h.html#ae2fe73a2f94f8668f5e81daa1939c870", null ],
+    [ "espeak_SetPhonemeTrace", "speak__lib_8h.html#a825cadb45c9a123edfc21128054f856c", null ],
+    [ "espeak_SetPunctuationList", "speak__lib_8h.html#a1572771c9adc97599c55347a0379b380", null ],
+    [ "espeak_SetSynthCallback", "speak__lib_8h.html#aab7084c81b3fe6a266dc0c5758063a7e", null ],
+    [ "espeak_SetUriCallback", "speak__lib_8h.html#a1f75bd1b434c4bf55a0861a6e4ece0fc", null ],
+    [ "espeak_SetVoiceByName", "speak__lib_8h.html#add5fdf459b7429bd2850e34dacc7ab74", null ],
+    [ "espeak_SetVoiceByProperties", "speak__lib_8h.html#a6cdb6bbe542f757ee73b220b39d5bb86", null ],
+    [ "espeak_Synchronize", "speak__lib_8h.html#aaa2d366845024e4c95cc6f47c7c25206", null ],
+    [ "espeak_Synth", "speak__lib_8h.html#acbfcd3cadfe05c3ae4d6b680b95300d7", null ],
+    [ "espeak_Synth_Mark", "speak__lib_8h.html#a7e05103df96fa6844d4ee36e2edfb9b2", null ],
+    [ "espeak_Terminate", "speak__lib_8h.html#aa9e2f5fc55b6ebb10ad7a5a073e24b79", null ]
+];

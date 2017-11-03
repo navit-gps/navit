@@ -11,6 +11,9 @@ var classVehicleObject =
     [ "setVehicle", "classVehicleObject.html#a8ae628c4b4b09d015f7b2450033ee59e", null ],
     [ "vehicle", "classVehicleObject.html#a0a389fa3fcdcc1652f44d3b774be05e3", null ],
     [ "vehicleChanged", "classVehicleObject.html#a7e7e626e89617c376699c3ec8fba589d", null ],
+    [ "m_active", "classVehicleObject.html#a91a69d213b28b21995a30002b1914801", null ],
+    [ "m_name", "classVehicleObject.html#a1204131cabbc03e88204e711e827c227", null ],
+    [ "m_vehicle", "classVehicleObject.html#a045bc43a150a4f77b36eb3b088b9e3a9", null ],
     [ "active", "classVehicleObject.html#a83011dfc9da7ebddfba1953fabf9e79a", null ],
     [ "name", "classVehicleObject.html#a8f6f4e1e3c66638720337190131e3786", null ]
 ];

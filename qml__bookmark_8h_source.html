@@ -70,46 +70,55 @@ $(document).ready(function(){initNavTree('qml__bookmark_8h_source.html','');});
 <div class="title">qml_bookmark.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef BOOKMARKOBJECT_H</span></div>
+<a href="qml__bookmark_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef BOOKMARKOBJECT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BOOKMARKOBJECT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;coord.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="coord_8h.html">coord.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classBookmarkObject.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="classBookmarkObject.html">BookmarkObject</a> : <span class="keyword">public</span> QObject</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    Q_PROPERTY(<span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> coords NOTIFY coordsChanged)</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classBookmarkObject.html#a3c04d2ee1eaf1d35e82784b7e0fc50bb">   11</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">name</a> READ <a class="code" href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">name</a> WRITE <a class="code" href="classBookmarkObject.html#ac36fa0a5997d093717471e2bb575ceb3">setName</a> NOTIFY <a class="code" href="classBookmarkObject.html#aa7a89ad4cee33bc0b98a74ae7fa968a8">nameChanged</a>)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    Q_PROPERTY(<span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> <a class="code" href="classBookmarkObject.html#af31a59578601801a0f66d12b14ce7344">coords</a> NOTIFY coordsChanged)</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classBookmarkObject.html">BookmarkObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classBookmarkObject.html">BookmarkObject</a>(<span class="keyword">const</span> QString &amp;name, <span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> &amp;coords, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString name() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> setName(<span class="keyword">const</span> QString &amp;name);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classBookmarkObject.html#a7c4af853aab1dd2a45719baf3e1b69ac">BookmarkObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classBookmarkObject.html#a7c4af853aab1dd2a45719baf3e1b69ac">BookmarkObject</a>(<span class="keyword">const</span> QString &amp;<a class="code" href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">name</a>, <span class="keyword">struct</span> <a class="code" href="structpcoord.html">pcoord</a> &amp;<a class="code" href="classBookmarkObject.html#af31a59578601801a0f66d12b14ce7344">coords</a>, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString <a class="code" href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">name</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classBookmarkObject.html#ac36fa0a5997d093717471e2bb575ceb3">setName</a>(<span class="keyword">const</span> QString &amp;<a class="code" href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">name</a>);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> coords() const;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> <a class="code" href="classBookmarkObject.html#af31a59578601801a0f66d12b14ce7344">coords</a>() <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;signals:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> nameChanged();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classBookmarkObject.html#aa7a89ad4cee33bc0b98a74ae7fa968a8">nameChanged</a>();</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> m_coords;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    QString m_name;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classBookmarkObject.html#a38436ef8c8878d0e4515302ca412a1fb">   26</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structpcoord.html">pcoord</a> <a class="code" href="classBookmarkObject.html#a38436ef8c8878d0e4515302ca412a1fb">m_coords</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classBookmarkObject.html#ac8e9662d4b791dae5f3c0073d4e4c50f">   27</a></span>&#160;    QString <a class="code" href="classBookmarkObject.html#ac8e9662d4b791dae5f3c0073d4e4c50f">m_name</a>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif // BOOKMARKOBJECT_H</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="classBookmarkObject_html_aa7a89ad4cee33bc0b98a74ae7fa968a8"><div class="ttname"><a href="classBookmarkObject.html#aa7a89ad4cee33bc0b98a74ae7fa968a8">BookmarkObject::nameChanged</a></div><div class="ttdeci">void nameChanged()</div></div>
+<div class="ttc" id="classBookmarkObject_html_a9334a344a032d034242d169d66576fc4"><div class="ttname"><a href="classBookmarkObject.html#a9334a344a032d034242d169d66576fc4">BookmarkObject::name</a></div><div class="ttdeci">QString name() const </div></div>
+<div class="ttc" id="classBookmarkObject_html_a7c4af853aab1dd2a45719baf3e1b69ac"><div class="ttname"><a href="classBookmarkObject.html#a7c4af853aab1dd2a45719baf3e1b69ac">BookmarkObject::BookmarkObject</a></div><div class="ttdeci">BookmarkObject(QObject *parent=0)</div><div class="ttdef"><b>Definition:</b> qml_bookmark.cpp:3</div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classBookmarkObject_html_ac8e9662d4b791dae5f3c0073d4e4c50f"><div class="ttname"><a href="classBookmarkObject.html#ac8e9662d4b791dae5f3c0073d4e4c50f">BookmarkObject::m_name</a></div><div class="ttdeci">QString m_name</div><div class="ttdef"><b>Definition:</b> qml_bookmark.h:27</div></div>
+<div class="ttc" id="coord_8h_html"><div class="ttname"><a href="coord_8h.html">coord.h</a></div></div>
+<div class="ttc" id="classBookmarkObject_html_af31a59578601801a0f66d12b14ce7344"><div class="ttname"><a href="classBookmarkObject.html#af31a59578601801a0f66d12b14ce7344">BookmarkObject::coords</a></div><div class="ttdeci">struct pcoord coords() const </div><div class="ttdef"><b>Definition:</b> qml_bookmark.cpp:29</div></div>
+<div class="ttc" id="classBookmarkObject_html_ac36fa0a5997d093717471e2bb575ceb3"><div class="ttname"><a href="classBookmarkObject.html#ac36fa0a5997d093717471e2bb575ceb3">BookmarkObject::setName</a></div><div class="ttdeci">void setName(const QString &amp;name)</div><div class="ttdef"><b>Definition:</b> qml_bookmark.cpp:21</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
 <div class="ttc" id="structpcoord_html"><div class="ttname"><a href="structpcoord.html">pcoord</a></div><div class="ttdef"><b>Definition:</b> coord.h:40</div></div>
 <div class="ttc" id="classBookmarkObject_html"><div class="ttname"><a href="classBookmarkObject.html">BookmarkObject</a></div><div class="ttdef"><b>Definition:</b> qml_bookmark.h:7</div></div>
+<div class="ttc" id="classBookmarkObject_html_a38436ef8c8878d0e4515302ca412a1fb"><div class="ttname"><a href="classBookmarkObject.html#a38436ef8c8878d0e4515302ca412a1fb">BookmarkObject::m_coords</a></div><div class="ttdeci">struct pcoord m_coords</div><div class="ttdef"><b>Definition:</b> qml_bookmark.h:26</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><b>qml_bookmark.h</b></li>
+    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><a class="el" href="qml__bookmark_8h.html">qml_bookmark.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

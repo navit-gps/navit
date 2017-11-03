@@ -70,55 +70,69 @@ $(document).ready(function(){initNavTree('qml__vehicle_8h_source.html','');});
 <div class="title">qml_vehicle.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef VEHICLEOBJECT_H</span></div>
+<a href="qml__vehicle_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef VEHICLEOBJECT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define VEHICLEOBJECT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;item.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;vehicle.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="item_8h.html">item.h</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="vehicle_8h.html">vehicle.h</a>&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="classVehicleObject.html">    8</a></span>&#160;<span class="keyword">class </span><a class="code" href="classVehicleObject.html">VehicleObject</a> : <span class="keyword">public</span> QObject</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Q_PROPERTY(<span class="keywordtype">bool</span> active READ active WRITE setActive NOTIFY activeChanged)</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classVehicleObject.html#a8f6f4e1e3c66638720337190131e3786">   12</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classVehicleObject.html#a607755c740c36a1732000d4cad19b587">name</a> READ <a class="code" href="classVehicleObject.html#a607755c740c36a1732000d4cad19b587">name</a> WRITE <a class="code" href="classVehicleObject.html#ac269215b45d45698dd5c5b61f93af8f2">setName</a> NOTIFY <a class="code" href="classVehicleObject.html#afbd3a1c453278e7faa24b22f7c93ca64">nameChanged</a>)</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classVehicleObject.html#a83011dfc9da7ebddfba1953fabf9e79a">   13</a></span>&#160;    Q_PROPERTY(<span class="keywordtype">bool</span> <a class="code" href="classVehicleObject.html#a8be40609919d6d0e9b98ebc224a624e2">active</a> READ <a class="code" href="classVehicleObject.html#a8be40609919d6d0e9b98ebc224a624e2">active</a> WRITE <a class="code" href="classVehicleObject.html#a5fac8fd8519e7ff144c0ba10a0563efa">setActive</a> NOTIFY <a class="code" href="classVehicleObject.html#acd961866c99a279b7bb01e2f7445fe12">activeChanged</a>)</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">//Q_PROPERTY(struct vehicle * vehicle READ vehicle WRITE setVehicle NOTIFY vehicleChanged)</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;public:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="classVehicleObject.html">VehicleObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classVehicleObject.html">VehicleObject</a>(<span class="keyword">const</span> QString &amp;name, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;active, <span class="keyword">struct</span> <a class="code" href="structvehicle.html">vehicle</a> *v, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classVehicleObject.html">VehicleObject</a>(<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classVehicleObject.html#a607755c740c36a1732000d4cad19b587">name</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <span class="keywordtype">bool</span> &amp;<a class="code" href="classVehicleObject.html#a8be40609919d6d0e9b98ebc224a624e2">active</a>, struct <a class="code" href="structvehicle.html">vehicle</a> *v, QObject *parent=0);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString name() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setName(<span class="keyword">const</span> QString &amp;name);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    QString name() <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classVehicleObject.html#ac269215b45d45698dd5c5b61f93af8f2">setName</a>(const QString &amp;name);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">bool</span> active() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> setActive(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;active);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">bool</span> active() const;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classVehicleObject.html#a5fac8fd8519e7ff144c0ba10a0563efa">setActive</a>(const <span class="keywordtype">bool</span> &amp;active);</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">struct </span><a class="code" href="structvehicle.html">vehicle</a> * <a class="code" href="structvehicle.html">vehicle</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> setVehicle(<span class="keyword">struct</span> vehicle * vehicle);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    struct <a class="code" href="structvehicle.html">vehicle</a> * <a class="code" href="structvehicle.html">vehicle</a>() const;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classVehicleObject.html#a8ae628c4b4b09d015f7b2450033ee59e">setVehicle</a>(struct <a class="code" href="structvehicle.html">vehicle</a> * <a class="code" href="structvehicle.html">vehicle</a>);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;signals:</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> nameChanged();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> activeChanged();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> vehicleChanged();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classVehicleObject.html#acd961866c99a279b7bb01e2f7445fe12">activeChanged</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classVehicleObject.html#a7e7e626e89617c376699c3ec8fba589d">vehicleChanged</a>();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    QString m_name;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">bool</span> m_active;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">struct </span>vehicle *m_vehicle;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;private:</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classVehicleObject.html#a1204131cabbc03e88204e711e827c227">   35</a></span>&#160;    QString <a class="code" href="classVehicleObject.html#a1204131cabbc03e88204e711e827c227">m_name</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classVehicleObject.html#a91a69d213b28b21995a30002b1914801">   36</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classVehicleObject.html#a91a69d213b28b21995a30002b1914801">m_active</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classVehicleObject.html#a045bc43a150a4f77b36eb3b088b9e3a9">   37</a></span>&#160;    struct vehicle *<a class="code" href="classVehicleObject.html#a045bc43a150a4f77b36eb3b088b9e3a9">m_vehicle</a>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#endif // MAPOBJECT_H</span></div>
 <div class="ttc" id="classVehicleObject_html"><div class="ttname"><a href="classVehicleObject.html">VehicleObject</a></div><div class="ttdef"><b>Definition:</b> qml_vehicle.h:8</div></div>
+<div class="ttc" id="vehicle_8h_html"><div class="ttname"><a href="vehicle_8h.html">vehicle.h</a></div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classVehicleObject_html_a1204131cabbc03e88204e711e827c227"><div class="ttname"><a href="classVehicleObject.html#a1204131cabbc03e88204e711e827c227">VehicleObject::m_name</a></div><div class="ttdeci">QString m_name</div><div class="ttdef"><b>Definition:</b> qml_vehicle.h:35</div></div>
+<div class="ttc" id="classVehicleObject_html_a045bc43a150a4f77b36eb3b088b9e3a9"><div class="ttname"><a href="classVehicleObject.html#a045bc43a150a4f77b36eb3b088b9e3a9">VehicleObject::m_vehicle</a></div><div class="ttdeci">struct vehicle * m_vehicle</div><div class="ttdef"><b>Definition:</b> qml_vehicle.h:37</div></div>
 <div class="ttc" id="structvehicle_html"><div class="ttname"><a href="structvehicle.html">vehicle</a></div><div class="ttdef"><b>Definition:</b> vehicle.c:55</div></div>
+<div class="ttc" id="classVehicleObject_html_a7e7e626e89617c376699c3ec8fba589d"><div class="ttname"><a href="classVehicleObject.html#a7e7e626e89617c376699c3ec8fba589d">VehicleObject::vehicleChanged</a></div><div class="ttdeci">void vehicleChanged()</div></div>
+<div class="ttc" id="classVehicleObject_html_a607755c740c36a1732000d4cad19b587"><div class="ttname"><a href="classVehicleObject.html#a607755c740c36a1732000d4cad19b587">VehicleObject::name</a></div><div class="ttdeci">QString name() const </div></div>
+<div class="ttc" id="classVehicleObject_html_acd961866c99a279b7bb01e2f7445fe12"><div class="ttname"><a href="classVehicleObject.html#acd961866c99a279b7bb01e2f7445fe12">VehicleObject::activeChanged</a></div><div class="ttdeci">void activeChanged()</div></div>
+<div class="ttc" id="classVehicleObject_html_afbd3a1c453278e7faa24b22f7c93ca64"><div class="ttname"><a href="classVehicleObject.html#afbd3a1c453278e7faa24b22f7c93ca64">VehicleObject::nameChanged</a></div><div class="ttdeci">void nameChanged()</div></div>
+<div class="ttc" id="item_8h_html"><div class="ttname"><a href="item_8h.html">item.h</a></div></div>
+<div class="ttc" id="classVehicleObject_html_a91a69d213b28b21995a30002b1914801"><div class="ttname"><a href="classVehicleObject.html#a91a69d213b28b21995a30002b1914801">VehicleObject::m_active</a></div><div class="ttdeci">bool m_active</div><div class="ttdef"><b>Definition:</b> qml_vehicle.h:36</div></div>
+<div class="ttc" id="classVehicleObject_html_a5fac8fd8519e7ff144c0ba10a0563efa"><div class="ttname"><a href="classVehicleObject.html#a5fac8fd8519e7ff144c0ba10a0563efa">VehicleObject::setActive</a></div><div class="ttdeci">void setActive(const bool &amp;active)</div><div class="ttdef"><b>Definition:</b> qml_vehicle.cpp:31</div></div>
+<div class="ttc" id="classVehicleObject_html_ac269215b45d45698dd5c5b61f93af8f2"><div class="ttname"><a href="classVehicleObject.html#ac269215b45d45698dd5c5b61f93af8f2">VehicleObject::setName</a></div><div class="ttdeci">void setName(const QString &amp;name)</div><div class="ttdef"><b>Definition:</b> qml_vehicle.cpp:18</div></div>
+<div class="ttc" id="classVehicleObject_html_a8ae628c4b4b09d015f7b2450033ee59e"><div class="ttname"><a href="classVehicleObject.html#a8ae628c4b4b09d015f7b2450033ee59e">VehicleObject::setVehicle</a></div><div class="ttdeci">void setVehicle(struct vehicle *vehicle)</div><div class="ttdef"><b>Definition:</b> qml_vehicle.cpp:44</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
+<div class="ttc" id="classVehicleObject_html_a8be40609919d6d0e9b98ebc224a624e2"><div class="ttname"><a href="classVehicleObject.html#a8be40609919d6d0e9b98ebc224a624e2">VehicleObject::active</a></div><div class="ttdeci">bool active() const </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><b>qml_vehicle.h</b></li>
+    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><a class="el" href="qml__vehicle_8h.html">qml_vehicle.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

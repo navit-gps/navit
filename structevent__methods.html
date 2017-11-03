@@ -73,37 +73,157 @@ $(document).ready(function(){initNavTree('structevent__methods.html','');});
 <div class="title">event_methods Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="event_8h_source.html">event.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a1d3cf902e952fde31c08f74bbb9da3f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1d3cf902e952fde31c08f74bbb9da3f2"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>main_loop_run</b> )(void)</td></tr>
+<tr class="memitem:a1d3cf902e952fde31c08f74bbb9da3f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#a1d3cf902e952fde31c08f74bbb9da3f2">main_loop_run</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td></tr>
 <tr class="separator:a1d3cf902e952fde31c08f74bbb9da3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5dfbc3536fba4b35965f06a996f684f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad5dfbc3536fba4b35965f06a996f684f"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>main_loop_quit</b> )(void)</td></tr>
+<tr class="memitem:ad5dfbc3536fba4b35965f06a996f684f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#ad5dfbc3536fba4b35965f06a996f684f">main_loop_quit</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td></tr>
 <tr class="separator:ad5dfbc3536fba4b35965f06a996f684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f8bb418bbec2ad3dc182d358ad84ecd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f8bb418bbec2ad3dc182d358ad84ecd"></a>
-struct <a class="el" href="structevent__watch.html">event_watch</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>add_watch</b> )(int fd, enum event_watch_cond cond, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
+<tr class="memitem:a2f8bb418bbec2ad3dc182d358ad84ecd"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__watch.html">event_watch</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#a2f8bb418bbec2ad3dc182d358ad84ecd">add_watch</a> )(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> fd, enum <a class="el" href="event_8h.html#a53ad37122e5e2c1d458cbf380d6547a0">event_watch_cond</a> cond, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:a2f8bb418bbec2ad3dc182d358ad84ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab81feef7ea1f77fae4bda62084224bda"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab81feef7ea1f77fae4bda62084224bda"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>remove_watch</b> )(struct <a class="el" href="structevent__watch.html">event_watch</a> *ev)</td></tr>
+<tr class="memitem:ab81feef7ea1f77fae4bda62084224bda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#ab81feef7ea1f77fae4bda62084224bda">remove_watch</a> )(struct <a class="el" href="structevent__watch.html">event_watch</a> *ev)</td></tr>
 <tr class="separator:ab81feef7ea1f77fae4bda62084224bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9957b606a2f3b9e42917bcf41193b0d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab9957b606a2f3b9e42917bcf41193b0d"></a>
-struct <a class="el" href="structevent__timeout.html">event_timeout</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>add_timeout</b> )(int timeout, int multi, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
+<tr class="memitem:ab9957b606a2f3b9e42917bcf41193b0d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__timeout.html">event_timeout</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#ab9957b606a2f3b9e42917bcf41193b0d">add_timeout</a> )(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> timeout, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> multi, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:ab9957b606a2f3b9e42917bcf41193b0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8d98e33a172fd0a3b47d3317c9c6f33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8d98e33a172fd0a3b47d3317c9c6f33"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>remove_timeout</b> )(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *ev)</td></tr>
+<tr class="memitem:aa8d98e33a172fd0a3b47d3317c9c6f33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#aa8d98e33a172fd0a3b47d3317c9c6f33">remove_timeout</a> )(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *ev)</td></tr>
 <tr class="separator:aa8d98e33a172fd0a3b47d3317c9c6f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c9cd86856db427d4cbb92de2cbd7659"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c9cd86856db427d4cbb92de2cbd7659"></a>
-struct <a class="el" href="structevent__idle.html">event_idle</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>add_idle</b> )(int priority, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
+<tr class="memitem:a8c9cd86856db427d4cbb92de2cbd7659"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__idle.html">event_idle</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#a8c9cd86856db427d4cbb92de2cbd7659">add_idle</a> )(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> priority, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:a8c9cd86856db427d4cbb92de2cbd7659"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeedb680039d30ef6fd49301aab54c5dd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeedb680039d30ef6fd49301aab54c5dd"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>remove_idle</b> )(struct <a class="el" href="structevent__idle.html">event_idle</a> *ev)</td></tr>
+<tr class="memitem:aeedb680039d30ef6fd49301aab54c5dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#aeedb680039d30ef6fd49301aab54c5dd">remove_idle</a> )(struct <a class="el" href="structevent__idle.html">event_idle</a> *ev)</td></tr>
 <tr class="separator:aeedb680039d30ef6fd49301aab54c5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05a8c1544471df644e38a6461d4b2415"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05a8c1544471df644e38a6461d4b2415"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>call_callback</b> )(struct <a class="el" href="structcallback__list.html">callback_list</a> *cb)</td></tr>
+<tr class="memitem:a05a8c1544471df644e38a6461d4b2415"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structevent__methods.html#a05a8c1544471df644e38a6461d4b2415">call_callback</a> )(struct <a class="el" href="structcallback__list.html">callback_list</a> *cb)</td></tr>
 <tr class="separator:a05a8c1544471df644e38a6461d4b2415"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a8c9cd86856db427d4cbb92de2cbd7659"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structevent__idle.html">event_idle</a>*(* event_methods::add_idle)(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> priority, struct <a class="el" href="structcallback.html">callback</a> *cb)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab9957b606a2f3b9e42917bcf41193b0d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structevent__timeout.html">event_timeout</a>*(* event_methods::add_timeout)(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> timeout, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> multi, struct <a class="el" href="structcallback.html">callback</a> *cb)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a84ab02a7011d6f7f66f4d2502658fb1d">event_add_timeout()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2f8bb418bbec2ad3dc182d358ad84ecd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structevent__watch.html">event_watch</a>*(* event_methods::add_watch)(<a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> fd, enum <a class="el" href="event_8h.html#a53ad37122e5e2c1d458cbf380d6547a0">event_watch_cond</a> cond, struct <a class="el" href="structcallback.html">callback</a> *cb)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#af0b4cc9711e5310e022da11bf0d45519">event_add_watch()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a05a8c1544471df644e38a6461d4b2415"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::call_callback)(struct <a class="el" href="structcallback__list.html">callback_list</a> *cb)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a453f6780e27351ce4592ccef2e63d4a7">event_call_callback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad5dfbc3536fba4b35965f06a996f684f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::main_loop_quit)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a9c9904dff9f3ba0cef33a0d0a99b1a31">event_main_loop_quit()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1d3cf902e952fde31c08f74bbb9da3f2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::main_loop_run)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#aa5e1b65befbe363ec3105728d4456b4c">event_main_loop_run()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeedb680039d30ef6fd49301aab54c5dd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::remove_idle)(struct <a class="el" href="structevent__idle.html">event_idle</a> *ev)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a958d2087511a68e1f0a150e76a5713e6">event_remove_idle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa8d98e33a172fd0a3b47d3317c9c6f33"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::remove_timeout)(struct <a class="el" href="structevent__timeout.html">event_timeout</a> *ev)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a617f1c54db196a3258a14be7311bec8a">event_remove_timeout()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab81feef7ea1f77fae4bda62084224bda"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* event_methods::remove_watch)(struct <a class="el" href="structevent__watch.html">event_watch</a> *ev)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="event_8h.html#a71c4acd9e0bfcf4cc341c6dbe4c2610b">event_remove_watch()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="event_8h_source.html">event.h</a></li>
 </ul>

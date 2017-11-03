@@ -70,33 +70,41 @@ $(document).ready(function(){initNavTree('event__qt5_8h_source.html','');});
 <div class="title">event_qt5.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="event__qt5_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// style with: clang-format -style=WebKit -i *</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;glib.h&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="glib_8h.html">glib.h</a>&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classqt5__navit__timer.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classqt5__navit__timer.html">qt5_navit_timer</a> : <span class="keyword">public</span> QObject {</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classqt5__navit__timer.html">qt5_navit_timer</a>(QObject* <a class="code" href="structparent.html">parent</a> = 0);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    GHashTable* timer_type;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    GHashTable* timer_callback;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    GHashTable* watches;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classqt5__navit__timer.html#a7bbda26f1ee764099c0484eb7f39addb">qt5_navit_timer</a>(QObject* <a class="code" href="structparent.html">parent</a> = 0);</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classqt5__navit__timer.html#ad139eb9e543aa856db72cc548020cfba">   28</a></span>&#160;    <a class="code" href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a>* <a class="code" href="classqt5__navit__timer.html#ad139eb9e543aa856db72cc548020cfba">timer_type</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classqt5__navit__timer.html#aa2f72702250ca388f606120b9239365a">   29</a></span>&#160;    <a class="code" href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a>* <a class="code" href="classqt5__navit__timer.html#aa2f72702250ca388f606120b9239365a">timer_callback</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6">   30</a></span>&#160;    <a class="code" href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a>* <a class="code" href="classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6">watches</a>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> timerEvent(QTimerEvent* event);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classqt5__navit__timer.html#af7e9cf69299079e1f075c449967674af">timerEvent</a>(QTimerEvent* event);</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> qt5_event_init(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> <a class="code" href="event__qt5_8h.html#a5f6385fb846817b8c84e6932e51773e1">qt5_event_init</a>(<span class="keywordtype">void</span>);</div>
 <div class="ttc" id="classqt5__navit__timer_html"><div class="ttname"><a href="classqt5__navit__timer.html">qt5_navit_timer</a></div><div class="ttdef"><b>Definition:</b> event_qt5.h:24</div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classqt5__navit__timer_html_ad139eb9e543aa856db72cc548020cfba"><div class="ttname"><a href="classqt5__navit__timer.html#ad139eb9e543aa856db72cc548020cfba">qt5_navit_timer::timer_type</a></div><div class="ttdeci">GHashTable * timer_type</div><div class="ttdef"><b>Definition:</b> event_qt5.h:28</div></div>
+<div class="ttc" id="glib_8h_html"><div class="ttname"><a href="glib_8h.html">glib.h</a></div></div>
+<div class="ttc" id="classqt5__navit__timer_html_a7bbda26f1ee764099c0484eb7f39addb"><div class="ttname"><a href="classqt5__navit__timer.html#a7bbda26f1ee764099c0484eb7f39addb">qt5_navit_timer::qt5_navit_timer</a></div><div class="ttdeci">qt5_navit_timer(QObject *parent=0)</div><div class="ttdef"><b>Definition:</b> event_qt5.cpp:59</div></div>
+<div class="ttc" id="ghash_8h_html_a0d071a65d3896dc0274c80a5dd8b9e2a"><div class="ttname"><a href="ghash_8h.html#a0d071a65d3896dc0274c80a5dd8b9e2a">GHashTable</a></div><div class="ttdeci">typedefG_BEGIN_DECLS struct _GHashTable GHashTable</div><div class="ttdef"><b>Definition:</b> ghash.h:39</div></div>
+<div class="ttc" id="classqt5__navit__timer_html_aa2f72702250ca388f606120b9239365a"><div class="ttname"><a href="classqt5__navit__timer.html#aa2f72702250ca388f606120b9239365a">qt5_navit_timer::timer_callback</a></div><div class="ttdeci">GHashTable * timer_callback</div><div class="ttdef"><b>Definition:</b> event_qt5.h:29</div></div>
+<div class="ttc" id="classqt5__navit__timer_html_a3866983df278a27ad30d4b483da157f6"><div class="ttname"><a href="classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6">qt5_navit_timer::watches</a></div><div class="ttdeci">GHashTable * watches</div><div class="ttdef"><b>Definition:</b> event_qt5.h:30</div></div>
+<div class="ttc" id="event__qt5_8h_html_a5f6385fb846817b8c84e6932e51773e1"><div class="ttname"><a href="event__qt5_8h.html#a5f6385fb846817b8c84e6932e51773e1">qt5_event_init</a></div><div class="ttdeci">void qt5_event_init(void)</div><div class="ttdef"><b>Definition:</b> event_qt5.cpp:185</div></div>
+<div class="ttc" id="classqt5__navit__timer_html_af7e9cf69299079e1f075c449967674af"><div class="ttname"><a href="classqt5__navit__timer.html#af7e9cf69299079e1f075c449967674af">qt5_navit_timer::timerEvent</a></div><div class="ttdeci">void timerEvent(QTimerEvent *event)</div><div class="ttdef"><b>Definition:</b> event_qt5.cpp:68</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><b>event_qt5.h</b></li>
+    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_8b19c315ddc03d8f73d70316e3e36453.html">qt5</a></li><li class="navelem"><a class="el" href="event__qt5_8h.html">event_qt5.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

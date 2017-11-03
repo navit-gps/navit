@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('Qt5EspeakAudioOut_8h_source.html','');
 <div class="title">Qt5EspeakAudioOut.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="Qt5EspeakAudioOut_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// style with: clang-format -style=WebKit -i *</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef Qt5EspeakAudioOut_h</span></div>
@@ -85,38 +85,46 @@ $(document).ready(function(){initNavTree('Qt5EspeakAudioOut_8h_source.html','');
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">/* Instantiate this. Parameters are the sample rate to use,</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">   * and the category to sort this audio output to. Not all platforms</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">   * will honour category */</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classQt5EspeakAudioOut.html#a8649165450bf91efd9567adecd9bbf2b">Qt5EspeakAudioOut</a>(<span class="keywordtype">int</span> samplerate, <span class="keyword">const</span> <span class="keywordtype">char</span>* category);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    ~<a class="code" href="classQt5EspeakAudioOut.html">Qt5EspeakAudioOut</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classQt5EspeakAudioOut.html#a8649165450bf91efd9567adecd9bbf2b">Qt5EspeakAudioOut</a>(<span class="keywordtype">int</span> <a class="code" href="espeak_8c.html#ac38751c7169cfeb9325a947cc0484286">samplerate</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* category);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classQt5EspeakAudioOut.html#ad019da125b08cb3e0eb5fe404849b143">~Qt5EspeakAudioOut</a>();</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">/* Add new samples to this class. The samples will be played*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> addSamples(<span class="keywordtype">short</span>* wav, <span class="keywordtype">int</span> numsamples);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQt5EspeakAudioOut.html#afbfc4de34a10f33b4de0eb8c9f717692">addSamples</a>(<span class="keywordtype">short</span>* wav, <span class="keywordtype">int</span> numsamples);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span> slots:</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">/* Deal with QAudioOutput status changes */</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> handleStateChanged(QAudio::State newState);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQt5EspeakAudioOut.html#ab3218eee3acfabafde0156a44d57ce57">handleStateChanged</a>(QAudio::State newState);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">/* Cause QAusioOutput to resume playing (after samples were added)*/</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> resume(<span class="keywordtype">int</span> state);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQt5EspeakAudioOut.html#a2106f16a66b9cf94dd2025763f96c968">resume</a>(<span class="keywordtype">int</span> state);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;signals:</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">/* Cause QAusioOutput to resume playing. Emit this from different thread</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">   * as this is not threadsafe*/</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> call_resume(<span class="keywordtype">int</span> state);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQt5EspeakAudioOut.html#a16b0b5d77281d4c668db7d42f8c4bbfe">call_resume</a>(<span class="keywordtype">int</span> state);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">/* internal buffer */</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    QByteArray* data;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    QBuffer* <a class="code" href="structbuffer.html">buffer</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classQt5EspeakAudioOut.html#ab0c52ec7f8c2f134756d573d3a5e3474">   50</a></span>&#160;    QByteArray* <a class="code" href="classQt5EspeakAudioOut.html#ab0c52ec7f8c2f134756d573d3a5e3474">data</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classQt5EspeakAudioOut.html#ab2819e93123a1921b109fbbc2b6fb99a">   51</a></span>&#160;    QBuffer* <a class="code" href="classQt5EspeakAudioOut.html#ab2819e93123a1921b109fbbc2b6fb99a">buffer</a>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">/* audio output class */</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    QAudioOutput* audio;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classQt5EspeakAudioOut.html#ae6c32bfd3b43a3165d72db7df3b4e58a">   53</a></span>&#160;    QAudioOutput* <a class="code" href="classQt5EspeakAudioOut.html#ae6c32bfd3b43a3165d72db7df3b4e58a">audio</a>;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_a2106f16a66b9cf94dd2025763f96c968"><div class="ttname"><a href="classQt5EspeakAudioOut.html#a2106f16a66b9cf94dd2025763f96c968">Qt5EspeakAudioOut::resume</a></div><div class="ttdeci">void resume(int state)</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.cpp:96</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_ad019da125b08cb3e0eb5fe404849b143"><div class="ttname"><a href="classQt5EspeakAudioOut.html#ad019da125b08cb3e0eb5fe404849b143">Qt5EspeakAudioOut::~Qt5EspeakAudioOut</a></div><div class="ttdeci">~Qt5EspeakAudioOut()</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.cpp:67</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_ab3218eee3acfabafde0156a44d57ce57"><div class="ttname"><a href="classQt5EspeakAudioOut.html#ab3218eee3acfabafde0156a44d57ce57">Qt5EspeakAudioOut::handleStateChanged</a></div><div class="ttdeci">void handleStateChanged(QAudio::State newState)</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.cpp:77</div></div>
 <div class="ttc" id="classQt5EspeakAudioOut_html"><div class="ttname"><a href="classQt5EspeakAudioOut.html">Qt5EspeakAudioOut</a></div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.h:27</div></div>
-<div class="ttc" id="structbuffer_html"><div class="ttname"><a href="structbuffer.html">buffer</a></div><div class="ttdef"><b>Definition:</b> maptool.h:168</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_ab0c52ec7f8c2f134756d573d3a5e3474"><div class="ttname"><a href="classQt5EspeakAudioOut.html#ab0c52ec7f8c2f134756d573d3a5e3474">Qt5EspeakAudioOut::data</a></div><div class="ttdeci">QByteArray * data</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.h:50</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_ae6c32bfd3b43a3165d72db7df3b4e58a"><div class="ttname"><a href="classQt5EspeakAudioOut.html#ae6c32bfd3b43a3165d72db7df3b4e58a">Qt5EspeakAudioOut::audio</a></div><div class="ttdeci">QAudioOutput * audio</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.h:53</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_afbfc4de34a10f33b4de0eb8c9f717692"><div class="ttname"><a href="classQt5EspeakAudioOut.html#afbfc4de34a10f33b4de0eb8c9f717692">Qt5EspeakAudioOut::addSamples</a></div><div class="ttdeci">void addSamples(short *wav, int numsamples)</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.cpp:103</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_ab2819e93123a1921b109fbbc2b6fb99a"><div class="ttname"><a href="classQt5EspeakAudioOut.html#ab2819e93123a1921b109fbbc2b6fb99a">Qt5EspeakAudioOut::buffer</a></div><div class="ttdeci">QBuffer * buffer</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.h:51</div></div>
 <div class="ttc" id="classQt5EspeakAudioOut_html_a8649165450bf91efd9567adecd9bbf2b"><div class="ttname"><a href="classQt5EspeakAudioOut.html#a8649165450bf91efd9567adecd9bbf2b">Qt5EspeakAudioOut::Qt5EspeakAudioOut</a></div><div class="ttdeci">Qt5EspeakAudioOut(int samplerate, const char *category)</div><div class="ttdef"><b>Definition:</b> Qt5EspeakAudioOut.cpp:26</div></div>
+<div class="ttc" id="classQt5EspeakAudioOut_html_a16b0b5d77281d4c668db7d42f8c4bbfe"><div class="ttname"><a href="classQt5EspeakAudioOut.html#a16b0b5d77281d4c668db7d42f8c4bbfe">Qt5EspeakAudioOut::call_resume</a></div><div class="ttdeci">void call_resume(int state)</div></div>
+<div class="ttc" id="espeak_8c_html_ac38751c7169cfeb9325a947cc0484286"><div class="ttname"><a href="espeak_8c.html#ac38751c7169cfeb9325a947cc0484286">samplerate</a></div><div class="ttdeci">int samplerate</div><div class="ttdef"><b>Definition:</b> espeak.c:84</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d96a2be2088865c6bacdc361b708e41e.html">speech</a></li><li class="navelem"><a class="el" href="dir_b565d4fcb41986a6b26d7475fb3f69ab.html">qt5_espeak</a></li><li class="navelem"><b>Qt5EspeakAudioOut.h</b></li>
+    <li class="navelem"><a class="el" href="dir_d96a2be2088865c6bacdc361b708e41e.html">speech</a></li><li class="navelem"><a class="el" href="dir_b565d4fcb41986a6b26d7475fb3f69ab.html">qt5_espeak</a></li><li class="navelem"><a class="el" href="Qt5EspeakAudioOut_8h.html">Qt5EspeakAudioOut.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

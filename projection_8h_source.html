@@ -70,35 +70,49 @@ $(document).ready(function(){initNavTree('projection_8h_source.html','');});
 <div class="title">projection.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="projection_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifndef NAVIT_PROJECTION_H</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define NAVIT_PROJECTION_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">enum</span> projection {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        projection_none,        </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        projection_mg,          </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        projection_garmin,      </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        projection_screen,      </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        projection_utm          </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">   23</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> {</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a02133eae2b9a5a58ec1bbf3072cdac0e">   24</a></span>&#160;        <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a02133eae2b9a5a58ec1bbf3072cdac0e">projection_none</a>,        </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">   25</a></span>&#160;        <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,          </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">   26</a></span>&#160;        <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">projection_garmin</a>,      </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a7fac95e85079a3f4fec97458ce877db0">   27</a></span>&#160;        <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a7fac95e85079a3f4fec97458ce877db0">projection_screen</a>,      </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e">   28</a></span>&#160;        <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e">projection_utm</a>          </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">enum</span> map_datum {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        map_datum_none, map_datum_wgs84, map_datum_dhdn</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350c">   31</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350c">map_datum</a> {</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350ca36d3848c88c66d79d2d11f7072e33ad8">   32</a></span>&#160;        <a class="code" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350ca8250b295e288b5152a7d192567449321">map_datum_none</a>, <a class="code" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350ca36d3848c88c66d79d2d11f7072e33ad8">map_datum_wgs84</a>, <a class="code" href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350cad8972dbbe56ecdd04784bf4be93a6ebf">map_datum_dhdn</a></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">struct </span><a class="code" href="structcoord.html">coord</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">enum</span> projection projection_from_name(<span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">struct</span> <a class="code" href="structcoord.html">coord</a> *offset);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">char</span> * projection_to_name(<span class="keyword">enum</span> projection proj);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">enum</span> <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> <a class="code" href="projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019">projection_from_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a>, <span class="keyword">struct</span> <a class="code" href="structcoord.html">coord</a> *<a class="code" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">char</span> * <a class="code" href="projection_8h.html#ab6bea86ce7e97569e9eedba942a880a2">projection_to_name</a>(<span class="keyword">enum</span> <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> proj);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="street_8c_html_aea4b5eaa20cb056bf06b1ed7969d1ae7"><div class="ttname"><a href="street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7">name</a></div><div class="ttdeci">char name[0]</div><div class="ttdef"><b>Definition:</b> street.c:559</div></div>
+<div class="ttc" id="garmin__img_8c_html_aed7ea92f45bd273dde380a45ddced592"><div class="ttname"><a href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a></div><div class="ttdeci">int offset</div><div class="ttdef"><b>Definition:</b> garmin_img.c:69</div></div>
+<div class="ttc" id="projection_8h_html_ab88b4aae7ee305476bf3ac7faebe8019"><div class="ttname"><a href="projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019">projection_from_name</a></div><div class="ttdeci">enum projection projection_from_name(const char *name, struct coord *offset)</div><div class="ttdef"><b>Definition:</b> projection.c:61</div></div>
+<div class="ttc" id="projection_8h_html_ab6bea86ce7e97569e9eedba942a880a2"><div class="ttname"><a href="projection_8h.html#ab6bea86ce7e97569e9eedba942a880a2">projection_to_name</a></div><div class="ttdeci">char * projection_to_name(enum projection proj)</div><div class="ttdef"><b>Definition:</b> projection.c:103</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a02133eae2b9a5a58ec1bbf3072cdac0e"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a02133eae2b9a5a58ec1bbf3072cdac0e">projection_none</a></div><div class="ttdef"><b>Definition:</b> projection.h:24</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e">projection_utm</a></div><div class="ttdef"><b>Definition:</b> projection.h:28</div></div>
+<div class="ttc" id="projection_8h_html_a1382ecd2eb400cff44d037ed681a350ca36d3848c88c66d79d2d11f7072e33ad8"><div class="ttname"><a href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350ca36d3848c88c66d79d2d11f7072e33ad8">map_datum_wgs84</a></div><div class="ttdef"><b>Definition:</b> projection.h:32</div></div>
+<div class="ttc" id="projection_8h_html_a1382ecd2eb400cff44d037ed681a350cad8972dbbe56ecdd04784bf4be93a6ebf"><div class="ttname"><a href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350cad8972dbbe56ecdd04784bf4be93a6ebf">map_datum_dhdn</a></div><div class="ttdef"><b>Definition:</b> projection.h:32</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdef"><b>Definition:</b> projection.h:25</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">projection_garmin</a></div><div class="ttdef"><b>Definition:</b> projection.h:26</div></div>
+<div class="ttc" id="projection_8h_html_a1382ecd2eb400cff44d037ed681a350c"><div class="ttname"><a href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350c">map_datum</a></div><div class="ttdeci">map_datum</div><div class="ttdef"><b>Definition:</b> projection.h:31</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a></div><div class="ttdeci">projection</div><div class="ttdef"><b>Definition:</b> projection.h:23</div></div>
+<div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a7fac95e85079a3f4fec97458ce877db0"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a7fac95e85079a3f4fec97458ce877db0">projection_screen</a></div><div class="ttdef"><b>Definition:</b> projection.h:27</div></div>
+<div class="ttc" id="projection_8h_html_a1382ecd2eb400cff44d037ed681a350ca8250b295e288b5152a7d192567449321"><div class="ttname"><a href="projection_8h.html#a1382ecd2eb400cff44d037ed681a350ca8250b295e288b5152a7d192567449321">map_datum_none</a></div><div class="ttdef"><b>Definition:</b> projection.h:32</div></div>
 <div class="ttc" id="structcoord_html"><div class="ttname"><a href="structcoord.html">coord</a></div><div class="ttdef"><b>Definition:</b> coord.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>projection.h</b></li>
+    <li class="navelem"><a class="el" href="projection_8h.html">projection.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

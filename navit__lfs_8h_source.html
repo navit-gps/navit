@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('navit__lfs_8h_source.html','');});
 <div class="title">navit_lfs.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __NAVIT_LFS_H__</span></div>
+<a href="navit__lfs_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __NAVIT_LFS_H__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifdef BUFSIZ</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#error &quot;Don&#39;t #include stdio.h directly if you later #include navit_lfs.h&quot;</span></div>
@@ -82,15 +82,15 @@ $(document).ready(function(){initNavTree('navit__lfs_8h_source.html','');});
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#error &quot;Don&#39;t #include unistd.h directly if you later #include navit_lfs.h&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define _LARGEFILE_SOURCE</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FILE_OFFSET_BITS 64</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="navit__lfs_8h.html#a0cdbd4d0545340d33dfe595811475ccd">   31</a></span>&#160;<span class="preprocessor">#define _LARGEFILE_SOURCE</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="navit__lfs_8h.html#a44d01ba0a136b8e27ad362f5a823d14e">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FILE_OFFSET_BITS 64</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef __MSVCRT__</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __USE_MINGW_FSEEK</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="unistd_8h.html">unistd.h</a>&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fcntl_8h.html">fcntl.h</a>&gt;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#ifdef __MSVCRT__</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
@@ -114,22 +114,24 @@ $(document).ready(function(){initNavTree('navit__lfs_8h_source.html','');});
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#ifndef O_LARGEFILE</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_LARGEFILE 0</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="navit__lfs_8h.html#a1126309aa58e7c99553c7f6be1bc7348">   63</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_LARGEFILE 0</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#ifndef O_BINARY</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_BINARY 0</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="navit__lfs_8h.html#a36fa9b2e726512bc17a7a6d3e39002be">   67</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define O_BINARY 0</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define __NAVIT_LFS_H__</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="navit__lfs_8h.html#af6b1b44a950caa804d59c31c06f72763">   70</a></span>&#160;<span class="preprocessor">#define __NAVIT_LFS_H__</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="fcntl_8h_html"><div class="ttname"><a href="fcntl_8h.html">fcntl.h</a></div></div>
+<div class="ttc" id="unistd_8h_html"><div class="ttname"><a href="unistd_8h.html">unistd.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>navit_lfs.h</b></li>
+    <li class="navelem"><a class="el" href="navit__lfs_8h.html">navit_lfs.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

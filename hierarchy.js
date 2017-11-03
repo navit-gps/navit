@@ -84,6 +84,7 @@ var hierarchy =
     [ "bookmarks", "structbookmarks.html", null ],
     [ "boundary", "structboundary.html", null ],
     [ "buffer", "structbuffer.html", null ],
+    [ "building", "structbuilding.html", null ],
     [ "cache", "structcache.html", null ],
     [ "cache_entry", "structcache__entry.html", null ],
     [ "cache_entry_list", "structcache__entry__list.html", null ],
@@ -126,6 +127,7 @@ var hierarchy =
     [ "coordObject", "structcoordObject.html", null ],
     [ "corelocation", "classcorelocation.html", null ],
     [ "country", "structcountry.html", null ],
+    [ "country_isonum", "structcountry__isonum.html", null ],
     [ "country_search", "structcountry__search.html", null ],
     [ "country_table", "structcountry__table.html", null ],
     [ "cursor", "structcursor.html", null ],
@@ -154,6 +156,7 @@ var hierarchy =
     [ "element", "structelement.html", null ],
     [ "element_func", "structelement__func.html", null ],
     [ "EMESS", "structEMESS.html", null ],
+    [ "entity", "structentity.html", null ],
     [ "espeak_EVENT", "structespeak__EVENT.html", null ],
     [ "espeak_VOICE", "structespeak__VOICE.html", null ],
     [ "event_idle", "structevent__idle.html", null ],
@@ -216,6 +219,7 @@ var hierarchy =
     [ "graphics_opengl_window_system_methods", "structgraphics__opengl__window__system__methods.html", null ],
     [ "graphics_priv", "structgraphics__priv.html", null ],
     [ "gscale", "structgscale.html", null ],
+    [ "gtk_poi_search", "structgtk__poi__search.html", null ],
     [ "gui", "structgui.html", null ],
     [ "gui_config_settings", "structgui__config__settings.html", null ],
     [ "gui_internal_data", "structgui__internal__data.html", null ],
@@ -238,6 +242,7 @@ var hierarchy =
     [ "inflate_state", "structinflate__state.html", null ],
     [ "InstanceData", "structInstanceData.html", null ],
     [ "internal_state", "structinternal__state.html", null ],
+    [ "org.navitproject.navit.FileBrowserActivity.Item", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html", null ],
     [ "item", "structitem.html", null ],
     [ "item_bin", "structitem__bin.html", null ],
     [ "item_bin_sink", "structitem__bin__sink.html", null ],
@@ -265,6 +270,9 @@ var hierarchy =
     [ "layout", "structlayout.html", null ],
     [ "lconv", "structlconv.html", null ],
     [ "level", "structlevel.html", null ],
+    [ "Listener", null, [
+      [ "org.navitproject.navit.NavitVehicle.NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", null ]
+    ] ],
     [ "loaded_domain", "structloaded__domain.html", null ],
     [ "loaded_l10nfile", "structloaded__l10nfile.html", null ],
     [ "log", "structlog.html", null ],
@@ -310,6 +318,7 @@ var hierarchy =
     [ "MNEM_TAB", "structMNEM__TAB.html", null ],
     [ "mo_file_header", "structmo__file__header.html", null ],
     [ "mouse_event_queue_element", "structmouse__event__queue__element.html", null ],
+    [ "org.navitproject.navit.NavitGraphics.msg_type", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1msg__type.html", null ],
     [ "nav_next_turn", "structnav__next__turn.html", null ],
     [ "nav_toggle_announcer", "structnav__toggle__announcer.html", null ],
     [ "navigation", "structnavigation.html", null ],
@@ -326,6 +335,7 @@ var hierarchy =
     [ "org.navitproject.navit.NavitActivityResult", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html", [
       [ "org.navitproject.navit.NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", null ]
     ] ],
+    [ "org.navitproject.navit.NavitAddressSearchActivity.NavitAddress", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html", null ],
     [ "org.navitproject.navit.NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html", null ],
     [ "org.navitproject.navit.NavitMap", "classorg_1_1navitproject_1_1navit_1_1NavitMap.html", null ],
     [ "NavitObject", "structNavitObject.html", null ],
@@ -350,6 +360,9 @@ var hierarchy =
     [ "OnInitListener", null, [
       [ "org.navitproject.navit.NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", null ]
     ] ],
+    [ "OnMenuItemClickListener", null, [
+      [ "org.navitproject.navit.NavitGraphics.NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", null ]
+    ] ],
     [ "option", "structoption.html", null ],
     [ "osd", "structosd.html", null ],
     [ "osd_button", "structosd__button.html", null ],
@@ -363,6 +376,7 @@ var hierarchy =
     [ "osd_speed_warner", "structosd__speed__warner.html", null ],
     [ "osd_text", "structosd__text.html", null ],
     [ "osd_text_item", "structosd__text__item.html", null ],
+    [ "org.navitproject.navit.NavitMapDownloader.osm_map_values", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html", null ],
     [ "osm_protobufdb_context", "structosm__protobufdb__context.html", null ],
     [ "padding", "structpadding.html", null ],
     [ "PaDeviceInfo", "structPaDeviceInfo.html", null ],
@@ -480,6 +494,8 @@ var hierarchy =
     [ "route_traffic_distortion", "structroute__traffic__distortion.html", null ],
     [ "routeObject", "structrouteObject.html", null ],
     [ "Runnable", null, [
+      [ "org.navitproject.navit.Navit.SoftInputRestorer", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html", null ],
+      [ "org.navitproject.navit.NavitGraphics.NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", null ],
       [ "org.navitproject.navit.NavitSpeech", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html", null ],
       [ "org.navitproject.navit.NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", null ],
       [ "org.navitproject.navit.NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", null ]
@@ -495,6 +511,7 @@ var hierarchy =
     [ "search_list_result", "structsearch__list__result.html", null ],
     [ "search_list_street", "structsearch__list__street.html", null ],
     [ "search_list_town", "structsearch__list__town.html", null ],
+    [ "search_param", "structsearch__param.html", null ],
     [ "sysdep_string::segment_pair", "structsysdep__string_1_1segment__pair.html", null ],
     [ "selector", "structselector.html", null ],
     [ "shape_tree_node", "structshape__tree__node.html", null ],
@@ -532,6 +549,7 @@ var hierarchy =
     [ "street_str", "structstreet__str.html", null ],
     [ "street_type", "structstreet__type.html", null ],
     [ "string_desc", "structstring__desc.html", null ],
+    [ "string_table", "structstring__table.html", null ],
     [ "subdivision", "structsubdivision.html", null ],
     [ "suffix", "structsuffix.html", null ],
     [ "SYLLABLE", "structSYLLABLE.html", null ],
@@ -642,11 +660,20 @@ var hierarchy =
       [ "org.navitproject.navit.NavitBackupTask", "classorg_1_1navitproject_1_1navit_1_1NavitBackupTask.html", null ],
       [ "org.navitproject.navit.NavitRestoreTask", "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html", null ]
     ] ],
+    [ "BroadcastReceiver", null, [
+      [ "org.navitproject.navit.NavitVehicle.NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", null ]
+    ] ],
+    [ "Comparator", null, [
+      [ "org.navitproject.navit.FileBrowserActivity.ItemFileNameComparator", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator.html", null ]
+    ] ],
     [ "ExpandableListActivity", null, [
       [ "org.navitproject.navit.NavitDownloadSelectMapActivity", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html", null ]
     ] ],
     [ "Handler", null, [
       [ "org.navitproject.navit.NavitDialogs", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html", null ]
+    ] ],
+    [ "LocationListener", null, [
+      [ "org.navitproject.navit.NavitVehicle.NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", null ]
     ] ],
     [ "SensorEventListener", null, [
       [ "org.navitproject.navit.NavitSensors", "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html", null ]
@@ -656,5 +683,9 @@ var hierarchy =
     ] ],
     [ "Thread", null, [
       [ "org.navitproject.navit.NavitMapDownloader", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html", null ]
+    ] ],
+    [ "View", null, [
+      [ "org.navitproject.navit.NavitGraphics.NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", null ],
+      [ "org.navitproject.navit.NavitGraphics.SystemBarTintView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1SystemBarTintView.html", null ]
     ] ]
 ];

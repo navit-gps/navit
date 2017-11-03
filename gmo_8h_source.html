@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="title">gmo.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Description of GNU message catalog format: general file layout.</span></div>
+<a href="gmo_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Description of GNU message catalog format: general file layout.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">   Copyright (C) 1995, 1997, 2000-2002, 2004 Free Software Foundation, Inc.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   This program is free software; you can redistribute it and/or modify it</span></div>
@@ -96,12 +96,12 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/* @@ end of prolog @@ */</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">/* The magic number of the GNU message catalog format.  */</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define _MAGIC 0x950412de</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _MAGIC_SWAPPED 0xde120495</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="gmo_8h.html#a0b432cf779682dc31391326c4498dc17">   27</a></span>&#160;<span class="preprocessor">#define _MAGIC 0x950412de</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="gmo_8h.html#a6e30f03cc8fb87f2a6aee68c9c05c137">   28</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _MAGIC_SWAPPED 0xde120495</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/* Revision number of the currently used .mo (binary) file format.  */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define MO_REVISION_NUMBER 0</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MO_REVISION_NUMBER_WITH_SYSDEP_I 1</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="gmo_8h.html#a3974d162cb13657563e6c525706fe47d">   31</a></span>&#160;<span class="preprocessor">#define MO_REVISION_NUMBER 0</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="gmo_8h.html#ac4db8636579c7a0d9856d8ff943e4192">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MO_REVISION_NUMBER_WITH_SYSDEP_I 1</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">/* The following contortions are an attempt to use the C preprocessor</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">   to determine an unsigned integral type that is 32 bits wide.  An</span></div>
@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#if __STDC__</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define UINT_MAX_32_BITS 4294967295U</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define UINT_MAX_32_BITS 0xFFFFFFFF</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="gmo_8h.html#ab108c64f1909e7e25fe8f8d85acbe7d2">   43</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define UINT_MAX_32_BITS 0xFFFFFFFF</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/* If UINT_MAX isn&#39;t defined, assume it&#39;s a 32-bit type.</span></div>
@@ -121,17 +121,17 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">   (that certainly have &lt;limits.h&gt;) have 64+-bit integral types.  */</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#ifndef UINT_MAX</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define UINT_MAX UINT_MAX_32_BITS</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="gmo_8h.html#ac998ea02fbd821fc123d60445ce76f38">   52</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define UINT_MAX UINT_MAX_32_BITS</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#if UINT_MAX == UINT_MAX_32_BITS</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> nls_uint32;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">   56</a></span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># if USHRT_MAX == UINT_MAX_32_BITS</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> nls_uint32;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"># else</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  if ULONG_MAX == UINT_MAX_32_BITS</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nls_uint32;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a>;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#  else</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span>  <span class="comment">/* The following line is intended to throw an error.  Using #error is</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">     not portable enough.  */</span></div>
@@ -145,44 +145,44 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="structmo__file__header.html">   73</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structmo__file__header.html">mo_file_header</a></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="comment">/* The magic number.  */</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  nls_uint32 magic;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a01da161a1cc1d4f738a18a0e8a971c1a">   76</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a01da161a1cc1d4f738a18a0e8a971c1a">magic</a>;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">/* The revision number of the file format.  */</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  nls_uint32 revision;</div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a49fa12af2eb2ffe6e9d78a7f3494bf6b">   78</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a49fa12af2eb2ffe6e9d78a7f3494bf6b">revision</a>;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="comment">/* The following are only used in .mo files with major revision 0 or 1.  */</span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="comment">/* The number of strings pairs.  */</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  nls_uint32 nstrings;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a1a62a251b78908ed7739a266db902d86">   83</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a1a62a251b78908ed7739a266db902d86">nstrings</a>;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">/* Offset of table with start offsets of original strings.  */</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  nls_uint32 orig_tab_offset;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a94132417c4acc41229e84cd1f2e6bdaa">   85</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a94132417c4acc41229e84cd1f2e6bdaa">orig_tab_offset</a>;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="comment">/* Offset of table with start offsets of translated strings.  */</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  nls_uint32 trans_tab_offset;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="structmo__file__header.html#ac6197be7c87364b58c6a4cfc5bd441d4">   87</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#ac6197be7c87364b58c6a4cfc5bd441d4">trans_tab_offset</a>;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="comment">/* Size of hash table.  */</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  nls_uint32 hash_tab_size;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a1329cf7a2f66a301a0adbd23ef8fbab5">   89</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a1329cf7a2f66a301a0adbd23ef8fbab5">hash_tab_size</a>;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="comment">/* Offset of first hash table entry.  */</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  nls_uint32 hash_tab_offset;</div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a7c7106449df79f702ad840061878012c">   91</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a7c7106449df79f702ad840061878012c">hash_tab_offset</a>;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="comment">/* The following are only used in .mo files with minor revision &gt;= 1.  */</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="comment">/* The number of system dependent segments.  */</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  nls_uint32 n_sysdep_segments;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a50fc6fdd6d817828e5f10a52a2b0b451">   96</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a50fc6fdd6d817828e5f10a52a2b0b451">n_sysdep_segments</a>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="comment">/* Offset of table describing system dependent segments.  */</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  nls_uint32 sysdep_segments_offset;</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a8854dbc0ccb8e8b4bb4a3daa68e33de7">   98</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a8854dbc0ccb8e8b4bb4a3daa68e33de7">sysdep_segments_offset</a>;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="comment">/* The number of system dependent strings pairs.  */</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  nls_uint32 n_sysdep_strings;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="structmo__file__header.html#a66ee23ecc66c87eb448e533f7ca42eec">  100</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#a66ee23ecc66c87eb448e533f7ca42eec">n_sysdep_strings</a>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="comment">/* Offset of table with start offsets of original sysdep strings.  */</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  nls_uint32 orig_sysdep_tab_offset;</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="structmo__file__header.html#afc82230814fb5e48ce1a77f772e8af47">  102</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#afc82230814fb5e48ce1a77f772e8af47">orig_sysdep_tab_offset</a>;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="comment">/* Offset of table with start offsets of translated sysdep strings.  */</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  nls_uint32 trans_sysdep_tab_offset;</div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structmo__file__header.html#aa72739affbf492a5dad70012d7637fa5">  104</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structmo__file__header.html#aa72739affbf492a5dad70012d7637fa5">trans_sysdep_tab_offset</a>;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;};</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">/* Descriptor for static string contained in the binary .mo file.  */</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="structstring__desc.html">  108</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structstring__desc.html">string_desc</a></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="comment">/* Length of addressed string, not including the trailing NUL.  */</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  nls_uint32 length;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="structstring__desc.html#a314d1e8511514dd3fea7239467d078e4">  111</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structstring__desc.html#a314d1e8511514dd3fea7239467d078e4">length</a>;</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">/* Offset of string in file.  */</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  nls_uint32 offset;</div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="structstring__desc.html#a8272e905a6bbdfcef87389a4ac5294f5">  113</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structstring__desc.html#a8272e905a6bbdfcef87389a4ac5294f5">offset</a>;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">/* The following are only used in .mo files with minor revision &gt;= 1.  */</span></div>
@@ -191,45 +191,66 @@ $(document).ready(function(){initNavTree('gmo_8h_source.html','');});
 <div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="structsysdep__segment.html">  119</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structsysdep__segment.html">sysdep_segment</a></div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;{</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="comment">/* Length of addressed string, including the trailing NUL.  */</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  nls_uint32 length;</div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="structsysdep__segment.html#a3de09bd36a01e87df4c3b9a7539e4831">  122</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structsysdep__segment.html#a3de09bd36a01e87df4c3b9a7539e4831">length</a>;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="comment">/* Offset of string in file.  */</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  nls_uint32 offset;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structsysdep__segment.html#adfb64f2ca1d8a9213e8452e6fecdbd2c">  124</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structsysdep__segment.html#adfb64f2ca1d8a9213e8452e6fecdbd2c">offset</a>;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">/* Descriptor for system dependent string.  */</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="structsysdep__string.html">  128</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structsysdep__string.html">sysdep_string</a></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;{</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <span class="comment">/* Offset of static string segments in file.  */</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  nls_uint32 offset;</div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="structsysdep__string.html#a9931d13f51aca573205c18f80640d103">  131</a></span>&#160;  <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structsysdep__string.html#a9931d13f51aca573205c18f80640d103">offset</a>;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="comment">/* Alternating sequence of static and system dependent segments.</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">     The last segment is a static segment, including the trailing NUL.  */</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="structsysdep__string_1_1segment__pair.html">  134</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="structsysdep__string_1_1segment__pair.html">segment_pair</a></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  {</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="comment">/* Size of static segment.  */</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    nls_uint32 segsize;</div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="structsysdep__string_1_1segment__pair.html#abcafeaaeddf0477a4b55c421e660d6a3">  137</a></span>&#160;    <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structsysdep__string_1_1segment__pair.html#abcafeaaeddf0477a4b55c421e660d6a3">segsize</a>;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="comment">/* Reference to system dependent string segment, or ~0 at the end.  */</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    nls_uint32 sysdepref;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  } segments[1];</div>
+<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="structsysdep__string_1_1segment__pair.html#ab18211e1a1481490b95d048ce02a4547">  139</a></span>&#160;    <a class="code" href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a> <a class="code" href="structsysdep__string_1_1segment__pair.html#ab18211e1a1481490b95d048ce02a4547">sysdepref</a>;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  } <a class="code" href="structsysdep__string.html#af803ef556ddeb313b811ad3b8b5e701f">segments</a>[1];</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;};</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">/* Marker for the end of the segments[] array.  This has the value 0xFFFFFFFF,</span></div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">   regardless whether &#39;int&#39; is 16 bit, 32 bit, or 64 bit.  */</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">#define SEGMENTS_END ((nls_uint32) ~0)</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="gmo_8h.html#a245fdc67f5399e7d2bf67808996ca5e8">  145</a></span>&#160;<span class="preprocessor">#define SEGMENTS_END ((nls_uint32) ~0)</span></div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment">/* @@ begin of epilog @@ */</span></div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* gettext.h  */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="structsysdep__string_html"><div class="ttname"><a href="structsysdep__string.html">sysdep_string</a></div><div class="ttdef"><b>Definition:</b> gmo.h:128</div></div>
+<div class="ttc" id="structmo__file__header_html_a7c7106449df79f702ad840061878012c"><div class="ttname"><a href="structmo__file__header.html#a7c7106449df79f702ad840061878012c">mo_file_header::hash_tab_offset</a></div><div class="ttdeci">nls_uint32 hash_tab_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:91</div></div>
 <div class="ttc" id="structsysdep__string_1_1segment__pair_html"><div class="ttname"><a href="structsysdep__string_1_1segment__pair.html">sysdep_string::segment_pair</a></div><div class="ttdef"><b>Definition:</b> gmo.h:134</div></div>
+<div class="ttc" id="structmo__file__header_html_a50fc6fdd6d817828e5f10a52a2b0b451"><div class="ttname"><a href="structmo__file__header.html#a50fc6fdd6d817828e5f10a52a2b0b451">mo_file_header::n_sysdep_segments</a></div><div class="ttdeci">nls_uint32 n_sysdep_segments</div><div class="ttdef"><b>Definition:</b> gmo.h:96</div></div>
+<div class="ttc" id="structsysdep__string_html_a9931d13f51aca573205c18f80640d103"><div class="ttname"><a href="structsysdep__string.html#a9931d13f51aca573205c18f80640d103">sysdep_string::offset</a></div><div class="ttdeci">nls_uint32 offset</div><div class="ttdef"><b>Definition:</b> gmo.h:131</div></div>
+<div class="ttc" id="structsysdep__string_1_1segment__pair_html_ab18211e1a1481490b95d048ce02a4547"><div class="ttname"><a href="structsysdep__string_1_1segment__pair.html#ab18211e1a1481490b95d048ce02a4547">sysdep_string::segment_pair::sysdepref</a></div><div class="ttdeci">nls_uint32 sysdepref</div><div class="ttdef"><b>Definition:</b> gmo.h:139</div></div>
+<div class="ttc" id="structmo__file__header_html_ac6197be7c87364b58c6a4cfc5bd441d4"><div class="ttname"><a href="structmo__file__header.html#ac6197be7c87364b58c6a4cfc5bd441d4">mo_file_header::trans_tab_offset</a></div><div class="ttdeci">nls_uint32 trans_tab_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:87</div></div>
+<div class="ttc" id="structmo__file__header_html_a1329cf7a2f66a301a0adbd23ef8fbab5"><div class="ttname"><a href="structmo__file__header.html#a1329cf7a2f66a301a0adbd23ef8fbab5">mo_file_header::hash_tab_size</a></div><div class="ttdeci">nls_uint32 hash_tab_size</div><div class="ttdef"><b>Definition:</b> gmo.h:89</div></div>
+<div class="ttc" id="structstring__desc_html_a314d1e8511514dd3fea7239467d078e4"><div class="ttname"><a href="structstring__desc.html#a314d1e8511514dd3fea7239467d078e4">string_desc::length</a></div><div class="ttdeci">nls_uint32 length</div><div class="ttdef"><b>Definition:</b> gmo.h:111</div></div>
+<div class="ttc" id="structmo__file__header_html_a49fa12af2eb2ffe6e9d78a7f3494bf6b"><div class="ttname"><a href="structmo__file__header.html#a49fa12af2eb2ffe6e9d78a7f3494bf6b">mo_file_header::revision</a></div><div class="ttdeci">nls_uint32 revision</div><div class="ttdef"><b>Definition:</b> gmo.h:78</div></div>
+<div class="ttc" id="structsysdep__segment_html_adfb64f2ca1d8a9213e8452e6fecdbd2c"><div class="ttname"><a href="structsysdep__segment.html#adfb64f2ca1d8a9213e8452e6fecdbd2c">sysdep_segment::offset</a></div><div class="ttdeci">nls_uint32 offset</div><div class="ttdef"><b>Definition:</b> gmo.h:124</div></div>
+<div class="ttc" id="structsysdep__string_html_af803ef556ddeb313b811ad3b8b5e701f"><div class="ttname"><a href="structsysdep__string.html#af803ef556ddeb313b811ad3b8b5e701f">sysdep_string::segments</a></div><div class="ttdeci">struct sysdep_string::segment_pair segments[1]</div></div>
+<div class="ttc" id="structmo__file__header_html_a1a62a251b78908ed7739a266db902d86"><div class="ttname"><a href="structmo__file__header.html#a1a62a251b78908ed7739a266db902d86">mo_file_header::nstrings</a></div><div class="ttdeci">nls_uint32 nstrings</div><div class="ttdef"><b>Definition:</b> gmo.h:83</div></div>
+<div class="ttc" id="structmo__file__header_html_a66ee23ecc66c87eb448e533f7ca42eec"><div class="ttname"><a href="structmo__file__header.html#a66ee23ecc66c87eb448e533f7ca42eec">mo_file_header::n_sysdep_strings</a></div><div class="ttdeci">nls_uint32 n_sysdep_strings</div><div class="ttdef"><b>Definition:</b> gmo.h:100</div></div>
+<div class="ttc" id="structmo__file__header_html_a01da161a1cc1d4f738a18a0e8a971c1a"><div class="ttname"><a href="structmo__file__header.html#a01da161a1cc1d4f738a18a0e8a971c1a">mo_file_header::magic</a></div><div class="ttdeci">nls_uint32 magic</div><div class="ttdef"><b>Definition:</b> gmo.h:76</div></div>
+<div class="ttc" id="structmo__file__header_html_a94132417c4acc41229e84cd1f2e6bdaa"><div class="ttname"><a href="structmo__file__header.html#a94132417c4acc41229e84cd1f2e6bdaa">mo_file_header::orig_tab_offset</a></div><div class="ttdeci">nls_uint32 orig_tab_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:85</div></div>
 <div class="ttc" id="structsysdep__segment_html"><div class="ttname"><a href="structsysdep__segment.html">sysdep_segment</a></div><div class="ttdef"><b>Definition:</b> gmo.h:119</div></div>
 <div class="ttc" id="structmo__file__header_html"><div class="ttname"><a href="structmo__file__header.html">mo_file_header</a></div><div class="ttdef"><b>Definition:</b> gmo.h:73</div></div>
 <div class="ttc" id="structstring__desc_html"><div class="ttname"><a href="structstring__desc.html">string_desc</a></div><div class="ttdef"><b>Definition:</b> gmo.h:108</div></div>
+<div class="ttc" id="gmo_8h_html_ac57d0b9c3a615f0579c6e8f06e5b0577"><div class="ttname"><a href="gmo_8h.html#ac57d0b9c3a615f0579c6e8f06e5b0577">nls_uint32</a></div><div class="ttdeci">unsigned nls_uint32</div><div class="ttdef"><b>Definition:</b> gmo.h:56</div></div>
+<div class="ttc" id="structmo__file__header_html_aa72739affbf492a5dad70012d7637fa5"><div class="ttname"><a href="structmo__file__header.html#aa72739affbf492a5dad70012d7637fa5">mo_file_header::trans_sysdep_tab_offset</a></div><div class="ttdeci">nls_uint32 trans_sysdep_tab_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:104</div></div>
+<div class="ttc" id="structstring__desc_html_a8272e905a6bbdfcef87389a4ac5294f5"><div class="ttname"><a href="structstring__desc.html#a8272e905a6bbdfcef87389a4ac5294f5">string_desc::offset</a></div><div class="ttdeci">nls_uint32 offset</div><div class="ttdef"><b>Definition:</b> gmo.h:113</div></div>
+<div class="ttc" id="structmo__file__header_html_afc82230814fb5e48ce1a77f772e8af47"><div class="ttname"><a href="structmo__file__header.html#afc82230814fb5e48ce1a77f772e8af47">mo_file_header::orig_sysdep_tab_offset</a></div><div class="ttdeci">nls_uint32 orig_sysdep_tab_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:102</div></div>
+<div class="ttc" id="structmo__file__header_html_a8854dbc0ccb8e8b4bb4a3daa68e33de7"><div class="ttname"><a href="structmo__file__header.html#a8854dbc0ccb8e8b4bb4a3daa68e33de7">mo_file_header::sysdep_segments_offset</a></div><div class="ttdeci">nls_uint32 sysdep_segments_offset</div><div class="ttdef"><b>Definition:</b> gmo.h:98</div></div>
+<div class="ttc" id="structsysdep__string_1_1segment__pair_html_abcafeaaeddf0477a4b55c421e660d6a3"><div class="ttname"><a href="structsysdep__string_1_1segment__pair.html#abcafeaaeddf0477a4b55c421e660d6a3">sysdep_string::segment_pair::segsize</a></div><div class="ttdeci">nls_uint32 segsize</div><div class="ttdef"><b>Definition:</b> gmo.h:137</div></div>
+<div class="ttc" id="structsysdep__segment_html_a3de09bd36a01e87df4c3b9a7539e4831"><div class="ttname"><a href="structsysdep__segment.html#a3de09bd36a01e87df4c3b9a7539e4831">sysdep_segment::length</a></div><div class="ttdeci">nls_uint32 length</div><div class="ttdef"><b>Definition:</b> gmo.h:122</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><b>gmo.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><a class="el" href="gmo_8h.html">gmo.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

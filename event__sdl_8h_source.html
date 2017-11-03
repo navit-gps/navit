@@ -70,15 +70,15 @@ $(document).ready(function(){initNavTree('event__sdl_8h_source.html','');});
 <div class="title">event_sdl.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="event__sdl_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef __EVENT_SDL_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __EVENT_SDL_H</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;SDL/SDL.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;callback.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="callback_8h.html">callback.h</a>&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;event.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;graphics_sdl.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="graphics__sdl_8h.html">graphics_sdl.h</a>&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#ifdef USE_WEBOS</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define SDL_USEREVENT_CODE_TIMER 0x1</span></div>
@@ -91,39 +91,53 @@ $(document).ready(function(){initNavTree('event__sdl_8h_source.html','');});
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">struct </span><a class="code" href="structevent__timeout.html">event_timeout</a> {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    SDL_TimerID id;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">int</span> multi;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *cb;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    SDL_TimerID <a class="code" href="structevent__timeout.html#a70c8b7c83d5221e3f308595d4a4f208d">id</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structevent__timeout.html#adf8db0941d0ebeabefa8679ad044115c">multi</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *<a class="code" href="structevent__timeout.html#a99f042b0b72b1555d1cf0f13812ac0fa">cb</a>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">struct </span><a class="code" href="structidle__task.html">idle_task</a> {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">int</span> priority;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *cb;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structidle__task.html#a987930bfcbcfbd1719d03a6f8b363422">priority</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *<a class="code" href="structidle__task.html#a07f1c47c812f933005cc40cf96593e16">cb</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">struct </span><a class="code" href="structevent__watch.html">event_watch</a> {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">struct </span>pollfd *pfd;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *cb;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">struct </span>pollfd *<a class="code" href="structevent__watch.html#af58a7990f92607a17c4f46da6044c509">pfd</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">struct </span><a class="code" href="structcallback.html">callback</a> *<a class="code" href="structevent__watch.html#ace71f4cea6ff3e7f8e0592c2e970d4c4">cb</a>;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">int</span> quit_event_loop             = 0; <span class="comment">// quit the main event loop</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">static</span> GPtrArray *idle_tasks    = NULL;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">   37</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">quit_event_loop</a>             = 0; <span class="comment">// quit the main event loop</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">   38</a></span>&#160;<span class="keyword">static</span> GPtrArray *<a class="code" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">idle_tasks</a>    = <a class="code" href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> event_sdl_watch_thread (GPtrArray *);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> <a class="code" href="event__sdl_8h.html#a9f579d8bce9fd2c69f1c5d0e34ca07cd">event_sdl_watch_thread</a> (GPtrArray *);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> event_sdl_register(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> <a class="code" href="event__sdl_8h.html#aa94393dbd1040a063fc7f214c5fac5f8">event_sdl_register</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="structevent__watch_html_ace71f4cea6ff3e7f8e0592c2e970d4c4"><div class="ttname"><a href="structevent__watch.html#ace71f4cea6ff3e7f8e0592c2e970d4c4">event_watch::cb</a></div><div class="ttdeci">struct callback * cb</div><div class="ttdef"><b>Definition:</b> event_qt5.cpp:53</div></div>
+<div class="ttc" id="event__sdl_8h_html_abb328802cc94f86b34e7e629e947d783"><div class="ttname"><a href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">quit_event_loop</a></div><div class="ttdeci">int quit_event_loop</div><div class="ttdef"><b>Definition:</b> event_sdl.h:37</div></div>
+<div class="ttc" id="explodename_8c_html_a070d2ce7b6bb7e5c05602aa8c308d0c4"><div class="ttname"><a href="explodename_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></div><div class="ttdeci">#define NULL</div><div class="ttdef"><b>Definition:</b> explodename.c:34</div></div>
+<div class="ttc" id="structevent__watch_html_af58a7990f92607a17c4f46da6044c509"><div class="ttname"><a href="structevent__watch.html#af58a7990f92607a17c4f46da6044c509">event_watch::pfd</a></div><div class="ttdeci">struct pollfd * pfd</div><div class="ttdef"><b>Definition:</b> event.c:22</div></div>
+<div class="ttc" id="event__sdl_8h_html_aa94393dbd1040a063fc7f214c5fac5f8"><div class="ttname"><a href="event__sdl_8h.html#aa94393dbd1040a063fc7f214c5fac5f8">event_sdl_register</a></div><div class="ttdeci">void event_sdl_register(void)</div><div class="ttdef"><b>Definition:</b> event_sdl.c:340</div></div>
+<div class="ttc" id="structevent__timeout_html_a70c8b7c83d5221e3f308595d4a4f208d"><div class="ttname"><a href="structevent__timeout.html#a70c8b7c83d5221e3f308595d4a4f208d">event_timeout::id</a></div><div class="ttdeci">SDL_TimerID id</div><div class="ttdef"><b>Definition:</b> event.c:11</div></div>
+<div class="ttc" id="structevent__timeout_html_a99f042b0b72b1555d1cf0f13812ac0fa"><div class="ttname"><a href="structevent__timeout.html#a99f042b0b72b1555d1cf0f13812ac0fa">event_timeout::cb</a></div><div class="ttdeci">struct callback * cb</div><div class="ttdef"><b>Definition:</b> event_glib.c:93</div></div>
 <div class="ttc" id="structevent__watch_html"><div class="ttname"><a href="structevent__watch.html">event_watch</a></div><div class="ttdef"><b>Definition:</b> event_glib.c:47</div></div>
+<div class="ttc" id="structevent__timeout_html_adf8db0941d0ebeabefa8679ad044115c"><div class="ttname"><a href="structevent__timeout.html#adf8db0941d0ebeabefa8679ad044115c">event_timeout::multi</a></div><div class="ttdeci">int multi</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1008</div></div>
 <div class="ttc" id="structidle__task_html"><div class="ttname"><a href="structidle__task.html">idle_task</a></div><div class="ttdef"><b>Definition:</b> event.c:16</div></div>
+<div class="ttc" id="callback_8h_html"><div class="ttname"><a href="callback_8h.html">callback.h</a></div></div>
+<div class="ttc" id="event__sdl_8h_html_a9f579d8bce9fd2c69f1c5d0e34ca07cd"><div class="ttname"><a href="event__sdl_8h.html#a9f579d8bce9fd2c69f1c5d0e34ca07cd">event_sdl_watch_thread</a></div><div class="ttdeci">void event_sdl_watch_thread(GPtrArray *)</div><div class="ttdef"><b>Definition:</b> event_sdl.c:91</div></div>
+<div class="ttc" id="event__sdl_8h_html_a6953fbcb99c7d88b64a067c5e47910f9"><div class="ttname"><a href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">idle_tasks</a></div><div class="ttdeci">static GPtrArray * idle_tasks</div><div class="ttdef"><b>Definition:</b> event_sdl.h:38</div></div>
+<div class="ttc" id="graphics__sdl_8h_html"><div class="ttname"><a href="graphics__sdl_8h.html">graphics_sdl.h</a></div></div>
+<div class="ttc" id="structidle__task_html_a987930bfcbcfbd1719d03a6f8b363422"><div class="ttname"><a href="structidle__task.html#a987930bfcbcfbd1719d03a6f8b363422">idle_task::priority</a></div><div class="ttdeci">int priority</div><div class="ttdef"><b>Definition:</b> event.c:17</div></div>
 <div class="ttc" id="structevent__timeout_html"><div class="ttname"><a href="structevent__timeout.html">event_timeout</a></div><div class="ttdef"><b>Definition:</b> event_glib.c:91</div></div>
 <div class="ttc" id="structcallback_html"><div class="ttname"><a href="structcallback.html">callback</a></div><div class="ttdef"><b>Definition:</b> callback.c:26</div></div>
+<div class="ttc" id="structidle__task_html_a07f1c47c812f933005cc40cf96593e16"><div class="ttname"><a href="structidle__task.html#a07f1c47c812f933005cc40cf96593e16">idle_task::cb</a></div><div class="ttdeci">struct callback * cb</div><div class="ttdef"><b>Definition:</b> event.c:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_9c614f9f6d85e2ed081007371a4f5142.html">sdl</a></li><li class="navelem"><b>event_sdl.h</b></li>
+    <li class="navelem"><a class="el" href="dir_e79632891301b850df87e9c0030293fa.html">graphics</a></li><li class="navelem"><a class="el" href="dir_9c614f9f6d85e2ed081007371a4f5142.html">sdl</a></li><li class="navelem"><a class="el" href="event__sdl_8h.html">event_sdl.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

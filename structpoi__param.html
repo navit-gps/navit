@@ -90,9 +90,9 @@ Data Fields</h2></td></tr>
 <tr class="separator:a8245acb6254a48a88424eb9199506596"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9147fb73e12c80a9afbfc40d66d922bd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpoi__param.html#a9147fb73e12c80a9afbfc40d66d922bd">filterstr</a></td></tr>
 <tr class="separator:a9147fb73e12c80a9afbfc40d66d922bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37184bbfd3ad88d884060ad2a073d04a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__GList.html">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpoi__param.html#a37184bbfd3ad88d884060ad2a073d04a">filter</a></td></tr>
+<tr class="memitem:a37184bbfd3ad88d884060ad2a073d04a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpoi__param.html#a37184bbfd3ad88d884060ad2a073d04a">filter</a></td></tr>
 <tr class="separator:a37184bbfd3ad88d884060ad2a073d04a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7ef481778597e62f8ba32d53d2cdb44"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpoi__param.html#ae7ef481778597e62f8ba32d53d2cdb44">count</a></td></tr>
+<tr class="memitem:ae7ef481778597e62f8ba32d53d2cdb44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpoi__param.html#ae7ef481778597e62f8ba32d53d2cdb44">count</a></td></tr>
 <tr class="separator:ae7ef481778597e62f8ba32d53d2cdb44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -109,6 +109,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Should filter phrase be compared to postal address of the POI. =0 - name filter, =1 - address filter, =2 - address filter, including postal code </p>
 
+<p>Referenced by <a class="el" href="gui__internal__command_8c.html#a3cebcce7b7d56975f924fac8ecb86944">gui_internal_cmd2_pois()</a>, <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a8822e386b6b8806d44c93d9fb02f0b22">gui_internal_cmd_pois_filter_do()</a>, and <a class="el" href="gui__internal__poi_8c.html#a5253d858d08a2d126abf375259537735">gui_internal_cmd_pois_item_selected()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ae7ef481778597e62f8ba32d53d2cdb44"></a>
@@ -116,11 +118,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int poi_param::count</td>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> poi_param::count</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Number of POIs in this list </p>
+
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>.</p>
 
 </div>
 </div>
@@ -135,6 +139,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Radius (number of 10-kilometer intervals) to search for POIs. </p>
 
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, and <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a37184bbfd3ad88d884060ad2a073d04a"></a>
@@ -142,11 +148,13 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct__GList.html">GList</a>* poi_param::filter</td>
+          <td class="memname"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a>* poi_param::filter</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>list of pointers to individual substrings of filterstr. </p>
+
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a5253d858d08a2d126abf375259537735">gui_internal_cmd_pois_item_selected()</a>, <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>, <a class="el" href="gui__internal__poi_8c.html#a354d623c06df50b899a6bd2c4dd2d039">gui_internal_poi_param_clone()</a>, and <a class="el" href="gui__internal__poi_8h.html#a2a3fcf80f66b372d3470f0ea2cf1a89b">gui_internal_poi_param_set_filter()</a>.</p>
 
 </div>
 </div>
@@ -161,6 +169,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Filter string, casefold()ed and divided into substrings at the spaces, which are replaced by ASCII 0*. </p>
 
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>, <a class="el" href="gui__internal__poi_8c.html#a354d623c06df50b899a6bd2c4dd2d039">gui_internal_poi_param_clone()</a>, and <a class="el" href="gui__internal__poi_8h.html#a2a3fcf80f66b372d3470f0ea2cf1a89b">gui_internal_poi_param_set_filter()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a58ce6bbebf39f6492c33d797a52ac4c9"></a>
@@ -173,6 +183,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Page number to display. </p>
+
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a8822e386b6b8806d44c93d9fb02f0b22">gui_internal_cmd_pois_filter_do()</a>, and <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>.</p>
 
 </div>
 </div>
@@ -187,6 +199,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>=1 if selnb is defined, 0 otherwize. </p>
 
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a5253d858d08a2d126abf375259537735">gui_internal_cmd_pois_item_selected()</a>, and <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a626fc92e903d550244f44be8e0bf1c6c"></a>
@@ -199,6 +213,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Index to struct selector selectors[], shows what type of POIs is defined. </p>
+
+<p>Referenced by <a class="el" href="gui__internal__poi_8h.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a5253d858d08a2d126abf375259537735">gui_internal_cmd_pois_item_selected()</a>, and <a class="el" href="gui__internal__poi_8c.html#aff6323d5de794764734fcbf0921d57d8">gui_internal_cmd_pois_selector()</a>.</p>
 
 </div>
 </div>

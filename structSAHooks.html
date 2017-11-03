@@ -73,40 +73,173 @@ $(document).ready(function(){initNavTree('structSAHooks.html','');});
 <div class="title">SAHooks Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="shapefil_8h_source.html">shapefil.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a1aa33c7b11f02fc4d9f9071b0e7bfdba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1aa33c7b11f02fc4d9f9071b0e7bfdba"></a>
-SAFile(*&#160;</td><td class="memItemRight" valign="bottom"><b>FOpen</b> )(const char *filename, const char *access)</td></tr>
+<tr class="memitem:a1aa33c7b11f02fc4d9f9071b0e7bfdba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a1aa33c7b11f02fc4d9f9071b0e7bfdba">FOpen</a> )(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="io_8h.html#a19e6168acb9d9764b6d7d3cfb234bcc3">access</a>)</td></tr>
 <tr class="separator:a1aa33c7b11f02fc4d9f9071b0e7bfdba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e70e015186a31878b716bf289ceb0d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e70e015186a31878b716bf289ceb0d2"></a>
-SAOffset(*&#160;</td><td class="memItemRight" valign="bottom"><b>FRead</b> )(void *p, SAOffset size, SAOffset nmemb, SAFile <a class="el" href="structfile.html">file</a>)</td></tr>
+<tr class="memitem:a9e70e015186a31878b716bf289ceb0d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a9e70e015186a31878b716bf289ceb0d2">FRead</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> nmemb, <a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:a9e70e015186a31878b716bf289ceb0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad50bf7d1692be7c0e279ec8a738ec20"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad50bf7d1692be7c0e279ec8a738ec20"></a>
-SAOffset(*&#160;</td><td class="memItemRight" valign="bottom"><b>FWrite</b> )(void *p, SAOffset size, SAOffset nmemb, SAFile <a class="el" href="structfile.html">file</a>)</td></tr>
+<tr class="memitem:aad50bf7d1692be7c0e279ec8a738ec20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#aad50bf7d1692be7c0e279ec8a738ec20">FWrite</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> nmemb, <a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:aad50bf7d1692be7c0e279ec8a738ec20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2597e0bc8352eb21304f02f1d1cd744"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2597e0bc8352eb21304f02f1d1cd744"></a>
-SAOffset(*&#160;</td><td class="memItemRight" valign="bottom"><b>FSeek</b> )(SAFile <a class="el" href="structfile.html">file</a>, SAOffset offset, int whence)</td></tr>
+<tr class="memitem:ad2597e0bc8352eb21304f02f1d1cd744"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#ad2597e0bc8352eb21304f02f1d1cd744">FSeek</a> )(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> whence)</td></tr>
 <tr class="separator:ad2597e0bc8352eb21304f02f1d1cd744"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd9a5a7e3f6700a2bf1ba5ad58a4e23c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd9a5a7e3f6700a2bf1ba5ad58a4e23c"></a>
-SAOffset(*&#160;</td><td class="memItemRight" valign="bottom"><b>FTell</b> )(SAFile <a class="el" href="structfile.html">file</a>)</td></tr>
+<tr class="memitem:acd9a5a7e3f6700a2bf1ba5ad58a4e23c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#acd9a5a7e3f6700a2bf1ba5ad58a4e23c">FTell</a> )(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:acd9a5a7e3f6700a2bf1ba5ad58a4e23c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5143f7d9c34ec679dc18c2e63391aac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5143f7d9c34ec679dc18c2e63391aac"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>FFlush</b> )(SAFile <a class="el" href="structfile.html">file</a>)</td></tr>
+<tr class="memitem:ae5143f7d9c34ec679dc18c2e63391aac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#ae5143f7d9c34ec679dc18c2e63391aac">FFlush</a> )(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:ae5143f7d9c34ec679dc18c2e63391aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f6ea8b9b955bd07e57fdede643ce6a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f6ea8b9b955bd07e57fdede643ce6a4"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>FClose</b> )(SAFile <a class="el" href="structfile.html">file</a>)</td></tr>
+<tr class="memitem:a4f6ea8b9b955bd07e57fdede643ce6a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a4f6ea8b9b955bd07e57fdede643ce6a4">FClose</a> )(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:a4f6ea8b9b955bd07e57fdede643ce6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d13713d29fdb290f863454d167fe3ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d13713d29fdb290f863454d167fe3ef"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>Remove</b> )(const char *filename)</td></tr>
+<tr class="memitem:a7d13713d29fdb290f863454d167fe3ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a7d13713d29fdb290f863454d167fe3ef">Remove</a> )(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>)</td></tr>
 <tr class="separator:a7d13713d29fdb290f863454d167fe3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a094b75a664448b1e9ba0090e3d2d5982"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a094b75a664448b1e9ba0090e3d2d5982"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>Error</b> )(const char *<a class="el" href="structmessage.html">message</a>)</td></tr>
+<tr class="memitem:a094b75a664448b1e9ba0090e3d2d5982"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a094b75a664448b1e9ba0090e3d2d5982">Error</a> )(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="structmessage.html">message</a>)</td></tr>
 <tr class="separator:a094b75a664448b1e9ba0090e3d2d5982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a019c01ef46e511591af5b551bb3975ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a019c01ef46e511591af5b551bb3975ab"></a>
-double(*&#160;</td><td class="memItemRight" valign="bottom"><b>Atof</b> )(const char *str)</td></tr>
+<tr class="memitem:a019c01ef46e511591af5b551bb3975ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="voices_8c.html#a38a01c28a245417a5317d84372adb76a">double</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAHooks.html#a019c01ef46e511591af5b551bb3975ab">Atof</a> )(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *str)</td></tr>
 <tr class="separator:a019c01ef46e511591af5b551bb3975ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a019c01ef46e511591af5b551bb3975ab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="voices_8c.html#a38a01c28a245417a5317d84372adb76a">double</a>(* SAHooks::Atof)(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *str)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="dbfopen_8c.html#af03056955cbf712f9eca34c00e69ab99">DBFReadAttribute()</a>, and <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a094b75a664448b1e9ba0090e3d2d5982"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* SAHooks::Error)(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="structmessage.html">message</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#a416601253a4a303914f195085d7a2b92">DBFAddNativeFieldType()</a>, <a class="el" href="dbfopen_8c.html#adbb1480cc7e87b2913d221ca2db57e7e">DBFFlushRecord()</a>, <a class="el" href="dbfopen_8c.html#a2199cf49d7e978d27d7be28601c69bcb">DBFLoadRecord()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a5f2daea4e4bce74200c688d43030345e">SHPCreateLL()</a>, <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>, <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>, <a class="el" href="shpopen_8c.html#a76ef929b8401fa6ce9dabec62e57fede">SHPWriteHeader()</a>, and <a class="el" href="shpopen_8c.html#ac93d390ab226586dcab7b6bc939d505b">SHPWriteObject()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4f6ea8b9b955bd07e57fdede643ce6a4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* SAHooks::FClose)(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#aa6ac0af57e7e0d5a766ff2bda17f3d45">DBFClose()</a>, <a class="el" href="shapefil_8h.html#ac481c9cdd9f299439f82f85a625ae5dd">DBFCreateLL()</a>, <a class="el" href="shapefil_8h.html#a12c6d8247b01f8476667c6c8bbd5b633">DBFOpenLL()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a827c26f028d427953ee6e81e6401b80b">SHPClose()</a>, <a class="el" href="shpopen_8c.html#a5f2daea4e4bce74200c688d43030345e">SHPCreateLL()</a>, <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>, <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>, and <a class="el" href="shptree_8c.html#a1f75ca8025ee43d93eb224a21bcac59c">SHPWriteTreeLL()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae5143f7d9c34ec679dc18c2e63391aac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* SAHooks::FFlush)(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#a220a8171d9cb308668d9829626ec3aaa">DBFUpdateHeader()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, and <a class="el" href="shpopen_8c.html#a76ef929b8401fa6ce9dabec62e57fede">SHPWriteHeader()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1aa33c7b11f02fc4d9f9071b0e7bfdba"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a>(* SAHooks::FOpen)(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="io_8h.html#a19e6168acb9d9764b6d7d3cfb234bcc3">access</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#ac481c9cdd9f299439f82f85a625ae5dd">DBFCreateLL()</a>, <a class="el" href="shapefil_8h.html#a12c6d8247b01f8476667c6c8bbd5b633">DBFOpenLL()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a5f2daea4e4bce74200c688d43030345e">SHPCreateLL()</a>, <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>, <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>, and <a class="el" href="shptree_8c.html#a1f75ca8025ee43d93eb224a21bcac59c">SHPWriteTreeLL()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9e70e015186a31878b716bf289ceb0d2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(* SAHooks::FRead)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> nmemb, <a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#a416601253a4a303914f195085d7a2b92">DBFAddNativeFieldType()</a>, <a class="el" href="shapefil_8h.html#a1d3d8d6e270246ca5e556fd467d15038">DBFAlterFieldDefn()</a>, <a class="el" href="dbfopen_8c.html#a2199cf49d7e978d27d7be28601c69bcb">DBFLoadRecord()</a>, <a class="el" href="shapefil_8h.html#a12c6d8247b01f8476667c6c8bbd5b633">DBFOpenLL()</a>, <a class="el" href="shapefil_8h.html#adfab054bb322c6989d0442f8600330d0">DBFReorderFields()</a>, <a class="el" href="shapefil_8h.html#a220a8171d9cb308668d9829626ec3aaa">DBFUpdateHeader()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>, and <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad2597e0bc8352eb21304f02f1d1cd744"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(* SAHooks::FSeek)(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> whence)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#a416601253a4a303914f195085d7a2b92">DBFAddNativeFieldType()</a>, <a class="el" href="shapefil_8h.html#a1d3d8d6e270246ca5e556fd467d15038">DBFAlterFieldDefn()</a>, <a class="el" href="dbfopen_8c.html#adbb1480cc7e87b2913d221ca2db57e7e">DBFFlushRecord()</a>, <a class="el" href="dbfopen_8c.html#a2199cf49d7e978d27d7be28601c69bcb">DBFLoadRecord()</a>, <a class="el" href="shapefil_8h.html#a12c6d8247b01f8476667c6c8bbd5b633">DBFOpenLL()</a>, <a class="el" href="shapefil_8h.html#adfab054bb322c6989d0442f8600330d0">DBFReorderFields()</a>, <a class="el" href="shapefil_8h.html#a220a8171d9cb308668d9829626ec3aaa">DBFUpdateHeader()</a>, <a class="el" href="dbfopen_8c.html#aa4e65111d5a067f8050355162100cfca">DBFWriteHeader()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>, <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>, <a class="el" href="shpopen_8c.html#a76ef929b8401fa6ce9dabec62e57fede">SHPWriteHeader()</a>, and <a class="el" href="shpopen_8c.html#ac93d390ab226586dcab7b6bc939d505b">SHPWriteObject()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acd9a5a7e3f6700a2bf1ba5ad58a4e23c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(* SAHooks::FTell)(<a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, and <a class="el" href="shpopen_8c.html#a0ab8ec345bda8f53d6508caefb27ba09">SHPOpenLL()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aad50bf7d1692be7c0e279ec8a738ec20"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a>(* SAHooks::FWrite)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="shapefil_8h.html#af12f1d7b4e50e4a79029b64404cd0b6a">SAOffset</a> nmemb, <a class="el" href="shapefil_8h.html#a853506ae4b5a13b2210ad87849ab6e6a">SAFile</a> <a class="el" href="structfile.html">file</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#a416601253a4a303914f195085d7a2b92">DBFAddNativeFieldType()</a>, <a class="el" href="shapefil_8h.html#a1d3d8d6e270246ca5e556fd467d15038">DBFAlterFieldDefn()</a>, <a class="el" href="shapefil_8h.html#ac481c9cdd9f299439f82f85a625ae5dd">DBFCreateLL()</a>, <a class="el" href="dbfopen_8c.html#adbb1480cc7e87b2913d221ca2db57e7e">DBFFlushRecord()</a>, <a class="el" href="shapefil_8h.html#adfab054bb322c6989d0442f8600330d0">DBFReorderFields()</a>, <a class="el" href="shapefil_8h.html#a220a8171d9cb308668d9829626ec3aaa">DBFUpdateHeader()</a>, <a class="el" href="dbfopen_8c.html#aa4e65111d5a067f8050355162100cfca">DBFWriteHeader()</a>, <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>, <a class="el" href="shpopen_8c.html#a5f2daea4e4bce74200c688d43030345e">SHPCreateLL()</a>, <a class="el" href="shpopen_8c.html#a8c68fb05f9637e9e9786286dfc2645c8">SHPRestoreSHX()</a>, <a class="el" href="shpopen_8c.html#a76ef929b8401fa6ce9dabec62e57fede">SHPWriteHeader()</a>, <a class="el" href="shpopen_8c.html#ac93d390ab226586dcab7b6bc939d505b">SHPWriteObject()</a>, <a class="el" href="shptree_8c.html#a1f75ca8025ee43d93eb224a21bcac59c">SHPWriteTreeLL()</a>, and <a class="el" href="shptree_8c.html#afd82af520fd47a41a564d5e8e88a1915">SHPWriteTreeNode()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7d13713d29fdb290f863454d167fe3ef"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* SAHooks::Remove)(<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="shapefil_8h.html#ac481c9cdd9f299439f82f85a625ae5dd">DBFCreateLL()</a>, and <a class="el" href="shapefil_8h.html#af204bdd2c9fa03207f3b0f408ea11815">SASetupDefaultHooks()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>support/shapefile/<a class="el" href="shapefil_8h_source.html">shapefil.h</a></li>
 </ul>

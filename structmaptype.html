@@ -73,19 +73,61 @@ $(document).ready(function(){initNavTree('structmaptype.html','');});
 <div class="title">maptype Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="maptype_8h_source.html">maptype.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ae3bd9b2167738459e6ca6ec27ec8add6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3bd9b2167738459e6ca6ec27ec8add6"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="memitem:ae3bd9b2167738459e6ca6ec27ec8add6"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmaptype.html#ae3bd9b2167738459e6ca6ec27ec8add6">name</a></td></tr>
 <tr class="separator:ae3bd9b2167738459e6ca6ec27ec8add6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ad3ef105dbb4473eae1ad50c419ac7c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ad3ef105dbb4473eae1ad50c419ac7c"></a>
-struct <a class="el" href="structmap__priv.html">map_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>map_new</b> )(struct <a class="el" href="structmap__methods.html">map_methods</a> *meth, char *data, char **charset, enum projection *pro)</td></tr>
+<tr class="memitem:a2ad3ef105dbb4473eae1ad50c419ac7c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__priv.html">map_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmaptype.html#a2ad3ef105dbb4473eae1ad50c419ac7c">map_new</a> )(struct <a class="el" href="structmap__methods.html">map_methods</a> *meth, char *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>, char **charset, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> *pro)</td></tr>
 <tr class="separator:a2ad3ef105dbb4473eae1ad50c419ac7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7f38d8084eb0eaf17aec33d155da08c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7f38d8084eb0eaf17aec33d155da08c"></a>
-struct <a class="el" href="structmaptype.html">maptype</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b></td></tr>
+<tr class="memitem:ae7f38d8084eb0eaf17aec33d155da08c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmaptype.html">maptype</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmaptype.html#ae7f38d8084eb0eaf17aec33d155da08c">next</a></td></tr>
 <tr class="separator:ae7f38d8084eb0eaf17aec33d155da08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a2ad3ef105dbb4473eae1ad50c419ac7c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmap__priv.html">map_priv</a>*(* maptype::map_new)(struct <a class="el" href="structmap__methods.html">map_methods</a> *meth, char *<a class="el" href="png_8h.html#ae5784a8f4db42de0ffacd0cbd08dc6ad">data</a>, char **charset, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> *pro)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="maptype_8h.html#a3abe7447b5694ebde4a1967ca1e94c77">maptype_register()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae3bd9b2167738459e6ca6ec27ec8add6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* maptype::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="maptype_8h.html#a955674f3d26f9df5e42956cd831d8b1a">maptype_get()</a>, and <a class="el" href="maptype_8h.html#a3abe7447b5694ebde4a1967ca1e94c77">maptype_register()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae7f38d8084eb0eaf17aec33d155da08c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmaptype.html">maptype</a>* maptype::next</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="maptype_8h.html#a955674f3d26f9df5e42956cd831d8b1a">maptype_get()</a>, and <a class="el" href="maptype_8h.html#a3abe7447b5694ebde4a1967ca1e94c77">maptype_register()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="maptype_8h_source.html">maptype.h</a></li>
 </ul>

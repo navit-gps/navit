@@ -70,11 +70,14 @@ $(document).ready(function(){initNavTree('classMapObject.html','');});
   <div class="summary">
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#properties">Properties</a>  </div>
+<a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">MapObject Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="qml__map_8h_source.html">qml_map.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for MapObject:</div>
 <div class="dyncontent">
@@ -86,46 +89,299 @@ Inheritance diagram for MapObject:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:a7961db701769348063d8e5c2147caf95"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7961db701769348063d8e5c2147caf95"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>nameChanged</b> ()</td></tr>
+<tr class="memitem:a7961db701769348063d8e5c2147caf95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a7961db701769348063d8e5c2147caf95">nameChanged</a> ()</td></tr>
 <tr class="separator:a7961db701769348063d8e5c2147caf95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cb62dcfe6b9f4c6827d8fccc54c58d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9cb62dcfe6b9f4c6827d8fccc54c58d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>activeChanged</b> ()</td></tr>
+<tr class="memitem:a9cb62dcfe6b9f4c6827d8fccc54c58d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6">activeChanged</a> ()</td></tr>
 <tr class="separator:a9cb62dcfe6b9f4c6827d8fccc54c58d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a37fd54af664ed8f84a552e04090f444e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37fd54af664ed8f84a552e04090f444e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MapObject</b> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:a37fd54af664ed8f84a552e04090f444e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a37fd54af664ed8f84a552e04090f444e">MapObject</a> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:a37fd54af664ed8f84a552e04090f444e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77b47f0fc2f05d575c02635b8f8b901a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a77b47f0fc2f05d575c02635b8f8b901a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MapObject</b> (const QString &amp;name, const bool &amp;active, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:a77b47f0fc2f05d575c02635b8f8b901a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a77b47f0fc2f05d575c02635b8f8b901a">MapObject</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classMapObject.html#ac97257b9ec2bf526a18b9bc4bbc5b2b8">name</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> bool &amp;<a class="el" href="classMapObject.html#a3ab652e15971fd18e1afb08dc52d5ce3">active</a>, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:a77b47f0fc2f05d575c02635b8f8b901a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0985587e2de44f2623f3aae09b1da826"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0985587e2de44f2623f3aae09b1da826"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const </td></tr>
+<tr class="memitem:a0985587e2de44f2623f3aae09b1da826"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">name</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a0985587e2de44f2623f3aae09b1da826"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42104b2092dcbdbff328b9f23c80c842"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42104b2092dcbdbff328b9f23c80c842"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const QString &amp;name)</td></tr>
+<tr class="memitem:a42104b2092dcbdbff328b9f23c80c842"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classMapObject.html#ac97257b9ec2bf526a18b9bc4bbc5b2b8">name</a>)</td></tr>
 <tr class="separator:a42104b2092dcbdbff328b9f23c80c842"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>active</b> () const </td></tr>
+<tr class="memitem:ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">active</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3771ff838f6d4f8cec50526f58e4a020"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3771ff838f6d4f8cec50526f58e4a020"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setActive</b> (const bool &amp;active)</td></tr>
+<tr class="memitem:a3771ff838f6d4f8cec50526f58e4a020"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> bool &amp;<a class="el" href="classMapObject.html#a3ab652e15971fd18e1afb08dc52d5ce3">active</a>)</td></tr>
 <tr class="separator:a3771ff838f6d4f8cec50526f58e4a020"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:ac97257b9ec2bf526a18b9bc4bbc5b2b8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac97257b9ec2bf526a18b9bc4bbc5b2b8"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="memitem:ac97257b9ec2bf526a18b9bc4bbc5b2b8"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#ac97257b9ec2bf526a18b9bc4bbc5b2b8">name</a></td></tr>
 <tr class="separator:ac97257b9ec2bf526a18b9bc4bbc5b2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ab652e15971fd18e1afb08dc52d5ce3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3ab652e15971fd18e1afb08dc52d5ce3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>active</b></td></tr>
+<tr class="memitem:a3ab652e15971fd18e1afb08dc52d5ce3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a3ab652e15971fd18e1afb08dc52d5ce3">active</a></td></tr>
 <tr class="separator:a3ab652e15971fd18e1afb08dc52d5ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aaaf01599496f3ac2057035525ad73aff"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#aaaf01599496f3ac2057035525ad73aff">m_name</a></td></tr>
+<tr class="separator:aaaf01599496f3ac2057035525ad73aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69c9a0d03f471a4e41e9977409bb247c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c">m_active</a></td></tr>
+<tr class="separator:a69c9a0d03f471a4e41e9977409bb247c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a37fd54af664ed8f84a552e04090f444e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MapObject::MapObject </td>
+          <td>(</td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a77b47f0fc2f05d575c02635b8f8b901a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MapObject::MapObject </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> bool &amp;&#160;</td>
+          <td class="paramname"><em>active</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MapObject::active </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9cb62dcfe6b9f4c6827d8fccc54c58d6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> MapObject::activeChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0985587e2de44f2623f3aae09b1da826"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString MapObject::name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7961db701769348063d8e5c2147caf95"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> MapObject::nameChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3771ff838f6d4f8cec50526f58e4a020"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> MapObject::setActive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> bool &amp;&#160;</td>
+          <td class="paramname"><em>active</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">active()</a>, <a class="el" href="classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6">activeChanged()</a>, and <a class="el" href="classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c">m_active</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a42104b2092dcbdbff328b9f23c80c842"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> MapObject::setName </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classMapObject.html#aaaf01599496f3ac2057035525ad73aff">m_name</a>, <a class="el" href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">name()</a>, and <a class="el" href="classMapObject.html#a7961db701769348063d8e5c2147caf95">nameChanged()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a69c9a0d03f471a4e41e9977409bb247c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MapObject::m_active</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aaaf01599496f3ac2057035525ad73aff"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString MapObject::m_name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a class="anchor" id="a3ab652e15971fd18e1afb08dc52d5ce3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MapObject::active</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac97257b9ec2bf526a18b9bc4bbc5b2b8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString MapObject::name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>gui/qt5_qml/<a class="el" href="qml__map_8h_source.html">qml_map.h</a></li>
-<li>gui/qt5_qml/qml_map.cpp</li>
+<li>gui/qt5_qml/<a class="el" href="qml__map_8cpp.html">qml_map.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

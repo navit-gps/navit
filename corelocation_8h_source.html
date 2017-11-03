@@ -70,19 +70,19 @@ $(document).ready(function(){initNavTree('corelocation_8h_source.html','');});
 <div class="title">corelocation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="corelocation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifndef VEHICLE_IPHONE_CORELOCATION_H</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define VEHICLE_IPHONE_CORELOCATION_H</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">typedef</span> void(*FT_LOCATION_CB)(<span class="keywordtype">void</span> *, double , double , double , double, <span class="keywordtype">char</span> *, double);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">void</span> corelocation_update(<span class="keywordtype">double</span> lat, </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">   22</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*<a class="code" href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">FT_LOCATION_CB</a>)(<span class="keywordtype">void</span> *, <a class="code" href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a> , <a class="code" href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a> , <a class="code" href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a> , <a class="code" href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a>, <span class="keywordtype">char</span> *, <a class="code" href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a>);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">void</span> <a class="code" href="corelocation_8h.html#a6781e6aa66ab4e6495b2c8a0006e61c4">corelocation_update</a>(<span class="keywordtype">double</span> <a class="code" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                <span class="keywordtype">double</span> lng,</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                <span class="keywordtype">double</span> dir,</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                <span class="keywordtype">double</span> spd,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                <span class="keywordtype">char</span> * time,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                <span class="keywordtype">char</span> * <a class="code" href="time_8c.html#a26c7d1dbf93fa8c23c5effbacec91f8c">time</a>,</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                <span class="keywordtype">double</span> radius);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">void</span> corelocation_init(<span class="keywordtype">void</span> * pv_arg, FT_LOCATION_CB pf_cb);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> corelocation_exit(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">void</span> <a class="code" href="corelocation_8h.html#a2a5519b30b65c04df9b39c7ed43fe328">corelocation_init</a>(<span class="keywordtype">void</span> * pv_arg, <a class="code" href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">FT_LOCATION_CB</a> pf_cb);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="corelocation_8h.html#a7d143a90800c582bbf3eb6be5f40b668">corelocation_exit</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifdef VEHICLE_IPHONE_OBJC</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#import &lt;CoreLocation/CoreLocation.h&gt;</span></div>
@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('corelocation_8h_source.html','');});
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        NSDateFormatter *dateFormatter;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        NSDate* eventDate;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">@public</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        FT_LOCATION_CB pf_cb;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">FT_LOCATION_CB</a> pf_cb;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">void</span> * pv_arg;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
@@ -102,26 +102,34 @@ $(document).ready(function(){initNavTree('corelocation_8h_source.html','');});
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">@property</span> (nonatomic, retain) NSDate* eventDate;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">@property</span> (nonatomic) <span class="keywordtype">int</span> first;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">@property</span> (nonatomic) <span class="keywordtype">void</span> * pv_arg;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">@property</span> (nonatomic) FT_LOCATION_CB pf_cb;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">@property</span> (nonatomic) <a class="code" href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">FT_LOCATION_CB</a> pf_cb;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;- (void)locationManager:(CLLocationManager *)manager</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;- (<a class="code" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)locationManager:(CLLocationManager *)manager</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        didUpdateToLocation:(CLLocation *)newLocation</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                   fromLocation:(CLLocation *)oldLocation;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;- (void)locationManager:(CLLocationManager *)manager</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;- (<a class="code" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>)locationManager:(CLLocationManager *)manager</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;           didFailWithError:(NSError *)error;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">@end</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="time_8c_html_a26c7d1dbf93fa8c23c5effbacec91f8c"><div class="ttname"><a href="time_8c.html#a26c7d1dbf93fa8c23c5effbacec91f8c">time</a></div><div class="ttdeci">time_t time(time_t *timer)</div><div class="ttdef"><b>Definition:</b> time.c:15</div></div>
+<div class="ttc" id="png_8h_html_a04364e387081209df3bd1a16e8abe3b9"><div class="ttname"><a href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a></div><div class="ttdeci">typedef void(PNGAPI *png_error_ptr) PNGARG((png_structp</div></div>
+<div class="ttc" id="corelocation_8h_html_a7d143a90800c582bbf3eb6be5f40b668"><div class="ttname"><a href="corelocation_8h.html#a7d143a90800c582bbf3eb6be5f40b668">corelocation_exit</a></div><div class="ttdeci">void corelocation_exit(void)</div><div class="ttdef"><b>Definition:</b> corelocation.m:49</div></div>
+<div class="ttc" id="corelocation_8h_html_a2a5519b30b65c04df9b39c7ed43fe328"><div class="ttname"><a href="corelocation_8h.html#a2a5519b30b65c04df9b39c7ed43fe328">corelocation_init</a></div><div class="ttdeci">void corelocation_init(void *pv_arg, FT_LOCATION_CB pf_cb)</div><div class="ttdef"><b>Definition:</b> corelocation.m:37</div></div>
+<div class="ttc" id="garmin__img_8c_html_a426867fb1e80a778a24f2a67841852f2"><div class="ttname"><a href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a></div><div class="ttdeci">struct triple lng lat</div><div class="ttdef"><b>Definition:</b> garmin_img.c:498</div></div>
 <div class="ttc" id="classcorelocation_html"><div class="ttname"><a href="classcorelocation.html">corelocation</a></div><div class="ttdef"><b>Definition:</b> corelocation.m:54</div></div>
+<div class="ttc" id="corelocation_8h_html_a3021d93abd5e1539a202e401536dfd1f"><div class="ttname"><a href="corelocation_8h.html#a3021d93abd5e1539a202e401536dfd1f">FT_LOCATION_CB</a></div><div class="ttdeci">void(* FT_LOCATION_CB)(void *, double, double, double, double, char *, double)</div><div class="ttdef"><b>Definition:</b> corelocation.h:22</div></div>
+<div class="ttc" id="corelocation_8h_html_a6781e6aa66ab4e6495b2c8a0006e61c4"><div class="ttname"><a href="corelocation_8h.html#a6781e6aa66ab4e6495b2c8a0006e61c4">corelocation_update</a></div><div class="ttdeci">void corelocation_update(double lat, double lng, double dir, double spd, char *time, double radius)</div><div class="ttdef"><b>Definition:</b> corelocation.m:30</div></div>
+<div class="ttc" id="readclause_8c_html_a38a01c28a245417a5317d84372adb76a"><div class="ttname"><a href="readclause_8c.html#a38a01c28a245417a5317d84372adb76a">double</a></div><div class="ttdeci">#define double(x)</div><div class="ttdef"><b>Definition:</b> readclause.c:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5d688059bd21a313bc96de52905569a5.html">vehicle</a></li><li class="navelem"><a class="el" href="dir_2ea991e553e5d35b57b9be4f74274886.html">iphone</a></li><li class="navelem"><b>corelocation.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5d688059bd21a313bc96de52905569a5.html">vehicle</a></li><li class="navelem"><a class="el" href="dir_2ea991e553e5d35b57b9be4f74274886.html">iphone</a></li><li class="navelem"><a class="el" href="corelocation_8h.html">corelocation.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

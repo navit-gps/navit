@@ -79,20 +79,60 @@ $(document).ready(function(){initNavTree('structstreet__destination.html','');})
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:aee07bb798a6824a32093b80135c90906"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee07bb798a6824a32093b80135c90906"></a>
-struct <a class="el" href="structstreet__destination.html">street_destination</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b></td></tr>
+<tr class="memitem:aee07bb798a6824a32093b80135c90906"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structstreet__destination.html">street_destination</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstreet__destination.html#aee07bb798a6824a32093b80135c90906">next</a></td></tr>
 <tr class="separator:aee07bb798a6824a32093b80135c90906"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ca9fc57d48e7fcb948950a39c83de5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ca9fc57d48e7fcb948950a39c83de5b"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>destination</b></td></tr>
+<tr class="memitem:a2ca9fc57d48e7fcb948950a39c83de5b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstreet__destination.html#a2ca9fc57d48e7fcb948950a39c83de5b">destination</a></td></tr>
 <tr class="separator:a2ca9fc57d48e7fcb948950a39c83de5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c9315380ee206d0167f4a3b69cf2cdb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c9315380ee206d0167f4a3b69cf2cdb"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>rank</b></td></tr>
+<tr class="memitem:a5c9315380ee206d0167f4a3b69cf2cdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstreet__destination.html#a5c9315380ee206d0167f4a3b69cf2cdb">rank</a></td></tr>
 <tr class="separator:a5c9315380ee206d0167f4a3b69cf2cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A linked list containing the destination of the road. </p>
 <p>Holds the destination info from the road, that is the place you drive to if you keep following the road as found on traffic sign's (ex. Paris, Senlis ...) </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a2ca9fc57d48e7fcb948950a39c83de5b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* street_destination::destination</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="navigation_8c.html#a716b6a2fabc5949fd8e9cca04b57dd55">free_list()</a>, <a class="el" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get()</a>, <a class="el" href="navigation_8c.html#adba1f0f416a77b713b5be4f17fd6e3ea">select_announced_destinations()</a>, <a class="el" href="navigation_8c.html#a61af9070ec9db0fc0f1f4b1b6029c8af">set_highrank()</a>, and <a class="el" href="navigation_8c.html#a75a6d42036f0613b53842bf8b0b21ea1">split_string_to_list()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aee07bb798a6824a32093b80135c90906"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structstreet__destination.html">street_destination</a>* street_destination::next</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="navigation_8c.html#a716b6a2fabc5949fd8e9cca04b57dd55">free_list()</a>, <a class="el" href="navigation_8c.html#a49c8728dd87b358f67b69ba1cee6ab50">get_bestranked()</a>, <a class="el" href="navigation_8c.html#adba1f0f416a77b713b5be4f17fd6e3ea">select_announced_destinations()</a>, <a class="el" href="navigation_8c.html#a61af9070ec9db0fc0f1f4b1b6029c8af">set_highrank()</a>, and <a class="el" href="navigation_8c.html#a75a6d42036f0613b53842bf8b0b21ea1">split_string_to_list()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5c9315380ee206d0167f4a3b69cf2cdb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> street_destination::rank</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="navigation_8c.html#a49c8728dd87b358f67b69ba1cee6ab50">get_bestranked()</a>, <a class="el" href="navigation_8c.html#a61af9070ec9db0fc0f1f4b1b6029c8af">set_highrank()</a>, and <a class="el" href="navigation_8c.html#a75a6d42036f0613b53842bf8b0b21ea1">split_string_to_list()</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="navigation_8c.html">navigation.c</a></li>
 </ul>
 </div><!-- contents -->

@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('wave_8h_source.html','');});
 <div class="title">wave.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef WAVE_H</span></div>
+<a href="wave_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef WAVE_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define WAVE_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
@@ -82,23 +82,23 @@ $(document).ready(function(){initNavTree('wave_8h_source.html','');});
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifndef PLATFORM_DOS</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;stdint.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;<a class="code" href="stdint_8h.html">stdint.h</a>&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> option_device_number;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="wave_8h.html#a9c89e697a95fabec481d41aa227c013d">option_device_number</a>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> wave_init();</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#a39edf53f76846285d78d17753bbb1863">wave_init</a>();</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// TBD: the arg could be &quot;alsa&quot;, &quot;oss&quot;,...</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span>* wave_open(<span class="keyword">const</span> <span class="keywordtype">char</span>* the_api);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span>* <a class="code" href="wave_8h.html#a1bc2b585f9764bbbbe71d14887a7653f">wave_open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* the_api);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">size_t</span> wave_write(<span class="keywordtype">void</span>* theHandler, <span class="keywordtype">char</span>* theMono16BitsWaveBuffer, <span class="keywordtype">size_t</span> theSize);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> wave_close(<span class="keywordtype">void</span>* theHandler);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> wave_flush(<span class="keywordtype">void</span>* theHandler);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> wave_is_busy(<span class="keywordtype">void</span>* theHandler);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> wave_terminate();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">extern</span> uint32_t wave_get_read_position(<span class="keywordtype">void</span>* theHandler);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">extern</span> uint32_t wave_get_write_position(<span class="keywordtype">void</span>* theHandler);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">size_t</span> <a class="code" href="wave_8h.html#a2ed0fd7a0b3b8bb596d54912dcebfdb9">wave_write</a>(<span class="keywordtype">void</span>* theHandler, <span class="keywordtype">char</span>* theMono16BitsWaveBuffer, <span class="keywordtype">size_t</span> theSize);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="wave_8h.html#a16d7ce4ad9ac704ee14e4d57a58a3330">wave_close</a>(<span class="keywordtype">void</span>* theHandler);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#acef85efe717ebbdef8a5de095d060f1e">wave_flush</a>(<span class="keywordtype">void</span>* theHandler);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="wave_8h.html#ae7cea933e81c3a77779320ad1ffced8b">wave_is_busy</a>(<span class="keywordtype">void</span>* theHandler);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#a212db139a87e17b6f48c0ef111d891c0">wave_terminate</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">extern</span> uint32_t <a class="code" href="wave_8h.html#a9aff41dee96f3adb9aab9b9b3f252717">wave_get_read_position</a>(<span class="keywordtype">void</span>* theHandler);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">extern</span> uint32_t <a class="code" href="wave_8h.html#a7a060467e8c4182b032eb01a85cf4c1e">wave_get_write_position</a>(<span class="keywordtype">void</span>* theHandler);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// Supply the remaining time in ms before the sample is played</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// (or 0 if the event has been already played).</span></div>
@@ -106,28 +106,49 @@ $(document).ready(function(){initNavTree('wave_8h_source.html','');});
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// time: supplied value in ms</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// return 0 if ok or -1 otherwise (stream not opened).</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> wave_get_remaining_time(uint32_t sample, uint32_t* time);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="wave_8h.html#a6a39468541e6eedebcda889fe2525f10">wave_get_remaining_time</a>(uint32_t sample, uint32_t* <a class="code" href="time_8c.html#a26c7d1dbf93fa8c23c5effbacec91f8c">time</a>);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// set the callback which informs if the output is still enabled.</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// Helpful if a new sample is waiting for free space whereas sound must be stopped.</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">typedef</span> int (t_wave_callback)(void);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> wave_set_callback_is_output_enabled(t_wave_callback* cb);</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="wave_8h.html#ad24bf7f40db0ad5125ecf480270219ce">   41</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a> (<a class="code" href="wave_8h.html#ad24bf7f40db0ad5125ecf480270219ce">t_wave_callback</a>)(<a class="code" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#a39fd91390998161657b8f7368e7d890e">wave_set_callback_is_output_enabled</a>(<a class="code" href="wave_8h.html#ad24bf7f40db0ad5125ecf480270219ce">t_wave_callback</a>* cb);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// general functions</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> clock_gettime2(<span class="keyword">struct</span> timespec *ts);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> add_time_in_ms(<span class="keyword">struct</span> timespec *ts, <span class="keywordtype">int</span> time_in_ms);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#a5505b48e5febf2e391de79cc0dc854ed">clock_gettime2</a>(<span class="keyword">struct</span> timespec *<a class="code" href="garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2">ts</a>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="wave_8h.html#a12450158cd0492b92a8ad63024c2c625">add_time_in_ms</a>(<span class="keyword">struct</span> timespec *<a class="code" href="garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2">ts</a>, <span class="keywordtype">int</span> time_in_ms);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// for tests</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> *wave_test_get_write_buffer();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> *<a class="code" href="wave_8h.html#af5e1fc8fc14b0afa1609e7b216e9f728">wave_test_get_write_buffer</a>();</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="wave_8h_html_a9c89e697a95fabec481d41aa227c013d"><div class="ttname"><a href="wave_8h.html#a9c89e697a95fabec481d41aa227c013d">option_device_number</a></div><div class="ttdeci">int option_device_number</div><div class="ttdef"><b>Definition:</b> synthdata.c:41</div></div>
+<div class="ttc" id="wave_8h_html_a39edf53f76846285d78d17753bbb1863"><div class="ttname"><a href="wave_8h.html#a39edf53f76846285d78d17753bbb1863">wave_init</a></div><div class="ttdeci">void wave_init()</div></div>
+<div class="ttc" id="time_8c_html_a26c7d1dbf93fa8c23c5effbacec91f8c"><div class="ttname"><a href="time_8c.html#a26c7d1dbf93fa8c23c5effbacec91f8c">time</a></div><div class="ttdeci">time_t time(time_t *timer)</div><div class="ttdef"><b>Definition:</b> time.c:15</div></div>
+<div class="ttc" id="wave_8h_html_a9aff41dee96f3adb9aab9b9b3f252717"><div class="ttname"><a href="wave_8h.html#a9aff41dee96f3adb9aab9b9b3f252717">wave_get_read_position</a></div><div class="ttdeci">uint32_t wave_get_read_position(void *theHandler)</div></div>
+<div class="ttc" id="wave_8h_html_a5505b48e5febf2e391de79cc0dc854ed"><div class="ttname"><a href="wave_8h.html#a5505b48e5febf2e391de79cc0dc854ed">clock_gettime2</a></div><div class="ttdeci">void clock_gettime2(struct timespec *ts)</div></div>
+<div class="ttc" id="wave_8h_html_a7a060467e8c4182b032eb01a85cf4c1e"><div class="ttname"><a href="wave_8h.html#a7a060467e8c4182b032eb01a85cf4c1e">wave_get_write_position</a></div><div class="ttdeci">uint32_t wave_get_write_position(void *theHandler)</div></div>
+<div class="ttc" id="voices_8c_html_a4a950eb550194bd27837f94f61603d36"><div class="ttname"><a href="voices_8c.html#a4a950eb550194bd27837f94f61603d36">int</a></div><div class="ttdeci">#define int(x)</div><div class="ttdef"><b>Definition:</b> voices.c:45</div></div>
+<div class="ttc" id="wave_8h_html_a2ed0fd7a0b3b8bb596d54912dcebfdb9"><div class="ttname"><a href="wave_8h.html#a2ed0fd7a0b3b8bb596d54912dcebfdb9">wave_write</a></div><div class="ttdeci">size_t wave_write(void *theHandler, char *theMono16BitsWaveBuffer, size_t theSize)</div></div>
+<div class="ttc" id="png_8h_html_a04364e387081209df3bd1a16e8abe3b9"><div class="ttname"><a href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a></div><div class="ttdeci">typedef void(PNGAPI *png_error_ptr) PNGARG((png_structp</div></div>
+<div class="ttc" id="wave_8h_html_af5e1fc8fc14b0afa1609e7b216e9f728"><div class="ttname"><a href="wave_8h.html#af5e1fc8fc14b0afa1609e7b216e9f728">wave_test_get_write_buffer</a></div><div class="ttdeci">void * wave_test_get_write_buffer()</div></div>
+<div class="ttc" id="wave_8h_html_ae7cea933e81c3a77779320ad1ffced8b"><div class="ttname"><a href="wave_8h.html#ae7cea933e81c3a77779320ad1ffced8b">wave_is_busy</a></div><div class="ttdeci">int wave_is_busy(void *theHandler)</div></div>
+<div class="ttc" id="wave_8h_html_acef85efe717ebbdef8a5de095d060f1e"><div class="ttname"><a href="wave_8h.html#acef85efe717ebbdef8a5de095d060f1e">wave_flush</a></div><div class="ttdeci">void wave_flush(void *theHandler)</div></div>
+<div class="ttc" id="wave_8h_html_a16d7ce4ad9ac704ee14e4d57a58a3330"><div class="ttname"><a href="wave_8h.html#a16d7ce4ad9ac704ee14e4d57a58a3330">wave_close</a></div><div class="ttdeci">int wave_close(void *theHandler)</div></div>
+<div class="ttc" id="stdint_8h_html"><div class="ttname"><a href="stdint_8h.html">stdint.h</a></div></div>
+<div class="ttc" id="wave_8h_html_ad24bf7f40db0ad5125ecf480270219ce"><div class="ttname"><a href="wave_8h.html#ad24bf7f40db0ad5125ecf480270219ce">t_wave_callback</a></div><div class="ttdeci">int( t_wave_callback)(void)</div><div class="ttdef"><b>Definition:</b> wave.h:41</div></div>
+<div class="ttc" id="wave_8h_html_a6a39468541e6eedebcda889fe2525f10"><div class="ttname"><a href="wave_8h.html#a6a39468541e6eedebcda889fe2525f10">wave_get_remaining_time</a></div><div class="ttdeci">int wave_get_remaining_time(uint32_t sample, uint32_t *time)</div></div>
+<div class="ttc" id="wave_8h_html_a1bc2b585f9764bbbbe71d14887a7653f"><div class="ttname"><a href="wave_8h.html#a1bc2b585f9764bbbbe71d14887a7653f">wave_open</a></div><div class="ttdeci">void * wave_open(const char *the_api)</div></div>
+<div class="ttc" id="wave_8h_html_a212db139a87e17b6f48c0ef111d891c0"><div class="ttname"><a href="wave_8h.html#a212db139a87e17b6f48c0ef111d891c0">wave_terminate</a></div><div class="ttdeci">void wave_terminate()</div></div>
+<div class="ttc" id="wave_8h_html_a12450158cd0492b92a8ad63024c2c625"><div class="ttname"><a href="wave_8h.html#a12450158cd0492b92a8ad63024c2c625">add_time_in_ms</a></div><div class="ttdeci">void add_time_in_ms(struct timespec *ts, int time_in_ms)</div></div>
+<div class="ttc" id="wave_8h_html_a39fd91390998161657b8f7368e7d890e"><div class="ttname"><a href="wave_8h.html#a39fd91390998161657b8f7368e7d890e">wave_set_callback_is_output_enabled</a></div><div class="ttdeci">void wave_set_callback_is_output_enabled(t_wave_callback *cb)</div></div>
+<div class="ttc" id="garmin__img_8c_html_a37c974d4977f0dec584df789e65ad4d2"><div class="ttname"><a href="garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2">ts</a></div><div class="ttdeci">struct timestamp ts</div><div class="ttdef"><b>Definition:</b> garmin_img.c:93</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><b>wave.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><a class="el" href="wave_8h.html">wave.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

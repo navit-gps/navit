@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('vasnprintf_8h_source.html','');});
 <div class="title">vasnprintf.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* vsprintf with automatic memory allocation.</span></div>
+<a href="vasnprintf_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* vsprintf with automatic memory allocation.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">   Copyright (C) 2002-2003 Free Software Foundation, Inc.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   This program is free software; you can redistribute it and/or modify it</span></div>
@@ -100,13 +100,13 @@ $(document).ready(function(){initNavTree('vasnprintf_8h_source.html','');});
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef __attribute__</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="comment">/* This feature is available in gcc versions 2.5 and later.  */</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"># if __GNUC__ &lt; 2 || (__GNUC__ == 2 &amp;&amp; __GNUC_MINOR__ &lt; 5) || __STRICT_ANSI__</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __attribute__(Spec) </span><span class="comment">/* empty */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">   31</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __attribute__(Spec) </span><span class="comment">/* empty */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># endif</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="comment">/* The __-protected variants of `format&#39; and `printf&#39; attributes</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"># if __GNUC__ &lt; 2 || (__GNUC__ == 2 &amp;&amp; __GNUC_MINOR__ &lt; 7)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __format__ format</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __printf__ printf</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="vasnprintf_8h.html#aeae48d5f6ceacbe69f931aa8efb6ae9e">   36</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __format__ format</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="vasnprintf_8h.html#a10ea4bdaa1534c2e792509268b4e597e">   37</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define __printf__ printf</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># endif</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
@@ -121,22 +121,27 @@ $(document).ready(function(){initNavTree('vasnprintf_8h_source.html','');});
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">   if no dynamic memory allocation was necessary) and set *LENGTHP to the</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">   number of resulting bytes, excluding the trailing NUL.  Upon error, set</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">   errno and return NULL.  */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> * asnprintf (<span class="keywordtype">char</span> *resultbuf, <span class="keywordtype">size_t</span> *lengthp, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;       __attribute__ ((__format__ (__printf__, 3, 4)));</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;extern <span class="keywordtype">char</span> * vasnprintf (<span class="keywordtype">char</span> *resultbuf, <span class="keywordtype">size_t</span> *lengthp, const <span class="keywordtype">char</span> *format, va_list args)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;       __attribute__ ((__format__ (__printf__, 3, 0)));</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> * <a class="code" href="vasnprintf_8h.html#a8e38a4feadcbaddb7036a88906695799">asnprintf</a> (<span class="keywordtype">char</span> *resultbuf, <span class="keywordtype">size_t</span> *lengthp, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;       <a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((<a class="code" href="vasnprintf_8h.html#aeae48d5f6ceacbe69f931aa8efb6ae9e">__format__</a> (<a class="code" href="vasnprintf_8h.html#a10ea4bdaa1534c2e792509268b4e597e">__printf__</a>, 3, 4)));</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> * <a class="code" href="vasnprintf_8h.html#ae4aa2a6cac909432c76a55054ea66538">vasnprintf</a> (<span class="keywordtype">char</span> *resultbuf, <span class="keywordtype">size_t</span> *lengthp, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, va_list args)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;       <a class="code" href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a> ((<a class="code" href="vasnprintf_8h.html#aeae48d5f6ceacbe69f931aa8efb6ae9e">__format__</a> (<a class="code" href="vasnprintf_8h.html#a10ea4bdaa1534c2e792509268b4e597e">__printf__</a>, 3, 0)));</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#ifdef  __cplusplus</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _VASNPRINTF_H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="vasnprintf_8h_html_aeae48d5f6ceacbe69f931aa8efb6ae9e"><div class="ttname"><a href="vasnprintf_8h.html#aeae48d5f6ceacbe69f931aa8efb6ae9e">__format__</a></div><div class="ttdeci">#define __format__</div><div class="ttdef"><b>Definition:</b> vasnprintf.h:36</div></div>
+<div class="ttc" id="vasnprintf_8h_html_a10ea4bdaa1534c2e792509268b4e597e"><div class="ttname"><a href="vasnprintf_8h.html#a10ea4bdaa1534c2e792509268b4e597e">__printf__</a></div><div class="ttdeci">#define __printf__</div><div class="ttdef"><b>Definition:</b> vasnprintf.h:37</div></div>
+<div class="ttc" id="vasnprintf_8h_html_a7542898d5be40c999bec6c243af33f58"><div class="ttname"><a href="vasnprintf_8h.html#a7542898d5be40c999bec6c243af33f58">__attribute__</a></div><div class="ttdeci">#define __attribute__(Spec)</div><div class="ttdef"><b>Definition:</b> vasnprintf.h:31</div></div>
+<div class="ttc" id="vasnprintf_8h_html_ae4aa2a6cac909432c76a55054ea66538"><div class="ttname"><a href="vasnprintf_8h.html#ae4aa2a6cac909432c76a55054ea66538">vasnprintf</a></div><div class="ttdeci">char char * vasnprintf(char *resultbuf, size_t *lengthp, const char *format, va_list args) __attribute__((__format__(__printf__</div></div>
+<div class="ttc" id="vasnprintf_8h_html_a8e38a4feadcbaddb7036a88906695799"><div class="ttname"><a href="vasnprintf_8h.html#a8e38a4feadcbaddb7036a88906695799">asnprintf</a></div><div class="ttdeci">char * asnprintf(char *resultbuf, size_t *lengthp, const char *format,...) __attribute__((__format__(__printf__</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><b>vasnprintf.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_1d90612e2b94e2840a52a97dcade9272.html">gettext_intl</a></li><li class="navelem"><a class="el" href="vasnprintf_8h.html">vasnprintf.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

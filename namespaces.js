@@ -1,8 +1,7 @@
 var namespaces =
 [
-    [ "org", null, [
-      [ "navitproject", null, [
-        [ "navit", "namespaceorg_1_1navitproject_1_1navit.html", null ]
-      ] ]
-    ] ]
+    [ "eval", "namespaceeval.html", null ],
+    [ "org", "namespaceorg.html", "namespaceorg" ],
+    [ "startup", "namespacestartup.html", null ],
+    [ "test", "namespacetest.html", null ]
 ];

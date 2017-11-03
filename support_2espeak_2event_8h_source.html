@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('support_2espeak_2event_8h_source.html'
 <div class="title">event.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef EVENT_H</span></div>
+<a href="support_2espeak_2event_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef EVENT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define EVENT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">/* </span></div>
@@ -93,20 +93,20 @@ $(document).ready(function(){initNavTree('support_2espeak_2event_8h_source.html'
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;speak_lib.h&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="speak__lib_8h.html">speak_lib.h</a>&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// Initialize the event component.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// First function to be called.</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// the callback will be called when the event actually occurs.</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// The callback is detailled in speak_lib.h .</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> event_init(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> event_set_callback(t_espeak_callback* cb);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="support_2espeak_2event_8h.html#a703aee6d18b09a8b0e7fa762e6024594">event_init</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="support_2espeak_2event_8h.html#a56dd524a7268f4f5c2165b2bffda17f3">event_set_callback</a>(<a class="code" href="speak__lib_8h.html#a565b12678d654c7b74acfd7e2c7aed0d">t_espeak_callback</a>* <a class="code" href="structevent__idle.html#abe70c2fd366b5228ade6ae79aa26606f">cb</a>);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// Clear any pending event.</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// Return: EE_OK: operation achieved </span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//         EE_INTERNAL_ERROR.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;espeak_ERROR event_clear_all ();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5d">espeak_ERROR</a> <a class="code" href="support_2espeak_2event_8h.html#a819d2e2065616a7b25e5775ab19c2629">event_clear_all</a> ();</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// Declare a future event</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">//</span></div>
@@ -114,20 +114,29 @@ $(document).ready(function(){initNavTree('support_2espeak_2event_8h_source.html'
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">//         EE_BUFFER_FULL: the event can not be buffered; </span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">//           you may try after a while to call the function again.</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">//         EE_INTERNAL_ERROR.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;espeak_ERROR event_declare (<a class="code" href="structespeak__EVENT.html">espeak_EVENT</a>* event);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5d">espeak_ERROR</a> <a class="code" href="support_2espeak_2event_8h.html#afdb3c0f50d34076e4bacc48d50fa3e60">event_declare</a> (<a class="code" href="structespeak__EVENT.html">espeak_EVENT</a>* event);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// Terminate the event component.</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// Last function to be called.</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> event_terminate();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> <a class="code" href="support_2espeak_2event_8h.html#af5c0fd0bca4f543c61042cf947de7ef9">event_terminate</a>();</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="speak__lib_8h_html_a1c9e117cca2ea4fdb7d11395f8e01c5d"><div class="ttname"><a href="speak__lib_8h.html#a1c9e117cca2ea4fdb7d11395f8e01c5d">espeak_ERROR</a></div><div class="ttdeci">espeak_ERROR</div><div class="ttdef"><b>Definition:</b> speak_lib.h:143</div></div>
+<div class="ttc" id="support_2espeak_2event_8h_html_afdb3c0f50d34076e4bacc48d50fa3e60"><div class="ttname"><a href="support_2espeak_2event_8h.html#afdb3c0f50d34076e4bacc48d50fa3e60">event_declare</a></div><div class="ttdeci">espeak_ERROR event_declare(espeak_EVENT *event)</div></div>
+<div class="ttc" id="support_2espeak_2event_8h_html_af5c0fd0bca4f543c61042cf947de7ef9"><div class="ttname"><a href="support_2espeak_2event_8h.html#af5c0fd0bca4f543c61042cf947de7ef9">event_terminate</a></div><div class="ttdeci">void event_terminate()</div></div>
+<div class="ttc" id="support_2espeak_2event_8h_html_a819d2e2065616a7b25e5775ab19c2629"><div class="ttname"><a href="support_2espeak_2event_8h.html#a819d2e2065616a7b25e5775ab19c2629">event_clear_all</a></div><div class="ttdeci">espeak_ERROR event_clear_all()</div></div>
 <div class="ttc" id="structespeak__EVENT_html"><div class="ttname"><a href="structespeak__EVENT.html">espeak_EVENT</a></div><div class="ttdef"><b>Definition:</b> speak_lib.h:62</div></div>
+<div class="ttc" id="structevent__idle_html_abe70c2fd366b5228ade6ae79aa26606f"><div class="ttname"><a href="structevent__idle.html#abe70c2fd366b5228ade6ae79aa26606f">event_idle::cb</a></div><div class="ttdeci">struct callback * cb</div><div class="ttdef"><b>Definition:</b> event_glib.c:133</div></div>
+<div class="ttc" id="support_2espeak_2event_8h_html_a703aee6d18b09a8b0e7fa762e6024594"><div class="ttname"><a href="support_2espeak_2event_8h.html#a703aee6d18b09a8b0e7fa762e6024594">event_init</a></div><div class="ttdeci">void event_init(void)</div></div>
+<div class="ttc" id="speak__lib_8h_html_a565b12678d654c7b74acfd7e2c7aed0d"><div class="ttname"><a href="speak__lib_8h.html#a565b12678d654c7b74acfd7e2c7aed0d">t_espeak_callback</a></div><div class="ttdeci">int( t_espeak_callback)(short *, int, espeak_EVENT *)</div><div class="ttdef"><b>Definition:</b> speak_lib.h:168</div></div>
+<div class="ttc" id="support_2espeak_2event_8h_html_a56dd524a7268f4f5c2165b2bffda17f3"><div class="ttname"><a href="support_2espeak_2event_8h.html#a56dd524a7268f4f5c2165b2bffda17f3">event_set_callback</a></div><div class="ttdeci">void event_set_callback(t_espeak_callback *cb)</div></div>
+<div class="ttc" id="speak__lib_8h_html"><div class="ttname"><a href="speak__lib_8h.html">speak_lib.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><b>event.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><a class="el" href="support_2espeak_2event_8h.html">event.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

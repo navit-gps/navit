@@ -70,11 +70,14 @@ $(document).ready(function(){initNavTree('classSearchObject.html','');});
   <div class="summary">
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#properties">Properties</a>  </div>
+<a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">SearchObject Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="qml__search_8h_source.html">qml_search.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SearchObject:</div>
 <div class="dyncontent">
@@ -86,49 +89,352 @@ Inheritance diagram for SearchObject:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:aa288955f6179f863ce46225409bcc5a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa288955f6179f863ce46225409bcc5a5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>nameChanged</b> ()</td></tr>
+<tr class="memitem:aa288955f6179f863ce46225409bcc5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#aa288955f6179f863ce46225409bcc5a5">nameChanged</a> ()</td></tr>
 <tr class="separator:aa288955f6179f863ce46225409bcc5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfb6051d45898ed695d98de4e5547a75"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abfb6051d45898ed695d98de4e5547a75"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>iconChanged</b> ()</td></tr>
+<tr class="memitem:abfb6051d45898ed695d98de4e5547a75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#abfb6051d45898ed695d98de4e5547a75">iconChanged</a> ()</td></tr>
 <tr class="separator:abfb6051d45898ed695d98de4e5547a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a623f76ad554f7c9d753cd86205c74c07"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a623f76ad554f7c9d753cd86205c74c07"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SearchObject</b> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:a623f76ad554f7c9d753cd86205c74c07"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a623f76ad554f7c9d753cd86205c74c07">SearchObject</a> (QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:a623f76ad554f7c9d753cd86205c74c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af65ccb5930fa6f8256a66cddcf3bc2d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af65ccb5930fa6f8256a66cddcf3bc2d9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SearchObject</b> (const QString &amp;name, const QString &amp;icon, struct <a class="el" href="structpcoord.html">pcoord</a> *c, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
+<tr class="memitem:af65ccb5930fa6f8256a66cddcf3bc2d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#af65ccb5930fa6f8256a66cddcf3bc2d9">SearchObject</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classSearchObject.html#a0bda9ef976dafc8a9ca1071912fbe0e3">name</a>, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classSearchObject.html#a4242c889787ab8133a72e3cfa0e618a6">icon</a>, struct <a class="el" href="structpcoord.html">pcoord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, QObject *<a class="el" href="structparent.html">parent</a>=0)</td></tr>
 <tr class="separator:af65ccb5930fa6f8256a66cddcf3bc2d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c3f1d6373d54a6d75f6bb916c86a62b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c3f1d6373d54a6d75f6bb916c86a62b"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const </td></tr>
+<tr class="memitem:a3c3f1d6373d54a6d75f6bb916c86a62b"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">name</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a3c3f1d6373d54a6d75f6bb916c86a62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a863c2ece1660369dd58dc1c7f57d537f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a863c2ece1660369dd58dc1c7f57d537f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const QString &amp;name)</td></tr>
+<tr class="memitem:a863c2ece1660369dd58dc1c7f57d537f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classSearchObject.html#a0bda9ef976dafc8a9ca1071912fbe0e3">name</a>)</td></tr>
 <tr class="separator:a863c2ece1660369dd58dc1c7f57d537f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62d7966e9827adb60b9b938538a7cb88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a62d7966e9827adb60b9b938538a7cb88"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b> () const </td></tr>
+<tr class="memitem:a62d7966e9827adb60b9b938538a7cb88"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">icon</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a62d7966e9827adb60b9b938538a7cb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a681055c0dfeacddd17b0fab925b0a8fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a681055c0dfeacddd17b0fab925b0a8fb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setIcon</b> (const QString &amp;icon)</td></tr>
+<tr class="memitem:a681055c0dfeacddd17b0fab925b0a8fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon</a> (<a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="el" href="classSearchObject.html#a4242c889787ab8133a72e3cfa0e618a6">icon</a>)</td></tr>
 <tr class="separator:a681055c0dfeacddd17b0fab925b0a8fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7805f0ab19b432fb6c6fb6ee274118a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7805f0ab19b432fb6c6fb6ee274118a7"></a>
-struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getCoords</b> () const </td></tr>
+<tr class="memitem:a7805f0ab19b432fb6c6fb6ee274118a7"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a7805f0ab19b432fb6c6fb6ee274118a7">getCoords</a> () <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> </td></tr>
 <tr class="separator:a7805f0ab19b432fb6c6fb6ee274118a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a0bda9ef976dafc8a9ca1071912fbe0e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0bda9ef976dafc8a9ca1071912fbe0e3"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="memitem:a0bda9ef976dafc8a9ca1071912fbe0e3"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a0bda9ef976dafc8a9ca1071912fbe0e3">name</a></td></tr>
 <tr class="separator:a0bda9ef976dafc8a9ca1071912fbe0e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4242c889787ab8133a72e3cfa0e618a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4242c889787ab8133a72e3cfa0e618a6"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b></td></tr>
+<tr class="memitem:a4242c889787ab8133a72e3cfa0e618a6"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a4242c889787ab8133a72e3cfa0e618a6">icon</a></td></tr>
 <tr class="separator:a4242c889787ab8133a72e3cfa0e618a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a4df9770ddd80e63e286469532b74b346"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#a4df9770ddd80e63e286469532b74b346">m_name</a></td></tr>
+<tr class="separator:a4df9770ddd80e63e286469532b74b346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb52eead32e7ae83d980b0c9077ee771"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#abb52eead32e7ae83d980b0c9077ee771">m_icon</a></td></tr>
+<tr class="separator:abb52eead32e7ae83d980b0c9077ee771"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc57256c9890c725b6a3b101c5e5d50d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSearchObject.html#abc57256c9890c725b6a3b101c5e5d50d">m_c</a></td></tr>
+<tr class="separator:abc57256c9890c725b6a3b101c5e5d50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a623f76ad554f7c9d753cd86205c74c07"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SearchObject::SearchObject </td>
+          <td>(</td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af65ccb5930fa6f8256a66cddcf3bc2d9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SearchObject::SearchObject </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>icon</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a7805f0ab19b432fb6c6fb6ee274118a7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a> * SearchObject::getCoords </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classSearchObject.html#abc57256c9890c725b6a3b101c5e5d50d">m_c</a>.</p>
+
+<p>Referenced by <a class="el" href="classBackend.html#a32e61dd81a567c7c26badc0cdbdc4754">Backend::searchValidateResult()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a62d7966e9827adb60b9b938538a7cb88"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::icon </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abfb6051d45898ed695d98de4e5547a75"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> SearchObject::iconChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c3f1d6373d54a6d75f6bb916c86a62b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa288955f6179f863ce46225409bcc5a5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> SearchObject::nameChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a681055c0dfeacddd17b0fab925b0a8fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> SearchObject::setIcon </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>icon</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88">icon()</a>, <a class="el" href="classSearchObject.html#abfb6051d45898ed695d98de4e5547a75">iconChanged()</a>, and <a class="el" href="classSearchObject.html#abb52eead32e7ae83d980b0c9077ee771">m_icon</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a863c2ece1660369dd58dc1c7f57d537f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> SearchObject::setName </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>References <a class="el" href="classSearchObject.html#a4df9770ddd80e63e286469532b74b346">m_name</a>, <a class="el" href="classSearchObject.html#a3c3f1d6373d54a6d75f6bb916c86a62b">name()</a>, and <a class="el" href="classSearchObject.html#aa288955f6179f863ce46225409bcc5a5">nameChanged()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="abc57256c9890c725b6a3b101c5e5d50d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structpcoord.html">pcoord</a>* SearchObject::m_c</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a7805f0ab19b432fb6c6fb6ee274118a7">getCoords()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abb52eead32e7ae83d980b0c9077ee771"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::m_icon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a681055c0dfeacddd17b0fab925b0a8fb">setIcon()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4df9770ddd80e63e286469532b74b346"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::m_name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classSearchObject.html#a863c2ece1660369dd58dc1c7f57d537f">setName()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a class="anchor" id="a4242c889787ab8133a72e3cfa0e618a6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::icon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0bda9ef976dafc8a9ca1071912fbe0e3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString SearchObject::name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classBackend.html#a32e61dd81a567c7c26badc0cdbdc4754">Backend::searchValidateResult()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>gui/qt5_qml/<a class="el" href="qml__search_8h_source.html">qml_search.h</a></li>
-<li>gui/qt5_qml/qml_search.cpp</li>
+<li>gui/qt5_qml/<a class="el" href="qml__search_8cpp.html">qml_search.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

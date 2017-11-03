@@ -73,86 +73,304 @@ $(document).ready(function(){initNavTree('structgraphics__methods.html','');});
 <div class="title">graphics_methods Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="graphics_8h_source.html">graphics.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a4d598a73a878bde14bb60525119448d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d598a73a878bde14bb60525119448d3"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>graphics_destroy</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr)</td></tr>
+<tr class="memitem:a4d598a73a878bde14bb60525119448d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a4d598a73a878bde14bb60525119448d3">graphics_destroy</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr)</td></tr>
 <tr class="separator:a4d598a73a878bde14bb60525119448d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3e83475caef7d6c5159d87102ba7d05"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3e83475caef7d6c5159d87102ba7d05"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_mode</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, enum draw_mode_num mode)</td></tr>
+<tr class="memitem:ab3e83475caef7d6c5159d87102ba7d05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#ab3e83475caef7d6c5159d87102ba7d05">draw_mode</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, enum <a class="el" href="graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89a">draw_mode_num</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td></tr>
 <tr class="separator:ab3e83475caef7d6c5159d87102ba7d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d3f5ce61cc8d5d57a795ce150ceab7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d3f5ce61cc8d5d57a795ce150ceab7b"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_lines</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *p, int count)</td></tr>
+<tr class="memitem:a8d3f5ce61cc8d5d57a795ce150ceab7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">draw_lines</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count)</td></tr>
 <tr class="separator:a8d3f5ce61cc8d5d57a795ce150ceab7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecdeaccd95b4e5c4f40104b269a23fb4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecdeaccd95b4e5c4f40104b269a23fb4"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_polygon</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *p, int count)</td></tr>
+<tr class="memitem:aecdeaccd95b4e5c4f40104b269a23fb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">draw_polygon</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count)</td></tr>
 <tr class="separator:aecdeaccd95b4e5c4f40104b269a23fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abca9b68067d0f3ab86232b694d3e7d15"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abca9b68067d0f3ab86232b694d3e7d15"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_rectangle</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *p, int w, int h)</td></tr>
+<tr class="memitem:abca9b68067d0f3ab86232b694d3e7d15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#abca9b68067d0f3ab86232b694d3e7d15">draw_rectangle</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h)</td></tr>
 <tr class="separator:abca9b68067d0f3ab86232b694d3e7d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9781a0ab7ecffba21ac37927e0f03347"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9781a0ab7ecffba21ac37927e0f03347"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_circle</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *p, int r)</td></tr>
+<tr class="memitem:a9781a0ab7ecffba21ac37927e0f03347"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a9781a0ab7ecffba21ac37927e0f03347">draw_circle</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> r)</td></tr>
 <tr class="separator:a9781a0ab7ecffba21ac37927e0f03347"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bffceb8bf79b5323102e284b942a5c1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5bffceb8bf79b5323102e284b942a5c1"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_text</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *bg, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, struct <a class="el" href="structpoint.html">point</a> *p, int dx, int dy)</td></tr>
+<tr class="memitem:a5bffceb8bf79b5323102e284b942a5c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a5bffceb8bf79b5323102e284b942a5c1">draw_text</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *bg, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dx, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dy)</td></tr>
 <tr class="separator:a5bffceb8bf79b5323102e284b942a5c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a840ab7e89dccd5c421dff7666d50fa38"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a840ab7e89dccd5c421dff7666d50fa38"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_image</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *p, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td></tr>
+<tr class="memitem:a840ab7e89dccd5c421dff7666d50fa38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a840ab7e89dccd5c421dff7666d50fa38">draw_image</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td></tr>
 <tr class="separator:a840ab7e89dccd5c421dff7666d50fa38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91283968d56e027fa4040cac32ef86e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a91283968d56e027fa4040cac32ef86e3"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_image_warp</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *p, int count, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td></tr>
+<tr class="memitem:a91283968d56e027fa4040cac32ef86e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a91283968d56e027fa4040cac32ef86e3">draw_image_warp</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td></tr>
 <tr class="separator:a91283968d56e027fa4040cac32ef86e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0af1073d9f74678b7a94b6f12834255"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa0af1073d9f74678b7a94b6f12834255"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>draw_drag</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *p)</td></tr>
+<tr class="memitem:aa0af1073d9f74678b7a94b6f12834255"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aa0af1073d9f74678b7a94b6f12834255">draw_drag</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>)</td></tr>
 <tr class="separator:aa0af1073d9f74678b7a94b6f12834255"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd297b7b9706978b650731c6e6933605"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afd297b7b9706978b650731c6e6933605"></a>
-struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>font_new</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> *meth, char *font, int size, int flags)</td></tr>
+<tr class="memitem:afd297b7b9706978b650731c6e6933605"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#afd297b7b9706978b650731c6e6933605">font_new</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> *meth, char *font, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td></tr>
 <tr class="separator:afd297b7b9706978b650731c6e6933605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed03080073bd48434ed04f52f72411ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed03080073bd48434ed04f52f72411ac"></a>
-struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>gc_new</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__methods.html">graphics_gc_methods</a> *meth)</td></tr>
+<tr class="memitem:aed03080073bd48434ed04f52f72411ac"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aed03080073bd48434ed04f52f72411ac">gc_new</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__methods.html">graphics_gc_methods</a> *meth)</td></tr>
 <tr class="separator:aed03080073bd48434ed04f52f72411ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0afd3d8de27e9f01250fc627e233489b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0afd3d8de27e9f01250fc627e233489b"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>background_gc</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc)</td></tr>
+<tr class="memitem:a0afd3d8de27e9f01250fc627e233489b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a0afd3d8de27e9f01250fc627e233489b">background_gc</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc)</td></tr>
 <tr class="separator:a0afd3d8de27e9f01250fc627e233489b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c4875f85072209a1854468186904679"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c4875f85072209a1854468186904679"></a>
-struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>overlay_new</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__methods.html">graphics_methods</a> *meth, struct <a class="el" href="structpoint.html">point</a> *p, int w, int h, int wraparound)</td></tr>
+<tr class="memitem:a9c4875f85072209a1854468186904679"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a9c4875f85072209a1854468186904679">overlay_new</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__methods.html">graphics_methods</a> *meth, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> wraparound)</td></tr>
 <tr class="separator:a9c4875f85072209a1854468186904679"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd3af633567b0212604d50f35b0d5de6"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#abd3af633567b0212604d50f35b0d5de6">image_new</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> *meth, char *path, int *w, int *h, struct <a class="el" href="structpoint.html">point</a> *hot, int rotation)</td></tr>
+<tr class="memitem:abd3af633567b0212604d50f35b0d5de6"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#abd3af633567b0212604d50f35b0d5de6">image_new</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> *meth, char *path, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> *w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> *h, struct <a class="el" href="structpoint.html">point</a> *hot, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> rotation)</td></tr>
 <tr class="memdesc:abd3af633567b0212604d50f35b0d5de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load an image from a file.  <a href="#abd3af633567b0212604d50f35b0d5de6">More...</a><br/></td></tr>
 <tr class="separator:abd3af633567b0212604d50f35b0d5de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a05699fecdcb076c32e4c37dc75a524"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a05699fecdcb076c32e4c37dc75a524"></a>
-void *(*&#160;</td><td class="memItemRight" valign="bottom"><b>get_data</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, const char *type)</td></tr>
+<tr class="memitem:a8a05699fecdcb076c32e4c37dc75a524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a8a05699fecdcb076c32e4c37dc75a524">get_data</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="png_8h.html#a31c258c425e1346a1cd21ffd48f58ace">type</a>)</td></tr>
 <tr class="separator:a8a05699fecdcb076c32e4c37dc75a524"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a5d11cc63b961726eb13080a8e40f3b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a5d11cc63b961726eb13080a8e40f3b"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>image_free</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *priv)</td></tr>
+<tr class="memitem:a6a5d11cc63b961726eb13080a8e40f3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a6a5d11cc63b961726eb13080a8e40f3b">image_free</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *priv)</td></tr>
 <tr class="separator:a6a5d11cc63b961726eb13080a8e40f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a587e8b6c28172c4c20df2c8a567ab72e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a587e8b6c28172c4c20df2c8a567ab72e"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>get_text_bbox</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, int dx, int dy, struct <a class="el" href="structpoint.html">point</a> *ret, int estimate)</td></tr>
+<tr class="memitem:a587e8b6c28172c4c20df2c8a567ab72e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a587e8b6c28172c4c20df2c8a567ab72e">get_text_bbox</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dx, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dy, struct <a class="el" href="structpoint.html">point</a> *ret, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> estimate)</td></tr>
 <tr class="separator:a587e8b6c28172c4c20df2c8a567ab72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca1488ad5b8cecd1fd5fd2a807345906"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca1488ad5b8cecd1fd5fd2a807345906"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>overlay_disable</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, int disable)</td></tr>
+<tr class="memitem:aca1488ad5b8cecd1fd5fd2a807345906"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aca1488ad5b8cecd1fd5fd2a807345906">overlay_disable</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> disable)</td></tr>
 <tr class="separator:aca1488ad5b8cecd1fd5fd2a807345906"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6684073de6ac7bc6ad88ce43edbc4826"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6684073de6ac7bc6ad88ce43edbc4826"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>overlay_resize</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *p, int w, int h, int wraparound)</td></tr>
+<tr class="memitem:a6684073de6ac7bc6ad88ce43edbc4826"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a6684073de6ac7bc6ad88ce43edbc4826">overlay_resize</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> wraparound)</td></tr>
 <tr class="separator:a6684073de6ac7bc6ad88ce43edbc4826"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabba082f0bee6dfba9b66aa41e916e46"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aabba082f0bee6dfba9b66aa41e916e46"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_attr</b> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:aabba082f0bee6dfba9b66aa41e916e46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aabba082f0bee6dfba9b66aa41e916e46">set_attr</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:aabba082f0bee6dfba9b66aa41e916e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a960176b09cc38cf9b360fab333cc2eb7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a960176b09cc38cf9b360fab333cc2eb7"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>show_native_keyboard</b> )(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td></tr>
+<tr class="memitem:a960176b09cc38cf9b360fab333cc2eb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a960176b09cc38cf9b360fab333cc2eb7">show_native_keyboard</a> )(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td></tr>
 <tr class="separator:a960176b09cc38cf9b360fab333cc2eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a577383167d75c46b29093482818967cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a577383167d75c46b29093482818967cc"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>hide_native_keyboard</b> )(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td></tr>
+<tr class="memitem:a577383167d75c46b29093482818967cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a577383167d75c46b29093482818967cc">hide_native_keyboard</a> )(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td></tr>
 <tr class="separator:a577383167d75c46b29093482818967cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a0afd3d8de27e9f01250fc627e233489b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::background_gc)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a4d38ffa8021ec30414b2baebbca1f8b1">graphics_background_gc()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9781a0ab7ecffba21ac37927e0f03347"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_circle)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> r)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa0af1073d9f74678b7a94b6f12834255"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_drag)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a4d9283397d9ae1f61e172f60be940343">graphics_draw_drag()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a840ab7e89dccd5c421dff7666d50fa38"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_image)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, and <a class="el" href="graphics_8h.html#ae7d89638f602a27225c942e9ecfe9c23">graphics_draw_image()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a91283968d56e027fa4040cac32ef86e3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_image_warp)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *img)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8d3f5ce61cc8d5d57a795ce150ceab7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_lines)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8c.html#ad04690119b69bf808f8447cbeae0ae8a">display_draw_arrow()</a>, <a class="el" href="graphics_8h.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, <a class="el" href="graphics_8h.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines()</a>, <a class="el" href="graphics_8c.html#a0e1329ee3202a69dd547efa868d3b93e">graphics_draw_polyline_clipped()</a>, and <a class="el" href="graphics_8h.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab3e83475caef7d6c5159d87102ba7d05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_mode)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, enum <a class="el" href="graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89a">draw_mode_num</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#af2b5843afcc9fd58e6c7cb84379b7e28">graphics_displaylist_draw()</a>, and <a class="el" href="graphics_8h.html#a4346119c6921341dfc973a00579286a9">graphics_draw_mode()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aecdeaccd95b4e5c4f40104b269a23fb4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_polygon)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> count)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a1a6b7c2503d1d7a8ac7eb1b57600edcf">graphics_draw_polygon_clipped()</a>, <a class="el" href="graphics_8c.html#a0e1329ee3202a69dd547efa868d3b93e">graphics_draw_polyline_clipped()</a>, and <a class="el" href="graphics_8h.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abca9b68067d0f3ab86232b694d3e7d15"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_rectangle)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#af2b5843afcc9fd58e6c7cb84379b7e28">graphics_displaylist_draw()</a>, and <a class="el" href="graphics_8h.html#a1060bbcc5b480bd3f5c3f01c0c6f8000">graphics_draw_rectangle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5bffceb8bf79b5323102e284b942a5c1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::draw_text)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *fg, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *bg, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dx, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dy)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, <a class="el" href="graphics_8h.html#ad150b9e24b7f75f8f2d684e6a1e5f809">graphics_draw_text()</a>, and <a class="el" href="graphics_8c.html#a324319a35ac5de50116e718419638e22">label_line()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afd297b7b9706978b650731c6e6933605"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a>*(* graphics_methods::font_new)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> *meth, char *font, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="png_8h.html#a43291b8493b637821dec145c4bb1503d">size</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="gui__internal_8h.html#a977410f175f1b6ea314bf5b2c0788dfb">flags</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a276e7f7638c678ed86a5d00e401642a6">graphics_font_new()</a>, <a class="el" href="graphics__gd_8c.html#a37ecad2663191b2c46cc03d2bf3cd3a3">graphics_gd_new()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a7ba878323e460951936aa2e0f6bbf186">graphics_gtk_drawing_area_new_helper()</a>, <a class="el" href="graphics_8h.html#ac4e5839a41f2afd567d22ab0d6d1e911">graphics_named_font_new()</a>, <a class="el" href="graphics__egl_8c.html#a43be278de9cc8f324bb5588a6ba1c79b">graphics_opengl_new_helper()</a>, <a class="el" href="graphics__qt5_8cpp.html#a1aa1ed5040aa9995a35839545e84fc7b">graphics_qt5_new()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#a507eec9c3ca42d4e0bf83cd2ba65a311">graphics_qt_qpainter_new()</a>, <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, and <a class="el" href="graphics__qt5_8cpp.html#a1166f0e775e95efcad0040474546a4ff">overlay_new()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aed03080073bd48434ed04f52f72411ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a>*(* graphics_methods::gc_new)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__methods.html">graphics_gc_methods</a> *meth)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a922588c7f73a70872a92e29b5cf45b83">graphics_gc_new()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8a05699fecdcb076c32e4c37dc75a524"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>*(* graphics_methods::get_data)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, <a class="el" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> char *<a class="el" href="png_8h.html#a31c258c425e1346a1cd21ffd48f58ace">type</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a1078b0b63913aabe459d72d795c2ed4a">graphics_get_data()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a587e8b6c28172c4c20df2c8a567ab72e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::get_text_bbox)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__font__priv.html">graphics_font_priv</a> *font, char *text, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dx, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> dy, struct <a class="el" href="structpoint.html">point</a> *ret, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> estimate)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics__gd_8c.html#a37ecad2663191b2c46cc03d2bf3cd3a3">graphics_gd_new()</a>, <a class="el" href="graphics_8h.html#abc516ca06af2f5c44540e2577a080f64">graphics_get_text_bbox()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a7ba878323e460951936aa2e0f6bbf186">graphics_gtk_drawing_area_new_helper()</a>, <a class="el" href="graphics__egl_8c.html#a43be278de9cc8f324bb5588a6ba1c79b">graphics_opengl_new_helper()</a>, <a class="el" href="graphics__qt5_8cpp.html#a1aa1ed5040aa9995a35839545e84fc7b">graphics_qt5_new()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#a507eec9c3ca42d4e0bf83cd2ba65a311">graphics_qt_qpainter_new()</a>, <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, <a class="el" href="graphics_8c.html#a324319a35ac5de50116e718419638e22">label_line()</a>, and <a class="el" href="graphics__qt5_8cpp.html#a1166f0e775e95efcad0040474546a4ff">overlay_new()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4d598a73a878bde14bb60525119448d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::graphics_destroy)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#aeb9cd324a994e1c1c40e1721eb7b669f">graphics_free()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a577383167d75c46b29093482818967cc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::hide_native_keyboard)(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#abfc23e410d71e734e4316fb8898d20f4">graphics_hide_native_keyboard()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6a5d11cc63b961726eb13080a8e40f3b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::image_free)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *priv)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#aeb9cd324a994e1c1c40e1721eb7b669f">graphics_free()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="abd3af633567b0212604d50f35b0d5de6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a>*(* graphics_methods::image_new)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> *meth, char *path, int *w, int *h, struct <a class="el" href="structpoint.html">point</a> *hot, int rotation)</td>
+          <td class="memname">struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a>*(* graphics_methods::image_new)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> *meth, char *path, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> *w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> *h, struct <a class="el" href="structpoint.html">point</a> *hot, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> rotation)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -170,8 +388,80 @@ void(*&#160;</td><td class="memItemRight" valign="bottom"><b>hide_native_keyboar
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>pointer to allocated image, to be freed by image_free() </dd></dl>
-<dl class="section see"><dt>See Also</dt><dd>image_free() </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to allocated image, to be freed by <a class="el" href="structgraphics__methods.html#a6a5d11cc63b961726eb13080a8e40f3b">image_free()</a> </dd></dl>
+<dl class="section see"><dt>See Also</dt><dd><a class="el" href="structgraphics__methods.html#a6a5d11cc63b961726eb13080a8e40f3b">image_free()</a> </dd></dl>
+
+<p>Referenced by <a class="el" href="graphics_8c.html#aceafbb8c2bc25ce645391da0a5dbdf46">image_new_helper()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aca1488ad5b8cecd1fd5fd2a807345906"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::overlay_disable)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> disable)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#ac5bc899c6a208b7c45558f850cc703d4">graphics_overlay_disable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9c4875f85072209a1854468186904679"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a>*(* graphics_methods::overlay_new)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__methods.html">graphics_methods</a> *meth, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> wraparound)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#aac9fba40cfe11bb90718f0e78b232ba9">graphics_overlay_new()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6684073de6ac7bc6ad88ce43edbc4826"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* graphics_methods::overlay_resize)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> w, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> h, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> wraparound)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a417d804a302930417bab298f4aa5024c">graphics_overlay_resize()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aabba082f0bee6dfba9b66aa41e916e46"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* graphics_methods::set_attr)(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#a2630c46e1c7758475ec776f2a3250914">graphics_set_attr()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a960176b09cc38cf9b360fab333cc2eb7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* graphics_methods::show_native_keyboard)(struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="graphics_8h.html#aee7998ec26bb2b69bd536eaa2a6305d5">graphics_show_native_keyboard()</a>.</p>
 
 </div>
 </div>

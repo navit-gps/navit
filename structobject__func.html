@@ -73,49 +73,213 @@ $(document).ready(function(){initNavTree('structobject__func.html','');});
 <div class="title">object_func Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a80a4325200821f691624c3a59f45eee0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80a4325200821f691624c3a59f45eee0"></a>
-enum attr_type&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="memitem:a80a4325200821f691624c3a59f45eee0"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a80a4325200821f691624c3a59f45eee0">type</a></td></tr>
 <tr class="separator:a80a4325200821f691624c3a59f45eee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ba8f27baba90cb9a7a7609fc07b8469"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ba8f27baba90cb9a7a7609fc07b8469"></a>
-void *(*&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> )(struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memitem:a8ba8f27baba90cb9a7a7609fc07b8469"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a8ba8f27baba90cb9a7a7609fc07b8469">create</a> )(struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="separator:a8ba8f27baba90cb9a7a7609fc07b8469"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0768e78bd25b261db07453660cfa2163"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0768e78bd25b261db07453660cfa2163"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>get_attr</b> )(void *, enum attr_type type, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
+<tr class="memitem:a0768e78bd25b261db07453660cfa2163"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a0768e78bd25b261db07453660cfa2163">get_attr</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="structobject__func.html#a80a4325200821f691624c3a59f45eee0">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
 <tr class="separator:a0768e78bd25b261db07453660cfa2163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af470006684405f1a9ad8af731340f29a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af470006684405f1a9ad8af731340f29a"></a>
-struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><b>iter_new</b> )(void *)</td></tr>
+<tr class="memitem:af470006684405f1a9ad8af731340f29a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#af470006684405f1a9ad8af731340f29a">iter_new</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:af470006684405f1a9ad8af731340f29a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4de1941efa0ebfa93905b1aa8df7d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f4de1941efa0ebfa93905b1aa8df7d9"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>iter_destroy</b> )(struct <a class="el" href="structattr__iter.html">attr_iter</a> *)</td></tr>
+<tr class="memitem:a3f4de1941efa0ebfa93905b1aa8df7d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a3f4de1941efa0ebfa93905b1aa8df7d9">iter_destroy</a> )(struct <a class="el" href="structattr__iter.html">attr_iter</a> *)</td></tr>
 <tr class="separator:a3f4de1941efa0ebfa93905b1aa8df7d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10ce92fffe9830d698d18162f1f1ef7a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10ce92fffe9830d698d18162f1f1ef7a"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>set_attr</b> )(void *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:a10ce92fffe9830d698d18162f1f1ef7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a10ce92fffe9830d698d18162f1f1ef7a">set_attr</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a10ce92fffe9830d698d18162f1f1ef7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa92106f3c169bdd1c791412f2d22a4d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa92106f3c169bdd1c791412f2d22a4d4"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>add_attr</b> )(void *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:aa92106f3c169bdd1c791412f2d22a4d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#aa92106f3c169bdd1c791412f2d22a4d4">add_attr</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:aa92106f3c169bdd1c791412f2d22a4d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a95277faab8f6f1e31fafc5c1193bea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1a95277faab8f6f1e31fafc5c1193bea"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>remove_attr</b> )(void *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memitem:a1a95277faab8f6f1e31fafc5c1193bea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a1a95277faab8f6f1e31fafc5c1193bea">remove_attr</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a1a95277faab8f6f1e31fafc5c1193bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24c57d3a15aefd11454a7f76c2434b12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24c57d3a15aefd11454a7f76c2434b12"></a>
-int(*&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> )(void *)</td></tr>
+<tr class="memitem:a24c57d3a15aefd11454a7f76c2434b12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a24c57d3a15aefd11454a7f76c2434b12">init</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:a24c57d3a15aefd11454a7f76c2434b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6eeec7c6ec2e661fcc15975eaaab172"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6eeec7c6ec2e661fcc15975eaaab172"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>destroy</b> )(void *)</td></tr>
+<tr class="memitem:ad6eeec7c6ec2e661fcc15975eaaab172"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#ad6eeec7c6ec2e661fcc15975eaaab172">destroy</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:ad6eeec7c6ec2e661fcc15975eaaab172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88db8a79824bc71382f7916342fcf251"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88db8a79824bc71382f7916342fcf251"></a>
-void *(*&#160;</td><td class="memItemRight" valign="bottom"><b>dup</b> )(void *)</td></tr>
+<tr class="memitem:a88db8a79824bc71382f7916342fcf251"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a88db8a79824bc71382f7916342fcf251">dup</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:a88db8a79824bc71382f7916342fcf251"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a069ec390d6c0f1131252ea9343319ca0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a069ec390d6c0f1131252ea9343319ca0"></a>
-void *(*&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b> )(void *)</td></tr>
+<tr class="memitem:a069ec390d6c0f1131252ea9343319ca0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a069ec390d6c0f1131252ea9343319ca0">ref</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:a069ec390d6c0f1131252ea9343319ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2143a31ceda8717be69d1be8411f05c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2143a31ceda8717be69d1be8411f05c8"></a>
-void *(*&#160;</td><td class="memItemRight" valign="bottom"><b>unref</b> )(void *)</td></tr>
+<tr class="memitem:a2143a31ceda8717be69d1be8411f05c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a2143a31ceda8717be69d1be8411f05c8">unref</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:a2143a31ceda8717be69d1be8411f05c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="aa92106f3c169bdd1c791412f2d22a4d4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* object_func::add_attr)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#ac5bc84a6e4a20108b6495ec0ff49ec0e">command_object_add_attr()</a>, <a class="el" href="command_8c.html#ad74e35474194efd8d81d847c26ea6573">command_register_callbacks()</a>, <a class="el" href="gui__internal__html_8c.html#a18c18878d98b084ae858628c645dbfbf">gui_internal_set_refresh_callback()</a>, and <a class="el" href="xmlconfig_8c.html#afcd5dc0aa3d812b43320084b8c0d99f7">xi_text()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8ba8f27baba90cb9a7a7609fc07b8469"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>*(* object_func::create)(struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a92bea054d37b06e01ea145c2cb5e152a">command_call_function()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad6eeec7c6ec2e661fcc15975eaaab172"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* object_func::destroy)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a88db8a79824bc71382f7916342fcf251"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>*(* object_func::dup)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0768e78bd25b261db07453660cfa2163"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* object_func::get_attr)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="structobject__func.html#a80a4325200821f691624c3a59f45eee0">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, <a class="el" href="command_8c.html#ab7a5f12a7331a1e53a4cf9c0badb0a55">command_object_get_attr()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a24c57d3a15aefd11454a7f76c2434b12"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* object_func::init)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3f4de1941efa0ebfa93905b1aa8df7d9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>(* object_func::iter_destroy)(struct <a class="el" href="structattr__iter.html">attr_iter</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af470006684405f1a9ad8af731340f29a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structattr__iter.html">attr_iter</a>*(* object_func::iter_new)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a069ec390d6c0f1131252ea9343319ca0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>*(* object_func::ref)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1a95277faab8f6f1e31fafc5c1193bea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* object_func::remove_attr)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a3e2d390f19ae5c06ade7548e59c571d6">command_object_remove_attr()</a>, <a class="el" href="command_8c.html#abf194bbbb304b98c83c8512356623db9">command_saved_callbacks_changed()</a>, and <a class="el" href="gui__internal__menu_8c.html#a8a12f043e73fb935cf1798cc16ef2e7b">gui_internal_menu_destroy()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a10ce92fffe9830d698d18162f1f1ef7a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>(* object_func::set_attr)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="command_8c.html#a68a6b8f43887962ab9374cf8abc9b03a">command_set_attr()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a80a4325200821f691624c3a59f45eee0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> object_func::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2143a31ceda8717be69d1be8411f05c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>*(* object_func::unref)(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a></li>
 </ul>

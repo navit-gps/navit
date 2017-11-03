@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('support_2espeak_2speech_8h_source.html
 <div class="title">speech.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/***************************************************************************</span></div>
+<a href="support_2espeak_2speech_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/***************************************************************************</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *   Copyright (C) 2005 to 2007 by Jonathan Duddington                     *</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *   email: jonsd@users.sourceforge.net                                    *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *                                                                         *</span></div>
@@ -90,21 +90,21 @@ $(document).ready(function(){initNavTree('support_2espeak_2speech_8h_source.html
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> ***************************************************************************/</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;sys/types.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="support_2libc_2sys_2types_8h.html">sys/types.h</a>&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// conditional compilation options</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define INCLUDE_KLATT</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a26c1434a34fde1e1c88fbc0a9097a4c0">   24</a></span>&#160;<span class="preprocessor">#define INCLUDE_KLATT</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#if defined(BYTE_ORDER) &amp;&amp; BYTE_ORDER == BIG_ENDIAN</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ARCH_BIG</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/* #define PLATFORM_POSIX */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define PATHSEP  &#39;/&#39;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#add147d27dd39c3119dfd2d2e7868a66b">   31</a></span>&#160;<span class="preprocessor">#define PATHSEP  &#39;/&#39;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="comment">// USE_PORTAUDIO or USE_PULSEAUDIO are now defined in the makefile</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//#define USE_PORTAUDIO</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//#define USE_PULSEAUDIO</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define USE_NANOSLEEP</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#ab43901a487bc5f2a615172d6c410c0f3">   35</a></span>&#160;<span class="preprocessor">#define USE_NANOSLEEP</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="comment">//#define ESPEAK_API  extern &quot;C&quot;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifdef LIBRARY</span></div>
@@ -120,49 +120,65 @@ $(document).ready(function(){initNavTree('support_2espeak_2speech_8h_source.html
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// will look for espeak_data directory here, and also in user&#39;s home directory</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifndef PATH_ESPEAK_DATA</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span><span class="preprocessor">   #define PATH_ESPEAK_DATA  &quot;/usr/share/espeak-data&quot;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#ab20bd686b5358aa263e8d80a947e5b83">   51</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">   #define PATH_ESPEAK_DATA  &quot;/usr/share/espeak-data&quot;</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> USHORT;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>  UCHAR;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">double</span> DOUBLEX;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a5850d5316caf7f4cedd742fdf8cd7c02">   54</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="support_2espeak_2speech_8h.html#a5850d5316caf7f4cedd742fdf8cd7c02">USHORT</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a4f4bb67531a9bf6f0b9c6ad76aeba587">   55</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>  <a class="code" href="support_2espeak_2speech_8h.html#a4f4bb67531a9bf6f0b9c6ad76aeba587">UCHAR</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a9454a1c15e465c46f74e2ad93b16051b">   56</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">double</span> <a class="code" href="support_2espeak_2speech_8h.html#a9454a1c15e465c46f74e2ad93b16051b">DOUBLEX</a>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
 <div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structMNEM__TAB.html">   61</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *mnem;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   <span class="keywordtype">int</span>  value;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="structMNEM__TAB.html#a88d8f49766a6fdb15163ad62b5a77e23">   62</a></span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="structMNEM__TAB.html#a88d8f49766a6fdb15163ad62b5a77e23">mnem</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structMNEM__TAB.html#a12f6a06205aae989d6be5e3f242b9d01">   63</a></span>&#160;   <span class="keywordtype">int</span>  <a class="code" href="structMNEM__TAB.html#a12f6a06205aae989d6be5e3f242b9d01">value</a>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <a class="code" href="structMNEM__TAB.html">MNEM_TAB</a>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">int</span> LookupMnem(<a class="code" href="structMNEM__TAB.html">MNEM_TAB</a> *table, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">int</span> <a class="code" href="support_2espeak_2speech_8h.html#a4e30a35e25dc7791bd56e5c9a0b374a9">LookupMnem</a>(<a class="code" href="structMNEM__TAB.html">MNEM_TAB</a> *table, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#ifdef PLATFORM_WINDOWS</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_PATH_HOME  220</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ESPEAK_API</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_PATH_HOME  150</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a651becc92b028509a7820ce312170d43">   72</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define N_PATH_HOME  150</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ESPEAK_API  extern &quot;C&quot;</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ESPEAK_API</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="support_2espeak_2speech_8h.html#a6d1d390a7efa6587408edd84c8b54488">   76</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ESPEAK_API</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> path_home[N_PATH_HOME];    <span class="comment">// this is the espeak-data directory</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> <a class="code" href="support_2espeak_2speech_8h.html#a7fd80a33306a015428e9d039cc100e28">path_home</a>[<a class="code" href="support_2espeak_2speech_8h.html#a651becc92b028509a7820ce312170d43">N_PATH_HOME</a>];    <span class="comment">// this is the espeak-data directory</span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> strncpy0(<span class="keywordtype">char</span> *to,<span class="keyword">const</span> <span class="keywordtype">char</span> *from, <span class="keywordtype">int</span> size);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">int</span>  GetFileLength(<span class="keyword">const</span> <span class="keywordtype">char</span> *filename);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">char</span> *Alloc(<span class="keywordtype">int</span> size);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> Free(<span class="keywordtype">void</span> *ptr);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="support_2espeak_2speech_8h.html#a3c3e9f7c8ce85f8b423f24af86fb537b">strncpy0</a>(<span class="keywordtype">char</span> *to,<span class="keyword">const</span> <span class="keywordtype">char</span> *from, <span class="keywordtype">int</span> <a class="code" href="garmin__img_8c.html#a43291b8493b637821dec145c4bb1503d">size</a>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">int</span>  <a class="code" href="support_2espeak_2speech_8h.html#ab8742df0460ed0aa3d81a2d2a67fb18d">GetFileLength</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">char</span> *<a class="code" href="support_2espeak_2speech_8h.html#aa279b4ebb6707b7d3224cae69f2cc072">Alloc</a>(<span class="keywordtype">int</span> <a class="code" href="garmin__img_8c.html#a43291b8493b637821dec145c4bb1503d">size</a>);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> <a class="code" href="support_2espeak_2speech_8h.html#a2b9bb176fa6405b0237f05cb6d5dc3e6">Free</a>(<span class="keywordtype">void</span> *<a class="code" href="png_8h.html#a95138b534309370df8c31b354dfcbe45">ptr</a>);</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="ttc" id="support_2libc_2sys_2types_8h_html"><div class="ttname"><a href="support_2libc_2sys_2types_8h.html">types.h</a></div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a9454a1c15e465c46f74e2ad93b16051b"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a9454a1c15e465c46f74e2ad93b16051b">DOUBLEX</a></div><div class="ttdeci">double DOUBLEX</div><div class="ttdef"><b>Definition:</b> speech.h:56</div></div>
+<div class="ttc" id="png_8h_html_a95138b534309370df8c31b354dfcbe45"><div class="ttname"><a href="png_8h.html#a95138b534309370df8c31b354dfcbe45">ptr</a></div><div class="ttdeci">png_voidp ptr</div><div class="ttdef"><b>Definition:</b> png.h:2090</div></div>
 <div class="ttc" id="structMNEM__TAB_html"><div class="ttname"><a href="structMNEM__TAB.html">MNEM_TAB</a></div><div class="ttdef"><b>Definition:</b> speech.h:61</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_aa279b4ebb6707b7d3224cae69f2cc072"><div class="ttname"><a href="support_2espeak_2speech_8h.html#aa279b4ebb6707b7d3224cae69f2cc072">Alloc</a></div><div class="ttdeci">char * Alloc(int size)</div><div class="ttdef"><b>Definition:</b> speak.c:76</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_ab8742df0460ed0aa3d81a2d2a67fb18d"><div class="ttname"><a href="support_2espeak_2speech_8h.html#ab8742df0460ed0aa3d81a2d2a67fb18d">GetFileLength</a></div><div class="ttdeci">int GetFileLength(const char *filename)</div><div class="ttdef"><b>Definition:</b> speak.c:59</div></div>
+<div class="ttc" id="garmin__img_8c_html_a59aa20226ab9bcc66f5a649808ce874a"><div class="ttname"><a href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a></div><div class="ttdeci">char filename[8]</div><div class="ttdef"><b>Definition:</b> garmin_img.c:129</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a4e30a35e25dc7791bd56e5c9a0b374a9"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a4e30a35e25dc7791bd56e5c9a0b374a9">LookupMnem</a></div><div class="ttdeci">int LookupMnem(MNEM_TAB *table, char *string)</div><div class="ttdef"><b>Definition:</b> dictionary.c:109</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a651becc92b028509a7820ce312170d43"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a651becc92b028509a7820ce312170d43">N_PATH_HOME</a></div><div class="ttdeci">#define N_PATH_HOME</div><div class="ttdef"><b>Definition:</b> speech.h:72</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a2b9bb176fa6405b0237f05cb6d5dc3e6"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a2b9bb176fa6405b0237f05cb6d5dc3e6">Free</a></div><div class="ttdeci">void Free(void *ptr)</div><div class="ttdef"><b>Definition:</b> speak.c:81</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a4f4bb67531a9bf6f0b9c6ad76aeba587"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a4f4bb67531a9bf6f0b9c6ad76aeba587">UCHAR</a></div><div class="ttdeci">unsigned char UCHAR</div><div class="ttdef"><b>Definition:</b> speech.h:55</div></div>
+<div class="ttc" id="garmin__img_8c_html_a43291b8493b637821dec145c4bb1503d"><div class="ttname"><a href="garmin__img_8c.html#a43291b8493b637821dec145c4bb1503d">size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> garmin_img.c:131</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a7fd80a33306a015428e9d039cc100e28"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a7fd80a33306a015428e9d039cc100e28">path_home</a></div><div class="ttdeci">char path_home[N_PATH_HOME]</div><div class="ttdef"><b>Definition:</b> speak.c:54</div></div>
+<div class="ttc" id="structMNEM__TAB_html_a12f6a06205aae989d6be5e3f242b9d01"><div class="ttname"><a href="structMNEM__TAB.html#a12f6a06205aae989d6be5e3f242b9d01">MNEM_TAB::value</a></div><div class="ttdeci">int value</div><div class="ttdef"><b>Definition:</b> speech.h:63</div></div>
+<div class="ttc" id="structMNEM__TAB_html_a88d8f49766a6fdb15163ad62b5a77e23"><div class="ttname"><a href="structMNEM__TAB.html#a88d8f49766a6fdb15163ad62b5a77e23">MNEM_TAB::mnem</a></div><div class="ttdeci">const char * mnem</div><div class="ttdef"><b>Definition:</b> speech.h:62</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a3c3e9f7c8ce85f8b423f24af86fb537b"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a3c3e9f7c8ce85f8b423f24af86fb537b">strncpy0</a></div><div class="ttdeci">void strncpy0(char *to, const char *from, int size)</div><div class="ttdef"><b>Definition:</b> dictionary.c:82</div></div>
+<div class="ttc" id="support_2espeak_2speech_8h_html_a5850d5316caf7f4cedd742fdf8cd7c02"><div class="ttname"><a href="support_2espeak_2speech_8h.html#a5850d5316caf7f4cedd742fdf8cd7c02">USHORT</a></div><div class="ttdeci">unsigned short USHORT</div><div class="ttdef"><b>Definition:</b> speech.h:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><b>speech.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_6ffc0f016d2deaea924d934b564632d3.html">espeak</a></li><li class="navelem"><a class="el" href="support_2espeak_2speech_8h.html">speech.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

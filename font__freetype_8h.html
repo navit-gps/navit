@@ -92,7 +92,7 @@ Data Structures</h2></td></tr>
 <p>This plugin supplies functions to render text (encoded as UTF-8) to bitmaps with the help of FreeType 2. Typical usage: </p>
 <ul>
 <li>create a struct <a class="el" href="structfont__freetype__font.html">font_freetype_font</a> by calling <a class="el" href="structfont__freetype__methods.html#a9dcc5e64be74309ba4ad8fd4659da07c" title="Load a font, preferring one with the given font family. ">font_freetype_methods.font_new()</a> </li>
-<li>for the text to render, create a struct <a class="el" href="structfont__freetype__text.html">font_freetype_text</a> by calling font_freetype_methods.text_new() </li>
+<li>for the text to render, create a struct <a class="el" href="structfont__freetype__text.html">font_freetype_text</a> by calling <a class="el" href="structfont__freetype__methods.html#a3e1aac01f0b54ad37142bada28e6888a">font_freetype_methods.text_new()</a> </li>
 <li>obtain glyph bitmaps by calling <a class="el" href="structfont__freetype__methods.html#a57341ad2a3c429a9ce3f570ce984aafe" title="Get a glyph bitmap. ">font_freetype_methods.get_glyph()</a> on the glyphs inside struct <a class="el" href="structfont__freetype__text.html">font_freetype_text</a> </li>
 <li>optionally, obtain a "shadow" of the glyph from <a class="el" href="structfont__freetype__methods.html#a54b8d588f8f28a38295cde02b25bb3a0" title="Get glyph &quot;shadow&quot;, a glyph bitmap to be used as background. ">font_freetype_methods.get_shadow()</a>, to make the text easier to read against a colored background (like the map) </li>
 </ul>

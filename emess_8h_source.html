@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('emess_8h_source.html','');});
 <div class="title">emess.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="emess_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/* Error message processing header file */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef EMESS_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define EMESS_H</span></div>
@@ -80,15 +80,15 @@ $(document).ready(function(){initNavTree('emess_8h_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structEMESS.html">   28</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structEMESS.html">EMESS</a> {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">char</span>    *File_name,     <span class="comment">/* input file name */</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                        *Prog_name;     <span class="comment">/* name of program */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">int</span>             File_line;      <span class="comment">/* approximate line read</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structEMESS.html#a85a97e62a785717bfa89f12bec294b3c">   29</a></span>&#160;        <span class="keywordtype">char</span>    *<a class="code" href="structEMESS.html#a11f26792e33da218d678e0755d997f18">File_name</a>,     <span class="comment">/* input file name */</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                        *<a class="code" href="structEMESS.html#a85a97e62a785717bfa89f12bec294b3c">Prog_name</a>;     <span class="comment">/* name of program */</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structEMESS.html#ad1ad576876968efd0fc3fee4ed2bf75f">   31</a></span>&#160;        <span class="keywordtype">int</span>             <a class="code" href="structEMESS.html#ad1ad576876968efd0fc3fee4ed2bf75f">File_line</a>;      <span class="comment">/* approximate line read</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">                                                        where error occured */</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifdef EMESS_ROUTINE    </span><span class="comment">/* use type */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="comment">/* for emess procedure */</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">struct </span><a class="code" href="structEMESS.html">EMESS</a> emess_dat = { (<span class="keywordtype">char</span> *)0, (<span class="keywordtype">char</span> *)0, 0 };</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">struct </span><a class="code" href="structEMESS.html">EMESS</a> <a class="code" href="emess_8h.html#a6bc8fb60ef14782df37f89760c1a6c7d">emess_dat</a> = { (<span class="keywordtype">char</span> *)0, (<span class="keywordtype">char</span> *)0, 0 };</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifdef sun </span><span class="comment">/* Archaic SunOs 4.1.1, etc. */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="keywordtype">char</span> *sys_errlist[];</div>
@@ -98,18 +98,23 @@ $(document).ready(function(){initNavTree('emess_8h_source.html','');});
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#else   </span><span class="comment">/* for for calling procedures */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">extern</span> <span class="keyword">struct </span><a class="code" href="structEMESS.html">EMESS</a> emess_dat;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> emess(<span class="keywordtype">int</span>, <span class="keywordtype">char</span> *, ...);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> <a class="code" href="emess_8h.html#a537946d32315ed938842d421bb9994ea">emess</a>(<span class="keywordtype">int</span>, <span class="keywordtype">char</span> *, ...);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* use type */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* end EMESS_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="structEMESS_html"><div class="ttname"><a href="structEMESS.html">EMESS</a></div><div class="ttdef"><b>Definition:</b> emess.h:28</div></div>
+<div class="ttc" id="emess_8h_html_a537946d32315ed938842d421bb9994ea"><div class="ttname"><a href="emess_8h.html#a537946d32315ed938842d421bb9994ea">emess</a></div><div class="ttdeci">void emess(int, char *,...)</div></div>
+<div class="ttc" id="structEMESS_html_a11f26792e33da218d678e0755d997f18"><div class="ttname"><a href="structEMESS.html#a11f26792e33da218d678e0755d997f18">EMESS::File_name</a></div><div class="ttdeci">char * File_name</div><div class="ttdef"><b>Definition:</b> emess.h:29</div></div>
+<div class="ttc" id="emess_8h_html_a6bc8fb60ef14782df37f89760c1a6c7d"><div class="ttname"><a href="emess_8h.html#a6bc8fb60ef14782df37f89760c1a6c7d">emess_dat</a></div><div class="ttdeci">struct EMESS emess_dat</div></div>
+<div class="ttc" id="structEMESS_html_ad1ad576876968efd0fc3fee4ed2bf75f"><div class="ttname"><a href="structEMESS.html#ad1ad576876968efd0fc3fee4ed2bf75f">EMESS::File_line</a></div><div class="ttdeci">int File_line</div><div class="ttdef"><b>Definition:</b> emess.h:31</div></div>
+<div class="ttc" id="structEMESS_html_a85a97e62a785717bfa89f12bec294b3c"><div class="ttname"><a href="structEMESS.html#a85a97e62a785717bfa89f12bec294b3c">EMESS::Prog_name</a></div><div class="ttdeci">char * Prog_name</div><div class="ttdef"><b>Definition:</b> emess.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_4eeb864c4eec08c7d6b9d3b0352cfdde.html">tools</a></li><li class="navelem"><a class="el" href="dir_e3f7bffca7669cf35b8652af00d5e0d2.html">gpx2navit_txt</a></li><li class="navelem"><a class="el" href="dir_4993c6783887a0bc8a44af89ddf4100f.html">src</a></li><li class="navelem"><b>emess.h</b></li>
+    <li class="navelem"><a class="el" href="dir_4eeb864c4eec08c7d6b9d3b0352cfdde.html">tools</a></li><li class="navelem"><a class="el" href="dir_e3f7bffca7669cf35b8652af00d5e0d2.html">gpx2navit_txt</a></li><li class="navelem"><a class="el" href="dir_4993c6783887a0bc8a44af89ddf4100f.html">src</a></li><li class="navelem"><a class="el" href="emess_8h.html">emess.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

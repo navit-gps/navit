@@ -1,0 +1,25 @@
+var maptool_2misc_8c =
+[
+    [ "_FILE_OFFSET_BITS", "maptool_2misc_8c.html#a44d01ba0a136b8e27ad362f5a823d14e", null ],
+    [ "_LARGEFILE64_SOURCE", "maptool_2misc_8c.html#a0e6d20c5075b52b0f0bc4858d51c8591", null ],
+    [ "_LARGEFILE_SOURCE", "maptool_2misc_8c.html#a0cdbd4d0545340d33dfe595811475ccd", null ],
+    [ "phase1_coord_max", "maptool_2misc_8c.html#a7d9fa52024247b89b3a96a4cb6f1c4df", null ],
+    [ "add_aux_tiles", "maptool_2misc_8c.html#a201df1ad792b2d8b3c2b9155732e17c3", null ],
+    [ "bbox", "maptool_2misc_8c.html#a0495c1aa20654b5c917de9c2fc02cdf9", null ],
+    [ "bbox_area", "maptool_2misc_8c.html#a2f50a0b3f5dd0360e1ac14cc89e596f0", null ],
+    [ "bbox_contains_bbox", "maptool_2misc_8c.html#adb739e582c043c73a8fa38b71da8244e", null ],
+    [ "bbox_contains_coord", "maptool_2misc_8c.html#a4dc3a009b56380642cb9dcb9efa77e2b", null ],
+    [ "bbox_extend", "maptool_2misc_8c.html#a2df3cece5bb4ddd9b58b670412135cd3", null ],
+    [ "contains_bbox", "maptool_2misc_8c.html#a6aa960191a741020917b59e3a564f0ad", null ],
+    [ "dump", "maptool_2misc_8c.html#a71e82a6b58b12ccd1128bc3fba2286b6", null ],
+    [ "item_order_by_type", "maptool_2misc_8c.html#a3a4f7bf0f3f593dee249cf516d68f0e0", null ],
+    [ "phase1_map", "maptool_2misc_8c.html#af614abb9152680903a876b5f8cc7480a", null ],
+    [ "phase34", "maptool_2misc_8c.html#a4c0c980a13f1a0ca57dc0bcdb944a664", null ],
+    [ "phase34_process_file", "maptool_2misc_8c.html#a94710339565517dc0ab71f348fafec91", null ],
+    [ "phase34_process_file_range", "maptool_2misc_8c.html#a2f71c1ba13c9bd8ae3ea2a556f2b1587", null ],
+    [ "phase4", "maptool_2misc_8c.html#a6e459d2bfddda6739ebf3af029da9c32", null ],
+    [ "phase5", "maptool_2misc_8c.html#aaef1c37df5d04310744771488dad81b9", null ],
+    [ "process_binfile", "maptool_2misc_8c.html#a68bc069e595445eaa9e7c1b3e865b2a1", null ],
+    [ "process_slice", "maptool_2misc_8c.html#acfbdcfa0633f0742dff80d0f98eaddbd", null ],
+    [ "world_bbox", "maptool_2misc_8c.html#a81e09c15989c4459bdbf160a071dbb62", null ]
+];

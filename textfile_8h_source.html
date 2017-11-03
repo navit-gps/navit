@@ -70,58 +70,80 @@ $(document).ready(function(){initNavTree('textfile_8h_source.html','');});
 <div class="title">textfile.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<a href="textfile_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;attr.h&quot;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;coord.h&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="attr_8h.html">attr.h</a>&quot;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="coord_8h.html">coord.h</a>&quot;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define TEXTFILE_COMMENT_CHAR &#39;#&#39;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="textfile_8h.html#acfe2a6c922f2ed717978e60cb8de6b83">   24</a></span>&#160;<span class="preprocessor">#define TEXTFILE_COMMENT_CHAR &#39;#&#39;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">struct </span><a class="code" href="structmap__priv.html">map_priv</a> {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">int</span> id;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__priv.html#aa66f57489b1b501ca5e235d49beb5cee">id</a>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structmap__priv.html#a4658248cfb752e347d19c65a914c1e69">filename</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">char</span> *charset;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">int</span> is_pipe;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">int</span> no_warning_if_map_file_missing;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">int</span> flags;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structmap__priv.html#adbc8803857348b8e9fe16048f6deec4c">charset</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structmap__priv.html#a2efdca525cc87f294eccde186790a504">   30</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__priv.html#a2efdca525cc87f294eccde186790a504">is_pipe</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structmap__priv.html#ada21580aacc179dfa592b8cd99780f12">   31</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__priv.html#ada21580aacc179dfa592b8cd99780f12">no_warning_if_map_file_missing</a>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__priv.html#a37f285ed865368cd6285426055c292fd">flags</a>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define TEXTFILE_LINE_SIZE 512</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">   35</a></span>&#160;<span class="preprocessor">#define TEXTFILE_LINE_SIZE 512</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">struct </span><a class="code" href="structmap__rect__priv.html">map_rect_priv</a> {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keyword">struct </span><a class="code" href="structmap__selection.html">map_selection</a> *sel;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keyword">struct </span><a class="code" href="structmap__selection.html">map_selection</a> *<a class="code" href="structmap__rect__priv.html#a0163c9c41cb4fdfb8ab71cdbf40abd6a">sel</a>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        FILE *f;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">long</span> pos;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">char</span> line[TEXTFILE_LINE_SIZE];</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">int</span> attr_pos;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">enum</span> attr_type attr_last;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">char</span> attrs[TEXTFILE_LINE_SIZE];</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structattr.html">attr</a>[TEXTFILE_LINE_SIZE];</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structattr__name.html">attr_name</a>[TEXTFILE_LINE_SIZE];</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">struct </span><a class="code" href="structcoord.html">coord</a> c;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">int</span> eoc;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">int</span> more;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">struct </span><a class="code" href="structmap__priv.html">map_priv</a> *m;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        FILE *<a class="code" href="structmap__rect__priv.html#a7b8a701b81c7c5bb193dd02ec1cf4482">f</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">long</span> <a class="code" href="structmap__rect__priv.html#ae5ade09e5af13b80e50f2eb4687202b9">pos</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structmap__rect__priv.html#aa2bfd9c6728b9f8de5a98f94d4720830">line</a>[<a class="code" href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">TEXTFILE_LINE_SIZE</a>];</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__rect__priv.html#a09a57270cd672b8860b3b895f345ab3d">attr_pos</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">enum</span> <a class="code" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="code" href="structmap__rect__priv.html#aff52b4f4a5a86c8d70d500c9207e2a52">attr_last</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structmap__rect__priv.html#ab7e7f13232c76c49e0c871d84cf7954c">attrs</a>[<a class="code" href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">TEXTFILE_LINE_SIZE</a>];</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structattr.html">attr</a>[<a class="code" href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">TEXTFILE_LINE_SIZE</a>];</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structmap__rect__priv.html#a94ea86dae12ef7b65a37960ba221ceed">   47</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structattr__name.html">attr_name</a>[<a class="code" href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">TEXTFILE_LINE_SIZE</a>];</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">struct </span><a class="code" href="structcoord.html">coord</a> <a class="code" href="structmap__rect__priv.html#ae2a088b117817e1b26bbf69dca8d7d7d">c</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__rect__priv.html#a6234d79b6c8c8fccddede15f670d9e81">eoc</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structmap__rect__priv.html#aede5a813f0bd0db12198d6385dbeb200">   50</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__rect__priv.html#aede5a813f0bd0db12198d6385dbeb200">more</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">struct </span><a class="code" href="structmap__priv.html">map_priv</a> *<a class="code" href="structmap__rect__priv.html#ad739f920e58ca373bfb2f60b99ae9cf4">m</a>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">struct </span><a class="code" href="structitem.html">item</a> <a class="code" href="structitem.html">item</a>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">char</span> *args;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">int</span> lastlen;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d">   53</a></span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d">args</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="structmap__rect__priv.html#a22d445e51f9cfc5af27804b57a679b98">   54</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="structmap__rect__priv.html#a22d445e51f9cfc5af27804b57a679b98">lastlen</a>;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="ttc" id="attr_8h_html_a9a9ab3c12bda86add06f89976f36f98c"><div class="ttname"><a href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a></div><div class="ttdeci">attr_type</div><div class="ttdef"><b>Definition:</b> attr.h:34</div></div>
+<div class="ttc" id="structmap__rect__priv_html_ae2a088b117817e1b26bbf69dca8d7d7d"><div class="ttname"><a href="structmap__rect__priv.html#ae2a088b117817e1b26bbf69dca8d7d7d">map_rect_priv::c</a></div><div class="ttdeci">struct coord c</div><div class="ttdef"><b>Definition:</b> csv.h:49</div></div>
+<div class="ttc" id="structmap__priv_html_ada21580aacc179dfa592b8cd99780f12"><div class="ttname"><a href="structmap__priv.html#ada21580aacc179dfa592b8cd99780f12">map_priv::no_warning_if_map_file_missing</a></div><div class="ttdeci">int no_warning_if_map_file_missing</div><div class="ttdef"><b>Definition:</b> textfile.h:31</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a623b44b7e2225260fd8f962d81a66e8d"><div class="ttname"><a href="structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d">map_rect_priv::args</a></div><div class="ttdeci">char * args</div><div class="ttdef"><b>Definition:</b> textfile.h:53</div></div>
+<div class="ttc" id="structmap__rect__priv_html_ad739f920e58ca373bfb2f60b99ae9cf4"><div class="ttname"><a href="structmap__rect__priv.html#ad739f920e58ca373bfb2f60b99ae9cf4">map_rect_priv::m</a></div><div class="ttdeci">struct map_priv * m</div><div class="ttdef"><b>Definition:</b> binfile.c:144</div></div>
 <div class="ttc" id="structattr__name_html"><div class="ttname"><a href="structattr__name.html">attr_name</a></div><div class="ttdef"><b>Definition:</b> attr.c:47</div></div>
+<div class="ttc" id="coord_8h_html"><div class="ttname"><a href="coord_8h.html">coord.h</a></div></div>
 <div class="ttc" id="structitem_html"><div class="ttname"><a href="structitem.html">item</a></div><div class="ttdef"><b>Definition:</b> item.h:99</div></div>
+<div class="ttc" id="structmap__priv_html_aa66f57489b1b501ca5e235d49beb5cee"><div class="ttname"><a href="structmap__priv.html#aa66f57489b1b501ca5e235d49beb5cee">map_priv::id</a></div><div class="ttdeci">int id</div><div class="ttdef"><b>Definition:</b> binfile.c:106</div></div>
+<div class="ttc" id="structmap__priv_html_a37f285ed865368cd6285426055c292fd"><div class="ttname"><a href="structmap__priv.html#a37f285ed865368cd6285426055c292fd">map_priv::flags</a></div><div class="ttdeci">int flags</div><div class="ttdef"><b>Definition:</b> binfile.c:125</div></div>
+<div class="ttc" id="structmap__rect__priv_html_ae5ade09e5af13b80e50f2eb4687202b9"><div class="ttname"><a href="structmap__rect__priv.html#ae5ade09e5af13b80e50f2eb4687202b9">map_rect_priv::pos</a></div><div class="ttdeci">long pos</div><div class="ttdef"><b>Definition:</b> garmin_img.c:261</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a0163c9c41cb4fdfb8ab71cdbf40abd6a"><div class="ttname"><a href="structmap__rect__priv.html#a0163c9c41cb4fdfb8ab71cdbf40abd6a">map_rect_priv::sel</a></div><div class="ttdeci">struct map_selection * sel</div><div class="ttdef"><b>Definition:</b> binfile.c:143</div></div>
 <div class="ttc" id="structmap__priv_html"><div class="ttname"><a href="structmap__priv.html">map_priv</a></div><div class="ttdoc">Represents the map from a single binfile. </div><div class="ttdef"><b>Definition:</b> binfile.c:105</div></div>
+<div class="ttc" id="structmap__priv_html_a2efdca525cc87f294eccde186790a504"><div class="ttname"><a href="structmap__priv.html#a2efdca525cc87f294eccde186790a504">map_priv::is_pipe</a></div><div class="ttdeci">int is_pipe</div><div class="ttdef"><b>Definition:</b> textfile.h:30</div></div>
 <div class="ttc" id="structmap__rect__priv_html"><div class="ttname"><a href="structmap__rect__priv.html">map_rect_priv</a></div><div class="ttdef"><b>Definition:</b> binfile.c:137</div></div>
 <div class="ttc" id="structmap__priv_html_a4658248cfb752e347d19c65a914c1e69"><div class="ttname"><a href="structmap__priv.html#a4658248cfb752e347d19c65a914c1e69">map_priv::filename</a></div><div class="ttdeci">char * filename</div><div class="ttdoc">Filename of the binfile. </div><div class="ttdef"><b>Definition:</b> binfile.c:107</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a22d445e51f9cfc5af27804b57a679b98"><div class="ttname"><a href="structmap__rect__priv.html#a22d445e51f9cfc5af27804b57a679b98">map_rect_priv::lastlen</a></div><div class="ttdeci">int lastlen</div><div class="ttdef"><b>Definition:</b> textfile.h:54</div></div>
+<div class="ttc" id="attr_8h_html"><div class="ttname"><a href="attr_8h.html">attr.h</a></div></div>
+<div class="ttc" id="structmap__rect__priv_html_aff52b4f4a5a86c8d70d500c9207e2a52"><div class="ttname"><a href="structmap__rect__priv.html#aff52b4f4a5a86c8d70d500c9207e2a52">map_rect_priv::attr_last</a></div><div class="ttdeci">enum attr_type attr_last</div><div class="ttdef"><b>Definition:</b> binfile.c:140</div></div>
 <div class="ttc" id="structattr_html"><div class="ttname"><a href="structattr.html">attr</a></div><div class="ttdef"><b>Definition:</b> attr.h:156</div></div>
 <div class="ttc" id="structmap__selection_html"><div class="ttname"><a href="structmap__selection.html">map_selection</a></div><div class="ttdoc">Used to select data from a map. </div><div class="ttdef"><b>Definition:</b> map.h:57</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a09a57270cd672b8860b3b895f345ab3d"><div class="ttname"><a href="structmap__rect__priv.html#a09a57270cd672b8860b3b895f345ab3d">map_rect_priv::attr_pos</a></div><div class="ttdeci">int attr_pos</div><div class="ttdef"><b>Definition:</b> garmin_img.c:263</div></div>
+<div class="ttc" id="structmap__rect__priv_html_aa2bfd9c6728b9f8de5a98f94d4720830"><div class="ttname"><a href="structmap__rect__priv.html#aa2bfd9c6728b9f8de5a98f94d4720830">map_rect_priv::line</a></div><div class="ttdeci">char line[256]</div><div class="ttdef"><b>Definition:</b> garmin_img.c:262</div></div>
+<div class="ttc" id="structmap__rect__priv_html_ab7e7f13232c76c49e0c871d84cf7954c"><div class="ttname"><a href="structmap__rect__priv.html#ab7e7f13232c76c49e0c871d84cf7954c">map_rect_priv::attrs</a></div><div class="ttdeci">struct attr attrs[8]</div><div class="ttdef"><b>Definition:</b> binfile.c:151</div></div>
+<div class="ttc" id="textfile_8h_html_a5f94c9f7409ff03de2aabc2d2d1444b8"><div class="ttname"><a href="textfile_8h.html#a5f94c9f7409ff03de2aabc2d2d1444b8">TEXTFILE_LINE_SIZE</a></div><div class="ttdeci">#define TEXTFILE_LINE_SIZE</div><div class="ttdef"><b>Definition:</b> textfile.h:35</div></div>
+<div class="ttc" id="structmap__priv_html_adbc8803857348b8e9fe16048f6deec4c"><div class="ttname"><a href="structmap__priv.html#adbc8803857348b8e9fe16048f6deec4c">map_priv::charset</a></div><div class="ttdeci">char * charset</div><div class="ttdef"><b>Definition:</b> csv.h:42</div></div>
+<div class="ttc" id="structmap__rect__priv_html_aede5a813f0bd0db12198d6385dbeb200"><div class="ttname"><a href="structmap__rect__priv.html#aede5a813f0bd0db12198d6385dbeb200">map_rect_priv::more</a></div><div class="ttdeci">int more</div><div class="ttdef"><b>Definition:</b> textfile.h:50</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a7b8a701b81c7c5bb193dd02ec1cf4482"><div class="ttname"><a href="structmap__rect__priv.html#a7b8a701b81c7c5bb193dd02ec1cf4482">map_rect_priv::f</a></div><div class="ttdeci">FILE * f</div><div class="ttdef"><b>Definition:</b> garmin_img.c:260</div></div>
 <div class="ttc" id="structcoord_html"><div class="ttname"><a href="structcoord.html">coord</a></div><div class="ttdef"><b>Definition:</b> coord.h:34</div></div>
+<div class="ttc" id="structmap__rect__priv_html_a6234d79b6c8c8fccddede15f670d9e81"><div class="ttname"><a href="structmap__rect__priv.html#a6234d79b6c8c8fccddede15f670d9e81">map_rect_priv::eoc</a></div><div class="ttdeci">int eoc</div><div class="ttdef"><b>Definition:</b> garmin_img.c:269</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_629690313ac978c400b86cc5525f4b87.html">map</a></li><li class="navelem"><a class="el" href="dir_5348599fb53ffd0a04c751b1feb60690.html">textfile</a></li><li class="navelem"><b>textfile.h</b></li>
+    <li class="navelem"><a class="el" href="dir_629690313ac978c400b86cc5525f4b87.html">map</a></li><li class="navelem"><a class="el" href="dir_5348599fb53ffd0a04c751b1feb60690.html">textfile</a></li><li class="navelem"><a class="el" href="textfile_8h.html">textfile.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

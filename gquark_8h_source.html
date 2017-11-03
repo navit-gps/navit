@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('gquark_8h_source.html','');});
 <div class="title">gquark.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
+<a href="gquark_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* GLIB - Library of useful routines for C programming</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This library is free software; you can redistribute it and/or</span></div>
@@ -101,33 +101,47 @@ $(document).ready(function(){initNavTree('gquark_8h_source.html','');});
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifndef __G_QUARK_H__</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_QUARK_H__</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="gquark_8h.html#a6bb74f40e01840a7390efc2c68a4fd8b">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __G_QUARK_H__</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;glib/gtypes.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="gtypes_8h.html">glib/gtypes.h</a>&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;G_BEGIN_DECLS</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">typedef</span> guint32 GQuark;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">   38</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="glibconfig_8h.html#a1bc9c34b086710705c000e9e810a7ef3">guint32</a> <a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/* Quarks (string&lt;-&gt;id association)</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;GQuark                g_quark_try_string         (<span class="keyword">const</span> gchar *<span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;GQuark                g_quark_from_static_string (<span class="keyword">const</span> gchar *<span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;GQuark                g_quark_from_string        (<span class="keyword">const</span> gchar *<span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;G_CONST_RETURN gchar* g_quark_to_string          (GQuark       quark) G_GNUC_CONST;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>                <a class="code" href="gquark_8h.html#a1f0d5bca913f6fcac8641ed03537b896">g_quark_try_string</a>         (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>                <a class="code" href="gquark_8h.html#a629d44ad26ff58c258a9a8b3a73435f0">g_quark_from_static_string</a> (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>                <a class="code" href="gquark_8h.html#af1cc6991d7d5ae11fa0e7e77b6c99ded">g_quark_from_string</a>        (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>* <a class="code" href="gquark_8h.html#ae4fa3c40cff3ff6418988ef37db935fb">g_quark_to_string</a>          (<a class="code" href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a>       quark) <a class="code" href="gmacros_8h.html#a84663340d618ccc916df094ab7165720">G_GNUC_CONST</a>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;G_CONST_RETURN gchar* g_intern_string            (<span class="keyword">const</span> gchar *<span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;G_CONST_RETURN gchar* g_intern_static_string     (<span class="keyword">const</span> gchar *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>* <a class="code" href="gquark_8h.html#a9a9cb9d17073fcc1d35e4a0a2e1f7127">g_intern_string</a>            (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a>* <a class="code" href="gquark_8h.html#a444df41db7075f086b218152df1c3e43">g_intern_static_string</a>     (<span class="keyword">const</span> <a class="code" href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a> *<span class="keywordtype">string</span>);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;G_END_DECLS</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __G_QUARK_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="gtypes_8h_html"><div class="ttname"><a href="gtypes_8h.html">gtypes.h</a></div></div>
+<div class="ttc" id="gmacros_8h_html_a592df9359e90124ffc0d185505c9d567"><div class="ttname"><a href="gmacros_8h.html#a592df9359e90124ffc0d185505c9d567">G_END_DECLS</a></div><div class="ttdeci">#define G_END_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:162</div></div>
+<div class="ttc" id="gquark_8h_html_ae4fa3c40cff3ff6418988ef37db935fb"><div class="ttname"><a href="gquark_8h.html#ae4fa3c40cff3ff6418988ef37db935fb">g_quark_to_string</a></div><div class="ttdeci">G_CONST_RETURN gchar * g_quark_to_string(GQuark quark) G_GNUC_CONST</div></div>
+<div class="ttc" id="gquark_8h_html_a9a9cb9d17073fcc1d35e4a0a2e1f7127"><div class="ttname"><a href="gquark_8h.html#a9a9cb9d17073fcc1d35e4a0a2e1f7127">g_intern_string</a></div><div class="ttdeci">G_CONST_RETURN gchar * g_intern_string(const gchar *string)</div></div>
+<div class="ttc" id="gmacros_8h_html_a95fb4ef7e7f405b070614c1ee9ab455f"><div class="ttname"><a href="gmacros_8h.html#a95fb4ef7e7f405b070614c1ee9ab455f">G_CONST_RETURN</a></div><div class="ttdeci">#define G_CONST_RETURN</div><div class="ttdef"><b>Definition:</b> gmacros.h:245</div></div>
+<div class="ttc" id="gtypes_8h_html_a7032b151d3b86839407074d8f0ab43eb"><div class="ttname"><a href="gtypes_8h.html#a7032b151d3b86839407074d8f0ab43eb">gchar</a></div><div class="ttdeci">G_BEGIN_DECLS typedef char gchar</div><div class="ttdef"><b>Definition:</b> gtypes.h:45</div></div>
+<div class="ttc" id="gquark_8h_html_a629d44ad26ff58c258a9a8b3a73435f0"><div class="ttname"><a href="gquark_8h.html#a629d44ad26ff58c258a9a8b3a73435f0">g_quark_from_static_string</a></div><div class="ttdeci">GQuark g_quark_from_static_string(const gchar *string)</div></div>
+<div class="ttc" id="gmacros_8h_html_a72c1126856454c07c2f9ab131aa7f2a3"><div class="ttname"><a href="gmacros_8h.html#a72c1126856454c07c2f9ab131aa7f2a3">G_BEGIN_DECLS</a></div><div class="ttdeci">#define G_BEGIN_DECLS</div><div class="ttdef"><b>Definition:</b> gmacros.h:161</div></div>
+<div class="ttc" id="gquark_8h_html_a1f0d5bca913f6fcac8641ed03537b896"><div class="ttname"><a href="gquark_8h.html#a1f0d5bca913f6fcac8641ed03537b896">g_quark_try_string</a></div><div class="ttdeci">GQuark g_quark_try_string(const gchar *string)</div></div>
+<div class="ttc" id="glibconfig_8h_html_a1bc9c34b086710705c000e9e810a7ef3"><div class="ttname"><a href="glibconfig_8h.html#a1bc9c34b086710705c000e9e810a7ef3">guint32</a></div><div class="ttdeci">unsigned int guint32</div><div class="ttdef"><b>Definition:</b> glibconfig.h:44</div></div>
+<div class="ttc" id="gquark_8h_html_aca120c4186e7780b67a1d06ba4f56332"><div class="ttname"><a href="gquark_8h.html#aca120c4186e7780b67a1d06ba4f56332">GQuark</a></div><div class="ttdeci">G_BEGIN_DECLS typedef guint32 GQuark</div><div class="ttdef"><b>Definition:</b> gquark.h:38</div></div>
+<div class="ttc" id="gquark_8h_html_af1cc6991d7d5ae11fa0e7e77b6c99ded"><div class="ttname"><a href="gquark_8h.html#af1cc6991d7d5ae11fa0e7e77b6c99ded">g_quark_from_string</a></div><div class="ttdeci">GQuark g_quark_from_string(const gchar *string)</div></div>
+<div class="ttc" id="gmacros_8h_html_a84663340d618ccc916df094ab7165720"><div class="ttname"><a href="gmacros_8h.html#a84663340d618ccc916df094ab7165720">G_GNUC_CONST</a></div><div class="ttdeci">#define G_GNUC_CONST</div><div class="ttdef"><b>Definition:</b> gmacros.h:98</div></div>
+<div class="ttc" id="gquark_8h_html_a444df41db7075f086b218152df1c3e43"><div class="ttname"><a href="gquark_8h.html#a444df41db7075f086b218152df1c3e43">g_intern_static_string</a></div><div class="ttdeci">G_CONST_RETURN gchar * g_intern_static_string(const gchar *string)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>gquark.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="gquark_8h.html">gquark.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

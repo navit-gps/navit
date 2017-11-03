@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('garmin_8h_source.html','');});
 <div class="title">garmin.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="garmin_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">        Copyright (C) 2007  Alexander Atanasov      &lt;aatanasov@gmail.com&gt;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">        This program is free software; you can redistribute it and/or modify</span></div>
@@ -92,24 +92,26 @@ $(document).ready(function(){initNavTree('garmin_8h_source.html','');});
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define dlog(x,y ...) logfn(__FILE__,__LINE__,x, ##y)</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="garmin_8h.html#aa395aec39056dfc23a214e854cc6847b">   23</a></span>&#160;<span class="preprocessor">#define dlog(x,y ...) logfn(__FILE__,__LINE__,x, ##y)</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef HARDDEBUG</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ddlog(x,y ...) logfn(__FILE__,__LINE__,x, ##y)</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ddlog(x,y ...)</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="garmin_8h.html#a3649d8ae82bcc7c608c1ed9cd6e64d9e">   27</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ddlog(x,y ...)</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> garmin_debug;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> logfn(<span class="keywordtype">char</span> *<a class="code" href="structfile.html">file</a>, <span class="keywordtype">int</span> line, <span class="keywordtype">int</span> <a class="code" href="structlevel.html">level</a>, <span class="keywordtype">char</span> *fmt, ...);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="garmin_8h.html#a859a8e1f336e6b2fae7334c1590a37c8">garmin_debug</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="garmin_8h.html#a1702a7b388b7106e27e99456ce163f86">logfn</a>(<span class="keywordtype">char</span> *<a class="code" href="structfile.html">file</a>, <span class="keywordtype">int</span> line, <span class="keywordtype">int</span> <a class="code" href="structlevel.html">level</a>, <span class="keywordtype">char</span> *fmt, ...);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="ttc" id="structlevel_html"><div class="ttname"><a href="structlevel.html">level</a></div><div class="ttdef"><b>Definition:</b> garmin_img.c:513</div></div>
+<div class="ttc" id="garmin_8h_html_a859a8e1f336e6b2fae7334c1590a37c8"><div class="ttname"><a href="garmin_8h.html#a859a8e1f336e6b2fae7334c1590a37c8">garmin_debug</a></div><div class="ttdeci">int garmin_debug</div><div class="ttdef"><b>Definition:</b> garmin.c:77</div></div>
+<div class="ttc" id="garmin_8h_html_a1702a7b388b7106e27e99456ce163f86"><div class="ttname"><a href="garmin_8h.html#a1702a7b388b7106e27e99456ce163f86">logfn</a></div><div class="ttdeci">void logfn(char *file, int line, int level, char *fmt,...)</div><div class="ttdef"><b>Definition:</b> garmin.c:80</div></div>
 <div class="ttc" id="structfile_html"><div class="ttname"><a href="structfile.html">file</a></div><div class="ttdef"><b>Definition:</b> file.h:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_629690313ac978c400b86cc5525f4b87.html">map</a></li><li class="navelem"><a class="el" href="dir_be188be5249491678773f9f5c5b518cb.html">garmin</a></li><li class="navelem"><b>garmin.h</b></li>
+    <li class="navelem"><a class="el" href="dir_629690313ac978c400b86cc5525f4b87.html">map</a></li><li class="navelem"><a class="el" href="dir_be188be5249491678773f9f5c5b518cb.html">garmin</a></li><li class="navelem"><a class="el" href="garmin_8h.html">garmin.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -10,5 +10,6 @@ var classQNavitQuick =
     [ "mouseReleaseEvent", "classQNavitQuick.html#a0dc708f8792892e73332cd0bbd53eabf", null ],
     [ "paint", "classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d", null ],
     [ "setGraphicContext", "classQNavitQuick.html#a6a072be030ed5b1e14736eae8e095f37", null ],
-    [ "wheelEvent", "classQNavitQuick.html#a48423474f9eb99d28f133c1f3ab6f980", null ]
+    [ "wheelEvent", "classQNavitQuick.html#a48423474f9eb99d28f133c1f3ab6f980", null ],
+    [ "graphics_priv", "classQNavitQuick.html#a1b6190f096d650ff8756b3fbb42c88cc", null ]
 ];

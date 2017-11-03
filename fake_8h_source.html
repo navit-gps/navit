@@ -70,28 +70,28 @@ $(document).ready(function(){initNavTree('fake_8h_source.html','');});
 <div class="title">fake.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
+<a href="fake_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef HAVE_API_WIN32_BASE</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define USE_POSIX_THREADS 1</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="fake_8h.html#a10434894a65dec6b7d997804b4d4dfec">    3</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define USE_POSIX_THREADS 1</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#if USE_POSIX_THREADS</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;pthread.h&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;debug.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define g_return_if_fail</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="fake_8h.html#aead3bc9f012b174c7f9ad48028780d31">   10</a></span>&#160;<span class="preprocessor">#define g_return_if_fail</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#if USE_POSIX_THREADS</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define GMutex pthread_mutex_t</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_new g_mutex_new_navit</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_lock(lock) ((lock == NULL) ? 0 : pthread_mutex_lock(lock))</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_unlock(lock) ((lock == NULL) ? 0 : pthread_mutex_unlock(lock))</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_trylock(lock) (((lock == NULL) ? 0 : pthread_mutex_trylock(lock)) == 0)</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define GPrivate pthread_key_t</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_new(xd) g_private_new_navit()</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_get(xd) pthread_getspecific(xd)</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_set(a,b) pthread_setspecific(a, b)</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="fake_8h.html#aa06cbfd525d5d88015067a3d9e04b054">   14</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define GMutex pthread_mutex_t</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="fake_8h.html#a2ed399d8eae61871440fe4166e6c3724">   15</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_new g_mutex_new_navit</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="fake_8h.html#aa49580765154090ae3728debb7c4f01d">   16</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_lock(lock) ((lock == NULL) ? 0 : pthread_mutex_lock(lock))</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="fake_8h.html#a5afef7e4aa1b119a18324c89321cea77">   17</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_unlock(lock) ((lock == NULL) ? 0 : pthread_mutex_unlock(lock))</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="fake_8h.html#a5009b05e694947cd0f21f255f07ca8c8">   18</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor"># define g_mutex_trylock(lock) (((lock == NULL) ? 0 : pthread_mutex_trylock(lock)) == 0)</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="fake_8h.html#a8ab049db4a1756752b0b4a4bb3a44b47">   19</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define GPrivate pthread_key_t</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="fake_8h.html#acb6b2c27fa935cf618398f88c8a870f1">   20</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_new(xd) g_private_new_navit()</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="fake_8h.html#aba3914a3847152fdf3fb489ecb1bd1a9">   21</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_get(xd) pthread_getspecific(xd)</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="fake_8h.html#a41f6d0b34d069abdb12fe8806142df95">   22</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define g_private_set(a,b) pthread_setspecific(a, b)</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># if HAVE_API_WIN32_BASE</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#  define GMutex CRITICAL_SECTION</span></div>
@@ -106,26 +106,29 @@ $(document).ready(function(){initNavTree('fake_8h_source.html','');});
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor"># endif</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">char</span>* g_convert               (<span class="keyword">const</span> <span class="keywordtype">char</span>  *str,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">char</span>* <a class="code" href="fake_8h.html#a4e50f9a807dc7b0abc9e2e50d9bc91e8">g_convert</a>               (<span class="keyword">const</span> <span class="keywordtype">char</span>  *str,</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                <span class="keywordtype">int</span>        len,            </div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                <span class="keyword">const</span> <span class="keywordtype">char</span>  *to_codeset,</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                <span class="keyword">const</span> <span class="keywordtype">char</span>  *from_codeset,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                <span class="keywordtype">int</span>        *bytes_read,     </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                <span class="keywordtype">int</span>        *<a class="code" href="maptool_8c.html#a2e20cac612cf0dd1a1c260f95411d0ee">bytes_read</a>,     </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                <span class="keywordtype">int</span>        *bytes_written,  </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                <span class="keywordtype">void</span>      **error);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define G_LOCK_DEFINE_STATIC(name)    //void</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define G_LOCK(name) //void //g_mutex_lock       (&amp;G_LOCK_NAME (name))</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define G_UNLOCK(name) //void //g_mutex_unlock   (&amp;G_LOCK_NAME (name))</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                <span class="keywordtype">void</span>      **<a class="code" href="command_8c.html#af10dacfa214e2575bb2e0ee407c242e0">error</a>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="fake_8h.html#a59eab347be833a3ad5fa128c23d2db9b">   44</a></span>&#160;<span class="preprocessor">#define G_LOCK_DEFINE_STATIC(name)    //void</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="fake_8h.html#a4fd3ac7097045a06f21f76fa2b25a347">   45</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define G_LOCK(name) //void //g_mutex_lock       (&amp;G_LOCK_NAME (name))</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="fake_8h.html#a954ab70d6602dc4f63110beaf8b3922f">   46</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define G_UNLOCK(name) //void //g_mutex_unlock   (&amp;G_LOCK_NAME (name))</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define g_thread_supported() TRUE</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="fake_8h.html#afef39af032f3e8544f7421e2a477464b">   48</a></span>&#160;<span class="preprocessor">#define g_thread_supported() TRUE</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define g_assert(expr) dbg_assert (expr)</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="fake_8h.html#ae29f4255afb24b3115223d8bce1931af">   50</a></span>&#160;<span class="preprocessor">#define g_assert(expr) dbg_assert (expr)</span></div>
+<div class="ttc" id="fake_8h_html_a4e50f9a807dc7b0abc9e2e50d9bc91e8"><div class="ttname"><a href="fake_8h.html#a4e50f9a807dc7b0abc9e2e50d9bc91e8">g_convert</a></div><div class="ttdeci">char * g_convert(const char *str, int len, const char *to_codeset, const char *from_codeset, int *bytes_read, int *bytes_written, void **error)</div><div class="ttdef"><b>Definition:</b> fake.c:20</div></div>
+<div class="ttc" id="maptool_8c_html_a2e20cac612cf0dd1a1c260f95411d0ee"><div class="ttname"><a href="maptool_8c.html#a2e20cac612cf0dd1a1c260f95411d0ee">bytes_read</a></div><div class="ttdeci">int bytes_read</div><div class="ttdef"><b>Definition:</b> maptool.c:72</div></div>
+<div class="ttc" id="command_8c_html_af10dacfa214e2575bb2e0ee407c242e0"><div class="ttname"><a href="command_8c.html#af10dacfa214e2575bb2e0ee407c242e0">error</a></div><div class="ttdeci">error</div><div class="ttdef"><b>Definition:</b> command.c:94</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><b>fake.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5815af820a9cc9481f1d0990a0d60286.html">support</a></li><li class="navelem"><a class="el" href="dir_0d964a942848f2da9e4611d1f0b24068.html">glib</a></li><li class="navelem"><a class="el" href="fake_8h.html">fake.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -70,7 +70,7 @@ $(document).ready(function(){initNavTree('qml__map_8h_source.html','');});
 <div class="title">qml_map.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef MAPOBJECT_H</span></div>
+<a href="qml__map_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef MAPOBJECT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MAPOBJECT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QObject&gt;</span></div>
@@ -79,37 +79,46 @@ $(document).ready(function(){initNavTree('qml__map_8h_source.html','');});
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    Q_PROPERTY(<span class="keywordtype">bool</span> active READ active WRITE setActive NOTIFY activeChanged)</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classMapObject.html#ac97257b9ec2bf526a18b9bc4bbc5b2b8">   10</a></span>&#160;    Q_PROPERTY(QString <a class="code" href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">name</a> READ <a class="code" href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">name</a> WRITE <a class="code" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName</a> NOTIFY <a class="code" href="classMapObject.html#a7961db701769348063d8e5c2147caf95">nameChanged</a>)</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classMapObject.html#a3ab652e15971fd18e1afb08dc52d5ce3">   11</a></span>&#160;    Q_PROPERTY(<span class="keywordtype">bool</span> <a class="code" href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">active</a> READ <a class="code" href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">active</a> WRITE <a class="code" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive</a> NOTIFY <a class="code" href="classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6">activeChanged</a>)</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;public:</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="classMapObject.html">MapObject</a>(QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classMapObject.html">MapObject</a>(<span class="keyword">const</span> QString &amp;name, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;active, QObject *<a class="code" href="structparent.html">parent</a>=0);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classMapObject.html">MapObject</a>(<a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> QString &amp;<a class="code" href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">name</a>, <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a> <span class="keywordtype">bool</span> &amp;<a class="code" href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">active</a>, QObject *parent=0);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString name() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> setName(<span class="keyword">const</span> QString &amp;name);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    QString name() <a class="code" href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">setName</a>(const QString &amp;name);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">bool</span> active() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setActive(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;active);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">bool</span> active() const;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">setActive</a>(const <span class="keywordtype">bool</span> &amp;active);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;signals:</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> nameChanged();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> activeChanged();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6">activeChanged</a>();</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    QString m_name;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">bool</span> m_active;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;private:</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classMapObject.html#aaaf01599496f3ac2057035525ad73aff">   28</a></span>&#160;    QString <a class="code" href="classMapObject.html#aaaf01599496f3ac2057035525ad73aff">m_name</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c">   29</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c">m_active</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif // MAPOBJECT_H</span></div>
+<div class="ttc" id="classMapObject_html_a7961db701769348063d8e5c2147caf95"><div class="ttname"><a href="classMapObject.html#a7961db701769348063d8e5c2147caf95">MapObject::nameChanged</a></div><div class="ttdeci">void nameChanged()</div></div>
 <div class="ttc" id="structparent_html"><div class="ttname"><a href="structparent.html">parent</a></div><div class="ttdef"><b>Definition:</b> gpx2navit_txt.h:51</div></div>
+<div class="ttc" id="classMapObject_html_a42104b2092dcbdbff328b9f23c80c842"><div class="ttname"><a href="classMapObject.html#a42104b2092dcbdbff328b9f23c80c842">MapObject::setName</a></div><div class="ttdeci">void setName(const QString &amp;name)</div><div class="ttdef"><b>Definition:</b> qml_map.cpp:18</div></div>
+<div class="ttc" id="classMapObject_html_a0985587e2de44f2623f3aae09b1da826"><div class="ttname"><a href="classMapObject.html#a0985587e2de44f2623f3aae09b1da826">MapObject::name</a></div><div class="ttdeci">QString name() const </div></div>
+<div class="ttc" id="classMapObject_html_a3771ff838f6d4f8cec50526f58e4a020"><div class="ttname"><a href="classMapObject.html#a3771ff838f6d4f8cec50526f58e4a020">MapObject::setActive</a></div><div class="ttdeci">void setActive(const bool &amp;active)</div><div class="ttdef"><b>Definition:</b> qml_map.cpp:31</div></div>
+<div class="ttc" id="classMapObject_html_ac90d6d8954f6d2a25c6ea7e7eb9aa1e0"><div class="ttname"><a href="classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0">MapObject::active</a></div><div class="ttdeci">bool active() const </div></div>
 <div class="ttc" id="classMapObject_html"><div class="ttname"><a href="classMapObject.html">MapObject</a></div><div class="ttdef"><b>Definition:</b> qml_map.h:6</div></div>
+<div class="ttc" id="classMapObject_html_a9cb62dcfe6b9f4c6827d8fccc54c58d6"><div class="ttname"><a href="classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6">MapObject::activeChanged</a></div><div class="ttdeci">void activeChanged()</div></div>
+<div class="ttc" id="classMapObject_html_aaaf01599496f3ac2057035525ad73aff"><div class="ttname"><a href="classMapObject.html#aaaf01599496f3ac2057035525ad73aff">MapObject::m_name</a></div><div class="ttdeci">QString m_name</div><div class="ttdef"><b>Definition:</b> qml_map.h:28</div></div>
+<div class="ttc" id="classMapObject_html_a69c9a0d03f471a4e41e9977409bb247c"><div class="ttname"><a href="classMapObject.html#a69c9a0d03f471a4e41e9977409bb247c">MapObject::m_active</a></div><div class="ttdeci">bool m_active</div><div class="ttdef"><b>Definition:</b> qml_map.h:29</div></div>
+<div class="ttc" id="zconf_8h_html_a2c212835823e3c54a8ab6d95c652660e"><div class="ttname"><a href="zconf_8h.html#a2c212835823e3c54a8ab6d95c652660e">const</a></div><div class="ttdeci">#define const</div><div class="ttdef"><b>Definition:</b> zconf.h:124</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><b>qml_map.h</b></li>
+    <li class="navelem"><a class="el" href="dir_11bc0974ce736ce9a6fadebbeb7a8314.html">gui</a></li><li class="navelem"><a class="el" href="dir_399a916a4057be65784a57a4334cd12d.html">qt5_qml</a></li><li class="navelem"><a class="el" href="qml__map_8h.html">qml_map.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

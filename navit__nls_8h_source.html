@@ -70,26 +70,31 @@ $(document).ready(function(){initNavTree('navit__nls_8h_source.html','');});
 <div class="title">navit_nls.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __NAVIT_NLS_H__</span></div>
+<a href="navit__nls_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __NAVIT_NLS_H__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keywordtype">char</span> *navit_nls_add_textdomain(<span class="keyword">const</span> <span class="keywordtype">char</span> *package, <span class="keyword">const</span> <span class="keywordtype">char</span> *dir);</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keywordtype">void</span> navit_nls_remove_textdomain(<span class="keyword">const</span> <span class="keywordtype">char</span> *package);</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *navit_nls_gettext(<span class="keyword">const</span> <span class="keywordtype">char</span> *msgid);</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *navit_nls_ngettext(<span class="keyword">const</span> <span class="keywordtype">char</span> *msgid, <span class="keyword">const</span> <span class="keywordtype">char</span> *msgid_plural, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> navit_nls_main_init(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keywordtype">char</span> *<a class="code" href="navit__nls_8h.html#a334a910b7e9e99815baeff6e0ba7e9ef">navit_nls_add_textdomain</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *package, <span class="keyword">const</span> <span class="keywordtype">char</span> *dir);</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keywordtype">void</span> <a class="code" href="navit__nls_8h.html#a83ea2d1609beb42d24e22862beb5cc80">navit_nls_remove_textdomain</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *package);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="navit__nls_8h.html#a44c4d6ec3651fb5fe7609ea09747363a">navit_nls_gettext</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *msgid);</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="navit__nls_8h.html#a0296fc6b183a93df1e383299fa4cc459">navit_nls_ngettext</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *msgid, <span class="keyword">const</span> <span class="keywordtype">char</span> *msgid_plural, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> <a class="code" href="navit__nls_8h.html#af7cee0f17708a48cbb2aff0f120e5c6c">navit_nls_main_init</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define _(STRING)    navit_nls_gettext(STRING)</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define gettext_noop(String) String</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _n(STRING)    gettext_noop(STRING)</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">    9</a></span>&#160;<span class="preprocessor">#define _(STRING)    navit_nls_gettext(STRING)</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="navit__nls_8h.html#a1a0ef2e42374f90a13299cc06f437847">   10</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define gettext_noop(String) String</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="navit__nls_8h.html#a97e781eac2fca475e0ea230f05314133">   11</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _n(STRING)    gettext_noop(STRING)</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#define __NAVIT_NLS_H__</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="navit__nls_8h.html#a79101c629e727a773c263744cdcc8111">   13</a></span>&#160;<span class="preprocessor">#define __NAVIT_NLS_H__</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="navit__nls_8h_html_a0296fc6b183a93df1e383299fa4cc459"><div class="ttname"><a href="navit__nls_8h.html#a0296fc6b183a93df1e383299fa4cc459">navit_nls_ngettext</a></div><div class="ttdeci">const char * navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long int n)</div><div class="ttdef"><b>Definition:</b> navit_nls.c:64</div></div>
+<div class="ttc" id="navit__nls_8h_html_a83ea2d1609beb42d24e22862beb5cc80"><div class="ttname"><a href="navit__nls_8h.html#a83ea2d1609beb42d24e22862beb5cc80">navit_nls_remove_textdomain</a></div><div class="ttdeci">void navit_nls_remove_textdomain(const char *package)</div><div class="ttdef"><b>Definition:</b> navit_nls.c:33</div></div>
+<div class="ttc" id="navit__nls_8h_html_a334a910b7e9e99815baeff6e0ba7e9ef"><div class="ttname"><a href="navit__nls_8h.html#a334a910b7e9e99815baeff6e0ba7e9ef">navit_nls_add_textdomain</a></div><div class="ttdeci">char * navit_nls_add_textdomain(const char *package, const char *dir)</div><div class="ttdef"><b>Definition:</b> navit_nls.c:20</div></div>
+<div class="ttc" id="navit__nls_8h_html_a44c4d6ec3651fb5fe7609ea09747363a"><div class="ttname"><a href="navit__nls_8h.html#a44c4d6ec3651fb5fe7609ea09747363a">navit_nls_gettext</a></div><div class="ttdeci">const char * navit_nls_gettext(const char *msgid)</div><div class="ttdef"><b>Definition:</b> navit_nls.c:49</div></div>
+<div class="ttc" id="navit__nls_8h_html_af7cee0f17708a48cbb2aff0f120e5c6c"><div class="ttname"><a href="navit__nls_8h.html#af7cee0f17708a48cbb2aff0f120e5c6c">navit_nls_main_init</a></div><div class="ttdeci">void navit_nls_main_init(void)</div><div class="ttdef"><b>Definition:</b> navit_nls.c:83</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>navit_nls.h</b></li>
+    <li class="navelem"><a class="el" href="navit__nls_8h.html">navit_nls.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
