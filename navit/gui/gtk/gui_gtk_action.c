@@ -130,8 +130,8 @@ tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
  *  cursor. Suitable for use in the GTK menu as below.
  *
  *  @param GtkWidget is the generic storage type for widgets.
- *  @param The gui. I think, I'm new here.
- *  @param Ignore the pointer behind the curtain.
+ *  @param gui The gui. I think, I'm new here.
+ *  @param dummy Ignore the pointer behind the curtain.
  *  @return void
  */
 
