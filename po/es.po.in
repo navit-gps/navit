@@ -1,5 +1,5 @@
 # Spanish translations for navit
-# Copyright (C) 2006-2016 The Navit Team
+# Copyright (C) 2006-2017 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Benjamín Valero Espinosa https://launchpad.net/~benjavalero
@@ -8,6 +8,7 @@
 # Emilio Gomez Fernandez https://launchpad.net/~egofer
 # Feder Sáiz https://launchpad.net/~federsaiz-deactivatedaccount
 # Inaki Saez https://launchpad.net/~inaki-saez
+# Iñigo Huguet https://launchpad.net/~inigohuguet
 # Jonay https://launchpad.net/~jonay-santana
 # KaZeR https://launchpad.net/~kazer
 # Kenneth Belitzky https://launchpad.net/~r-kenny
@@ -26,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-06-21 22:51+0000\n"
-"Last-Translator: Kenneth Belitzky <kenny@belitzky.com>\n"
+"PO-Revision-Date: 2017-09-26 07:01+0000\n"
+"Last-Translator: Iñigo Huguet <inigohuguet@hotmail.com>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,7 +175,7 @@ msgstr "en el carril de entrada"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
-msgstr "%sen la calle %s%s%s"
+msgstr "%sen %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
@@ -189,7 +190,7 @@ msgstr "%sen la %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr "%sen la calle %s%s%s"
+msgstr "%sen %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -214,10 +215,10 @@ msgstr "Entre en la próxima rotonda"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr "Entrar en la rotonda de %s"
+msgstr "Entre en la rotonda %s"
 
 msgid "then enter the roundabout"
-msgstr "luego entrar en la rotonda"
+msgstr "luego entre en la rotonda"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -1453,6 +1454,16 @@ msgid ""
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
 msgstr ""
+"uso de navit:\n"
+"navit [opciones][archivo config]\n"
+"\t-c <archivo>: usa <archivo> como archivo de configuración en lugar del "
+"archivo por defecto.\n"
+"\t-d <n>: fija el nivel global de salida de debug a <n> (0=error, 1=warning, "
+"2=info, 3=debug).\n"
+"\tLas configuraciones del archivo de configuración aún tendrán efecto donde "
+"fijen un nivel mayor.\n"
+"\t-h: muestra este mensaje de ayuda y termina.\n"
+"\t-v: muestra la versión y termina.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
@@ -1470,6 +1481,7 @@ msgstr "Usando el fichero de configuración '%s'\n"
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
 msgstr ""
+"Error: No se encontró la configuración en el archivo de configuración '%s'\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
@@ -1716,7 +1728,7 @@ msgid "Select a POI"
 msgstr "Seleccionar un POI"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
 msgstr "Categoría"
@@ -1984,15 +1996,20 @@ msgstr "Perfil de altura"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
 msgstr ""
+"por favor, instale un mapa *.heightlines.bin para suministrar información de "
+"altimetría."
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "La ruta cruza al menos 2 curvas de nivel"
 
 msgid "Route Description"
 msgstr "Descripción de ruta"
 
 msgid "Show Locale"
 msgstr "Mostrar locale"
+
+msgid "Network info"
+msgstr "Info. de red"
 
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
@@ -2535,8 +2552,17 @@ msgstr "Pantalla completa"
 msgid "Window Mode"
 msgstr "Modo ventana"
 
+msgid "Auto zoom"
+msgstr "Zoom automático"
+
+msgid "Manual zoom"
+msgstr "Zoom manual"
+
 msgid "Layers"
 msgstr ""
+
+msgid "Zoom to route"
+msgstr "Zoom a ruta"
 
 msgid "Description"
 msgstr "Descripción"
@@ -2788,6 +2814,18 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+"Navit necesita permiso para acceder al GPS y abrir el mapa.\n"
+"Si cambia de opinión, por favor reinicie Navit y conceda los permisos."
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr "Uno o más permisos rechazados"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"

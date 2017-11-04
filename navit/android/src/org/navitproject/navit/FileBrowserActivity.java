@@ -213,7 +213,6 @@ public class FileBrowserActivity extends Activity {
 
 	private void initializeFileListView() {
 		ListView lView = (ListView) this.findViewById(R.id.fileListView);
-		lView.setBackgroundColor(Color.LTGRAY);
 		LinearLayout.LayoutParams lParam = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		lParam.setMargins(15, 5, 15, 5);
@@ -357,7 +356,6 @@ public class FileBrowserActivity extends Activity {
 				// TODO: change next line for empty directory, so text will be
 				// centered
 				textView.setCompoundDrawablePadding(dp3);
-				textView.setBackgroundColor(Color.LTGRAY);
 				return view;
 			}// public View getView(int position, View convertView, ViewGroup
 		};// adapter = new ArrayAdapter<Item>(this,

@@ -4,13 +4,13 @@ maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
 .B For OSM XML data:
 .B bzcat planet.osm.bz2 | maptool mymap.bin
-[\-h] [\-5 <file>] [\-6] [\-a <level>] [\-c] -[\-d <connect string]
+[\-h] [\-6] [\-a <level>] [\-c] -[\-d <connect string]
 [\-e <phase>] [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-r <file>] [\-s <phase>]
 [\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 
 .B For OSM Protobuf/PBF data:
 .B maptool \-\-protobuf \-i planet.osm.pbf planet.bin
-[\-h] [\-5 <file>] [\-6] [\-a <level>] [\-c] [\-e <phase>]
+[\-h] [\-6] [\-a <level>] [\-c] [\-e <phase>]
 [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
 [\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 .SH DESCRIPTION
@@ -19,9 +19,6 @@ maptool parses osm textfile and converts it to Navit binfile format
 .TP
 \-h (\-\-help)
 display a short help message
-.TP
-\-5 (\-\-md5)
-set file where to write md5 sum
 .TP
 \-6 (\-\-64bit)
 set zip 64 bit compression
