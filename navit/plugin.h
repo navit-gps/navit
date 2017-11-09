@@ -49,6 +49,8 @@ enum plugin_category {
 	plugin_category_event,
 	/** Category for plugins which load fonts. */
 	plugin_category_font,
+	/** Category for plugins which play audio */
+	plugin_category_audio,
 	/** Dummy for last entry. */
 	plugin_category_last,
 };
