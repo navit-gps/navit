@@ -123,7 +123,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		map_rect_destroy(mr);
 
         sprintf(buffer,_("Route %4.1f%s    %02d:%02d ETA" ),
-                imperial == TRUE ? route_len / METERS_PER_MILE : route_len/1000,
+                imperial == TRUE ? route_len * (KILOMETERS_TO_MILES/1000.00) : route_len/1000,
                 imperial == TRUE ? "mi" : "km",
                 eta_tm ? eta_tm->tm_hour : 0 ,
                 eta_tm ? eta_tm->tm_min : 0);
@@ -163,7 +163,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
                 imperial ? height * FEET_PER_METER : height,
                 imperial == TRUE ? "\'" : "m",
                 direction, dir,
-                imperial == TRUE ? speed / (METERS_PER_MILE / 1000) : speed, /* hard-coded. Ugly */
+                imperial == TRUE ? speed * KILOMETERS_TO_MILES : speed,
                 imperial == TRUE ? " mph" : "km/h"
             );
 
