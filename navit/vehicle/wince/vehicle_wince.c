@@ -83,6 +83,8 @@ struct vehicle_priv {
 	char *source;
 	struct callback_list *cbl;
 	struct callback_list *priv_cbl;
+	struct callback *cb_fix_timeout;
+	struct event_timeout *ev_fix_timeout;
 	int is_running;
 	int thread_up;
 	int fd;
@@ -365,6 +367,43 @@ vehicle_wince_available_ports(void)
 }
 
 
+//***************************************************************************
+/** @fn static void vehicle_wince_fix_timeout_cb( struct vehicle_priv *priv )
+*****************************************************************************
+* @b Description: This is a callback function, called when the fix timeout
+* 		is done. Set the position to invalid.
+*****************************************************************************
+* @param      priv : pointer on the private data of the plugin
+*****************************************************************************
+**/
+static void
+vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv)
+{
+	priv->valid = attr_position_valid_invalid;
+	priv->ev_fix_timeout = NULL;
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+}
+
+
+//***************************************************************************
+/** @fn static void vehicle_wince_restart_fix_timeout(
+ * 					struct vehicle_priv *priv)
+*****************************************************************************
+* @b Description: Cancel previous fix timeout event and add a new one
+*****************************************************************************
+* @param      priv : pointer on the private data of the plugin
+*****************************************************************************
+**/
+static void
+vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv)
+{
+	if (priv->ev_fix_timeout != NULL)
+		event_remove_timeout(priv->ev_fix_timeout);
+	priv->ev_fix_timeout = event_add_timeout(10000, 0, priv->cb_fix_timeout);
+}
+
+
+
 static int
 vehicle_wince_open(struct vehicle_priv *priv)
 {
@@ -474,7 +513,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
 		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
-		if (*item[2] && *item[3] && *item[4] && *item[5]) {
+		if (*item[2] && *item[3] && *item[4] && *item[5] && *item[6] > 0) {
 			lat = g_ascii_strtod(item[2], NULL);
 			priv->geo.lat = floor(lat / 100);
 			lat -= priv->geo.lat * 100;
@@ -490,20 +529,31 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
-			priv->valid=attr_position_valid_valid;
+
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid = attr_position_valid_valid;
+			vehicle_wince_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
 
 			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
-		} else
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
 			priv->valid=attr_position_valid_invalid;
+		}
+
 		if (*item[6])
 			sscanf(item[6], "%d", &priv->status);
 		if (*item[7])
-		sscanf(item[7], "%d", &priv->sats_used);
+			sscanf(item[7], "%d", &priv->sats_used);
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
-		if (*item[1]) 
-			strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->height);
 
@@ -547,8 +597,40 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 				&priv->fixmonth,
 				&priv->fixyear);
 			priv->fixyear += 2000;
+
+			lat = g_ascii_strtod(item[3], NULL);
+			priv->geo.lat = floor(lat / 100);
+			lat -= priv->geo.lat * 100;
+			priv->geo.lat += lat / 60;
+
+			if (!g_ascii_strcasecmp(item[4],"S"))
+				priv->geo.lat=-priv->geo.lat;
+
+			lng = g_ascii_strtod(item[5], NULL);
+			priv->geo.lng = floor(lng / 100);
+			lng -= priv->geo.lng * 100;
+			priv->geo.lng += lng / 60;
+
+			if (!g_ascii_strcasecmp(item[6],"W"))
+				priv->geo.lng=-priv->geo.lng;
+
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid=attr_position_valid_valid;
+			vehicle_wince_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
+
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
+			priv->valid=attr_position_valid_invalid;
 		}
-		ret = 1;
 	}
 	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
@@ -902,6 +984,8 @@ vehicle_wince_new(struct vehicle_methods
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=0;	// do not change the rate if not configured
+	ret->fixtime[0] = '\0';
+	ret->ev_fix_timeout = NULL;
 
 	time = attr_search(attrs, NULL, attr_time);
 	if (time)
@@ -923,6 +1007,7 @@ vehicle_wince_new(struct vehicle_methods
 	*meth = vehicle_wince_methods;
 	ret->priv_cbl = callback_list_new();
 	callback_list_add(ret->priv_cbl, callback_new_1(callback_cast(vehicle_wince_io), ret));
+	ret->cb_fix_timeout=callback_new_1(callback_cast(vehicle_wince_fix_timeout_cb), ret);
 	ret->sat_item.type=type_position_sat;
 	ret->sat_item.id_hi=ret->sat_item.id_lo=0;
 	ret->sat_item.priv_data=ret;
