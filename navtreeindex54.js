@@ -1,5 +1,7 @@
 var NAVTREEINDEX54 =
 {
+"structSHPTree.html#a20a5c9e372e2deb2f4558c4d481e6194":[3,0,477,4],
+"structSHPTree.html#a7ddad23921595458aaef92d785b0dd64":[3,0,477,0],
 "structSHPTree.html#aa2155006272f1c6ce320c8c1142aad7f":[3,0,477,1],
 "structSHPTree.html#ad035693b5a02694ded9513796a6ea462":[3,0,477,2],
 "structSHPTree.html#ae312b8a6a489643a10018cc1860fca96":[3,0,477,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX54 =
 "struct__OSMPBF____DenseInfo.html#af299d367f7588f3be1e2c06ecd92de18":[3,0,24,3],
 "struct__OSMPBF____DenseInfo.html#afd4159d860d8a730d9826995b9c15359":[3,0,24,5],
 "struct__OSMPBF____DenseNodes.html":[3,0,25],
-"struct__OSMPBF____DenseNodes.html#a00af3b48a813ca546a9ee0eb57c10026":[3,0,25,6],
-"struct__OSMPBF____DenseNodes.html#a151e136136778a718c553615f196d4a3":[3,0,25,0],
-"struct__OSMPBF____DenseNodes.html#a1b3cee463936c799c658be17bce3e876":[3,0,25,4]
+"struct__OSMPBF____DenseNodes.html#a00af3b48a813ca546a9ee0eb57c10026":[3,0,25,6]
 };

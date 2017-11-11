@@ -1,5 +1,7 @@
 var NAVTREEINDEX55 =
 {
+"struct__OSMPBF____DenseNodes.html#a151e136136778a718c553615f196d4a3":[3,0,25,0],
+"struct__OSMPBF____DenseNodes.html#a1b3cee463936c799c658be17bce3e876":[3,0,25,4],
 "struct__OSMPBF____DenseNodes.html#a1cbdebba09381bd89434fa21cdf62cd7":[3,0,25,2],
 "struct__OSMPBF____DenseNodes.html#a28faf879946252b84778592a0b43e328":[3,0,25,5],
 "struct__OSMPBF____DenseNodes.html#a51a6404fb1e699e6d74054302baafeea":[3,0,25,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX55 =
 "struct__wfinddatai64__t.html#a0c03ab10faeca8840a119a90538d7120":[3,0,55,3],
 "struct__wfinddatai64__t.html#a1357a8a4fc37809d8cfba957eb56904d":[3,0,55,1],
 "struct__wfinddatai64__t.html#a235bafaf6bf5cfb1be6386d1b46baf05":[3,0,55,4],
-"struct__wfinddatai64__t.html#a82dec27618c7ca12aacc8cad5502d3b5":[3,0,55,0],
-"struct__wfinddatai64__t.html#ac44f0329b9d52190322339a6fe967e83":[3,0,55,2],
-"struct__wfinddatai64__t.html#ac99a3ac884cfd6d4024a00d1a53f4f82":[3,0,55,5]
+"struct__wfinddatai64__t.html#a82dec27618c7ca12aacc8cad5502d3b5":[3,0,55,0]
 };

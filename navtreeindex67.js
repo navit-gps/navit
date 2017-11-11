@@ -1,5 +1,7 @@
 var NAVTREEINDEX67 =
 {
+"structosd__speed__warner.html#a649e7e438f1bd4407c7dc8b78269725f":[3,0,365,8],
+"structosd__speed__warner.html#a72b00b359030570be6c4f8b838caff04":[3,0,365,11],
 "structosd__speed__warner.html#a85bd4e08c01c3e4bfe5004166564de16":[3,0,365,15],
 "structosd__speed__warner.html#a8a7a9417648754a88eb4a5284d2a26e2":[3,0,365,16],
 "structosd__speed__warner.html#a927534a9c545e30fe8c2f2e089373d24":[3,0,365,14],
@@ -247,7 +249,5 @@ var NAVTREEINDEX67 =
 "structpng__struct__def.html#a22b2414d75791e0cdf225b08a2291066":[3,0,400,45],
 "structpng__struct__def.html#a2415cf0a090d8cc92ca22e2cf04ff2bb":[3,0,400,34],
 "structpng__struct__def.html#a25b8f28a221e07d4d293c8cc4a810c10":[3,0,400,57],
-"structpng__struct__def.html#a2bf63cf7e913a61254757d9bf262539c":[3,0,400,17],
-"structpng__struct__def.html#a2cc5bd1cf507373992a61cf725a730cd":[3,0,400,29],
-"structpng__struct__def.html#a2ddb3bedc92ad2e8be70e3c7f3f38fa6":[3,0,400,5]
+"structpng__struct__def.html#a2bf63cf7e913a61254757d9bf262539c":[3,0,400,17]
 };

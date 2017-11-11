@@ -1,5 +1,7 @@
 var NAVTREEINDEX47 =
 {
+"portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a3fbb82a5d01ed678642426f1f5058e2c":[4,0,14,0,18,22,27],
+"portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a467dac712e45745d8b0d8cd429fd1a01":[4,0,14,0,18,22,15],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a467dac712e45745d8b0d8cd429fd1a01":[4,0,14,0,18,22,31],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a46c51714378540c67c46895e726fb787":[4,0,14,0,18,22,2],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a46c51714378540c67c46895e726fb787":[4,0,14,0,18,22,18],
@@ -11,8 +13,8 @@ var NAVTREEINDEX47 =
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a5db3dc29fc64ff8a2b445b550bef2893":[4,0,14,0,18,22,20],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a69660cd762aec2672fd3393e0971e99c":[4,0,14,0,18,22,6],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a69660cd762aec2672fd3393e0971e99c":[4,0,14,0,18,22,22],
-"portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a795db60c291d92362b87edbc0bdb56cc":[4,0,14,0,18,22,7],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a795db60c291d92362b87edbc0bdb56cc":[4,0,14,0,18,22,23],
+"portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45a795db60c291d92362b87edbc0bdb56cc":[4,0,14,0,18,22,7],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45aa5e7d0d9ea49ef845a93c89a3d138294":[4,0,14,0,18,22,21],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45aa5e7d0d9ea49ef845a93c89a3d138294":[4,0,14,0,18,22,5],
 "portaudio_8h.html#ae6e5bd3e2c42d568b53411c66fa57f45ad58986a9b5064d5a29c7ed0837bfc621":[4,0,14,0,18,22,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX47 =
 "protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6":[4,0,9,1,0,2,43],
 "protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6a005bd9cbc420ac8413f7c624eb2d5cee":[4,0,9,1,0,2,43,5],
 "protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6a06f43a2208e1a2e764afbb7b2a91023b":[4,0,9,1,0,2,43,3],
-"protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6a55ffe8468e484a11ffcca9c0bf3caf73":[4,0,9,1,0,2,43,4],
-"protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6abee5e7e065cb28f5d9ef94ad62863edc":[4,0,9,1,0,2,43,2],
-"protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6acddea9eb6cfa51d2515770b358b24f8f":[4,0,9,1,0,2,43,1]
+"protobuf-c_8h.html#a58f35889606ee435ad29a83bcea23ca6a55ffe8468e484a11ffcca9c0bf3caf73":[4,0,9,1,0,2,43,4]
 };

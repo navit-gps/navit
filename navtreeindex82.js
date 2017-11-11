@@ -1,5 +1,7 @@
 var NAVTREEINDEX82 =
 {
+"zlib_8h.html#a036580ed18d33791beb30eee4a381233":[4,0,14,10,12,73],
+"zlib_8h.html#a1eec3d3720ba91fd54fa08d2757c1785":[4,0,14,10,12,23],
 "zlib_8h.html#a1f228220c3e6935eb171761c61487059":[4,0,14,10,12,40],
 "zlib_8h.html#a1f60ebb9d0a34dc0246d08f8c17892e4":[4,0,14,10,12,72],
 "zlib_8h.html#a200aee6968107e38df3efcf80e9b696f":[4,0,14,10,12,70],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX52 =
 {
+"speak__lib_8h.html#a733d14390c664816340338f3d4443e3aad8675c02305dbbf8df612cb2d9b59c95":[4,0,14,0,27,15,4],
+"speak__lib_8h.html#a7741613926f4d38b6d27999b8ff80d47":[4,0,14,0,27,23],
 "speak__lib_8h.html#a7e05103df96fa6844d4ee36e2edfb9b2":[4,0,14,0,27,38],
 "speak__lib_8h.html#a825cadb45c9a123edfc21128054f856c":[4,0,14,0,27,30],
 "speak__lib_8h.html#a8b7bbb23f50801d590758f5f25cdc52b":[4,0,14,0,27,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX52 =
 "street_8c.html#aea4b5eaa20cb056bf06b1ed7969d1ae7":[4,0,8,5,4,46],
 "street_8c.html#aec9124645a0cfddbcdd727bb2947970b":[4,0,8,5,4,1],
 "street_8c.html#aecbb4527b5dd664862874e1df00f55ab":[4,0,8,5,4,28],
-"street_8c.html#afd945b9b241314bdecaae9a3a9e298f7":[4,0,8,5,4,14],
-"structACCENTS.html":[3,0,56],
-"structACCENTS.html#a767ef3a76e7975ef49c8293fbdda97dd":[3,0,56,1]
+"street_8c.html#afd945b9b241314bdecaae9a3a9e298f7":[4,0,8,5,4,14]
 };

@@ -83,8 +83,12 @@ Macros</h2></td></tr>
 <tr class="separator:ae12f53427fba2f2790098221f27e8cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf409a6032c8d9d39196543724e92836"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#adf409a6032c8d9d39196543724e92836">FEET_PER_MILE</a>&#160;&#160;&#160;5280</td></tr>
 <tr class="separator:adf409a6032c8d9d39196543724e92836"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeae162f67890798aa1296327baf288ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#aeae162f67890798aa1296327baf288ff">METERS_PER_MILE</a>&#160;&#160;&#160;1609</td></tr>
+<tr class="memitem:a32886caa8cb9a4c8aa583a0f6124bfe6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6">KILOMETERS_TO_MILES</a>&#160;&#160;&#160;0.62137119	/* Kilometers to miles */</td></tr>
+<tr class="separator:a32886caa8cb9a4c8aa583a0f6124bfe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae162f67890798aa1296327baf288ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#aeae162f67890798aa1296327baf288ff">METERS_PER_MILE</a>&#160;&#160;&#160;1/(<a class="el" href="navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6">KILOMETERS_TO_MILES</a>/1000.00)</td></tr>
 <tr class="separator:aeae162f67890798aa1296327baf288ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a977822f448c2c2a69f846839d085fc98"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#a977822f448c2c2a69f846839d085fc98">MPS_TO_KPH</a>&#160;&#160;&#160;3.6		/* Meters per second to klicks/hr */</td></tr>
+<tr class="separator:a977822f448c2c2a69f846839d085fc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -162,17 +166,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a32886caa8cb9a4c8aa583a0f6124bfe6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define KILOMETERS_TO_MILES&#160;&#160;&#160;0.62137119	/* Kilometers to miles */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="gui__gtk__statusbar_8c.html#a798ad4510fcf2ee073cf71d5b859a549">statusbar_route_update()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="aeae162f67890798aa1296327baf288ff"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define METERS_PER_MILE&#160;&#160;&#160;1609</td>
+          <td class="memname">#define METERS_PER_MILE&#160;&#160;&#160;1/(<a class="el" href="navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6">KILOMETERS_TO_MILES</a>/1000.00)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="navigation_8c.html#a55fdd8d56acdf0069268354fca794ab3">get_distance_str()</a>, <a class="el" href="group__navit.html#ga9840d0a2ac5a308e1249fdda78e87dc0">navit_window_roadbook_update()</a>, and <a class="el" href="gui__gtk__statusbar_8c.html#a798ad4510fcf2ee073cf71d5b859a549">statusbar_route_update()</a>.</p>
+<p>Referenced by <a class="el" href="navigation_8c.html#a55fdd8d56acdf0069268354fca794ab3">get_distance_str()</a>, and <a class="el" href="group__navit.html#ga9840d0a2ac5a308e1249fdda78e87dc0">navit_window_roadbook_update()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a977822f448c2c2a69f846839d085fc98"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MPS_TO_KPH&#160;&#160;&#160;3.6		/* Meters per second to klicks/hr */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="vehicle__gpsd_8c.html#adbd0d4ba03eee5e96ead3fcca9496f2c">vehicle_gpsd_callback()</a>.</p>
 
 </div>
 </div>
