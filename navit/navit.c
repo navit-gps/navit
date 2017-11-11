@@ -1982,7 +1982,7 @@ navit_window_roadbook_update(struct navit *this_)
 			if ( attr.u.num >= 2000 )
 			{
                                 param[1].value=g_strdup_printf("%5.1f %s",
-                                                               imperial == TRUE ? (float)attr.u.num / METERS_PER_MILE : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? (float)attr.u.num / (METERS_PER_MILE/1000.00) : (float)attr.u.num / 1000,
                                                                imperial == TRUE ? _("mi") : _("km")
                                         );
 			}
