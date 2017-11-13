@@ -367,15 +367,12 @@ vehicle_wince_available_ports(void)
 }
 
 
-//***************************************************************************
-/** @fn static void vehicle_wince_fix_timeout_cb( struct vehicle_priv *priv )
-*****************************************************************************
-* @b Description: This is a callback function, called when the fix timeout
+/**
+* @brief This is a callback function, called when the fix timeout
 * 		is done. Set the position to invalid.
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-**/
+*
+* @param priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv)
 {
@@ -385,15 +382,11 @@ vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv)
 }
 
 
-//***************************************************************************
-/** @fn static void vehicle_wince_restart_fix_timeout(
- * 					struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Cancel previous fix timeout event and add a new one
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-**/
+/**
+* @brief Cancel previous fix timeout event and add a new one
+*
+* @param priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv)
 {
@@ -823,7 +816,8 @@ vehicle_wince_destroy(struct vehicle_priv *priv)
  * @param priv vehicle_priv structure for the vehicle
  * @param type The attribute type to retrieve
  * @param attr Points to an attr structure that will receive the attribute data
- * @returns True for success, false for failure
+ *
+ * @return True for success, false for failure
  */
 static int
 vehicle_wince_position_attr_get(struct vehicle_priv *priv,
@@ -945,10 +939,11 @@ struct vehicle_methods vehicle_wince_methods = {
 /**
  * @brief Creates a new wince_vehicle
  * 
- * @param meth
- * @param cbl
- * @param attrs
- * @returns vehicle_priv
+ * @param meth ?
+ * @param cbl ?
+ * @param attrs ?
+ *
+ * @return vehicle_priv
  */
 static struct vehicle_priv *
 vehicle_wince_new(struct vehicle_methods
