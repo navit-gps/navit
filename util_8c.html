@@ -129,6 +129,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a1d3db22e64d6081b5674305557538115"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a1d3db22e64d6081b5674305557538115">spawn_process_init</a> ()</td></tr>
 <tr class="separator:a1d3db22e64d6081b5674305557538115"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8c0c1d7dea6db0d07a63ba8648fce8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#ae8c0c1d7dea6db0d07a63ba8648fce8e">get_compass_direction</a> (char *<a class="el" href="structbuffer.html">buffer</a>, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> angle, <a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td></tr>
+<tr class="memdesc:ae8c0c1d7dea6db0d07a63ba8648fce8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get printable compass direction from an angle.  <a href="#ae8c0c1d7dea6db0d07a63ba8648fce8e">More...</a><br/></td></tr>
 <tr class="separator:ae8c0c1d7dea6db0d07a63ba8648fce8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -286,7 +287,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>Get printable compass direction from an angle. </p>
+<p>This function supports three different modes:</p>
+<p>In mode 0, the angle in degrees is output as a string.</p>
+<p>In mode 1, the angle is output as a cardinal direction (N, SE etc.).</p>
+<p>In mode 2, the angle is output in analog clock notation (6 o'clock).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>Buffer to hold the result string (up to 5 characters, including the terminating null character, may be required) </td></tr>
+    <tr><td class="paramname">angle</td><td>The angle to convert </td></tr>
+    <tr><td class="paramname">mode</td><td>The conversion mode, see description </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="libgnuintl_8h.html#afb3bd535ce7ceb797e93d3bf11f04edf">sprintf()</a>.</p>
 
