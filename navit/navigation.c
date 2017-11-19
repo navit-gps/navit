@@ -966,17 +966,17 @@ round_distance(int dist)
 }
 
 /** @brief Returns the last element of the simplified numbers containing a distance value.
-*   @return value with the highest distance.
-*/
+ *   @return value with the highest distance.
+ */
 static int
 distance_set_last(void)
 {
 	static int i=0;
-	if (i == 0) {
-		while (distances[i] > 0)
-			i++;
-	}
-	return distances[i-1];
+
+        while (distances[i] > 0)
+                i++;
+
+	return distances[ i>0 ? i-1 : 0 ];
 }
 
 /** @brief Restricts the distance value to a simple set of pronounceable numbers.
