@@ -702,8 +702,6 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
 
 // TODO function to report traffic message
 
-// TODO plugin functions
-
 /* end of prototypes */
 #ifdef __cplusplus
 }
