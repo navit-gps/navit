@@ -9,7 +9,7 @@ set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.
    event.c file.c geom.c graphics.c gui.c item.c layout.c log.c main.c map.c maps.c
    linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navit_nls.c navigation.c osd.c param.c phrase.c plugin.c popup.c
    profile.c profile_option.c projection.c roadprofile.c route.c script.c search.c speech.c start_real.c sunriset.c transform.c track.c
-   search_houseno_interpol.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
+   search_houseno_interpol.c traffic.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
 if(NOT USE_PLUGINS)
   list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
