@@ -26,7 +26,7 @@
  *
  * The traffic module consists of two parts:
  *
- * The traffic plugin interacts with the Navit core and converts traffic messages into traffic
+ * The traffic core interacts with the Navit core and converts traffic messages into traffic
  * distortions (future versions may add support for other traffic information).
  *
  * The traffic backends obtain traffic information from a source of their choice (e.g. from a TMC
@@ -700,7 +700,24 @@ void traffic_message_add_event(struct traffic_message * this_, struct traffic_ev
  */
 struct traffic_event * traffic_message_get_event(struct traffic_message * this_, int index);
 
-// TODO function to report traffic message
+/**
+ * @brief Reports new messages to the traffic plugin.
+ *
+ * This function is called by backends when they have new messages to report to the traffic plugin.
+ *
+ * The traffic plugin matches the messages to existing ones, matches locations to map data and adds,
+ * removes or modifies traffic distortions. If necessary, it triggers a route recalculation.
+ *
+ * It is the caller’s responsibility to free up the memory used for the pointer array, but not the
+ * messages themselves, after the call returns.
+ *
+ * @param message_count The number of messages in {@code messages}
+ * @param messages Points to an array of pointers for the events reported
+ *
+ * @return true if the messages were processed successfully, false if not. In the latter case, the
+ * backend should either retry the report until it succeeds, or destroy the messages.
+ */
+int traffic_report_messages(int message_count, struct traffic_message ** messages);
 
 /* end of prototypes */
 #ifdef __cplusplus

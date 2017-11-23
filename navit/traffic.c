@@ -36,6 +36,7 @@
 #include "coord.h"
 #include "item.h"
 #include "traffic.h"
+#include "debug.h"
 
 struct traffic_point * traffic_point_new(float lon, float lat, char * junction_name, char * junction_ref,
 		char * tmc_id) {
@@ -277,4 +278,10 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
 		return this_->events[index];
 	else
 		return NULL;
+}
+
+int traffic_report_messages(int message_count, struct traffic_message ** messages) {
+	// TODO
+    dbg(lvl_error, "MESSAGE RECEIVED, don't know how to process it yet...\n");
+	return 0;
 }
