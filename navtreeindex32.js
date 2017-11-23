@@ -1,5 +1,6 @@
 var NAVTREEINDEX32 =
 {
+"linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8ae180eadbcf68ae0b8d9baec99471f16c":[4,0,76,1,0],
 "linguistics_8h.html#aecc5831def94e310a2f2f7b3c9fcf4dd":[4,0,76,0],
 "linguistics_8h.html#af811ff7e43a3a927e2416ffd96b872ce":[4,0,76,5],
 "linguistics_8h_source.html":[4,0,76],
@@ -248,6 +249,5 @@ var NAVTREEINDEX32 =
 "map_2mg_2map_8c.html#a938cc4918ced9c65c0d231b20ad68066":[4,0,8,5,1,3],
 "map_2mg_2map_8c.html#a9d0b1dc47a136a41c032f4219ecaf56c":[4,0,8,5,1,12],
 "map_2mg_2map_8c.html#aa7e82b3e2ea443917e8be39e43d5d5cb":[4,0,8,5,1,25],
-"map_2mg_2map_8c.html#aa9b4b0424080f570da460cd70d739360":[4,0,8,5,1,4],
-"map_2mg_2map_8c.html#aba1da86a4b0d4da2db3d7c5bdbc0293b":[4,0,8,5,1,30]
+"map_2mg_2map_8c.html#aa9b4b0424080f570da460cd70d739360":[4,0,8,5,1,4]
 };

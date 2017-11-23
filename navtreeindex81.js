@@ -1,5 +1,6 @@
 var NAVTREEINDEX81 =
 {
+"win32__gui__destination_8c.html#a3d41a47376984ae71ee388a1bf97fd8b":[4,0,6,4,4,6],
 "win32__gui__destination_8c.html#a71007378da47c820335f70c780653f76":[4,0,6,4,4,3],
 "win32__gui__destination_8c.html#a8e10d796ca2d5a52e7102c8b34ba1c92":[4,0,6,4,4,7],
 "win32__gui__destination_8c.html#a98d6a1f7f6e5b812123847ce98f2c5e8":[4,0,6,4,4,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX81 =
 "zipfile_8h.html#ac0062f99ded34ffe6e71f74815e63c18":[4,0,146,10],
 "zipfile_8h.html#ad4324c0c321aafce6235370558efe3e3":[4,0,146,22],
 "zipfile_8h.html#af75106c62eb158a0db7947c9514d3205":[4,0,146,16],
-"zipfile_8h_source.html":[4,0,146],
-"zlib_8h.html":[4,0,14,10,12]
+"zipfile_8h_source.html":[4,0,146]
 };

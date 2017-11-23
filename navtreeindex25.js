@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"guiProxy_8h.html#acb889ddb228a98a2c5948f3dd175bac6":[4,0,6,2,2,2],
 "guiProxy_8h_source.html":[4,0,6,2,2],
 "gui_2win32_2resources_2resource_8h.html":[4,0,6,4,0,0],
 "gui_2win32_2resources_2resource_8h.html#aaeff2cbc65f8364a2d2c8d4d2125be16":[4,0,6,4,0,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "gui__internal_8c.html#af17219d956a10dad10b77c3db823a289":[4,0,6,1,0,102],
 "gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605":[4,0,6,1,0,72],
 "gui__internal_8c.html#afbefbb1bdfc665f41ff2c35a733a8eb7":[4,0,6,1,0,92],
-"gui__internal_8h.html":[4,0,6,1,1],
-"gui__internal_8h.html#a011442fa571647f6171d9bbd66c505a5":[4,0,6,1,1,3]
+"gui__internal_8h.html":[4,0,6,1,1]
 };

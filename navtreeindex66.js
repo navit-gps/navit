@@ -1,5 +1,6 @@
 var NAVTREEINDEX66 =
 {
+"structnavit.html":[1,1,1],
 "structnavit.html#a03ffddf3b591c84abe62652564c51fba":[1,1,1,7],
 "structnavit.html#a083b0066e6ef77cf11e63de3a2644d7c":[1,1,1,20],
 "structnavit.html#a08929700983f1ab0d686d7eb240b2596":[1,1,1,36],
@@ -248,6 +249,5 @@ var NAVTREEINDEX66 =
 "structosd__speed__warner.html#a0ce6feec10e11ef22d8cfb8ed62576b0":[3,0,365,7],
 "structosd__speed__warner.html#a3571d90eab207720ff60b64829fa5ab7":[3,0,365,12],
 "structosd__speed__warner.html#a3726136f2f3b7b944c1be43bb9db67a6":[3,0,365,0],
-"structosd__speed__warner.html#a516827abe7cc0f39a8680f52c6bddb3f":[3,0,365,1],
-"structosd__speed__warner.html#a55e5b67cc269842c1e2f6c6486faa1cc":[3,0,365,18]
+"structosd__speed__warner.html#a516827abe7cc0f39a8680f52c6bddb3f":[3,0,365,1]
 };

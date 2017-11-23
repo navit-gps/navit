@@ -60,6 +60,7 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "NavitLanguage", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a13b93e94e0e1ef3283c3557a15ed4d0c", null ],
     [ "NavitResources", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ad5a69ef4481732284a518434e77ade62", null ],
     [ "NavitSelectStorage_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ae0d970d580af3fe902b17912e65c745d", null ],
+    [ "nm", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8373f06a6b696dbc416f94d5bb5d9cf2", null ],
     [ "show_soft_keyboard", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a721c9a043342ef1a1fc83cc878bd143d", null ],
     [ "show_soft_keyboard_now_showing", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a2b2f56b93b3af98a5c89c414b56e008e", null ],
     [ "startup_intent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8c2f54754a72873b13b6b886633882b6", null ],

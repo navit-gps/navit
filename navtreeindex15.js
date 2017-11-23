@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"garmin__img_8c.html#a4215c4493ea38488b397821ed2e8d4a4":[4,0,8,4,0,27],
 "garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2":[4,0,8,4,0,92],
 "garmin__img_8c.html#a43291b8493b637821dec145c4bb1503d":[4,0,8,4,0,117],
 "garmin__img_8c.html#a435a10efbc8005bae2e58e63cf9b55ce":[4,0,8,4,0,141],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "getopt_8h.html#a80155586fa275b28773c9b203f52cabaab78b2ae97087d17f362530b184e3217b":[4,0,14,4,9,5],
 "getopt_8h.html#a80155586fa275b28773c9b203f52cabaac5bf117fca352609d0e6cd02ddb3a008":[4,0,14,4,9,3],
 "getopt_8h.html#a9a5b96a1d0b0139f42ccf8851d21498e":[4,0,14,4,9,8],
-"getopt_8h.html#acbd3b0584888b80a8e7f16d4d794eb2c":[4,0,14,4,9,6],
-"getopt_8h.html#ad4e526cd7d8899b3032ecde2a6a9fa68":[4,0,14,4,9,1]
+"getopt_8h.html#acbd3b0584888b80a8e7f16d4d794eb2c":[4,0,14,4,9,6]
 };

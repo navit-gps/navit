@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"dictionary_8c.html#a22a8689556c18d90d823955435477cdf":[4,0,14,0,3,13],
 "dictionary_8c.html#a286562a54aae81f927346797dea96d34":[4,0,14,0,3,15],
 "dictionary_8c.html#a2e960354a3ee0efdf6800f13251903c4":[4,0,14,0,3,12],
 "dictionary_8c.html#a34035f60773c426c7c39fe974802e3f4":[4,0,14,0,3,27],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "espeak__command_8h.html":[4,0,14,0,6],
 "espeak__command_8h.html#a013acfad75357e0c4526fcc63e9e13a5":[4,0,14,0,6,17],
 "espeak__command_8h.html#a0dcc7ce029e59e4d0b90ce62c53aab75":[4,0,14,0,6,31],
-"espeak__command_8h.html#a254537985fcb7152142e5f5e48def35e":[4,0,14,0,6,14],
-"espeak__command_8h.html#a2fde5a5bd5f318a4d809c29f29990e5d":[4,0,14,0,6,22]
+"espeak__command_8h.html#a254537985fcb7152142e5f5e48def35e":[4,0,14,0,6,14]
 };

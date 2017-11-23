@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"graphics__qt__qpainter_8cpp.html":[4,0,5,8,0],
 "graphics__qt__qpainter_8cpp.html#a1166f0e775e95efcad0040474546a4ff":[4,0,5,8,0,28],
 "graphics__qt__qpainter_8cpp.html#a11a445d672efb2d812bf447c8b275923":[4,0,5,8,0,5],
 "graphics__qt__qpainter_8cpp.html#a18e3c2e64373fc85093d4d2d684e5ec8":[4,0,5,8,0,27],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "group__navit.html#ga551e228f9a6ed97cc575af96cd55000c":[1,1,13],
 "group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51":[1,1,99],
 "group__navit.html#ga56eaddbe00403026ce26c980ab92f01b":[1,1,36],
-"group__navit.html#ga573bc5a9c51fc9167ff9bd75f8b3a7eb":[1,1,45],
-"group__navit.html#ga591b6ffb516e114d28107c70c119671d":[1,1,66]
+"group__navit.html#ga573bc5a9c51fc9167ff9bd75f8b3a7eb":[1,1,45]
 };

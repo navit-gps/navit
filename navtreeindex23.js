@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"group__navit.html#ga591b6ffb516e114d28107c70c119671d":[1,1,66],
 "group__navit.html#ga59756cffd4515e2c950d050ce4b89e26":[1,1,101],
 "group__navit.html#ga5b4400bcd5a6eefb9e8b8dd26d3fa863":[1,1,27],
 "group__navit.html#ga5c2881fddee1c8482fd6d088a194046b":[1,1,21],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "gslist_8h.html#afc520a6fc5345708a63ff92a6b8255b7":[4,0,14,3,29,9],
 "gslist_8h_source.html":[4,0,14,3,29],
 "gstrfuncs_8c.html":[4,0,14,3,30],
-"gstrfuncs_8c.html#a01437084b3023c0dabde411fe6c718d0":[4,0,14,3,30,27],
-"gstrfuncs_8c.html#a020126a96c5c0c9633bf84f3922782c4":[4,0,14,3,30,14]
+"gstrfuncs_8c.html#a01437084b3023c0dabde411fe6c718d0":[4,0,14,3,30,27]
 };
