@@ -830,7 +830,7 @@ public class Navit extends Activity
 				SharedPreferences.Editor  prefs_editor = prefs.edit(); 
 				prefs_editor.putString("filenamePath", newDir); 
 				prefs_editor.commit();
-				Toast.makeText(this, String.format(Navit.T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();
+				Toast.makeText(this, String.format(Navit.T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();                 
 			} 
 				else Log.w(TAG, "select path failed"); 
 			break; 			
