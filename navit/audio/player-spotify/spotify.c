@@ -1103,9 +1103,6 @@ player_spotify_new(struct audio_methods *meth, struct callback_list *cbl,
 	}
 
 
-	spotify->callback =
-	    callback_new_1(callback_cast(spotify_spotify_idle), spotify);
-	event_add_idle(125, spotify->callback);
 	dbg(lvl_info, "Callback created successfully\n");
 	this = g_new(struct audio_priv, 1);
 
