@@ -58,6 +58,7 @@ struct traffic {
 void traffic_idle(struct traffic * this_) {
         // TODO poll backends and process any new messages
         dbg(lvl_error, "THIS IS THE DUMMY TRAFFIC PLUGIN. Got nothing to do yet...\n");
+        traffic_report_messages(0, NULL);
 }
 
 /**
