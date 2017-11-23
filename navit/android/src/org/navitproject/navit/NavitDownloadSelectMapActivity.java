@@ -64,7 +64,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 		} catch (Exception e) {
 			Log.e("Navit","Exception "+e.getClass().getName()+" during getFreeSpace, reporting 'no sdcard present'");
 			NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null, 
-				String.format(Navit._("Current map location %s is not available\nPlease restart Navit after you attach an SD card or select a different map location."),Navit.map_filename_path),
+				String.format(Navit.T("Current map location %s is not available\nPlease restart Navit after you attach an SD card or select a different map location."),Navit.map_filename_path),
 				 -1, 0, 0);
 			finish();
 		}
@@ -134,7 +134,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
 		// add already downloaded maps (group and empty child list
 		HashMap<String, String> downloaded_maps_hash = new HashMap<String, String>();
-		downloaded_maps_hash.put("category_name", Navit._("Downloaded maps"));
+		downloaded_maps_hash.put("category_name", Navit.T("Downloaded maps"));
 		resultGroups.add(downloaded_maps_hash);
 		downloaded_maps_childs = new ArrayList<HashMap<String, String>>();
 		resultChilds.add(downloaded_maps_childs);
@@ -188,7 +188,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 			int mi=Integer.parseInt(map_index);
 			if(NavitMapDownloader.osm_maps[mi].est_size_bytes/1024/1024/950>=4) {
 				NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null, 
-					Navit._("Sorry, we currently do not support maps above 3.8G on Android, please select a smaller one."),
+					Navit.T("Sorry, we currently do not support maps above 3.8G on Android, please select a smaller one."),
 					 -1, 0, 0);
 				return true;
 			}
@@ -205,19 +205,12 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
 	private void askForMapDeletion(final String map_location) {
 		AlertDialog.Builder deleteMapBox = new AlertDialog.Builder(this);
-		deleteMapBox.setTitle(getString(R.string.map_delete)); // TRANS
+		deleteMapBox.setTitle(R.string.map_delete); // Android also takes recource id
 		deleteMapBox.setCancelable(true);
-		final TextView message = new TextView(this);
-		message.setFadingEdgeLength(20);
-		message.setVerticalFadingEdgeEnabled(true);
-		RelativeLayout.LayoutParams layoutParams =
-		        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
-		                RelativeLayout.LayoutParams.FILL_PARENT);
-
-		message.setLayoutParams(layoutParams);
+		
 		NavitMap maptoDelete = new NavitMap(map_location);
-		message.setText(maptoDelete.mapName + " " + String.valueOf(maptoDelete.size() / 1024 / 1024) + "MB");
-		deleteMapBox.setView(message);
+		deleteMapBox.setMessage(maptoDelete.mapName + " " + String.valueOf(maptoDelete.size() / 1024 / 1024) + "MB");
+		
 
 		// TRANS
 		deleteMapBox.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {

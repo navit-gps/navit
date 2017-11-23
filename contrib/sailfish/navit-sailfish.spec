@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.1
-Release: 3
+Release: 4
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-projet.org/
@@ -79,7 +79,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DNAVIT_BINARY:STRING=harbour-navit \
        -DSHARE_DIR:PATH=share/harbour-navit \
        -DLOCALE_DIR:PATH=share/harbour-navit/locale \
-       -DIMAGE_DIR:PATH=share/harbour-navit/xpm \
+       -DIMAGE_DIR:PATH=share/harbour-navit/icons \
        -DLIB_DIR:PATH=share/harbour-navit/lib \
        -DBUILD_MAPTOOL:BOOL=FALSE \
        -Dfont/freetype:BOOL=FALSE \
@@ -107,7 +107,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %files
 %defattr(644, root, root, 755)
 %{_datadir}/harbour-navit/navit.xml
-%{_datadir}/harbour-navit/xpm/
+%{_datadir}/harbour-navit/icons/
 %{_datadir}/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/harbour-navit/espeak-data/
 %{_datadir}/applications/harbour-navit.desktop
@@ -123,6 +123,10 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+*Tue Oct 17 2017 metalstrolch 0.5.1-4
+- Fix medium GUI icon size to cope with changed icon set on upstream
+- Update upstream
+
 *Wed Jun 05 2017 metalstrolch 0.5.1-3
 - Enable rotating.
 - Create default config from xlst

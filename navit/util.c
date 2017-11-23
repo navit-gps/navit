@@ -709,7 +709,22 @@ void spawn_process_init()
 	return;
 }
 
-/** Get printable compass direction from an angle. */
+/**
+ * @brief Get printable compass direction from an angle.
+ *
+ * This function supports three different modes:
+ *
+ * In mode 0, the angle in degrees is output as a string.
+ *
+ * In mode 1, the angle is output as a cardinal direction (N, SE etc.).
+ *
+ * In mode 2, the angle is output in analog clock notation (6 o'clock).
+ *
+ * @param buffer Buffer to hold the result string (up to 5 characters, including the terminating null
+ * character, may be required)
+ * @param angle The angle to convert
+ * @param mode The conversion mode, see description
+ */
 void
 get_compass_direction(char *buffer, int angle, int mode)
 {

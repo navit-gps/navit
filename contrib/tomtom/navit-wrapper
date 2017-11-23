@@ -1,0 +1,59 @@
+#!/bin/sh
+
+cd /mnt/sdcard/navit/bin
+
+# Set some paths.
+export PATH=$PATH:/mnt/sdcard/navit/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib:/mnt/sdcard/LoquendoTTS/lib
+export HOME=/mnt/sdcard/navit
+export NAVIT_LIBDIR=/mnt/sdcard/navit/lib/navit
+export NAVIT_SHAREDIR=/mnt/sdcard/navit/share
+export NAVIT_LOCALEDIR=/mnt/sdcard/navit/share/locale
+
+# tslib requirements.
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_FBDEVICE=/dev/fb
+export TSLIB_TSDEVICE=/dev/ts
+export TSLIB_CALIBFILE=/mnt/sdcard/navit/ts/pointercal
+export TSLIB_CONFFILE=/mnt/sdcard/navit/ts/ts.conf
+export TSLIB_PLUGINDIR=/mnt/sdcard/navit/lib/ts
+
+# SDL requirements.
+export SDL_MOUSEDRV=TSLIB
+export SDL_MOUSEDEV=$TSLIB_TSDEVICE
+export SDL_NOMOUSE=1
+export SDL_FBDEV=/dev/fb
+export SDL_VIDEODRIVER=fbcon
+export SDL_AUDIODRIVER=dsp
+
+# Set time zone.
+export TZ="CEDT-01:00:00CEST-02:00:00,M3.4.0,M10.4.0"
+
+# Set language.
+export LANG=en_US
+
+export ESPEAK_DATA_PATH=/mnt/sdcard/navit/share
+
+# Run Navit.
+if /mnt/sdcard/navit/sdl/testvidinfo | grep 480x272
+then
+        /mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/tomtom480.xml 2>/mnt/sdcard/navit/navit.log&
+# tomtom320xml is not provided yet
+# elif  /mnt/sdcard/navit/sdl/testvidinfo | grep 320x240
+# then
+#       /mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/config/tomtom320.xml 2>/mnt/sdcard/navit/navit.log&
+else
+        exit 1
+fi
+
+# Kill TTN while Navit is running.
+killall ttn
+
+while [ $? -eq 0 ]
+do
+echo "\0" > /dev/watchdog
+sleep 10
+ps | grep -v grep | grep -v wrapper | grep navit
+done
+
+/sbin/reboot

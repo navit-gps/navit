@@ -24,6 +24,9 @@ GridLayout {
         icon: "icons/appbar.transit.car.svg"
         Layout.fillHeight: true
         Layout.fillWidth: true
+        onClicked: {
+            menucontent.source = "vehicles.qml"
+        }
     }
     MainButton {
         text: "Display"

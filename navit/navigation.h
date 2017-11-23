@@ -22,7 +22,9 @@
 
 #define FEET_PER_METER  3.2808399
 #define FEET_PER_MILE   5280
-#define METERS_PER_MILE 1609
+#define KILOMETERS_TO_MILES	0.62137119	/* Kilometers to miles */
+#define METERS_PER_MILE 1/(KILOMETERS_TO_MILES/1000.00)
+#define MPS_TO_KPH	3.6		/* Meters per second to klicks/hr */
 
 #ifdef __cplusplus
 extern "C" {

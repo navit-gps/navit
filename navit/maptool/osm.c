@@ -34,6 +34,7 @@
 #include "file.h"
 #include "profile.h"
 #include "types.h"
+#include "transform.h"
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -885,26 +886,60 @@ build_countrytable(void)
 	}
 }
 
+static void
+osm_logv(char *prefix, char *objtype, osmid id, int cont, struct coord_geo *geo, char *fmt, va_list ap)
+{
+	char str[4096];
+	vsnprintf(str, sizeof(str), fmt, ap);
+	if(cont)
+		prefix="";
+	if(objtype)
+		fprintf(stderr,"%shttp://www.openstreetmap.org/%s/"OSMID_FMT" %s", prefix, objtype, id, str);
+	else if(geo)
+		fprintf(stderr,"%shttp://www.openstreetmap.org/#map=19/%.5f/%.5f %s",prefix, geo->lat, geo->lng, str);
+	else
+		fprintf(stderr,"%s[no osm object info] %s",prefix, str);
+}
+
 void
 osm_warning(char *type, osmid id, int cont, char *fmt, ...)
 {
-	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(str, sizeof(str), fmt, ap);
+	osm_logv("OSM Warning:", type, id, cont, NULL, fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
 void
 osm_info(char *type, osmid id, int cont, char *fmt, ...)
 {
-	char str[4096];
 	va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(str, sizeof(str), fmt, ap);
+	osm_logv("OSM Info:", type, id, cont, NULL, fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"OSMID_FMT" %s",cont ? "":"OSM Info:",type,id,str);
+}
+
+static void
+itembin_warning(struct item_bin *ib, int cont, char *fmt, ...)
+{
+	char *type=NULL;
+	osmid id;
+	struct coord_geo geo;
+	va_list ap;
+	if(0!=(id=item_bin_get_nodeid(ib))) {
+		type="node";
+	} else if(0!=(id=item_bin_get_wayid(ib))) {
+		type="way";
+	} else if(0!=(id=item_bin_get_relationid(ib))) {
+		type="relation";
+	} else {
+		struct coord *c=(struct coord *)(ib+1);
+		transform_to_geo(projection_mg, c, &geo);
+	}
+
+	va_start(ap, fmt);
+	osm_logv("OSM Warning:", type, id, cont, &geo, fmt, ap);
+	va_end(ap);
 }
 
 static void
@@ -1013,8 +1048,10 @@ osm_add_tag(char *k, char *v)
 		relation_add_tag(k,v);
 		return;
 	}
-	if (! strcmp(k,"ele"))
+	if (! strcmp(k,"ele")){
+		attr_strings_save(attr_string_label, v);
 		level=9;
+	}
 	if (! strcmp(k,"time"))
 		level=9;
 	if (! strcmp(k,"created_by"))
@@ -1711,7 +1748,7 @@ relation_add_tag(char *k, char *v)
 		if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
 			boundary=1;
 		}
-	} else if (!strcmp(k,"ISO3166-1")) {
+	} else if (!strcmp(k,"ISO3166-1") || !strcmp(k,"ISO3166-1:alpha2")) {
 		g_strlcpy(iso_code, v, sizeof(iso_code));
 	}
 	if (add_tag) {
@@ -1922,145 +1959,239 @@ osm_end_node(struct maptool_osm *osm)
 	attr_longest_match_clear();
 }
 
-static struct country_table *
+#define MAX_TOWN_ADMIN_LEVELS 11
+
+struct town_country {
+	/* attrs[0] is reserved for postal code */
+	/* attrs[1..] are for osm admin levels 3.. (admin_level=2 is always a country boundary)*/
+	struct attr attrs[MAX_TOWN_ADMIN_LEVELS];
+	struct country_table *country;
+};
+
+static struct town_country *
+town_country_new(struct country_table *country)
+{
+	struct town_country *ret=g_malloc0(sizeof(struct town_country));
+	ret->country=country;
+	return ret;
+}
+
+static void
+town_country_destroy(struct town_country *tc)
+{
+	g_free(tc);
+}
+
+/**
+ * Insert a new record into the list of town info structures, if there's no such entry.
+ *
+ * @param in/out town_country_list pointer to GList* of town_country structures.
+ * @param in country country to add the town to
+ * @returns refernce to then new town_country structure added to the list, or NULL if GList already had an entry for the country given
+ */
+static struct town_country *
+town_country_list_insert_if_new(GList **town_country_list, struct country_table *country)
+{
+	GList *l;
+	struct town_country *ret;
+
+	if(!country)
+		return NULL;
+
+	for(l=*town_country_list; l; l=g_list_next(l)) {
+		if(((struct town_country*)l->data)->country==country)
+			return NULL;
+	}
+
+	ret=town_country_new(country);
+	*town_country_list=g_list_prepend(*town_country_list, ret);
+	return ret;
+}
+
+static GList *
 osm_process_town_unknown_country(void)
 {
 	static struct country_table *unknown;
 	if (!unknown)
 		unknown=country_from_countryid(999);
 
-	return unknown;
+	return g_list_prepend(NULL, town_country_new(unknown));
 }
 
-static struct country_table *
-osm_process_town_by_is_in(struct item_bin *ib,char *is_in, struct attr *attrs, GHashTable *town_hash)
-{
-	struct country_table *result=NULL, *lookup;
-	char *tok,*dup=g_strdup(is_in),*buf=dup;
-	int conflict=0;
 
-	int find_town_name = 0;
+/**
+ * Get town name from district is_in attribute if possible.
+ *
+ * @param in ib pointer to item_bin structure holding district information
+ * @param in town_hash hash of all town names
+ * @returns refernce to a list of struct town_country* the town belongs to
+ */
+static char *
+osm_process_town_get_town_name_from_is_in(struct item_bin *ib, GHashTable *town_hash)
+{
+	char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
+	char *tok,*dup,*buf;
+	char *town=NULL;
 
 	if(!is_in)
 		return NULL;
 
-	if (item_is_district(*ib))
-		find_town_name = 1;
-
-	while ((tok=strtok(buf, ",;"))) {
+	dup=g_strdup(is_in);
+	buf=dup;
+	while (!town && (tok=strtok(buf, ",;"))) {
 		while (*tok==' ')
 			tok++;
-		if (find_town_name && g_hash_table_lookup(town_hash, tok)) {
-			attrs[10].type = attr_town_name;
-			attrs[10].u.str = g_strdup(tok);
-			find_town_name = 0;
-		}
-		lookup=g_hash_table_lookup(country_table_hash,tok);
-		if (lookup) {
-			if (result && result->countryid != lookup->countryid) {
-				conflict=1;
-			}
-			result=lookup;
-		}
+		town=g_hash_table_lookup(town_hash, tok);
 		buf=NULL;
 	}
 	g_free(dup);
 
-	if(conflict) {
-		char *label=item_bin_get_attr(ib, attr_town_name, NULL);
-		osm_warning("node",item_bin_get_nodeid(ib),0,"Country conflict for %s is_in=%s, choosen country %d (%s)\n", label, is_in, result->countryid, result->names);
-	}
-
-	return result;
+	return town;
 }
 
-static struct country_table *
-osm_process_town_by_boundary(GList *bl, struct item_bin *ib, struct coord *c, struct attr *attrs)
+
+/**
+ * Find list of countries which town or district belongs to.
+ * @param in ib pointer to item_bin structure holding town information
+ * @returns refernce to a list of struct town_country* the town belongs to
+ */
+static GList *
+osm_process_town_by_is_in(struct item_bin *ib)
 {
-	GList *l,*matches=boundary_find_matches(bl, c);
-	struct boundary *match=NULL;
-	
-	l=matches;
-	while (l) {
-		struct boundary *b=l->data;
-		if (b->country) {
-			if (match && match->country->countryid!=b->country->countryid) {
-				osm_warning("node",item_bin_get_nodeid(ib),0,"node (0x%x,0x%x) country conflict: ", c->x, c->y);
-				osm_warning("relation",boundary_relid(match),1,"replacing country %d (%s) with ",match->country->countryid, match->country->names);
-				osm_warning("relation",boundary_relid(b),1,"country %d (%s)\n",b->country->countryid, b->country->names);
-			}
-			match=b;
-		}
-		l=g_list_next(l);
-	}
+	struct country_table *country;
+	char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
+	char *tok,*dup,*buf;
+	GList *town_country_list=NULL;
 
-	if (match) {
-		if (match && match->country && match->country->admin_levels) {
-			long long *nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
-			long long node_id=0;
-			int end=strlen(match->country->admin_levels)+3;
-			int a;
-			int max_adm_level=0;
-
-			if(nodeid)
-				node_id=*nodeid;
-
-			l=matches;
-			while (l) {
-				struct boundary *b=l->data;
-				char *boundary_admin_level_string=osm_tag_value(b->ib, "admin_level");
-				char *postal=osm_tag_value(b->ib, "postal_code");
-				if (boundary_admin_level_string) {
-					char *name;
-					a=atoi(boundary_admin_level_string);
-					if (a > 2 && a < end) {
-						enum attr_type attr_type=attr_none;
-						switch(match->country->admin_levels[a-3]) {
-						case 's':
-							attr_type=attr_state_name;
-							break;
-						case 'c':
-							attr_type=attr_county_name;
-							break;
-						case 'M':
-							b->ib->type=type_poly_place6;
-						case 'm':
-							attr_type=attr_municipality_name;
-							break;
-						case 'T':
-							b->ib->type=type_poly_place6;
-							break;
-						}
-						name=osm_tag_value(b->ib, "name");
-						if (name && attr_type != attr_none) {
-							attrs[a-2].type=attr_type;
-							attrs[a-2].u.str=name;
-						}
-					}
-					if(b->admin_centre && b->admin_centre==node_id) {
-						if(!max_adm_level || max_adm_level<a){
-							max_adm_level=a;
-						}
-					}
-				}
-				if (postal) {
-					attrs[0].type=attr_town_postal;
-					attrs[0].u.str=postal;
-				}
-				l=g_list_next(l);
-			}
-
-			/* Administrative centres are not to be contained in their own districts. */
-			if(max_adm_level>0)
-				for(a=end-1;a>max_adm_level && a>2;a--)
-					attrs[a-2].type=type_none;
-		}
-		g_list_free(matches);	
-		return match->country; 
-	} else {
-		g_list_free(matches);	
+	if(!is_in)
 		return NULL;
+
+	dup=g_strdup(is_in);
+	buf=dup;
+	while ((tok=strtok(buf, ",;"))) {
+		while (*tok==' ')
+			tok++;
+		country=g_hash_table_lookup(country_table_hash,tok);
+		town_country_list_insert_if_new(&town_country_list, country);
+		buf=NULL;
 	}
+
+	g_free(dup);
+
+	return town_country_list;
+}
+
+/**
+ * Update town attributes based on its administrative parents.
+ *
+ * @param in town town initial item_bin data
+ * @param in/out tc town_country structure holding country information and town attributes to add to town item_bin
+ * @param in matches list of administrative boundaries the town belongs to (data is struct boundary *)
+ * @returns nothing
+ */
+static void
+osm_process_town_by_boundary_update_attrs(struct item_bin *town, struct town_country *tc, GList *matches)
+{
+	long long *nodeid;
+	long long node_id=0;
+	int max_possible_adm_level=-1;
+	int max_adm_level=0;
+	GList *l;
+	int a;
+
+	if(tc->country->admin_levels)
+		max_possible_adm_level=strlen(tc->country->admin_levels)+3;
+	
+	nodeid=item_bin_get_attr(town, attr_osm_nodeid, NULL);
+	if(nodeid)
+		node_id=*nodeid;
+
+	for(l=matches;l;l=g_list_next(l)) {
+		struct boundary *b=l->data;
+		char *boundary_admin_level_string;
+		char *name;
+		char *postal=osm_tag_value(b->ib, "postal_code");
+
+		if (postal) {
+			tc->attrs[0].type=attr_town_postal;
+			tc->attrs[0].u.str=postal;
+		}
+
+		if(max_possible_adm_level==-1)
+			continue;
+
+		boundary_admin_level_string=osm_tag_value(b->ib, "admin_level");
+
+		if (!boundary_admin_level_string)
+			continue;
+
+		a=atoi(boundary_admin_level_string);
+		if (a > 2 && a < max_possible_adm_level) {
+			enum attr_type attr_type=attr_none;
+			switch(tc->country->admin_levels[a-3]) {
+			case 's':
+				attr_type=attr_state_name;
+				break;
+			case 'c':
+				attr_type=attr_county_name;
+				break;
+			case 'M':
+				/* Here we patch the boundary itself to convert it to town polygon later*/
+				b->ib->type=type_poly_place6;
+			case 'm':
+				attr_type=attr_municipality_name;
+				break;
+			case 'T':
+				/* Here we patch the boundary itself to convert it to town polygon later*/
+				b->ib->type=type_poly_place6;
+				break;
+			}
+			name=osm_tag_value(b->ib, "name");
+			if (name && attr_type != attr_none) {
+				tc->attrs[a-2].type=attr_type;
+				tc->attrs[a-2].u.str=name;
+			}
+		}
+		if(b->admin_centre && b->admin_centre==node_id) {
+			if(!max_adm_level || max_adm_level<a) {
+				max_adm_level=a;
+			}
+		}
+	}
+
+	/* Administrative centres are not to be contained in their own districts. */
+	if(max_adm_level>0)
+		for(a=max_possible_adm_level-1;a>max_adm_level && a>2;a--)
+			tc->attrs[a-2].type=type_none;
+}
+
+/**
+ * Find country which town belongs to. Find town administrative hierarchy attributes.
+ *
+ * @param in bl list of administrative boundaries (data is struct boundary *)
+ * @param in town item_bin structure holding town information
+ * @param in c town center coordinates
+ * @returns refernce to the list of town_country structures
+ */
+static GList *
+osm_process_town_by_boundary(GList *bl, struct item_bin *town, struct coord *c)
+{
+	GList *matches=boundary_find_matches(bl, c);
+	GList *town_country_list=NULL;
+	GList *l;
+
+	for (l=matches;l;l=g_list_next(l)) {
+		struct boundary *match=l->data;
+		if (match->country) {
+			struct town_country *tc=town_country_list_insert_if_new(&town_country_list, match->country);
+			if(tc)
+				osm_process_town_by_boundary_update_attrs(town, tc, matches);
+		}
+	}
+
+	g_list_free(matches);
+
+	return town_country_list;
 }
 
 static void 
@@ -2099,7 +2230,6 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 	struct item_bin *ib;
 	GList *bl;
 	GHashTable *town_hash;
-	struct attr attrs[11];
 	FILE *towns_poly;
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
@@ -2115,7 +2245,8 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		if (!item_is_district(*ib))
 		{
 			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
-			g_hash_table_insert(town_hash, strdup(townname), (gpointer)1);
+			char *dup=strdup(townname);
+			g_hash_table_replace(town_hash, dup, dup);
 		}
 	}
 	fseek(in, 0, SEEK_SET);
@@ -2124,63 +2255,95 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 
 	while ((ib=read_item(in)))  {
 		struct coord *c=(struct coord *)(ib+1);
-		struct country_table *result=NULL;
-		char *is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL);
-		int i;
-		
+		GList *tc_list, *l;
+		struct item_bin *ib_copy=NULL;
+
 		processed_nodes++;
 
-		memset(attrs, 0, sizeof(attrs));
-		result=osm_process_town_by_boundary(bl, ib, c, attrs);
-		if (!result)
-			result=osm_process_town_by_is_in(ib, is_in, attrs, town_hash);
-		else if (item_is_district(*ib)) // just for the town name
-			osm_process_town_by_is_in(ib, is_in, attrs, town_hash);
+		tc_list=osm_process_town_by_boundary(bl, ib, c);
+		if (!tc_list)
+			tc_list=osm_process_town_by_is_in(ib);
 
-		// treat a district like a town, if we could not find the town it belongs to
-		if (!item_bin_get_attr(ib, attr_town_name, NULL) && attrs[10].type != attr_town_name) {
-			char *district_name = item_bin_get_attr(ib, attr_district_name, NULL);
+		if (!tc_list && unknown_country)
+			tc_list=osm_process_town_unknown_country();
 
-			if (district_name) {
-				struct attr attr_new_town_name;
-				attr_new_town_name.type = attr_town_name;
-				attr_new_town_name.u.str = district_name;
-
-				item_bin_add_attr(ib, &attr_new_town_name);
-				item_bin_remove_attr(ib, district_name);
-			}
+		if (!tc_list) {
+			itembin_warning(ib, 0, "Lost town %s %s\n", item_bin_get_attr(ib, attr_town_name, NULL), item_bin_get_attr(ib, attr_district_name, NULL));
 		}
 
-		if (!result && unknown_country)
-			result=osm_process_town_unknown_country();
-		if (result) {
-			if (!result->file) {
-				char *name=g_strdup_printf("country_%d.unsorted.tmp", result->countryid);
-				result->file=fopen(name,"wb");
+		if(tc_list && g_list_next(tc_list))
+			ib_copy=item_bin_dup(ib);
+
+		l=tc_list;
+		while(l) {
+			struct town_country *tc=l->data;
+			char *is_in;
+			long long *nodeid;
+			char *town_name=NULL;
+			int i;
+
+			if (!tc->country->file) {
+				char *name=g_strdup_printf("country_%d.unsorted.tmp", tc->country->countryid);
+				tc->country->file=fopen(name,"wb");
 				g_free(name);
 			}
-			if (result->file) {
-				long long *nodeid;
-				if (is_in)
-					item_bin_remove_attr(ib, is_in);
-				nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
-				if (nodeid)
-					item_bin_remove_attr(ib, nodeid);
-				if (attrs[0].type != attr_none) {
-					char *postal=item_bin_get_attr(ib, attr_town_postal, NULL);
-					if (postal)
-						item_bin_remove_attr(ib, postal);
-				}
-				for (i = 0 ; i < 11 ; i++) {
-					if (attrs[i].type != attr_none)
-						item_bin_add_attr(ib, &attrs[i]);
-				}
-				if(item_bin_get_attr(ib, attr_district_name, NULL))
-					item_bin_write_match(ib, attr_district_name, attr_district_name_match, 5, result->file);
-				else
-					item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, result->file);
+
+			if (item_is_district(*ib) && NULL!=(town_name=osm_process_town_get_town_name_from_is_in(ib, town_hash))) {
+				struct attr attr_new_town_name;
+				attr_new_town_name.type = attr_town_name;
+				attr_new_town_name.u.str = town_name;
+				item_bin_add_attr(ib, &attr_new_town_name);
 			}
+
+			if ((is_in=item_bin_get_attr(ib, attr_osm_is_in, NULL))!=NULL)
+				item_bin_remove_attr(ib, is_in);
+
+			nodeid=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+
+			if (nodeid)
+				item_bin_remove_attr(ib, nodeid);
+
+			/* Treat district like a town, if we did not find the town it belongs to */
+			if (!item_bin_get_attr(ib, attr_town_name, NULL)) {
+				char *district_name = item_bin_get_attr(ib, attr_district_name, NULL);
+
+				if (district_name) {
+					struct attr attr_new_town_name;
+					attr_new_town_name.type = attr_town_name;
+					attr_new_town_name.u.str = district_name;
+
+					item_bin_add_attr(ib, &attr_new_town_name);
+					item_bin_remove_attr(ib, district_name);
+				}
+			}
+
+			/* FIXME: preserved from old code, but we'll have to reconsider if we really should drop attribute
+			 * explicitely set on the town osm node and use an attribute derived from one of its surrounding boundaries. Thus we would
+			 * use town central district' postal code instead of town one. */
+			if (tc->attrs[0].type != attr_none) {
+				char *postal=item_bin_get_attr(ib, attr_town_postal, NULL);
+				if (postal)
+					item_bin_remove_attr(ib, postal);
+			}
+
+			for (i = 0 ; i < MAX_TOWN_ADMIN_LEVELS ; i++) {
+				if (tc->attrs[i].type != attr_none)
+					item_bin_add_attr(ib, &tc->attrs[i]);
+			}
+
+			if(item_bin_get_attr(ib, attr_district_name, NULL))
+				item_bin_write_match(ib, attr_district_name, attr_district_name_match, 5, tc->country->file);
+			else
+				item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, tc->country->file);
+
+			town_country_destroy(tc);
+			processed_nodes_out++;
+			l=g_list_next(l);
+			if(l!=NULL)
+				memcpy(ib, ib_copy, (ib_copy->len+1)*4);
 		}
+		g_free(ib_copy);
+		g_list_free(tc_list);
 	}
 
 	towns_poly=tempfile(suffix,"towns_poly",1);

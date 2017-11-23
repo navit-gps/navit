@@ -176,7 +176,7 @@ public class Navit extends Activity
 	}
 
 
-	public static String _(String in)
+	public static String T(String in)
 	{
 		return NavitTextTranslations.get_text(in);
 	}
@@ -240,18 +240,8 @@ public class Navit extends Activity
 			AlertDialog.Builder infobox = new AlertDialog.Builder(this);
 			infobox.setTitle(getString(R.string.initial_info_box_title)); // TRANS
 			infobox.setCancelable(false);
-			final TextView message = new TextView(this);
-			message.setFadingEdgeLength(20);
-			message.setVerticalFadingEdgeEnabled(true);
-			// message.setVerticalScrollBarEnabled(true);
-			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-	
-			message.setLayoutParams(rlp);
-			final SpannableString s = new SpannableString(getString(R.string.initial_info_box_message)); // TRANS
-			Linkify.addLinks(s, Linkify.WEB_URLS);
-			message.setText(s);
-			message.setMovementMethod(LinkMovementMethod.getInstance());
-			infobox.setView(message);
+			
+			infobox.setMessage(R.string.initial_info_box_message);
 	
 			// TRANS
 			infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
@@ -589,6 +579,10 @@ public class Navit extends Activity
 		ActivityResults[requestCode] = ActivityResult;
 	}
 
+	/*
+	 * This is unused since we dont have the dropdown 
+	 * TODO: recheck if this is right and remove this!
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{

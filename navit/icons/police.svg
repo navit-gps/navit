@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="22"
+   height="22"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.91 r13725"
+   version="1.0"
+   sodipodi:docname="police.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/jeff/projets/navit/icons/png/police.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#f4ca00"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="108.43166"
+     inkscape:cy="14.769275"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="918"
+     inkscape:window-height="483"
+     inkscape:window-x="200"
+     inkscape:window-y="221"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2380"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <dc:description>jfitie@gmail.com</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,78)">
+    <g
+       id="g3361"
+       transform="matrix(0.21216975,0,0,0.2121694,1.4016894,-62.319121)">
+      <path
+         inkscape:connector-curvature="0"
+         id="rect2383-3"
+         d="m 74.144589,-67.020119 c -3.380662,5.577799 -9.122992,14.445774 -16.957032,11.230468 -5.14318,-2.561363 -8.50676,-7.42216 -12.12695,-11.685546 -3.3388,6.166479 -10.012362,15.350854 -17.974611,10.597656 -4.909176,-2.726934 -8.356217,-7.296319 -11.888672,-11.523438 -6.8747432,4.035329 -13.7480862,8.073045 -20.6210942,12.111328 11.745254,4.120397 12.776901,17.769153 12.179688,28.308594 -0.244761,16.910473 7.0703452,34.3318344 21.6388142,43.633094 5.311373,3.457785 11.117131,7.716969 17.107275,8.90011 17.5686,-6.57098 33.655692,-21.3799835 35.618962,-40.875154 2.00158,-11.440876 -1.54086,-24.753814 6.63495,-34.368987 2.51547,-2.229444 5.58671,-3.691051 8.38281,-5.519532 -6.9815,-4.138921 -13.96484,-8.27474 -20.94726,-12.412109 l -0.54667,0.837347 -0.50021,0.766169 z"
+         style="display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;enable-background:accumulate" />
+      <path
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccc"
+         id="rect2383"
+         d="m 1.9642857,-56.521127 12.0650713,-7.085828 c 13.116408,16.199912 22.908177,14.330738 31.130843,2.447057 12.870788,15.636394 22.46549,10.960863 31.024434,-2.447044 L 88.143301,-56.5211 C 64.352249,-42.181339 97.534834,-2.67566 44.521811,20.125006 -9.2649229,-4.968524 23.014674,-41.348284 1.9642857,-56.521127 Z"
+         style="display:inline;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;enable-background:accumulate" />
+      <path
+         d="M 62.657142,2.8813915 44.120106,-7.134913 25.359985,2.4570567 29.157797,-18.267921 14.238095,-33.145775 l 20.884214,-2.792436 9.539238,-18.786989 9.109342,18.999157 20.815275,3.266856 -15.254331,14.534561 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="1.582173"
+         sodipodi:arg1="0.95385444"
+         sodipodi:r2="15.864456"
+         sodipodi:r1="31.72891"
+         sodipodi:cy="-22.998343"
+         sodipodi:cx="44.300587"
+         sodipodi:sides="5"
+         id="path3162"
+         style="display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f4f400;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.1999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:0.40000001;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;enable-background:accumulate"
+         sodipodi:type="star" />
+    </g>
+  </g>
+</svg>
