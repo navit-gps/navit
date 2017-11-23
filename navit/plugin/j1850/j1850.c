@@ -325,9 +325,6 @@ osd_j1850_init(struct j1850 *this, struct navit *nav)
     graphics_gc_set_foreground(this->white, &c);
     graphics_gc_set_linewidth(this->white, this->width);
 
-
-    graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
-
     event_add_timeout(500, 1, callback_new_1(callback_cast(osd_j1850_draw), this));
 
     j1850_init_serial_port(this);
