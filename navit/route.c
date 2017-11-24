@@ -2155,6 +2155,15 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	return ret;
 }
 
+/**
+ * @brief Whether two route graph segments match.
+ *
+ * Two segments match if both start and end at the exact same points. Other points are not considered.
+ *
+ * @param s1 The first segment
+ * @param s2 The second segment
+ * @return true if both segments match, false if not
+ */
 static int
 route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_segment *s2)
 {
@@ -2167,11 +2176,13 @@ route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_seg
 /**
  * @brief Sets or clears a traffic distortion for a segment.
  *
- * This sets or clears a delay. It cannot be used to set speed.
+ * This sets a delay (setting speed is not supported) or clears an existing traffic distortion.
+ * Note that, although setting a speed is not supported, calling this function with a delay of 0
+ * will also clear an existing speed constraint.
  *
  * @param this The route graph
  * @param seg The segment to which the traffic distortion applies
- * @param delay Delay in tenths of a second
+ * @param delay Delay in tenths of a second, or 0 to clear an existing traffic distortion
  */
 static void
 route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay)
@@ -2204,10 +2215,10 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
 }
 
 /**
- * @brief Adds a route distortion item to the route graph
+ * @brief Adds a traffic distortion item to the route graph
  *
  * @param this The route graph to add to
- * @param item The item to add
+ * @param item The item to add, must be of {@code type_traffic_distortion}
  */
 static void
 route_process_traffic_distortion(struct route_graph *this, struct item *item)
