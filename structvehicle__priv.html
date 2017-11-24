@@ -160,6 +160,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a499f0690262451eafb3bed2dabc1b01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32355cb7fc884d2724db069731be31ab"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback.html">callback</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#a32355cb7fc884d2724db069731be31ab">cbt</a></td></tr>
 <tr class="separator:a32355cb7fc884d2724db069731be31ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39f38bfb31af0137fb94dfe15ccef92a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback.html">callback</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#a39f38bfb31af0137fb94dfe15ccef92a">cb_fix_timeout</a></td></tr>
+<tr class="separator:a39f38bfb31af0137fb94dfe15ccef92a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11b388631e7d9c451f1287deacaab3d7"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#a11b388631e7d9c451f1287deacaab3d7">buffer</a></td></tr>
 <tr class="separator:a11b388631e7d9c451f1287deacaab3d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af57268ae8641adb4ec87dccc06d8370c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#af57268ae8641adb4ec87dccc06d8370c">buffer_pos</a></td></tr>
@@ -196,6 +198,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a0278c2432c273715a203b0dbc262f92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9854817baeee3048d02df5f8a6276fe2"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__watch.html">event_watch</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#a9854817baeee3048d02df5f8a6276fe2">watch</a></td></tr>
 <tr class="separator:a9854817baeee3048d02df5f8a6276fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1cb0c0a959cc041a7e111f28a932330"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structevent__timeout.html">event_timeout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#ae1cb0c0a959cc041a7e111f28a932330">ev_fix_timeout</a></td></tr>
+<tr class="separator:ae1cb0c0a959cc041a7e111f28a932330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6a3231e3367ee1dd9b9505997ce0b4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="serial__io_8h.html#a14a0666abcf3bb67c7ff400b4a450467">speed_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#ac6a3231e3367ee1dd9b9505997ce0b4a">baudrate</a></td></tr>
 <tr class="separator:ac6a3231e3367ee1dd9b9505997ce0b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae87c80db413d5ec1f436ad768dbfa3a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__priv.html#ae87c80db413d5ec1f436ad768dbfa3a8">checksum_ignore</a></td></tr>
@@ -355,19 +359,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a32f27ba0d72e4e17de3aac7195af5616">vehicle_gpsd_dbus_new()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gpsd_8c.html#a41d6ac7c451490737a74c2811115ec1e">vehicle_gpsd_position_attr_get()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#a10a2c3cb655d680b54ffeb3665db86a5">vehicle_gypsy_position_attr_get()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__maemo_8c.html#a06b9a97c99ac1da067843fccea15b06f">vehicle_maemo_position_attr_get()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__qt5_8cpp.html#abba786ce4c2a820e67195efeb1f95aab">vehicle_qt5_position_attr_get()</a>, <a class="el" href="vehicle__webos_8c.html#adce71c9357fdff667883d4640e730f5a">vehicle_webos_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a3f09656289a3e4510e33b808877296dd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_priv::baudrate</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a32f27ba0d72e4e17de3aac7195af5616">vehicle_gpsd_dbus_new()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gpsd_8c.html#a41d6ac7c451490737a74c2811115ec1e">vehicle_gpsd_position_attr_get()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#a10a2c3cb655d680b54ffeb3665db86a5">vehicle_gypsy_position_attr_get()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__maemo_8c.html#a06b9a97c99ac1da067843fccea15b06f">vehicle_maemo_position_attr_get()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__qt5_8cpp.html#abba786ce4c2a820e67195efeb1f95aab">vehicle_qt5_position_attr_get()</a>, <a class="el" href="vehicle__webos_8c.html#adce71c9357fdff667883d4640e730f5a">vehicle_webos_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -381,7 +373,19 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__wince_8c.html#acf1ead3fa52a508c6636ddf0a8ebbd6c">initDevice()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__wince_8c.html#acf1ead3fa52a508c6636ddf0a8ebbd6c">initDevice()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3f09656289a3e4510e33b808877296dd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="png_8h.html#add732426a6b9f107aa8b02f1888329b3">int</a> vehicle_priv::baudrate</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -409,7 +413,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="bluetooth_8c.html#aca07fd3327c60ecc82a07ad9c700b02a">vehicle_webos_spp_handle_open()</a>, <a class="el" href="bluetooth_8c.html#a3cab5fea015018919f64463eb0f509aa">vehicle_webos_spp_handle_read()</a>, <a class="el" href="vehicle__wince_8c.html#ae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="bluetooth_8c.html#aca07fd3327c60ecc82a07ad9c700b02a">vehicle_webos_spp_handle_open()</a>, <a class="el" href="bluetooth_8c.html#a3cab5fea015018919f64463eb0f509aa">vehicle_webos_spp_handle_read()</a>, <a class="el" href="vehicle__wince_8c.html#ae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -437,7 +441,21 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a3499c284b0d0bc10fb7ba97abcec8a5b">vehicle_file_enable_watch()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd_8c.html#ac2c1db2a946f205595d85f5a7ed797d1">vehicle_gpsd_close()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, <a class="el" href="vehicle__gypsy_8c.html#adc4045e2c765776fb2b9a0940a6dd4b9">vehicle_gypsy_course_changed()</a>, and <a class="el" href="vehicle__gypsy_8c.html#a17146f813a211dcfd475569812f295d6">vehicle_gypsy_position_changed()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a3499c284b0d0bc10fb7ba97abcec8a5b">vehicle_file_enable_watch()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd_8c.html#ac2c1db2a946f205595d85f5a7ed797d1">vehicle_gpsd_close()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, <a class="el" href="vehicle__gypsy_8c.html#adc4045e2c765776fb2b9a0940a6dd4b9">vehicle_gypsy_course_changed()</a>, and <a class="el" href="vehicle__gypsy_8c.html#a17146f813a211dcfd475569812f295d6">vehicle_gypsy_position_changed()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a39f38bfb31af0137fb94dfe15ccef92a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcallback.html">callback</a> * vehicle_priv::cb_fix_timeout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#afce5a84c807c693dd15198dc22ddaecc">vehicle_file_restart_fix_timeout()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a51fefe0078a758525b93a0bfd4c18a5a">vehicle_wince_restart_fix_timeout()</a>.</p>
 
 </div>
 </div>
@@ -451,7 +469,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classQNavitGeoReceiver.html#a58c9c1cca49b6d21a0b99dfed177bc0d">QNavitGeoReceiver::positionUpdated()</a>, <a class="el" href="classQNavitGeoReceiver.html#a605704835808a1b9769c4aa88000ae4d">QNavitGeoReceiver::satellitesInUseUpdated()</a>, <a class="el" href="classQNavitGeoReceiver.html#a40c514e7e99aaa79fd32712e675794f6">QNavitGeoReceiver::satellitesInViewUpdated()</a>, <a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback()</a>, <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>, <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>, <a class="el" href="vehicle__android_8c.html#a6bbfa6c118a23f28bf27039ab61f6d48">vehicle_android_status_callback()</a>, <a class="el" href="vehicle__demo_8c.html#a09ae19730e9f7118267b2475f9076dc5">vehicle_demo_new()</a>, <a class="el" href="vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d">vehicle_demo_set_attr_do()</a>, <a class="el" href="vehicle__demo_8c.html#a4194f012c439533a7dd3c63fd14991bc">vehicle_demo_timer()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd_8c.html#adbd0d4ba03eee5e96ead3fcca9496f2c">vehicle_gpsd_callback()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#af32771cb9aaeabd419b06f53a8524906">vehicle_gpsd_dbus_filter()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a32f27ba0d72e4e17de3aac7195af5616">vehicle_gpsd_dbus_new()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gypsy_8c.html#adc4045e2c765776fb2b9a0940a6dd4b9">vehicle_gypsy_course_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#aca1dd86f7ce02caa387d9775c99570e4">vehicle_gypsy_fixstatus_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#a17146f813a211dcfd475569812f295d6">vehicle_gypsy_position_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#a2f2659c52efa76e27faef0a260e50535">vehicle_gypsy_satellite_changed()</a>, <a class="el" href="vehicle__iphone_8c.html#a72753f7f1b2ee92fad177bb211ad19d1">vehicle_iphone_new()</a>, <a class="el" href="vehicle__iphone_8c.html#a7d6e4ab45c34b205f9d171195ffc0875">vehicle_iphone_update()</a>, <a class="el" href="vehicle__maemo_8c.html#a32397d3a5f25ed018267af5e66544859">vehicle_maemo_callback()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__null_8c.html#a6a9bcd7ba83133ffb0201a062b09481c">vehicle_null_new_null()</a>, <a class="el" href="vehicle__null_8c.html#ad95de197f76edf0d2752200ed7fcea4a">vehicle_null_set_attr()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a46c859d8637a016aa819f7bd5a654241">vehicle_qt5_set_attr()</a>, <a class="el" href="vehicle__webos_8c.html#a4d5603b0216dcb109979d3e8911368e0">vehicle_webos_gps_update()</a>, <a class="el" href="vehicle__webos_8c.html#adce71c9357fdff667883d4640e730f5a">vehicle_webos_new()</a>, <a class="el" href="vehicle__webos_8c.html#a6cd1505295c017e0db922ed3dc991de0">vehicle_webos_timeout_callback()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="classQNavitGeoReceiver.html#a58c9c1cca49b6d21a0b99dfed177bc0d">QNavitGeoReceiver::positionUpdated()</a>, <a class="el" href="classQNavitGeoReceiver.html#a605704835808a1b9769c4aa88000ae4d">QNavitGeoReceiver::satellitesInUseUpdated()</a>, <a class="el" href="classQNavitGeoReceiver.html#a40c514e7e99aaa79fd32712e675794f6">QNavitGeoReceiver::satellitesInViewUpdated()</a>, <a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback()</a>, <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>, <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>, <a class="el" href="vehicle__android_8c.html#a6bbfa6c118a23f28bf27039ab61f6d48">vehicle_android_status_callback()</a>, <a class="el" href="vehicle__demo_8c.html#a09ae19730e9f7118267b2475f9076dc5">vehicle_demo_new()</a>, <a class="el" href="vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d">vehicle_demo_set_attr_do()</a>, <a class="el" href="vehicle__demo_8c.html#a4194f012c439533a7dd3c63fd14991bc">vehicle_demo_timer()</a>, <a class="el" href="vehicle__file_8c.html#a387810dc5d4ebc20b3a30ab8107cd66f">vehicle_file_fix_timeout_cb()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__gpsd_8c.html#adbd0d4ba03eee5e96ead3fcca9496f2c">vehicle_gpsd_callback()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#af32771cb9aaeabd419b06f53a8524906">vehicle_gpsd_dbus_filter()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a32f27ba0d72e4e17de3aac7195af5616">vehicle_gpsd_dbus_new()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gypsy_8c.html#adc4045e2c765776fb2b9a0940a6dd4b9">vehicle_gypsy_course_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#aca1dd86f7ce02caa387d9775c99570e4">vehicle_gypsy_fixstatus_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#a17146f813a211dcfd475569812f295d6">vehicle_gypsy_position_changed()</a>, <a class="el" href="vehicle__gypsy_8c.html#a2f2659c52efa76e27faef0a260e50535">vehicle_gypsy_satellite_changed()</a>, <a class="el" href="vehicle__iphone_8c.html#a72753f7f1b2ee92fad177bb211ad19d1">vehicle_iphone_new()</a>, <a class="el" href="vehicle__iphone_8c.html#a7d6e4ab45c34b205f9d171195ffc0875">vehicle_iphone_update()</a>, <a class="el" href="vehicle__maemo_8c.html#a32397d3a5f25ed018267af5e66544859">vehicle_maemo_callback()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__null_8c.html#a6a9bcd7ba83133ffb0201a062b09481c">vehicle_null_new_null()</a>, <a class="el" href="vehicle__null_8c.html#ad95de197f76edf0d2752200ed7fcea4a">vehicle_null_set_attr()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a46c859d8637a016aa819f7bd5a654241">vehicle_qt5_set_attr()</a>, <a class="el" href="vehicle__webos_8c.html#a4d5603b0216dcb109979d3e8911368e0">vehicle_webos_gps_update()</a>, <a class="el" href="vehicle__webos_8c.html#adce71c9357fdff667883d4640e730f5a">vehicle_webos_new()</a>, <a class="el" href="vehicle__webos_8c.html#a6cd1505295c017e0db922ed3dc991de0">vehicle_webos_timeout_callback()</a>, <a class="el" href="vehicle__wince_8c.html#ad8ba64cb6918fd1ac39508120d3b6ec2">vehicle_wince_fix_timeout_cb()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -465,7 +483,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__gpsd_8c.html#ac2c1db2a946f205595d85f5a7ed797d1">vehicle_gpsd_close()</a>, <a class="el" href="vehicle__gpsd_8c.html#acfebf07724eeda75ca7f04fbf3724523">vehicle_gpsd_open()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, and <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__gpsd_8c.html#ac2c1db2a946f205595d85f5a7ed797d1">vehicle_gpsd_close()</a>, <a class="el" href="vehicle__gpsd_8c.html#acfebf07724eeda75ca7f04fbf3724523">vehicle_gpsd_open()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, and <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>.</p>
 
 </div>
 </div>
@@ -479,7 +497,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>.</p>
 
 </div>
 </div>
@@ -634,6 +652,20 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae1cb0c0a959cc041a7e111f28a932330"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structevent__timeout.html">event_timeout</a> * vehicle_priv::ev_fix_timeout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a387810dc5d4ebc20b3a30ab8107cd66f">vehicle_file_fix_timeout_cb()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#afce5a84c807c693dd15198dc22ddaecc">vehicle_file_restart_fix_timeout()</a>, <a class="el" href="vehicle__wince_8c.html#ad8ba64cb6918fd1ac39508120d3b6ec2">vehicle_wince_fix_timeout_cb()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, and <a class="el" href="vehicle__wince_8c.html#a51fefe0078a758525b93a0bfd4c18a5a">vehicle_wince_restart_fix_timeout()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a499c508875e6ae64e5ffe147da6d3f08"></a>
 <div class="memitem">
 <div class="memproto">
@@ -699,7 +731,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a0c22a1b483542393f36cb8e23f6068bc">vehicle_file_close()</a>, <a class="el" href="vehicle__file_8c.html#a3499c284b0d0bc10fb7ba97abcec8a5b">vehicle_file_enable_watch()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a0c22a1b483542393f36cb8e23f6068bc">vehicle_file_close()</a>, <a class="el" href="vehicle__file_8c.html#a3499c284b0d0bc10fb7ba97abcec8a5b">vehicle_file_enable_watch()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -814,7 +846,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
 
 </div>
 </div>
@@ -1314,7 +1346,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="vehicle__gpsd_8c.html#adbd0d4ba03eee5e96ead3fcca9496f2c">vehicle_gpsd_callback()</a>, <a class="el" href="vehicle__gpsd_8c.html#a41d6ac7c451490737a74c2811115ec1e">vehicle_gpsd_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="vehicle__gpsd_8c.html#adbd0d4ba03eee5e96ead3fcca9496f2c">vehicle_gpsd_callback()</a>, <a class="el" href="vehicle__gpsd_8c.html#a41d6ac7c451490737a74c2811115ec1e">vehicle_gpsd_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
 
 </div>
 </div>
@@ -1342,7 +1374,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__wince_8c.html#a2f97a0268110c9c7f26bebafbaaeb7d2">vehicle_wince_io()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -1441,7 +1473,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, and <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, and <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>.</p>
 
 </div>
 </div>
@@ -1568,7 +1600,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="vehicle__file_8c.html#aae4de957f8f3fb72489f63fa882e2079">vehicle_file_sat_attr_get()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>, and <a class="el" href="vehicle__wince_8c.html#a4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="vehicle__file_8c.html#aae4de957f8f3fb72489f63fa882e2079">vehicle_file_sat_attr_get()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>, and <a class="el" href="vehicle__wince_8c.html#a4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get()</a>.</p>
 
 </div>
 </div>
@@ -1695,7 +1727,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__wince_8c.html#acf1ead3fa52a508c6636ddf0a8ebbd6c">initDevice()</a>, <a class="el" href="classQNavitGeoReceiver.html#af32117de5f479e6e0596b135d928b83c">QNavitGeoReceiver::QNavitGeoReceiver()</a>, <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a022ee0e67cb243232b2fe1a2f6d6bb37">vehicle_gpsd_dbus_destroy()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a9ae34149faa19b92fc217615d95d8778">vehicle_gpsd_dbus_set_attr_do()</a>, <a class="el" href="vehicle__gpsd_8c.html#a0172a77622e6381b4bea947e7358ffe0">vehicle_gpsd_destroy()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, <a class="el" href="vehicle__gypsy_8c.html#acbdf7d787cf3c7d46cab963d046db6cc">vehicle_gypsy_destroy()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#ae4e3a01dd25066d4eba995c4e8c36596">vehicle_gypsy_try_open()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__maemo_8c.html#a14f813470013897f8d69465bbfc1121c">vehicle_maemo_open()</a>, <a class="el" href="vehicle__qt5_8cpp.html#ab8b8d195e05c36aa499db103cb6c393b">vehicle_qt5_destroy()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__webos_8c.html#a75bdf75bb927cc38901433e4af9d868e">vehicle_webos_destroy()</a>, <a class="el" href="vehicle__webos_8c.html#a64d636156f42b14b00c135926defa3b2">vehicle_webos_set_attr_do()</a>, <a class="el" href="vehicle__wince_8c.html#ae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, <a class="el" href="vehicle__wince_8c.html#a199d58ec7e1ab9acc0ca93c302c82a48">vehicle_wince_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a7f9bbe2d09c4a31a92e5f751ef061f9b">wince_reader_thread()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__wince_8c.html#acf1ead3fa52a508c6636ddf0a8ebbd6c">initDevice()</a>, <a class="el" href="classQNavitGeoReceiver.html#af32117de5f479e6e0596b135d928b83c">QNavitGeoReceiver::QNavitGeoReceiver()</a>, <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af1501e130cf07d520eebeb2f92b64c5d">vehicle_file_open()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a022ee0e67cb243232b2fe1a2f6d6bb37">vehicle_gpsd_dbus_destroy()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#a9ae34149faa19b92fc217615d95d8778">vehicle_gpsd_dbus_set_attr_do()</a>, <a class="el" href="vehicle__gpsd_8c.html#a0172a77622e6381b4bea947e7358ffe0">vehicle_gpsd_destroy()</a>, <a class="el" href="vehicle__gpsd_8c.html#a1327c7c606a551108c297fed21fef5c0">vehicle_gpsd_new_gpsd()</a>, <a class="el" href="vehicle__gpsd_8c.html#a578db99725377012d8f0234fcec79e6d">vehicle_gpsd_try_open()</a>, <a class="el" href="vehicle__gypsy_8c.html#acbdf7d787cf3c7d46cab963d046db6cc">vehicle_gypsy_destroy()</a>, <a class="el" href="vehicle__gypsy_8c.html#ad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>, <a class="el" href="vehicle__gypsy_8c.html#ae4e3a01dd25066d4eba995c4e8c36596">vehicle_gypsy_try_open()</a>, <a class="el" href="vehicle__maemo_8c.html#acc094f12f50b20fd06053b51625cd0e6">vehicle_maemo_new_maemo()</a>, <a class="el" href="vehicle__maemo_8c.html#a14f813470013897f8d69465bbfc1121c">vehicle_maemo_open()</a>, <a class="el" href="vehicle__qt5_8cpp.html#ab8b8d195e05c36aa499db103cb6c393b">vehicle_qt5_destroy()</a>, <a class="el" href="vehicle__qt5_8cpp.html#a6fdc0303f69c67cf85db7b325ef9839e">vehicle_qt5_new_qt5()</a>, <a class="el" href="vehicle__webos_8c.html#a75bdf75bb927cc38901433e4af9d868e">vehicle_webos_destroy()</a>, <a class="el" href="vehicle__webos_8c.html#a64d636156f42b14b00c135926defa3b2">vehicle_webos_set_attr_do()</a>, <a class="el" href="vehicle__wince_8c.html#ae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy()</a>, <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>, <a class="el" href="vehicle__wince_8c.html#a199d58ec7e1ab9acc0ca93c302c82a48">vehicle_wince_open()</a>, and <a class="el" href="vehicle__wince_8c.html#a7f9bbe2d09c4a31a92e5f751ef061f9b">wince_reader_thread()</a>.</p>
 
 </div>
 </div>
@@ -1752,7 +1784,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#a98a098ad181ce618119b885560841a2f">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, and <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a291d4a4195f65ed8fd28f46917992d6a">vehicle_file_destroy()</a>, <a class="el" href="vehicle__file_8c.html#a6809870f2c78bde29546369cec96e86d">vehicle_file_io()</a>, and <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>.</p>
 
 </div>
 </div>
@@ -1820,7 +1852,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="vehicle__file_8c.html#abbed1041ac5771df4c28396bbf5a17fc">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#af32771cb9aaeabd419b06f53a8524906">vehicle_gpsd_dbus_filter()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__file_8c.html#a96255444ad4e0ce081b166043c3ff07e">vehicle_file_new_file()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__gpsd__dbus_8c.html#af32771cb9aaeabd419b06f53a8524906">vehicle_gpsd_dbus_filter()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, and <a class="el" href="vehicle__wince_8c.html#a02ed21030d427138311383e3bc856ec5">vehicle_wince_new()</a>.</p>
 
 </div>
 </div>
@@ -1907,7 +1939,7 @@ Data Fields</h2></td></tr>
 <div class="fragment"><div class="line"><a class="code" href="structvehicle__priv.html#ad84849f1968fc52322edfb467f4b197b">geo</a> </div>
 </div><!-- fragment --><p> are valid </p>
 
-<p>Referenced by <a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback()</a>, <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>, <a class="el" href="vehicle__android_8c.html#a1a9fbb5a39327e7707442a394cb706ec">vehicle_android_position_attr_get()</a>, <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>, <a class="el" href="vehicle__demo_8c.html#a09ae19730e9f7118267b2475f9076dc5">vehicle_demo_new()</a>, <a class="el" href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get()</a>, <a class="el" href="vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d">vehicle_demo_set_attr_do()</a>, <a class="el" href="vehicle__demo_8c.html#a4194f012c439533a7dd3c63fd14991bc">vehicle_demo_timer()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
+<p>Referenced by <a class="el" href="vehicle__android_8c.html#a81bc98fadf2c0912b0de153ca31f747f">vehicle_android_fix_callback()</a>, <a class="el" href="vehicle__android_8c.html#ace72833b3af104032b26381a52a2ef1d">vehicle_android_new_android()</a>, <a class="el" href="vehicle__android_8c.html#a1a9fbb5a39327e7707442a394cb706ec">vehicle_android_position_attr_get()</a>, <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>, <a class="el" href="vehicle__demo_8c.html#a09ae19730e9f7118267b2475f9076dc5">vehicle_demo_new()</a>, <a class="el" href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get()</a>, <a class="el" href="vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d">vehicle_demo_set_attr_do()</a>, <a class="el" href="vehicle__demo_8c.html#a4194f012c439533a7dd3c63fd14991bc">vehicle_demo_timer()</a>, <a class="el" href="vehicle__file_8c.html#a387810dc5d4ebc20b3a30ab8107cd66f">vehicle_file_fix_timeout_cb()</a>, <a class="el" href="vehicle__file_8c.html#af89da12dff5a0fe18870b51772919f47">vehicle_file_parse()</a>, <a class="el" href="vehicle__file_8c.html#af1ad951a62972e1384d77818ddb60b3c">vehicle_file_position_attr_get()</a>, <a class="el" href="bluetooth_8c.html#a18dbdd86dd72eae007b220aaf265a90c">vehicle_webos_parse_nmea()</a>, <a class="el" href="vehicle__wince_8c.html#ad8ba64cb6918fd1ac39508120d3b6ec2">vehicle_wince_fix_timeout_cb()</a>, <a class="el" href="vehicle__wince_8c.html#a45c5e57248cb700c760fa2cdfc1730bc">vehicle_wince_parse()</a>, and <a class="el" href="vehicle__wince_8c.html#ae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get()</a>.</p>
 
 </div>
 </div>
