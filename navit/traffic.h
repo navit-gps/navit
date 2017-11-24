@@ -719,6 +719,13 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  */
 int traffic_report_messages(int message_count, struct traffic_message ** messages);
 
+/**
+ * @brief Initializes the traffic plugin.
+ *
+ * This function is called once on startup.
+ */
+void traffic_init(void);
+
 /* end of prototypes */
 #ifdef __cplusplus
 }

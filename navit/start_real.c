@@ -46,6 +46,7 @@
 #include "atom.h"
 #include "command.h"
 #include "geom.h"
+#include "traffic.h"
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
@@ -113,6 +114,7 @@ int main_real(int argc, char * const* argv)
 	search_init();
 	linguistics_init();
 	geom_init();
+	traffic_init();
 	config_file=NULL;
 #ifdef HAVE_GETOPT_H
 	opterr=0;  //don't bomb out on errors.

@@ -285,3 +285,7 @@ int traffic_report_messages(int message_count, struct traffic_message ** message
     dbg(lvl_error, "MESSAGE RECEIVED, don't know how to process it yet...\n");
 	return 0;
 }
+
+void traffic_init(void) {
+        dbg(lvl_error, "THIS IS TRAFFIC CORE. Startup successful, more to come soon...\n");
+}
