@@ -23,8 +23,16 @@
 #define FEET_PER_METER  3.2808399
 #define FEET_PER_MILE   5280
 #define KILOMETERS_TO_MILES	0.62137119	/* Kilometers to miles */
-#define METERS_PER_MILE 1/(KILOMETERS_TO_MILES/1000.00)
-#define MPS_TO_KPH	3.6		/* Meters per second to klicks/hr */
+
+/* It appears that distances to be displayed, such as distances to
+ * maneuvers, are in meters. Multiply that by METERS_PER_MILE and you
+ * have miles. */
+#define METERS_TO_MILES (KILOMETERS_TO_MILES/1000.0) /* Meters to miles */
+/* #define METERS_PER_MILE (1000.0/KILOMETERS_TO_MILES) */
+
+/* Meters per second to kilometers per hour. GPSD delivers speeds in
+ * meters per second. */
+#define MPS_TO_KPH	3.6
 
 #ifdef __cplusplus
 extern "C" {

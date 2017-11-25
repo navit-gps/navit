@@ -87,7 +87,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	struct map_rect *mr=NULL;
 	struct item *item=NULL;
 	struct attr attr;
-	double route_len=0;
+	double route_len=0;     /* Distance to destination. We get it in kilometers. */
 	time_t eta;
 	struct tm *eta_tm=NULL;
 	char buffer[128];
