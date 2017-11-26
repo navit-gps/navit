@@ -73,13 +73,13 @@ typedef void *(*object_func_unref)(void *);
  * Some members can be NULL for certain object types: while Navit does not mandate this function to be
  * implemented for every object class, the function may need to be defined for some object classes.
  *
- * Default implementations are available for every function in the list except `init` and `dup`. These
- * can be set directly, or type-specific implementations can call through to them as they see fit.
+ * Default implementations are available for every function in the list except `create`, `init` and
+ * `dup`. These can be set directly, or type-specific implementations can call through to them as they
+ * see fit.
  */
 struct object_func {
 	enum attr_type type;                           /**< The object type */
-	void *(*create)(struct attr *parent, struct attr **attrs); /**< Function to create a new object instance,
-	                                                 *  set to `navit_object_new` for default behavior */
+	void *(*create)(struct attr *parent, struct attr **attrs); /**< Function to create a new object instance */
 	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter); /**< Function
 	                                                 *  to get an attribute of the object,
 	                                                 *  set to `navit_object_get_attr` for default behavior */
