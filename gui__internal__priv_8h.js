@@ -44,6 +44,6 @@ var gui__internal__priv_8h =
     [ "image_new_xs", "gui__internal__priv_8h.html#a08f973ad94428d4359d98819cf329e5a", null ],
     [ "item_get_heightline", "gui__internal__priv_8h.html#a376ed6facd12225c4293ef7f07affeea", null ],
     [ "line_intersection", "gui__internal__priv_8h.html#a6e806d703f0dc9338d5abe1d75d77e3f", null ],
-    [ "plugin_init", "gui__internal__priv_8h.html#a1eaae939034896b436dffbf5e93c0da1", null ],
+    [ "plugin_init", "gui__internal__priv_8h.html#ga1eaae939034896b436dffbf5e93c0da1", null ],
     [ "removecase", "gui__internal__priv_8h.html#ab8f7dc9491f800c64894dfb06417b8a8", null ]
 ];

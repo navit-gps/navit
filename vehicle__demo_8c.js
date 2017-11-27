@@ -1,6 +1,5 @@
 var vehicle__demo_8c =
 [
-    [ "vehicle_priv", "structvehicle__priv.html", "structvehicle__priv" ],
     [ "nmea_chksum", "vehicle__demo_8c.html#a11f821124a4cfe286968be8ccdfadc15", null ],
     [ "plugin_init", "vehicle__demo_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "vehicle_demo_destroy", "vehicle__demo_8c.html#a1ef345208068f7734c1c0b5138909303", null ],
