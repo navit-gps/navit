@@ -35,8 +35,71 @@
 #include "config.h"
 #include "coord.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "traffic.h"
+#include "plugin.h"
+#include "event.h"
+#include "callback.h"
 #include "debug.h"
+
+/**
+ * @brief The idle function for the traffic module.
+ *
+ * This function polls backends for new messages and processes them by inserting, removing or modifying
+ * traffic distortions and triggering route recalculations as needed.
+ */
+void traffic_idle(struct traffic * this_) {
+        // TODO poll backends and process any new messages
+        dbg(lvl_error, "THIS IS THE DUMMY TRAFFIC PLUGIN. Got nothing to do yet...\n");
+}
+
+/**
+ * @brief Instantiates the traffic plugin
+ *
+ * At a minimum, `attrs` must contain a `type` attribute matching one of the available traffic plugins.
+ *
+ * @param parent The parent, usually the Navit instance
+ * @param attrs The attributes for the plugin
+ *
+ * @return A `traffic` instance.
+ */
+struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
+	struct traffic *this_;
+	struct traffic_priv *(*traffic_new)(struct traffic_methods *meth, struct attr **attrs,
+			struct callback_list *cbl, struct attr *parent);
+	struct attr *attr;
+
+	attr = attr_search(attrs, NULL, attr_type);
+	if (!attr) {
+		dbg(lvl_error, "type missing\n");
+		return NULL;
+	}
+	dbg(lvl_debug, "type='%s'\n", attr->u.str);
+	traffic_new = plugin_get_category_traffic(attr->u.str);
+	dbg(lvl_debug, "new=%p\n", traffic_new);
+	if (!traffic_new) {
+		dbg(lvl_error, "wrong type '%s'\n", attr->u.str);
+		return NULL;
+	}
+	this_ = (struct traffic *) navit_object_new(attrs, &traffic_func, sizeof(struct traffic));
+	if (parent->type == attr_navit)
+		this_->navit = parent->u.navit;
+
+	this_->priv = traffic_new(&this_->meth, this_->attrs, NULL, parent);
+	dbg(lvl_debug, "get_messages=%p\n", this_->meth.get_messages);
+	dbg(lvl_debug, "priv=%p\n", this_->priv);
+	if (!this_->priv) {
+		navit_object_destroy(this_);
+		return NULL;
+	}
+	dbg(lvl_debug,"return %p\n", this_);
+
+	// TODO do this once and cycle through all plugins
+	this_->callback = callback_new_1(callback_cast(traffic_idle), this_);
+	this_->idle = event_add_idle(200, this_->callback);
+
+	return this_;
+}
 
 struct traffic_point * traffic_point_new(float lon, float lat, char * junction_name, char * junction_ref,
 		char * tmc_id) {
@@ -287,5 +350,21 @@ int traffic_report_messages(int message_count, struct traffic_message ** message
 }
 
 void traffic_init(void) {
-        dbg(lvl_error, "THIS IS TRAFFIC CORE. Startup successful, more to come soon...\n");
+	dbg(lvl_error, "enter\n");
 }
+
+struct object_func traffic_func = {
+	attr_traffic,
+	(object_func_new)traffic_new,
+	(object_func_get_attr)navit_object_get_attr,
+	(object_func_iter_new)navit_object_attr_iter_new, // TODO or NULL
+	(object_func_iter_destroy)navit_object_attr_iter_destroy, // TODO or NULL
+	(object_func_set_attr)navit_object_set_attr, // TODO or NULL
+	(object_func_add_attr)navit_object_add_attr, // TODO or NULL
+	(object_func_remove_attr)navit_object_remove_attr, // TODO or NULL
+	(object_func_init)NULL,
+	(object_func_destroy)navit_object_destroy, // TODO or NULL
+	(object_func_dup)NULL,
+	(object_func_ref)navit_object_ref,
+	(object_func_unref)navit_object_unref,
+};
