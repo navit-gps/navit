@@ -348,7 +348,7 @@ ATTR_UNUSED
 ATTR_UNUSED
 ATTR(status_text)
 ATTR(log_gpx_desc)
-ATTR(map_pass)
+ATTR_UNUSED
 ATTR_UNUSED
 ATTR(socket)
 /* These attributes for house number interpolation are only written by

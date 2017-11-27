@@ -65,20 +65,51 @@ typedef void *(*object_func_ref)(void *);
 typedef void *(*object_func_unref)(void *);
 
 
+/**
+ * @brief Basic functions for Navit objects
+ *
+ * This is the minimal list of functions which is supported by every Navit object.
+ *
+ * Some members can be NULL for certain object types: while Navit does not mandate this function to be
+ * implemented for every object class, the function may need to be defined for some object classes.
+ *
+ * Default implementations are available for every function in the list except `create`, `init` and
+ * `dup`. These can be set directly, or type-specific implementations can call through to them as they
+ * see fit.
+ */
 struct object_func {
-	enum attr_type type;
-	void *(*create)(struct attr *parent, struct attr **attrs);
-	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-	struct attr_iter *(*iter_new)(void *);
-	void (*iter_destroy)(struct attr_iter *);
-	int (*set_attr)(void *, struct attr *attr);
-	int (*add_attr)(void *, struct attr *attr);
-	int (*remove_attr)(void *, struct attr *attr);
-	int (*init)(void *);
-	void (*destroy)(void *);
-	void *(*dup)(void *);
-	void *(*ref)(void *);
-	void *(*unref)(void *);
+	enum attr_type type;                           /**< The object type */
+	void *(*create)(struct attr *parent, struct attr **attrs); /**< Function to create a new object instance */
+	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter); /**< Function
+	                                                 *  to get an attribute of the object,
+	                                                 *  set to `navit_object_get_attr` for default behavior */
+	struct attr_iter *(*iter_new)(void *);         /**< Function to obtain a new attribute iterator,
+	                                                 *  set to `navit_object_attr_iter_new` for default
+	                                                 *  behavior, can be NULL for some object types */
+	void (*iter_destroy)(struct attr_iter *);      /**< Function to destroy an attribute iterator,
+	                                                 *  set to `navit_object_attr_iter_destroy` for default
+	                                                 *  behavior, can be NULL for some object types */
+	int (*set_attr)(void *, struct attr *attr);    /**< Function to set an attribute,
+	                                                 *  set to `navit_object_set_attr` for default behavior,
+	                                                 *  can be NULL for some object types */
+	int (*add_attr)(void *, struct attr *attr);    /**< Function to add an attribute,
+	                                                 *  set to `navit_object_add_attr` for default behavior,
+	                                                 *  can be NULL for some object types */
+	int (*remove_attr)(void *, struct attr *attr); /**< Function to remove an attribute,
+	                                                 *  set to `navit_object_remove_attr` for default behavior,
+	                                                 *  can be NULL for some object types */
+	int (*init)(void *);                           /**< TODO,
+	                                                 *  can be NULL for some object types */
+	void (*destroy)(void *);                       /**< Function to destroy an object instance,
+	                                                 *  set to `navit_object_destroy` for default behavior,
+	                                                 *  can be NULL */
+	void *(*dup)(void *);                          /**< Function to create a copy of an object instance */
+	void *(*ref)(void *);                          /**< Function to increase the reference count for an
+	                                                 *  object instance, set to `navit_object_ref` for
+	                                                 *  default behavior, can be NULL for some object types */
+	void *(*unref)(void *);                        /**< Function to decrease the reference count for an
+	                                                 *  object instance, set to `navit_object_unref` for
+	                                                 *  default behavior, can be NULL for some object types */
 };
 
 extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func, speech_func, navigation_func, route_func;

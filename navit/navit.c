@@ -1947,6 +1947,11 @@ navit_window_roadbook_update(struct navit *this_)
 	struct param_list param[5];
 	int secs;
 
+        /* Respect the Imperial attribute as we enlighten the user. */
+        int imperial = FALSE;  /* default to using metric measures. */
+        if (navit_get_attr(this_, attr_imperial, &attr, NULL))
+            imperial=attr.u.num;
+
 	dbg(lvl_debug,"enter\n");
 	datawindow_mode(this_->roadbook_window, 1);
 	if (nav)
@@ -1976,11 +1981,17 @@ navit_window_roadbook_update(struct navit *this_)
 
 			if ( attr.u.num >= 2000 )
 			{
-				param[1].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+                                param[1].value=g_strdup_printf("%5.1f %s",
+                                                               imperial == TRUE ? (float)attr.u.num / (METERS_PER_MILE/1000.00) : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? _("mi") : _("km")
+                                        );
 			}
 			else
 			{
-				param[1].value=g_strdup_printf("%7ld %s",attr.u.num, _("m"));
+                                param[1].value=g_strdup_printf("%7.0f %s",
+                                                               imperial == TRUE ? (attr.u.num * FEET_PER_METER) : attr.u.num,
+                                                               imperial == TRUE ? _("feet") : _("m")
+                                        );
 			}
 
 			item_attr_get(item, attr_time, &attr);
@@ -1989,11 +2000,11 @@ navit_window_roadbook_update(struct navit *this_)
 			param[2].name=_("Time");
 			if ( secs >= 3600 )
 			{
-				param[2].value=g_strdup_printf("%d:%02d:%02d",secs / 60, ( secs / 60 ) % 60 , secs % 60);
+                                param[2].value=g_strdup_printf("%d:%02d:%02d",secs / 60, ( secs / 60 ) % 60 , secs % 60);
 			}
 			else
 			{
-				param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
+                                param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
 			}
 
 			item_attr_get(item, attr_destination_length, &attr);
@@ -2001,11 +2012,17 @@ navit_window_roadbook_update(struct navit *this_)
 			param[3].name=_("Destination Length");
 			if ( attr.u.num >= 2000 )
 			{
-				param[3].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+                                param[3].value=g_strdup_printf("%5.1f %s",
+                                                               imperial == TRUE ? (float)attr.u.num / METERS_PER_MILE : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? _("mi") : _("km")
+                                        );
 			}
 			else
 			{
-				param[3].value=g_strdup_printf("%ld %s",attr.u.num, _("m"));
+                                param[3].value=g_strdup_printf("%7.0f %s",
+                                                               imperial == TRUE ? (attr.u.num * FEET_PER_METER) : attr.u.num,
+                                                               imperial == TRUE ? _("feet") : _("m")
+                                        );
 			}
 
 			item_attr_get(item, attr_destination_time, &attr);

@@ -1,11 +1,12 @@
 # French (fr) translations for navit
-# Copyright (C) 2006-2016 The Navit Team
+# Copyright (C) 2006-2017 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Arnaud https://launchpad.net/~arnaud-lemeur
 # Breizh_Punisher https://launchpad.net/~lemeura
 # Deuchnord https://launchpad.net/~jerome-logiciels-id
 # Elodie https://launchpad.net/~elodie
+# Francois.Mocq https://launchpad.net/~francois-mocq
 # Fred https://launchpad.net/~frederi1
 # Fred https://launchpad.net/~jelk
 # Gaël Ecorchard https://launchpad.net/~galou-breizh
@@ -31,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-09-29 12:45+0000\n"
-"Last-Translator: Fred <frederi1@gmail.com>\n"
+"PO-Revision-Date: 2017-10-08 23:54+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2013,6 +2014,9 @@ msgstr "Description de la route"
 msgid "Show Locale"
 msgstr "Afficher la locale"
 
+msgid "Network info"
+msgstr ""
+
 msgid "Former Destinations"
 msgstr "Destinations précédentes"
 
@@ -2484,7 +2488,7 @@ msgid "Error writing map!"
 msgstr "Erreur d'écriture de carte !"
 
 msgid "Map download aborted!"
-msgstr "Téléchargement de carte abondonné !"
+msgstr "Téléchargement de la carte abandonné!"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2492,7 +2496,7 @@ msgstr "Temps restant"
 
 #. Android resource: @strings/map_download_title
 msgid "Map download"
-msgstr "Carte téléchargement"
+msgstr "Télécharger la carte"
 
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
@@ -2551,8 +2555,17 @@ msgstr "Plein écran"
 msgid "Window Mode"
 msgstr "Mode fenêtré"
 
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
 msgid "Layers"
 msgstr "Couches"
+
+msgid "Zoom to route"
+msgstr ""
 
 msgid "Description"
 msgstr "Description"
@@ -2656,7 +2669,7 @@ msgstr "Basculer POIs"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
-msgstr "Quittez Navit"
+msgstr "Quitter Navit"
 
 #. Android resource: @strings/optionsmenu_backup_restore
 msgid "Backup / Restore"
@@ -2680,7 +2693,7 @@ msgstr "Erreur de téléchargement carte"
 
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
-msgstr "Carte télécharger avortée"
+msgstr "Téléchargement de la carte abandonné"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
@@ -2808,6 +2821,16 @@ msgstr ""
 "appareil. Le système actuellement sélectionné indique qu'il ne peut pas "
 "parler dans votre langue. Devons nous demander au système d'afficher le menu "
 "de téléchargement des voix?"
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr ""
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"
