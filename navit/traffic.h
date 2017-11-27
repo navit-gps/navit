@@ -213,6 +213,16 @@ enum si_type {
 // TODO do we need priv members for structs?
 
 /**
+ * @brief Holds all functions a traffic plugin has to implement to be usable
+ *
+ * This structure holds pointers to a traffic plugin's functions which navit's core will call
+ * to communicate with the plugin.
+ */
+struct traffic_methods {
+	struct traffic_message **(* get_messages)(void); /**< Retrieves new messages from the traffic plugin */
+};
+
+/**
  * @brief A point on the road.
  *
  * This can either be a point location or an endpoint of a linear location. It specifies a coordinate
