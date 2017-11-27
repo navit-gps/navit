@@ -84,7 +84,7 @@ struct vehicle_priv {
 	char *source;
 	struct callback_list *cbl;
 	int fd;
-	struct callback *cb,*cbt;
+	struct callback *cb,*cbt,*cb_fix_timeout;
 	char *buffer;
 	int buffer_pos;
 	char *nmea_data;
@@ -114,6 +114,7 @@ struct vehicle_priv {
 	enum file_type file_type;
 	FILE *file;
 	struct event_watch *watch;
+	struct event_timeout *ev_fix_timeout;
 	speed_t baudrate;
 	struct attr ** attrs;
 	char fixiso8601[128];
@@ -129,16 +130,13 @@ struct vehicle_priv {
 	int process_statefile;
 };
 
-//***************************************************************************
-/** @fn static int vehicle_win32_serial_track(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Callback of the plugin
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-* @return     always 1
-*****************************************************************************
-**/
+/**
+* @brief Callback of the plugin
+*
+* @param priv Pointer on the private data of the plugin
+*
+* @return Always 1
+*/
 #ifdef _WIN32
 static int vehicle_win32_serial_track(struct vehicle_priv *priv)
 {
@@ -207,17 +205,13 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
 }
 #endif
 
-//***************************************************************************
-/** @fn static int vehicle_file_open(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: open dialogue with the GPS
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-* @return     1 if ok
-*             0 if error
-*****************************************************************************
-**/
+/**
+* @brief Open dialogue with the GPS
+*
+* @param priv Pointer on the private data of the plugin
+*
+* @return 1 if ok, 0 if error
+*/
 static int
 vehicle_file_open(struct vehicle_priv *priv)
 {
@@ -318,14 +312,11 @@ vehicle_file_open(struct vehicle_priv *priv)
     return(priv->fd != -1);
 }
 
-//***************************************************************************
-/** @fn static void vehicle_file_close(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: close dialogue with the GPS
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-**/
+/**
+* @brief Close dialogue with the GPS
+*
+* @param priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_file_close(struct vehicle_priv *priv)
 {
@@ -356,16 +347,13 @@ vehicle_file_close(struct vehicle_priv *priv)
     }
 }
 
-//***************************************************************************
-/** @fn static int vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Enable watch timer to get GPS data
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-* @return     always 0
-*****************************************************************************
-**/
+/**
+* @brief Enable watch timer to get GPS data
+*
+* @param priv Pointer on the private data of the plugin
+*
+* @return Always 0
+*/
 static int
 vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 {
@@ -376,19 +364,44 @@ vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 }
 
 
-//***************************************************************************
-/** @fn static int vehicle_file_parse( struct vehicle_priv *priv,
-*                                      char *buffer)
-*****************************************************************************
-* @b Description: Parse the buffer
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-* @param      buffer : data buffer (null terminated)
-*****************************************************************************
-* @return     1 if The GPRMC Sentence is found
-*             0 if not found
-*****************************************************************************
-**/
+/**
+* @brief This is a callback function, called when the fix timeout
+*        is done. Set the position to invalid.
+*
+* @param priv Pointer on the private data of the plugin
+*/
+static void
+vehicle_file_fix_timeout_cb(struct vehicle_priv *priv)
+{
+	priv->valid = attr_position_valid_invalid;
+	priv->ev_fix_timeout = NULL;
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+}
+
+
+/**
+* @brief Cancel previous fix timeout event and add a new one
+*
+* @param priv Pointer on the private data of the plugin
+*/
+static void
+vehicle_file_restart_fix_timeout(struct vehicle_priv *priv)
+{
+	if (priv->ev_fix_timeout != NULL)
+		event_remove_timeout(priv->ev_fix_timeout);
+	priv->ev_fix_timeout = event_add_timeout(10000, 0, priv->cb_fix_timeout);
+}
+
+
+/**
+* @brief Parse the buffer
+*
+* @param priv Pointer on the private data of the plugin
+* @param buffer Data buffer (null terminated)
+*
+* @return 1 if new coords were received (fixtime changed) or changed to invalid,
+*         0 if not found
+*/
 static int
 vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 {
@@ -458,7 +471,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
 		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
-		if (*item[2] && *item[3] && *item[4] && *item[5]) {
+		if (*item[2] && *item[3] && *item[4] && *item[5] && *item[6] > 0) {
 			lat = g_ascii_strtod(item[2], NULL);
 			priv->geo.lat = floor(lat / 100);
 			lat -= priv->geo.lat * 100;
@@ -474,20 +487,31 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 
 			if (!g_ascii_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
-			priv->valid=attr_position_valid_valid;
+
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid = attr_position_valid_valid;
+			vehicle_file_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
 
 			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
-		} else
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
 			priv->valid=attr_position_valid_invalid;
+		}
+
 		if (*item[6])
 			sscanf(item[6], "%d", &priv->status);
 		if (*item[7])
 			sscanf(item[7], "%d", &priv->sats_used);
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
-		if (*item[1]) 
-			strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->height);
 
@@ -537,8 +561,40 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 				&priv->fixmonth,
 				&priv->fixyear);
 			priv->fixyear += 2000;
+
+			lat = g_ascii_strtod(item[3], NULL);
+			priv->geo.lat = floor(lat / 100);
+			lat -= priv->geo.lat * 100;
+			priv->geo.lat += lat / 60;
+
+			if (!g_ascii_strcasecmp(item[4],"S"))
+				priv->geo.lat=-priv->geo.lat;
+
+			lng = g_ascii_strtod(item[5], NULL);
+			priv->geo.lng = floor(lng / 100);
+			lng -= priv->geo.lng * 100;
+			priv->geo.lng += lng / 60;
+
+			if (!g_ascii_strcasecmp(item[6],"W"))
+				priv->geo.lng=-priv->geo.lng;
+
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid=attr_position_valid_valid;
+			vehicle_file_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
+
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
+			priv->valid=attr_position_valid_invalid;
 		}
-		ret = 1;
 	}
 	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
@@ -610,16 +666,11 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	return ret;
 }
 
-//***************************************************************************
-/** @fn static void vehicle_file_io(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: function to get data from GPS
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-* @remarks 
-*****************************************************************************
-**/
+/**
+* @brief Function to get data from GPS
+*
+* @param  priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_file_io(struct vehicle_priv *priv)
 {
@@ -685,14 +736,11 @@ vehicle_file_io(struct vehicle_priv *priv)
 		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
-//***************************************************************************
-/** @fn static void vehicle_file_enable_watch(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Enable watch
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-**/
+/**
+* @brief Enable watch
+*
+* @param priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_file_enable_watch(struct vehicle_priv *priv)
 {
@@ -713,14 +761,11 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
     }
 }
 
-//***************************************************************************
-/** @fn static void vehicle_file_disable_watch(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Disable watch
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
-**/
+/**
+* @brief Disable watch
+*
+* @param priv Pointer on the private data of the plugin
+*/
 static void
 vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
@@ -742,16 +787,13 @@ vehicle_file_disable_watch(struct vehicle_priv *priv)
     }
 }
 
-//***************************************************************************
-/** @fn static void vehicle_priv vehicle_file_destroy(struct vehicle_priv *priv)
-*****************************************************************************
-* @b Description: Function called to uninitialize the plugin
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-*****************************************************************************
+/**
+* @brief Function called to uninitialize the plugin
+*
+* @param priv Pointer on the private data of the plugin
+*
 * @remarks private data is freed by this function (g_free)
-*****************************************************************************
-**/
+*/
 static void
 vehicle_file_destroy(struct vehicle_priv *priv)
 {
@@ -781,21 +823,15 @@ vehicle_file_destroy(struct vehicle_priv *priv)
 	g_free(priv);
 }
 
-//***************************************************************************
-/** @fn static int vehicle_file_position_attr_get(struct vehicle_priv *priv,
-*                                                 enum attr_type type,
-*                                                 struct attr *attr)
-*****************************************************************************
-* @b Description: Function called to get attribute
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-* @param      type : attribute type called
-* @param      attr : structure to return the attribute value
-*****************************************************************************
-* @return     1 if ok
-*             0 for unkown or invalid attribute
-*****************************************************************************
-**/
+/**
+* @brief Function called to get attribute
+*
+* @param priv Pointer on the private data of the plugin
+* @param type Attribute type called
+* @param attr Structure to return the attribute value
+*
+* @return 1 if ok, 0 for unkown or invalid attribute
+*/
 static int
 vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
@@ -865,21 +901,15 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 	return 1;
 }
 
-//***************************************************************************
-/** @fn static int vehicle_file_sat_attr_get(struct vehicle_priv *priv,
-*                                                 enum attr_type type,
-*                                                 struct attr *attr)
-*****************************************************************************
-* @b Description: Function called to get satellite attribute
-*****************************************************************************
-* @param      priv : pointer on the private data of the plugin
-* @param      type : attribute type called
-* @param      attr : structure to return the attribute value
-*****************************************************************************
-* @return     1 if ok
-*             0 for unkown attribute
-*****************************************************************************
-**/
+/**
+* @brief Function called to get satellite attribute
+*
+* @param priv Pointer on the private data of the plugin
+* @param type Attribute type called
+* @param attr Structure to return the attribute value
+*
+* @return 1 if ok, 0 for unkown attribute
+*/
 static int
 vehicle_file_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)
 {
@@ -922,23 +952,17 @@ static struct vehicle_methods vehicle_file_methods = {
 	vehicle_file_position_attr_get,
 };
 
-//***************************************************************************
-/** @fn static struct vehicle_priv * vehicle_file_new_file(
-*                                       struct vehicle_methods *meth,
-*                                       struct callback_list   *cbl,
-*                                       struct attr            **attrs)
-*****************************************************************************
-* @b Description: Function called to initialize the plugin
-*****************************************************************************
-* @param      meth  : ?
-* @param      cbl   : ?
-* @param      attrs : ?
-*****************************************************************************
-* @return     pointer on the private data of the plugin
-*****************************************************************************
-* @remarks private data is allocated by this function (g_new0)
-*****************************************************************************
-**/
+/**
+* @brief Function called to initialize the plugin
+*
+* @param meth ?
+* @param cbl ?
+* @param attrs ?
+*
+* @return Pointer on the private data of the plugin
+*
+* @remarks Private data is allocated by this function (g_new0)
+*/
 static struct vehicle_priv *
 vehicle_file_new_file(struct vehicle_methods
 		      *meth, struct callback_list
@@ -958,7 +982,7 @@ vehicle_file_new_file(struct vehicle_methods
 	if(source == NULL){
 		 dbg(lvl_error,"Missing source attribute");
 		 return NULL;
-    }
+	}
 	ret = g_new0(struct vehicle_priv, 1);   // allocate and initialize to 0
 	ret->fd = -1;
 	ret->cbl = cbl;
@@ -966,6 +990,8 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=B4800;
+	ret->fixtime[0] = '\0';
+	ret->ev_fix_timeout = NULL;
 	state_file=attr_search(attrs, NULL, attr_state_file);
 	if (state_file) 
 		ret->statefile=g_strdup(state_file->u.str);
@@ -1014,6 +1040,7 @@ vehicle_file_new_file(struct vehicle_methods
 	*meth = vehicle_file_methods;
 	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
 	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
+	ret->cb_fix_timeout=callback_new_1(callback_cast(vehicle_file_fix_timeout_cb), ret);
 	if (ret->statefile && file_exists(ret->statefile)) {
 		ret->process_statefile=1;
 		event_add_timeout(1000, 0, ret->cb);
@@ -1038,12 +1065,9 @@ vehicle_file_new_file(struct vehicle_methods
 	return ret;
 }
 
-//***************************************************************************
-/** @fn void plugin_init(void)
-*****************************************************************************
-* @b Description: Initialisation of vehicle_file plugin
-*****************************************************************************
-**/
+/**
+* @brief Initialisation of vehicle_file plugin
+*/
 void plugin_init(void)
 {
 	dbg(lvl_debug, "vehicle_file:plugin_init:enter\n");

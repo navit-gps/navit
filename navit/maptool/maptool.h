@@ -23,9 +23,6 @@
 #include "attr.h"
 #include "geom.h"
 #include "types.h"
-#ifdef HAVE_LIBCRYPTO
-#include <openssl/md5.h>
-#endif
 
 #define sq(x) ((double)(x)*(x))
 
@@ -404,8 +401,6 @@ void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *d
 void zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
 struct zip_info *zip_new(void);
-void zip_set_md5(struct zip_info *info, int on);
-int zip_get_md5(struct zip_info *info, unsigned char *out);
 void zip_set_zip64(struct zip_info *info, int on);
 void zip_set_compression_level(struct zip_info *info, int level);
 void zip_set_maxnamelen(struct zip_info *info, int max);
