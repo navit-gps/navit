@@ -74,6 +74,9 @@ $(document).ready(function(){initNavTree('structobject__func.html','');});
 </div><!--header-->
 <div class="contents">
 
+<p>Basic functions for Navit objects.  
+ <a href="structobject__func.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -105,7 +108,12 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a2143a31ceda8717be69d1be8411f05c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structobject__func.html#a2143a31ceda8717be69d1be8411f05c8">unref</a> )(<a class="el" href="png_8h.html#a04364e387081209df3bd1a16e8abe3b9">void</a> *)</td></tr>
 <tr class="separator:a2143a31ceda8717be69d1be8411f05c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Basic functions for Navit objects. </p>
+<p>This is the minimal list of functions which is supported by every Navit object.</p>
+<p>Some members can be NULL for certain object types: while Navit does not mandate this function to be implemented for every object class, the function may need to be defined for some object classes.</p>
+<p>Default implementations are available for every function in the list except <code>create</code>, <code>init</code> and <code>dup</code>. These can be set directly, or type-specific implementations can call through to them as they see fit. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="aa92106f3c169bdd1c791412f2d22a4d4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -115,6 +123,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to add an attribute, set to <code>navit_object_add_attr</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#ac5bc84a6e4a20108b6495ec0ff49ec0e">command_object_add_attr()</a>, <a class="el" href="command_8c.html#ad74e35474194efd8d81d847c26ea6573">command_register_callbacks()</a>, <a class="el" href="gui__internal__html_8c.html#a18c18878d98b084ae858628c645dbfbf">gui_internal_set_refresh_callback()</a>, and <a class="el" href="xmlconfig_8c.html#afcd5dc0aa3d812b43320084b8c0d99f7">xi_text()</a>.</p>
 
@@ -129,6 +138,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to create a new object instance </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a92bea054d37b06e01ea145c2cb5e152a">command_call_function()</a>.</p>
 
@@ -143,6 +153,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to destroy an object instance, set to <code>navit_object_destroy</code> for default behavior, can be NULL </p>
 
 </div>
 </div>
@@ -155,6 +166,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to create a copy of an object instance </p>
 
 </div>
 </div>
@@ -167,6 +179,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to get an attribute of the object, set to <code>navit_object_get_attr</code> for default behavior </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, <a class="el" href="command_8c.html#ab7a5f12a7331a1e53a4cf9c0badb0a55">command_object_get_attr()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
 
@@ -181,6 +194,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>TODO, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>.</p>
 
@@ -195,6 +209,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to destroy an attribute iterator, set to <code>navit_object_attr_iter_destroy</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
 
@@ -209,6 +224,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to obtain a new attribute iterator, set to <code>navit_object_attr_iter_new</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, and <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>.</p>
 
@@ -223,6 +239,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to increase the reference count for an object instance, set to <code>navit_object_ref</code> for default behavior, can be NULL for some object types </p>
 
 </div>
 </div>
@@ -235,6 +252,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to remove an attribute, set to <code>navit_object_remove_attr</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a3e2d390f19ae5c06ade7548e59c571d6">command_object_remove_attr()</a>, <a class="el" href="command_8c.html#abf194bbbb304b98c83c8512356623db9">command_saved_callbacks_changed()</a>, and <a class="el" href="gui__internal__menu_8c.html#a8a12f043e73fb935cf1798cc16ef2e7b">gui_internal_menu_destroy()</a>.</p>
 
@@ -249,6 +267,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to set an attribute, set to <code>navit_object_set_attr</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="command_8c.html#a68a6b8f43887962ab9374cf8abc9b03a">command_set_attr()</a>.</p>
 
@@ -263,6 +282,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The object type </p>
 
 </div>
 </div>
@@ -275,6 +295,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to decrease the reference count for an object instance, set to <code>navit_object_unref</code> for default behavior, can be NULL for some object types </p>
 
 <p>Referenced by <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>.</p>
 

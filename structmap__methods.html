@@ -151,6 +151,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to get a map attribute, can be NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr()</a>.</p>
 
@@ -210,7 +211,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function to get an item with a specific ID from a map rect </p>
+<p>Function to get an item with a specific ID from a map rect, can be NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#a9e27d0888db14bf9b88727ead943eaf6">map_rect_get_item_byid()</a>.</p>
 
@@ -240,7 +241,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function to destroy a map search struct </p>
+<p>Function to destroy a map search struct, ignored if <code>map_search_new</code> is NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#a17363cc27a950b21d4a10c1e4977f750">map_search_destroy()</a>.</p>
 
@@ -255,7 +256,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function to get the next item of a search on the map </p>
+<p>Function to get the next item of a search on the map, ignored if <code>map_search_new</code> is NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#a2a6f7023b430cc03af1a8d72e8f6a09b">map_search_get_item()</a>.</p>
 
@@ -270,7 +271,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function to start a new search on the map </p>
+<p>Function to start a new search on the map, can be NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#a3192f982f537a0eb5cc0e32f306ead2d">map_search_new()</a>.</p>
 
@@ -285,6 +286,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Function to set a map attribute, can be NULL </p>
 
 <p>Referenced by <a class="el" href="map_8h.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr()</a>.</p>
 
