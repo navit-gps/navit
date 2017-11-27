@@ -35,43 +35,30 @@
 #include "config.h"
 #include "coord.h"
 #include "item.h"
+#include "xmlconfig.h"
 #include "traffic.h"
-#include "event.h"
-#include "callback.h"
 #include "debug.h"
 
 /**
  * @brief Stores information about the plugin instance.
  */
-struct traffic {
-        struct navit * nav;         /*!< The navit instance */
-        struct callback * callback; /*!< The callback function for the idle loop */
-        struct event_idle * idle;   /*!< The idle event that triggers the idle function */
+struct traffic_priv {
+	struct navit * nav;         /*!< The navit instance */
 };
 
 /**
- * @brief The idle function for the traffic plugin.
- *
- * This function polls backends for new messages and processes them by inserting, removing or modifying
- * traffic distortions and triggering route recalculations as needed.
- */
-void traffic_idle(struct traffic * this_) {
-        // TODO poll backends and process any new messages
-        dbg(lvl_error, "THIS IS THE DUMMY TRAFFIC PLUGIN. Got nothing to do yet...\n");
-        traffic_report_messages(0, NULL);
-}
-
-/**
- * @brief Inserts a dummy traffic report.
+ * @brief Returns a dummy traffic report.
  *
  * This will report one single message, indicating queuing traffic on the A9 Munich–Nuremberg between
  * Neufahrn and Allershausen. This mimics a TMC message in that coordinates are approximate, TMC
  * identifiers are supplied for the location and extra data fields which can be inferred from the TMC
  * location table are filled. The message purports to just have been received for the first time, and
  * expire in 24 hours.
+ *
+ * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
  */
-void traffic_dummy_report(void) {
-	struct traffic_message ** messages = g_new0(struct traffic_message *, 1);
+struct traffic_message ** traffic_dummy_get_messages(void) {
+	struct traffic_message ** messages = g_new0(struct traffic_message *, 2);
 	struct traffic_point * from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
 	struct traffic_point * to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
 	struct trafic_location * location = traffic_location_new(NULL, from, to, "Nürnberg", NULL,
@@ -80,7 +67,35 @@ void traffic_dummy_report(void) {
 
 	messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
 			time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
-	traffic_report_messages(1, messages);
+}
+
+/**
+ * @brief The methods implemented by this plugin
+ */
+static struct traffic_methods traffic_dummy_meth = {
+		traffic_dummy_get_messages,
+};
+
+/**
+ * @brief Registers a new dummy traffic plugin
+ *
+ * @param meth Receives the traffic methods
+ * @param attrs The attributes for the map
+ * @param cbl
+ * @param parent The parent of the plugin, must be the navit instance
+ *
+ * @return A pointer to a `traffic_priv` structure for the plugin instance
+ */
+static struct traffic_priv * traffic_dummy_new(struct traffic_methods *meth, struct attr **attrs,
+		struct callback_list *cbl, struct attr *parent) {
+	struct traffic_priv *ret;
+
+	dbg(lvl_error, "enter\n");
+
+	ret = g_new0(struct traffic_priv, 1);
+	*meth = traffic_dummy_meth;
+
+	return ret;
 }
 
 /**
@@ -89,15 +104,7 @@ void traffic_dummy_report(void) {
  * This function is called once on startup.
  */
 void plugin_init(void) {
-        struct traffic * this_;
+	dbg(lvl_error, "enter\n");
 
-        dbg(lvl_error, "THIS IS THE DUMMY TRAFFIC PLUGIN. Startup successful, more to come soon...\n");
-
-        this_ = g_new0(struct traffic, 1);
-
-        // TODO register ourselves as a map plugin (once we have a map provider)
-
-        // FIXME error:navit:event_add_idle:Can't find event system method add_idle. Event system is not set.
-        this_->callback = callback_new_1(callback_cast(traffic_idle), this_);
-        this_->idle = event_add_idle(200, this_->callback); // TODO store return value with plugin instance
+	plugin_register_category_traffic("dummy", traffic_dummy_new);
 }
