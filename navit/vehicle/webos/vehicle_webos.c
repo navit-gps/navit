@@ -1,4 +1,4 @@
-/**
+/*
  * vim: sw=3 ts=3
  *
  * Navit, a modular navigation system.
@@ -36,6 +36,14 @@
 #include "event.h"
 #include "vehicle_webos.h"
 #include "bluetooth.h"
+
+/**
+ * @defgroup vehicle-webos Vehicle WebOS
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from WebOS
+ *
+ * @{
+ */
 
 static char *vehicle_webos_prefix="webos:";
 
