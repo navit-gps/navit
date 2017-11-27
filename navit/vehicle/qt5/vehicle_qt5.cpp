@@ -1,5 +1,4 @@
-/** @file vehicle_null.c
- * @brief null uses dbus signals
+/*
  *
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2017 Navit Team
@@ -41,6 +40,15 @@ extern "C" {
 #include "vehicle_qt5.h"
 #include "vehicle_qt5.moc"
 #include <QDateTime>
+
+/**
+ * @defgroup vehicle-qt5 Vehicle QT5
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from qt5
+ *
+ * @{
+ */
+
 QNavitGeoReceiver::QNavitGeoReceiver(QObject* parent, struct vehicle_priv* c)
     : QObject(parent)
 {
