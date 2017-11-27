@@ -35,12 +35,90 @@
 #include "config.h"
 #include "coord.h"
 #include "item.h"
+#include "map.h"
 #include "xmlconfig.h"
 #include "traffic.h"
 #include "plugin.h"
 #include "event.h"
 #include "callback.h"
 #include "debug.h"
+
+/**
+ * @brief Private data for the traffic map.
+ */
+struct map_priv {
+	struct traffic_message ** messages; /**< Points to a list of pointers to all currently active messages */
+	// TODO messages by ID, segments by message?
+};
+
+/**
+ * @brief Destroys (closes) the traffic map.
+ *
+ * @param priv The private data for the traffic map instance
+ */
+void tm_destroy(struct map_priv *priv) {
+	g_free(priv);
+}
+
+/**
+ * @brief Opens a new map rectangle on the traffic map
+ *
+ * This function opens a new map rectangle on the route graph's map.
+ *
+ * @param priv The traffic graph map's private data
+ * @param sel The map selection (to restrict search to a rectangle, order and/or item types)
+ * @return A new map rect's private data
+ */
+static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
+	// TODO
+	return NULL;
+}
+
+/**
+ * @brief Destroys a map rectangle on the traffic map
+ */
+static void tm_rect_destroy(struct map_rect_priv *mr) {
+	// TODO
+	return;
+}
+
+/**
+ * @brief Returns the next item from the traffic map
+ *
+ * @param mr The map rect to search for items
+ */
+static struct item * tm_get_item(struct map_rect_priv *mr) {
+	// TODO
+	return NULL;
+}
+
+/**
+ * @brief Returns the next item with the supplied ID from the traffic map
+ *
+ * @param mr The map rect to search for items
+ * @param id_hi The high-order portion of the ID
+ * @param id_lo The low-order portion of the ID
+ */
+static struct item * tm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
+	// TODO
+	return NULL;
+}
+
+static struct map_methods traffic_map_meth = {
+	projection_mg,    /* pro: The projection used for that type of map */
+	"utf-8",          /* charset: The charset this map uses. */
+	tm_destroy,       /* map_destroy: Destroy ("close") a map. */
+	tm_rect_new,      /* map_rect_new: Create a new map rect on the map. */
+	tm_rect_destroy,  /* map_rect_destroy: Destroy a map rect */
+	tm_get_item,      /* map_rect_get_item: Return the next item from a map rect */
+	tm_get_item_byid, /* map_rect_get_item_byid: Get an item with a specific ID from a map rect, can be NULL */
+	NULL,             /* map_search_new: Start a new search on the map, can be NULL */
+	NULL,             /* map_search_destroy: Destroy a map search struct, ignored if `map_search_new` is NULL */
+	NULL,             /* map_search_get_item: Get the next item of a search on the map */
+	NULL,             /* map_rect_create_item: Create a new item in the map */
+	NULL,             /* map_get_attr */
+	NULL,             /* map_set_attr */
+};
 
 /**
  * @brief The idle function for the traffic module.
@@ -349,8 +427,29 @@ int traffic_report_messages(int message_count, struct traffic_message ** message
 	return 0;
 }
 
+/**
+ * @brief Registers a new traffic map plugin
+ *
+ * @param meth Receives the map methods
+ * @param attrs The attributes for the map
+ * @param cbl
+ *
+ * @return A pointer to a {@code map_priv} structure for the map
+ */
+static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+	struct map_priv *ret;
+
+	dbg(lvl_error, "enter\n");
+
+	ret = g_new0(struct map_priv, 1);
+	*meth = traffic_map_meth;
+
+	return ret; // TODO
+}
+
 void traffic_init(void) {
 	dbg(lvl_error, "enter\n");
+	plugin_register_category_map("traffic", traffic_map_new);
 }
 
 struct object_func traffic_func = {
