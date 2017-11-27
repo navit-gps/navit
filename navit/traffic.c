@@ -421,12 +421,6 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
 		return NULL;
 }
 
-int traffic_report_messages(int message_count, struct traffic_message ** messages) {
-	// TODO
-    dbg(lvl_error, "MESSAGE RECEIVED, don't know how to process it yet...\n");
-	return 0;
-}
-
 /**
  * @brief Registers a new traffic map plugin
  *
