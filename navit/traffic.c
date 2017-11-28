@@ -170,6 +170,7 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 		navit_object_destroy(this_);
 		return NULL;
 	}
+	navit_object_ref((struct navit_object *) this_);
 	dbg(lvl_debug,"return %p\n", this_);
 
 	// TODO do this once and cycle through all plugins
