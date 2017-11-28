@@ -61,7 +61,7 @@ struct traffic_message ** traffic_dummy_get_messages(void) {
 	struct traffic_message ** messages = g_new0(struct traffic_message *, 2);
 	struct traffic_point * from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
 	struct traffic_point * to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
-	struct trafic_location * location = traffic_location_new(NULL, from, to, "Nürnberg", NULL,
+	struct traffic_location * location = traffic_location_new(NULL, from, to, "Nürnberg", NULL,
 			location_dir_one, location_fuzziness_low_res, location_ramps_none, type_highway_land,
 			NULL, "A9", "58:1", -1);
 
