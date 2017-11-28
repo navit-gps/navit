@@ -67,6 +67,8 @@ struct traffic_message ** traffic_dummy_get_messages(void) {
 
 	messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
 			time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
+
+	return messages;
 }
 
 /**
