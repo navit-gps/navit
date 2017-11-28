@@ -231,7 +231,7 @@ struct traffic {
 	struct traffic_priv *priv;   /**< Private data used by the plugin */
 	struct traffic_methods meth; /**< Methods implemented by the plugin */
 	struct callback * callback;  /**< The callback function for the idle loop */
-	struct event_idle * idle;    /**< The idle event that triggers the idle function */
+	struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
 };
 
 /**

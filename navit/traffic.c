@@ -121,12 +121,12 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
- * @brief The idle function for the traffic module.
+ * @brief The loop function for the traffic module.
  *
  * This function polls backends for new messages and processes them by inserting, removing or modifying
  * traffic distortions and triggering route recalculations as needed.
  */
-void traffic_idle(struct traffic * this_) {
+void traffic_loop(struct traffic * this_) {
 	int i;
 	struct traffic_message ** messages;
 
@@ -181,8 +181,8 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	dbg(lvl_debug,"return %p\n", this_);
 
 	// TODO do this once and cycle through all plugins
-	this_->callback = callback_new_1(callback_cast(traffic_idle), this_);
-	this_->idle = event_add_idle(200, this_->callback);
+	this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
+	this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
 
 	return this_;
 }
