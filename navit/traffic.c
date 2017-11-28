@@ -167,7 +167,7 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	dbg(lvl_debug, "get_messages=%p\n", this_->meth.get_messages);
 	dbg(lvl_debug, "priv=%p\n", this_->priv);
 	if (!this_->priv) {
-		navit_object_destroy(this_);
+		navit_object_destroy((struct navit_object *) this_);
 		return NULL;
 	}
 	navit_object_ref((struct navit_object *) this_);
