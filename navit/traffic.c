@@ -127,8 +127,15 @@ static struct map_methods traffic_map_meth = {
  * traffic distortions and triggering route recalculations as needed.
  */
 void traffic_idle(struct traffic * this_) {
-        // TODO poll backends and process any new messages
-        dbg(lvl_error, "THIS IS THE DUMMY TRAFFIC PLUGIN. Got nothing to do yet...\n");
+	int i;
+	struct traffic_message ** messages;
+
+	messages = this_->meth.get_messages();
+	if (!messages)
+		return;
+	for (i = 0; messages[i] != NULL; i++)
+		;
+	dbg(lvl_error, "received %d message(s)\n", i);
 }
 
 /**
