@@ -179,6 +179,7 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	dbg(lvl_debug, "get_messages=%p\n", this_->meth.get_messages);
 	dbg(lvl_debug, "priv=%p\n", this_->priv);
 	if (!this_->priv) {
+		dbg(lvl_error, "plugin initialization failed\n");
 		navit_object_destroy((struct navit_object *) this_);
 		return NULL;
 	}
