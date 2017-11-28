@@ -150,8 +150,8 @@ void traffic_loop(struct traffic * this_) {
  */
 struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	struct traffic *this_;
-	struct traffic_priv *(*traffic_new)(struct traffic_methods *meth, struct attr **attrs,
-			struct callback_list *cbl, struct attr *parent);
+	struct traffic_priv *(*traffic_new)(struct navit *nav, struct traffic_methods *meth,
+			struct attr **attrs, struct callback_list *cbl);
 	struct attr *attr;
 
 	attr = attr_search(attrs, NULL, attr_type);
@@ -169,8 +169,13 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	this_ = (struct traffic *) navit_object_new(attrs, &traffic_func, sizeof(struct traffic));
 	if (parent->type == attr_navit)
 		this_->navit = parent->u.navit;
+	else {
+		dbg(lvl_error, "wrong parent type '%s', only navit is permitted\n", attr_to_name(parent->type));
+		navit_object_destroy((struct navit_object *) this_);
+		return NULL;
+	}
 
-	this_->priv = traffic_new(&this_->meth, this_->attrs, NULL, parent);
+	this_->priv = traffic_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
 	dbg(lvl_debug, "get_messages=%p\n", this_->meth.get_messages);
 	dbg(lvl_debug, "priv=%p\n", this_->priv);
 	if (!this_->priv) {

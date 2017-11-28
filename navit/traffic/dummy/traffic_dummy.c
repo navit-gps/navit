@@ -37,6 +37,7 @@
 #include "item.h"
 #include "xmlconfig.h"
 #include "traffic.h"
+#include "plugin.h"
 #include "debug.h"
 
 /**
@@ -81,15 +82,15 @@ static struct traffic_methods traffic_dummy_meth = {
 /**
  * @brief Registers a new dummy traffic plugin
  *
+ * @param nav The navit instance
  * @param meth Receives the traffic methods
  * @param attrs The attributes for the map
  * @param cbl
- * @param parent The parent of the plugin, must be the navit instance
  *
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
-static struct traffic_priv * traffic_dummy_new(struct traffic_methods *meth, struct attr **attrs,
-		struct callback_list *cbl, struct attr *parent) {
+static struct traffic_priv * traffic_dummy_new(struct navit *nav, struct traffic_methods *meth,
+		struct attr **attrs, struct callback_list *cbl) {
 	struct traffic_priv *ret;
 
 	dbg(lvl_error, "enter\n");
