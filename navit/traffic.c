@@ -44,6 +44,18 @@
 #include "debug.h"
 
 /**
+ * @brief A traffic plugin instance
+ */
+struct traffic {
+	NAVIT_OBJECT
+	struct navit *navit;         /**< The navit instance */
+	struct traffic_priv *priv;   /**< Private data used by the plugin */
+	struct traffic_methods meth; /**< Methods implemented by the plugin */
+	struct callback * callback;  /**< The callback function for the idle loop */
+	struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
+};
+
+/**
  * @brief Private data for the traffic map.
  */
 struct map_priv {

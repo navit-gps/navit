@@ -223,18 +223,6 @@ struct traffic_methods {
 };
 
 /**
- * @brief A traffic plugin instance
- */
-struct traffic {
-	NAVIT_OBJECT
-	struct navit *navit;         /**< The navit instance */
-	struct traffic_priv *priv;   /**< Private data used by the plugin */
-	struct traffic_methods meth; /**< Methods implemented by the plugin */
-	struct callback * callback;  /**< The callback function for the idle loop */
-	struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
-};
-
-/**
  * @brief A point on the road.
  *
  * This can either be a point location or an endpoint of a linear location. It specifies a coordinate
