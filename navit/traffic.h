@@ -375,6 +375,10 @@ struct traffic_message {
 	struct traffic_event ** events; /*!< Points to an array of pointers to the events for this message. */
 };
 
+struct map;
+struct mapset;
+struct traffic;
+
 /**
  * @brief Creates a new {@code traffic_point}.
  *
@@ -716,6 +720,23 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  * This function is called once on startup.
  */
 void traffic_init(void);
+
+/**
+ * @brief Sets the mapset for the traffic plugin.
+ *
+ * This sets the mapset from which the segments affected by a traffic report will be retrieved.
+ *
+ * @param this_ The traffic plugin instance
+ * @param ms The mapset
+ */
+void traffic_set_mapset(struct traffic *this_, struct mapset *ms);
+
+/**
+ * @brief Sets the route for the traffic plugin.
+ *
+ * This sets the route which may get notified by the traffic plugin if traffic distortions change.
+ */
+void traffic_set_route(struct traffic *this_, struct route *rt);
 
 /* end of prototypes */
 #ifdef __cplusplus

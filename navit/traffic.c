@@ -53,6 +53,8 @@ struct traffic {
 	struct traffic_methods meth; /**< Methods implemented by the plugin */
 	struct callback * callback;  /**< The callback function for the idle loop */
 	struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
+	struct mapset *ms;           /**< The mapset used for routing */
+	struct route *rt;            /**< The route to notify of traffic changes */
 };
 
 /**
@@ -474,6 +476,14 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
 void traffic_init(void) {
 	dbg(lvl_error, "enter\n");
 	plugin_register_category_map("traffic", traffic_map_new);
+}
+
+void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
+	this_->ms = ms;
+}
+
+void traffic_set_route(struct traffic *this_, struct route *rt) {
+	this_->rt = rt;
 }
 
 struct object_func traffic_func = {

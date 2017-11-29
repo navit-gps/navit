@@ -2073,6 +2073,9 @@ navit_init(struct navit *this_)
 	struct map *map;
 	int callback;
 	char *center_file;
+	struct attr_iter *iter;
+	struct attr *attr;
+	struct traffic * traffic;
 
 	dbg(lvl_info,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 
@@ -2140,6 +2143,18 @@ navit_init(struct navit *this_)
 			if (this_->route)
 				tracking_set_route(this_->tracking, this_->route);
 		}
+
+		attr = g_new0(struct attr, 1);
+		iter = navit_attr_iter_new();
+		while (navit_get_attr(this_, attr_traffic, attr, iter)) {
+			traffic = (struct traffic *) attr->u.navit_object;
+			traffic_set_mapset(traffic, ms);
+			if (this_->route)
+				traffic_set_route(traffic, this_->route);
+		}
+		navit_attr_iter_destroy(iter);
+		g_free(attr);
+
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
 				struct attr map_a,active;
