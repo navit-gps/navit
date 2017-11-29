@@ -63,6 +63,10 @@ struct map_priv {
 	// TODO messages by ID, segments by message?
 };
 
+void tm_destroy(struct map_priv *priv);
+void traffic_loop(struct traffic * this_);
+struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
+
 /**
  * @brief Destroys (closes) the traffic map.
  *
