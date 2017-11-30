@@ -36,6 +36,9 @@
 #include "coord.h"
 #include "item.h"
 #include "map.h"
+#include "mapset.h"
+#include "route.h"
+#include "transform.h"
 #include "xmlconfig.h"
 #include "traffic.h"
 #include "plugin.h"
@@ -140,6 +143,263 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
+ * @brief Determines the degree to which the attributes of a location and a map item match.
+ *
+ * The result of this method is used to match a location to a map item. Its result is a score—the higher
+ * the score, the better the match.
+ *
+ * To calculate the score, all supplied attributes are examined. An exact match adds 4 to the score, a
+ * partial match adds 2. Values of 1 are subtracted where additional granularity is needed. Undefined
+ * attributes are not considered a match.
+ *
+ * @param this_ The location
+ * @param point The point to calculate the score for: 0 = `from`, 1 = `at`, 2 = `to`
+ * @param item The map item
+ *
+ * @return The score
+ */
+int traffic_location_match_attributes(struct traffic_location * this_, int point, struct item *item) {
+	int ret = 0;
+	struct traffic_point *tp;
+	struct attr attr;
+
+	tp = (point == 0) ? this_->from : (point == 1) ? this_->at : (point == 2) ? this_->to : NULL;
+	if (!tp)
+		return ret;
+
+	/* road type */
+	if ((this_->road_type != type_line_unspecified) && item_attr_get(item, attr_type, &attr)) {
+		if (attr.u.item_type == this_->road_type)
+			ret +=4;
+		else
+			switch (this_->road_type) {
+			/* motorway */
+			case type_highway_land:
+				if (attr.u.item_type == type_highway_city)
+					ret += 3;
+				else if (attr.u.item_type == type_street_n_lanes)
+					ret += 2;
+				break;
+			case type_highway_city:
+				if (attr.u.item_type == type_highway_land)
+					ret += 3;
+				else if (attr.u.item_type == type_street_n_lanes)
+					ret += 2;
+				break;
+			/* trunk */
+			case type_street_n_lanes:
+				if ((attr.u.item_type == type_highway_land) || (attr.u.item_type == type_highway_city)
+						|| (attr.u.item_type == type_street_4_land)
+						|| (attr.u.item_type == type_street_4_city))
+					ret += 2;
+				break;
+			/* primary */
+			case type_street_4_land:
+				if (attr.u.item_type == type_street_4_city)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_n_lanes)
+						|| (attr.u.item_type == type_street_3_land))
+					ret += 2;
+				else if (attr.u.item_type == type_street_3_city)
+					ret += 1;
+				break;
+			case type_street_4_city:
+				if (attr.u.item_type == type_street_4_land)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_n_lanes)
+						|| (attr.u.item_type == type_street_3_city))
+					ret += 2;
+				else if (attr.u.item_type == type_street_3_land)
+					ret += 1;
+				break;
+			/* secondary */
+			case type_street_3_land:
+				if (attr.u.item_type == type_street_3_city)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_4_land)
+						|| (attr.u.item_type == type_street_2_land))
+					ret += 2;
+				else if ((attr.u.item_type == type_street_4_city)
+						|| (attr.u.item_type == type_street_2_city))
+					ret += 1;
+				break;
+			case type_street_3_city:
+				if (attr.u.item_type == type_street_3_land)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_4_city)
+						|| (attr.u.item_type == type_street_2_city))
+					ret += 2;
+				else if ((attr.u.item_type == type_street_4_land)
+						|| (attr.u.item_type == type_street_2_land))
+					ret += 1;
+				break;
+			/* tertiary */
+			case type_street_2_land:
+				if (attr.u.item_type == type_street_2_city)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_3_land))
+					ret += 2;
+				else if ((attr.u.item_type == type_street_3_city))
+					ret += 1;
+				break;
+			case type_street_2_city:
+				if (attr.u.item_type == type_street_2_land)
+					ret += 3;
+				else if ((attr.u.item_type == type_street_3_city))
+					ret += 2;
+				else if ((attr.u.item_type == type_street_3_land))
+					ret += 1;
+				break;
+			default:
+				break;
+			}
+	}
+
+	/* road_ref */
+	if (this_->road_ref && item_attr_get(item, attr_street_name_systematic, &attr)) {
+		// TODO crude comparison in need of refinement
+		if (!strcmp(this_->road_ref, attr.u.str))
+			ret += 4;
+	}
+
+	/* road_name */
+	if (this_->road_name && item_attr_get(item, attr_street_name, &attr)) {
+		// TODO crude comparison in need of refinement
+		if (!strcmp(this_->road_name, attr.u.str))
+			ret += 4;
+	}
+
+	// TODO point->junction_ref
+	// TODO point->junction_name
+
+	// TODO direction
+	// TODO destination
+
+	// TODO tmc_table, point->tmc_id
+
+	// TODO ramps
+
+	return ret;
+}
+
+/**
+ * @brief Matches a location to a map.
+ *
+ * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
+ * and matches them to an exact position on the map, using both the raw coordinates and the auxiliary
+ * information contained in the location.
+ *
+ * @param this_ The location to match to the map
+ * @param ms The mapset to use for matching
+ *
+ * @return `true` if the locations were matched successfully, `false` if there was a failure.
+ */
+int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
+	int i;
+	struct traffic_point * points[3];
+
+	/* Corners of the enclosing rectangle, in WGS84 coordinates */
+	struct coord_geo g1;
+	struct coord_geo g2;
+
+	/* Corners of the enclosing rectangle, in Mercator coordinates */
+	struct coord c1, c2;
+
+	/* Projected raw coordinates */
+	struct coord c;
+
+	struct mapset_handle *h;
+	struct map *m;
+	struct map_selection *sel;
+	int max_dist = 1000;
+	struct map_rect *mr;
+	struct item *item;
+
+	/* The matched point for the last item examined */
+	struct coord lpnt;
+
+	/* The matched point */
+	struct pcoord * plpnt;
+
+	/* The attribute matching score */
+	int score, maxscore;
+
+	/* Current and minimum distance between point and road */
+	int dist, mindist;
+
+	/* Street data for the item being examined */
+	struct street_data *sd;
+
+	if (!(this_->from || this_->at || this_->to))
+		return 0;
+
+	points[0] = this_->from;
+	points[1] = this_->at;
+	points[2] = this_->to;
+
+	// FIXME this may fail if three points are given and `at` is outside the enclosing rectangle
+	g1 = this_->from ? this_->from->coord : this_->at ? this_->at->coord : this_->to->coord;
+	g2 = this_->to ? this_->to->coord : this_->at ? this_->at->coord : this_->from->coord;
+
+	for (i = 0; i < 3; i++) {
+		if (points[i]) {
+			// TODO both directions if location is bidirectional
+			/* match to map */
+			plpnt = NULL;
+			mindist = INT_MAX;
+			maxscore = 0;
+
+			h = mapset_open(ms);
+			while ((m = mapset_next(h, 2))) {
+				transform_from_geo(map_projection(m), &points[i]->coord, &c);
+				transform_from_geo(map_projection(m), &g1, &c1);
+				transform_from_geo(map_projection(m), &g2, &c2);
+				sel = route_rect(18, &c1, &c2, 0, max_dist);
+				if (!sel)
+					continue;
+				mr = map_rect_new(m, sel);
+				if (!mr) {
+					map_selection_destroy(sel);
+					continue;
+				}
+				while ((item = map_rect_get_item(mr))) {
+					if (item_get_default_flags(item->type)) {
+						score = traffic_location_match_attributes(this_, i, item);
+						sd = street_get_data(item);
+						if (!sd)
+							continue;
+						dist = transform_distance_polyline_sq(sd->c, sd->count, &c, &lpnt, NULL);
+
+						if ((score > maxscore) || ((score == maxscore) && (dist < mindist))) {
+							maxscore = score;
+							mindist = dist;
+
+							if (!plpnt)
+								plpnt = g_new0(struct pcoord, 1);
+							plpnt->pro = map_projection(m);
+							plpnt->x = lpnt.x;
+							plpnt->y = lpnt.y;
+
+							dbg(lvl_debug,"dist=%d id 0x%x 0x%x\n", dist, item->id_hi, item->id_lo);
+						}
+						street_data_free(sd);
+					}
+				}
+				map_selection_destroy(sel);
+				map_rect_destroy(mr);
+			}
+			mapset_close(h);
+			if (plpnt)
+				points[i]->map_coord = plpnt;
+			else
+				return 0;
+		}
+	}
+
+	return 1;
+}
+
+/**
  * @brief Prints a dump of a message to debug output.
  *
  * @param this_ The message to dump
@@ -239,6 +499,7 @@ void traffic_loop(struct traffic * this_) {
 	if (!messages)
 		return;
 	for (i = 0; messages[i] != NULL; i++) {
+		traffic_location_match_to_map(messages[i]->location, this_->ms);
 		traffic_message_dump(messages[i]);
 	}
 	dbg(lvl_debug, "received %d message(s)\n", i);
