@@ -47,6 +47,8 @@ struct traffic_priv {
 	struct navit * nav;         /*!< The navit instance */
 };
 
+struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_);
+
 /**
  * @brief Returns a dummy traffic report.
  *

@@ -212,6 +212,8 @@ enum si_type {
 
 // TODO do we need priv members for structs?
 
+struct traffic_priv;
+
 /**
  * @brief Holds all functions a traffic plugin has to implement to be usable
  *
