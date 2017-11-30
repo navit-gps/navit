@@ -58,7 +58,7 @@ struct traffic_priv {
  *
  * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
  */
-struct traffic_message ** traffic_dummy_get_messages(void) {
+struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_) {
 	struct traffic_message ** messages = g_new0(struct traffic_message *, 2);
 	struct traffic_point * from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
 	struct traffic_point * to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");

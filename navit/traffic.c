@@ -148,7 +148,7 @@ void traffic_loop(struct traffic * this_) {
 	int i;
 	struct traffic_message ** messages;
 
-	messages = this_->meth.get_messages();
+	messages = this_->meth.get_messages(this_->priv);
 	if (!messages)
 		return;
 	for (i = 0; messages[i] != NULL; i++)

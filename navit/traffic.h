@@ -219,7 +219,7 @@ enum si_type {
  * to communicate with the plugin.
  */
 struct traffic_methods {
-	struct traffic_message **(* get_messages)(void); /**< Retrieves new messages from the traffic plugin */
+	struct traffic_message **(* get_messages)(struct traffic_priv * this_); /**< Retrieves new messages from the traffic plugin */
 };
 
 /**
