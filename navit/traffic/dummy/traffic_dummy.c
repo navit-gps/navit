@@ -45,6 +45,7 @@
  */
 struct traffic_priv {
 	struct navit * nav;         /*!< The navit instance */
+	int is_report_sent;         /*!< Whether we have already sent a report */
 };
 
 struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_);
@@ -52,24 +53,37 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 /**
  * @brief Returns a dummy traffic report.
  *
- * This will report one single message, indicating queuing traffic on the A9 Munich–Nuremberg between
- * Neufahrn and Allershausen. This mimics a TMC message in that coordinates are approximate, TMC
- * identifiers are supplied for the location and extra data fields which can be inferred from the TMC
- * location table are filled. The message purports to just have been received for the first time, and
- * expire in 24 hours.
+ * This method will report one single message when first called. Further calls to this method will
+ * return `NULL`, indicating that there are no messages to report.
+ *
+ * The message indicates queuing traffic on the A9 Munich–Nuremberg between Neufahrn and Allershausen.
+ * It mimics a TMC message in that coordinates are approximate, TMC identifiers are supplied for the
+ * location and extra data fields which can be inferred from the TMC location table are filled. The
+ * timestamps indicate a message that has just been received for the first time, i.e. its “first
+ * received” and “last updated” timestamps match and are recent. Expiration is after 24 hours, longer
+ * than the typical lifespan of a TMC message of this kind.
  *
  * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
+ * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
  */
 struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_) {
-	struct traffic_message ** messages = g_new0(struct traffic_message *, 2);
-	struct traffic_point * from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
-	struct traffic_point * to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
-	struct traffic_location * location = traffic_location_new(NULL, from, to, "Nürnberg", NULL,
-			location_dir_one, location_fuzziness_low_res, location_ramps_none, type_highway_land,
-			NULL, "A9", "58:1", -1);
+	struct traffic_message ** messages;
+	struct traffic_point * from;
+	struct traffic_point * to;
+	struct traffic_location * location;
 
+	if (this_->is_report_sent)
+		return NULL;
+
+	messages = g_new0(struct traffic_message *, 2);
+	from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
+	to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
+	location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
+			location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 	messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
 			time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
+
+	this_->is_report_sent = 1;
 
 	return messages;
 }
