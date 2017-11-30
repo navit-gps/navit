@@ -250,8 +250,8 @@ struct route {
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
-	struct map *map;
-	struct map *graph_map;
+	struct map *map;            /**< The map containing the route path */
+	struct map *graph_map;      /**< The map containing the route graph */
 	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
 	struct callback_list *cbl2;	/**< Callback list to call when route changes */
