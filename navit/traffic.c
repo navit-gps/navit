@@ -68,6 +68,7 @@ struct map_priv {
 void tm_destroy(struct map_priv *priv);
 void traffic_loop(struct traffic * this_);
 struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
+void traffic_message_dump(struct traffic_message * this_);
 
 /**
  * @brief Destroys (closes) the traffic map.
@@ -139,6 +140,92 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
+ * @brief Prints a dump of a message to debug output.
+ *
+ * @param this_ The message to dump
+ */
+void traffic_message_dump(struct traffic_message * this_) {
+	int i, j;
+	char * point_names[3] = {"From", "At", "To"};
+	struct traffic_point * points[3];
+
+	if (!this_) {
+		dbg(lvl_debug, "(null)\n");
+		return;
+	}
+
+	points[0] = this_->location->from;
+	points[1] = this_->location->at;
+	points[2] = this_->location->to;
+
+	dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d\n",
+			this_->id, this_->is_cancellation, this_->is_forecast);
+	/* TODO timestamps */
+
+	/* dump replaced message IDs */
+	dbg(lvl_debug, "  replaced_count=%d\n",
+			this_->replaced_count);
+	for (i = 0; i < this_->replaced_count; i++) {
+		dbg(lvl_debug, "  Replaces: '%s'\n", this_->replaces[i]);
+	}
+
+	/* dump location */
+	dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'\n",
+			item_to_name(this_->location->road_type), this_->location->road_ref,
+			this_->location->road_name);
+	dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'\n",
+			this_->location->directionality, this_->location->destination, this_->location->direction);
+	dbg(lvl_debug, "    fuzziness=%d, ramps=%d, tmc_table='%s', tmc_direction=%+d\n",
+			this_->location->fuzziness, this_->location->ramps, this_->location->tmc_table,
+			this_->location->tmc_direction);
+	for (i = 0; i < 3; i++) {
+		if (points[i]) {
+			dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f\n",
+					point_names[i], points[i]->coord.lat, points[i]->coord.lng);
+			dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'\n",
+					points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
+
+			if (points[i]->map_coord) {
+				dbg(lvl_debug, "      Map-matched: pro=%d, x=%x, y=%x\n",
+						points[i]->map_coord->pro, points[i]->map_coord->x, points[i]->map_coord->y);
+			} else {
+				dbg(lvl_debug, "      Map-matched: (null)\n");
+			}
+
+			if (points[i]->map_coord_backward) {
+				dbg(lvl_debug, "      Map-matched backward: pro=%d, x=%x, y=%x\n",
+						points[i]->map_coord_backward->pro, points[i]->map_coord_backward->x,
+						points[i]->map_coord_backward->y);
+			} else {
+				dbg(lvl_debug, "      Map-matched backward: (null)\n");
+			}
+		} else {
+			dbg(lvl_debug, "    %s: (null)\n",
+					point_names[i]);
+		}
+	}
+
+	/* dump events */
+	dbg(lvl_debug, "  event_count=%d\n",
+			this_->event_count);
+	for (i = 0; i < this_->event_count; i++) {
+		dbg(lvl_debug, "  Event: event_class=%d, type=%d, length=%d m, speed=%d km/h\n",
+				this_->events[i]->event_class, this_->events[i]->type, this_->events[i]->length,
+				this_->events[i]->speed);
+		/* TODO quantifier */
+
+		/* dump supplementary information */
+		dbg(lvl_debug, "    si_count=%d\n",
+				this_->events[i]->si_count);
+		for (j = 0; j < this_->events[i]->si_count; j++) {
+			dbg(lvl_debug, "    Supplementary Information: si_class=%d, type=%d\n",
+					this_->events[i]->si[j]->si_class, this_->events[i]->si[j]->type);
+			/* TODO quantifier */
+		}
+	}
+}
+
+/**
  * @brief The loop function for the traffic module.
  *
  * This function polls backends for new messages and processes them by inserting, removing or modifying
@@ -151,9 +238,10 @@ void traffic_loop(struct traffic * this_) {
 	messages = this_->meth.get_messages(this_->priv);
 	if (!messages)
 		return;
-	for (i = 0; messages[i] != NULL; i++)
-		;
-	dbg(lvl_error, "received %d message(s)\n", i);
+	for (i = 0; messages[i] != NULL; i++) {
+		traffic_message_dump(messages[i]);
+	}
+	dbg(lvl_debug, "received %d message(s)\n", i);
 }
 
 /**
