@@ -33,6 +33,7 @@
 #endif
 #include "glib_slice.h"
 #include "config.h"
+#include "navit.h" // TODO see if we will still need that in the long run
 #include "coord.h"
 #include "item.h"
 #include "map.h"
@@ -68,10 +69,63 @@ struct map_priv {
 	// TODO messages by ID, segments by message?
 };
 
+void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_lo, struct attr **attrs,
+		struct coord *c, int count);
 void tm_destroy(struct map_priv *priv);
 void traffic_loop(struct traffic * this_);
 struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 void traffic_message_dump(struct traffic_message * this_);
+
+/**
+ * @brief Adds an item to the map.
+ *
+ * Currently this method ignores the `priv` argument and simply writes the item to a textfile map named
+ * `distortion.txt` in the default data folder. This map must be in the active mapset in order for the
+ * distortions to be rendered on the map and considered for routing.
+ *
+ * All data passed to this method is safe to free after the method returns, and doing so is the
+ * responsibility of the caller.
+ *
+ * @param priv The traffic map's private data
+ * @param type Type of the item
+ * @param id_hi First part of the ID of the item (item IDs have two parts)
+ * @param id_lo Second part of the ID of the item
+ * @param attrs The attributes for the item
+ * @param c Points to an array of coordinates for the item
+ * @param count Number of items in `c`
+ */
+void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_lo, struct attr **attrs,
+		struct coord *c, int count) {
+	int i;
+	char * attr_text;
+
+	/* add the configuration directory to the name of the file to use */
+	char *dist_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
+									"/distortion.txt", NULL);
+	if (dist_filename) {
+		FILE *map = fopen(dist_filename,"a");
+		if (map) {
+			fprintf(map, "type=%s", item_to_name(type));
+			while (*attrs) {
+				attr_text = attr_to_text(*attrs, NULL, 0);
+				/* FIXME this may not work properly for all attribute types */
+				fprintf(map, " %s=%s", attr_to_name((*attrs)->type), attr_text);
+				g_free(attr_text);
+				attrs++;
+			}
+			fprintf(map, "\n");
+
+			for (i = 0; i < count; i++) {
+				fprintf(map,"0x%x 0x%x\n", c[i].x, c[i].y);
+			}
+			fclose(map);
+		} else {
+			dbg(lvl_error,"could not open file for distortions !!");
+
+		} /* else - if (map) */
+		g_free(dist_filename);			/* free the file name */
+	} /* if (dist_filename) */
+}
 
 /**
  * @brief Destroys (closes) the traffic map.
