@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -18,14 +18,6 @@
  */
 
 
-/* 
-	Plugin for new Maemo's  liblocation API.
- 
-	<vehicle source="maemo://any" retry_interval="1"/>
-   source cound be on of "any","cwp","acwp","gnss","agnss"
-   retry_interval could be one of "1","2","5","10","20","30","60","120" measured in seconds
-*/
-
 #include <config.h>
 #include <string.h>
 #include <glib.h>
@@ -39,6 +31,19 @@
 #include "item.h"
 #include "vehicle.h"
 #include "event.h"
+
+/**
+ * @defgroup vehicle-iphone Vehicle Maemo
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from Maemo.
+ *
+ * Plugin for new Maemo's  liblocation API.
+ * <vehicle source="maemo://any" retry_interval="1"/>
+ *  source cound be on of "any","cwp","acwp","gnss","agnss"
+ *  retry_interval could be one of "1","2","5","10","20","30","60","120" measured in seconds
+ *
+ * @{
+ */
 
 static struct vehicle_priv {
 	LocationGPSDControl *control;

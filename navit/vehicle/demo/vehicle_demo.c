@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -33,6 +33,13 @@
 #include "vehicle.h"
 #include "event.h"
 #include "util.h"
+
+/**
+ * @defgroup vehicle-demo Vehicle Demo
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle for a demo. It followes the route automatically
+ *
+ */
 
 struct vehicle_priv {
 	int interval;
@@ -302,3 +309,6 @@ plugin_init(void)
 	dbg(lvl_debug, "enter\n");
 	plugin_register_category_vehicle("demo", vehicle_demo_new);
 }
+
+
+/** @} */
