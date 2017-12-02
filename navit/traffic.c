@@ -350,7 +350,7 @@ int traffic_location_match_attributes(struct traffic_location * this_, int point
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
 int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
-	int i;
+	int i, j;
 	struct traffic_point * points[3];
 
 	/* Corners of the enclosing rectangle, in WGS84 coordinates */
@@ -369,9 +369,6 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 	int max_dist = 1000;
 	struct map_rect *mr;
 	struct item *item;
-
-	/* The matched point for the last item examined */
-	struct coord lpnt;
 
 	/* The matched point */
 	struct pcoord * plpnt;
@@ -423,19 +420,22 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 						sd = street_get_data(item);
 						if (!sd)
 							continue;
-						dist = transform_distance_polyline_sq(sd->c, sd->count, &c, &lpnt, NULL);
 
-						if ((score > maxscore) || ((score == maxscore) && (dist < mindist))) {
-							maxscore = score;
-							mindist = dist;
+						for (j = 0; j < sd->count; j += (sd->count - 1)) {
+							dist = transform_distance_sq(&(sd->c[j]), &c);
 
-							if (!plpnt)
-								plpnt = g_new0(struct pcoord, 1);
-							plpnt->pro = map_projection(m);
-							plpnt->x = lpnt.x;
-							plpnt->y = lpnt.y;
+							if ((score > maxscore) || ((score == maxscore) && (dist < mindist))) {
+								maxscore = score;
+								mindist = dist;
 
-							dbg(lvl_debug,"dist=%d id 0x%x 0x%x\n", dist, item->id_hi, item->id_lo);
+								if (!plpnt)
+									plpnt = g_new0(struct pcoord, 1);
+								plpnt->pro = map_projection(m);
+								plpnt->x = sd->c[j].x;
+								plpnt->y = sd->c[j].y;
+
+								dbg(lvl_debug,"dist=%d id 0x%x 0x%x\n", dist, item->id_hi, item->id_lo);
+							}
 						}
 						street_data_free(sd);
 					}
