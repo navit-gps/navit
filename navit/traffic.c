@@ -554,6 +554,36 @@ void traffic_loop(struct traffic * this_) {
 		return;
 	for (i = 0; messages[i] != NULL; i++) {
 		traffic_location_match_to_map(messages[i]->location, this_->ms);
+
+		/* begin crude code */
+		/* temporary solution to dump traffic report to a map, only good for visualization but not for
+		 * any kind of routing */
+		struct attr **attrs = g_new0(struct attr*, 2);
+		struct coord coords[3];
+		int coord_count = 0;
+		attrs[0] = g_new0(struct attr, 1);
+		attrs[0]->type = attr_maxspeed;
+		attrs[0]->u.num = 20;
+		if (messages[i]->location->from && messages[i]->location->from->map_coord) {
+			coords[coord_count].x = messages[i]->location->from->map_coord->x;
+			coords[coord_count].y = messages[i]->location->from->map_coord->y;
+			coord_count++;
+		}
+		if (messages[i]->location->at && messages[i]->location->at->map_coord) {
+			coords[coord_count].x = messages[i]->location->at->map_coord->x;
+			coords[coord_count].y = messages[i]->location->at->map_coord->y;
+			coord_count++;
+		}
+		if (messages[i]->location->to && messages[i]->location->to->map_coord) {
+			coords[coord_count].x = messages[i]->location->to->map_coord->x;
+			coords[coord_count].y = messages[i]->location->to->map_coord->y;
+			coord_count++;
+		}
+		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, &coords, coord_count);
+		g_free(attrs[0]);
+		g_free(attrs);
+		/* end crude code */
+
 		traffic_message_dump(messages[i]);
 	}
 	dbg(lvl_debug, "received %d message(s)\n", i);
