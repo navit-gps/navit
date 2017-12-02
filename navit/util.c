@@ -68,6 +68,201 @@ navit_utf8_strcasecmp(const char *s1, const char *s2)
 	return cmpres;
 }
 
+/**
+ * @brief Trims all leading and trailing whitespace characters from a string.
+ *
+ * Whitespace characters are all up to and including 0x20.
+ *
+ * This function operates in-place, i.e. `s` will be modified.
+ *
+ * @param s The string to trim
+ */
+void strtrim(char *s) {
+	char *tmp = g_strdup(s);
+	char *in = tmp;
+	while (strlen(in) && (in[0] <= 0x20))
+		in++;
+	while (strlen(in) && (in[strlen(in) - 1] <= 0x20))
+		in[strlen(in) - 1] = 0;
+	strcpy(s, in);
+	g_free(tmp);
+}
+
+/**
+ * @brief Parser states for `parse_for_systematic_comparison()`.
+ */
+enum parse_state {
+	parse_state_whitespace,
+	parse_state_numeric,
+	parse_state_alpha,
+};
+
+/**
+ * @brief Parses a string for systematic comparison.
+ *
+ * This is a helper function for `compare_name_systematic()`.
+ *
+ * The string is broken down into numeric and non-numeric parts. Whitespace characters are discarded
+ * unless they are surrounded by string characters, in which case the whole unit is treated as one
+ * string part. All strings are converted to lowercase and leading zeroes stripped from numbers.
+ *
+ * @param s The string to parse
+ *
+ * @return A buffer containing the parsed string, parts delimited by a null character, the last part
+ * followed by a double null character.
+ */
+char * parse_for_systematic_comparison(const char *s) {
+	char *ret = g_malloc0(strlen(s) * 2 + 1);
+	char *in = s;
+	char *out = ret;
+	char *part;
+	enum parse_state state = parse_state_whitespace;
+	int i = 0;
+	char c;
+
+	dbg(lvl_debug, "enter\n");
+
+	// TODO convert strings to lowercase
+
+	while (i < strlen(in)) {
+		c = in[i];
+		if (c <= 0x20) {
+			/* whitespace */
+			if (state == parse_state_numeric) {
+				part = g_malloc0(i + 1);
+				strncpy(part, in, i);
+				sprintf(part, "%d", atoi(part));
+				strcpy(out, part);
+				out += strlen(part) + 1;
+				dbg(lvl_debug, "part='%s'\n", part);
+				g_free(part);
+				in += i;
+				i = 1;
+				state = parse_state_whitespace;
+			} else
+				i++;
+		} else if ((c >= '0') && (c <= '9')) {
+			/* numeric */
+			if (state == parse_state_alpha) {
+				part = g_malloc0(i + 1);
+				strncpy(part, in, i);
+				strtrim(part);
+				strcpy(out, part);
+				out += strlen(part) + 1;
+				dbg(lvl_debug, "part='%s'\n", part);
+				g_free(part);
+				in += i;
+				i = 1;
+			} else
+				i++;
+			state = parse_state_numeric;
+		} else {
+			/* alpha */
+			if (state == parse_state_numeric) {
+				part = g_malloc0(i + 1);
+				strncpy(part, in, i);
+				sprintf(part, "%d", atoi(part));
+				strcpy(out, part);
+				out += strlen(part) + 1;
+				dbg(lvl_debug, "part='%s'\n", part);
+				g_free(part);
+				in += i;
+				i = 1;
+			} else
+				i++;
+			state = parse_state_alpha;
+		}
+	}
+
+	if (strlen(in) > 0) {
+		if (state == parse_state_numeric) {
+			part = g_malloc0(strlen(in) + 1);
+			strcpy(part, in);
+			sprintf(part, "%d", atoi(part));
+			strcpy(out, part);
+			dbg(lvl_debug, "part='%s'\n", part);
+			g_free(part);
+		} else if (state == parse_state_alpha) {
+			part = g_malloc0(strlen(in) + 1);
+			strcpy(part, in);
+			strtrim(part);
+			strcpy(out, part);
+			dbg(lvl_debug, "part='%s'\n", part);
+			g_free(part);
+		}
+	}
+
+	return ret;
+}
+
+/**
+ * @brief Compares two name_systematic strings.
+ *
+ * A name_systematic string is typically used for road reference numbers (A 4, I-51, SP526). This
+ * function performs a fuzzy comparison: Each string is broken down into numeric and non-numeric parts.
+ * Then both strings are compared part by part. The following rules apply:
+ *
+ * \li Whitespace bordering on a number is discarded.
+ * \li Whitespace surrounded by string characters is treated as one string with the surrounding characters.
+ * \li If one string has more parts than the other, the shorter string is padded with null parts.
+ * \li null is less than non-null.
+ * \li null equals null.
+ * \li A numeric part is less than a string part.
+ * \li Numeric parts are compared as integers.
+ * \li String parts are compared as strings. Comparison is case-insensitive.
+ *
+ * @param s1 The first string
+ * @param s2 The second string
+ *
+ * @return 0 if both strings match, a negative value if `s1<s2`, a positive value if `s1>s2`.
+ */
+int compare_name_systematic(const char *s1, const char *s2) {
+	int ret = 0;
+	int i;
+	char *l, *r, *l0, *r0;
+
+	if (!s1 || !s1[0]) {
+		if (!s2 || !s2[0])
+			return 0;
+		else
+			return 1;
+	} else if (!s2 || !s2[0])
+		return -1;
+
+	l0 = parse_for_systematic_comparison(s1);
+	r0 = parse_for_systematic_comparison(s2);
+
+	l = l0;
+	r = r0;
+
+	while (!ret && l[0] && r[0]) {
+		if (atoi(l) || (l[0] == '0')) {
+			if (atoi(r) || (r[0] == '0'))
+				ret = atoi(l) - atoi(r);
+			else
+				ret = -1;
+		} else {
+			if (atoi(r) || (r[0] == '0'))
+				ret = 1;
+			else
+				ret = strcmp(l, r);
+		}
+
+		l += strlen(l) + 1;
+		r += strlen(r) + 1;
+	}
+
+	g_free(l0);
+	g_free(r0);
+
+	if (!ret)
+		ret = l[0] - r[0];
+
+	dbg(lvl_debug, "'%s' %s '%s'\n", s1, ret?"does NOT match":"matches", s2);
+
+	return ret;
+}
+
 static void
 hash_callback(gpointer key, gpointer value, gpointer user_data)
 {
