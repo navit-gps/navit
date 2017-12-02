@@ -34,6 +34,7 @@
 #include "glib_slice.h"
 #include "config.h"
 #include "navit.h" // TODO see if we will still need that in the long run
+#include "util.h"
 #include "coord.h"
 #include "item.h"
 #include "map.h"
@@ -311,8 +312,8 @@ int traffic_location_match_attributes(struct traffic_location * this_, int point
 
 	/* road_ref */
 	if (this_->road_ref && item_attr_get(item, attr_street_name_systematic, &attr)) {
-		// TODO crude comparison in need of refinement
-		if (!strcmp(this_->road_ref, attr.u.str))
+		// TODO give partial score for partial matches
+		if (!compare_name_systematic(this_->road_ref, attr.u.str))
 			ret += 4;
 	}
 
