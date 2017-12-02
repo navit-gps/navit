@@ -13,7 +13,7 @@ var searchData=
   ['max_5fuint64_5fencoded_5fsize',['MAX_UINT64_ENCODED_SIZE',['../protobuf-c_8c.html#ae21f5d070cefdbc252bb0fca0f89c104',1,'protobuf-c.c']]],
   ['maxext',['MAXEXT',['../use_8c.html#a64d018faf6bfbb39f76c976a5c7c7a4e',1,'use.c']]],
   ['meri_5ftol',['MERI_TOL',['../geod__for_8c.html#aaa0462d575174fe57e3c4b0b686e06b0',1,'geod_for.c']]],
-  ['meters_5fper_5fmile',['METERS_PER_MILE',['../navigation_8h.html#aeae162f67890798aa1296327baf288ff',1,'navigation.h']]],
+  ['meters_5fto_5fmiles',['METERS_TO_MILES',['../navigation_8h.html#ad2c9af5d6ed9fc71aadbac0899451945',1,'navigation.h']]],
   ['mex_5fexit',['mex_exit',['../navigation_8c.html#a59497518b56060abdd403f4169a7a41f',1,'navigation.c']]],
   ['mex_5fexit_5fleft',['mex_exit_left',['../navigation_8c.html#a5098a1f8794cddb3192b9200caf96738',1,'navigation.c']]],
   ['mex_5fexit_5fright',['mex_exit_right',['../navigation_8c.html#aafec98459688e4c23a1ad0418f617724',1,'navigation.c']]],
