@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -32,6 +32,14 @@
 #include "vehicle.h"
 #include "event.h"
 #include "corelocation.h"
+
+/**
+ * @defgroup vehicle-iphone Vehicle iPhone
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from iPhone.
+ *
+ * @{
+ */
 
 struct vehicle_priv {
 	int interval;

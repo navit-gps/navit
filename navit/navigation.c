@@ -1014,11 +1014,11 @@ round_distance_reduced( int dist )
 *   'imperial' if set distinguishes the distance statement between miles and feet. Maximum distance in feet is 500.
 *   'vocabulary_distances' if set constrains the distance values to a set of simple pronounceable numbers.
 *
-*   @param nav       The navigation object.
-*   @param dist      Distance in meters.
-*   @param type      The type of announcement precision.
-*   @param is_length 1 for length statement, 0 for distance statement.
-*   @return          String with length/distance statement.
+*   @param nav         The navigation object.
+*   @param dist_meters Distance in meters.
+*   @param type        The type of announcement precision.
+*   @param is_length   1 for length statement, 0 for distance statement.
+*   @return            String with length/distance statement.
 */
 static char *
 get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length)
@@ -1058,7 +1058,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 				return g_strdup_printf(_("in %d feet"), dist_feet);
 		}
 
-		int dist_miles = (double) dist_meters / (double)METERS_PER_MILE + 0.5;
+		int dist_miles = (double) dist_meters * (double)METERS_TO_MILES + 0.5;
 
 		if (vocabulary == 0)
 		{
@@ -1066,10 +1066,10 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 			dist_miles = round_distance_reduced(dist_miles);
 		}
 
-		if ((dist_meters < METERS_PER_MILE) && (vocabulary > 0))
+		if ((dist_meters < METERS_TO_MILES) && (vocabulary > 0))
 		{
 			/* values smaller than one need extra treatment for one decimal place. For reduced vocabulary it shall remain 'one'. */
-			int rem = (((double)dist_meters  / (double)METERS_PER_MILE) + 0.05) * 10.0;
+			int rem = (((double)dist_meters  * (double)METERS_TO_MILES) + 0.05) * 10.0;
 			dist_miles= 0;
 			if (is_length)
 				return g_strdup_printf(_("%d.%d miles"), dist_miles, rem);

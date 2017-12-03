@@ -1,6 +1,4 @@
-/** @file vehicle_android.c
- * @brief android uses dbus signals
- *
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -18,8 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  *
- * @Author Tim Niemeyer <reddog@mastersword.de>
- * @date 2008-2009
  */
 
 #include <config.h>
@@ -34,6 +30,15 @@
 #include "item.h"
 #include "android.h"
 #include "vehicle.h"
+
+/**
+ * @defgroup vehicle-android Vehicle Android
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from android. Android uses dbus signals
+ * @author Tim Niemeyer <reddog@mastersword.de>
+ * @date 2008-2009
+ *
+ */
 
 struct vehicle_priv {
 	struct callback_list *cbl;
@@ -294,3 +299,5 @@ plugin_init(void)
 	dbg(lvl_debug, "enter\n");
 	plugin_register_category_vehicle("android", vehicle_android_new_android);
 }
+
+/** @} */
