@@ -25,7 +25,7 @@
          <xsl:apply-templates select="@*"/>
          <xsl:attribute name="font_size">350</xsl:attribute>
          <xsl:attribute name="icon_xs">32</xsl:attribute>
-         <xsl:attribute name="icon_s">96</xsl:attribute>
+         <xsl:attribute name="icon_s">64</xsl:attribute>
          <xsl:attribute name="icon_l">96</xsl:attribute>
          <xsl:attribute name="enabled">yes</xsl:attribute>
          <xsl:apply-templates select="node()"/>

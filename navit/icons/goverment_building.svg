@@ -13,13 +13,10 @@
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="emergency.svg"
+   sodipodi:docname="goverment_building.svg"
    sodipodi:version="0.32"
    version="1.0"
-   width="200"
-   inkscape:export-filename="C:\Users\jeremy\Pictures\svg\emergency.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   width="200">
   <defs
      id="defs22">
     <inkscape:perspective
@@ -53,7 +50,7 @@
      id="base"
      inkscape:current-layer="svg2"
      inkscape:cx="63.25448"
-     inkscape:cy="100.6273"
+     inkscape:cy="98.118112"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="705"
@@ -95,25 +92,57 @@
        style="fill:#0089cd;stroke:none"
        inkscape:connector-curvature="0" />
   </g>
-  <circle
-     style="fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:17.50965309;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path1494"
-     cx="101.07435"
-     cy="100.33749"
-     r="97.5" />
+  <path
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:19.49269104px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 9.1798926,59.466906 H 190.52231 L 99.851101,2.7306848 Z"
+     id="path925"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:14.25435543;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1712"
-     width="125.35715"
-     height="41.785713"
-     x="38.395782"
-     y="79.444618" />
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.1354475;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect927"
+     width="160.5358"
+     height="10.516355"
+     x="19.583216"
+     y="61.701366" />
+  <path
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.29089642;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="m 16.846267,171.67451 v 10.51391 H 8.0568816 v 15.54226 H 191.64467 v -15.54226 h -8.78936 v -10.51391 z"
+     id="rect927-7"
+     inkscape:connector-curvature="0" />
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:14.25435543;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1712-5"
-     width="125.35715"
-     height="41.785713"
-     x="37.658913"
-     y="-121.9672"
-     transform="rotate(90)" />
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.59141922;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect960"
+     width="18.032125"
+     height="93.275604"
+     x="27.863939"
+     y="74.209015" />
+  <rect
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.59141922;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect960-2"
+     width="18.032125"
+     height="93.275604"
+     x="154.58975"
+     y="74.209015" />
+  <rect
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.59141922;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect960-9"
+     width="18.032125"
+     height="93.275604"
+     x="122.90829"
+     y="74.209015" />
+  <rect
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.59141922;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect960-0"
+     width="18.032125"
+     height="93.275604"
+     x="59.545391"
+     y="74.209015" />
+  <rect
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.59141922;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect960-3"
+     width="18.032125"
+     height="93.275604"
+     x="91.22686"
+     y="74.209015" />
 </svg>

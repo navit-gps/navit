@@ -167,14 +167,14 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
-		addr_view.setText(Navit._("Enter Destination")); // TRANS
+		addr_view.setText(Navit.T("Enter Destination")); // TRANS
 		addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addr_view.setPadding(4, 4, 4, 4);
 
 		// partial match checkbox
 		final CheckBox checkboxPartialMatch = new CheckBox(this);
-		checkboxPartialMatch.setText(Navit._("partial match")); // TRANS
+		checkboxPartialMatch.setText(Navit.T("partial match")); // TRANS
 		checkboxPartialMatch.setChecked(last_address_partial_match);
 		checkboxPartialMatch.setGravity(Gravity.CENTER);
 
@@ -184,7 +184,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// search button
 		final Button btnSearch = new Button(this);
-		btnSearch.setText(Navit._("Search")); // TRANS
+		btnSearch.setText(Navit.T("Search")); // TRANS
 		btnSearch.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		btnSearch.setGravity(Gravity.CENTER);
 		btnSearch.setOnClickListener(new OnClickListener() {
@@ -298,8 +298,8 @@ public class NavitAddressSearchActivity extends Activity {
 			break;
 
 		}
-		search_results_wait.setMessage(Navit._("Towns") + ":" + search_results_towns + " "
-		        + Navit._("Streets") + ":" + search_results_streets + "/"
+		search_results_wait.setMessage(Navit.T("Towns") + ":" + search_results_towns + " "
+		        + Navit.T("Streets") + ":" + search_results_streets + "/"
 		        + search_results_streets_hn);
 
 		search_results_wait.setProgress(Addresses_found.size() % (ADDRESS_RESULT_PROGRESS_MAX + 1));

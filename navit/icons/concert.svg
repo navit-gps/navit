@@ -13,11 +13,11 @@
    id="svg2"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="emergency.svg"
+   sodipodi:docname="concert.svg"
    sodipodi:version="0.32"
    version="1.0"
    width="200"
-   inkscape:export-filename="C:\Users\jeremy\Pictures\svg\emergency.png"
+   inkscape:export-filename="C:\Users\jeremy\Pictures\svg\concert.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -41,7 +41,7 @@
         <cc:license
            rdf:resource="http://web.resource.org/cc/PublicDomain" />
         <dc:language>en</dc:language>
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,15 +52,15 @@
      guidetolerance="10.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="63.25448"
-     inkscape:cy="100.6273"
+     inkscape:cx="14.153144"
+     inkscape:cy="4.6274553"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="705"
      inkscape:window-width="1366"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:zoom="2.1796875"
+     inkscape:zoom="1"
      objecttolerance="10.0"
      pagecolor="#ffffff"
      showgrid="false"
@@ -70,7 +70,7 @@
      inkscape:lockguides="true" />
   <g
      id="g1327"
-     transform="matrix(0.04083073,0,0,0.04083073,-0.1767767,176.93977)">
+     transform="matrix(0.34431731,0,0,0.34431731,-0.1767767,0.6565548)">
     <path
        d="M 66.275,1.768 C 24.94,1.768 1.704,23.139 1.704,66.804 v 450.123 c 0,40.844 20.894,62.229 62.192,62.229 H 515.92 c 41.307,0 62.229,-20.316 62.229,-62.229 V 66.804 c 0,-42.601 -20.922,-65.036 -63.522,-65.036 -0.003,0 -448.494,-0.143 -448.352,0 z"
        id="path1329"
@@ -96,24 +96,35 @@
        inkscape:connector-curvature="0" />
   </g>
   <circle
-     style="fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:17.50965309;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path1494"
-     cx="101.07435"
-     cy="100.33749"
-     r="97.5" />
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.95306969;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path1511"
+     cx="54.465088"
+     cy="171.69257"
+     r="25.818937" />
+  <circle
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.95306969;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path1511-2"
+     cx="140.43051"
+     cy="128.74763"
+     r="25.818937" />
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:14.25435543;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1712"
-     width="125.35715"
-     height="41.785713"
-     x="38.395782"
-     y="79.444618" />
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.26697731;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect1530"
+     width="21.705309"
+     height="113.89934"
+     x="58.578712"
+     y="55.204674" />
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:14.25435543;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1712-5"
-     width="125.35715"
-     height="41.785713"
-     x="37.658913"
-     y="-121.9672"
-     transform="rotate(90)" />
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:9.26697731;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect1530-1"
+     width="21.705309"
+     height="113.89934"
+     x="144.54413"
+     y="13.819176" />
+  <path
+     style="fill:#0089cd;fill-opacity:1;stroke:none;stroke-width:34.42524719px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 58.662477,55.204534 166.24943,2.511515 V 30.901629 L 58.662477,83.956741 Z"
+     id="path1547"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccccc" />
 </svg>
