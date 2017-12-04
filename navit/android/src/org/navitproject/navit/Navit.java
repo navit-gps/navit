@@ -80,6 +80,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.NotificationCompat;
 
 
 public class Navit extends Activity
@@ -119,6 +120,7 @@ public class Navit extends Activity
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
 	Boolean                          isFullscreen                   = false;
 	private static final int         MY_PERMISSIONS_REQUEST_ALL     = 101;
+	public static NotificationManager       nm;
 
 	
 	/**
@@ -174,7 +176,7 @@ public class Navit extends Activity
 	}
 
 
-	public static String _(String in)
+	public static String T(String in)
 	{
 		return NavitTextTranslations.get_text(in);
 	}
@@ -238,18 +240,8 @@ public class Navit extends Activity
 			AlertDialog.Builder infobox = new AlertDialog.Builder(this);
 			infobox.setTitle(getString(R.string.initial_info_box_title)); // TRANS
 			infobox.setCancelable(false);
-			final TextView message = new TextView(this);
-			message.setFadingEdgeLength(20);
-			message.setVerticalFadingEdgeEnabled(true);
-			// message.setVerticalScrollBarEnabled(true);
-			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-	
-			message.setLayoutParams(rlp);
-			final SpannableString s = new SpannableString(getString(R.string.initial_info_box_message)); // TRANS
-			Linkify.addLinks(s, Linkify.WEB_URLS);
-			message.setText(s);
-			message.setMovementMethod(LinkMovementMethod.getInstance());
-			infobox.setView(message);
+			
+			infobox.setMessage(R.string.initial_info_box_message);
 	
 			// TRANS
 			infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
@@ -302,13 +294,17 @@ public class Navit extends Activity
 		// NOTIFICATION
 		// Setup the status bar notification		
 		// This notification is removed in the exit() function
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);	// Grab a handle to the NotificationManager
-		Notification NavitNotification = new Notification(R.drawable.ic_notify, getString(R.string.notification_ticker), System.currentTimeMillis());	// Create a new notification, with the text string to show when the notification first appears
+		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);	// Grab a handle to the NotificationManager
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
-//		FIXME : needs a fix for sdk 23
-//		NavitNotification.setLatestEventInfo(getApplicationContext(), "Navit", getString(R.string.notification_event_default), appIntent);	// Set the text in the notification
-//		NavitNotification.flags|=Notification.FLAG_ONGOING_EVENT;	// Ensure that the notification appears in Ongoing
-//		nm.notify(R.string.app_name, NavitNotification);	// Set the notification
+		
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+		builder.setContentIntent(appIntent);
+		builder.setAutoCancel(false).setOngoing(true);
+		builder.setContentTitle(getString(R.string.app_name));
+		builder.setContentText(getString(R.string.notification_event_default));
+		builder.setSmallIcon(R.drawable.ic_notify);
+		Notification NavitNotification = builder.build();
+		nm.notify(R.string.app_name, NavitNotification);// Show the notification
 		
 		// Status and navigation bar sizes
 		// These are platform defaults and do not change with rotation, but we have to figure out which ones apply
@@ -583,6 +579,10 @@ public class Navit extends Activity
 		ActivityResults[requestCode] = ActivityResult;
 	}
 
+	/*
+	 * This is unused since we dont have the dropdown 
+	 * TODO: recheck if this is right and remove this!
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
@@ -824,7 +824,7 @@ public class Navit extends Activity
 				SharedPreferences.Editor  prefs_editor = prefs.edit(); 
 				prefs_editor.putString("filenamePath", newDir); 
 				prefs_editor.commit();
-				Toast.makeText(this, String.format(Navit._("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();                 
+				Toast.makeText(this, String.format(Navit.T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();                 
 			} 
 				else Log.w(TAG, "select path failed"); 
 			break; 			
@@ -912,8 +912,7 @@ public class Navit extends Activity
 
 	public void exit()
 	{
-//		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//		nm.cancel(R.string.app_name);
+		nm.cancelAll();
 		NavitVehicle.removeListener();
 		NavitDestroy();
 	}
