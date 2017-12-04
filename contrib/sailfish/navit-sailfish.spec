@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.1
-Release: 3
+Release: 4
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-projet.org/
@@ -123,6 +123,10 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+*Tue Oct 17 2017 metalstrolch 0.5.1-4
+- Fix medium GUI icon size to cope with changed icon set on upstream
+- Update upstream
+
 *Wed Jun 05 2017 metalstrolch 0.5.1-3
 - Enable rotating.
 - Create default config from xlst

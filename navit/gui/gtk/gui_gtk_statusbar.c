@@ -87,7 +87,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	struct map_rect *mr=NULL;
 	struct item *item=NULL;
 	struct attr attr;
-	double route_len=0;
+	double route_len=0;     /* Distance to destination. We get it in kilometers. */
 	time_t eta;
 	struct tm *eta_tm=NULL;
 	char buffer[128];
@@ -97,6 +97,11 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	const char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	const char *dir;
 	int dir_idx;
+
+        /* Respect the Imperial attribute as we enlighten the user. */
+        int imperial = FALSE;  /* default to using metric measures. */
+        if (navit_get_attr(navit, attr_imperial, &attr, NULL))
+            imperial=attr.u.num;
 
 	if (navit)
 		nav=navit_get_navigation(navit);
@@ -116,7 +121,13 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	}
 	if (mr)
 		map_rect_destroy(mr);
-	sprintf(buffer,_("Route %4.0fkm    %02d:%02d ETA" ),route_len/1000, eta_tm ? eta_tm->tm_hour : 0 , eta_tm ? eta_tm->tm_min : 0);
+
+        sprintf(buffer,_("Route %4.1f%s    %02d:%02d ETA" ),
+                imperial == TRUE ? route_len * (KILOMETERS_TO_MILES/1000.00) : route_len/1000,
+                imperial == TRUE ? "mi" : "km",
+                eta_tm ? eta_tm->tm_hour : 0 ,
+                eta_tm ? eta_tm->tm_min : 0);
+
 	if (strcmp(buffer, this->route_text)) {
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
@@ -145,10 +156,17 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	if (vehicle_get_attr(v, attr_position_qual, &attr, NULL))
 		qual=attr.u.num;
 	coord_format(lat,lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
-	sprintf(this->gps_text,"GPS:%s %02d/%02d HD:%02.2f %s %4.0fm %3.0f°%-2s %3.0fkm/h", 
-			status_fix2str(status),
-			sats, qual, hdop, buffer, height,
-			direction, dir, speed);
+
+        sprintf(this->gps_text,"GPS:%s %02d/%02d HD:%02.2f %s %4.0f%s %3.0f°%-2s %3.1f%s", 
+                status_fix2str(status),
+                sats, qual, hdop, buffer,
+                imperial ? height * FEET_PER_METER : height,
+                imperial == TRUE ? "\'" : "m",
+                direction, dir,
+                imperial == TRUE ? speed * KILOMETERS_TO_MILES : speed,
+                imperial == TRUE ? " mph" : "km/h"
+            );
+
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 }
 

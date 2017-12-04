@@ -126,6 +126,27 @@ tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	}
 }
 
+/** @brief Toggles the ability to follow the vehicle at the
+ *  cursor. Suitable for use in the GTK menu as below.
+ *
+ *  @param GtkWidget is the generic storage type for widgets.
+ *  @param gui The gui. I think, I'm new here.
+ *  @param dummy Ignore the pointer behind the curtain.
+ *  @return void
+ */
+
+static void
+follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
+{
+	struct attr attr;
+
+	attr.type=attr_follow_cursor;
+	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+	if(!navit_set_attr(gui->nav, &attr)) {
+		dbg(lvl_error, "Failed to set attr_follow_gps\n");
+	}
+}
+
 static void
 orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
@@ -232,6 +253,7 @@ static GtkToggleActionEntry toggleentries[] =
 {
 	{ "CursorAction", "cursor_icon",_n("Show position _cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
 	{ "TrackingAction", NULL ,_n("_Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
+	{ "FollowVehicleAction", NULL ,_n("_Follow Vehicle"), NULL, NULL, G_CALLBACK(follow_vehicle_action),TRUE },
 	{ "OrientationAction", "orientation_icon", _n("_Keep orientation to the North"), NULL, _n("Switches map orientation to the north or the vehicle"), G_CALLBACK(orient_north_action),FALSE },
 	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("_Roadbook"), "<control>B", _n("Show/hide route description"), G_CALLBACK(roadbook_action), FALSE },
 	{ "AutozoomAction", GTK_STOCK_ZOOM_FIT, _n("_Autozoom"), "<control>A", _n("Enable/disable automatic zoom level changing"), G_CALLBACK(autozoom_action), FALSE },
@@ -383,6 +405,7 @@ static char layout[] =
 				<menuitem name=\"Zoom out\" action=\"ZoomOutAction\" />\
 				<menuitem name=\"Cursor\" action=\"CursorAction\"/>\
 				<menuitem name=\"Tracking\" action=\"TrackingAction\"/>\
+				<menuitem name=\"Follow Vehicle\" action=\"FollowVehicleAction\"/>\
 				<menuitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<menuitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
 				<menuitem name=\"Autozoom\" action=\"AutozoomAction\"/>\
