@@ -1,4 +1,3 @@
-#include <QDebug>
 #include "qml_poi.h"
 
 PoiObject::PoiObject(QObject *parent)

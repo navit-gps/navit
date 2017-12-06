@@ -1,5 +1,5 @@
 # Portuguese translations for navit
-# Copyright (C) 2006-2016 The Navit Team
+# Copyright (C) 2006-2017 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # CaioNavas https://launchpad.net/~webmaster-caiomnavas
@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-10-11 10:00+0000\n"
+"PO-Revision-Date: 2017-06-26 15:54+0000\n"
 "Last-Translator: João Pirralha <joaopirralha@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2000,6 +2000,9 @@ msgstr "Descrição da rota"
 msgid "Show Locale"
 msgstr "Exibir região e idioma"
 
+msgid "Network info"
+msgstr "Informação da rede"
+
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
 
@@ -2539,8 +2542,17 @@ msgstr "Ecrã completo"
 msgid "Window Mode"
 msgstr "Modo de janela"
 
+msgid "Auto zoom"
+msgstr "Ampliação automática"
+
+msgid "Manual zoom"
+msgstr "Ampliação manual"
+
 msgid "Layers"
 msgstr "Camadas"
+
+msgid "Zoom to route"
+msgstr "Ampliar para a rota"
 
 msgid "Description"
 msgstr "Descrição"
@@ -2796,6 +2808,18 @@ msgstr ""
 "O Navit pode usar qualquer motor de síntese de voz no dispositivo. O motor "
 "atualmente selecionado reporta não suportar o seu idioma. Pedir ao sistema "
 "para exibir o diálogo de transferência de voz?"
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+"O Navit necessita de permissão para aceder ao GPS e ler o mapa.\n"
+"Se mudar de ideias por favor reinicie o Navit e conceda estas permissões."
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr "Uma ou mais permissões não concedidas"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"

@@ -8,7 +8,10 @@
         <file>skins/modern/MainButton.qml</file>
         <file>skins/modern/settings.qml</file>
         <file>skins/modern/maps.qml</file>
+        <file>skins/modern/poi.qml</file>
         <file>skins/modern/pois.qml</file>
+        <file>skins/modern/bookmark.qml</file>
+        <file>skins/modern/bookmarks.qml</file>
         <file>skins/modern/icons/appbar.home.variant.svg</file>
         <file>skins/modern/icons/appbar.rocket.svg</file>
         <file>skins/modern/icons/appbar.power.svg</file>
@@ -24,7 +27,6 @@
         <file>skins/modern/icons/appbar.location.checkin.svg</file>
         <file>skins/modern/icons/appbar.cogs.svg</file>
         <file>skins/modern/icons/bigcity.png</file>
-        <file>skins/modern/poi.qml</file>
         <file>skins/modern/search.qml</file>
         <file>skins/modern/destination.qml</file>
         <file>skins/modern/icons/appbar.city.svg</file>
@@ -33,5 +35,8 @@
         <file>skins/modern/icons/appbar.book.list.svg</file>
         <file>skins/modern/icons/smallcity.png</file>
         <file>skins/modern/destination_address.qml</file>
+        <file>skins/modern/search_result_item.qml</file>
+        <file>skins/modern/vehicles.qml</file>
+        <file>skins/modern/vehicle.qml</file>
     </qresource>
 </RCC>

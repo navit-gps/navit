@@ -94,7 +94,9 @@ struct route_graph_point {
 										  *  least costs */
 	struct fibheap_el *el;				 /**< When this point is put on a Fibonacci heap, this is a pointer
 										  *  to this point's heap-element */
-	int value;							 /**< The cost at which one can reach the destination from this point on */
+	int value;							 /**< The cost at which one can reach the destination from this point on.
+	                                      *  {@code INT_MAX} indicates that the destination is unreachable from this
+	                                      *  point, or that this point has not yet been examined. */
 	struct coord c;						 /**< Coordinates of this point */
 	int flags;						/**< Flags for this point (eg traffic distortion) */
 };
@@ -112,7 +114,7 @@ struct route_graph_point {
 struct route_segment_data {
 	struct item item;							/**< The item (e.g. street) that this segment represents. */
 	int flags;
-	int len;									/**< Length of this segment */
+	int len;									/**< Length of this segment, in meters */
 	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
 				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
 				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
@@ -135,13 +137,19 @@ struct size_weight_limit {
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
 
+/**
+ * @brief Data for a segment in the route graph
+ */
 struct route_graph_segment_data {
-	struct item *item;
-	int offset;
-	int flags;
-	int len;
-	int maxspeed;
-	struct size_weight_limit size_weight;
+	struct item *item;                    /**< The item which this segment is part of */
+	int offset;                           /**< If the item passed in "item" is segmented (i.e. divided
+	                                       *   into several segments), this indicates the position of
+	                                       *   this segment within the item */
+	int flags;                            /**< Flags for this segment */
+	int len;                              /**< The length of this segment */
+	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
+	                                       *   -1 if not known */
+	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
 };
 
@@ -215,7 +223,8 @@ struct route_info {
 /**
  * @brief A complete route path
  *
- * This structure describes a whole routing path
+ * A route path is an ordered set of segments describing the route from the current position (or previous
+ * destination) to the next destination.
  */
 struct route_path {
 	int in_use;						/**< The path is in use and can not be updated */
@@ -247,8 +256,8 @@ struct route {
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
-	struct map *map;
-	struct map *graph_map;
+	struct map *map;            /**< The map containing the route path */
+	struct map *graph_map;      /**< The map containing the route graph */
 	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
 	struct callback_list *cbl2;	/**< Callback list to call when route changes */
@@ -263,7 +272,8 @@ struct route {
 /**
  * @brief A complete route graph
  *
- * This structure describes a whole routing graph
+ * The route graph holds all routable segments along with the connections between them and the cost of
+ * each segment.
  */
 struct route_graph {
 	int busy;					/**< The graph is being built */
@@ -1165,8 +1175,9 @@ route_clear_destinations(struct route *this_)
  * and updates the route.
  *
  * @param this The route to set the destination for
- * @param dst Coordinates to set as destination
- * @param count Number of destinations (last one is final)
+ * @param dst Points to an array of coordinates to set as destinations, which will be visited in the
+ * order in which they appear in the array (the last one is the final destination)
+ * @param count Number of items in {@code dst}, 0 to clear all destinations
  * @param async If set, do routing asynchronously
  */
 
@@ -1602,6 +1613,15 @@ route_segment_data_size(int flags)
 }
 
 
+/**
+ * @brief Checks if the route graph already contains a particular segment.
+ *
+ * This function compares the item IDs of both segments. If the item is segmented, the segment offset is
+ * also compared.
+ *
+ * @param start The starting point of the segment
+ * @param data The data for the segment
+ */
 static int
 route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
 {
@@ -1623,9 +1643,6 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_g
 
 /**
  * @brief Inserts a new segment into the route graph
- *
- * This function performs a check if a segment for the item specified already exists, and inserts
- * a new segment representing this item if it does not.
  *
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
@@ -2150,6 +2167,15 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	return ret;
 }
 
+/**
+ * @brief Whether two route graph segments match.
+ *
+ * Two segments match if both start and end at the exact same points. Other points are not considered.
+ *
+ * @param s1 The first segment
+ * @param s2 The second segment
+ * @return true if both segments match, false if not
+ */
 static int
 route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_segment *s2)
 {
@@ -2162,11 +2188,13 @@ route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_seg
 /**
  * @brief Sets or clears a traffic distortion for a segment.
  *
- * This sets or clears a delay. It cannot be used to set speed.
+ * This sets a delay (setting speed is not supported) or clears an existing traffic distortion.
+ * Note that, although setting a speed is not supported, calling this function with a delay of 0
+ * will also clear an existing speed constraint.
  *
  * @param this The route graph
  * @param seg The segment to which the traffic distortion applies
- * @param delay Delay in tenths of a second
+ * @param delay Delay in tenths of a second, or 0 to clear an existing traffic distortion
  */
 static void
 route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay)
@@ -2199,10 +2227,10 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
 }
 
 /**
- * @brief Adds a route distortion item to the route graph
+ * @brief Adds a traffic distortion item to the route graph
  *
  * @param this The route graph to add to
- * @param item The item to add
+ * @param item The item to add, must be of {@code type_traffic_distortion}
  */
 static void
 route_process_traffic_distortion(struct route_graph *this, struct item *item)
@@ -2932,6 +2960,15 @@ route_graph_process_restrictions(struct route_graph *this)
 	}
 }
 
+/**
+ * @brief Releases all resources needed to build the route graph.
+ *
+ * If {@code cancel} is false, this function will start processing restrictions and ultimately call
+ * the route graph's {@code done_cb} callback.
+ *
+ * @param rg Points to the route graph
+ * @param cancel True if the process was aborted before completing, false if it completed normally
+ */
 static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {

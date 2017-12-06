@@ -1,0 +1,150 @@
+version: 2
+defaults: &defaults
+  docker:
+    - image: ubuntu:14.04
+
+jobs:
+  build_linux:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Setup requirements
+          command: |
+            bash ci/setup_common_requirements.sh
+            apt-get install -y libpng12-dev librsvg2-bin libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+      - run:
+          name: Build for Linux
+          command: bash ci/build_linux.sh
+  run_doxygen:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install doxygen
+          command: apt-get update && apt-get -y install doxygen ca-certificates git
+      - run:
+          name: Run doxygen
+          command: cd navit && doxygen
+      - run:
+          name: Update results to Github
+          command: |
+            mkdir /root/.ssh
+            chmod 0600 /root/.ssh
+            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' >> ~/.ssh/known_hosts
+            git clone -b gh-pages git@github.com:navit-gps/navit.git /root/navit-doc
+            cd /root/navit-doc
+            git config --global push.default simple
+            git config user.name "Circle CI"
+            git config user.email "circleci@navit-project.org"
+            rsync -vrtza --exclude '.git' --delete /root/project/doc/html/ /root/navit-doc/
+            echo "" > .nojekyll
+            echo "doxygen.navit-project.org" > CNAME
+            git add .
+            git commit -am "update:doc:Doxygen update for commit ${CIRCLE_SHA1} [ci skip]" || true
+            git push
+      - store_artifacts:
+          path: /root/project/doc
+  build_android_arm:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Setup common requirements
+          command: |
+            bash ci/setup_common_requirements.sh
+      - run:
+          name: Prepare the Android build environment
+          command: |
+            bash ci/setup_android.sh
+      - run:
+          name: Build for Android ARM
+          command: |
+            bash ci/build_android.sh
+      - store_artifacts:
+          path: android-arm/navit
+  build_android_x86:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Setup common requirements
+          command: |
+            bash ci/setup_common_requirements.sh
+      - run:
+          name: Prepare the Android build environment
+          command: |
+            bash ci/setup_android.sh
+      - run:
+          name: Build for Android X86
+          command: |
+            bash ci/build_android_x86.sh
+      - store_artifacts:
+          path: android-x86/navit
+  build_win32:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Windows
+          command: |
+            bash ci/setup_common_requirements.sh
+            bash ci/build_win32.sh
+  build_wince:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build for Windows CE
+          command: |
+            bash ci/setup_common_requirements.sh
+            bash ci/build_wince.sh
+  build_tomtom_minimal:
+    <<: *defaults
+    docker:
+      - image: navit/tomtom-build-image
+    steps:
+      - checkout
+      - run:
+          name: Setup common requirements
+          command: |
+            bash ci/setup_common_requirements.sh
+      - run:
+          name: Build for Tomtom (minimal)
+          command: |
+            bash ci/build_tomtom_minimal.sh
+      - store_artifacts:
+          path: /output
+  build_tomtom_plugin:
+    <<: *defaults
+    docker:
+      - image: navit/tomtom-build-image
+    steps:
+      - checkout
+      - run:
+          name: Setup common requirements
+          command: |
+            bash ci/setup_common_requirements.sh
+      - run:
+          name: Build for Tomtom (plugin)
+          command: |
+            bash ci/build_tomtom_plugin.sh
+      - store_artifacts:
+          path: /output
+
+workflows:
+  version: 2
+  doxygen:
+    jobs:
+      - run_doxygen:
+          filters:
+            branches:
+              only: /^trunk$/
+  build_all:
+    jobs:
+      - build_linux
+      - build_android_arm
+      - build_android_x86
+      - build_win32
+      - build_tomtom_minimal
+      - build_tomtom_plugin

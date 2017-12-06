@@ -2,7 +2,7 @@
 
 Navit on Android tablet:
 
-![navit on android](http://wiki.openstreetmap.org/w/images/2/25/Navit_android.png)
+![navit on android](https://raw.githubusercontent.com/navit-gps/navit/trunk/contrib/images/androidtablet.png)
 
 Navit on Linux based Carputer:
 

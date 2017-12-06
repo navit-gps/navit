@@ -460,7 +460,7 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 		this_->skin=g_strdup("navit");
 	}
 	if ( this_->icon_src==NULL ) {
-		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/xpm/",NULL);
+		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/icons/",NULL);
 	}
 
 	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {

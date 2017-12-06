@@ -480,7 +480,7 @@ gui_internal_keyboard_init_mode(char *lang)
  * @param this The internal GUI instance
  * @param w The placeholder widget
  */
-void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
+static void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
 	struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
 
 	if (kbd) {

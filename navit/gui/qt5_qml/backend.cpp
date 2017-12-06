@@ -7,6 +7,8 @@
 #include "layout.h"
 #include "map.h"
 #include "transform.h"
+#include "vehicle.h"
+#include "bookmarks.h"
 #include "backend.h"
 
 #include "qml_map.h"
@@ -25,6 +27,10 @@ extern "C" {
 
 Backend::Backend(QObject * parent):QObject(parent)
 {
+	set_default_country();
+	this->search = NULL;
+	_current_town = NULL;
+	_current_street = NULL;
 }
 
 /**
@@ -91,6 +97,48 @@ void Backend::get_maps()
         emit mapsChanged();
 }
 
+
+/**
+ * @brief update the private m_vehicles list. Expected to be called from QML
+ * @param none
+ * @returns nothing
+ */ 
+void Backend::get_vehicles()
+{
+        struct attr attr,attr2,vattr;
+        struct attr_iter *iter;
+        struct attr active_vehicle;
+	_vehicles.clear();
+
+        iter=navit_attr_iter_new();
+        if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
+                vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
+                navit_attr_iter_destroy(iter);
+		_vehicles.append(new VehicleObject(g_strdup(vattr.u.str), active_vehicle.u.vehicle, attr.u.vehicle));
+		dbg(lvl_debug, "done\n");
+		emit vehiclesChanged();
+                return;
+        }
+        navit_attr_iter_destroy(iter);
+
+        if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
+                active_vehicle.u.vehicle=NULL;
+        iter=navit_attr_iter_new();
+        while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
+                vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
+		dbg(lvl_debug, "adding vehicle %s\n", vattr.u.str);
+		_vehicles.append(
+			new VehicleObject(
+				g_strdup(vattr.u.str),
+				attr.u.vehicle == active_vehicle.u.vehicle,
+				attr.u.vehicle
+			)
+		);
+        }
+        navit_attr_iter_destroy(iter);
+	emit vehiclesChanged();
+}
+
 /**
  * @brief set a pointer to the struct navit * for local use
  * @param none
@@ -123,6 +171,39 @@ int Backend::filter_pois(struct item *item)
         if (type >= type_line)
                 return 0;
         return 1;
+}
+
+/**
+ * @brief update the private m_bookmarks list. Expected to be called from QML
+ * @param none
+ * @returns nothing
+ */ 
+void Backend::get_bookmarks()
+{
+        struct attr attr,mattr;
+        struct navigation * nav = NULL;
+        struct item *item;
+        struct coord c;
+        struct pcoord pc;
+
+	_bookmarks.clear();
+
+        pc.pro = transform_get_projection(navit_get_trans(this->nav));
+
+        if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
+                bookmarks_item_rewind(mattr.u.bookmarks);
+                while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
+                        if (!item_attr_get(item, attr_label, &attr)) continue;
+                        dbg(lvl_debug,"full_label: %s\n", attr.u.str);
+                        if (item_coord_get(item, &c, 1)) {
+                                pc.x = c.x;
+                                pc.y = c.y;
+                                dbg(lvl_debug, "coords : %i x %i\n", pc.x, pc.y);
+				_bookmarks.append(new BookmarkObject(attr.u.str, pc));
+                        }
+                }
+        }
+        emit bookmarksChanged();
 }
 
 /**
@@ -196,12 +277,31 @@ QQmlListProperty<QObject> Backend::getPois(){
 }
 
 /**
+ * @brief get the Bookmarks as a QList
+ * @param none
+ * @returns the bookmarks QList
+ */ 
+QQmlListProperty<QObject> Backend::getBookmarks(){
+        return QQmlListProperty<QObject>(this, _bookmarks);
+}
+
+/**
  * @brief get the maps as a QList
  * @param none
  * @returns the maps QList
  */ 
 QQmlListProperty<QObject> Backend::getMaps(){
         return QQmlListProperty<QObject>(this, _maps);
+}
+
+
+/**
+ * @brief get the vehicles as a QList
+ * @param none
+ * @returns the vehicles QList
+ */ 
+QQmlListProperty<QObject> Backend::getVehicles(){
+        return QQmlListProperty<QObject>(this, _vehicles);
 }
 
 /**
@@ -223,6 +323,34 @@ PoiObject * Backend::activePoi() {
         dbg(lvl_debug, "type : %s\n", m_activePoi->type().toLatin1().data());
         return m_activePoi;
 }
+
+/**
+ * @brief get the current bookmark. Used when displaying the relevant menu
+ * @param none
+ * @returns the current bookmark
+ */ 
+BookmarkObject * Backend::currentBookmark() {
+        return m_currentBookmark;
+}
+
+/**
+ * @brief get the currently selected vehicle. Used when displaying the relevant menu
+ * @param none
+ * @returns the active POI
+ */ 
+VehicleObject * Backend::currentVehicle() {
+	struct attr attr;
+        dbg(lvl_debug, "name : %s\n", m_currentVehicle->name().toUtf8().data());
+	if (m_currentVehicle->vehicle()) {
+		if (vehicle_get_attr(m_currentVehicle->vehicle(), attr_position_nmea, &attr, NULL))
+			dbg(lvl_debug, "NMEA : %s\n", attr.u.str);
+	} else {
+		dbg(lvl_debug, "m_currentVehicle->v is null\n");
+	}
+
+        return m_currentVehicle;
+}
+
 
 void Backend::block_draw(){
         navit_block(this->nav, 1);
@@ -256,14 +384,37 @@ void Backend::setActivePoi(int index) {
         navit_set_center(this->nav, &c, 1);
         emit activePoiChanged();
 }
+/**
+ * @brief set the current bookmark. Used when clicking on a bookmark list to display one single bookmark
+ * @param int index the index of the bookmark in the m_bookmarks list
+ * @returns nothing
+ */ 
+void Backend::setCurrentBookmark(int index) {
+        struct pcoord c;
+        m_currentBookmark = (BookmarkObject *)_bookmarks.at(index);
+        c = m_currentBookmark->coords();
+        resize(320, 240);
+        navit_set_center(this->nav, &c, 1);
+        emit currentBookmarkChanged();
+}
 
 /**
- * @brief returns the icon (xpm) absolute path
+ * @brief set the current vehicle. Used when clicking on a vehicle list to display one single vehicle
+ * @param int index the index of the vehicle in the m_vehicles list
+ * @returns nothing
+ */ 
+void Backend::setCurrentVehicle(int index) {
+        m_currentVehicle = (VehicleObject *)_vehicles.at(index);
+        emit currentVehicleChanged();
+}
+
+/**
+ * @brief returns the icon absolute path
  * @param none
- * @returns the icon (xpm) absolute path as a QString
+ * @returns the icon absolute path as a QString
  */ 
 QString Backend::get_icon_path(){
-        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",NULL));
+        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/icons/",NULL));
 }
 
 /**
@@ -288,9 +439,10 @@ void Backend::setActivePoiAsDestination(){
  */ 
 void Backend::searchValidateResult(int index){
         SearchObject * r = (SearchObject *)_search_results.at(index);
-        dbg(lvl_debug, "Saving %s [%i] %x %x\n", 
-                        r->name().toUtf8().data(),
-                        index, r->getCoords()->x, r->getCoords()->y);
+        dbg(lvl_debug, "Saving %s [%i] as search result\n", r->name().toUtf8().data(), index);
+	if (r->getCoords()){
+                dbg(lvl_debug, "Item is at %x x %x\n", r->getCoords()->x, r->getCoords()->y);
+	}
         if (_search_context == attr_country_all) {
                 _current_country = g_strdup(r->name().toUtf8().data());
                 _current_town = NULL;
@@ -316,7 +468,7 @@ QString Backend::get_country_icon(char * country_iso_code){
 //        if ( country_iso_code == "" ) {
 //                country_iso_code = _country_iso2;
 //        }
-        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/xpm/",country_iso_code,".svg",NULL));
+        return QString(g_strjoin(NULL,"file://",getenv("NAVIT_SHAREDIR"),"/icons/",country_iso_code,".svg",NULL));
 }
 
 
@@ -357,9 +509,6 @@ void Backend::updateSearch(QString text){
                 search->ms=navit_get_mapset(this->nav);
                 search->sl=search_list_new(search->ms);
                 search->partial = 1;
-                if ( _country_iso2 == NULL ){
-                        set_default_country();
-                }
                 dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
                 search_attr.type=attr_country_iso2;
                 search_attr.u.str=_country_iso2;
@@ -389,7 +538,6 @@ void Backend::updateSearch(QString text){
                 if ( _search_context == attr_country_all && res->country) {
                         char * label;
                         label = g_strdup(res->country->name);
-                        dbg(lvl_debug, "country result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, get_country_icon(res->country->flag) , res->c)
                                         );
@@ -397,7 +545,6 @@ void Backend::updateSearch(QString text){
                 if ( _search_context == attr_town_name && res->town) {
                         char * label;
                         label = g_strdup(res->town->common.town_name);
-                        dbg(lvl_debug, "town result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, "icons/bigcity.png", res->c)
                                         );
@@ -405,7 +552,6 @@ void Backend::updateSearch(QString text){
                 if (res->street) {
                         char * label;
                         label = g_strdup(res->street->name);
-                        dbg(lvl_debug, "street result %s\n", label);
                         _search_results.append(
                                         new SearchObject(label, "icons/smallcity.png", res->c)
                                         );
@@ -431,17 +577,11 @@ void Backend::setSearchContext(QString text){
 }
 
 QString Backend::currentCountry() {
-        if (_current_country == NULL) {
-                set_default_country();
-        }
         dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
         return QString(_current_country);
 }
 
 QString Backend::currentCountryIso2() {
-        if (_country_iso2 == NULL) {
-                set_default_country();
-        }
         dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
         return QString(_country_iso2);
 }

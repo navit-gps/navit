@@ -201,7 +201,7 @@ sub get_arg {
 }
 
 $sjjb_dir= get_arg(0, "Directory holding the extracted svg's from http://www.sjjb.co.uk/mapicons/downloads");
-$dest_dir= $ARGV[1] ? $ARGV[1] : dirname(__FILE__)."/../navit/xpm/";
+$dest_dir= $ARGV[1] ? $ARGV[1] : dirname(__FILE__)."/../navit/icons/";
 
 foreach $i (@icons) {
 	my ($path, $icon)= split('/', $i->[0]);
