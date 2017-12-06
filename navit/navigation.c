@@ -194,8 +194,9 @@ struct navigation {
 /** @brief Set of simplified distance values that are easy to be pronounced.
 *          Used for the 'vocabulary_distances' configuration.
 */
-int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
-
+const int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750};
+#define SIZE_OF_ARRAY_DISTANCES (sizeof (distances)/sizeof (int))
+#define LAST_DISTANCE (SIZE_OF_ARRAY_DISTANCES - 1)
 
 /* Allowed values for navigation_maneuver.merge_or_exit
  * The numeric values are chosen in such a way that they can be interpreted as flags:
@@ -965,20 +966,6 @@ round_distance(int dist)
 	return dist*10000;
 }
 
-/** @brief Returns the last element of the simplified numbers containing a distance value.
- *   @return value with the highest distance.
- */
-static int
-distance_set_last(void)
-{
-	static int i=0;
-
-        while (distances[i] > 0)
-                i++;
-
-	return distances[ i>0 ? i-1 : 0 ];
-}
-
 /** @brief Restricts the distance value to a simple set of pronounceable numbers.
 *   @param  dist       The distance to be processed
 *   @return distance   Simplified distance value
@@ -987,14 +974,14 @@ static int
 round_distance_reduced( int dist )
 {
 	int factor = 1;
-	if (dist > distance_set_last())
+	if (dist > distances[LAST_DISTANCE])
 	{
 		dist=(dist+500)/1000;
 		factor = 1000;
 	}
 
 	int i=0,d=0,m=0;
-	while (distances[i] > 0) {
+	while (i < SIZE_OF_ARRAY_DISTANCES) {
 		if (!i || abs(distances[i]-dist) <= d) {
 			d=abs(distances[i]-dist);
 			m=i;
