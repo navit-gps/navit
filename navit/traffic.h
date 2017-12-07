@@ -268,6 +268,7 @@ struct traffic_location {
 	struct traffic_point * at;         /*!< The point for a point location, NULL for linear locations. */
 	struct traffic_point * from;       /*!< The start of a linear location, or a point before {@code at}. */
 	struct traffic_point * to;         /*!< The end of a linear location, or a point after {@code at}. */
+	/* TODO specify direction for linear locations on ring roads */
 	char * destination;                /*!< A destination, preferably the one given on road signs,
 	                                    *   indicating that the message applies only to traffic going in
 	                                    *   that direction. Do not use for bidirectional locations. */
