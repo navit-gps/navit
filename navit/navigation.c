@@ -194,6 +194,22 @@ struct navigation {
 /** @brief Set of simplified distance values that are easy to be pronounced.
 *          Used for the 'vocabulary_distances' configuration.
 */
+
+/**
+ * This method of calculating the number of elements in an array
+ * (#define SIZE_OF_ARRAY_DISTANCES, below) will work for most modern
+ * processors. It may cause problems on a few obscure processors, none
+ * of which are likely candidates for navit anyway.
+ *
+ * It works like so: Modern processors simply stuff the elements of an
+ * int array into memory one after the other, with no gaps. Some older
+ * processors might not do so, due to memory alignment issues. This
+ * method does not take such gaps into account. For more discussion,
+ * see https://github.com/navit-gps/navit/pull/373
+ *
+ * So if you are on an oddball processor and start getting really odd
+ * values for distances, this might be the reason. Good luck!
+ */
 const int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750};
 #define SIZE_OF_ARRAY_DISTANCES (sizeof (distances)/sizeof (int))
 #define LAST_DISTANCE (SIZE_OF_ARRAY_DISTANCES - 1)
