@@ -1975,14 +1975,15 @@ navit_window_roadbook_update(struct navit *this_)
 				param[0].value=_("Position");
 			param[0].name=_("Command");
 
+                        /* Distance to the next maneuver. */
 			item_attr_get(item, attr_length, &attr);
-			dbg(lvl_info, "Length=%ld\n", attr.u.num);
+			dbg(lvl_info, "Length=%ld in meters\n", attr.u.num);
 			param[1].name=_("Length");
 
 			if ( attr.u.num >= 2000 )
 			{
                                 param[1].value=g_strdup_printf("%5.1f %s",
-                                                               imperial == TRUE ? (float)attr.u.num / (METERS_PER_MILE/1000.00) : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? (float)attr.u.num * METERS_TO_MILES : (float)attr.u.num / 1000,
                                                                imperial == TRUE ? _("mi") : _("km")
                                         );
 			}
@@ -1994,6 +1995,7 @@ navit_window_roadbook_update(struct navit *this_)
                                         );
 			}
 
+                        /* Time to next maneuver. */
 			item_attr_get(item, attr_time, &attr);
 			dbg(lvl_info, "Time=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
@@ -2007,13 +2009,14 @@ navit_window_roadbook_update(struct navit *this_)
                                 param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
 			}
 
+                        /* Distance from next maneuver to destination. */
 			item_attr_get(item, attr_destination_length, &attr);
-			dbg(lvl_info, "Destlength=%ld\n", attr.u.num);
+			dbg(lvl_info, "Destlength=%ld in meters.\n", attr.u.num);
 			param[3].name=_("Destination Length");
 			if ( attr.u.num >= 2000 )
 			{
                                 param[3].value=g_strdup_printf("%5.1f %s",
-                                                               imperial == TRUE ? (float)attr.u.num / METERS_PER_MILE : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? (float)attr.u.num * METERS_TO_MILES : (float)attr.u.num / 1000,
                                                                imperial == TRUE ? _("mi") : _("km")
                                         );
 			}
@@ -2025,6 +2028,7 @@ navit_window_roadbook_update(struct navit *this_)
                                         );
 			}
 
+                        /* Time from next maneuver to destination. */
 			item_attr_get(item, attr_destination_time, &attr);
 			dbg(lvl_info, "Desttime=%ld\n", attr.u.num);
 			secs=attr.u.num/10;

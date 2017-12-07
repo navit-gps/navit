@@ -137,13 +137,19 @@ struct size_weight_limit {
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
 
+/**
+ * @brief Data for a segment in the route graph
+ */
 struct route_graph_segment_data {
-	struct item *item;
-	int offset;
-	int flags;
-	int len;
-	int maxspeed;
-	struct size_weight_limit size_weight;
+	struct item *item;                    /**< The item which this segment is part of */
+	int offset;                           /**< If the item passed in "item" is segmented (i.e. divided
+	                                       *   into several segments), this indicates the position of
+	                                       *   this segment within the item */
+	int flags;                            /**< Flags for this segment */
+	int len;                              /**< The length of this segment */
+	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
+	                                       *   -1 if not known */
+	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
 };
 
@@ -250,8 +256,8 @@ struct route {
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
-	struct map *map;
-	struct map *graph_map;
+	struct map *map;            /**< The map containing the route path */
+	struct map *graph_map;      /**< The map containing the route graph */
 	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
 	struct callback_list *cbl2;	/**< Callback list to call when route changes */
@@ -1607,6 +1613,15 @@ route_segment_data_size(int flags)
 }
 
 
+/**
+ * @brief Checks if the route graph already contains a particular segment.
+ *
+ * This function compares the item IDs of both segments. If the item is segmented, the segment offset is
+ * also compared.
+ *
+ * @param start The starting point of the segment
+ * @param data The data for the segment
+ */
 static int
 route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
 {
@@ -1628,9 +1643,6 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_g
 
 /**
  * @brief Inserts a new segment into the route graph
- *
- * This function performs a check if a segment for the item specified already exists, and inserts
- * a new segment representing this item if it does not.
  *
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
