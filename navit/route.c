@@ -60,6 +60,7 @@
 #include "xmlconfig.h"
 #include "map.h"
 #include "mapset.h"
+#include "route_protected.h"
 #include "route.h"
 #include "track.h"
 #include "transform.h"
@@ -78,96 +79,16 @@ struct map_priv {
 
 int debug_route=0;
 
-/**
- * @brief A point in the route graph
- *
- * This represents a point in the route graph. A point usually connects two or more segments,
- * but there are also points which don't do that (e.g. at the end of a dead-end).
- */
-struct route_graph_point {
-	struct route_graph_point *hash_next; /**< Pointer to a chained hashlist of all route_graph_points with this hash */
-	struct route_graph_segment *start;	 /**< Pointer to a list of segments of which this point is the start. The links 
-										  *  of this linked-list are in route_graph_segment->start_next.*/
-	struct route_graph_segment *end;	 /**< Pointer to a list of segments of which this pointer is the end. The links
-										  *  of this linked-list are in route_graph_segment->end_next. */
-	struct route_graph_segment *seg;	 /**< Pointer to the segment one should use to reach the destination at
-										  *  least costs */
-	struct fibheap_el *el;				 /**< When this point is put on a Fibonacci heap, this is a pointer
-										  *  to this point's heap-element */
-	int value;							 /**< The cost at which one can reach the destination from this point on.
-	                                      *  {@code INT_MAX} indicates that the destination is unreachable from this
-	                                      *  point, or that this point has not yet been examined. */
-	struct coord c;						 /**< Coordinates of this point */
-	int flags;						/**< Flags for this point (eg traffic distortion) */
-};
-
 #define RP_TRAFFIC_DISTORTION 1
 #define RP_TURN_RESTRICTION 2
 #define RP_TURN_RESTRICTION_RESOLVED 4
 
-/**
- * @brief A segment in the route graph or path
- *
- * This is a segment in the route graph or path. A segment represents a driveable way.
- */
-
-struct route_segment_data {
-	struct item item;							/**< The item (e.g. street) that this segment represents. */
-	int flags;
-	int len;									/**< Length of this segment, in meters */
-	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
-				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
-				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
-										indicates the position of this segment in the item. Present if AF_SEGMENTED is set.
-	 */
-};
-
-
-struct size_weight_limit {
-	int width;
-	int length;
-	int height;
-	int weight;
-	int axle_weight;
-};
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
 #define RSD_SIZE_WEIGHT(x) *((struct size_weight_limit *)route_segment_data_field_pos((x), attr_vehicle_width))
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
-
-/**
- * @brief Data for a segment in the route graph
- */
-struct route_graph_segment_data {
-	struct item *item;                    /**< The item which this segment is part of */
-	int offset;                           /**< If the item passed in "item" is segmented (i.e. divided
-	                                       *   into several segments), this indicates the position of
-	                                       *   this segment within the item */
-	int flags;                            /**< Flags for this segment */
-	int len;                              /**< The length of this segment */
-	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
-	                                       *   -1 if not known */
-	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
-	int dangerous_goods;
-};
-
-/**
- * @brief A segment in the route graph
- *
- * This is a segment in the route graph. A segment represents a driveable way.
- */
-struct route_graph_segment {
-	struct route_graph_segment *next;			/**< Linked-list pointer to a list of all route_graph_segments */
-	struct route_graph_segment *start_next;		/**< Pointer to the next element in the list of segments that start at the 
-												 *  same point. Start of this list is in route_graph_point->start. */
-	struct route_graph_segment *end_next;		/**< Pointer to the next element in the list of segments that end at the
-												 *  same point. Start of this list is in route_graph_point->end. */
-	struct route_graph_point *start;			/**< Pointer to the point this segment starts at. */
-	struct route_graph_point *end;				/**< Pointer to the point this segment ends at. */
-	struct route_segment_data data;				/**< The segment data */
-};
 
 /**
  * @brief A traffic distortion
@@ -269,28 +190,6 @@ struct route {
 	struct vehicle *v;
 };
 
-/**
- * @brief A complete route graph
- *
- * The route graph holds all routable segments along with the connections between them and the cost of
- * each segment.
- */
-struct route_graph {
-	int busy;					/**< The graph is being built */
-	struct map_selection *sel;			/**< The rectangle selection for the graph */
-	struct mapset_handle *h;			/**< Handle to the mapset */	
-	struct map *m;					/**< Pointer to the currently active map */	
-	struct map_rect *mr;				/**< Pointer to the currently active map rectangle */
-	struct vehicleprofile *vehicleprofile;		/**< The vehicle profile */
-	struct callback *idle_cb;			/**< Idle callback to process the graph */
-	struct callback *done_cb;			/**< Callback when graph is done */
-	struct event_idle *idle_ev;			/**< The pointer to the idle event */
-   	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
-	struct route_graph_segment *avoid_seg;
-#define HASH_SIZE 8192
-	struct route_graph_point *hash[HASH_SIZE];	/**< A hashtable containing all route_graph_points in this graph */
-};
-
 #define HASHCOORD(c) ((((c)->x +(c)->y) * 2654435761UL) & (HASH_SIZE-1))
 
 /**
@@ -314,7 +213,6 @@ struct attr_iter {
 static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this, struct callback *cb, int async);
-static void route_graph_build_done(struct route_graph *rg, int cancel);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
 static void route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
 static void route_graph_destroy(struct route_graph *this);
@@ -1490,7 +1388,7 @@ route_graph_point_new(struct route_graph *this, struct coord *f)
  * @param f The coordinates at which the point should be inserted
  * @return The point inserted or NULL on failure
  */
-static struct route_graph_point *
+struct route_graph_point *
 route_graph_add_point(struct route_graph *this, struct coord *f)
 {
 	struct route_graph_point *p;
@@ -1506,7 +1404,7 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
  *
  * @param this The route graph to delete all points from
  */
-static void
+void
 route_graph_free_points(struct route_graph *this)
 {
 	struct route_graph_point *curr,*next;
@@ -1622,7 +1520,7 @@ route_segment_data_size(int flags)
  * @param start The starting point of the segment
  * @param data The data for the segment
  */
-static int
+int
 route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
 {
 	struct route_graph_segment *s;
@@ -1653,7 +1551,7 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_g
  * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
  * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
  */
-static void
+void
 route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
 			struct route_graph_point *end, struct route_graph_segment_data *data)
 {
@@ -1960,7 +1858,7 @@ linkold:
  *
  * @param this The graph to destroy all segments from
  */
-static void
+void
 route_graph_free_segments(struct route_graph *this)
 {
 	struct route_graph_segment *curr,*next;
@@ -2969,7 +2867,7 @@ route_graph_process_restrictions(struct route_graph *this)
  * @param rg Points to the route graph
  * @param cancel True if the process was aborted before completing, false if it completed normally
  */
-static void
+void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
 	dbg(lvl_debug,"cancel=%d\n",cancel);
