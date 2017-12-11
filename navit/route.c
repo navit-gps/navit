@@ -1591,51 +1591,6 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 }
 
 /**
- * @brief Gets all the coordinates of an item
- *
- * This will get all the coordinates of the item i and return them in c,
- * up to max coordinates. Additionally it is possible to limit the coordinates
- * returned to all the coordinates of the item between the two coordinates
- * start end end.
- *
- * @important Make sure that whatever c points to has enough memory allocated
- * @important to hold max coordinates!
- *
- * @param i The item to get the coordinates of
- * @param c Pointer to memory allocated for holding the coordinates
- * @param max Maximum number of coordinates to return
- * @param start First coordinate to get
- * @param end Last coordinate to get
- * @return The number of coordinates returned
- */
-static int get_item_seg_coords(struct item *i, struct coord *c, int max,
-		struct coord *start, struct coord *end)
-{
-	struct map_rect *mr;
-	struct item *item;
-	int rc = 0, p = 0;
-	struct coord c1;
-	mr=map_rect_new(i->map, NULL);
-	if (!mr)
-		return 0;
-	item = map_rect_get_item_byid(mr, i->id_hi, i->id_lo);
-	if (item) {
-		rc = item_coord_get(item, &c1, 1);
-		while (rc && (c1.x != start->x || c1.y != start->y)) {
-			rc = item_coord_get(item, &c1, 1);
-		}
-		while (rc && p < max) {
-			c[p++] = c1;
-			if (c1.x == end->x && c1.y == end->y)
-				break;
-			rc = item_coord_get(item, &c1, 1);
-		}
-	}
-	map_rect_destroy(mr);
-	return p;
-}
-
-/**
  * @brief Returns and removes one segment from a path
  *
  * @param path The path to take the segment from
@@ -1810,7 +1765,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			len=dst->lenpos;
 		}
 	} else {
-		ccnt=get_item_seg_coords(&rgs->data.item, ca, 2047, &rgs->start->c, &rgs->end->c);
+		ccnt=item_coord_get_within_range(&rgs->data.item, ca, 2047, &rgs->start->c, &rgs->end->c);
 		c=ca;
 	}
 	seg_size=sizeof(*segment) + sizeof(struct coord) * (ccnt + extra);
