@@ -39,14 +39,19 @@
 #include "item.h"
 #include "map.h"
 #include "mapset.h"
+#include "route_protected.h"
 #include "route.h"
 #include "transform.h"
 #include "xmlconfig.h"
 #include "traffic.h"
 #include "plugin.h"
+#include "fib.h"
 #include "event.h"
 #include "callback.h"
 #include "debug.h"
+
+/** The penalty applied to an off-road link */
+#define PENALTY_OFFROAD 2
 
 /**
  * @brief A traffic plugin instance
@@ -208,19 +213,13 @@ static struct map_methods traffic_map_meth = {
  * attributes are not considered a match.
  *
  * @param this_ The location
- * @param point The point to calculate the score for: 0 = `from`, 1 = `at`, 2 = `to`
  * @param item The map item
  *
  * @return The score
  */
-int traffic_location_match_attributes(struct traffic_location * this_, int point, struct item *item) {
+int traffic_location_match_attributes(struct traffic_location * this_, struct item *item) {
 	int ret = 0;
-	struct traffic_point *tp;
 	struct attr attr;
-
-	tp = (point == 0) ? this_->from : (point == 1) ? this_->at : (point == 2) ? this_->to : NULL;
-	if (!tp)
-		return ret;
 
 	/* road type */
 	if ((this_->road_type != type_line_unspecified) && item_attr_get(item, attr_type, &attr)) {
@@ -338,6 +337,191 @@ int traffic_location_match_attributes(struct traffic_location * this_, int point
 }
 
 /**
+ * @brief Returns the cost of the segment in the given direction.
+ *
+ * Currently the cost of a segment (for the purpose of matching traffic locations) is simply its length,
+ * as only the best matching roads are used. Future versions may change this by considering all roads
+ * and factoring match quality into the cost calculation.
+ *
+ * @param over The segment
+ * @param dir The direction (positive numbers indicate positive direction)
+ *
+ * @return The cost of the segment, or `INT_MAX` if the segment is impassable in direction `dir`
+ */
+static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir) {
+	if (over->data.flags & (dir >= 0 ? AF_ONEWAYREV : AF_ONEWAY))
+		return INT_MAX;
+
+	return over->data.len;
+}
+
+/**
+ * @brief Builds a new route graph for traffic location matching.
+ *
+ * Traffic location matching is done by using a modified routing algorithm to identify the segments
+ * affected by a traffic message.
+ *
+ * @param this_ The location to match to the map
+ * @param ms The mapset to use for the route graph
+ *
+ * @return A route graph. The caller is responsible for destroying the route graph and all related data
+ * when it is no longer needed.
+ */
+struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_, struct mapset * ms) {
+	struct route_graph *rg;
+
+	/* Corners of the enclosing rectangle, in WGS84 coordinates */
+	struct coord_geo g1;
+	struct coord_geo g2;
+
+	/* Corners of the enclosing rectangle, in Mercator coordinates */
+	struct coord c1, c2;
+
+	/* buffer zone around the rectangle */
+	int max_dist = 1000;
+
+	/* The item being processed */
+	struct item *item;
+
+	/* Mercator coordinates of current and previous point */
+	struct coord c, l;
+
+	/* The attribute matching score (current and maximum) */
+	int score, maxscore = 0;
+
+	/* Data for the route graph segment */
+	struct route_graph_segment_data data;
+
+	/* The length of the current segment */
+#ifdef AVOID_FLOAT
+	int len;
+#else
+	double len;
+#endif
+
+	/* Whether the current item is segmented */
+	int segmented;
+
+	/* Holds an attribute retrieved from the current item */
+	struct attr attr;
+
+	/* Start and end point of the current way or segment */
+	struct route_graph_point *s_pnt, *e_pnt;
+
+	/* TODO revisit all possible cases (point vs. line, directionality) */
+	if (!(this_->from || this_->at || this_->to))
+		return NULL;
+
+	rg = g_new0(struct route_graph, 1);
+
+	// FIXME this may fail if three points are given and `at` is outside the enclosing rectangle
+	g1 = this_->from ? this_->from->coord : this_->at ? this_->at->coord : this_->to->coord;
+	g2 = this_->to ? this_->to->coord : this_->at ? this_->at->coord : this_->from->coord;
+
+	rg->h = mapset_open(ms);
+	rg->done_cb = NULL;
+	rg->busy = 1;
+
+	/* build the route graph */
+	while ((rg->m = mapset_next(rg->h, 2))) {
+		transform_from_geo(map_projection(rg->m), &g1, &c1);
+		transform_from_geo(map_projection(rg->m), &g2, &c2);
+
+		rg->sel = route_rect(18, &c1, &c2, 0, max_dist);
+
+		if (!rg->sel)
+			continue;
+		rg->mr = map_rect_new(rg->m, rg->sel);
+		if (!rg->mr) {
+			map_selection_destroy(rg->sel);
+			rg->sel = NULL;
+			continue;
+		}
+		while ((item = map_rect_get_item(rg->mr))) {
+			if (item_get_default_flags(item->type)) {
+				/* TODO skip non-routable items */
+
+				if (item_coord_get(item, &l, 1)) {
+					score = traffic_location_match_attributes(this_, item);
+
+					if (score < maxscore)
+						continue;
+					if (score > maxscore) {
+						/* we have found a better match, drop the previous route graph */
+						route_graph_free_points(rg);
+						route_graph_free_segments(rg);
+						maxscore = score;
+					}
+
+					data.flags=0;
+					data.offset=1;
+					data.maxspeed=-1;
+					data.item=item;
+					len = 0;
+					segmented = 0;
+
+					int default_flags_value = AF_ALL;
+					int *default_flags = item_get_default_flags(item->type);
+					if (!default_flags)
+						default_flags = &default_flags_value;
+					if (item_attr_get(item, attr_flags, &attr)) {
+						data.flags = attr.u.num;
+						if (data.flags & AF_SEGMENTED)
+							segmented = 1;
+					} else
+						data.flags = *default_flags;
+
+					s_pnt = route_graph_add_point(rg, &l);
+
+					if (!segmented) {
+						while (item_coord_get(item, &c, 1)) {
+							len += transform_distance(map_projection(item->map), &l, &c);
+							l = c;
+						}
+						e_pnt = route_graph_add_point(rg, &l);
+						dbg_assert(len >= 0);
+						data.len=len;
+						if (!route_graph_segment_is_duplicate(s_pnt, &data))
+							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
+					} else {
+						int isseg, rc;
+						int sc = 0;
+						do {
+							isseg = item_coord_is_node(item);
+							rc = item_coord_get(item, &c, 1);
+							if (rc) {
+								len += transform_distance(map_projection(item->map), &l, &c);
+								l = c;
+								if (isseg) {
+									e_pnt = route_graph_add_point(rg, &l);
+									data.len = len;
+									if (!route_graph_segment_is_duplicate(s_pnt, &data))
+										route_graph_add_segment(rg, s_pnt, e_pnt, &data);
+									data.offset++;
+									s_pnt = route_graph_add_point(rg, &l);
+									len = 0;
+								}
+							}
+						} while(rc);
+						e_pnt = route_graph_add_point(rg, &l);
+						dbg_assert(len >= 0);
+						sc++;
+						data.len = len;
+						if (!route_graph_segment_is_duplicate(s_pnt, &data))
+							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
+					}
+				}
+			}
+		}
+		map_rect_destroy(rg->mr);
+		rg->mr = NULL;
+	}
+	route_graph_build_done(rg, 1);
+
+	return rg;
+}
+
+/**
  * @brief Matches a location to a map.
  *
  * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
@@ -350,106 +534,173 @@ int traffic_location_match_attributes(struct traffic_location * this_, int point
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
 int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
-	int i, j;
-	struct traffic_point * points[3];
+	int i;
 
-	/* Corners of the enclosing rectangle, in WGS84 coordinates */
-	struct coord_geo g1;
-	struct coord_geo g2;
+	/* Projected coordinates of start point (from or at) and destination point (at or to) */
+	struct coord c_start, c_dst;
 
-	/* Corners of the enclosing rectangle, in Mercator coordinates */
-	struct coord c1, c2;
+	/* Cost of the start position */
+	int start_value;
 
-	/* Projected raw coordinates */
-	struct coord c;
+	/* Next point after start position */
+	struct route_graph_point * start_next;
 
-	struct mapset_handle *h;
-	struct map *m;
-	struct map_selection *sel;
-	int max_dist = 1000;
-	struct map_rect *mr;
-	struct item *item;
+	struct route_graph_point *p;
+	struct route_graph_segment *s=NULL;
+	int min, new, val;
 
-	/* The matched point */
-	struct pcoord * plpnt;
+	/* This heap will hold all points with "temporarily" calculated costs */
+	struct fibheap *heap;
 
-	/* The attribute matching score */
-	int score, maxscore;
+	/* point at which the next segment starts, i.e. up to which the path is complete */
+	struct route_graph_point *start;
 
-	/* Current and minimum distance between point and road */
-	int dist, mindist;
+	/* route graph for simplified routing */
+	struct route_graph *rg;
 
-	/* Street data for the item being examined */
-	struct street_data *sd;
+	rg = traffic_location_get_route_graph(this_, ms);
 
-	if (!(this_->from || this_->at || this_->to))
-		return 0;
+	/* TODO for each direction */
 
-	points[0] = this_->from;
-	points[1] = this_->at;
-	points[2] = this_->to;
+	/* prime the route graph */
+	heap = fh_makekeyheap();
 
-	// FIXME this may fail if three points are given and `at` is outside the enclosing rectangle
-	g1 = this_->from ? this_->from->coord : this_->at ? this_->at->coord : this_->to->coord;
-	g2 = this_->to ? this_->to->coord : this_->at ? this_->at->coord : this_->from->coord;
+	if (this_->to)
+		transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
+	else
+		transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
 
-	for (i = 0; i < 3; i++) {
-		if (points[i]) {
-			// TODO both directions if location is bidirectional
-			/* match to map */
-			plpnt = NULL;
-			mindist = INT_MAX;
-			maxscore = 0;
+	if (this_->from)
+		transform_from_geo(projection_mg, &this_->from->coord, &c_start);
+	else
+		transform_from_geo(projection_mg, &this_->at->coord, &c_start);
 
-			h = mapset_open(ms);
-			while ((m = mapset_next(h, 2))) {
-				transform_from_geo(map_projection(m), &points[i]->coord, &c);
-				transform_from_geo(map_projection(m), &g1, &c1);
-				transform_from_geo(map_projection(m), &g2, &c2);
-				sel = route_rect(18, &c1, &c2, 0, max_dist);
-				if (!sel)
-					continue;
-				mr = map_rect_new(m, sel);
-				if (!mr) {
-					map_selection_destroy(sel);
-					continue;
-				}
-				while ((item = map_rect_get_item(mr))) {
-					if (item_get_default_flags(item->type)) {
-						score = traffic_location_match_attributes(this_, i, item);
-						sd = street_get_data(item);
-						if (!sd)
-							continue;
+	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, &c_start, &c_dst);
+	start_next = NULL;
 
-						for (j = 0; j < sd->count; j += (sd->count - 1)) {
-							dist = transform_distance_sq(&(sd->c[j]), &c);
+	dbg(lvl_error, "start flooding route graph, start_value=%d\n", start_value);
 
-							if ((score > maxscore) || ((score == maxscore) && (dist < mindist))) {
-								maxscore = score;
-								mindist = dist;
-
-								if (!plpnt)
-									plpnt = g_new0(struct pcoord, 1);
-								plpnt->pro = map_projection(m);
-								plpnt->x = sd->c[j].x;
-								plpnt->y = sd->c[j].y;
-
-								dbg(lvl_debug,"dist=%d id 0x%x 0x%x\n", dist, item->id_hi, item->id_lo);
-							}
-						}
-						street_data_free(sd);
-					}
-				}
-				map_selection_destroy(sel);
-				map_rect_destroy(mr);
-			}
-			mapset_close(h);
-			if (plpnt)
-				points[i]->map_coord = plpnt;
-			else
-				return 0;
+	for (i = 0; i < HASH_SIZE; i++) {
+		p = rg->hash[i];
+		while (p) {
+			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, &c_dst);
+			p->el = fh_insertkey(heap, p->value, p);
+			p->seg = NULL;
+			p = p->hash_next;
 		}
 	}
+
+	/* flood the route graph */
+	for (;;) {
+		p = fh_extractmin(heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
+		if (!p) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
+			break;
+
+		dbg(lvl_error, "p=0x%x, value=%d\n", p, p->value);
+
+		min = p->value;
+		p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
+		s = p->start;
+		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
+			val = traffic_route_get_seg_cost(s, -1);
+
+			dbg(lvl_error, "  negative segment, val=%d\n", val);
+
+			if (val != INT_MAX) {
+				new = min + val;
+				if (new < s->end->value) { /* We've found a less costly way to reach the end of s, update it */
+					s->end->value = new;
+					s->end->seg = s;
+					if (!s->end->el) {
+						s->end->el = fh_insertkey(heap, new, s->end);
+					} else {
+						fh_replacekey(heap, s->end->el, new);
+					}
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, &c_start);
+					if (new < start_value) { /* We've found a less costly way from the start point, update */
+						start_value = new;
+						start_next = s->end;
+					}
+				}
+			}
+			s = s->start_next;
+		}
+		s = p->end;
+		while (s) { /* Doing the same as above with the segments leading towards our point */
+			val = traffic_route_get_seg_cost(s, 1);
+
+			dbg(lvl_error, "  positive segment, val=%d\n", val);
+
+			if (val != INT_MAX) {
+				new = min + val;
+				if (new < s->start->value) {
+					s->start->value = new;
+					s->start->seg = s;
+					if (!s->start->el) {
+						s->start->el = fh_insertkey(heap, new, s->start);
+					} else {
+						fh_replacekey(heap, s->start->el, new);
+					}
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, &c_start);
+					if (new < start_value) {
+						start_value = new;
+						start_next = s->start;
+					}
+				}
+			}
+			s = s->end_next;
+		}
+	}
+
+	fh_deleteheap(heap);
+
+	/* calculate route */
+	if (start_next)
+		s = start_next->seg;
+	else
+		s = NULL;
+	start = start_next;
+
+	if (!s)
+		dbg(lvl_error, "no segments\n");
+
+	while (s) {
+		/* TODO contains crude code */
+
+		/* TODO begin crude code */
+		struct attr **attrs = g_new0(struct attr*, 2);
+		struct coord coords[2];
+		attrs[0] = g_new0(struct attr, 1);
+		attrs[0]->type = attr_maxspeed;
+		attrs[0]->u.num = 20;
+		coords[0].x = start->c.x;
+		coords[0].y = start->c.y;
+		/* TODO end crude code */
+
+		if (s->start == start) {
+			/* TODO add traffic distortions for segment */
+			start = s->end;
+		} else {
+			/* TODO add traffic distortions for segment */
+			start = s->start;
+		}
+
+		/* TODO begin crude code */
+		coords[1].x = start->c.x;
+		coords[1].y = start->c.y;
+		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, &coords, 2);
+		g_free(attrs[0]);
+		g_free(attrs);
+		/* TODO end crude code */
+
+		s = start->seg;
+	}
+
+	/* TODO end for each direction */
+
+	route_graph_free_points(rg);
+	route_graph_free_segments(rg);
+	g_free(rg);
 
 	return 1;
 }
@@ -556,6 +807,7 @@ void traffic_loop(struct traffic * this_) {
 	for (i = 0; messages[i] != NULL; i++) {
 		traffic_location_match_to_map(messages[i]->location, this_->ms);
 
+#if 0
 		/* begin crude code */
 		/* temporary solution to dump traffic report to a map, only good for visualization but not for
 		 * any kind of routing */
@@ -584,6 +836,7 @@ void traffic_loop(struct traffic * this_) {
 		g_free(attrs[0]);
 		g_free(attrs);
 		/* end crude code */
+#endif
 
 		traffic_message_dump(messages[i]);
 	}
