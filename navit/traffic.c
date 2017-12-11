@@ -558,6 +558,18 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 	/* route graph for simplified routing */
 	struct route_graph *rg;
 
+	/* Coordinate count for matched segment */
+	int ccnt;
+
+	/* Coordinates of matched segment and pointer into it, order as read from map */
+	struct coord *c, ca[2048];
+
+	/* Coordinates of matched segment, sorted */
+	struct coord *cd, *cs;
+
+	/* Attributes for traffic distortion */
+	struct attr **attrs;
+
 	rg = traffic_location_get_route_graph(this_, ms);
 
 	/* TODO for each direction */
@@ -665,36 +677,40 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 		dbg(lvl_error, "no segments\n");
 
 	while (s) {
-		/* TODO contains crude code */
+		ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
+		c = ca;
+		cs = g_new0(struct coord, ccnt);
+		cd = cs;
 
-		/* TODO begin crude code */
-		struct attr **attrs = g_new0(struct attr*, 2);
-		struct coord coords[2];
+		attrs = g_new0(struct attr*, 2);
 		attrs[0] = g_new0(struct attr, 1);
 		attrs[0]->type = attr_maxspeed;
 		attrs[0]->u.num = 20;
-		coords[0].x = start->c.x;
-		coords[0].y = start->c.y;
-		/* TODO end crude code */
 
 		if (s->start == start) {
-			/* TODO add traffic distortions for segment */
+			/* forward direction, maintain order of coordinates */
+			for (i = 0; i < ccnt; i++) {
+				*cd++ = *c++;
+			}
 			start = s->end;
 		} else {
-			/* TODO add traffic distortions for segment */
+			/* backward direction, reverse order of coordinates */
+			c += ccnt-1;
+			for (i = 0; i < ccnt; i++) {
+				*cd++ = *c--;
+			}
 			start = s->start;
 		}
 
-		/* TODO begin crude code */
-		coords[1].x = start->c.x;
-		coords[1].y = start->c.y;
-		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, &coords, 2);
+		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, cs, ccnt);
 		g_free(attrs[0]);
 		g_free(attrs);
-		/* TODO end crude code */
+		/* TODO decide who frees cs */
 
 		s = start->seg;
 	}
+
+	/* TODO tweak ends (find the point where the ramp touches the main road) */
 
 	/* TODO end for each direction */
 

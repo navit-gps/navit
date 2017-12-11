@@ -233,6 +233,7 @@ struct traffic_methods {
 struct traffic_point {
 	struct coord_geo coord; /*!< The coordinates of this point, as supplied by the source. These may
 	                         *   deviate somewhat from the coordinates on the map. */
+	/* TODO do we need map-matched coordinates at all? */
 	struct pcoord * map_coord; /*!< The coordinates of this point on the map, in forward direction.
 	                         *   This is filled by the traffic plugin. */
 	struct pcoord * map_coord_backward; /*!< The coordinates of this point on the map, in backward
