@@ -522,80 +522,70 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 }
 
 /**
- * @brief Matches a location to a map.
+ * @brief Determines the path between two reference points in a route graph.
  *
- * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
- * and matches them to an exact position on the map, using both the raw coordinates and the auxiliary
- * information contained in the location.
+ * The reference points `c_start` and `c_dst` can be approximate, i.e. not directly located on a route
+ * graph segment.
  *
- * @param this_ The location to match to the map
- * @param ms The mapset to use for matching
+ * When this function returns, the route graph will be flooded, i.e. every point will have a cost
+ * assigned to it and the `seg` member for each point will be set, indicating the next segment on which
+ * to proceed in order to reach the destination. For the last point in the graph, `seg` will be `NULL`.
+ * Unlike in common routing, the last point will have a nonzero cost if `c_dst` does not coincide with a
+ * point in the route graph.
  *
- * @return `true` if the locations were matched successfully, `false` if there was a failure.
+ * The cost of each node represents the cost to reach `c_dst`. Currently distance is used for cost, with
+ * a penalty applied to the offroad connection from the last point in the graph to `c_dst`. Future
+ * versions may calculate segment cost differently.
+ *
+ * To obtain the path, start with the return value. Its `seg` member points to the next segment. Either
+ * the `start` or the `end` value of that segment will coincide with the point currently being examined;
+ * the other of the two is the point at the other end. Repeat this until you reach a point whose `seg`
+ * member is `NULL`.
+ *
+ * This function can be run multiple times against the same route graph but with different reference
+ * points.
+ *
+ * The caller is responsible for freeing up the data structures passed to this function when they are no
+ * longer needed.
+ *
+ * @param rg The route graph
+ * @param c_start Start location
+ * @param c_dst Destination location
+ *
+ * @return The point in the route graph at which the path begins
  */
-int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
+struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct coord * c_start, struct coord * c_dst) {
+	struct route_graph_point * ret;
+
 	int i;
-
-	/* Projected coordinates of start point (from or at) and destination point (at or to) */
-	struct coord c_start, c_dst;
-
-	/* Cost of the start position */
-	int start_value;
-
-	/* Next point after start position */
-	struct route_graph_point * start_next;
-
-	struct route_graph_point *p;
-	struct route_graph_segment *s=NULL;
-	int min, new, val;
 
 	/* This heap will hold all points with "temporarily" calculated costs */
 	struct fibheap *heap;
 
-	/* point at which the next segment starts, i.e. up to which the path is complete */
-	struct route_graph_point *start;
+	/* Cost of the start position */
+	int start_value;
 
-	/* route graph for simplified routing */
-	struct route_graph *rg;
+	/* The point currently being examined */
+	struct route_graph_point *p;
 
-	/* Coordinate count for matched segment */
-	int ccnt;
+	/* Cost of point being examined, other end of segment being examined, segment */
+	int min, new, val;
 
-	/* Coordinates of matched segment and pointer into it, order as read from map */
-	struct coord *c, ca[2048];
-
-	/* Coordinates of matched segment, sorted */
-	struct coord *cd, *cs;
-
-	/* Attributes for traffic distortion */
-	struct attr **attrs;
-
-	rg = traffic_location_get_route_graph(this_, ms);
-
-	/* TODO for each direction */
+	/* The segment currently being examined */
+	struct route_graph_segment *s = NULL;
 
 	/* prime the route graph */
 	heap = fh_makekeyheap();
 
-	if (this_->to)
-		transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
-	else
-		transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
-
-	if (this_->from)
-		transform_from_geo(projection_mg, &this_->from->coord, &c_start);
-	else
-		transform_from_geo(projection_mg, &this_->at->coord, &c_start);
-
-	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, &c_start, &c_dst);
-	start_next = NULL;
+	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, c_start, c_dst);
+	ret = NULL;
 
 	dbg(lvl_error, "start flooding route graph, start_value=%d\n", start_value);
 
 	for (i = 0; i < HASH_SIZE; i++) {
 		p = rg->hash[i];
 		while (p) {
-			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, &c_dst);
+			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
 			p->el = fh_insertkey(heap, p->value, p);
 			p->seg = NULL;
 			p = p->hash_next;
@@ -628,10 +618,10 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 					} else {
 						fh_replacekey(heap, s->end->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, &c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, c_start);
 					if (new < start_value) { /* We've found a less costly way from the start point, update */
 						start_value = new;
-						start_next = s->end;
+						ret = s->end;
 					}
 				}
 			}
@@ -653,10 +643,10 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 					} else {
 						fh_replacekey(heap, s->start->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, &c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, c_start);
 					if (new < start_value) {
 						start_value = new;
-						start_next = s->start;
+						ret = s->start;
 					}
 				}
 			}
@@ -665,6 +655,65 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 	}
 
 	fh_deleteheap(heap);
+	return ret;
+}
+
+/**
+ * @brief Matches a location to a map.
+ *
+ * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
+ * and matches them to an exact position on the map, using both the raw coordinates and the auxiliary
+ * information contained in the location.
+ *
+ * @param this_ The location to match to the map
+ * @param ms The mapset to use for matching
+ *
+ * @return `true` if the locations were matched successfully, `false` if there was a failure.
+ */
+int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
+	int i;
+
+	/* Projected coordinates of start point (from or at) and destination point (at or to) */
+	struct coord c_start, c_dst;
+
+	/* Next point after start position */
+	struct route_graph_point * start_next;
+
+	struct route_graph_segment *s = NULL;
+
+	/* point at which the next segment starts, i.e. up to which the path is complete */
+	struct route_graph_point *start;
+
+	/* route graph for simplified routing */
+	struct route_graph *rg;
+
+	/* Coordinate count for matched segment */
+	int ccnt;
+
+	/* Coordinates of matched segment and pointer into it, order as read from map */
+	struct coord *c, ca[2048];
+
+	/* Coordinates of matched segment, sorted */
+	struct coord *cd, *cs;
+
+	/* Attributes for traffic distortion */
+	struct attr **attrs;
+
+	rg = traffic_location_get_route_graph(this_, ms);
+
+	/* TODO for each direction */
+
+	if (this_->to)
+		transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
+	else
+		transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
+
+	if (this_->from)
+		transform_from_geo(projection_mg, &this_->from->coord, &c_start);
+	else
+		transform_from_geo(projection_mg, &this_->at->coord, &c_start);
+
+	start_next = traffic_route_flood_graph(rg, &c_start, &c_dst);
 
 	/* calculate route */
 	if (start_next)
