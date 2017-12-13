@@ -673,6 +673,9 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, st
 int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
 	int i;
 
+	/* The direction (positive or negative) */
+	int dir = 1;
+
 	/* Projected coordinates of start point (from or at) and destination point (at or to) */
 	struct coord c_start, c_dst;
 
@@ -701,67 +704,74 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 
 	rg = traffic_location_get_route_graph(this_, ms);
 
-	/* TODO for each direction */
+	/* determine segments, once for each direction */
+	while (1) {
+		if (this_->to)
+			transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
+		else
+			transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
 
-	if (this_->to)
-		transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
-	else
-		transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
+		if (this_->from)
+			transform_from_geo(projection_mg, &this_->from->coord, &c_start);
+		else
+			transform_from_geo(projection_mg, &this_->at->coord, &c_start);
 
-	if (this_->from)
-		transform_from_geo(projection_mg, &this_->from->coord, &c_start);
-	else
-		transform_from_geo(projection_mg, &this_->at->coord, &c_start);
+		if (dir > 0)
+			start_next = traffic_route_flood_graph(rg, &c_start, &c_dst);
+		else
+			start_next = traffic_route_flood_graph(rg, &c_dst, &c_start);
 
-	start_next = traffic_route_flood_graph(rg, &c_start, &c_dst);
+		/* calculate route */
+		if (start_next)
+			s = start_next->seg;
+		else
+			s = NULL;
+		start = start_next;
 
-	/* calculate route */
-	if (start_next)
-		s = start_next->seg;
-	else
-		s = NULL;
-	start = start_next;
+		if (!s)
+			dbg(lvl_error, "no segments\n");
 
-	if (!s)
-		dbg(lvl_error, "no segments\n");
+		while (s) {
+			ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
+			c = ca;
+			cs = g_new0(struct coord, ccnt);
+			cd = cs;
 
-	while (s) {
-		ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
-		c = ca;
-		cs = g_new0(struct coord, ccnt);
-		cd = cs;
+			attrs = g_new0(struct attr*, 2);
+			attrs[0] = g_new0(struct attr, 1);
+			attrs[0]->type = attr_maxspeed;
+			attrs[0]->u.num = 20;
 
-		attrs = g_new0(struct attr*, 2);
-		attrs[0] = g_new0(struct attr, 1);
-		attrs[0]->type = attr_maxspeed;
-		attrs[0]->u.num = 20;
-
-		if (s->start == start) {
-			/* forward direction, maintain order of coordinates */
-			for (i = 0; i < ccnt; i++) {
-				*cd++ = *c++;
+			if (s->start == start) {
+				/* forward direction, maintain order of coordinates */
+				for (i = 0; i < ccnt; i++) {
+					*cd++ = *c++;
+				}
+				start = s->end;
+			} else {
+				/* backward direction, reverse order of coordinates */
+				c += ccnt-1;
+				for (i = 0; i < ccnt; i++) {
+					*cd++ = *c--;
+				}
+				start = s->start;
 			}
-			start = s->end;
-		} else {
-			/* backward direction, reverse order of coordinates */
-			c += ccnt-1;
-			for (i = 0; i < ccnt; i++) {
-				*cd++ = *c--;
-			}
-			start = s->start;
+
+			tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, cs, ccnt);
+			g_free(attrs[0]);
+			g_free(attrs);
+			/* TODO decide who frees cs */
+
+			s = start->seg;
 		}
 
-		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, cs, ccnt);
-		g_free(attrs[0]);
-		g_free(attrs);
-		/* TODO decide who frees cs */
+		/* TODO tweak ends (find the point where the ramp touches the main road) */
 
-		s = start->seg;
+		if ((this_->directionality == location_dir_one) || (dir < 0))
+			break;
+
+		dir = -1;
 	}
-
-	/* TODO tweak ends (find the point where the ramp touches the main road) */
-
-	/* TODO end for each direction */
 
 	route_graph_free_points(rg);
 	route_graph_free_segments(rg);
