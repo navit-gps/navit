@@ -356,20 +356,18 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
 }
 
 /**
- * @brief Builds a new route graph for traffic location matching.
+ * @brief Populates a route graph.
  *
- * Traffic location matching is done by using a modified routing algorithm to identify the segments
- * affected by a traffic message.
+ * This method can operate in two modes: In “initial” mode the route graph is populated with the best
+ * matching segments, which may not include any ramps. In “add ramps” mode, all ramps within the
+ * enclosing rectangle are added, which can be done even after flooding the route graph.
  *
- * @param this_ The location to match to the map
- * @param ms The mapset to use for the route graph
- *
- * @return A route graph. The caller is responsible for destroying the route graph and all related data
- * when it is no longer needed.
+ * @param rg The route graph
+ * @param ms The mapset to read the ramps from
+ * @param mode 0 to initially populate the route graph, 1 to add ramps
  */
-struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_, struct mapset * ms) {
-	struct route_graph *rg;
-
+void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
+		struct mapset * ms, int mode) {
 	/* Corners of the enclosing rectangle, in Mercator coordinates */
 	struct coord c1, c2;
 
@@ -405,15 +403,10 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 	struct route_graph_point *s_pnt, *e_pnt;
 
 	if (!(this_->sw && this_->ne))
-		return NULL;
-
-	rg = g_new0(struct route_graph, 1);
+		return;
 
 	rg->h = mapset_open(ms);
-	rg->done_cb = NULL;
-	rg->busy = 1;
 
-	/* build the route graph */
 	while ((rg->m = mapset_next(rg->h, 2))) {
 		transform_from_geo(map_projection(rg->m), this_->sw, &c1);
 		transform_from_geo(map_projection(rg->m), this_->ne, &c2);
@@ -429,21 +422,26 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 			continue;
 		}
 		while ((item = map_rect_get_item(rg->mr))) {
+			/* TODO we might need turn restrictions in mode 1 as well */
+			if ((mode == 1) && (item->type != type_ramp))
+				continue;
 			/* TODO are there any non-routable line types which we can exclude? */
 			if ((item->type < type_line) || (item->type >= type_area))
 				continue;
 			if (item_get_default_flags(item->type)) {
 
 				if (item_coord_get(item, &l, 1)) {
-					score = traffic_location_match_attributes(this_, item);
+					if (mode == 0) {
+						score = traffic_location_match_attributes(this_, item);
 
-					if (score < maxscore)
-						continue;
-					if (score > maxscore) {
-						/* we have found a better match, drop the previous route graph */
-						route_graph_free_points(rg);
-						route_graph_free_segments(rg);
-						maxscore = score;
+						if (score < maxscore)
+							continue;
+						if (score > maxscore) {
+							/* we have found a better match, drop the previous route graph */
+							route_graph_free_points(rg);
+							route_graph_free_segments(rg);
+							maxscore = score;
+						}
 					}
 
 					data.flags=0;
@@ -510,6 +508,33 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 		rg->mr = NULL;
 	}
 	route_graph_build_done(rg, 1);
+}
+
+/**
+ * @brief Builds a new route graph for traffic location matching.
+ *
+ * Traffic location matching is done by using a modified routing algorithm to identify the segments
+ * affected by a traffic message.
+ *
+ * @param this_ The location to match to the map
+ * @param ms The mapset to use for the route graph
+ *
+ * @return A route graph. The caller is responsible for destroying the route graph and all related data
+ * when it is no longer needed.
+ */
+struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_, struct mapset * ms) {
+	struct route_graph *rg;
+
+	if (!(this_->sw && this_->ne))
+		return NULL;
+
+	rg = g_new0(struct route_graph, 1);
+
+	rg->done_cb = NULL;
+	rg->busy = 1;
+
+	/* build the route graph */
+	traffic_location_populate_route_graph(this_, rg, ms, 0);
 
 	return rg;
 }
