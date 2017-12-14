@@ -769,6 +769,16 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 		this_->ne = ne;
 	}
 
+	if (this_->at)
+		/* TODO Point location, not supported yet */
+		return 0;
+
+	if (this_->ramps != location_ramps_none)
+		/* TODO Ramps, not supported yet */
+		return 0;
+
+	/* Line location, main carriageway */
+
 	rg = traffic_location_get_route_graph(this_, ms);
 
 	/* determine segments, once for each direction */
