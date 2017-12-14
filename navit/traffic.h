@@ -298,6 +298,10 @@ struct traffic_location {
 	int tmc_direction;                 /*!< For messages received via TMC, the direction of the road to
 	                                    *   which this message applies (positive or negative). Ignored
 	                                    *   for bidirectional messages. */
+	struct coord_geo * sw;             /*!< Southwestern corner of rectangle enclosing all points.
+	                                    *   Calculated by Navit from the points of the location. */
+	struct coord_geo * ne;             /*!< Northeastern corner of rectangle enclosing all points.
+	                                    *   Calculated by Navit from the points of the location. */
 };
 
 /**

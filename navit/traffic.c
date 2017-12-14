@@ -370,10 +370,6 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
 struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_, struct mapset * ms) {
 	struct route_graph *rg;
 
-	/* Corners of the enclosing rectangle, in WGS84 coordinates */
-	struct coord_geo g1;
-	struct coord_geo g2;
-
 	/* Corners of the enclosing rectangle, in Mercator coordinates */
 	struct coord c1, c2;
 
@@ -408,15 +404,10 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 	/* Start and end point of the current way or segment */
 	struct route_graph_point *s_pnt, *e_pnt;
 
-	/* TODO revisit all possible cases (point vs. line, directionality) */
-	if (!(this_->from || this_->at || this_->to))
+	if (!(this_->sw && this_->ne))
 		return NULL;
 
 	rg = g_new0(struct route_graph, 1);
-
-	// FIXME this may fail if three points are given and `at` is outside the enclosing rectangle
-	g1 = this_->from ? this_->from->coord : this_->at ? this_->at->coord : this_->to->coord;
-	g2 = this_->to ? this_->to->coord : this_->at ? this_->at->coord : this_->from->coord;
 
 	rg->h = mapset_open(ms);
 	rg->done_cb = NULL;
@@ -424,8 +415,8 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 
 	/* build the route graph */
 	while ((rg->m = mapset_next(rg->h, 2))) {
-		transform_from_geo(map_projection(rg->m), &g1, &c1);
-		transform_from_geo(map_projection(rg->m), &g2, &c2);
+		transform_from_geo(map_projection(rg->m), this_->sw, &c1);
+		transform_from_geo(map_projection(rg->m), this_->ne, &c2);
 
 		rg->sel = route_rect(18, &c1, &c2, 0, max_dist);
 
@@ -692,6 +683,12 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
 	int i;
 
+	/* Corners of the enclosing rectangle, in WGS84 coordinates */
+	struct coord_geo * sw;
+	struct coord_geo * ne;
+
+	struct coord_geo * coords[] = {&this_->from->coord, &this_->at->coord, &this_->to->coord};
+
 	/* The direction (positive or negative) */
 	int dir = 1;
 
@@ -717,6 +714,35 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 
 	/* Attributes for traffic distortion */
 	struct attr **attrs;
+
+	/* calculate enclosing rectangle, if not yet present */
+	if (!this_->sw) {
+		sw = g_new0(struct coord_geo, 1);
+		sw->lat = INT_MAX;
+		sw->lng = INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat < sw->lat)
+					sw->lat = coords[i]->lat;
+				if (coords[i]->lng < sw->lng)
+					sw->lng = coords[i]->lng;
+			}
+		this_->sw = sw;
+	}
+
+	if (!this_->ne) {
+		ne = g_new0(struct coord_geo, 1);
+		ne->lat = -INT_MAX;
+		ne->lng = -INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat > ne->lat)
+					ne->lat = coords[i]->lat;
+				if (coords[i]->lng > ne->lng)
+					ne->lng = coords[i]->lng;
+			}
+		this_->ne = ne;
+	}
 
 	rg = traffic_location_get_route_graph(this_, ms);
 
@@ -1035,6 +1061,8 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
 	ret->road_ref = road_ref ? g_strdup(road_ref) : NULL;
 	ret->tmc_table = tmc_table ? g_strdup(tmc_table) : NULL;
 	ret->tmc_direction = tmc_direction;
+	ret->sw = NULL;
+	ret->ne = NULL;
 	return ret;
 }
 
@@ -1061,6 +1089,10 @@ void traffic_location_destroy(struct traffic_location * this_) {
 		g_free(this_->road_ref);
 	if (this_->tmc_table)
 		g_free(this_->tmc_table);
+	if (this_->sw)
+		g_free(this_->sw);
+	if (this_->ne)
+		g_free(this_->ne);
 	g_free(this_);
 }
 
