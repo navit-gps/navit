@@ -438,8 +438,10 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 			continue;
 		}
 		while ((item = map_rect_get_item(rg->mr))) {
+			/* TODO are there any non-routable line types which we can exclude? */
+			if ((item->type < type_line) || (item->type >= type_area))
+				continue;
 			if (item_get_default_flags(item->type)) {
-				/* TODO skip non-routable items */
 
 				if (item_coord_get(item, &l, 1)) {
 					score = traffic_location_match_attributes(this_, item);
