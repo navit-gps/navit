@@ -524,18 +524,23 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
 /**
  * @brief Determines the path between two reference points in a route graph.
  *
- * The reference points `c_start` and `c_dst` can be approximate, i.e. not directly located on a route
- * graph segment.
+ * The reference points `from` and `to` are the beginning and end of the path and do not necessarily
+ * coincide with the `from` and `to` members of the location. For a point location with an auxiliary
+ * point, one will instead be the `at` member of the location; when examining the opposite direction of
+ * a bidirectional location, `from` and `to` will be swapped with respect to the location.
+ *
+ * The coordinates contained in the reference points are typically approximate, i.e. they do not
+ * precisely coincide with a point in the route graph.
  *
  * When this function returns, the route graph will be flooded, i.e. every point will have a cost
  * assigned to it and the `seg` member for each point will be set, indicating the next segment on which
  * to proceed in order to reach the destination. For the last point in the graph, `seg` will be `NULL`.
- * Unlike in common routing, the last point will have a nonzero cost if `c_dst` does not coincide with a
+ * Unlike in common routing, the last point will have a nonzero cost if `to` does not coincide with a
  * point in the route graph.
  *
- * The cost of each node represents the cost to reach `c_dst`. Currently distance is used for cost, with
- * a penalty applied to the offroad connection from the last point in the graph to `c_dst`. Future
- * versions may calculate segment cost differently.
+ * The cost of each node represents the cost to reach `to`. Currently distance is used for cost, with a
+ * penalty applied to the offroad connection from the last point in the graph to `to`. Future versions
+ * may calculate segment cost differently.
  *
  * To obtain the path, start with the return value. Its `seg` member points to the next segment. Either
  * the `start` or the `end` value of that segment will coincide with the point currently being examined;
@@ -543,19 +548,24 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
  * member is `NULL`.
  *
  * This function can be run multiple times against the same route graph but with different reference
- * points.
+ * points. It is safe to call with `NULL` passed for one or both reference points, in which case `NULL`
+ * will be returned.
  *
  * The caller is responsible for freeing up the data structures passed to this function when they are no
  * longer needed.
  *
  * @param rg The route graph
- * @param c_start Start location
- * @param c_dst Destination location
+ * @param from Start location
+ * @param to Destination location
  *
- * @return The point in the route graph at which the path begins
+ * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
-struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct coord * c_start, struct coord * c_dst) {
+struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+		struct traffic_point * from, struct traffic_point * to) {
 	struct route_graph_point * ret;
+
+	/* Projected coordinates of start and destination point */
+	struct coord c_start, c_dst;
 
 	int i;
 
@@ -574,10 +584,17 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, st
 	/* The segment currently being examined */
 	struct route_graph_segment *s = NULL;
 
+	if (!from || !to)
+		return NULL;
+
+	/* transform coordinates */
+	transform_from_geo(projection_mg, &to->coord, &c_dst);
+	transform_from_geo(projection_mg, &from->coord, &c_start);
+
 	/* prime the route graph */
 	heap = fh_makekeyheap();
 
-	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, c_start, c_dst);
+	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, &c_start, &c_dst);
 	ret = NULL;
 
 	dbg(lvl_error, "start flooding route graph, start_value=%d\n", start_value);
@@ -585,7 +602,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, st
 	for (i = 0; i < HASH_SIZE; i++) {
 		p = rg->hash[i];
 		while (p) {
-			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
+			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, &c_dst);
 			p->el = fh_insertkey(heap, p->value, p);
 			p->seg = NULL;
 			p = p->hash_next;
@@ -618,7 +635,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, st
 					} else {
 						fh_replacekey(heap, s->end->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, &c_start);
 					if (new < start_value) { /* We've found a less costly way from the start point, update */
 						start_value = new;
 						ret = s->end;
@@ -643,7 +660,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, st
 					} else {
 						fh_replacekey(heap, s->start->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, &c_start);
 					if (new < start_value) {
 						start_value = new;
 						ret = s->start;
@@ -676,9 +693,6 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 	/* The direction (positive or negative) */
 	int dir = 1;
 
-	/* Projected coordinates of start point (from or at) and destination point (at or to) */
-	struct coord c_start, c_dst;
-
 	/* Next point after start position */
 	struct route_graph_point * start_next;
 
@@ -706,20 +720,12 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 
 	/* determine segments, once for each direction */
 	while (1) {
-		if (this_->to)
-			transform_from_geo(projection_mg, &this_->to->coord, &c_dst);
-		else
-			transform_from_geo(projection_mg, &this_->at->coord, &c_dst);
-
-		if (this_->from)
-			transform_from_geo(projection_mg, &this_->from->coord, &c_start);
-		else
-			transform_from_geo(projection_mg, &this_->at->coord, &c_start);
-
 		if (dir > 0)
-			start_next = traffic_route_flood_graph(rg, &c_start, &c_dst);
+			start_next = traffic_route_flood_graph(rg, this_->from ? this_->from : this_->at,
+					this_->to ? this_->to : this_->at);
 		else
-			start_next = traffic_route_flood_graph(rg, &c_dst, &c_start);
+			start_next = traffic_route_flood_graph(rg, this_->to ? this_->to : this_->at,
+					this_->from ? this_->from : this_->at);
 
 		/* calculate route */
 		if (start_next)
