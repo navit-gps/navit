@@ -33,7 +33,7 @@
 #endif
 #include "glib_slice.h"
 #include "config.h"
-#include "navit.h" // TODO see if we will still need that in the long run
+#include "navit.h" // TODO see if we will still need that once we have a working map implementation
 #include "util.h"
 #include "coord.h"
 #include "item.h"
@@ -951,37 +951,6 @@ void traffic_loop(struct traffic * this_) {
 	for (i = 0; messages[i] != NULL; i++) {
 		traffic_location_match_to_map(messages[i]->location, this_->ms);
 
-#if 0
-		/* begin crude code */
-		/* temporary solution to dump traffic report to a map, only good for visualization but not for
-		 * any kind of routing */
-		struct attr **attrs = g_new0(struct attr*, 2);
-		struct coord coords[3];
-		int coord_count = 0;
-		attrs[0] = g_new0(struct attr, 1);
-		attrs[0]->type = attr_maxspeed;
-		attrs[0]->u.num = 20;
-		if (messages[i]->location->from && messages[i]->location->from->map_coord) {
-			coords[coord_count].x = messages[i]->location->from->map_coord->x;
-			coords[coord_count].y = messages[i]->location->from->map_coord->y;
-			coord_count++;
-		}
-		if (messages[i]->location->at && messages[i]->location->at->map_coord) {
-			coords[coord_count].x = messages[i]->location->at->map_coord->x;
-			coords[coord_count].y = messages[i]->location->at->map_coord->y;
-			coord_count++;
-		}
-		if (messages[i]->location->to && messages[i]->location->to->map_coord) {
-			coords[coord_count].x = messages[i]->location->to->map_coord->x;
-			coords[coord_count].y = messages[i]->location->to->map_coord->y;
-			coord_count++;
-		}
-		tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, &coords, coord_count);
-		g_free(attrs[0]);
-		g_free(attrs);
-		/* end crude code */
-#endif
-
 		traffic_message_dump(messages[i]);
 	}
 	dbg(lvl_debug, "received %d message(s)\n", i);
@@ -1327,13 +1296,13 @@ struct object_func traffic_func = {
 	attr_traffic,
 	(object_func_new)traffic_new,
 	(object_func_get_attr)navit_object_get_attr,
-	(object_func_iter_new)navit_object_attr_iter_new, // TODO or NULL
-	(object_func_iter_destroy)navit_object_attr_iter_destroy, // TODO or NULL
-	(object_func_set_attr)navit_object_set_attr, // TODO or NULL
-	(object_func_add_attr)navit_object_add_attr, // TODO or NULL
-	(object_func_remove_attr)navit_object_remove_attr, // TODO or NULL
+	(object_func_iter_new)navit_object_attr_iter_new,
+	(object_func_iter_destroy)navit_object_attr_iter_destroy,
+	(object_func_set_attr)navit_object_set_attr,
+	(object_func_add_attr)navit_object_add_attr,
+	(object_func_remove_attr)navit_object_remove_attr,
 	(object_func_init)NULL,
-	(object_func_destroy)navit_object_destroy, // TODO or NULL
+	(object_func_destroy)navit_object_destroy,
 	(object_func_dup)NULL,
 	(object_func_ref)navit_object_ref,
 	(object_func_unref)navit_object_unref,
