@@ -496,6 +496,14 @@ void traffic_location_populate_route_graph(struct traffic_location * this_, stru
 					} else
 						data.flags = *default_flags;
 
+					if (data.flags & AF_SPEED_LIMIT) {
+						if (item_attr_get(item, attr_maxspeed, &attr))
+							data.maxspeed = attr.u.num;
+					}
+
+					/* clear flags we're not copying here */
+					data.flags &= ~(AF_DANGEROUS_GOODS | AF_SIZE_OR_WEIGHT_LIMIT);
+
 					s_pnt = route_graph_add_point(rg, &l);
 
 					if (!segmented) {
