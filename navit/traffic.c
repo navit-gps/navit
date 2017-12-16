@@ -256,86 +256,86 @@ int traffic_location_match_attributes(struct traffic_location * this_, struct it
 	struct attr attr;
 
 	/* road type */
-	if ((this_->road_type != type_line_unspecified) && item_attr_get(item, attr_type, &attr)) {
-		if (attr.u.item_type == this_->road_type)
+	if ((this_->road_type != type_line_unspecified)) {
+		if (item->type == this_->road_type)
 			ret +=4;
 		else
 			switch (this_->road_type) {
 			/* motorway */
 			case type_highway_land:
-				if (attr.u.item_type == type_highway_city)
+				if (item->type == type_highway_city)
 					ret += 3;
-				else if (attr.u.item_type == type_street_n_lanes)
+				else if (item->type == type_street_n_lanes)
 					ret += 2;
 				break;
 			case type_highway_city:
-				if (attr.u.item_type == type_highway_land)
+				if (item->type == type_highway_land)
 					ret += 3;
-				else if (attr.u.item_type == type_street_n_lanes)
+				else if (item->type == type_street_n_lanes)
 					ret += 2;
 				break;
 			/* trunk */
 			case type_street_n_lanes:
-				if ((attr.u.item_type == type_highway_land) || (attr.u.item_type == type_highway_city)
-						|| (attr.u.item_type == type_street_4_land)
-						|| (attr.u.item_type == type_street_4_city))
+				if ((item->type == type_highway_land) || (item->type == type_highway_city)
+						|| (item->type == type_street_4_land)
+						|| (item->type == type_street_4_city))
 					ret += 2;
 				break;
 			/* primary */
 			case type_street_4_land:
-				if (attr.u.item_type == type_street_4_city)
+				if (item->type == type_street_4_city)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_n_lanes)
-						|| (attr.u.item_type == type_street_3_land))
+				else if ((item->type == type_street_n_lanes)
+						|| (item->type == type_street_3_land))
 					ret += 2;
-				else if (attr.u.item_type == type_street_3_city)
+				else if (item->type == type_street_3_city)
 					ret += 1;
 				break;
 			case type_street_4_city:
-				if (attr.u.item_type == type_street_4_land)
+				if (item->type == type_street_4_land)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_n_lanes)
-						|| (attr.u.item_type == type_street_3_city))
+				else if ((item->type == type_street_n_lanes)
+						|| (item->type == type_street_3_city))
 					ret += 2;
-				else if (attr.u.item_type == type_street_3_land)
+				else if (item->type == type_street_3_land)
 					ret += 1;
 				break;
 			/* secondary */
 			case type_street_3_land:
-				if (attr.u.item_type == type_street_3_city)
+				if (item->type == type_street_3_city)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_4_land)
-						|| (attr.u.item_type == type_street_2_land))
+				else if ((item->type == type_street_4_land)
+						|| (item->type == type_street_2_land))
 					ret += 2;
-				else if ((attr.u.item_type == type_street_4_city)
-						|| (attr.u.item_type == type_street_2_city))
+				else if ((item->type == type_street_4_city)
+						|| (item->type == type_street_2_city))
 					ret += 1;
 				break;
 			case type_street_3_city:
-				if (attr.u.item_type == type_street_3_land)
+				if (item->type == type_street_3_land)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_4_city)
-						|| (attr.u.item_type == type_street_2_city))
+				else if ((item->type == type_street_4_city)
+						|| (item->type == type_street_2_city))
 					ret += 2;
-				else if ((attr.u.item_type == type_street_4_land)
-						|| (attr.u.item_type == type_street_2_land))
+				else if ((item->type == type_street_4_land)
+						|| (item->type == type_street_2_land))
 					ret += 1;
 				break;
 			/* tertiary */
 			case type_street_2_land:
-				if (attr.u.item_type == type_street_2_city)
+				if (item->type == type_street_2_city)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_3_land))
+				else if ((item->type == type_street_3_land))
 					ret += 2;
-				else if ((attr.u.item_type == type_street_3_city))
+				else if ((item->type == type_street_3_city))
 					ret += 1;
 				break;
 			case type_street_2_city:
-				if (attr.u.item_type == type_street_2_land)
+				if (item->type == type_street_2_land)
 					ret += 3;
-				else if ((attr.u.item_type == type_street_3_city))
+				else if ((item->type == type_street_3_city))
 					ret += 2;
-				else if ((attr.u.item_type == type_street_3_land))
+				else if ((item->type == type_street_3_land))
 					ret += 1;
 				break;
 			default:
