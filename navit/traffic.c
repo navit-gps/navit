@@ -75,12 +75,46 @@ struct map_priv {
 	// TODO messages by ID, segments by message?
 };
 
+/**
+ * @brief Data for segments affected by a traffic message.
+ *
+ * Speed can be specified in three different ways:
+ * \li `speed` replaces the maximum speed of the segment, if lower
+ * \li `speed_penalty` subtracts the specified amount from the maximum speed of the segment
+ * \li `speed_factor` is the percentage of the maximum speed of the segment to be assumed
+ *
+ * Where more than one of these values is set, the lowest speed applies.
+ */
+struct seg_data {
+	enum item_type type;         /**< The item type; currently only `type_traffic_distortion` is supported */
+	int speed;                   /**< The expected speed in km/h (`INT_MAX` for unlimited, 0 indicates
+	                              *   that the road is closed) */
+	int speed_penalty;           /**< Difference between expected speed and the posted speed limit of
+	                              *   the segment (0 for none); the resulting maximum speed is never
+	                              *   less than 5 km/h */
+	int speed_factor;            /**< Expected speed expressed as a percentage of the posted limit (100
+	                              *   for full speed) */
+	int delay;                   /**  Expected delay for all segments combined, in 1/10 s */
+	struct attr ** attrs;        /**< Additional attributes to add to the segments */
+};
+
 void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_lo, struct attr **attrs,
 		struct coord *c, int count);
 void tm_destroy(struct map_priv *priv);
 void traffic_loop(struct traffic * this_);
 struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 void traffic_message_dump(struct traffic_message * this_);
+
+/**
+ * @brief Creates a new `struct seg_data` and initializes it with default values.
+ */
+struct seg_data * seg_data_new(void) {
+	struct seg_data * ret = g_new0(struct seg_data, 1);
+	ret->type = type_traffic_distortion;
+	ret->speed = INT_MAX;
+	ret->speed_factor = 100;
+	return ret;
+}
 
 /**
  * @brief Adds an item to the map.
@@ -702,10 +736,11 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
  *
  * @param this_ The location to match to the map
  * @param ms The mapset to use for matching
+ * @param data Data for the segments added to the map
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
-int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms) {
+int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms, struct seg_data * data) {
 	int i;
 
 	/* Corners of the enclosing rectangle, in WGS84 coordinates */
@@ -739,6 +774,20 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 
 	/* Attributes for traffic distortion */
 	struct attr **attrs;
+
+	/* Number of attributes */
+	int attr_count;
+
+	/* Speed calculated in various ways */
+	int maxspeed, speed, penalized_speed, factor_speed;
+
+	/* Length of location */
+	int len;
+
+	if (!data) {
+		dbg(lvl_error, "no data for segments, aborting\n");
+		return 0;
+	}
 
 	/* calculate enclosing rectangle, if not yet present */
 	if (!this_->sw) {
@@ -791,14 +840,27 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 					this_->from ? this_->from : this_->at);
 
 		/* calculate route */
-		if (start_next)
-			s = start_next->seg;
-		else
-			s = NULL;
+		s = start_next ? start_next->seg : NULL;
 		start = start_next;
 
 		if (!s)
 			dbg(lvl_error, "no segments\n");
+
+		/* calculate length (only if there is a delay) */
+		if (data->delay) {
+			len = 0;
+			while (s) {
+				len += s->data.len;
+				if (s->start == start)
+					start = s->end;
+				else
+					start = s->start;
+				s = start->seg;
+			}
+
+			s = start_next ? start_next->seg : NULL;
+			start = start_next;
+		}
 
 		while (s) {
 			ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
@@ -806,10 +868,104 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 			cs = g_new0(struct coord, ccnt);
 			cd = cs;
 
-			attrs = g_new0(struct attr*, 2);
-			attrs[0] = g_new0(struct attr, 1);
-			attrs[0]->type = attr_maxspeed;
-			attrs[0]->u.num = 20;
+			attr_count = 1;
+			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100))
+				attr_count++;
+			if (data->delay)
+				attr_count++;
+			if (data->attrs)
+				for (attrs = data->attrs; *attrs; attrs++)
+					attr_count++;
+
+			attrs = g_new0(struct attr*, attr_count);
+
+			if (data->attrs)
+				for (i = 0; data->attrs[i]; i++)
+					attrs[i] = data->attrs[i];
+			else
+				i = 0;
+
+			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
+				if (s->data.flags & AF_SPEED_LIMIT) {
+					maxspeed = RSD_MAXSPEED(&s->data);
+				} else {
+					switch (s->data.item.type) {
+					case type_highway_land:
+					case type_street_n_lanes:
+						maxspeed = 100;
+						break;
+					case type_highway_city:
+					case type_street_4_land:
+						maxspeed = 80;
+						break;
+					case type_street_3_land:
+						maxspeed = 70;
+						break;
+					case type_street_2_land:
+						maxspeed = 65;
+						break;
+					case type_street_1_land:
+						maxspeed = 60;
+						break;
+					case type_street_4_city:
+						maxspeed = 50;
+						break;
+					case type_ramp:
+					case type_street_3_city:
+					case type_street_unkn:
+						maxspeed = 40;
+						break;
+					case type_street_2_city:
+					case type_track_paved:
+						maxspeed = 30;
+						break;
+					case type_track:
+					case type_cycleway:
+						maxspeed = 20;
+						break;
+					case type_roundabout:
+					case type_street_1_city:
+					case type_street_0:
+					case type_living_street:
+					case type_street_service:
+					case type_street_parking_lane:
+					case type_path:
+					case type_track_ground:
+					case type_track_gravelled:
+					case type_track_unpaved:
+					case type_track_grass:
+					case type_bridleway:
+						maxspeed = 10;
+						break;
+					case type_street_pedestrian:
+					case type_footway:
+					case type_steps:
+						maxspeed = 5;
+						break;
+					default:
+						maxspeed = 50;
+					}
+				}
+				speed = data->speed;
+				penalized_speed = maxspeed - data->speed_penalty;
+				if (penalized_speed < 5)
+					penalized_speed = 5;
+				factor_speed = maxspeed * data->speed_factor / 100;
+				if (speed > penalized_speed)
+					speed = penalized_speed;
+				if (speed > factor_speed)
+					speed = factor_speed;
+				attrs[i] = g_new0(struct attr, 1);
+				attrs[i]->type = attr_maxspeed;
+				attrs[i]->u.num = speed;
+				i++;
+			}
+
+			if (data->delay) {
+				attrs[i] = g_new0(struct attr, 1);
+				attrs[i]->type = attr_delay;
+				attrs[i]->u.num = data->delay * s->data.len / len;
+			}
 
 			if (s->start == start) {
 				/* forward direction, maintain order of coordinates */
@@ -827,7 +983,11 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 			}
 
 			tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, cs, ccnt);
-			g_free(attrs[0]);
+
+			if (((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) && (data->delay))
+				g_free(attrs[attr_count - 2]);
+			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100) || data->delay)
+				g_free(attrs[attr_count - 1]);
 			g_free(attrs);
 			/* TODO decide who frees cs */
 
@@ -936,6 +1096,138 @@ void traffic_message_dump(struct traffic_message * this_) {
 }
 
 /**
+ * @brief Parses the events of a traffic message.
+ *
+ * @param message The message to parse
+ *
+ * @return A `struct seg_data`, or `NULL` if the message contains no usable information
+ */
+struct seg_data * traffic_message_parse_events(struct traffic_message * this_) {
+	struct seg_data * ret = NULL;
+
+	int i;
+
+	/* Default assumptions, used only if no explicit values are given */
+	int speed = INT_MAX;
+	int speed_penalty = 0;
+	int speed_factor = 100;
+	int delay = 0;
+
+	for (i = 0; i < this_->event_count; i++) {
+		if (this_->events[i]->speed != INT_MAX) {
+			if (!ret)
+				ret = seg_data_new();
+			if (ret->speed > this_->events[i]->speed)
+				ret->speed = this_->events[i]->speed;
+		}
+		if (this_->events[i]->event_class == event_class_congestion) {
+			switch (this_->events[i]->type) {
+			case event_congestion_heavy_traffic:
+			case event_congestion_traffic_building_up:
+			case event_congestion_traffic_heavier_than_normal:
+			case event_congestion_traffic_much_heavier_than_normal:
+				/* Heavy traffic: assume 10 km/h below the posted limit, unless explicitly specified */
+				if ((this_->events[i]->speed == INT_MAX) && (speed_penalty < 10))
+					speed_penalty = 10;
+				break;
+			case event_congestion_slow_traffic:
+			case event_congestion_traffic_congestion:
+			case event_congestion_traffic_problem:
+				/* Slow traffic or unspecified congestion: assume half the posted limit, unless explicitly specified */
+				if ((this_->events[i]->speed == INT_MAX) && (speed_factor > 50))
+					speed_factor = 50;
+				break;
+			case event_congestion_queue:
+				/* Queuing traffic: assume 20 km/h, unless explicitly specified */
+				if ((this_->events[i]->speed == INT_MAX) && (speed > 20))
+					speed = 20;
+				break;
+			case event_congestion_stationary_traffic:
+			case event_congestion_long_queue:
+				/* Stationary traffic or long queues: assume 5 km/h, unless explicitly specified */
+				if ((this_->events[i]->speed == INT_MAX) && (speed > 5))
+					speed = 5;
+				break;
+			default:
+				break;
+			}
+		} else if (this_->events[i]->event_class == event_class_delay) {
+			switch (this_->events[i]->type) {
+			case event_delay_delay:
+			case event_delay_long_delay:
+				/* Delay or long delay: assume 30 minutes, unless explicitly specified */
+				if (this_->events[i]->quantifier) {
+					if (!ret)
+						ret = seg_data_new();
+					if (ret->delay < this_->events[i]->quantifier->u.q_duration)
+						ret->delay = this_->events[i]->quantifier->u.q_duration;
+				} else if (delay < 18000)
+					delay = 18000;
+				break;
+			case event_delay_very_long_delay:
+				/* Very long delay: assume 1 hour, unless explicitly specified */
+				if (this_->events[i]->quantifier) {
+					if (!ret)
+						ret = seg_data_new();
+					if (ret->delay < this_->events[i]->quantifier->u.q_duration)
+						ret->delay = this_->events[i]->quantifier->u.q_duration;
+				} else if (delay < 36000)
+					delay = 36000;
+				break;
+			case event_delay_several_hours:
+				/* Delay of several hours: assume 3 hours */
+				if (delay < 108000)
+					delay = 108000;
+				break;
+			case event_delay_uncertain_duration:
+				/* TODO */
+				break;
+			default:
+				break;
+			}
+		} else if (this_->events[i]->event_class == event_class_restriction) {
+			switch (this_->events[i]->type) {
+			case event_restriction_blocked:
+			case event_restriction_blocked_ahead:
+			case event_restriction_carriageway_blocked:
+			case event_restriction_carriageway_closed:
+			case event_restriction_closed:
+			case event_restriction_closed_ahead:
+				if (!ret)
+					ret = seg_data_new();
+				if (ret->speed > 0)
+					ret->speed = 0;
+				break;
+			case event_restriction_intermittent_closures:
+			case event_restriction_batch_service:
+			case event_restriction_single_alternate_line_traffic:
+				/* Assume 30% of the posted limit for all of these cases */
+				if (speed_factor > 30)
+					speed_factor = 30;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/* use implicit values if no explicit ones are given */
+	if ((speed != INT_MAX) || speed_penalty || (speed_factor != 100) || delay) {
+		if (!ret)
+			ret = seg_data_new();
+		if (ret->speed == INT_MAX) {
+			ret->speed = speed;
+			ret->speed_penalty = speed_penalty;
+			ret->speed_factor = speed_factor;
+		}
+		if (!ret->delay)
+			ret->delay = delay;
+	}
+
+	return ret;
+}
+
+/**
  * @brief The loop function for the traffic module.
  *
  * This function polls backends for new messages and processes them by inserting, removing or modifying
@@ -945,11 +1237,23 @@ void traffic_loop(struct traffic * this_) {
 	int i;
 	struct traffic_message ** messages;
 
+	/* The item type for traffic distortions generated from the current traffic message */
+	enum item_type type;
+
+	/* Attributes for traffic distortions generated from the current traffic message */
+	struct seg_data * data;
+
 	messages = this_->meth.get_messages(this_->priv);
 	if (!messages)
 		return;
 	for (i = 0; messages[i] != NULL; i++) {
-		traffic_location_match_to_map(messages[i]->location, this_->ms);
+		/* TODO handle cancellation messages */
+
+		data = traffic_message_parse_events(messages[i]);
+
+		traffic_location_match_to_map(messages[i]->location, this_->ms, data);
+
+		g_free(data);
 
 		traffic_message_dump(messages[i]);
 	}
