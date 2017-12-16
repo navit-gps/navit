@@ -2815,8 +2815,12 @@ route_graph_process_restrictions(struct route_graph *this)
 /**
  * @brief Releases all resources needed to build the route graph.
  *
- * If {@code cancel} is false, this function will start processing restrictions and ultimately call
- * the route graph's {@code done_cb} callback.
+ * If `cancel` is false, this function will start processing restrictions and ultimately call the route
+ * graph's `done_cb` callback.
+ *
+ * The traffic module will always call this method with `cancel` set to true, as it does not process
+ * restrictions and has no callback. Inside the routing module, `cancel` will be true if, and only if,
+ * navigation has been aborted.
  *
  * @param rg Points to the route graph
  * @param cancel True if the process was aborted before completing, false if it completed normally
