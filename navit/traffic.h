@@ -342,7 +342,8 @@ struct traffic_event {
 	int length;                      /*!< The length of the affected route in meters. */
 	int speed;                       /*!< The speed in km/h at which vehicles can expect to pass through the
 	                                  *   affected stretch of road (either a temporary speed limit or
-	                                  *   average speed in practice, whichever is less). */
+	                                  *   average speed in practice, whichever is less), `INT_MAX` if
+	                                  *   not set or unknown. */
 	struct quantifier * quantifier;  /*!< Additional quantifier for events allowing this. Data type and
 	                                  *   meaning depends on the event type. */
 	int si_count;                    /*!< Number of supplementary information items in {@code si_count}. */
