@@ -85,7 +85,6 @@ int debug_route=0;
 
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
-#define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
 #define RSD_SIZE_WEIGHT(x) *((struct size_weight_limit *)route_segment_data_field_pos((x), attr_vehicle_width))
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
@@ -1459,7 +1458,7 @@ route_graph_reset(struct route_graph *this)
  * @param type Type of the field that should be returned
  * @return A pointer to a field of a certain type, or NULL if no such field is present
  */
-static void *
+void *
 route_segment_data_field_pos(struct route_segment_data *seg, enum attr_type type)
 {
 	unsigned char *ptr;
