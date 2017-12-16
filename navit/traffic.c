@@ -990,7 +990,7 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 				start = s->start;
 			}
 
-			tm_add_item(NULL, type_traffic_distortion, 0, 0, attrs, cs, ccnt);
+			tm_add_item(NULL, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt);
 
 			if (((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) && (data->delay))
 				g_free(attrs[attr_count - 2]);
