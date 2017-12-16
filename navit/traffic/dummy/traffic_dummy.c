@@ -53,12 +53,14 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 /**
  * @brief Returns a dummy traffic report.
  *
- * This method will report one single message when first called. Further calls to this method will
- * return `NULL`, indicating that there are no messages to report.
+ * This method will report two messages when first called. Further calls to this method will return
+ * `NULL`, indicating that there are no messages to report.
  *
- * The message indicates queuing traffic on the A9 Munich–Nuremberg between Neufahrn and Allershausen.
- * It mimics a TMC message in that coordinates are approximate, TMC identifiers are supplied for the
- * location and extra data fields which can be inferred from the TMC location table are filled. The
+ * The messages indicate queuing traffic on the A9 Munich–Nuremberg between Neufahrn and Allershausen,
+ * and slow traffic on the A96 Lindau–Munich between Gräfelfing and München-Laim.
+ *
+ * They mimic TMC messages in that coordinates are approximate, TMC identifiers are supplied for the
+ * locations and extra data fields which can be inferred from the TMC location table are filled. The
  * timestamps indicate a message that has just been received for the first time, i.e. its “first
  * received” and “last updated” timestamps match and are recent. Expiration is after 24 hours, longer
  * than the typical lifespan of a TMC message of this kind.
@@ -75,13 +77,21 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 	if (this_->is_report_sent)
 		return NULL;
 
-	messages = g_new0(struct traffic_message *, 2);
+	messages = g_new0(struct traffic_message *, 3);
+
 	from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
 	to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
 	location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
 			location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 	messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
 			time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
+
+	from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
+	to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
+	location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
+			location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
+	messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
+			time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_slow_traffic);
 
 	this_->is_report_sent = 1;
 
