@@ -94,7 +94,7 @@ struct seg_data {
 	                              *   less than 5 km/h */
 	int speed_factor;            /**< Expected speed expressed as a percentage of the posted limit (100
 	                              *   for full speed) */
-	int delay;                   /**  Expected delay for all segments combined, in 1/10 s */
+	int delay;                   /**< Expected delay for all segments combined, in 1/10 s */
 	struct attr ** attrs;        /**< Additional attributes to add to the segments */
 };
 
