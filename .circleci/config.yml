@@ -98,6 +98,8 @@ jobs:
       - run:
           name: Build for Windows CE
           command: bash ci/build_wince.sh
+      - store_artifacts:
+          path: wince/output
   build_tomtom_minimal:
     <<: *defaults
     docker:
