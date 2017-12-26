@@ -11,7 +11,7 @@ var searchData=
   ['watch_5ffunc',['watch_func',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a1725cda6177a61d64c7654b6822fe812',1,'org::navitproject::navit::NavitWatch']]],
   ['watchcallback',['WatchCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a5f12aa40a53d73dad2ec85c9a75f2577',1,'org::navitproject::navit::NavitWatch']]],
   ['watches',['watches',['../classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6',1,'qt5_navit_timer']]],
-  ['watchevent',['watchEvent',['../classRenderArea.html#ac2921205b8d304009b3d7153f304c8b8',1,'RenderArea']]],
+  ['watchevent',['watchEvent',['../classqt5__navit__timer.html#a80e512ba274a85379afba76fa4610559',1,'qt5_navit_timer::watchEvent()'],['../classRenderArea.html#ac2921205b8d304009b3d7153f304c8b8',1,'RenderArea::watchEvent()']]],
   ['wave_5fout',['wave_out',['../speak_8c.html#aed3d8a3b8575ca53c4673125db9f4281',1,'speak.c']]],
   ['waveout_5fclose',['waveout_close',['../speak_8c.html#a0c004fda547076b5514e3e44cd177a58',1,'speak.c']]],
   ['waveout_5fopen',['waveout_open',['../speak_8c.html#ac6a8a5f56ddfdfc76055ae10bd274749',1,'speak.c']]],

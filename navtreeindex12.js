@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e":[3,0,8,4,0,123],
 "garmin__img_8c.html#a90fcdd7735ed224b360d5bd5301ed5e7":[3,0,8,4,0,130],
 "garmin__img_8c.html#a9292a4a76609ecd9475794ec9a7876a6":[3,0,8,4,0,144],
 "garmin__img_8c.html#a93762be7e895038d3a5d902e124c50a4":[3,0,8,4,0,32],
@@ -173,8 +174,8 @@ var NAVTREEINDEX12 =
 "globals_b.html":[3,1,0,3],
 "globals_c.html":[3,1,0,4],
 "globals_d.html":[3,1,0,5],
-"globals_defs.html":[3,1,6,0],
 "globals_defs.html":[3,1,6],
+"globals_defs.html":[3,1,6,0],
 "globals_defs_a.html":[3,1,6,1],
 "globals_defs_b.html":[3,1,6,2],
 "globals_defs_c.html":[3,1,6,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "globals_func_w.html":[3,1,1,23],
 "globals_func_x.html":[3,1,1,24],
 "globals_func_z.html":[3,1,1,25],
-"globals_g.html":[3,1,0,8],
-"globals_h.html":[3,1,0,9]
+"globals_g.html":[3,1,0,8]
 };

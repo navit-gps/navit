@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"gui__internal__keyboard_8c.html#af61b899f113298bffe78fbd8e2b22f50":[3,0,6,1,10,5],
 "gui__internal__keyboard_8h.html":[3,0,6,1,11],
 "gui__internal__keyboard_8h.html#a2c2c1c8a502c402a4306b54713b0e4d7":[3,0,6,1,11,6],
 "gui__internal__keyboard_8h.html#a451eb46ad7ef67e4ca70b1f03d55c000":[3,0,6,1,11,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "gui__qml_8cpp.html#a49eeebc95aefc85f016715d822541ce0":[3,0,6,2,1,2],
 "gui__qml_8cpp.html#a75168507db89d4d3c3a61178fc6c825c":[3,0,6,2,1,8],
 "gui__qml_8cpp.html#a7cfa223fa2b1e0cda6c6cd64bd16d988":[3,0,6,2,1,16],
-"gui__qml_8cpp.html#a903c05dde04c397dfd5dff7030d8bb7a":[3,0,6,2,1,7],
-"gui__qml_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c":[3,0,6,2,1,15]
+"gui__qml_8cpp.html#a903c05dde04c397dfd5dff7030d8bb7a":[3,0,6,2,1,7]
 };

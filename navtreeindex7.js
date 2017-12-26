@@ -81,10 +81,11 @@ var NAVTREEINDEX7 =
 "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html":[2,0,1,0,0,1,0],
 "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html#a8d70b91909334402f7ba7891a2644076":[2,0,1,0,0,1,0,0],
 "classqt5__navit__timer.html":[2,0,330],
-"classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6":[2,0,330,4],
+"classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6":[2,0,330,5],
 "classqt5__navit__timer.html#a7bbda26f1ee764099c0484eb7f39addb":[2,0,330,0],
-"classqt5__navit__timer.html#aa2f72702250ca388f606120b9239365a":[2,0,330,2],
-"classqt5__navit__timer.html#ad139eb9e543aa856db72cc548020cfba":[2,0,330,3],
+"classqt5__navit__timer.html#a80e512ba274a85379afba76fa4610559":[2,0,330,2],
+"classqt5__navit__timer.html#aa2f72702250ca388f606120b9239365a":[2,0,330,3],
+"classqt5__navit__timer.html#ad139eb9e543aa856db72cc548020cfba":[2,0,330,4],
 "classqt5__navit__timer.html#af7e9cf69299079e1f075c449967674af":[2,0,330,1],
 "coastline_8c.html":[3,0,9,5],
 "coastline_8c.html#a101b79175bdf9925bdbeabf15759153f":[3,0,9,5,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "common_8h_source.html":[3,0,2,1,2],
 "config_8c.html":[3,0,2,1,3],
 "config_8c.html#a02bc98ba6e3af40d0754c670728592b3":[3,0,2,1,3,1],
-"config_8c.html#a1f951c13f4bc19e32c5b5417b2d2b53e":[3,0,2,1,3,3],
-"config_8c.html#a431b9e2f170c3a2e02402908ade52258":[3,0,2,1,3,5]
+"config_8c.html#a1f951c13f4bc19e32c5b5417b2d2b53e":[3,0,2,1,3,3]
 };

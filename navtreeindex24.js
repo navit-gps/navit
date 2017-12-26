@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"gui__qml_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c":[3,0,6,2,1,15],
 "gui__qml_8cpp.html#abe048dfbe3d5467e2b58449632eed693":[3,0,6,2,1,5],
 "gui__qml_8cpp.html#ac8f0133fe6042f6e5db41bc72139e54b":[3,0,6,2,1,3],
 "gui__qml_8cpp.html#ad1447518f4372828b8435ae82e48499e":[3,0,6,2,1,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "keys_8h_source.html":[3,0,70],
 "latlon2bookmark_8c.html":[3,0,14,1,0],
 "latlon2bookmark_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,14,1,0,0],
-"layer_8h.html":[3,0,71],
-"layer_8h.html#a68fa97773d99e5ca72a571f56b8eb177":[3,0,71,0]
+"layer_8h.html":[3,0,71]
 };

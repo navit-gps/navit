@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"speech_8c.html#aa5b4a6300391ce4fa3def1f84bf80132":[3,0,123,9],
 "speech_8c.html#af0c0c727ad322e5bac255b4aa200c2b1":[3,0,123,5],
 "speech_8h.html":[3,0,124],
 "speech_8h.html#a044b65a0ba601d83a25ebbfa12628bdd":[3,0,124,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "struct__OSMPBF____PrimitiveGroup.html#a6c40482343957b242be42eb32ccc8dcc":[2,0,14,5],
 "struct__OSMPBF____PrimitiveGroup.html#a6e1214ea0160930c2c840df8b7cfd326":[2,0,14,8],
 "struct__OSMPBF____PrimitiveGroup.html#a705ccb3cfbac7a519a5df6a5734ee4f2":[2,0,14,0],
-"struct__OSMPBF____PrimitiveGroup.html#aeb42265d66228a1a9f15b76243e1acfa":[2,0,14,1],
-"struct__OSMPBF____PrimitiveGroup.html#afca177d19b54727f15cb2e3135d67d0f":[2,0,14,4]
+"struct__OSMPBF____PrimitiveGroup.html#aeb42265d66228a1a9f15b76243e1acfa":[2,0,14,1]
 };

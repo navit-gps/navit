@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"group__vehicle-wince.html#ga9e1c077e5b51c21a125c9f91d74e60c2":[0,2,0,6,0,44],
 "group__vehicle-wince.html#ga9e1c077e5b51c21a125c9f91d74e60c2":[0,2,0,3,0,44],
 "group__vehicle-wince.html#gaa05d1b270e454a85f9340c1793c3de12":[0,2,0,3,0,61],
 "group__vehicle-wince.html#gaa05d1b270e454a85f9340c1793c3de12":[0,2,0,7,0,61],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "gui__internal_8c.html#a3d13b96a1eaa5d39160cb511d4677abd":[3,0,6,1,0,58],
 "gui__internal_8c.html#a3fec6cfe0d7369a966d68104d7fe0b9e":[3,0,6,1,0,3],
 "gui__internal_8c.html#a401f7e7d432258eef9b441dcb984782d":[3,0,6,1,0,88],
-"gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c":[3,0,6,1,0,81],
-"gui__internal_8c.html#a4b17969080bc271e2840706abbf3127c":[3,0,6,1,0,91]
+"gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c":[3,0,6,1,0,81]
 };
