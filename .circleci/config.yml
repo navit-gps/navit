@@ -92,7 +92,7 @@ jobs:
             bash ci/build_win32.sh
   build_wince:
     docker:
-      - image: pgrandin/wince:8.04
+      - image: navit/wince:8.04
     steps:
       - checkout
       - run:
