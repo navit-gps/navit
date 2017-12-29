@@ -12,3 +12,6 @@ cp -r navit/icons/ output
 mkdir output/maps
 cp navit/maps/*.bin output/maps
 cp navit/maps/*.xml output/maps
+
+cd ..
+bash ./navit/script/cabify.sh wince/output/navit.cab wince/
