@@ -54,7 +54,9 @@
 #define PENALTY_OFFROAD 2
 
 /**
- * @brief A traffic plugin instance
+ * @brief A traffic plugin instance.
+ *
+ * If multiple traffic plugins are loaded, each will have its own `struct traffic` instance.
  */
 struct traffic {
 	NAVIT_OBJECT
@@ -65,14 +67,46 @@ struct traffic {
 	struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
 	struct mapset *ms;           /**< The mapset used for routing */
 	struct route *rt;            /**< The route to notify of traffic changes */
+	struct map *map;             /**< The traffic map, in which traffic distortions are stored */
+};
+
+struct traffic_message_priv {
+	struct item **items;        /**< The items for this message in the traffic map */
 };
 
 /**
  * @brief Private data for the traffic map.
+ *
+ * If multiple traffic plugins are loaded, the map is shared between all of them.
  */
 struct map_priv {
-	struct traffic_message ** messages; /**< Points to a list of pointers to all currently active messages */
-	// TODO messages by ID, segments by message?
+	struct map * map;           /**< The map object */
+	GList * messages;           /**< Currently active messages */
+	GList * items;              /**< The map items */
+	// TODO messages by ID?                 In a later phase…
+	// TODO items by start/end coordinates? In a later phase…
+};
+
+/**
+ * @brief Implementation-specific map rect data
+ */
+struct map_rect_priv {
+	struct map_priv *mpriv;     /**< The map to which this map rect refers */
+	struct item *item;          /**< The current item, i.e. the last item returned by the `map_rect_get_item` method */
+	GList * next_item;          /**< `GList` entry for the next item to be returned by `map_rect_get_item` */
+};
+
+/**
+ * @brief Implementation-specific item data for traffic map items
+ */
+struct item_priv {
+	struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
+	struct coord *coords;       /**< The coordinates for the item */
+	int coord_count;            /**< The number of elements in `coords` */
+	int refcount;               /**< How many references to this item exist */
+	char ** message_ids;        /**< Message IDs for the messages associated with this item, `NULL`-terminated */
+	struct attr **next_attr;    /**< The next attribute of `item` to be returned by the `item_attr_get` method */
+	unsigned int next_coord;    /**< The index of the next coordinate of `item` to be returned by the `item_coord_get` method */
 };
 
 /**
@@ -98,17 +132,43 @@ struct seg_data {
 	struct attr ** attrs;        /**< Additional attributes to add to the segments */
 };
 
-void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_lo, struct attr **attrs,
-		struct coord *c, int count);
-void tm_destroy(struct map_priv *priv);
-void traffic_loop(struct traffic * this_);
-struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
-void traffic_message_dump(struct traffic_message * this_);
+static struct seg_data * seg_data_new(void);
+static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
+		struct attr **attrs, struct coord *c, int count, char * id);
+static void tm_dump_item(struct item * item);
+static void tm_destroy(struct map_priv *priv);
+static void tm_coord_rewind(void *priv_data);
+static void tm_item_destroy(struct item * item);
+static struct item * tm_item_ref(struct item * item);
+static struct item * tm_item_unref(struct item * item);
+static int tm_coord_get(void *priv_data, struct coord *c, int count);
+static void tm_attr_rewind(void *priv_data);
+static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
+static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
+		struct mapset * ms);
+static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
+static int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms,
+		struct seg_data * data, struct map *map, char * id);
+static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
+		struct mapset * ms, int mode);
+static void traffic_loop(struct traffic * this_);
+static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
+static void traffic_message_dump(struct traffic_message * this_);
+static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+		struct traffic_point * from, struct traffic_point * to);
+
+static struct item_methods methods_traffic_item = {
+	tm_coord_rewind,
+	tm_coord_get,
+	tm_attr_rewind,
+	tm_attr_get,
+};
 
 /**
  * @brief Creates a new `struct seg_data` and initializes it with default values.
  */
-struct seg_data * seg_data_new(void) {
+static struct seg_data * seg_data_new(void) {
 	struct seg_data * ret = g_new0(struct seg_data, 1);
 	ret->type = type_traffic_distortion;
 	ret->speed = INT_MAX;
@@ -117,25 +177,135 @@ struct seg_data * seg_data_new(void) {
 }
 
 /**
- * @brief Adds an item to the map.
+ * @brief Destroys a traffic map item.
  *
- * Currently this method ignores the `priv` argument and simply writes the item to a textfile map named
- * `distortion.txt` in the default data folder. This map must be in the active mapset in order for the
- * distortions to be rendered on the map and considered for routing.
+ * This function should never be called directly. Instead, be sure to obtain all references by calling
+ * `tm_item_ref()` and destroying them by calling `tm_item_unref()`.
  *
- * All data passed to this method is safe to free after the method returns, and doing so is the
- * responsibility of the caller.
+ * @param item The item (its `priv_data` member must point to a `struct item_priv`)
+ */
+static void tm_item_destroy(struct item * item) {
+	int i = 0;
+	struct item_priv * priv_data = item->priv_data;
+
+	attr_list_free(priv_data->attrs);
+	g_free(priv_data->coords);
+
+	while (priv_data->message_ids && priv_data->message_ids[i]) {
+		g_free(priv_data->message_ids[i++]);
+	}
+	g_free(priv_data->message_ids);
+
+	g_free(item->priv_data);
+	g_free(item);
+}
+
+/**
+ * @brief References a traffic map item.
  *
- * @param priv The traffic map's private data
+ * Storing a reference to a traffic map item should always be done by calling this function, passing the
+ * item as its argument. This will return the item and increase its reference count by one.
+ *
+ * Never store a pointer to a traffic item not obtained via this function. Doing so may have undesired
+ * side effects as the item will not be aware of the reference to it, and the reference may unexpectedly
+ * become invalid, leading to a segmentation fault.
+ *
+ * @param item The item (its `priv_data` member must point to a `struct item_priv`)
+ *
+ * @return The item. `NULL` will be returned if the argument is `NULL` or points to an item whose
+ * `priv_data` member is `NULL`.
+ */
+static struct item * tm_item_ref(struct item * item) {
+	if (!item)
+		return NULL;
+	if (!item->priv_data)
+		return NULL;
+	((struct item_priv *) item->priv_data)->refcount++;
+	return item;
+}
+
+/**
+ * @brief Unreferences a traffic map item.
+ *
+ * This must be called when destroying a reference to a traffic map item. It will decrease the reference
+ * count of the item by one, and destroy the item if the last reference to is is removed.
+ *
+ * If the unreference operation is successful, this function returns `NULL`. This allows one-line
+ * operations such as:
+ *
+ * {@code some_item = tm_item_unref(some_item);}
+ *
+ * @param item The item (its `priv_data` member must point to a `struct item_priv`)
+ *
+ * @return `NULL` if the item was unreferenced successfully, `item` if it points to an item whose
+ * `priv_data` member is `NULL`.
+ */
+/* TODO use weak references in map, remove from map when unreferencing (g_list_remove_all) */
+static struct item * tm_item_unref(struct item * item) {
+	if (!item)
+		return item;
+	if (!item->priv_data)
+		return item;
+	((struct item_priv *) item->priv_data)->refcount--;
+	if (((struct item_priv *) item->priv_data)->refcount <= 0) {
+		tm_item_destroy(item);
+	}
+	return NULL;
+}
+
+// TODO func to remove item from message (but keep it in the map if referenced elsewhere)
+
+/**
+ * @brief Returns an item from the map which matches the supplied data.
+ *
+ * For now only the item type, start coordinates and end coordinates are compared; attributes are
+ * ignored. Inverted coordinates are not considered a match for now.
+ *
+ * @param mr A map rectangle in the traffic map
  * @param type Type of the item
- * @param id_hi First part of the ID of the item (item IDs have two parts)
- * @param id_lo Second part of the ID of the item
  * @param attrs The attributes for the item
  * @param c Points to an array of coordinates for the item
  * @param count Number of items in `c`
  */
-void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_lo, struct attr **attrs,
+/*
+ * TODO
+ * Comparison criteria need to be revisited to properly handle different reports for the same segment.
+ * Differences may affect quantifiers (explicit vs. implied speed) or maxspeed vs. delay.
+ */
+static struct item * tm_find_item(struct map_rect *mr, enum item_type type, struct attr **attrs,
 		struct coord *c, int count) {
+	struct item * ret = NULL;
+	struct item * curr;
+	struct item_priv * curr_priv;
+
+	while ((curr = map_rect_get_item(mr)) && !ret) {
+		if (curr->type != type)
+			continue;
+		curr_priv = curr->priv_data;
+		if (curr_priv->coords[0].x == c[0].x && curr_priv->coords[0].y == c[0].y
+				&& curr_priv->coords[curr_priv->coord_count-1].x == c[count-1].x
+				&& curr_priv->coords[curr_priv->coord_count-1].y == c[count-1].y)
+			ret = curr;
+	}
+	return ret;
+}
+
+/**
+ * @brief Dumps an item to a textfile map.
+ *
+ * This method writes the item to a textfile map named `distortion.txt` in the default data folder.
+ * This map can be added to the active mapset in order for the distortions to be rendered on the map and
+ * considered for routing.
+ *
+ * All data passed to this method is safe to free after the method returns, and doing so is the
+ * responsibility of the caller.
+ *
+ * @param item The item
+ */
+static void tm_dump_item(struct item * item) {
+	struct item_priv * ip = (struct item_priv *) item->priv_data;
+	struct attr **attrs = ip->attrs;
+	struct coord *c = ip->coords;
 	int i;
 	char * attr_text;
 
@@ -145,7 +315,7 @@ void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_l
 	if (dist_filename) {
 		FILE *map = fopen(dist_filename,"a");
 		if (map) {
-			fprintf(map, "type=%s", item_to_name(type));
+			fprintf(map, "type=%s", item_to_name(item->type));
 			while (*attrs) {
 				attr_text = attr_to_text(*attrs, NULL, 0);
 				/* FIXME this may not work properly for all attribute types */
@@ -155,7 +325,7 @@ void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_l
 			}
 			fprintf(map, "\n");
 
-			for (i = 0; i < count; i++) {
+			for (i = 0; i < ip->coord_count; i++) {
 				fprintf(map,"0x%x 0x%x\n", c[i].x, c[i].y);
 			}
 			fclose(map);
@@ -168,16 +338,86 @@ void tm_add_item(struct map_priv *priv, enum item_type type, int id_hi, int id_l
 }
 
 /**
+ * @brief Dumps the traffic map to a textfile map.
+ *
+ * This method writes all items to a textfile map named `distortion.txt` in the default data folder.
+ * This map can be added to the active mapset in order for the distortions to be rendered on the map and
+ * considered for routing.
+ *
+ * @param map The traffic map
+ */
+static void tm_dump(struct map * map) {
+	/* external method, verifies the public API as well as internal structure */
+	struct map_rect * mr;
+	struct item * item;
+
+	mr = map_rect_new(map, NULL);
+	while ((item = map_rect_get_item(mr)))
+		tm_dump_item(item);
+	map_rect_destroy(mr);
+}
+
+/**
+ * @brief Adds an item to the map.
+ *
+ * If a matching item is already in the map, that item will be returned.
+ *
+ * All data passed to this method is safe to free after the method returns, and doing so is the
+ * responsibility of the caller.
+ *
+ * @param map The traffic map
+ * @param type Type of the item
+ * @param id_hi First part of the ID of the item (item IDs have two parts)
+ * @param id_lo Second part of the ID of the item
+ * @param attrs The attributes for the item
+ * @param c Points to an array of coordinates for the item
+ * @param count Number of items in `c`
+ * @param id Message ID for the associated message
+ *
+ * @return The map item
+ */
+static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
+		struct attr **attrs, struct coord *c, int count, char * id) {
+	struct item * ret = NULL;
+	struct item_priv * priv_data;
+	struct map_rect * mr;
+
+	mr = map_rect_new(map, NULL);
+	ret = tm_find_item(mr, type, attrs, c, count);
+	/* TODO if (ret), check and (if needed) change attributes for the existing item */
+	if (!ret) {
+		ret = map_rect_create_item(mr, type);
+		ret->id_hi = id_hi;
+		ret->id_lo = id_lo;
+		ret->map = map;
+		ret->meth = &methods_traffic_item;
+		priv_data = (struct item_priv *) ret->priv_data;
+		priv_data->attrs = attr_list_dup(attrs);
+		priv_data->coords = g_memdup(c, sizeof(struct coord) * count);
+		priv_data->coord_count = count;
+		priv_data->message_ids = g_new0(char *, 2);
+		priv_data->message_ids[0] = g_strdup(id);
+		priv_data->next_attr = attrs;
+		priv_data->next_coord = 0;
+		/* TODO use weak references in map, remove from map when unreferencing (g_list_remove_all) */
+		ret = tm_item_ref(ret);
+	}
+	map_rect_destroy(mr);
+	//tm_dump_item(ret);
+	return ret;
+}
+
+/**
  * @brief Destroys (closes) the traffic map.
  *
  * @param priv The private data for the traffic map instance
  */
-void tm_destroy(struct map_priv *priv) {
+static void tm_destroy(struct map_priv *priv) {
 	g_free(priv);
 }
 
 /**
- * @brief Opens a new map rectangle on the traffic map
+ * @brief Opens a new map rectangle on the traffic map.
  *
  * This function opens a new map rectangle on the route graph's map.
  *
@@ -186,26 +426,41 @@ void tm_destroy(struct map_priv *priv) {
  * @return A new map rect's private data
  */
 static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
-	// TODO
-	return NULL;
+	struct map_rect_priv * mr;
+	dbg(lvl_debug,"enter\n");
+	mr=g_new0(struct map_rect_priv, 1);
+	mr->mpriv = priv;
+	mr->next_item = priv->items;
+	/* all other pointers are initially NULL */
+	return mr;
 }
 
 /**
- * @brief Destroys a map rectangle on the traffic map
+ * @brief Destroys a map rectangle on the traffic map.
  */
 static void tm_rect_destroy(struct map_rect_priv *mr) {
-	// TODO
-	return;
+	/* just free the map_rect_priv, all its members are pointers to data "owned" by others */
+	g_free(mr);
 }
 
 /**
  * @brief Returns the next item from the traffic map
  *
  * @param mr The map rect to search for items
+ *
+ * @return The next item, or `NULL` if the last item has already been retrieved.
  */
 static struct item * tm_get_item(struct map_rect_priv *mr) {
-	// TODO
-	return NULL;
+	struct item * ret = NULL;
+	if (mr->next_item) {
+		ret = (struct item *) mr->next_item->data;
+		mr->item = ret;
+		tm_attr_rewind(mr);
+		tm_coord_rewind(mr);
+		mr->next_item = g_list_next(mr->next_item);
+	}
+
+	return ret;
 }
 
 /**
@@ -214,10 +469,122 @@ static struct item * tm_get_item(struct map_rect_priv *mr) {
  * @param mr The map rect to search for items
  * @param id_hi The high-order portion of the ID
  * @param id_lo The low-order portion of the ID
+ *
+ * @return The next item matching the ID; `NULL` if there are no matching items or the last matching
+ * item has already been retrieved.
  */
 static struct item * tm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
-	// TODO
-	return NULL;
+	struct item *ret = NULL;
+	do {
+		ret = tm_get_item(mr);
+	} while (ret && (ret->id_lo != id_lo || ret->id_hi != id_hi));
+	return ret;
+}
+
+/**
+ * @brief Creates a new item of the specified type and inserts it into the map.
+ *
+ * @param mr The map rect in which to create the item
+ * @param type The type of item to create
+ *
+ * @return The new item. The item is of type `type` and has an allocated `priv_data` member; all other
+ * members of both structs are `NULL`.
+ */
+static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_type type) {
+	struct map_priv * map_priv = mr->mpriv;
+	struct item * ret = NULL;
+	struct item_priv * priv_data;
+
+	dbg(lvl_error, "enter\n");
+
+	priv_data = g_new0(struct item_priv, 1);
+
+	dbg(lvl_error, "priv_data allocated\n");
+
+	ret = g_new0(struct item, 1);
+	ret->type = type;
+	ret->priv_data = priv_data;
+	map_priv->items = g_list_append(map_priv->items, ret);
+
+	dbg(lvl_error, "return\n");
+
+	return ret;
+}
+
+/**
+ * @brief Rewinds the coordinates of the currently selected item.
+ *
+ * After rewinding, the next call to the `tm_coord_get()` will return the first coordinate of the
+ * current item.
+ *
+ * @param priv_data The map rect private data
+ */
+static void tm_coord_rewind(void *priv_data) {
+	struct item_priv * ip = priv_data;
+
+	ip->next_coord = 0;
+}
+
+/**
+ * @brief Returns the coordinates of a traffic item.
+ *
+ * @param priv_data The map rect private data
+ * @param c Pointer to a `struct coord` array where coordinates will be stored
+ * @param count The maximum number of coordinates to retrieve (must be less than or equal to the number
+ * of items `c` can hold)
+ * @return The number of coordinates retrieved
+ */
+static int tm_coord_get(void *priv_data, struct coord *c, int count) {
+	struct item_priv * ip = priv_data;
+	int ret = count;
+
+	if (!ip)
+		return 0;
+	if (ip->next_coord >= ip->coord_count)
+		return 0;
+	if (ip->next_coord + count > ip->coord_count)
+		ret = ip->coord_count - ip->next_coord;
+	memcpy(c, &ip->coords[ip->next_coord], ret * sizeof(struct coord));
+	ip->next_coord += ret;
+	return ret;
+}
+
+/**
+ * @brief Rewinds the attributes of the currently selected item.
+ *
+ * After rewinding, the next call to `tm_attr_get()` will return the first attribute.
+ *
+ * @param priv_data The map rect private data
+ */
+static void tm_attr_rewind(void *priv_data) {
+	struct item_priv * ip = priv_data;
+
+	ip->next_attr = ip->attrs;
+}
+
+/**
+ * @brief Returns the next attribute of a traffic item which matches the specified type.
+ *
+ * @param priv_data The map rect private data
+ * @param attr_type The attribute type to retrieve, or `attr_any` to retrieve the next attribute,
+ * regardless of type
+ * @param attr Receives the attribute
+ *
+ * @return True on success, false on failure
+ */
+static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+	struct item_priv * ip = priv_data;
+	int ret = 0;
+
+	if (!ip->next_attr)
+		return 0;
+	while (*(ip->next_attr) && !ret) {
+		ret = (attr_type == attr_any) || (attr_type == (*(ip->next_attr))->type);
+		if (ret)
+			attr_dup_content(*(ip->next_attr), attr);
+		ip->next_attr++;
+	}
+	return ret;
 }
 
 static struct map_methods traffic_map_meth = {
@@ -231,7 +598,7 @@ static struct map_methods traffic_map_meth = {
 	NULL,             /* map_search_new: Start a new search on the map, can be NULL */
 	NULL,             /* map_search_destroy: Destroy a map search struct, ignored if `map_search_new` is NULL */
 	NULL,             /* map_search_get_item: Get the next item of a search on the map */
-	NULL,             /* map_rect_create_item: Create a new item in the map */
+	tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
 	NULL,             /* map_get_attr */
 	NULL,             /* map_set_attr */
 };
@@ -251,7 +618,7 @@ static struct map_methods traffic_map_meth = {
  *
  * @return The score
  */
-int traffic_location_match_attributes(struct traffic_location * this_, struct item *item) {
+static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item) {
 	int ret = 0;
 	struct attr attr;
 
@@ -400,7 +767,7 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
  * @param ms The mapset to read the ramps from
  * @param mode 0 to initially populate the route graph, 1 to add ramps
  */
-void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
+static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
 		struct mapset * ms, int mode) {
 	/* Corners of the enclosing rectangle, in Mercator coordinates */
 	struct coord c1, c2;
@@ -564,7 +931,8 @@ void traffic_location_populate_route_graph(struct traffic_location * this_, stru
  * @return A route graph. The caller is responsible for destroying the route graph and all related data
  * when it is no longer needed.
  */
-struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_, struct mapset * ms) {
+static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
+		struct mapset * ms) {
 	struct route_graph *rg;
 
 	if (!(this_->sw && this_->ne))
@@ -620,7 +988,7 @@ struct route_graph * traffic_location_get_route_graph(struct traffic_location * 
  *
  * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
-struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 		struct traffic_point * from, struct traffic_point * to) {
 	struct route_graph_point * ret;
 
@@ -657,7 +1025,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, &c_start, &c_dst);
 	ret = NULL;
 
-	dbg(lvl_error, "start flooding route graph, start_value=%d\n", start_value);
+	dbg(lvl_debug, "start flooding route graph, start_value=%d\n", start_value);
 
 	for (i = 0; i < HASH_SIZE; i++) {
 		p = rg->hash[i];
@@ -675,7 +1043,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 		if (!p) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
 			break;
 
-		dbg(lvl_error, "p=0x%x, value=%d\n", p, p->value);
+		dbg(lvl_debug, "p=0x%x, value=%d\n", p, p->value);
 
 		min = p->value;
 		p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
@@ -683,7 +1051,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
 			val = traffic_route_get_seg_cost(s, -1);
 
-			dbg(lvl_error, "  negative segment, val=%d\n", val);
+			dbg(lvl_debug, "  negative segment, val=%d\n", val);
 
 			if (val != INT_MAX) {
 				new = min + val;
@@ -708,7 +1076,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 		while (s) { /* Doing the same as above with the segments leading towards our point */
 			val = traffic_route_get_seg_cost(s, 1);
 
-			dbg(lvl_error, "  positive segment, val=%d\n", val);
+			dbg(lvl_debug, "  positive segment, val=%d\n", val);
 
 			if (val != INT_MAX) {
 				new = min + val;
@@ -736,7 +1104,7 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 }
 
 /**
- * @brief Matches a location to a map.
+ * @brief Matches a location to a map and stores it in the traffic map.
  *
  * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
  * and matches them to an exact position on the map, using both the raw coordinates and the auxiliary
@@ -745,10 +1113,13 @@ struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
  * @param this_ The location to match to the map
  * @param ms The mapset to use for matching
  * @param data Data for the segments added to the map
+ * @param map The traffic map
+ * @param id The message ID
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
-int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms, struct seg_data * data) {
+static int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms,
+		struct seg_data * data, struct map *map, char * id) {
 	int i;
 
 	/* Corners of the enclosing rectangle, in WGS84 coordinates */
@@ -788,6 +1159,9 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 
 	/* Speed calculated in various ways */
 	int maxspeed, speed, penalized_speed, factor_speed;
+
+	/* Number of segments */
+	int count;
 
 	/* Length of location */
 	int len;
@@ -854,21 +1228,21 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 		if (!s)
 			dbg(lvl_error, "no segments\n");
 
-		/* calculate length (only if there is a delay) */
-		if (data->delay) {
-			len = 0;
-			while (s) {
-				len += s->data.len;
-				if (s->start == start)
-					start = s->end;
-				else
-					start = s->start;
-				s = start->seg;
-			}
-
-			s = start_next ? start_next->seg : NULL;
-			start = start_next;
+		/* count segments and calculate length */
+		count = 0;
+		len = 0;
+		while (s) {
+			count++;
+			len += s->data.len;
+			if (s->start == start)
+				start = s->end;
+			else
+				start = s->start;
+			s = start->seg;
 		}
+
+		s = start_next ? start_next->seg : NULL;
+		start = start_next;
 
 		while (s) {
 			ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
@@ -990,14 +1364,14 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
 				start = s->start;
 			}
 
-			tm_add_item(NULL, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt);
+			tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt, id);
 
 			if (((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) && (data->delay))
 				g_free(attrs[attr_count - 2]);
 			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100) || data->delay)
 				g_free(attrs[attr_count - 1]);
 			g_free(attrs);
-			/* TODO decide who frees cs */
+			g_free(cs);
 
 			s = start->seg;
 		}
@@ -1022,7 +1396,7 @@ int traffic_location_match_to_map(struct traffic_location * this_, struct mapset
  *
  * @param this_ The message to dump
  */
-void traffic_message_dump(struct traffic_message * this_) {
+static void traffic_message_dump(struct traffic_message * this_) {
 	int i, j;
 	char * point_names[3] = {"From", "At", "To"};
 	struct traffic_point * points[3];
@@ -1110,7 +1484,7 @@ void traffic_message_dump(struct traffic_message * this_) {
  *
  * @return A `struct seg_data`, or `NULL` if the message contains no usable information
  */
-struct seg_data * traffic_message_parse_events(struct traffic_message * this_) {
+static struct seg_data * traffic_message_parse_events(struct traffic_message * this_) {
 	struct seg_data * ret = NULL;
 
 	int i;
@@ -1241,12 +1615,9 @@ struct seg_data * traffic_message_parse_events(struct traffic_message * this_) {
  * This function polls backends for new messages and processes them by inserting, removing or modifying
  * traffic distortions and triggering route recalculations as needed.
  */
-void traffic_loop(struct traffic * this_) {
+static void traffic_loop(struct traffic * this_) {
 	int i;
 	struct traffic_message ** messages;
-
-	/* The item type for traffic distortions generated from the current traffic message */
-	enum item_type type;
 
 	/* Attributes for traffic distortions generated from the current traffic message */
 	struct seg_data * data;
@@ -1259,12 +1630,15 @@ void traffic_loop(struct traffic * this_) {
 
 		data = traffic_message_parse_events(messages[i]);
 
-		traffic_location_match_to_map(messages[i]->location, this_->ms, data);
+		/* TODO ensure we have a map the first time this runs */
+		traffic_location_match_to_map(messages[i]->location, this_->ms, data, this_->map, messages[i]->id);
 
 		g_free(data);
 
 		traffic_message_dump(messages[i]);
 	}
+	if (i)
+		tm_dump(this_->map);
 	dbg(lvl_debug, "received %d message(s)\n", i);
 }
 
@@ -1278,7 +1652,7 @@ void traffic_loop(struct traffic * this_) {
  *
  * @return A `traffic` instance.
  */
-struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
+static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	struct traffic *this_;
 	struct traffic_priv *(*traffic_new)(struct navit *nav, struct traffic_methods *meth,
 			struct attr **attrs, struct callback_list *cbl);
@@ -1319,6 +1693,8 @@ struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	// TODO do this once and cycle through all plugins
 	this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
 	this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
+
+	this_->map = NULL;
 
 	return this_;
 }
@@ -1514,6 +1890,8 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
 	ret->location = location;
 	ret->event_count = event_count;
 	ret->events = g_memdup(events, sizeof(struct traffic_event *) * event_count);
+	ret->priv = g_new0(struct traffic_message_priv, 1);
+	ret->priv->items = NULL;
 	return ret;
 }
 
@@ -1551,6 +1929,8 @@ void traffic_message_destroy(struct traffic_message * this_) {
 	for (i = 0; i < this_->event_count; i++)
 		traffic_event_destroy(this_->events[i]);
 	g_free(this_->events);
+	g_free(this_->priv->items);
+	g_free(this_->priv);
 }
 
 void traffic_message_add_event(struct traffic_message * this_, struct traffic_event * event) {
@@ -1580,6 +1960,7 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  *
  * @return A pointer to a {@code map_priv} structure for the map
  */
+// FIXME make sure we use the return value of this function instead of creating another
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
 	struct map_priv *ret;
 
@@ -1588,12 +1969,66 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
 	ret = g_new0(struct map_priv, 1);
 	*meth = traffic_map_meth;
 
+	dbg(lvl_error, "***** map_priv=0x%x\n", ret);
 	return ret; // TODO
 }
 
 void traffic_init(void) {
 	dbg(lvl_error, "enter\n");
 	plugin_register_category_map("traffic", traffic_map_new);
+}
+
+/* FIXME
+ * Revisit the whole logic of this.
+ * map_new() calls through to traffic_map_new, instantiating a struct map_priv, though the instance
+ * is only kept internally and not disclosed to anyone. map_new() returns a struct map instance,
+ * whose members are not exposed via headers.
+ *
+ * Creating another map_priv around the map is incorrect usage.
+ *
+ * We want one map for any number of plugins.
+ *
+ * We need some kind of data structure which holds the list of items for the map and which is shared
+ * by all traffic instances, in addition to being accessible from the map.
+ */
+struct map * traffic_get_map(struct traffic *this_) {
+	struct attr_iter *iter;
+	struct attr *attr;
+	struct traffic * traffic;
+
+	dbg(lvl_error, "enter\n");
+
+	if (!this_->map) {
+		attr = g_new0(struct attr, 1);
+		iter = navit_attr_iter_new();
+		while (navit_get_attr(this_->navit, attr_traffic, attr, iter)) {
+			traffic = (struct traffic *) attr->u.navit_object;
+			if (traffic->map)
+				this_->map = traffic->map;
+		}
+		navit_attr_iter_destroy(iter);
+		g_free(attr);
+	}
+
+	if (!this_->map) {
+		struct attr *attrs[4];
+		struct attr a_type,data,a_description;
+		a_type.type = attr_type;
+		a_type.u.str = "traffic";
+		data.type = attr_data;
+		data.u.str = "";
+		a_description.type = attr_description;
+		a_description.u.str = "Traffic";
+
+		attrs[0] = &a_type;
+		attrs[1] = &data;
+		attrs[2] = &a_description;
+		attrs[3] = NULL;
+
+		this_->map = map_new(NULL, attrs);
+		navit_object_ref((struct navit_object *) this_->map);
+	}
+	return this_->map;
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {

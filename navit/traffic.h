@@ -210,9 +210,8 @@ enum si_type {
 	si_vehicle_with_trailer,      /*!< For vehicles with trailers only */
 };
 
-// TODO do we need priv members for structs?
-
 struct traffic_priv;
+struct traffic_message_priv;
 
 /**
  * @brief Holds all functions a traffic plugin has to implement to be usable
@@ -382,6 +381,7 @@ struct traffic_message {
 	struct traffic_location * location; /*!< The location to which this message refers. */
 	int event_count;            /*!< The number of events in {@code events}. */
 	struct traffic_event ** events; /*!< Points to an array of pointers to the events for this message. */
+	struct traffic_message_priv * priv; /*!< Internal data, not exposed via the API */
 };
 
 struct map;
@@ -729,6 +729,18 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  * This function is called once on startup.
  */
 void traffic_init(void);
+
+/**
+ * @brief Returns the map for the traffic plugin.
+ *
+ * The map is created by the first traffic plugin loaded. If multiple traffic plugin instances are
+ * active at the same time, they share the map created by the first instance.
+ *
+ * @param this_ The traffic plugin instance
+ *
+ * @return The traffic map
+ */
+struct map * traffic_get_map(struct traffic *this_);
 
 /**
  * @brief Sets the mapset for the traffic plugin.
