@@ -1675,12 +1675,10 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 }
 
 /**
- * @brief Inserts a new item into the path
+ * @brief Inserts a new segment into the path
  * 
- * This function does almost the same as "route_path_add_item()", but identifies
- * the item to add by a segment from the route graph. Another difference is that it "copies" the
- * segment from the route graph, i.e. if the item is segmented, only the segment passed in rgs will
- * be added to the route path, not all segments of the item. 
+ * This function adds a new segment to the route path. The segment is copied from the route graph. If
+ * `rgs` is part of a segmented item, only `rgs` will be added to the route path, not the other segments.
  *
  * The function can be sped up by passing an old path already containing this segment in oldpath - 
  * the segment will then be extracted from this old path. Please note that in this case the direction
@@ -3184,12 +3182,15 @@ route_crossings_get(struct route *this, struct coord *c)
 #endif
 
 
+/**
+ * @brief Implementation-specific map rect data
+ */
 struct map_rect_priv {
 	struct route_info_handle *ri;
 	enum attr_type attr_next;
 	int pos;
-	struct map_priv *mpriv;
-	struct item item;
+	struct map_priv *mpriv;     /**< The map to which this map rect refers */
+	struct item item;           /**< The current item, i.e. the last item returned by the `map_rect_get_item` method */
 	unsigned int last_coord;
 	struct route_path *path;
 	struct route_path_segment *seg,*seg_next;

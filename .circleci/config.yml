@@ -91,14 +91,15 @@ jobs:
             bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
   build_wince:
-    <<: *defaults
+    docker:
+      - image: navit/wince:8.04
     steps:
       - checkout
       - run:
           name: Build for Windows CE
-          command: |
-            bash ci/setup_common_requirements.sh
-            bash ci/build_wince.sh
+          command: bash ci/build_wince.sh
+      - store_artifacts:
+          path: wince/output
   build_tomtom_minimal:
     <<: *defaults
     docker:
@@ -146,5 +147,6 @@ workflows:
       - build_android_arm
       - build_android_x86
       - build_win32
+      - build_wince
       - build_tomtom_minimal
       - build_tomtom_plugin
