@@ -455,8 +455,8 @@ static struct item * tm_get_item(struct map_rect_priv *mr) {
 	if (mr->next_item) {
 		ret = (struct item *) mr->next_item->data;
 		mr->item = ret;
-		tm_attr_rewind(mr);
-		tm_coord_rewind(mr);
+		tm_attr_rewind(ret->priv_data);
+		tm_coord_rewind(ret->priv_data);
 		mr->next_item = g_list_next(mr->next_item);
 	}
 
@@ -517,7 +517,7 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
  * After rewinding, the next call to the `tm_coord_get()` will return the first coordinate of the
  * current item.
  *
- * @param priv_data The map rect private data
+ * @param priv_data The item's private data
  */
 static void tm_coord_rewind(void *priv_data) {
 	struct item_priv * ip = priv_data;
@@ -528,7 +528,7 @@ static void tm_coord_rewind(void *priv_data) {
 /**
  * @brief Returns the coordinates of a traffic item.
  *
- * @param priv_data The map rect private data
+ * @param priv_data The item's private data
  * @param c Pointer to a `struct coord` array where coordinates will be stored
  * @param count The maximum number of coordinates to retrieve (must be less than or equal to the number
  * of items `c` can hold)
@@ -554,7 +554,7 @@ static int tm_coord_get(void *priv_data, struct coord *c, int count) {
  *
  * After rewinding, the next call to `tm_attr_get()` will return the first attribute.
  *
- * @param priv_data The map rect private data
+ * @param priv_data The item's private data
  */
 static void tm_attr_rewind(void *priv_data) {
 	struct item_priv * ip = priv_data;
@@ -565,7 +565,7 @@ static void tm_attr_rewind(void *priv_data) {
 /**
  * @brief Returns the next attribute of a traffic item which matches the specified type.
  *
- * @param priv_data The map rect private data
+ * @param priv_data The item's private data
  * @param attr_type The attribute type to retrieve, or `attr_any` to retrieve the next attribute,
  * regardless of type
  * @param attr Receives the attribute
