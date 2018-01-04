@@ -1639,6 +1639,7 @@ static void traffic_loop(struct traffic * this_) {
 	}
 	if (i)
 		tm_dump(this_->map);
+	/* TODO trigger redraw if segments have changed */
 	dbg(lvl_debug, "received %d message(s)\n", i);
 }
 
