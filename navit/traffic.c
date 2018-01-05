@@ -236,6 +236,14 @@ static struct item * tm_item_ref(struct item * item) {
  * This must be called when destroying a reference to a traffic map item. It will decrease the reference
  * count of the item by one, and destroy the item if the last reference to is is removed.
  *
+ * The map itself (and only the map) holds weak references to its items, which are not considered in the
+ * reference count. Consequently, when the reference count reaches zero, the item is also removed from
+ * the map.
+ *
+ * Unreferencing an item with a zero reference count (which is only possible for an item which has never
+ * been referenced since its creation) is equivalent to dropping the last reference, i.e. it will destroy
+ * the item.
+ *
  * If the unreference operation is successful, this function returns `NULL`. This allows one-line
  * operations such as:
  *
@@ -246,14 +254,22 @@ static struct item * tm_item_ref(struct item * item) {
  * @return `NULL` if the item was unreferenced successfully, `item` if it points to an item whose
  * `priv_data` member is `NULL`.
  */
-/* TODO use weak references in map, remove from map when unreferencing (g_list_remove_all) */
 static struct item * tm_item_unref(struct item * item) {
+	struct map_rect * mr;
+	struct item * mapitem;
 	if (!item)
 		return item;
 	if (!item->priv_data)
 		return item;
 	((struct item_priv *) item->priv_data)->refcount--;
 	if (((struct item_priv *) item->priv_data)->refcount <= 0) {
+		mr = map_rect_new(item->map, NULL);
+		do {
+			mapitem = map_rect_get_item(mr);
+		} while (mapitem && (mapitem != item));
+		if (mapitem)
+			map_rect_remove_item(mr);
+		map_rect_destroy(mr);
 		tm_item_destroy(item);
 	}
 	return NULL;
@@ -405,8 +421,6 @@ static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi
 		priv_data->message_ids[0] = g_strdup(id);
 		priv_data->next_attr = attrs;
 		priv_data->next_coord = 0;
-		/* TODO use weak references in map, remove from map when unreferencing (g_list_remove_all) */
-		ret = tm_item_ref(ret);
 	}
 	map_rect_destroy(mr);
 	//tm_dump_item(ret);
@@ -460,12 +474,12 @@ static struct item * tm_get_item(struct map_rect_priv *mr) {
 	struct item * ret = NULL;
 	if (mr->next_item) {
 		ret = (struct item *) mr->next_item->data;
-		mr->item = ret;
 		tm_attr_rewind(ret->priv_data);
 		tm_coord_rewind(ret->priv_data);
 		mr->next_item = g_list_next(mr->next_item);
 	}
 
+	mr->item = ret;
 	return ret;
 }
 
@@ -515,6 +529,43 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
 	dbg(lvl_error, "return\n");
 
 	return ret;
+}
+
+/**
+ * @brief Removes the last retrieved item from the map.
+ *
+ * This function removes the last item retrieved by a call to `map_rect_get_item()` or
+ * `map_rect_get_item_byid()` for the same `map_rect` from the map.
+ *
+ * Subsequent calls to `map_rect_get_item()` or `map_rect_get_item_byid()` are unaffected by the
+ * deletion, i.e. they will behave as if the deletion had not taken place.
+ *
+ * It is incorrect usage to:
+ * \li Remove an item without having first called `map_rect_get_item()` or `map_rect_get_item_byid()` for
+ * than same `map_rect` (map providers should return 0 and cause an error to be logged in this case)
+ * \li Get or rewind item attributes or coordinates immediately following a call to this function,
+ * without having retrieved a new item first (this is the same as attempting these operations on a fresh
+ * `map_rect` from which no item has been retrieved yet)
+ *
+ * @param mr The map rectangle from which the item was retrieved
+ *
+ * @return 0 on failure, nonzero on success
+ */
+static int tm_rect_remove_item(struct map_rect_priv *mr) {
+	struct item * item = NULL;
+	if (mr->item) {
+		/* if we have multiple occurrences of this item in the list, move forward beyond the last one */
+		while (mr->next_item && (mr->next_item->data == mr->item))
+			mr->next_item = g_list_next(mr->next_item);
+
+		/* remove the item from the map and set last retrieved item to NULL */
+		mr->mpriv->items = g_list_remove_all(mr->mpriv->items, mr->item);
+		mr->item = NULL;
+		return 1;
+	}
+
+	dbg(lvl_error, "this function must be preceded by a successful retrieval of an item from the same map rect\n");
+	return 0;
 }
 
 /**
@@ -607,6 +658,7 @@ static struct map_methods traffic_map_meth = {
 	tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
 	NULL,             /* map_get_attr */
 	NULL,             /* map_set_attr */
+	tm_rect_remove_item, /* tm_rect_remove_item: Remove the last retrieved item from the map */
 };
 
 /**
@@ -1989,6 +2041,7 @@ struct traffic_message * traffic_message_new_single_event(char * id, time_t rece
 
 void traffic_message_destroy(struct traffic_message * this_) {
 	int i;
+	struct item ** items;
 
 	g_free(this_->id);
 	if (this_->replaces) {
@@ -2000,7 +2053,11 @@ void traffic_message_destroy(struct traffic_message * this_) {
 	for (i = 0; i < this_->event_count; i++)
 		traffic_event_destroy(this_->events[i]);
 	g_free(this_->events);
-	g_free(this_->priv->items);
+	if (this_->priv->items) {
+		for (items = this_->priv->items; *items; items++)
+			*items = tm_item_unref(*items);
+		g_free(this_->priv->items);
+	}
 	g_free(this_->priv);
 }
 
