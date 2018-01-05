@@ -33,7 +33,7 @@
 #endif
 #include "glib_slice.h"
 #include "config.h"
-#include "navit.h" // TODO see if we will still need that once we have a working map implementation
+#include "navit.h"
 #include "util.h"
 #include "coord.h"
 #include "item.h"

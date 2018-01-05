@@ -216,6 +216,7 @@ char * parse_for_systematic_comparison(const char *s) {
  *
  * @return 0 if both strings match, a negative value if `s1<s2`, a positive value if `s1>s2`.
  */
+/* TODO break up strings at semicolons and parse each separately, return 0 if any two match */
 int compare_name_systematic(const char *s1, const char *s2) {
 	int ret = 0;
 	int i;
