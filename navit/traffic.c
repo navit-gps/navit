@@ -147,8 +147,8 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
 		struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
-static int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms,
-		struct seg_data * data, struct map *map, char * id);
+static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
+		struct seg_data * data, struct map *map);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
 		struct mapset * ms, int mode);
 static void traffic_loop(struct traffic * this_);
@@ -1104,29 +1104,33 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 }
 
 /**
- * @brief Matches a location to a map and stores it in the traffic map.
+ * @brief Generates segments affected by a traffic message.
  *
- * This takes the approximate coordinates contained in the `from`, `at` and `to` members of the location
- * and matches them to an exact position on the map, using both the raw coordinates and the auxiliary
- * information contained in the location.
+ * This translates the approximate coordinates in the `from`, `at` and `to` members of the location to
+ * one or more map segments, using both the raw coordinates and the auxiliary information contained in
+ * the location. Each segment is stored in the map, if not already present, and a link is stored with
+ * the message.
  *
- * @param this_ The location to match to the map
+ * @param this_ The traffic message
  * @param ms The mapset to use for matching
  * @param data Data for the segments added to the map
  * @param map The traffic map
- * @param id The message ID
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
-static int traffic_location_match_to_map(struct traffic_location * this_, struct mapset * ms,
-		struct seg_data * data, struct map *map, char * id) {
+static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
+		struct seg_data * data, struct map *map) {
 	int i;
 
 	/* Corners of the enclosing rectangle, in WGS84 coordinates */
 	struct coord_geo * sw;
 	struct coord_geo * ne;
 
-	struct coord_geo * coords[] = {&this_->from->coord, &this_->at->coord, &this_->to->coord};
+	struct coord_geo * coords[] = {
+			&this_->location->from->coord,
+			&this_->location->at->coord,
+			&this_->location->to->coord
+	};
 
 	/* The direction (positive or negative) */
 	int dir = 1;
@@ -1166,13 +1170,16 @@ static int traffic_location_match_to_map(struct traffic_location * this_, struct
 	/* Length of location */
 	int len;
 
+	/* The last item added */
+	struct item * item;
+
 	if (!data) {
 		dbg(lvl_error, "no data for segments, aborting\n");
 		return 0;
 	}
 
 	/* calculate enclosing rectangle, if not yet present */
-	if (!this_->sw) {
+	if (!this_->location->sw) {
 		sw = g_new0(struct coord_geo, 1);
 		sw->lat = INT_MAX;
 		sw->lng = INT_MAX;
@@ -1183,10 +1190,10 @@ static int traffic_location_match_to_map(struct traffic_location * this_, struct
 				if (coords[i]->lng < sw->lng)
 					sw->lng = coords[i]->lng;
 			}
-		this_->sw = sw;
+		this_->location->sw = sw;
 	}
 
-	if (!this_->ne) {
+	if (!this_->location->ne) {
 		ne = g_new0(struct coord_geo, 1);
 		ne->lat = -INT_MAX;
 		ne->lng = -INT_MAX;
@@ -1197,29 +1204,31 @@ static int traffic_location_match_to_map(struct traffic_location * this_, struct
 				if (coords[i]->lng > ne->lng)
 					ne->lng = coords[i]->lng;
 			}
-		this_->ne = ne;
+		this_->location->ne = ne;
 	}
 
-	if (this_->at)
+	if (this_->location->at)
 		/* TODO Point location, not supported yet */
 		return 0;
 
-	if (this_->ramps != location_ramps_none)
+	if (this_->location->ramps != location_ramps_none)
 		/* TODO Ramps, not supported yet */
 		return 0;
 
 	/* Line location, main carriageway */
 
-	rg = traffic_location_get_route_graph(this_, ms);
+	rg = traffic_location_get_route_graph(this_->location, ms);
 
 	/* determine segments, once for each direction */
 	while (1) {
 		if (dir > 0)
-			start_next = traffic_route_flood_graph(rg, this_->from ? this_->from : this_->at,
-					this_->to ? this_->to : this_->at);
+			start_next = traffic_route_flood_graph(rg,
+					this_->location->from ? this_->location->from : this_->location->at,
+					this_->location->to ? this_->location->to : this_->location->at);
 		else
-			start_next = traffic_route_flood_graph(rg, this_->to ? this_->to : this_->at,
-					this_->from ? this_->from : this_->at);
+			start_next = traffic_route_flood_graph(rg,
+					this_->location->to ? this_->location->to : this_->location->at,
+					this_->location->from ? this_->location->from : this_->location->at);
 
 		/* calculate route */
 		s = start_next ? start_next->seg : NULL;
@@ -1364,7 +1373,7 @@ static int traffic_location_match_to_map(struct traffic_location * this_, struct
 				start = s->start;
 			}
 
-			tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt, id);
+			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt, this_->id);
 
 			if (((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) && (data->delay))
 				g_free(attrs[attr_count - 2]);
@@ -1378,7 +1387,7 @@ static int traffic_location_match_to_map(struct traffic_location * this_, struct
 
 		/* TODO tweak ends (find the point where the ramp touches the main road) */
 
-		if ((this_->directionality == location_dir_one) || (dir < 0))
+		if ((this_->location->directionality == location_dir_one) || (dir < 0))
 			break;
 
 		dir = -1;
@@ -1631,7 +1640,7 @@ static void traffic_loop(struct traffic * this_) {
 		data = traffic_message_parse_events(messages[i]);
 
 		/* TODO ensure we have a map the first time this runs */
-		traffic_location_match_to_map(messages[i]->location, this_->ms, data, this_->map, messages[i]->id);
+		traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
 
 		g_free(data);
 
