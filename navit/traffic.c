@@ -1176,6 +1176,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Length of location */
 	int len;
 
+	/* The next item in the message's list of items */
+	struct item ** next_item;
+
 	/* The last item added */
 	struct item * item;
 
@@ -1258,6 +1261,13 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 		s = start_next ? start_next->seg : NULL;
 		start = start_next;
+
+		if (this_->priv->items) {
+			dbg(lvl_error, "internal error: message should not yet have any linked items at this point\n");
+		}
+
+		this_->priv->items = g_new0(struct item *, count);
+		next_item = this_->priv->items;
 
 		while (s) {
 			ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
@@ -1387,6 +1397,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				g_free(attrs[attr_count - 1]);
 			g_free(attrs);
 			g_free(cs);
+
+			*next_item = tm_item_ref(item);
+			next_item++;
 
 			s = start->seg;
 		}
@@ -1673,7 +1686,9 @@ static void traffic_loop(struct traffic * this_) {
 	messages = this_->meth.get_messages(this_->priv);
 	if (!messages)
 		return;
+
 	for (i = 0; messages[i] != NULL; i++) {
+		/* TODO identify existing messages replaced by this one */
 		/* TODO handle cancellation messages */
 
 		data = traffic_message_parse_events(messages[i]);
@@ -1682,6 +1697,10 @@ static void traffic_loop(struct traffic * this_) {
 		traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
 
 		g_free(data);
+
+		/* store message */
+		/* TODO handle replacements */
+		this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
 
 		traffic_message_dump(messages[i]);
 	}
