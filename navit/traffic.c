@@ -54,6 +54,14 @@
 #define PENALTY_OFFROAD 2
 
 /**
+ * @brief Private data shared between all traffic instances.
+ */
+struct traffic_shared_priv {
+	GList * messages;           /**< Currently active messages */
+	// TODO messages by ID?                 In a later phase…
+};
+
+/**
  * @brief A traffic plugin instance.
  *
  * If multiple traffic plugins are loaded, each will have its own `struct traffic` instance.
@@ -61,6 +69,7 @@
 struct traffic {
 	NAVIT_OBJECT
 	struct navit *navit;         /**< The navit instance */
+	struct traffic_shared_priv *shared; /**< Private data shared between all instances */
 	struct traffic_priv *priv;   /**< Private data used by the plugin */
 	struct traffic_methods meth; /**< Methods implemented by the plugin */
 	struct callback * callback;  /**< The callback function for the idle loop */
@@ -80,10 +89,7 @@ struct traffic_message_priv {
  * If multiple traffic plugins are loaded, the map is shared between all of them.
  */
 struct map_priv {
-	struct map * map;           /**< The map object */
-	GList * messages;           /**< Currently active messages */
 	GList * items;              /**< The map items */
-	// TODO messages by ID?                 In a later phase…
 	// TODO items by start/end coordinates? In a later phase…
 };
 
@@ -1619,6 +1625,39 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 }
 
 /**
+ * @brief Ensures the traffic instance points to valid shared data.
+ *
+ * This method first examines all registered traffic instances to see if one of them has the `shared`
+ * member set. If that is the case, the current instance copies the `shared` pointer of the other
+ * instance. Otherwise a new `struct traffic_shared_priv` is created and its address stored in `shared`.
+ *
+ * Calling this method on a traffic instance with a non-NULL `shared` member has no effect.
+ *
+ * @param this_ The traffic instance
+ */
+static void traffic_set_shared(struct traffic *this_) {
+	struct attr_iter *iter;
+	struct attr attr;
+	struct traffic * traffic;
+
+	dbg(lvl_error, "enter\n");
+
+	if (!this_->shared) {
+		iter = navit_attr_iter_new();
+		while (navit_get_attr(this_->navit, attr_traffic, &attr, iter)) {
+			traffic = (struct traffic *) attr.u.navit_object;
+			if (traffic->shared)
+				this_->shared = traffic->shared;
+		}
+		navit_attr_iter_destroy(iter);
+	}
+
+	if (!this_->shared) {
+		this_->shared = g_new0(struct traffic_shared_priv, 1);
+	}
+}
+
+/**
  * @brief The loop function for the traffic module.
  *
  * This function polls backends for new messages and processes them by inserting, removing or modifying
@@ -1705,6 +1744,9 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
 
 	this_->map = NULL;
+
+	if (!this_->shared)
+		traffic_set_shared(this_);
 
 	return this_;
 }
