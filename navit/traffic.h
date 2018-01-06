@@ -668,7 +668,7 @@ struct traffic_message * traffic_message_new_short(char * id, time_t receive_tim
  * This is a convenience constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
  *
- * The {{@code traffic_location} instances are destroyed when the {@code traffic_message} is destroyed,
+ * The {@code traffic_location} instances are destroyed when the {@code traffic_message} is destroyed,
  * and therefore cannot be shared between multiple {@code traffic_message} instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function. This
