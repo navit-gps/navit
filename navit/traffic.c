@@ -183,6 +183,43 @@ static struct seg_data * seg_data_new(void) {
 }
 
 /**
+ * @brief Whether two `struct seg_data` contain the same data.
+ *
+ * @return true if `l` and `r` are equal, false if not
+ */
+static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
+	struct attr ** attrs;
+	struct attr * attr;
+
+	if (l->type != r->type)
+		return 0;
+	if (l->speed != r->speed)
+		return 0;
+	if (l->speed_penalty != r->speed_penalty)
+		return 0;
+	if (l->speed_factor != r->speed_factor)
+		return 0;
+	if (l->delay != r->delay)
+		return 0;
+	if (!l->attrs && !r->attrs)
+		return 1;
+	if (!l->attrs || !r->attrs)
+		return 0;
+	/* FIXME this will break if multiple attributes of the same type are present and have different values */
+	for (attrs = l->attrs; attrs; attrs++) {
+		attr = attr_search(r->attrs, NULL, (*attrs)->type);
+		if (!attr || (attr->u.data != (*attrs)->u.data))
+			return 0;
+	}
+	for (attrs = r->attrs; attrs; attrs++) {
+		attr = attr_search(l->attrs, NULL, (*attrs)->type);
+		if (!attr || (attr->u.data != (*attrs)->u.data))
+			return 0;
+	}
+	return 1;
+}
+
+/**
  * @brief Destroys a traffic map item.
  *
  * This function should never be called directly. Instead, be sure to obtain all references by calling
@@ -1008,6 +1045,62 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 }
 
 /**
+ * @brief Whether two traffic points are equal.
+ *
+ * Comparison is done solely on coordinates and requires a precise match. This can result in two points
+ * being reported as not equal, even though the locations using these points may translate to the same
+ * segments later.
+ *
+ * @return true if `l` and `r` are equal, false if not
+ */
+static int traffic_point_equals(struct traffic_point * l, struct traffic_point * r) {
+	if (l->coord.lat != r->coord.lat)
+		return 0;
+	if (l->coord.lng != r->coord.lng)
+		return 0;
+	return 1;
+}
+
+/**
+ * @brief Whether two traffic locations are equal.
+ *
+ * Only directionality, the `ramps` member and reference points are considered for comparison; auxiliary
+ * data (such as road names, road types and additional TMC information) is ignored.
+ *
+ * When in doubt, this function errs on the side of inequality, i.e. when equivalence cannot be reliably
+ * determined, the locations will be reported as not equal, even though they may translate to the same
+ * segments later.
+ *
+ * @return true if `l` and `r` are equal, false if not
+ */
+static int traffic_location_equals(struct traffic_location * l, struct traffic_location * r) {
+	/* directionality and ramps must match for locations to be considered equal */
+	if (l->directionality != r->directionality)
+		return 0;
+	if (l->ramps != r->ramps)
+		return 0;
+
+	/* locations must have the same points set to be considered equal */
+	if (!l->from != !r->from)
+		return 0;
+	if (!l->to != !r->to)
+		return 0;
+	if (!l->at != !r->at)
+		return 0;
+
+	/* both locations have the same points set, compare them */
+	if (l->from && !traffic_point_equals(l->from, r->from))
+		return 0;
+	if (l->to && !traffic_point_equals(l->to, r->to))
+		return 0;
+	if (l->at && !traffic_point_equals(l->at, r->at))
+		return 0;
+
+	/* No differences found, consider locations equal */
+	return 1;
+}
+
+/**
  * @brief Determines the path between two reference points in a route graph.
  *
  * The reference points `from` and `to` are the beginning and end of the path and do not necessarily
@@ -1747,6 +1840,13 @@ static void traffic_loop(struct traffic * this_) {
 	/* Attributes for traffic distortions generated from the current traffic message */
 	struct seg_data * data;
 
+	/* Message replaced by the current one whose segments can be reused */
+	struct traffic_message * swap_candidate;
+
+	/* Temporary store for swapping locations and items */
+	struct traffic_location * swap_location;
+	struct item ** swap_items;
+
 	messages = this_->meth.get_messages(this_->priv);
 	if (!messages)
 		return;
@@ -1762,41 +1862,49 @@ static void traffic_loop(struct traffic * this_) {
 						replaced = g_list_append(replaced, stored_msg);
 		}
 
-		if (messages[i]->is_cancellation) {
-			/*
-			 * ignore cancellation messages which don't replace an existing message
-			 * (they might refer to a message we didn't receive for some reason)
-			 */
-			if (!replaced)
-				continue;
+		if (!messages[i]->is_cancellation) {
+			/* if the message is not just a cancellation, store it and match it to the map */
+			data = traffic_message_parse_events(messages[i]);
+			swap_candidate = NULL;
 
+			/* check if any of the replaced messages has the same location and segment data */
+			for (msg_iter = replaced; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
+				stored_msg = (struct traffic_message *) msg_iter->data;
+				if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+						&& traffic_location_equals(messages[i]->location, stored_msg->location))
+					swap_candidate = stored_msg;
+			}
+
+			if (swap_candidate) {
+				/* reuse location and segments if we are replacing a matching message */
+				swap_location = messages[i]->location;
+				swap_items = messages[i]->priv->items;
+				messages[i]->location = swap_candidate->location;
+				messages[i]->priv->items = swap_candidate->priv->items;
+				swap_candidate->location = swap_location;
+				swap_candidate->priv->items = swap_items;
+			} else {
+				/* else find matching segments from scratch */
+				traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+			}
+
+			g_free(data);
+
+			/* store message */
+			this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+		}
+
+		/* delete replaced messages */
+		if (replaced) {
 			for (msg_iter = replaced; msg_iter; msg_iter = g_list_next(msg_iter)) {
 				stored_msg = (struct traffic_message *) msg_iter->data;
 				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
 				traffic_message_destroy(stored_msg);
 			}
-		} else {
-			data = traffic_message_parse_events(messages[i]);
 
-			/* TODO handle updates/replacements (seg_data_equals(), traffic_location_equals()) */
-			if (replaced) {
-				/*
-				 * TODO check if one of the replaced messages has the same location and data
-				 * and if so, swap them
-				 */
-			}
-
-			traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
-
-			g_free(data);
-
-			/* store message */
-			/* TODO handle replacements */
-			this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
-		}
-
-		if (replaced)
 			g_list_free(replaced);
+			replaced = NULL;
+		}
 
 		traffic_message_dump(messages[i]);
 	}
