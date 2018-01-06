@@ -112,8 +112,8 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
-		messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
-				time(NULL) + 86400, 1, 0, location, 0, 0);
+		messages[1] = traffic_message_new_short("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
+				time(NULL) + 86400, 1, 0, location, 0, NULL);
 		break;
 
 	default:
