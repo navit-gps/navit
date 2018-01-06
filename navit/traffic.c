@@ -1732,6 +1732,18 @@ static void traffic_loop(struct traffic * this_) {
 	int i;
 	struct traffic_message ** messages;
 
+	/* Iterator over messages */
+	GList * msg_iter;
+
+	/* Stored message being compared */
+	struct traffic_message * stored_msg;
+
+	/* Pointer into messages[i]->replaces */
+	char ** replaces;
+
+	/* Messages replaced by the current one */
+	GList * replaced = NULL;
+
 	/* Attributes for traffic distortions generated from the current traffic message */
 	struct seg_data * data;
 
@@ -1740,24 +1752,57 @@ static void traffic_loop(struct traffic * this_) {
 		return;
 
 	for (i = 0; messages[i] != NULL; i++) {
-		/* TODO identify existing messages replaced by this one */
-		/* TODO handle cancellation messages */
+		for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
+			stored_msg = (struct traffic_message *) msg_iter->data;
+			if (!strcmp(stored_msg->id, messages[i]->id))
+				replaced = g_list_append(replaced, stored_msg);
+			else
+				for (replaces = messages[i]->replaces; replaces; replaces++)
+					if (!strcmp(stored_msg->id, *replaces) && !g_list_find(replaced, messages[i]))
+						replaced = g_list_append(replaced, stored_msg);
+		}
 
-		data = traffic_message_parse_events(messages[i]);
+		if (messages[i]->is_cancellation) {
+			/*
+			 * ignore cancellation messages which don't replace an existing message
+			 * (they might refer to a message we didn't receive for some reason)
+			 */
+			if (!replaced)
+				continue;
 
-		/* TODO ensure we have a map the first time this runs */
-		traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+			for (msg_iter = replaced; msg_iter; msg_iter = g_list_next(msg_iter)) {
+				stored_msg = (struct traffic_message *) msg_iter->data;
+				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+				traffic_message_destroy(stored_msg);
+			}
+		} else {
+			data = traffic_message_parse_events(messages[i]);
 
-		g_free(data);
+			/* TODO handle updates/replacements (seg_data_equals(), traffic_location_equals()) */
+			if (replaced) {
+				/*
+				 * TODO check if one of the replaced messages has the same location and data
+				 * and if so, swap them
+				 */
+			}
 
-		/* store message */
-		/* TODO handle replacements */
-		this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+			traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+
+			g_free(data);
+
+			/* store message */
+			/* TODO handle replacements */
+			this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+		}
+
+		if (replaced)
+			g_list_free(replaced);
 
 		traffic_message_dump(messages[i]);
 	}
 	if (i)
 		tm_dump(this_->map);
+	/* TODO dump message store if new messages have been received */
 	/* TODO trigger redraw if segments have changed */
 	dbg(lvl_debug, "received %d message(s)\n", i);
 }
