@@ -1318,7 +1318,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			dbg(lvl_error, "internal error: message should not yet have any linked items at this point\n");
 		}
 
-		this_->priv->items = g_new0(struct item *, count);
+		this_->priv->items = g_new0(struct item *, count + 1);
 		next_item = this_->priv->items;
 
 		while (s) {
