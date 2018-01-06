@@ -57,8 +57,8 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
  * A9 Munich–Nuremberg between Neufahrn and Allershausen, and slow traffic on the A96 Lindau–Munich
  * between Gräfelfing and München-Laim.
  *
- * The 10th call will report a cancellation message for the A96 (no update or cancellation is sent for
- * the A9).
+ * The 10th call will report an update message for the A9 (with a recent timestamp but otherwise the same
+ * data) and a cancellation message for the A96.
  *
  * They mimic TMC messages in that coordinates are approximate, TMC identifiers are supplied for the
  * locations and extra data fields which can be inferred from the TMC location table are filled. The
@@ -99,13 +99,20 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		break;
 
 	case 11:
-		messages = g_new0(struct traffic_message *, 2);
+		messages = g_new0(struct traffic_message *, 3);
+
+		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
+		to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
+		location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
+				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
+		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL) - 10, time(NULL),
+				time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
 
 		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
-		messages[0] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
+		messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
 				time(NULL) + 86400, 1, 0, location, 0, 0);
 		break;
 
