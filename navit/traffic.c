@@ -2172,14 +2172,14 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
 }
 
 struct traffic_message * traffic_message_new_short(char * id, time_t receive_time, time_t update_time,
-		time_t expiration_time, int is_cancellation, int is_forecast, struct traffic_location * location,
+		time_t expiration_time, int is_forecast, struct traffic_location * location,
 		int event_count, struct traffic_event ** events) {
-	return traffic_message_new(id, receive_time, update_time, expiration_time, 0, 0, is_cancellation,
+	return traffic_message_new(id, receive_time, update_time, expiration_time, 0, 0, 0,
 			is_forecast, 0, NULL, location, event_count, events);
 }
 
 struct traffic_message * traffic_message_new_single_event(char * id, time_t receive_time, time_t update_time,
-		time_t expiration_time, int is_cancellation, int is_forecast, struct traffic_location * location,
+		time_t expiration_time, int is_forecast, struct traffic_location * location,
 		enum event_class event_class, enum event_type type) {
 	struct traffic_event * event;
 	struct traffic_event ** events;
@@ -2187,9 +2187,15 @@ struct traffic_message * traffic_message_new_single_event(char * id, time_t rece
 	event = traffic_event_new_short(event_class, type);
 	events = g_new0(struct traffic_event *, 1);
 	events[0] = event;
-	return traffic_message_new_short(id, receive_time, update_time, expiration_time, is_cancellation,
-			is_forecast, location, 1, events);
+	return traffic_message_new_short(id, receive_time, update_time, expiration_time, is_forecast,
+			location, 1, events);
 	g_free(events);
+}
+
+struct traffic_message * traffic_message_new_cancellation(char * id, time_t receive_time, time_t update_time,
+		time_t expiration_time, struct traffic_location * location) {
+	return traffic_message_new(id, receive_time, update_time, expiration_time, 0, 0, 1,
+			0, 0, NULL, location, 0, NULL);
 }
 
 void traffic_message_destroy(struct traffic_message * this_) {

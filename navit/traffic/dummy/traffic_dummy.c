@@ -88,14 +88,14 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
+				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
 
 		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
 		messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_slow_traffic);
+				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 		break;
 
 	case 11:
@@ -106,14 +106,14 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL) - 10, time(NULL),
-				time(NULL) + 86400, 0, 0, location, event_class_congestion, event_congestion_queue);
+				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
 
 		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
-		messages[1] = traffic_message_new_short("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
-				time(NULL) + 86400, 1, 0, location, 0, NULL);
+		messages[1] = traffic_message_new_cancellation("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
+				time(NULL) + 86400, location);
 		break;
 
 	default:

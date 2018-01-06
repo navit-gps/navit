@@ -650,8 +650,6 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
  * all updates
  * @param update_time When the last update to this message was received by the source
  * @param expiration_time How long the message should be considered valid
- * @param is_cancellation If true, create a cancellation message (existing messages with the same ID
- * should be deleted or no longer considered current, and all other attributes ignored)
  * @param is_forecast If false, the message describes a current situation; if true, it describes an
  * expected situation in the future
  * @param location The location to which this message refers
@@ -659,7 +657,7 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
  * @param events Points to an array of pointers to the events for this message
  */
 struct traffic_message * traffic_message_new_short(char * id, time_t receive_time, time_t update_time,
-		time_t expiration_time, int is_cancellation, int is_forecast, struct traffic_location * location,
+		time_t expiration_time, int is_forecast, struct traffic_location * location,
 		int event_count, struct traffic_event ** events);
 
 /**
@@ -680,8 +678,6 @@ struct traffic_message * traffic_message_new_short(char * id, time_t receive_tim
  * all updates
  * @param update_time When the last update to this message was received by the source
  * @param expiration_time How long the message should be considered valid
- * @param is_cancellation If true, create a cancellation message (existing messages with the same ID
- * should be deleted or no longer considered current, and all other attributes ignored)
  * @param is_forecast If false, the message describes a current situation; if true, it describes an
  * expected situation in the future
  * @param location The location to which this message refers
@@ -689,8 +685,33 @@ struct traffic_message * traffic_message_new_short(char * id, time_t receive_tim
  * @param type The event type, which can be mapped to a string to be displayed to the user
  */
 struct traffic_message * traffic_message_new_single_event(char * id, time_t receive_time, time_t update_time,
-		time_t expiration_time, int is_cancellation, int is_forecast, struct traffic_location * location,
+		time_t expiration_time, int is_forecast, struct traffic_location * location,
 		enum event_class event_class, enum event_type type);
+
+/**
+ * @brief Creates a new cancellation {@code traffic_message}.
+ *
+ * This is a convenience constructor, which creates a cancellation message, without the need to supply
+ * members which are not required for cancellation messages. Upon receiving a cancellation message,
+ * existing messages with the same ID should be deleted or no longer considered current, and all other
+ * attributes ignored.
+ *
+ * The {@code traffic_location} instances are destroyed when the {@code traffic_message} is destroyed,
+ * and therefore cannot be shared between multiple {@code traffic_message} instances.
+ *
+ * It is the responsibility of the caller to destroy all other references passed to this function. This
+ * can be done immediately after the function returns.
+ *
+ * @param id The message identifier; existing messages with the same identifier will be replaced by the
+ * new message
+ * @param receive_time When the message was first received by the source, should be kept stable across
+ * all updates
+ * @param update_time When the last update to this message was received by the source
+ * @param expiration_time How long the message should be considered valid
+ * @param location The location to which this message refers
+ */
+struct traffic_message * traffic_message_new_cancellation(char * id, time_t receive_time, time_t update_time,
+		time_t expiration_time, struct traffic_location * location);
 
 /**
  * @brief Destroys a {@code traffic_message}.
