@@ -1834,8 +1834,8 @@ static void traffic_loop(struct traffic * this_) {
 	/* Pointer into messages[i]->replaces */
 	char ** replaces;
 
-	/* Messages replaced by the current one */
-	GList * replaced = NULL;
+	/* Messages to remove */
+	GList * msgs_to_remove = NULL;
 
 	/* Attributes for traffic distortions generated from the current traffic message */
 	struct seg_data * data;
@@ -1848,71 +1848,93 @@ static void traffic_loop(struct traffic * this_) {
 	struct item ** swap_items;
 
 	messages = this_->meth.get_messages(this_->priv);
-	if (!messages)
-		return;
-
-	for (i = 0; messages[i] != NULL; i++) {
-		for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
-			stored_msg = (struct traffic_message *) msg_iter->data;
-			if (!strcmp(stored_msg->id, messages[i]->id))
-				replaced = g_list_append(replaced, stored_msg);
-			else
-				for (replaces = messages[i]->replaces; replaces; replaces++)
-					if (!strcmp(stored_msg->id, *replaces) && !g_list_find(replaced, messages[i]))
-						replaced = g_list_append(replaced, stored_msg);
-		}
-
-		if (!messages[i]->is_cancellation) {
-			/* if the message is not just a cancellation, store it and match it to the map */
-			data = traffic_message_parse_events(messages[i]);
-			swap_candidate = NULL;
-
-			/* check if any of the replaced messages has the same location and segment data */
-			for (msg_iter = replaced; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
+	if (messages)
+		for (i = 0; messages[i] != NULL; i++) {
+			for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
 				stored_msg = (struct traffic_message *) msg_iter->data;
-				if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
-						&& traffic_location_equals(messages[i]->location, stored_msg->location))
-					swap_candidate = stored_msg;
+				if (!strcmp(stored_msg->id, messages[i]->id))
+					msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
+				else
+					for (replaces = messages[i]->replaces; replaces; replaces++)
+						if (!strcmp(stored_msg->id, *replaces) && !g_list_find(msgs_to_remove, messages[i]))
+							msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
 			}
 
-			if (swap_candidate) {
-				/* reuse location and segments if we are replacing a matching message */
-				swap_location = messages[i]->location;
-				swap_items = messages[i]->priv->items;
-				messages[i]->location = swap_candidate->location;
-				messages[i]->priv->items = swap_candidate->priv->items;
-				swap_candidate->location = swap_location;
-				swap_candidate->priv->items = swap_items;
-			} else {
-				/* else find matching segments from scratch */
-				traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+			if (!messages[i]->is_cancellation) {
+				/* if the message is not just a cancellation, store it and match it to the map */
+				data = traffic_message_parse_events(messages[i]);
+				swap_candidate = NULL;
+
+				/* check if any of the replaced messages has the same location and segment data */
+				for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
+					stored_msg = (struct traffic_message *) msg_iter->data;
+					if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+							&& traffic_location_equals(messages[i]->location, stored_msg->location))
+						swap_candidate = stored_msg;
+				}
+
+				if (swap_candidate) {
+					/* reuse location and segments if we are replacing a matching message */
+					swap_location = messages[i]->location;
+					swap_items = messages[i]->priv->items;
+					messages[i]->location = swap_candidate->location;
+					messages[i]->priv->items = swap_candidate->priv->items;
+					swap_candidate->location = swap_location;
+					swap_candidate->priv->items = swap_items;
+				} else {
+					/* else find matching segments from scratch */
+					traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+				}
+
+				g_free(data);
+
+				/* store message */
+				this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
 			}
 
-			g_free(data);
+			/* delete replaced messages */
+			if (msgs_to_remove) {
+				for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
+					stored_msg = (struct traffic_message *) msg_iter->data;
+					this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+					traffic_message_destroy(stored_msg);
+				}
 
-			/* store message */
-			this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+				g_list_free(msgs_to_remove);
+				msgs_to_remove = NULL;
+			}
+
+			traffic_message_dump(messages[i]);
 		}
 
-		/* delete replaced messages */
-		if (replaced) {
-			for (msg_iter = replaced; msg_iter; msg_iter = g_list_next(msg_iter)) {
-				stored_msg = (struct traffic_message *) msg_iter->data;
-				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-				traffic_message_destroy(stored_msg);
-			}
-
-			g_list_free(replaced);
-			replaced = NULL;
-		}
-
-		traffic_message_dump(messages[i]);
+	/* find and remove expired messages */
+	for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
+		stored_msg = (struct traffic_message *) msg_iter->data;
+		if (stored_msg->expiration_time < time(NULL))
+			msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
 	}
-	if (i)
+
+	if (msgs_to_remove) {
+		for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
+			stored_msg = (struct traffic_message *) msg_iter->data;
+			this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+			traffic_message_destroy(stored_msg);
+		}
+
+		g_list_free(msgs_to_remove);
+	}
+
+	if (i || msgs_to_remove) {
+		/* dump map if messages have been added, deleted or expired */
 		tm_dump(this_->map);
-	/* TODO dump message store if new messages have been received */
+
+		/* TODO dump message store if new messages have been received */
+
+		dbg(lvl_debug, "received %d message(s), %d message(s) expired\n", i, g_list_length(msgs_to_remove));
+	}
+	msgs_to_remove = NULL;
+
 	/* TODO trigger redraw if segments have changed */
-	dbg(lvl_debug, "received %d message(s)\n", i);
 }
 
 /**
