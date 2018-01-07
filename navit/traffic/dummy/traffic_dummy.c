@@ -63,8 +63,9 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
  * They mimic TMC messages in that coordinates are approximate, TMC identifiers are supplied for the
  * locations and extra data fields which can be inferred from the TMC location table are filled. The
  * timestamps indicate a message that has just been received for the first time, i.e. its “first
- * received” and “last updated” timestamps match and are recent. Expiration is after 24 hours, longer
- * than the typical lifespan of a TMC message of this kind.
+ * received” and “last updated” timestamps match and are recent. Expiration is after 20 seconds for
+ * messages in the first feed and 10 seconds for messages in the first feed (far below the lowest
+ * expiration timespan permitted in TMC).
  *
  * All other calls to this method will return `NULL`, indicating that there are no messages to report.
  *
@@ -88,14 +89,14 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
+				time(NULL) + 20, 0, location, event_class_congestion, event_congestion_queue);
 
 		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
 		messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+				time(NULL) + 20, 0, location, event_class_congestion, event_congestion_slow_traffic);
 		break;
 
 	case 11:
@@ -106,14 +107,14 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		location = traffic_location_new(NULL, from, to, "Nürnberg", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
 		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL) - 10, time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
+				time(NULL) + 10, 0, location, event_class_congestion, event_congestion_queue);
 
 		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
 		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
 		location = traffic_location_new(NULL, from, to, "München", NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
 		messages[1] = traffic_message_new_cancellation("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
-				time(NULL) + 86400, location);
+				time(NULL) + 10, location);
 		break;
 
 	default:
