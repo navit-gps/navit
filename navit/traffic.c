@@ -589,7 +589,6 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
  * @return 0 on failure, nonzero on success
  */
 static int tm_rect_remove_item(struct map_rect_priv *mr) {
-	struct item * item = NULL;
 	if (mr->item) {
 		/* if we have multiple occurrences of this item in the list, move forward beyond the last one */
 		while (mr->next_item && (mr->next_item->data == mr->item))
@@ -2269,17 +2268,13 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  *
  * @return A pointer to a {@code map_priv} structure for the map
  */
-// FIXME make sure we use the return value of this function instead of creating another
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
 	struct map_priv *ret;
-
-	dbg(lvl_error, "enter\n");
 
 	ret = g_new0(struct map_priv, 1);
 	*meth = traffic_map_meth;
 
-	dbg(lvl_error, "***** map_priv=0x%x\n", ret);
-	return ret; // TODO
+	return ret;
 }
 
 void traffic_init(void) {
@@ -2287,25 +2282,10 @@ void traffic_init(void) {
 	plugin_register_category_map("traffic", traffic_map_new);
 }
 
-/* FIXME
- * Revisit the whole logic of this.
- * map_new() calls through to traffic_map_new, instantiating a struct map_priv, though the instance
- * is only kept internally and not disclosed to anyone. map_new() returns a struct map instance,
- * whose members are not exposed via headers.
- *
- * Creating another map_priv around the map is incorrect usage.
- *
- * We want one map for any number of plugins.
- *
- * We need some kind of data structure which holds the list of items for the map and which is shared
- * by all traffic instances, in addition to being accessible from the map.
- */
 struct map * traffic_get_map(struct traffic *this_) {
 	struct attr_iter *iter;
 	struct attr *attr;
 	struct traffic * traffic;
-
-	dbg(lvl_error, "enter\n");
 
 	if (!this_->map) {
 		attr = g_new0(struct attr, 1);
