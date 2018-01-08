@@ -605,6 +605,10 @@ gui_gtk_ui_init(struct gui_priv *this)
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num);
 	}
+	if (navit_get_attr(this->nav, attr_follow_cursor, &attr, NULL)) {
+		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "FollowVehicleAction"));
+		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+	}
 	if (navit_get_attr(this->nav, attr_orientation, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num != -1);
