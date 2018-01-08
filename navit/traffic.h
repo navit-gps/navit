@@ -211,6 +211,7 @@ enum si_type {
 };
 
 struct traffic_priv;
+struct traffic_location_priv;
 struct traffic_message_priv;
 
 /**
@@ -297,11 +298,7 @@ struct traffic_location {
 	int tmc_direction;                 /*!< For messages received via TMC, the direction of the road to
 	                                    *   which this message applies (positive or negative). Ignored
 	                                    *   for bidirectional messages. */
-	/* TODO move these two into a private struct */
-	struct coord_geo * sw;             /*!< Southwestern corner of rectangle enclosing all points.
-	                                    *   Calculated by Navit from the points of the location. */
-	struct coord_geo * ne;             /*!< Northeastern corner of rectangle enclosing all points.
-	                                    *   Calculated by Navit from the points of the location. */
+	struct traffic_location_priv * priv; /*!< Internal data, not exposed via the API */
 };
 
 /**

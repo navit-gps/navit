@@ -79,6 +79,13 @@ struct traffic {
 	struct map *map;             /**< The traffic map, in which traffic distortions are stored */
 };
 
+struct traffic_location_priv {
+	struct coord_geo * sw;             /*!< Southwestern corner of rectangle enclosing all points.
+	                                    *   Calculated by Navit from the points of the location. */
+	struct coord_geo * ne;             /*!< Northeastern corner of rectangle enclosing all points.
+	                                    *   Calculated by Navit from the points of the location. */
+};
+
 struct traffic_message_priv {
 	struct item **items;        /**< The items for this message in the traffic map */
 };
@@ -897,14 +904,14 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 	/* Start and end point of the current way or segment */
 	struct route_graph_point *s_pnt, *e_pnt;
 
-	if (!(this_->sw && this_->ne))
+	if (!(this_->priv->sw && this_->priv->ne))
 		return;
 
 	rg->h = mapset_open(ms);
 
 	while ((rg->m = mapset_next(rg->h, 2))) {
-		transform_from_geo(map_projection(rg->m), this_->sw, &c1);
-		transform_from_geo(map_projection(rg->m), this_->ne, &c2);
+		transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
+		transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
 		rg->sel = route_rect(18, &c1, &c2, 0, max_dist);
 
@@ -1029,7 +1036,7 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 		struct mapset * ms) {
 	struct route_graph *rg;
 
-	if (!(this_->sw && this_->ne))
+	if (!(this_->priv->sw && this_->priv->ne))
 		return NULL;
 
 	rg = g_new0(struct route_graph, 1);
@@ -1332,7 +1339,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	}
 
 	/* calculate enclosing rectangle, if not yet present */
-	if (!this_->location->sw) {
+	if (!this_->location->priv->sw) {
 		sw = g_new0(struct coord_geo, 1);
 		sw->lat = INT_MAX;
 		sw->lng = INT_MAX;
@@ -1343,10 +1350,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				if (coords[i]->lng < sw->lng)
 					sw->lng = coords[i]->lng;
 			}
-		this_->location->sw = sw;
+		this_->location->priv->sw = sw;
 	}
 
-	if (!this_->location->ne) {
+	if (!this_->location->priv->ne) {
 		ne = g_new0(struct coord_geo, 1);
 		ne->lat = -INT_MAX;
 		ne->lng = -INT_MAX;
@@ -1357,7 +1364,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				if (coords[i]->lng > ne->lng)
 					ne->lng = coords[i]->lng;
 			}
-		this_->location->ne = ne;
+		this_->location->priv->ne = ne;
 	}
 
 	if (this_->location->at)
@@ -2050,8 +2057,9 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
 	ret->road_ref = road_ref ? g_strdup(road_ref) : NULL;
 	ret->tmc_table = tmc_table ? g_strdup(tmc_table) : NULL;
 	ret->tmc_direction = tmc_direction;
-	ret->sw = NULL;
-	ret->ne = NULL;
+	ret->priv = g_new0(struct traffic_location_priv, 1);
+	ret->priv->sw = NULL;
+	ret->priv->ne = NULL;
 	return ret;
 }
 
@@ -2078,10 +2086,11 @@ void traffic_location_destroy(struct traffic_location * this_) {
 		g_free(this_->road_ref);
 	if (this_->tmc_table)
 		g_free(this_->tmc_table);
-	if (this_->sw)
-		g_free(this_->sw);
-	if (this_->ne)
-		g_free(this_->ne);
+	if (this_->priv->sw)
+		g_free(this_->priv->sw);
+	if (this_->priv->ne)
+		g_free(this_->priv->ne);
+	g_free(this_->priv);
 	g_free(this_);
 }
 
