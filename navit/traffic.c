@@ -705,6 +705,21 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
+ * @brief Determines the length of a segment, penalized according to its attribute matching score.
+ *
+ * A segment with the maximum score of 100 is not penalized. A segment with a zero score is penalized
+ * with a factor of `PENALTY_OFFROAD`. For scores in between, the penalty is reduced proportionally.
+ *
+ * @param len The length of the segment, in meters
+ * @param score The attribute matching score, expressed as a percentage
+ *
+ * @return The cost for the segment, `INT_MAX` for an impassable segment
+ */
+static int traffic_route_get_penalized_length(int len, int score) {
+	return len * (100 - score) * (PENALTY_OFFROAD - 1) / 100 + len;
+}
+
+/**
  * @brief Determines the degree to which the attributes of a location and a map item match.
  *
  * The result of this method is used to match a location to a map item. Its result is a score—the higher
@@ -846,9 +861,8 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 /**
  * @brief Returns the cost of the segment in the given direction.
  *
- * Currently the cost of a segment (for the purpose of matching traffic locations) is simply its length,
- * as only the best matching roads are used. Future versions may change this by considering all roads
- * and factoring match quality into the cost calculation.
+ * For the purpose of matching traffic locations, the cost of a segment is simply its length (as per its
+ * `len` member), which already has a penalty based on match quality factored in.
  *
  * @param over The segment
  * @param dir The direction (positive numbers indicate positive direction)
@@ -887,8 +901,8 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 	/* Mercator coordinates of current and previous point */
 	struct coord c, l;
 
-	/* The attribute matching score (current and maximum) */
-	int score, maxscore = 0;
+	/* The attribute matching score */
+	int score;
 
 	/* Data for the route graph segment */
 	struct route_graph_segment_data data;
@@ -938,18 +952,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 			if (item_get_default_flags(item->type)) {
 
 				if (item_coord_get(item, &l, 1)) {
-					if (mode == 0) {
-						score = traffic_location_match_attributes(this_, item);
-
-						if (score < maxscore)
-							continue;
-						if (score > maxscore) {
-							/* we have found a better match, drop the previous route graph */
-							route_graph_free_points(rg);
-							route_graph_free_segments(rg);
-							maxscore = score;
-						}
-					}
+					score = traffic_location_match_attributes(this_, item);
 
 					data.flags=0;
 					data.offset=1;
@@ -986,7 +989,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 						}
 						e_pnt = route_graph_add_point(rg, &l);
 						dbg_assert(len >= 0);
-						data.len=len;
+						data.len = traffic_route_get_penalized_length(len, score);
 						if (!route_graph_segment_is_duplicate(s_pnt, &data))
 							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 					} else {
@@ -1000,7 +1003,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 								l = c;
 								if (isseg) {
 									e_pnt = route_graph_add_point(rg, &l);
-									data.len = len;
+									data.len = traffic_route_get_penalized_length(len, score);
 									if (!route_graph_segment_is_duplicate(s_pnt, &data))
 										route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 									data.offset++;
@@ -1012,7 +1015,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 						e_pnt = route_graph_add_point(rg, &l);
 						dbg_assert(len >= 0);
 						sc++;
-						data.len = len;
+						data.len = traffic_route_get_penalized_length(len, score);
 						if (!route_graph_segment_is_duplicate(s_pnt, &data))
 							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 					}
