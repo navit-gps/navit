@@ -710,101 +710,104 @@ static struct map_methods traffic_map_meth = {
  * The result of this method is used to match a location to a map item. Its result is a score—the higher
  * the score, the better the match.
  *
- * To calculate the score, all supplied attributes are examined. An exact match adds 4 to the score, a
- * partial match adds 2. Values of 1 are subtracted where additional granularity is needed. Undefined
- * attributes are not considered a match.
+ * To calculate the score, all supplied attributes are examined and points are given for each attribute
+ * which is defined for the location. An exact match adds 4 points, a partial match adds 2. Values of 1
+ * and 3 are added where additional granularity is needed. The number of points attained is divided by
+ * the maximum number of points attainable, and the result is returned as a percentage value.
  *
  * @param this_ The location
  * @param item The map item
  *
- * @return The score
+ * @return The score, as a percentage value
  */
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item) {
-	int ret = 0;
+	int score = 0;
+	int maxscore = 0;
 	struct attr attr;
 
 	/* road type */
 	if ((this_->road_type != type_line_unspecified)) {
+		maxscore += 4;
 		if (item->type == this_->road_type)
-			ret +=4;
+			score += 4;
 		else
 			switch (this_->road_type) {
 			/* motorway */
 			case type_highway_land:
 				if (item->type == type_highway_city)
-					ret += 3;
+					score += 3;
 				else if (item->type == type_street_n_lanes)
-					ret += 2;
+					score += 2;
 				break;
 			case type_highway_city:
 				if (item->type == type_highway_land)
-					ret += 3;
+					score += 3;
 				else if (item->type == type_street_n_lanes)
-					ret += 2;
+					score += 2;
 				break;
 			/* trunk */
 			case type_street_n_lanes:
 				if ((item->type == type_highway_land) || (item->type == type_highway_city)
 						|| (item->type == type_street_4_land)
 						|| (item->type == type_street_4_city))
-					ret += 2;
+					score += 2;
 				break;
 			/* primary */
 			case type_street_4_land:
 				if (item->type == type_street_4_city)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_n_lanes)
 						|| (item->type == type_street_3_land))
-					ret += 2;
+					score += 2;
 				else if (item->type == type_street_3_city)
-					ret += 1;
+					score += 1;
 				break;
 			case type_street_4_city:
 				if (item->type == type_street_4_land)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_n_lanes)
 						|| (item->type == type_street_3_city))
-					ret += 2;
+					score += 2;
 				else if (item->type == type_street_3_land)
-					ret += 1;
+					score += 1;
 				break;
 			/* secondary */
 			case type_street_3_land:
 				if (item->type == type_street_3_city)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_4_land)
 						|| (item->type == type_street_2_land))
-					ret += 2;
+					score += 2;
 				else if ((item->type == type_street_4_city)
 						|| (item->type == type_street_2_city))
-					ret += 1;
+					score += 1;
 				break;
 			case type_street_3_city:
 				if (item->type == type_street_3_land)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_4_city)
 						|| (item->type == type_street_2_city))
-					ret += 2;
+					score += 2;
 				else if ((item->type == type_street_4_land)
 						|| (item->type == type_street_2_land))
-					ret += 1;
+					score += 1;
 				break;
 			/* tertiary */
 			case type_street_2_land:
 				if (item->type == type_street_2_city)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_3_land))
-					ret += 2;
+					score += 2;
 				else if ((item->type == type_street_3_city))
-					ret += 1;
+					score += 1;
 				break;
 			case type_street_2_city:
 				if (item->type == type_street_2_land)
-					ret += 3;
+					score += 3;
 				else if ((item->type == type_street_3_city))
-					ret += 2;
+					score += 2;
 				else if ((item->type == type_street_3_land))
-					ret += 1;
+					score += 1;
 				break;
 			default:
 				break;
@@ -813,16 +816,18 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
 	/* road_ref */
 	if (this_->road_ref && item_attr_get(item, attr_street_name_systematic, &attr)) {
+		maxscore += 4;
 		// TODO give partial score for partial matches
 		if (!compare_name_systematic(this_->road_ref, attr.u.str))
-			ret += 4;
+			score += 4;
 	}
 
 	/* road_name */
 	if (this_->road_name && item_attr_get(item, attr_street_name, &attr)) {
+		maxscore += 4;
 		// TODO crude comparison in need of refinement
 		if (!strcmp(this_->road_name, attr.u.str))
-			ret += 4;
+			score += 4;
 	}
 
 	// TODO point->junction_ref
@@ -835,7 +840,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
 	// TODO ramps
 
-	return ret;
+	return (score * 100) / maxscore;
 }
 
 /**
