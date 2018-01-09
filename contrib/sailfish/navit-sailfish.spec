@@ -15,6 +15,8 @@ License: GPL
 Group: Applications/Productivity
 URL: http://navit-projet.org/
 
+#git is vor version info while building
+BuildRequires: git
 BuildRequires: gcc
 BuildRequires: cmake
 BuildRequires: glib2-devel
