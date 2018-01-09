@@ -1836,7 +1836,7 @@ static void traffic_set_shared(struct traffic *this_) {
  * traffic distortions and triggering route recalculations as needed.
  */
 static void traffic_loop(struct traffic * this_) {
-	int i;
+	int i = 0;
 	struct traffic_message ** messages;
 
 	/* Iterator over messages */
