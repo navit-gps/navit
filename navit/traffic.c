@@ -705,21 +705,6 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
- * @brief Determines the length of a segment, penalized according to its attribute matching score.
- *
- * A segment with the maximum score of 100 is not penalized. A segment with a zero score is penalized
- * with a factor of `PENALTY_OFFROAD`. For scores in between, the penalty is reduced proportionally.
- *
- * @param len The length of the segment, in meters
- * @param score The attribute matching score, expressed as a percentage
- *
- * @return The cost for the segment, `INT_MAX` for an impassable segment
- */
-static int traffic_route_get_penalized_length(int len, int score) {
-	return len * (100 - score) * (PENALTY_OFFROAD - 1) / 100 + len;
-}
-
-/**
  * @brief Determines the degree to which the attributes of a location and a map item match.
  *
  * The result of this method is used to match a location to a map item. Its result is a score—the higher
@@ -861,19 +846,23 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 /**
  * @brief Returns the cost of the segment in the given direction.
  *
- * For the purpose of matching traffic locations, the cost of a segment is simply its length (as per its
- * `len` member), which already has a penalty based on match quality factored in.
+ * The cost is calculated based on the length of the segment and a penalty which depends on the score.
+ * A segment with the maximum score of 100 is not penalized, i.e. its cost is equal to its length. A
+ * segment with a zero score is penalized with a factor of `PENALTY_OFFROAD`. For scores in between, a
+ * penalty factor between 1 and `PENALTY_OFFROAD` is applied.
+ *
+ * If the segment is impassable in the given direction, the cost is always `INT_MAX`.
  *
  * @param over The segment
  * @param dir The direction (positive numbers indicate positive direction)
  *
- * @return The cost of the segment, or `INT_MAX` if the segment is impassable in direction `dir`
+ * @return The cost of the segment
  */
 static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir) {
 	if (over->data.flags & (dir >= 0 ? AF_ONEWAYREV : AF_ONEWAY))
 		return INT_MAX;
 
-	return over->data.len;
+	return over->data.len * (100 - over->data.score) * (PENALTY_OFFROAD - 1) / 100 + over->data.len;
 }
 
 /**
@@ -900,9 +889,6 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 
 	/* Mercator coordinates of current and previous point */
 	struct coord c, l;
-
-	/* The attribute matching score */
-	int score;
 
 	/* Data for the route graph segment */
 	struct route_graph_segment_data data;
@@ -952,8 +938,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 			if (item_get_default_flags(item->type)) {
 
 				if (item_coord_get(item, &l, 1)) {
-					score = traffic_location_match_attributes(this_, item);
-
+					data.score = traffic_location_match_attributes(this_, item);
 					data.flags=0;
 					data.offset=1;
 					data.maxspeed=-1;
@@ -989,7 +974,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 						}
 						e_pnt = route_graph_add_point(rg, &l);
 						dbg_assert(len >= 0);
-						data.len = traffic_route_get_penalized_length(len, score);
+						data.len = len;
 						if (!route_graph_segment_is_duplicate(s_pnt, &data))
 							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 					} else {
@@ -1003,7 +988,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 								l = c;
 								if (isseg) {
 									e_pnt = route_graph_add_point(rg, &l);
-									data.len = traffic_route_get_penalized_length(len, score);
+									data.len = len;
 									if (!route_graph_segment_is_duplicate(s_pnt, &data))
 										route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 									data.offset++;
@@ -1015,7 +1000,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 						e_pnt = route_graph_add_point(rg, &l);
 						dbg_assert(len >= 0);
 						sc++;
-						data.len = traffic_route_get_penalized_length(len, score);
+						data.len = len;
 						if (!route_graph_segment_is_duplicate(s_pnt, &data))
 							route_graph_add_segment(rg, s_pnt, e_pnt, &data);
 					}
