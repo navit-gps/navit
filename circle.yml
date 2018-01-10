@@ -28,7 +28,7 @@ test:
     - bash ci/build.sh:
         parallel: true
         files:
-          - ci/build_*.sh
+          - ci/build_android.sh
 deployment:
   publish_to_playstore:
     branch: master
