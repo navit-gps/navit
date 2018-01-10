@@ -1573,6 +1573,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	s->data.len=data->len;
 	s->data.item=*data->item;
 	s->data.flags=data->flags;
+	s->data.score = data->score;
 
 	if (data->flags & AF_SPEED_LIMIT) 
 		RSD_MAXSPEED(&s->data)=data->maxspeed;

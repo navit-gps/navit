@@ -68,6 +68,8 @@ struct route_segment_data {
 	struct item item;                    /**< The item (e.g. street) that this segment represents. */
 	int flags;
 	int len;                             /**< Length of this segment, in meters */
+	int score;                           /**< Used by the traffic module to give preference to some
+	                                      *   segments over others */
 	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
 				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
 				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
@@ -100,6 +102,8 @@ struct route_graph_segment_data {
 	                                       *   -1 if not known */
 	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
+	int score;                            /**< Used by the traffic module to give preference to some
+	                                       *   segments over others */
 };
 
 /**
