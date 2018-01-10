@@ -113,6 +113,7 @@ struct map_rect_priv {
  * @brief Implementation-specific item data for traffic map items
  */
 struct item_priv {
+	struct map_rect_priv * mr;  /**< The private data for the map rect from which the item was obtained */
 	struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
 	struct coord *coords;       /**< The coordinates for the item */
 	int coord_count;            /**< The number of elements in `coords` */
@@ -157,6 +158,7 @@ static struct item * tm_item_unref(struct item * item);
 static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
+static int tm_type_set(void *priv_data, enum item_type type);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
 		struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
@@ -176,6 +178,10 @@ static struct item_methods methods_traffic_item = {
 	tm_coord_get,
 	tm_attr_rewind,
 	tm_attr_get,
+	NULL,
+	NULL,
+	NULL,
+	tm_type_set,
 };
 
 /**
@@ -312,7 +318,7 @@ static struct item * tm_item_unref(struct item * item) {
 			mapitem = map_rect_get_item(mr);
 		} while (mapitem && (mapitem != item));
 		if (mapitem)
-			map_rect_remove_item(mr);
+			item_type_set(mapitem, type_none);
 		map_rect_destroy(mr);
 		tm_item_destroy(item);
 	}
@@ -516,8 +522,16 @@ static void tm_rect_destroy(struct map_rect_priv *mr) {
  */
 static struct item * tm_get_item(struct map_rect_priv *mr) {
 	struct item * ret = NULL;
+	struct item_priv * ip;
+
+	if (mr->item) {
+		ip = (struct item_priv *) mr->item->priv_data;
+		ip->mr = NULL;
+	}
 	if (mr->next_item) {
 		ret = (struct item *) mr->next_item->data;
+		ip = (struct item_priv *) ret->priv_data;
+		ip->mr = mr;
 		tm_attr_rewind(ret->priv_data);
 		tm_coord_rewind(ret->priv_data);
 		mr->next_item = g_list_next(mr->next_item);
@@ -573,42 +587,6 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
 	dbg(lvl_error, "return\n");
 
 	return ret;
-}
-
-/**
- * @brief Removes the last retrieved item from the map.
- *
- * This function removes the last item retrieved by a call to `map_rect_get_item()` or
- * `map_rect_get_item_byid()` for the same `map_rect` from the map.
- *
- * Subsequent calls to `map_rect_get_item()` or `map_rect_get_item_byid()` are unaffected by the
- * deletion, i.e. they will behave as if the deletion had not taken place.
- *
- * It is incorrect usage to:
- * \li Remove an item without having first called `map_rect_get_item()` or `map_rect_get_item_byid()` for
- * than same `map_rect` (map providers should return 0 and cause an error to be logged in this case)
- * \li Get or rewind item attributes or coordinates immediately following a call to this function,
- * without having retrieved a new item first (this is the same as attempting these operations on a fresh
- * `map_rect` from which no item has been retrieved yet)
- *
- * @param mr The map rectangle from which the item was retrieved
- *
- * @return 0 on failure, nonzero on success
- */
-static int tm_rect_remove_item(struct map_rect_priv *mr) {
-	if (mr->item) {
-		/* if we have multiple occurrences of this item in the list, move forward beyond the last one */
-		while (mr->next_item && (mr->next_item->data == mr->item))
-			mr->next_item = g_list_next(mr->next_item);
-
-		/* remove the item from the map and set last retrieved item to NULL */
-		mr->mpriv->items = g_list_remove_all(mr->mpriv->items, mr->item);
-		mr->item = NULL;
-		return 1;
-	}
-
-	dbg(lvl_error, "this function must be preceded by a successful retrieval of an item from the same map rect\n");
-	return 0;
 }
 
 /**
@@ -687,6 +665,37 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 	return ret;
 }
 
+/**
+ * @brief Sets the type of a traffic item.
+ *
+ * @param priv_data The item's private data
+ * @param type The new type for the item. Setting it to `type_none` deletes the item from the map.
+ *
+ * @return 0 on failure, nonzero on success
+ */
+static int tm_type_set(void *priv_data, enum item_type type) {
+	struct item_priv * ip = priv_data;
+
+	if (!ip->mr || !ip->mr->item || (ip->mr->item->priv_data != priv_data)) {
+		dbg(lvl_error, "this function can only be called for the last item retrieved from its map rect\n");
+		return 0;
+	}
+
+	if (type == type_none) {
+		/* if we have multiple occurrences of this item in the list, move forward beyond the last one */
+		while (ip->mr->next_item && (ip->mr->next_item->data == ip->mr->item))
+			ip->mr->next_item = g_list_next(ip->mr->next_item);
+
+		/* remove the item from the map and set last retrieved item to NULL */
+		ip->mr->mpriv->items = g_list_remove_all(ip->mr->mpriv->items, ip->mr->item);
+		ip->mr->item = NULL;
+	} else {
+		ip->mr->item->type = type;
+	}
+
+	return 1;
+}
+
 static struct map_methods traffic_map_meth = {
 	projection_mg,    /* pro: The projection used for that type of map */
 	"utf-8",          /* charset: The charset this map uses. */
@@ -701,7 +710,6 @@ static struct map_methods traffic_map_meth = {
 	tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
 	NULL,             /* map_get_attr */
 	NULL,             /* map_set_attr */
-	tm_rect_remove_item, /* tm_rect_remove_item: Remove the last retrieved item from the map */
 };
 
 /**
