@@ -86,7 +86,7 @@ struct map_methods {
 	struct item *		(*map_rect_create_item)(struct map_rect_priv *mr, enum item_type type); /**< Function to create a new item in the map */
 	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr); /**< Function to get a map attribute, can be NULL */
         int			(*map_set_attr)(struct map_priv *priv, struct attr *attr); /**< Function to set a map attribute, can be NULL */
-        int			(*map_rect_remove_item)(struct map_rect_priv *mr); /**< Function to remove the current item from the map */
+
 };
 
 /**
@@ -258,7 +258,6 @@ struct map_rect *map_rect_new(struct map *m, struct map_selection *sel);
 struct item *map_rect_get_item(struct map_rect *mr);
 struct item *map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo);
 struct item *map_rect_create_item(struct map_rect *mr, enum item_type type_);
-int map_rect_remove_item(struct map_rect *mr);
 void map_rect_destroy(struct map_rect *mr);
 struct map_search *map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial);
 struct item *map_search_get_item(struct map_search *this_);

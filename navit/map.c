@@ -732,39 +732,6 @@ map_rect_create_item(struct map_rect *mr, enum item_type type_)
 	}
 }
 
-
-/**
- * @brief Removes the last retrieved item from the map.
- *
- * This function removes the last item retrieved by a call to `map_rect_get_item()` or
- * `map_rect_get_item_byid()` for the same `map_rect` from the map.
- *
- * Subsequent calls to `map_rect_get_item()` or `map_rect_get_item_byid()` are unaffected by the
- * deletion, i.e. they will behave as if the deletion had not taken place.
- *
- * It is incorrect usage to:
- * \li Remove an item without having first called `map_rect_get_item()` or `map_rect_get_item_byid()` for
- * than same `map_rect` (map providers should return 0 and cause an error to be logged in this case)
- * \li Get or rewind item attributes or coordinates immedidately following a call to this function,
- * without having retrieved a new item first (this is the same as attempting these operations on a fresh
- * `map_rect` from which no item has been retrieved yet)
- *
- * @param mr The map rectangle from which the item was retrieved
- *
- * @return 0 on failure, nonzero on success
- */
-int
-map_rect_remove_item(struct map_rect *mr)
-{
-	if(mr && mr->priv && mr->m && mr->m->meth.map_rect_remove_item) {
-		return mr->m->meth.map_rect_remove_item(mr->priv) ;
-	}
-	else {
-		return 0;
-	}
-}
-
-
 struct object_func map_func = {
 	attr_map,
 	(object_func_new)map_new,
