@@ -1846,6 +1846,9 @@ static void traffic_loop(struct traffic * this_) {
 	struct traffic_location * swap_location;
 	struct item ** swap_items;
 
+	/* Whether a redraw is needed (because segments have changed) */
+	int is_redraw_needed = 0;
+
 	messages = this_->meth.get_messages(this_->priv);
 	if (messages)
 		for (i = 0; messages[i] != NULL; i++) {
@@ -1883,6 +1886,7 @@ static void traffic_loop(struct traffic * this_) {
 				} else {
 					/* else find matching segments from scratch */
 					traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+					is_redraw_needed = 1;
 				}
 
 				g_free(data);
@@ -1895,6 +1899,8 @@ static void traffic_loop(struct traffic * this_) {
 			if (msgs_to_remove) {
 				for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
 					stored_msg = (struct traffic_message *) msg_iter->data;
+					if (stored_msg->priv->items)
+						is_redraw_needed = 1;
 					this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
 					traffic_message_destroy(stored_msg);
 				}
@@ -1916,6 +1922,8 @@ static void traffic_loop(struct traffic * this_) {
 	if (msgs_to_remove) {
 		for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
 			stored_msg = (struct traffic_message *) msg_iter->data;
+			if (stored_msg->priv->items)
+				is_redraw_needed = 1;
 			this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
 			traffic_message_destroy(stored_msg);
 		}
@@ -1930,10 +1938,12 @@ static void traffic_loop(struct traffic * this_) {
 		/* TODO dump message store if new messages have been received */
 
 		dbg(lvl_debug, "received %d message(s), %d message(s) expired\n", i, g_list_length(msgs_to_remove));
+
+		/* trigger redraw if segments have changed */
+		if (is_redraw_needed)
+			navit_draw_async(this_->navit, 1);
 	}
 	msgs_to_remove = NULL;
-
-	/* TODO trigger redraw if segments have changed */
 }
 
 /**
