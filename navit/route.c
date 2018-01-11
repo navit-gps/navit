@@ -210,7 +210,6 @@ struct attr_iter {
 };
 
 static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *c);
-static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this, struct callback *cb, int async);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
 static void route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
@@ -1320,7 +1319,7 @@ route_graph_get_point_next(struct route_graph *this, struct coord *c, struct rou
  * @param c Coordinates to search for
  * @return The point at the specified coordinates or NULL if not found
  */
-static struct route_graph_point *
+struct route_graph_point *
 route_graph_get_point(struct route_graph *this, struct coord *c)
 {
 	return route_graph_get_point_next(this, c, NULL);

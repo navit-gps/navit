@@ -148,6 +148,7 @@ struct route_graph {
 /* prototypes */
 struct route_graph_point * route_graph_add_point(struct route_graph *this, struct coord *f);
 void route_graph_free_points(struct route_graph *this);
+struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
 		struct route_graph_point *end, struct route_graph_segment_data *data);
 int route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data);
