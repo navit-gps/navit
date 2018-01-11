@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('structmap__methods.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Holds all functions a map plugin has to implement to be useable.  
+<p>Holds all functions a map plugin has to implement to be usable.  
  <a href="structmap__methods.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="map_8h_source.html">map.h</a>&gt;</code></p>
@@ -146,8 +146,9 @@ Data Fields</h2></td></tr>
 <tr class="separator:ac35a17092ad3e8f19a7349d22899d0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Holds all functions a map plugin has to implement to be useable. </p>
-<p>This structure holds pointers to a map plugin's functions navit's core will call to communicate with the plugin. For further information look into map.c - there exist functions with the same names acting more or less as "wrappers" around the functions here. Especially the arguments (and their meaning) of each function will be described there. </p>
+<div class="textblock"><p>Holds all functions a map plugin has to implement to be usable. </p>
+<p>This structure holds pointers to a map plugin's functions, which Navit's core will call to communicate with the plugin. For further information look into map.c, which has functions with the same names acting more or less as "wrappers" around the functions here. Especially the arguments (and their meaning) of each function will be described there.</p>
+<p>Note that there is no separate method to remove an item from a map. This is instead accomplished by retrieving the item, then setting its type to <code>type_none</code> via its <code>item_type_set</code> method (provided the item and its map support removal). </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="af1b08a1287899114eba4a47645799da6"></a>
 <div class="memitem">

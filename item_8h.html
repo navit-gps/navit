@@ -189,6 +189,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ae4ca690f46c2e5d491491d9f706f04e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next coordinates from an item.  <a href="#ae4ca690f46c2e5d491491d9f706f04e8">More...</a><br/></td></tr>
 <tr class="separator:ae4ca690f46c2e5d491491d9f706f04e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3303e95f0c2dff01ab8dc3389e44a4ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a3303e95f0c2dff01ab8dc3389e44a4ec">item_coord_set</a> (struct <a class="el" href="structitem.html">item</a> *it, struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count, enum <a class="el" href="item_8h.html#a29e5d337e75d347e81012e2dfad6a3c9">change_mode</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td></tr>
+<tr class="memdesc:a3303e95f0c2dff01ab8dc3389e44a4ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets coordinates of an item.  <a href="#a3303e95f0c2dff01ab8dc3389e44a4ec">More...</a><br/></td></tr>
 <tr class="separator:a3303e95f0c2dff01ab8dc3389e44a4ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29b6c55bda6614c901e4f341a70c79f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a29b6c55bda6614c901e4f341a70c79f1">item_coord_get_within_selection</a> (struct <a class="el" href="structitem.html">item</a> *it, struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count, struct <a class="el" href="structmap__selection.html">map_selection</a> *sel)</td></tr>
 <tr class="separator:a29b6c55bda6614c901e4f341a70c79f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,15 +197,19 @@ Functions</h2></td></tr>
 <tr class="memdesc:a088682cd8951907090cbf68b4c9e0f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next coordinates from an item and reprojects them.  <a href="#a088682cd8951907090cbf68b4c9e0f83">More...</a><br/></td></tr>
 <tr class="separator:a088682cd8951907090cbf68b4c9e0f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afba64e56910719c067affad47d2df767"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#afba64e56910719c067affad47d2df767">item_coord_is_node</a> (struct <a class="el" href="structitem.html">item</a> *it)</td></tr>
+<tr class="memdesc:afba64e56910719c067affad47d2df767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the current coordinates of an item correspond to a node.  <a href="#afba64e56910719c067affad47d2df767">More...</a><br/></td></tr>
 <tr class="separator:afba64e56910719c067affad47d2df767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cac46294839e00eec2c1adbaaa73d22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a0cac46294839e00eec2c1adbaaa73d22">item_attr_rewind</a> (struct <a class="el" href="structitem.html">item</a> *it)</td></tr>
+<tr class="memdesc:a0cac46294839e00eec2c1adbaaa73d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the "attribute pointer" of an item.  <a href="#a0cac46294839e00eec2c1adbaaa73d22">More...</a><br/></td></tr>
 <tr class="separator:a0cac46294839e00eec2c1adbaaa73d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f97d6a6d85956aa73deb31d4a16397f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get</a> (struct <a class="el" href="structitem.html">item</a> *it, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:a1f97d6a6d85956aa73deb31d4a16397f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next matching attribute from an item.  <a href="#a1f97d6a6d85956aa73deb31d4a16397f">More...</a><br/></td></tr>
 <tr class="separator:a1f97d6a6d85956aa73deb31d4a16397f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cdaedbf70196b90b97d7b14eaf45918"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a6cdaedbf70196b90b97d7b14eaf45918">item_attr_set</a> (struct <a class="el" href="structitem.html">item</a> *it, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, enum <a class="el" href="item_8h.html#a29e5d337e75d347e81012e2dfad6a3c9">change_mode</a> <a class="el" href="graphics__win32_8c.html#a25ea69ac5fd1db5cec1ac4663e5ee145">mode</a>)</td></tr>
+<tr class="memdesc:a6cdaedbf70196b90b97d7b14eaf45918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an attribute of an item.  <a href="#a6cdaedbf70196b90b97d7b14eaf45918">More...</a><br/></td></tr>
 <tr class="separator:a6cdaedbf70196b90b97d7b14eaf45918"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8d9b6e142e6445e6d36a35031d0c783"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#ab8d9b6e142e6445e6d36a35031d0c783">item_type_set</a> (struct <a class="el" href="structitem.html">item</a> *it, enum <a class="el" href="item_8h.html#a2679318a14061852e50df3c6e4e42f62">item_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>)</td></tr>
-<tr class="memdesc:ab8d9b6e142e6445e6d36a35031d0c783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set map item type.  <a href="#ab8d9b6e142e6445e6d36a35031d0c783">More...</a><br/></td></tr>
+<tr class="memdesc:ab8d9b6e142e6445e6d36a35031d0c783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the type of a map item.  <a href="#ab8d9b6e142e6445e6d36a35031d0c783">More...</a><br/></td></tr>
 <tr class="separator:ab8d9b6e142e6445e6d36a35031d0c783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87283b5140d9cb8dbf0edbc038919516"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem.html">item</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a87283b5140d9cb8dbf0edbc038919516">item_new</a> (char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> <a class="el" href="garmin__img_8c.html#a8f713cfa80d7d6b0de82a2c059ba7f73">zoom</a>)</td></tr>
 <tr class="separator:a87283b5140d9cb8dbf0edbc038919516"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -598,8 +603,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
-          <td class="paramname"><em>attr_type</em>, </td>
+          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -614,6 +619,21 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets the next matching attribute from an item. </p>
+<p>This function returns the next attribute matching <code>attr_type</code> from an item and advances the "attribute pointer" accordingly, so that at the next call the next attribute will be returned.</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">it</td><td>The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . </td></tr>
+    <tr><td class="paramname">attr_type</td><td>The attribute type to retrieve, or <code>attr_any</code> to retrieve the next attribute </td></tr>
+    <tr><td class="paramname">attr</td><td>Receives the attribute retrieved</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false on failure </dd></dl>
 
 <p>References <a class="el" href="structitem__methods.html#a24e16b616c09a26643a283ba57110c4f">item_methods::item_attr_get</a>, <a class="el" href="structitem.html#ad957a0f1cfe3938aecb9dd2a694db3b0">item::meth</a>, and <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>.</p>
 
@@ -634,6 +654,20 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Resets the "attribute pointer" of an item. </p>
+<p>This function resets the "attribute pointer" of an item to point to the first attribute, so that at the next call to</p>
+<div class="fragment"><div class="line"><a class="code" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get</a>() </div>
+</div><!-- fragment --><p> the first attribute will be returned.</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">it</td><td>The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="structitem__methods.html#abcc16859f487c6211cb92bbfc996169f">item_methods::item_attr_rewind</a>, <a class="el" href="structitem.html#ad957a0f1cfe3938aecb9dd2a694db3b0">item::meth</a>, and <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>.</p>
 
@@ -670,6 +704,28 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets an attribute of an item. </p>
+<p>This function supports different modes:</p>
+<ul>
+<li><code>change_mode_delete</code>: Deletes the attribute </li>
+<li><code>change_mode_modify</code>: Replaces an attribute </li>
+<li><code>change_mode_append</code>: Appends an attribute </li>
+<li><code>change_mode_prepend</code>: Prepends an attribute</li>
+</ul>
+<p>TODO which attribute is deleted/modified? The last one retrieved, the next one, the first matching one?</p>
+<p>TODO where are attributes appended/prepended? Beginning/end or current position?</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">it</td><td>The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . </td></tr>
+    <tr><td class="paramname">attr</td><td>TODO new attr, also store for old attr (delete/modify)? Required in delete mode (type of attr to delete)? </td></tr>
+    <tr><td class="paramname">mode</td><td>The change mode, see description </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="structitem__methods.html#a2e06e293fabaa648a074d5e92ddec40e">item_methods::item_attr_set</a>, <a class="el" href="structitem.html#ad957a0f1cfe3938aecb9dd2a694db3b0">item::meth</a>, and <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>.</p>
 
@@ -730,6 +786,7 @@ Variables</h2></td></tr>
 <p>Coordinates are stored in the projection of the item's map. If you need them in a different projection, call</p>
 <div class="fragment"><div class="line"><a class="code" href="item_8c.html#a088682cd8951907090cbf68b4c9e0f83">item_coord_get_pro</a>() </div>
 </div><!-- fragment --><p> instead.</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">it</td><td>The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
@@ -865,6 +922,17 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Whether the current coordinates of an item correspond to a node. </p>
+<p>TODO which coordinates? Last retrieved or next (to be) retrieved?</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">it</td><td>The item</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false on failure </dd></dl>
+
 <p>References <a class="el" href="structitem__methods.html#ae39963899ec946bdb138e77af29fd3c9">item_methods::item_coord_is_node</a>, <a class="el" href="structitem.html#ad957a0f1cfe3938aecb9dd2a694db3b0">item::meth</a>, and <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>.</p>
 
 <p>Referenced by <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>.</p>
@@ -889,6 +957,7 @@ Variables</h2></td></tr>
 <p>This function resets the "coordinate pointer" of an item to point to the first coordinate pair, so that at the next call to</p>
 <div class="fragment"><div class="line"><a class="code" href="item_8c.html#ae4ca690f46c2e5d491491d9f706f04e8">item_coord_get</a>() </div>
 </div><!-- fragment --><p> the first coordinates will be returned.</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">it</td><td>The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
@@ -939,6 +1008,30 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets coordinates of an item. </p>
+<p>This function supports different modes:</p>
+<ul>
+<li><code>change_mode_delete</code>: Deletes the specified number of coordinates </li>
+<li><code>change_mode_modify</code>: Replaces existing coordinates with new ones </li>
+<li><code>change_mode_append</code>: Appends new coordinates </li>
+<li><code>change_mode_prepend</code>: Prepends new coordinates</li>
+</ul>
+<p>TODO which coordinates are deleted/modified? Starting from the last coordinate retrieved, or the one after, or...?</p>
+<p>TODO what if <code>count</code> in delete or modify mode is bigger then the number of coordinates left?</p>
+<p>TODO where are coordinates appended/prepended? Beginning/end or current position?</p>
+<p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">it</td><td>The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div>
+</div><!-- fragment --> . </td></tr>
+    <tr><td class="paramname">c</td><td>TODO new coordinates, also store for old coordinates (delete/modify)? Required in delete mode? </td></tr>
+    <tr><td class="paramname">count</td><td>TODO number of coordinates to add, delete or modify? </td></tr>
+    <tr><td class="paramname">mode</td><td>The change mode, see description </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="structitem__methods.html#a17158b9dc973af3875efae960872d1c1">item_methods::item_coord_set</a>, <a class="el" href="structitem.html#ad957a0f1cfe3938aecb9dd2a694db3b0">item::meth</a>, and <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>.</p>
 
@@ -1450,11 +1543,11 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set map item type. </p>
+<p>Sets the type of a map item. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">it</td><td>reference to the item. </td></tr>
-    <tr><td class="paramname">type</td><td>New type for the item. Setting it to type_none is expected to delete item from the map. </td></tr>
+    <tr><td class="paramname">it</td><td>The item </td></tr>
+    <tr><td class="paramname">type</td><td>The new type for the item. Setting it to type_none is expected to delete item from the map.</td></tr>
   </table>
   </dd>
 </dl>
