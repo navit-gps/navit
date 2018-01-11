@@ -723,6 +723,9 @@ static struct map_methods traffic_map_meth = {
  * and 3 are added where additional granularity is needed. The number of points attained is divided by
  * the maximum number of points attainable, and the result is returned as a percentage value.
  *
+ * If no points can be attained (because no attributes which must match are supplied), the score is 100
+ * for any item supplied.
+ *
  * @param this_ The location
  * @param item The map item
  *
@@ -848,6 +851,8 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
 	// TODO ramps
 
+	if (!maxscore)
+		return 100;
 	return (score * 100) / maxscore;
 }
 
