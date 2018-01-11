@@ -826,19 +826,23 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 	}
 
 	/* road_ref */
-	if (this_->road_ref && item_attr_get(item, attr_street_name_systematic, &attr)) {
+	if (this_->road_ref) {
 		maxscore += 4;
-		// TODO give partial score for partial matches
-		if (!compare_name_systematic(this_->road_ref, attr.u.str))
-			score += 4;
+		if (item_attr_get(item, attr_street_name_systematic, &attr)) {
+			// TODO give partial score for partial matches
+			if (!compare_name_systematic(this_->road_ref, attr.u.str))
+				score += 4;
+		}
 	}
 
 	/* road_name */
-	if (this_->road_name && item_attr_get(item, attr_street_name, &attr)) {
+	if (this_->road_name) {
 		maxscore += 4;
-		// TODO crude comparison in need of refinement
-		if (!strcmp(this_->road_name, attr.u.str))
-			score += 4;
+		if (item_attr_get(item, attr_street_name, &attr)) {
+			// TODO crude comparison in need of refinement
+			if (!strcmp(this_->road_name, attr.u.str))
+				score += 4;
+		}
 	}
 
 	// TODO point->junction_ref
