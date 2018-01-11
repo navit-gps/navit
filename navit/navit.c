@@ -1947,6 +1947,11 @@ navit_window_roadbook_update(struct navit *this_)
 	struct param_list param[5];
 	int secs;
 
+        /* Respect the Imperial attribute as we enlighten the user. */
+        int imperial = FALSE;  /* default to using metric measures. */
+        if (navit_get_attr(this_, attr_imperial, &attr, NULL))
+            imperial=attr.u.num;
+
 	dbg(lvl_debug,"enter\n");
 	datawindow_mode(this_->roadbook_window, 1);
 	if (nav)
@@ -1970,44 +1975,60 @@ navit_window_roadbook_update(struct navit *this_)
 				param[0].value=_("Position");
 			param[0].name=_("Command");
 
+                        /* Distance to the next maneuver. */
 			item_attr_get(item, attr_length, &attr);
-			dbg(lvl_info, "Length=%ld\n", attr.u.num);
+			dbg(lvl_info, "Length=%ld in meters\n", attr.u.num);
 			param[1].name=_("Length");
 
 			if ( attr.u.num >= 2000 )
 			{
-				param[1].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+                                param[1].value=g_strdup_printf("%5.1f %s",
+                                                               imperial == TRUE ? (float)attr.u.num * METERS_TO_MILES : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? _("mi") : _("km")
+                                        );
 			}
 			else
 			{
-				param[1].value=g_strdup_printf("%7ld %s",attr.u.num, _("m"));
+                                param[1].value=g_strdup_printf("%7.0f %s",
+                                                               imperial == TRUE ? (attr.u.num * FEET_PER_METER) : attr.u.num,
+                                                               imperial == TRUE ? _("feet") : _("m")
+                                        );
 			}
 
+                        /* Time to next maneuver. */
 			item_attr_get(item, attr_time, &attr);
 			dbg(lvl_info, "Time=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[2].name=_("Time");
 			if ( secs >= 3600 )
 			{
-				param[2].value=g_strdup_printf("%d:%02d:%02d",secs / 60, ( secs / 60 ) % 60 , secs % 60);
+                                param[2].value=g_strdup_printf("%d:%02d:%02d",secs / 60, ( secs / 60 ) % 60 , secs % 60);
 			}
 			else
 			{
-				param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
+                                param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
 			}
 
+                        /* Distance from next maneuver to destination. */
 			item_attr_get(item, attr_destination_length, &attr);
-			dbg(lvl_info, "Destlength=%ld\n", attr.u.num);
+			dbg(lvl_info, "Destlength=%ld in meters.\n", attr.u.num);
 			param[3].name=_("Destination Length");
 			if ( attr.u.num >= 2000 )
 			{
-				param[3].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+                                param[3].value=g_strdup_printf("%5.1f %s",
+                                                               imperial == TRUE ? (float)attr.u.num * METERS_TO_MILES : (float)attr.u.num / 1000,
+                                                               imperial == TRUE ? _("mi") : _("km")
+                                        );
 			}
 			else
 			{
-				param[3].value=g_strdup_printf("%ld %s",attr.u.num, _("m"));
+                                param[3].value=g_strdup_printf("%7.0f %s",
+                                                               imperial == TRUE ? (attr.u.num * FEET_PER_METER) : attr.u.num,
+                                                               imperial == TRUE ? _("feet") : _("m")
+                                        );
 			}
 
+                        /* Time from next maneuver to destination. */
 			item_attr_get(item, attr_destination_time, &attr);
 			dbg(lvl_info, "Desttime=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
@@ -2596,7 +2617,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	case attr_pitch:
 		attr_updated=(this_->pitch != attr->u.num);
 		this_->pitch=attr->u.num;
-		transform_set_pitch(this_->trans, this_->pitch);
+		transform_set_pitch(this_->trans, round(this_->pitch*sqrt(240*320)/sqrt(this_->w*this_->h))); // Pitch corrected for window resolution
 		if (!init && attr_updated && this_->ready == 3)
 			navit_draw(this_);
 		break;
@@ -2836,7 +2857,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.num=this_->osd_configuration;
 		break;
 	case attr_pitch:
-		attr->u.num=transform_get_pitch(this_->trans);
+		attr->u.num=round(transform_get_pitch(this_->trans)*sqrt(this_->w*this_->h)/sqrt(240*320)); // Pitch corrected for window resolution
 		break;
 	case attr_projection:
 		if(this_->trans) {

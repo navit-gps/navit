@@ -18,6 +18,8 @@
  */
  
 /** @file vehicle.c
+ * @defgroup vehicle-plugins vehicle plugins
+ * @ingroup plugins
  * @brief Generic components of the vehicle object.
  * 
  * This file implements the generic vehicle interface, i.e. everything which is
@@ -51,6 +53,7 @@
 #include "layout.h"
 #include "vehicle.h"
 #include "navit_nls.h"
+
 
 struct vehicle {
 	NAVIT_OBJECT

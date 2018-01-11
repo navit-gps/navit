@@ -969,7 +969,7 @@ round_distance(int dist)
 *   @return value with the highest distance.
 */
 static int
-distance_set_last()
+distance_set_last(void)
 {
 	static int i=0;
 	if (i == 0) {
@@ -1014,11 +1014,11 @@ round_distance_reduced( int dist )
 *   'imperial' if set distinguishes the distance statement between miles and feet. Maximum distance in feet is 500.
 *   'vocabulary_distances' if set constrains the distance values to a set of simple pronounceable numbers.
 *
-*   @param nav       The navigation object.
-*   @param dist      Distance in meters.
-*   @param type      The type of announcement precision.
-*   @param is_length 1 for length statement, 0 for distance statement.
-*   @return          String with length/distance statement.
+*   @param nav         The navigation object.
+*   @param dist_meters Distance in meters.
+*   @param type        The type of announcement precision.
+*   @param is_length   1 for length statement, 0 for distance statement.
+*   @return            String with length/distance statement.
 */
 static char *
 get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length)
@@ -1058,7 +1058,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 				return g_strdup_printf(_("in %d feet"), dist_feet);
 		}
 
-		int dist_miles = (double) dist_meters / (double)METERS_PER_MILE + 0.5;
+		int dist_miles = (double) dist_meters * (double)METERS_TO_MILES + 0.5;
 
 		if (vocabulary == 0)
 		{
@@ -1066,10 +1066,10 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
 			dist_miles = round_distance_reduced(dist_miles);
 		}
 
-		if ((dist_meters < METERS_PER_MILE) && (vocabulary > 0))
+		if ((dist_meters < METERS_TO_MILES) && (vocabulary > 0))
 		{
 			/* values smaller than one need extra treatment for one decimal place. For reduced vocabulary it shall remain 'one'. */
-			int rem = (((double)dist_meters  / (double)METERS_PER_MILE) + 0.05) * 10.0;
+			int rem = (((double)dist_meters  * (double)METERS_TO_MILES) + 0.05) * 10.0;
 			dist_miles= 0;
 			if (is_length)
 				return g_strdup_printf(_("%d.%d miles"), dist_miles, rem);
@@ -2353,7 +2353,7 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
  * @return The adjusted delta, which is numerically within +/-180 degrees of the reference. If {@code delta} or {@code reference}
  * are outside of their specified range, the result is undefined.
  */
-int adjust_delta(int delta, int reference) {
+static int adjust_delta(int delta, int reference) {
 	if ((delta >= 0) && (delta - reference) > 180) {
 		dbg(lvl_debug,"adjusting delta from %d to %d\n", delta, delta - 360);
 		return delta - 360;
@@ -2402,7 +2402,7 @@ int adjust_delta(int delta, int reference) {
  * this function
  * @param itm The navigation item for the maneuver to exit the roundabout
  */
-void navigation_analyze_roundabout(struct navigation *this_, struct navigation_command *cmd, struct navigation_itm *itm) {
+static void navigation_analyze_roundabout(struct navigation *this_, struct navigation_command *cmd, struct navigation_itm *itm) {
 	enum item_type r = type_none, l = type_none;
 	int len = 0;                 /* length of roundabout segment */
 	int roundabout_length;       /* estimated total length of roundabout */

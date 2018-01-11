@@ -164,7 +164,7 @@ garmin_object_label(struct gobject *o, struct attr *attr)
 	}
 	if (mr->label) {
 		char *cp = mr->label;
-#warning FIXME Process label and give only the visible part
+		/* FIXME Process label and give only the visible part */
 		if (*mr->label == '@' || *mr->label == '^')
 			cp++; 
 		/* FIXME: If zoomlevel is high convert ^ in the string to spaces */
@@ -222,7 +222,7 @@ gmap_search_new(struct map_priv *map, struct item *item, struct attr *search, in
 		case attr_street_name:
 			gs->type = GS_ROAD;
 				break;
-#if someday
+#if 0 /* someday */
 		case attr_region_name:
 		case attr_intersection:
 		case attr_housenumber:

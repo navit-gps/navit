@@ -42,7 +42,7 @@ struct selector {
 static enum item_type selectors_BankTypes[]={type_poi_bank,type_poi_bank, type_poi_atm,type_poi_atm, type_none};
 static enum item_type selectors_FuelTypes[]={type_poi_fuel,type_poi_fuel,type_none};
 static enum item_type selectors_BusTrainTypes[]={type_poi_rail_station,type_poi_rail_station,
-    type_poi_bus_station,type_poi_bus_station, type_poi_bus_stop,type_poi_bus_stop, type_none};
+    type_poi_rail_halt,type_poi_rail_tram_stop,type_poi_bus_station,type_poi_bus_stop,type_none};
 static enum item_type selectors_HotelTypes[]={type_poi_hotel,type_poi_camp_rv,type_poi_camping,type_poi_camping,
     type_poi_resort,type_poi_resort,type_poi_motel,type_poi_hostel,type_none};
 static enum item_type selectors_RestaurantTypes[]={type_poi_bar,type_poi_picnic,type_poi_burgerking,type_poi_fastfood,

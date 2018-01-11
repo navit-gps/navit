@@ -1722,7 +1722,7 @@ request_search_list_destroy(DBusConnection *connection, DBusMessage *message)
 	return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) search_list_destroy);
 }
 
-void
+static void
 request_search_list_common(struct search_list_common *slc, DBusMessageIter *iter4)
 {
 	if (slc->postal)
