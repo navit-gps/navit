@@ -221,6 +221,9 @@ item_coord_get_within_selection(struct item *it, struct coord *c, int count, str
  * `start` are retrieved, ending with the last coordinate of `i` or after `max` coordinates have been
  * retrieved, whichever occurs first.
  *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
  * @important Make sure that `c` points to a buffer large enough to hold `max` coordinates!
  *
  * @param i The item to get the coordinates of
