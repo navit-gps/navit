@@ -253,13 +253,13 @@ int compare_name_systematic(const char *s1, const char *s2) {
 		r += strlen(r) + 1;
 	}
 
-	g_free(l0);
-	g_free(r0);
-
 	if (!ret)
 		ret = l[0] - r[0];
 
 	dbg(lvl_debug, "'%s' %s '%s'\n", s1, ret?"does NOT match":"matches", s2);
+
+	g_free(l0);
+	g_free(r0);
 
 	return ret;
 }
