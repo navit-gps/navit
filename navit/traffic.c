@@ -1648,7 +1648,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 						if (pd->p == start)
 							break;
 					}
-					val = transform_distance(projection_mg, &start->c, &c_to);
+					val = transform_distance(projection_mg, &start->c, (dir > 0) ? &c_to : &c_from);
 					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
 					if (val < minval) {
 						minval = val;
