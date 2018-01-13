@@ -1528,7 +1528,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	int val, minval;
 
 	/* Aligned points */
-	struct route_grahp_point * p_from;
+	struct route_graph_point * p_from;
 	struct route_graph_point * p_to;
 
 	/* Whether we are at a junction of 3 or more segments */
