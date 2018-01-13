@@ -53,6 +53,9 @@
 /** The penalty applied to an off-road link */
 #define PENALTY_OFFROAD 2
 
+/** The maximum penalty applied to points with non-matching attributes */
+#define PENALTY_POINT_MATCH 16
+
 /**
  * @brief Private data shared between all traffic instances.
  */
@@ -144,6 +147,11 @@ struct seg_data {
 	                              *   for full speed) */
 	int delay;                   /**< Expected delay for all segments combined, in 1/10 s */
 	struct attr ** attrs;        /**< Additional attributes to add to the segments */
+};
+
+struct point_data {
+	struct route_graph_point * p; /**< The point in the route graph */
+	int score;                   /**< The attribute matching score */
 };
 
 static struct seg_data * seg_data_new(void);
@@ -845,18 +853,64 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 		}
 	}
 
-	// TODO point->junction_ref
-	// TODO point->junction_name
-
 	// TODO direction
 	// TODO destination
-
-	// TODO tmc_table, point->tmc_id
 
 	// TODO ramps
 
 	if (!maxscore)
 		return 100;
+	return (score * 100) / maxscore;
+}
+
+/**
+ * @brief Determines the degree to which the attributes of a point and a map item match.
+ *
+ * The result of this method is used to match a location to a map item. Its result is a score—the higher
+ * the score, the better the match.
+ *
+ * To calculate the score, all supplied attributes are examined and points are given for each attribute
+ * which is defined for the location. An exact match adds 4 points, a partial match adds 2. Values of 1
+ * and 3 are added where additional granularity is needed. The number of points attained is divided by
+ * the maximum number of points attainable, and the result is returned as a percentage value.
+ *
+ * If no points can be attained (because no attributes which must match are supplied), the score is 0
+ * for any item supplied.
+ *
+ * @param this_ The traffic point
+ * @param item The map item
+ *
+ * @return The score, as a percentage value
+ */
+static int traffic_point_match_attributes(struct traffic_point * this_, struct item *item) {
+	int score = 0;
+	int maxscore = 0;
+	struct attr attr;
+
+	/* junction_ref */
+	if (this_->junction_ref) {
+		maxscore += 4;
+		if (item_attr_get(item, attr_ref, &attr)) {
+			// TODO give partial score for partial matches
+			if (!compare_name_systematic(this_->junction_ref, attr.u.str))
+				score += 4;
+		}
+	}
+
+	/* junction_name */
+	if (this_->junction_name) {
+		if (item_attr_get(item, attr_label, &attr)) {
+			maxscore += 4;
+			// TODO crude comparison in need of refinement
+			if (!strcmp(this_->junction_name, attr.u.str))
+				score += 4;
+		}
+	}
+
+	// TODO tmc_table, point->tmc_id
+
+	if (!maxscore)
+		return 0;
 	return (score * 100) / maxscore;
 }
 
@@ -1271,6 +1325,121 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 }
 
 /**
+ * @brief Returns points from the route graph which match a traffic location.
+ *
+ * This method obtains point items from the map_rect from which the route graph was built and compares
+ * their attributes to those supplied with the location. Each point is assigned a match score, from 0
+ * (no matching attributes) to 100 (all supplied attributes match), and a list of all points with a
+ * nonzero score is returned.
+ *
+ * @param this_ The traffic location
+ * @param point The point of the traffic location to use for matching (0 = from, 1 = at, 2 = to, 16 = start, 17 = end)
+ * @param rg The route graph
+ * @param start The first point of the path
+ * @param ms The mapset to read the items from
+ *
+ * @return The matched points as a `GList`. The `data` member of each item points to a `struct point_data` for the point.
+ */
+static GList * traffic_location_get_matching_points(struct traffic_location * this_, int point,
+		struct route_graph * rg, struct route_graph_point * start, struct mapset * ms) {
+	GList * ret = NULL;
+
+	/* The point from the location to match */
+	struct traffic_point * trpoint;
+
+	/* Corners of the enclosing rectangle, in Mercator coordinates */
+	struct coord c1, c2;
+
+	/* buffer zone around the rectangle */
+	int max_dist = 1000;
+
+	/* The item being processed */
+	struct item *item;
+
+	/* Mercator coordinates of current and previous point */
+	struct coord c;
+
+	/* The corresponding point in the route graph */
+	struct route_graph_point * p;
+
+	/* The attribute matching score for the current item */
+	int score;
+
+	/* Data for the current point */
+	struct point_data * data;
+
+	switch(point) {
+	case 0:
+		trpoint = this_->from;
+		break;
+	case 1:
+		trpoint = this_->at;
+		break;
+	case 2:
+		trpoint = this_->to;
+		break;
+	case 16:
+		trpoint = this_->from ? this_->from : this_->at;
+		break;
+	case 17:
+		trpoint = this_->to ? this_->to : this_->at;
+		break;
+	default:
+		break;
+	}
+
+	if (!trpoint)
+		return NULL;
+
+	rg->h = mapset_open(ms);
+
+	while ((rg->m = mapset_next(rg->h, 2))) {
+		transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
+		transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
+
+		rg->sel = route_rect(18, &c1, &c2, 0, max_dist);
+
+		if (!rg->sel)
+			continue;
+		rg->mr = map_rect_new(rg->m, rg->sel);
+		if (!rg->mr) {
+			map_selection_destroy(rg->sel);
+			rg->sel = NULL;
+			continue;
+		}
+		while ((item = map_rect_get_item(rg->mr))) {
+			/* exclude non-point items */
+			if ((item->type < type_town_label) || (item->type >= type_line))
+				continue;
+
+			/* exclude items from which we can't obtain a coordinate pair */
+			if (!item_coord_get(item, &c, 1))
+				continue;
+
+			/* exclude items not in the route graph */
+			if (!(p = route_graph_get_point(rg, &c)))
+				continue;
+
+			/* exclude items with a zero score */
+			if (!(score = traffic_point_match_attributes(trpoint, item)))
+				continue;
+
+			dbg(lvl_error, "adding item, score: %d\n", score);
+
+			data = g_new0(struct point_data, 1);
+			data->score = score;
+			data->p = p;
+
+			ret = g_list_append(ret, data);
+		}
+		map_rect_destroy(rg->mr);
+		rg->mr = NULL;
+	}
+
+	return ret;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at` and `to` members of the location to
@@ -1305,7 +1474,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Next point after start position */
 	struct route_graph_point * start_next;
 
+	/* Current and previous segment and segment used for comparison */
 	struct route_graph_segment *s = NULL;
+	struct route_graph_segment *s_prev;
+	struct route_graph_segment *s_cmp;
 
 	/* point at which the next segment starts, i.e. up to which the path is complete */
 	struct route_graph_point *start;
@@ -1342,6 +1514,26 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 	/* The last item added */
 	struct item * item;
+
+	/* Projected coordinates of from and to points */
+	struct coord c_from, c_to;
+
+	/* Matched points */
+	GList * points;
+	GList * points_iter;
+
+	/* The corresponding point data */
+	struct point_data * pd;
+
+	/* Current and minimum cost to reference point */
+	int val, minval;
+
+	/* Aligned points */
+	struct route_grahp_point * p_from;
+	struct route_graph_point * p_to;
+
+	/* Whether we are at a junction of 3 or more segments */
+	int is_junction;
 
 	if (!data) {
 		dbg(lvl_error, "no data for segments, aborting\n");
@@ -1389,6 +1581,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 	rg = traffic_location_get_route_graph(this_->location, ms);
 
+	/* transform coordinates */
+	transform_from_geo(projection_mg, &this_->location->from->coord, &c_from);
+	transform_from_geo(projection_mg, &this_->location->to->coord, &c_to);
+
 	/* determine segments, once for each direction */
 	while (1) {
 		if (dir > 0)
@@ -1419,6 +1615,71 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				start = s->start;
 			s = start->seg;
 		}
+
+		/* tweak ends (find the point where the ramp touches the main road) */
+		if (this_->location->fuzziness == location_fuzziness_low_res) {
+			/* TODO tweak start point */
+
+			/* tweak end point */
+			/* TODO check if this works in the opposite direction */
+			points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+			s = start_next ? start_next->seg : NULL;
+			s_prev = NULL;
+			start = start_next;
+			minval = INT_MAX;
+			p_to = NULL;
+			while (start) {
+				/* detect junctions */
+				is_junction = 0;
+				for (s_cmp = start->start; s_cmp; s_cmp = s_cmp->start_next) {
+					if ((s_cmp != s) && (s_cmp != s_prev))
+						is_junction = 1;
+				}
+				for (s_cmp = start->end; s_cmp; s_cmp = s_cmp->end_next) {
+					if ((s_cmp != s) && (s_cmp != s_prev))
+						is_junction = 1;
+				}
+				/* if start has segments other than s and s_prev */
+				if (is_junction) {
+					pd = NULL;
+					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
+						pd = (struct point_data *) points_iter->data;
+						if (pd->p == start)
+							break;
+					}
+					val = transform_distance(projection_mg, &start->c, &c_to);
+					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
+					if (val < minval) {
+						minval = val;
+						p_to = start;
+						dbg(lvl_error, "candidate end point found, point 0x%p, value %d\n", pd, val);
+					}
+				}
+
+				if (!s)
+					start = NULL;
+				else  {
+					if (s->start == start)
+						start = s->end;
+					else
+						start = s->start;
+					s_prev = s;
+					if (start->seg)
+						s = start->seg;
+					else {
+						/* TODO find continuation */
+						s = NULL;
+					}
+				}
+			}
+
+			/* if we have identified a point, drop everything after it from the path */
+			if (p_to) {
+				p_to->seg = NULL;
+			}
+		}
+
+		/* add segments */
 
 		s = start_next ? start_next->seg : NULL;
 		start = start_next;
@@ -1564,8 +1825,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 			s = start->seg;
 		}
-
-		/* TODO tweak ends (find the point where the ramp touches the main road) */
 
 		if ((this_->location->directionality == location_dir_one) || (dir < 0))
 			break;
