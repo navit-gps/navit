@@ -1640,7 +1640,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					if ((s_cmp != s) && (s_cmp != s_prev))
 						is_junction = 1;
 				}
-				/* if start has segments other than s and s_prev */
+
 				if (is_junction) {
 					pd = NULL;
 					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
