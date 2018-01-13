@@ -1003,8 +1003,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 			/* TODO we might need turn restrictions in mode 1 as well */
 			if ((mode == 1) && (item->type != type_ramp))
 				continue;
-			/* TODO are there any non-routable line types which we can exclude? */
-			if ((item->type < type_line) || (item->type >= type_area))
+			if ((item->type < route_item_first) || (item->type > route_item_last))
 				continue;
 			if (item_get_default_flags(item->type)) {
 
