@@ -1672,6 +1672,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				}
 			}
 
+			for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
+				g_free(points_iter->data);
+			g_list_free(points);
+
 			/* if we have identified a point, drop everything after it from the path */
 			if (p_to) {
 				p_to->seg = NULL;
