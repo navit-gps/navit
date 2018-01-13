@@ -1620,8 +1620,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			/* TODO tweak start point */
 
 			/* tweak end point */
-			/* TODO check if this works in the opposite direction */
-			points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+			if (dir > 0)
+				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+			else
+				points = traffic_location_get_matching_points(this_->location, 0, rg, start_next, ms);
 			s = start_next ? start_next->seg : NULL;
 			s_prev = NULL;
 			start = start_next;
