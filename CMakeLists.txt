@@ -820,7 +820,7 @@ navit-gui-qml (>= ${PACKAGE_VERSION}) | navit-gui-internal (>= ${PACKAGE_VERSION
 
 ")
 
-file(READ ${PROJECT_SOURCE_DIR}/cmake/summery.txt  CPACK_DEBIAN_PACKAGE_DESCRIPTION)
+file(READ ${PROJECT_SOURCE_DIR}/cmake/summary.txt  CPACK_DEBIAN_PACKAGE_DESCRIPTION)
 set(CPACK_DEBIAN_DATA_PACKAGE_ARCHITECTURE "all")
 
 
