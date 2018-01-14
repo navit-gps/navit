@@ -1617,8 +1617,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 		/* tweak ends (find the point where the ramp touches the main road) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
-			/* TODO tweak start point */
-
 			/* tweak end point */
 			if (dir > 0)
 				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
@@ -1681,6 +1679,71 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			/* if we have identified a point, drop everything after it from the path */
 			if (p_to) {
 				p_to->seg = NULL;
+			}
+
+			/* tweak start point */
+			if (dir > 0)
+				points = traffic_location_get_matching_points(this_->location, 0, rg, start_next, ms);
+			else
+				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+			s = start_next ? start_next->seg : NULL;
+			s_prev = NULL;
+			start = start_next;
+			minval = INT_MAX;
+			p_from = NULL;
+			/* TODO find continuation */
+			while (start) {
+				/* detect junctions */
+				is_junction = (s && s_prev) ? 0 : -1;
+				for (s_cmp = start->start; s_cmp; s_cmp = s_cmp->start_next) {
+					if ((s_cmp != s) && (s_cmp != s_prev))
+						is_junction += 1;
+				}
+				for (s_cmp = start->end; s_cmp; s_cmp = s_cmp->end_next) {
+					if ((s_cmp != s) && (s_cmp != s_prev))
+						is_junction += 1;
+				}
+
+				if (is_junction > 0) {
+					pd = NULL;
+					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
+						pd = (struct point_data *) points_iter->data;
+						if (pd->p == start)
+							break;
+					}
+					val = transform_distance(projection_mg, &start->c, (dir > 0) ? &c_from : &c_to);
+					/* TODO does attribute matching make sense for the start segment? */
+					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
+					if (val < minval) {
+						minval = val;
+						p_from = start;
+						dbg(lvl_error, "candidate start point found, point %p, data %p, value %d\n", start, points_iter ? pd : NULL, val);
+					}
+				}
+
+				if (!s)
+					start = NULL;
+				else {
+					if (s->start == start)
+						start = s->end;
+					else
+						start = s->start;
+					s_prev = s;
+					if (start->seg)
+						s = start->seg;
+					else
+						s = NULL;
+				}
+			}
+
+			for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
+				g_free(points_iter->data);
+			g_list_free(points);
+
+			/* if we have identified a point, set it to be the start point */
+			if (p_from) {
+				dbg(lvl_error, "changing start_next from %p to %p\n", start_next, p_from);
+				start_next = p_from;
 			}
 		}
 
