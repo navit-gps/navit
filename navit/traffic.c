@@ -1653,7 +1653,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					if (val < minval) {
 						minval = val;
 						p_to = start;
-						dbg(lvl_error, "candidate end point found, point %#p, value %d\n", points_iter ? pd : NULL, val);
+						dbg(lvl_error, "candidate end point found, point %p, data %p, value %d\n", start, points_iter ? pd : NULL, val);
 					}
 				}
 
