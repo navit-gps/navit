@@ -2284,7 +2284,7 @@ static void traffic_loop(struct traffic * this_) {
 		dbg(lvl_debug, "received %d message(s), %d message(s) expired\n", i, g_list_length(msgs_to_remove));
 
 		/* trigger redraw if segments have changed */
-		if (is_redraw_needed)
+		if (is_redraw_needed && (navit_get_ready(this_->navit) == 3))
 			navit_draw_async(this_->navit, 1);
 	}
 	msgs_to_remove = NULL;
