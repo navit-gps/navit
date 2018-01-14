@@ -333,8 +333,6 @@ static struct item * tm_item_unref(struct item * item) {
 	return NULL;
 }
 
-// TODO func to remove item from message (but keep it in the map if referenced elsewhere)
-
 /**
  * @brief Returns an item from the map which matches the supplied data.
  *
