@@ -1631,17 +1631,17 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			p_to = NULL;
 			while (start) {
 				/* detect junctions */
-				is_junction = 0;
+				is_junction = (s && s_prev) ? 0 : -1;
 				for (s_cmp = start->start; s_cmp; s_cmp = s_cmp->start_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
-						is_junction = 1;
+						is_junction += 1;
 				}
 				for (s_cmp = start->end; s_cmp; s_cmp = s_cmp->end_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
-						is_junction = 1;
+						is_junction += 1;
 				}
 
-				if (is_junction) {
+				if (is_junction > 0) {
 					pd = NULL;
 					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
 						pd = (struct point_data *) points_iter->data;
