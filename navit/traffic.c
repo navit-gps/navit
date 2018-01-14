@@ -173,7 +173,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
 		struct seg_data * data, struct map *map);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
-		struct mapset * ms, int mode);
+		struct mapset * ms);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static void traffic_message_dump(struct traffic_message * this_);
@@ -937,16 +937,14 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
 /**
  * @brief Populates a route graph.
  *
- * This method can operate in two modes: In “initial” mode the route graph is populated with the best
- * matching segments, which may not include any ramps. In “add ramps” mode, all ramps within the
- * enclosing rectangle are added, which can be done even after flooding the route graph.
+ * This adds all routable segments in the enclosing rectangle of the location (plus a safety margin) to
+ * the route graph.
  *
  * @param rg The route graph
  * @param ms The mapset to read the ramps from
- * @param mode 0 to initially populate the route graph, 1 to add ramps
  */
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
-		struct mapset * ms, int mode) {
+		struct mapset * ms) {
 	/* Corners of the enclosing rectangle, in Mercator coordinates */
 	struct coord c1, c2;
 
@@ -998,9 +996,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 			continue;
 		}
 		while ((item = map_rect_get_item(rg->mr))) {
-			/* TODO we might need turn restrictions in mode 1 as well */
-			if ((mode == 1) && (item->type != type_ramp))
-				continue;
+			/* TODO we might need turn restrictions as well */
 			if ((item->type < route_item_first) || (item->type > route_item_last))
 				continue;
 			if (item_get_default_flags(item->type)) {
@@ -1106,7 +1102,7 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 	rg->busy = 1;
 
 	/* build the route graph */
-	traffic_location_populate_route_graph(this_, rg, ms, 0);
+	traffic_location_populate_route_graph(this_, rg, ms);
 
 	return rg;
 }
