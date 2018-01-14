@@ -2072,12 +2072,10 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 					delay = 36000;
 				break;
 			case event_delay_several_hours:
-				/* Delay of several hours: assume 3 hours */
+			case event_delay_uncertain_duration:
+				/* Delay of several hours or uncertain duration: assume 3 hours */
 				if (delay < 108000)
 					delay = 108000;
-				break;
-			case event_delay_uncertain_duration:
-				/* TODO */
 				break;
 			default:
 				break;
