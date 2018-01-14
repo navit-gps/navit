@@ -235,7 +235,6 @@ var searchData=
   ['countryname',['countryName',['../classNGQProxySearch.html#a32700856ec45ff0dacd64a1793ec4826',1,'NGQProxySearch']]],
   ['countrynamesignal',['countryNameSignal',['../classNGQProxySearch.html#a75ee70f11887784b5e7e29c84e734fc4',1,'NGQProxySearch']]],
   ['countunconverted',['countUnconverted',['../setpath_8c.html#ae0027a69657ca116c8fd412fccc7e71d',1,'setpath.c']]],
-  ['create_5fbuffer_5fwith_5fstride_5fif_5frequired',['create_buffer_with_stride_if_required',['../graphics__gtk__drawing__area_8c.html#a312f585b9b7135958dc9e2dffa1c844c',1,'graphics_gtk_drawing_area.c']]],
   ['create_5fbuffers',['create_buffers',['../speak_8c.html#a01adb155fa9798d6415d8d2f6e54e89f',1,'speak.c']]],
   ['create_5fdestination_5fwindow',['create_destination_window',['../win32__gui__destination_8c.html#a98d6a1f7f6e5b812123847ce98f2c5e8',1,'win32_gui_destination.c']]],
   ['create_5fframebuffer_5ftexture',['create_framebuffer_texture',['../graphics__egl_8c.html#a8cd6542c3ff38f280b4314c53b3fb361',1,'graphics_egl.c']]],

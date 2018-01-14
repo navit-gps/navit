@@ -10,7 +10,6 @@ var graphics__gtk__drawing__area_8c =
     [ "button_press", "graphics__gtk__drawing__area_8c.html#af0616297fefbb8ff7285f141a3261f44", null ],
     [ "button_release", "graphics__gtk__drawing__area_8c.html#a2675181dc05c6e57edabfb512c289a1f", null ],
     [ "configure", "graphics__gtk__drawing__area_8c.html#a559cb5175d3010ee245f2eeae3f7bf84", null ],
-    [ "create_buffer_with_stride_if_required", "graphics__gtk__drawing__area_8c.html#a312f585b9b7135958dc9e2dffa1c844c", null ],
     [ "delete", "graphics__gtk__drawing__area_8c.html#a511be494a26a6f1e11e2d743721edbaa", null ],
     [ "display_text_draw", "graphics__gtk__drawing__area_8c.html#a827829e380d7029891688fa69cbabfbc", null ],
     [ "draw_circle", "graphics__gtk__drawing__area_8c.html#af0284e13ff04d3d79092c2fdf352fab6", null ],
