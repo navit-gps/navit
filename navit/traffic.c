@@ -1344,7 +1344,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 	GList * ret = NULL;
 
 	/* The point from the location to match */
-	struct traffic_point * trpoint;
+	struct traffic_point * trpoint = NULL;
 
 	/* Corners of the enclosing rectangle, in Mercator coordinates */
 	struct coord c1, c2;
@@ -1434,6 +1434,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 		map_rect_destroy(rg->mr);
 		rg->mr = NULL;
 	}
+	route_graph_build_done(rg, 1);
 
 	return ret;
 }
@@ -2255,6 +2256,8 @@ static void traffic_loop(struct traffic * this_) {
 
 			traffic_message_dump(messages[i]);
 		}
+
+	g_free(messages);
 
 	/* find and remove expired messages */
 	for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
