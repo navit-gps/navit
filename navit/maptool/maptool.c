@@ -50,7 +50,7 @@
 #define SLIZE_SIZE_DEFAULT_GB 1
 long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
 int attr_debug_level=1;
-int ignore_unkown = 0;
+int ignore_unknown = 0;
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -80,7 +80,7 @@ static struct timespec start_ts;
 /*
   Asynchronous signal safe lltoa function (note: no trailing \0 char!)
 */
-int assafe_lltoa(long long n, int maxlen, char *buf)
+static int assafe_lltoa(long long n, int maxlen, char *buf)
 {
 	int i;
 	int out_length;
@@ -114,7 +114,7 @@ int assafe_lltoa(long long n, int maxlen, char *buf)
 /*
   Asynchronous signal safe string copy to buffer function (note: no trailing \0 char!)
 */
-int assafe_strcp2buf(char *str, int maxlen, char *buf)
+static int assafe_strcp2buf(char *str, int maxlen, char *buf)
 {
 	int i;
 	for(i=0;str[i] && i<maxlen;i++)
@@ -159,7 +159,7 @@ progress_memory(void)
 #endif
 }
 
-void
+static void
 sig_alrm_do(int sig)
 {
 	const int buflen=1024;
@@ -267,9 +267,10 @@ maptool_init(FILE* rule_file)
 }
 
 static void
-usage(FILE *f)
+usage(void)
 {
-	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
+	FILE *f = stdout;
+	/* DEVELOPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
 	fprintf(f,"maptool - parse osm textfile and convert to Navit binfile format\n\n");
 	fprintf(f,"Usage (for OSM XML data):\n");
@@ -278,26 +279,26 @@ usage(FILE *f)
 	fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)                       : this screen\n");
-	fprintf(f,"-5 (--md5) <file>                 : set file where to write md5 sum\n");
 	fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)           : dump coordinates after phase 1\n");
 #ifdef HAVE_POSTGRESQL
 	fprintf(f,"-d (--db) <conn. string>          : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
+	fprintf(f,"-D (--dump)                       : dump map data to standard output in Navit textfile format\n");
 	fprintf(f,"-e (--end) <phase>                : end at specified phase\n");
 	fprintf(f,"-E (--experimental)               : Enable experimental features (%s)\n",
 		experimental_feature_description ? experimental_feature_description : "-not available in this version-");
 	fprintf(f,"-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n");
-	fprintf(f,"-M (--o5m)                        : input file os o5m\n");
+	fprintf(f,"-M (--o5m)                        : input data is in o5m format\n");
+	fprintf(f,"-n (--ignore-unknown)             : do not output ways and nodes with unknown type\n");
 	fprintf(f,"-N (--nodes-only)                 : process only nodes\n");
-	fprintf(f,"-o (--coverage)                   : map every street to item coverage\n");
-	fprintf(f,"-P (--protobuf)                   : input file is protobuf\n");
+	fprintf(f,"-P (--protobuf)                   : input data is in pbf (Protocol Buffer) format\n");
 	fprintf(f,"-r (--rule-file) <file>           : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start) <phase>              : start at specified phase\n");
 	fprintf(f,"-S (--slice-size) <size>          : limit memory to use for some large internal buffers, in bytes. Default is %dGB.\n", SLIZE_SIZE_DEFAULT_GB);
-	fprintf(f,"-t (--timestamp) y-m-dTh:m:s      : Set zip timestamp\n");
+	fprintf(f,"-t (--timestamp) <y-m-dTh:m:s>    : Set zip timestamp\n");
 	fprintf(f,"-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-W (--ways-only)                  : process only ways\n");
 	fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
@@ -309,8 +310,9 @@ usage(FILE *f)
 	fprintf(f,"-m (--map) \n");                                                                                           
 	fprintf(f,"-O \n");                                                                                                   
 	fprintf(f,"-p (--plugin) \n");                                                                                        
+	fprintf(f,"-u (--url) \n");
 	
-	exit(1);
+	exit(0);
 }
 
 struct maptool_params {
@@ -321,10 +323,9 @@ struct maptool_params {
 	int process_relations;
 	char *protobufdb;
 	char *protobufdb_operation;
-	char *md5file;
 	int start;
 	int end;
-	int output;
+	int dump;
 	int o5m;
 	int compression_level;
 	int protobuf;
@@ -354,7 +355,6 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 	int pos,c,i;
 
 	static struct option long_options[] = {
-		{"md5", 1, 0, '5'},
 		{"64bit", 0, 0, '6'},
 		{"attr-debug-level", 1, 0, 'a'},
 		{"binfile", 0, 0, 'b'},
@@ -386,7 +386,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		{"index-size", 0, 0, 'x'},
 		{0, 0, 0, 0}
 	};
-	c = getopt_long (argc, argv, "5:6B:DEMNO:PS:Wa:bc"
+	c = getopt_long (argc, argv, "6B:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
 				      "d:"
 #endif
@@ -394,9 +394,6 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 	if (c == -1)
 		return 1;
 	switch (c) {
-	case '5':
-		p->md5file=optarg;
-		break;
 	case '6':
 		p->zip64=1;
 		break;
@@ -404,7 +401,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		p->protobufdb=optarg;
 		break;
 	case 'D':
-		p->output=1;
+		p->dump=1;
 		break;
 	case 'E':
 		experimental=1;
@@ -420,7 +417,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'O':
 		p->protobufdb_operation=optarg;
-		p->output=1;
+		p->dump=1;
 		break;
 	case 'P':
 		p->protobuf=1;
@@ -480,7 +477,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		break;
 	case 'n':
 		fprintf(stderr,"I will IGNORE unknown types\n");
-		ignore_unkown=1;
+		ignore_unknown=1;
 		break;
 	case 'k':
 		fprintf(stderr,"I will KEEP tmp files\n");
@@ -503,7 +500,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		if (p->input_file ==  NULL )
 		{
 		    fprintf( stderr, "\nInput file (%s) not found\n", optarg );
-		    exit( -1 );
+		    exit( 1 );
 		}
 		break;
 	case 'r':
@@ -511,7 +508,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
 		if (p->rule_file ==  NULL )
 		{
 		    fprintf( stderr, "\nRule file (%s) not found\n", optarg );
-		    exit( -1 );
+		    exit( 1 );
 		}
 		break;
 	case 'u':
@@ -545,6 +542,12 @@ start_phase(struct maptool_params *p, char *str)
 		return 1;
 	} else
 		return 0;
+}
+
+static void
+exit_with_error(char* error_message) {
+	fprintf(stderr, "%s", error_message);
+	exit(1);
 }
 
 static void
@@ -583,8 +586,7 @@ osm_read_input_data(struct maptool_params *p, char *suffix)
 	}
 	else if (p->protobuf) {
 #ifdef _MSC_VER
-		fprintf(stderr,"Option -P not yet supported on MSVC\n");
-		exit(1);
+		exit_with_error("Option -P not yet supported on MSVC\n");
 #else
 		map_collect_data_osm_protobuf(p->input_file,&p->osm);
 #endif
@@ -804,8 +806,6 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		zip_set_timestamp(zip_info, p->timestamp);
 		zip_set_maxnamelen(zip_info, 14+strlen(suffix0));
 		zip_set_compression_level(zip_info, p->compression_level);
-		if (p->md5file) 
-			zip_set_md5(zip_info, 1);
 		if(!zip_open(zip_info, p->result, zipdir, zipindex)) {
 			fprintf(stderr,"Fatal: Could not write output file.\n");
 			exit(1);
@@ -852,7 +852,6 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		unlink("coords.tmp");
 	}
 	if (last) {
-		unsigned char md5_data[16];
 		zipnum=zip_get_zipnum(zip_info);
 		add_aux_tiles("auxtiles.txt", zip_info);
 		write_countrydir(zip_info,p->max_index_size);
@@ -861,14 +860,6 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
 		zip_write_index(zip_info);
 		zip_write_directory(zip_info);
 		zip_close(zip_info);
-		if (p->md5file && zip_get_md5(zip_info, md5_data)) {
-			FILE *md5=fopen(p->md5file,"w");
-			int i;
-			for (i = 0 ; i < 16 ; i++)
-				fprintf(md5,"%02x",md5_data[i]);
-			fprintf(md5,"\n");
-			fclose(md5);
-		}
 		if (!p->keep_tmpfiles) {
 			remove_countryfiles();
 			tempfile_unlink("index","");
@@ -906,7 +897,6 @@ maptool_load_tilesdir(struct maptool_params *p, char *suffix)
 		p->tilesdir_loaded=1;
 	}
 }
-
 
 int main(int argc, char **argv)
 {
@@ -951,22 +941,28 @@ int main(int argc, char **argv)
 	while (1) {
 		int parse_result=parse_option(&p, argv, argc, &option_index);
 		if (!parse_result) {
-			usage(stderr);
 			exit(1);
 		}
 		if (parse_result == 1)
 			break;
 		if (parse_result == 2) {
-			usage(stdout);
+			usage();
 			exit(0);
 		}
 	}
 	if (experimental && (!experimental_feature_description )) {
-		fprintf(stderr,"No experimental features available in this version, aborting. \n");
-		exit(1);
+		exit_with_error("No experimental features available in this version, aborting. \n");
 	}
-	if (optind != argc-(p.output == 1 ? 0:1))
-		usage(stderr);
+	if (optind < argc -1) {
+		exit_with_error("Only one non-option argument allowed.\n");
+	}
+	if (p.dump == 0 && optind != argc -1) {
+		exit_with_error("Please specify an output file.\n");
+	}
+	if (p.dump == 1 && optind != argc) {
+		exit_with_error("Please do not specify an output file in dump mode.\n");
+	}
+
 	p.result=argv[optind];
 
 
@@ -974,8 +970,7 @@ int main(int argc, char **argv)
 	maptool_init(p.rule_file);
 	if (p.protobufdb_operation) {
 #ifdef _MSC_VER
-		fprintf(stderr,"Option -O not yet supported on MSVC\n");
-		exit(1);
+		exit_with_error("Option -O not yet supported on MSVC\n");
 #else
 		osm_protobufdb_load(p.input_file, p.protobufdb);
 		return 0;
@@ -1070,7 +1065,7 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	if (p.output == 1 && start_phase(&p,"dumping")) {
+	if (p.dump == 1 && start_phase(&p,"dumping")) {
 		maptool_dump(&p, suffix);
 		exit(0);
 	}

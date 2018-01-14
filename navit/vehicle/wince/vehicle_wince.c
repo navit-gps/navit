@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -44,6 +44,14 @@
 #include <wchar.h>
 #include "support/win32/ConvertUTF.h"
 
+/**
+ * @defgroup vehicle-wince Vehicle WinCE
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from WinCE
+ *
+ * @{
+ */
+
 #define SwitchToThread() Sleep(0)
 
 typedef int (WINAPI *PFN_BthSetMode)(DWORD pBthMode);
@@ -83,6 +91,8 @@ struct vehicle_priv {
 	char *source;
 	struct callback_list *cbl;
 	struct callback_list *priv_cbl;
+	struct callback *cb_fix_timeout;
+	struct event_timeout *ev_fix_timeout;
 	int is_running;
 	int thread_up;
 	int fd;
@@ -365,6 +375,36 @@ vehicle_wince_available_ports(void)
 }
 
 
+/**
+* @brief This is a callback function, called when the fix timeout
+* 		is done. Set the position to invalid.
+*
+* @param priv Pointer on the private data of the plugin
+*/
+static void
+vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv)
+{
+	priv->valid = attr_position_valid_invalid;
+	priv->ev_fix_timeout = NULL;
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+}
+
+
+/**
+* @brief Cancel previous fix timeout event and add a new one
+*
+* @param priv Pointer on the private data of the plugin
+*/
+static void
+vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv)
+{
+	if (priv->ev_fix_timeout != NULL)
+		event_remove_timeout(priv->ev_fix_timeout);
+	priv->ev_fix_timeout = event_add_timeout(10000, 0, priv->cb_fix_timeout);
+}
+
+
+
 static int
 vehicle_wince_open(struct vehicle_priv *priv)
 {
@@ -467,14 +507,14 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		*p++ = '\0';
 	}
 
-	if (!strncmp(buffer, "$GPGGA", 6)) {
+	if (!strncmp(&buffer[3], "GGA", 3)) {
 		/*                                                           1 1111
 		   0      1          2         3 4          5 6 7  8   9     0 1234
 		   $GPGGA,184424.505,4924.2811,N,01107.8846,E,1,05,2.5,408.6,M,,,,0000*0C
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
 		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
-		if (*item[2] && *item[3] && *item[4] && *item[5]) {
+		if (*item[2] && *item[3] && *item[4] && *item[5] && *item[6] > 0) {
 			lat = g_ascii_strtod(item[2], NULL);
 			priv->geo.lat = floor(lat / 100);
 			lat -= priv->geo.lat * 100;
@@ -490,19 +530,31 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
-			priv->valid=attr_position_valid_valid;
-		dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
 
-		} else
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid = attr_position_valid_valid;
+			vehicle_wince_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
+
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
 			priv->valid=attr_position_valid_invalid;
+		}
+
 		if (*item[6])
 			sscanf(item[6], "%d", &priv->status);
 		if (*item[7])
-		sscanf(item[7], "%d", &priv->sats_used);
+			sscanf(item[7], "%d", &priv->sats_used);
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
-		if (*item[1]) 
-			strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->height);
 
@@ -510,7 +562,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
 	}
-	if (!strncmp(buffer, "$GPVTG", 6)) {
+	if (!strncmp(&buffer[3], "VTG", 3)) {
 		/* 0      1      2 34 5    6 7   8
 		   $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
@@ -526,7 +578,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			dbg(lvl_info,"direction %lf, speed %2.1lf\n", priv->direction, priv->speed);
 		}
 	}
-	if (!strncmp(buffer, "$GPRMC", 6)) {
+	if (!strncmp(&buffer[3], "RMC", 3)) {
 		/*                                                           1     1
 		   0      1      2 3        4 5         6 7     8     9      0     1
 		   $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
@@ -546,8 +598,40 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 				&priv->fixmonth,
 				&priv->fixyear);
 			priv->fixyear += 2000;
+
+			lat = g_ascii_strtod(item[3], NULL);
+			priv->geo.lat = floor(lat / 100);
+			lat -= priv->geo.lat * 100;
+			priv->geo.lat += lat / 60;
+
+			if (!g_ascii_strcasecmp(item[4],"S"))
+				priv->geo.lat=-priv->geo.lat;
+
+			lng = g_ascii_strtod(item[5], NULL);
+			priv->geo.lng = floor(lng / 100);
+			lng -= priv->geo.lng * 100;
+			priv->geo.lng += lng / 60;
+
+			if (!g_ascii_strcasecmp(item[6],"W"))
+				priv->geo.lng=-priv->geo.lng;
+
+			if (priv->valid == attr_position_valid_invalid)
+				ret = 1;
+			priv->valid=attr_position_valid_valid;
+			vehicle_wince_restart_fix_timeout(priv);
+
+			if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
+				ret = 1;
+				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+			}
+
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+
+		} else {
+			if (priv->valid == attr_position_valid_valid)
+				ret = 1;
+			priv->valid=attr_position_valid_invalid;
 		}
-		ret = 1;
 	}
 	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
@@ -586,7 +670,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			priv->next_count=0;
 		}
 	}
-	if (!strncmp(buffer, "$GPZDA", 6)) {
+	if (!strncmp(&buffer[3], "ZDA", 3)) {
 	/*
 		0        1        2  3  4    5  6
 		$GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
@@ -740,7 +824,8 @@ vehicle_wince_destroy(struct vehicle_priv *priv)
  * @param priv vehicle_priv structure for the vehicle
  * @param type The attribute type to retrieve
  * @param attr Points to an attr structure that will receive the attribute data
- * @returns True for success, false for failure
+ *
+ * @return True for success, false for failure
  */
 static int
 vehicle_wince_position_attr_get(struct vehicle_priv *priv,
@@ -862,10 +947,11 @@ struct vehicle_methods vehicle_wince_methods = {
 /**
  * @brief Creates a new wince_vehicle
  * 
- * @param meth
- * @param cbl
- * @param attrs
- * @returns vehicle_priv
+ * @param meth ?
+ * @param cbl ?
+ * @param attrs ?
+ *
+ * @return vehicle_priv
  */
 static struct vehicle_priv *
 vehicle_wince_new(struct vehicle_methods
@@ -901,6 +987,8 @@ vehicle_wince_new(struct vehicle_methods
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=0;	// do not change the rate if not configured
+	ret->fixtime[0] = '\0';
+	ret->ev_fix_timeout = NULL;
 
 	time = attr_search(attrs, NULL, attr_time);
 	if (time)
@@ -922,6 +1010,7 @@ vehicle_wince_new(struct vehicle_methods
 	*meth = vehicle_wince_methods;
 	ret->priv_cbl = callback_list_new();
 	callback_list_add(ret->priv_cbl, callback_new_1(callback_cast(vehicle_wince_io), ret));
+	ret->cb_fix_timeout=callback_new_1(callback_cast(vehicle_wince_fix_timeout_cb), ret);
 	ret->sat_item.type=type_position_sat;
 	ret->sat_item.id_hi=ret->sat_item.id_lo=0;
 	ret->sat_item.priv_data=ret;

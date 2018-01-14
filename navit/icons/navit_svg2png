@@ -1,0 +1,112 @@
+#!/bin/sh
+
+exitwithhelp()
+{
+	echo "Usage: navit_svg2png <conversion_tool> <output_png_filename> [<width_px> <height_px>]"
+	echo "The input filename is the same than the output png one with svg or svgz extension"
+	echo "Possible conversion tools: ksvgtopng, ksvgtopng4, rsvg-convert, inkscape and convert"
+	echo "width_px and height_px arguments can be omitted if output png size is specified in the filename, like this: imagename_WIDTH_HEIGHT.png (ex. myPng_100_100.png)"
+	exit
+}
+
+svgtopng()
+{
+	case $svgtopng in
+	*ksvgtopng|*ksvgtopng4)
+		$svgtopng $*
+		;;
+	*rsvg-convert)
+		$svgtopng --width=$1 --height=$2 --output $4 $3
+		;;
+	*inkscape)
+		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$BUILDDIR/$4 $3
+		;;
+	*convert)
+		$svgtopng -alpha on -background none $3 -resize $1x$2 $4
+		;;
+	*)
+		echo "Error: unknown conversion tool"
+		exitwithhelp    # unknown conversion tool
+		;;
+	esac
+}
+
+if [ "$OSTYPE" != "cygwin" -a "$OSTYPE" != "msys" ]; then
+	ulimit -t 10
+fi
+
+svgtopng=$1
+png=$2
+w=$3
+h=$4
+
+# if -h or --help arg is passed, print help and exit
+case "$1" in
+	'-h'|'--help'|'')
+		exitwithhelp
+		;;
+esac
+
+# args num must be == 2 or == 4
+if [ "$#" -ne 2 ] && [ "$#" -ne 4 ];
+then
+	echo "Error: wrong number of arguments"
+	exitwithhelp
+fi
+
+case "$png" in
+	*_[1-9]*_[1-9]*.png)
+		if [ "$#" -ne 2 ]; then
+			echo "Error: output png size is specified by filename and by arguments, plese use only one"
+			exitwithhelp    # png size musn't be specifed, only in filename
+		fi
+		svg=${png%_*_*.png};
+		h=${png##*_}
+		w=${png%_$h}
+		h=${h%.png}
+		w=${w##*_}
+		;;
+	*)
+		if [ "$#" -ne 4 ]; then
+			echo "Error: please, specify output png size"
+			exitwithhelp    # filename doesn't specify png size, must be done with args 3 and 4
+		fi
+		svg=${png%.png}
+		;;
+esac
+if [ ! -f $svg.svg -a ! -f $svg.svgz ]
+then
+	svg="$SRCDIR/$svg"
+fi
+if [ -f $png -a ! -f $svg.svg ]; then
+	# width and height seems to be defined as part of the file name
+	touch $png
+else
+	# use width and height from the svg image
+	if [ -f $svg.svg ]
+	then
+		if [ -z "$w" ]
+		then
+			w=$(grep 'width="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*width="//' -e 's/[pxt]*".*//')
+		fi
+		if [ -z "$h" ]
+		then
+			h=$(grep 'height="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*height="//' -e 's/[pxt]*".*//')
+		fi
+		svgtopng $w $h $svg.svg $png
+	elif [ -f $svg.svgz ]
+	then
+		gzip -dc <$svg.svgz >$svg.svg
+		if [ -z "$w" ]
+		then
+			w=$(grep 'width="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*width="//' -e 's/[pxt]*".*//')
+		fi
+		if [ -z "$h" ]
+		then
+			h=$(grep 'height="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*height="//' -e 's/[pxt]*".*//')
+		fi
+		svgtopng $w $h $svg.svg $png
+		rm -f $svg.svg
+	fi
+fi
+exit 0

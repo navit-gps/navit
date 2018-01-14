@@ -34,7 +34,29 @@
 #include "projection.h"
 #include "point.h"
 
-#define POST_SHIFT 8
+/** @file
+ *
+ * Coordinate transformations and projections.
+ */
+
+/**
+ * @brief Bitshift to apply during coordinate transformation.
+ *
+ * This bitshift is applied (left shift) during coordinate transformation (and later reversed).
+ * The transformation is performed with integer arithmetic, and this shift reduces rounding
+ * errors when converting floating point numbers to integers, particularly because some input
+ * values are fairly small (for example, the entries in the transformation matrix, <tt>struct
+ * transformation</tt>).
+ *
+ * This works because the transformations involve only multiplications, so the shift can be
+ * applied to one factor and removed from the result.
+ *
+ * The value is a compromise; if it is too small, rounding errors increase, if it is too large,
+ * signed integer calculations will overflow at high zoom levels (which is undefined behavior).
+ *
+ * @see transformation
+ */
+#define POST_SHIFT 5
 
 /**
  * @brief The parameters needed to transform a map for display.
@@ -1165,6 +1187,14 @@ transform_overflow_possible_if_squared(int count, ...) {
 	return result;
 }
 
+/**
+ * @brief Determines the squared Mercator distance between two points.
+ *
+ * @param c0 The first coordinate
+ * @param c1 The second coordinate
+ *
+ * @return The squared distance between `c1` and `c2`, or `INT_MAX` if an overflow occurs.
+ */
 int
 transform_distance_sq(struct coord *c1, struct coord *c2)
 {
@@ -1194,6 +1224,17 @@ transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2)
 	return transform_distance_sq(&p1, &p2);
 }
 
+/**
+ * @brief Determines the point on a line segment that is closest to a reference point, and its distance
+ * from the reference point.
+ *
+ * @param l0 The first coordinate of the line segment
+ * @param l1 The second coordinate of the line segment
+ * @param ref The reference point
+ * @param lpnt Receives the coordinates of the point on the line segment that is closest to `ref`, can be `NULL`
+ *
+ * @return The square of the Mercator distance between `ref` and `lpnt`, or `INT_MAX` if an overflow occurred
+ */
 int
 transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt)
 {
@@ -1265,6 +1306,18 @@ transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coor
 	return transform_distance_sq_float(&l, ref);
 }
 
+/**
+ * @brief Determines the point on a polyline that is closest to a reference point, and its distance
+ * from the reference point.
+ *
+ * @param c An array containing the coordinates of the polyline
+ * @param count Number of elements in `c`
+ * @param ref The reference point
+ * @param lpnt Receives the coordinates of the point on the polyline that is closest to `ref`, can be `NULL`
+ * @param pos Receives the index of the line segment containing `lpnt`, can be NULL
+ *
+ * @return The square of the Mercator distance between `ref` and `lpnt`, or `INT_MAX` if an overflow occurred
+ */
 int
 transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos)
 {

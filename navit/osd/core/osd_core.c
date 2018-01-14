@@ -657,7 +657,7 @@ static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_
 	int height=osd_item->font_size*13/256;
 	int yspacing=height/2;
 	int xspacing=height/4;
-	char *next, *last, *absbegin;
+	char *next, *last;
 	struct point p, p2[4];
 	int lines;
 	int do_draw = osd_item->do_draw;

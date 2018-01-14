@@ -49,6 +49,7 @@
       <xsl:copy>
          <xsl:copy-of select="@*"/>
          <xsl:attribute name="zoom">32</xsl:attribute>
+         <xsl:attribute name="autozoom_active">1</xsl:attribute>
          <xsl:attribute name="timeout">86400</xsl:attribute>
          <xsl:attribute name="drag_bitmap">1</xsl:attribute>
          <xsl:apply-templates/>
@@ -112,7 +113,7 @@
    <xsl:template match="/config/navit/layout">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
-         <xsl:if test="@name='Car-Android'">
+         <xsl:if test="@name='Car'">
 		<xsl:attribute name="active">1</xsl:attribute>
 	 </xsl:if>
          <xsl:if test="number($OSD_SIZE)>3">

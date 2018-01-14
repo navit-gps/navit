@@ -1,8 +1,8 @@
 set(CMAKE_SYSTEM_NAME GNU)
 
 set(ANDROID TRUE)
-set(ANDROID_API_VERSION 9 CACHE STRING "Andriod API Version")
-set(ANDROID_NDK_API_VERSION ${ANDROID_API_VERSION} CACHE STRING "Andriod NDK API Version")
+set(ANDROID_API_VERSION 9 CACHE STRING "Android API Version")
+set(ANDROID_NDK_API_VERSION ${ANDROID_API_VERSION} CACHE STRING "Android NDK API Version")
 set(ANDROID_ARCH "armeabi" CACHE STRING "Android architecture")
 
 find_program(CMAKE_C_COMPILER NAMES arm-eabi-gcc arm-eabi-gcc.exe arm-linux-androideabi-gcc arm-linux-androideabi-gcc.exe)
@@ -11,7 +11,7 @@ set(PKG_CONFIG_EXECUTABLE "arm-eabi-pkg-config")
 
 get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} PATH)
 
-set(ANDROID_NDK "${COMPILER_PATH}/../../../../.." CACHE STRING "PATH to Andriod NDK")
+set(ANDROID_NDK "${COMPILER_PATH}/../../../../.." CACHE STRING "PATH to Android NDK")
 
 set(NDK_ARCH_DIR "${ANDROID_NDK}/platforms/android-${ANDROID_NDK_API_VERSION}/arch-arm")
 set(CMAKE_FIND_ROOT_PATH ${NDK_ARCH_DIR})
