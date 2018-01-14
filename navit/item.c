@@ -136,6 +136,9 @@ item_cleanup(void)
  * This function resets the "coordinate pointer" of an item to point to the first coordinate pair,
  * so that at the next call to {@code item_coord_get()} the first coordinates will be returned.
  *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
  * @param it The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the
  * {@code map_rect}. There can only be one active item per {@code map_rect}.
  */
@@ -154,6 +157,9 @@ item_coord_rewind(struct item *it)
  * Coordinates are stored in the projection of the item's map. If you need them in a different projection,
  * call {@code item_coord_get_pro()} instead.
  *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
  * @param it The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the
  * {@code map_rect}. There can only be one active item per {@code map_rect}.
  * @param c Points to a buffer that will receive the coordinates.
@@ -170,6 +176,31 @@ item_coord_get(struct item *it, struct coord *c, int count)
 	return it->meth->item_coord_get(it->priv_data, c, count);
 }
 
+/**
+ * @brief Sets coordinates of an item
+ *
+ * This function supports different modes:
+ *
+ * \li `change_mode_delete`: Deletes the specified number of coordinates
+ * \li `change_mode_modify`: Replaces existing coordinates with new ones
+ * \li `change_mode_append`: Appends new coordinates
+ * \li `change_mode_prepend`: Prepends new coordinates
+ *
+ * TODO which coordinates are deleted/modified? Starting from the last coordinate retrieved, or the one after, or...?
+ *
+ * TODO what if `count` in delete or modify mode is bigger then the number of coordinates left?
+ *
+ * TODO where are coordinates appended/prepended? Beginning/end or current position?
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @param it The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the
+ * {@code map_rect}. There can only be one active item per {@code map_rect}.
+ * @param c TODO new coordinates, also store for old coordinates (delete/modify)? Required in delete mode?
+ * @param count TODO number of coordinates to add, delete or modify?
+ * @param mode The change mode, see description
+ */
 int
 item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode)
 {
@@ -238,6 +269,18 @@ item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection 
 	return ret;
 }
 
+/**
+ * @brief Whether the current coordinates of an item correspond to a node.
+ *
+ * TODO which coordinates? Last retrieved or next (to be) retrieved?
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @param it The item
+ *
+ * @return True on success, false on failure
+ */
 int 
 item_coord_is_node(struct item *it)
 {
@@ -246,18 +289,68 @@ item_coord_is_node(struct item *it)
 	return 0;
 }
 
+/**
+ * @brief Resets the "attribute pointer" of an item
+ *
+ * This function resets the "attribute pointer" of an item to point to the first attribute,
+ * so that at the next call to {@code item_attr_get()} the first attribute will be returned.
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @param it The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the
+ * {@code map_rect}. There can only be one active item per {@code map_rect}.
+ */
 void
 item_attr_rewind(struct item *it)
 {
 	it->meth->item_attr_rewind(it->priv_data);
 }
 
+/**
+ * @brief Gets the next matching attribute from an item
+ *
+ * This function returns the next attribute matching `attr_type` from an item and advances the
+ * "attribute pointer" accordingly, so that at the next call the next attribute will be returned.
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @param it The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the
+ * {@code map_rect}. There can only be one active item per {@code map_rect}.
+ * @param attr_type The attribute type to retrieve, or `attr_any` to retrieve the next attribute
+ * @param attr Receives the attribute retrieved
+ *
+ * @return True on success, false on failure
+ */
 int
 item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr)
 {
 	return it->meth->item_attr_get(it->priv_data, attr_type, attr);
 }
 
+/**
+ * @brief Sets an attribute of an item
+ *
+ * This function supports different modes:
+ *
+ * \li `change_mode_delete`: Deletes the attribute
+ * \li `change_mode_modify`: Replaces an attribute
+ * \li `change_mode_append`: Appends an attribute
+ * \li `change_mode_prepend`: Prepends an attribute
+ *
+ * TODO which attribute is deleted/modified? The last one retrieved, the next one, the first matching one?
+ *
+ * TODO where are attributes appended/prepended? Beginning/end or current position?
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @param it The map item whose coordinates to retrieve. This must be the active item, i.e. the last one retrieved from the
+ * {@code map_rect}. There can only be one active item per {@code map_rect}.
+ * @param attr TODO new attr, also store for old attr (delete/modify)? Required in delete mode (type of attr to delete)?
+ * @param mode The change mode, see description
+ */
 int
 item_attr_set(struct item *it, struct attr *attr, enum change_mode mode)
 {
@@ -265,12 +358,14 @@ item_attr_set(struct item *it, struct attr *attr, enum change_mode mode)
 		return 0;
 	return it->meth->item_attr_set(it->priv_data, attr, mode);
 }
+
 /**
- * @brief Set map item type. 
+ * @brief Sets the type of a map item.
  *
- * @param it reference to the item.
- * @param type New type for the item. Setting it to type_none is expected to delete item from the map.
- * @return  Non-zero if this action is supported by the map and type is set successfully, 0 on error.
+ * @param it The item
+ * @param type The new type for the item. Setting it to type_none is expected to delete item from the map.
+ *
+ * @return Non-zero if this action is supported by the map and type is set successfully, 0 on error.
  */
 int
 item_type_set(struct item *it, enum item_type type)
