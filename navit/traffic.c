@@ -1318,6 +1318,91 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 }
 
 /**
+ * @brief Extends the route beyond its start point.
+ *
+ * This function follows the road leading towards `start` backwards, stopping at the next junction. It
+ * can be called again on the result, again extending it to the next junction.
+ *
+ * To follow the road, each segment is compared to `start->seg` and the segment whose attributes match
+ * it is chosen, provided such a segment can be determined without ambiguity.
+ *
+ * When the function returns, all points added to the route will have their `seg` member set so the
+ * extended route can be walked in the usual manner.
+ *
+ * @param rg The flooded route graph
+ * @param start The current start of the route
+ *
+ * @return The start of the extended route, or `NULL` if the route cannot be extended (in which case
+ * `start` continues to be the start of the route).
+ */
+static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
+		struct route_graph_point * start) {
+	struct route_graph_point * ret = start;
+	struct route_graph_segment * s = start->seg, * s_cmp, * s_prev = NULL;
+	int num_seg;
+	int id_match;
+
+	if (!start)
+		return NULL;
+
+	while (s) {
+		num_seg = 0;
+		id_match = 0;
+		for (s_cmp = ret->start; s_cmp; s_cmp = s_cmp->start_next) {
+			num_seg++;
+			if (s_cmp == s)
+				continue;
+			if (s_cmp->data.flags & AF_ONEWAY)
+				continue;
+			if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
+					&& (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+				s_prev = s_cmp;
+				id_match = 1;
+			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match) {
+				if (s_prev)
+					s_prev = NULL;
+				else
+					s_prev = s_cmp;
+			}
+		}
+		for (s_cmp = ret->end; s_cmp; s_cmp = s_cmp->end_next) {
+			num_seg++;
+			if (s_cmp == s)
+				continue;
+			if (s_cmp->data.flags & AF_ONEWAYREV)
+				continue;
+			if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
+					&& (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+				s_prev = s_cmp;
+				id_match = 1;
+			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match) {
+				if (s_prev)
+					s_prev = NULL;
+				else
+					s_prev = s_cmp;
+			}
+		}
+
+		/* cancel if we are past start and ret is a junction */
+		if ((ret != start) && (num_seg > 2))
+			break;
+
+		/* move s and ret one step further and update links */
+		s = s_prev;
+		if (s) {
+			if (ret == s->start)
+				ret = s->end;
+			else
+				ret = s->start;
+			ret->seg = s;
+			s_prev = NULL;
+		}
+	}
+	dbg(lvl_debug, "return, start=%p, ret=%p\n", start, ret);
+	return ret;
+}
+
+/**
  * @brief Returns points from the route graph which match a traffic location.
  *
  * This method obtains point items from the map_rect from which the route graph was built and compares
@@ -1522,6 +1607,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Current and minimum cost to reference point */
 	int val, minval;
 
+	/* Start of extended route */
+	struct route_graph_point * start_new;
+
 	/* Aligned points */
 	struct route_graph_point * p_from;
 	struct route_graph_point * p_to;
@@ -1589,26 +1677,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			start_next = traffic_route_flood_graph(rg,
 					this_->location->to ? this_->location->to : this_->location->at,
 					this_->location->from ? this_->location->from : this_->location->at);
-
-		/* calculate route */
-		s = start_next ? start_next->seg : NULL;
-		start = start_next;
-
-		if (!s)
-			dbg(lvl_error, "no segments\n");
-
-		/* count segments and calculate length */
-		count = 0;
-		len = 0;
-		while (s) {
-			count++;
-			len += s->data.len;
-			if (s->start == start)
-				start = s->end;
-			else
-				start = s->start;
-			s = start->seg;
-		}
 
 		/* tweak ends (find the point where the ramp touches the main road) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
@@ -1681,12 +1749,17 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				points = traffic_location_get_matching_points(this_->location, 0, rg, start_next, ms);
 			else
 				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
-			s = start_next ? start_next->seg : NULL;
 			s_prev = NULL;
-			start = start_next;
 			minval = INT_MAX;
 			p_from = NULL;
-			/* TODO find continuation */
+
+			/* extend start to next junction */
+			start_new = traffic_route_prepend(rg, start_next);
+			if (start_new)
+				start_next = start_new;
+
+			s = start_next ? start_next->seg : NULL;
+			start = start_next;
 			while (start) {
 				/* detect junctions */
 				is_junction = (s && s_prev) ? 0 : -1;
@@ -1740,6 +1813,26 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				dbg(lvl_error, "changing start_next from %p to %p\n", start_next, p_from);
 				start_next = p_from;
 			}
+		}
+
+		/* calculate route */
+		s = start_next ? start_next->seg : NULL;
+		start = start_next;
+
+		if (!s)
+			dbg(lvl_error, "no segments\n");
+
+		/* count segments and calculate length */
+		count = 0;
+		len = 0;
+		while (s) {
+			count++;
+			len += s->data.len;
+			if (s->start == start)
+				start = s->end;
+			else
+				start = s->start;
+			s = start->seg;
 		}
 
 		/* add segments */
