@@ -1390,10 +1390,13 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 		/* move s and ret one step further and update links */
 		s = s_prev;
 		if (s) {
-			if (ret == s->start)
+			if (ret == s->start) {
 				ret = s->end;
-			else
+				ret->value = s->start->value + s->data.len;
+			} else {
 				ret = s->start;
+				ret->value = s->end->value + s->data.len;
+			}
 			ret->seg = s;
 			s_prev = NULL;
 		}
