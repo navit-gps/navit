@@ -1341,6 +1341,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 	struct route_graph_segment * s = start->seg, * s_cmp, * s_prev = NULL;
 	int num_seg;
 	int id_match;
+	int is_ambiguous;
 
 	if (!start)
 		return NULL;
@@ -1348,6 +1349,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 	while (s) {
 		num_seg = 0;
 		id_match = 0;
+		is_ambiguous = 0;
 		for (s_cmp = ret->start; s_cmp; s_cmp = s_cmp->start_next) {
 			num_seg++;
 			if (s_cmp == s)
@@ -1358,10 +1360,11 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 					&& (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
 				s_prev = s_cmp;
 				id_match = 1;
-			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match) {
-				if (s_prev)
+			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
+				if (s_prev) {
 					s_prev = NULL;
-				else
+					is_ambiguous = 1;
+				} else
 					s_prev = s_cmp;
 			}
 		}
@@ -1375,10 +1378,11 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 					&& (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
 				s_prev = s_cmp;
 				id_match = 1;
-			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match) {
-				if (s_prev)
+			} else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
+				if (s_prev) {
 					s_prev = NULL;
-				else
+					is_ambiguous = 1;
+				} else
 					s_prev = s_cmp;
 			}
 		}
