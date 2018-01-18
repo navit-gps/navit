@@ -1150,6 +1150,10 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
 		return 0;
 	if (!l->at != !r->at)
 		return 0;
+	if (!l->via != !r->via)
+		return 0;
+	if (!l->not_via != !r->not_via)
+		return 0;
 
 	/* both locations have the same points set, compare them */
 	if (l->from && !traffic_point_equals(l->from, r->from))
@@ -1157,6 +1161,10 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
 	if (l->to && !traffic_point_equals(l->to, r->to))
 		return 0;
 	if (l->at && !traffic_point_equals(l->at, r->at))
+		return 0;
+	if (l->via && !traffic_point_equals(l->via, r->via))
+		return 0;
+	if (l->not_via && !traffic_point_equals(l->not_via, r->not_via))
 		return 0;
 
 	/* No differences found, consider locations equal */
