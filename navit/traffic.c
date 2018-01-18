@@ -2844,7 +2844,7 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  * @param attrs The attributes for the map
  * @param cbl
  *
- * @return A pointer to a {@code map_priv} structure for the map
+ * @return A pointer to a `map_priv` structure for the map
  */
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
 	struct map_priv *ret;

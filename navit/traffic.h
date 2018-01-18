@@ -38,15 +38,15 @@
  * manipulation methods. Those that exist are intended for the creation of new messages rather than
  * for extensive manipulation.
  *
- * As a rule, responsibility for freeing up any {@code traffic_*} instances normally lies with the
+ * As a rule, responsibility for freeing up any `traffic_*` instances normally lies with the
  * traffic plugin, which frees messages as they expire or are replaced. Since this also frees all child
  * data structures, traffic backends will seldom need to call any of the destructors. The only case in
  * which this would be necessary is if a backend has instantiated an object which is not going to be
- * used (i.e. attached to a parent object or, in the case of {@code traffic_message}, reported to the
+ * used (i.e. attached to a parent object or, in the case of `traffic_message`, reported to the
  * traffic plugin: these need to be freed up manually by calling the destructor of the topmost object in
  * the hierarchy.
  *
- * Any other references passed in functions (including pointer arrays and {@code quantifier} instances)
+ * Any other references passed in functions (including pointer arrays and `quantifier` instances)
  * must be freed up by the caller. This is safe to do as soon as the function returns.
  */
 
@@ -73,39 +73,39 @@ enum event_class {
 enum event_type {
 	event_congestion_cleared,                          /*!< Traffic congestion cleared */
 	event_congestion_forecast_withdrawn,               /*!< Traffic congestion forecast withdrawn */
-	event_congestion_heavy_traffic,                    /*!< Heavy traffic with average speeds of {@code speed} */
-	event_congestion_long_queue,                       /*!< Long queues with average speeds of {@code speed} */
+	event_congestion_heavy_traffic,                    /*!< Heavy traffic with average speeds of `speed` */
+	event_congestion_long_queue,                       /*!< Long queues with average speeds of `speed` */
 	event_congestion_none,                             /*!< No problems to report */
 	event_congestion_normal_traffic,                   /*!< Traffic has returned to normal */
-	event_congestion_queue,                            /*!< Queuing traffic with average speeds of {@code speed} */
+	event_congestion_queue,                            /*!< Queuing traffic with average speeds of `speed` */
 	event_congestion_queue_likely,                     /*!< Danger of queuing traffic with average speeds
-	                                                    *   of {@code speed} */
-	event_congestion_slow_traffic,                     /*!< Slow traffic with average speeds of {@code speed} */
+	                                                    *   of `speed` */
+	event_congestion_slow_traffic,                     /*!< Slow traffic with average speeds of `speed` */
 	event_congestion_stationary_traffic,               /*!< Stationary traffic (frequent standstills) */
 	event_congestion_stationary_traffic_likely,        /*!< Danger of stationary traffic */
 	event_congestion_traffic_building_up,              /*!< Traffic building up with average speeds of
-	                                                    *   {@code speed} */
+	                                                    *   `speed` */
 	event_congestion_traffic_congestion,               /*!< Traffic congestion with average speeds of
-	                                                    *   {@code speed} */
+	                                                    *   `speed` */
 	event_congestion_traffic_easing,                   /*!< Traffic easing */
 	event_congestion_traffic_flowing_freely,           /*!< Traffic flowing freely with average speeds
-	                                                    *   of {@code speed} */
+	                                                    *   of `speed` */
 	event_congestion_traffic_heavier_than_normal,      /*!< Traffic heavier than normal with average
-	                                                    *   speeds of {@code speed} */
+	                                                    *   speeds of `speed` */
 	event_congestion_traffic_lighter_than_normal,      /*!< Traffic lighter than normal with average
-	                                                    *   speeds of {@code speed} */
+	                                                    *   speeds of `speed` */
 	event_congestion_traffic_much_heavier_than_normal, /*!< Traffic very much heavier than normal with
-	                                                    *   average speeds of {@code speed} (increased density
+	                                                    *   average speeds of `speed` (increased density
 	                                                    *   but no significant decrease in speed) */
 	event_congestion_traffic_problem,                  /*!< Traffic problem */
 	event_delay_clearance,                             /*!< Delays cleared */
-	event_delay_delay,                                 /*!< Delays up to {@code q_timespan} */
-	event_delay_delay_possible,                        /*!< Delays up to {@code q_timespan} possible */
+	event_delay_delay,                                 /*!< Delays up to `q_timespan` */
+	event_delay_delay_possible,                        /*!< Delays up to `q_timespan` possible */
 	event_delay_forecast_withdrawn,                    /*!< Delay forecast withdrawn */
-	event_delay_long_delay,                            /*!< Long delays up to {@code q_timespan} */
+	event_delay_long_delay,                            /*!< Long delays up to `q_timespan` */
 	event_delay_several_hours,                         /*!< Delays of several hours */
 	event_delay_uncertain_duration,                    /*!< Delays of uncertain duration */
-	event_delay_very_long_delay,                       /*!< Very long delays up to {@code q_timespan} */
+	event_delay_very_long_delay,                       /*!< Very long delays up to `q_timespan` */
 	event_restriction_access_restrictions_lifted,      /*!< Traffic restrictions lifted: reopened for all
                                                         *   traffic, other restrictions (overtaking etc.)
                                                         *   remain in place */
@@ -123,14 +123,14 @@ enum event_type {
 	                                                    *   otherwise indicated in supplementary information) */
 	event_restriction_carriageway_closed,              /*!< Carriageway closed (main carriageway, unless
 	                                                    *   otherwise indicated in supplementary information) */
-	event_restriction_closed,                          /*!< Closed until {@code q_time} (refers to the entire
+	event_restriction_closed,                          /*!< Closed until `q_time` (refers to the entire
 	                                                    *   road; separate codes exist for closures of
 	                                                    *   individual lanes or carriageways) */
 	event_restriction_closed_ahead,                    /*!< Closed ahead (at a point beyond the indicated
 	                                                    *   location) */
-	event_restriction_entry_blocked,                   /*!< {@code q_int} th entry slip road blocked */
+	event_restriction_entry_blocked,                   /*!< `q_int` th entry slip road blocked */
 	event_restriction_entry_reopened,                  /*!< Entry reopened */
-	event_restriction_exit_blocked,                    /*!< {@code q_int} th exit slip road blocked */
+	event_restriction_exit_blocked,                    /*!< `q_int` th exit slip road blocked */
 	event_restriction_exit_reopened,                   /*!< Exit reopened */
 	event_restriction_intermittent_closures,           /*!< Intermittent short term closures */
 	event_restriction_open,                            /*!< Open */
@@ -143,7 +143,7 @@ enum event_type {
 	                                                    *   affected stretch of road can only be used in
 	                                                    *   one direction at a time, different from batch
 	                                                    *   service) */
-	event_restriction_speed_limit,                     /*!< Speed limit {@code speed} in force */
+	event_restriction_speed_limit,                     /*!< Speed limit `speed` in force */
 	event_restriction_speed_limit_lifted,              /*!< Speed limit lifted */
 };
 
@@ -197,8 +197,8 @@ enum si_type {
 	si_place_ramp,                /*!< On ramps (entry/exit) */
 	si_place_roadworks,           /*!< In the roadworks area */
 	si_place_tunnel,              /*!< In tunnels */
-	si_tendency_queue_decreasing, /*!< Traffic queue length decreasing (average rate in optional {@code q_speed}) */
-	si_tendency_queue_increasing, /*!< Traffic queue length increasing (average rate in optional {@code q_speed}) */
+	si_tendency_queue_decreasing, /*!< Traffic queue length decreasing (average rate in optional `q_speed`) */
+	si_tendency_queue_increasing, /*!< Traffic queue length increasing (average rate in optional `q_speed`) */
 	si_vehicle_all,               /*!< For all vehicles */
 	si_vehicle_bus,               /*!< For buses only */
 	si_vehicle_car,               /*!< For cars only */
@@ -258,18 +258,18 @@ struct traffic_point {
  * than any road connecting to them directly.
  *
  * Point locations are indicated by a single point, as well as one or two auxiliary points to indicate
- * direction. Auxiliary points can be omitted if {@code tmc_table}, {@code tmc_direction} and
- * {@code at->tmc_id} are supplied. However, this will only work if the map has accurate TMC data for
+ * direction. Auxiliary points can be omitted if `tmc_table`, `tmc_direction` and
+ * `at->tmc_id` are supplied. However, this will only work if the map has accurate TMC data for
  * the location, thus it is recommended to supply an auxiliary point nonetheless.
  *
- * The order of points is as a driver would encounter them, i.e. first {@code from}, then {@code at},
- * finally {@code to}.
+ * The order of points is as a driver would encounter them, i.e. first `from`, then `at`,
+ * finally `to`.
  */
 struct traffic_location {
 	struct traffic_point * at;         /*!< The point for a point location, NULL for linear locations. */
-	struct traffic_point * from;       /*!< The start of a linear location, or a point before {@code at}. */
-	struct traffic_point * to;         /*!< The end of a linear location, or a point after {@code at}. */
 	/* TODO specify direction for linear locations on ring roads */
+	struct traffic_point * from;       /*!< The start of a linear location, or a point before `at`. */
+	struct traffic_point * to;         /*!< The end of a linear location, or a point after `at`. */
 	char * destination;                /*!< A destination, preferably the one given on road signs,
 	                                    *   indicating that the message applies only to traffic going in
 	                                    *   that direction. Do not use for bidirectional locations. */
@@ -278,15 +278,15 @@ struct traffic_location {
 	enum location_dir directionality;  /*!< Indicates whether the message refers to one or both directions
 	                                    *   of travel. */
 	enum location_fuzziness fuzziness; /*!< Indicates how precisely the end points are known. */
-	enum location_ramps ramps;         /*!< Any value other than {@code location_ramps_none} implies
+	enum location_ramps ramps;         /*!< Any value other than `location_ramps_none` implies
 	                                    *   that only the specified ramps are affected while the main
-	                                    *   road is not. In that case, the {@code road*} fields refer to
+	                                    *   road is not. In that case, the `road*` fields refer to
 	                                    *   the main road served by the ramp, not the ramp itself. This
 	                                    *   is mainly intended for compatibility with TMC, where
 	                                    *   junctions with all their ramps are represented by a single
 	                                    *   point. Other sources should use coordinate pairs instead. */
 	enum item_type road_type;          /*!< The importance of the road within the road network, must be a
-	                                    *   road item type. Use {@code line_unspecified} if not known or
+	                                    *   road item type. Use `line_unspecified` if not known or
 	                                    *   not consistent. */
 	char * road_name;                  /*!< A road name, if consistent throughout the location. */
 	char * road_ref;                   /*!< A road number, if consistent throughout the location. */
@@ -343,7 +343,7 @@ struct traffic_event {
 	                                  *   not set or unknown. */
 	struct quantifier * quantifier;  /*!< Additional quantifier for events allowing this. Data type and
 	                                  *   meaning depends on the event type. */
-	int si_count;                    /*!< Number of supplementary information items in {@code si_count}. */
+	int si_count;                    /*!< Number of supplementary information items in `si_count`. */
 	struct traffic_suppl_info ** si; /*!< Points to an array of pointers to supplementary information items. */
 };
 
@@ -353,8 +353,8 @@ struct traffic_event {
  * A message is the atomic element of traffic information, referring to a particular condition at a
  * given location.
  *
- * If no updates are received for a message, it should be discarded after both {@code expiration_time}
- * and {@code end_time} (if specified) have elapsed.
+ * If no updates are received for a message, it should be discarded after both `expiration_time`
+ * and `end_time` (if specified) have elapsed.
  */
 struct traffic_message {
 	char * id;                  /*!< An identifier, which remains stable over the entire lifecycle of the
@@ -373,11 +373,11 @@ struct traffic_message {
 	                             *   should be ignored. */
 	int is_forecast;            /*!< If false, the message describes a current situation. If true, it
 	                             *   describes an expected situation in the future. */
-	int replaced_count;         /*!< The number of entries in {@code replaces}. */
+	int replaced_count;         /*!< The number of entries in `replaces`. */
 	char ** replaces;           /*!< Points to an array of identifiers of messages which the current
 	                             *   message replaces. */
 	struct traffic_location * location; /*!< The location to which this message refers. */
-	int event_count;            /*!< The number of events in {@code events}. */
+	int event_count;            /*!< The number of events in `events`. */
 	struct traffic_event ** events; /*!< Points to an array of pointers to the events for this message. */
 	struct traffic_message_priv * priv; /*!< Internal data, not exposed via the API */
 };
@@ -387,7 +387,7 @@ struct mapset;
 struct traffic;
 
 /**
- * @brief Creates a new {@code traffic_point}.
+ * @brief Creates a new `traffic_point`.
  *
  * It is the responsibility of the caller to destroy all references passed to this function. This can be
  * done immediately after the function returns.
@@ -402,7 +402,7 @@ struct traffic_point * traffic_point_new(float lon, float lat, char * junction_n
 		char * tmc_id);
 
 /**
- * @brief Creates a new {@code traffic_point}.
+ * @brief Creates a new `traffic_point`.
  *
  * This is the short version of the constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
@@ -413,11 +413,11 @@ struct traffic_point * traffic_point_new(float lon, float lat, char * junction_n
 struct traffic_point * traffic_point_new_short(float lon, float lat);
 
 /**
- * @brief Destroys a {@code traffic_point}.
+ * @brief Destroys a `traffic_point`.
  *
- * This will release the memory used by the {@code traffic_point} and all related data.
+ * This will release the memory used by the `traffic_point` and all related data.
  *
- * A {@code traffic_point} is usually destroyed together with its parent {@code traffic_location}, thus
+ * A `traffic_point` is usually destroyed together with its parent `traffic_location`, thus
  * it is usually not necessary to call this destructor directly.
  *
  * @param this_ The point
@@ -425,35 +425,35 @@ struct traffic_point * traffic_point_new_short(float lon, float lat);
 void traffic_point_destroy(struct traffic_point * this_);
 
 /**
- * @brief Creates a new {@code traffic_location}.
+ * @brief Creates a new `traffic_location`.
  *
- * The {@code traffic_point} instances are destroyed when the {@code traffic_location} is destroyed, and
- * therefore cannot be shared between multiple {@code traffic_location} instances.
+ * The `traffic_point` instances are destroyed when the `traffic_location` is destroyed, and
+ * therefore cannot be shared between multiple `traffic_location` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function. This
  * can be done immediately after the function returns.
  *
- * If {@code at} is non-NULL, the location is a point location, and {@code from} and {@code to} are
+ * If `at` is non-NULL, the location is a point location, and `from` and `to` are
  * interpreted as auxiliary locations.
  *
- * Of {@code from} and {@code to}, one is mandatory for a unidirectional point location; both are
+ * Of `from` and `to`, one is mandatory for a unidirectional point location; both are
  * mandatory for a linear location.
  *
- * {@code ramps} is mainly intended for compatibility with TMC, where junctions with all their ramps are
+ * `ramps` is mainly intended for compatibility with TMC, where junctions with all their ramps are
  * represented by a single point. Other sources should use coordinate pairs instead.
  *
  * @param at The coordinates for a point location, NULL for a linear location
- * @param from The start of a linear location, or a point before {@code at}
- * @param to The end of a linear location, or a point after {@code at}
+ * @param from The start of a linear location, or a point before `at`
+ * @param to The end of a linear location, or a point after `at`
  * @param destination A destination, preferably the one given on road signs, indicating that the message
  * applies only to traffic going in that direction; can be NULL, do not use for bidirectional locations
  * @param direction A compass direction indicating the direction of travel which this location refers to;
  * can be NULL, do not use where ambiguous
  * @param directionality Whether the location is unidirectional or bidirectional
- * @param fuzziness A precision indicator for {@code from} and {@code to}
+ * @param fuzziness A precision indicator for `from` and `to`
  * @param ramps Whether the main carriageway or the ramps are affected
  * @param road_type The importance of the road within the road network, must be a road item type,
- * {@code type_line_unspecified} if not known or not consistent
+ * `type_line_unspecified` if not known or not consistent
  * @param road_name A road name, if consistent throughout the location; NULL if not known or inconsistent
  * @param road_ref A road number, if consistent throughout the location; NULL if not known or inconsistent
  * @param tmc_table For messages received via TMC, the CID and LTN; NULL otherwise
@@ -467,35 +467,35 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
 		char * road_name, char * road_ref, char * tmc_table, int tmc_direction);
 
 /**
- * @brief Creates a new {@code traffic_location}.
+ * @brief Creates a new `traffic_location`.
  *
  * This is the short version of the constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
  *
- * The {@code traffic_point} instances are destroyed when the {@code traffic_location} is destroyed, and
- * therefore cannot be shared between multiple {@code traffic_location} instances.
+ * The `traffic_point` instances are destroyed when the `traffic_location` is destroyed, and
+ * therefore cannot be shared between multiple `traffic_location` instances.
  *
- * If {@code at} is non-NULL, the location is a point location, and {@code from} and {@code to} are
+ * If `at` is non-NULL, the location is a point location, and `from` and `to` are
  * interpreted as auxiliary locations.
  *
- * Of {@code from} and {@code to}, one is mandatory for a unidirectional point location; both are
+ * Of `from` and `to`, one is mandatory for a unidirectional point location; both are
  * mandatory for a linear location.
  *
  * @param at The coordinates for a point location, NULL for a linear location
- * @param from The start of a linear location, or a point before {@code at}
- * @param to The end of a linear location, or a point after {@code at}
+ * @param from The start of a linear location, or a point before `at`
+ * @param to The end of a linear location, or a point after `at`
  * @param directionality Whether the location is unidirectional or bidirectional
- * @param fuzziness A precision indicator for {@code from} and {@code to}
+ * @param fuzziness A precision indicator for `from` and `to`
  */
 struct traffic_location * traffic_location_new_short(struct traffic_point * at, struct traffic_point * from,
 		struct traffic_point * to, enum location_dir directionality, enum location_fuzziness fuzziness);
 
 /**
- * @brief Destroys a {@code traffic_location}.
+ * @brief Destroys a `traffic_location`.
  *
- * This will release the memory used by the {@code traffic_location} and all related data.
+ * This will release the memory used by the `traffic_location` and all related data.
  *
- * A {@code traffic_location} is usually destroyed together with its parent {@code traffic_message}, thus
+ * A `traffic_location` is usually destroyed together with its parent `traffic_message`, thus
  * it is usually not necessary to call this destructor directly.
  *
  * @param this_ The location
@@ -503,7 +503,7 @@ struct traffic_location * traffic_location_new_short(struct traffic_point * at, 
 void traffic_location_destroy(struct traffic_location * this_);
 
 /**
- * @brief Creates a new {@code traffic_suppl_info}.
+ * @brief Creates a new `traffic_suppl_info`.
  *
  * It is the responsibility of the caller to destroy all references passed to this function. This can be
  * done immediately after the function returns.
@@ -517,11 +517,11 @@ struct traffic_suppl_info * traffic_suppl_info_new(enum si_class si_class, enum 
 		struct quantifier * quantifier);
 
 /**
- * @brief Destroys a {@code traffic_suppl_info}.
+ * @brief Destroys a `traffic_suppl_info`.
  *
- * This will release the memory used by the {@code traffic_suppl_info} and all related data.
+ * This will release the memory used by the `traffic_suppl_info` and all related data.
  *
- * A {@code traffic_suppl_info} is usually destroyed together with its parent {@code traffic_event}, thus
+ * A `traffic_suppl_info` is usually destroyed together with its parent `traffic_event`, thus
  * it is usually not necessary to call this destructor directly.
  *
  * @param this_ The supplementary information item
@@ -529,13 +529,13 @@ struct traffic_suppl_info * traffic_suppl_info_new(enum si_class si_class, enum 
 void traffic_suppl_info_destroy(struct traffic_suppl_info * this_);
 
 /**
- * @brief Creates a new {@code traffic_event}.
+ * @brief Creates a new `traffic_event`.
  *
- * The {@code traffic_suppl_info} instances are destroyed when the {@code traffic_event} is destroyed, and
- * therefore cannot be shared between multiple {@code traffic_event} instances.
+ * The `traffic_suppl_info` instances are destroyed when the `traffic_event` is destroyed, and
+ * therefore cannot be shared between multiple `traffic_event` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function
- * (including the {@code si} buffer but not the {@code traffic_suppl_info} instances). This can be done
+ * (including the `si` buffer but not the `traffic_suppl_info` instances). This can be done
  * immediately after the function returns.
  *
  * @param event_class The event class (generic category)
@@ -544,14 +544,14 @@ void traffic_suppl_info_destroy(struct traffic_suppl_info * this_);
  * @param speed The speed in km/h at which vehicles can expect to pass through the affected stretch of
  * road (either a temporary speed limit or average speed in practice, whichever is less); INT_MAX if unknown
  * @param quantifier Additional quantifier for supplementary information types allowing this, or NULL
- * @param si_count Number of supplementary information items in {@code si_count}
+ * @param si_count Number of supplementary information items in `si_count`
  * @param si Points to an array of pointers to supplementary information items
  */
 struct traffic_event * traffic_event_new(enum event_class event_class, enum event_type type,
 		int length, int speed, struct quantifier * quantifier, int si_count, struct traffic_suppl_info ** si);
 
 /**
- * @brief Creates a new {@code traffic_event}.
+ * @brief Creates a new `traffic_event`.
  *
  * This is the short version of the constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
@@ -562,11 +562,11 @@ struct traffic_event * traffic_event_new(enum event_class event_class, enum even
 struct traffic_event * traffic_event_new_short(enum event_class event_class, enum event_type type);
 
 /**
- * @brief Destroys a {@code traffic_event}.
+ * @brief Destroys a `traffic_event`.
  *
- * This will release the memory used by the {@code traffic_event} and all related data.
+ * This will release the memory used by the `traffic_event` and all related data.
  *
- * A {@code traffic_event} is usually destroyed together with its parent {@code traffic_message}, thus
+ * A `traffic_event` is usually destroyed together with its parent `traffic_message`, thus
  * it is usually not necessary to call this destructor directly.
  *
  * @param this_ The event
@@ -576,8 +576,8 @@ void traffic_event_destroy(struct traffic_event * this_);
 /**
  * @brief Adds a supplementary information item to an event.
  *
- * The {@code traffic_suppl_info} instance is destroyed when the {@code traffic_event} is destroyed, and
- * therefore cannot be shared between multiple {@code traffic_event} instances.
+ * The `traffic_suppl_info` instance is destroyed when the `traffic_event` is destroyed, and
+ * therefore cannot be shared between multiple `traffic_event` instances.
  *
  * @param this_ The event
  * @param si The supplementary information item
@@ -594,14 +594,14 @@ void traffic_event_add_suppl_info(struct traffic_event * this_, struct traffic_s
 struct traffic_suppl_info * traffic_event_get_suppl_info(struct traffic_event * this_, int index);
 
 /**
- * @brief Creates a new {@code traffic_message}.
+ * @brief Creates a new `traffic_message`.
  *
- * The {@code traffic_event} and {@code traffic_location} instances are destroyed when the
- * {@code traffic_message} is destroyed, and therefore cannot be shared between multiple
- * {@code traffic_message} instances.
+ * The `traffic_event` and `traffic_location` instances are destroyed when the
+ * `traffic_message` is destroyed, and therefore cannot be shared between multiple
+ * `traffic_message` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function
- * (including the {@code events} buffer but not the {@code traffic_event} instances). This can be done
+ * (including the `events` buffer but not the `traffic_event` instances). This can be done
  * immediately after the function returns.
  *
  * @param id The message identifier; existing messages with the same identifier will be replaced by the
@@ -616,10 +616,10 @@ struct traffic_suppl_info * traffic_event_get_suppl_info(struct traffic_event * 
  * should be deleted or no longer considered current, and all other attributes ignored)
  * @param isForecast If false, the message describes a current situation; if true, it describes an
  * expected situation in the future
- * @param replaced_count The number of entries in {@code replaces}
+ * @param replaced_count The number of entries in `replaces`
  * @param replaces Points to an array of identifiers of messages which the current message replaces
  * @param location The location to which this message refers
- * @param event_count The number of events in {@code events}
+ * @param event_count The number of events in `events`
  * @param events Points to an array of pointers to the events for this message
  */
 struct traffic_message * traffic_message_new(char * id, time_t receive_time, time_t update_time,
@@ -628,17 +628,17 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
 		struct traffic_event ** events);
 
 /**
- * @brief Creates a new {@code traffic_message}.
+ * @brief Creates a new `traffic_message`.
  *
  * This is the short version of the constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
  *
- * The {@code traffic_event} and {@code traffic_location} instances are destroyed when the
- * {@code traffic_message} is destroyed, and therefore cannot be shared between multiple
- * {@code traffic_message} instances.
+ * The `traffic_event` and `traffic_location` instances are destroyed when the
+ * `traffic_message` is destroyed, and therefore cannot be shared between multiple
+ * `traffic_message` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function
- * (including the {@code events} buffer but not the {@code traffic_event} instances). This can be done
+ * (including the `events` buffer but not the `traffic_event` instances). This can be done
  * immediately after the function returns.
  *
  * @param id The message identifier; existing messages with the same identifier will be replaced by the
@@ -650,7 +650,7 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
  * @param is_forecast If false, the message describes a current situation; if true, it describes an
  * expected situation in the future
  * @param location The location to which this message refers
- * @param event_count The number of events in {@code events}
+ * @param event_count The number of events in `events`
  * @param events Points to an array of pointers to the events for this message
  */
 struct traffic_message * traffic_message_new_short(char * id, time_t receive_time, time_t update_time,
@@ -658,13 +658,13 @@ struct traffic_message * traffic_message_new_short(char * id, time_t receive_tim
 		int event_count, struct traffic_event ** events);
 
 /**
- * @brief Creates a new single-event {@code traffic_message}.
+ * @brief Creates a new single-event `traffic_message`.
  *
  * This is a convenience constructor, which sets only mandatory members. Other members can be
  * set after the instance is created.
  *
- * The {@code traffic_location} instances are destroyed when the {@code traffic_message} is destroyed,
- * and therefore cannot be shared between multiple {@code traffic_message} instances.
+ * The `traffic_location` instances are destroyed when the `traffic_message` is destroyed,
+ * and therefore cannot be shared between multiple `traffic_message` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function. This
  * can be done immediately after the function returns.
@@ -686,15 +686,15 @@ struct traffic_message * traffic_message_new_single_event(char * id, time_t rece
 		enum event_class event_class, enum event_type type);
 
 /**
- * @brief Creates a new cancellation {@code traffic_message}.
+ * @brief Creates a new cancellation `traffic_message`.
  *
  * This is a convenience constructor, which creates a cancellation message, without the need to supply
  * members which are not required for cancellation messages. Upon receiving a cancellation message,
  * existing messages with the same ID should be deleted or no longer considered current, and all other
  * attributes ignored.
  *
- * The {@code traffic_location} instances are destroyed when the {@code traffic_message} is destroyed,
- * and therefore cannot be shared between multiple {@code traffic_message} instances.
+ * The `traffic_location` instances are destroyed when the `traffic_message` is destroyed,
+ * and therefore cannot be shared between multiple `traffic_message` instances.
  *
  * It is the responsibility of the caller to destroy all other references passed to this function. This
  * can be done immediately after the function returns.
@@ -711,11 +711,11 @@ struct traffic_message * traffic_message_new_cancellation(char * id, time_t rece
 		time_t expiration_time, struct traffic_location * location);
 
 /**
- * @brief Destroys a {@code traffic_message}.
+ * @brief Destroys a `traffic_message`.
  *
- * This will release the memory used by the {@code traffic_message} and all related data.
+ * This will release the memory used by the `traffic_message` and all related data.
  *
- * A {@code traffic_message} is usually destroyed by the traffic plugin, thus it is usually not
+ * A `traffic_message` is usually destroyed by the traffic plugin, thus it is usually not
  * necessary to call this destructor directly.
  *
  * @param this_ The message
@@ -725,8 +725,8 @@ void traffic_message_destroy(struct traffic_message * this_);
 /**
  * @brief Adds an event to a message.
  *
- * The {@code traffic_event} instance is destroyed when the {@code traffic_message} is destroyed, and
- * therefore cannot be shared between multiple {@code traffic_message} instances.
+ * The `traffic_event` instance is destroyed when the `traffic_message` is destroyed, and
+ * therefore cannot be shared between multiple `traffic_message` instances.
  *
  * @param this_ The message
  * @param event The event to add to this message
