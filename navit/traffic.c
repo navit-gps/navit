@@ -1330,6 +1330,11 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
  * the new stretch to the route, set the `seg` member of its last point to the return value. After that,
  * the extended route can be walked in the usual manner.
  *
+ * The value of each new point is the value of its predecessor on the route mins the length of the
+ * segment which links the two points. Point values thus continue to decrease along the route, allowing
+ * comparisons or difference calculations to be performed on the extended route. Note that this may
+ * result in points having negative values.
+ *
  * @param rg The flooded route graph
  * @param last The last segment in the current route graph (either the `start` or the `end` member of
  * this segment must be equal to the `end` argument)
