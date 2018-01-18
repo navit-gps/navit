@@ -1636,12 +1636,62 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 }
 
 /**
+ * @brief Determines the “point triple” for a traffic location.
+ *
+ * Each traffic location is defined by up to three points:
+ * \li a start and end point, and an optional auxiliary point in between
+ * \li a single point, with one or two auxiliary points (one before, one after)
+ * \li a start and end point, and a third point which is outside the location
+ *
+ * This method determines these three points, puts them in the order in which they are encountered and
+ * returns a bit field indicating the end points. If a point in the array is NULL or refers to an
+ * auxiliary point, its corresponding bit is not set. The following values are returned:
+ * \li 2: Point location, the middle point is the actual point
+ * \li 3: Point-to-point location from the first to the second point; the third point is an auxiliary
+ * point outside the location
+ * \li 5: Point-to-point location from the first to the last point; the second point (if not NULL) is an
+ * auxiliary point located in between
+ * \li 6: Point-to-point location from the second to the third point; the first point is an auxiliary
+ * point outside the location
+ *
+ * @param this_ The location
+ * @param coords Points to an array which will receive pointers to the coordinates. The array must be
+ * able to store three pointers.
+ *
+ * @return A bit field indicating the end points for the location
+ */
+static int traffic_location_get_point_triple(struct traffic_location * this_, struct coord_geo ** coords) {
+	/* Which members of coords are the end points */
+	int ret = 0;
+
+	if (this_->at) {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = &this_->at->coord;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = 1 << 1;
+	} else if (this_->via) {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = &this_->via->coord;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = (1 << 2) | (1 << 0);
+	} else if (this_->not_via) {
+		/* TODO determine if not_via should be first or last */
+	} else {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = NULL;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = (1 << 2) | (1 << 0);
+	}
+	return ret;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
- * This translates the approximate coordinates in the `from`, `at` and `to` members of the location to
- * one or more map segments, using both the raw coordinates and the auxiliary information contained in
- * the location. Each segment is stored in the map, if not already present, and a link is stored with
- * the message.
+ * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
+ * the location to one or more map segments, using both the raw coordinates and the auxiliary information
+ * contained in the location. Each segment is stored in the map, if not already present, and a link is
+ * stored with the message.
  *
  * @param this_ The traffic message
  * @param ms The mapset to use for matching
@@ -1658,11 +1708,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	struct coord_geo * sw;
 	struct coord_geo * ne;
 
-	struct coord_geo * coords[] = {
-			&this_->location->from->coord,
-			&this_->location->at->coord,
-			&this_->location->to->coord
-	};
+	struct coord_geo * coords[] = {NULL, NULL, NULL};
+
+	/* Which members of coords are the end points */
+	int endpoints = 0;
 
 	/* The direction (positive or negative) */
 	int dir = 1;
@@ -1741,6 +1790,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		dbg(lvl_error, "no data for segments, aborting\n");
 		return 0;
 	}
+
+	/* get point triple */
+	endpoints = traffic_location_get_point_triple(this_->location, &coords);
 
 	/* calculate enclosing rectangle, if not yet present */
 	if (!this_->location->priv->sw) {
