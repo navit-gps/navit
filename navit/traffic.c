@@ -1180,9 +1180,9 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
  * Unlike in common routing, the last point will have a nonzero cost if `to` does not coincide with a
  * point in the route graph.
  *
- * The cost of each node represents the cost to reach `to`. Currently distance is used for cost, with a
- * penalty applied to the offroad connection from the last point in the graph to `to`. Future versions
- * may calculate segment cost differently.
+ * The cost of each node represents the cost to reach `to`. The cost is calculated in
+ * `traffic_route_get_seg_cost()` for actual segments, and distance (with a penalty factor) for the
+ * offroad connection from the last point in the graph to `to`.
  *
  * To obtain the path, start with the return value. Its `seg` member points to the next segment. Either
  * the `start` or the `end` value of that segment will coincide with the point currently being examined;
