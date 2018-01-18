@@ -267,9 +267,12 @@ struct traffic_point {
  */
 struct traffic_location {
 	struct traffic_point * at;         /*!< The point for a point location, NULL for linear locations. */
-	/* TODO specify direction for linear locations on ring roads */
 	struct traffic_point * from;       /*!< The start of a linear location, or a point before `at`. */
 	struct traffic_point * to;         /*!< The end of a linear location, or a point after `at`. */
+	struct traffic_point * via;        /*!< A point between `from` and `to`. Required on ring roads
+	                                    *   unless `not_via` is used; cannot be used together with `at`. */
+	struct traffic_point * not_via;    /*!< A point NOT between `from` and `to`. Required on ring roads
+	                                    *   unless `via` is used; cannot be used together with `at`. */
 	char * destination;                /*!< A destination, preferably the one given on road signs,
 	                                    *   indicating that the message applies only to traffic going in
 	                                    *   that direction. Do not use for bidirectional locations. */
@@ -445,6 +448,8 @@ void traffic_point_destroy(struct traffic_point * this_);
  * @param at The coordinates for a point location, NULL for a linear location
  * @param from The start of a linear location, or a point before `at`
  * @param to The end of a linear location, or a point after `at`
+ * @param via A point between `from` and `to`, needed only on ring roads
+ * @param not_via A point not between `from` and `to`, needed only on ring roads
  * @param destination A destination, preferably the one given on road signs, indicating that the message
  * applies only to traffic going in that direction; can be NULL, do not use for bidirectional locations
  * @param direction A compass direction indicating the direction of travel which this location refers to;
@@ -462,7 +467,8 @@ void traffic_point_destroy(struct traffic_point * this_);
  */
 // TODO split CID/LTN?
 struct traffic_location * traffic_location_new(struct traffic_point * at, struct traffic_point * from,
-		struct traffic_point * to, char * destination, char * direction, enum location_dir directionality,
+		struct traffic_point * to, struct traffic_point * via, struct traffic_point * not_via,
+		char * destination, char * direction, enum location_dir directionality,
 		enum location_fuzziness fuzziness, enum location_ramps ramps, enum item_type road_type,
 		char * road_name, char * road_ref, char * tmc_table, int tmc_direction);
 
@@ -484,11 +490,14 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
  * @param at The coordinates for a point location, NULL for a linear location
  * @param from The start of a linear location, or a point before `at`
  * @param to The end of a linear location, or a point after `at`
+ * @param via A point between `from` and `to`, needed only on ring roads
+ * @param not_via A point not between `from` and `to`, needed only on ring roads
  * @param directionality Whether the location is unidirectional or bidirectional
  * @param fuzziness A precision indicator for `from` and `to`
  */
 struct traffic_location * traffic_location_new_short(struct traffic_point * at, struct traffic_point * from,
-		struct traffic_point * to, enum location_dir directionality, enum location_fuzziness fuzziness);
+		struct traffic_point * to, struct traffic_point * via, struct traffic_point * not_via,
+		enum location_dir directionality, enum location_fuzziness fuzziness);
 
 /**
  * @brief Destroys a `traffic_location`.

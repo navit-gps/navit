@@ -2607,7 +2607,8 @@ void traffic_point_destroy(struct traffic_point * this_) {
 
 // TODO split CID/LTN?
 struct traffic_location * traffic_location_new(struct traffic_point * at, struct traffic_point * from,
-		struct traffic_point * to, char * destination, char * direction, enum location_dir directionality,
+		struct traffic_point * to, struct traffic_point * via, struct traffic_point * not_via,
+		char * destination, char * direction, enum location_dir directionality,
 		enum location_fuzziness fuzziness, enum location_ramps ramps, enum item_type road_type,
 		char * road_name, char * road_ref, char * tmc_table, int tmc_direction) {
 	struct traffic_location * ret;
@@ -2616,6 +2617,8 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
 	ret->at = at;
 	ret->from = from;
 	ret->to = to;
+	ret->via = via;
+	ret->not_via = not_via;
 	ret->destination = destination ? g_strdup(destination) : NULL;
 	ret->direction = direction ? g_strdup(direction) : NULL;
 	ret->directionality = directionality;
@@ -2633,9 +2636,10 @@ struct traffic_location * traffic_location_new(struct traffic_point * at, struct
 }
 
 struct traffic_location * traffic_location_new_short(struct traffic_point * at, struct traffic_point * from,
-		struct traffic_point * to, enum location_dir directionality, enum location_fuzziness fuzziness) {
-	return traffic_location_new(at, from, to, NULL, NULL, directionality, fuzziness, location_ramps_none,
-			type_line_unspecified, NULL, NULL, NULL, 0);
+		struct traffic_point * to, struct traffic_point * via, struct traffic_point * not_via,
+		enum location_dir directionality, enum location_fuzziness fuzziness) {
+	return traffic_location_new(at, from, to, via, not_via, NULL, NULL, directionality, fuzziness,
+			location_ramps_none, type_line_unspecified, NULL, NULL, NULL, 0);
 }
 
 void traffic_location_destroy(struct traffic_location * this_) {
@@ -2645,6 +2649,10 @@ void traffic_location_destroy(struct traffic_location * this_) {
 		traffic_point_destroy(this_->from);
 	if (this_->to)
 		traffic_point_destroy(this_->to);
+	if (this_->via)
+		traffic_point_destroy(this_->via);
+	if (this_->not_via)
+		traffic_point_destroy(this_->not_via);
 	if (this_->destination)
 		g_free(this_->destination);
 	if (this_->direction)
