@@ -1694,6 +1694,52 @@ static int traffic_location_get_point_triple(struct traffic_location * this_, st
 }
 
 /**
+ * @brief Sets the rectangle enclosing all points of a location
+ *
+ * @param this_ The traffic location
+ * @param coords The point triple, can be NULL
+ */
+static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords) {
+	struct coord_geo * sw;
+	struct coord_geo * ne;
+	struct coord_geo * int_coords[] = {NULL, NULL, NULL};
+	int i;
+
+	if (!coords) {
+		coords = &int_coords;
+		traffic_location_get_point_triple(this_, coords);
+	}
+
+	if (!this_->priv->sw) {
+		sw = g_new0(struct coord_geo, 1);
+		sw->lat = INT_MAX;
+		sw->lng = INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat < sw->lat)
+					sw->lat = coords[i]->lat;
+				if (coords[i]->lng < sw->lng)
+					sw->lng = coords[i]->lng;
+			}
+		this_->priv->sw = sw;
+	}
+
+	if (!this_->priv->ne) {
+		ne = g_new0(struct coord_geo, 1);
+		ne->lat = -INT_MAX;
+		ne->lng = -INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat > ne->lat)
+					ne->lat = coords[i]->lat;
+				if (coords[i]->lng > ne->lng)
+					ne->lng = coords[i]->lng;
+			}
+		this_->priv->ne = ne;
+	}
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
@@ -1711,10 +1757,6 @@ static int traffic_location_get_point_triple(struct traffic_location * this_, st
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
 		struct seg_data * data, struct map *map) {
 	int i;
-
-	/* Corners of the enclosing rectangle, in WGS84 coordinates */
-	struct coord_geo * sw;
-	struct coord_geo * ne;
 
 	struct coord_geo * coords[] = {NULL, NULL, NULL};
 
@@ -1799,37 +1841,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		return 0;
 	}
 
-	/* get point triple */
+	/* get point triple and enclosing rectangle */
 	endpoints = traffic_location_get_point_triple(this_->location, &coords);
-
-	/* calculate enclosing rectangle, if not yet present */
-	if (!this_->location->priv->sw) {
-		sw = g_new0(struct coord_geo, 1);
-		sw->lat = INT_MAX;
-		sw->lng = INT_MAX;
-		for (i = 0; i < 3; i++)
-			if (coords[i]) {
-				if (coords[i]->lat < sw->lat)
-					sw->lat = coords[i]->lat;
-				if (coords[i]->lng < sw->lng)
-					sw->lng = coords[i]->lng;
-			}
-		this_->location->priv->sw = sw;
-	}
-
-	if (!this_->location->priv->ne) {
-		ne = g_new0(struct coord_geo, 1);
-		ne->lat = -INT_MAX;
-		ne->lng = -INT_MAX;
-		for (i = 0; i < 3; i++)
-			if (coords[i]) {
-				if (coords[i]->lat > ne->lat)
-					ne->lat = coords[i]->lat;
-				if (coords[i]->lng > ne->lng)
-					ne->lng = coords[i]->lng;
-			}
-		this_->location->priv->ne = ne;
-	}
+	traffic_location_set_enclosing_rect(this_->location, &coords);
 
 	if (this_->location->at)
 		/* TODO Point location, not supported yet */
