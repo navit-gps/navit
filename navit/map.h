@@ -65,12 +65,16 @@ struct map_selection {
 };
 
 /**
- * @brief Holds all functions a map plugin has to implement to be useable
+ * @brief Holds all functions a map plugin has to implement to be usable
  *
- * This structure holds pointers to a map plugin's functions navit's core will call
- * to communicate with the plugin. For further information look into map.c - there exist
+ * This structure holds pointers to a map plugin's functions, which Navit's core will call
+ * to communicate with the plugin. For further information look into map.c, which has
  * functions with the same names acting more or less as "wrappers" around the functions here.
  * Especially the arguments (and their meaning) of each function will be described there.
+ *
+ * Note that there is no separate method to remove an item from a map. This is instead accomplished by
+ * retrieving the item, then setting its type to `type_none` via its `item_type_set` method (provided
+ * the item and its map support removal).
  */
 struct map_methods {
 	enum projection pro;        /**< The projection used for that type of map */

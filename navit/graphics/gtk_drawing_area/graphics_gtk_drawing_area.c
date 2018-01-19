@@ -49,6 +49,7 @@
 #include "plugin.h"
 #include "navit/font/freetype/font_freetype.h"
 #include "navit.h"
+#include <errno.h>
 
 #ifndef GDK_Book
 #define GDK_Book XF86XK_Book
@@ -428,6 +429,7 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 	cairo_paint(gr->cairo);
 }
 
+#ifdef HAVE_IMLIB2
 static unsigned char*
 create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel, size_t output_stride)
 {
@@ -448,7 +450,6 @@ create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h,
 	return out_buf;
 }
 
-#ifdef HAVE_IMLIB2
 static void
 draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)
 {
@@ -1037,7 +1038,11 @@ get_data(struct graphics_priv *this, char const *type)
 #if !defined(_WIN32) && !defined(__CEGCC__)
 		f=popen("pidof /usr/bin/ipaq-sleep","r");
 		if (f) {
-			fscanf(f,"%d",&this->pid);
+			int fscanf_result;
+			fscanf_result = fscanf(f,"%d",&this->pid);
+			if ((fscanf_result == EOF) || (fscanf_result == 0)){
+				dbg(lvl_warning, "Failed to open iPaq sleep file. Error-Code: %d\n" , errno);
+			}
 			dbg(lvl_debug,"ipaq_sleep pid=%d\n", this->pid);
 			pclose(f);
 		}

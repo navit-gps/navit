@@ -289,7 +289,11 @@ vehicle_file_open(struct vehicle_priv *priv)
 		p=strchr(p,':');
 		if (p) {
 			p++;
-			write(priv->fd, p, strlen(p));
+			int write_result;
+			write_result = write(priv->fd, p, strlen(p));
+			if (write_result == -1){
+				dbg(lvl_warning, "write failed.");
+			}
 		}
 		priv->file_type = file_type_socket;
 #endif //HAVE_SOCKET
