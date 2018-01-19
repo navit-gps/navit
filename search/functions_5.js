@@ -65,7 +65,6 @@ var searchData=
   ['dist_5fsq',['dist_sq',['../quadtree_8c.html#ab19c760f9cf0bd84663551db094e6618',1,'quadtree.c']]],
   ['distance',['distance',['../classPoiObject.html#a831ba33b305dbc2ac55580b29c258a35',1,'PoiObject']]],
   ['distance_5ffrom_5fll',['distance_from_ll',['../coastline_8c.html#a101b79175bdf9925bdbeabf15759153f',1,'coastline.c']]],
-  ['distance_5fset_5flast',['distance_set_last',['../navigation_8c.html#a3acdc14587990a6e49defdc60b4db9b6',1,'navigation.c']]],
   ['distancechanged',['distanceChanged',['../classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6',1,'PoiObject']]],
   ['district_5fstr',['district_str',['../android_8c.html#af19391ea1e0978a528a9fb52b5ebac29',1,'district_str(struct search_list_result *res, int level):&#160;android.c'],['../gui__internal__search_8c.html#a4ed78d4533e919f897bea9534af7c190',1,'district_str(struct search_list_result *res, int level, enum attr_type district, char *dflt):&#160;gui_internal_search.c']]],
   ['div_5fflag',['div_flag',['../gui__internal__html_8c.html#ab046403671d3100662517839f5af5e54',1,'gui_internal_html.c']]],

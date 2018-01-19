@@ -102,7 +102,7 @@ var searchData=
   ['displaylist',['displaylist',['../structattr.html#ad6cc12f85b3f3914ed66fa9d9df57bad',1,'attr::displaylist()'],['../structnavit.html#a083b0066e6ef77cf11e63de3a2644d7c',1,'navit::displaylist()'],['../structauxmap.html#a0d3d07fe22ff0b910a08f94b335a62cb',1,'auxmap::displaylist()']]],
   ['dist',['DIST',['../structgeodesic.html#a1a7c66afdc70a64c46c674d9f2e993d6',1,'geodesic::DIST()'],['../structitem__data.html#a092645828d64a634437540488e4e2b46',1,'item_data::dist()'],['../structpoi__param.html#afae856177f8237dd1475eefbc561b78e',1,'poi_param::dist()'],['../structstreet__name__numbers.html#a397a7dc9531cce53d5b0930e1e067bd3',1,'street_name_numbers::dist()']]],
   ['distance_5fturn',['distance_turn',['../structnavigation.html#aa354a1ce655f0ad3f57dcc2134349b12',1,'navigation']]],
-  ['distances',['distances',['../navigation_8c.html#aa9541e5fa2bd1f5f4e6b605c9a87b16e',1,'navigation.c']]],
+  ['distances',['distances',['../navigation_8c.html#af71f58b4e4674bdd356b5c6add3df65f',1,'navigation.c']]],
   ['district',['district',['../structtown__priv.html#a52652f68cffad5486b7ed0c4c85473f5',1,'town_priv']]],
   ['district_5fitem',['district_item',['../town_8c.html#a53c3b0f0dbe26fb2fc3161f0cb0e67de',1,'town.c']]],
   ['district_5fname',['district_name',['../structsearch__list__common.html#a80882007cf79e5989bae7950a04a3f78',1,'search_list_common']]],

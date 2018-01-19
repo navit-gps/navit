@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"struct__OSMPBF____PrimitiveGroup.html#afca177d19b54727f15cb2e3135d67d0f":[2,0,14,4],
 "struct__OSMPBF____Relation.html":[2,0,15],
 "struct__OSMPBF____Relation.html#a0ce518a78e8e67d8d6427eb6f76b15b8":[2,0,15,7],
 "struct__OSMPBF____Relation.html#a17adad6262d8690f8ffef32c4a00d636":[2,0,15,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,47,5],
 "structbinfile__hash__entry.html":[2,0,49],
 "structbinfile__hash__entry.html#a2631cf4f1bb3277a7fafc7a7b5a01e60":[2,0,49,0],
-"structbinfile__hash__entry.html#a91a355e3e27ef96d2f87a1e11a60f8c9":[2,0,49,2],
-"structbinfile__hash__entry.html#aa09060296247caa9c40e3761da698819":[2,0,49,1]
+"structbinfile__hash__entry.html#a91a355e3e27ef96d2f87a1e11a60f8c9":[2,0,49,2]
 };

@@ -11,6 +11,7 @@ var searchData=
   ['set_5fref',['SET_REF',['../osm_8c.html#a537de5978441ee08c8f79369128b843d',1,'osm.c']]],
   ['setpowermanagement',['SETPOWERMANAGEMENT',['../ceglue_8c.html#af22160fabda49f9de87e3346cd4388ce',1,'ceglue.c']]],
   ['sind',['sind',['../sunriset_8h.html#ad0827f80a4727ba1e433b37a59b61571',1,'sunriset.h']]],
+  ['size_5fof_5farray_5fdistances',['SIZE_OF_ARRAY_DISTANCES',['../navigation_8c.html#af8aa7587163d76c35ef590a20477b043',1,'navigation.c']]],
   ['slize_5fsize_5fdefault_5fgb',['SLIZE_SIZE_DEFAULT_GB',['../maptool_8c.html#aacd1f96904d8ef8a1bf9de7e7a63add1',1,'maptool.c']]],
   ['sq',['sq',['../geom_8h.html#ae7616788b30810a219d9cdee95904ba4',1,'sq():&#160;geom.h'],['../maptool_8h.html#ae7616788b30810a219d9cdee95904ba4',1,'sq():&#160;maptool.h']]],
   ['state_5fclear',['STATE_CLEAR',['../gui__internal_8h.html#ac97dd15ce6af53f5c2e61f843b324e03',1,'gui_internal.h']]],

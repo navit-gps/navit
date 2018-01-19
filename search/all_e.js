@@ -25,6 +25,7 @@ var searchData=
   ['last_5fcountry',['last_country',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#ae05052f524d272e6527f445c43c99e12',1,'org::navitproject::navit::NavitAddressSearchActivity']]],
   ['last_5fdir',['last_dir',['../structcdf__data.html#a9a0ceefdb5f59c1f890bcd630797292b',1,'cdf_data']]],
   ['last_5fdist',['last_dist',['../structcdf__data.html#ac71d14c6982d4b22358932e66f67f112',1,'cdf_data']]],
+  ['last_5fdistance',['LAST_DISTANCE',['../navigation_8c.html#acff11afeca273ec6cc9d1f1f077fc99c',1,'navigation.c']]],
   ['last_5fhigh',['last_high',['../structtree__search__node.html#a7242708a7e050cf2c60ffcac783a1d2f',1,'tree_search_node']]],
   ['last_5fin',['last_in',['../structtracking.html#aa7eb959a6ac6e0a040ddbdef9b2efc10',1,'tracking']]],
   ['last_5fitterated',['last_itterated',['../structmap__rect__priv.html#a37324c638779e59779c21fbc870f4c61',1,'map_rect_priv']]],

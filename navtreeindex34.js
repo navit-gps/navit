@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"qt5__espeak_8cpp.html#ad00bdb151d0e6397b282cd0c65ab6cdb":[3,0,13,5,0,9],
 "qt5__espeak_8cpp.html#adf82ae783f984ad06190fed0f96801d4":[3,0,13,5,0,7],
 "qt5__espeak_8cpp.html#ae25e0da7cdb20c758a56dc6aece92ba7":[3,0,13,5,0,3],
 "qt5__qml_2proxy_8h.html":[3,0,6,3,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "route_8c.html#afef9a7821c82a284360b06e607207856":[3,0,27,134],
 "route_8c.html#aff13b4b1b182e3ef05620ce10704f81b":[3,0,27,129],
 "route_8h.html":[3,0,117],
-"route_8h.html#a03a2c87fe7268b8a6aef10b431813a27":[3,0,117,14],
-"route_8h.html#a126e01d89edb53634a6805233970fdd9":[3,0,117,9]
+"route_8h.html#a03a2c87fe7268b8a6aef10b431813a27":[3,0,117,14]
 };

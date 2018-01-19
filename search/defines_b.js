@@ -3,6 +3,7 @@ var searchData=
   ['l',['L',['../data_8h.html#a7577d49f3bfffb1cf048eef843177784',1,'data.h']]],
   ['lam1',['lam1',['../geodesic_8h.html#a51460d63effce8166af1c813dac3972b',1,'geodesic.h']]],
   ['lam2',['lam2',['../geodesic_8h.html#afc42839d6606df9eff52e2c3f1fe9e1d',1,'geodesic.h']]],
+  ['last_5fdistance',['LAST_DISTANCE',['../navigation_8c.html#acff11afeca273ec6cc9d1f1f077fc99c',1,'navigation.c']]],
   ['le16_5fto_5fcpu',['le16_to_cpu',['../endianess_8h.html#a65e9510f535c1ee2f826d447471289fa',1,'endianess.h']]],
   ['le32_5fto_5fcpu',['le32_to_cpu',['../endianess_8h.html#a48f527b00bc1d5e46366d720280a1039',1,'endianess.h']]],
   ['le64_5fto_5fcpu',['le64_to_cpu',['../endianess_8h.html#a0987d88a4fac98f0b1d6355ef7aa77e2',1,'endianess.h']]],
