@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2011 Navit Team
+ * Copyright (C) 2005-2018 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,15 @@
 #include "maptool.h"
 #include "debug.h"
 
+/**
+ * @brief Saves a buffer to a file
+ *
+ * This function saves a buffer to a file. 
+ *
+ * @param filename The name of the while to where the buffer is saved to.
+ * @param b Buffer which is saved to file.
+ * @param offset
+ */
 void
 save_buffer(char *filename, struct buffer *b, long long offset)
 {
@@ -34,7 +43,15 @@ save_buffer(char *filename, struct buffer *b, long long offset)
 	dbg_assert(fwrite(b->base, b->size, 1, f)==1);
 	fclose(f);
 }
-
+/**
+ * @brief Loads a buffer from a file
+ *
+ * This function loads a buffer from a file. 
+ *
+ * @param filename The name of the while to where the buffer is loaded from.
+ * @param b Buffer in which file is loaded.
+ * @param offset
+ */
 int
 load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 {
@@ -65,7 +82,13 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	fclose(f);
 	return true;
 }
-
+/**
+ * @brief Determines size of buffer for file 
+ *
+ * This function determines the size of the buffer required to read a file. 
+ *
+ * @param  filename Name of file for which the required size of the buffer is determined
+ */
 long long
 sizeof_buffer(char *filename)
 {
