@@ -77,10 +77,10 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	dbg_assert(b->base != NULL);
 	if (fread(b->base, b->size, 1, f) == 0){
 		dbg(lvl_warning, "fread failed");
-		return false;
+		return 0;
         }
 	fclose(f);
-	return true;
+	return 1;
 }
 /**
  * @brief Determines size of buffer for file 
