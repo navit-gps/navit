@@ -207,6 +207,7 @@ ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg)
 		
 		if (fread(&road_id, sizeof(road_id), 1, ref) == 0){
 			dbg(lvl_warning, "fread failed");
+			continue;
 		}
 		if (speed) {
 			struct edge_hash_item *hi=g_slice_new(struct edge_hash_item);
