@@ -187,10 +187,13 @@ zip_write_index(struct zip_info *info)
 {
 	int size=ftell(info->index);
 	char *buffer;
-
+	
 	buffer=g_alloca(size);
 	fseek(info->index, 0, SEEK_SET);
-	fread(buffer, size, 1, info->index);
+	
+	if (fread(buffer, size, 1, info->index) == 0){
+		dbg(lvl_warning, "fread failed");
+	}
 	write_zipmember(info, "index", strlen("index"), buffer, size);
 	info->zipnum++;
 }
