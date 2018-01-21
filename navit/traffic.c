@@ -56,6 +56,9 @@
 /** The maximum penalty applied to points with non-matching attributes */
 #define PENALTY_POINT_MATCH 16
 
+/** The lowest order of items to consider */
+#define ROUTE_ORDER 18
+
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
 #define ROUTE_RECT_DIST_ABS 1000
 
@@ -1086,7 +1089,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 		transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
 		transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
-		rg->sel = route_rect(18, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
+		rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
 
 		if (!rg->sel)
 			continue;
@@ -1699,7 +1702,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 		transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
 		transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
-		rg->sel = route_rect(18, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
+		rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
 
 		if (!rg->sel)
 			continue;
