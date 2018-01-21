@@ -177,7 +177,7 @@ struct buffer {
 };
 
 void save_buffer(char *filename, struct buffer *b, long long offset);
-void load_buffer(char *filename, struct buffer *b, long long offset, long long size);
+int load_buffer(char *filename, struct buffer *b, long long offset, long long size);
 long long sizeof_buffer(char *filename);
 
 /* ch.c */
