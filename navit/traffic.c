@@ -935,6 +935,105 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
 }
 
 /**
+ * @brief Determines the “point triple” for a traffic location.
+ *
+ * Each traffic location is defined by up to three points:
+ * \li a start and end point, and an optional auxiliary point in between
+ * \li a single point, with one or two auxiliary points (one before, one after)
+ * \li a start and end point, and a third point which is outside the location
+ *
+ * This method determines these three points, puts them in the order in which they are encountered and
+ * returns a bit field indicating the end points. If a point in the array is NULL or refers to an
+ * auxiliary point, its corresponding bit is not set. The following values are returned:
+ * \li 2: Point location, the middle point is the actual point
+ * \li 3: Point-to-point location from the first to the second point; the third point is an auxiliary
+ * point outside the location
+ * \li 5: Point-to-point location from the first to the last point; the second point (if not NULL) is an
+ * auxiliary point located in between
+ * \li 6: Point-to-point location from the second to the third point; the first point is an auxiliary
+ * point outside the location
+ *
+ * @param this_ The location
+ * @param coords Points to an array which will receive pointers to the coordinates. The array must be
+ * able to store three pointers.
+ *
+ * @return A bit field indicating the end points for the location
+ */
+static int traffic_location_get_point_triple(struct traffic_location * this_, struct coord_geo ** coords) {
+	/* Which members of coords are the end points */
+	int ret = 0;
+
+	if (this_->at) {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = &this_->at->coord;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = 1 << 1;
+	} else if (this_->via) {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = &this_->via->coord;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = (1 << 2) | (1 << 0);
+	} else if (this_->not_via) {
+		/* TODO determine if not_via should be first or last */
+	} else {
+		coords[0] = this_->from ? &this_->from->coord : NULL;
+		coords[1] = NULL;
+		coords[2] = this_->to ? &this_->to->coord : NULL;
+		ret = (1 << 2) | (1 << 0);
+	}
+	return ret;
+}
+
+/**
+ * @brief Sets the rectangle enclosing all points of a location
+ *
+ * @param this_ The traffic location
+ * @param coords The point triple, can be NULL
+ */
+static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords) {
+	struct coord_geo * sw;
+	struct coord_geo * ne;
+	struct coord_geo * int_coords[] = {NULL, NULL, NULL};
+	int i;
+
+	if (this_->priv->sw && this_->priv->ne)
+		return;
+
+	if (!coords) {
+		coords = &int_coords;
+		traffic_location_get_point_triple(this_, coords);
+	}
+
+	if (!this_->priv->sw) {
+		sw = g_new0(struct coord_geo, 1);
+		sw->lat = INT_MAX;
+		sw->lng = INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat < sw->lat)
+					sw->lat = coords[i]->lat;
+				if (coords[i]->lng < sw->lng)
+					sw->lng = coords[i]->lng;
+			}
+		this_->priv->sw = sw;
+	}
+
+	if (!this_->priv->ne) {
+		ne = g_new0(struct coord_geo, 1);
+		ne->lat = -INT_MAX;
+		ne->lng = -INT_MAX;
+		for (i = 0; i < 3; i++)
+			if (coords[i]) {
+				if (coords[i]->lat > ne->lat)
+					ne->lat = coords[i]->lat;
+				if (coords[i]->lng > ne->lng)
+					ne->lng = coords[i]->lng;
+			}
+		this_->priv->ne = ne;
+	}
+}
+
+/**
  * @brief Populates a route graph.
  *
  * This adds all routable segments in the enclosing rectangle of the location (plus a safety margin) to
@@ -976,8 +1075,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 	/* Start and end point of the current way or segment */
 	struct route_graph_point *s_pnt, *e_pnt;
 
-	if (!(this_->priv->sw && this_->priv->ne))
-		return;
+	traffic_location_set_enclosing_rect(this_, NULL);
 
 	rg->h = mapset_open(ms);
 
@@ -1093,8 +1191,7 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 		struct mapset * ms) {
 	struct route_graph *rg;
 
-	if (!(this_->priv->sw && this_->priv->ne))
-		return NULL;
+	traffic_location_set_enclosing_rect(this_, NULL);
 
 	rg = g_new0(struct route_graph, 1);
 
@@ -1594,6 +1691,8 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 	if (!trpoint)
 		return NULL;
 
+	traffic_location_set_enclosing_rect(this_, NULL);
+
 	rg->h = mapset_open(ms);
 
 	while ((rg->m = mapset_next(rg->h, 2))) {
@@ -1641,102 +1740,6 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 	route_graph_build_done(rg, 1);
 
 	return ret;
-}
-
-/**
- * @brief Determines the “point triple” for a traffic location.
- *
- * Each traffic location is defined by up to three points:
- * \li a start and end point, and an optional auxiliary point in between
- * \li a single point, with one or two auxiliary points (one before, one after)
- * \li a start and end point, and a third point which is outside the location
- *
- * This method determines these three points, puts them in the order in which they are encountered and
- * returns a bit field indicating the end points. If a point in the array is NULL or refers to an
- * auxiliary point, its corresponding bit is not set. The following values are returned:
- * \li 2: Point location, the middle point is the actual point
- * \li 3: Point-to-point location from the first to the second point; the third point is an auxiliary
- * point outside the location
- * \li 5: Point-to-point location from the first to the last point; the second point (if not NULL) is an
- * auxiliary point located in between
- * \li 6: Point-to-point location from the second to the third point; the first point is an auxiliary
- * point outside the location
- *
- * @param this_ The location
- * @param coords Points to an array which will receive pointers to the coordinates. The array must be
- * able to store three pointers.
- *
- * @return A bit field indicating the end points for the location
- */
-static int traffic_location_get_point_triple(struct traffic_location * this_, struct coord_geo ** coords) {
-	/* Which members of coords are the end points */
-	int ret = 0;
-
-	if (this_->at) {
-		coords[0] = this_->from ? &this_->from->coord : NULL;
-		coords[1] = &this_->at->coord;
-		coords[2] = this_->to ? &this_->to->coord : NULL;
-		ret = 1 << 1;
-	} else if (this_->via) {
-		coords[0] = this_->from ? &this_->from->coord : NULL;
-		coords[1] = &this_->via->coord;
-		coords[2] = this_->to ? &this_->to->coord : NULL;
-		ret = (1 << 2) | (1 << 0);
-	} else if (this_->not_via) {
-		/* TODO determine if not_via should be first or last */
-	} else {
-		coords[0] = this_->from ? &this_->from->coord : NULL;
-		coords[1] = NULL;
-		coords[2] = this_->to ? &this_->to->coord : NULL;
-		ret = (1 << 2) | (1 << 0);
-	}
-	return ret;
-}
-
-/**
- * @brief Sets the rectangle enclosing all points of a location
- *
- * @param this_ The traffic location
- * @param coords The point triple, can be NULL
- */
-static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords) {
-	struct coord_geo * sw;
-	struct coord_geo * ne;
-	struct coord_geo * int_coords[] = {NULL, NULL, NULL};
-	int i;
-
-	if (!coords) {
-		coords = &int_coords;
-		traffic_location_get_point_triple(this_, coords);
-	}
-
-	if (!this_->priv->sw) {
-		sw = g_new0(struct coord_geo, 1);
-		sw->lat = INT_MAX;
-		sw->lng = INT_MAX;
-		for (i = 0; i < 3; i++)
-			if (coords[i]) {
-				if (coords[i]->lat < sw->lat)
-					sw->lat = coords[i]->lat;
-				if (coords[i]->lng < sw->lng)
-					sw->lng = coords[i]->lng;
-			}
-		this_->priv->sw = sw;
-	}
-
-	if (!this_->priv->ne) {
-		ne = g_new0(struct coord_geo, 1);
-		ne->lat = -INT_MAX;
-		ne->lng = -INT_MAX;
-		for (i = 0; i < 3; i++)
-			if (coords[i]) {
-				if (coords[i]->lat > ne->lat)
-					ne->lat = coords[i]->lat;
-				if (coords[i]->lng > ne->lng)
-					ne->lng = coords[i]->lng;
-			}
-		this_->priv->ne = ne;
-	}
 }
 
 /**
