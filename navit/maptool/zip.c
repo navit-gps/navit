@@ -193,6 +193,7 @@ zip_write_index(struct zip_info *info)
 	
 	if (fread(buffer, size, 1, info->index) == 0){
 		dbg(lvl_warning, "fread failed");
+		return;
 	}
 	write_zipmember(info, "index", strlen("index"), buffer, size);
 	info->zipnum++;

@@ -51,6 +51,7 @@ save_buffer(char *filename, struct buffer *b, long long offset)
  * @param filename The name of the while to where the buffer is loaded from.
  * @param b Buffer in which file is loaded.
  * @param offset
+ * @return indicator if operation suceeded
  */
 int
 load_buffer(char *filename, struct buffer *b, long long offset, long long size)
@@ -88,6 +89,7 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
  * This function determines the size of the buffer required to read a file. 
  *
  * @param  filename Name of file for which the required size of the buffer is determined
+ * @return required size of buffer
  */
 long long
 sizeof_buffer(char *filename)

@@ -131,7 +131,6 @@ progress_time(void)
 	const int buflen=20;
 	char buf[buflen];
 	int pos=1;
-	int write_result;
 	buf[0]=' ';
 #ifdef _WIN32
 	gettimeofday(&ts, NULL);
@@ -143,8 +142,7 @@ progress_time(void)
 	seconds%=60;
 	pos+=assafe_strcp2buf(seconds>9?":":":0", buflen-pos, buf+pos);
 	pos+=assafe_lltoa(seconds, buflen-pos, buf+pos);
-	write_result = write(2,buf,pos);
-	if (write_result == -1){
+	if (write(2,buf,pos) == -1){
 		dbg(lvl_warning, "Writing progress time failed. Error-Code: %d" , errno);
 	}
 }
