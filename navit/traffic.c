@@ -166,7 +166,7 @@ struct point_data {
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
 		struct attr **attrs, struct coord *c, int count, char * id);
-static void tm_dump_item(struct item * item);
+static void tm_dump_item_to_textfile(struct item * item);
 static void tm_destroy(struct map_priv *priv);
 static void tm_coord_rewind(void *priv_data);
 static void tm_item_destroy(struct item * item);
@@ -185,7 +185,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 		struct mapset * ms);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
-static void traffic_message_dump(struct traffic_message * this_);
+static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
 		struct traffic_point * from, struct traffic_point * to);
@@ -389,7 +389,7 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
  *
  * @param item The item
  */
-static void tm_dump_item(struct item * item) {
+static void tm_dump_item_to_textfile(struct item * item) {
 	struct item_priv * ip = (struct item_priv *) item->priv_data;
 	struct attr **attrs = ip->attrs;
 	struct coord *c = ip->coords;
@@ -433,14 +433,14 @@ static void tm_dump_item(struct item * item) {
  *
  * @param map The traffic map
  */
-static void tm_dump(struct map * map) {
+static void tm_dump_to_textfile(struct map * map) {
 	/* external method, verifies the public API as well as internal structure */
 	struct map_rect * mr;
 	struct item * item;
 
 	mr = map_rect_new(map, NULL);
 	while ((item = map_rect_get_item(mr)))
-		tm_dump_item(item);
+		tm_dump_item_to_textfile(item);
 	map_rect_destroy(mr);
 }
 
@@ -2214,7 +2214,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
  *
  * @param this_ The message to dump
  */
-static void traffic_message_dump(struct traffic_message * this_) {
+static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 	int i, j;
 	char * point_names[3] = {"From", "At", "To"};
 	struct traffic_point * points[3];
@@ -2553,7 +2553,7 @@ static void traffic_loop(struct traffic * this_) {
 				msgs_to_remove = NULL;
 			}
 
-			traffic_message_dump(messages[i]);
+			traffic_message_dump_to_stderr(messages[i]);
 		}
 
 	g_free(messages);
@@ -2579,7 +2579,7 @@ static void traffic_loop(struct traffic * this_) {
 
 	if (i || msgs_to_remove) {
 		/* dump map if messages have been added, deleted or expired */
-		tm_dump(this_->map);
+		tm_dump_to_textfile(this_->map);
 
 		/* TODO dump message store if new messages have been received */
 
