@@ -541,6 +541,111 @@ iso8601_to_secs(char *iso8601)
 }
 
 /**
+ * @brief Converts a `tm` structure to `time_t`
+ *
+ * Returns the value of type `time_t` that represents the UTC time described by the `tm` structure
+ * pointed to by `pt` (which may be modified).
+ *
+ * This function performs the reverse translation that `gmtime()` does. As this functionality is absent
+ * in the standard library, it is emulated by calling `mktime()`, converting its output into both GMT
+ * and local time, comparing the results and calling `mktime()` again with an input adjusted for the
+ * offset in the opposite direction. This ensures maximum portability.
+ *
+ * The values of the `tm_wday` and `tm_yday` members of `pt` are ignored, and the values of the other
+ * members are interpreted even if out of their valid ranges (see `struct tm`). For example, `tm_mday`
+ * may contain values above 31, which are interpreted accordingly as the days that follow the last day
+ * of the selected month.
+ *
+ * A call to this function automatically adjusts the values of the members of `pt` if they are off-range
+ * or—in the case of `tm_wday` and `tm_yday`—if their values are inconsistent with the other members.
+ *
+ */
+time_t mkgmtime(struct tm * pt) {
+	time_t ret;
+
+	/* GMT and local time */
+	struct tm * pgt, * plt;
+
+	ret = mktime(pt);
+
+	pgt = g_memdup(gmtime(ret), sizeof(struct tm));
+	plt = g_memdup(localtime(ret), sizeof(struct tm));
+
+	plt->tm_year -= pgt->tm_year - plt->tm_year;
+	plt->tm_mon -= pgt->tm_mon - plt->tm_mon;
+	plt->tm_mday -= pgt->tm_mday - plt->tm_mday;
+	plt->tm_hour -= pgt->tm_hour - plt->tm_hour;
+	plt->tm_min -= pgt->tm_min - plt->tm_min;
+	plt->tm_sec -= pgt->tm_sec - plt->tm_sec;
+
+	ret = mktime(plt);
+
+	g_free(pgt);
+	g_free(plt);
+
+	return ret;
+}
+
+/**
+ * @brief Converts an ISO 8601-style time string into `time_t`.
+ */
+time_t iso8601_to_time(char * iso8601) {
+	time_t ret;
+
+	/* Date/time fields (YYYY-MM-DD-hh-mm-ss) */
+	int val[6];
+
+	int i = 0;
+
+	/* Start of next integer portion and current position */
+	char *start = iso8601, *pos = iso8601;
+
+	/* Time struct */
+	struct tm tm;
+
+	while (*pos && i < 6) {
+		if (*pos < '0' || *pos > '9') {
+			val[i++] = atoi(start);
+			pos++;
+			start = pos;
+		}
+		if (*pos)
+			pos++;
+	}
+
+	tm.tm_year = val[0] - 1900;
+	tm.tm_mon = val[1];
+	tm.tm_mday = val[2];
+	tm.tm_hour = val[3];
+	tm.tm_min = val[4];
+	tm.tm_sec = val[5];
+
+	return mkgmtime(&tm);
+}
+
+/**
+ * @brief Converts time to ISO8601 format.
+ *
+ * The caller is responsible for freeing the return value of this function when it is no longer needed.
+ *
+ * @param time The time, as returned by `time()` and related functions
+ *
+ * @return Time in ISO8601 format
+ */
+char * time_to_iso8601(time_t time) {
+	char *timep=NULL;
+	char buffer[32];
+	struct tm *tm;
+
+	tm = gmtime(&time);
+	if (tm) {
+		strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
+		timep=g_strdup(buffer);
+	}
+	return timep;
+}
+
+/**
  * @brief Outputs local system time in ISO 8601 format.
  *
  * @return Time in ISO 8601 format
@@ -548,23 +653,17 @@ iso8601_to_secs(char *iso8601)
 char *
 current_to_iso8601(void)
 {
-	char *timep=NULL;
 #ifdef HAVE_API_WIN32_BASE
+	char *timep=NULL;
 	SYSTEMTIME ST;
 	GetSystemTime(&ST);
 	timep=g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ",ST.wYear,ST.wMonth,ST.wDay,ST.wHour,ST.wMinute,ST.wSecond);
-#else
-	char buffer[32];
-	time_t tnow;
-	struct tm *tm;
-	tnow = time(0);
-	tm = gmtime(&tnow);
-	if (tm) {
-		strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
-		timep=g_strdup(buffer);	
-	}
-#endif
 	return timep;
+#else
+	time_t tnow;
+	tnow = time(0);
+	return time_to_iso8601(tnow);
+#endif
 }
 
 

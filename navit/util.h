@@ -38,6 +38,8 @@ char * newSysString(const char *toconvert);
 #endif
 #endif
 unsigned int iso8601_to_secs(char *iso8601);
+time_t mkgmtime(struct tm * pt);
+char * time_to_iso8601(time_t time);
 char * current_to_iso8601(void);
 
 #if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
