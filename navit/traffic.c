@@ -2218,6 +2218,7 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 	int i, j;
 	char * point_names[3] = {"From", "At", "To"};
 	struct traffic_point * points[3];
+	char * timestamp = NULL;
 
 	if (!this_) {
 		dbg(lvl_debug, "(null)\n");
@@ -2230,7 +2231,31 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 
 	dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d\n",
 			this_->id, this_->is_cancellation, this_->is_forecast);
-	/* TODO timestamps */
+	if (this_->receive_time) {
+		timestamp = time_to_iso8601(this_->receive_time);
+		dbg(lvl_debug, "  First received: %s\n", timestamp);
+		g_free(timestamp);
+	}
+	if (this_->update_time) {
+		timestamp = time_to_iso8601(this_->update_time);
+		dbg(lvl_debug, "  Last updated:   %s\n", timestamp);
+		g_free(timestamp);
+	}
+	if (this_->start_time) {
+		timestamp = time_to_iso8601(this_->start_time);
+		dbg(lvl_debug, "  Start time:     %s\n", timestamp);
+		g_free(timestamp);
+	}
+	if (this_->end_time) {
+		timestamp = time_to_iso8601(this_->end_time);
+		dbg(lvl_debug, "  End time:       %s\n", timestamp);
+		g_free(timestamp);
+	}
+	if (this_->expiration_time) {
+		timestamp = time_to_iso8601(this_->expiration_time);
+		dbg(lvl_debug, "  Expires:        %s\n", timestamp);
+		g_free(timestamp);
+	}
 
 	/* dump replaced message IDs */
 	dbg(lvl_debug, "  replaced_count=%d\n",
