@@ -2216,8 +2216,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
  */
 static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 	int i, j;
-	char * point_names[3] = {"From", "At", "To"};
-	struct traffic_point * points[3];
+	char * point_names[5] = {"From", "At", "Via", "Not via", "To"};
+	struct traffic_point * points[5];
 	char * timestamp = NULL;
 
 	if (!this_) {
@@ -2227,7 +2227,9 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 
 	points[0] = this_->location->from;
 	points[1] = this_->location->at;
-	points[2] = this_->location->to;
+	points[2] = this_->location->via;
+	points[3] = this_->location->not_via;
+	points[4] = this_->location->to;
 
 	dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d\n",
 			this_->id, this_->is_cancellation, this_->is_forecast);
@@ -2273,7 +2275,7 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 	dbg(lvl_debug, "    fuzziness=%d, ramps=%d, tmc_table='%s', tmc_direction=%+d\n",
 			this_->location->fuzziness, this_->location->ramps, this_->location->tmc_table,
 			this_->location->tmc_direction);
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < 5; i++) {
 		if (points[i]) {
 			dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f\n",
 					point_names[i], points[i]->coord.lat, points[i]->coord.lng);
