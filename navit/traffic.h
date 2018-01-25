@@ -61,6 +61,7 @@ extern "C" {
  * @brief Classes for events.
  */
 enum event_class {
+	event_class_invalid = 0, /*!< Invalid event which should be ignored */
 	event_class_congestion,  /*!< Traffic congestion, typically indicating the approximate speed */
 	event_class_delay,       /*!< Delays, typically indicating the amount of extra waiting time */
 	event_class_restriction, /*!< Temporary traffic restrictions, such as road or lane closures or size,
@@ -71,6 +72,7 @@ enum event_class {
  * @brief Event types.
  */
 enum event_type {
+	event_invalid = 0,                                 /*!< Invalid event which should be ignored */
 	event_congestion_cleared,                          /*!< Traffic congestion cleared */
 	event_congestion_forecast_withdrawn,               /*!< Traffic congestion forecast withdrawn */
 	event_congestion_heavy_traffic,                    /*!< Heavy traffic with average speeds of `speed` */
