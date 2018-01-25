@@ -2272,8 +2272,9 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 			this_->location->road_name);
 	dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'\n",
 			this_->location->directionality, this_->location->destination, this_->location->direction);
-	dbg(lvl_debug, "    fuzziness=%d, ramps=%d, tmc_table='%s', tmc_direction=%+d\n",
-			this_->location->fuzziness, this_->location->ramps, this_->location->tmc_table,
+	dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d\n",
+			location_fuzziness_to_string(this_->location->fuzziness),
+			location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
 			this_->location->tmc_direction);
 	for (i = 0; i < 5; i++) {
 		if (points[i]) {
