@@ -390,6 +390,40 @@ struct mapset;
 struct traffic;
 
 /**
+ * @brief Creates a location fuzziness from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum location_fuzziness`, or `location_fuzziness_none` if `string` does
+ * not match a known identifier
+ */
+enum location_fuzziness location_fuzziness_new(char * string);
+
+/**
+ * @brief Translates location fuzziness to its string representation.
+ *
+ * @return The string representation of the location fuzziness, or NULL for `location_fuzziness_none`
+ */
+const char * location_fuzziness_to_string(enum location_fuzziness this_);
+
+/**
+ * @brief Creates an `enum location_ramps` from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum location_ramps`, or `location_ramps_none` if `string` does
+ * not match a known identifier
+ */
+enum location_ramps location_ramps_new(char * string);
+
+/**
+ * @brief Translates an `enum location_ramps` to its string representation.
+ *
+ * @return The string representation
+ */
+const char * location_ramps_to_string(enum location_ramps this_);
+
+/**
  * @brief Creates a new `traffic_point`.
  *
  * It is the responsibility of the caller to destroy all references passed to this function. This can be

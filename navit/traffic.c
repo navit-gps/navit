@@ -2679,6 +2679,58 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	return this_;
 }
 
+enum location_fuzziness location_fuzziness_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "LOW_RES"))
+		return location_fuzziness_low_res;
+	if (!g_ascii_strcasecmp(string, "END_UNKNOWN"))
+		return location_fuzziness_end_unknown;
+	if (!g_ascii_strcasecmp(string, "START_UNKNOWN"))
+		return location_fuzziness_start_unknown;
+	if (!g_ascii_strcasecmp(string, "EXTENT_UNKNOWN"))
+		return location_fuzziness_extent_unknown;
+	return location_fuzziness_none;
+}
+
+const char * location_fuzziness_to_string(enum location_fuzziness this_) {
+	switch (this_) {
+	case location_fuzziness_low_res:
+		return "LOW_RES";
+	case location_fuzziness_end_unknown:
+		return "END_UNKNOWN";
+	case location_fuzziness_start_unknown:
+		return "START_UNKNOWN";
+	case location_fuzziness_extent_unknown:
+		return "EXTENT_UNKNOWN";
+	default:
+		return NULL;
+	}
+}
+
+enum location_ramps location_ramps_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "ALL_RAMPS"))
+		return location_ramps_all;
+	if (!g_ascii_strcasecmp(string, "ENTRY_RAMP"))
+		return location_ramps_entry;
+	if (!g_ascii_strcasecmp(string, "EXIT_RAMP"))
+		return location_ramps_exit;
+	return location_ramps_none;
+}
+
+const char * location_ramps_to_string(enum location_ramps this_) {
+	switch (this_) {
+	case location_ramps_none:
+		return "NONE";
+	case location_ramps_all:
+		return "ALL_RAMPS";
+	case location_ramps_entry:
+		return "ENTRY_RAMP";
+	case location_ramps_exit:
+		return "EXIT_RAMP";
+	default:
+		return NULL;
+	}
+}
+
 struct traffic_point * traffic_point_new(float lon, float lat, char * junction_name, char * junction_ref,
 		char * tmc_id) {
 	struct traffic_point * ret;
