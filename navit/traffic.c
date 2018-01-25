@@ -2301,9 +2301,9 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 	dbg(lvl_debug, "  event_count=%d\n",
 			this_->event_count);
 	for (i = 0; i < this_->event_count; i++) {
-		dbg(lvl_debug, "  Event: event_class=%s, type=%d, length=%d m, speed=%d km/h\n",
+		dbg(lvl_debug, "  Event: event_class=%s, type=%s, length=%d m, speed=%d km/h\n",
 				event_class_to_string(this_->events[i]->event_class),
-				this_->events[i]->type,
+				event_type_to_string(this_->events[i]->type),
 				this_->events[i]->length, this_->events[i]->speed);
 		/* TODO quantifier */
 
