@@ -2483,6 +2483,132 @@ static void traffic_set_shared(struct traffic *this_) {
 }
 
 /**
+ * @brief Dumps all currently active traffic messages to an XML file.
+ */
+static void traffic_dump_messages_to_xml(struct traffic * this_) {
+	/* add the configuration directory to the name of the file to use */
+	char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
+									"/traffic.xml", NULL);
+	GList * msgiter;
+	struct traffic_message * message;
+	char * strval;
+	char * point_names[5] = {"from", "at", "via", "not_via", "to"};
+	struct traffic_point * points[5];
+	int i, j;
+
+	if (traffic_filename) {
+		FILE *f = fopen(traffic_filename,"w");
+		if (f) {
+			fprintf(f, "<navit_messages>\n");
+			for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+				message = (struct traffic_message *) msgiter->data;
+				points[0] = message->location->from;
+				points[1] = message->location->at;
+				points[2] = message->location->via;
+				points[3] = message->location->not_via;
+				points[4] = message->location->to;
+
+				strval = time_to_iso8601(message->receive_time);
+				fprintf(f, "  <message id=\"%s\" receive_time=\"%s\"", message->id, strval);
+				g_free(strval);
+				strval = time_to_iso8601(message->update_time);
+				fprintf(f, " update_time=\"%s\"", strval);
+				g_free(strval);
+				if (message->start_time) {
+					strval = time_to_iso8601(message->start_time);
+					fprintf(f, " start_time=\"%s\"", strval);
+					g_free(strval);
+				}
+				if (message->end_time) {
+					strval = time_to_iso8601(message->end_time);
+					fprintf(f, " end_time=\"%s\"", strval);
+					g_free(strval);
+				}
+				if (message->expiration_time) {
+					strval = time_to_iso8601(message->expiration_time);
+					fprintf(f, " expiration_time=\"%s\"", strval);
+					g_free(strval);
+				}
+				if (message->is_forecast)
+					fprintf(f, " forecast=\"%d\"", message->is_forecast);
+				fprintf(f, ">\n");
+
+				fprintf(f, "    <location directionality=\"%s\"",
+						message->location->directionality == location_dir_one ? "ONE_DIRECTION" : "BOTH_DIRECTIONS");
+				if (message->location->fuzziness)
+					fprintf(f, " fuzziness=\"%s\"", location_fuzziness_to_string(message->location->fuzziness));
+				if (message->location->ramps)
+					fprintf(f, " ramps=\"%s\"", location_ramps_to_string(message->location->ramps));
+				if (message->location->road_type != type_line_unspecified)
+					fprintf(f, " road_type=\"%s\"", item_to_name(message->location->road_type));
+				if (message->location->road_ref)
+					fprintf(f, " road_ref=\"%s\"", message->location->road_ref);
+				if (message->location->road_name)
+					fprintf(f, " road_name=\"%s\"", message->location->road_name);
+				if (message->location->destination)
+					fprintf(f, " destination=\"%s\"", message->location->destination);
+				if (message->location->direction)
+					fprintf(f, " direction=\"%s\"", message->location->direction);
+				if ((message->location->directionality == location_dir_one)
+						&& message->location->tmc_direction) {
+					fprintf(f, " tmc_direction=\"%+d\"", message->location->tmc_direction);
+				}
+				if (message->location->tmc_table)
+					fprintf(f, " tmc_table=\"%s\"", message->location->tmc_table);
+				fprintf(f, ">\n");
+
+				for (i = 0; i < 5; i++)
+					if (points[i]) {
+						fprintf(f, "      <%s", point_names[i]);
+						if (points[i]->junction_name)
+							fprintf(f, " junction_name=\"%s\"", points[i]->junction_name);
+						if (points[i]->junction_ref)
+							fprintf(f, " junction_ref=\"%s\"", points[i]->junction_ref);
+						if (points[i]->tmc_id)
+							fprintf(f, " tmc_id=\"%s\"", points[i]->tmc_id);
+						fprintf(f, ">");
+						fprintf(f, "%+f %+f", points[i]->coord.lat, points[i]->coord.lng);
+						fprintf(f, "</%s>\n", point_names[i]);
+					}
+
+				fprintf(f, "    </location>\n");
+
+				fprintf(f, "    <events>\n");
+				for (i = 0; i < message->event_count; i++) {
+					fprintf(f, "      <event class=\"%s\" type=\"%s\"",
+							event_class_to_string(message->events[i]->event_class),
+							event_type_to_string(message->events[i]->type));
+					if (message->events[i]->length >= 0)
+						fprintf(f, " length=\"%d\"", message->events[i]->length);
+					if (message->events[i]->speed != INT_MAX)
+						fprintf(f, " speed=\"%d\"", message->events[i]->speed);
+					/* TODO message->events[i]->quantifier */
+					fprintf(f, ">\n");
+
+					for (j = 0; j < message->events[i]->si_count; j++) {
+						fprintf(f, "        <supplementary_info class=\"%s\" type=\"%s\"",
+								si_class_to_string(message->events[i]->si[j]->si_class),
+								si_type_to_string(message->events[i]->si[j]->type));
+						/* TODO message->events[i]->si[j]->quantifier */
+						fprintf(f, "/>\n");
+					}
+
+					fprintf(f, "      </event>\n");
+				}
+				fprintf(f, "    </events>\n");
+				fprintf(f, "  </message>\n");
+			}
+			fprintf(f, "</navit_messages>\n");
+			fclose(f);
+		} else {
+			dbg(lvl_error,"could not open file for traffic messages");
+
+		} /* else - if (f) */
+		g_free(traffic_filename);			/* free the file name */
+	} /* if (traffic_filename) */
+}
+
+/**
  * @brief The loop function for the traffic module.
  *
  * This function polls backends for new messages and processes them by inserting, removing or modifying
@@ -2605,7 +2731,8 @@ static void traffic_loop(struct traffic * this_) {
 		/* dump map if messages have been added, deleted or expired */
 		tm_dump_to_textfile(this_->map);
 
-		/* TODO dump message store if new messages have been received */
+		/* dump message store if new messages have been received */
+		traffic_dump_messages_to_xml(this_);
 
 		dbg(lvl_debug, "received %d message(s), %d message(s) expired\n", i, g_list_length(msgs_to_remove));
 
