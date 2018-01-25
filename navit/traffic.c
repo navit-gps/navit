@@ -51,7 +51,7 @@
 #include "debug.h"
 
 /** The penalty applied to an off-road link */
-#define PENALTY_OFFROAD 2
+#define PENALTY_OFFROAD 4
 
 /** The maximum penalty applied to points with non-matching attributes */
 #define PENALTY_POINT_MATCH 16
