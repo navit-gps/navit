@@ -111,7 +111,7 @@ enum event_type {
 	event_restriction_access_restrictions_lifted,      /*!< Traffic restrictions lifted: reopened for all
                                                         *   traffic, other restrictions (overtaking etc.)
                                                         *   remain in place */
-	event_restriction_all_carriagewqays_cleared,       /*!< All carriageways cleared */
+	event_restriction_all_carriageways_cleared,        /*!< All carriageways cleared */
 	event_restriction_all_carriageways_reopened,       /*!< All carriageways reopened */
 	event_restriction_batch_service,                   /*!< Batch service (to limit the amount of traffic
 	                                                    *   passing through a section, unlike single
