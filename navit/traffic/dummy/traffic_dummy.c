@@ -101,7 +101,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 
 		from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
 		to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
-		via = traffic_point_new(11.5728, 48.178, "Petueltunnel", NULL, "29829"); // via
+		via = traffic_point_new(11.5728, 48.178, "Petueltunnel", NULL, "29829");
 		location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", 1);
 		messages[2] = traffic_message_new_single_event("dummy:B2R-N", time(NULL), time(NULL),
@@ -109,7 +109,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 
 		from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
 		to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
-		via = traffic_point_new(11.55085, 48.11225, "Brudermühltunnel", NULL, "35329"); // via
+		via = traffic_point_new(11.55085, 48.11225, "Brudermühltunnel", NULL, "35329");
 		location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", -1);
 		messages[3] = traffic_message_new_single_event("dummy:B2R-S", time(NULL), time(NULL),
