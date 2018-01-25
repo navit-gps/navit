@@ -409,6 +409,23 @@ enum event_class event_class_new(char * string);
 const char * event_class_to_string(enum event_class this_);
 
 /**
+ * @brief Creates an event type from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum event_type`, or `event_invalid` if `string` does not match a known
+ * identifier
+ */
+enum event_type event_type_new(char * string);
+
+/**
+ * @brief Translates an event type to its string representation.
+ *
+ * @return The string representation of the event type
+ */
+const char * event_type_to_string(enum event_type this_);
+
+/**
  * @brief Creates a location fuzziness from its string representation.
  *
  * @string The string representation (case is ignored)

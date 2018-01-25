@@ -2698,6 +2698,217 @@ const char * event_class_to_string(enum event_class this_) {
 	}
 }
 
+enum event_type event_type_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "CONGESTION_CLEARED"))
+		return event_congestion_cleared;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_FORECAST_WITHDRAWN"))
+		return event_congestion_forecast_withdrawn;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_HEAVY_TRAFFIC"))
+		return event_congestion_heavy_traffic;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_LONG_QUEUE"))
+		return event_congestion_long_queue;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_NONE"))
+		return event_congestion_none;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_NORMAL_TRAFFIC"))
+		return event_congestion_normal_traffic;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_QUEUE"))
+		return event_congestion_queue;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_QUEKE_LIKELY"))
+		return event_congestion_queue_likely;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_SLOW_TRAFFIC"))
+		return event_congestion_slow_traffic;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC"))
+		return event_congestion_stationary_traffic;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC_LIKELY"))
+		return event_congestion_stationary_traffic_likely;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_BUILDING_UP"))
+		return event_congestion_traffic_building_up;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_CONGESTION"))
+		return event_congestion_traffic_congestion;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_EASING"))
+		return event_congestion_traffic_easing;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_FLOWING_FREELY"))
+		return event_congestion_traffic_flowing_freely;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_HEAVIER_THAN_NORMAL"))
+		return event_congestion_traffic_heavier_than_normal;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_LIGHTER_THAN_NORMAL"))
+		return event_congestion_traffic_lighter_than_normal;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_MUCH_HEAVIER_THAN_NORMAL"))
+		return event_congestion_traffic_much_heavier_than_normal;
+	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_PROBLEM"))
+		return event_congestion_traffic_problem;
+	if (!g_ascii_strcasecmp(string, "DELAY_CLEARANCE"))
+		return event_delay_clearance;
+	if (!g_ascii_strcasecmp(string, "DELAY_DELAY"))
+		return event_delay_delay;
+	if (!g_ascii_strcasecmp(string, "DELAY_DELAY_POSSIBLE"))
+		return event_delay_delay_possible;
+	if (!g_ascii_strcasecmp(string, "DELAY_FORECAST_WITHDRAWN"))
+		return event_delay_forecast_withdrawn;
+	if (!g_ascii_strcasecmp(string, "DELAY_LONG_DELAY"))
+		return event_delay_long_delay;
+	if (!g_ascii_strcasecmp(string, "DELAY_SEVERAL_HOURS"))
+		return event_delay_several_hours;
+	if (!g_ascii_strcasecmp(string, "DELAY_UNCERTAIN_DURATION"))
+		return event_delay_uncertain_duration;
+	if (!g_ascii_strcasecmp(string, "DELAY_VERY_LONG_DELAY"))
+		return event_delay_very_long_delay;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ACCESS_RESTRICTIONS_LIFTED"))
+		return event_restriction_access_restrictions_lifted;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_CLEARED"))
+		return event_restriction_all_carriageways_cleared;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_REOPENED"))
+		return event_restriction_all_carriageways_reopened;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_BATCH_SERVICE"))
+		return event_restriction_batch_service;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED"))
+		return event_restriction_blocked;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED_AHEAD"))
+		return event_restriction_blocked_ahead;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_BLOCKED"))
+		return event_restriction_carriageway_blocked;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_CLOSED"))
+		return event_restriction_carriageway_closed;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED"))
+		return event_restriction_closed;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED_AHEAD"))
+		return event_restriction_closed_ahead;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_BLOCKED"))
+		return event_restriction_entry_blocked;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_REOPENED"))
+		return event_restriction_entry_reopened;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_INTERMITTENT_CLOSURES"))
+		return event_restriction_intermittent_closures;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_OPEN"))
+		return event_restriction_open;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_BLOCKED"))
+		return event_restriction_ramp_blocked;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_CLOSED"))
+		return event_restriction_ramp_closed;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_REOPENED"))
+		return event_restriction_ramp_reopened;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_REOPENED"))
+		return event_restriction_reopened;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_ROAD_CLEARED"))
+		return event_restriction_road_cleared;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_SINGLE_ALTERNATE_LINE_TRAFFIC"))
+		return event_restriction_single_alternate_line_traffic;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT"))
+		return event_restriction_speed_limit;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT_LIFTED"))
+		return event_restriction_speed_limit_lifted;
+	return event_invalid;
+}
+
+const char * event_type_to_string(enum event_type this_) {
+	switch (this_) {
+	case event_congestion_cleared:
+		return "CONGESTION_CLEARED";
+	case event_congestion_forecast_withdrawn:
+		return "CONGESTION_FORECAST_WITHDRAWN";
+	case event_congestion_heavy_traffic:
+		return "CONGESTION_HEAVY_TRAFFIC";
+	case event_congestion_long_queue:
+		return "CONGESTION_LONG_QUEUE";
+	case event_congestion_none:
+		return "CONGESTION_NONE";
+	case event_congestion_normal_traffic:
+		return "CONGESTION_NORMAL_TRAFFIC";
+	case event_congestion_queue:
+		return "CONGESTION_QUEUE";
+	case event_congestion_queue_likely:
+		return "CONGESTION_QUEUE_LIKELY";
+	case event_congestion_slow_traffic:
+		return "CONGESTION_SLOW_TRAFFIC";
+	case event_congestion_stationary_traffic:
+		return "CONGESTION_STATIONARY_TRAFFIC";
+	case event_congestion_stationary_traffic_likely:
+		return "CONGESTION_STATIONARY_TRAFFIC_LIKELY";
+	case event_congestion_traffic_building_up:
+		return "CONGESTION_TRAFFIC_BUILDING_UP";
+	case event_congestion_traffic_congestion:
+		return "CONGESTION_TRAFFIC_CONGESTION";
+	case event_congestion_traffic_easing:
+		return "CONGESTION_TRAFFIC_EASING";
+	case event_congestion_traffic_flowing_freely:
+		return "CONGESTION_TRAFFIC_FLOWING_FREELY";
+	case event_congestion_traffic_heavier_than_normal:
+		return "CONGESTION_TRAFFIC_HEAVIER_THAN_NORMAL";
+	case event_congestion_traffic_lighter_than_normal:
+		return "CONGESTION_TRAFFIC_LIGHTER_THAN_NORMAL";
+	case event_congestion_traffic_much_heavier_than_normal:
+		return "CONGESTION_TRAFFIC_MUCH_HEAVIER_THAN_NORMAL";
+	case event_congestion_traffic_problem:
+		return "CONGESTION_TRAFFIC_PROBLEM";
+	case event_delay_clearance:
+		return "DELAY_CLEARANCE";
+	case event_delay_delay:
+		return "DELAY_DELAY";
+	case event_delay_delay_possible:
+		return "DELAY_DELAY_POSSIBLE";
+	case event_delay_forecast_withdrawn:
+		return "DELAY_FORECAST_WITHDRAWN";
+	case event_delay_long_delay:
+		return "DELAY_LONG_DELAY";
+	case event_delay_several_hours:
+		return "DELAY_SEVERAL_HOURS";
+	case event_delay_uncertain_duration:
+		return "DELAY_UNCERTAIN_DURATION";
+	case event_delay_very_long_delay:
+		return "DELAY_VERY_LONG_DELAY";
+	case event_restriction_access_restrictions_lifted:
+		return "RESTRICTION_ACCESS_RESTRICTIONS_LIFTED";
+	case event_restriction_all_carriageways_cleared:
+		return "RESTRICTION_ALL_CARRIAGEWAYS_CLEARED";
+	case event_restriction_all_carriageways_reopened:
+		return "RESTRICTION_ALL_CARRIAGEWAYS_REOPENED";
+	case event_restriction_batch_service:
+		return "RESTRICTION_BATCH_SERVICE";
+	case event_restriction_blocked:
+		return "RESTRICTION_BLOCKED";
+	case event_restriction_blocked_ahead:
+		return "RESTRICTION_BLOCKED_AHEAD";
+	case event_restriction_carriageway_blocked:
+		return "RESTRICTION_CARRIAGEWAY_BLOCKED";
+	case event_restriction_carriageway_closed:
+		return "RESTRICTION_CARRIAGEWAY_CLOSED";
+	case event_restriction_closed:
+		return "RESTRICTION_CLOSED";
+	case event_restriction_closed_ahead:
+		return "RESTRICTION_CLOSED_AHEAD";
+	case event_restriction_entry_blocked:
+		return "RESTRICTION_ENTRY_BLOCKED";
+	case event_restriction_entry_reopened:
+		return "RESTRICTION_ENTRY_REOPENED";
+	case event_restriction_exit_blocked:
+		return "RESTRICTION_EXIT_BLOCKED";
+	case event_restriction_exit_reopened:
+		return "RESTRICTION_EXIT_REOPENED";
+	case event_restriction_intermittent_closures:
+		return "RESTRICTION_INTERMITTENT_CLOSURES";
+	case event_restriction_open:
+		return "RESTRICTION_OPEN";
+	case event_restriction_ramp_blocked:
+		return "RESTRICTION_RAMP_BLOCKED";
+	case event_restriction_ramp_closed:
+		return "RESTRICTION_RAMP_CLOSED";
+	case event_restriction_ramp_reopened:
+		return "RESTRICTION_RAMP_REOPENED";
+	case event_restriction_reopened:
+		return "RESTRICTION_REOPENED";
+	case event_restriction_road_cleared:
+		return "RESTRICTION_ROAD_CLEARED";
+	case event_restriction_single_alternate_line_traffic:
+		return "RESTRICTION_SINGLE_ALTERNATE_LINE_TRAFFIC";
+	case event_restriction_speed_limit:
+		return "RESTRICTION_SPEED_LIMIT";
+	case event_restriction_speed_limit_lifted:
+		return "RESTRICTION_SPEED_LIMIT_LIFTED";
+	default:
+		return "INVALID";
+	}
+}
+
 enum location_fuzziness location_fuzziness_new(char * string) {
 	if (!g_ascii_strcasecmp(string, "LOW_RES"))
 		return location_fuzziness_low_res;
