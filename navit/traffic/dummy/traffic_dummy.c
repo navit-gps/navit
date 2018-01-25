@@ -117,7 +117,6 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		break;
 
 	case 11:
-#if 0
 		messages = g_new0(struct traffic_message *, 4);
 
 		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
@@ -133,7 +132,6 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
 		messages[1] = traffic_message_new_cancellation("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
 				time(NULL) + 10, location);
-#endif
 		break;
 
 	default:
