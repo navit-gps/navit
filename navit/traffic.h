@@ -186,15 +186,17 @@ enum location_ramps {
  * @brief Classes for supplementary information items.
  */
 enum si_class {
-	si_class_place,    /*!< Qualifiers specifying the place(s) to which the event refers */
-	si_class_tendency, /*!< Traffic density development */
-	si_class_vehicle,  /*!< Specifies categories of vehicles to which the event applies */
+	si_class_invalid = 0, /*!< Invalid supplementary information item which should be ignored */
+	si_class_place,       /*!< Qualifiers specifying the place(s) to which the event refers */
+	si_class_tendency,    /*!< Traffic density development */
+	si_class_vehicle,     /*!< Specifies categories of vehicles to which the event applies */
 };
 
 /**
  * @brief Supplementary information types.
  */
 enum si_type {
+	si_invalid = 0,               /*!< Invalid supplementary information item which should be ignored */
 	si_place_bridge,              /*!< On bridges */
 	si_place_ramp,                /*!< On ramps (entry/exit) */
 	si_place_roadworks,           /*!< In the roadworks area */
