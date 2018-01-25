@@ -2311,8 +2311,9 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 		dbg(lvl_debug, "    si_count=%d\n",
 				this_->events[i]->si_count);
 		for (j = 0; j < this_->events[i]->si_count; j++) {
-			dbg(lvl_debug, "    Supplementary Information: si_class=%d, type=%d\n",
-					this_->events[i]->si[j]->si_class, this_->events[i]->si[j]->type);
+			dbg(lvl_debug, "    Supplementary Information: si_class=%s, type=%s\n",
+					si_class_to_string(this_->events[i]->si[j]->si_class),
+					si_type_to_string(this_->events[i]->si[j]->type));
 			/* TODO quantifier */
 		}
 	}
