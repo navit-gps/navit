@@ -2550,9 +2550,8 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
 				if (message->location->direction)
 					fprintf(f, " direction=\"%s\"", message->location->direction);
 				if ((message->location->directionality == location_dir_one)
-						&& message->location->tmc_direction) {
+						&& message->location->tmc_direction)
 					fprintf(f, " tmc_direction=\"%+d\"", message->location->tmc_direction);
-				}
 				if (message->location->tmc_table)
 					fprintf(f, " tmc_table=\"%s\"", message->location->tmc_table);
 				fprintf(f, ">\n");
