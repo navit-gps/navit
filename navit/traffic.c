@@ -2674,6 +2674,29 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	return this_;
 }
 
+enum event_class event_class_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "CONGESTION"))
+		return event_class_congestion;
+	if (!g_ascii_strcasecmp(string, "DELAY"))
+		return event_class_delay;
+	if (!g_ascii_strcasecmp(string, "RESTRICTION"))
+		return event_class_restriction;
+	return event_class_invalid;
+}
+
+const char * event_class_to_string(enum event_class this_) {
+	switch (this_) {
+	case event_class_congestion:
+		return "CONGESTION";
+	case event_class_delay:
+		return "DELAY";
+	case event_class_restriction:
+		return "RESTRICTION";
+	default:
+		return "INVALID";
+	}
+}
+
 enum location_fuzziness location_fuzziness_new(char * string) {
 	if (!g_ascii_strcasecmp(string, "LOW_RES"))
 		return location_fuzziness_low_res;

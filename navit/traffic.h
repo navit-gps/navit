@@ -392,6 +392,23 @@ struct mapset;
 struct traffic;
 
 /**
+ * @brief Creates an event class from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum event_class`, or `event_class_invalid` if `string` does not match a
+ * known identifier
+ */
+enum event_class event_class_new(char * string);
+
+/**
+ * @brief Translates an event class to its string representation.
+ *
+ * @return The string representation of the event class
+ */
+const char * event_class_to_string(enum event_class this_);
+
+/**
  * @brief Creates a location fuzziness from its string representation.
  *
  * @string The string representation (case is ignored)
