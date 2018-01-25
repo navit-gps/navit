@@ -2961,6 +2961,100 @@ const char * location_ramps_to_string(enum location_ramps this_) {
 	}
 }
 
+enum si_class si_class_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "PLACE"))
+		return si_class_place;
+	if (!g_ascii_strcasecmp(string, "TENDENCY"))
+		return si_class_tendency;
+	if (!g_ascii_strcasecmp(string, "VEHICLE"))
+		return si_class_vehicle;
+	return si_class_invalid;
+}
+
+const char * si_class_to_string(enum si_class this_) {
+	switch (this_) {
+	case si_class_place:
+		return "PLACE";
+	case si_class_tendency:
+		return "TENDENCY";
+	case si_class_vehicle:
+		return "VEHICLE";
+	default:
+		return "INVALID";
+	}
+}
+
+enum si_type si_type_new(char * string) {
+	if (!g_ascii_strcasecmp(string, "S_PLACE_BRIDGE"))
+		return si_place_bridge;
+	if (!g_ascii_strcasecmp(string, "S_PLACE_RAMP"))
+		return si_place_ramp;
+	if (!g_ascii_strcasecmp(string, "S_PLACE_ROADWORKS"))
+		return si_place_roadworks;
+	if (!g_ascii_strcasecmp(string, "S_PLACE_TUNNEL"))
+		return si_place_tunnel;
+	if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_DECREASING"))
+		return si_tendency_queue_decreasing;
+	if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_INCREASING"))
+		return si_tendency_queue_increasing;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_ALL"))
+		return si_vehicle_all;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_BUS"))
+		return si_vehicle_bus;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR"))
+		return si_vehicle_car;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_CARAVAN"))
+		return si_vehicle_car_with_caravan;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_TRAILER"))
+		return si_vehicle_car_with_trailer;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_HAZMAT"))
+		return si_vehicle_hazmat;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_HGV"))
+		return si_vehicle_hgv;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_MOTOR"))
+		return si_vehicle_motor;
+	if (!g_ascii_strcasecmp(string, "S_VEHICLE_WITH_TRAILER"))
+		return si_vehicle_with_trailer;
+	return si_invalid;
+}
+
+const char * si_type_to_string(enum si_type this_) {
+	switch (this_) {
+	case si_place_bridge:
+		return "S_PLACE_BRIDGE";
+	case si_place_ramp:
+		return "S_PLACE_RAMP";
+	case si_place_roadworks:
+		return "S_PLACE_ROADWORKS";
+	case si_place_tunnel:
+		return "S_PLACE_TUNNEL";
+	case si_tendency_queue_decreasing:
+		return "S_TENDENCY_QUEUE_DECREASING";
+	case si_tendency_queue_increasing:
+		return "S_TENDENCY_QUEUE_INCREASING";
+	case si_vehicle_all:
+		return "S_VEHICLE_ALL";
+	case si_vehicle_bus:
+		return "S_VEHICLE_BUS";
+	case si_vehicle_car:
+		return "S_VEHICLE_CAR";
+	case si_vehicle_car_with_caravan:
+		return "S_VEHICLE_CAR_WITH_CARAVAN";
+	case si_vehicle_car_with_trailer:
+		return "S_VEHICLE_CAR_WITH_TRAILER";
+	case si_vehicle_hazmat:
+		return "S_VEHICLE_HAZMAT";
+	case si_vehicle_hgv:
+		return "S_VEHICLE_HGV";
+	case si_vehicle_motor:
+		return "S_VEHICLE_MOTOR";
+	case si_vehicle_with_trailer:
+		return "S_VEHICLE_WITH_TRAILER";
+	default:
+		return "INVALID";
+	}
+}
+
 struct traffic_point * traffic_point_new(float lon, float lat, char * junction_name, char * junction_ref,
 		char * tmc_id) {
 	struct traffic_point * ret;

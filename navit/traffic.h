@@ -462,6 +462,40 @@ enum location_ramps location_ramps_new(char * string);
 const char * location_ramps_to_string(enum location_ramps this_);
 
 /**
+ * @brief Creates a supplementary information class from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum si_class`, or `si_class_invalid` if `string` does not match a
+ * known identifier
+ */
+enum si_class si_class_new(char * string);
+
+/**
+ * @brief Translates a supplementary information class to its string representation.
+ *
+ * @return The string representation of the supplementary information class
+ */
+const char * si_class_to_string(enum si_class this_);
+
+/**
+ * @brief Creates a supplementary information type from its string representation.
+ *
+ * @string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum si_type`, or `si_invalid` if `string` does not match a known
+ * identifier
+ */
+enum si_type si_type_new(char * string);
+
+/**
+ * @brief Translates a supplementary information type to its string representation.
+ *
+ * @return The string representation of the supplementary information type
+ */
+const char * si_type_to_string(enum si_type this_);
+
+/**
  * @brief Creates a new `traffic_point`.
  *
  * It is the responsibility of the caller to destroy all references passed to this function. This can be
