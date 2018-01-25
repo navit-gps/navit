@@ -588,18 +588,12 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
 	struct item * ret = NULL;
 	struct item_priv * priv_data;
 
-	dbg(lvl_error, "enter\n");
-
 	priv_data = g_new0(struct item_priv, 1);
-
-	dbg(lvl_error, "priv_data allocated\n");
 
 	ret = g_new0(struct item, 1);
 	ret->type = type;
 	ret->priv_data = priv_data;
 	map_priv->items = g_list_append(map_priv->items, ret);
-
-	dbg(lvl_error, "return\n");
 
 	return ret;
 }
