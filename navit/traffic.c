@@ -188,7 +188,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
-		struct traffic_point * from, struct traffic_point * to);
+		struct coord * c_start, struct coord * c_dst);
 
 static struct item_methods methods_traffic_item = {
 	tm_coord_rewind,
@@ -1302,17 +1302,14 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
  * longer needed.
  *
  * @param rg The route graph
- * @param from Start location
- * @param to Destination location
+ * @param c_start Start coordinates
+ * @param c_dst Destination coordinates
  *
  * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
-		struct traffic_point * from, struct traffic_point * to) {
+		struct coord * c_start, struct coord * c_dst) {
 	struct route_graph_point * ret;
-
-	/* Projected coordinates of start and destination point */
-	struct coord c_start, c_dst;
 
 	int i;
 
@@ -1331,17 +1328,13 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 	/* The segment currently being examined */
 	struct route_graph_segment *s = NULL;
 
-	if (!from || !to)
+	if (!c_start || !c_dst)
 		return NULL;
-
-	/* transform coordinates */
-	transform_from_geo(projection_mg, &to->coord, &c_dst);
-	transform_from_geo(projection_mg, &from->coord, &c_start);
 
 	/* prime the route graph */
 	heap = fh_makekeyheap();
 
-	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, &c_start, &c_dst);
+	start_value = PENALTY_OFFROAD * transform_distance(projection_mg, c_start, c_dst);
 	ret = NULL;
 
 	dbg(lvl_debug, "start flooding route graph, start_value=%d\n", start_value);
@@ -1349,7 +1342,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 	for (i = 0; i < HASH_SIZE; i++) {
 		p = rg->hash[i];
 		while (p) {
-			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, &c_dst);
+			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
 			p->el = fh_insertkey(heap, p->value, p);
 			p->seg = NULL;
 			p = p->hash_next;
@@ -1382,7 +1375,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 					} else {
 						fh_replacekey(heap, s->end->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, &c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->end->c, c_start);
 					if (new < start_value) { /* We've found a less costly way from the start point, update */
 						start_value = new;
 						ret = s->end;
@@ -1407,7 +1400,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 					} else {
 						fh_replacekey(heap, s->start->el, new);
 					}
-					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, &c_start);
+					new += PENALTY_OFFROAD * transform_distance(projection_mg, &s->start->c, c_start);
 					if (new < start_value) {
 						start_value = new;
 						ret = s->start;
@@ -1759,6 +1752,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	int i;
 
 	struct coord_geo * coords[] = {NULL, NULL, NULL};
+	struct coord * pcoords[] = {NULL, NULL, NULL};
 
 	/* Which members of coords are the end points */
 	int endpoints = 0;
@@ -1811,6 +1805,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	struct item * item;
 
 	/* Projected coordinates of from and to points */
+	/* TODO use pcoord for this */
 	struct coord c_from, c_to;
 
 	/* Matched points */
@@ -1841,10 +1836,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		return 0;
 	}
 
-	/* get point triple and enclosing rectangle */
-	endpoints = traffic_location_get_point_triple(this_->location, &coords);
-	traffic_location_set_enclosing_rect(this_->location, &coords);
-
 	if (this_->location->at)
 		/* TODO Point location, not supported yet */
 		return 0;
@@ -1854,6 +1845,15 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		return 0;
 
 	/* Line location, main carriageway */
+
+	/* get point triple and enclosing rectangle */
+	endpoints = traffic_location_get_point_triple(this_->location, &coords);
+	traffic_location_set_enclosing_rect(this_->location, &coords);
+	for (i = 0; i < 3; i++)
+		if (coords[i]) {
+			pcoords[i] = g_new0(struct coord, 1);
+			transform_from_geo(projection_mg, coords[i], pcoords[i]);
+		}
 
 	rg = traffic_location_get_route_graph(this_->location, ms);
 
@@ -1865,12 +1865,12 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	while (1) {
 		if (dir > 0)
 			start_next = traffic_route_flood_graph(rg,
-					this_->location->from ? this_->location->from : this_->location->at,
-					this_->location->to ? this_->location->to : this_->location->at);
+					pcoords[0] ? pcoords[0] : pcoords[1],
+							pcoords[2] ? pcoords[2] : pcoords[1]);
 		else
 			start_next = traffic_route_flood_graph(rg,
-					this_->location->to ? this_->location->to : this_->location->at,
-					this_->location->from ? this_->location->from : this_->location->at);
+					pcoords[2] ? pcoords[2] : pcoords[1],
+							pcoords[0] ? pcoords[0] : pcoords[1]);
 
 		/* tweak ends (find the point where the ramp touches the main road) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
@@ -2199,6 +2199,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	route_graph_free_points(rg);
 	route_graph_free_segments(rg);
 	g_free(rg);
+
+	for (i = 0; i < 3; i++)
+		g_free(pcoords[i]);
 
 	return 1;
 }
