@@ -1861,8 +1861,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	transform_from_geo(projection_mg, &this_->location->from->coord, &c_from);
 	transform_from_geo(projection_mg, &this_->location->to->coord, &c_to);
 
-	/* determine segments, once for each direction */
-	while (1) {
+	/* determine segments */
+	while (1) { /* once for each direction (loop logic at the end) */
 		if (dir > 0)
 			start_next = traffic_route_flood_graph(rg,
 					pcoords[0] ? pcoords[0] : pcoords[1],
