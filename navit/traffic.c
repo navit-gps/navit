@@ -1787,7 +1787,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	int dir = 1;
 
 	/* Start point for the route path */
-	struct route_graph_point * p_start;
+	struct route_graph_point * p_start = NULL;
 
 	/* Current and previous segment and segment used for comparison */
 	struct route_graph_segment *s = NULL;
@@ -1848,7 +1848,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	struct route_graph_point * start_new;
 
 	/* Last segment of the route (before extension) */
-	struct route_graph_segment * s_last;
+	struct route_graph_segment * s_last = NULL;
 
 	/* Aligned points */
 	struct route_graph_point * p_from;
