@@ -1335,6 +1335,9 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 		return NULL;
 
 	/* store points of existing route */
+	/* TODO
+	 * Is it correct to exclude the last point (seg==NULL) from the heap?
+	 * Doing so has worked for the cases tested, is this always true? */
 	if (start_existing) {
 		p = start_existing;
 		while (p) {
