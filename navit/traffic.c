@@ -1312,8 +1312,6 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 		struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing) {
 	struct route_graph_point * ret;
 
-	struct route_graph_point * p_iter;
-
 	int i;
 
 	GList * existing = NULL;
@@ -1338,15 +1336,15 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 
 	/* store points of existing route */
 	if (start_existing) {
-		p_iter = start_existing;
-		while (p_iter) {
-			existing = g_list_prepend(existing, p_iter);
-			if (!p_iter->seg)
-				p_iter = NULL;
-			else if (p_iter == p_iter->seg->start)
-				p_iter = p_iter->seg->end;
+		p = start_existing;
+		while (p) {
+			existing = g_list_prepend(existing, p);
+			if (!p->seg)
+				p = NULL;
+			else if (p == p->seg->start)
+				p = p->seg->end;
 			else
-				p_iter = p_iter->seg->start;
+				p = p->seg->start;
 		}
 	}
 
