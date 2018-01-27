@@ -1830,9 +1830,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* The last item added */
 	struct item * item;
 
-	/* Projected coordinates of from and to points */
-	/* TODO use pcoord for this */
-	struct coord c_from, c_to;
+	/* Projected coordinates of start and end points of the actual location
+	 * (if at is set, both point to the same coordinates) */
+	struct coord * c_from, * c_to;
 
 	/* Matched points */
 	GList * points;
@@ -1885,8 +1885,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	rg = traffic_location_get_route_graph(this_->location, ms);
 
 	/* transform coordinates */
-	transform_from_geo(projection_mg, &this_->location->from->coord, &c_from);
-	transform_from_geo(projection_mg, &this_->location->to->coord, &c_to);
+	c_from = (endpoints & 4) ? pcoords[0] : pcoords[1];
+	c_to = (endpoints & 1) ? pcoords[2] : pcoords[1];
 
 	/* determine segments */
 	while (1) { /* once for each direction (loop logic at the end) */
@@ -1911,6 +1911,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		}
 
 		/* tweak ends (find the point where the ramp touches the main road) */
+		/* TODO handle point locations (c_from == c_to) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
 			/* tweak end point */
 			if (dir > 0)
@@ -1956,7 +1957,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 						if (pd->p == p_iter)
 							break;
 					}
-					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? &c_to : &c_from);
+					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? c_to : c_from);
 					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
 					if (val < minval) {
 						minval = val;
@@ -2025,7 +2026,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 						if (pd->p == p_iter)
 							break;
 					}
-					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? &c_from : &c_to);
+					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? c_from : c_to);
 					/* TODO does attribute matching make sense for the start segment? */
 					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
 					if (val < minval) {
