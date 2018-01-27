@@ -1912,7 +1912,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		}
 
 		/* tweak ends (find the point where the ramp touches the main road) */
-		/* TODO handle point locations (c_from == c_to) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
 			/* tweak end point */
 			if (this_->location->at)
