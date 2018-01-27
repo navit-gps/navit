@@ -188,7 +188,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
-		struct coord * c_start, struct coord * c_dst);
+		struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing);
 
 static struct item_methods methods_traffic_item = {
 	tm_coord_rewind,
@@ -1304,14 +1304,19 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
  * @param rg The route graph
  * @param c_start Start coordinates
  * @param c_dst Destination coordinates
+ * @param start_existing Start point of an existing route (whose points will not be used)
  *
  * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
-		struct coord * c_start, struct coord * c_dst) {
+		struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing) {
 	struct route_graph_point * ret;
 
+	struct route_graph_point * p_iter;
+
 	int i;
+
+	GList * existing = NULL;
 
 	/* This heap will hold all points with "temporarily" calculated costs */
 	struct fibheap *heap;
@@ -1331,6 +1336,20 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 	if (!c_start || !c_dst)
 		return NULL;
 
+	/* store points of existing route */
+	if (start_existing) {
+		p_iter = start_existing;
+		while (p_iter) {
+			existing = g_list_prepend(existing, p_iter);
+			if (!p_iter->seg)
+				p_iter = NULL;
+			else if (p_iter == p_iter->seg->start)
+				p_iter = p_iter->seg->end;
+			else
+				p_iter = p_iter->seg->start;
+		}
+	}
+
 	/* prime the route graph */
 	heap = fh_makekeyheap();
 
@@ -1342,9 +1361,11 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 	for (i = 0; i < HASH_SIZE; i++) {
 		p = rg->hash[i];
 		while (p) {
-			p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
-			p->el = fh_insertkey(heap, p->value, p);
-			p->seg = NULL;
+			if (!g_list_find(existing, p)) {
+				p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
+				p->el = fh_insertkey(heap, p->value, p);
+				p->seg = NULL;
+			}
 			p = p->hash_next;
 		}
 	}
@@ -1412,6 +1433,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 	}
 
 	fh_deleteheap(heap);
+	g_list_free(existing);
 	return ret;
 }
 
@@ -1754,6 +1776,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	struct coord_geo * coords[] = {NULL, NULL, NULL};
 	struct coord * pcoords[] = {NULL, NULL, NULL};
 
+	/* How many point pairs coords contains (number of members minus one) */
+	int point_pairs = -1;
+
 	/* Which members of coords are the end points */
 	int endpoints = 0;
 
@@ -1853,6 +1878,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		if (coords[i]) {
 			pcoords[i] = g_new0(struct coord, 1);
 			transform_from_geo(projection_mg, coords[i], pcoords[i]);
+			point_pairs++;
 		}
 
 	rg = traffic_location_get_route_graph(this_->location, ms);
@@ -1863,14 +1889,25 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 	/* determine segments */
 	while (1) { /* once for each direction (loop logic at the end) */
-		if (dir > 0)
-			start_next = traffic_route_flood_graph(rg,
-					pcoords[0] ? pcoords[0] : pcoords[1],
-							pcoords[2] ? pcoords[2] : pcoords[1]);
-		else
-			start_next = traffic_route_flood_graph(rg,
-					pcoords[2] ? pcoords[2] : pcoords[1],
-							pcoords[0] ? pcoords[0] : pcoords[1]);
+		if (point_pairs == 1) {
+			if (dir > 0)
+				start_next = traffic_route_flood_graph(rg,
+						pcoords[0] ? pcoords[0] : pcoords[1],
+								pcoords[2] ? pcoords[2] : pcoords[1], NULL);
+			else
+				start_next = traffic_route_flood_graph(rg,
+						pcoords[2] ? pcoords[2] : pcoords[1],
+								pcoords[0] ? pcoords[0] : pcoords[1], NULL);
+		}
+		if (point_pairs == 2) {
+			if (dir > 0) {
+				start_next = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
+				traffic_route_flood_graph(rg, pcoords[1], pcoords[2], start_next);
+			} else {
+				start_next = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
+				traffic_route_flood_graph(rg, pcoords[1], pcoords[0], start_next);
+			}
+		}
 
 		/* tweak ends (find the point where the ramp touches the main road) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
