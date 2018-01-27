@@ -1003,7 +1003,7 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
 		return;
 
 	if (!coords) {
-		coords = &int_coords;
+		coords = &int_coords[0];
 		traffic_location_get_point_triple(this_, coords);
 	}
 
@@ -1873,8 +1873,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Line location, main carriageway */
 
 	/* get point triple and enclosing rectangle */
-	endpoints = traffic_location_get_point_triple(this_->location, &coords);
-	traffic_location_set_enclosing_rect(this_->location, &coords);
+	endpoints = traffic_location_get_point_triple(this_->location, &coords[0]);
+	traffic_location_set_enclosing_rect(this_->location, &coords[0]);
 	for (i = 0; i < 3; i++)
 		if (coords[i]) {
 			pcoords[i] = g_new0(struct coord, 1);
