@@ -1862,15 +1862,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		return 0;
 	}
 
-	if (this_->location->at)
-		/* TODO Point location, not supported yet */
-		return 0;
-
 	if (this_->location->ramps != location_ramps_none)
 		/* TODO Ramps, not supported yet */
 		return 0;
 
-	/* Line location, main carriageway */
+	/* Main carriageway */
 
 	/* get point triple and enclosing rectangle */
 	endpoints = traffic_location_get_point_triple(this_->location, &coords[0]);
@@ -1881,6 +1877,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			transform_from_geo(projection_mg, coords[i], pcoords[i]);
 			point_pairs++;
 		}
+
+	if (this_->location->at && !(this_->location->from || this_->location->to))
+		/* TODO Point location with no auxiliary points, not supported yet */
+		return 0;
 
 	rg = traffic_location_get_route_graph(this_->location, ms);
 
@@ -1989,11 +1989,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				g_free(points_iter->data);
 			g_list_free(points);
 
-			/* if we have identified a point, drop everything after it from the path */
-			if (p_to) {
-				p_to->seg = NULL;
-			}
-
 			/* tweak start point */
 			if (this_->location->at)
 				points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
@@ -2060,11 +2055,50 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				g_free(points_iter->data);
 			g_list_free(points);
 
-			/* if we have identified a point, set it to be the start point */
-			if (p_from) {
-				dbg(lvl_error, "changing start_next from %p to %p\n", p_start, p_from);
-				p_start = p_from;
+			if (!p_from)
+				p_from = p_start;
+
+			/* ensure we have at least one segment */
+			if ((p_from == p_to) || !p_from->seg) {
+				p_iter = p_start;
+				while (1) {
+					if (p_iter == p_iter->seg->start) {
+						/* compare to the last point: because p_to may be NULL here, we're comparing to
+						 * p_from instead, which at this point is guaranteed to be non-NULL and either
+						 * equal to p_to or without a successor, making it the designated end point. */
+						if (p_iter->seg->end == p_from)
+							break;
+						p_iter = p_iter->seg->end;
+					} else {
+						if (p_iter->seg->start == p_from)
+							break;
+						p_iter = p_iter->seg->start;
+					}
+				}
+				if (p_from->seg) {
+					/* decide between predecessor and successor of the point, based on proximity */
+					p_to = (p_from == p_from->seg->end) ? p_from->seg->start : p_from->seg->end;
+					if (transform_distance(projection_mg, &p_to->c, pcoords[1] ? pcoords[1] : pcoords[2])
+							> transform_distance(projection_mg, &p_iter->c, pcoords[1] ? pcoords[1] : pcoords[2])) {
+						p_to = p_from;
+						p_from = p_iter;
+					}
+				} else {
+					/* p_from has no successor, the segment goes from its predecessor to p_from */
+					p_to = p_from;
+					p_from = p_iter;
+				}
 			}
+
+			/* if we have identified a last point, drop everything after it from the path */
+			if (p_to)
+				p_to->seg = NULL;
+
+			/* set first point to be the start point */
+			if (p_from != p_start) {
+				dbg(lvl_error, "changing p_start from %p to %p\n", p_start, p_from);
+			}
+			p_start = p_from;
 		}
 
 		/* calculate route */
