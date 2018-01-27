@@ -76,6 +76,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 	struct traffic_message ** messages;
 	struct traffic_point * from;
 	struct traffic_point * to;
+	struct traffic_point * at;
 	struct traffic_point * via;
 	struct traffic_location * location;
 
@@ -83,7 +84,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 
 	switch (this_->reports_requested) {
 	case 1:
-		messages = g_new0(struct traffic_message *, 5);
+		messages = g_new0(struct traffic_message *, 6);
 
 		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
 		to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
@@ -113,6 +114,13 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 		location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
 				location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", -1);
 		messages[3] = traffic_message_new_single_event("dummy:B2R-S", time(NULL), time(NULL),
+				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+
+		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12727+5");
+		at = traffic_point_new(11.6405, 48.2435, "Garching-Süd", "71", "12727");
+		location = traffic_location_new(at, from, NULL, NULL, NULL, NULL, NULL, location_dir_one,
+				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", 1);
+		messages[4] = traffic_message_new_single_event("dummy:A9-71-S", time(NULL), time(NULL),
 				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 		break;
 
