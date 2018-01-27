@@ -2356,21 +2356,6 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 					point_names[i], points[i]->coord.lat, points[i]->coord.lng);
 			dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'\n",
 					points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
-
-			if (points[i]->map_coord) {
-				dbg(lvl_debug, "      Map-matched: pro=%d, x=%x, y=%x\n",
-						points[i]->map_coord->pro, points[i]->map_coord->x, points[i]->map_coord->y);
-			} else {
-				dbg(lvl_debug, "      Map-matched: (null)\n");
-			}
-
-			if (points[i]->map_coord_backward) {
-				dbg(lvl_debug, "      Map-matched backward: pro=%d, x=%x, y=%x\n",
-						points[i]->map_coord_backward->pro, points[i]->map_coord_backward->x,
-						points[i]->map_coord_backward->y);
-			} else {
-				dbg(lvl_debug, "      Map-matched backward: (null)\n");
-			}
 		} else {
 			dbg(lvl_debug, "    %s: (null)\n",
 					point_names[i]);
@@ -3269,8 +3254,6 @@ struct traffic_point * traffic_point_new(float lon, float lat, char * junction_n
 	ret = g_new0(struct traffic_point, 1);
 	ret->coord.lat = lat;
 	ret->coord.lng = lon;
-	ret->map_coord = NULL;
-	ret->map_coord_backward = NULL;
 	ret->junction_name = junction_name ? g_strdup(junction_name) : NULL;
 	ret->junction_ref = junction_ref ? g_strdup(junction_ref) : NULL;
 	ret->tmc_id = tmc_id ? g_strdup(tmc_id) : NULL;
@@ -3282,10 +3265,6 @@ struct traffic_point * traffic_point_new_short(float lon, float lat) {
 }
 
 void traffic_point_destroy(struct traffic_point * this_) {
-	if (this_->map_coord)
-		g_free(this_->map_coord);
-	if (this_->map_coord_backward)
-		g_free(this_->map_coord_backward);
 	if (this_->junction_name)
 		g_free(this_->junction_name);
 	if (this_->junction_ref)
