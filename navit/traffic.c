@@ -1785,16 +1785,16 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* The direction (positive or negative) */
 	int dir = 1;
 
-	/* Next point after start position */
-	struct route_graph_point * start_next;
+	/* Start point for the route path */
+	struct route_graph_point * p_start;
 
 	/* Current and previous segment and segment used for comparison */
 	struct route_graph_segment *s = NULL;
 	struct route_graph_segment *s_prev;
 	struct route_graph_segment *s_cmp;
 
-	/* point at which the next segment starts, i.e. up to which the path is complete */
-	struct route_graph_point *start;
+	/* Iterator for the route path */
+	struct route_graph_point *p_iter;
 
 	/* route graph for simplified routing */
 	struct route_graph *rg;
@@ -1891,21 +1891,21 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	while (1) { /* once for each direction (loop logic at the end) */
 		if (point_pairs == 1) {
 			if (dir > 0)
-				start_next = traffic_route_flood_graph(rg,
+				p_start = traffic_route_flood_graph(rg,
 						pcoords[0] ? pcoords[0] : pcoords[1],
 								pcoords[2] ? pcoords[2] : pcoords[1], NULL);
 			else
-				start_next = traffic_route_flood_graph(rg,
+				p_start = traffic_route_flood_graph(rg,
 						pcoords[2] ? pcoords[2] : pcoords[1],
 								pcoords[0] ? pcoords[0] : pcoords[1], NULL);
 		}
 		if (point_pairs == 2) {
 			if (dir > 0) {
-				start_next = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
-				traffic_route_flood_graph(rg, pcoords[1], pcoords[2], start_next);
+				p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
+				traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
 			} else {
-				start_next = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
-				traffic_route_flood_graph(rg, pcoords[1], pcoords[0], start_next);
+				p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
+				traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
 			}
 		}
 
@@ -1913,37 +1913,37 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
 			/* tweak end point */
 			if (dir > 0)
-				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+				points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
 			else
-				points = traffic_location_get_matching_points(this_->location, 0, rg, start_next, ms);
-			s = start_next ? start_next->seg : NULL;
-			start = start_next;
+				points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
+			s = p_start ? p_start->seg : NULL;
+			p_iter = p_start;
 
 			/* extend end to next junction */
-			for (s = start_next ? start_next->seg : NULL; s; s = start->seg) {
+			for (s = p_start ? p_start->seg : NULL; s; s = p_iter->seg) {
 				s_last = s;
-				if (s->start == start)
-					start = s->end;
+				if (s->start == p_iter)
+					p_iter = s->end;
 				else
-					start = s->start;
+					p_iter = s->start;
 			}
-			s = traffic_route_append(rg, s_last, start);
-			start->seg = s;
+			s = traffic_route_append(rg, s_last, p_iter);
+			p_iter->seg = s;
 
-			s = start_next ? start_next->seg : NULL;
+			s = p_start ? p_start->seg : NULL;
 			s_prev = NULL;
-			start = start_next;
+			p_iter = p_start;
 			minval = INT_MAX;
 			p_to = NULL;
 
-			while (start) {
+			while (p_iter) {
 				/* detect junctions */
 				is_junction = (s && s_prev) ? 0 : -1;
-				for (s_cmp = start->start; s_cmp; s_cmp = s_cmp->start_next) {
+				for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
 						is_junction += 1;
 				}
-				for (s_cmp = start->end; s_cmp; s_cmp = s_cmp->end_next) {
+				for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
 						is_junction += 1;
 				}
@@ -1952,28 +1952,28 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					pd = NULL;
 					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
 						pd = (struct point_data *) points_iter->data;
-						if (pd->p == start)
+						if (pd->p == p_iter)
 							break;
 					}
-					val = transform_distance(projection_mg, &start->c, (dir > 0) ? &c_to : &c_from);
+					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? &c_to : &c_from);
 					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
 					if (val < minval) {
 						minval = val;
-						p_to = start;
-						dbg(lvl_error, "candidate end point found, point %p, data %p, value %d\n", start, points_iter ? pd : NULL, val);
+						p_to = p_iter;
+						dbg(lvl_error, "candidate end point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
 					}
 				}
 
 				if (!s)
-					start = NULL;
+					p_iter = NULL;
 				else  {
-					if (s->start == start)
-						start = s->end;
+					if (s->start == p_iter)
+						p_iter = s->end;
 					else
-						start = s->start;
+						p_iter = s->start;
 					s_prev = s;
-					if (start->seg)
-						s = start->seg;
+					if (p_iter->seg)
+						s = p_iter->seg;
 					else {
 						s = NULL;
 					}
@@ -1991,28 +1991,28 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 			/* tweak start point */
 			if (dir > 0)
-				points = traffic_location_get_matching_points(this_->location, 0, rg, start_next, ms);
+				points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
 			else
-				points = traffic_location_get_matching_points(this_->location, 2, rg, start_next, ms);
+				points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
 			s_prev = NULL;
 			minval = INT_MAX;
 			p_from = NULL;
 
 			/* extend start to next junction */
-			start_new = traffic_route_prepend(rg, start_next);
+			start_new = traffic_route_prepend(rg, p_start);
 			if (start_new)
-				start_next = start_new;
+				p_start = start_new;
 
-			s = start_next ? start_next->seg : NULL;
-			start = start_next;
-			while (start) {
+			s = p_start ? p_start->seg : NULL;
+			p_iter = p_start;
+			while (p_iter) {
 				/* detect junctions */
 				is_junction = (s && s_prev) ? 0 : -1;
-				for (s_cmp = start->start; s_cmp; s_cmp = s_cmp->start_next) {
+				for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
 						is_junction += 1;
 				}
-				for (s_cmp = start->end; s_cmp; s_cmp = s_cmp->end_next) {
+				for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
 					if ((s_cmp != s) && (s_cmp != s_prev))
 						is_junction += 1;
 				}
@@ -2021,29 +2021,29 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					pd = NULL;
 					for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
 						pd = (struct point_data *) points_iter->data;
-						if (pd->p == start)
+						if (pd->p == p_iter)
 							break;
 					}
-					val = transform_distance(projection_mg, &start->c, (dir > 0) ? &c_from : &c_to);
+					val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? &c_from : &c_to);
 					/* TODO does attribute matching make sense for the start segment? */
 					val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
 					if (val < minval) {
 						minval = val;
-						p_from = start;
-						dbg(lvl_error, "candidate start point found, point %p, data %p, value %d\n", start, points_iter ? pd : NULL, val);
+						p_from = p_iter;
+						dbg(lvl_error, "candidate start point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
 					}
 				}
 
 				if (!s)
-					start = NULL;
+					p_iter = NULL;
 				else {
-					if (s->start == start)
-						start = s->end;
+					if (s->start == p_iter)
+						p_iter = s->end;
 					else
-						start = s->start;
+						p_iter = s->start;
 					s_prev = s;
-					if (start->seg)
-						s = start->seg;
+					if (p_iter->seg)
+						s = p_iter->seg;
 					else
 						s = NULL;
 				}
@@ -2055,14 +2055,14 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 			/* if we have identified a point, set it to be the start point */
 			if (p_from) {
-				dbg(lvl_error, "changing start_next from %p to %p\n", start_next, p_from);
-				start_next = p_from;
+				dbg(lvl_error, "changing start_next from %p to %p\n", p_start, p_from);
+				p_start = p_from;
 			}
 		}
 
 		/* calculate route */
-		s = start_next ? start_next->seg : NULL;
-		start = start_next;
+		s = p_start ? p_start->seg : NULL;
+		p_iter = p_start;
 
 		if (!s)
 			dbg(lvl_error, "no segments\n");
@@ -2073,17 +2073,17 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		while (s) {
 			count++;
 			len += s->data.len;
-			if (s->start == start)
-				start = s->end;
+			if (s->start == p_iter)
+				p_iter = s->end;
 			else
-				start = s->start;
-			s = start->seg;
+				p_iter = s->start;
+			s = p_iter->seg;
 		}
 
 		/* add segments */
 
-		s = start_next ? start_next->seg : NULL;
-		start = start_next;
+		s = p_start ? p_start->seg : NULL;
+		p_iter = p_start;
 
 		if (this_->priv->items) {
 			dbg(lvl_error, "internal error: message should not yet have any linked items at this point\n");
@@ -2197,19 +2197,19 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				attrs[i]->u.num = data->delay * s->data.len / len;
 			}
 
-			if (s->start == start) {
+			if (s->start == p_iter) {
 				/* forward direction, maintain order of coordinates */
 				for (i = 0; i < ccnt; i++) {
 					*cd++ = *c++;
 				}
-				start = s->end;
+				p_iter = s->end;
 			} else {
 				/* backward direction, reverse order of coordinates */
 				c += ccnt-1;
 				for (i = 0; i < ccnt; i++) {
 					*cd++ = *c--;
 				}
-				start = s->start;
+				p_iter = s->start;
 			}
 
 			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt, this_->id);
@@ -2224,7 +2224,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			*next_item = tm_item_ref(item);
 			next_item++;
 
-			s = start->seg;
+			s = p_iter->seg;
 		}
 
 		if ((this_->location->directionality == location_dir_one) || (dir < 0))
