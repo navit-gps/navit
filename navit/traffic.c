@@ -1377,7 +1377,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
 		if (!p) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
 			break;
 
-		dbg(lvl_debug, "p=0x%x, value=%d\n", p, p->value);
+		dbg(lvl_debug, "p=%p, value=%d\n", p, p->value);
 
 		min = p->value;
 		p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
