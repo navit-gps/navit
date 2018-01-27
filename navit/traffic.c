@@ -1914,7 +1914,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		/* TODO handle point locations (c_from == c_to) */
 		if (this_->location->fuzziness == location_fuzziness_low_res) {
 			/* tweak end point */
-			if (dir > 0)
+			if (this_->location->at)
+				points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
+			else if (dir > 0)
 				points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
 			else
 				points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
@@ -1992,7 +1994,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			}
 
 			/* tweak start point */
-			if (dir > 0)
+			if (this_->location->at)
+				points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
+			else if (dir > 0)
 				points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
 			else
 				points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
