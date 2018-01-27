@@ -1896,6 +1896,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 	/* get point triple and enclosing rectangle */
 	endpoints = traffic_location_get_point_triple(this_->location, &coords[0]);
+	if (!endpoints) {
+		dbg(lvl_error, "invalid location (mandatory points missing)\n");
+		return 0;
+	}
 	traffic_location_set_enclosing_rect(this_->location, &coords[0]);
 	for (i = 0; i < 3; i++)
 		if (coords[i]) {
