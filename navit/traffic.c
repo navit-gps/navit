@@ -966,6 +966,9 @@ static int traffic_location_get_point_triple(struct traffic_location * this_, st
 	/* Which members of coords are the end points */
 	int ret = 0;
 
+	/* Projected coordinates */
+	struct coord c_from, c_to, c_not_via;
+
 	if (this_->at) {
 		coords[0] = this_->from ? &this_->from->coord : NULL;
 		coords[1] = &this_->at->coord;
@@ -977,7 +980,30 @@ static int traffic_location_get_point_triple(struct traffic_location * this_, st
 		coords[2] = this_->to ? &this_->to->coord : NULL;
 		ret = (1 << 2) | (1 << 0);
 	} else if (this_->not_via) {
-		/* TODO determine if not_via should be first or last */
+		/*
+		 * If not_via is set, we calculate a route either for not_via-from-to or for from-to-not_via,
+		 * then trim the ends. The order of points is determined by the distance between not_via and the
+		 * other two points.
+		 */
+		if (!this_->from || !this_->to) {
+			coords[0] = NULL;
+			coords[1] = NULL;
+			coords[2] = NULL;
+			return ret;
+		}
+		transform_from_geo(projection_mg, &this_->from->coord, &c_from);
+		transform_from_geo(projection_mg, &this_->to->coord, &c_to);
+		transform_from_geo(projection_mg, &this_->not_via->coord, &c_not_via);
+		if (transform_distance(projection_mg, &c_from, &c_not_via)
+				< transform_distance(projection_mg, &c_to, &c_not_via)) {
+			coords[0] = &this_->not_via->coord;
+			coords[1] = &this_->from->coord;
+			coords[2] = &this_->to->coord;
+		} else {
+			coords[0] = &this_->from->coord;
+			coords[1] = &this_->to->coord;
+			coords[2] = &this_->not_via->coord;
+		}
 	} else {
 		coords[0] = this_->from ? &this_->from->coord : NULL;
 		coords[1] = NULL;
@@ -1913,7 +1939,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 		/* tweak ends (find the point where the ramp touches the main road) */
 		if ((this_->location->fuzziness == location_fuzziness_low_res)
-				|| this_->location->at){
+				|| this_->location->at || this_->location->not_via){
 			/* tweak end point */
 			if (this_->location->at)
 				points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
