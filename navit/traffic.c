@@ -1912,7 +1912,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		}
 
 		/* tweak ends (find the point where the ramp touches the main road) */
-		if (this_->location->fuzziness == location_fuzziness_low_res) {
+		if ((this_->location->fuzziness == location_fuzziness_low_res)
+				|| this_->location->at){
 			/* tweak end point */
 			if (this_->location->at)
 				points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
