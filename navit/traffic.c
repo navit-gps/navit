@@ -1900,6 +1900,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 						pcoords[2] ? pcoords[2] : pcoords[1],
 								pcoords[0] ? pcoords[0] : pcoords[1], NULL);
 		} else if (point_pairs == 2) {
+			/* TODO handle cases in which the route goes through the "third" point
+			 * (this should not happen; if it does, we need to detect and fix it) */
 			if (dir > 0) {
 				p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
 				traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
