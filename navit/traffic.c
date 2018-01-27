@@ -1899,8 +1899,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				p_start = traffic_route_flood_graph(rg,
 						pcoords[2] ? pcoords[2] : pcoords[1],
 								pcoords[0] ? pcoords[0] : pcoords[1], NULL);
-		}
-		if (point_pairs == 2) {
+		} else if (point_pairs == 2) {
 			if (dir > 0) {
 				p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
 				traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
