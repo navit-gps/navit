@@ -1062,7 +1062,19 @@ parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, co
 }
 #endif
 
-void
+/**
+ * @brief Parses XML text.
+ *
+ * @param document The XML data to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int
 xml_parse_text(const char *document, void *data,
 	void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
 	void (*end)(xml_context *, const char *, void *, GError **),
@@ -1072,17 +1084,17 @@ xml_parse_text(const char *document, void *data,
 	xml_context *context;
 	gboolean result;
 
-	context = g_markup_parse_context_new (&parser, 0, data, NULL);
 	if (!document){
-		dbg(lvl_error, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).\n");
-		exit(1);
+		dbg(lvl_error, "FATAL: No XML data supplied.\n");
+		return 0;
 	}
+	context = g_markup_parse_context_new (&parser, 0, data, NULL);
 	result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
+	g_markup_parse_context_free (context);
 	if (!result){
 		dbg(lvl_error, "FATAL: Cannot parse data as XML: '%s'\n", document);
-		exit(1);
+		return 0;
 	}
-	g_markup_parse_context_free (context);
 #else
 	char *str=g_strdup(document);
 	ezxml_t root = ezxml_parse_str(str, strlen(str));
@@ -1092,6 +1104,7 @@ xml_parse_text(const char *document, void *data,
 	ezxml_free(root);
 	g_free(str);
 #endif
+	return 1;
 }
 
 
