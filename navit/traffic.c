@@ -50,6 +50,12 @@
 #include "callback.h"
 #include "debug.h"
 
+/** Flag to indicate new messages have been received */
+#define MESSAGE_UPDATE_MESSAGES 1 << 0
+
+/** Flag to indicate segments have changed */
+#define MESSAGE_UPDATE_SEGMENTS 1 << 1
+
 /** The penalty applied to an off-road link */
 #define PENALTY_OFFROAD 4
 
@@ -2703,15 +2709,9 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
 	} /* if (traffic_filename) */
 }
 
-/**
- * @brief The loop function for the traffic module.
- *
- * This function polls backends for new messages and processes them by inserting, removing or modifying
- * traffic distortions and triggering route recalculations as needed.
- */
-static void traffic_loop(struct traffic * this_) {
+static int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
+	int ret = 0;
 	int i = 0;
-	struct traffic_message ** messages;
 
 	/* Iterator over messages */
 	GList * msg_iter;
@@ -2719,11 +2719,11 @@ static void traffic_loop(struct traffic * this_) {
 	/* Stored message being compared */
 	struct traffic_message * stored_msg;
 
-	/* Pointer into messages[i]->replaces */
-	char ** replaces;
-
 	/* Messages to remove */
 	GList * msgs_to_remove = NULL;
+
+	/* Pointer into messages[i]->replaces */
+	char ** replaces;
 
 	/* Attributes for traffic distortions generated from the current traffic message */
 	struct seg_data * data;
@@ -2735,71 +2735,97 @@ static void traffic_loop(struct traffic * this_) {
 	struct traffic_location * swap_location;
 	struct item ** swap_items;
 
-	/* Whether a redraw is needed (because segments have changed) */
-	int is_redraw_needed = 0;
+	for (i = 0; messages[i] != NULL; i++) {
+		ret |= MESSAGE_UPDATE_MESSAGES;
+
+		for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
+			stored_msg = (struct traffic_message *) msg_iter->data;
+			if (!strcmp(stored_msg->id, messages[i]->id))
+				msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
+			else
+				for (replaces = messages[i]->replaces; replaces; replaces++)
+					if (!strcmp(stored_msg->id, *replaces) && !g_list_find(msgs_to_remove, messages[i]))
+						msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
+		}
+
+		if (!messages[i]->is_cancellation) {
+			/* if the message is not just a cancellation, store it and match it to the map */
+			data = traffic_message_parse_events(messages[i]);
+			swap_candidate = NULL;
+
+			/* check if any of the replaced messages has the same location and segment data */
+			for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
+				stored_msg = (struct traffic_message *) msg_iter->data;
+				if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+						&& traffic_location_equals(messages[i]->location, stored_msg->location))
+					swap_candidate = stored_msg;
+			}
+
+			if (swap_candidate) {
+				/* reuse location and segments if we are replacing a matching message */
+				swap_location = messages[i]->location;
+				swap_items = messages[i]->priv->items;
+				messages[i]->location = swap_candidate->location;
+				messages[i]->priv->items = swap_candidate->priv->items;
+				swap_candidate->location = swap_location;
+				swap_candidate->priv->items = swap_items;
+			} else {
+				/* else find matching segments from scratch */
+				traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
+				ret |= MESSAGE_UPDATE_SEGMENTS;
+			}
+
+			g_free(data);
+
+			/* store message */
+			this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+		}
+
+		/* delete replaced messages */
+		if (msgs_to_remove) {
+			for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
+				stored_msg = (struct traffic_message *) msg_iter->data;
+				if (stored_msg->priv->items)
+					ret |= MESSAGE_UPDATE_SEGMENTS;
+				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+				traffic_message_destroy(stored_msg);
+			}
+
+			g_list_free(msgs_to_remove);
+			msgs_to_remove = NULL;
+		}
+
+		traffic_message_dump_to_stderr(messages[i]);
+	}
+
+	dbg(lvl_debug, "processed %d message(s)\n", i);
+
+	return ret;
+}
+
+/**
+ * @brief The loop function for the traffic module.
+ *
+ * This function polls backends for new messages and processes them by inserting, removing or modifying
+ * traffic distortions and triggering route recalculations as needed.
+ */
+static void traffic_loop(struct traffic * this_) {
+	struct traffic_message ** messages;
+
+	int update_status = 0;
+
+	/* Iterator over messages */
+	GList * msg_iter;
+
+	/* Stored message being compared */
+	struct traffic_message * stored_msg;
+
+	/* Messages to remove */
+	GList * msgs_to_remove = NULL;
 
 	messages = this_->meth.get_messages(this_->priv);
 	if (messages)
-		for (i = 0; messages[i] != NULL; i++) {
-			for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
-				stored_msg = (struct traffic_message *) msg_iter->data;
-				if (!strcmp(stored_msg->id, messages[i]->id))
-					msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
-				else
-					for (replaces = messages[i]->replaces; replaces; replaces++)
-						if (!strcmp(stored_msg->id, *replaces) && !g_list_find(msgs_to_remove, messages[i]))
-							msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
-			}
-
-			if (!messages[i]->is_cancellation) {
-				/* if the message is not just a cancellation, store it and match it to the map */
-				data = traffic_message_parse_events(messages[i]);
-				swap_candidate = NULL;
-
-				/* check if any of the replaced messages has the same location and segment data */
-				for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
-					stored_msg = (struct traffic_message *) msg_iter->data;
-					if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
-							&& traffic_location_equals(messages[i]->location, stored_msg->location))
-						swap_candidate = stored_msg;
-				}
-
-				if (swap_candidate) {
-					/* reuse location and segments if we are replacing a matching message */
-					swap_location = messages[i]->location;
-					swap_items = messages[i]->priv->items;
-					messages[i]->location = swap_candidate->location;
-					messages[i]->priv->items = swap_candidate->priv->items;
-					swap_candidate->location = swap_location;
-					swap_candidate->priv->items = swap_items;
-				} else {
-					/* else find matching segments from scratch */
-					traffic_message_add_segments(messages[i], this_->ms, data, this_->map);
-					is_redraw_needed = 1;
-				}
-
-				g_free(data);
-
-				/* store message */
-				this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
-			}
-
-			/* delete replaced messages */
-			if (msgs_to_remove) {
-				for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
-					stored_msg = (struct traffic_message *) msg_iter->data;
-					if (stored_msg->priv->items)
-						is_redraw_needed = 1;
-					this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-					traffic_message_destroy(stored_msg);
-				}
-
-				g_list_free(msgs_to_remove);
-				msgs_to_remove = NULL;
-			}
-
-			traffic_message_dump_to_stderr(messages[i]);
-		}
+		update_status |= traffic_process_messages(this_, messages);
 
 	g_free(messages);
 
@@ -2814,7 +2840,7 @@ static void traffic_loop(struct traffic * this_) {
 		for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
 			stored_msg = (struct traffic_message *) msg_iter->data;
 			if (stored_msg->priv->items)
-				is_redraw_needed = 1;
+				update_status |= MESSAGE_UPDATE_SEGMENTS;
 			this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
 			traffic_message_destroy(stored_msg);
 		}
@@ -2822,17 +2848,17 @@ static void traffic_loop(struct traffic * this_) {
 		g_list_free(msgs_to_remove);
 	}
 
-	if (i || msgs_to_remove) {
+	if (update_status || msgs_to_remove) {
 		/* dump map if messages have been added, deleted or expired */
 		tm_dump_to_textfile(this_->map);
 
 		/* dump message store if new messages have been received */
 		traffic_dump_messages_to_xml(this_);
 
-		dbg(lvl_debug, "received %d message(s), %d message(s) expired\n", i, g_list_length(msgs_to_remove));
+		dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
 
 		/* trigger redraw if segments have changed */
-		if (is_redraw_needed && (navit_get_ready(this_->navit) == 3))
+		if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
 			navit_draw_async(this_->navit, 1);
 	}
 	msgs_to_remove = NULL;
