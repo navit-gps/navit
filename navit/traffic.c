@@ -2736,7 +2736,7 @@ static int traffic_process_messages(struct traffic * this_, struct traffic_messa
 	struct item ** swap_items;
 
 	for (i = 0; messages[i] != NULL; i++)
-		if (stored_msg->expiration_time >= time(NULL)) {
+		if (messages[i]->expiration_time >= time(NULL)) {
 			ret |= MESSAGE_UPDATE_MESSAGES;
 
 			for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
