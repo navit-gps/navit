@@ -2709,6 +2709,18 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
 	} /* if (traffic_filename) */
 }
 
+/**
+ * @brief Processes new traffic messages.
+ *
+ * Messages which are past their expiration timestamp are skipped, and the flags in the return value
+ * are set only if at least one valid message is found.
+ *
+ * @param this_ The traffic instance
+ * @param messages The new messages
+ *
+ * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
+ * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
+ */
 static int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
 	int ret = 0;
 	int i = 0;
