@@ -276,8 +276,8 @@ var hierarchy =
     [ "org.navitproject.navit.NavitAddressSearchActivity.NavitAddress", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html", null ],
     [ "org.navitproject.navit.NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html", null ],
     [ "org.navitproject.navit.NavitMap", "classorg_1_1navitproject_1_1navit_1_1NavitMap.html", null ],
-    [ "NavitObject", "structNavitObject.html", null ],
     [ "navitObject", "structnavitObject.html", null ],
+    [ "NavitObject", "structNavitObject.html", null ],
     [ "org.navitproject.navit.NavitTextTranslations", "classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html", null ],
     [ "org.navitproject.navit.NavitVehicle", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html", null ],
     [ "newnode", "structnewnode.html", null ],
@@ -404,7 +404,6 @@ var hierarchy =
     [ "Runnable", null, [
       [ "org.navitproject.navit.Navit.SoftInputRestorer", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html", null ],
       [ "org.navitproject.navit.NavitGraphics.NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", null ],
-      [ "org.navitproject.navit.NavitSpeech", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html", null ],
       [ "org.navitproject.navit.NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", null ],
       [ "org.navitproject.navit.NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", null ]
     ] ],

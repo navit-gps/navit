@@ -50,9 +50,6 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
     [ "NavitSensors.java", "NavitSensors_8java.html", [
       [ "NavitSensors", "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html", "classorg_1_1navitproject_1_1navit_1_1NavitSensors" ]
     ] ],
-    [ "NavitSpeech.java", "NavitSpeech_8java.html", [
-      [ "NavitSpeech", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech" ]
-    ] ],
     [ "NavitSpeech2.java", "NavitSpeech2_8java.html", [
       [ "NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2" ]
     ] ],

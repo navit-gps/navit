@@ -23,7 +23,6 @@ var searchData=
   ['we',['we',['../structfile__wordexp.html#a97d9da187426577cdf3a49ab289c007a',1,'file_wordexp']]],
   ['weight',['weight',['../structch__edge.html#afbab763db5dc32011bd626f78e8e7879',1,'ch_edge::weight()'],['../structedge.html#ac6cf46f253ca5faf8f4e83b18013bf9c',1,'edge::weight()'],['../structsize__weight__limit.html#af786f43599bb9b1030d782cfa20af323',1,'size_weight_limit::weight()'],['../structvehicleprofile.html#aa8ee7c3e754ae0f529c1f25517fdd5bd',1,'vehicleprofile::weight()']]],
   ['wfree',['wfree',['../structwidget.html#abf1f52809302cc5c9fb557889c78955d',1,'widget']]],
-  ['what',['what',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html#a50f1f8f41279dfb6a3ac7149c3ab2926',1,'org::navitproject::navit::NavitSpeech']]],
   ['where',['where',['../structcache__entry.html#add5e125db81b24374db7f1391d65def7',1,'cache_entry::where()'],['../structmalloc__head.html#a15e2f15b982ca632e0e0103bede944c6',1,'malloc_head::where()']]],
   ['white',['white',['../structj1850.html#aafd01c88a291e852af16f6a1774cced5',1,'j1850']]],
   ['wi',['wi',['../structdraw__polyline__shape.html#a8b3c2674fa9090ffa5bd932987da8305',1,'draw_polyline_shape']]],

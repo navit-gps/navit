@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea9bb3c10d2c2e1b7becc7be961d74e00b":[2,0,285,0,0],
 "classPoiObject.html":[2,0,321],
 "classPoiObject.html#a0ad10a5700c7b87b577c362fc39bd9d6":[2,0,321,4],
 "classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73":[2,0,321,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a086aab815df8a0e7aad907f4511c6676":[2,0,1,0,0,3,8],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a0aaff54f98314c275f52daa53f02fe31":[2,0,1,0,0,3,3],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a13adfa50043ff7b380a5b8f533730872":[2,0,1,0,0,3,11],
-"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a170fa4cf40faacb6e2ad578e545b96bb":[2,0,1,0,0,3,9]
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a170fa4cf40faacb6e2ad578e545b96bb":[2,0,1,0,0,3,9],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a27a77a7bbd422e3da7af7d026e103921":[2,0,1,0,0,3,26]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a27a77a7bbd422e3da7af7d026e103921":[2,0,1,0,0,3,26],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a3774d5bc93a3a2b3bc22e1e9c824e42a":[2,0,1,0,0,3,17],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4938b8d2e020022acc5d39dcfcbafe81":[2,0,1,0,0,3,19],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6a17b64922a961d044f1c7ec37239617":[2,0,1,0,0,3,24],
@@ -249,5 +248,6 @@ var NAVTREEINDEX6 =
 "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html":[2,0,1,0,0,13],
 "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a38379def280f77f593fb2a3f94d9b4a7":[2,0,1,0,0,13,4],
 "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a4821526e553f7ce0355678695be991d4":[2,0,1,0,0,13,1],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a5c32ad97daf4cec5b922d15caf12f3d7":[2,0,1,0,0,13,2]
+"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a5c32ad97daf4cec5b922d15caf12f3d7":[2,0,1,0,0,13,2],
+"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a9d64ebca2cec3310bc3fdfa57cd1217b":[2,0,1,0,0,13,5]
 };

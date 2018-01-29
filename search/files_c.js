@@ -23,7 +23,6 @@ var searchData=
   ['navitproxy_2eh',['navitProxy.h',['../navitProxy_8h.html',1,'']]],
   ['navitrestoretask_2ejava',['NavitRestoreTask.java',['../NavitRestoreTask_8java.html',1,'']]],
   ['navitsensors_2ejava',['NavitSensors.java',['../NavitSensors_8java.html',1,'']]],
-  ['navitspeech_2ejava',['NavitSpeech.java',['../NavitSpeech_8java.html',1,'']]],
   ['navitspeech2_2ejava',['NavitSpeech2.java',['../NavitSpeech2_8java.html',1,'']]],
   ['navittexttranslations_2ejava',['NavitTextTranslations.java',['../NavitTextTranslations_8java.html',1,'']]],
   ['navittimeout_2ejava',['NavitTimeout.java',['../NavitTimeout_8java.html',1,'']]],

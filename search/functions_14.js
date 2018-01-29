@@ -6,7 +6,7 @@ var searchData=
   ['save_5fbuffer',['save_buffer',['../buffer_8c.html#aa7452743a76a8cad407e8a84a60e7ed2',1,'save_buffer(char *filename, struct buffer *b, long long offset):&#160;buffer.c'],['../maptool_8h.html#aa7452743a76a8cad407e8a84a60e7ed2',1,'save_buffer(char *filename, struct buffer *b, long long offset):&#160;buffer.c']]],
   ['save_5fmap_5fcsv',['save_map_csv',['../csv_8c.html#a4a7ba1cf34b823d5a9c8167d4e7c1165',1,'csv.c']]],
   ['save_5fvehicle_5fxml',['save_vehicle_xml',['../gui__internal_8c.html#aa532cc06603a8d87299e917f577e59c1',1,'gui_internal.c']]],
-  ['say',['say',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html#a755779d05e212203e301e42713bece96',1,'org.navitproject.navit.NavitSpeech.say()'],['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a02727414f9ce45fa734aacca3726e33f',1,'org.navitproject.navit.NavitSpeech2.say()']]],
+  ['say',['say',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a02727414f9ce45fa734aacca3726e33f',1,'org::navitproject::navit::NavitSpeech2']]],
   ['scan_5flength_5fprefixed_5fdata',['scan_length_prefixed_data',['../protobuf-c_8c.html#a97b6bc25d86c21a049ddc78f6dc7875b',1,'protobuf-c.c']]],
   ['scan_5fvarint',['scan_varint',['../protobuf-c_8c.html#a7c707d8aa566a66c2c9208b3fc882447',1,'protobuf-c.c']]],
   ['script_5fdestroy',['script_destroy',['../script_8c.html#ad8d57117bde9df302768f691f6ad2489',1,'script.c']]],

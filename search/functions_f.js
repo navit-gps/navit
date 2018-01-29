@@ -219,7 +219,6 @@ var searchData=
   ['navitmapdownloader',['NavitMapDownloader',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['navitrestoretask',['NavitRestoreTask',['../classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ae58c05516229b205423ce38b9830c6c5',1,'org::navitproject::navit::NavitRestoreTask']]],
   ['navitsensors',['NavitSensors',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#ad761b057bf51aa700ffc8ae4aaa72d27',1,'org::navitproject::navit::NavitSensors']]],
-  ['navitspeech',['NavitSpeech',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech.html#a9855a785c7abcb5b2b2ea0452be6ba9e',1,'org::navitproject::navit::NavitSpeech']]],
   ['navitspeech2',['NavitSpeech2',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a8d7c42e0d95fd58e177a90b3c8b15bb6',1,'org::navitproject::navit::NavitSpeech2']]],
   ['navittimeout',['NavitTimeout',['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html#abd235476e0a1e15926977565c8990582',1,'org::navitproject::navit::NavitTimeout']]],
   ['navitvehicle',['NavitVehicle',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#ac4dc9d2eec58e27febb1b1618fdd8f34',1,'org::navitproject::navit::NavitVehicle']]],

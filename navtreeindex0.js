@@ -23,12 +23,11 @@ var NAVTREEINDEX0 =
 "NavitMap_8java.html":[3,0,0,0,0,0,0,10],
 "NavitRestoreTask_8java.html":[3,0,0,0,0,0,0,12],
 "NavitSensors_8java.html":[3,0,0,0,0,0,0,13],
-"NavitSpeech2_8java.html":[3,0,0,0,0,0,0,15],
-"NavitSpeech_8java.html":[3,0,0,0,0,0,0,14],
-"NavitTextTranslations_8java.html":[3,0,0,0,0,0,0,16],
-"NavitTimeout_8java.html":[3,0,0,0,0,0,0,17],
-"NavitVehicle_8java.html":[3,0,0,0,0,0,0,18],
-"NavitWatch_8java.html":[3,0,0,0,0,0,0,19],
+"NavitSpeech2_8java.html":[3,0,0,0,0,0,0,14],
+"NavitTextTranslations_8java.html":[3,0,0,0,0,0,0,15],
+"NavitTimeout_8java.html":[3,0,0,0,0,0,0,16],
+"NavitVehicle_8java.html":[3,0,0,0,0,0,0,17],
+"NavitWatch_8java.html":[3,0,0,0,0,0,0,18],
 "Navit_8java.html":[3,0,0,0,0,0,0,1],
 "QNavitQuick_8cpp.html":[3,0,5,7,4],
 "QNavitQuick_8cpp.html#a3e27cc033e73ffddfb4a04c0ec989fe3":[3,0,5,7,4,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "attr_8h.html#aea83b4807e6d8661f72db20d375c356c":[3,0,23,2],
 "attr_8h.html#af09a65cfd198568aea29d5ca4aa1ecf6":[3,0,23,40],
 "attr_8h.html#af2ce0a129647d2864d4e96da2a31710d":[3,0,23,13],
-"attr_8h.html#af78ae59ad62810df2f069b62b9ddfe49":[3,0,23,6]
+"attr_8h.html#af78ae59ad62810df2f069b62b9ddfe49":[3,0,23,6],
+"attr_8h.html#af7b5712cbd86a0440ca0012c2b9204cd":[3,0,23,24]
 };
