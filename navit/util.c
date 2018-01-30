@@ -593,7 +593,7 @@ time_t iso8601_to_time(char * iso8601) {
 	time_t ret;
 
 	/* Date/time fields (YYYY-MM-DD-hh-mm-ss) */
-	int val[6];
+	int val[8];
 
 	int i = 0;
 
@@ -612,13 +612,27 @@ time_t iso8601_to_time(char * iso8601) {
 		if (*pos)
 			pos++;
 	}
+	val[6] = 0;
+	val[7] = 0;
+	if (*pos && i == 6) {
+		if (pos[1] && pos[2] && (!pos[3] || pos[3] == ':')) {
+			val[6] = atoi(pos);
+			if (pos[3] == ':') {
+				pos += 3;
+				val[7] = (val[6] < 0) ? -atoi(pos) : atoi(pos);
+			}
+		} else if (pos[1] && pos[2] && pos[3] && pos[4]) {
+			val[6] = atoi(pos) / 100;
+			val[7] = atoi(pos) % 100;
+		}
+	}
 
 	tm.tm_year = val[0] - 1900;
 	tm.tm_mon = val[1];
 	tm.tm_mday = val[2];
 	tm.tm_hour = val[3];
-	tm.tm_min = val[4];
-	tm.tm_sec = val[5];
+	tm.tm_min = val[4] - val[6];
+	tm.tm_sec = val[5] - val[7];
 
 	return mkgmtime(&tm);
 }
