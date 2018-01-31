@@ -390,7 +390,7 @@ struct traffic;
 /**
  * @brief Creates an event class from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum event_class`, or `event_class_invalid` if `string` does not match a
  * known identifier
@@ -407,7 +407,7 @@ const char * event_class_to_string(enum event_class this_);
 /**
  * @brief Creates an event type from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum event_type`, or `event_invalid` if `string` does not match a known
  * identifier
@@ -424,7 +424,7 @@ const char * event_type_to_string(enum event_type this_);
 /**
  * @brief Creates a location fuzziness from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum location_fuzziness`, or `location_fuzziness_none` if `string` does
  * not match a known identifier
@@ -441,7 +441,7 @@ const char * location_fuzziness_to_string(enum location_fuzziness this_);
 /**
  * @brief Creates an `enum location_ramps` from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum location_ramps`, or `location_ramps_none` if `string` does
  * not match a known identifier
@@ -458,7 +458,7 @@ const char * location_ramps_to_string(enum location_ramps this_);
 /**
  * @brief Creates a supplementary information class from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum si_class`, or `si_class_invalid` if `string` does not match a
  * known identifier
@@ -475,7 +475,7 @@ const char * si_class_to_string(enum si_class this_);
 /**
  * @brief Creates a supplementary information type from its string representation.
  *
- * @string The string representation (case is ignored)
+ * @param string The string representation (case is ignored)
  *
  * @return The corresponding `enum si_type`, or `si_invalid` if `string` does not match a known
  * identifier
