@@ -83,7 +83,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 	this_->reports_requested++;
 
 	switch (this_->reports_requested) {
-	case 1:
+	case 10:
 		messages = g_new0(struct traffic_message *, 6);
 
 		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
@@ -124,7 +124,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
 				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 		break;
 
-	case 11:
+	case 20:
 		messages = g_new0(struct traffic_message *, 4);
 
 		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
