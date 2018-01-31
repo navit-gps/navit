@@ -39,6 +39,7 @@ char * newSysString(const char *toconvert);
 #endif
 unsigned int iso8601_to_secs(char *iso8601);
 time_t mkgmtime(struct tm * pt);
+time_t iso8601_to_time(char * iso8601);
 char * time_to_iso8601(time_t time);
 char * current_to_iso8601(void);
 
