@@ -568,8 +568,8 @@ time_t mkgmtime(struct tm * pt) {
 
 	ret = mktime(pt);
 
-	pgt = g_memdup(gmtime(ret), sizeof(struct tm));
-	plt = g_memdup(localtime(ret), sizeof(struct tm));
+	pgt = g_memdup(gmtime(&ret), sizeof(struct tm));
+	plt = g_memdup(localtime(&ret), sizeof(struct tm));
 
 	plt->tm_year -= pgt->tm_year - plt->tm_year;
 	plt->tm_mon -= pgt->tm_mon - plt->tm_mon;
