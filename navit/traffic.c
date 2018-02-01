@@ -1661,7 +1661,7 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
 		} else
 			break;
 	}
-	dbg(lvl_error, "return, last=%p, ret=%p\n", last, ret);
+	dbg(lvl_debug, "return, last=%p, ret=%p\n", last, ret);
 	return ret;
 }
 
@@ -1856,7 +1856,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 			if (!(score = traffic_point_match_attributes(trpoint, item)))
 				continue;
 
-			dbg(lvl_error, "adding item, score: %d\n", score);
+			dbg(lvl_debug, "adding item, score: %d\n", score);
 
 			data = g_new0(struct point_data, 1);
 			data->score = score;
@@ -2086,7 +2086,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					if (val < minval) {
 						minval = val;
 						p_to = p_iter;
-						dbg(lvl_error, "candidate end point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
+						dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
 					}
 				}
 
@@ -2153,7 +2153,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					if (val < minval) {
 						minval = val;
 						p_from = p_iter;
-						dbg(lvl_error, "candidate start point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
+						dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
 					}
 				}
 
@@ -2217,7 +2217,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 			/* set first point to be the start point */
 			if (p_from != p_start) {
-				dbg(lvl_error, "changing p_start from %p to %p\n", p_start, p_from);
+				dbg(lvl_debug, "changing p_start from %p to %p\n", p_start, p_from);
 			}
 			p_start = p_from;
 		}
@@ -2652,7 +2652,7 @@ static void traffic_set_shared(struct traffic *this_) {
 	struct attr attr;
 	struct traffic * traffic;
 
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 
 	if (!this_->shared) {
 		iter = navit_attr_iter_new();
@@ -4065,7 +4065,7 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
 }
 
 void traffic_init(void) {
-	dbg(lvl_error, "enter\n");
+	dbg(lvl_debug, "enter\n");
 	plugin_register_category_map("traffic", traffic_map_new);
 }
 
