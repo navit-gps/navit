@@ -26,6 +26,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 
 #ifdef _POSIX_C_SOURCE
@@ -169,6 +170,44 @@ struct point_data {
 	int score;                   /**< The attribute matching score */
 };
 
+/**
+ * @brief State for the XML parser.
+ *
+ * Several members of this struct are used to cache traffic data model objects until they can be
+ * incorporated in a message.
+ *
+ * All `struct traffic_point` members are reset to NULL when the `location` member is set. Likewise, the
+ * `si` member is reset to NULL when a new event is added. The `location` and `events` members are reset
+ * to NULL when a message is created.
+ */
+struct xml_state {
+	GList * messages;                   /**< Messages read so far */
+	GList * tagstack;                   /**< Currently open tags (order is bottom to top) */
+	int is_valid;                       /**< Whether `tagstack` represents a hierarchy of elements we recognize */
+	int is_opened;                      /**< True if we have just opened an element;
+	                                     *   false if child elements have been opened and closed since */
+	struct traffic_point * at;          /**< The point for a point location, NULL for linear locations. */
+	struct traffic_point * from;        /**< The start of a linear location, or a point before `at`. */
+	struct traffic_point * to;          /**< The end of a linear location, or a point after `at`. */
+	struct traffic_point * via;         /**< A point between `from` and `to`. Required on ring roads
+	                                     *   unless `not_via` is used; cannot be used together with `at`. */
+	struct traffic_point * not_via;     /**< A point NOT between `from` and `to`. Required on ring roads
+	                                     *   unless `via` is used; cannot be used together with `at`. */
+	struct traffic_location * location; /**< The location to which the next message refers. */
+	GList * si;                         /**< Supplementary information items for the next event. */
+	GList * events;                     /**< The events for the next message. */
+};
+
+/**
+ * @brief Data for an XML element
+ */
+struct xml_element {
+	char * tag_name;             /**< The tag name */
+	char ** names;               /**< Attribute names */
+	char ** values;              /**< Attribute values (indices correspond to `names`) */
+	char * text;                 /**< Character data (NULL-terminated) */
+};
+
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
 		struct attr **attrs, struct coord *c, int count, char * id);
@@ -189,8 +228,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 		struct seg_data * data, struct map *map);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
 		struct mapset * ms);
+static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
+static int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
@@ -208,6 +249,37 @@ static struct item_methods methods_traffic_item = {
 };
 
 /**
+ * @brief Creates a Boolean value from its string representation.
+ *
+ * If the string equals `true`, `yes` or can be parsed to a nonzero integer, the result is true.
+ *
+ * If the string equals `false`, `no` or begins with the digit 0 and returns zero when parsed to an
+ * integer, the result is false.
+ *
+ * If NULL is supplied, or if the string does not match any known value, the result is the default value.
+ *
+ * String comparison is case-insensitive.
+ *
+ * Since true is always represented by a return value of 1, passing a `deflt` other than 0 or 1 allows
+ * the caller to determine if the string could be parsed correctly.
+ *
+ * @param string The string representation
+ * @param deflt The default value to return if `string` is not a valid representation of a Boolean value.
+ *
+ * @return The corresponding `enum event_class`, or `event_class_invalid` if `string` does not match a
+ * known identifier
+ */
+static int boolean_new(const char * string, int deflt) {
+	if (!string)
+		return deflt;
+	if (!g_ascii_strcasecmp(string, "yes") || !g_ascii_strcasecmp(string, "true") || atoi(string))
+		return 1;
+	if (!g_ascii_strcasecmp(string, "no") || !g_ascii_strcasecmp(string, "false") || ((string[0] == '0') && !atoi(string)))
+		return 0;
+	return deflt;
+}
+
+/**
  * @brief Creates a new `struct seg_data` and initializes it with default values.
  */
 static struct seg_data * seg_data_new(void) {
@@ -216,6 +288,19 @@ static struct seg_data * seg_data_new(void) {
 	ret->speed = INT_MAX;
 	ret->speed_factor = 100;
 	return ret;
+}
+
+/**
+ * @brief Creates a timestamp from its ISO8601 representation.
+ *
+ * @param string The ISO8601 timestamp
+ *
+ * @return The timestamp, or 0 if `string` is NULL.
+ */
+static time_t time_new(char * string) {
+	if (!string)
+		return 0;
+	return iso8601_to_time(string);
 }
 
 /**
@@ -2939,13 +3024,350 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 	return this_;
 }
 
+/**
+ * @brief Creates a new XML element structure.
+ *
+ * @param tag_name The tag name
+ * @param names Attribute names
+ * @param values Attribute values (indices correspond to `names`)
+ */
+static struct xml_element * traffic_xml_element_new(const char *tag_name, const char **names,
+		const char **values) {
+	struct xml_element * ret = g_new0(struct xml_element, 1);
+	const char ** in;
+	char ** out;
+
+	ret->tag_name = g_strdup(tag_name);
+	if (names) {
+		ret->names = g_new0(char *, g_strv_length((gchar **) names) + 1);
+		in = names;
+		out = ret->names;
+		while (*in)
+			*out++ = g_strdup(*in++);
+	}
+	if (values) {
+		ret->values = g_new0(char *, g_strv_length((gchar **) values) + 1);
+		in = values;
+		out = ret->values;
+		while (*in)
+			*out++ = g_strdup(*in++);
+	}
+	return ret;
+}
+
+/**
+ * @brief Frees up an XML element structure.
+ *
+ * This will free up the memory used by the struct and all its members.
+ */
+static void traffic_xml_element_destroy(struct xml_element * this_) {
+	void ** iter;
+
+	g_free(this_->tag_name);
+	if (this_->names) {
+		for (iter = (void **) this_->names; *iter; iter++)
+			g_free(*iter);
+		g_free(this_->names);
+	}
+	if (this_->names) {
+		for (iter = (void **) this_->values; *iter; iter++)
+			g_free(*iter);
+		g_free(this_->values);
+	}
+	g_free(this_->text);
+	g_free(this_);
+}
+
+/**
+ * @brief Retrieves the value of an XML attribute.
+ *
+ * @param name The name of the attribute to retrieve
+ * @param names All attribute names
+ * @param values Attribute values (indices correspond to `names`)
+ *
+ * @return If `names` contains `name`, the corresponding value is returned, else NULL
+ */
+static char * traffic_xml_get_attr(const char * attr, char ** names, char ** values) {
+	int i;
+	for (i = 0; names[i] && values[i]; i++) {
+		if (!g_ascii_strcasecmp(attr, names[i]))
+			return values[i];
+	}
+	return NULL;
+}
+
+/**
+ * @brief Whether the tag stack represents a hierarchy of elements which is recognized.
+ *
+ * @param state The XML parser state
+ *
+ * @return True if the stack is valid, false if invalid. An empty stack is considered invalid.
+ */
+static int traffic_xml_is_tagstack_valid(struct xml_state * state) {
+	int ret = 0;
+	GList * tagiter;
+	struct xml_element * el, * el_parent;
+
+	for (tagiter = g_list_last(state->tagstack); tagiter; tagiter = g_list_previous(tagiter)) {
+		el = (struct xml_element *) tagiter->data;
+		el_parent = tagiter->next ? tagiter->next->data : NULL;
+
+		if (!g_ascii_strcasecmp(el->tag_name, "navit_messages")
+				|| !g_ascii_strcasecmp(el->tag_name, "feed"))
+			ret = !tagiter->next;
+		else if (!g_ascii_strcasecmp((char *) el->tag_name, "message"))
+			ret = (!el_parent
+					|| !g_ascii_strcasecmp(el_parent->tag_name, "navit_messages")
+					|| !g_ascii_strcasecmp(el_parent->tag_name, "feed"));
+		else if (!g_ascii_strcasecmp(el->tag_name, "events")
+				|| !g_ascii_strcasecmp(el->tag_name, "location")
+				|| !g_ascii_strcasecmp(el->tag_name, "merge"))
+			ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "message"));
+		else if (!g_ascii_strcasecmp(el->tag_name, "event"))
+			ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "events"));
+		else if (!g_ascii_strcasecmp(el->tag_name, "from")
+				|| !g_ascii_strcasecmp(el->tag_name, "to")
+				|| !g_ascii_strcasecmp(el->tag_name, "at")
+				|| !g_ascii_strcasecmp(el->tag_name, "via")
+				|| !g_ascii_strcasecmp(el->tag_name, "not_via"))
+			ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
+		else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
+			ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "event"));
+		else if (!g_ascii_strcasecmp(el->tag_name, "replaces"))
+			ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "merge"));
+		else
+			ret = 0;
+
+		if (!ret)
+			break;
+	}
+
+	return ret;
+}
+
+/**
+ * @brief Callback function which gets called when an opening tag is encountered.
+ *
+ * @param tag_name The tag name
+ * @param names Attribute names
+ * @param values Attribute values (indices correspond to `names`)
+ * @param data Points to a `struct xml_state` holding parser state
+ */
+/* TODO prevent building of semantically incorrect messages */
+static void traffic_xml_start(xml_context *dummy, const char *tag_name, const char **names,
+		const char **values, void *data, GError **error) {
+	struct xml_state * state = (struct xml_state *) data;
+	struct xml_element * el;
+
+	el = traffic_xml_element_new(tag_name, names, values);
+	state->tagstack = g_list_prepend(state->tagstack, el);
+	state->is_opened = 1;
+	state->is_valid = traffic_xml_is_tagstack_valid(state);
+	if (!state->is_valid)
+		return;
+
+	dbg(lvl_debug, "OPEN: %s\n", tag_name);
+
+	if (!g_ascii_strcasecmp((char *) tag_name, "supplementary_info")) {
+		state->si = g_list_append(state->si, traffic_suppl_info_new(
+				si_class_new(traffic_xml_get_attr("si_class", el->names, el->values)),
+				si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
+				/* TODO quantifier */
+				NULL));
+	} else if (!g_ascii_strcasecmp((char *) tag_name, "replaces")) {
+		/* TODO */
+	}
+
+	/*
+	 * No handling necessary for:
+	 *
+	 * navit_messages: No attributes, everything handled in children's callbacks
+	 * feed: No attributes, everything handled in children's callbacks
+	 * message: Everything handled in end callback
+	 * events: No attributes, everything handled in children's callbacks
+	 * location: Everything handled in end callback
+	 * event: Everything handled in end callback
+	 * merge: No attributes, everything handled in children's callbacks
+	 * from, to, at, via, not_via: Everything handled in end callback
+	 */
+}
+
+/**
+ * @brief Callback function which gets called when a closing tag is encountered.
+ *
+ * @param tag_name The tag name
+ * @param data Points to a `struct xml_state` holding parser state
+ */
+/* TODO prevent building of semantically incorrect messages */
+static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data, GError **error) {
+	struct xml_state * state = (struct xml_state *) data;
+	struct xml_element * el = state->tagstack ? (struct xml_element *) state->tagstack->data : NULL;
+	struct traffic_point ** point = NULL;
+
+	/* Iterator and child element count */
+	int i, count;
+
+	/* Child elements */
+	void ** children = NULL;
+
+	/* Iterator for children in GList */
+	GList * iter;
+
+	/* Length and speed for events */
+	char * length;
+	char * speed;
+
+	float lat, lon;
+
+	if (state->is_valid) {
+		dbg(lvl_debug, "  END:  %s\n", tag_name);
+
+		if (!g_ascii_strcasecmp((char *) tag_name, "message")) {
+			count = g_list_length(state->events);
+			if (count) {
+				children = (void **) g_new0(struct traffic_event *, count);
+				iter = state->events;
+				for (i = 0; iter && (i < count); i++) {
+					children[i] = iter->data;
+					iter = g_list_next(iter);
+				}
+			}
+			state->messages = g_list_append(state->messages,
+					traffic_message_new(traffic_xml_get_attr("id", el->names, el->values),
+							time_new(traffic_xml_get_attr("receive_time", el->names, el->values)),
+							time_new(traffic_xml_get_attr("update_time", el->names, el->values)),
+							time_new(traffic_xml_get_attr("expiration_time", el->names, el->values)),
+							time_new(traffic_xml_get_attr("start_time", el->names, el->values)),
+							time_new(traffic_xml_get_attr("end_time", el->names, el->values)),
+							boolean_new(traffic_xml_get_attr("cancellation", el->names, el->values), 0),
+							boolean_new(traffic_xml_get_attr("forecast", el->names, el->values), 0),
+							/* TODO replaces */
+							0, NULL,
+							state->location,
+							count,
+							(struct traffic_event **) children));
+			g_free(children);
+			state->location = NULL;
+			g_list_free(state->events);
+			state->events = NULL;
+			/* TODO replaces */
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "location")) {
+			state->location = traffic_location_new(state->at, state->from,
+					state->to, state->via, state->not_via,
+					traffic_xml_get_attr("destination", el->names, el->values),
+					traffic_xml_get_attr("direction", el->names, el->values),
+					location_dir_new(traffic_xml_get_attr("directionality", el->names, el->values)),
+					location_fuzziness_new(traffic_xml_get_attr("fuzziness", el->names, el->values)),
+					location_ramps_new(traffic_xml_get_attr("ramps", el->names, el->values)),
+					item_type_from_road_type(traffic_xml_get_attr("road_type", el->names, el->values),
+							/* TODO revisit default for road_is_urban */
+							boolean_new(traffic_xml_get_attr("road_is_urban", el->names, el->values), 0)),
+					traffic_xml_get_attr("road_name", el->names, el->values),
+					traffic_xml_get_attr("road_ref", el->names, el->values),
+					traffic_xml_get_attr("tmc_table", el->names, el->values),
+					atoi(traffic_xml_get_attr("tmc_direction", el->names, el->values)));
+			state->from = NULL;
+			state->to = NULL;
+			state->at = NULL;
+			state->via = NULL;
+			state->not_via = NULL;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "event")) {
+			count = g_list_length(state->si);
+			if (count) {
+				children = (void **) g_new0(struct traffic_suppl_info *, count);
+				iter = state->si;
+				for (i = 0; iter && (i < count); i++) {
+					children[i] = iter->data;
+					iter = g_list_next(iter);
+				}
+			}
+			length = traffic_xml_get_attr("length", el->names, el->values);
+			speed = traffic_xml_get_attr("speed", el->names, el->values);
+			state->events = g_list_append(state->events,
+					traffic_event_new(event_class_new(traffic_xml_get_attr("class", el->names, el->values)),
+							event_type_new(traffic_xml_get_attr("type", el->names, el->values)),
+							length ? atoi(length) : -1,
+							speed ? atoi(speed) : INT_MAX,
+							/* TODO quantifier */
+							NULL,
+							count,
+							(struct traffic_suppl_info **) children));
+			g_free(children);
+			g_list_free(state->si);
+			state->si = NULL;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "from")) {
+			point = &state->from;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "to")) {
+			point = &state->to;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "at")) {
+			point = &state->at;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "via")) {
+			point = &state->via;
+		} else if (!g_ascii_strcasecmp((char *) tag_name, "not_via")) {
+			point = &state->not_via;
+		}
+
+		/*
+		 * No handling necessary for:
+		 *
+		 * navit_messages: No attributes, everything handled in children's callbacks
+		 * feed: No attributes, everything handled in children's callbacks
+		 * events: No attributes, everything handled in children's callbacks
+		 * merge: No attributes, everything handled in children's callbacks
+		 * replaces: Leaf node, handled in start callback
+		 * supplementary_info: Leaf node, handled in start callback
+		 */
+
+		if (point) {
+			/* we have a location point (from, at, to, via or not_via) to process */
+			if (sscanf(el->text, "%f %f", &lat, &lon) == 2) {
+				*point = traffic_point_new(lon, lat,
+						traffic_xml_get_attr("junction_name", el->names, el->values),
+						traffic_xml_get_attr("junction_ref", el->names, el->values),
+						traffic_xml_get_attr("tmc_id", el->names, el->values));
+			} else {
+				dbg(lvl_error, "%s has no valid lat/lon pair, skipping\n", tag_name);
+			}
+		}
+	}
+
+	if (el && !g_ascii_strcasecmp(tag_name, el->tag_name)) {
+		traffic_xml_element_destroy(el);
+		state->tagstack = g_list_remove(state->tagstack, state->tagstack->data);
+	}
+	state->is_opened = 0;
+}
+
+/**
+ * @brief Callback function which gets called when character data is encountered.
+ *
+ * @param text The character data (note that the data is not NULL-terminated!)
+ * @param len The number of characters in `text`
+ * @param data Points to a `struct xml_state` holding parser state
+ */
+static void traffic_xml_text(xml_context *dummy, const char *text, gsize len, void *data, GError **error) {
+	struct xml_state * state = (struct xml_state *) data;
+	char * text_sz = g_strndup(text, len);
+	struct xml_element * el = state->tagstack ? (struct xml_element *) state->tagstack->data : NULL;
+
+	dbg(lvl_debug, " TEXT: '%s'\n", text_sz);
+	if (state->is_valid && state->is_opened) {
+		/* this will work only for leaf nodes, which is not an issue at the moment as the only nodes
+		 * with actual text data are leaf nodes */
+		el->text = g_strndup(text, len);
+	}
+	g_free(text_sz);
+}
+
 enum event_class event_class_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "CONGESTION"))
-		return event_class_congestion;
-	if (!g_ascii_strcasecmp(string, "DELAY"))
-		return event_class_delay;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION"))
-		return event_class_restriction;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "CONGESTION"))
+			return event_class_congestion;
+		if (!g_ascii_strcasecmp(string, "DELAY"))
+			return event_class_delay;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION"))
+			return event_class_restriction;
+	}
 	return event_class_invalid;
 }
 
@@ -2963,104 +3385,106 @@ const char * event_class_to_string(enum event_class this_) {
 }
 
 enum event_type event_type_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "CONGESTION_CLEARED"))
-		return event_congestion_cleared;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_FORECAST_WITHDRAWN"))
-		return event_congestion_forecast_withdrawn;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_HEAVY_TRAFFIC"))
-		return event_congestion_heavy_traffic;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_LONG_QUEUE"))
-		return event_congestion_long_queue;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_NONE"))
-		return event_congestion_none;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_NORMAL_TRAFFIC"))
-		return event_congestion_normal_traffic;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_QUEUE"))
-		return event_congestion_queue;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_QUEKE_LIKELY"))
-		return event_congestion_queue_likely;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_SLOW_TRAFFIC"))
-		return event_congestion_slow_traffic;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC"))
-		return event_congestion_stationary_traffic;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC_LIKELY"))
-		return event_congestion_stationary_traffic_likely;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_BUILDING_UP"))
-		return event_congestion_traffic_building_up;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_CONGESTION"))
-		return event_congestion_traffic_congestion;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_EASING"))
-		return event_congestion_traffic_easing;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_FLOWING_FREELY"))
-		return event_congestion_traffic_flowing_freely;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_HEAVIER_THAN_NORMAL"))
-		return event_congestion_traffic_heavier_than_normal;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_LIGHTER_THAN_NORMAL"))
-		return event_congestion_traffic_lighter_than_normal;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_MUCH_HEAVIER_THAN_NORMAL"))
-		return event_congestion_traffic_much_heavier_than_normal;
-	if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_PROBLEM"))
-		return event_congestion_traffic_problem;
-	if (!g_ascii_strcasecmp(string, "DELAY_CLEARANCE"))
-		return event_delay_clearance;
-	if (!g_ascii_strcasecmp(string, "DELAY_DELAY"))
-		return event_delay_delay;
-	if (!g_ascii_strcasecmp(string, "DELAY_DELAY_POSSIBLE"))
-		return event_delay_delay_possible;
-	if (!g_ascii_strcasecmp(string, "DELAY_FORECAST_WITHDRAWN"))
-		return event_delay_forecast_withdrawn;
-	if (!g_ascii_strcasecmp(string, "DELAY_LONG_DELAY"))
-		return event_delay_long_delay;
-	if (!g_ascii_strcasecmp(string, "DELAY_SEVERAL_HOURS"))
-		return event_delay_several_hours;
-	if (!g_ascii_strcasecmp(string, "DELAY_UNCERTAIN_DURATION"))
-		return event_delay_uncertain_duration;
-	if (!g_ascii_strcasecmp(string, "DELAY_VERY_LONG_DELAY"))
-		return event_delay_very_long_delay;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ACCESS_RESTRICTIONS_LIFTED"))
-		return event_restriction_access_restrictions_lifted;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_CLEARED"))
-		return event_restriction_all_carriageways_cleared;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_REOPENED"))
-		return event_restriction_all_carriageways_reopened;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_BATCH_SERVICE"))
-		return event_restriction_batch_service;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED"))
-		return event_restriction_blocked;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED_AHEAD"))
-		return event_restriction_blocked_ahead;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_BLOCKED"))
-		return event_restriction_carriageway_blocked;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_CLOSED"))
-		return event_restriction_carriageway_closed;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED"))
-		return event_restriction_closed;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED_AHEAD"))
-		return event_restriction_closed_ahead;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_BLOCKED"))
-		return event_restriction_entry_blocked;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_REOPENED"))
-		return event_restriction_entry_reopened;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_INTERMITTENT_CLOSURES"))
-		return event_restriction_intermittent_closures;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_OPEN"))
-		return event_restriction_open;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_BLOCKED"))
-		return event_restriction_ramp_blocked;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_CLOSED"))
-		return event_restriction_ramp_closed;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_REOPENED"))
-		return event_restriction_ramp_reopened;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_REOPENED"))
-		return event_restriction_reopened;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_ROAD_CLEARED"))
-		return event_restriction_road_cleared;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_SINGLE_ALTERNATE_LINE_TRAFFIC"))
-		return event_restriction_single_alternate_line_traffic;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT"))
-		return event_restriction_speed_limit;
-	if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT_LIFTED"))
-		return event_restriction_speed_limit_lifted;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "CONGESTION_CLEARED"))
+			return event_congestion_cleared;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_FORECAST_WITHDRAWN"))
+			return event_congestion_forecast_withdrawn;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_HEAVY_TRAFFIC"))
+			return event_congestion_heavy_traffic;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_LONG_QUEUE"))
+			return event_congestion_long_queue;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_NONE"))
+			return event_congestion_none;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_NORMAL_TRAFFIC"))
+			return event_congestion_normal_traffic;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_QUEUE"))
+			return event_congestion_queue;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_QUEKE_LIKELY"))
+			return event_congestion_queue_likely;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_SLOW_TRAFFIC"))
+			return event_congestion_slow_traffic;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC"))
+			return event_congestion_stationary_traffic;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_STATIONARY_TRAFFIC_LIKELY"))
+			return event_congestion_stationary_traffic_likely;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_BUILDING_UP"))
+			return event_congestion_traffic_building_up;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_CONGESTION"))
+			return event_congestion_traffic_congestion;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_EASING"))
+			return event_congestion_traffic_easing;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_FLOWING_FREELY"))
+			return event_congestion_traffic_flowing_freely;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_HEAVIER_THAN_NORMAL"))
+			return event_congestion_traffic_heavier_than_normal;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_LIGHTER_THAN_NORMAL"))
+			return event_congestion_traffic_lighter_than_normal;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_MUCH_HEAVIER_THAN_NORMAL"))
+			return event_congestion_traffic_much_heavier_than_normal;
+		if (!g_ascii_strcasecmp(string, "CONGESTION_TRAFFIC_PROBLEM"))
+			return event_congestion_traffic_problem;
+		if (!g_ascii_strcasecmp(string, "DELAY_CLEARANCE"))
+			return event_delay_clearance;
+		if (!g_ascii_strcasecmp(string, "DELAY_DELAY"))
+			return event_delay_delay;
+		if (!g_ascii_strcasecmp(string, "DELAY_DELAY_POSSIBLE"))
+			return event_delay_delay_possible;
+		if (!g_ascii_strcasecmp(string, "DELAY_FORECAST_WITHDRAWN"))
+			return event_delay_forecast_withdrawn;
+		if (!g_ascii_strcasecmp(string, "DELAY_LONG_DELAY"))
+			return event_delay_long_delay;
+		if (!g_ascii_strcasecmp(string, "DELAY_SEVERAL_HOURS"))
+			return event_delay_several_hours;
+		if (!g_ascii_strcasecmp(string, "DELAY_UNCERTAIN_DURATION"))
+			return event_delay_uncertain_duration;
+		if (!g_ascii_strcasecmp(string, "DELAY_VERY_LONG_DELAY"))
+			return event_delay_very_long_delay;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ACCESS_RESTRICTIONS_LIFTED"))
+			return event_restriction_access_restrictions_lifted;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_CLEARED"))
+			return event_restriction_all_carriageways_cleared;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ALL_CARRIAGEWAYS_REOPENED"))
+			return event_restriction_all_carriageways_reopened;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_BATCH_SERVICE"))
+			return event_restriction_batch_service;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED"))
+			return event_restriction_blocked;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_BLOCKED_AHEAD"))
+			return event_restriction_blocked_ahead;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_BLOCKED"))
+			return event_restriction_carriageway_blocked;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_CLOSED"))
+			return event_restriction_carriageway_closed;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED"))
+			return event_restriction_closed;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED_AHEAD"))
+			return event_restriction_closed_ahead;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_BLOCKED"))
+			return event_restriction_entry_blocked;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ENTRY_REOPENED"))
+			return event_restriction_entry_reopened;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_INTERMITTENT_CLOSURES"))
+			return event_restriction_intermittent_closures;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_OPEN"))
+			return event_restriction_open;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_BLOCKED"))
+			return event_restriction_ramp_blocked;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_CLOSED"))
+			return event_restriction_ramp_closed;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_REOPENED"))
+			return event_restriction_ramp_reopened;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_REOPENED"))
+			return event_restriction_reopened;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_ROAD_CLEARED"))
+			return event_restriction_road_cleared;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_SINGLE_ALTERNATE_LINE_TRAFFIC"))
+			return event_restriction_single_alternate_line_traffic;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT"))
+			return event_restriction_speed_limit;
+		if (!g_ascii_strcasecmp(string, "RESTRICTION_SPEED_LIMIT_LIFTED"))
+			return event_restriction_speed_limit_lifted;
+	}
 	return event_invalid;
 }
 
@@ -3173,15 +3597,45 @@ const char * event_type_to_string(enum event_type this_) {
 	}
 }
 
+enum item_type item_type_from_road_type(char * string, int is_urban) {
+	enum item_type ret = type_line_unspecified;
+
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "MOTORWAY"))
+			return is_urban ? type_highway_city : type_highway_land;
+		if (!g_ascii_strcasecmp(string, "TRUNK"))
+			return type_street_n_lanes;
+		if (!g_ascii_strcasecmp(string, "PRIMARY"))
+			return is_urban ? type_street_4_city : type_street_4_land;
+		if (!g_ascii_strcasecmp(string, "SECONDARY"))
+			return is_urban ? type_street_3_city : type_street_3_land;
+		if (!g_ascii_strcasecmp(string, "TERTIARY"))
+			return is_urban ? type_street_2_city : type_street_2_land;
+
+		ret = item_from_name(string);
+	}
+	if ((ret < route_item_first) || (ret > route_item_last))
+		return type_line_unspecified;
+	return ret;
+}
+
+enum location_dir location_dir_new(char * string) {
+	if (string && !g_ascii_strcasecmp(string, "ONE_DIRECTION"))
+		return location_dir_one;
+	return location_dir_both;
+}
+
 enum location_fuzziness location_fuzziness_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "LOW_RES"))
-		return location_fuzziness_low_res;
-	if (!g_ascii_strcasecmp(string, "END_UNKNOWN"))
-		return location_fuzziness_end_unknown;
-	if (!g_ascii_strcasecmp(string, "START_UNKNOWN"))
-		return location_fuzziness_start_unknown;
-	if (!g_ascii_strcasecmp(string, "EXTENT_UNKNOWN"))
-		return location_fuzziness_extent_unknown;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "LOW_RES"))
+			return location_fuzziness_low_res;
+		if (!g_ascii_strcasecmp(string, "END_UNKNOWN"))
+			return location_fuzziness_end_unknown;
+		if (!g_ascii_strcasecmp(string, "START_UNKNOWN"))
+			return location_fuzziness_start_unknown;
+		if (!g_ascii_strcasecmp(string, "EXTENT_UNKNOWN"))
+			return location_fuzziness_extent_unknown;
+	}
 	return location_fuzziness_none;
 }
 
@@ -3201,12 +3655,14 @@ const char * location_fuzziness_to_string(enum location_fuzziness this_) {
 }
 
 enum location_ramps location_ramps_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "ALL_RAMPS"))
-		return location_ramps_all;
-	if (!g_ascii_strcasecmp(string, "ENTRY_RAMP"))
-		return location_ramps_entry;
-	if (!g_ascii_strcasecmp(string, "EXIT_RAMP"))
-		return location_ramps_exit;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "ALL_RAMPS"))
+			return location_ramps_all;
+		if (!g_ascii_strcasecmp(string, "ENTRY_RAMP"))
+			return location_ramps_entry;
+		if (!g_ascii_strcasecmp(string, "EXIT_RAMP"))
+			return location_ramps_exit;
+	}
 	return location_ramps_none;
 }
 
@@ -3226,12 +3682,14 @@ const char * location_ramps_to_string(enum location_ramps this_) {
 }
 
 enum si_class si_class_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "PLACE"))
-		return si_class_place;
-	if (!g_ascii_strcasecmp(string, "TENDENCY"))
-		return si_class_tendency;
-	if (!g_ascii_strcasecmp(string, "VEHICLE"))
-		return si_class_vehicle;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "PLACE"))
+			return si_class_place;
+		if (!g_ascii_strcasecmp(string, "TENDENCY"))
+			return si_class_tendency;
+		if (!g_ascii_strcasecmp(string, "VEHICLE"))
+			return si_class_vehicle;
+	}
 	return si_class_invalid;
 }
 
@@ -3249,36 +3707,38 @@ const char * si_class_to_string(enum si_class this_) {
 }
 
 enum si_type si_type_new(char * string) {
-	if (!g_ascii_strcasecmp(string, "S_PLACE_BRIDGE"))
-		return si_place_bridge;
-	if (!g_ascii_strcasecmp(string, "S_PLACE_RAMP"))
-		return si_place_ramp;
-	if (!g_ascii_strcasecmp(string, "S_PLACE_ROADWORKS"))
-		return si_place_roadworks;
-	if (!g_ascii_strcasecmp(string, "S_PLACE_TUNNEL"))
-		return si_place_tunnel;
-	if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_DECREASING"))
-		return si_tendency_queue_decreasing;
-	if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_INCREASING"))
-		return si_tendency_queue_increasing;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_ALL"))
-		return si_vehicle_all;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_BUS"))
-		return si_vehicle_bus;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR"))
-		return si_vehicle_car;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_CARAVAN"))
-		return si_vehicle_car_with_caravan;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_TRAILER"))
-		return si_vehicle_car_with_trailer;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_HAZMAT"))
-		return si_vehicle_hazmat;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_HGV"))
-		return si_vehicle_hgv;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_MOTOR"))
-		return si_vehicle_motor;
-	if (!g_ascii_strcasecmp(string, "S_VEHICLE_WITH_TRAILER"))
-		return si_vehicle_with_trailer;
+	if (string) {
+		if (!g_ascii_strcasecmp(string, "S_PLACE_BRIDGE"))
+			return si_place_bridge;
+		if (!g_ascii_strcasecmp(string, "S_PLACE_RAMP"))
+			return si_place_ramp;
+		if (!g_ascii_strcasecmp(string, "S_PLACE_ROADWORKS"))
+			return si_place_roadworks;
+		if (!g_ascii_strcasecmp(string, "S_PLACE_TUNNEL"))
+			return si_place_tunnel;
+		if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_DECREASING"))
+			return si_tendency_queue_decreasing;
+		if (!g_ascii_strcasecmp(string, "S_TENDENCY_QUEUE_INCREASING"))
+			return si_tendency_queue_increasing;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_ALL"))
+			return si_vehicle_all;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_BUS"))
+			return si_vehicle_bus;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR"))
+			return si_vehicle_car;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_CARAVAN"))
+			return si_vehicle_car_with_caravan;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_CAR_WITH_TRAILER"))
+			return si_vehicle_car_with_trailer;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_HAZMAT"))
+			return si_vehicle_hazmat;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_HGV"))
+			return si_vehicle_hgv;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_MOTOR"))
+			return si_vehicle_motor;
+		if (!g_ascii_strcasecmp(string, "S_VEHICLE_WITH_TRAILER"))
+			return si_vehicle_with_trailer;
+	}
 	return si_invalid;
 }
 
@@ -3613,8 +4073,11 @@ struct map * traffic_get_map(struct traffic *this_) {
 	struct attr_iter *iter;
 	struct attr *attr;
 	struct traffic * traffic;
+	struct traffic_message ** messages;
+	int update_status;
 
 	if (!this_->map) {
+		/* see if any of the other instances has already created a map */
 		attr = g_new0(struct attr, 1);
 		iter = navit_attr_iter_new();
 		while (navit_get_attr(this_->navit, attr_traffic, attr, iter)) {
@@ -3627,6 +4090,7 @@ struct map * traffic_get_map(struct traffic *this_) {
 	}
 
 	if (!this_->map) {
+		/* no map yet, create a new one */
 		struct attr *attrs[4];
 		struct attr a_type,data,a_description;
 		a_type.type = attr_type;
@@ -3643,8 +4107,59 @@ struct map * traffic_get_map(struct traffic *this_) {
 
 		this_->map = map_new(NULL, attrs);
 		navit_object_ref((struct navit_object *) this_->map);
+
+		/* populate map with previously stored messages */
+		messages = traffic_get_messages_from_xml(this_);
+		if (messages) {
+			update_status = traffic_process_messages(this_, messages);
+			g_free(messages);
+
+			/* trigger redraw if segments have changed */
+			if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
+				navit_draw_async(this_->navit, 1);
+		}
 	}
+
 	return this_->map;
+}
+
+struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_) {
+	struct traffic_message ** ret = NULL;
+
+	/* add the configuration directory to the name of the file to use */
+	char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
+									"/traffic.xml", NULL);
+	gchar *contents;
+	gsize len;
+	struct xml_state state;
+	int i, count;
+	GList * msg_iter;
+
+	if (traffic_filename) {
+		FILE *f = fopen(traffic_filename,"r");
+		if (f) {
+			if (g_file_get_contents (traffic_filename, &contents, &len, NULL)) {
+				dbg(lvl_debug, "Stored message data:\n%s\n", contents);
+				memset(&state, 0, sizeof(struct xml_state));
+				if (xml_parse_text(contents, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text)) {
+					count = g_list_length(state.messages);
+					if (count)
+						ret = g_new0(struct traffic_message *, count + 1);
+					msg_iter = state.messages;
+					for (i = 0; i < count; i++) {
+						ret[i] = (struct traffic_message *) msg_iter->data;
+						msg_iter = g_list_next(msg_iter);
+					}
+					g_list_free(state.messages);
+				}
+				g_free(contents);
+			}
+		} else {
+			dbg(lvl_error,"could not open file for traffic messages");
+		} /* else - if (f) */
+		g_free(traffic_filename);			/* free the file name */
+	} /* if (traffic_filename) */
+	return ret;
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {

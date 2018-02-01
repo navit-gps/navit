@@ -422,6 +422,31 @@ enum event_type event_type_new(char * string);
 const char * event_type_to_string(enum event_type this_);
 
 /**
+ * @brief Creates an item type from a road type.
+ *
+ * This is guaranteed to return either a routable type (i.e. `route_item_first <= type <= route_item_last`)
+ * or `type_line_unspecified`. The latter is also returned if `string` refers to a Navit item type which
+ * is not routable.
+ *
+ * @param string A TraFF road type or the string representation of a Navit item type
+ * @param is_urban Whether the road is in a built-up area (ignored if `string` is a Navit item type)
+ *
+ * @return The corresponding `enum item_type`, or `type_line_unspecified` if `string` does not match a
+ * known and routable identifier
+ */
+enum item_type item_type_from_road_type(char * string, int is_urban);
+
+/**
+ * @brief Creates a location directionality from its string representation.
+ *
+ * @param string The string representation (case is ignored)
+ *
+ * @return The corresponding `enum location_dir`, or `location_dir_both` if `string` does
+ * not match a known identifier
+ */
+enum location_dir location_dir_new(char * string);
+
+/**
  * @brief Creates a location fuzziness from its string representation.
  *
  * @param string The string representation (case is ignored)
@@ -857,6 +882,11 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
  * This function is called once on startup.
  */
 void traffic_init(void);
+
+/**
+ * @brief Reads previously stored traffic messages from an XML file.
+ */
+struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_);
 
 /**
  * @brief Returns the map for the traffic plugin.
