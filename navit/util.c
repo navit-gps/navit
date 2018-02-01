@@ -563,25 +563,31 @@ iso8601_to_secs(char *iso8601)
 time_t mkgmtime(struct tm * pt) {
 	time_t ret;
 
-	/* GMT and local time */
-	struct tm * pgt, * plt;
+	/* Input, GMT and local time */
+	struct tm * pti, * pgt, * plt;
 
-	ret = mktime(pt);
+	pti = g_memdup(pt, sizeof(struct tm));
+
+	ret = mktime(pti);
 
 	pgt = g_memdup(gmtime(&ret), sizeof(struct tm));
 	plt = g_memdup(localtime(&ret), sizeof(struct tm));
 
-	plt->tm_year -= pgt->tm_year - plt->tm_year;
-	plt->tm_mon -= pgt->tm_mon - plt->tm_mon;
-	plt->tm_mday -= pgt->tm_mday - plt->tm_mday;
-	plt->tm_hour -= pgt->tm_hour - plt->tm_hour;
-	plt->tm_min -= pgt->tm_min - plt->tm_min;
-	plt->tm_sec -= pgt->tm_sec - plt->tm_sec;
+	pti->tm_year -= pgt->tm_year - plt->tm_year;
+	pti->tm_mon -= pgt->tm_mon - plt->tm_mon;
+	pti->tm_mday -= pgt->tm_mday - plt->tm_mday;
+	pti->tm_hour -= pgt->tm_hour - plt->tm_hour;
+	pti->tm_min -= pgt->tm_min - plt->tm_min;
+	pti->tm_sec -= pgt->tm_sec - plt->tm_sec;
 
-	ret = mktime(plt);
+	ret = mktime(pti);
 
+	g_free(pti);
 	g_free(pgt);
 	g_free(plt);
+
+	dbg(lvl_debug, "time %ld (%02d-%02d-%02d %02d:%02d:%02d)\n", ret, pti->tm_year, pti->tm_mon, pti->tm_mday,
+			pti->tm_hour, pti->tm_min, pti->tm_sec);
 
 	return ret;
 }
@@ -602,6 +608,8 @@ time_t iso8601_to_time(char * iso8601) {
 
 	/* Time struct */
 	struct tm tm;
+
+	memset(&tm, 0, sizeof(struct tm));
 
 	while (*pos && i < 6) {
 		if (*pos < '0' || *pos > '9') {
@@ -633,6 +641,9 @@ time_t iso8601_to_time(char * iso8601) {
 	tm.tm_hour = val[3];
 	tm.tm_min = val[4] - val[6];
 	tm.tm_sec = val[5] - val[7];
+
+	dbg(lvl_debug, "time %s (%02d-%02d-%02d %02d:%02d:%02d)\n", iso8601, tm.tm_year, tm.tm_mon, tm.tm_mday,
+			tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 	return mkgmtime(&tm);
 }
