@@ -628,7 +628,7 @@ time_t iso8601_to_time(char * iso8601) {
 	}
 
 	tm.tm_year = val[0] - 1900;
-	tm.tm_mon = val[1];
+	tm.tm_mon = val[1] - 1;
 	tm.tm_mday = val[2];
 	tm.tm_hour = val[3];
 	tm.tm_min = val[4] - val[6];
