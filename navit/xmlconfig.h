@@ -139,6 +139,10 @@ typedef GError xmlerror;
 /* prototypes */
 enum attr_type;
 struct object_func *object_func_lookup(enum attr_type type);
+int xml_parse_file(char *filename, void *data,
+		void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+		void (*end)(xml_context *, const char *, void *, GError **),
+		void (*text)(xml_context *, const char *, gsize, void *, GError **));
 int xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **), void (*text)(xml_context*, const char *, gsize, void *, GError **));
 gboolean config_load(const char *filename, xmlerror **error);
 //static void xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error);

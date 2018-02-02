@@ -1063,6 +1063,54 @@ parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, co
 #endif
 
 /**
+ * @brief Parses an XML file.
+ *
+ * @param filename The XML file to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int xml_parse_file(char *filename, void *data,
+		void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+		void (*end)(xml_context *, const char *, void *, GError **),
+		void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+	int ret = 0;
+#if !USE_EZXML
+	gchar *contents;
+	gsize len;
+
+	if (g_file_get_contents(filename, &contents, &len, NULL)) {
+		dbg(lvl_debug, "XML data:\n%s\n", contents);
+		ret = xml_parse_text(contents, data, start, end, text);
+		g_free(contents);
+	} else {
+		dbg(lvl_error,"could not open XML file");
+	}
+#else
+	FILE *f;
+	ezxml_t root;
+
+	f = fopen(filename,"rb");
+	if (f) {
+		root = ezxml_parse_fp(f);
+		fclose(f);
+		if (root) {
+			parse_node_text(root, data, start, end, text);
+			ezxml_free(root);
+			ret = 1;
+		}
+	} else {
+		dbg(lvl_error,"could not open XML file");
+	}
+#endif
+	return ret;
+}
+
+/**
  * @brief Parses XML text.
  *
  * @param document The XML data to parse
