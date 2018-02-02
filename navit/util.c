@@ -219,7 +219,6 @@ char * parse_for_systematic_comparison(const char *s) {
 /* TODO break up strings at semicolons and parse each separately, return 0 if any two match */
 int compare_name_systematic(const char *s1, const char *s2) {
 	int ret = 0;
-	int i;
 	char *l, *r, *l0, *r0;
 
 	if (!s1 || !s1[0]) {
@@ -596,8 +595,6 @@ time_t mkgmtime(struct tm * pt) {
  * @brief Converts an ISO 8601-style time string into `time_t`.
  */
 time_t iso8601_to_time(char * iso8601) {
-	time_t ret;
-
 	/* Date/time fields (YYYY-MM-DD-hh-mm-ss) */
 	int val[8];
 
