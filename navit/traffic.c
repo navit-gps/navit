@@ -4129,38 +4129,14 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_) 
 	/* add the configuration directory to the name of the file to use */
 	char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
 									"/traffic.xml", NULL);
-	gchar *contents;
-	gsize len;
 	struct xml_state state;
 	int i, count;
 	GList * msg_iter;
 	int read_success = 0;
 
 	if (traffic_filename) {
-#if !USE_EZXML
-		if (g_file_get_contents(traffic_filename, &contents, &len, NULL)) {
-			dbg(lvl_debug, "Stored message data:\n%s\n", contents);
-			memset(&state, 0, sizeof(struct xml_state));
-			read_success = xml_parse_text(contents, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
-			g_free(contents);
-		} else {
-			dbg(lvl_error,"could not open file for traffic messages");
-		}
-#else
-		FILE *f;
-		ezxml_t root;
-
-		f = fopen(traffic_filename,"rb");
-		if (f) {
-			root = ezxml_parse_fp(f);
-			fclose(f);
-			if (root) {
-				parse_node_text(root, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
-				ezxml_free(root);
-				read_success = 1;
-			}
-		}
-#endif
+		memset(&state, 0, sizeof(struct xml_state));
+		read_success = xml_parse_file(traffic_filename, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
 		if (read_success) {
 			count = g_list_length(state.messages);
 			if (count)
@@ -4171,6 +4147,8 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_) 
 				msg_iter = g_list_next(msg_iter);
 			}
 			g_list_free(state.messages);
+		} else {
+			dbg(lvl_error,"could not retrieve stored traffic messages");
 		}
 		g_free(traffic_filename);			/* free the file name */
 	} /* if (traffic_filename) */
