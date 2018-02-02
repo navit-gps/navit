@@ -111,9 +111,9 @@ enum parse_state {
  * @return A buffer containing the parsed string, parts delimited by a null character, the last part
  * followed by a double null character.
  */
-char * parse_for_systematic_comparison(const char *s) {
+static char * parse_for_systematic_comparison(const char *s) {
 	char *ret = g_malloc0(strlen(s) * 2 + 1);
-	char *in = s;
+	const char *in = s;
 	char *out = ret;
 	char *part;
 	enum parse_state state = parse_state_whitespace;
