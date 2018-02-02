@@ -582,12 +582,12 @@ time_t mkgmtime(struct tm * pt) {
 
 	ret = mktime(pti);
 
+	dbg(lvl_debug, "time %ld (%02d-%02d-%02d %02d:%02d:%02d)\n", ret, pti->tm_year, pti->tm_mon, pti->tm_mday,
+			pti->tm_hour, pti->tm_min, pti->tm_sec);
+
 	g_free(pti);
 	g_free(pgt);
 	g_free(plt);
-
-	dbg(lvl_debug, "time %ld (%02d-%02d-%02d %02d:%02d:%02d)\n", ret, pti->tm_year, pti->tm_mon, pti->tm_mday,
-			pti->tm_hour, pti->tm_min, pti->tm_sec);
 
 	return ret;
 }

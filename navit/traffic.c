@@ -3022,6 +3022,8 @@ static void traffic_loop(struct traffic * this_) {
 			traffic_message_destroy(stored_msg);
 		}
 
+		dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
+
 		g_list_free(msgs_to_remove);
 	}
 
@@ -3031,8 +3033,6 @@ static void traffic_loop(struct traffic * this_) {
 
 		/* dump message store if new messages have been received */
 		traffic_dump_messages_to_xml(this_);
-
-		dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
 
 		/* trigger redraw if segments have changed */
 		if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
