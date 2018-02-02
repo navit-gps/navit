@@ -60,6 +60,7 @@ extern "C" {
 /**
  * @brief Classes for events.
  */
+/* If additional event classes are introduced, traffic_event_is_valid() must be adapted to recognize them. */
 enum event_class {
 	event_class_invalid = 0, /*!< Invalid event which should be ignored */
 	event_class_congestion,  /*!< Traffic congestion, typically indicating the approximate speed */
@@ -71,6 +72,11 @@ enum event_class {
 /**
  * @brief Event types.
  */
+/* If additional events are introduced, remember to do the following:
+ * - If the events belong to an existing class, insert them right after the last existing event for that class.
+ * - If the events belong to a new class, insert them at the end of the list.
+ * - Always keep events of the same class together.
+ * - After adding events (of any class) at the end of the list, adapt traffic_event_is_valid() to recognize them. */
 enum event_type {
 	event_invalid = 0,                                 /*!< Invalid event which should be ignored */
 	event_congestion_cleared,                          /*!< Traffic congestion cleared */

@@ -813,6 +813,40 @@ static struct map_methods traffic_map_meth = {
 };
 
 /**
+ * @brief Whether the contents of an event are valid.
+ *
+ * This identifies any malformed events in which mandatory members are not set.
+ *
+ * @return true if the event is valid, false if it is malformed
+ */
+static int traffic_event_is_valid(struct traffic_event * this_) {
+	if (!this_->event_class || !this_->type)
+		return 0;
+	switch (this_->event_class) {
+	case event_class_congestion:
+		if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance))
+			return 0;
+		break;
+	case event_class_delay:
+		if ((this_->type < event_delay_clearance)
+				|| (this_->type >= event_restriction_access_restrictions_lifted))
+			return 0;
+		break;
+	case event_class_restriction:
+		if ((this_->type < event_restriction_access_restrictions_lifted)
+				|| (this_->type > event_restriction_speed_limit_lifted))
+			return 0;
+		break;
+	default:
+		return 0;
+	}
+	if (this_->si_count && !this_->si)
+		return 0;
+	/* TODO check SI */
+	return 1;
+}
+
+/**
  * @brief Determines the degree to which the attributes of a location and a map item match.
  *
  * The result of this method is used to match a location to a map item. Its result is a score—the higher
@@ -1873,6 +1907,19 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 }
 
 /**
+ * @brief Whether the contents of a location are valid.
+ *
+ * This identifies any malformed locations in which mandatory members are not set.
+ *
+ * @return true if the locations is valid, false if it is malformed
+ */
+static int traffic_location_is_valid(struct traffic_location * this_) {
+	if (!this_->at && !(this_->from && this_->to))
+		return 0;
+	return 1;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
@@ -2504,6 +2551,36 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
 			/* TODO quantifier */
 		}
 	}
+}
+
+/**
+ * @brief Whether the contents of a message are valid.
+ *
+ * This identifies any malformed messages in which mandatory members are not set.
+ *
+ * @return true if the message is valid, false if it is malformed
+ */
+static int traffic_message_is_valid(struct traffic_message * this_) {
+	int i;
+
+	if (!this_->id || !this_->id[0])
+		return 0;
+	if (!this_->receive_time || !this_->update_time)
+		return 0;
+	if (!this_->is_cancellation) {
+		if (!this_->expiration_time && !this_->end_time)
+			return 0;
+		if (!this_->location)
+			return 0;
+		if (!traffic_location_is_valid(this_->location))
+			return 0;
+		if (!this_->event_count || !this_->events)
+			return 0;
+		for (i = 0; i < this_->event_count; i++)
+			if (!this_->events[i] || !traffic_event_is_valid(this_->events[i]))
+				return 0;
+	}
+	return 1;
 }
 
 /**
@@ -3153,7 +3230,6 @@ static int traffic_xml_is_tagstack_valid(struct xml_state * state) {
  * @param values Attribute values (indices correspond to `names`)
  * @param data Points to a `struct xml_state` holding parser state
  */
-/* TODO prevent building of semantically incorrect messages */
 static void traffic_xml_start(xml_context *dummy, const char *tag_name, const char **names,
 		const char **values, void *data, GError **error) {
 	struct xml_state * state = (struct xml_state *) data;
@@ -3198,10 +3274,10 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
  * @param tag_name The tag name
  * @param data Points to a `struct xml_state` holding parser state
  */
-/* TODO prevent building of semantically incorrect messages */
 static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data, GError **error) {
 	struct xml_state * state = (struct xml_state *) data;
 	struct xml_element * el = state->tagstack ? (struct xml_element *) state->tagstack->data : NULL;
+	struct traffic_message * message;
 	struct traffic_point ** point = NULL;
 
 	/* Iterator and child element count */
@@ -3232,20 +3308,24 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
 					iter = g_list_next(iter);
 				}
 			}
-			state->messages = g_list_append(state->messages,
-					traffic_message_new(traffic_xml_get_attr("id", el->names, el->values),
-							time_new(traffic_xml_get_attr("receive_time", el->names, el->values)),
-							time_new(traffic_xml_get_attr("update_time", el->names, el->values)),
-							time_new(traffic_xml_get_attr("expiration_time", el->names, el->values)),
-							time_new(traffic_xml_get_attr("start_time", el->names, el->values)),
-							time_new(traffic_xml_get_attr("end_time", el->names, el->values)),
-							boolean_new(traffic_xml_get_attr("cancellation", el->names, el->values), 0),
-							boolean_new(traffic_xml_get_attr("forecast", el->names, el->values), 0),
-							/* TODO replaces */
-							0, NULL,
-							state->location,
-							count,
-							(struct traffic_event **) children));
+			message = traffic_message_new(traffic_xml_get_attr("id", el->names, el->values),
+					time_new(traffic_xml_get_attr("receive_time", el->names, el->values)),
+					time_new(traffic_xml_get_attr("update_time", el->names, el->values)),
+					time_new(traffic_xml_get_attr("expiration_time", el->names, el->values)),
+					time_new(traffic_xml_get_attr("start_time", el->names, el->values)),
+					time_new(traffic_xml_get_attr("end_time", el->names, el->values)),
+					boolean_new(traffic_xml_get_attr("cancellation", el->names, el->values), 0),
+					boolean_new(traffic_xml_get_attr("forecast", el->names, el->values), 0),
+					/* TODO replaces */
+					0, NULL,
+					state->location,
+					count,
+					(struct traffic_event **) children);
+			if (!traffic_message_is_valid(message)) {
+				dbg(lvl_error, "malformed message detected, skipping\n");
+				traffic_message_destroy(message);
+			} else
+				state->messages = g_list_append(state->messages, message);
 			g_free(children);
 			state->location = NULL;
 			g_list_free(state->events);
