@@ -122,11 +122,9 @@ static char * parse_for_systematic_comparison(const char *s) {
 
 	dbg(lvl_debug, "enter\n");
 
-	// TODO convert strings to lowercase
-
 	while (i < strlen(in)) {
 		c = in[i];
-		if (c <= 0x20) {
+		if ((c <= 0x20) || (c == ',') || (c == '-') || (c == '.') || (c == '/')) {
 			/* whitespace */
 			if (state == parse_state_numeric) {
 				part = g_malloc0(i + 1);
@@ -245,7 +243,7 @@ int compare_name_systematic(const char *s1, const char *s2) {
 			if (atoi(r) || (r[0] == '0'))
 				ret = 1;
 			else
-				ret = strcmp(l, r);
+				ret = strcasecmp(l, r);
 		}
 
 		l += strlen(l) + 1;
