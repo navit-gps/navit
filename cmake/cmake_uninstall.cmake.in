@@ -1,0 +1,34 @@
+# taken from https://cmake.org/Wiki/RecipeAddUninstallTarget
+MESSAGE("Blubb: ${BIN_DIR} ${SHARE_DIR} ${LOCALE_DIR} ${IMAGE_DIR} ${MAN_DIR} ${CMAKE_INSTALL_PREFIX} $ENV{DESTINATION}")
+LIST(APPEND DIRS ${CMAKE_INSTALL_PREFIX}/${BIN_DIR} ${CMAKE_INSTALL_PREFIX}/${SHARE_DIR} ${CMAKE_INSTALL_PREFIX}/${LOCALE_DIR} ${CMAKE_INSTALL_PREFIX}/${IMAGE_DIR} ${CMAKE_INSTALL_PREFIX}/${MAN_DIR})
+MESSAGE("DIRS: ${DIRS}")
+IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/install_manifest.txt")
+  MESSAGE(FATAL_ERROR "Cannot find install manifest:" ${CMAKE_CURRENT_BINARY_DIR} "/install_manifest.txt")
+ENDIF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/install_manifest.txt")
+
+FILE(READ "${CMAKE_CURRENT_BINARY_DIR}/install_manifest.txt" files)
+STRING(REGEX REPLACE "\n" ";" files "${files}")
+FOREACH(file ${files})
+  MESSAGE(STATUS "Uninstalling " $ENV{DESTDIR} ${file} "")
+  IF(EXISTS "$ENV{DESTDIR}${file}")
+    EXEC_PROGRAM(
+      "${CMAKE_COMMAND}" ARGS "-E remove " $ENV{DESTDIR} ${file} ""
+      OUTPUT_VARIABLE rm_out
+      RETURN_VALUE rm_retval
+      )
+    IF(NOT "${rm_retval}" STREQUAL 0)
+      MESSAGE(FATAL_ERROR "Problem when removing " $ENV{DESTDIR} ${file} "")
+    ENDIF(NOT "${rm_retval}" STREQUAL 0)
+  ELSE(EXISTS " $ENV{DESTDIR} ${file} ")
+    MESSAGE(STATUS "File " $ENV{DESTDIR} ${file} " does not exist.")
+  ENDIF(EXISTS "$ENV{DESTDIR}${file}")
+FOREACH(DIR ${DIRS})
+	FILE(GLOB RESULT "${DIR}/")
+	LIST(LENGTH RESULT RES_LEN)
+	IF("${RES_LEN}" EQUAL 0)
+	# DIR is empty, do something
+		MESSAGE("DIR ${DIR} empty ${RES_LEN}, removing...")
+		#FILE(REMOVE_RECURSE ${DIR})
+	ENDIF()
+ ENDFOREACH(DIR)
+ENDFOREACH(file)

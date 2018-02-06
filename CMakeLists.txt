@@ -855,3 +855,12 @@ add_subdirectory (man)
 if (USE_NATIVE_LANGUAGE_SUPPORT)
    add_subdirectory (po)
 endif(USE_NATIVE_LANGUAGE_SUPPORT)
+IF(UNIX AND NOT ANDROID AND NOT APPLE)
+########### Add uninstall target ###############
+CONFIGURE_FILE(
+  "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake.in"
+  "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
+ADD_CUSTOM_TARGET(uninstall
+  "${CMAKE_COMMAND}" -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DBIN_DIR=${BIN_DIR} -DSHARE_DIR=${SHARE_DIR} -DLOCALE_DIR=${LOCALE_DIR} -DIMAGE_DIR=${IMAGE_DIR} -DMAN_DIR=${MAN_DIR}  -P "${CMAKE_MODULE_PATH}/cmake_uninstall.cmake") 
+ENDIF(UNIX AND NOT ANDROID AND NOT APPLE)
