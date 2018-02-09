@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -34,6 +34,14 @@
 #include "vehicle.h"
 #include "event.h"
 #include "types.h"
+
+/**
+ * @defgroup vehicle-gpsd Vehicle Gpsd
+ * @ingroup vehicle-plugins
+ * @brief The Vehicle to gain position data from the gpsd service
+ *
+ * @{
+ */
 
 static struct vehicle_priv {
 	char *source;
@@ -101,13 +109,15 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 			}
 		}
 	}	
+
 	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"\n", (unsigned long long)data->set);
 	if (data->set & SPEED_SET) {
-		priv->speed = data->fix.speed * 3.6;
+		priv->speed = data->fix.speed * MPS_TO_KPH;
 		if(!isnan(data->fix.speed))
 			callback_list_call_attr_0(priv->cbl, attr_position_speed);
 		data->set &= ~SPEED_SET;
 	}
+
 	if (data->set & TRACK_SET) {
 		priv->direction = data->fix.track;
 		data->set &= ~TRACK_SET;

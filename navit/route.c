@@ -137,13 +137,19 @@ struct size_weight_limit {
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
 
+/**
+ * @brief Data for a segment in the route graph
+ */
 struct route_graph_segment_data {
-	struct item *item;
-	int offset;
-	int flags;
-	int len;
-	int maxspeed;
-	struct size_weight_limit size_weight;
+	struct item *item;                    /**< The item which this segment is part of */
+	int offset;                           /**< If the item passed in "item" is segmented (i.e. divided
+	                                       *   into several segments), this indicates the position of
+	                                       *   this segment within the item */
+	int flags;                            /**< Flags for this segment */
+	int len;                              /**< The length of this segment */
+	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
+	                                       *   -1 if not known */
+	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
 };
 
@@ -250,8 +256,8 @@ struct route {
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
-	struct map *map;
-	struct map *graph_map;
+	struct map *map;            /**< The map containing the route path */
+	struct map *graph_map;      /**< The map containing the route graph */
 	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
 	struct callback_list *cbl2;	/**< Callback list to call when route changes */
@@ -1607,6 +1613,15 @@ route_segment_data_size(int flags)
 }
 
 
+/**
+ * @brief Checks if the route graph already contains a particular segment.
+ *
+ * This function compares the item IDs of both segments. If the item is segmented, the segment offset is
+ * also compared.
+ *
+ * @param start The starting point of the segment
+ * @param data The data for the segment
+ */
 static int
 route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
 {
@@ -1628,9 +1643,6 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_g
 
 /**
  * @brief Inserts a new segment into the route graph
- *
- * This function performs a check if a segment for the item specified already exists, and inserts
- * a new segment representing this item if it does not.
  *
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
@@ -1811,12 +1823,10 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 }
 
 /**
- * @brief Inserts a new item into the path
+ * @brief Inserts a new segment into the path
  * 
- * This function does almost the same as "route_path_add_item()", but identifies
- * the item to add by a segment from the route graph. Another difference is that it "copies" the
- * segment from the route graph, i.e. if the item is segmented, only the segment passed in rgs will
- * be added to the route path, not all segments of the item. 
+ * This function adds a new segment to the route path. The segment is copied from the route graph. If
+ * `rgs` is part of a segmented item, only `rgs` will be added to the route path, not the other segments.
  *
  * The function can be sped up by passing an old path already containing this segment in oldpath - 
  * the segment will then be extracted from this old path. Please note that in this case the direction
@@ -2155,6 +2165,15 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	return ret;
 }
 
+/**
+ * @brief Whether two route graph segments match.
+ *
+ * Two segments match if both start and end at the exact same points. Other points are not considered.
+ *
+ * @param s1 The first segment
+ * @param s2 The second segment
+ * @return true if both segments match, false if not
+ */
 static int
 route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_segment *s2)
 {
@@ -2167,11 +2186,13 @@ route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_seg
 /**
  * @brief Sets or clears a traffic distortion for a segment.
  *
- * This sets or clears a delay. It cannot be used to set speed.
+ * This sets a delay (setting speed is not supported) or clears an existing traffic distortion.
+ * Note that, although setting a speed is not supported, calling this function with a delay of 0
+ * will also clear an existing speed constraint.
  *
  * @param this The route graph
  * @param seg The segment to which the traffic distortion applies
- * @param delay Delay in tenths of a second
+ * @param delay Delay in tenths of a second, or 0 to clear an existing traffic distortion
  */
 static void
 route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay)
@@ -2204,10 +2225,10 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
 }
 
 /**
- * @brief Adds a route distortion item to the route graph
+ * @brief Adds a traffic distortion item to the route graph
  *
  * @param this The route graph to add to
- * @param item The item to add
+ * @param item The item to add, must be of {@code type_traffic_distortion}
  */
 static void
 route_process_traffic_distortion(struct route_graph *this, struct item *item)
@@ -3305,12 +3326,15 @@ route_crossings_get(struct route *this, struct coord *c)
 #endif
 
 
+/**
+ * @brief Implementation-specific map rect data
+ */
 struct map_rect_priv {
 	struct route_info_handle *ri;
 	enum attr_type attr_next;
 	int pos;
-	struct map_priv *mpriv;
-	struct item item;
+	struct map_priv *mpriv;     /**< The map to which this map rect refers */
+	struct item item;           /**< The current item, i.e. the last item returned by the `map_rect_get_item` method */
 	unsigned int last_coord;
 	struct route_path *path;
 	struct route_path_segment *seg,*seg_next;
