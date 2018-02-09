@@ -90,6 +90,8 @@ jobs:
           command: |
             bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
+      - store_artifacts:
+          path: win32/navit
   build_wince:
     docker:
       - image: navit/wince:8.04
