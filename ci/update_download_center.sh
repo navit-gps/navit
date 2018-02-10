@@ -55,6 +55,7 @@ trap cleanup EXIT
 #############################################
 
 echo "Init Git Repo"
+export GIT_TERMINAL_PROMPT=0 
 cd $TMP_DIR
 git clone $NAVIT_DOWNLOAD_CENTER_REPO $UUID
 cd $UUID/_data
