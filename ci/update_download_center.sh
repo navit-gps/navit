@@ -86,6 +86,7 @@ RC=$?
 if [ $RC -ne 0 ]; then
     exit 0
 else
+    echo "Push to ${NAVIT_DOWNLOAD_CENTER_REPO} was not successful update repo and try again..."
     for NUM in {1..10}; do
         echo "Retry #${NUM} to push to github"
         git pull
