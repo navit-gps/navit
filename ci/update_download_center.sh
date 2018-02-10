@@ -23,7 +23,7 @@ fi
 if [ -z $CIRCLECI ];then
     echo "This Script needs to be run on CircleCI"
 fi
-if [ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]; then
+if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
     echo "Only trunk on navit-gps may upload to the Download Center"
     exit 0
 fi
@@ -58,10 +58,10 @@ echo "Init Git Repo"
 cd $TMP_DIR
 git clone $NAVIT_DOWNLOAD_CENTER_REPO $UUID
 cd $UUID/_data
-wget $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
+wget --no-check-certificate $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
 RC=$?
 if [ $RC -ne 0 ]; then
-    echo "Git Checkout failed"
+    echo "wget artifacts failed"
     exit 1
 fi
 git config --global push.default simple
