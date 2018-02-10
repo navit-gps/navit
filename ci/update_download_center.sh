@@ -73,3 +73,21 @@ git config user.email "circleci@navit-project.org"
 git add ${BUILD_NUM}.json
 git commit -m "add:artifacts:Add artifacts for build #${BUILD_NUM} with SHA1:${CIRCLE_SHA1} [ci skip]" 
 git push
+RC=$?
+if [ $RC -ne 0 ]; then
+    exit 0
+else
+    for NUM in {1..10}; do
+        echo "Retry #${NUM} to push to github"
+        git pull
+        git push
+        RC=$?
+        if [ $RC -eq 0 ]; then
+            exit 0
+        fi
+        sleep $(($RANDOM%5)) # sleep between 1 and 5 seconds
+    done
+fi
+
+echo "Failed to push to github"
+exit 100
