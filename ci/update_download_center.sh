@@ -32,7 +32,7 @@ fi
 
 echo "Setting up all Variables"
 
-UUID=$(uuidgen)
+UUID=${RANDOM}-${RANDOM}-${RANDOM}-${RANDOM}
 TMP_DIR=$(mktemp -d)
 CIRCLECI_API_BASE="https://circleci.com/api/v1.1/"
 NAVIT_DOWNLOAD_CENTER_REPO="https://github.com/jkoan/data-test"
