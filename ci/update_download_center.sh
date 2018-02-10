@@ -42,6 +42,7 @@ CVS_TYPE="github"
 REPONAME=$CIRCLE_PROJECT_REPONAME
 USERNAME=$CIRCLE_PROJECT_USERNAME
 BUILD_NUM=$CIRCLE_BUILD_NUM
+JOB_NAME=$CIRCLE_JOB
 
 # Build all api urls
 URL_BUILD_ARTIFACTS="${CIRCLECI_API_BASE}project/${CVS_TYPE}/${USERNAME}/${REPONAME}/${BUILD_NUM}/artifacts"
@@ -60,7 +61,10 @@ cd $TMP_DIR
 mkdir -p ~/.ssh/
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 git clone $NAVIT_DOWNLOAD_CENTER_REPO $UUID
-cd $UUID/_data
+if [ ! -d $UUID/_data/$JOB_NAME ]; then
+    mkdir -p $UUID/_data/$JOB_NAME
+fi
+cd $UUID/_data/$JOB_NAME
 wget --no-check-certificate $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
 RC=$?
 if [ $RC -ne 0 ]; then
