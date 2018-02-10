@@ -36,6 +36,9 @@
 #include "gui_internal_search.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
+#ifdef USE_AUDIO_FRAMEWORK
+#include "gui_internal_media.h"
+#endif
 #if HAS_IFADDRS
 #include <ifaddrs.h>
 #include <arpa/inet.h>
@@ -1338,6 +1341,10 @@ static struct command_table commands[] = {
 #if HAS_IFADDRS
 	{"network_info",command_cast(gui_internal_cmd2)},
 #endif
+#ifdef USE_AUDIO_FRAMEWORK
+        {"media_show_playlist", command_cast (gui_internal_media_show_playlist)},
+#endif
+
 };
 
 void

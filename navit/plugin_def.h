@@ -30,4 +30,5 @@ PLUGIN_CATEGORY(osd, (struct navit *nav, struct osd_methods *meth, struct attr *
 PLUGIN_CATEGORY(speech, (struct speech_methods *meth, struct attr **attrs, struct attr *parent))
 PLUGIN_CATEGORY(vehicle, (struct vehicle_methods *meth, struct callback_list *cbl, struct attr **attrs))
 PLUGIN_CATEGORY(event, (struct event_methods *meth))
+PLUGIN_CATEGORY(audio, (struct audio_methods *meth, struct callback_list * cbl, struct attr **attrs, struct attr *parent))
 PLUGIN_CATEGORY(font, (void *meth))

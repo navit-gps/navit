@@ -287,6 +287,8 @@ object_func_lookup(enum attr_type type)
 		return &tracking_func;
 	case attr_speech:
 		return &speech_func;
+	case attr_audio:
+		return &audio_func;
 	case attr_vehicle:
 		return &vehicle_func;
 	case attr_vehicleprofile:
@@ -555,6 +557,11 @@ static void initStatic(void) {
 	elements[42].parent="navit";
 	elements[42].func=NULL;
 	elements[42].type=attr_script;
+
+ 	elements[43].name="audio";
+ 	elements[43].parent="navit";
+ 	elements[43].func=NULL;
+ 	elements[43].type=attr_audio;
 }
 
 /**
