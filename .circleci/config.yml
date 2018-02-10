@@ -17,7 +17,7 @@ jobs:
           name: Build for Linux
           command: bash ci/build_linux.sh
       - store_artifacts:
-          path: linux/navit*
+          path: linux
       - run:
           name: Update Navit-Download-Center
           command: |
