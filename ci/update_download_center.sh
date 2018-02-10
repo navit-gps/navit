@@ -57,6 +57,8 @@ trap cleanup EXIT
 echo "Init Git Repo"
 export GIT_TERMINAL_PROMPT=0 
 cd $TMP_DIR
+mkdir -p ~/.ssh/
+ssh-keyscan github.com >> ~/.ssh/known_hosts
 git clone $NAVIT_DOWNLOAD_CENTER_REPO $UUID
 cd $UUID/_data
 wget --no-check-certificate $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
