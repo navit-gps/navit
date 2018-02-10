@@ -35,7 +35,7 @@ echo "Setting up all Variables"
 UUID=${RANDOM}-${RANDOM}-${RANDOM}-${RANDOM}
 TMP_DIR=$(mktemp -d)
 CIRCLECI_API_BASE="https://circleci.com/api/v1.1/"
-NAVIT_DOWNLOAD_CENTER_REPO="https://github.com/jkoan/data-test"
+NAVIT_DOWNLOAD_CENTER_REPO="git@github.com:jkoan/data-test"
 
 # To keep it generic
 CVS_TYPE="github"
