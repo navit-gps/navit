@@ -182,7 +182,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	free(compbuffer);
 }
 
-void
+int
 zip_write_index(struct zip_info *info)
 {
 	int size=ftell(info->index);
@@ -193,11 +193,13 @@ zip_write_index(struct zip_info *info)
 	
 	if (fread(buffer, size, 1, info->index) == 0){
 		dbg(lvl_warning, "fread failed");
+		return 1;
 	}
 	else{
 		write_zipmember(info, "index", strlen("index"), buffer, size);
 	}
 	info->zipnum++;
+	return 0;
 }
 
 static void
