@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 mkdir -p ~/.ssh/
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 git clone -b gh-pages git@github.com:navit-gps/navit.git /root/navit-doc
