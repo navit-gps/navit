@@ -48,7 +48,7 @@ jobs:
           command: |
             bash ci/build_android.sh
       - store_artifacts:
-          path: android-arm/navit
+          path: android-arm/navit/android/bin
   build_android_x86:
     <<: *defaults
     steps:
@@ -66,7 +66,7 @@ jobs:
           command: |
             bash ci/build_android_x86.sh
       - store_artifacts:
-          path: android-x86/navit
+          path: android-x86/navit/android/bin
   build_win32:
     <<: *defaults
     steps:
@@ -76,6 +76,8 @@ jobs:
           command: |
             bash ci/setup_common_requirements.sh
             bash ci/build_win32.sh
+      - store_artifacts:
+          path: win32/navit.exe
   build_wince:
     docker:
       - image: navit/wince:8.04
