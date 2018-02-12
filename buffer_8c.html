@@ -117,19 +117,22 @@ $(document).ready(function(){initNavTree('buffer_8c.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa7452743a76a8cad407e8a84a60e7ed2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8c.html#aa7452743a76a8cad407e8a84a60e7ed2">save_buffer</a> (char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, struct <a class="el" href="structbuffer.html">buffer</a> *b, long long <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>)</td></tr>
+<tr class="memdesc:aa7452743a76a8cad407e8a84a60e7ed2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a buffer to a file.  <a href="#aa7452743a76a8cad407e8a84a60e7ed2">More...</a><br/></td></tr>
 <tr class="separator:aa7452743a76a8cad407e8a84a60e7ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeca86b3fe1fc33dd8669abff2a7f332b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8c.html#aeca86b3fe1fc33dd8669abff2a7f332b">load_buffer</a> (char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, struct <a class="el" href="structbuffer.html">buffer</a> *b, long long <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, long long <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>)</td></tr>
-<tr class="separator:aeca86b3fe1fc33dd8669abff2a7f332b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea404f46b171b91411e63491f855f05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8c.html#abea404f46b171b91411e63491f855f05">load_buffer</a> (char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, struct <a class="el" href="structbuffer.html">buffer</a> *b, long long <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, long long <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>)</td></tr>
+<tr class="memdesc:abea404f46b171b91411e63491f855f05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a buffer from a file.  <a href="#abea404f46b171b91411e63491f855f05">More...</a><br/></td></tr>
+<tr class="separator:abea404f46b171b91411e63491f855f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4a64d98cb8dc7dd891ef6f21e0c6a41"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8c.html#aa4a64d98cb8dc7dd891ef6f21e0c6a41">sizeof_buffer</a> (char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>)</td></tr>
+<tr class="memdesc:aa4a64d98cb8dc7dd891ef6f21e0c6a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines size of buffer for file.  <a href="#aa4a64d98cb8dc7dd891ef6f21e0c6a41">More...</a><br/></td></tr>
 <tr class="separator:aa4a64d98cb8dc7dd891ef6f21e0c6a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aeca86b3fe1fc33dd8669abff2a7f332b"></a>
+<a class="anchor" id="abea404f46b171b91411e63491f855f05"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void load_buffer </td>
+          <td class="memname"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> load_buffer </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
@@ -160,7 +163,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="structbuffer.html#a0d86c461fecdc90bf044e7715b8e1876">buffer::base</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="types_8h.html#aa61075d0d6640f7dd9f42b322431e781">LONGLONG_FMT</a>, <a class="el" href="structbuffer.html#ae6f15b2064e33de08e16e316ed1ce67f">buffer::malloced</a>, <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, and <a class="el" href="structbuffer.html#ab0dad21387a06c0cc06756776575940e">buffer::size</a>.</p>
+<p>Loads a buffer from a file. </p>
+<p>This function loads a buffer from a file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the while to where the buffer is loaded from. </td></tr>
+    <tr><td class="paramname">b</td><td>Buffer in which file is loaded. </td></tr>
+    <tr><td class="paramname">offset</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>indicator if operation suceeded </dd></dl>
+
+<p>References <a class="el" href="structbuffer.html#a0d86c461fecdc90bf044e7715b8e1876">buffer::base</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25ae8f0c4875bfa25147150a74f41c86c53">lvl_warning</a>, <a class="el" href="structbuffer.html#ae6f15b2064e33de08e16e316ed1ce67f">buffer::malloced</a>, <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, and <a class="el" href="structbuffer.html#ab0dad21387a06c0cc06756776575940e">buffer::size</a>.</p>
 
 <p>Referenced by <a class="el" href="maptool_8c.html#a01a8023a50c47b72cc1e92025aa4dce5">maptool_load_node_table()</a>, <a class="el" href="maptool_8c.html#a0fe4352dda41b14a61340f04c4957620">osm_count_references()</a>, and <a class="el" href="maptool_8c.html#a5ea560b5f3de3e7c0de81208c607008e">osm_resolve_coords_and_split_at_intersections()</a>.</p>
 
@@ -195,10 +210,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Navit, a modular navigation system. Copyright (C) 2005-2011 Navit Team</p>
+
+<p>Saves a buffer to a file. </p>
+<p>Navit, a modular navigation system. Copyright (C) 2005-2018 Navit Team</p>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. </p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. This function saves a buffer to a file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the while to where the buffer is saved to. </td></tr>
+    <tr><td class="paramname">b</td><td>Buffer which is saved to file. </td></tr>
+    <tr><td class="paramname">offset</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="structbuffer.html#a0d86c461fecdc90bf044e7715b8e1876">buffer::base</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, and <a class="el" href="structbuffer.html#ab0dad21387a06c0cc06756776575940e">buffer::size</a>.</p>
 
@@ -219,6 +244,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Determines size of buffer for file. </p>
+<p>This function determines the size of the buffer required to read a file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Name of file for which the required size of the buffer is determined </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>required size of buffer </dd></dl>
 
 <p>Referenced by <a class="el" href="maptool_8c.html#a01a8023a50c47b72cc1e92025aa4dce5">maptool_load_node_table()</a>.</p>
 

@@ -162,7 +162,7 @@ var searchData=
   ['lng',['lng',['../structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb',1,'coord_geo::lng()'],['../structmap__rect__priv.html#a92f3a91260cfafc939b31dc94827b853',1,'map_rect_priv::lng()']]],
   ['lng_5fc',['lng_c',['../structmap__rect__priv.html#a575f338010bebe3b3b0635134fff03c3',1,'map_rect_priv']]],
   ['lng_5fdelta',['lng_delta',['../structrgn__point.html#a74ffd739d05e44689ee6fbf96c798595',1,'rgn_point::lng_delta()'],['../structrgn__poly.html#a9dff7d11a9e297cd56ea830458609885',1,'rgn_poly::lng_delta()'],['../garmin__img_8c.html#abf3d30798573437d324f6e867b748ac8',1,'lng_delta():&#160;garmin_img.c']]],
-  ['load_5fbuffer',['load_buffer',['../buffer_8c.html#aeca86b3fe1fc33dd8669abff2a7f332b',1,'load_buffer(char *filename, struct buffer *b, long long offset, long long size):&#160;buffer.c'],['../maptool_8h.html#aeca86b3fe1fc33dd8669abff2a7f332b',1,'load_buffer(char *filename, struct buffer *b, long long offset, long long size):&#160;buffer.c']]],
+  ['load_5fbuffer',['load_buffer',['../buffer_8c.html#abea404f46b171b91411e63491f855f05',1,'load_buffer(char *filename, struct buffer *b, long long offset, long long size):&#160;buffer.c'],['../maptool_8h.html#abea404f46b171b91411e63491f855f05',1,'load_buffer(char *filename, struct buffer *b, long long offset, long long size):&#160;buffer.c']]],
   ['load_5fchanges',['load_changes',['../binfile_8c.html#a7858004e8cfbbb4a3cfbe5bf1f678b31',1,'binfile.c']]],
   ['load_5fcountries',['load_countries',['../maptool_8h.html#ab178373e3be0ed68e2ac0cf1e44004d2',1,'load_countries(void):&#160;osm.c'],['../osm_8c.html#ab178373e3be0ed68e2ac0cf1e44004d2',1,'load_countries(void):&#160;osm.c']]],
   ['load_5fmaps',['load_maps',['../map__data_8h.html#ac80118310af2b3eea1b856e6fa0d5dfd',1,'map_data.h']]],
