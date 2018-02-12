@@ -35,7 +35,7 @@ echo "Setting up all Variables"
 UUID=${RANDOM}-${RANDOM}-${RANDOM}-${RANDOM}
 TMP_DIR=$(mktemp -d)
 CIRCLECI_API_BASE="https://circleci.com/api/v1.1/"
-NAVIT_DOWNLOAD_CENTER_REPO="git@github.com:jkoan/data-test"
+NAVIT_DOWNLOAD_CENTER_REPO="git@github.com:navit-gps/download-center"
 
 # To keep it generic
 CVS_TYPE="github"
@@ -66,6 +66,7 @@ if [ ! -d $UUID/_data/$JOB_NAME ]; then
 fi
 cd $UUID/_data/$JOB_NAME
 
+#############################################
 
 echo "Download metadata of this build"
 wget --no-check-certificate $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
@@ -74,6 +75,8 @@ if [ $RC -ne 0 ]; then
     echo "wget artifacts download failed"
     exit 1
 fi
+
+#############################################
 
 echo "Push update to ${NAVIT_DOWNLOAD_CENTER_REPO}"
 git config --global push.default simple
