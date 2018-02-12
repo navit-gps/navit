@@ -121,7 +121,6 @@ struct map_priv {
 	int check_version;
 	int map_version;
 	GHashTable *changes;
-	char *passwd;
 	char *map_release;
 	int flags;
 	char *url;
@@ -363,7 +362,6 @@ binfile_read_lfh(struct file *fi, long long offset)
 static unsigned char *
 binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh)
 {
-	struct zip_enc *enc;
 	unsigned char *ret=NULL;
 
 	offset+=sizeof(struct zip_lfh)+lfh->zipfnln;
@@ -375,23 +373,6 @@ binfile_read_content(struct map_priv *m, struct file *fi, long long offset, stru
 	case 8:
 		offset+=lfh->zipxtraln;
 		ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
-		break;
-	case 99:
-		if (!m->passwd)
-			break;
-		enc=(struct zip_enc *)file_data_read(fi, offset, sizeof(*enc));
-		offset+=lfh->zipxtraln;
-		switch (enc->compress_method) {
-		case 0:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, m->passwd);
-			break;
-		case 8:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
-			break;
-		default:
-			dbg(lvl_error,"map file %s: unknown encrypted compression method %d\n", fi->name, enc->compress_method);
-		}
-		file_data_free(fi, (unsigned char *)enc);
 		break;
 	default:
 		dbg(lvl_error,"map file %s: unknown compression method %d\n", fi->name, lfh->zipmthd);
@@ -2822,7 +2803,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct attr *check_version,*map_pass,*flags,*url,*download_enabled;
+	struct attr *check_version,*flags,*url,*download_enabled;
 	struct file_wordexp *wexp;
 	char **wexp_data;
 	if (! data)
@@ -2841,9 +2822,6 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
 	check_version=attr_search(attrs, NULL, attr_check_version);
 	if (check_version)
 		m->check_version=check_version->u.num;
-	map_pass=attr_search(attrs, NULL, attr_map_pass);
-	if (map_pass)
-		m->passwd=g_strdup(map_pass->u.str);
 	flags=attr_search(attrs, NULL, attr_flags);
 	if (flags)
 		m->flags=flags->u.num;
