@@ -39,39 +39,7 @@ speech_android_say(struct speech_priv *this, const char *text)
 	char *str=g_strdup(text);
 	jstring string;
 	int i;
-
-	if (this->flags & 2) {
-		for (i = 0 ; i < strlen(str) ; i++) {
-			if (str[i] == 0xc3 && str[i+1] == 0x84) {
-				str[i]='A';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0x96) {
-				str[i]='O';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0x9c) {
-				str[i]='U';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0xa4) {
-				str[i]='a';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0xb6) {
-				str[i]='o';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0xbc) {
-				str[i]='u';
-				str[i+1]='e';
-			}
-			if (str[i] == 0xc3 && str[i+1] == 0x9f) {
-				str[i]='s';
-				str[i+1]='s';
-			}
-		}
-	}
+	
 	string = (*jnienv)->NewStringUTF(jnienv, str);
 	dbg(lvl_debug,"enter %s\n",str);
         (*jnienv)->CallVoidMethod(jnienv, this->NavitSpeech, this->NavitSpeech_say, string);
@@ -96,9 +64,6 @@ speech_android_init(struct speech_priv *ret)
 {
 	jmethodID cid;
 	char *class="org/navitproject/navit/NavitSpeech2";
-
-	if (ret->flags & 1) 
-		class="org/navitproject/navit/NavitSpeech";
 
 	if (!android_find_class_global(class, &ret->NavitSpeechClass)) {
 		dbg(lvl_error,"No class found\n");
