@@ -16,6 +16,12 @@ jobs:
       - run:
           name: Build for Linux
           command: bash ci/build_linux.sh
+      - store_artifacts:
+          path: linux/_CPack_Packages
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   run_doxygen:
     <<: *defaults
     steps:
@@ -49,6 +55,10 @@ jobs:
             bash ci/build_android.sh
       - store_artifacts:
           path: android-arm/navit/android/bin
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_android_x86:
     <<: *defaults
     steps:
@@ -67,6 +77,10 @@ jobs:
             bash ci/build_android_x86.sh
       - store_artifacts:
           path: android-x86/navit/android/bin
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_win32:
     <<: *defaults
     steps:
@@ -78,6 +92,10 @@ jobs:
             bash ci/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_wince:
     docker:
       - image: navit/wince:8.04
@@ -88,6 +106,10 @@ jobs:
           command: bash ci/build_wince.sh
       - store_artifacts:
           path: wince/output
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_tomtom_minimal:
     <<: *defaults
     docker:
@@ -104,6 +126,10 @@ jobs:
             bash ci/build_tomtom_minimal.sh
       - store_artifacts:
           path: /output
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_tomtom_plugin:
     <<: *defaults
     docker:
@@ -120,7 +146,10 @@ jobs:
             bash ci/build_tomtom_plugin.sh
       - store_artifacts:
           path: /output
-
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
 workflows:
   version: 2
   doxygen:
