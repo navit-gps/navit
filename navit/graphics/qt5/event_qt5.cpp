@@ -43,6 +43,7 @@ extern "C" {
 #if defined(WINDOWS) || defined(WIN32) || defined(HAVE_API_WIN32_CE)
 #include <windows.h>
 #endif
+
 #include "event_qt5.h"
 #include "event_qt5.moc"
 #include "graphics_qt5.h"
@@ -63,6 +64,16 @@ qt5_navit_timer::qt5_navit_timer(QObject* parent)
     timer_callback = g_hash_table_new(NULL, NULL);
     watches = g_hash_table_new(NULL, NULL);
     dbg(lvl_debug, "qt5_navit_timer object created\n");
+}
+
+void qt5_navit_timer::watchEvent(int id)
+{
+   struct event_watch* ret = g_new0(struct event_watch, 1);
+   ret = (struct event_watch*)g_hash_table_lookup(watches, (void*)(long)id);
+   if (ret) {
+        dbg(lvl_debug, "callback found, calling it\n");
+        callback_call_0(ret->cb);
+    }
 }
 
 void qt5_navit_timer::timerEvent(QTimerEvent* event)

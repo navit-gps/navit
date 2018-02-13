@@ -21,8 +21,6 @@
 #cmakedefine PACKAGE "@PACKAGE@"
 #cmakedefine LOCALEDIR "@LOCALEDIR@"
 
-#cmakedefine HAVE_LIBCRYPTO 1
-
 #cmakedefine HAVE_ZLIB 1
 
 #cmakedefine USE_ROUTING 1
@@ -95,3 +93,5 @@
 #cmakedefine HAVE_IMLIB2 1
 
 #cmakedefine HAS_IFADDRS 1
+
+#cmakedefine HAVE_POSTGRESQL 1

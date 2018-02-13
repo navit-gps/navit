@@ -204,7 +204,11 @@ ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg)
 		int n1,n2,speed=road_speed(ib->type);
 		struct item_id road_id;
 		double l;
-		fread(&road_id, sizeof(road_id), 1, ref);
+		
+		if (fread(&road_id, sizeof(road_id), 1, ref) == 0){
+			dbg(lvl_warning, "fread failed");
+			continue;
+		}
 		if (speed) {
 			struct edge_hash_item *hi=g_slice_new(struct edge_hash_item);
 			struct item_id *id=g_slice_new(struct item_id);
@@ -229,12 +233,19 @@ ch_generate_sgr(char *suffix)
 {
 #ifndef HAVE_API_WIN32_CE
 	char command[1024];
+	int system_result;
 	sprintf(command,"./contraction-hierarchies-20080621/main -s -p -f ddsg_%s.tmp -o hcn_%s.tmp -l hcn_log_%s.tmp -x 190 -y 1 -e 600 -p 1000 -k 1,3.3,2,10,3,10,5",suffix,suffix,suffix);
 	printf("%s\n",command);
-	system(command);
+	system_result = system(command);
+	if (system_result == -1){
+		dbg(lvl_warning, "Running main failed");
+	}
 	sprintf(command,"./contraction-hierarchies-20080621/main -c -f ddsg_%s.tmp -h hcn_%s.tmp -k 1,3.3,2,10,3,10,5 -C ch_%s.tmp -O 1 -z sgr_%s.tmp",suffix,suffix,suffix,suffix);
 	printf("%s\n",command);
-	system(command);
+	system_result = system(command);
+	if (system_result == -1){
+		dbg(lvl_warning, "Running main failed");
+	}
 #endif
 }
 

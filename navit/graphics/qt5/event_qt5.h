@@ -29,6 +29,9 @@ public:
     GHashTable* timer_callback;
     GHashTable* watches;
 
+public slots:
+    void watchEvent(int id);
+
 protected:
     void timerEvent(QTimerEvent* event);
 };

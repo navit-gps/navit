@@ -1,11 +1,12 @@
 # Čeština translations for navit
-# Copyright (C) 2006-2016 The Navit Team
+# Copyright (C) 2006-2017 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # 72ka https://launchpad.net/~2hp
 # Aleš Janda https://launchpad.net/~kyblicek
 # Ivan Kološ https://launchpad.net/~ivan-kolos
 # Jakuje https://launchpad.net/~jakuje
+# Jiří Holubčík https://launchpad.net/~jery
 # MMlosh https://launchpad.net/~mmlosh
 # Marc0 https://launchpad.net/~z-ubuntuone-y
 # Mike Crash https://launchpad.net/~mike-mikecrash
@@ -22,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-07-12 16:13+0000\n"
+"PO-Revision-Date: 2017-09-24 10:28+0000\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +34,7 @@ msgstr ""
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr "Běží ze zdrojového adresáře\n"
+msgstr "Spuštěné ze zdrojové složky\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -203,7 +204,7 @@ msgstr "Až to bude možné, otočte se"
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr ""
+msgstr "směrem na %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -215,7 +216,7 @@ msgstr "Brzy najeďte na kruhový objezd"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "Vjeďte na kruhový objezd po %s"
 
 msgid "then enter the roundabout"
 msgstr "poté vjeďte na kruhový objezd"
@@ -272,7 +273,7 @@ msgstr "Opusťte komunikaci na sjezdu %1$s %2$s%3$s"
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "sjeďte"
 
 msgid "at exit"
 msgstr "na konci"
@@ -285,7 +286,7 @@ msgstr "poté pokračujte přímo %1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
-msgstr ""
+msgstr "Pokračujte rovně %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -295,7 +296,7 @@ msgstr "poté se držte vpravo%1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
-msgstr ""
+msgstr "Držte se vpravo %1$s%2$s%3$s"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -305,7 +306,7 @@ msgstr "poté se držte vlevo%1$s"
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
+msgstr "Držte se vlevo %1$s%2$s%3$s"
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
@@ -371,7 +372,7 @@ msgstr "Otočte se %1$s"
 #. *
 #. 
 msgid "follow"
-msgstr ""
+msgstr "následujte"
 
 msgid "then you have reached your destination."
 msgstr "pak budete v cíli."
@@ -383,7 +384,7 @@ msgstr "%s dorazíte do cíle"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "Sjezd"
 
 msgid "Exit"
 msgstr "Ukončit"
@@ -1592,7 +1593,7 @@ msgid "Opens address search dialog"
 msgstr "Otevře vyhledávání adres"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_POI hledat"
 
 msgid "Opens POI search dialog"
 msgstr "Otevře dialog vyhledávání POI"
@@ -1689,7 +1690,7 @@ msgstr "Vzdálenost od středu mapy (km)"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
@@ -1983,7 +1984,7 @@ msgid "Height Profile"
 msgstr "Výškový profil"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
+msgstr "pro výškové údaje nainstalujte mapu *.heightlines.bin"
 
 msgid "The route must cross at least 2 heightlines"
 msgstr ""
@@ -1993,6 +1994,9 @@ msgstr "Popis trasy"
 
 msgid "Show Locale"
 msgstr "Zobrazit jazyk"
+
+msgid "Network info"
+msgstr "Informace o síti"
 
 msgid "Former Destinations"
 msgstr "Minulé cíle"
@@ -2448,7 +2452,7 @@ msgid "ready"
 msgstr "mapa připravena"
 
 msgid "Media selected for map storage is not available"
-msgstr ""
+msgstr "Médium zvolené pro uchovávání map není k dispozici"
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
@@ -2528,8 +2532,17 @@ msgstr "Celá obrazovka"
 msgid "Window Mode"
 msgstr "V okně"
 
+msgid "Auto zoom"
+msgstr "Automatické přiblížení"
+
+msgid "Manual zoom"
+msgstr "Ruční přiblížení"
+
 msgid "Layers"
-msgstr ""
+msgstr "Vrstvy"
+
+msgid "Zoom to route"
+msgstr "Přiblížit trasu"
 
 msgid "Description"
 msgstr "Popis"
@@ -2641,7 +2654,7 @@ msgstr "Zálohovat / Obnovit"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Nastavit umístění mapy"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2781,6 +2794,16 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr "Chybí přinejmenším jedno oprávnění"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"

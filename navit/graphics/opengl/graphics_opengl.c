@@ -50,7 +50,7 @@
 #define PIXEL_FORMAT GL_BGRA
 #endif
 
-#if HAVE_FREEIMAGE
+#ifdef HAVE_FREEIMAGE
 #include <FreeImage.h>
 #endif
 
@@ -371,7 +371,7 @@ static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 	  char *path, int *w, int *h, struct point *hot, int rotation)
 {
-#if HAVE_FREEIMAGE
+#ifdef HAVE_FREEIMAGE
 	FIBITMAP *image;
 	RGBQUAD aPixel;
 	unsigned char *data;
@@ -527,7 +527,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 		return gi;
 	}
 #else
-	dbg(lvl_error,"FreeImage not available - cannot load any images.\n", path);
+	dbg(lvl_error,"FreeImage not available - cannot load any images.\n");
 	return NULL;
 #endif
 }
