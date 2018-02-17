@@ -129,6 +129,21 @@ struct map_rect_priv {
 };
 
 /**
+ * @brief Message-specific map private data
+ *
+ * This structure is needed to handle segments referenced by multiple messages. When a message changes,
+ * is cancelled or expires, the data of the remaining messages is used to determine the new attributes
+ * for the segment.
+ */
+struct item_msg_priv {
+	char * message_id;           /**< Message ID for the associated message */
+	int speed;                   /**< The expected speed in km/h (`INT_MAX` for unlimited, 0 indicates
+	                              *   that the road is closed) */
+	int delay;                   /**< Expected delay for this segment, in 1/10 s */
+	struct attr ** attrs;        /**< Additional attributes to add to the segment */
+};
+
+/**
  * @brief Implementation-specific item data for traffic map items
  */
 struct item_priv {
@@ -137,7 +152,7 @@ struct item_priv {
 	struct coord *coords;       /**< The coordinates for the item */
 	int coord_count;            /**< The number of elements in `coords` */
 	int refcount;               /**< How many references to this item exist */
-	char ** message_ids;        /**< Message IDs for the messages associated with this item, `NULL`-terminated */
+	GList * message_data;       /**< Message-specific data, see `struct item_msg_priv` */
 	struct attr **next_attr;    /**< The next attribute of `item` to be returned by the `item_attr_get` method */
 	unsigned int next_coord;    /**< The index of the next coordinate of `item` to be returned by the `item_coord_get` method */
 };
@@ -217,6 +232,7 @@ static void tm_coord_rewind(void *priv_data);
 static void tm_item_destroy(struct item * item);
 static struct item * tm_item_ref(struct item * item);
 static struct item * tm_item_unref(struct item * item);
+static void tm_item_update_attrs(struct item * item);
 static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
@@ -341,6 +357,58 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
 }
 
 /**
+ * @brief Adds message data to a traffic map item.
+ *
+ * This method checks if the item already has data for the message specified in `msgid`. If so, the
+ * existing data is updated, else a new entry is added.
+ *
+ * Data changes also trigger an update of the affected item’s attributes.
+ *
+ * @param item The item (its `priv_data` member must point to a `struct item_priv`)
+ * @param msgid The message ID
+ * @param speed The maximum speed for the segment (`INT_MAX` if none given)
+ * @param delay The delay for the segment, in tenths of seconds (0 for none)
+ * @param attrs Additional attributes specified by the message
+ *
+ * @return true if data was changed, false if not
+ */
+static int tm_item_add_message_data(struct item * item, char * msgid, int speed, int delay,
+		struct attr ** attrs) {
+	int ret = 0;
+	struct item_priv * priv_data = item->priv_data;
+	GList * msglist;
+	struct item_msg_priv * msgdata;
+
+	for (msglist = priv_data->message_data; msglist; msglist = g_list_next(msglist)) {
+		msgdata = (struct item_msg_priv *) msglist->data;
+		if (!strcmp(msgdata->message_id, msgid))
+			break;
+	}
+
+	if (msglist) {
+		/* we have an existing item, update it */
+		ret |= ((msgdata->speed != speed) || (msgdata->delay != delay));
+		msgdata->speed = speed;
+		msgdata->delay = delay;
+		/* TODO attrs */
+	} else {
+		ret = 1;
+		/* we need to insert a new item */
+		msgdata = g_new0(struct item_msg_priv, 1);
+		msgdata->message_id = g_strdup(msgid);
+		msgdata->speed = speed;
+		msgdata->delay = delay;
+		/* TODO attrs */
+		priv_data->message_data = g_list_append(priv_data->message_data, msgdata);
+	}
+
+	if (ret)
+		tm_item_update_attrs(item);
+
+	return ret;
+}
+
+/**
  * @brief Destroys a traffic map item.
  *
  * This function should never be called directly. Instead, be sure to obtain all references by calling
@@ -351,14 +419,18 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
 static void tm_item_destroy(struct item * item) {
 	int i = 0;
 	struct item_priv * priv_data = item->priv_data;
+	GList * msglist;
+	struct item_msg_priv * msgdata;
 
 	attr_list_free(priv_data->attrs);
 	g_free(priv_data->coords);
 
-	while (priv_data->message_ids && priv_data->message_ids[i]) {
-		g_free(priv_data->message_ids[i++]);
+	for (msglist = priv_data->message_data; msglist; msglist = g_list_remove(msglist, msglist->data)) {
+		msgdata = (struct item_msg_priv *) msglist->data;
+		g_free(msgdata->message_id);
+		attr_list_free(msgdata->attrs);
+		g_free(msgdata);
 	}
-	g_free(priv_data->message_ids);
 
 	g_free(item->priv_data);
 	g_free(item);
@@ -431,6 +503,72 @@ static struct item * tm_item_unref(struct item * item) {
 		tm_item_destroy(item);
 	}
 	return NULL;
+}
+
+/**
+ * @brief Updates the attributes of an item.
+ *
+ * This method must be called after changing the message data associated with an item, i.e. adding,
+ * removing or modifying message data.
+ *
+ * @param item The item
+ */
+static void tm_item_update_attrs(struct item * item) {
+	struct item_priv * priv_data = (struct item_priv *) item->priv_data;
+	GList * msglist;
+	struct item_msg_priv * msgdata;
+	int speed = INT_MAX;
+	int delay = 0;
+	struct attr * attr = NULL;
+
+	for (msglist = priv_data->message_data; msglist; msglist = g_list_next(msglist)) {
+		msgdata = (struct item_msg_priv *) msglist->data;
+		if (msgdata->speed < speed)
+			speed = msgdata->speed;
+		if (msgdata->delay < delay)
+			delay = msgdata->delay;
+		/* TODO attrs */
+	}
+
+	/* TODO maxspeed vs. delay:
+	 * Currently both values are interpreted as being cumulative, which may give erroneous results.
+	 * Consider a segment with a length of 1000 m and a maxspeed of 120 km/h, thus having a cost of 30 s.
+	 * One message reports a maxspeed of 60 km/h and no delay, increasing the cost to 60 s. A second
+	 * message reports no maxspeed but a delay of 30 s, also increasing the cost to 60 s. Both messages
+	 * together would be interpreted as reducing the maxspeed to 60 km/h and adding a delay of 30 s,
+	 * resulting in a cost of 90 s for the segment.
+	 */
+	if (speed < INT_MAX) {
+		attr = attr_search(priv_data->attrs, NULL, attr_maxspeed);
+		if (!attr) {
+			attr = g_new0(struct attr, 1);
+			attr->type = attr_maxspeed;
+			attr->u.num = speed;
+			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
+		} else
+			attr->u.num = speed;
+	} else {
+		while (attr = attr_search(priv_data->attrs, NULL, attr_maxspeed))
+			priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
+	}
+
+	if (delay) {
+		attr = attr_search(priv_data->attrs, NULL, attr_delay);
+		if (!attr) {
+			attr = g_new0(struct attr, 1);
+			attr->type = attr_delay;
+			attr->u.num = delay;
+			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
+		} else
+			attr->u.num = delay;
+	} else {
+		while (1) {
+			attr = attr_search(priv_data->attrs, NULL, attr_delay);
+			if (!attr)
+				break;
+			priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
+		}
+	}
 }
 
 /**
@@ -562,7 +700,6 @@ static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi
 
 	mr = map_rect_new(map, NULL);
 	ret = tm_find_item(mr, type, attrs, c, count);
-	/* TODO if (ret), check and (if needed) change attributes for the existing item */
 	if (!ret) {
 		ret = map_rect_create_item(mr, type);
 		ret->id_hi = id_hi;
@@ -573,8 +710,6 @@ static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi
 		priv_data->attrs = attr_list_dup(attrs);
 		priv_data->coords = g_memdup(c, sizeof(struct coord) * count);
 		priv_data->coord_count = count;
-		priv_data->message_ids = g_new0(char *, 2);
-		priv_data->message_ids[0] = g_strdup(id);
 		priv_data->next_attr = attrs;
 		priv_data->next_coord = 0;
 	}
@@ -1982,6 +2117,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Speed calculated in various ways */
 	int maxspeed, speed, penalized_speed, factor_speed;
 
+	/* Delay for the current segment */
+	int delay;
+
 	/* Number of segments */
 	int count;
 
@@ -2324,6 +2462,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			else
 				i = 0;
 
+			speed = data->speed;
 			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
 				if (s->data.flags & AF_SPEED_LIMIT) {
 					maxspeed = RSD_MAXSPEED(&s->data);
@@ -2385,7 +2524,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 						maxspeed = 50;
 					}
 				}
-				speed = data->speed;
 				penalized_speed = maxspeed - data->speed_penalty;
 				if (penalized_speed < 5)
 					penalized_speed = 5;
@@ -2401,10 +2539,12 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			}
 
 			if (data->delay) {
+				delay = data->delay * s->data.len / len;
 				attrs[i] = g_new0(struct attr, 1);
 				attrs[i]->type = attr_delay;
-				attrs[i]->u.num = data->delay * s->data.len / len;
-			}
+				attrs[i]->u.num = delay;
+			} else
+				delay = data->delay;
 
 			if (s->start == p_iter) {
 				/* forward direction, maintain order of coordinates */
@@ -2427,6 +2567,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				g_free(attrs[attr_count - 2]);
 			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100) || data->delay)
 				g_free(attrs[attr_count - 1]);
+
+			tm_item_add_message_data(item, this_->id, speed, delay, attrs);
+
 			g_free(attrs);
 			g_free(cs);
 
@@ -2714,6 +2857,44 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 }
 
 /**
+ * @brief Removes message data from the items associated with a message.
+ *
+ * Removing message data also triggers an update of the affected items’ attributes.
+ *
+ * @param old The message whose data it so be removed from its associated items
+ * @param new If non-NULL, items referenced by this message will be skipped
+ */
+static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new) {
+	int i, j;
+	int skip;
+	struct item_priv * ip;
+	GList * msglist;
+	struct item_msg_priv * msgdata;
+
+	if (new && strcmp(old->id, new->id))
+		new = NULL;
+
+	for (i = 0; old->priv->items && old->priv->items[i]; i++) {
+		skip = 0;
+		if (new)
+			for (j = 0; new->priv->items && new->priv->items[j] && !skip; j++)
+				skip |= (old->priv->items[i] == new->priv->items[j]);
+		if (!skip) {
+			ip = (struct item_priv *) old->priv->items[i]->priv_data;
+			for (msglist = ip->message_data; msglist; ) {
+				msgdata = (struct item_msg_priv *) msglist->data;
+				msglist = g_list_next(msglist);
+				if (!strcmp(msgdata->message_id, old->id)) {
+					ip->message_data = g_list_remove(ip->message_data, msgdata);
+					g_free(msgdata);
+				}
+			}
+			tm_item_update_attrs(old->priv->items[i]);
+		}
+	}
+}
+
+/**
  * @brief Ensures the traffic instance points to valid shared data.
  *
  * This method first examines all registered traffic instances to see if one of them has the `shared`
@@ -2963,6 +3144,7 @@ static int traffic_process_messages(struct traffic * this_, struct traffic_messa
 					if (stored_msg->priv->items)
 						ret |= MESSAGE_UPDATE_SEGMENTS;
 					this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+					traffic_message_remove_item_data(stored_msg, messages[i]);
 					traffic_message_destroy(stored_msg);
 				}
 
@@ -3019,6 +3201,7 @@ static void traffic_loop(struct traffic * this_) {
 			if (stored_msg->priv->items)
 				update_status |= MESSAGE_UPDATE_SEGMENTS;
 			this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+			traffic_message_remove_item_data(stored_msg, NULL);
 			traffic_message_destroy(stored_msg);
 		}
 
