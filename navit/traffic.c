@@ -530,6 +530,9 @@ static void tm_item_update_attrs(struct item * item) {
 		/* TODO attrs */
 	}
 
+	if (!priv_data->attrs)
+		priv_data->attrs = g_new0(struct attr *, 1);
+
 	/* TODO maxspeed vs. delay:
 	 * Currently both values are interpreted as being cumulative, which may give erroneous results.
 	 * Consider a segment with a length of 1000 m and a maxspeed of 120 km/h, thus having a cost of 30 s.
@@ -2108,12 +2111,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 	/* Coordinates of matched segment, sorted */
 	struct coord *cd, *cs;
 
-	/* Attributes for traffic distortion */
-	struct attr **attrs;
-
-	/* Number of attributes */
-	int attr_count;
-
 	/* Speed calculated in various ways */
 	int maxspeed, speed, penalized_speed, factor_speed;
 
@@ -2445,23 +2442,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			cs = g_new0(struct coord, ccnt);
 			cd = cs;
 
-			attr_count = 1;
-			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100))
-				attr_count++;
-			if (data->delay)
-				attr_count++;
-			if (data->attrs)
-				for (attrs = data->attrs; *attrs; attrs++)
-					attr_count++;
-
-			attrs = g_new0(struct attr*, attr_count);
-
-			if (data->attrs)
-				for (i = 0; data->attrs[i]; i++)
-					attrs[i] = data->attrs[i];
-			else
-				i = 0;
-
 			speed = data->speed;
 			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
 				if (s->data.flags & AF_SPEED_LIMIT) {
@@ -2532,18 +2512,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 					speed = penalized_speed;
 				if (speed > factor_speed)
 					speed = factor_speed;
-				attrs[i] = g_new0(struct attr, 1);
-				attrs[i]->type = attr_maxspeed;
-				attrs[i]->u.num = speed;
-				i++;
 			}
 
-			if (data->delay) {
+			if (data->delay)
 				delay = data->delay * s->data.len / len;
-				attrs[i] = g_new0(struct attr, 1);
-				attrs[i]->type = attr_delay;
-				attrs[i]->u.num = delay;
-			} else
+			else
 				delay = data->delay;
 
 			if (s->start == p_iter) {
@@ -2561,16 +2534,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 				p_iter = s->start;
 			}
 
-			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, attrs, cs, ccnt, this_->id);
+			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, data->attrs, cs, ccnt, this_->id);
 
-			if (((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) && (data->delay))
-				g_free(attrs[attr_count - 2]);
-			if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100) || data->delay)
-				g_free(attrs[attr_count - 1]);
+			tm_item_add_message_data(item, this_->id, speed, delay, data->attrs);
 
-			tm_item_add_message_data(item, this_->id, speed, delay, attrs);
-
-			g_free(attrs);
 			g_free(cs);
 
 			*next_item = tm_item_ref(item);
