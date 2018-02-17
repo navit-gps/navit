@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2011 Navit Team
+ * Copyright (C) 2005-2018 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,15 @@
 #include "maptool.h"
 #include "debug.h"
 
+/**
+ * @brief Saves a buffer to a file
+ *
+ * This function saves a buffer to a file. 
+ *
+ * @param filename The name of the while to where the buffer is saved to.
+ * @param b Buffer which is saved to file.
+ * @param offset
+ */
 void
 save_buffer(char *filename, struct buffer *b, long long offset)
 {
@@ -34,8 +43,17 @@ save_buffer(char *filename, struct buffer *b, long long offset)
 	dbg_assert(fwrite(b->base, b->size, 1, f)==1);
 	fclose(f);
 }
-
-void
+/**
+ * @brief Loads a buffer from a file
+ *
+ * This function loads a buffer from a file. 
+ *
+ * @param filename The name of the while to where the buffer is loaded from.
+ * @param b Buffer in which file is loaded.
+ * @param offset
+ * @return indicator if operation suceeded
+ */
+int
 load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 {
 	FILE *f;
@@ -54,16 +72,25 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	}
 	b->size=b->malloced=size;
 	dbg_assert(b->size>0);
-#if 0
-	fprintf(stderr,"reading "LONGLONG_FMT" bytes from %s of "LONGLONG_FMT" bytes at "LONGLONG_FMT"\n", b->size, filename, len, offset);
-#endif
+	
 	fseeko(f, offset, SEEK_SET);
 	b->base=malloc(b->size);
 	dbg_assert(b->base != NULL);
-	fread(b->base, b->size, 1, f);
+	if (fread(b->base, b->size, 1, f) == 0){
+		dbg(lvl_warning, "fread failed");
+		return 0;
+        }
 	fclose(f);
+	return 1;
 }
-
+/**
+ * @brief Determines size of buffer for file 
+ *
+ * This function determines the size of the buffer required to read a file. 
+ *
+ * @param  filename Name of file for which the required size of the buffer is determined
+ * @return required size of buffer
+ */
 long long
 sizeof_buffer(char *filename)
 {

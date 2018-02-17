@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <math.h>
+#include <errno.h>
 #ifdef _MSC_VER
 #include "getopt_long.h"
 #define atoll _atoi64
@@ -141,7 +142,9 @@ progress_time(void)
 	seconds%=60;
 	pos+=assafe_strcp2buf(seconds>9?":":":0", buflen-pos, buf+pos);
 	pos+=assafe_lltoa(seconds, buflen-pos, buf+pos);
-	write(2,buf,pos);
+	if (write(2,buf,pos) == -1){
+		dbg(lvl_warning, "Writing progress time failed. Error-Code: %d" , errno);
+	}
 }
 
 static void
@@ -152,10 +155,14 @@ progress_memory(void)
 	const int buflen=20;
 	char buf[buflen];
 	int pos=1;
+	int write_result;
 	buf[0]=' ';
 	pos+=assafe_lltoa(mem/1024/1024, buflen-pos, buf+pos);
 	pos+=assafe_strcp2buf(" MB", buflen-pos, buf+pos);
-	write(2,buf,pos);
+	write_result = write(2,buf,pos);
+	if (write_result == -1){
+		dbg(lvl_warning, "Writing progress memory failed. Error-Code: %d" , errno);
+	}
 #endif
 }
 
@@ -165,6 +172,7 @@ sig_alrm_do(int sig)
 	const int buflen=1024;
 	char buf[buflen];
 	int pos=0;
+	int write_result;
 #ifndef _WIN32
 	signal(SIGALRM, sig_alrm_do);
 	alarm(30);
@@ -182,13 +190,22 @@ sig_alrm_do(int sig)
 	pos+=assafe_strcp2buf(" relations ", buflen-pos, buf+pos);
 	pos+=assafe_lltoa(processed_tiles, buflen-pos, buf+pos);
 	pos+=assafe_strcp2buf(" tiles", buflen-pos, buf+pos);
-	write(2,buf,pos);
+	write_result = write(2,buf,pos);
+	if (write_result == -1){
+		dbg(lvl_warning, "Writing sig alrm ailed. Error-Code: %d" , errno);
+	}
 	progress_time();
 	progress_memory();
 #ifndef _WIN32
-	write(2,"\r\n",2);
+	write_result = write(2,"\r\n",2);
+	if (write_result == -1){
+		dbg(lvl_warning, "Writing new line in sig alrm ailed. Error-Code: %d" , errno);
+	}
 #else
-	write(2,"\n",1);
+	write_result = write(2,"\n",1);
+	if (write_result == -1){
+		dbg(lvl_warning, "Writing new line in sig alrm ailed. Error-Code: %d" , errno);
+	}
 #endif
 }
 
