@@ -298,9 +298,9 @@ Functions</h2></td></tr>
 <tr class="memitem:afdd47d2aca7ecfba9916276b357afde8"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#afdd47d2aca7ecfba9916276b357afde8">request_navit_zoom</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>)</td></tr>
 <tr class="separator:afdd47d2aca7ecfba9916276b357afde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ad55e324ece05ac9c647fb691e6302"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#a67ad55e324ece05ac9c647fb691e6302">request_navit_zoom_to_route</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>)</td></tr>
-<tr class="memdesc:a67ad55e324ece05ac9c647fb691e6302"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports the current route as a GPX file.  <a href="#a67ad55e324ece05ac9c647fb691e6302">More...</a><br/></td></tr>
 <tr class="separator:a67ad55e324ece05ac9c647fb691e6302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfa39940de8d6661f0e696a9a5d4f922"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#abfa39940de8d6661f0e696a9a5d4f922">request_navit_route_export_gpx</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>)</td></tr>
+<tr class="memdesc:abfa39940de8d6661f0e696a9a5d4f922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports the current route as a GPX file.  <a href="#abfa39940de8d6661f0e696a9a5d4f922">More...</a><br/></td></tr>
 <tr class="separator:abfa39940de8d6661f0e696a9a5d4f922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a048f93e084c152c01ee24892e9c285b8"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#a048f93e084c152c01ee24892e9c285b8">request_navit_route_export_geojson</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>)</td></tr>
 <tr class="memdesc:a048f93e084c152c01ee24892e9c285b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports the current route as a GeoJSON file.  <a href="#a048f93e084c152c01ee24892e9c285b8">More...</a><br/></td></tr>
@@ -3179,6 +3179,16 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Exports the current route as a GPX file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connection</td><td>The DBusConnection object through which a message arrived </td></tr>
+    <tr><td class="paramname">message</td><td>The DBusMessage including the <code>filename</code> parameter </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An empty reply if everything went right, otherwise <code>DBUS_HANDLER_RESULT_NOT_YET_HANDLED</code> </dd></dl>
+
 <p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="binding__dbus_8c.html#a106b046f4b91874a59e296976115c0b3">dbus_error_invalid_object_path()</a>, <a class="el" href="binding__dbus_8c.html#aec6e875593b5d4b9e70ce30660a17166">dbus_error_navigation_not_configured()</a>, <a class="el" href="binding__dbus_8c.html#a04e933e3775489489f46516b8d605cb0">empty_reply()</a>, <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="item_8c.html#ae4ca690f46c2e5d491491d9f706f04e8">item_coord_get()</a>, <a class="el" href="item_8c.html#adb033f52350446fc9cbb68f977b5047a">item_to_name()</a>, <a class="el" href="namespaceeval.html#a1fb375ab731cfd1abc68389519e19aca">eval::iter</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#a7a181e682ec4a9174897686bd91a89b9">map_convert_string_tmp()</a>, <a class="el" href="map_8c.html#ae025c855207536977afd84d39b316e9c">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="navigation_8c.html#a0a8a5f4e94a4c775901bfeccc4801bd6">navigation_get_map()</a>, <a class="el" href="namespaceeval.html#a0d69fa30a65d86a400ef7f080d840f46">eval::navit</a>, <a class="el" href="group__navit.html#ga633cb0f999127f77c891bc8ec94bd038">navit_get_navigation()</a>, <a class="el" href="binding__dbus_8c.html#a7ebb60105821d743e0fb8a0af9c54ab3">object_get_from_message()</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#a5cbcb421bbf89d276019e973aa7c5703">transform_to_geo()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 </div>
@@ -3496,16 +3506,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Exports the current route as a GPX file. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">connection</td><td>The DBusConnection object through which a message arrived </td></tr>
-    <tr><td class="paramname">message</td><td>The DBusMessage including the 'filename' parameter </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED </dd></dl>
 
 <p>References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="binding__dbus_8c.html#a106b046f4b91874a59e296976115c0b3">dbus_error_invalid_object_path()</a>, <a class="el" href="binding__dbus_8c.html#a04e933e3775489489f46516b8d605cb0">empty_reply()</a>, <a class="el" href="namespaceeval.html#a1fb375ab731cfd1abc68389519e19aca">eval::iter</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="namespaceeval.html#a0d69fa30a65d86a400ef7f080d840f46">eval::navit</a>, <a class="el" href="group__navit.html#ga38e803366dc39957f5dfcfbbcfd2b853">navit_zoom_to_route()</a>, and <a class="el" href="binding__dbus_8c.html#a7ebb60105821d743e0fb8a0af9c54ab3">object_get_from_message()</a>.</p>
 
@@ -4493,7 +4493,7 @@ Variables</h2></td></tr>
 <div class="line">        {<span class="stringliteral">&quot;dbus_send_signal&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a>)},</div>
 <div class="line">}</div>
 <div class="ttc" id="command_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition:</b> command.h:32</div></div>
-<div class="ttc" id="binding__dbus_8c_html_abb52ad9fd21ec5490b101bf5eb3d995e"><div class="ttname"><a href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a></div><div class="ttdeci">static int dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2153</div></div>
+<div class="ttc" id="binding__dbus_8c_html_abb52ad9fd21ec5490b101bf5eb3d995e"><div class="ttname"><a href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a></div><div class="ttdeci">static int dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2154</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4553,7 +4553,7 @@ Variables</h2></td></tr>
 <div class="line">        <a class="code" href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a>,</div>
 <div class="line">        NULL</div>
 <div class="line">}</div>
-<div class="ttc" id="binding__dbus_8c_html_a1d6283232cad123a15c9dae03c160c3a"><div class="ttname"><a href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a></div><div class="ttdeci">static DBusHandlerResult navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2103</div></div>
+<div class="ttc" id="binding__dbus_8c_html_a1d6283232cad123a15c9dae03c160c3a"><div class="ttname"><a href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a></div><div class="ttdeci">static DBusHandlerResult navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2104</div></div>
 </div><!-- fragment -->
 </div>
 </div>

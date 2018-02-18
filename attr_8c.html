@@ -170,6 +170,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a99828bb9ed376e5231e4c1d78bc70983"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8c.html#a99828bb9ed376e5231e4c1d78bc70983">attr_generic_prepend_attr</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a99828bb9ed376e5231e4c1d78bc70983"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0460f47ed4e34e7dc3104c354f6165b2"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8c.html#a0460f47ed4e34e7dc3104c354f6165b2">attr_generic_remove_attr</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:a0460f47ed4e34e7dc3104c354f6165b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes an attribute from an attribute list.  <a href="#a0460f47ed4e34e7dc3104c354f6165b2">More...</a><br/></td></tr>
 <tr class="separator:a0460f47ed4e34e7dc3104c354f6165b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac64bd30dd261e054d18af84cee82ea57"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8c.html#ac64bd30dd261e054d18af84cee82ea57">attr_type_begin</a> (enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>)</td></tr>
 <tr class="separator:ac64bd30dd261e054d18af84cee82ea57"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -742,6 +743,18 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Removes an attribute from an attribute list. </p>
+<p>If <code>attrs</code> contains <code>attr</code>, a new attribute list is created (which contains all attributes, except for <code>attr</code>) and both <code>attrs</code> (the original attribute list) and <code>attr</code> are freed.</p>
+<p>If <code>attrs</code> does not contain <code>attr</code>, this function is a no-op.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">attrs</td><td>The attribute list </td></tr>
+    <tr><td class="paramname">attr</td><td>The attribute to remove from the list</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new attribute list </dd></dl>
 
 <p>References <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structattr.html#a9fe0cdea57804f5d5913954dfb2dfa2f">attr::data</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
