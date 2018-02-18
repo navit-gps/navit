@@ -1350,12 +1350,6 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 
 }
 
-/**
- * @brief Exports the current route as a GPX file
- * @param connection The DBusConnection object through which a message arrived
- * @param message The DBusMessage including the 'filename' parameter
- * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
- */
 static DBusHandlerResult
 request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message)
 {
@@ -1375,6 +1369,13 @@ request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message)
 
 }
 
+/**
+ * @brief Exports the current route as a GPX file.
+ *
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the `filename` parameter
+ * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
+ */
 static DBusHandlerResult
 request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 {
