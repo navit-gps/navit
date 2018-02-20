@@ -894,6 +894,9 @@ void traffic_init(void);
  *
  * @param this_ The traffic instance
  * @param filename The full path to the XML file to parse
+ *
+ * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
+ * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
  */
 struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, char * filename);
 
