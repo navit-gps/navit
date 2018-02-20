@@ -1340,7 +1340,6 @@ request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message)
 	struct attr_iter * a_iter;
 	struct traffic * traffic = NULL;
 	struct traffic_message ** messages;
-	int update_status = 0;
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
@@ -1364,12 +1363,8 @@ request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message)
 
 	messages = traffic_get_messages_from_xml(traffic, filename);
 	if (messages) {
-		update_status = traffic_process_messages(traffic, messages);
+		traffic_process_messages(traffic, messages);
 		g_free(messages);
-
-		/* trigger redraw if segments have changed */
-		if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(navit) == 3))
-			navit_draw_async(navit, 1);
 	}
 
 	return empty_reply(connection, message);

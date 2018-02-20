@@ -57,6 +57,12 @@
 /** The maximum penalty applied to points with non-matching attributes */
 #define PENALTY_POINT_MATCH 16
 
+/** Flag to indicate expired messages should be purged */
+#define PROCESS_MESSAGES_PURGE_EXPIRED 1 << 0
+
+/** Flag to indicate the message store should not be exported */
+#define PROCESS_MESSAGES_NO_DUMP_STORE 1 << 1
+
 /** The lowest order of items to consider */
 #define ROUTE_ORDER 18
 
@@ -241,6 +247,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
+static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
@@ -3012,7 +3019,28 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
 	} /* if (traffic_filename) */
 }
 
-int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
+/**
+ * @brief Processes new traffic messages.
+ *
+ * This is the internal backend for `traffic_process_messages()`. It is also used internally.
+ *
+ * The behavior of this function can be controlled via flags.
+ *
+ * `PROCESS_MESSAGES_PURGE_EXPIRED` causes expired messages to be purged from the message store after
+ * new messages have been processed. It is intended to be used with timer-triggered calls.
+ *
+ * `PROCESS_MESSAGES_NO_DUMP_STORE` prevents saving of the message store to disk, intended to be used
+ * when reading stored message data on startup.
+ *
+ * @param this_ The traffic instance
+ * @param messages The new messages
+ * @param flags Flags, see description
+ *
+ * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
+ * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
+ */
+/* TODO what if the update for a still-valid message expires in the past? */
+static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags) {
 	int ret = 0;
 	int i = 0;
 
@@ -3107,6 +3135,42 @@ int traffic_process_messages(struct traffic * this_, struct traffic_message ** m
 
 	dbg(lvl_debug, "processed %d message(s)\n", i);
 
+	if (flags & PROCESS_MESSAGES_PURGE_EXPIRED) {
+		/* find and remove expired messages */
+		for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
+			stored_msg = (struct traffic_message *) msg_iter->data;
+			if (stored_msg->expiration_time < time(NULL))
+				msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
+		}
+
+		if (msgs_to_remove) {
+			for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
+				stored_msg = (struct traffic_message *) msg_iter->data;
+				if (stored_msg->priv->items)
+					ret |= MESSAGE_UPDATE_SEGMENTS;
+				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+				traffic_message_remove_item_data(stored_msg, NULL);
+				traffic_message_destroy(stored_msg);
+			}
+
+			dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
+
+			g_list_free(msgs_to_remove);
+		}
+	}
+
+	if (ret && !(flags & PROCESS_MESSAGES_NO_DUMP_STORE)) {
+		/* dump map if messages have been added, deleted or expired */
+		tm_dump_to_textfile(this_->map);
+
+		/* dump message store if new messages have been received */
+		traffic_dump_messages_to_xml(this_);
+	}
+
+	/* trigger redraw if segments have changed */
+	if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
+		navit_draw_async(this_->navit, 1);
+
 	return ret;
 }
 
@@ -3119,57 +3183,17 @@ int traffic_process_messages(struct traffic * this_, struct traffic_message ** m
 static void traffic_loop(struct traffic * this_) {
 	struct traffic_message ** messages;
 
-	int update_status = 0;
-
 	/* Iterator over messages */
 	GList * msg_iter;
 
 	/* Stored message being compared */
 	struct traffic_message * stored_msg;
 
-	/* Messages to remove */
-	GList * msgs_to_remove = NULL;
-
 	messages = this_->meth.get_messages(this_->priv);
 	if (messages)
-		update_status |= traffic_process_messages(this_, messages);
+		traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_PURGE_EXPIRED);
 
 	g_free(messages);
-
-	/* find and remove expired messages */
-	for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
-		stored_msg = (struct traffic_message *) msg_iter->data;
-		if (stored_msg->expiration_time < time(NULL))
-			msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
-	}
-
-	if (msgs_to_remove) {
-		for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
-			stored_msg = (struct traffic_message *) msg_iter->data;
-			if (stored_msg->priv->items)
-				update_status |= MESSAGE_UPDATE_SEGMENTS;
-			this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-			traffic_message_remove_item_data(stored_msg, NULL);
-			traffic_message_destroy(stored_msg);
-		}
-
-		dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
-
-		g_list_free(msgs_to_remove);
-	}
-
-	if (update_status || msgs_to_remove) {
-		/* dump map if messages have been added, deleted or expired */
-		tm_dump_to_textfile(this_->map);
-
-		/* dump message store if new messages have been received */
-		traffic_dump_messages_to_xml(this_);
-
-		/* trigger redraw if segments have changed */
-		if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
-			navit_draw_async(this_->navit, 1);
-	}
-	msgs_to_remove = NULL;
 }
 
 /**
@@ -4286,7 +4310,6 @@ struct map * traffic_get_map(struct traffic *this_) {
 	struct traffic * traffic;
 	char * filename;
 	struct traffic_message ** messages;
-	int update_status;
 
 	if (!this_->map) {
 		/* see if any of the other instances has already created a map */
@@ -4326,12 +4349,8 @@ struct map * traffic_get_map(struct traffic *this_) {
 		g_free(filename);
 
 		if (messages) {
-			update_status = traffic_process_messages(this_, messages);
+			traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_NO_DUMP_STORE);
 			g_free(messages);
-
-			/* trigger redraw if segments have changed */
-			if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
-				navit_draw_async(this_->navit, 1);
 		}
 	}
 
@@ -4364,6 +4383,10 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, 
 		}
 	} /* if (traffic_filename) */
 	return ret;
+}
+
+int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
+	return traffic_process_messages_int(this_, messages, 0);
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
