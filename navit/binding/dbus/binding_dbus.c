@@ -52,6 +52,7 @@
 #include "util.h"
 #include "transform.h"
 #include "event.h"
+#include "traffic.h"
 
 static DBusConnection *connection;
 static dbus_uint32_t dbus_serial;
@@ -366,6 +367,12 @@ static DBusHandlerResult
 dbus_error_navigation_not_configured(DBusConnection *connection, DBusMessage *message)
 {
 	return dbus_error(connection, message, DBUS_ERROR_FAILED, "navigation is not configured (no <navigation> element in config file?)");
+}
+
+static DBusHandlerResult
+dbus_error_traffic_not_configured(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_FAILED, "traffic is not configured (no <traffic> element in config file?)");
 }
 
 static DBusHandlerResult
@@ -1316,6 +1323,58 @@ request_navit_quit(DBusConnection *connection, DBusMessage *message)
         return empty_reply(connection, message);
 }
 
+/**
+ * @brief Injects a traffic feed.
+ *
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the `filename` parameter
+ * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
+ */
+static DBusHandlerResult
+request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message)
+{
+	char * filename;
+	struct navit *navit;
+	DBusMessageIter iter;
+	struct attr * attr;
+	struct attr_iter * a_iter;
+	struct traffic * traffic = NULL;
+	struct traffic_message ** messages;
+	int update_status = 0;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+
+	dbus_message_iter_get_basic(&iter, &filename);
+
+	attr = g_new0(struct attr, 1);
+	a_iter = navit_attr_iter_new();
+	if (navit_get_attr(navit, attr_traffic, attr, a_iter))
+		traffic = (struct traffic *) attr->u.navit_object;
+	navit_attr_iter_destroy(a_iter);
+	g_free(attr);
+
+	if (!traffic)
+		return dbus_error_traffic_not_configured(connection, message);
+
+	dbg(lvl_debug, "Processing traffic feed from file %s\n", filename);
+
+	messages = traffic_get_messages_from_xml(traffic, filename);
+	if (messages) {
+		update_status = traffic_process_messages(traffic, messages);
+		g_free(messages);
+
+		/* trigger redraw if segments have changed */
+		if ((update_status & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(navit) == 3))
+			navit_draw_async(navit, 1);
+	}
+
+	return empty_reply(connection, message);
+}
+
 static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
@@ -1963,6 +2022,7 @@ struct dbus_method {
 	{".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
 	{".navit",  "set_center_screen",   "(ii)",    "(pixel_x,pixel_y)",                       "",   "",      request_navit_set_center_screen},
 	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
+	{".navit",  "traffic_inject",      "s",       "filename",                                "",   "",      request_navit_traffic_inject},
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
 	{".navit",  "zoom_to_route",       "",        "",                                        "",   "",      request_navit_zoom_to_route},
