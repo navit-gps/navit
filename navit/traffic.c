@@ -4284,6 +4284,7 @@ struct map * traffic_get_map(struct traffic *this_) {
 	struct attr_iter *iter;
 	struct attr *attr;
 	struct traffic * traffic;
+	char * filename;
 	struct traffic_message ** messages;
 	int update_status;
 
@@ -4320,8 +4321,10 @@ struct map * traffic_get_map(struct traffic *this_) {
 		navit_object_ref((struct navit_object *) this_->map);
 
 		/* populate map with previously stored messages */
-		messages = traffic_get_messages_from_xml(this_,
-				g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL));
+		filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
+		messages = traffic_get_messages_from_xml(this_, filename);
+		g_free(filename);
+
 		if (messages) {
 			update_status = traffic_process_messages(this_, messages);
 			g_free(messages);
@@ -4359,7 +4362,6 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, 
 		} else {
 			dbg(lvl_error,"could not retrieve stored traffic messages");
 		}
-		g_free(filename);			/* free the file name */
 	} /* if (traffic_filename) */
 	return ret;
 }
