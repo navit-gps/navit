@@ -891,8 +891,11 @@ void traffic_init(void);
 
 /**
  * @brief Reads previously stored traffic messages from an XML file.
+ *
+ * @param this_ The traffic instance
+ * @param filename The full path to the XML file to parse
  */
-struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_);
+struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, char * filename);
 
 /**
  * @brief Returns the map for the traffic plugin.

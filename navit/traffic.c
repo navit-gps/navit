@@ -4339,7 +4339,8 @@ struct map * traffic_get_map(struct traffic *this_) {
 		navit_object_ref((struct navit_object *) this_->map);
 
 		/* populate map with previously stored messages */
-		messages = traffic_get_messages_from_xml(this_);
+		messages = traffic_get_messages_from_xml(this_,
+				g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL));
 		if (messages) {
 			update_status = traffic_process_messages(this_, messages);
 			g_free(messages);
@@ -4353,20 +4354,17 @@ struct map * traffic_get_map(struct traffic *this_) {
 	return this_->map;
 }
 
-struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_) {
+struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, char * filename) {
 	struct traffic_message ** ret = NULL;
 
-	/* add the configuration directory to the name of the file to use */
-	char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
-									"/traffic.xml", NULL);
 	struct xml_state state;
 	int i, count;
 	GList * msg_iter;
 	int read_success = 0;
 
-	if (traffic_filename) {
+	if (filename) {
 		memset(&state, 0, sizeof(struct xml_state));
-		read_success = xml_parse_file(traffic_filename, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
+		read_success = xml_parse_file(filename, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
 		if (read_success) {
 			count = g_list_length(state.messages);
 			if (count)
@@ -4380,7 +4378,7 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_) 
 		} else {
 			dbg(lvl_error,"could not retrieve stored traffic messages");
 		}
-		g_free(traffic_filename);			/* free the file name */
+		g_free(filename);			/* free the file name */
 	} /* if (traffic_filename) */
 	return ret;
 }
