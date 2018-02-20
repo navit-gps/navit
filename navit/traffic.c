@@ -51,12 +51,6 @@
 #include "callback.h"
 #include "debug.h"
 
-/** Flag to indicate new messages have been received */
-#define MESSAGE_UPDATE_MESSAGES 1 << 0
-
-/** Flag to indicate segments have changed */
-#define MESSAGE_UPDATE_SEGMENTS 1 << 1
-
 /** The penalty applied to an off-road link */
 #define PENALTY_OFFROAD 4
 
@@ -247,7 +241,6 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
-static int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
@@ -3019,19 +3012,7 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
 	} /* if (traffic_filename) */
 }
 
-/**
- * @brief Processes new traffic messages.
- *
- * Messages which are past their expiration timestamp are skipped, and the flags in the return value
- * are set only if at least one valid message is found.
- *
- * @param this_ The traffic instance
- * @param messages The new messages
- *
- * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
- * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
- */
-static int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
+int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
 	int ret = 0;
 	int i = 0;
 

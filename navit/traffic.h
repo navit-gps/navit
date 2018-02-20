@@ -57,6 +57,12 @@
 extern "C" {
 #endif
 
+/** Flag to indicate new messages have been received */
+#define MESSAGE_UPDATE_MESSAGES 1 << 0
+
+/** Flag to indicate segments have changed */
+#define MESSAGE_UPDATE_SEGMENTS 1 << 1
+
 /**
  * @brief Classes for events.
  */
@@ -911,6 +917,23 @@ struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, 
  * @return The traffic map
  */
 struct map * traffic_get_map(struct traffic *this_);
+
+/**
+ * @brief Processes new traffic messages.
+ *
+ * Calling this method delivers new messages in a “push” manner (as opposed to the “pull” fashion of
+ * calling a plugin method).
+ *
+ * Messages which are past their expiration timestamp are skipped, and the flags in the return value
+ * are set only if at least one valid message is found.
+ *
+ * @param this_ The traffic instance
+ * @param messages The new messages
+ *
+ * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
+ * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
+ */
+int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages);
 
 /**
  * @brief Sets the mapset for the traffic plugin.
