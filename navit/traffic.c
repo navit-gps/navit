@@ -3033,7 +3033,8 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
  * when reading stored message data on startup.
  *
  * @param this_ The traffic instance
- * @param messages The new messages
+ * @param messages The new messages (can be NULL, e.g. in conjunction with the
+ * `PROCESS_MESSAGES_PURGE_EXPIRED` flag to just purge expired messages)
  * @param flags Flags, see description
  *
  * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
@@ -3066,7 +3067,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 	struct traffic_location * swap_location;
 	struct item ** swap_items;
 
-	for (i = 0; messages[i] != NULL; i++)
+	for (i = 0; messages && messages[i]; i++)
 		if (messages[i]->expiration_time >= time(NULL)) {
 			ret |= MESSAGE_UPDATE_MESSAGES;
 
@@ -3133,7 +3134,8 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 			dbg(lvl_debug, "message is no longer valid, ignoring\n");
 		}
 
-	dbg(lvl_debug, "processed %d message(s)\n", i);
+	if (i)
+		dbg(lvl_debug, "processed %d message(s)\n", i);
 
 	if (flags & PROCESS_MESSAGES_PURGE_EXPIRED) {
 		/* find and remove expired messages */
@@ -3190,8 +3192,7 @@ static void traffic_loop(struct traffic * this_) {
 	struct traffic_message * stored_msg;
 
 	messages = this_->meth.get_messages(this_->priv);
-	if (messages)
-		traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_PURGE_EXPIRED);
+	traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_PURGE_EXPIRED);
 
 	g_free(messages);
 }
