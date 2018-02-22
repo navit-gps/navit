@@ -417,7 +417,6 @@ static int tm_item_add_message_data(struct item * item, char * msgid, int speed,
  * @param item The item (its `priv_data` member must point to a `struct item_priv`)
  */
 static void tm_item_destroy(struct item * item) {
-	int i = 0;
 	struct item_priv * priv_data = item->priv_data;
 	GList * msglist;
 	struct item_msg_priv * msgdata;
@@ -3184,12 +3183,6 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
  */
 static void traffic_loop(struct traffic * this_) {
 	struct traffic_message ** messages;
-
-	/* Iterator over messages */
-	GList * msg_iter;
-
-	/* Stored message being compared */
-	struct traffic_message * stored_msg;
 
 	messages = this_->meth.get_messages(this_->priv);
 	traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_PURGE_EXPIRED);
