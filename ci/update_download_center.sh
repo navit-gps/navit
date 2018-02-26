@@ -23,7 +23,7 @@ fi
 if [ -z $CIRCLECI ];then
     echo "This Script needs to be run on CircleCI"
 fi
-if [[ "${CIRCLE_PROJECT_USERNAME}" != "navit-gps" && "${CIRCLE_BRANCH}" != "trunk" ]]; then
+if [[ "${CIRCLE_PROJECT_USERNAME}" != "navit-gps" || "${CIRCLE_BRANCH}" != "trunk" ]]; then
     echo "Only trunk on navit-gps may upload to the Download Center"
     exit 0
 fi
