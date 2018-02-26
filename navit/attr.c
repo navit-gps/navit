@@ -689,6 +689,19 @@ attr_generic_prepend_attr(struct attr **attrs, struct attr *attr)
 	return curr;
 }
 
+/**
+ * @brief Removes an attribute from an attribute list.
+ *
+ * If `attrs` contains `attr`, a new attribute list is created (which contains all attributes, except
+ * for `attr`) and both `attrs` (the original attribute list) and `attr` are freed.
+ *
+ * If `attrs` does not contain `attr`, this function is a no-op.
+ *
+ * @param attrs The attribute list
+ * @param attr The attribute to remove from the list
+ *
+ * @return The new attribute list
+ */
 struct attr **
 attr_generic_remove_attr(struct attr **attrs, struct attr *attr)
 {
