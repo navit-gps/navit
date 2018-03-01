@@ -1363,6 +1363,7 @@ request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message)
 
 	messages = traffic_get_messages_from_xml(traffic, filename);
 	if (messages) {
+		dbg(lvl_debug, "got messages from file %s, processing\n", filename);
 		traffic_process_messages(traffic, messages);
 		g_free(messages);
 	}
