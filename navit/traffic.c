@@ -1832,6 +1832,7 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
 		} else
 			break;
 	}
+	p->seg = NULL;
 	dbg(lvl_debug, "return, last=%p, ret=%p\n", last, ret);
 	return ret;
 }
