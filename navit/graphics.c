@@ -1829,7 +1829,7 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect)
 	return ret;
 }
 
-static void
+void
 graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int poly)
 {
 	struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
@@ -1937,7 +1937,7 @@ poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int 
 	}
 }
 
-static void
+void
 graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in)
 {
 	struct point_rect r=gra->r;
