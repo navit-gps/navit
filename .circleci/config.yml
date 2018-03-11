@@ -98,7 +98,7 @@ jobs:
             bash ci/update_download_center.sh
   build_wince:
     docker:
-      - image: navit/wince:8.04
+      - image: navit/dockerfiles:wince
     steps:
       - checkout
       - run:
