@@ -13,6 +13,8 @@ mkdir output/maps
 cp navit/maps/*.bin output/maps
 cp navit/maps/*.xml output/maps
 
-cd ..
+cd output/
+zip -r navit.zip  .
+
+cd ../..
 bash ./navit/script/cabify.sh wince/output/navit.cab wince/
-zip -r output/navit.zip wince/
