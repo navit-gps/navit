@@ -145,7 +145,7 @@ transform_move(int dx, int dy, struct point *p,
 /**
  * @brief Draw a compass handle of length @p r, centered at point @p p, pointing to direction @p dir
  *
- * @param gr The graphic display on which to draw
+ * @param gr The graphics instance on which to draw
  * @param gc_n The color to use for the north half of the compass
  * @param gc_s The color to use for the south half of the compass
  * @param p The center of the compass
@@ -182,7 +182,7 @@ draw_compass(struct graphics *gr, struct graphics_gc *gc_n, struct graphics_gc *
 /**
  * @brief Draw an arrow of length @p r, centered at point @p p, with color @p gc, pointing to direction @p dir
  *
- * @param gr The graphic display on which to draw
+ * @param gr The graphics instance on which to draw
  * @param gc The color to draw the arrow
  * @param p The center of the compass
  * @param r The radius of the compass (around the center point @p p)
