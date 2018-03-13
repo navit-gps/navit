@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"struct__OSMPBF____Relation.html#a46bd00cc244da70426db3cffe8c448cc":[2,0,15,12],
+"struct__OSMPBF____Relation.html#a5a0dc4e9bfd6ac68510ade5c438c7b31":[2,0,15,1],
+"struct__OSMPBF____Relation.html#a64a32c1bf0194c50ea69d240c40dc11e":[2,0,15,0],
+"struct__OSMPBF____Relation.html#a927445f175ea52e9b5a8c6a4e8e8128f":[2,0,15,10],
 "struct__OSMPBF____Relation.html#a9d1edc4fa5dd90ef00cc71c272a98131":[2,0,15,6],
 "struct__OSMPBF____Relation.html#ab665860d1425da74436e1424446f8c8d":[2,0,15,11],
 "struct__OSMPBF____Relation.html#ab821d1aa434ece846d5b7cf39bda7bdd":[2,0,15,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "structblock.html":[2,0,50],
 "structblock.html#a9379915577ca627a21f844b3a31ade31":[2,0,50,0],
 "structblock__bt__priv.html":[2,0,51],
-"structblock__bt__priv.html#a016914e5b92077456bfcc9a48f095085":[2,0,51,5],
-"structblock__bt__priv.html#a2a5a15685d949792f8c8a243aa95e6e7":[2,0,51,3],
-"structblock__bt__priv.html#a3e0aea8da021731cac1888e5d2ae2c0a":[2,0,51,7],
-"structblock__bt__priv.html#a85db370e35d467ee2fff2167bc2ab7c5":[2,0,51,0],
-"structblock__bt__priv.html#a9f51ba8b1b0e92602163c196269ec6c3":[2,0,51,1]
+"structblock__bt__priv.html#a016914e5b92077456bfcc9a48f095085":[2,0,51,5]
 };

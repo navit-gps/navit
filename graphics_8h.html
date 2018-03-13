@@ -289,6 +289,12 @@ Functions</h2></td></tr>
 <tr class="memitem:abfc23e410d71e734e4316fb8898d20f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#abfc23e410d71e734e4316fb8898d20f4">graphics_hide_native_keyboard</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__keyboard.html">graphics_keyboard</a> *kbd)</td></tr>
 <tr class="memdesc:abfc23e410d71e734e4316fb8898d20f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hides the native on-screen keyboard or other input method.  <a href="#abfc23e410d71e734e4316fb8898d20f4">More...</a><br/></td></tr>
 <tr class="separator:abfc23e410d71e734e4316fb8898d20f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *pin, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count_in)</td></tr>
+<tr class="memdesc:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a plain polygon on the display.  <a href="#af9d2d5864a63fe16efe4a7e5f38a33bd">More...</a><br/></td></tr>
+<tr class="separator:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39c00af10fa4bf6a547250715cf98f67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#a39c00af10fa4bf6a547250715cf98f67">graphics_draw_polyline_clipped</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *pa, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *<a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> poly)</td></tr>
+<tr class="memdesc:a39c00af10fa4bf6a547250715cf98f67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw polyline on the display.  <a href="#a39c00af10fa4bf6a547250715cf98f67">More...</a><br/></td></tr>
+<tr class="separator:a39c00af10fa4bf6a547250715cf98f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Exported functions / structures for the graphics subsystem. </p>
@@ -1230,7 +1236,7 @@ Functions</h2></td></tr>
 
 <p>References <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
 
-<p>Referenced by <a class="el" href="gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297">gui_internal_box_render()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7">handle()</a>, and <a class="el" href="osd__core_8c.html#ab1ba9b04384d99394e2f2c4f2824dcc8">osd_scale_draw()</a>.</p>
+<p>Referenced by <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>, <a class="el" href="gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297">gui_internal_box_render()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, and <a class="el" href="osd__core_8c.html#ab1ba9b04384d99394e2f2c4f2824dcc8">osd_scale_draw()</a>.</p>
 
 </div>
 </div>
@@ -1272,6 +1278,127 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="structgraphics__methods.html#ab3e83475caef7d6c5159d87102ba7d05">graphics_methods::draw_mode</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, and <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>.</p>
 
 <p>Referenced by <a class="el" href="osd__core_8c.html#a8ce693ba90853a2a3b074c022ec423ca">draw_aligned_osd_text()</a>, <a class="el" href="gui__internal_8c.html#a34fe8cf132c93e8c6addcc9c1f6ca6c8">gui_internal_button()</a>, <a class="el" href="gui__internal__command_8c.html#a8da2bde7e98acac48eaa0ecb33101cf1">gui_internal_cmd2()</a>, <a class="el" href="gui__internal__command_8c.html#a41ed296cf55f45883e004971dda42573">gui_internal_cmd2_about()</a>, <a class="el" href="gui__internal__command_8c.html#a8f8b7d98ec2a1e69c4c5b1ec5245b772">gui_internal_cmd2_back()</a>, <a class="el" href="gui__internal__command_8c.html#ab734f4036e3ab5ef2ed69dd1678266c4">gui_internal_cmd2_locale()</a>, <a class="el" href="gui__internal__command_8c.html#a10921f31d55b5ece15489b1ad881fa05">gui_internal_cmd2_network_info()</a>, <a class="el" href="gui__internal__widget_8h.html#a5efe38768980e0d257316c523c0457fc">gui_internal_highlight_do()</a>, <a class="el" href="gui__internal__search_8c.html#a151035beb4d034286a5269cfc31f0f79">gui_internal_highlight_possible_keys()</a>, <a class="el" href="gui__internal__html_8h.html#a1df1887f4ae6177f607d0593ce8df00e">gui_internal_html_menu()</a>, <a class="el" href="gui__internal__html_8c.html#a020849ddec7bc9be1596a39645b25385">gui_internal_html_submit()</a>, <a class="el" href="gui__internal_8c.html#a24a4c5e476783c673ad1dbcde8ab7621">gui_internal_keypress()</a>, <a class="el" href="gui__internal__priv_8h.html#a753483ffd990f0ce15a75f26fdbb5bdf">gui_internal_leave()</a>, <a class="el" href="gui__internal_8c.html#a2469723fa124da974054196d9c4bfbb1">gui_internal_motion_cb()</a>, <a class="el" href="gui__internal__priv_8h.html#ab42851ef64e8863d2d309cede2eba4d5">gui_internal_route_update()</a>, <a class="el" href="gui__internal__search_8c.html#a97bc37f93120ac17a8602ceb794af1d4">gui_internal_search_idle()</a>, <a class="el" href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr()</a>, <a class="el" href="group__navit.html#gacd0ef4b110b76f6b7770312752862e49">navit_map_progress()</a>, <a class="el" href="group__navit.html#gaea79c049fda4ecdf1e9b69b7762d7ae4">navit_motion_timeout()</a>, <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>, <a class="el" href="osd__core_8c.html#ab13875a27a976a250b1ddb86d58e51fd">osd_auxmap_draw()</a>, <a class="el" href="osd__core_8c.html#a892be7caa40ecd5edf2f9cd3fb3cc8e6">osd_button_init()</a>, <a class="el" href="osd__core_8c.html#a99c2e93db2ce347aef3fa40d045400bb">osd_cmd_interface_draw()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="osd_8h.html#a9f451d32667e1745917e76a9133bb469">osd_fill_with_bgcolor()</a>, <a class="el" href="osd__core_8c.html#a03027a6fcacad6b9d1c39ef2f4fa0a70">osd_gps_status_draw()</a>, <a class="el" href="osd__core_8c.html#adda8a31b4d24cb52be0399e0c8e385e0">osd_image_init()</a>, <a class="el" href="j1850_8c.html#a7573663581a3c8705b05d27749bdb8ad">osd_j1850_draw()</a>, <a class="el" href="osd__core_8c.html#a0c9ad7b4a3685122f1d9c384df3b9b1a">osd_nav_next_turn_draw()</a>, <a class="el" href="osd__core_8c.html#acc7a4456ae3b97ce79a9f2f26e572369">osd_nav_toggle_announcer_draw()</a>, <a class="el" href="osd__core_8c.html#a31508e7bce72fa26ea10c53396dccfc1">osd_navigation_status_draw_do()</a>, <a class="el" href="osd__core_8c.html#a043e8cab591d1f6e333932e16b830863">osd_odometer_draw()</a>, <a class="el" href="osd__core_8c.html#ad86e59ee7e69545d881064ea9d27b700">osd_route_guard_draw()</a>, <a class="el" href="osd__core_8c.html#ab1ba9b04384d99394e2f2c4f2824dcc8">osd_scale_draw()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>, <a class="el" href="osd__core_8c.html#a769bb80e8557a8a7208da0721c5e36af">osd_stopwatch_draw()</a>, <a class="el" href="osd__core_8c.html#ad1b3aad9b6f3d02df61bea4c5759ebb4">osd_text_draw()</a>, <a class="el" href="osd__core_8c.html#a850a1c85c18124e392ed6dea5241b574">osd_volume_draw()</a>, and <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af9d2d5864a63fe16efe4a7e5f38a33bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void graphics_draw_polygon_clipped </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gra</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>count_in</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a plain polygon on the display. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8">is_inside()</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, <a class="el" href="structpoint__rect.html#a75cfbb317f6427b2026305f46fabb864">point_rect::lu</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="graphics_8c.html#aae5b20946f5f500c7003a981618d6702">poly_intersection()</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structgraphics.html#a07a56bda9c786f803f6e97b94e96f406">graphics::r</a>, <a class="el" href="structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66">point_rect::rl</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, and <a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a39c00af10fa4bf6a547250715cf98f67"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void graphics_draw_polyline_clipped </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gra</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>pa</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>poly</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw polyline on the display. </p>
+<p>Polylines are a serie of lines connected to each other.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>An array of width matching the line starting from the corresponding <code>pa</code> (if all equal, all lines will have the same width) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">poly</td><td>A boolean indicating whether the polyline should be closed to form a polygon (only the contour of this polygon will be drawn) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="graphics_8c.html#ae84c82ded6d1d2463545327dfbb6a1c8">clip_line()</a>, <a class="el" href="graphics_8c.html#addcc850218c3d42c66cecf11d1414e70a0d3b57ec61e15c1f3c303a26419cab38">CLIPRES_END_CLIPPED</a>, <a class="el" href="graphics_8c.html#addcc850218c3d42c66cecf11d1414e70aca130ef3969cfef42f2a75163db40a89">CLIPRES_INVISIBLE</a>, <a class="el" href="graphics_8c.html#addcc850218c3d42c66cecf11d1414e70a18a4270ce7d75219396477a14150237b">CLIPRES_START_CLIPPED</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="graphics_8c.html#a5e7ccf84caa7c0176094ad796a833573">graphics_draw_polyline_as_polygon()</a>, <a class="el" href="structpoint__rect.html#a75cfbb317f6427b2026305f46fabb864">point_rect::lu</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structgraphics.html#a07a56bda9c786f803f6e97b94e96f406">graphics::r</a>, <a class="el" href="structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66">point_rect::rl</a>, <a class="el" href="structwpoint.html#ad9d271d89c988a87c28feadb6b4dc45e">wpoint::w</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structwpoint.html#a3f8d759e6add853f110c2575baf813e6">wpoint::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, and <a class="el" href="structwpoint.html#a684e3c78ae1f233368f69ca3851b2ab6">wpoint::y</a>.</p>
+
+<p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, and <a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass()</a>.</p>
 
 </div>
 </div>

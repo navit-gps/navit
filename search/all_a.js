@@ -4,7 +4,6 @@ var searchData=
   ['h_5fmessage_5fthread',['h_message_thread',['../structspeech__priv.html#abc900d48c24daae4852e660e82b71800',1,'speech_priv']]],
   ['h_5fqueue',['h_queue',['../structspeech__priv.html#ac30d770c0e902a547791c6e7d49a3f0b',1,'speech_priv']]],
   ['h_5fwave_5fout',['h_wave_out',['../structspeech__priv.html#a5d7de3e2a3ea1a4dfcd98ffcd5c0b38f',1,'speech_priv']]],
-  ['handle',['handle',['../osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7',1,'osd_core.c']]],
   ['handle_5fmouse_5fqueue',['handle_mouse_queue',['../graphics__opengl_8c.html#a4217c26d905bbcc7b38abb35db5f3dcb',1,'graphics_opengl.c']]],
   ['handle_5ftimeout',['handle_timeout',['../structevent__timeout.html#a808cd9a7baafac7a46d916360e871e06',1,'event_timeout']]],
   ['handlebuttonclick',['HandleButtonClick',['../graphics__win32_8c.html#ab95c091265df40792440ce33c53bb9f0',1,'graphics_win32.c']]],

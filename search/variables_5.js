@@ -67,6 +67,8 @@ var searchData=
   ['dest_5fmenuitems',['dest_menuitems',['../structgui__priv.html#a18c3297e9a46f70d1d3a65e8f64825f4',1,'gui_priv']]],
   ['dest_5ftime',['dest_time',['../structnavigation__itm.html#ae7605ce0df237f7b87a692f87cd303bb',1,'navigation_itm']]],
   ['destination',['destination',['../structnavigation__way.html#a527b8ae184c85179bb878b1446eeaa2c',1,'navigation_way::destination()'],['../structstreet__destination.html#a2ca9fc57d48e7fcb948950a39c83de5b',1,'street_destination::destination()'],['../structnavit.html#a5cbee5b552e44f9f8fdd19ce6756aaf0',1,'navit::destination()']]],
+  ['destination_5fdir_5fcolor',['destination_dir_color',['../structcompass.html#af370800076ff7cb7357e9524b6f04423',1,'compass']]],
+  ['destination_5fdir_5fgc',['destination_dir_gc',['../structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7',1,'compass']]],
   ['destination_5fdistance',['destination_distance',['../structroute.html#aa1edf18cdace11ebf4cc1605181d0eac',1,'route']]],
   ['destination_5fvalid',['destination_valid',['../structnavit.html#a711283c37c70835299be334cce344006',1,'navit']]],
   ['destinations',['destinations',['../structroute.html#a19d1594ee18b1887a8904915d319f089',1,'route']]],

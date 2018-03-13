@@ -229,9 +229,17 @@ Functions</h2></td></tr>
 <tr class="memitem:a8bb59c3fab9118c86b60005f2d3fbada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a8bb59c3fab9118c86b60005f2d3fbada">osd_button_set_attr</a> (struct <a class="el" href="structosd__priv__common.html">osd_priv_common</a> *opc, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a8bb59c3fab9118c86b60005f2d3fbada"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9211b67e2952ca458bd23dc9b7e3ce60"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a9211b67e2952ca458bd23dc9b7e3ce60">transform_rotate</a> (struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="garmin__img_8c.html#a3bce700a88a243b80b791686799ae5f7">center</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> angle, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count)</td></tr>
+<tr class="memdesc:a9211b67e2952ca458bd23dc9b7e3ce60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate a group of points around a <code>center</code>.  <a href="#a9211b67e2952ca458bd23dc9b7e3ce60">More...</a><br/></td></tr>
 <tr class="separator:a9211b67e2952ca458bd23dc9b7e3ce60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a90588a2f6c511cd1e094000373abc7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7">handle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gr, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> r, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dir)</td></tr>
-<tr class="separator:a5a90588a2f6c511cd1e094000373abc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c285ccfa387374d5469b9369ba2715"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a68c285ccfa387374d5469b9369ba2715">transform_move</a> (<a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dx, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dy, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count)</td></tr>
+<tr class="memdesc:a68c285ccfa387374d5469b9369ba2715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move a group of points in a direction (adding <code>dx</code> and <code>dy</code> to their x and y coordinates)  <a href="#a68c285ccfa387374d5469b9369ba2715">More...</a><br/></td></tr>
+<tr class="separator:a68c285ccfa387374d5469b9369ba2715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a2c70491ba25b7042907c275b7cde99"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gr, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc_n, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc_s, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> r, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dir)</td></tr>
+<tr class="memdesc:a5a2c70491ba25b7042907c275b7cde99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a compass handle of length <code>r</code>, centered at point <code>p</code>, pointing to direction <code>dir</code>.  <a href="#a5a2c70491ba25b7042907c275b7cde99">More...</a><br/></td></tr>
+<tr class="separator:a5a2c70491ba25b7042907c275b7cde99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad995355183f6dbfa1479a06238780f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gr, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> r, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dir)</td></tr>
+<tr class="memdesc:a5ad995355183f6dbfa1479a06238780f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an arrow of length <code>r</code>, centered at point <code>p</code>, with color <code>gc</code>, pointing to direction <code>dir</code>.  <a href="#a5ad995355183f6dbfa1479a06238780f">More...</a><br/></td></tr>
+<tr class="separator:a5ad995355183f6dbfa1479a06238780f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bb307bf8e4b8fc62ddfa7d4e7033ade"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a5bb307bf8e4b8fc62ddfa7d4e7033ade">format_distance</a> (double distance, char *sep, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> imperial)</td></tr>
 <tr class="separator:a5bb307bf8e4b8fc62ddfa7d4e7033ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bcc984b8251493bac9a9353ab9c087"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a43bcc984b8251493bac9a9353ab9c087">format_time</a> (struct tm *tm, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> days)</td></tr>
@@ -285,6 +293,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a4ecde268d9cd5b31973a08681a134f36"><td class="memItemLeft" align="right" valign="top">static struct osd_priv *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a4ecde268d9cd5b31973a08681a134f36">osd_stopwatch_new</a> (struct <a class="el" href="structnavit.html">navit</a> *nav, struct <a class="el" href="structosd__methods.html">osd_methods</a> *meth, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="separator:a4ecde268d9cd5b31973a08681a134f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ec589bef5aa2b80cf52734966b98332"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw</a> (struct <a class="el" href="structosd__priv__common.html">osd_priv_common</a> *opc, struct <a class="el" href="structnavit.html">navit</a> *nav, struct <a class="el" href="structvehicle.html">vehicle</a> *v)</td></tr>
+<tr class="memdesc:a8ec589bef5aa2b80cf52734966b98332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the compass on the OSD (includes north and destination direction)  <a href="#a8ec589bef5aa2b80cf52734966b98332">More...</a><br/></td></tr>
 <tr class="separator:a8ec589bef5aa2b80cf52734966b98332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e2140721a5b43a86b971cef5a3a60dc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osd__core_8c.html#a3e2140721a5b43a86b971cef5a3a60dc">osd_compass_init</a> (struct <a class="el" href="structosd__priv__common.html">osd_priv_common</a> *opc, struct <a class="el" href="structnavit.html">navit</a> *nav)</td></tr>
 <tr class="separator:a3e2140721a5b43a86b971cef5a3a60dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -596,6 +605,149 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5a2c70491ba25b7042907c275b7cde99"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void draw_compass </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc_n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw a compass handle of length <code>r</code>, centered at point <code>p</code>, pointing to direction <code>dir</code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gr</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramname">gc_n</td><td>The color to use for the north half of the compass </td></tr>
+    <tr><td class="paramname">gc_s</td><td>The color to use for the south half of the compass </td></tr>
+    <tr><td class="paramname">p</td><td>The center of the compass </td></tr>
+    <tr><td class="paramname">r</td><td>The radius of the compass (around the center point <code>p</code>) </td></tr>
+    <tr><td class="paramname">dir</td><td>The direction the compass points to (0 being up, value is in degrees counter-clockwise) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="graphics_8c.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>, <a class="el" href="graphics_8c.html#a39c00af10fa4bf6a547250715cf98f67">graphics_draw_polyline_clipped()</a>, <a class="el" href="osd__core_8c.html#a9211b67e2952ca458bd23dc9b7e3ce60">transform_rotate()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p>Referenced by <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5ad995355183f6dbfa1479a06238780f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void draw_handle </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw an arrow of length <code>r</code>, centered at point <code>p</code>, with color <code>gc</code>, pointing to direction <code>dir</code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gr</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramname">gc</td><td>The color to draw the arrow </td></tr>
+    <tr><td class="paramname">p</td><td>The center of the compass </td></tr>
+    <tr><td class="paramname">r</td><td>The radius of the compass (around the center point <code>p</code>) </td></tr>
+    <tr><td class="paramname">dir</td><td>The direction the arrow points to (0 being up, value is in degrees counter-clockwise) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="graphics_8c.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines()</a>, <a class="el" href="osd__core_8c.html#a68c285ccfa387374d5469b9369ba2715">transform_move()</a>, <a class="el" href="osd__core_8c.html#a9211b67e2952ca458bd23dc9b7e3ce60">transform_rotate()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p>Referenced by <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a4824e8269a11995f9858c7c04b9cda9c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -853,62 +1005,6 @@ Variables</h2></td></tr>
 </ul>
 
 <p>Referenced by <a class="el" href="osd__core_8c.html#a5931ef28c52eba156129c563fa2fcaaa">osd_text_format_attr()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5a90588a2f6c511cd1e094000373abc7"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void handle </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
-          <td class="paramname"><em>gr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
-          <td class="paramname"><em>gc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>r</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>dir</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>References <a class="el" href="graphics_8c.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines()</a>, <a class="el" href="osd__core_8c.html#a9211b67e2952ca458bd23dc9b7e3ce60">transform_rotate()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
-
-<p>Referenced by <a class="el" href="android_8c.html#ad6e97babcf2f3250705560296e1830d8">Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="maptool_8c.html#ade40f66edac4fc4c13a21785ddbf7d8c">parse_option()</a>, and <a class="el" href="speech__cmdline_8c.html#ae8c56e729bcac10d56e3bab174d92a48">speechd_new()</a>.</p>
 
 </div>
 </div>
@@ -1522,7 +1618,17 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="maptool_8h.html#a0495c1aa20654b5c917de9c2fc02cdf9">bbox()</a>, <a class="el" href="geod__for_8c.html#a8a289ed190008419ee49288535be093d">c1</a>, <a class="el" href="geod__for_8c.html#a3d7054db04feaba66495dccf1a8ce86c">c2</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57">draw_mode_end</a>, <a class="el" href="structosd__item.html#a1319f1da5fc1990d401053716bf999c2">osd_item::font</a>, <a class="el" href="osd__core_8c.html#a5bb307bf8e4b8fc62ddfa7d4e7033ade">format_distance()</a>, <a class="el" href="structosd__item.html#ac5ef7d8953962a62a3bda46d04ac1548">osd_item::gr</a>, <a class="el" href="structosd__item.html#a41caf500389648ee9f8ba928870bd474">osd_item::graphic_fg</a>, <a class="el" href="graphics_8c.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, <a class="el" href="graphics_8c.html#a4346119c6921341dfc973a00579286a9">graphics_draw_mode()</a>, <a class="el" href="graphics_8c.html#ad150b9e24b7f75f8f2d684e6a1e5f809">graphics_draw_text()</a>, <a class="el" href="graphics_8c.html#abc516ca06af2f5c44540e2577a080f64">graphics_get_text_bbox()</a>, <a class="el" href="structosd__item.html#aff849de461cbd617b0e26e39df0cf6be">osd_item::h</a>, <a class="el" href="osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7">handle()</a>, <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="osd_8c.html#a9f451d32667e1745917e76a9133bb469">osd_fill_with_bgcolor()</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="transform_8c.html#abf0560a954a531f44ab7e05715da80f3">transform_distance()</a>, <a class="el" href="transform_8c.html#a677e361bc2370ddd5203fabda516a1e3">transform_from_geo()</a>, <a class="el" href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr()</a>, <a class="el" href="structosd__item.html#a57318924da99a40920bd552e4206aa06">osd_item::w</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+<p>Draw the compass on the OSD (includes north and destination direction) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">opc</td><td>A contextual private data pointer (see struct <a class="el" href="structosd__priv__common.html">osd_priv_common</a>) </td></tr>
+    <tr><td class="paramname">nav</td><td>The global navit object </td></tr>
+    <tr><td class="paramname">v</td><td>The current vehicle </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="maptool_8h.html#a0495c1aa20654b5c917de9c2fc02cdf9">bbox()</a>, <a class="el" href="geod__for_8c.html#a8a289ed190008419ee49288535be093d">c1</a>, <a class="el" href="geod__for_8c.html#a3d7054db04feaba66495dccf1a8ce86c">c2</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass()</a>, <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>, <a class="el" href="graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57">draw_mode_end</a>, <a class="el" href="structosd__item.html#a1319f1da5fc1990d401053716bf999c2">osd_item::font</a>, <a class="el" href="osd__core_8c.html#a5bb307bf8e4b8fc62ddfa7d4e7033ade">format_distance()</a>, <a class="el" href="structosd__item.html#ac5ef7d8953962a62a3bda46d04ac1548">osd_item::gr</a>, <a class="el" href="structosd__item.html#a41caf500389648ee9f8ba928870bd474">osd_item::graphic_fg</a>, <a class="el" href="graphics_8c.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, <a class="el" href="graphics_8c.html#a4346119c6921341dfc973a00579286a9">graphics_draw_mode()</a>, <a class="el" href="graphics_8c.html#ad150b9e24b7f75f8f2d684e6a1e5f809">graphics_draw_text()</a>, <a class="el" href="graphics_8c.html#abc516ca06af2f5c44540e2577a080f64">graphics_get_text_bbox()</a>, <a class="el" href="structosd__item.html#aff849de461cbd617b0e26e39df0cf6be">osd_item::h</a>, <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="osd_8c.html#a9f451d32667e1745917e76a9133bb469">osd_fill_with_bgcolor()</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="transform_8c.html#abf0560a954a531f44ab7e05715da80f3">transform_distance()</a>, <a class="el" href="transform_8c.html#a677e361bc2370ddd5203fabda516a1e3">transform_from_geo()</a>, <a class="el" href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr()</a>, <a class="el" href="structosd__item.html#a57318924da99a40920bd552e4206aa06">osd_item::w</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
 <p>Referenced by <a class="el" href="osd__core_8c.html#a3e2140721a5b43a86b971cef5a3a60dc">osd_compass_init()</a>, and <a class="el" href="osd__core_8c.html#a50757652eb51c7bf535b060f3cbd59f2">osd_compass_new()</a>.</p>
 
@@ -1560,7 +1666,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="structcolor.html#ada88c609a801744faf4f35601733f96f">color::a</a>, <a class="el" href="structcolor.html#af18acfb5e593334f215f2f9c391f25e7">color::b</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9">compass::click_cb</a>, <a class="el" href="structosd__item.html#aa7fe754bae06b98fd165fe6936280203">osd_item::command</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="structcolor.html#a7b23afbfdc39f8f97369aa0f9cdad48d">color::g</a>, <a class="el" href="structosd__item.html#ac5ef7d8953962a62a3bda46d04ac1548">osd_item::gr</a>, <a class="el" href="structosd__item.html#a41caf500389648ee9f8ba928870bd474">osd_item::graphic_fg</a>, <a class="el" href="graphics_8c.html#a922588c7f73a70872a92e29b5cf45b83">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="graphics_8c.html#a7763c3bb4b5a77666fa580ade99cedda">graphics_gc_set_linewidth()</a>, <a class="el" href="structcompass.html#a732f8203a3df92a7d8dd0c50a6ab3677">compass::green</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="osd_8c.html#a81f8a476d02d720a1b174604901d0218">osd_set_std_graphic()</a>, <a class="el" href="osd_8c.html#a26f0bde6f55a50f12da03f8ac6cfb6bc">osd_std_click()</a>, <a class="el" href="structcolor.html#adf42bf89ce203b7b9b3677bd6ae571d8">color::r</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
+<p>References <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9">compass::click_cb</a>, <a class="el" href="structosd__item.html#aa7fe754bae06b98fd165fe6936280203">osd_item::command</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="structcompass.html#af370800076ff7cb7357e9524b6f04423">compass::destination_dir_color</a>, <a class="el" href="structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7">compass::destination_dir_gc</a>, <a class="el" href="structosd__item.html#ac5ef7d8953962a62a3bda46d04ac1548">osd_item::gr</a>, <a class="el" href="structosd__item.html#a41caf500389648ee9f8ba928870bd474">osd_item::graphic_fg</a>, <a class="el" href="graphics_8c.html#a922588c7f73a70872a92e29b5cf45b83">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="graphics_8c.html#a7763c3bb4b5a77666fa580ade99cedda">graphics_gc_set_linewidth()</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19">compass::north_color</a>, <a class="el" href="structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069">compass::north_gc</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="osd_8c.html#a81f8a476d02d720a1b174604901d0218">osd_set_std_graphic()</a>, <a class="el" href="osd_8c.html#a26f0bde6f55a50f12da03f8ac6cfb6bc">osd_std_click()</a>, <a class="el" href="structosd__item.html#ae451268bd908ba0e139dbd2dd8527805">osd_item::text_color</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
 
 <p>Referenced by <a class="el" href="osd__core_8c.html#a50757652eb51c7bf535b060f3cbd59f2">osd_compass_new()</a>.</p>
 
@@ -1604,7 +1710,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="structosd__item__methods.html#ae6640b5da2ee77b36660d1b35e553fda">osd_item_methods::draw</a>, <a class="el" href="structosd__item.html#a7ac2aa85d2f3035e3dce99914244e372">osd_item::font_size</a>, <a class="el" href="structosd__item.html#a05b0080d170686984b8e2f9babfdce57">osd_item::meth</a>, <a class="el" href="structosd__item.html#a372103371db7d2f63d23487329b5433d">osd_item::navit</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="osd__core_8c.html#a3e2140721a5b43a86b971cef5a3a60dc">osd_compass_init()</a>, <a class="el" href="osd_8h.html#a0630610c20c4d7bdcfb44f7802def280">osd_draw_cast</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="osd_8c.html#a45434510477f4d91bb5cc6fc12ab158a">osd_set_std_attr()</a>, <a class="el" href="structosd__item.html#ae6e965b71304eecdb5af35a0bb4a5fc7">osd_item::rel_h</a>, <a class="el" href="structosd__item.html#a4540dc24aa44663ff2a0e176cbe21377">osd_item::rel_w</a>, <a class="el" href="structosd__item.html#aeea4c3e7ecd24bd8268cc4ffa9660128">osd_item::rel_x</a>, <a class="el" href="structosd__item.html#a485cfc3c0f4a036984b4935ffa7da777">osd_item::rel_y</a>, <a class="el" href="structosd__methods.html#a07961c3ac1c3b0abae82001e82dfeb37">osd_methods::set_attr</a>, <a class="el" href="osd__core_8c.html#a44b08d3828fa775c67fa64d05110ef3d">set_std_osd_attr()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
+<p>References <a class="el" href="attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="structattr.html#a58dd03447f7532a9a264ff3a38e6d1ec">attr::color</a>, <a class="el" href="structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f">osd_priv_common::data</a>, <a class="el" href="structosd__item__methods.html#ae6640b5da2ee77b36660d1b35e553fda">osd_item_methods::draw</a>, <a class="el" href="structosd__item.html#a7ac2aa85d2f3035e3dce99914244e372">osd_item::font_size</a>, <a class="el" href="structosd__item.html#a05b0080d170686984b8e2f9babfdce57">osd_item::meth</a>, <a class="el" href="structosd__item.html#a372103371db7d2f63d23487329b5433d">osd_item::navit</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="osd__core_8c.html#a3e2140721a5b43a86b971cef5a3a60dc">osd_compass_init()</a>, <a class="el" href="osd_8h.html#a0630610c20c4d7bdcfb44f7802def280">osd_draw_cast</a>, <a class="el" href="structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd">osd_priv_common::osd_item</a>, <a class="el" href="osd_8c.html#a45434510477f4d91bb5cc6fc12ab158a">osd_set_std_attr()</a>, <a class="el" href="structosd__item.html#ae6e965b71304eecdb5af35a0bb4a5fc7">osd_item::rel_h</a>, <a class="el" href="structosd__item.html#a4540dc24aa44663ff2a0e176cbe21377">osd_item::rel_w</a>, <a class="el" href="structosd__item.html#aeea4c3e7ecd24bd8268cc4ffa9660128">osd_item::rel_x</a>, <a class="el" href="structosd__item.html#a485cfc3c0f4a036984b4935ffa7da777">osd_item::rel_y</a>, <a class="el" href="structosd__methods.html#a07961c3ac1c3b0abae82001e82dfeb37">osd_methods::set_attr</a>, <a class="el" href="osd__core_8c.html#a44b08d3828fa775c67fa64d05110ef3d">set_std_osd_attr()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
 
 <p>Referenced by <a class="el" href="osd__core_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 
@@ -4044,6 +4150,67 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a68c285ccfa387374d5469b9369ba2715"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void transform_move </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>dx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>dy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move a group of points in a direction (adding <code>dx</code> and <code>dy</code> to their x and y coordinates) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">dx</td><td>The shift to perform to the x axis </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">dy</td><td>The shift to perform to the y axis </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">p</td><td>An array of points to move </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">count</td><td>The number of points stored inside <code>p</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p>Referenced by <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a9211b67e2952ca458bd23dc9b7e3ce60"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4088,9 +4255,20 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Rotate a group of points around a <code>center</code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">center</td><td>The coordinates of the center of the rotation to apply </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">angle</td><td>The angle of the rotation </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">p</td><td>An array of points to rotate </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">count</td><td>The number of points stored inside <code>p</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>References <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
-<p>Referenced by <a class="el" href="osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7">handle()</a>.</p>
+<p>Referenced by <a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass()</a>, and <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>.</p>
 
 </div>
 </div>
@@ -4160,7 +4338,7 @@ Variables</h2></td></tr>
 <div class="line">        {<span class="stringliteral">&quot;odometer_reset&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="osd__core_8c.html#ae456377abc0f90e39d378eb702877e79">osd_cmd_odometer_reset</a>)},</div>
 <div class="line">}</div>
 <div class="ttc" id="command_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition:</b> command.h:32</div></div>
-<div class="ttc" id="osd__core_8c_html_ae456377abc0f90e39d378eb702877e79"><div class="ttname"><a href="osd__core_8c.html#ae456377abc0f90e39d378eb702877e79">osd_cmd_odometer_reset</a></div><div class="ttdeci">static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdef"><b>Definition:</b> osd_core.c:513</div></div>
+<div class="ttc" id="osd__core_8c_html_ae456377abc0f90e39d378eb702877e79"><div class="ttname"><a href="osd__core_8c.html#ae456377abc0f90e39d378eb702877e79">osd_cmd_odometer_reset</a></div><div class="ttdeci">static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdef"><b>Definition:</b> osd_core.c:617</div></div>
 </div><!-- fragment -->
 </div>
 </div>

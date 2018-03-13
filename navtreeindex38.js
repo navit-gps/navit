@@ -1,5 +1,9 @@
 var NAVTREEINDEX38 =
 {
+"structblock__bt__priv.html#a2a5a15685d949792f8c8a243aa95e6e7":[2,0,51,3],
+"structblock__bt__priv.html#a3e0aea8da021731cac1888e5d2ae2c0a":[2,0,51,7],
+"structblock__bt__priv.html#a85db370e35d467ee2fff2167bc2ab7c5":[2,0,51,0],
+"structblock__bt__priv.html#a9f51ba8b1b0e92602163c196269ec6c3":[2,0,51,1],
 "structblock__bt__priv.html#ad58d2dab012ae185fbb7ba6986080c2a":[2,0,51,8],
 "structblock__bt__priv.html#ae23eacbc4b0571507f16eec365f1d8f3":[2,0,51,6],
 "structblock__bt__priv.html#ae619695ffecc31d3bc731d312be45fbd":[2,0,51,4],
@@ -172,9 +176,12 @@ var NAVTREEINDEX38 =
 "structcommand__table.html#a35ae2e637995ddfbb9c22fef5a7565dc":[2,0,81,0],
 "structcommand__table.html#abf287579abba97929721542aec7eb760":[2,0,81,1],
 "structcompass.html":[2,0,82],
-"structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,82,2],
-"structcompass.html#a732f8203a3df92a7d8dd0c50a6ab3677":[2,0,82,1],
+"structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069":[2,0,82,4],
+"structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,82,5],
+"structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19":[2,0,82,3],
+"structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7":[2,0,82,2],
 "structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9":[2,0,82,0],
+"structcompass.html#af370800076ff7cb7357e9524b6f04423":[2,0,82,1],
 "structconfig.html":[2,0,83],
 "structconfigObject.html":[2,0,84],
 "structcontext.html":[2,0,85],
@@ -242,12 +249,5 @@ var NAVTREEINDEX38 =
 "structcursor.html#a54647761d8272ad8f6dc2ada53650071":[2,0,100,1],
 "structcursor.html#a95a9fff72cc48dcd58f9720206d145f4":[2,0,100,3],
 "structcursor.html#aa2c554535603836c7080bbef467370cc":[2,0,100,0],
-"structcursor.html#aa87bbc52482fd3baf3c2d01370591e3e":[2,0,100,5],
-"structcursor.html#adac9065ff2dbf78cd9f3711a3040bdaf":[2,0,100,4],
-"structdata__window.html":[2,0,101],
-"structdata__window.html#aac0ae6bee5846f43ace41cedda1d8fdd":[2,0,101,0],
-"structdata__window.html#ac90a773f316bacebc387e6052ed3dafb":[2,0,101,1],
-"structdata__window.html#ad1dad895ff0e516121619713f33cc483":[2,0,101,2],
-"structdata__window.html#af66759c457a75fff2eb1eaab1b879a5d":[2,0,101,3],
-"structdatawindow.html":[2,0,102]
+"structcursor.html#aa87bbc52482fd3baf3c2d01370591e3e":[2,0,100,5]
 };

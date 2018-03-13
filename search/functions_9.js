@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['handle',['handle',['../osd__core_8c.html#a5a90588a2f6c511cd1e094000373abc7',1,'osd_core.c']]],
   ['handle_5fmouse_5fqueue',['handle_mouse_queue',['../graphics__opengl_8c.html#a4217c26d905bbcc7b38abb35db5f3dcb',1,'graphics_opengl.c']]],
   ['handlebuttonclick',['HandleButtonClick',['../graphics__win32_8c.html#ab95c091265df40792440ce33c53bb9f0',1,'graphics_win32.c']]],
   ['handlekeychar',['HandleKeyChar',['../graphics__win32_8c.html#a2c793a6253341cb8fd8e395b3eb551fd',1,'graphics_win32.c']]],

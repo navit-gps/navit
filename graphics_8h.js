@@ -44,6 +44,8 @@ var graphics_8h =
     [ "graphics_draw_itemgra", "graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85", null ],
     [ "graphics_draw_lines", "graphics_8h.html#a5d8dc987416508625cf3d46571abdbcb", null ],
     [ "graphics_draw_mode", "graphics_8h.html#a4346119c6921341dfc973a00579286a9", null ],
+    [ "graphics_draw_polygon_clipped", "graphics_8h.html#af9d2d5864a63fe16efe4a7e5f38a33bd", null ],
+    [ "graphics_draw_polyline_clipped", "graphics_8h.html#a39c00af10fa4bf6a547250715cf98f67", null ],
     [ "graphics_draw_rectangle", "graphics_8h.html#a1060bbcc5b480bd3f5c3f01c0c6f8000", null ],
     [ "graphics_draw_rectangle_rounded", "graphics_8h.html#a6fbefa5235319970bbc4df76be037a49", null ],
     [ "graphics_draw_text", "graphics_8h.html#ad150b9e24b7f75f8f2d684e6a1e5f809", null ],

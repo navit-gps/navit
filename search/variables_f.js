@@ -169,6 +169,8 @@ var searchData=
   ['nodes_5fin',['nodes_in',['../structfiles__relation__processing.html#ade6a30c5d31dd32ecfefd3194a861f11',1,'files_relation_processing']]],
   ['nodes_5fout',['nodes_out',['../structfiles__relation__processing.html#abf40dabcbbae00cd85b6df2641673221',1,'files_relation_processing']]],
   ['none',['NONE',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a8bb60e2923569676eafc0a7b4382b2d4',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
+  ['north_5fcolor',['north_color',['../structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19',1,'compass']]],
+  ['north_5fgc',['north_gc',['../structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069',1,'compass']]],
   ['north_5fxpm',['north_xpm',['../gui__gtk__action_8c.html#a43bc2577411c4363bb231a7bffeaaaf9',1,'gui_gtk_action.c']]],
   ['nospeedcheck',['nospeedcheck',['../structg2sprop.html#a1b5b5c2ca1b590a78a59765c8ef84d3b',1,'g2sprop']]],
   ['nostop_5fpref',['nostop_pref',['../structtracking.html#ad843aff4cd703f65337f0b7d6594fd90',1,'tracking']]],
