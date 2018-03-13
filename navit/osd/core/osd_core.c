@@ -93,8 +93,10 @@ static int b_commandtable_added = 0;
 
 struct compass {
 	int width;	/*!< Width of the compass in pixels */
-	struct graphics_gc *green;	/*!< Color definition of green parts of the compass */
-	struct graphics_gc *red;	/*!< Color definition of red parts of the compass */
+	struct color destination_dir_color;	/*!< Color definition of the destination direction arrow */
+	struct color north_color;	/*!< Color definition of north handle of the compass */
+	struct graphics_gc *destination_dir_gc;	/*!< graphics_gc context used to draw the destination direction arrow */
+	struct graphics_gc *north_gc; /*!< graphics_gc context used to draw the north handle of the compass */
 	struct callback *click_cb;	/*!< A callback to execute when clicking on the compass */
 };
 
@@ -1543,7 +1545,7 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 	if (v) {
 		if (vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)) {
 			vdir = *attr_dir.u.numd;
-			draw_compass(opc->osd_item.gr, this->red, opc->osd_item.graphic_fg, &p, opc->osd_item.w/3, -vdir); /* Draw a compass */
+			draw_compass(opc->osd_item.gr, this->north_gc, opc->osd_item.graphic_fg, &p, opc->osd_item.w/3, -vdir); /* Draw a compass */
 		}
 
 		if (navit_get_attr(nav, attr_destination, &destination_attr, NULL)
@@ -1554,12 +1556,12 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 			c2.y = destination_attr.u.pcoord->y;
 			dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
 			dir -= vdir;
-			draw_handle(opc->osd_item.gr, this->green, &p, opc->osd_item.w/3, dir); /* Draw the green arrow pointing to the destination */
+			draw_handle(opc->osd_item.gr, this->destination_dir_gc, &p, opc->osd_item.w/3, dir); /* Draw the green arrow pointing to the destination */
 			buffer=format_distance(transform_distance(pro, &c1, &c2),"",imperial);
 			graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, buffer, 0x10000, 0, bbox, 0);
 			p.x=(opc->osd_item.w-bbox[2].x)/2;
 			p.y = opc->osd_item.h-opc->osd_item.h/10;
-			graphics_draw_text(opc->osd_item.gr, this->green, NULL, opc->osd_item.font, buffer, &p, 0x10000, 0);
+			graphics_draw_text(opc->osd_item.gr, this->destination_dir_gc, NULL, opc->osd_item.font, buffer, &p, 0x10000, 0);
 			g_free(buffer);
 		}
 	}
@@ -1571,28 +1573,20 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 static void
 osd_compass_init(struct osd_priv_common *opc, struct navit *nav)
 {
-	struct color c;
-
 	struct compass *this = (struct compass *)opc->data;
 
 	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 
-	this->green = graphics_gc_new(opc->osd_item.gr);
-	c.r = 1024;
-	c.g = 65535;
-	c.b = 4096;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->green, &c);
-	graphics_gc_set_linewidth(this->green, this->width);
+	this->destination_dir_gc = graphics_gc_new(opc->osd_item.gr);
+	graphics_gc_set_foreground(this->destination_dir_gc, &this->destination_dir_color);
+	graphics_gc_set_linewidth(this->destination_dir_gc, this->width);
 
-	this->red = graphics_gc_new(opc->osd_item.gr);
-	c.r = 65535;
-	c.g = 1024;
-	c.b = 1024;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->red, &c);
-	graphics_gc_set_linewidth(this->red, this->width);
+	this->north_gc = graphics_gc_new(opc->osd_item.gr);
+	graphics_gc_set_foreground(this->north_gc, &this->north_color);
+	graphics_gc_set_linewidth(this->north_gc, this->width);
 
+	opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
+	graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
 	graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, opc));
@@ -1609,6 +1603,8 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	struct compass *this = g_new0(struct compass, 1);
 	struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
 	struct attr *attr;
+	struct color green_color={0x0400,0xffff,0x1000,0xffff};
+	struct color red_color={0xffff,0x0400,0x0400,0xffff};
 
 	opc->data = (void*)this;
 	opc->osd_item.rel_x = 20;
@@ -1622,6 +1618,11 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
+	attr = attr_search(attrs, NULL, attr_destination_dir_color);
+	this->destination_dir_color=attr ? *attr->u.color : green_color; /* Pick destination color from configuration, default to green if unspecified */
+	attr = attr_search(attrs, NULL, attr_north_color);
+	this->north_color=attr ? *attr->u.color : red_color; /* Pick north handle color from configuration, default to red if unspecified */
+
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_graphics_ready, opc));
 	return (struct osd_priv *) opc;
 }
