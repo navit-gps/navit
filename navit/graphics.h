@@ -282,6 +282,8 @@ void graphics_remove_selection(struct graphics *gra, struct item *item, enum ite
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
 int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
 int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in);
+void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int poly);
 
 /* end of prototypes */
 #ifdef __cplusplus
