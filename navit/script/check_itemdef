@@ -7,8 +7,15 @@ check_item_xml() {
 	grep -q "^$1\$" check.$$ || echo "$1 will not be rendered"
 }
 
-
-awk '/<layout name="Car"/,/<\/layout/ { if (/<itemgra/) {print $0} }' < ../navit.xml | sed 's/.*item_types="\([^"]*\)".*/\1/' | tr "," "\012" | sort -u >check.$$
+xi_include=`awk '/<layout name="Car"/,/<\/layout/ { if (/<xi:include/) {print $0} }' < ../navit.xml | sed 's/.*xi:include.*href="\([^"]*\).*/\1/' | head -n 1`
+if test -n "$xi_include"; then
+	xi_include=../`echo "$xi_include" | sed 's/\$NAVIT_SHAREDIR/./'`
+	echo "Fetching itemgra from ${xi_include}'s Car layout"
+	awk '{ if (/<itemgra/) {print $0} }' < "$xi_include" | sed 's/.*item_types="\([^"]*\)".*/\1/' | tr "," "\012" | sort -u >check.$$
+else
+	echo "Fetching itemgra from navit.xml's Car layout"
+	awk '/<layout name="Car"/,/<\/layout/ { if (/<itemgra/) {print $0} }' < ../navit.xml | sed 's/.*item_types="\([^"]*\)".*/\1/' | tr "," "\012" | sort -u >check.$$
+fi
 echo item_def.h
 grep "^ITEM" ../item_def.h | sed -e "s/ITEM(\(.*\))/\1/" -e "s/ITEM2([^,]*,\(.*\))/\1/" |
 while read -r x
