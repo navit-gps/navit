@@ -1,11 +1,9 @@
-#! /bin/sh
-function check_item_def
-{
+#!/bin/sh
+check_item_def() {
 	grep -q "[(,]$1)" ../item_def.h || echo "$1 missing"
 }
 
-function check_item_xml
-{
+check_item_xml() {
 	grep -q "^$1\$" check.$$ || echo "$1 will not be rendered"
 }
 
@@ -20,7 +18,7 @@ done
 
 rm -f check.$$
 echo maptool.c
-egrep '^	"[nw]	+[^	]+	+[^	]+' ../maptool.c | sed "s/.*	//" | sort -u |
+egrep '^	"[nw]	+[^	]+	+[^	]+' ../maptool/maptool.c | sed "s/.*	//" | sort -u |
 while read -r x
 do
 	check_item_def "${x%%\\n\"}"
