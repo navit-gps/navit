@@ -27,27 +27,32 @@
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
 
-	<!-- center= defines which map location Navit will show after first start.
-		It will only be used for the first start; subsequent starts will remember the
-		last position (in center.txt).
-		Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
-		For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
-		-->
-	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0">
-		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
-		     On windows systems, use win32 -->
-		<graphics type="gtk_drawing_area"/>
-		<!-- The following line let you select which graphical user interface you'd like to use.
-		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
-		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag -->
-		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
 	<!--
-			In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
-			Here's an example for a freerunner: -->
-		<!-- <gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/> -->
-		<!-- The action that appears on map click is configurable with the attribute "on_map_click".
-		     To get the prvious behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
-	        -->
+	center= defines which map location Navit will show after first start.
+	It will only be used for the first start; subsequent starts will remember the
+	last position (in center.txt).
+	Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
+	For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
+	-->
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0">
+		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. On windows systems, use win32 -->
+		<graphics type="gtk_drawing_area"/>
+		<!--
+		The following line let you select which graphical user interface you'd like to use.
+		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
+		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag
+		-->
+		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
+		<!--
+		In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
+		Here's an example for a freerunner:
+		<gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/>
+		-->
+		
+		<!--
+		The action that appears on map click is configurable with the attribute "on_map_click".
+		To get the prvious behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
+		-->
 		<gui type="internal" enabled="yes"><![CDATA[
 			<html>
 				<a name='Main Menu'><text>Main menu</text>
@@ -359,7 +364,7 @@ Waypoint</text></img>
                         <roadprofile item_types="street_n_lanes" speed="80" route_weight="80"/>
                         <roadprofile item_types="highway_land" speed="80" route_weight="80"/>
                         <roadprofile item_types="ramp" speed="30" route_weight="30"/>
-			<!--roundabout does not apply to OSMaps -->
+                        <!--roundabout does not apply to OSMaps -->
                         <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
                         <roadprofile item_types="ferry" speed="40" route_weight="40"/>
                 </vehicleprofile>
@@ -374,9 +379,11 @@ Waypoint</text></img>
 			<announce type="street_n_lanes,highway_land" level0="300" level1="1000" level2="2000" unit="m"/>
 		</navigation>
 
-		<!-- Navit provides speech output in text format.
-			If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
-			The default is text output to the shell -->
+		<!--
+		Navit provides speech output in text format.
+		If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
+		The default is text output to the shell
+		-->
 		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!--
 		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
@@ -385,7 +392,7 @@ Waypoint</text></img>
 		<speech type="cmdline" data="aplay -q %s"
 		sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
 		vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
-                -->
+		->
 
 		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
 
@@ -419,25 +426,18 @@ Waypoint</text></img>
 				<circle color="#008080" radius="24" width="2" text_size="12"/>
 			</itemgra>
 		</layer>
-
-		<layout name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
-			<xi:include href="$NAVIT_SHAREDIR/layout-Car.xml"/>
-		</layout>
-		<layout name="Car-dark" daylayout="Car" color="#011001">
-			<xi:include href="$NAVIT_SHAREDIR/layout-Car-dark.xml"/>
-		</layout>
-		<layout name="Car-Android" color="#fef9ee" font="Liberation Sans">
-			<xi:include href="$NAVIT_SHAREDIR/layout-Car-Android.xml"/>
-		</layout>
-		<layout name="Car-simple" color="#839ea9">
-			<xi:include href="$NAVIT_SHAREDIR/layout-Car-simple.xml"/>
-		</layout>
-		<layout name="Bike" color="#ffefb7" font="Liberation Sans">
-			<xi:include href="$NAVIT_SHAREDIR/layout-Bike.xml"/>
-		</layout>
-		<layout name="T@H" font="Liberation Sans">
-			<xi:include href="$NAVIT_SHAREDIR/layout-T@H.xml"/>
-		</layout>
+		
+		<!--
+		Layouts are defined in their own specific XML files and are included below (one file per layout)
+		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)
+		One layout is a specifid theme. The user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file.
+		-->
+		<xi:include href="$NAVIT_SHAREDIR/layout-Car.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/layout-Car-dark.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/layout-Car-Android.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/layout-Car-simple.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/layout-Bike.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/layout-T@H.xml"/>
 		<layout name="Route">
 			<layer name="streets">
 				<itemgra item_types="street_route_occluded" order="0-">
