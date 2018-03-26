@@ -4,6 +4,7 @@
 # Run ./itemgra.pl 2>/dev/null to get only the result without parsing information messages
 my $layout;
 my $type,$types;
+my $garmintypes;
 my $order,$orders,@orders;
 my @layouts;
 my $input_stream;
@@ -61,6 +62,7 @@ while(defined($input_stream)) {
 	#print("Popped input stream " . $input_stream . "\n");
 }
 print(STDERR "Finished parsing navit XML config\n");
+print(STDERR "Parsing item_def.h\n");
 open(IN,"../item_def.h");
 while (<IN>) {
 	if (/^ITEM2\([^,]*,(.*)\)/) {
@@ -73,13 +75,26 @@ while (<IN>) {
 	}
 }
 close(IN);
+print(STDERR "Parsing ../map/garmin/garmintypes.txt\n");
+open(IN,"../map/garmin/garmintypes.txt");
+while (<IN>) {
+	if (/^[0-9][^=]*=\s*([^,]*),.*$/) {
+		$type=$1;
+		print("Garmintype: " . $type . "\n");
+		$garmintypes->{$type}->{"none"}=1;
+	}
+}
+close(IN);
+
+print(STDERR "Outputting results\n");
 my $typefmt="%-30s";
 my $layoutfmt="%10s";
 printf($typefmt,"");
 foreach $layout (@layouts) {
 	printf($layoutfmt,$layout);
 }
-printf("\n");
+print("\n");
+# Check which map items defined in ../item_def.h are actually handled by each layout
 foreach $type (sort keys %$result) {
 	$marker="";
 	if (!$result->{$type}->{"none"}) {
@@ -95,4 +110,11 @@ foreach $type (sort keys %$result) {
 		printf($layoutfmt,$order);
 	}
 	printf("\n");
+}
+
+print("Analysis on ../map/garmin/garmintypes.txt:\n");
+foreach $type (sort keys %$garmintypes) {
+	if (!$result->{$type}->{"none"}) {
+		print($type . " exists in garmintypes.txt and missing in itemdef.h\n");
+	}
 }
