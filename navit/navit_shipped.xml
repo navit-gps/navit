@@ -392,7 +392,7 @@ Waypoint</text></img>
 		<speech type="cmdline" data="aplay -q %s"
 		sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
 		vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
-		->
+		-->
 
 		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
 
