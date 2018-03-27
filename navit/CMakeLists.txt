@@ -124,7 +124,7 @@ add_custom_command(
 )
 
 # additional parameter are passed to the stylesheet processor as parameter
-macro(process_xslt SRC_XML DEST_XML)
+macro(process_xslt SRC_DIR SRC_XML DEST_XML)
    set(XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/navit/navit_shipped.xml" "${CMAKE_CURRENT_BINARY_DIR}/${DEST_XML}" )
    if(XSL_PROCESSING)
       if(NOT XSLTS STREQUAL "")
@@ -148,21 +148,21 @@ macro(process_xslt SRC_XML DEST_XML)
    ADD_CUSTOM_COMMAND(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${DEST_XML}
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/navit/xslt/
-      DEPENDS ${SRC_XML} "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd" ${ALL_XSLT_FILES}
+      DEPENDS "${SRC_DIR}/${SRC_XML}" "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd" ${ALL_XSLT_FILES}
       ${XSLT_COMMANDS}
    )
 endmacro()
 
 if(ANDROID)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navithdpi.xml OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navitmdpi.xml OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64)
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navithdpi.xml OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navitmdpi.xml OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64)
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48)
    add_custom_target( navit_config_xml ALL DEPENDS navitxxxhdpi.xml navitxxhdpi.xml navitxhdpi.xml navithdpi.xml navitmdpi.xml navitldpi.xml)
 else()
-   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml navit.xml "")
+   process_xslt(${CMAKE_CURRENT_SOURCE_DIR}/ navit_shipped.xml navit.xml "")
    add_custom_target( navit_config_xml_resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/navit.xml COMMAND mkdir -p resources/share/navit COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}/navit.xml resources/share/navit)
    add_custom_target( locale_resource DEPENDS locales COMMAND mkdir -p resources/share COMMAND cp -a ${CMAKE_CURRENT_BINARY_DIR}/../locale resources/share/locale)
    add_custom_target( navit_config_xml ALL DEPENDS navit.xml)
