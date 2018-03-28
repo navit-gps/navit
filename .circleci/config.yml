@@ -102,6 +102,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Prepare the WinCE build environment
+          command: |
+            bash ci/setup_wince.sh
+      - run:
           name: Build for Windows CE
           command: bash ci/build_wince.sh
       - store_artifacts:
