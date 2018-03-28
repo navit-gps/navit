@@ -6802,6 +6802,9 @@ Waypoint</text></img>
 					<polyline color="#b5d6f1"/>
 					<text text_size="8"/>
 				</itemgra>
+				<itemgra item_types="poly_water_tiled">
+					<polygon color="#b5d6f1"/>
+				</itemgra>
 				<!-- leisure=park -->
 				<itemgra item_types="poly_park" order="0-">
 					<polygon color="#c7f1a3"/>
