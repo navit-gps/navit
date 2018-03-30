@@ -513,9 +513,14 @@ load_tilesdir(FILE *in)
 #if 0
 			printf("subtile '%s'\n",subtile);
 #endif
-			th=realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
-			*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
-			th->num_subtiles++;
+			struct tile_head *th_tmp=realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
+			if (th_tmp == NULL) {
+				printf("Memory allocation failure, unable to load subtiles\n");
+			} else {
+				th = th_tmp;
+				*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
+				th->num_subtiles++;
+			}
 		}
 		*last=th;
 		last=&th->next;
