@@ -181,7 +181,7 @@ POINT
 0, 0x5400-0x543F = poi_swimming, Swimming
 0, 0x5500-0x553F = poi_dam, Dam
 
-0, 0x5600-0x563F = poi_forbidden_area, Forbiden Area
+0, 0x5600-0x563F = poi_forbidden_area, Forbidden Area
 0, 0x5700-0x573F = poi_danger_area, Danger Area
 0, 0x5800-0x583F = poi_restricted_area, Restricted Area
 

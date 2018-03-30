@@ -2117,7 +2117,7 @@ Waypoint</text></img>
 					<icon src="fish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_forbidden_area" order="12-">
-					<icon src="forbiden_area.xpm"/>
+					<icon src="forbidden_area.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_bicycle" order="12-">
 				<icon src="bicycle_shop.png"/>
@@ -3856,7 +3856,7 @@ Waypoint</text></img>
 					<icon src="fish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_forbidden_area" order="0-">
-					<icon src="forbiden_area.xpm"/>
+					<icon src="forbidden_area.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_gps" order="0-">
 					<icon src="garmin.xpm"/>
@@ -5032,7 +5032,7 @@ Waypoint</text></img>
           <icon src="danger_16_16.png" />
         </itemgra>
         <itemgra item_types="poi_forbidden_area" order="13-">
-          <icon src="forbiden_area.png" />
+          <icon src="forbidden_area.png" />
         </itemgra>
         <itemgra item_types="poi_tunnel" order="12-">
           <icon src="tunnel.png" />
@@ -5245,7 +5245,7 @@ Waypoint</text></img>
           <icon src="fish.png" />
         </itemgra>
         <itemgra item_types="poi_forbidden_area" order="12-">
-          <icon src="forbiden_area.png" />
+          <icon src="forbidden_area.png" />
         </itemgra>
         <itemgra item_types="poi_shop_gps" order="15-">
           <icon src="garmin.png" />
