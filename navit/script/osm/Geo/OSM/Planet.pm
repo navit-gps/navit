@@ -196,7 +196,7 @@ sub mirror_planet(){
     $current_file = $files[0];
     
     if ( $DEBUG) {
-	print STDERR "Choosen File: $current_file\n";
+	print STDERR "Chosen File: $current_file\n";
     }
     
     return undef unless $current_file;

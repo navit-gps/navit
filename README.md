@@ -79,7 +79,7 @@ destination by assigning a value to each point directly connected to
 destination point. The value represents the estimated time needed to
 pass this distance.
 
-Now the point with the lowest value is choosen using the Fibonacci
+Now the point with the lowest value is chosen using the Fibonacci
 heap and a value is assigned to connected points whos are
 unevaluated or whos current value ist greater than the new one.
 
