@@ -68,7 +68,7 @@
          <xsl:apply-templates/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="/config/navit/layout/layer/itemgra/child::*">
+   <xsl:template match="/config/navit/layout/layer/itemgra/child::*|layout/layer/itemgra/child::*">
       <xsl:copy>
          <xsl:copy-of select="@*[not(name()='text_size') and not(name()='width') and not(name()='radius') and not(name()='w') and not(name()='h') and not(name()='x') and not(name()='y') and not(name()='dash')]"/>
          <xsl:if test="@text_size">
@@ -110,7 +110,7 @@
 	 </xsl:if>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="/config/navit/layout">
+   <xsl:template match="/config/navit/layout|/layout">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
          <xsl:if test="@name='Car'">
