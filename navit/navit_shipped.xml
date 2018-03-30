@@ -2129,7 +2129,7 @@ Waypoint</text></img>
 					<icon src="golf.png"/>
 				</itemgra>
 				<itemgra item_types="poi_government_building" order="12-">
-					<icon src="goverment_building.xpm"/>
+					<icon src="government_building.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_height" order="12-">
 					<icon src="height.xpm"/>
@@ -3865,7 +3865,7 @@ Waypoint</text></img>
 					<icon src="golf.png"/>
 				</itemgra>
 				<itemgra item_types="poi_government_building" order="0-">
-					<icon src="goverment_building.xpm"/>
+					<icon src="government_building.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_height" order="0-">
 					<icon src="height.xpm"/>
@@ -5254,7 +5254,7 @@ Waypoint</text></img>
           <icon src="golf.png" />
         </itemgra>
         <itemgra item_types="poi_government_building" order="12-">
-          <icon src="goverment_building.png" />
+          <icon src="government_building.png" />
         </itemgra>
         <itemgra item_types="poi_height" order="12-">
           <icon src="height.png" />

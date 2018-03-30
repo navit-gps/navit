@@ -155,7 +155,7 @@ POINT
 0, 0x3004 = poi_justice, Justice
 0, 0x3005 = poi_concert, Concert hall(point)
 0, 0x3006 = poi_border_station, Border Station(point)
-0, 0x3007 = poi_goverment_building, Goverment Building
+0, 0x3007 = poi_government_building, Government Building
 0, 0x3008 = poi_firebrigade, FireFighters Station
 
 0, 0x4000-0x403F = poi_golf, Golf
