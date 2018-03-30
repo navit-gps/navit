@@ -46,7 +46,7 @@ POINT
 0, 0x2000-0x203F = highway_exit, Exit
 0, 0x2100-0x213F = highway_exit, Exit with Services
 0, 0x2200-0x223F = highway_exit, Exit with Restroom
-0, 0x2300-0x233F = highway_exit, Exit with Convinience Store
+0, 0x2300-0x233F = highway_exit, Exit with Convenience Store
 0, 0x2400-0x243F = highway_exit, Exit with Weight Station
 0, 0x2500-0x253F = highway_exit, Exit with Toolbooth Booth
 0, 0x2600-0x263F = highway_exit, Exit with Information
