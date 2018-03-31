@@ -1415,7 +1415,7 @@
 			<icon src="fish.xpm"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="0-">
-			<icon src="forbiden_area.xpm"/>
+			<icon src="forbidden_area.xpm"/>
 		</itemgra>
 		<itemgra item_types="poi_shop_gps" order="0-">
 			<icon src="garmin.xpm"/>
@@ -1424,7 +1424,7 @@
 			<icon src="golf.png"/>
 		</itemgra>
 		<itemgra item_types="poi_government_building" order="0-">
-			<icon src="goverment_building.xpm"/>
+			<icon src="government_building.xpm"/>
 		</itemgra>
 		<itemgra item_types="poi_height" order="0-">
 			<icon src="height.xpm"/>

@@ -809,7 +809,7 @@
 			<icon src="danger_16_16.png"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="13-">
-			<icon src="forbiden_area.png"/>
+			<icon src="forbidden_area.png"/>
 		</itemgra>
 		<itemgra item_types="poi_tunnel" order="12-">
 			<icon src="tunnel.png"/>
@@ -1020,7 +1020,7 @@
 			<icon src="fish.png"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="12-">
-			<icon src="forbiden_area.png"/>
+			<icon src="forbidden_area.png"/>
 		</itemgra>
 		<itemgra item_types="poi_shop_gps" order="15-">
 			<icon src="garmin.png"/>
@@ -1029,7 +1029,7 @@
 			<icon src="golf.png"/>
 		</itemgra>
 		<itemgra item_types="poi_government_building" order="12-">
-			<icon src="goverment_building.png"/>
+			<icon src="government_building.png"/>
 		</itemgra>
 		<itemgra item_types="poi_height" order="12-">
 			<icon src="height.png"/>
