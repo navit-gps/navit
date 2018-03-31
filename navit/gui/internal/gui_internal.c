@@ -634,7 +634,7 @@ gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm,
  * function passed as {@code cmd} will be called.
  *
  * Widget passed as wm parameter of the called cmd function will have item set to user chosen waypoint item. Its data will be set
- *  to zero-based choosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
+ *  to zero-based chosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
  *  waypoint coordinates will be copied to wm->c.
  *
  * @param this gui context

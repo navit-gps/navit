@@ -131,7 +131,7 @@ save_map_csv(struct map_priv *m)
 							tmpstr=g_strdup("");
 						}
 					} else {
-						dbg(lvl_debug,"No value defined for the atribute %s, assuming empty string\n",attr_to_name(*at));
+						dbg(lvl_debug,"No value defined for the attribute %s, assuming empty string\n",attr_to_name(*at));
 						tmpstr=g_strdup("");
 					}
 				}
