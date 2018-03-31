@@ -9,7 +9,7 @@ my $order,$orders,@orders;
 my @layouts;
 my $input_stream;
 my @input_stream_stack;
-my $current_filename = "../navit.xml";
+my $current_filename = "../navit_shipped.xml";
 if (!open($input_stream,$current_filename)) {
 	print(STDERR "Failed to open \"" . $current_filename . "\"\n");
 	exit(1);
@@ -25,11 +25,12 @@ while(defined($input_stream)) {
 		if (/<xi:include href="([^"]*)"/) {
 			my $xml_include_file;
 			$xml_include_file=$1;
-			$xml_include_file =~ s/\$NAVIT_SHAREDIR/./;
-			if ($xml_include_file eq "./maps/*.xml") {	# Skip mapsets that use wildcards
+			if ($xml_include_file =~ /^[\/\$]/) {	# PATH is absolute or starts with a variable... do not modify PATH
+			}
+			$xml_include_file =~ s@^@../@;	# Make PATH relative to ../ (navit XML config is in parent
+			if ($xml_include_file =~ /.*maps\/\*\.xml$/) {	# Skip mapsets that use wildcards
 			}
 			else {
-				$xml_include_file = "../" . $xml_include_file;
 				push(@input_stream_stack, $input_stream);
 				$input_stream = undef;
 				print(STDERR "Opening included file \"" . $xml_include_file . "\"\n");
