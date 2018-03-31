@@ -69,6 +69,7 @@
 #cmakedefine EZXML_NOMMAP 0
 
 #cmakedefine HAVE_STPCPY 1
+#cmakedefine HAVE_MEMPCPY 1
 
 #cmakedefine HAVE_SBRK 1
 
