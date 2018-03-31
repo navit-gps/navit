@@ -405,19 +405,18 @@ write_aux_tiles(struct zip_info *zip_info)
 		assert(buffer != NULL);
 		f=fopen(at->filename,"rb");
 		assert(f != NULL);
-		
-	        if (fread(buffer, at->size, 1, f) == 0){
+
+		if (fread(buffer, at->size, 1, f) == 0){
 			dbg(lvl_warning, "fread failed");
 			fclose(f);
-		}
-		else{
+		} else {
 			fclose(f);
 			write_zipmember(zip_info, at->name, zip_get_maxnamelen(zip_info), buffer, at->size);
-			free(buffer);
 			count++;
 			l=g_list_next(l);
 			zip_add_member(zip_info);
 		}
+		free(buffer);
 	}
 	return count;
 }
