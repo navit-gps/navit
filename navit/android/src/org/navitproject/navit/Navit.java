@@ -419,7 +419,7 @@ public class Navit extends Activity
 			my_display_density = "xxxhdpi";
 		}
 
-		if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
+		if (!extractRes("navit_" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
 		{
 			Log.e("Navit", "Failed to extract navit.xml for " + my_display_density);
 		}
