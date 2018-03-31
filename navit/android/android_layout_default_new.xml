@@ -834,7 +834,7 @@
 					<icon src="danger_16_16.png"/>
 				</itemgra>
 				<itemgra item_types="poi_forbidden_area" order="13-">
-					<icon src="forbiden_area.png"/>
+					<icon src="forbidden_area.png"/>
 				</itemgra>
 				<itemgra item_types="poi_tunnel" order="12-">
 					<icon src="tunnel.png"/>

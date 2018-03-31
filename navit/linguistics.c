@@ -317,7 +317,7 @@ linguistics_casefold(const char *in)
 	}
 	*dest=0;
 	if(*src)
-		dbg(lvl_error,"Casefolded string for '%s' needs extra space, result is trucated to '%s'.\n",in,ret);
+		dbg(lvl_error,"Casefolded string for '%s' needs extra space, result is truncated to '%s'.\n",in,ret);
 	return ret;
 }
 

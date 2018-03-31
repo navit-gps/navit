@@ -2117,7 +2117,7 @@ Waypoint</text></img>
 					<icon src="fish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_forbidden_area" order="12-">
-					<icon src="forbiden_area.xpm"/>
+					<icon src="forbidden_area.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_bicycle" order="12-">
 				<icon src="bicycle_shop.png"/>
@@ -2129,7 +2129,7 @@ Waypoint</text></img>
 					<icon src="golf.png"/>
 				</itemgra>
 				<itemgra item_types="poi_government_building" order="12-">
-					<icon src="goverment_building.xpm"/>
+					<icon src="government_building.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_height" order="12-">
 					<icon src="height.xpm"/>
@@ -3856,7 +3856,7 @@ Waypoint</text></img>
 					<icon src="fish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_forbidden_area" order="0-">
-					<icon src="forbiden_area.xpm"/>
+					<icon src="forbidden_area.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_gps" order="0-">
 					<icon src="garmin.xpm"/>
@@ -3865,7 +3865,7 @@ Waypoint</text></img>
 					<icon src="golf.png"/>
 				</itemgra>
 				<itemgra item_types="poi_government_building" order="0-">
-					<icon src="goverment_building.xpm"/>
+					<icon src="government_building.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_height" order="0-">
 					<icon src="height.xpm"/>
@@ -5032,7 +5032,7 @@ Waypoint</text></img>
           <icon src="danger_16_16.png" />
         </itemgra>
         <itemgra item_types="poi_forbidden_area" order="13-">
-          <icon src="forbiden_area.png" />
+          <icon src="forbidden_area.png" />
         </itemgra>
         <itemgra item_types="poi_tunnel" order="12-">
           <icon src="tunnel.png" />
@@ -5245,7 +5245,7 @@ Waypoint</text></img>
           <icon src="fish.png" />
         </itemgra>
         <itemgra item_types="poi_forbidden_area" order="12-">
-          <icon src="forbiden_area.png" />
+          <icon src="forbidden_area.png" />
         </itemgra>
         <itemgra item_types="poi_shop_gps" order="15-">
           <icon src="garmin.png" />
@@ -5254,7 +5254,7 @@ Waypoint</text></img>
           <icon src="golf.png" />
         </itemgra>
         <itemgra item_types="poi_government_building" order="12-">
-          <icon src="goverment_building.png" />
+          <icon src="government_building.png" />
         </itemgra>
         <itemgra item_types="poi_height" order="12-">
           <icon src="height.png" />
@@ -6801,6 +6801,9 @@ Waypoint</text></img>
 					<polygon color="#b5d6f1"/>
 					<polyline color="#b5d6f1"/>
 					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="poly_water_tiled">
+					<polygon color="#b5d6f1"/>
 				</itemgra>
 				<!-- leisure=park -->
 				<itemgra item_types="poly_park" order="0-">
