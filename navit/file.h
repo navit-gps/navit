@@ -83,6 +83,7 @@ void file_unmap(struct file *f);
 void *file_opendir(char *dir);
 char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
+char *file_get_dirname(char *filename);
 struct file *file_create_caseinsensitive(char *name, struct attr **options);
 void file_fsync(struct file *f);
 void file_destroy(struct file *f);

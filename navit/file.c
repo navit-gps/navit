@@ -505,7 +505,7 @@ uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLe
 	if (err != Z_STREAM_END) {
 	inflateEnd(&stream);
 	if (err == Z_NEED_DICT || (err == Z_BUF_ERROR && stream.avail_in == 0))
-		return Z_DATA_ERROR;
+		return Z_DATA_ERROR;	// FIXME: Indentation error and missing block opening
 		return err;
 	}
 	*destLen = stream.total_out;
@@ -667,6 +667,30 @@ file_closedir(void *hnd)
 	FindClose(hnd);
 }
 #endif /* _MSC_VER */
+
+
+/**
+ * @brief Get the directory part of a filename
+ *
+ * @param filename The filename to parse
+ * @return A pointer to the NUL-terminated string containing the directory name (that must be freed by caller using g_free()
+ */
+char *
+file_get_dirname(char *filename)
+{
+	char *dirname;
+	char *p;
+
+	dirname = g_strdup(filename);
+	p=dirname+strlen(filename);
+	while (p > dirname) {
+		if (*p == '/')
+			break;
+		p--;
+	}
+	*p=0;
+	return dirname;
+}
 
 struct file *
 file_create_caseinsensitive(char *name, struct attr **options)
