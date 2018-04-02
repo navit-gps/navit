@@ -73,8 +73,15 @@
       <xsl:copy>
          <xsl:copy-of select="@*[not(name()='href')]"/>
          <xsl:if test="@href">
-		<xsl:attribute name="href"><xsl:value-of select="concat(substring-before(@href, '.xml'), concat('_', $DPI_SUFFIX, '.xml'))"/></xsl:attribute>
-	 </xsl:if>
+            <xsl:choose>
+               <xsl:when test="$DPI_SUFFIX!=''">
+                  <xsl:attribute name="href"><xsl:value-of select="concat(substring-before(@href, '.xml'), concat('_', $DPI_SUFFIX, '.xml'))"/></xsl:attribute>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:copy-of select="@*[name()='href']"/>
+               </xsl:otherwise>
+            </xsl:choose>
+         </xsl:if>
       </xsl:copy>
    </xsl:template>
    <xsl:template match="/config/navit/layout/layer/itemgra/child::*|layout/layer/itemgra/child::*">
