@@ -418,12 +418,31 @@ public class Navit extends Activity
 			Log.e("Navit", "using xxxhdpi values");
 			my_display_density = "xxxhdpi";
 		}
-
-		if (!extractRes("navit_" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
-		{
-			Log.e("Navit", "Failed to extract navit.xml for " + my_display_density);
+		
+		try {
+			String[] children = NavitResources.getAssets().list("config");
+			for (String child : children) {
+				Log.d("Navit", "in /config asset, foudn node: '" + child + "'");
+				String[] grandChildren = NavitResources.getAssets().list(child);
+				if (0 == grandChildren.length)
+					Log.d("Navit", "above node is a file");
+				else
+					Log.d("Navit", "above node is a directory");
+			}
+		} catch (IOException e) {
+			Log.e("Navit", "Lionel: NavitAssetManager failed");
 		}
-
+		
+		String[] navitConfigFiles = {"navit", "navit_layout_car", "navit_layout_car_dark", "navit_layout_car_android", "navit_layout_car_simple", "navit_layout_bike", "navit_layout_th"};
+		for (String configFile : navitConfigFiles)
+		{
+			Log.d("Navit", "Extracting config file '" + configFile + "'");
+			if (!extractRes(configFile + "_" + my_display_density, NAVIT_DATA_DIR + "/share/" + configFile + ".xml"))
+			{
+				Log.e("Navit", "Failed to extract " + configFile + ".xml for " + my_display_density);
+			}
+		}
+		
 		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
