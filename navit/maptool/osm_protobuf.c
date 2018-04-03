@@ -76,7 +76,7 @@ read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned char *buffer)
 static unsigned char *
 uncompress_blob(OSMPBF__Blob *blob)
 {
-	unsigned char *ret=malloc(blob->raw_size);
+	unsigned char *ret=g_malloc(blob->raw_size);
 	int zerr;
 	z_stream strm;
 
@@ -355,7 +355,7 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 	OSMPBF__BlobHeader *header;
 	OSMPBF__Blob *blob;
 	unsigned char *data;
-	unsigned char *buffer=malloc(MAX_BLOB_LENGTH);
+	unsigned char *buffer=g_malloc(MAX_BLOB_LENGTH);
 
 #if 0
 	printf("<?xml version='1.0' encoding='UTF-8'?>\n");

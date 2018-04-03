@@ -122,11 +122,11 @@ osm_protobufdb_finish_block(struct osm_protobufdb_context *ctx)
 		osm_protobufdb_write_blob(&empty_blob, ctx->f);	
 		ctx->current_block++;
 	}
-	blob=malloc(sizeof(*blob));
+	blob=g_malloc(sizeof(*blob));
 	*blob=empty_blob;
 	blob->has_raw=1;
 	blob->has_raw_size=1;
-	blob->raw.data=malloc(len);
+	blob->raw.data=g_malloc(len);
 	osmpbf__primitive_block__pack(ctx->pb, blob->raw.data);
 	blob->raw.len=len;
 	blob->raw_size=len;
@@ -147,9 +147,9 @@ osm_protobufdb_start_block(struct osm_protobufdb_context *ctx, int blocknum)
 		return 0;
 	osm_protobufdb_finish_block(ctx);
 	ctx->active_block=blocknum;
-	ctx->pb=malloc(sizeof(*ctx->pb));
+	ctx->pb=g_malloc(sizeof(*ctx->pb));
 	*ctx->pb=pb;
-	ctx->pb->stringtable=malloc(sizeof(*ctx->pb->stringtable));
+	ctx->pb->stringtable=g_malloc(sizeof(*ctx->pb->stringtable));
 	*ctx->pb->stringtable=st;
 	ctx->st=ctx->pb->stringtable;
 	return 1;
@@ -162,7 +162,7 @@ osm_protobufdb_start_group(struct osm_protobufdb_context *ctx, int groupnum)
 	if (ctx->pb->n_primitivegroup <= groupnum) {
 		ctx->pb->primitivegroup=realloc(ctx->pb->primitivegroup, (groupnum+1)*sizeof(ctx->pb->primitivegroup[0]));
 		while (ctx->pb->n_primitivegroup <= groupnum) {
-			ctx->pb->primitivegroup[ctx->pb->n_primitivegroup]=malloc(sizeof(*context.pg));
+			ctx->pb->primitivegroup[ctx->pb->n_primitivegroup]=g_malloc(sizeof(*context.pg));
 			*ctx->pb->primitivegroup[ctx->pb->n_primitivegroup++]=pg;
 		}
 		g_hash_table_destroy(ctx->string_hash);
@@ -170,7 +170,7 @@ osm_protobufdb_start_group(struct osm_protobufdb_context *ctx, int groupnum)
 	}
 	ctx->pg=ctx->pb->primitivegroup[groupnum];
 	if (!ctx->pg) {
-		ctx->pg=malloc(sizeof(*context.pg));
+		ctx->pg=g_malloc(sizeof(*context.pg));
 		*ctx->pg=pg;
 		ctx->pb->primitivegroup[groupnum]=ctx->pg;
 	}
@@ -185,13 +185,13 @@ osm_protobufdb_start_densenode(struct osm_protobufdb_context *ctx)
 	OSMPBF__DenseNodes dn=OSMPBF__DENSE_NODES__INIT;
 
 	if (!ctx->pg->dense) {
-		ctx->dn=malloc(sizeof(*context.dn));
+		ctx->dn=g_malloc(sizeof(*context.dn));
 		*ctx->dn=dn;
 		ctx->pg->dense=ctx->dn;
 	} else
 		ctx->dn=ctx->pg->dense;
 	if (!ctx->dn->denseinfo) {
-		ctx->di=malloc(sizeof(*context.di));
+		ctx->di=g_malloc(sizeof(*context.di));
 		*ctx->di=di;
 		ctx->dn->denseinfo=ctx->di;
 	} else
@@ -287,7 +287,7 @@ osm_protobufdb_insert_node(long long id, OSMPBF__PrimitiveGroup *pg)
 	l=pg->n_nodes;
 	p=l;
 	insert(pg, nodes, p);
-	pg->nodes[p]=malloc(sizeof(*pg->nodes[0]));
+	pg->nodes[p]=g_malloc(sizeof(*pg->nodes[0]));
 	*pg->nodes[p]=node;
 	return p;
 }
@@ -312,7 +312,7 @@ osm_protobufdb_modify_node(OSMPBF__Node *node, OSMPBF__Info *info, int pos, OSMP
 		if (old_info)
 			n->info=old_info;
 		else
-			n->info=malloc(sizeof(*info));
+			n->info=g_malloc(sizeof(*info));
 		*n->info=*info;
 	}
 	
@@ -326,7 +326,7 @@ osm_protobufdb_insert_way(long long id, OSMPBF__PrimitiveGroup *pg)
 	l=pg->n_ways;
 	p=l;
 	insert(pg, ways, p);
-	pg->ways[p]=malloc(sizeof(*pg->ways[0]));
+	pg->ways[p]=g_malloc(sizeof(*pg->ways[0]));
 	*pg->ways[p]=way;
 	return p;
 }
@@ -359,7 +359,7 @@ osm_protobufdb_modify_way(OSMPBF__Way *way, OSMPBF__Info *info, int pos, OSMPBF_
 		if (old_info)
 			w->info=old_info;
 		else
-			w->info=malloc(sizeof(*info));
+			w->info=g_malloc(sizeof(*info));
 		*w->info=*info;
 	}
 	
@@ -373,7 +373,7 @@ osm_protobufdb_insert_relation(long long id, OSMPBF__PrimitiveGroup *pg)
 	l=pg->n_relations;
 	p=l;
 	insert(pg, relations, p);
-	pg->relations[p]=malloc(sizeof(*pg->relations[0]));
+	pg->relations[p]=g_malloc(sizeof(*pg->relations[0]));
 	*pg->relations[p]=relation;
 	return p;
 }
@@ -410,7 +410,7 @@ osm_protobufdb_modify_relation(OSMPBF__Relation *relation, OSMPBF__Info *info, i
 		if (old_info)
 			r->info=old_info;
 		else
-			r->info=malloc(sizeof(*info));
+			r->info=g_malloc(sizeof(*info));
 		*r->info=*info;
 	}
 	
@@ -495,9 +495,9 @@ test(void)
 	context.current_file=-1;
 
 #if 0
-	context.di=malloc(sizeof(*context.di));
+	context.di=g_malloc(sizeof(*context.di));
 	*context.di=di;
-	context.dn=malloc(sizeof(*context.dn));
+	context.dn=g_malloc(sizeof(*context.dn));
 	*context.dn=dn;
 #endif
 

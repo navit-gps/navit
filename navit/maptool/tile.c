@@ -194,8 +194,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 	if (!th)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (! th) {
-		th=malloc(sizeof(struct tile_head)+ sizeof( char* ) );
-		assert(th != NULL);
+		th=g_malloc(sizeof(struct tile_head)+ sizeof( char* ) );
 		// strcpy(th->subtiles, tile);
 		th->num_subtiles=1;
 		th->total_size=0;
@@ -401,8 +400,7 @@ write_aux_tiles(struct zip_info *zip_info)
 	
 	while (l) {
 		at=l->data;
-		buffer=malloc(at->size);
-		assert(buffer != NULL);
+		buffer=g_malloc(at->size);
 		f=fopen(at->filename,"rb");
 		assert(f != NULL);
 
@@ -496,7 +494,7 @@ load_tilesdir(FILE *in)
 	tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	last=&tile_head_root;
 	while (fscanf(in,"%[^:]:%d",tile,&size) == 2) {
-		struct tile_head *th=malloc(sizeof(struct tile_head));
+		struct tile_head *th=g_malloc(sizeof(struct tile_head));
 		if (!strcmp(tile,"index"))
 			tile[0]='\0';
 		th->num_subtiles=0;
