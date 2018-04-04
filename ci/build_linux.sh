@@ -9,7 +9,7 @@ cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOO
 [ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
 pushd $BUILD_PATH
 
-if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "fix_coverity_source_url" ]]; then
+if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	# If we are building the official trunk code, push an update to coverity
 	curl \
 	    -X POST --data "token=${COVERITY_TOKEN}&project=${CIRCLE_PROJECT_USERNAME}" \
