@@ -1359,12 +1359,7 @@ static void
 extend_buffer(struct buffer *b)
 {
 	b->malloced+=b->malloced_step;
-	b->base=realloc(b->base, b->malloced);
-	if (b->base == NULL) {
-		fprintf(stderr,"realloc of %d bytes failed\n",(int)b->malloced);
-		exit(1);
-	}
-
+	b->base=g_realloc(b->base, b->malloced);
 }
 
 /** The node currently being processed. */
