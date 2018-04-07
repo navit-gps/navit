@@ -91,12 +91,12 @@ uncompress_blob(OSMPBF__Blob *blob)
 	strm.next_out=ret;
 	zerr = inflateInit(&strm);
 	if (zerr != Z_OK) {
-		free(ret);
+		g_free(ret);
 		return NULL;
 	}
 	zerr = inflate(&strm, Z_NO_FLUSH);
 	if (zerr != Z_STREAM_END) {
-		free(ret);
+		g_free(ret);
 		return NULL;
 	}
 	inflateEnd(&strm);
@@ -370,14 +370,14 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 			process_osmdata(blob, data, osm);
 		} else {
 			printf("skipping fileblock of unknown type '%s'\n", header->type);
-			free(buffer);
+			g_free(buffer);
 			return 0;
 		}
-		free(data);
+		g_free(data);
 		osmpbf__blob__free_unpacked(blob, &protobuf_c_system_allocator);
 		osmpbf__blob_header__free_unpacked(header, &protobuf_c_system_allocator);
 	}
-	free(buffer);
+	g_free(buffer);
 #if 0
 	printf("</osm>\n");
 #endif

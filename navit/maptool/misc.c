@@ -364,7 +364,7 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 			dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info))==1);
 		}
 	}
-	free(slice_data);
+	g_free(slice_data);
 
 	return zipfiles;
 }

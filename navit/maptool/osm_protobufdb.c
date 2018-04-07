@@ -298,10 +298,8 @@ osm_protobufdb_modify_node(OSMPBF__Node *node, OSMPBF__Info *info, int pos, OSMP
 	OSMPBF__Node *n=pg->nodes[pos];
 	OSMPBF__Info *old_info;
 
-	if (n->keys)
-		free(n->keys);
-	if (n->vals)
-		free(n->vals);
+	g_free(n->keys);
+	g_free(n->vals);
 	old_info=n->info;
 	*n=*node;
 	if (!info) {
@@ -339,12 +337,9 @@ osm_protobufdb_modify_way(OSMPBF__Way *way, OSMPBF__Info *info, int pos, OSMPBF_
 	int i;
 	long long ref=0;
 
-	if (w->keys)
-		free(w->keys);
-	if (w->vals)
-		free(w->vals);
-	if (w->refs)
-		free(w->refs);
+	g_free(w->keys);
+	g_free(w->vals);
+	g_free(w->refs);
 	old_info=w->info;
 	*w=*way;
 	for (i = 0 ; i < w->n_refs ; i++) {
@@ -386,16 +381,11 @@ osm_protobufdb_modify_relation(OSMPBF__Relation *relation, OSMPBF__Info *info, i
 	int i;
 	long long ref=0;
 
-	if (r->keys)
-		free(r->keys);
-	if (r->vals)
-		free(r->vals);
-	if (r->roles_sid)
-		free(r->roles_sid);
-	if (r->memids)
-		free(r->memids);
-	if (r->types)
-		free(r->types);
+	g_free(r->keys);
+	g_free(r->vals);
+	g_free(r->roles_sid);
+	g_free(r->memids);
+	g_free(r->types);
 	old_info=r->info;
 	*r=*relation;
 	for (i = 0 ; i < r->n_memids ; i++) {

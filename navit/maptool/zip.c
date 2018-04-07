@@ -175,7 +175,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		zip_info->dir_size+=sizeof(cd_ext);
 	}
 	
-	free(compbuffer);
+	g_free(compbuffer);
 }
 
 int

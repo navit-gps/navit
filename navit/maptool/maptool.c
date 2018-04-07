@@ -1014,7 +1014,7 @@ int main(int argc, char **argv)
 				osm_resolve_coords_and_split_at_intersections(&p, suffix);
 			}
 		}
-		free(node_buffer.base);
+		g_free(node_buffer.base);
 		node_buffer.base=NULL;
 		node_buffer.malloced=0;
 		node_buffer.size=0;

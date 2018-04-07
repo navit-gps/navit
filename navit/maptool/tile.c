@@ -414,7 +414,7 @@ write_aux_tiles(struct zip_info *zip_info)
 			l=g_list_next(l);
 			zip_add_member(zip_info);
 		}
-		free(buffer);
+		g_free(buffer);
 	}
 	return count;
 }
