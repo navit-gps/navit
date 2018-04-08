@@ -2240,7 +2240,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		if (!item_is_district(*ib))
 		{
 			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
-			char *dup=strdup(townname);
+			char *dup=g_strdup(townname);
 			g_hash_table_replace(town_hash, dup, dup);
 		}
 	}

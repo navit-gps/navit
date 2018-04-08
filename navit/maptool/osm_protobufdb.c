@@ -420,7 +420,7 @@ osm_protobufdb_string(struct osm_protobufdb_context *ctx, char *str)
 	if (!st->n_s) {
 		st->n_s++;
 	}
-	strd=strdup(str);
+	strd=g_strdup(str);
 	st->s=g_realloc(st->s, sizeof(st->s[0])*(st->n_s+1));
 	if (st->n_s == 1) {
 		st->s[0].data=NULL;
