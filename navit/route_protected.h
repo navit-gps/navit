@@ -66,7 +66,7 @@ struct route_graph_point {
  */
 struct route_segment_data {
 	struct item item;                    /**< The item (e.g. street) that this segment represents. */
-	int flags;
+	int flags;                           /**< Flags e.g. for access, restrictions, segmentation or roundabouts. */
 	int len;                             /**< Length of this segment, in meters */
 	int score;                           /**< Used by the traffic module to give preference to some
 	                                      *   segments over others */
