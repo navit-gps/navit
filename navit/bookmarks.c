@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2010 Navit Team
+ * Copyright (C) 2005-2018 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -372,6 +372,7 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
     }
 
     unlink(this_->bookmark_file);
+    sync();
     result=(rename(this_->working_file,this_->bookmark_file)==0);
     if (!result) {
         navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
