@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2010 Navit Team
+ * Copyright (C) 2005-2018 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -370,14 +370,15 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 
 	fclose(f);
 
-    g_hash_table_destroy(dedup);
-
-    if (this_->mr) {
-        map_rect_destroy(this_->mr);
-        this_->mr = 0;
-    }
-
-    unlink(this_->bookmark_file);
+	g_hash_table_destroy(dedup);
+	
+	if (this_->mr) {
+	    map_rect_destroy(this_->mr);
+	    this_->mr = 0;
+	}
+	
+	unlink(this_->bookmark_file);
+	sync();
 	result=(rename(this_->working_file,this_->bookmark_file)==0);
 	if (!result) 
 	{
