@@ -539,6 +539,7 @@ osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_route_guard_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
 	attr = attr_search(attrs, NULL, attr_min_dist);
@@ -968,8 +969,9 @@ osd_odometer_reset(struct osd_priv_common *opc, int flags)
 {
   struct odometer *this = (struct odometer *)opc->data;
 
-  if(!this->bDisableReset || (flags & 1)) {
-    if (!(flags & 2)) 
+	// TODO: DEFINE & NAME FLAGS
+  if(!this->bDisableReset || (flags & FLAG1)) {
+    if (!(flags & FLAG2)) 
       this->bActive         = 0;
     this->sum_dist        = 0;
     this->sum_time        = 0;
@@ -1153,6 +1155,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	if (attr)
 		this->align=attr->u.num;
 
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
@@ -1334,6 +1337,7 @@ osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
 	opc->spec_set_attr_func = osd_cmd_interface_set_attr;
 	meth->set_attr = set_std_osd_attr;
 
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
 	attr = attr_search(attrs, NULL, attr_width);
@@ -1498,6 +1502,7 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 	this->sum_time = 0;
 	this->last_click_time = 0;
 
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
@@ -1615,6 +1620,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
@@ -1820,6 +1826,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
 		this->use_overlay=attr->u.num;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? 1:(1|16));
 
 	if (!opc->osd_item.command) {
@@ -1878,7 +1885,7 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 		graphics_image_free(opc->osd_item.gr, img);
 	} else {
-		opc->osd_item.configured=1;
+		osd_set_std_config(nav, &opc->osd_item);
 		opc->osd_item.gr=gra;
 		opc->osd_item.graphic_bg=graphics_gc_new(opc->osd_item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
@@ -1903,11 +1910,13 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 	meth->set_attr = set_std_osd_attr;
 	opc->spec_set_attr_func = osd_button_set_attr;
 
-	osd_set_std_attr(attrs, &opc->osd_item, 1);
-
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
 		this->use_overlay=attr->u.num;
+		
+	// TODO: DEFINE & NAME FLAGS
+	osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? 1:(1|16));
+
 	attr = attr_search(attrs, NULL, attr_src);
 	if (!attr) {
 		dbg(lvl_error, "no src\n");
@@ -2088,6 +2097,7 @@ static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_
 	opc->osd_item.font_size = 200;  // FIXME may not be needed
 	opc->osd_item.meth.draw = osd_draw_cast(osd_navigation_status_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -2238,6 +2248,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_nav_next_turn_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -2373,6 +2384,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 	opc->osd_item.meth.draw = osd_draw_cast(osd_nav_toggle_announcer_draw);
 	meth->set_attr = set_std_osd_attr;
 
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -2550,6 +2562,7 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
   }
   mapset_close(msh);
 
+	// TODO: DEFINE & NAME FLAGS
   if(bFound && (idx==-1 || this_->flags & (1<<(idx-1))) ) {
     dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
     ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
@@ -2666,6 +2679,7 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
   opc->osd_item.meth.draw = osd_draw_cast(osd_speed_cam_draw);
   meth->set_attr = set_std_osd_attr;
 
+	// TODO: DEFINE & NAME FLAGS
   osd_set_std_attr(attrs, &opc->osd_item, 2);
   attr = attr_search(attrs, NULL, attr_width);
   this->width=attr ? attr->u.num : 2;
@@ -2758,6 +2772,7 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
 			imperial=imperial_attr.u.num;
 	}
 
+	// TODO: DEFINE & NAME FLAGS
         flags=tracking_get_current_flags(tracking);
         if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
             routespeed = maxspeed_attr.u.num;
@@ -2964,6 +2979,8 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 		this->announce_on = attr->u.num;
 	else
 		this->announce_on = 1;    //announce by default
+	
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, opc));
 	return (struct osd_priv *) opc;
@@ -3604,6 +3621,7 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
 	meth->set_attr = set_std_osd_attr;
 	opc->spec_set_attr_func = osd_text_set_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 2);
 
 	this->active = -1;
@@ -3717,6 +3735,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_gps_status_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -3827,6 +3846,7 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.font_size = 200;
 	opc->osd_item.meth.draw = osd_draw_cast(osd_volume_draw);
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	this->icon_w = -1;
@@ -3967,7 +3987,7 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 	if (this->use_overlay) {
 		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	} else {
-		opc->osd_item.configured=1;
+		osd_set_std_config(nav, &opc->osd_item);
 		opc->osd_item.gr=gra;
 		opc->osd_item.font = graphics_font_new(opc->osd_item.gr, opc->osd_item.font_size, 1);
 		opc->osd_item.graphic_fg=graphics_gc_new(opc->osd_item.gr);
@@ -3993,12 +4013,14 @@ osd_scale_new(struct navit *nav, struct osd_methods *meth,
 	opc->osd_item.meth.draw = osd_draw_cast(osd_scale_draw);
 	meth->set_attr = set_std_osd_attr;
 
-	osd_set_std_attr(attrs, &opc->osd_item, 3);
-
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
 		this->use_overlay=attr->u.num;
-
+// TODO: DEFINE & NAME FLAGS
+	osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? 1:(1|16));
+	// TODO: DEFINE & NAME FLAGS
+	//osd_set_std_attr(attrs, &opc->osd_item, 3);
+	
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_scale_init), attr_graphics_ready, opc));
 
 	return (struct osd_priv *) opc;
@@ -4108,6 +4130,7 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 	opc->osd_item.rel_h = 40;
 	opc->osd_item.font_size = 200;
 	meth->set_attr = set_std_osd_attr;
+	// TODO: DEFINE & NAME FLAGS
 	osd_set_std_attr(attrs, &opc->osd_item, 0);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, opc));

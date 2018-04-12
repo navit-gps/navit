@@ -23,6 +23,12 @@
 struct osd_priv;
 struct attr;
 
+#define FLAG1 1
+#define FLAG2 2
+#define FLAG4 4
+#define FLAG8 8
+#define FLAG16 16
+
 struct osd_methods {
 	void (*osd_destroy)(struct osd_priv *osd);
 	int (*set_attr)(struct osd_priv *osd, struct attr* attr);
