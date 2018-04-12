@@ -8,13 +8,7 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
-import org.acra.*;
-import org.acra.annotation.*;
 
-//@ReportsCrashes(formKey = "dGlrNVRIOVVKYjB0UGVoLUZPanlzWFE6MQ")
-@ReportsCrashes(mailTo = "android@navit-project.org",
-		mode = ReportingInteractionMode.TOAST,
-                resToastText = R.string.app_name)
 
 public class NavitAppConfig extends Application {
 
@@ -27,19 +21,6 @@ public class NavitAppConfig extends Application {
 
 	@Override
 	public void onCreate() {
-		// call ACRA.init(this) as reflection, because old ant may forgot to include it
-		try {
-			Class<?> acraClass = Class.forName("org.acra.ACRA");
-			Class<?> partypes[] = new Class[1];
-			partypes[0] = Application.class;
-			java.lang.reflect.Method initMethod = acraClass.getMethod("init", partypes);
-			Object arglist[] = new Object[1];
-			arglist[0] = this;
-			initMethod.invoke(null, arglist);
-		} catch (Exception e1) {
-			Log.e(TAG, "Could not init ACRA crash reporter");
-		}
-
 		mSettings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
 		super.onCreate();
 	}
