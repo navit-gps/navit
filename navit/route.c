@@ -107,6 +107,8 @@ struct route_traffic_distortion {
 	int flags;                      /**< Flags indicating the modes of transportation and direction to
 	                                 *   which the traffic distortion applies. Other flags are not
 	                                 *   defined for traffic distortions and should not be used. */
+	int dir;                        /**< Direction of the distortion, relative to the segment to which
+	                                 *   it refers (1 for same, -1 for opposite direction). */
 };
 
 /**
@@ -1945,16 +1947,21 @@ route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traff
 	struct route_graph_point *start=seg->start;
 	struct route_graph_point *end=seg->end;
 	struct route_graph_segment *tmp,*found=NULL;
+	int dir = 0;
 	tmp=start->start;
 	while (tmp && !found) {
-		if (tmp->data.item.type == type_traffic_distortion && tmp->start == start && tmp->end == end)
+		if (tmp->data.item.type == type_traffic_distortion && tmp->start == start && tmp->end == end) {
 			found=tmp;
+			dir = 1;
+		}
 		tmp=tmp->start_next;
 	}
 	tmp=start->end;
 	while (tmp && !found) {
-		if (tmp->data.item.type == type_traffic_distortion && tmp->end == start && tmp->start == end) 
+		if (tmp->data.item.type == type_traffic_distortion && tmp->end == start && tmp->start == end) {
 			found=tmp;
+			dir = -1;
+		}
 		tmp=tmp->end_next;
 	}
 	if (found) {
@@ -1964,6 +1971,7 @@ route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traff
 		else
 			ret->maxspeed=INT_MAX;
 		ret->flags = found->data.flags & AF_DISTORTIONMASK;
+		ret->dir = dir;
 		return 1;
 	}
 	return 0;
@@ -1999,9 +2007,14 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 {
 	int ret;
 	struct route_traffic_distortion dist,*distp=NULL;
+	int dist_dir;
 #if 0
 	dbg(lvl_debug,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
+	if (!dir) {
+		dbg(lvl_warning, "dir is zero, assuming positive\n");
+		dir = 1;
+	}
 	if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
 	if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
@@ -2015,7 +2028,8 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
 		route_get_traffic_distortion(over, &dist) && dir != 2 && dir != -2) {
 		/* we have a traffic distortion, check if access flags match */
-		if ((dist.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags) {
+		dist_dir = dir * dist.dir;
+		if ((dist.flags & (dist_dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags) {
 			distp = 0;
 		} else {
 			distp=&dist;
