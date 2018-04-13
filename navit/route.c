@@ -104,6 +104,9 @@ struct route_traffic_distortion {
 									     leave the speed unchanged, or 0 to mark the segment as
 									     impassable. */
 	int delay;					/**< Delay in tenths of seconds (0 for no delay) */
+	int flags;                      /**< Flags indicating the modes of transportation and direction to
+	                                 *   which the traffic distortion applies. Other flags are not
+	                                 *   defined for traffic distortions and should not be used. */
 };
 
 /**
@@ -1935,6 +1938,7 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
  *
  * @return true if a traffic distortion was found, 0 if not
  */
+/* TODO handle multiple distortions for same segment (with different access flags) */
 static int
 route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traffic_distortion *ret)
 {
@@ -1959,6 +1963,7 @@ route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traff
 			ret->maxspeed=RSD_MAXSPEED(&found->data);
 		else
 			ret->maxspeed=INT_MAX;
+		ret->flags = found->data.flags & AF_DISTORTIONMASK;
 		return 1;
 	}
 	return 0;
@@ -2005,9 +2010,16 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 		return INT_MAX;
 	if (from && from->seg == over)
 		return INT_MAX;
+	if (over->data.item.type == type_traffic_distortion)
+		return INT_MAX;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
 		route_get_traffic_distortion(over, &dist) && dir != 2 && dir != -2) {
+		/* we have a traffic distortion, check if access flags match */
+		if ((dist.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags) {
+			distp = 0;
+		} else {
 			distp=&dist;
+		}
 	}
 	ret=route_time_seg(profile, &over->data, distp);
 	if (ret == INT_MAX)
@@ -2064,6 +2076,7 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
 					item.type=type_traffic_distortion;
 					data.item=&item;
 					data.len=delay;
+					data.flags = seg->data.flags & AF_DISTORTIONMASK;
 					s->start->flags |= RP_TRAFFIC_DISTORTION;
 					s->end->flags |= RP_TRAFFIC_DISTORTION;
 					route_graph_add_segment(this, s->start, s->end, &data);
@@ -2087,14 +2100,18 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 {
 	struct route_graph_point *s_pnt,*e_pnt;
 	struct coord c,l;
-	struct attr delay_attr, maxspeed_attr;
+	struct attr flags_attr, delay_attr, maxspeed_attr;
 	struct route_graph_segment_data data;
 
 	data.item=item;
 	data.len=0;
-	data.flags=0;
 	data.offset=1;
 	data.maxspeed = INT_MAX;
+
+	if (item_attr_get(item, attr_flags, &flags_attr))
+		data.flags = flags_attr.u.num & AF_DISTORTIONMASK;
+	else
+		data.flags = 0;
 
 	if (item_coord_get(item, &l, 1)) {
 		s_pnt=route_graph_add_point(this,&l);
@@ -3269,6 +3286,8 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				return 0;
 			return 1;
 		case attr_time:
+			/* FIXME This ignores access flags on traffic distortions, but the attribute does not seem
+			 * to be used anywhere */
 			mr->attr_next=attr_speed;
 			if (seg)
 				attr->u.num=route_time_seg(route->vehicleprofile, seg->data, NULL);
@@ -3276,6 +3295,8 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				return 0;
 			return 1;
 		case attr_speed:
+			/* FIXME This ignores access flags on traffic distortions, but the attribute does not seem
+			 * to be used anywhere */
 			mr->attr_next=attr_label;
 			if (seg)
 				attr->u.num=route_seg_speed(route->vehicleprofile, seg->data, NULL);

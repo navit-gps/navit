@@ -177,6 +177,8 @@ struct seg_data {
 	int speed_factor;            /**< Expected speed expressed as a percentage of the posted limit (100
 	                              *   for full speed) */
 	int delay;                   /**< Expected delay for all segments combined, in 1/10 s */
+	enum location_dir dir;       /**< Directionality */
+	int flags;                   /**< Access flags (modes of transportation to which the message applies) */
 	struct attr ** attrs;        /**< Additional attributes to add to the segments */
 };
 
@@ -225,7 +227,7 @@ struct xml_element {
 
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
-		struct attr **attrs, struct coord *c, int count, char * id);
+		int flags, struct attr **attrs, struct coord *c, int count, char * id);
 static void tm_dump_item_to_textfile(struct item * item);
 static void tm_destroy(struct map_priv *priv);
 static void tm_coord_rewind(void *priv_data);
@@ -337,6 +339,10 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
 	if (l->speed_factor != r->speed_factor)
 		return 0;
 	if (l->delay != r->delay)
+		return 0;
+	if (l->dir != r->dir)
+		return 0;
+	if (l->flags != r->flags)
 		return 0;
 	if (!l->attrs && !r->attrs)
 		return 1;
@@ -576,8 +582,12 @@ static void tm_item_update_attrs(struct item * item) {
 /**
  * @brief Returns an item from the map which matches the supplied data.
  *
- * For now only the item type, start coordinates and end coordinates are compared; attributes are
- * ignored. Inverted coordinates are not considered a match for now.
+ * Comparison criteria are as follows:
+ *
+ * \li The item type must match
+ * \li Start and end coordinates must match (inverted coordinates are not considered a match for now)
+ * \li If `attr_flags` is supplied, the item must have this attribute and values must match
+ * \li Other attributes are ignored for now
  *
  * @param mr A map rectangle in the traffic map
  * @param type Type of the item
@@ -595,10 +605,16 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
 	struct item * ret = NULL;
 	struct item * curr;
 	struct item_priv * curr_priv;
+	struct attr wanted_flags_attr, curr_flags_attr;
 
 	while ((curr = map_rect_get_item(mr)) && !ret) {
 		if (curr->type != type)
 			continue;
+		if (attr_generic_get_attr(attrs, NULL, attr_flags, &wanted_flags_attr, NULL)) {
+				if (!item_attr_get(curr, attr_flags, &curr_flags_attr)
+						|| (wanted_flags_attr.u.num != curr_flags_attr.u.num))
+			continue;
+		}
 		curr_priv = curr->priv_data;
 		if (curr_priv->coords[0].x == c[0].x && curr_priv->coords[0].y == c[0].y
 				&& curr_priv->coords[curr_priv->coord_count-1].x == c[count-1].x
@@ -695,13 +711,19 @@ static void tm_dump_to_textfile(struct map * map) {
  * @return The map item
  */
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
-		struct attr **attrs, struct coord *c, int count, char * id) {
+		int flags, struct attr **attrs, struct coord *c, int count, char * id) {
 	struct item * ret = NULL;
 	struct item_priv * priv_data;
 	struct map_rect * mr;
+	struct attr ** int_attrs = NULL;
+	struct attr flags_attr;
+
+	flags_attr.type = attr_flags;
+	flags_attr.u.num = flags;
+	int_attrs = attr_generic_set_attr(attr_list_dup(attrs), &flags_attr);
 
 	mr = map_rect_new(map, NULL);
-	ret = tm_find_item(mr, type, attrs, c, count);
+	ret = tm_find_item(mr, type, int_attrs, c, count);
 	if (!ret) {
 		ret = map_rect_create_item(mr, type);
 		ret->id_hi = id_hi;
@@ -709,11 +731,14 @@ static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi
 		ret->map = map;
 		ret->meth = &methods_traffic_item;
 		priv_data = (struct item_priv *) ret->priv_data;
-		priv_data->attrs = attr_list_dup(attrs);
+		priv_data->attrs = int_attrs;
 		priv_data->coords = g_memdup(c, sizeof(struct coord) * count);
 		priv_data->coord_count = count;
-		priv_data->next_attr = attrs;
+		priv_data->next_attr = int_attrs;
 		priv_data->next_coord = 0;
+	} else if (int_attrs) {
+		/* free up our copy of the attribute list if we’re not attaching it to a new item */
+		attr_list_free(int_attrs);
 	}
 	map_rect_destroy(mr);
 	//tm_dump_item(ret);
@@ -901,6 +926,8 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 	}
 	return ret;
 }
+
+/* TODO setter method? */
 
 /**
  * @brief Sets the type of a traffic item.
@@ -2072,6 +2099,7 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
+/* TODO process data->flags and data->dir */
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
 		struct seg_data * data, struct map *map) {
 	int i;
@@ -2125,6 +2153,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 	/* The next item in the message's list of items */
 	struct item ** next_item;
+
+	/* Flags for the next item to add */
+	int flags;
 
 	/* The last item added */
 	struct item * item;
@@ -2519,22 +2550,22 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 			else
 				delay = data->delay;
 
-			if (s->start == p_iter) {
-				/* forward direction, maintain order of coordinates */
-				for (i = 0; i < ccnt; i++) {
-					*cd++ = *c++;
-				}
-				p_iter = s->end;
-			} else {
-				/* backward direction, reverse order of coordinates */
-				c += ccnt-1;
-				for (i = 0; i < ccnt; i++) {
-					*cd++ = *c--;
-				}
-				p_iter = s->start;
+			for (i = 0; i < ccnt; i++) {
+				*cd++ = *c++;
 			}
 
-			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, data->attrs, cs, ccnt, this_->id);
+			if (s->start == p_iter) {
+				/* forward direction */
+				p_iter = s->end;
+				flags = data->flags | (data->dir == location_dir_one ? AF_ONEWAY : 0);
+			} else {
+				/* backward direction */
+				p_iter = s->start;
+				flags = data->flags | (data->dir == location_dir_one ? AF_ONEWAYREV : 0);
+			}
+
+
+			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, flags, data->attrs, cs, ccnt, this_->id);
 
 			tm_item_add_message_data(item, this_->id, speed, delay, data->attrs);
 
@@ -2704,6 +2735,7 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 	struct seg_data * ret = NULL;
 
 	int i;
+	int flags = AF_ALL;
 
 	/* Default assumptions, used only if no explicit values are given */
 	int speed = INT_MAX;
@@ -2711,6 +2743,7 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 	int speed_factor = 100;
 	int delay = 0;
 
+	/* TODO derive flags (modes of transportation) from message */
 	for (i = 0; i < this_->event_count; i++) {
 		if (this_->events[i]->speed != INT_MAX) {
 			if (!ret)
@@ -2818,6 +2851,8 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 		}
 		if (!ret->delay)
 			ret->delay = delay;
+		ret->dir = this_->location->directionality;
+		ret->flags = flags;
 	}
 
 	return ret;
