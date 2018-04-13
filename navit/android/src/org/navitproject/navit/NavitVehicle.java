@@ -20,11 +20,12 @@
 package org.navitproject.navit;
 
 import java.util.List;
-
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
@@ -33,6 +34,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.content.ContextCompat;
+
+
 
 public class NavitVehicle {
 	
