@@ -76,6 +76,11 @@ public class NavitVehicle {
 		 * Called when the status of the GPS changes.
 		 */
 		public void onGpsStatusChanged (int event) {
+			if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+				!= PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			return;
+			}
 			GpsStatus status = sLocationManager.getGpsStatus(null);
 			int satsInView = 0;
 			int satsUsed = 0;
@@ -110,6 +115,11 @@ public class NavitVehicle {
 	 * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
 	 */
 	NavitVehicle (Context context, int pcbid, int scbid, int fcbid) {
+		if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+				!= PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			return;
+		}
 		this.context = context;
 		sLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		preciseLocationListener = new NavitLocationListener();
