@@ -479,6 +479,9 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 	struct heightline *heightline,*heightlines=NULL;
 	struct diagram_point *min,*diagram_point,*diagram_points=NULL;
 	struct point p[2];
+	int min_ele=INT_MAX;
+	int max_ele=INT_MIN;
+	int distance=0;
 	sel.next=NULL;
 	sel.order=18;
 	sel.range.min=type_height_line_1;
@@ -578,6 +581,9 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_points=diagram_point;
 										diagram_points_count ++;
 										dbg(lvl_debug,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+										max_ele=fmax(max_ele, diagram_point->c.y);
+										min_ele=fmin(min_ele, diagram_point->c.y);
+										distance=diagram_point->c.x;
 									}
 								}
 							}
@@ -654,6 +660,17 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			x=min->c.x+1;
 		}
 	}
+
+	struct point pTopLeft={0, box->p.y + 10};
+	struct point pBottomLeft={0, box->h + box->p.y - 2};
+	struct point pBottomRight={box->w - 100, box->h + box->p.y - 2};
+	char* minele_text=g_strdup_printf("%d m", min_ele);
+	char* maxele_text=g_strdup_printf("%d m", max_ele);
+	char* distance_text=g_strdup_printf("%.3f km", distance/1000.0);
+	graphics_draw_text_std(this->gra, 10, maxele_text, &pTopLeft);
+	graphics_draw_text_std(this->gra, 10, minele_text, &pBottomLeft);
+	graphics_draw_text_std(this->gra, 10, distance_text, &pBottomRight);
+
 	while (diagram_points){
 		diagram_point=diagram_points;
 		diagram_points=diagram_points->next;
