@@ -255,6 +255,7 @@ var searchData=
   ['item_5ffrom_5fname',['item_from_name',['../item_8c.html#ad268178625434952eae1c2349a419dd8',1,'item_from_name(const char *name):&#160;item.c'],['../item_8h.html#ad268178625434952eae1c2349a419dd8',1,'item_from_name(const char *name):&#160;item.c']]],
   ['item_5fget_5fdefault_5fflags',['item_get_default_flags',['../item_8c.html#a99dbca645342f64f20565cd1bde1d19d',1,'item_get_default_flags(enum item_type type):&#160;item.c'],['../item_8h.html#a99dbca645342f64f20565cd1bde1d19d',1,'item_get_default_flags(enum item_type type):&#160;item.c']]],
   ['item_5fget_5fheightline',['item_get_heightline',['../gui__internal_8c.html#a376ed6facd12225c4293ef7f07affeea',1,'item_get_heightline(struct item *item):&#160;gui_internal.c'],['../gui__internal__priv_8h.html#a376ed6facd12225c4293ef7f07affeea',1,'item_get_heightline(struct item *item):&#160;gui_internal.c']]],
+  ['item_5fhas_5ftext',['ITEM_HAS_TEXT',['../osd_8h.html#a8dcb3becfbd0a2a87d8f56e8e7535de4',1,'osd.h']]],
   ['item_5fhash',['item_hash',['../structitem__hash.html',1,'item_hash'],['../item_8c.html#a06f39817adf6b6fe25ff0d9ff9325505',1,'item_hash():&#160;item.c']]],
   ['item_5fhash_5fdestroy',['item_hash_destroy',['../item_8c.html#aa86dd5c691e5d0d7dae98db2f0017018',1,'item_hash_destroy(struct item_hash *h):&#160;item.c'],['../item_8h.html#aa86dd5c691e5d0d7dae98db2f0017018',1,'item_hash_destroy(struct item_hash *h):&#160;item.c']]],
   ['item_5fhash_5fequal',['item_hash_equal',['../item_8c.html#aa069a34284b36282c10d9a3e8de307df',1,'item.c']]],

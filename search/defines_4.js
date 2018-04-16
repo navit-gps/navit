@@ -25,6 +25,7 @@ var searchData=
   ['degrad',['DEGRAD',['../sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c',1,'sunriset.h']]],
   ['destroy',['DESTROY',['../xmlconfig_8c.html#ad136e4f3c5ca43df199c1230dbbcafa7',1,'xmlconfig.c']]],
   ['dif',['DIF',['../use_8c.html#a76e45ccf8cae6600e438f34dd06d6571',1,'use.c']]],
+  ['disable_5foverlay',['DISABLE_OVERLAY',['../osd_8h.html#a8b5f41c0866df244674438b93a75257c',1,'osd.h']]],
   ['display_5fh',['DISPLAY_H',['../graphics__sdl_8c.html#a895152e89a26d775212c88dafb8c50ca',1,'graphics_sdl.c']]],
   ['display_5fw',['DISPLAY_W',['../graphics__sdl_8c.html#a78f89e91b5365676ca7a0d937946b854',1,'graphics_sdl.c']]],
   ['dlog',['dlog',['../garmin_8h.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog():&#160;garmin.h'],['../gentypes_8c.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog():&#160;gentypes.c']]],

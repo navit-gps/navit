@@ -317,6 +317,7 @@ var searchData=
   ['transform_5fzplane_5fintersection',['transform_zplane_intersection',['../transform_8c.html#a32757441ba85b986bc7219e86927e8d0',1,'transform.c']]],
   ['transformation',['transformation',['../structtransformation.html',1,'transformation'],['../structattr.html#a7b87158e92e3ccb2527dbf471e68faaa',1,'attr::transformation()']]],
   ['transformation_5fget_5forder_5fbase',['transformation_get_order_base',['../transform_8c.html#a4c40e49945de57235c9b1443e0b5eace',1,'transformation_get_order_base(struct transformation *this_):&#160;transform.c'],['../transform_8h.html#a4c40e49945de57235c9b1443e0b5eace',1,'transformation_get_order_base(struct transformation *this_):&#160;transform.c']]],
+  ['transparent_5fbg',['TRANSPARENT_BG',['../osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36',1,'osd.h']]],
   ['transparent_5fcolor',['transparent_color',['../structgraphics__priv.html#ae89b2950582a08a7930642a65629b7b9',1,'graphics_priv']]],
   ['tre',['tre',['../structmap__rect__priv.html#a52594165b791088dba7c65aa66eb417e',1,'map_rect_priv']]],
   ['tre7',['tre7',['../structtree__header.html#a351838b55467db203e6ad9631e965124',1,'tree_header']]],

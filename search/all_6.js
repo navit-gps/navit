@@ -186,6 +186,7 @@ var searchData=
   ['dirname',['dirname',['../structmap__priv.html#ae2e94d631b562cfb0b5a324aa75d4c4d',1,'map_priv']]],
   ['dirty',['dirty',['../structgraphics__priv.html#a8ecc6ae074473328fd865a9802a21633',1,'graphics_priv::dirty()'],['../structmap__priv.html#a8a593e4c661715a64f16609df2e34b4e',1,'map_priv::dirty()']]],
   ['disable',['disable',['../structgraphics__priv.html#a04d54402b8b49b4ff2b9af75a63e8e1a',1,'graphics_priv']]],
+  ['disable_5foverlay',['DISABLE_OVERLAY',['../osd_8h.html#a8b5f41c0866df244674438b93a75257c',1,'osd.h']]],
   ['disable_5fsuspend',['disable_suspend',['../structgui__methods.html#acf2a716caa2920a8b9bec0c16e23d7e7',1,'gui_methods::disable_suspend()'],['../structwindow.html#aa88360f6749e137b3976dbe9baea4ca2',1,'window::disable_suspend()'],['../graphics__qt__qpainter_8cpp.html#a800b0dbf7cef29a4d034adee85b588f7',1,'disable_suspend(struct window *win):&#160;graphics_qt_qpainter.cpp'],['../graphics__win32_8c.html#a800b0dbf7cef29a4d034adee85b588f7',1,'disable_suspend(struct window *win):&#160;graphics_win32.c']]],
   ['disabled',['disabled',['../structgraphics__priv.html#ad4f495616777bc1d63fb8388143ba98e',1,'graphics_priv::disabled()'],['../structgraphics.html#a086ff6c3e756e19ede0d520e330cc73f',1,'graphics::disabled()']]],
   ['disablesuspend',['disableSuspend',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a4546df5524adc32952ad2ef55e467932',1,'org::navitproject::navit::Navit']]],

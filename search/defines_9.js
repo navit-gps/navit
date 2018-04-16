@@ -28,6 +28,7 @@ var searchData=
   ['is_5fref',['IS_REF',['../osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b',1,'osm.c']]],
   ['item',['ITEM',['../item_8c.html#a6420a1c34a992e8a722a47d278dd7783',1,'ITEM():&#160;item.c'],['../item_8h.html#a6420a1c34a992e8a722a47d278dd7783',1,'ITEM():&#160;item.h']]],
   ['item2',['ITEM2',['../item_8c.html#a24d15da515f3431d5114956efe1cdc47',1,'ITEM2():&#160;item.c'],['../item_8h.html#a24d15da515f3431d5114956efe1cdc47',1,'ITEM2():&#160;item.h']]],
+  ['item_5fhas_5ftext',['ITEM_HAS_TEXT',['../osd_8h.html#a8dcb3becfbd0a2a87d8f56e8e7535de4',1,'osd.h']]],
   ['item_5fid_5fargs',['ITEM_ID_ARGS',['../item_8h.html#a164d1145c8ea7df8adb35f782b02949f',1,'item.h']]],
   ['item_5fid_5ffmt',['ITEM_ID_FMT',['../item_8h.html#a933de3334c70a27fd070e4cc34866881',1,'item.h']]],
   ['item_5fis_5fcustom_5fpoi',['item_is_custom_poi',['../item_8h.html#afbf6af5ea9dc8e5286ae02a46eb35b09',1,'item.h']]],
