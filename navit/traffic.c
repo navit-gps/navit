@@ -585,8 +585,13 @@ static void tm_item_update_attrs(struct item * item) {
  * Comparison criteria are as follows:
  *
  * \li The item type must match
- * \li Start and end coordinates must match (inverted coordinates are not considered a match for now)
- * \li If `attr_flags` is supplied, the item must have this attribute and values must match
+ * \li Start and end coordinates must match (inverted coordinates will also match)
+ * \li If `attr_flags` is supplied in `attrs`, the item must have this attribute and the rules listed
+ * below are applied
+ * \li Flags in `AF_ALL` must match if supplied
+ * \li Flags in `AF_ONEWAYMASK` must effectively match if supplied (equal for same direction, inverted
+ * for opposite directions)
+ * \li Currently, either both sides or neither side must have flags in `AF_ONEWAYMASK` set
  * \li Other attributes are ignored for now
  *
  * @param mr A map rectangle in the traffic map
@@ -598,7 +603,8 @@ static void tm_item_update_attrs(struct item * item) {
 /*
  * TODO
  * Comparison criteria need to be revisited to properly handle different reports for the same segment.
- * Differences may affect quantifiers (explicit vs. implied speed) or maxspeed vs. delay.
+ * Differences may affect quantifiers (explicit vs. implied speed), maxspeed vs. delay or oneway vs.
+ * bidirectional.
  */
 static struct item * tm_find_item(struct map_rect *mr, enum item_type type, struct attr **attrs,
 		struct coord *c, int count) {
@@ -611,15 +617,41 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
 		if (curr->type != type)
 			continue;
 		if (attr_generic_get_attr(attrs, NULL, attr_flags, &wanted_flags_attr, NULL)) {
-				if (!item_attr_get(curr, attr_flags, &curr_flags_attr)
-						|| (wanted_flags_attr.u.num != curr_flags_attr.u.num))
+			if (!item_attr_get(curr, attr_flags, &curr_flags_attr))
+				continue;
+			if ((wanted_flags_attr.u.num & AF_ALL) != (curr_flags_attr.u.num & AF_ALL))
+				continue;
 			continue;
-		}
+		} else
+			wanted_flags_attr.type = attr_none;
 		curr_priv = curr->priv_data;
 		if (curr_priv->coords[0].x == c[0].x && curr_priv->coords[0].y == c[0].y
 				&& curr_priv->coords[curr_priv->coord_count-1].x == c[count-1].x
-				&& curr_priv->coords[curr_priv->coord_count-1].y == c[count-1].y)
+				&& curr_priv->coords[curr_priv->coord_count-1].y == c[count-1].y) {
+			if (wanted_flags_attr.type == attr_none) {
+				/* no flag comparison, match */
+			} else if ((wanted_flags_attr.u.num & AF_ONEWAYMASK) != (curr_flags_attr.u.num & AF_ONEWAYMASK))
+				/* different oneway restrictions, no match */
+				continue;
 			ret = curr;
+		} else if (curr_priv->coords[0].x == c[count-1].x
+				&& curr_priv->coords[0].y == c[count-1].y
+				&& curr_priv->coords[curr_priv->coord_count-1].x == c[0].x
+				&& curr_priv->coords[curr_priv->coord_count-1].y == c[0].y) {
+			if (wanted_flags_attr.type == attr_none) {
+				/* no flag comparison, match */
+			} else if (!(wanted_flags_attr.u.num & AF_ONEWAYMASK) && !(curr_flags_attr.u.num & AF_ONEWAYMASK)) {
+				/* two bidirectional distortions, match */
+			} else if (wanted_flags_attr.u.num & curr_flags_attr.u.num & AF_ONEWAYMASK) {
+				/* oneway in opposite directions, no match */
+				continue;
+			} else if ((wanted_flags_attr.u.num ^ AF_ONEWAYMASK) & curr_flags_attr.u.num & AF_ONEWAYMASK) {
+				/* oneway in same direction, match */
+			} else {
+				continue;
+			}
+			ret = curr;
+		}
 	}
 	return ret;
 }
