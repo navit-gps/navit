@@ -3909,14 +3909,12 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 
 	if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
 		return;
-	//if (this->use_overlay) {
-		graphics_draw_mode(opc->osd_item.gr, draw_mode_begin);
-		item_pos.x=0;
-		item_pos.y=0;
-		graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_bg, &item_pos, opc->osd_item.w, opc->osd_item.h);
-	/*} else {
-		item_pos=opc->osd_item.p;
-	}*/
+
+	graphics_draw_mode(opc->osd_item.gr, draw_mode_begin);
+	item_pos.x=0;
+	item_pos.y=0;
+	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_bg, &item_pos, opc->osd_item.w, opc->osd_item.h);
+
 	scale_line_start=item_pos;
 	scale_line_start.y+=opc->osd_item.h/2;
 	scale_line_start.x+=(opc->osd_item.w-width_reduced)/2;
@@ -3951,14 +3949,14 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav)
 	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg, p+6, 4,opc->osd_item.h/5+4);
 	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg, p+7, p[1].x-p[0].x, 4);
 	graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_fg, p+8, 4,opc->osd_item.h/5+4);
-	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text /*this->black*/, p, 2);
-	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text /*this->black*/, p+2, 2);
-	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text /*this->black*/, p+4, 2);
+	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text, p, 2);
+	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text, p+2, 2);
+	graphics_draw_lines(opc->osd_item.gr, opc->osd_item.graphic_fg_text, p+4, 2);
 	text=format_distance(scale_length_on_map, "", imperial);
 	graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
 	p[0].x=(opc->osd_item.w-bbox[2].x)/2+item_pos.x;
 	p[0].y=item_pos.y+opc->osd_item.h-opc->osd_item.h/10;
-	graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text /*this->black*/, opc->osd_item.graphic_fg, opc->osd_item.font, text, &p[0], 0x10000, 0);
+	graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text, opc->osd_item.graphic_fg, opc->osd_item.font, text, &p[0], 0x10000, 0);
 	g_free(text);
 	if (this->use_overlay)
 		graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
@@ -3988,15 +3986,6 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav)
 
 	osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 	
-	/*} else {
-		osd_set_std_config(nav, &opc->osd_item);
-		osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-		opc->osd_item.gr=gra;
-		opc->osd_item.font = graphics_font_new(opc->osd_item.gr, opc->osd_item.font_size, 1);
-		opc->osd_item.graphic_fg=graphics_gc_new(opc->osd_item.gr);
-	}//*/
-	//this->black=graphics_gc_new(opc->osd_item.gr);
-	//graphics_gc_set_foreground(this->black, &opc->osd_item.text_color);
 	graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, opc, nav));
 	if (navit_get_ready(nav) == 3)
 		osd_scale_draw(opc, nav);
