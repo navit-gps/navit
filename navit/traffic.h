@@ -216,14 +216,14 @@ enum si_type {
 	si_tendency_queue_decreasing, /*!< Traffic queue length decreasing (average rate in optional `q_speed`) */
 	si_tendency_queue_increasing, /*!< Traffic queue length increasing (average rate in optional `q_speed`) */
 	si_vehicle_all,               /*!< For all vehicles */
-	si_vehicle_bus,               /*!< For buses only */
+	si_vehicle_bus,               /*!< For buses only (TODO currently supported for public buses only) */
 	si_vehicle_car,               /*!< For cars only */
-	si_vehicle_car_with_caravan,  /*!< For cars with caravans only */
-	si_vehicle_car_with_trailer,  /*!< For cars with trailers only */
+	si_vehicle_car_with_caravan,  /*!< For cars with caravans only (TODO currently not supported) */
+	si_vehicle_car_with_trailer,  /*!< For cars with trailers only (TODO currently not supported) */
 	si_vehicle_hazmat,            /*!< For hazardous loads only */
 	si_vehicle_hgv,               /*!< For heavy trucks only */
 	si_vehicle_motor,             /*!< For all motor vehicles */
-	si_vehicle_with_trailer,      /*!< For vehicles with trailers only */
+	si_vehicle_with_trailer,      /*!< For vehicles with trailers only (TODO currently not supported) */
 };
 
 struct traffic_priv;

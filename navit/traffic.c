@@ -2766,8 +2766,9 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_) {
 	struct seg_data * ret = NULL;
 
-	int i;
-	int flags = AF_ALL;
+	int i, j;
+	int has_flags = 0;
+	int flags = 0;
 
 	/* Default assumptions, used only if no explicit values are given */
 	int speed = INT_MAX;
@@ -2775,7 +2776,6 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 	int speed_factor = 100;
 	int delay = 0;
 
-	/* TODO derive flags (modes of transportation) from message */
 	for (i = 0; i < this_->event_count; i++) {
 		if (this_->events[i]->speed != INT_MAX) {
 			if (!ret)
@@ -2870,7 +2870,65 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
 				break;
 			}
 		}
+
+		for (j = 0; j < this_->events[i]->si_count; j++) {
+			/* TODO derive flags (modes of transportation) from message */
+			switch (this_->events[i]->si[j]->type) {
+			case si_vehicle_all:
+				/* For all vehicles */
+				flags |= AF_ALL;
+				has_flags = 1;
+				break;
+			case si_vehicle_bus:
+				/* For buses only */
+				/* TODO what about other (e.g. chartered) buses? */
+				flags |= AF_PUBLIC_BUS;
+				has_flags = 1;
+				break;
+			case si_vehicle_car:
+				/* For cars only */
+				flags |= AF_CAR;
+				has_flags = 1;
+				break;
+			case si_vehicle_car_with_caravan:
+				/* For cars with caravans only */
+				/* TODO no matching flag */
+				has_flags = 1;
+				break;
+			case si_vehicle_car_with_trailer:
+				/* For cars with trailers only */
+				/* TODO no matching flag */
+				has_flags = 1;
+				break;
+			case si_vehicle_hazmat:
+				/* For hazardous loads only */
+				flags |= AF_DANGEROUS_GOODS;
+				has_flags = 1;
+				break;
+			case si_vehicle_hgv:
+				/* For heavy trucks only */
+				flags |= AF_TRANSPORT_TRUCK | AF_DELIVERY_TRUCK;
+				has_flags = 1;
+				break;
+			case si_vehicle_motor:
+				/* For all motor vehicles */
+				flags |= AF_MOTORIZED_FAST | AF_MOPED;
+				has_flags = 1;
+				break;
+			case si_vehicle_with_trailer:
+				/* For vehicles with trailers only */
+				/* TODO no matching flag */
+				has_flags = 1;
+				break;
+			default:
+				break;
+			}
+		}
 	}
+
+	/* if no vehicle type is specified in supplementary information, assume all */
+	if (!has_flags)
+		flags = AF_ALL;
 
 	/* use implicit values if no explicit ones are given */
 	if ((speed != INT_MAX) || speed_penalty || (speed_factor != 100) || delay) {
