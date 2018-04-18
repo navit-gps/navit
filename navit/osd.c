@@ -292,7 +292,7 @@ osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 	dbg(lvl_debug, "enter, item=%p, cs=%p\n", item, cs);
 	if (!command_saved_error(cs)) {
 		item->configured = !! command_saved_get_int(cs);
-		if (item->gr && !(item->flags & 16)) 
+		if (item->gr && !(item->flags & DISABLE_OVERLAY)) 
 			graphics_overlay_disable(item->gr, !item->configured);
 	} else {
 		err = command_error_to_text(command_saved_error(cs));
@@ -305,7 +305,6 @@ void
 osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 {
 	struct attr *attr;
-
 	item->flags=flags;
 	item->osd_configuration=-1;
 	item->color_fg.r = 0xffff;
@@ -316,7 +315,8 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	item->text_color.g = 0xffff;
 	item->text_color.b = 0xffff;
 	item->text_color.a = 0xffff;
-	if (flags & 1) {
+
+	if (flags & TRANSPARENT_BG) {
 		item->color_bg.r = 0x0808;
 		item->color_bg.g = 0x0808;
 		item->color_bg.b = 0xf8f8;
@@ -404,7 +404,8 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 			attr.u.num=-1;
 		item->configured = !!(attr.u.num & item->osd_configuration);
 	}
-	if (item->gr && !(item->flags & 16)) 
+
+	if (item->gr && !(item->flags & DISABLE_OVERLAY)) 
 		graphics_overlay_disable(item->gr, !item->configured);
 }
 
@@ -475,7 +476,7 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 	item->graphic_fg = graphics_gc_new(item->gr);
 	graphics_gc_set_foreground(item->graphic_fg, &item->color_fg);
 
-	if (item->flags & 2) {
+	if (item->flags & ITEM_HAS_TEXT) {
 		item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size, 1);
 		item->graphic_fg_text = graphics_gc_new(item->gr);
 		graphics_gc_set_foreground(item->graphic_fg_text, &item->text_color);

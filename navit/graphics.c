@@ -1829,7 +1829,19 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect)
 	return ret;
 }
 
-static void
+/**
+ * @brief Draw polyline on the display
+ *
+ * Polylines are a serie of lines connected to each other.
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The color to use for the drawing
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ * @param[in] width An array of width matching the line starting from the corresponding @p pa (if all equal, all lines will have the same width)
+ * @param poly A boolean indicating whether the polyline should be closed to form a polygon (only the contour of this polygon will be drawn)
+ */
+void
 graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int poly)
 {
 	struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
@@ -1937,7 +1949,15 @@ poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int 
 	}
 }
 
-static void
+/**
+ * @brief Draw a plain polygon on the display
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The color to use for the drawing
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ */
+void
 graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in)
 {
 	struct point_rect r=gra->r;

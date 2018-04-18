@@ -23,6 +23,10 @@
 struct osd_priv;
 struct attr;
 
+#define TRANSPARENT_BG 1
+#define ITEM_HAS_TEXT 2
+#define DISABLE_OVERLAY 4
+
 struct osd_methods {
 	void (*osd_destroy)(struct osd_priv *osd);
 	int (*set_attr)(struct osd_priv *osd, struct attr* attr);

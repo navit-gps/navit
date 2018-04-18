@@ -23,7 +23,7 @@ fi
 if [ -z $CIRCLECI ];then
     echo "This Script needs to be run on CircleCI"
 fi
-if [[ "${CIRCLE_PROJECT_USERNAME}" != "navit-gps" && "${CIRCLE_BRANCH}" != "trunk" ]]; then
+if [[ "${CIRCLE_PROJECT_USERNAME}" != "navit-gps" || "${CIRCLE_BRANCH}" != "trunk" ]]; then
     echo "Only trunk on navit-gps may upload to the Download Center"
     exit 0
 fi
@@ -59,7 +59,7 @@ echo "Init Git Repo"
 export GIT_TERMINAL_PROMPT=0 
 cd $TMP_DIR
 mkdir -p ~/.ssh/
-ssh-keyscan github.com >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 git clone $NAVIT_DOWNLOAD_CENTER_REPO $UUID
 if [ ! -d $UUID/_data/$JOB_NAME ]; then
     mkdir -p $UUID/_data/$JOB_NAME

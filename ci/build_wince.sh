@@ -12,6 +12,10 @@ cp -r navit/icons/ output
 mkdir output/maps
 cp navit/maps/*.bin output/maps
 cp navit/maps/*.xml output/maps
+rm -rf output/icons/CMakeFiles/ icons/cmake_install.cmake
 
-cd ..
+cd output/
+zip -r navit.zip  .
+
+cd ../..
 bash ./navit/script/cabify.sh wince/output/navit.cab wince/

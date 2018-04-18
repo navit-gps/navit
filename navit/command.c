@@ -621,7 +621,7 @@ result_op(struct context *ctx, enum op_type op_type, const char *op, struct resu
 	default:
 		break;
 	}
-	dbg(lvl_error,"Unkown op %d %s\n",op_type,op);
+	dbg(lvl_error,"Unknown op %d %s\n",op_type,op);
 	ctx->error=internal;
 }
 

@@ -12,23 +12,22 @@ if (GIT_EXECUTABLE)
       OUTPUT_STRIP_TRAILING_WHITESPACE
       ERROR_STRIP_TRAILING_WHITESPACE
    )
-   if(NOT GIT_OUTPUT_DATE)
+   if(GIT_ERROR)
       message(STATUS "Cannot determine current git commit - git error: '${GIT_ERROR}'")
       set(GIT_OUTPUT_DATE "0000000000")
-   else()
-      EXECUTE_PROCESS(
-         COMMAND ${GIT_EXECUTABLE} log "--format='%h'"
-         WORKING_DIRECTORY "${SOURCE_DIR}"
-         OUTPUT_VARIABLE GIT_OUTPUT_HASH
-         ERROR_VARIABLE GIT_ERROR
-         OUTPUT_STRIP_TRAILING_WHITESPACE
-         ERROR_STRIP_TRAILING_WHITESPACE
-      )
-      if(NOT GIT_OUTPUT_HASH)
-         message(STATUS "Cannot determine current git commit - git error: '${GIT_ERROR}'")
-         set(GIT_OUTPUT_HASH "xdevxgitxnotxfound")
-      endif(NOT GIT_OUTPUT_HASH)
-   endif(NOT GIT_OUTPUT_DATE)
+   endif(GIT_ERROR)
+   EXECUTE_PROCESS(
+    COMMAND ${GIT_EXECUTABLE} log "--format='%h'"
+    WORKING_DIRECTORY "${SOURCE_DIR}"
+    OUTPUT_VARIABLE GIT_OUTPUT_HASH
+    ERROR_VARIABLE GIT_ERROR_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_STRIP_TRAILING_WHITESPACE
+   )
+   if(GIT_ERROR_HASH)
+      message(STATUS "Cannot determine current git hash - git error: '${GIT_ERROR}'")
+      set(GIT_OUTPUT_HASH "xdevxgitxnotxfound")
+   endif(GIT_ERROR_HASH)
 else()
    message(STATUS "git not found, cannot record git commit")
    set(GIT_OUTPUT_DATE "0000000000") # To match length of android versionCode
@@ -36,6 +35,8 @@ else()
 endif(GIT_EXECUTABLE)
 
 string(REGEX MATCH "^[0-9]+" VERSION_NUM ${GIT_OUTPUT_DATE} )
+
+set(VERSION ${GIT_OUTPUT_HASH})
 
 EXECUTE_PROCESS(
    COMMAND ${DATE_EXECUTABLE} "+%y%m%d%H%M" "-d \@${VERSION_NUM}" # output as unix timestamp
