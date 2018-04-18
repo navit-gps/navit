@@ -107,8 +107,6 @@ struct route_traffic_distortion {
 	int flags;                      /**< Flags indicating the modes of transportation and direction to
 	                                 *   which the traffic distortion applies. Other flags are not
 	                                 *   defined for traffic distortions and should not be used. */
-	int dir;                        /**< Direction of the distortion, relative to the segment to which
-	                                 *   it refers (1 for same, -1 for opposite direction). */
 };
 
 /**
@@ -1962,7 +1960,6 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
 	}
 
 	result.delay = 0;
-	result.dir = 1;
 	result.flags = AF_DISTORTIONMASK;
 	result.maxspeed = INT_MAX;
 
@@ -1995,7 +1992,6 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
 	}
 	if (found) {
 		ret->delay = result.delay;
-		ret->dir = 1; // TODO there’s probably no need for negative directions any more
 		ret->flags = result.flags;
 		ret->maxspeed = result.maxspeed;
 		return 1;
@@ -2033,7 +2029,6 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 {
 	int ret;
 	struct route_traffic_distortion dist,*distp=NULL;
-	int dist_dir;
 #if 0
 	dbg(lvl_debug,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
@@ -2054,7 +2049,6 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
 		route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
 		/* we have a traffic distortion, check if access flags match */
-		dist_dir = dir * dist.dir;
 		distp=&dist;
 	}
 	ret=route_time_seg(profile, &over->data, distp);
