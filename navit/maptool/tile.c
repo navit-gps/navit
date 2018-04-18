@@ -194,8 +194,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 	if (!th)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (! th) {
-		th=malloc(sizeof(struct tile_head)+ sizeof( char* ) );
-		assert(th != NULL);
+		th=g_malloc(sizeof(struct tile_head)+ sizeof( char* ) );
 		// strcpy(th->subtiles, tile);
 		th->num_subtiles=1;
 		th->total_size=0;
@@ -246,8 +245,7 @@ merge_tile(char *base, char *sub)
 		g_hash_table_insert(tile_hash, string_hash_lookup( thb->name ), thb);
 
 	} else {
-		thb=realloc(thb, sizeof(struct tile_head)+( ths->num_subtiles+thb->num_subtiles ) * sizeof( char*) );
-		assert(thb != NULL);
+		thb=g_realloc(thb, sizeof(struct tile_head)+( ths->num_subtiles+thb->num_subtiles ) * sizeof( char*) );
 		memcpy( th_get_subtile( thb, thb->num_subtiles ), th_get_subtile( ths, 0 ), ths->num_subtiles * sizeof( char*) );
 		thb->num_subtiles+=ths->num_subtiles;
 		thb->total_size+=ths->total_size;
@@ -401,8 +399,7 @@ write_aux_tiles(struct zip_info *zip_info)
 	
 	while (l) {
 		at=l->data;
-		buffer=malloc(at->size);
-		assert(buffer != NULL);
+		buffer=g_malloc(at->size);
 		f=fopen(at->filename,"rb");
 		assert(f != NULL);
 
@@ -416,7 +413,7 @@ write_aux_tiles(struct zip_info *zip_info)
 			l=g_list_next(l);
 			zip_add_member(zip_info);
 		}
-		free(buffer);
+		g_free(buffer);
 	}
 	return count;
 }
@@ -496,7 +493,7 @@ load_tilesdir(FILE *in)
 	tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	last=&tile_head_root;
 	while (fscanf(in,"%[^:]:%d",tile,&size) == 2) {
-		struct tile_head *th=malloc(sizeof(struct tile_head));
+		struct tile_head *th=g_malloc(sizeof(struct tile_head));
 		if (!strcmp(tile,"index"))
 			tile[0]='\0';
 		th->num_subtiles=0;
@@ -512,14 +509,9 @@ load_tilesdir(FILE *in)
 #if 0
 			printf("subtile '%s'\n",subtile);
 #endif
-			struct tile_head *th_tmp=realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
-			if (th_tmp == NULL) {
-				printf("Memory allocation failure, unable to load subtiles\n");
-			} else {
-				th = th_tmp;
-				*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
-				th->num_subtiles++;
-			}
+			th=g_realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
+			*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
+			th->num_subtiles++;
 		}
 		*last=th;
 		last=&th->next;

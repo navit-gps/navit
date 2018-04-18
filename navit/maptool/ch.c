@@ -529,7 +529,7 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 	}
 	th=tile_head_root;
         while (th) {
-		th->zip_data=malloc(th->total_size);
+		th->zip_data=g_malloc(th->total_size);
 		th->total_size_used=0;
                 th=th->next;
         }

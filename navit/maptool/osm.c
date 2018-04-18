@@ -1359,12 +1359,7 @@ static void
 extend_buffer(struct buffer *b)
 {
 	b->malloced+=b->malloced_step;
-	b->base=realloc(b->base, b->malloced);
-	if (b->base == NULL) {
-		fprintf(stderr,"realloc of %d bytes failed\n",(int)b->malloced);
-		exit(1);
-	}
-
+	b->base=g_realloc(b->base, b->malloced);
 }
 
 /** The node currently being processed. */
@@ -2245,7 +2240,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		if (!item_is_district(*ib))
 		{
 			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
-			char *dup=strdup(townname);
+			char *dup=g_strdup(townname);
 			g_hash_table_replace(town_hash, dup, dup);
 		}
 	}
