@@ -236,7 +236,7 @@ Variables</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">{<a class="code" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">\</a></div>
 <div class="line"><a class="code" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">	int</a> n=<span class="keyword">struct</span>-&gt;n_##member; <a class="code" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">\</a></div>
 <div class="line"><a class="code" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">	int</a> s=<span class="keyword">sizeof</span>(<span class="keyword">struct</span>-&gt;member[0]); \</div>
-<div class="line">        struct-&gt;member=realloc(struct-&gt;member, (n+1)*s); \</div>
+<div class="line">        struct-&gt;member=g_realloc(struct-&gt;member, (n+1)*s); \</div>
 <div class="line">        memmove(&amp;struct-&gt;member[n+1], &amp;struct-&gt;member[n], (<a class="code" href="namespacestartup.html#a9ca06758194d7e10c9019377dbc522df">pos</a>-n)*s); \</div>
 <div class="line">        memset(&amp;struct-&gt;member[n], 0, s); \</div>
 <div class="line">        struct-&gt;n_##member++;\</div>
