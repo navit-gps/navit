@@ -104,9 +104,6 @@ struct route_traffic_distortion {
 									     leave the speed unchanged, or 0 to mark the segment as
 									     impassable. */
 	int delay;					/**< Delay in tenths of seconds (0 for no delay) */
-	int flags;                      /**< Flags indicating the modes of transportation and direction to
-	                                 *   which the traffic distortion applies. Other flags are not
-	                                 *   defined for traffic distortions and should not be used. */
 };
 
 /**
@@ -1933,8 +1930,8 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
 /**
  * @brief Returns the traffic distortion for a segment.
  *
- * If multiple traffic distortions match a segment, their data is accumulated: the lowest speed limit,
- * greatest delay and sum of all access/oneway restriction flags is returned.
+ * If multiple traffic distortions match a segment, the return value will report the lowest speed limit
+ * and greatest delay of all matching segments.
  *
  * @param seg The segment for which the traffic distortion is to be returned
  * @param dir The direction of `seg` for which to return traffic distortions. Positive values indicate
@@ -1960,7 +1957,6 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
 	}
 
 	result.delay = 0;
-	result.flags = AF_DISTORTIONMASK;
 	result.maxspeed = INT_MAX;
 
 	for (tmp = start->start; tmp; tmp = tmp->start_next) {
@@ -1971,8 +1967,6 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
 				result.delay = tmp->data.len;
 			if ((tmp->data.flags & AF_SPEED_LIMIT) && (RSD_MAXSPEED(&tmp->data) < result.maxspeed))
 				result.maxspeed = RSD_MAXSPEED(&tmp->data);
-			result.flags &= (tmp->data.flags | AF_ONEWAYMASK);
-			result.flags |= (tmp->data.flags & AF_ONEWAYMASK);
 			found=tmp;
 		}
 	}
@@ -1984,15 +1978,11 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
 				result.delay = tmp->data.len;
 			if ((tmp->data.flags & AF_SPEED_LIMIT) && (RSD_MAXSPEED(&tmp->data) < result.maxspeed))
 				result.maxspeed = RSD_MAXSPEED(&tmp->data);
-			result.flags &= (tmp->data.flags | AF_ONEWAYMASK);
-			if (tmp->data.flags & AF_ONEWAYMASK)
-				result.flags |= ((tmp->data.flags & AF_ONEWAYMASK) ^ AF_ONEWAYMASK);
 			found=tmp;
 		}
 	}
 	if (found) {
 		ret->delay = result.delay;
-		ret->flags = result.flags;
 		ret->maxspeed = result.maxspeed;
 		return 1;
 	}
