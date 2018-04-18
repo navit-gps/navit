@@ -605,7 +605,8 @@ attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_ty
  * contain an attribute whose type matches that of the new one, the new
  * attribute is inserted into the list.
  *
- * @param attrs Points to the array of attribute pointers to be updated
+ * @param attrs Points to the array of attribute pointers to be updated (if NULL, this function will
+ * create a new list containing only the new attribute)
  * @param attr The new attribute.
  * @return Pointer to the updated attribute list
  */
@@ -902,6 +903,15 @@ attr_dup(struct attr *attr)
 	return ret;
 }
 
+/**
+ * @brief Frees a list of attributes.
+ *
+ * This frees the pointer array as well as the attributes referenced by the pointers.
+ *
+ * It is safe to call this function with a NULL argument; doing so is a no-op.
+ *
+ * @param attrs The attribute list to free
+ */
 void
 attr_list_free(struct attr **attrs)
 {
@@ -912,6 +922,17 @@ attr_list_free(struct attr **attrs)
 	g_free(attrs);
 }
 
+/**
+ * @brief Duplicates a list of attributes.
+ *
+ * This creates a deep copy, i.e. the attributes in the list are copied as well.
+ *
+ * It is safe to call this function with a NULL argument; in this case, NULL will be returned.
+ *
+ * @param attrs The attribute list to copy
+ *
+ * @return The copy of the attribute list
+ */
 struct attr **
 attr_list_dup(struct attr **attrs)
 {
