@@ -1935,43 +1935,69 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
 /**
  * @brief Returns the traffic distortion for a segment.
  *
+ * If multiple traffic distortions match a segment, their data is accumulated: the lowest speed limit,
+ * greatest delay and sum of all access/oneway restriction flags is returned.
+ *
  * @param seg The segment for which the traffic distortion is to be returned
- * @param ret Points to a {@code struct route_traffic_distortion}, whose members will be filled
+ * @param dir The direction of `seg` for which to return traffic distortions. Positive values indicate
+ * travel in the direction of the segment, negative values indicate travel against it.
+ * @param profile The current vehicle profile
+ * @param ret Points to a {@code struct route_traffic_distortion}, whose members will be filled with the
+ * distortion data
  *
  * @return true if a traffic distortion was found, 0 if not
  */
-/* TODO handle multiple distortions for same segment (with different access flags) */
 static int
-route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traffic_distortion *ret)
+route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct vehicleprofile *profile,
+		struct route_traffic_distortion *ret)
 {
 	struct route_graph_point *start=seg->start;
 	struct route_graph_point *end=seg->end;
 	struct route_graph_segment *tmp,*found=NULL;
-	int dir = 0;
-	tmp=start->start;
-	while (tmp && !found) {
-		if (tmp->data.item.type == type_traffic_distortion && tmp->start == start && tmp->end == end) {
-			found=tmp;
-			dir = 1;
-		}
-		tmp=tmp->start_next;
+	struct route_traffic_distortion result;
+
+	if (!dir) {
+		dbg(lvl_warning, "dir is zero, assuming positive\n");
+		dir = 1;
 	}
-	tmp=start->end;
-	while (tmp && !found) {
-		if (tmp->data.item.type == type_traffic_distortion && tmp->end == start && tmp->start == end) {
+
+	result.delay = 0;
+	result.dir = 1;
+	result.flags = AF_DISTORTIONMASK;
+	result.maxspeed = INT_MAX;
+
+	for (tmp = start->start; tmp; tmp = tmp->start_next) {
+		if (tmp->data.item.type == type_traffic_distortion && tmp->start == start && tmp->end == end) {
+			if ((tmp->data.flags & (dir > 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
+				continue;
+			if (tmp->data.len > result.delay)
+				result.delay = tmp->data.len;
+			if ((tmp->data.flags & AF_SPEED_LIMIT) && (RSD_MAXSPEED(&tmp->data) < result.maxspeed))
+				result.maxspeed = RSD_MAXSPEED(&tmp->data);
+			result.flags &= (tmp->data.flags | AF_ONEWAYMASK);
+			result.flags |= (tmp->data.flags & AF_ONEWAYMASK);
 			found=tmp;
-			dir = -1;
 		}
-		tmp=tmp->end_next;
+	}
+	for (tmp = start->end; tmp; tmp = tmp->end_next) {
+		if (tmp->data.item.type == type_traffic_distortion && tmp->end == start && tmp->start == end) {
+			if ((tmp->data.flags & (dir < 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
+				continue;
+			if (tmp->data.len > result.delay)
+				result.delay = tmp->data.len;
+			if ((tmp->data.flags & AF_SPEED_LIMIT) && (RSD_MAXSPEED(&tmp->data) < result.maxspeed))
+				result.maxspeed = RSD_MAXSPEED(&tmp->data);
+			result.flags &= (tmp->data.flags | AF_ONEWAYMASK);
+			if (tmp->data.flags & AF_ONEWAYMASK)
+				result.flags |= ((tmp->data.flags & AF_ONEWAYMASK) ^ AF_ONEWAYMASK);
+			found=tmp;
+		}
 	}
 	if (found) {
-		ret->delay=found->data.len;
-		if (found->data.flags & AF_SPEED_LIMIT)
-			ret->maxspeed=RSD_MAXSPEED(&found->data);
-		else
-			ret->maxspeed=INT_MAX;
-		ret->flags = found->data.flags & AF_DISTORTIONMASK;
-		ret->dir = dir;
+		ret->delay = result.delay;
+		ret->dir = 1; // TODO there’s probably no need for negative directions any more
+		ret->flags = result.flags;
+		ret->maxspeed = result.maxspeed;
 		return 1;
 	}
 	return 0;
@@ -2026,14 +2052,10 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	if (over->data.item.type == type_traffic_distortion)
 		return INT_MAX;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
-		route_get_traffic_distortion(over, &dist) && dir != 2 && dir != -2) {
+		route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
 		/* we have a traffic distortion, check if access flags match */
 		dist_dir = dir * dist.dir;
-		if ((dist.flags & (dist_dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags) {
-			distp = 0;
-		} else {
-			distp=&dist;
-		}
+		distp=&dist;
 	}
 	ret=route_time_seg(profile, &over->data, distp);
 	if (ret == INT_MAX)
