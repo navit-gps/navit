@@ -329,8 +329,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a78e42e6261bed949dfc5cb98f1291bb1"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#a78e42e6261bed949dfc5cb98f1291bb1">attr_dup</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a78e42e6261bed949dfc5cb98f1291bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a703fe486d07cd5fb556899d3b988f052"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free</a> (struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memdesc:a703fe486d07cd5fb556899d3b988f052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a list of attributes.  <a href="#a703fe486d07cd5fb556899d3b988f052">More...</a><br/></td></tr>
 <tr class="separator:a703fe486d07cd5fb556899d3b988f052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78c8acc94b747237631b2e68f123c7fa"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#a78c8acc94b747237631b2e68f123c7fa">attr_list_dup</a> (struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memdesc:a78c8acc94b747237631b2e68f123c7fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duplicates a list of attributes.  <a href="#a78c8acc94b747237631b2e68f123c7fa">More...</a><br/></td></tr>
 <tr class="separator:a78c8acc94b747237631b2e68f123c7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb02e9708bf88f47a6d595353b5026ba"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#abb02e9708bf88f47a6d595353b5026ba">attr_list_append</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:abb02e9708bf88f47a6d595353b5026ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1895,7 +1897,7 @@ Functions</h2></td></tr>
 <p>This function will search the list for the first attribute of the same type as the supplied new one and replace it with that. If the list does not contain an attribute whose type matches that of the new one, the new attribute is inserted into the list.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">attrs</td><td>Points to the array of attribute pointers to be updated </td></tr>
+    <tr><td class="paramname">attrs</td><td>Points to the array of attribute pointers to be updated (if NULL, this function will create a new list containing only the new attribute) </td></tr>
     <tr><td class="paramname">attr</td><td>The new attribute. </td></tr>
   </table>
   </dd>
@@ -1948,6 +1950,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Duplicates a list of attributes. </p>
+<p>This creates a deep copy, i.e. the attributes in the list are copied as well.</p>
+<p>It is safe to call this function with a NULL argument; in this case, NULL will be returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">attrs</td><td>The attribute list to copy</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The copy of the attribute list </dd></dl>
+
 <p>References <a class="el" href="attr_8c.html#a78e42e6261bed949dfc5cb98f1291bb1">attr_dup()</a>.</p>
 
 <p>Referenced by <a class="el" href="announcement_8h.html#ab232de67204389f24a312032dc327e3e">announcement_new()</a>, <a class="el" href="graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15">graphics_new()</a>, <a class="el" href="gui_8h.html#a4ed53bd30c68ebca2d2bfb85e581c745">gui_new()</a>, <a class="el" href="log_8h.html#adc0038d2777d8572e77982fe4b746bba">log_new()</a>, <a class="el" href="map_8h.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="maps_8c.html#aac1b1796640454998c50c59c45350a87">maps_new()</a>, <a class="el" href="mapset_8h.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new()</a>, <a class="el" href="group__navit.html#gaa41f90609eaafc6e2d8eda1ee47b6881">navit_new()</a>, <a class="el" href="xmlconfig_8h.html#a320a24bc9f8d32d908713329edeb0516">navit_object_new()</a>, <a class="el" href="osd_8h.html#a2fe824b03a6b5cd14326fac42470beba">osd_new()</a>, <a class="el" href="profile__option_8c.html#afcb4663abd91dc9e70edc8b86aa14399">profile_option_new()</a>, <a class="el" href="roadprofile_8c.html#a89b3c3d77474fc0dba05fd5d941f9176">roadprofile_dup()</a>, <a class="el" href="roadprofile_8h.html#a3ce86ed260a9c8dc6c906e02ca865577">roadprofile_new()</a>, <a class="el" href="script_8c.html#a7b203f6017ec424b5179df03489551cf">script_new()</a>, <a class="el" href="vehicle_8h.html#a95bedb061f63a2484c2e052280d0f5e7">vehicle_new()</a>, and <a class="el" href="vehicleprofile_8h.html#a3d6f385994dc02c76023222520c34ab9">vehicleprofile_new()</a>.</p>
@@ -1967,6 +1980,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Frees a list of attributes. </p>
+<p>This frees the pointer array as well as the attributes referenced by the pointers.</p>
+<p>It is safe to call this function with a NULL argument; doing so is a no-op.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">attrs</td><td>The attribute list to free </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>References <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>.</p>
 
