@@ -961,8 +961,6 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 	return ret;
 }
 
-/* TODO setter method? */
-
 /**
  * @brief Sets the type of a traffic item.
  *
