@@ -2955,8 +2955,16 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
  *
  * Removing message data also triggers an update of the affected items’ attributes.
  *
+ * It is possible to skip items associated with a particular message from being removed by passing that
+ * message as the `new` argument. This is used for message updates, as this function is called after the
+ * items associated with both the old and the new message have already been updated. Skipping items
+ * referenced by `new` ensures that message data is only stripped from items which are no longer being
+ * referenced by the updated message.
+ *
+ * If the IDs of `old` and `new` differ, `new` is ignored.
+ *
  * @param old The message whose data it so be removed from its associated items
- * @param new If non-NULL, items referenced by this message will be skipped
+ * @param new If non-NULL, items referenced by this message will be skipped, see description
  */
 static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new) {
 	int i, j;
