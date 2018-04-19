@@ -588,23 +588,25 @@ static void tm_item_update_attrs(struct item * item) {
  * \li Start and end coordinates must match (inverted coordinates will also match)
  * \li If `attr_flags` is supplied in `attrs`, the item must have this attribute and the rules listed
  * below are applied
- * \li Flags in `AF_ALL` must match if supplied
- * \li Flags in `AF_ONEWAYMASK` must effectively match if supplied (equal for same direction, inverted
- * for opposite directions)
- * \li Currently, either both sides or neither side must have flags in `AF_ONEWAYMASK` set
- * \li Other attributes are ignored for now
+ * \li Flags in `AF_ALL` must match
+ * \li Flags in `AF_ONEWAYMASK` must be set either on both sides or neither side
+ * \li If set, flags in `AF_ONEWAYMASK` must effectively match (equal for same direction, inverted for
+ * opposite directions)
+ * \li Other attributes are currently ignored
+ *
+ * This is due to the way different reports for the same segment are handled:
+ *
+ * \li If multiple reports with the same access flags exist, one item is created; speed and delay are
+ * evaluated across all currently active reports in `tm_item_update_attrs()` (lowest speed and longest
+ * delay wins)
+ * \li If multiple reports exist and access flags differ, one item is created for each set of flags;
+ * items are deduplicated in `route_get_traffic_distortion()`
  *
  * @param mr A map rectangle in the traffic map
  * @param type Type of the item
  * @param attrs The attributes for the item
  * @param c Points to an array of coordinates for the item
  * @param count Number of items in `c`
- */
-/*
- * TODO
- * Comparison criteria need to be revisited to properly handle different reports for the same segment.
- * Differences may affect quantifiers (explicit vs. implied speed), maxspeed vs. delay or oneway vs.
- * bidirectional.
  */
 static struct item * tm_find_item(struct map_rect *mr, enum item_type type, struct attr **attrs,
 		struct coord *c, int count) {
