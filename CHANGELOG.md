@@ -23,6 +23,12 @@ Navit follows the semantic versioning:
     usually tends to occur along with larger changes which would warrant a new major
     version anyway
 
+## [Unreleased]
+
+To get the list of all the unreleased commits, see:
+https://github.com/navit-gps/navit/compare/v0.5.1...HEAD
+
+This changelog is generated from the list of commits on every releases.
 
 ## [v0.5.1] - 2018-04-19
 
