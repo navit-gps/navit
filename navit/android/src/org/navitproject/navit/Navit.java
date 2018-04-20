@@ -242,14 +242,14 @@ public class Navit extends Activity
 			// TRANS
 			infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
-					Log.e("Navit", "Ok, user saw the infobox");
+					Log.d(TAG, "Ok, user saw the infobox");
 				}
 			});
 
 			// TRANS
 			infobox.setNeutralButton(getString(R.string.initial_info_box_more_info), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
-					Log.e("Navit", "user wants more info, show the website");
+					Log.d(TAG, "user wants more info, show the website");
 					String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
 					Intent i = new Intent(Intent.ACTION_VIEW);
 					i.setData(Uri.parse(url));
@@ -281,8 +281,8 @@ public class Navit extends Activity
 		Navit.startup_intent = this.getIntent();
 		// hack! Remember time stamps, and only allow 4 secs. later in onResume to set target!
 		Navit.startup_intent_timestamp = System.currentTimeMillis();
-		Log.e("Navit", "**1**A " + startup_intent.getAction());
-		Log.e("Navit", "**1**D " + startup_intent.getDataString());
+		Log.d(TAG, "**1**A " + startup_intent.getAction());
+		Log.d(TAG, "**1**D " + startup_intent.getDataString());
 
 		// init translated text
 		NavitTextTranslations.init();
@@ -329,13 +329,13 @@ public class Navit extends Activity
 		String lang = locale.getLanguage();
 		String langu = lang;
 		String langc = lang;
-		Log.e("Navit", "lang=" + lang);
+		Log.d(TAG, "lang=" + lang);
 		int pos = langu.indexOf('_');
 		if (pos != -1)
 		{
 			langc = langu.substring(0, pos);
 			NavitLanguage = langc + langu.substring(pos).toUpperCase(locale);
-			Log.e("Navit", "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
+			Log.d(TAG, "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
 			// set lang. for translation
 			NavitTextTranslations.main_language = langc;
 			NavitTextTranslations.sub_language = NavitLanguage.substring(pos).toUpperCase(locale);
@@ -343,14 +343,14 @@ public class Navit extends Activity
 		else
 		{
 			String country = locale.getCountry();
-			Log.e("Navit", "Country1 " + country);
-			Log.e("Navit", "Country2 " + country.toUpperCase(locale));
+			Log.d(TAG, "Country1 " + country);
+			Log.d(TAG, "Country2 " + country.toUpperCase(locale));
 			NavitLanguage = langc + "_" + country.toUpperCase(locale);
 			// set lang. for translation
 			NavitTextTranslations.main_language = langc;
 			NavitTextTranslations.sub_language = country.toUpperCase(locale);
 		}
-		Log.e("Navit", "Language " + lang);
+		Log.d(TAG, "Language " + lang);
 
 		SharedPreferences prefs = getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
 		map_filename_path  = prefs.getString("filenamePath", Environment.getExternalStorageDirectory().getPath() + "/navit/");
@@ -369,10 +369,10 @@ public class Navit extends Activity
 		metrics = new DisplayMetrics();
 		display_.getMetrics(Navit.metrics);
 		int densityDpi = (int)(( Navit.metrics.density*160)-.5f);
-		Log.e("Navit", "Navit -> pixels x=" + width_ + " pixels y=" + height_);
-		Log.e("Navit", "Navit -> dpi=" + densityDpi);
-		Log.e("Navit", "Navit -> density=" + Navit.metrics.density);
-		Log.e("Navit", "Navit -> scaledDensity=" + Navit.metrics.scaledDensity);
+		Log.d(TAG, "Navit -> pixels x=" + width_ + " pixels y=" + height_);
+		Log.d(TAG, "Navit -> dpi=" + densityDpi);
+		Log.d(TAG, "Navit -> density=" + Navit.metrics.density);
+		Log.d(TAG, "Navit -> scaledDensity=" + Navit.metrics.scaledDensity);
 
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -381,7 +381,7 @@ public class Navit extends Activity
 
 		if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo"))
 		{
-			Log.e("Navit", "Failed to extract language resource " + langc);
+			Log.e(TAG, "Failed to extract language resource " + langc);
 		}
 
 		if (densityDpi <= 120)
@@ -410,18 +410,18 @@ public class Navit extends Activity
 		}
 		else
 		{
-			Log.e("Navit", "found device of very high density ("+densityDpi+")");
-			Log.e("Navit", "using xxxhdpi values");
+			Log.e(TAG, "found device of very high density ("+densityDpi+")");
+			Log.e(TAG, "using xxxhdpi values");
 			my_display_density = "xxxhdpi";
 		}
 
 		if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
 		{
-			Log.e("Navit", "Failed to extract navit.xml for " + my_display_density);
+			Log.e(TAG, "Failed to extract navit.xml for " + my_display_density);
 		}
 
 		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
-		Log.e("Navit", "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
+		Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
 
 		showInfos();
@@ -433,7 +433,7 @@ public class Navit extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		Log.d("Navit", "OnResume");
+		Log.d(TAG, "OnResume");
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 			/* Required to make system bars fully transparent */
 			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -450,15 +450,15 @@ public class Navit extends Activity
 		{
 			if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L)
 			{
-				Log.e("Navit", "**2**A " + startup_intent.getAction());
-				Log.e("Navit", "**2**D " + startup_intent.getDataString());
+				Log.d(TAG, "**2**A " + startup_intent.getAction());
+				Log.d(TAG, "**2**D " + startup_intent.getDataString());
 				String navi_scheme = startup_intent.getScheme();
 				if ( navi_scheme != null && navi_scheme.equals("google.navigation")) {
 					parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
 				}
 			}
 			else {
-				Log.e("Navit", "timestamp for navigate_to expired! not using data");
+				Log.e(TAG, "timestamp for navigate_to expired! not using data");
 			}
 		}
 		Log.d(TAG, "onResume");
@@ -559,7 +559,7 @@ public class Navit extends Activity
 
 						msg.setData(b);
 						msg.sendToTarget();
-						Log.e("Navit", "target found (b): " + geoString);
+						Log.e(TAG, "target found (b): " + geoString);
 					} catch (NumberFormatException e) { } // nothing to do here
 				}
 			}
@@ -571,7 +571,6 @@ public class Navit extends Activity
 
 	public void setActivityResult(int requestCode, NavitActivityResult ActivityResult)
 	{
-		//Log.e("Navit", "setActivityResult " + requestCode);
 		ActivityResults[requestCode] = ActivityResult;
 	}
 
@@ -613,17 +612,11 @@ public class Navit extends Activity
 	// callback id gets set here when called from NavitGraphics
 	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
 	{
-		//Log.e("Navit", "setKeypressCallback -> id1=" + kp_cb_id);
-		//Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
-		//N_KeypressCallbackID = kp_cb_id;
 		N_NavitGraphics = ng;
 	}
 
 	public static void setMotionCallback(int mo_cb_id, NavitGraphics ng)
 	{
-		//Log.e("Navit", "setKeypressCallback -> id2=" + mo_cb_id);
-		//Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
-		//N_MotionCallbackID = mo_cb_id;
 		N_NavitGraphics = ng;
 	}
 
@@ -651,20 +644,19 @@ public class Navit extends Activity
 	
 	public void runOptionsItem(int id)
 	{
-		// Handle item selection
 		switch (id)
 		{
 			case 1 :
 				// zoom in
 				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
-				Log.e("Navit", "onOptionsItemSelected -> zoom in");
+				Log.d(TAG, "onOptionsItemSelected -> zoom in");
 				break;
 			case 2 :
 				// zoom out
 				Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
 				// if we zoom, hide the bubble
-				Log.e("Navit", "onOptionsItemSelected -> zoom out");
+				Log.d(TAG, "onOptionsItemSelected -> zoom out");
 				break;
 			case 3 :
 				// map download menu
@@ -825,7 +817,6 @@ public class Navit extends Activity
 				else Log.w(TAG, "select path failed"); 
 			break; 			
 		default :
-			//Log.e("Navit", "onActivityResult " + requestCode + " " + resultCode);
 			ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
 			break;
 		}
@@ -866,7 +857,7 @@ public class Navit extends Activity
 	public void onDestroy()
 	{
 		super.onDestroy();
-		Log.e("Navit", "OnDestroy");
+		Log.d(TAG, "OnDestroy");
 		// TODO next call will kill our app the hard way. This should not be necessary, but ensures navit is
 		// properly restarted and no resources are wasted with navit in background. Remove this call after 
 		// code review
