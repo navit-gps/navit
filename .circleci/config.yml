@@ -184,6 +184,14 @@ workflows:
   merge-to-master:
     jobs:
       - merge_trunk_in_master:
+          requires:
+            - build_linux
+            - build_android_arm
+            - build_android_x86
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
           filters:
             branches:
               only: /^trunk$/
