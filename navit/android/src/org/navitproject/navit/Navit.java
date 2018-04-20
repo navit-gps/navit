@@ -104,19 +104,15 @@ public class Navit extends Activity
 	private static long              startup_intent_timestamp       = 0L;
 	public static String             my_display_density             = "mdpi";
 	public static final int          NavitDownloaderSelectMap_id    = 967;
-	public static final int          MAP_NUM_PRIMARY                = 11;
 	public static final int          NavitAddressSearch_id          = 70;
 	public static final int          NavitSelectStorage_id          = 43;
 	public static String             NavitLanguage;
 	public static Resources          NavitResources                 = null;
-
-	public static final int          MAP_NUM_SECONDARY              = 12;
 	static final String              NAVIT_PACKAGE_NAME             = "org.navitproject.navit";
 	static final String              TAG                            = "Navit";
 	static String                    map_filename_path              = null;
 	static final String              NAVIT_DATA_DIR                 = "/data/data/" + NAVIT_PACKAGE_NAME;
 	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
-	static final String              FIRST_STARTUP_FILE             = NAVIT_DATA_SHARE_DIR + "/has_run_once.txt";
 	public static final String       NAVIT_PREFS                    = "NavitPrefs";
 	Boolean                          isFullscreen                   = false;
 	private static final int         MY_PERMISSIONS_REQUEST_ALL     = 101;
