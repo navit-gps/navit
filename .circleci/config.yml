@@ -154,6 +154,16 @@ jobs:
           name: Update Navit-Download-Center
           command: |
             bash ci/update_download_center.sh
+  merge_trunk_in_master:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install git
+          command: apt-get update && apt-get -y install ca-certificates git
+      - run:
+          name: Update results to Github
+          command: bash git push origin $CIRCLE_SHA1:refs/heads/master
 workflows:
   version: 2
   doxygen:
@@ -171,3 +181,9 @@ workflows:
       - build_wince
       - build_tomtom_minimal
       - build_tomtom_plugin
+  merge-to-master:
+    jobs:
+      - merge_trunk_in_master:
+          filters:
+            branches:
+              only: /^trunk$/
