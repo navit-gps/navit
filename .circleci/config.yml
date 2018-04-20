@@ -163,7 +163,7 @@ jobs:
           command: apt-get update && apt-get -y install ca-certificates git
       - run:
           name: Update results to Github
-          command: bash git push origin $CIRCLE_SHA1:refs/heads/master
+          command: git push origin $CIRCLE_SHA1:refs/heads/master
 workflows:
   version: 2
   doxygen:
