@@ -184,8 +184,6 @@ workflows:
       - build_wince
       - build_tomtom_minimal
       - build_tomtom_plugin
-  merge-to-master:
-    jobs:
       - merge_trunk_in_master:
           requires:
             - build_linux
