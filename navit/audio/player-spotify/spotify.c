@@ -692,8 +692,8 @@ static sp_session_callbacks session_callbacks = {
 
 static sp_session_config spconfig = {
 	.api_version = SPOTIFY_API_VERSION,
-	.cache_location = "/var/tmp/spotify",
-	.settings_location = "/var/tmp/spotify",
+	.cache_location = "/var/spotify",
+	.settings_location = "/var/spotify",
 	.application_key = spotify_apikey,
 	.application_key_size = 0,	// set in main()
 	.user_agent = "navit",
