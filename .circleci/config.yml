@@ -172,12 +172,6 @@ jobs:
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
 workflows:
   version: 2
-  doxygen:
-    jobs:
-      - run_doxygen:
-          filters:
-            branches:
-              only: /^trunk$/
   build_all:
     jobs:
       - build_linux
@@ -187,6 +181,18 @@ workflows:
       - build_wince
       - build_tomtom_minimal
       - build_tomtom_plugin
+      - run_doxygen:
+          requires:
+            - build_linux
+            - build_android_arm
+            - build_android_x86
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
+          filters:
+            branches:
+              only: /^trunk$/
       - merge_trunk_in_master:
           requires:
             - build_linux
