@@ -161,6 +161,9 @@ jobs:
       - run:
           name: Install git
           command: apt-get update && apt-get -y install ca-certificates git
+      - add_ssh_keys:
+          fingerprints:
+            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
       - run:
           name: Update results to Github
           command: git push origin $CIRCLE_SHA1:refs/heads/master
@@ -184,6 +187,14 @@ workflows:
   merge-to-master:
     jobs:
       - merge_trunk_in_master:
+          requires:
+            - build_linux
+            - build_android_arm
+            - build_android_x86
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
           filters:
             branches:
               only: /^trunk$/
