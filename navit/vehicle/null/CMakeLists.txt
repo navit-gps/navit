@@ -1,1 +1,1 @@
-module_add_library(vehicle_null vehicle_null.c)
+module_add_library(vehicle_null Unspecified vehicle_null.c)

@@ -1,1 +1,1 @@
-module_add_library(plugin_pedestrian pedestrian.c)
+module_add_library(plugin_pedestrian plugins pedestrian.c)

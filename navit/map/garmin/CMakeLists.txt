@@ -9,4 +9,4 @@ add_custom_command (
   DEPENDS gentypes
   )
 
-module_add_library(map_garmin garmin.c gar2navit.c g2nbuiltin.h)
+module_add_library(map_garmin map-garmin garmin.c gar2navit.c g2nbuiltin.h)
