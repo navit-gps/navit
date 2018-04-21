@@ -1,8 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186":[3,0,6,1,11,0],
-"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347":[3,0,6,1,11,0,11],
-"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd":[3,0,6,1,11,0,8],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a392fb35ddf8afb4d6bdd4c16d6c087a9":[3,0,6,1,11,0,2],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa":[3,0,6,1,11,0,4],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a65b37ee78f60cb83d41387dfd8f62822":[3,0,6,1,11,0,6],
@@ -249,5 +246,8 @@ var NAVTREEINDEX23 =
 "gui__qml_8cpp.html#ad1bacfaaf484ddb29cf57d37ba886daf":[3,0,6,2,1,11],
 "gui__qt5__qml_8cpp.html":[3,0,6,3,3],
 "gui__qt5__qml_8cpp.html#a095509a539d20dfcf5036269c347d525":[3,0,6,3,3,2],
-"gui__qt5__qml_8cpp.html#a0f8b2d91dafbf1789f4052cf440dec68":[3,0,6,3,3,7]
+"gui__qt5__qml_8cpp.html#a0f8b2d91dafbf1789f4052cf440dec68":[3,0,6,3,3,7],
+"gui__qt5__qml_8cpp.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,6,3,3,9],
+"gui__qt5__qml_8cpp.html#a418a8b4400675f58373a8115af065282":[3,0,6,3,3,4],
+"gui__qt5__qml_8cpp.html#a44c18e7dd204c91e4b21b7f99d2d2d46":[3,0,6,3,3,1]
 };

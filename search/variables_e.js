@@ -68,8 +68,6 @@ var searchData=
   ['map_5fmethods_5ftextfile',['map_methods_textfile',['../textfile_8c.html#a1b4b1c1813a7ad622e428d23cb45d0da',1,'textfile.c']]],
   ['map_5fname',['map_name',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html#a3d9effdbd7d8cee3dce9e762cc9e0514',1,'org.navitproject.navit.NavitMapDownloader.osm_map_values.map_name()'],['../structroute__guard.html#a0527db3ce46a994e3460a13bfa0849cc',1,'route_guard::map_name()']]],
   ['map_5fnew',['map_new',['../structmaptype.html#a2ad3ef105dbb4473eae1ad50c419ac7c',1,'maptype']]],
-  ['map_5fnum_5fprimary',['MAP_NUM_PRIMARY',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a21b99b4ad4244ccb8b5aceaf58e6cf90',1,'org::navitproject::navit::Navit']]],
-  ['map_5fnum_5fsecondary',['MAP_NUM_SECONDARY',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#acdab1f4cd3bf046377eb1a3a7adb45a7',1,'org::navitproject::navit::Navit']]],
   ['map_5fread_5ffile_5fbuffer',['MAP_READ_FILE_BUFFER',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a19eeeed01c68b5b6bfab53ffc9de9c24',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['map_5frect_5fcreate_5fitem',['map_rect_create_item',['../structmap__methods.html#ab4658d88b9347a00a723b84a4735e545',1,'map_methods']]],
   ['map_5frect_5fdestroy',['map_rect_destroy',['../structmap__methods.html#ad5cc635991170b1689db2ed6ae2e9d77',1,'map_methods']]],

@@ -220,7 +220,6 @@ var searchData=
   ['first_5fnumber',['first_number',['../structstreet__priv.html#a2d6de3cc85bf8e2727c8970425837fca',1,'street_priv']]],
   ['first_5fpos',['first_pos',['../structcdf__data.html#a27fe46e35cd5f6cb3e79488737f9de23',1,'cdf_data']]],
   ['first_5fscanned_5fmember_5fslab_5fsize_5flog2',['FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2',['../protobuf-c_8c.html#a839f5a00dfd895de179af9d537aa3c43',1,'protobuf-c.c']]],
-  ['first_5fstartup_5ffile',['FIRST_STARTUP_FILE',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#aecfef48b3e0ad7e4e74d0514cdfb814e',1,'org::navitproject::navit::Navit']]],
   ['firstbytemark',['firstByteMark',['../cJSON_8c.html#a4ec3316cc778a6d7233bffd55cea7047',1,'cJSON.c']]],
   ['fis',['fis',['../structmap__priv.html#a56b994882b3d6e3f51cdf5dcacd0616d',1,'map_priv']]],
   ['fix',['fix',['../structg2scolumns.html#a519c2360fe4052ed8127125a237902e7',1,'g2scolumns::fix()'],['../structg2sattr.html#a61322869f72765ac6d97d88572c047a9',1,'g2sattr::fix()']]],
