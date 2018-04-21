@@ -10,7 +10,7 @@ export ANDROID_SDK_HOME=/opt/android-sdk-linux
 export ANDROID_HOME=/opt/android-sdk-linux
 
 cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -O android-sdk.tgz
-cd /opt && tar -xvzf android-sdk.tgz
+cd /opt && tar -xvzf android-sdk.tgz --no-same-owner
 cd /opt && rm -f android-sdk.tgz
 
 export PATH=${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
