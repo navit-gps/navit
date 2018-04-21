@@ -581,8 +581,8 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_points=diagram_point;
 										diagram_points_count ++;
 										dbg(lvl_debug,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
-										max_ele=fmax(max_ele, diagram_point->c.y);
-										min_ele=fmin(min_ele, diagram_point->c.y);
+										max_ele=MAX(max_ele, diagram_point->c.y);
+										min_ele=MIN(min_ele, diagram_point->c.y);
 										distance=diagram_point->c.x;
 									}
 								}
