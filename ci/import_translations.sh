@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Let's check if there is files in the import queue
 [ -d po/import_queue/ ] || exit 0
 
