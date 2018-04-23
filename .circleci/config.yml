@@ -55,10 +55,6 @@ jobs:
             bash ci/build_android.sh
       - store_artifacts:
           path: android-arm/navit/android/bin
-      - save_cache:
-          key : navit-android-arm-{{ .Revision }}
-          paths:
-            - ./android-arm/navit/android/bin
       - run:
           name: Install git
           command: apt-get update && apt-get -y install ca-certificates git python-pip
