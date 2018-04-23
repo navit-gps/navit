@@ -38,17 +38,10 @@ jobs:
       - store_artifacts:
           path: /root/project/doc
   build_android_arm:
-    <<: *defaults
+    docker:
+      - image: navit/android
     steps:
       - checkout
-      - run:
-          name: Setup common requirements
-          command: |
-            bash ci/setup_common_requirements.sh
-      - run:
-          name: Prepare the Android build environment
-          command: |
-            bash ci/setup_android.sh
       - run:
           name: Build for Android ARM
           command: |
@@ -60,17 +53,10 @@ jobs:
           command: |
             bash ci/update_download_center.sh
   build_android_x86:
-    <<: *defaults
+    docker:
+      - image: navit/android
     steps:
       - checkout
-      - run:
-          name: Setup common requirements
-          command: |
-            bash ci/setup_common_requirements.sh
-      - run:
-          name: Prepare the Android build environment
-          command: |
-            bash ci/setup_android.sh
       - run:
           name: Build for Android X86
           command: |
