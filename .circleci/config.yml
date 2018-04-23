@@ -55,6 +55,7 @@ jobs:
           command: |
             cd navit/icons
             make
+            rm gui_map.svg
             sudo ls -la
             mkdir ../android/res/drawable-nodpi
             rename 'y/A-Z/a-z/' *
