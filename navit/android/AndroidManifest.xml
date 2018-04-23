@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.navitproject.navit"
+    android:sharedUserId="org.navitproject.navit"
+    android:versionCode="5"
+    android:versionName="zomaar"
+    android:installLocation="auto">
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="25"/>
+    <uses-feature android:name="android.hardware.location.network" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-feature android:glEsVersion="0x00020000"/>
+    <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true" android:anyDensity="true"/>
+    @ANDROID_PERMISSIONS@
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <application android:label="@string/app_name"
+        android:icon="@drawable/icon"
+        android:name=".NavitAppConfig">
+        <activity android:name="Navit"
+            android:label="@string/app_name"
+            android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="google.navigation" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".NavitAddressSearchActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+        </activity>
+        <activity android:name=".NavitDownloadSelectMapActivity"></activity>
+        <!--       <activity android:name=".NavitAddressResultListActivity"></activity> -->
+        <activity
+            android:name="FileBrowserActivity"
+            android:label="File browser"
+            android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="ua.com.vassiliev.androidfilebrowser.SELECT_DIRECTORY_ACTION"></action>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.acra.dialog.CrashReportDialog"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"/>
+        <service
+            android:name="org.acra.sender.SenderService"
+            android:exported="false"
+            android:process=":acra" />
+    </application>
+</manifest>
