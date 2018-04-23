@@ -177,6 +177,10 @@ jobs:
   upload_to_googleplay:
     <<: *defaults
     steps:
+      - checkout
+      - run:
+          name: Install certs
+          command: apt-get update && apt-get -y install ca-certificates
       - restore_cache:
           key : navit-android-arm-{{ .Revision }}
       - run:
