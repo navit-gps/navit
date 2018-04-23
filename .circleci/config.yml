@@ -53,8 +53,6 @@ jobs:
           name: Build for Android ARM
           command: |
             bash ci/build_android.sh
-      - store_artifacts:
-          path: android-arm/navit/android/bin
       - run:
           name: Install git
           command: apt-get update && apt-get -y install ca-certificates git python-pip
@@ -67,6 +65,8 @@ jobs:
       - run:
           name: Update beta channel on PlayStore
           command: bash ci/publish.sh
+      - store_artifacts:
+          path: android-arm/navit/android/bin
       - run:
           name: Update Navit-Download-Center
           command: |
