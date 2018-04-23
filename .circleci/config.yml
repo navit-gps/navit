@@ -46,6 +46,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Id
+          command: sudo cat /etc/lsb-release
+      - run:
           name: Install cmake gettext inkscape libsaxonb-java
           command: |
             sudo apt-get install cmake gettext imagemagick libsaxonb-java
