@@ -47,7 +47,7 @@ jobs:
       - checkout
       - run:
           name: Id
-          command: sudo cat /etc/lsb-release
+          command: sudo cat /etc/*release
       - run:
           name: Install cmake gettext inkscape libsaxonb-java
           command: |
