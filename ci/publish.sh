@@ -1,4 +1,16 @@
 #!/bin/sh
+
+if [ -z $CI ];then
+    echo "This Script needs to be run by CI"
+fi
+if [ -z $CIRCLECI ];then
+    echo "This Script needs to be run on CircleCI"
+fi
+if [[ "${CIRCLE_PROJECT_USERNAME}" != "navit-gps" || "${CIRCLE_BRANCH}" != "trunk" ]]; then
+    echo "Only trunk on navit-gps may upload to the Play Store"
+    exit 0
+fi
+
 set -e
 
 ARCH="arm"
