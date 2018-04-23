@@ -37,50 +37,76 @@ jobs:
           command: bash ci/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
-  build_android_arm:
-    <<: *defaults
+  build_android:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
     steps:
       - checkout
       - run:
-          name: Setup common requirements
+          name: Install cmake gettext imagemagick libsaxonb-java
           command: |
-            bash ci/setup_common_requirements.sh
+            sudo apt-get install cmake gettext imagemagick libsaxonb-java
+            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
       - run:
-          name: Prepare the Android build environment
+          name: Process icons
           command: |
-            bash ci/setup_android.sh
+            cd navit/xpm
+            make
+            sudo ls -la
+            mkdir ../android/res/drawable-nodpi
+            rename 'y/A-Z/a-z/' *
+            cp *.png ../android/res/drawable-nodpi
+            cd ../../
       - run:
-          name: Build for Android ARM
+          name: Process translations
           command: |
-            bash ci/build_android.sh
+            cd po  
+            make
+            sudo ls -la
+            mkdir ../navit/android/res/raw
+            rename 'y/A-Z/a-z/' *
+            cp *.mo ../navit/android/res/raw
+            cd ../
+      - run:
+          name: Move xml's
+          command: |
+            cd navit
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitmdpi.xml OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navithdpi.xml OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192
+            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256
+            sudo ls -la
+            mv *dpi.xml android/res/raw
+            cd ../
+      - run:
+         name: Chmod permissions
+         command: sudo chmod +x ./gradlew
+      - run:
+          name: Download Dependencies
+          command: ./gradlew -v
+#          command: ./gradlew androidDependencies
+      - run:
+         name: Install ndk
+         command: sdkmanager ndk-bundle
+      - run:
+          name: Build
+          command: ./gradlew assembleDebug
+      - run:
+          name: Run Tests
+          command: ./gradlew tasks --all
       - store_artifacts:
-          path: android-arm/navit/android/bin
-      - run:
-          name: Update Navit-Download-Center
-          command: |
-            bash ci/update_download_center.sh
-  build_android_x86:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: Setup common requirements
-          command: |
-            bash ci/setup_common_requirements.sh
-      - run:
-          name: Prepare the Android build environment
-          command: |
-            bash ci/setup_android.sh
-      - run:
-          name: Build for Android X86
-          command: |
-            bash ci/build_android_x86.sh
+          path: navit/android/build/outputs/apk
+          destination: apk
       - store_artifacts:
-          path: android-x86/navit/android/bin
-      - run:
-          name: Update Navit-Download-Center
-          command: |
-            bash ci/update_download_center.sh
+          path: navit/android/build/outputs/logs
+          destination: logs
+      - store_test_results:
+          path: app/build/test-results  
   build_win32:
     <<: *defaults
     steps:
@@ -175,8 +201,7 @@ workflows:
   build_all:
     jobs:
       - build_linux
-      - build_android_arm
-      - build_android_x86
+      - build_android
       - build_win32
       - build_wince
       - build_tomtom_minimal
