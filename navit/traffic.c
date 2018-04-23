@@ -737,6 +737,7 @@ static void tm_dump_to_textfile(struct map * map) {
  * @param type Type of the item
  * @param id_hi First part of the ID of the item (item IDs have two parts)
  * @param id_lo Second part of the ID of the item
+ * @param flags Flags used as a matching criterion, and added to newly-created items
  * @param attrs The attributes for the item
  * @param c Points to an array of coordinates for the item
  * @param count Number of items in `c`
