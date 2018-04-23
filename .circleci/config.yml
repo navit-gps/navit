@@ -55,6 +55,10 @@ jobs:
             bash ci/build_android.sh
       - store_artifacts:
           path: android-arm/navit/android/bin
+      - save_cache:
+          key : navit-android-arm-{{ .Revision }}
+          paths:
+            - ./android-arm/navit/android/bin
       - run:
           name: Update Navit-Download-Center
           command: |
@@ -170,6 +174,14 @@ jobs:
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  upload_to_googleplay:
+    <<: *defaults
+    steps:
+      - save_cache:
+          key : navit-android-arm-{{ .Revision }}
+      - run:
+          name: Update beta channel on PlayStore
+          command: bash ci/publish.sh
 workflows:
   version: 2
   build_all:
@@ -205,3 +217,9 @@ workflows:
           filters:
             branches:
               only: /^trunk$/
+      - upload_to_googleplay:
+          requires:
+            - build_android_arm
+          filters:
+            branches:
+              only: /^googleplay_upload$/
