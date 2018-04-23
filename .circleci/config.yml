@@ -177,7 +177,7 @@ jobs:
   upload_to_googleplay:
     <<: *defaults
     steps:
-      - save_cache:
+      - restore_cache:
           key : navit-android-arm-{{ .Revision }}
       - run:
           name: Update beta channel on PlayStore
