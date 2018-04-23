@@ -54,7 +54,6 @@ jobs:
           name: Process icons
           command: |
             cd navit/icons
-            rm gui_map.svg
             make  
             sudo ls -la
             mkdir ../android/res/drawable-nodpi
