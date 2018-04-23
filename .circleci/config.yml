@@ -60,10 +60,6 @@ jobs:
           paths:
             - ./android-arm/navit/android/bin
       - run:
-          name: Update Navit-Download-Center
-          command: |
-            bash ci/update_download_center.sh
-      - run:
           name: Install git
           command: apt-get update && apt-get -y install ca-certificates git python-pip
       - run:
@@ -75,6 +71,10 @@ jobs:
       - run:
           name: Update beta channel on PlayStore
           command: bash ci/publish.sh
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash ci/update_download_center.sh
   build_android_x86:
     <<: *defaults
     steps:
