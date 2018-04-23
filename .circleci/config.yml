@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Process icons
           command: |
-            cd navit/xpm
+            cd navit/icons
             make
             sudo ls -la
             mkdir ../android/res/drawable-nodpi
