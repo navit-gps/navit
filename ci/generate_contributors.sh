@@ -6,29 +6,15 @@ set -e
 # output of the git log command. It splits the contributors in 2 groups:
 #  * The "active contributors" are the contributors that authored commits over the last 2 years
 #  * The "retired contributors" are the contributors that have authored commits but not over the last 2 years
+# Note: it uses git's mailmap functionnality to get a clean list of users
 # ###########################################################################################################
 
-# This map is used to map the old authors to the new ones to avoid duplicates
-declare -A authorsMap=(
-  ["Pierre GRANDIN"]="Pierre Grandin"
-  ["kazer_"]="Pierre Grandin"
-  ["Patrick Höhn"]="Patrick Höhn"
-  ["Wildemann Stefan"]="Stefan Wildemann"
-  ["pohlinkzei"]="Robert Pohlink"
-  ["mdankov"]="Michael Dankov"
-  ["sleske"]="Sebastian Leske"
-  ["mcapdeville"]="Marc Capdeville"
-  ["Marc CAPDEVILLE"]="Marc Capdeville"
-  ["Gauthier60"]="gauthier60"
-  ["horwitz"]="Michael Farmbauer"
-  ["martin-s"]="Martin Schaller"
-)
 declare -A CONTRIBUTORS=()
 declare -a authors=()
 TWO_YEARS_AGO=`date +%s --date="2 years ago"`
 retiredTitleWritten=false
 
-git log --encoding=utf-8 --full-history --date=short "--format=format:%ad;%an" |
+git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=format:%ad;%aN" |
 {
   echo "# Active contributors:" > AUTHORS
   while read -r line; do
@@ -51,11 +37,6 @@ git log --encoding=utf-8 --full-history --date=short "--format=format:%ad;%an" |
         echo -e "\n# Retired contributors:" >> AUTHORS
         retiredTitleWritten=true
       fi
-    fi
-  
-    # Remapping authors
-    if [ -n "${authorsMap[${author}]}" ]; then
-      author=${authorsMap[${author}]}
     fi
   
     # using the map as an easy way to check if the author has already been listed
