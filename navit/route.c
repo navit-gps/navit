@@ -3995,6 +3995,15 @@ enum route_path_flags route_get_flags(struct route *this_) {
 }
 
 /**
+ * @brief Retrieves the route graph.
+ *
+ * @return The route graph, or NULL if the route has no valid graph
+ */
+struct route_graph * route_get_graph(struct route *this_) {
+	return this_->graph;
+}
+
+/**
  * @brief Whether the route has a valid graph.
  *
  * @return True if the route has a graph, false if not.

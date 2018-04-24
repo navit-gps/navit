@@ -175,6 +175,7 @@ struct route_traffic_distortion_change {
 
 
 /* prototypes */
+struct route_graph * route_get_graph(struct route *this_);
 struct route_graph_point * route_graph_add_point(struct route_graph *this, struct coord *f);
 void route_graph_free_points(struct route_graph *this);
 struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
