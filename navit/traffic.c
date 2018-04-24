@@ -562,6 +562,8 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 			attr->type = attr_maxspeed;
 			attr->u.num = speed;
 			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
+			g_free(attr);
+			attr = NULL;
 			change_flags |= TDC_SEG_INCREASED;
 		} else if (speed < attr->u.num) {
 			change_flags |= TDC_SEG_INCREASED;
@@ -582,6 +584,8 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 			attr->type = attr_delay;
 			attr->u.num = delay;
 			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
+			g_free(attr);
+			attr = NULL;
 			change_flags |= TDC_SEG_INCREASED;
 		} else if (delay > attr->u.num) {
 			change_flags |= TDC_SEG_INCREASED;
@@ -1552,6 +1556,8 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 				}
 			}
 		}
+		map_selection_destroy(rg->sel);
+		rg->sel = NULL;
 		map_rect_destroy(rg->mr);
 		rg->mr = NULL;
 	}
@@ -2131,6 +2137,8 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 
 			ret = g_list_append(ret, data);
 		}
+		map_selection_destroy(rg->sel);
+		rg->sel = NULL;
 		map_rect_destroy(rg->mr);
 		rg->mr = NULL;
 	}
@@ -3030,6 +3038,7 @@ static void traffic_message_remove_item_data(struct traffic_message * old, struc
 				msglist = g_list_next(msglist);
 				if (!strcmp(msgdata->message_id, old->id)) {
 					ip->message_data = g_list_remove(ip->message_data, msgdata);
+					g_free(msgdata->message_id);
 					g_free(msgdata);
 				}
 			}
@@ -3318,8 +3327,12 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 			}
 
 			traffic_message_dump_to_stderr(messages[i]);
+
+			if (messages[i]->is_cancellation)
+				traffic_message_destroy(messages[i]);
 		} else {
 			dbg(lvl_debug, "message is no longer valid, ignoring\n");
+			traffic_message_destroy(messages[i]);
 		}
 
 	if (i)
@@ -4449,6 +4462,7 @@ void traffic_message_destroy(struct traffic_message * this_) {
 		g_free(this_->priv->items);
 	}
 	g_free(this_->priv);
+	g_free(this_);
 }
 
 void traffic_message_add_event(struct traffic_message * this_, struct traffic_event * event) {

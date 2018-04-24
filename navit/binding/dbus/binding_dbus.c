@@ -1488,6 +1488,8 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
 	
          fclose(fp);
 
+         map_rect_destroy(mr);
+
 	return empty_reply(connection, message);
 }
 
