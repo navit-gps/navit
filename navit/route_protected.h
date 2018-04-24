@@ -34,6 +34,22 @@
 extern "C" {
 #endif
 
+/** Indicates that the cost of a node has increased. */
+#define TDC_INCREASED 1
+
+/** Indicates that the cost of a node has decreased. */
+#define TDC_DECREASED 2
+
+/** Indicates that the cost of a segment has increased. */
+#define TDC_SEG_INCREASED 4
+
+/** Indicates that the cost of a segment has decreased. */
+#define TDC_SEG_DECREASED 8
+
+/** Mask of flags which indicate that the cost of a segment has changed. */
+#define TDC_SEG_MASK TDC_SEG_INCREASED | TDC_SEG_DECREASED
+
+
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
 
 /**
@@ -142,6 +158,19 @@ struct route_graph {
 	struct route_graph_segment *avoid_seg;
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
+};
+
+/**
+ * @brief Describes a traffic distortion that has been added, cleared or changed
+ */
+struct route_traffic_distortion_change {
+	struct route_graph_point *to;               /**< A point whose cost has changed */
+	struct route_graph_point *from;             /**< If non-NULL, indicates that the changes affect the
+	                                                 segment linking `from` and `to` (the cost of `to`
+	                                                 may or may not have changed). If NULL, the cost of
+	                                                 `to` itself has changed and all segments leading
+	                                                 towards `to` must be evaluated. */
+	int flags;                                  /**< Flags to indicate how the cost has changed. */
 };
 
 
