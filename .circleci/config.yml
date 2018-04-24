@@ -9,6 +9,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Id
+          command: sudo cat /etc/*release
+      - run:
           name: Setup requirements
           command: |
             bash ci/setup_common_requirements.sh
@@ -49,7 +52,7 @@ jobs:
           name: Id
           command: sudo cat /etc/*release
       - run:
-          name: Install cmake gettext inkscape libsaxonb-java inkscape
+          name: Install cmake gettext imagemagick libsaxonb-java inkscape
           command: |
             sudo apt-get install cmake gettext imagemagick libsaxonb-java inkscape
             cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
