@@ -2038,7 +2038,7 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 		return INT_MAX;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
 		route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
-		/* we have a traffic distortion, check if access flags match */
+		/* we have a traffic distortion */
 		distp=&dist;
 	}
 	ret=route_time_seg(profile, &over->data, distp);
