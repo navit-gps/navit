@@ -599,7 +599,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 		}
 	}
 
-	if (change_flags) {
+	if (change_flags && changes) {
 		graph = route_get_graph(route);
 		if (graph) {
 			tdc = g_new0(struct route_traffic_distortion_change, 1);
