@@ -113,7 +113,7 @@ jobs:
           path: navit/android/build/outputs/logs
           destination: logs
       - store_test_results:
-          path: app/build/test-results  
+          path: navit/android/build/test-results  
   build_win32:
     <<: *defaults
     steps:
