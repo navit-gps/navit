@@ -524,7 +524,6 @@ static struct item * tm_item_unref(struct item * item) {
  * @param changes Points to a buffer which will receive the address of a GList holding a
  * `struct route_traffic_distortion_change` for each changed item; can be NULL
  */
-/* TODO populate `changes` */
 static void tm_item_update_attrs(struct item * item, struct route * route, GList ** changes) {
 	struct item_priv * priv_data = (struct item_priv *) item->priv_data;
 	GList * msglist;
@@ -532,6 +531,9 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 	int speed = INT_MAX;
 	int delay = 0;
 	struct attr * attr = NULL;
+	int change_flags = 0;
+	struct route_traffic_distortion_change * tdc = NULL;
+	struct route_graph * graph = NULL;
 
 	for (msglist = priv_data->message_data; msglist; msglist = g_list_next(msglist)) {
 		msgdata = (struct item_msg_priv *) msglist->data;
@@ -560,8 +562,14 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 			attr->type = attr_maxspeed;
 			attr->u.num = speed;
 			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
-		} else
+			change_flags |= TDC_SEG_INCREASED;
+		} else if (speed < attr->u.num) {
+			change_flags |= TDC_SEG_INCREASED;
 			attr->u.num = speed;
+		} else if (speed > attr->u.num) {
+			change_flags |= TDC_SEG_DECREASED;
+			attr->u.num = speed;
+		}
 	} else {
 		while (attr = attr_search(priv_data->attrs, NULL, attr_maxspeed))
 			priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
@@ -574,14 +582,34 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 			attr->type = attr_delay;
 			attr->u.num = delay;
 			priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
-		} else
+			change_flags |= TDC_SEG_INCREASED;
+		} else if (delay > attr->u.num) {
+			change_flags |= TDC_SEG_INCREASED;
 			attr->u.num = delay;
+		} else if (delay < attr->u.num) {
+			change_flags |= TDC_SEG_DECREASED;
+			attr->u.num = delay;
+		}
 	} else {
 		while (1) {
 			attr = attr_search(priv_data->attrs, NULL, attr_delay);
 			if (!attr)
 				break;
 			priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
+		}
+	}
+
+	if (change_flags) {
+		graph = route_get_graph(route);
+		if (graph) {
+			tdc = g_new0(struct route_traffic_distortion_change, 1);
+			tdc->from = route_graph_get_point(graph, priv_data->coords);
+			tdc->to = route_graph_get_point(graph, &(priv_data->coords[priv_data->coord_count - 1]));
+			tdc->flags = change_flags;
+			if (tdc->from && tdc->to)
+				*changes = g_list_append(*changes, tdc);
+			else
+				g_free(tdc);
 		}
 	}
 }
