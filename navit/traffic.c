@@ -3215,7 +3215,13 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 	/* Changed items to pass to the route */
 	GList ** changes = NULL;
 
-	/* TODO if we are routing, assign changes */
+	/* Current route status */
+	struct attr route_status_attr;
+
+	if (route_get_attr(this_->rt, attr_route_status, &route_status_attr, NULL)
+			&& (route_status_attr.u.num >= route_status_path_done_new))
+		/* if we are routing, assign changes */
+		changes = g_new0(GList *, 1);
 
 	for (i = 0; messages && messages[i]; i++)
 		if (messages[i]->expiration_time >= time(NULL)) {
@@ -3323,7 +3329,10 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 	if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
 		navit_draw_async(this_->navit, 1);
 
-	/* TODO send `changes` to route if non-NULL */
+	/* FIXME this is probably not thread-safe: if route calculation and traffic message processing
+	 * happen concurrently, changes introduced by the messages may not be considered */
+	if (changes)
+		route_process_traffic_changes(this_->rt, changes);
 
 	return ret;
 }

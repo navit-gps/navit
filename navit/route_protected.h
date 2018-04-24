@@ -183,6 +183,7 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
 int route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data);
 void route_graph_free_segments(struct route_graph *this);
 void route_graph_build_done(struct route_graph *rg, int cancel);
+void route_process_traffic_changes(struct route *this_, GList ** changes);
 void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_type type);
 /* end of prototypes */
 #ifdef __cplusplus

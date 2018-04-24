@@ -2473,6 +2473,37 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 }
 
 /**
+ * @brief Recalculates the route based on changes in the traffic situation.
+ *
+ * This re-evaluates segments in the route graph for which traffic distortions have been added,
+ * removed or changed, as well as nodes affected by this change. After that, the route path is
+ * updated as needed.
+ *
+ * The list pointed to by `changes` is emptied and its elements are freed by this function.
+ *
+ * @param this_ The route
+ * @param changes Points to a `GList` of `struct route_traffic_distortion_change` elements describing
+ * the segments for which the traffic situation has changed
+ */
+void route_process_traffic_changes(struct route *this_, GList ** changes) {
+	struct route_traffic_distortion_change *curr = NULL;
+
+	if (!changes)
+		return;
+
+	while (*changes) {
+		curr = g_list_nth_data(*changes, 0);
+		*changes = g_list_remove(*changes, curr);
+
+		/* TODO process changes */
+
+		g_free(curr);
+	}
+
+	g_free(changes);
+}
+
+/**
  * @brief Starts an "offroad" path
  *
  * This starts a path that is not located on a street. It creates a new route path
