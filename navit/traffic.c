@@ -234,7 +234,7 @@ static void tm_coord_rewind(void *priv_data);
 static void tm_item_destroy(struct item * item);
 static struct item * tm_item_ref(struct item * item);
 static struct item * tm_item_unref(struct item * item);
-static void tm_item_update_attrs(struct item * item, GList ** changes);
+static void tm_item_update_attrs(struct item * item, struct route * route, GList ** changes);
 static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
@@ -243,7 +243,7 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 		struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
-		struct seg_data * data, struct map *map, GList ** changes);
+		struct seg_data * data, struct map *map, struct route * route, GList ** changes);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
 		struct mapset * ms);
 static void traffic_dump_messages_to_xml(struct traffic * this_);
@@ -375,13 +375,14 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
  * @param speed The maximum speed for the segment (`INT_MAX` if none given)
  * @param delay The delay for the segment, in tenths of seconds (0 for none)
  * @param attrs Additional attributes specified by the message
+ * @param route The route affected by the changes
  * @param changes Points to a buffer which will receive the address of a GList holding a
  * `struct route_traffic_distortion_change` for each changed item; can be NULL
  *
  * @return true if data was changed, false if not
  */
 static int tm_item_add_message_data(struct item * item, char * msgid, int speed, int delay,
-		struct attr ** attrs, GList ** changes) {
+		struct attr ** attrs, struct route * route, GList ** changes) {
 	int ret = 0;
 	struct item_priv * priv_data = item->priv_data;
 	GList * msglist;
@@ -411,7 +412,7 @@ static int tm_item_add_message_data(struct item * item, char * msgid, int speed,
 	}
 
 	if (ret)
-		tm_item_update_attrs(item, changes);
+		tm_item_update_attrs(item, route, changes);
 
 	return ret;
 }
@@ -519,11 +520,12 @@ static struct item * tm_item_unref(struct item * item) {
  * removing or modifying message data.
  *
  * @param item The item
+ * @param route The route affected by the changes
  * @param changes Points to a buffer which will receive the address of a GList holding a
  * `struct route_traffic_distortion_change` for each changed item; can be NULL
  */
 /* TODO populate `changes` */
-static void tm_item_update_attrs(struct item * item, GList ** changes) {
+static void tm_item_update_attrs(struct item * item, struct route * route, GList ** changes) {
 	struct item_priv * priv_data = (struct item_priv *) item->priv_data;
 	GList * msglist;
 	struct item_msg_priv * msgdata;
@@ -2134,6 +2136,7 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
  * @param ms The mapset to use for matching
  * @param data Data for the segments added to the map
  * @param map The traffic map
+ * @param route The route affected by the changes
  * @param changes Points to a buffer which will receive the address of a GList holding a
  * `struct route_traffic_distortion_change` for each changed item; can be NULL
  *
@@ -2141,7 +2144,7 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
  */
 /* TODO process data->flags and data->dir */
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
-		struct seg_data * data, struct map *map, GList ** changes) {
+		struct seg_data * data, struct map *map, struct route * route, GList ** changes) {
 	int i;
 
 	struct coord_geo * coords[] = {NULL, NULL, NULL};
@@ -2607,7 +2610,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
 			item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, flags, data->attrs, cs, ccnt, this_->id);
 
-			tm_item_add_message_data(item, this_->id, speed, delay, data->attrs, changes);
+			tm_item_add_message_data(item, this_->id, speed, delay, data->attrs, route, changes);
 
 			g_free(cs);
 
@@ -2971,12 +2974,13 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
  *
  * @param old The message whose data it so be removed from its associated items
  * @param new If non-NULL, items referenced by this message will be skipped, see description
+ * @param route The route affected by the changes
  * @param changes Points to a buffer which will receive the address of a GList holding a
  * `struct route_traffic_distortion_change` for each changed item; can be NULL
  */
 /* TODO populate `changes` */
 static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new,
-		GList ** changes) {
+		struct route * route, GList ** changes) {
 	int i, j;
 	int skip;
 	struct item_priv * ip;
@@ -3001,7 +3005,7 @@ static void traffic_message_remove_item_data(struct traffic_message * old, struc
 					g_free(msgdata);
 				}
 			}
-			tm_item_update_attrs(old->priv->items[i], changes);
+			tm_item_update_attrs(old->priv->items[i], route, changes);
 		}
 	}
 }
@@ -3260,7 +3264,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 					swap_candidate->priv->items = swap_items;
 				} else {
 					/* else find matching segments from scratch */
-					traffic_message_add_segments(messages[i], this_->ms, data, this_->map, changes);
+					traffic_message_add_segments(messages[i], this_->ms, data, this_->map, this_->rt, changes);
 					ret |= MESSAGE_UPDATE_SEGMENTS;
 				}
 
@@ -3277,7 +3281,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 					if (stored_msg->priv->items)
 						ret |= MESSAGE_UPDATE_SEGMENTS;
 					this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-					traffic_message_remove_item_data(stored_msg, messages[i], changes);
+					traffic_message_remove_item_data(stored_msg, messages[i], this_->rt, changes);
 					traffic_message_destroy(stored_msg);
 				}
 
@@ -3307,7 +3311,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 				if (stored_msg->priv->items)
 					ret |= MESSAGE_UPDATE_SEGMENTS;
 				this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-				traffic_message_remove_item_data(stored_msg, NULL, changes);
+				traffic_message_remove_item_data(stored_msg, NULL, this_->rt, changes);
 				traffic_message_destroy(stored_msg);
 			}
 
