@@ -49,9 +49,9 @@ jobs:
           name: Id
           command: sudo cat /etc/*release
       - run:
-          name: Install cmake gettext inkscape libsaxonb-java
+          name: Install cmake gettext inkscape libsaxonb-java inkscape
           command: |
-            sudo apt-get install cmake gettext imagemagick libsaxonb-java
+            sudo apt-get install cmake gettext imagemagick libsaxonb-java inkscape
             cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
       - run:
           name: Process icons
