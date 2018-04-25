@@ -120,13 +120,13 @@ _stat (const char *path, struct _stat *st)
   size_t len;
   int exec;
 
-	dbg(lvl_debug,"path=%s\n",path);
+	dbg(lvl_debug,"path=%s",path);
   mbstowcs (pathw, path, MAX_PATH);
-	dbg(lvl_debug,"wide path=%S\n",pathw);
+	dbg(lvl_debug,"wide path=%S",pathw);
   if((h = FindFirstFileW (pathw, &fd)) == INVALID_HANDLE_VALUE)
     {
       DWORD dwError = GetLastError ();
-	dbg(lvl_error,"no file\n");
+	dbg(lvl_error,"no file");
       if(dwError == ERROR_NO_MORE_FILES)
 	/* Convert error to something more sensible.  */
 	SetLastError (ERROR_FILE_NOT_FOUND);
@@ -139,7 +139,7 @@ _stat (const char *path, struct _stat *st)
   exec = (len >= 4
 	  && strcasecmp (path + len - 4, ".exe") == 0);
   ret = __stat_by_file_info (&sfi, st, exec);
-	dbg(lvl_debug,"ret=%d\n",ret);
+	dbg(lvl_debug,"ret=%d",ret);
   FindClose (h);
   return ret;
 }

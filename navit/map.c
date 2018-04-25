@@ -96,12 +96,12 @@ map_new(struct attr *parent, struct attr **attrs)
 	struct attr *type=attr_search(attrs, NULL, attr_type);
 
 	if (! type) {
-		dbg(lvl_error,"missing type\n");
+		dbg(lvl_error,"missing type");
 		return NULL;
 	}
 	maptype_new=plugin_get_category_map(type->u.str);
 	if (! maptype_new) {
-		dbg(lvl_error,"invalid type '%s'\n", type->u.str);
+		dbg(lvl_error,"invalid type '%s'", type->u.str);
 		return NULL;
 	}
 
@@ -227,7 +227,7 @@ map_convert_string_tmp(struct map *this_, char *str)
 		return str;
 	map_converted_string_tmp=g_convert(str, -1, "utf-8", this_->meth.charset, NULL, NULL, NULL);
 	if(!map_converted_string_tmp) {
-		dbg(lvl_error,"Error converting '%s' from %s to utf-8\n", str, this_->meth.charset);
+		dbg(lvl_error,"Error converting '%s' from %s to utf-8", str, this_->meth.charset);
 		return str;
 	}	
 	return map_converted_string_tmp;
@@ -442,8 +442,8 @@ struct map_search *
 map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial)
 {
 	struct map_search *this_;
-	dbg(lvl_debug,"enter(%p,%p,%p,%d)\n", m, item, search_attr, partial);
-	dbg(lvl_debug,"0x%x 0x%x 0x%x\n", attr_country_all, search_attr->type, attr_country_name);
+	dbg(lvl_debug,"enter(%p,%p,%p,%d)", m, item, search_attr, partial);
+	dbg(lvl_debug,"0x%x 0x%x 0x%x", attr_country_all, search_attr->type, attr_country_name);
 	this_=g_new0(struct map_search,1);
 	this_->m=m;
 	this_->search_attr=*search_attr;
@@ -712,7 +712,7 @@ map_dump_file(struct map *map, const char *file)
 		map_dump_filedesc(map, f);
 		fclose(f);
 	} else 
-		dbg(lvl_error,"failed to open file '%s'\n",file);
+		dbg(lvl_error,"failed to open file '%s'",file);
 }
 
 void

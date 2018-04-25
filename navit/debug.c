@@ -155,12 +155,12 @@ parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr)
 		if(!strcmp(dbg_level_attr->u.str,"debug")){
 			return lvl_debug;
 		}
-		dbg(lvl_error, "Invalid debug level in config: '%s'\n", dbg_level_attr->u.str);
+		dbg(lvl_error, "Invalid debug level in config: '%s'", dbg_level_attr->u.str);
 	} else if (level_attr) {
 		if (level_attr->u.num>= lvl_error &&
 		    level_attr->u.num<= lvl_debug)
 			return level_attr->u.num;
-		dbg(lvl_error, "Invalid debug level in config: %ld\n", level_attr->u.num);
+		dbg(lvl_error, "Invalid debug level in config: %ld", level_attr->u.num);
 	}
 	return lvl_unset;
 }
@@ -391,7 +391,7 @@ debug_dump_mallocs(void)
 {
 	struct malloc_head *head=malloc_heads;
 	int i;
-	dbg(lvl_debug,"mallocs %d\n",mallocs);
+	dbg(lvl_debug,"mallocs %d",mallocs);
 	while (head) {
 		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
 		for (i = 0 ; i < 8 ; i++)
@@ -414,7 +414,7 @@ debug_malloc(const char *where, int line, const char *func, int size)
 	debug_malloc_size+=size;
 	if (debug_malloc_size/(1024*1024) != debug_malloc_size_m) {
 		debug_malloc_size_m=debug_malloc_size/(1024*1024);
-		dbg(lvl_debug,"malloced %d kb\n",debug_malloc_size/1024);
+		dbg(lvl_debug,"malloced %d kb",debug_malloc_size/1024);
 	}
 	head=malloc(size+sizeof(*head)+sizeof(*tail));
 	head->magic=0xdeadbeef;

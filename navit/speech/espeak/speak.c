@@ -166,11 +166,11 @@ static BOOL initialise(void)
 	{
 		if(result == -1)
 		{
-			dbg(lvl_error, "Failed to load espeak-data\n");
+			dbg(lvl_error, "Failed to load espeak-data");
 			return FALSE;
 		}
 		else
-			dbg(lvl_error, "Wrong version of espeak-data 0x%x (expects 0x%x) at %s\n",result,version_phdata,path_home);
+			dbg(lvl_error, "Wrong version of espeak-data 0x%x (expects 0x%x) at %s",result,version_phdata,path_home);
 	}
 	LoadConfig();
 	SetVoiceStack(NULL);
@@ -214,7 +214,7 @@ static void start_speaking(struct speech_priv* sp_priv)
 
 static LRESULT CALLBACK speech_message_handler( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	dbg(lvl_debug, "message_handler called\n");
+	dbg(lvl_debug, "message_handler called");
 
 	switch (uMsg)
 	{
@@ -234,7 +234,7 @@ static LRESULT CALLBACK speech_message_handler( HWND hwnd, UINT uMsg, WPARAM wPa
 		{
 			WAVEHDR *WaveHeader = (WAVEHDR *)lParam;
 			struct speech_priv* sp_priv;
-			dbg(lvl_info, "Wave buffer done\n");
+			dbg(lvl_info, "Wave buffer done");
 
 			sp_priv = (struct speech_priv*)WaveHeader->dwUser;
 			sp_priv->free_buffers = g_list_append(sp_priv->free_buffers, WaveHeader);
@@ -282,7 +282,7 @@ static void speech_message_dispatcher( struct speech_priv * sp_priv)
     {
         if (bRet == -1)
         {
-            dbg(lvl_error, "Error getting message from queue\n");
+            dbg(lvl_error, "Error getting message from queue");
             break;
         }
         else
@@ -336,7 +336,7 @@ static DWORD startThread( LPVOID sp_priv)
 
     if (!RegisterClass(&wc))
     {
-        dbg(lvl_error, "Window registration for message queue failed\n");
+        dbg(lvl_error, "Window registration for message queue failed");
         return 1;
     }
 
@@ -361,7 +361,7 @@ static DWORD startThread( LPVOID sp_priv)
 
     if (hwnd == NULL)
     {
-        dbg(lvl_error, "Window creation failed: %d\n",  GetLastError());
+        dbg(lvl_error, "Window creation failed: %d",  GetLastError());
         return 1;
     }
 
@@ -371,7 +371,7 @@ static DWORD startThread( LPVOID sp_priv)
 
 	if(!waveout_open(this))
 	{
-		dbg(lvl_error, "Can't open wave output\n");
+		dbg(lvl_error, "Can't open wave output");
 		return 1;
 	}
 
@@ -387,11 +387,11 @@ static int
 espeak_say(struct speech_priv *this, const char *text)
 {
 	char *phrase = g_strdup(text);
-	dbg(lvl_debug, "Speak: '%s'\n", text);
+	dbg(lvl_debug, "Speak: '%s'", text);
 
 	if (!PostMessage(this->h_queue, msg_say, (WPARAM)this, (LPARAM)phrase))
 	{
-		dbg(lvl_error, "PostThreadMessage 'say' failed\n");
+		dbg(lvl_error, "PostThreadMessage 'say' failed");
 	}
 
 	return 0;
@@ -440,7 +440,7 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 		strcpy(path_home,path->u.str);
 	else
 		sprintf(path_home,"%s/espeak-data",getenv("NAVIT_SHAREDIR"));
-	dbg(lvl_debug,"path_home set to %s\n",path_home);
+	dbg(lvl_debug,"path_home set to %s",path_home);
 
 	if ( !initialise() )
 	{
@@ -467,12 +467,12 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 			}
 			file1=g_strdup_printf("%s/voices/%s",path_home,lang_full);
 			file2=g_strdup_printf("%s/voices/%s/%s",path_home,lang,lang_full);
-			dbg(lvl_debug,"Testing %s and %s\n",file1,file2);
+			dbg(lvl_debug,"Testing %s and %s",file1,file2);
 			if (file_exists(file1) || file_exists(file2)) 
 				lang_str=g_strdup(lang_full);
 			else
 				lang_str=g_strdup(lang);
-			dbg(lvl_debug,"Language full %s lang %s result %s\n",lang_full,lang,lang_str);
+			dbg(lvl_debug,"Language full %s lang %s result %s",lang_full,lang,lang_str);
 			g_free(lang_full);
 			g_free(lang);
 			g_free(file1);
@@ -481,12 +481,12 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
 	}
 	if(lang_str && SetVoiceByName(lang_str) != EE_OK)
 	{
-		dbg(lvl_error, "Error setting language to: '%s',falling back to default\n", lang_str);
+		dbg(lvl_error, "Error setting language to: '%s',falling back to default", lang_str);
 		g_free(lang_str);
 		lang_str=NULL;
 	}
 	if(!lang_str && SetVoiceByName("default") != EE_OK) {
-		dbg(lvl_error, "Error setting language to default\n");
+		dbg(lvl_error, "Error setting language to default");
 	}
 
 

@@ -492,7 +492,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     else
     {
         /* TODO: debug "colour parse errors" on xpm */
-        dbg(lvl_error,"image_new on '%s' failed: %s\n", name, IMG_GetError());
+        dbg(lvl_error,"image_new on '%s' failed: %s", name, IMG_GetError());
         g_free(gi);
         gi = NULL;
         g_hash_table_insert(hImageData,
@@ -829,7 +829,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
     int color = 1;
 
     if (!font) {
-        dbg(lvl_error, "no font, returning\n");
+        dbg(lvl_error, "no font, returning");
         return;
     }
     graphics_priv_root->dirty = 1;

@@ -354,21 +354,21 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 	if (! face_id)
 		return FT_Err_Invalid_Handle;
 	fontfile=g_strdup((char *)face_id);
-	dbg(lvl_debug,"fontfile=%s\n", fontfile);
+	dbg(lvl_debug,"fontfile=%s", fontfile);
 	fontindex=strrchr(fontfile,'/');
 	if (! fontindex) {
 		g_free(fontfile);
 		return FT_Err_Invalid_Handle;
 	}
 	*fontindex++='\0';
-	dbg(lvl_debug,"new face %s %d\n", fontfile, atoi(fontindex));
+	dbg(lvl_debug,"new face %s %d", fontfile, atoi(fontindex));
 	ret = FT_New_Face( library, fontfile, atoi(fontindex), aface );
 	if(ret) {
-	       dbg(lvl_error,"Error while creating freetype face: %d\n", ret);
+	       dbg(lvl_error,"Error while creating freetype face: %d", ret);
 	       return ret;
 	}
 	if((ret = FT_Select_Charmap(*aface, FT_ENCODING_UNICODE))) {
-	       dbg(lvl_error,"Error while creating freetype face: %d\n", ret);
+	       dbg(lvl_error,"Error while creating freetype face: %d", ret);
 	}
 	return 0;
 }
@@ -405,7 +405,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 	}
 	font->size=size;
 #ifdef HAVE_FONTCONFIG
-	dbg(lvl_info, " about to search for fonts, preferred = %s\n", fontfamily);
+	dbg(lvl_info, " about to search for fonts, preferred = %s", fontfamily);
 	family = g_malloc(sizeof(fontfamilies) + sizeof(fontfamily));
 	if (fontfamily) {
 		memcpy(family, &fontfamily, sizeof(fontfamily));
@@ -419,7 +419,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 
 
 		while (*family && !found) {
-			dbg(lvl_info, "Looking for font family %s. exact=%d\n",
+			dbg(lvl_info, "Looking for font family %s. exact=%d",
 			    *family, exact);
 			FcPattern *required =
 			    FcPatternBuild(NULL, FC_FAMILY, FcTypeString,
@@ -521,7 +521,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 	g_free(name);
 #endif /* HAVE_FONTCONFIG */
 	if (!found) {
-		dbg(lvl_error,"Failed to load font, no labelling\n");
+		dbg(lvl_error,"Failed to load font, no labelling");
 		g_free(font);
 		return NULL;
 	}

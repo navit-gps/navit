@@ -785,7 +785,7 @@ static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_
 		last++;
 	}
 
-	dbg(lvl_debug,"align=%d\n", align);
+	dbg(lvl_debug,"align=%d", align);
 	switch (align & 51) {
 	case 1:
 		p.y=0;
@@ -1688,7 +1688,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav)
 		this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 
 		if (!this->img) {
-			dbg(lvl_warning, "failed to load '%s'\n", this->src);
+			dbg(lvl_warning, "failed to load '%s'", this->src);
 			return;
 		}
 
@@ -1721,16 +1721,16 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav)
 		opc->osd_item.w = -1;
 		opc->osd_item.h = -1;
 	}
-	dbg(lvl_debug, "enter\n");
-	dbg(lvl_debug, "Get: %s, %d, %d, %d, %d\n", this->src, opc->osd_item.rel_w, opc->osd_item.rel_h, opc->osd_item.w, opc->osd_item.h);
+	dbg(lvl_debug, "enter");
+	dbg(lvl_debug, "Get: %s, %d, %d, %d, %d", this->src, opc->osd_item.rel_w, opc->osd_item.rel_h, opc->osd_item.w, opc->osd_item.h);
 	this->img = graphics_image_new_scaled(gra, this->src, opc->osd_item.w, opc->osd_item.h);
 	if (!this->img) {
-		dbg(lvl_warning, "failed to load '%s'\n", this->src);
+		dbg(lvl_warning, "failed to load '%s'", this->src);
 		return;
 	}
         else
         {
-		dbg(lvl_debug,"Got %s: %d, %d\n", this->src, this->img->width, this->img->height);
+		dbg(lvl_debug,"Got %s: %d, %d", this->src, this->img->width, this->img->height);
         }
 	osd_button_adjust_sizes(opc, this->img);
 	if (this->use_overlay) {
@@ -1784,7 +1784,7 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr)
 		gra = navit_get_graphics(nav);
 	        this_->img = graphics_image_new_scaled(gra, this_->src, opc->osd_item.w, opc->osd_item.h);
 		if (!this_->img) {
-			dbg(lvl_warning, "failed to load '%s'\n", this_->src);
+			dbg(lvl_warning, "failed to load '%s'", this_->src);
 			return 0;
 		}
 
@@ -1825,7 +1825,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? TRANSPARENT_BG:(TRANSPARENT_BG|DISABLE_OVERLAY));
 
 	if (!opc->osd_item.command) {
-		dbg(lvl_error, "no command\n");
+		dbg(lvl_error, "no command");
 		goto error;
 	}
 	attr = attr_search(attrs, NULL, attr_src_dir);
@@ -1835,7 +1835,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 		this->src_dir=NULL;
 	attr = attr_search(attrs, NULL, attr_src);
 	if (!attr) {
-		dbg(lvl_error, "no src\n");
+		dbg(lvl_error, "no src");
 		goto error;
 	}
 
@@ -1861,10 +1861,10 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav)
 	struct osd_button *this = (struct osd_button *)opc->data;
 
 	struct graphics *gra = navit_get_graphics(nav);
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	this->img = graphics_image_new(gra, this->src);
 	if (!this->img) {
-		dbg(lvl_warning, "failed to load '%s'\n", this->src);
+		dbg(lvl_warning, "failed to load '%s'", this->src);
 		return;
 	}
 	osd_button_adjust_sizes(opc, this->img);
@@ -1914,7 +1914,7 @@ osd_image_new(struct navit *nav, struct osd_methods *meth,
 
 	attr = attr_search(attrs, NULL, attr_src);
 	if (!attr) {
-		dbg(lvl_error, "no src\n");
+		dbg(lvl_error, "no src");
 		goto error;
 	}
 
@@ -1974,13 +1974,13 @@ static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int statu
 	if (do_draw) {
 		osd_fill_with_bgcolor(&opc->osd_item);
 		image = g_strdup_printf(this->icon_src, nav_status_to_text(status2));
-		dbg(lvl_debug, "image=%s\n", image);
+		dbg(lvl_debug, "image=%s", image);
 		gr_image =
 				graphics_image_new_scaled(opc->osd_item.gr,
 						image, this->icon_w,
 						this->icon_h);
 		if (!gr_image) {
-			dbg(lvl_error,"failed to load %s in %dx%d\n",image,this->icon_w,this->icon_h);
+			dbg(lvl_error,"failed to load %s in %dx%d",image,this->icon_w,this->icon_h);
 			g_free(image);
 			image = graphics_icon_path("unknown.png");
 			gr_image =
@@ -1991,7 +1991,7 @@ static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int statu
 							this->
 							icon_h);
 		}
-		dbg(lvl_debug, "gr_image=%p\n", gr_image);
+		dbg(lvl_debug, "gr_image=%p", gr_image);
 		if (gr_image) {
 			p.x =
 					(opc->osd_item.w -
@@ -2049,7 +2049,7 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 	struct navigation *nav = NULL;
 	struct attr attr;
 
-	dbg(lvl_debug, "enter, opc=%p\n", opc);
+	dbg(lvl_debug, "enter, opc=%p", opc);
 	osd_set_std_graphic(navit, &opc->osd_item, (struct osd_priv *)opc);
 	if (navit)
 		nav = navit_get_navigation(navit);
@@ -2059,7 +2059,7 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 			osd_navigation_status_draw_do(opc, attr.u.num);
 	}
 	else
-		dbg(lvl_error, "navigation instance is NULL, OSD will never update\n");
+		dbg(lvl_error, "navigation instance is NULL, OSD will never update");
 	//navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item)); // FIXME do we need this?
 }
 
@@ -2159,7 +2159,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);
-		dbg(lvl_debug, "name=%s\n", name);
+		dbg(lvl_debug, "name=%s", name);
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
 			this->last_name = name;
@@ -2178,13 +2178,13 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		osd_fill_with_bgcolor(&opc->osd_item);
 		if (this->active) {
 			image = g_strdup_printf(this->icon_src, name);
-			dbg(lvl_debug, "image=%s\n", image);
+			dbg(lvl_debug, "image=%s", image);
 			gr_image =
 			    graphics_image_new_scaled(opc->osd_item.gr,
 						      image, this->icon_w,
 						      this->icon_h);
 			if (!gr_image) {
-				dbg(lvl_error,"failed to load %s in %dx%d\n",image,this->icon_w,this->icon_h);
+				dbg(lvl_error,"failed to load %s in %dx%d",image,this->icon_w,this->icon_h);
 				g_free(image);
 				image = graphics_icon_path("unknown.png");
 				gr_image =
@@ -2195,7 +2195,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 							      this->
 							      icon_h);
 			}
-			dbg(lvl_debug, "gr_image=%p\n", gr_image);
+			dbg(lvl_debug, "gr_image=%p", gr_image);
 			if (gr_image) {
 				p.x =
 				    (opc->osd_item.w -
@@ -2302,7 +2302,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
 
     if (!navit_get_attr(navit, attr_speech, &speechattr, NULL))
     {
-        dbg(lvl_error, "No speech plugin available, toggle_announcer disabled.\n");
+        dbg(lvl_error, "No speech plugin available, toggle_announcer disabled.");
         return;
     }
     if (!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
@@ -2335,7 +2335,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
             gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
         }
         
-        dbg(lvl_debug, "gr_image=%p\n", gr_image);
+        dbg(lvl_debug, "gr_image=%p", gr_image);
         
         if (gr_image)
         {
@@ -3258,8 +3258,8 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 			}
 
 			if (item) {
-				dbg(lvl_debug,"name %s\n", item_to_name(item->type));
-				dbg(lvl_debug,"type %s\n", attr_to_name(oti->attr_typ));
+				dbg(lvl_debug,"name %s", item_to_name(item->type));
+				dbg(lvl_debug,"type %s", attr_to_name(oti->attr_typ));
 				if (item_attr_get(item, oti->attr_typ, &attr))
 					value=osd_text_format_attr(&attr, oti->format, imperial);
 			}
@@ -3371,7 +3371,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
 				last++;
 			}
 
-			dbg(lvl_debug,"this->align=%d\n", this->align);
+			dbg(lvl_debug,"this->align=%d", this->align);
 			switch (this->align & 51) {
 			case 1:
 				p.y=0;
@@ -3654,7 +3654,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
 			case 2:
 				strength=2;
 				if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_sats_used, &attr, NULL)) {
-					dbg(lvl_debug,"num=%ld\n", attr.u.num);
+					dbg(lvl_debug,"num=%ld", attr.u.num);
 					if (attr.u.num >= 3) 
 						strength=attr.u.num-1;
 					if (strength > 5)
@@ -4043,7 +4043,7 @@ osd_auxmap_draw(struct osd_priv_common *opc)
 		memset(&sel, 0, sizeof(sel));
 		sel.u.p_rect.rl.x=opc->osd_item.w;
 		sel.u.p_rect.rl.y=opc->osd_item.h;
-		dbg(lvl_debug,"osd_auxmap_draw: sel.u.p_rect.rl=(%d, %d)\n", opc->osd_item.w, opc->osd_item.h);
+		dbg(lvl_debug,"osd_auxmap_draw: sel.u.p_rect.rl=(%d, %d)", opc->osd_item.w, opc->osd_item.h);
 		transform_set_screen_selection(this->trans, &sel);
 		graphics_set_rect(opc->osd_item.gr, &sel.u.p_rect);
 	}

@@ -154,7 +154,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
     int rc = 0;
     int dwBytes;
 
-    dbg(lvl_debug, "enter, *priv='%x', priv->source='%s'\n", priv, priv->source);
+    dbg(lvl_debug, "enter, *priv='%x', priv->source='%s'", priv, priv->source);
 
     if ( priv->no_data_count > 5 )
     {
@@ -200,7 +200,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
             priv->no_data_count = 0;
             callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
             if (rc > 1)
-                dbg(lvl_error, "Can not keep with gps data delay is %d seconds\n", rc - 1);
+                dbg(lvl_error, "Can not keep with gps data delay is %d seconds", rc - 1);
 
         }
     }
@@ -208,7 +208,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
     {
         priv->no_data_count++;
     }
-    dbg(lvl_info, "leave, return '1', priv->no_data_count='%d'\n", priv->no_data_count);
+    dbg(lvl_info, "leave, return '1', priv->no_data_count='%d'", priv->no_data_count);
     return 1;
 }
 #endif
@@ -266,7 +266,7 @@ vehicle_file_open(struct vehicle_priv *priv)
 		struct sockaddr_in sin;
 		p=strchr(s,':');
 		if (!p) {
-			dbg(lvl_error,"port number missing in %s\n",s);
+			dbg(lvl_error,"port number missing in %s",s);
 			g_free(s);
 			return 0;
 		}
@@ -274,14 +274,14 @@ vehicle_file_open(struct vehicle_priv *priv)
 		sin.sin_family=AF_INET;
 		sin.sin_port=ntohs(atoi(p));
 		if (!inet_aton(s, &sin.sin_addr)) {
-			dbg(lvl_error,"failed to parse %s\n",s);
+			dbg(lvl_error,"failed to parse %s",s);
 			g_free(s);
 			return 0;
 		}
 		priv->fd = socket(PF_INET, SOCK_STREAM, 0);
 		if (priv->fd != -1) {
 			if (connect(priv->fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
-				dbg(lvl_error,"failed to connect to %s:%s\n",s,p);
+				dbg(lvl_error,"failed to connect to %s:%s",s,p);
 				g_free(s);
 				return 0;
 			}
@@ -315,7 +315,7 @@ vehicle_file_open(struct vehicle_priv *priv)
 		g_free( raw_setting_str );
 		priv->file_type = file_type_serial;
 		// Add the callback
-		dbg(lvl_info, "Add the callback ...\n", priv->source);
+		dbg(lvl_info, "Add the callback ...", priv->source);
 			priv->timeout_callback=callback_new_1(callback_cast(vehicle_win32_serial_track), priv);
 #else
 		//TODO - add linux serial
@@ -332,7 +332,7 @@ vehicle_file_open(struct vehicle_priv *priv)
 static void
 vehicle_file_close(struct vehicle_priv *priv)
 {
-    dbg(lvl_debug, "enter, priv->fd='%d'\n", priv->fd);
+    dbg(lvl_debug, "enter, priv->fd='%d'", priv->fd);
 	vehicle_file_disable_watch(priv);
 #ifdef _WIN32
     if(priv->file_type == file_type_serial)
@@ -369,7 +369,7 @@ vehicle_file_close(struct vehicle_priv *priv)
 static int
 vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	vehicle_file_enable_watch(priv);
 
 	return FALSE;
@@ -425,10 +425,10 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	int valid=0;
 	int ret = 0;
 
-	dbg(lvl_info, "enter: buffer='%s'\n", buffer);
+	dbg(lvl_info, "enter: buffer='%s'", buffer);
 	for (;;) {
 		if (len < 4) {
-			dbg(lvl_error, "'%s' too short\n", buffer);
+			dbg(lvl_error, "'%s' too short", buffer);
 			return ret;
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n') {
@@ -439,22 +439,22 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			break;
 	}
 	if (buffer[0] != '$') {
-		dbg(lvl_error, "no leading $ in '%s'\n", buffer);
+		dbg(lvl_error, "no leading $ in '%s'", buffer);
 		return ret;
 	}
 	if (buffer[len - 3] != '*') {
-		dbg(lvl_error, "no *XX in '%s'\n", buffer);
+		dbg(lvl_error, "no *XX in '%s'", buffer);
 		return ret;
 	}
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
 	if (!sscanf(buffer + len - 2, "%x", &bcsum) && priv->checksum_ignore != 2) {
-		dbg(lvl_error, "no checksum in '%s'\n", buffer);
+		dbg(lvl_error, "no checksum in '%s'", buffer);
 		return ret;
 	}
 	if (bcsum != csum && priv->checksum_ignore == 0) {
-		dbg(lvl_error, "wrong checksum in '%s was %x should be %x'\n", buffer,bcsum,csum);
+		dbg(lvl_error, "wrong checksum in '%s was %x should be %x'", buffer,bcsum,csum);
 		return ret;
 	}
 
@@ -463,7 +463,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data_buf);
 		priv->nmea_data_buf=nmea_data_buf;
 	} else {
-		dbg(lvl_error, "nmea buffer overflow (len %zu), discarding '%s'\n", priv->nmea_data_buf?strlen(priv->nmea_data_buf):-1,buffer);
+		dbg(lvl_error, "nmea buffer overflow (len %zu), discarding '%s'", priv->nmea_data_buf?strlen(priv->nmea_data_buf):-1,buffer);
 	}
 	i = 0;
 	p = buffer;
@@ -510,7 +510,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 			}
 
-			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f", priv->geo.lat, priv->geo.lng);
 
 		} else {
 			if (priv->valid == attr_position_valid_valid)
@@ -550,7 +550,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		if (valid) {
 			priv->direction = g_ascii_strtod( item[1], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
-			dbg(lvl_info,"direction %lf, speed %2.1lf\n", priv->direction, priv->speed);
+			dbg(lvl_info,"direction %lf, speed %2.1lf", priv->direction, priv->speed);
 		}
 	}
 	if (!strncmp(&buffer[3], "RMC", 3)) {
@@ -600,7 +600,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 				strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 			}
 
-			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+			dbg(lvl_info, "latitude '%2.4f' longitude %2.4f", priv->geo.lat, priv->geo.lng);
 
 		} else {
 			if (priv->valid == attr_position_valid_valid)
@@ -672,7 +672,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(lvl_debug,"magnetic %d\n", priv->magnetic_direction);
+			dbg(lvl_debug,"magnetic %d", priv->magnetic_direction);
 		}
 	}
 	return ret;
@@ -688,7 +688,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 {
 	int size, rc = 0;
 	char *str, *tok;
-    dbg(lvl_debug, "vehicle_file_io : enter\n");
+    dbg(lvl_debug, "vehicle_file_io : enter");
 
 	if (priv->process_statefile) {
 		unsigned char *data;
@@ -721,12 +721,12 @@ vehicle_file_io(struct vehicle_priv *priv)
 	}
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
-	dbg(lvl_debug, "size=%d pos=%d buffer='%s'\n", size,
+	dbg(lvl_debug, "size=%d pos=%d buffer='%s'", size,
 	    priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
-		dbg(lvl_debug, "line='%s'\n", str);
+		dbg(lvl_debug, "line='%s'", str);
 		rc +=vehicle_file_parse(priv, str);
 		str = tok;
 		if (priv->file_type == file_type_file && rc)
@@ -737,7 +737,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 		size = priv->buffer + priv->buffer_pos - str;
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
-		dbg(lvl_debug, "now pos=%d buffer='%s'\n",
+		dbg(lvl_debug, "now pos=%d buffer='%s'",
 		    priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
 		dbg(lvl_debug,
@@ -756,7 +756,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 static void
 vehicle_file_enable_watch(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 #ifdef _WIN32
 	// add an event : don't use glib timers and g_timeout_add
     if (priv->file_type == file_type_serial)
@@ -764,7 +764,7 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 	if (priv->timeout_callback != NULL)
             priv->timeout = event_add_timeout(500, 1, priv->timeout_callback);
         else
-            dbg(lvl_warning, "error : watch not enabled : priv->timeout_callback is null\n"); }
+            dbg(lvl_warning, "error : watch not enabled : priv->timeout_callback is null"); }
     else
 #endif
     {
@@ -781,7 +781,7 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 static void
 vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug, "vehicle_file_disable_watch : enter\n");
+	dbg(lvl_debug, "vehicle_file_disable_watch : enter");
 #ifdef _WIN32
     if(priv->file_type == file_type_serial)
     {
@@ -893,7 +893,7 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		attr->u.str=priv->fixiso8601;
 		break;
 	case attr_position_sat_item:
-		dbg(lvl_debug,"at here\n");
+		dbg(lvl_debug,"at here");
 		priv->sat_item.id_lo++;
 		if (priv->sat_item.id_lo > priv->current_count) {
 			priv->sat_item.id_lo=0;
@@ -988,7 +988,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct attr *checksum_ignore;
 	struct attr *state_file;
 
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 
 	source = attr_search(attrs, NULL, attr_source);
 	if(source == NULL){
@@ -1048,7 +1048,7 @@ vehicle_file_new_file(struct vehicle_methods
 		ret->on_eof=1;
 	if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
-	dbg(lvl_debug,"on_eof=%d\n", ret->on_eof);
+	dbg(lvl_debug,"on_eof=%d", ret->on_eof);
 	*meth = vehicle_file_methods;
 	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
 	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
@@ -1065,15 +1065,15 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->no_data_count = 0;
 #endif
 
-	dbg(lvl_debug, "vehicle_file_new_file:open\n");
+	dbg(lvl_debug, "vehicle_file_new_file:open");
 	if (!vehicle_file_open(ret)) {
-        dbg(lvl_error, "Failed to open '%s'\n", ret->source);
+        dbg(lvl_error, "Failed to open '%s'", ret->source);
 	}
 
 	vehicle_file_enable_watch(ret);
 	// vehicle_file_destroy(ret);
 	// return NULL;
-	dbg(lvl_debug, "leave\n");
+	dbg(lvl_debug, "leave");
 	return ret;
 }
 
@@ -1082,7 +1082,7 @@ vehicle_file_new_file(struct vehicle_methods
 */
 void plugin_init(void)
 {
-	dbg(lvl_debug, "vehicle_file:plugin_init:enter\n");
+	dbg(lvl_debug, "vehicle_file:plugin_init:enter");
 	plugin_register_category_vehicle("file", vehicle_file_new_file);
 	plugin_register_category_vehicle("pipe", vehicle_file_new_file);
 	plugin_register_category_vehicle("socket", vehicle_file_new_file);
