@@ -244,7 +244,13 @@ file_create_url(char *url)
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
 
-int file_is_dir(char *name)
+/**
+ * \brief Check if a given path corresponds to a directory
+ *
+ * \param name The path to the filesystem element
+ * \return !=0 (true) if \p name is a directory
+ */
+int file_is_dir(const char *name)
 {
 	struct stat buf;
 	if (! stat(name, &buf)) {
@@ -254,7 +260,13 @@ int file_is_dir(char *name)
 
 }
 
-int file_is_reg(char *name)
+/**
+ * \brief Check if a given path corresponds to a regular file
+ *
+ * \param name The path to the filesystem element
+ * \return !=0 (true) if \p name is a regular file
+ */
+int file_is_reg(const char *name)
 {
 	struct stat buf;
 	if (! stat(name, &buf)) {
@@ -676,7 +688,7 @@ file_closedir(void *hnd)
  * @return A pointer to the NUL-terminated string containing the directory name (that must be freed by caller using g_free()
  */
 char *
-file_get_dirname(char *filename)
+file_get_dirname(const char *filename)
 {
 	char *dirname;
 	char *p;
