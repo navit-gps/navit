@@ -422,7 +422,7 @@ public class Navit extends Activity
 		try {
 			String[] children = NavitResources.getAssets().list("config");
 			for (String child : children) {
-				Log.d("Navit", "in /config asset, foudn node: '" + child + "'");
+				Log.d("Navit", "in /config asset, found node: '" + child + "'");
 				String[] grandChildren = NavitResources.getAssets().list(child);
 				if (0 == grandChildren.length)
 					Log.d("Navit", "above node is a file");
