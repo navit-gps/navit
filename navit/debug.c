@@ -308,7 +308,14 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
-		vsnprintf(debug_message+strlen(debug_message),4095-strlen(debug_message),fmt,ap);
+		gchar *fmt_newline;
+#ifdef HAVE_API_WIN32_BASE
+		fmt_newline = g_strconcat(fmt, "\r\n");
+#else
+		fmt_newline = g_strconcat(fmt, "\n");
+#endif
+		vsnprintf(debug_message+strlen(debug_message),4095-strlen(debug_message),fmt_newline,ap);
+		g_free(fmt_newline);
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
 		mbstowcs(muni, debug_message, strlen(debug_message)+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);

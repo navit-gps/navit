@@ -38,14 +38,6 @@ extern "C" {
 #endif
 #endif
 
-#ifndef EOL
-#ifdef HAVE_API_WIN32_BASE
-#define EOL '\r\n'
-#else
-#define EOL '\n'
-#endif
-#endif
-
 /** Possible debug levels (inspired by SLF4J). */
 typedef enum {
 	/** Internal use only, do not use for logging. */
@@ -64,7 +56,7 @@ extern dbg_level max_debug_level;
 #define dbg_str2(x) #x
 #define dbg_str1(x) dbg_str2(x)
 #define dbg_module dbg_str1(MODULE)
-#define dbg(level,...) { if (max_debug_level >= level) debug_printf(level,dbg_module,strlen(dbg_module),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,__VA_ARGS__, EOL); }
+#define dbg(level,...) { if (max_debug_level >= level) debug_printf(level,dbg_module,strlen(dbg_module),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,__VA_ARGS__); }
 #define dbg_assert(expr) ((expr) ? (void) 0 : debug_assert_fail(dbg_module,strlen(dbg_module),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),__FILE__,__LINE__,dbg_str1(expr)))
 
 #define DEBUG_MODULE_GLOBAL "global"
