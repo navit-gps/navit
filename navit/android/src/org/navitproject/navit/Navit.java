@@ -494,15 +494,7 @@ public class Navit extends Activity
 					AlertDialog.Builder infobox = new AlertDialog.Builder(this);
 					infobox.setTitle(getString(R.string.permissions_info_box_title)); // TRANS
 					infobox.setCancelable(false);
-					final TextView message = new TextView(this);
-					message.setFadingEdgeLength(20);
-					message.setVerticalFadingEdgeEnabled(true);
-					RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-					message.setLayoutParams(rlp);
-					final SpannableString s = new SpannableString(getString(R.string.permissions_not_granted)); // TRANS
-					message.setText(s);
-					message.setMovementMethod(LinkMovementMethod.getInstance());
-					infobox.setView(message);
+					infobox.setMessage(getString(R.string.permissions_not_granted));
 					// TRANS
 					infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface arg0, int arg1) {
