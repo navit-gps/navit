@@ -54,9 +54,6 @@ jobs:
           command: |
             bash ci/build_android.sh
       - run:
-          name: Install git
-          command: apt-get update && apt-get -y install ca-certificates git python-pip
-      - run:
           name: configure ssh git
           command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - add_ssh_keys:
