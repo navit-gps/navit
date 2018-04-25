@@ -450,7 +450,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 				    && (r2 == FcResultMatch)
 				    && (FcValueEqual(v1, v2) || !exact)) {
 					dbg(lvl_info,
-					    "About to load font from file %s index %d\n",
+					    "About to load font from file %s index %d",
 					    fontfile, fontindex);
 #if USE_CACHING
 					idstr=g_strdup_printf("%s/%d", fontfile, fontindex);

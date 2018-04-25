@@ -917,7 +917,7 @@ command_call_function(struct context *ctx, struct result *res)
 				callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
 				if (valid!=1){
 					dbg(lvl_error, "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
-					    "OSD#Navit_commands for valid commands.\n", function);
+					    "OSD#Navit_commands for valid commands.", function);
 				}
 				if (out && out[0]) {
 					result_free(res);
@@ -1796,11 +1796,15 @@ command_register_callbacks(struct command_saved *cs)
 		if (cs->ctx.error) {
 			/* An error occurred while parsing the command */
 			tmpoffset = cs->ctx.expr - cs->command;
-			dbg(lvl_error, "parsing error: cs=%p, cs->ctx.error=%d\n\t%s\n\t%*s", cs, cs->ctx.error, cs->command, tmpoffset + 1, "^");
+			dbg(lvl_error, "parsing error: cs=%p, cs->ctx.error=%d", cs, cs->ctx.error);
+			dbg(lvl_error, "\t%s", cs->command);
+			dbg(lvl_error, "\t%*s", tmpoffset + 1, "^");
 			return 0;
 		} else if (cs->res.attr.type == attr_none) {
 			/* We could not resolve an object, perhaps because it has not been created */
-			dbg(lvl_error, "could not resolve object in cs=%p:\n\t%s\n\t%*s", cs, cs->command, tmpoffset + 1, "^");
+			dbg(lvl_error, "could not resolve object in cs=%p:", cs);
+			dbg(lvl_error, "\t%s", cs->command);
+			dbg(lvl_error, "\t%*s", tmpoffset + 1, "^");
 			return 0;
 		}
 

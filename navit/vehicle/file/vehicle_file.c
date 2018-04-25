@@ -741,7 +741,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 		    priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
 		dbg(lvl_debug,
-		    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
+		    "Overflow. Most likely wrong baud rate or no nmea protocol");
 		priv->buffer_pos = 0;
 	}
 	if (rc)

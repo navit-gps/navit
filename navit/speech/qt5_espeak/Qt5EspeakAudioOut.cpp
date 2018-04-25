@@ -41,7 +41,7 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category)
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
     if (!info.isFormatSupported(format)) {
         dbg(lvl_error,
-            "Raw audio format not supported by backend, cannot play audio.\n");
+            "Raw audio format not supported by backend, cannot play audio.");
         return;
     }
 
