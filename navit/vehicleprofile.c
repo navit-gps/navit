@@ -30,7 +30,7 @@
 static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 {
-	dbg(lvl_debug,"%s:%ld\n", attr_to_name(attr->type), attr->u.num);
+	dbg(lvl_debug,"%s:%ld", attr_to_name(attr->type), attr->u.num);
 	switch (attr->type) {
 	case attr_flags:
 		this_->flags=attr->u.num;
@@ -154,7 +154,7 @@ vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struct navit_obje
 				struct navit_object *newrp;
 				struct attr_iter *iter=rp->func->iter_new(NULL);
 				struct attr attr;
-				dbg(lvl_debug,"patching roadprofile\n");
+				dbg(lvl_debug,"patching roadprofile");
 				newrp=oldrp->func->dup(oldrp);
 				while (rp->func->get_attr(rp, attr_any, &attr, iter)) 
 					newrp->func->set_attr(newrp, &attr);
@@ -177,7 +177,7 @@ vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navit_object *ob
 	struct attr attr;
 	struct attr_iter *iter=obj->func->iter_new(NULL);
 	while (obj->func->get_attr(obj, attr_any, &attr, iter)) {
-		dbg(lvl_debug,"%s\n",attr_to_name(attr.type));
+		dbg(lvl_debug,"%s",attr_to_name(attr.type));
 		if (attr.type == attr_roadprofile) 
 			vehicleprofile_apply_roadprofile(this_, attr.u.navit_object, is_option);
 		else if (attr.type != attr_profile_option)
@@ -190,7 +190,7 @@ static void
 vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data)
 {
 	struct roadprofile *rp=value;
-	dbg(lvl_debug,"type %s avg %d weight %d max %d\n",item_to_name((int)(long)key),rp->speed,rp->route_weight,rp->maxspeed);
+	dbg(lvl_debug,"type %s avg %d weight %d max %d",item_to_name((int)(long)key),rp->speed,rp->route_weight,rp->maxspeed);
 }
 
 static void
@@ -198,7 +198,7 @@ vehicleprofile_update(struct vehicleprofile *this_)
 {
 	struct attr_iter *iter=vehicleprofile_attr_iter_new();
 	struct attr profile_option;
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	vehicleprofile_clear(this_);
 	vehicleprofile_apply_attrs(this_, (struct navit_object *)this_, 0);
 	while (vehicleprofile_get_attr(this_, attr_profile_option, &profile_option, iter)) {
@@ -206,13 +206,13 @@ vehicleprofile_update(struct vehicleprofile *this_)
 		if (!profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_active, &active, NULL)) 
 			active.u.num=0;
 		if (profile_option.u.navit_object->func->get_attr(profile_option.u.navit_object, attr_name, &name, NULL)) 
-			dbg(lvl_debug,"%p %s %ld\n",profile_option.u.navit_object,name.u.str,active.u.num);
+			dbg(lvl_debug,"%p %s %ld",profile_option.u.navit_object,name.u.str,active.u.num);
 		if (active.u.num) 
 			vehicleprofile_apply_attrs(this_, profile_option.u.navit_object, 1);
 	}
 	vehicleprofile_attr_iter_destroy(iter);
-	dbg(lvl_debug,"result l %d w %d h %d wg %d awg %d pen %d\n",this_->length,this_->width,this_->height,this_->weight,this_->axle_weight,this_->through_traffic_penalty);
-	dbg(lvl_debug,"m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d\n",this_->mode,this_->flags_forward_mask,this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling, this_->static_speed, this_->static_distance, this_->dangerous_goods);
+	dbg(lvl_debug,"result l %d w %d h %d wg %d awg %d pen %d",this_->length,this_->width,this_->height,this_->weight,this_->axle_weight,this_->through_traffic_penalty);
+	dbg(lvl_debug,"m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d",this_->mode,this_->flags_forward_mask,this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling, this_->static_speed, this_->static_distance, this_->dangerous_goods);
 	g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 
 }

@@ -138,7 +138,7 @@ search_list_level(enum attr_type attr_type)
 	case attr_postal:
 		return -1;
 	default:
-		dbg(lvl_error,"unknown search '%s'\n",attr_to_name(attr_type));
+		dbg(lvl_error,"unknown search '%s'",attr_to_name(attr_type));
 		return -1;
 	}
 }
@@ -225,10 +225,10 @@ search_phrase_used(struct phrase *p, GList *used_phrases)
 {
 	while (used_phrases) {
 		struct phrase *pu=used_phrases->data;
-		dbg(lvl_debug,"'%s'-'%s' vs '%s'-'%s'\n",p->start,p->end,pu->start,pu->end);
+		dbg(lvl_debug,"'%s'-'%s' vs '%s'-'%s'",p->start,p->end,pu->start,pu->end);
 		if (p->start < pu->end && p->end > pu->start)
 			return 1;
-		dbg(lvl_debug,"unused\n");
+		dbg(lvl_debug,"unused");
 		used_phrases=g_list_next(used_phrases);
 	}
 	return 0;
@@ -255,7 +255,7 @@ search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, G
 			int count=0,wordcount_all=wordcount+p->wordcount;
 			struct search_list_result *slr;
 			attr.u.str=search_phrase_str(p);
-			dbg(lvl_debug,"%s phrase '%s'\n",attr_to_name(attr_type),attr.u.str);
+			dbg(lvl_debug,"%s phrase '%s'",attr_to_name(attr_type),attr.u.str);
 			search_list_search(sl, &attr, 0);
 			while ((slr=search_list_get_result(sl))) {
 				if (attr_type != attr_country_all) {
@@ -265,7 +265,7 @@ search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, G
 				}
 				count++;
 			}
-			dbg(lvl_debug,"%d results wordcount %d\n",count,wordcount_all);
+			dbg(lvl_debug,"%d results wordcount %d",count,wordcount_all);
 			if (count) {
 				GList *used=g_list_prepend(g_list_copy(exclude), tmp->data);
 				enum attr_type new_attr_type=attr_none;
@@ -348,7 +348,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 {
 	struct search_list_level *le;
 	int level;
-	dbg(lvl_info,"Starting search for '=%s' of type %s\n", search_attr->u.str, attr_to_name(search_attr->type));
+	dbg(lvl_info,"Starting search for '=%s' of type %s", search_attr->u.str, attr_to_name(search_attr->type));
 	search_address_results_free(this_);
 	if (search_attr->type == attr_address) {
 		search_by_address(this_, search_attr->u.str);
@@ -392,7 +392,7 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 	curr=le->list;
 	if (mode > 0 || !id)
 		le->selected=mode;
-	//dbg(lvl_debug,"enter level=%d %d %d %p\n", level, id, mode, curr);
+	//dbg(lvl_debug,"enter level=%d %d %d %p", level, id, mode, curr);
 	num = 0;
 	while (curr) {
 		num++;
@@ -401,13 +401,13 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 			slc->selected=mode;
 			if (id) {
 				le->last=curr;
-				//dbg(lvl_debug,"found\n");
+				//dbg(lvl_debug,"found");
 				return slc;
 			}
 		}
 		curr=g_list_next(curr);
 	}
-	//dbg(lvl_debug,"not found\n");
+	//dbg(lvl_debug,"not found");
 	return NULL;
 }
 
@@ -566,7 +566,7 @@ search_list_town_new(struct item *item)
 	ret->itemt=*item;
 	ret->common.item=ret->common.unique=*item;
 	if (item_attr_get(item, attr_town_streets_item, &attr)) {
-		dbg(lvl_debug,"town_assoc 0x%x 0x%x\n", attr.u.item->id_hi, attr.u.item->id_lo);
+		dbg(lvl_debug,"town_assoc 0x%x 0x%x", attr.u.item->id_hi, attr.u.item->id_lo);
 		ret->common.unique=*attr.u.item;
 	}
 	search_list_common_new(item, &ret->common);
@@ -760,7 +760,7 @@ search_postal_merge(char *mask, char *new)
 {
 	int i;
 	char *ret=NULL;
-	dbg(lvl_debug,"enter %s %s\n", mask, new);
+	dbg(lvl_debug,"enter %s %s", mask, new);
 	if (!new)
 		return NULL;
 	if (!mask)
@@ -777,7 +777,7 @@ search_postal_merge(char *mask, char *new)
 		while (mask[i])
 			ret[i++]='.';
 	}
-	dbg(lvl_debug,"merged %s with %s as %s\n", mask, new, ret);
+	dbg(lvl_debug,"merged %s with %s as %s", mask, new, ret);
 	return ret;
 }
 
@@ -861,21 +861,21 @@ search_list_get_result(struct search_list *this_)
 		return ret;
 	}
 
-	//dbg(lvl_debug,"enter\n");
+	//dbg(lvl_debug,"enter");
 	le=&this_->levels[level];
-	//dbg(lvl_debug,"le=%p\n", le);
+	//dbg(lvl_debug,"le=%p", le);
 	for (;;)
 	{
-		//dbg(lvl_debug,"le->search=%p\n", le->search);
+		//dbg(lvl_debug,"le->search=%p", le->search);
 		if (! le->search)
 		{
-			//dbg(lvl_debug,"partial=%d level=%d\n", le->partial, level);
+			//dbg(lvl_debug,"partial=%d level=%d", le->partial, level);
 			if (! level)
 				le->parent=NULL;
 			else
 			{
 				leu=&this_->levels[level-1];
-				//dbg(lvl_debug,"leu->curr=%p\n", leu->curr);
+				//dbg(lvl_debug,"leu->curr=%p", leu->curr);
 				for (;;)
 				{
 					//dbg(lvl_debug,"*********########");
@@ -897,23 +897,23 @@ search_list_get_result(struct search_list *this_)
 			}
 			if (le->parent)
 			{
-				//dbg(lvl_debug,"mapset_search_new with item(%d,%d)\n", le->parent->item.id_hi, le->parent->item.id_lo);
+				//dbg(lvl_debug,"mapset_search_new with item(%d,%d)", le->parent->item.id_hi, le->parent->item.id_lo);
 			}
-			//dbg(lvl_debug,"############## attr=%s\n", attr_to_name(le->attr->type));
+			//dbg(lvl_debug,"############## attr=%s", attr_to_name(le->attr->type));
 			le->search=mapset_search_new(this_->ms, &le->parent->item, le->attr, le->partial);
 			le->hash=g_hash_table_new(search_item_hash_hash, search_item_hash_equal);
 		}
-		//dbg(lvl_debug,"le->search=%p\n", le->search);
+		//dbg(lvl_debug,"le->search=%p", le->search);
 		if (!this_->item)
 		{
 			//dbg(lvl_debug,"sssss 1");
 			this_->item=mapset_search_get_item(le->search);
-			//dbg(lvl_debug,"sssss 1 %p\n",this_->item);
+			//dbg(lvl_debug,"sssss 1 %p",this_->item);
 		}
 		if (this_->item)
 		{
 			void *p=NULL;
-			//dbg(lvl_debug,"id_hi=%d id_lo=%d\n", this_->item->id_hi, this_->item->id_lo);
+			//dbg(lvl_debug,"id_hi=%d id_lo=%d", this_->item->id_hi, this_->item->id_lo);
 			if (this_->postal)
 			{
 				struct attr postal;
@@ -929,7 +929,7 @@ search_list_get_result(struct search_list *this_)
 			this_->result.town=NULL;
 			this_->result.street=NULL;
 			this_->result.c=NULL;
-			//dbg(lvl_debug,"case x LEVEL start %d\n",level);
+			//dbg(lvl_debug,"case x LEVEL start %d",level);
 			switch (level)
 			{
 			case 0:
@@ -965,13 +965,13 @@ search_list_get_result(struct search_list *this_)
 				this_->item=NULL;
 				break;
 			case 3:
-				dbg(lvl_debug,"case 3 HOUSENUMBER\n");
+				dbg(lvl_debug,"case 3 HOUSENUMBER");
 				has_street_name=0;
 
 				// if this housenumber has a streetname tag, set the name now
 				if (item_attr_get(this_->item, attr_street_name, &attr2))
 				{
-					dbg(lvl_debug,"streetname: %s\n",attr2.u.str);
+					dbg(lvl_debug,"streetname: %s",attr2.u.str);
 					has_street_name=1;
 				}
 
@@ -988,7 +988,7 @@ search_list_get_result(struct search_list *this_)
 				{
 					this_->item=NULL;
 				} else {
-					dbg(lvl_debug,"interpolation!\n");
+					dbg(lvl_debug,"interpolation!");
 				}
 
 				if(le->parent && has_street_name) {

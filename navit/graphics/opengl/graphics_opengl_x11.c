@@ -86,29 +86,29 @@ graphics_opengl_x11_watch(struct graphics_opengl_window_system *x11)
 				x11->button(x11->data,event.xbutton.button,0,event.xbutton.x,event.xbutton.y);
 			break;
 		case ConfigureNotify:
-			dbg(lvl_debug,"ConfigureNotify\n");
+			dbg(lvl_debug,"ConfigureNotify");
 			break;
 		case Expose:
-			dbg(lvl_debug,"Expose\n");
+			dbg(lvl_debug,"Expose");
 			break;
 		case KeyPress:
-			dbg(lvl_debug,"KeyPress\n");
+			dbg(lvl_debug,"KeyPress");
 			break;
 		case KeyRelease:
-			dbg(lvl_debug,"KeyRelease\n");
+			dbg(lvl_debug,"KeyRelease");
 			break;
 		case MapNotify:
-			dbg(lvl_debug,"MapNotify\n");
+			dbg(lvl_debug,"MapNotify");
 			break;
 		case MotionNotify:
 			if (x11->motion)
 				x11->motion(x11->data,event.xmotion.x,event.xmotion.y);
 			break;
 		case ReparentNotify:
-			dbg(lvl_debug,"ReparentNotify\n");
+			dbg(lvl_debug,"ReparentNotify");
 			break;
 		default:
-			dbg(lvl_debug,"type %d\n",event.type);
+			dbg(lvl_debug,"type %d",event.type);
 		}
 	}
 }
@@ -126,14 +126,14 @@ graphics_opengl_x11_new(void *displayname, int w, int h, int depth, struct graph
 	*methods=&graphics_opengl_x11_methods;
 	ret->display=XOpenDisplay(displayname);
 	if (!ret->display) {
-		dbg(lvl_error,"failed to open display\n");
+		dbg(lvl_error,"failed to open display");
 		goto error;
 	}
 	ret->watch=event_add_watch(ConnectionNumber(ret->display), event_watch_cond_read, ret->cb);
 	ret->screen=XDefaultScreen(ret->display);
 	ret->root_window=RootWindow(ret->display, ret->screen);
 	if (!XMatchVisualInfo(ret->display, ret->screen, depth, TrueColor, &ret->visual)) {
-		dbg(lvl_error,"failed to find visual\n");
+		dbg(lvl_error,"failed to find visual");
 		goto error;
 	}
 	ret->colormap=XCreateColormap(ret->display, ret->root_window, ret->visual.visual, AllocNone);

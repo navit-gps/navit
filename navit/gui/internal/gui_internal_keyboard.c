@@ -488,7 +488,7 @@ static void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct wid
 		g_free(kbd->lang);
 		g_free(kbd->gui_priv);
 	} else
-		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed\n");
+		dbg(lvl_warning, "no graphics_keyboard found, cleanup failed");
 	g_free(w);
 }
 
@@ -531,7 +531,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
 
 	switch(res) {
 	case -1:
-		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard\n");
+		dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard");
 		/* no break */
 	case 0:
 		g_free(kbd);
@@ -552,9 +552,9 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
 		ret->wmin = w->wmin;
 	} else
 		ret->w = kbd->w;
-	dbg(lvl_error, "ret->w=%d, ret->h=%d\n", ret->w, ret->h);
+	dbg(lvl_error, "ret->w=%d, ret->h=%d", ret->w, ret->h);
 	ret->data = (void *) kbd;
 	gui_internal_widget_append(w, ret);
-	dbg(lvl_error, "return\n");
+	dbg(lvl_error, "return");
 	return ret;
 }

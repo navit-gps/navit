@@ -43,15 +43,15 @@ void Backend::showMenu(struct point *p)
         struct coord co;
 
         transform_reverse(navit_get_trans(nav), p, &co);
-        dbg(lvl_debug, "Point 0x%x 0x%x\n", co.x, co.y);
-        dbg(lvl_debug, "Screen coord : %d %d\n", p->x, p->y);
+        dbg(lvl_debug, "Point 0x%x 0x%x", co.x, co.y);
+        dbg(lvl_debug, "Screen coord : %d %d", p->x, p->y);
         transform_to_geo(transform_get_projection(navit_get_trans(nav)), &co, &(this->g));
-        dbg(lvl_debug, "%f %f\n", this->g.lat, this->g.lng);
-        dbg(lvl_debug, "%p %p\n", nav, &c);
+        dbg(lvl_debug, "%f %f", this->g.lat, this->g.lng);
+        dbg(lvl_debug, "%p %p", nav, &c);
         this->c.pro = transform_get_projection(navit_get_trans(nav));
         this->c.x = co.x;
         this->c.y = co.y;
-        dbg(lvl_debug, "c : %x %x\n", this->c.x, this->c.y);
+        dbg(lvl_debug, "c : %x %x", this->c.x, this->c.y);
 
         // As a test, set the Demo vehicle position to wherever we just clicked
         navit_set_position(this->nav, &c);
@@ -115,7 +115,7 @@ void Backend::get_vehicles()
                 vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
                 navit_attr_iter_destroy(iter);
 		_vehicles.append(new VehicleObject(g_strdup(vattr.u.str), active_vehicle.u.vehicle, attr.u.vehicle));
-		dbg(lvl_debug, "done\n");
+		dbg(lvl_debug, "done");
 		emit vehiclesChanged();
                 return;
         }
@@ -126,7 +126,7 @@ void Backend::get_vehicles()
         iter=navit_attr_iter_new();
         while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
                 vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
-		dbg(lvl_debug, "adding vehicle %s\n", vattr.u.str);
+		dbg(lvl_debug, "adding vehicle %s", vattr.u.str);
 		_vehicles.append(
 			new VehicleObject(
 				g_strdup(vattr.u.str),
@@ -194,11 +194,11 @@ void Backend::get_bookmarks()
                 bookmarks_item_rewind(mattr.u.bookmarks);
                 while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
                         if (!item_attr_get(item, attr_label, &attr)) continue;
-                        dbg(lvl_debug,"full_label: %s\n", attr.u.str);
+                        dbg(lvl_debug,"full_label: %s", attr.u.str);
                         if (item_coord_get(item, &c, 1)) {
                                 pc.x = c.x;
                                 pc.y = c.y;
-                                dbg(lvl_debug, "coords : %i x %i\n", pc.x, pc.y);
+                                dbg(lvl_debug, "coords : %i x %i", pc.x, pc.y);
 				_bookmarks.append(new BookmarkObject(attr.u.str, pc));
                         }
                 }
@@ -227,13 +227,13 @@ void Backend::get_pois()
         center.x = this->c.x;
         center.y = this->c.y;
 
-        dbg(lvl_debug, "center is at %x, %x\n", center.x, center.y);
+        dbg(lvl_debug, "center is at %x, %x", center.x, center.y);
 
         h = mapset_open(navit_get_mapset(this->nav));
         while ((m = mapset_next(h, 1))) {
                 selm = map_selection_dup_pro(sel, pro, map_projection(m));
                 mr = map_rect_new(m, selm);
-                dbg(lvl_debug, "mr=%p\n", mr);
+                dbg(lvl_debug, "mr=%p", mr);
                 if (mr) {
                         while ((item = map_rect_get_item(mr))) {
                                 if ( filter_pois(item) &&
@@ -319,8 +319,8 @@ QQmlListProperty<QObject> Backend::getSearchResults(){
  * @returns the active POI
  */ 
 PoiObject * Backend::activePoi() {
-        dbg(lvl_debug, "name : %s\n", m_activePoi->name().toUtf8().data());
-        dbg(lvl_debug, "type : %s\n", m_activePoi->type().toLatin1().data());
+        dbg(lvl_debug, "name : %s", m_activePoi->name().toUtf8().data());
+        dbg(lvl_debug, "type : %s", m_activePoi->type().toLatin1().data());
         return m_activePoi;
 }
 
@@ -340,12 +340,12 @@ BookmarkObject * Backend::currentBookmark() {
  */ 
 VehicleObject * Backend::currentVehicle() {
 	struct attr attr;
-        dbg(lvl_debug, "name : %s\n", m_currentVehicle->name().toUtf8().data());
+        dbg(lvl_debug, "name : %s", m_currentVehicle->name().toUtf8().data());
 	if (m_currentVehicle->vehicle()) {
 		if (vehicle_get_attr(m_currentVehicle->vehicle(), attr_position_nmea, &attr, NULL))
-			dbg(lvl_debug, "NMEA : %s\n", attr.u.str);
+			dbg(lvl_debug, "NMEA : %s", attr.u.str);
 	} else {
-		dbg(lvl_debug, "m_currentVehicle->v is null\n");
+		dbg(lvl_debug, "m_currentVehicle->v is null");
 	}
 
         return m_currentVehicle;
@@ -354,7 +354,7 @@ VehicleObject * Backend::currentVehicle() {
 
 void Backend::block_draw(){
         navit_block(this->nav, 1);
-        dbg(lvl_debug, "Draw operations blocked per UI request\n");
+        dbg(lvl_debug, "Draw operations blocked per UI request");
 }
 
 /**
@@ -425,7 +425,7 @@ QString Backend::get_icon_path(){
 void Backend::setActivePoiAsDestination(){
         struct pcoord c;
         c = m_activePoi->coords();
-        dbg(lvl_debug, "Destination : %s c=%d:0x%x,0x%x\n",
+        dbg(lvl_debug, "Destination : %s c=%d:0x%x,0x%x",
                         m_activePoi->name().toUtf8().data(),
                         c.pro, c.x, c.y);
         navit_set_destination(this->nav, &c,  m_activePoi->name().toUtf8().data(), 1);
@@ -439,9 +439,9 @@ void Backend::setActivePoiAsDestination(){
  */ 
 void Backend::searchValidateResult(int index){
         SearchObject * r = (SearchObject *)_search_results.at(index);
-        dbg(lvl_debug, "Saving %s [%i] as search result\n", r->name().toUtf8().data(), index);
+        dbg(lvl_debug, "Saving %s [%i] as search result", r->name().toUtf8().data(), index);
 	if (r->getCoords()){
-                dbg(lvl_debug, "Item is at %x x %x\n", r->getCoords()->x, r->getCoords()->y);
+                dbg(lvl_debug, "Item is at %x x %x", r->getCoords()->x, r->getCoords()->y);
 	}
         if (_search_context == attr_country_all) {
                 _current_country = g_strdup(r->name().toUtf8().data());
@@ -453,7 +453,7 @@ void Backend::searchValidateResult(int index){
         } else if (_search_context == attr_street_name) {
                 _current_street = g_strdup(r->name().toUtf8().data());
         } else {
-                dbg(lvl_error, "Unknown search context for '%s'\n", r->name().toUtf8().data());
+                dbg(lvl_error, "Unknown search context for '%s'", r->name().toUtf8().data());
         }
         // navit_set_center(this->nav, r->getCoords(), 1);
         emit displayMenu("destination_address.qml");
@@ -504,12 +504,12 @@ void Backend::updateSearch(QString text){
 
         if (search == NULL){
                 search=&search_param;
-                dbg(lvl_debug, "search = %p\n", search);
+                dbg(lvl_debug, "search = %p", search);
                 search->nav=this->nav;
                 search->ms=navit_get_mapset(this->nav);
                 search->sl=search_list_new(search->ms);
                 search->partial = 1;
-                dbg(lvl_debug,"attempting to use country '%s'\n", _country_iso2);
+                dbg(lvl_debug,"attempting to use country '%s'", _country_iso2);
                 search_attr.type=attr_country_iso2;
                 search_attr.u.str=_country_iso2;
                 search_list_search(search->sl, &search_attr, 0);
@@ -529,7 +529,7 @@ void Backend::updateSearch(QString text){
 //        while((res=search_list_get_result(search->sl)));
 
         search->attr.u.str = text.toUtf8().data();
-        dbg(lvl_error, "searching for %s partial %d\n", search->attr.u.str, search->partial);
+        dbg(lvl_error, "searching for %s partial %d", search->attr.u.str, search->partial);
 
         search->attr.type = _search_context;
         search_list_search(search->sl, &search->attr, search->partial);
@@ -571,18 +571,18 @@ void Backend::setSearchContext(QString text){
         } else if (text == "street") {
                 _search_context = attr_street_name;
         } else {
-                dbg(lvl_error, "Unhandled search context '%s'\n", text.toUtf8().data());
+                dbg(lvl_error, "Unhandled search context '%s'", text.toUtf8().data());
         }
                
 }
 
 QString Backend::currentCountry() {
-        dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
+        dbg(lvl_debug, "Current country : %s/%s", _country_iso2, _current_country);
         return QString(_current_country);
 }
 
 QString Backend::currentCountryIso2() {
-        dbg(lvl_debug, "Current country : %s/%s\n", _country_iso2, _current_country);
+        dbg(lvl_debug, "Current country : %s/%s", _country_iso2, _current_country);
         return QString(_country_iso2);
 }
 
@@ -590,7 +590,7 @@ QString Backend::currentTown() {
         if (_current_town == NULL) {
                 _current_town = "Enter City";
         }
-        dbg(lvl_debug, "Current town : %s\n", _current_town);
+        dbg(lvl_debug, "Current town : %s", _current_town);
         return QString(_current_town);
 }
 
@@ -598,6 +598,6 @@ QString Backend::currentStreet() {
         if (_current_street == NULL) {
                 _current_street = "Enter Street";
         }
-        dbg(lvl_debug, "Current street : %s\n", _current_street);
+        dbg(lvl_debug, "Current street : %s", _current_street);
         return QString(_current_street);
 }

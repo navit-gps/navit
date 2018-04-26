@@ -105,12 +105,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 				g_free(priv->nmea_data_buf);
 				priv->nmea_data_buf=nmea_data_buf;
 			} else {
-				dbg(lvl_error, "nmea buffer overflow, discarding '%s'\n", buffer);
+				dbg(lvl_error, "nmea buffer overflow, discarding '%s'", buffer);
 			}
 		}
 	}	
 
-	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"\n", (unsigned long long)data->set);
+	dbg(lvl_debug,"data->set="LONGLONG_HEX_FMT"", (unsigned long long)data->set);
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * MPS_TO_KPH;
 		if(!isnan(data->fix.speed))
@@ -178,12 +178,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 	}
 #ifdef HAVE_LIBGPS19
 	if (data->set & DOP_SET) {
-		dbg(lvl_debug, "pdop : %g\n", data->dop.pdop);
+		dbg(lvl_debug, "pdop : %g", data->dop.pdop);
 		priv->hdop = data->dop.pdop;
 		data->set &= ~DOP_SET;
 #else
 	if (data->set & PDOP_SET) {
-		dbg(lvl_debug, "pdop : %g\n", data->pdop);
+		dbg(lvl_debug, "pdop : %g", data->pdop);
 		priv->hdop = data->hdop;
 		data->set &= ~PDOP_SET;
 #endif
@@ -191,7 +191,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 	if (data->set & LATLON_SET) {
 		priv->geo.lat = data->fix.latitude;
 		priv->geo.lng = data->fix.longitude;
-		dbg(lvl_debug,"lat=%f lng=%f\n", priv->geo.lat, priv->geo.lng);
+		dbg(lvl_debug,"lat=%f lng=%f", priv->geo.lat, priv->geo.lng);
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
@@ -201,7 +201,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 	if (! isnan(data->fix.speed) && priv->fix_type > 0) {
 		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 	}
-	dbg(lvl_info,"speed ok\n");
+	dbg(lvl_info,"speed ok");
 }
 
 /**
@@ -219,7 +219,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 		*colon = '\0';
 		port=colon+1;
 	}
-	dbg(lvl_debug,"Trying to connect to %s:%s\n",source+7,port?port:"default");
+	dbg(lvl_debug,"Trying to connect to %s:%s",source+7,port?port:"default");
 
 #if GPSD_API_MAJOR_VERSION >= 5
         /* gps_open returns 0 on success */
@@ -228,7 +228,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 	priv->gps = gps_open(source + 7, port);
 	if(!priv->gps) {
 #endif
-		dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
+		dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source, priv->retry_interval);
                 g_free(source);
 		return TRUE;
 	}
@@ -252,7 +252,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv)
 	if (!priv->gps->gps_fd) {
 		dbg(lvl_error,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
 	}
-	dbg(lvl_debug,"Connected to gpsd fd=%d evwatch=%p\n", priv->gps->gps_fd, priv->evwatch);
+	dbg(lvl_debug,"Connected to gpsd fd=%d evwatch=%p", priv->gps->gps_fd, priv->evwatch);
 	event_remove_timeout(priv->retry_timer2);
 	priv->retry_timer2=NULL;
 	return FALSE;
@@ -271,11 +271,11 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	memset(&priv->context, 0, sizeof(gpsbt_t));
 	if(gpsbt_start(NULL, 0, 0, 0, errstr, sizeof(errstr),
 		0, &priv->context) < 0) {
-	       dbg(lvl_error,"Error connecting to GPS with gpsbt: (%d) %s (%s)\n",
+	       dbg(lvl_error,"Error connecting to GPS with gpsbt: (%d) %s (%s)",
 		  errno, strerror(errno), errstr);
 	}
 	sleep(1);       /* give gpsd time to start */
-	dbg(lvl_debug,"gpsbt_start: completed\n");
+	dbg(lvl_debug,"gpsbt_start: completed");
 #endif
 	priv->retry_timer2=NULL;
 	if (vehicle_gpsd_try_open(priv)) 
@@ -324,7 +324,7 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 static void
 vehicle_gpsd_io(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	if (priv->gps) {
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
@@ -333,7 +333,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
 		 * No point in processing old GPS reports. */
 		while((read_result=gps_read(priv->gps))>0);
 		if(read_result==-1) {
-                  dbg(lvl_error,"gps_poll failed\n");
+                  dbg(lvl_error,"gps_poll failed");
                   vehicle_gpsd_close(priv);
                   vehicle_gpsd_open(priv);
                 }
@@ -344,7 +344,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
                 }
 #else
                 if (gps_poll(priv->gps)) {
-			dbg(lvl_error,"gps_poll failed\n");
+			dbg(lvl_error,"gps_poll failed");
 			vehicle_gpsd_close(priv);
 			vehicle_gpsd_open(priv);
                 }
@@ -445,7 +445,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	struct vehicle_priv *ret;
 	struct attr *source, *query, *retry_int;
 
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 #if GPSD_API_MAJOR_VERSION >= 5
@@ -458,16 +458,16 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	} else {
 		ret->gpsd_query = g_strdup("w+x\n");
 	}
-	dbg(lvl_debug,"Format string for gpsd_query: %s\n",ret->gpsd_query);
+	dbg(lvl_debug,"Format string for gpsd_query: %s",ret->gpsd_query);
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
 		if (ret->retry_interval < MIN_RETRY_INTERVAL) {
-			dbg(lvl_error, "Retry interval %d too small, setting to %d\n", ret->retry_interval, MIN_RETRY_INTERVAL);
+			dbg(lvl_error, "Retry interval %d too small, setting to %d", ret->retry_interval, MIN_RETRY_INTERVAL);
 			ret->retry_interval = MIN_RETRY_INTERVAL;
 		}
 	} else {
-		dbg(lvl_debug, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
+		dbg(lvl_debug, "Retry interval not defined, setting to %d", DEFAULT_RETRY_INTERVAL);
 		ret->retry_interval = DEFAULT_RETRY_INTERVAL;
 	}
 	ret->cbl = cbl;
@@ -480,6 +480,6 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 void
 plugin_init(void)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	plugin_register_category_vehicle("gpsd", vehicle_gpsd_new_gpsd);
 }
