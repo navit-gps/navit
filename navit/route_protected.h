@@ -46,6 +46,9 @@ extern "C" {
 /** Indicates that the cost of a segment has decreased. */
 #define TDC_SEG_DECREASED 8
 
+/** Mask of flags which indicate that the cost of the point has changed. */
+#define TDC_POINT_MASK TDC_INCREASED | TDC_DECREASED
+
 /** Mask of flags which indicate that the cost of a segment has changed. */
 #define TDC_SEG_MASK TDC_SEG_INCREASED | TDC_SEG_DECREASED
 
