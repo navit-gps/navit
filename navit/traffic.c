@@ -49,6 +49,7 @@
 #include "fib.h"
 #include "event.h"
 #include "callback.h"
+#include "vehicleprofile.h"
 #include "debug.h"
 
 /** The penalty applied to an off-road link */
@@ -534,6 +535,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 	int change_flags = 0;
 	struct route_traffic_distortion_change * tdc = NULL;
 	struct route_graph * graph = NULL;
+	struct vehicleprofile *profile;
 
 	for (msglist = priv_data->message_data; msglist; msglist = g_list_next(msglist)) {
 		msgdata = (struct item_msg_priv *) msglist->data;
@@ -604,16 +606,21 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 	}
 
 	if (change_flags && changes) {
-		graph = route_get_graph(route);
-		if (graph) {
-			tdc = g_new0(struct route_traffic_distortion_change, 1);
-			tdc->from = route_graph_get_point(graph, priv_data->coords);
-			tdc->to = route_graph_get_point(graph, &(priv_data->coords[priv_data->coord_count - 1]));
-			tdc->flags = change_flags;
-			if (tdc->from && tdc->to)
-				*changes = g_list_append(*changes, tdc);
-			else
-				g_free(tdc);
+		route_get_attr(route, attr_vehicleprofile, attr, NULL);
+		profile = attr->u.vehicleprofile;
+		attr = attr_search(priv_data->attrs, NULL, attr_flags);
+		if (attr && ((attr->u.num & profile->flags) == profile->flags)) {
+			graph = route_get_graph(route);
+			if (graph) {
+				tdc = g_new0(struct route_traffic_distortion_change, 1);
+				tdc->from = route_graph_get_point(graph, priv_data->coords);
+				tdc->to = route_graph_get_point(graph, &(priv_data->coords[priv_data->coord_count - 1]));
+				tdc->flags = change_flags;
+				if (tdc->from && tdc->to)
+					*changes = g_list_append(*changes, tdc);
+				else
+					g_free(tdc);
+			}
 		}
 	}
 }
