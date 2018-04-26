@@ -9,7 +9,8 @@ cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOO
 [ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
 pushd $BUILD_PATH
 
-if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
+if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && \
+	[[ "${CIRCLE_BRANCH}" == "trunk" || "${CIRCLE_PR_NUMBER}" != "" ]]; then
 	# If we are building the official trunk code, push an update to coverity
 	curl \
 	    -X POST --data "token=${COVERITY_TOKEN}&project=${CIRCLE_PROJECT_USERNAME}" \
@@ -22,11 +23,17 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 	cmake ${cmake_opts} ../
 	cov-build --dir cov-int make -j $(nproc --all)
 	tar czvf navit.tgz cov-int
+
+	if [[ "${CIRCLE_PR_NUMBER}" != "" ]]; then
+		VERSION="${CIRCLE_PR_NUMBER}-$CIRCLE_SHA1"
+	else
+		VERSION="${CIRCLE_BRANCH}-$CIRCLE_SHA1"
+	fi
 	
 	curl --form token=$COVERITY_TOKEN \
   --form email=$COVERITY_EMAIL \
   --form file=@navit.tgz \
-  --form version="${CIRCLE_BRANCH}-$CIRCLE_SHA1" \
+  --form version=${VERSION} \
   --form description="${CIRCLE_BRANCH}-$CIRCLE_SHA1" \
   https://scan.coverity.com/builds?project=$CIRCLE_PROJECT_USERNAME
 
