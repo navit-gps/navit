@@ -2345,6 +2345,26 @@ route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struc
 }
 
 /**
+ * @brief Adds two route values with protection against integer overflows.
+ *
+ * Unlike regular addition, this function is safe to use if one of the two arguments is `INT_MAX`
+ * (which Navit uses to express that a segment cannot be traversed or a point cannot be reached):
+ * If any of the two arguments is `INT_MAX`, then `INT_MAX` is returned; else the sum of the two
+ * arguments is returned.
+ *
+ * Note that this currently does not cover cases in which both arguments are less than `INT_MAX` but add
+ * up to `val1 + val2 >= INT_MAX`. With Navit’s internal cost definition, `INT_MAX` (2^31) is equivalent
+ * to approximately 7 years, making this unlikely to become a real issue.
+ */
+static int route_value_add(int val1, int val2) {
+	if (val1 == INT_MAX)
+		return INT_MAX;
+	if (val2 == INT_MAX)
+		return INT_MAX;
+	return val1 + val2;
+}
+
+/**
  * @brief Calculates the routing costs for each point
  *
  * This function is the heart of routing. It assigns each point in the route graph a
