@@ -3385,7 +3385,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 
 	/* FIXME this is probably not thread-safe: if route calculation and traffic message processing
 	 * happen concurrently, changes introduced by the messages may not be considered */
-	if (changes)
+	if (changes && *changes)
 		route_process_traffic_changes(this_->rt, changes);
 
 	return ret;
