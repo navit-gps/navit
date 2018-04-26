@@ -606,8 +606,10 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
 	}
 
 	if (change_flags && changes) {
+		attr = g_new0(struct attr, 1);
 		route_get_attr(route, attr_vehicleprofile, attr, NULL);
 		profile = attr->u.vehicleprofile;
+		g_free(attr);
 		attr = attr_search(priv_data->attrs, NULL, attr_flags);
 		if (attr && ((attr->u.num & profile->flags) == profile->flags)) {
 			graph = route_get_graph(route);
