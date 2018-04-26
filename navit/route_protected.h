@@ -73,6 +73,9 @@ struct route_graph_point {
 	                                      *  point, or that this point has not yet been examined. */
 	struct coord c;                      /**< Coordinates of this point */
 	int flags;                           /**< Flags for this point (e.g. traffic distortion) */
+	GList * changes;                     /**< List of `struct route_traffic_distortion_change` leading towards
+	                                      *   this point, used for recalculation */
+	int change_flags;                    /**< Flags to indicate how the cost has changed, used for recalculation */
 };
 
 /**
