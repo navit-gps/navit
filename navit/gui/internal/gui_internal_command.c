@@ -161,11 +161,11 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 {
 	struct attr escaped;
 	if (!in || !in[0]) {
-		dbg(lvl_error,"first parameter missing or wrong type\n");
+		dbg(lvl_error,"first parameter missing or wrong type");
 		return;
 	}
 	if (!out) {
-		dbg(lvl_error,"output missing\n");
+		dbg(lvl_error,"output missing");
 		return;
 	}
 	if (ATTR_IS_STRING(in[0]->type)) {
@@ -175,10 +175,10 @@ gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in,
 		escaped.type=attr_type_string_begin;
 		escaped.u.str=g_strdup_printf("%ld",in[0]->u.num);
 	} else {
-		dbg(lvl_error,"first parameter wrong type\n");
+		dbg(lvl_error,"first parameter wrong type");
 		return;
 	}
-	dbg(lvl_debug,"in %s result %s\n",in[0]->u.str,escaped.u.str);
+	dbg(lvl_debug,"in %s result %s",in[0]->u.str,escaped.u.str);
 	*out=attr_generic_add_attr(*out, attr_dup(&escaped));
 	g_free(escaped.u.str);
 }
@@ -479,6 +479,9 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 	struct heightline *heightline,*heightlines=NULL;
 	struct diagram_point *min,*diagram_point,*diagram_points=NULL;
 	struct point p[2];
+	int min_ele=INT_MAX;
+	int max_ele=INT_MIN;
+	int distance=0;
 	sel.next=NULL;
 	sel.order=18;
 	sel.range.min=type_height_line_1;
@@ -512,14 +515,14 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			while ((map=mapset_next(msh, 1))) {
 				struct attr data_attr;
 				if (map_get_attr(map, attr_data, &data_attr, NULL)){
-					dbg(lvl_debug,"map name = %s\n",data_attr.u.str);
+					dbg(lvl_debug,"map name = %s",data_attr.u.str);
 					if (strstr(data_attr.u.str,".heightlines.bin")){
-						dbg(lvl_info,"reading heightlines from map %s\n",data_attr.u.str);
+						dbg(lvl_info,"reading heightlines from map %s",data_attr.u.str);
 						mr=map_rect_new(map, &sel);
 						heightmap_installed = TRUE;
 					}
 					else {
-						dbg(lvl_debug,"ignoring map %s\n",data_attr.u.str);
+						dbg(lvl_debug,"ignoring map %s",data_attr.u.str);
 					}
 				}
 				if (mr) {
@@ -577,7 +580,10 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 										diagram_point->next=diagram_points;
 										diagram_points=diagram_point;
 										diagram_points_count ++;
-										dbg(lvl_debug,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+										dbg(lvl_debug,"%d %d", diagram_point->c.x, diagram_point->c.y);
+										max_ele=MAX(max_ele, diagram_point->c.y);
+										min_ele=MIN(min_ele, diagram_point->c.y);
+										distance=diagram_point->c.x;
 									}
 								}
 							}
@@ -623,12 +629,12 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			coord_rect_extend(&dbbox, &diagram_point->c);
 		diagram_point=diagram_point->next;
 	}
-	dbg(lvl_debug,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	dbg(lvl_debug,"%d %d %d %d", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
 	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
 		dbbox.lu.x=0;
 	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
 		dbbox.rl.y=0;
-	dbg(lvl_debug,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	dbg(lvl_debug,"%d,%d %dx%d", box->p.x, box->p.y, box->w, box->h);
 	x=dbbox.lu.x;
 	first=1;
 	if (diagram_points_count > 1 && dbbox.rl.x != dbbox.lu.x && dbbox.lu.y != dbbox.rl.y){
@@ -644,7 +650,7 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 				break;
 			p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
 			p[1].y=(box->h)-5-(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y;
-			dbg(lvl_debug,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+			dbg(lvl_debug,"%d,%d=%d,%d",min->c.x, min->c.y, p[1].x,p[1].y);
 			graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
 			if (first)
 				first=0;
@@ -654,6 +660,17 @@ gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, st
 			x=min->c.x+1;
 		}
 	}
+
+	struct point pTopLeft={0, box->p.y + 10};
+	struct point pBottomLeft={0, box->h + box->p.y - 2};
+	struct point pBottomRight={box->w - 100, box->h + box->p.y - 2};
+	char* minele_text=g_strdup_printf("%d m", min_ele);
+	char* maxele_text=g_strdup_printf("%d m", max_ele);
+	char* distance_text=g_strdup_printf("%.3f km", distance/1000.0);
+	graphics_draw_text_std(this->gra, 10, maxele_text, &pTopLeft);
+	graphics_draw_text_std(this->gra, 10, minele_text, &pBottomLeft);
+	graphics_draw_text_std(this->gra, 10, distance_text, &pBottomRight);
+
 	while (diagram_points){
 		diagram_point=diagram_points;
 		diagram_points=diagram_points->next;
@@ -709,7 +726,7 @@ gui_internal_cmd2_pois(struct gui_priv *this, char *function, struct attr **in, 
 	struct attr pro;
 	struct coord c;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -826,7 +843,7 @@ gui_internal_cmd2_network_info(struct gui_priv *this, char *function, struct att
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
 #else
-	dbg(lvl_error, "Cannot show network info: ifaddr.h not found\n");
+	dbg(lvl_error, "Cannot show network info: ifaddr.h not found");
 #endif
 }
 
@@ -1002,7 +1019,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	const char *name=_("Position");
 	int flags=-1;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	if (!in || !in[0])
 		return;
 	if (!ATTR_IS_COORD_GEO(in[0]->type))
@@ -1012,7 +1029,7 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 		if (in[2] && ATTR_IS_INT(in[2]->type))
 			flags=in[2]->u.num;
 	}
-	dbg(lvl_debug,"flags=0x%x\n",flags);
+	dbg(lvl_debug,"flags=0x%x",flags);
 	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
 
@@ -1035,14 +1052,14 @@ gui_internal_cmd2_set(struct gui_priv *this, char *function, struct attr **in, s
 {
 	char *pattern,*command=NULL;
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type)) {
-		dbg(lvl_error,"first parameter missing or wrong type\n");
+		dbg(lvl_error,"first parameter missing or wrong type");
 		return;
 	}
 	pattern=in[0]->u.str;
-	dbg(lvl_debug,"pattern %s\n",pattern);
+	dbg(lvl_debug,"pattern %s",pattern);
 	if (in[1]) {
 		command=gui_internal_cmd_match_expand(pattern, in+1);
-		dbg(lvl_debug,"expand %s\n",command);
+		dbg(lvl_debug,"expand %s",command);
 		gui_internal_set(pattern, command);
 		command_evaluate(&this->self, command);
 		g_free(command);
@@ -1086,7 +1103,7 @@ static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str=NULL;
-	dbg(lvl_debug,"enter %s %p %p %p\n",function,in,out,valid);
+	dbg(lvl_debug,"enter %s %p %p %p",function,in,out,valid);
 	if (!in)
 		return;
 	while (*in) {
@@ -1096,7 +1113,7 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	if (str) {
 		str=g_strdup_printf("<html>%s</html>\n",str);
 #if 0
-		dbg(lvl_debug,"%s\n",str);
+		dbg(lvl_debug,"%s",str);
 #endif
 		gui_internal_html_parse_text(this, str);
 	}
@@ -1119,11 +1136,11 @@ gui_internal_onclick(struct attr ***in, char **onclick, char *set)
 			char format[4],*end=strchr(c+2,'}'),*replacement=NULL,*new_str;
 			int is_arg;
 			if (!end) {
-				dbg(lvl_error,"Missing closing brace in format string %s\n",c);
+				dbg(lvl_error,"Missing closing brace in format string %s",c);
 				goto error;
 			}
 			if (end-c > sizeof(format)) {
-				dbg(lvl_error,"Invalid format string %s\n",c);
+				dbg(lvl_error,"Invalid format string %s",c);
 				goto error;
 			}
 			strncpy(format, c+2, end-c-2);
@@ -1150,7 +1167,7 @@ gui_internal_onclick(struct attr ***in, char **onclick, char *set)
 				}
 			}	
 			if (!replacement) {
-				dbg(lvl_error,"Unsupported format string %s\n",format);
+				dbg(lvl_error,"Unsupported format string %s",format);
 				goto error;
 			}
 			new_str=g_strconcat(str, replacement, end+1, NULL);
@@ -1193,7 +1210,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 			str=gui_internal_append_attr(str, escape_mode_string|escape_mode_html, " class=", *in, "");
 		in++;
 	} else {
-		dbg(lvl_error,"argument error: class argument not string\n");
+		dbg(lvl_error,"argument error: class argument not string");
 		goto error;
 	}
 	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
@@ -1202,7 +1219,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 		}
 		in++;
 	} else {
-		dbg(lvl_error,"argument error: image argument not string\n");
+		dbg(lvl_error,"argument error: image argument not string");
 		goto error;
 	}
 	if (ATTR_IS_STRING((*in)->type) && (*in)->u.str) {
@@ -1213,7 +1230,7 @@ gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, s
 		}
 		in++;
 	} else {
-		dbg(lvl_error,"argument error: text argument not string\n");
+		dbg(lvl_error,"argument error: text argument not string");
 		goto error;
 	}
 	gui_internal_onclick(&in,&onclick,NULL);
@@ -1239,16 +1256,16 @@ static void
 gui_internal_cmd_debug(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str;
-	dbg(lvl_debug,"begin\n");
+	dbg(lvl_debug,"begin");
 	if (in) {
 		while (*in) {
 			str=attr_to_text(*in, NULL, 0);
-			dbg(lvl_debug,"%s:%s\n",attr_to_name((*in)->type),str);
+			dbg(lvl_debug,"%s:%s",attr_to_name((*in)->type),str);
 			in++;
 			g_free(str);
 		}
 	}
-	dbg(lvl_debug,"done\n");
+	dbg(lvl_debug,"done");
 }
 
 static void

@@ -60,8 +60,7 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	long long len;
 	dbg_assert(size>=0);
 	dbg_assert(offset>=0);
-	if (b->base)
-		free(b->base);
+	g_free(b->base);
 	b->malloced=0;
 	f=fopen(filename,"rb");
 	fseeko(f, 0, SEEK_END);
@@ -74,8 +73,7 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 	dbg_assert(b->size>0);
 	
 	fseeko(f, offset, SEEK_SET);
-	b->base=malloc(b->size);
-	dbg_assert(b->base != NULL);
+	b->base=g_malloc(b->size);
 	if (fread(b->base, b->size, 1, f) == 0){
 		dbg(lvl_warning, "fread failed");
 		return 0;

@@ -1,13 +1,16 @@
+#!/bin/bash
+set -e
+
 apt-get update && apt-get install -y software-properties-common
 add-apt-repository -y ppa:openjdk-r/ppa
-apt-get update && apt-get install -y openjdk-8-jdk wget expect git curl libsaxonb-java ant
+apt-get update && apt-get install -y openjdk-8-jdk wget expect curl libsaxonb-java ant ca-certificates python-pip
 apt-get remove -y openjdk-7-jre-headless
 
 export ANDROID_SDK_HOME=/opt/android-sdk-linux
 export ANDROID_HOME=/opt/android-sdk-linux
 
 cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -O android-sdk.tgz
-cd /opt && tar -xvzf android-sdk.tgz
+cd /opt && tar -xvzf android-sdk.tgz --no-same-owner
 cd /opt && rm -f android-sdk.tgz
 
 export PATH=${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools

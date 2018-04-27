@@ -155,7 +155,7 @@ tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *po
 	int speed_num,i;
 
 	if (cdf->hist_size == 0) {
-		dbg(lvl_warning,"No CDF.\n");
+		dbg(lvl_warning,"No CDF.");
 		*pout = *pin;
 		*dirout = dirin;
 		return;
@@ -338,7 +338,7 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 	struct tracking_line *tl;
 
 	int result=0;
-	dbg(lvl_debug,"enter %s\n",attr_to_name(type));
+	dbg(lvl_debug,"enter %s",attr_to_name(type));
 	if (_this->attr) {
 		attr_free(_this->attr);
 		_this->attr=NULL;
@@ -471,7 +471,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection p
 	struct coord_geo g;
 	struct coord cc;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	h=mapset_open(tr->ms);
 	while ((m=mapset_next(h,2))) {
 		cc.x = pc->x;
@@ -501,7 +501,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection p
 		map_rect_destroy(mr);
 	}
 	mapset_close(h);
-	dbg(lvl_debug, "exit\n");
+	dbg(lvl_debug, "exit");
 }
 
 
@@ -509,7 +509,7 @@ void
 tracking_flush(struct tracking *tr)
 {
 	struct tracking_line *tl=tr->lines,*next;
-	dbg(lvl_debug,"enter(tr=%p)\n", tr);
+	dbg(lvl_debug,"enter(tr=%p)", tr);
 
 	while (tl) {
 		next=tl->next;
@@ -603,7 +603,7 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 {
 	int value=0;
 	struct street_data *sd=t->street;
-	dbg(lvl_info, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
+	dbg(lvl_info, "%d: (0x%x,0x%x)-(0x%x,0x%x)", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
 	if (flags & 1) {
 		struct coord c1, c2, cp;
 		c1.x = sd->c[offset].x;
@@ -673,7 +673,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
-		dbg(lvl_error,"failed to get position data %d %d %d %d\n",
+		dbg(lvl_error,"failed to get position data %d %d %d %d",
 		vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL),
 	    vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL),
 	    vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL),
@@ -693,45 +693,45 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	if (!vehicleprofile_get_attr(vehicleprofile,attr_static_speed,&static_speed,NULL) || !vehicleprofile_get_attr(vehicleprofile,attr_static_distance,&static_distance,NULL)) {
 		static_speed.u.num=3;
 		static_distance.u.num=10;
-		dbg(lvl_debug,"Using defaults for static position detection\n");
+		dbg(lvl_debug,"Using defaults for static position detection");
 	}
-	dbg(lvl_info,"Static speed: %ld, static distance: %ld\n",static_speed.u.num, static_distance.u.num);
+	dbg(lvl_info,"Static speed: %ld, static distance: %ld",static_speed.u.num, static_distance.u.num);
 	time=iso8601_to_secs(time_attr.u.str);
 	speed=*speed_attr.u.numd;
 	direction=*direction_attr.u.numd;
 	tr->valid=attr_position_valid_valid;
 	transform_from_geo(pro, coord_geo.u.coord_geo, &tr->curr_in);
 	if ((speed < static_speed.u.num && transform_distance(pro, &tr->last_in, &tr->curr_in) < static_distance.u.num )) {
-		dbg(lvl_debug,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x\n",speed,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
+		dbg(lvl_debug,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x",speed,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
 		tr->valid=attr_position_valid_static;
 		tr->speed=0;
 		return;
 	}
 	if (tr->tunnel) {
 		tr->curr_in=tr->curr_out;
-		dbg(lvl_debug,"tunnel extrapolation speed %f dir %f\n",tr->speed,tr->direction);
-		dbg(lvl_debug,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		dbg(lvl_debug,"tunnel extrapolation speed %f dir %f",tr->speed,tr->direction);
+		dbg(lvl_debug,"old 0x%x,0x%x",tr->curr_in.x, tr->curr_in.y);
 		speed=tr->speed;
 		direction=tr->curr_line->angle[tr->pos];
 		transform_project(pro, &tr->curr_in, tr->speed*tr->tunnel_extrapolation/36, tr->direction, &tr->curr_in);
-		dbg(lvl_debug,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		dbg(lvl_debug,"new 0x%x,0x%x",tr->curr_in.x, tr->curr_in.y);
 	} else if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
 		double espeed;
 		int edirection;
 		if (time-tr->time == 1) {
-			dbg(lvl_debug,"extrapolating speed from %f and %f (%f)\n",tr->speed, speed, speed-tr->speed);
+			dbg(lvl_debug,"extrapolating speed from %f and %f (%f)",tr->speed, speed, speed-tr->speed);
 			espeed=speed+(speed-tr->speed)*lag.u.num/10;
-			dbg(lvl_debug,"extrapolating angle from %f and %f (%d)\n",tr->direction, direction, tracking_angle_diff(direction,tr->direction,360));
+			dbg(lvl_debug,"extrapolating angle from %f and %f (%d)",tr->direction, direction, tracking_angle_diff(direction,tr->direction,360));
 			edirection=direction+tracking_angle_diff(direction,tr->direction,360)*lag.u.num/10;
 		} else {
-			dbg(lvl_debug,"no speed and direction extrapolation\n");
+			dbg(lvl_debug,"no speed and direction extrapolation");
 			espeed=speed;
 			edirection=direction;
 		}
-		dbg(lvl_debug,"lag %ld speed %f direction %d\n",lag.u.num,espeed,edirection);
-		dbg(lvl_debug,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		dbg(lvl_debug,"lag %ld speed %f direction %d",lag.u.num,espeed,edirection);
+		dbg(lvl_debug,"old 0x%x,0x%x",tr->curr_in.x, tr->curr_in.y);
 		transform_project(pro, &tr->curr_in, espeed*lag.u.num/36, edirection, &tr->curr_in);
-		dbg(lvl_debug,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		dbg(lvl_debug,"new 0x%x,0x%x",tr->curr_in.x, tr->curr_in.y);
 	}
 	tr->time=time;
 	tr->pro=pro;
@@ -746,11 +746,11 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	tr->last[0]=tr->curr[0];
 	tr->last[1]=tr->curr[1];
 	if (!tr->lines || transform_distance(pro, &tr->last_updated, &tr->curr_in) > 500) {
-		dbg(lvl_debug, "update\n");
+		dbg(lvl_debug, "update");
 		tracking_flush(tr);
 		tracking_doupdate_lines(tr, &tr->curr_in, pro);
 		tr->last_updated=tr->curr_in;
-		dbg(lvl_debug,"update end\n");
+		dbg(lvl_debug,"update end");
 	}
 	
 	tr->street_direction=0;
@@ -769,7 +769,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
 				tr->direction_matched=t->angle[i];
-				dbg(lvl_debug,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
+				dbg(lvl_debug,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt_tmp),
 					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*tr->angle_pref,
 					tracking_is_connected(tr, tr->last, &sd->c[i]) ? tr->connected_pref : 0,
@@ -790,7 +790,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		}
 		t=t->next;
 	}
-	dbg(lvl_debug,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
+	dbg(lvl_debug,"tr->curr_line=%p min=%d", tr->curr_line, min);
 	if (!tr->curr_line || min > tr->offroad_limit_pref) {
 		tr->curr_out=tr->curr_in;
 		tr->coord_geo_valid=0;
@@ -802,7 +802,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	} else if (tr->tunnel) {
 		tr->speed=0;
 	}
-	dbg(lvl_debug,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
+	dbg(lvl_debug,"found 0x%x,0x%x", tr->curr_out.x, tr->curr_out.y);
 	callback_list_call_attr_0(tr->callback_list, attr_position_coord_geo);
 }
 
@@ -989,7 +989,7 @@ tracking_map_item_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *this=priv_data;
 	enum projection pro;
 	int ret=0;
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	while (this->ccount < 2 && count > 0) {
 		pro = map_projection(this->curr->street->item.map);
 		if (projection_mg != pro) {
@@ -998,7 +998,7 @@ tracking_map_item_coord_get(void *priv_data, struct coord *c, int count)
 				c ,projection_mg);
 		} else
 		*c=this->curr->street->c[this->ccount+this->coord];
-		dbg(lvl_debug,"coord %d 0x%x,0x%x\n",this->ccount,c->x,c->y);
+		dbg(lvl_debug,"coord %d 0x%x,0x%x",this->ccount,c->x,c->y);
 		this->ccount++;
 		ret++;
 		c++;
@@ -1176,7 +1176,7 @@ tracking_map_get_item(struct map_rect_priv *priv)
 		priv->item.type=type_tracking_10;
 	else
 		priv->item.type=type_tracking_0;
-	dbg(lvl_debug,"item %d %d points\n", priv->coord, priv->curr->street->count);
+	dbg(lvl_debug,"item %d %d points", priv->coord, priv->curr->street->count);
 	tracking_map_item_coord_rewind(priv);
 	tracking_map_item_attr_rewind(priv);
 	return ret;

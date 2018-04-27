@@ -115,7 +115,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	if (this->gra) {
 		padding = graphics_get_data(this->gra, "padding");
 	} else
-		dbg(lvl_warning, "cannot get padding: this->gra is NULL\n");
+		dbg(lvl_warning, "cannot get padding: this->gra is NULL");
 
 	gui_internal_search_idle_end(this);
 	topbox=gui_internal_box_new_with_label(this, 0, label);
@@ -149,7 +149,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
-		dbg(lvl_info,"topbox->menu_data=%p\n", topbox->menu_data);
+		dbg(lvl_info,"topbox->menu_data=%p", topbox->menu_data);
 		gui_internal_widget_append(wm, w);
 		wb=gui_internal_box_new(this, gravity_right_center|orientation_horizontal|flags_fill);
 		wb->bl=6;
@@ -309,7 +309,7 @@ gui_internal_top_bar(struct gui_priv *this)
 				use_sep=1;
 			else
 				use_sep=0;
-			dbg(lvl_debug,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
+			dbg(lvl_debug,"%d (%s) + %d + %d + %d > %d", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
 			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) + (g_list_previous(l) ? dots_len : 0) > width) {
 				incomplete=1;
 				gui_internal_widget_destroy(this, wcn);

@@ -118,7 +118,7 @@ static struct attr ** convert_to_attrs(struct xmlstate *state, struct attr_fixme
 				if (! strcmp(name, attr_fixme[0])) {
 					name=attr_fixme[1];
 					if (fixme_count++ < 10)
-						dbg(lvl_error,"Please change attribute '%s' to '%s' in <%s />\n", attr_fixme[0], attr_fixme[1], fixme->element);
+						dbg(lvl_error,"Please change attribute '%s' to '%s' in <%s />", attr_fixme[0], attr_fixme[1], fixme->element);
 					break;
 				}
 				attr_fixme+=2;
@@ -128,12 +128,12 @@ static struct attr ** convert_to_attrs(struct xmlstate *state, struct attr_fixme
 		if (ret[count])
 			count++;
 		else if (strcmp(*attribute_name,"enabled") && strcmp(*attribute_name,"xmlns:xi"))
-			dbg(lvl_error,"failed to create attribute '%s' with value '%s'\n", *attribute_name,*attribute_value);
+			dbg(lvl_error,"failed to create attribute '%s' with value '%s'", *attribute_name,*attribute_value);
 		attribute_name++;
 		attribute_value++;
 	}
 	ret[count]=NULL;
-	dbg(lvl_debug,"ret=%p\n", ret);
+	dbg(lvl_debug,"ret=%p", ret);
 	return ret;
 }
 
@@ -209,7 +209,7 @@ xmlconfig_announce(struct xmlstate *state)
 		if (itype!=type_none) {
 			navigation_set_announce(state->parent->element_attr.u.data, itype, level);
 		} else {
-			dbg(lvl_error, "Invalid type for announcement: %s\n",tok);
+			dbg(lvl_error, "Invalid type for announcement: %s",tok);
 		}
 		str=NULL;
 	}
@@ -586,7 +586,7 @@ start_element(xml_context *context,
 	const char *parent_name=NULL;
 	char *s,*sep="",*possible_parents;
 	struct attr *parent_attr;
-	dbg(lvl_info,"name='%s' parent='%s'\n", element_name, *parent ? (*parent)->element:NULL);
+	dbg(lvl_info,"name='%s' parent='%s'", element_name, *parent ? (*parent)->element:NULL);
 
 	if (!strcmp(element_name,"xml"))
 		return;
@@ -604,7 +604,7 @@ start_element(xml_context *context,
 		if (!strcmp(element_name,element_fixme[0])) {
 			element_name=element_fixme[1];
 			if (fixme_count++ < 10)
-				dbg(lvl_error,"Please change <%s /> to <%s /> in config file\n", element_fixme[0], element_fixme[1]);
+				dbg(lvl_error,"Please change <%s /> to <%s /> in config file", element_fixme[0], element_fixme[1]);
 		}
 		element_fixme+=2;
 	}
@@ -676,7 +676,7 @@ start_element(xml_context *context,
 			return;
 		new->element_attr.type=attr_from_name(element_name);
 		if (new->element_attr.type == attr_none)
-			dbg(lvl_error,"failed to create object of type '%s'\n", element_name);
+			dbg(lvl_error,"failed to create object of type '%s'", element_name);
 		if (new->element_attr.type == attr_tracking)
 			new->element_attr.type=attr_trackingo;
 		if (new->parent && new->parent->object_func && new->parent->object_func->add_attr)
@@ -697,7 +697,7 @@ end_element (xml_context *context,
 
 	if (!strcmp(element_name,"xml"))
 		return;
-	dbg(lvl_info,"name='%s'\n", element_name);
+	dbg(lvl_info,"name='%s'", element_name);
 	curr=*state;
 	if (curr->object_func && curr->object_func->init)
 		curr->object_func->init(curr->element_attr.u.data);
@@ -764,19 +764,19 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 	doc_new.level=doc_old->level+1;
 	doc_new.user_data=doc_old->user_data;
 	if (! href) {
-		dbg(lvl_debug,"no href, using '%s'\n", doc_old->href);
+		dbg(lvl_debug,"no href, using '%s'", doc_old->href);
 		doc_new.href=doc_old->href;
 		if (file_exists(doc_new.href)) {
 		    parse_file(&doc_new, error);
 		} else {
-		    dbg(lvl_error,"Unable to include %s\n",doc_new.href);
+		    dbg(lvl_error,"Unable to include %s",doc_new.href);
 		}
 	} else {
-		dbg(lvl_debug,"expanding '%s'\n", href);
+		dbg(lvl_debug,"expanding '%s'", href);
 		we=file_wordexp_new(href);
 		we_files=file_wordexp_get_array(we);	/* Expand wildcards (if any) into a list of files */
 		count=file_wordexp_get_count(we);
-		dbg(lvl_debug,"%d results\n", count);
+		dbg(lvl_debug,"%d results", count);
 		for (i = 0 ; i < count ; i++) {
 			included_filename = g_strdup(we_files[i]);
 			if (*included_filename != '\0') { /* Non empty href */
@@ -788,13 +788,13 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 						g_free(tmp); /* Free initial included_filename buffer (saved in tmp) */
 					}
 					g_free(doc_base);
-					dbg(lvl_debug,"converted relative filename='%s' to absolute filename='%s'\n", we_files[i], included_filename);
+					dbg(lvl_debug,"converted relative filename='%s' to absolute filename='%s'", we_files[i], included_filename);
 				}
-				dbg(lvl_debug,"result[%d]='%s'\n", i, included_filename);
+				dbg(lvl_debug,"result[%d]='%s'", i, included_filename);
 				if (file_exists(included_filename)) {
 					doc_new.href=included_filename;
 				} else {
-					dbg(lvl_error,"Unable to include '%s'\n",included_filename);
+					dbg(lvl_error,"Unable to include '%s'",included_filename);
 				}
 			}
 			g_free(included_filename);
@@ -813,7 +813,7 @@ strncmp_len(const char *s1, int s1len, const char *s2)
 	char c[s1len+1];
 	strncpy(c, s1, s1len);
 	c[s1len]='\0';
-	dbg(lvl_debug,"'%s' vs '%s'\n", c, s2);
+	dbg(lvl_debug,"'%s' vs '%s'", c, s2);
 #endif
 
 	ret=strncmp(s1, s2, s1len);
@@ -858,7 +858,7 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 
 	strncpy(test2, test, len);
 	test2[len]='\0';
-	dbg(lvl_debug,"%s\n", test2);
+	dbg(lvl_debug,"%s", test2);
 #endif
 	if (!len)
 		return 0;
@@ -912,7 +912,7 @@ xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first)
 {
 	const char *c;
 	int s;
-	dbg(lvl_info,"%s\n", xpointer);
+	dbg(lvl_info,"%s", xpointer);
 	if (xpointer[0] != '/')
 		return 0;
 	c=xpointer+1;
@@ -1093,12 +1093,12 @@ xml_parse_text(const char *document, void *data,
 
 	context = g_markup_parse_context_new (&parser, 0, data, NULL);
 	if (!document){
-		dbg(lvl_error, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).\n");
+		dbg(lvl_error, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).");
 		exit(1);
 	}
 	result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
 	if (!result){
-		dbg(lvl_error, "FATAL: Cannot parse data as XML: '%s'\n", document);
+		dbg(lvl_error, "FATAL: Cannot parse data as XML: '%s'", document);
 		exit(1);
 	}
 	g_markup_parse_context_free (context);
@@ -1141,7 +1141,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	gboolean result;
 	char *xmldir,*newxmldir,*xmlfile,*newxmlfile,*sep;
 
-	dbg(lvl_debug,"enter filename='%s'\n", document->href);
+	dbg(lvl_debug,"enter filename='%s'", document->href);
 #if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 12
 #define G_MARKUP_TREAT_CDATA_AS_TEXT 0
 #endif
@@ -1185,7 +1185,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 		unsetenv("XMLFILE");
 	g_free(newxmldir);
 	g_free(newxmlfile);
-	dbg(lvl_debug,"return %d\n", result);
+	dbg(lvl_debug,"return %d", result);
 
 	return result;
 }
@@ -1245,7 +1245,7 @@ gboolean config_load(const char *filename, xmlerror **error)
 	item_create_hash();
 	initStatic();
 
-	dbg(lvl_debug,"enter filename='%s'\n", filename);
+	dbg(lvl_debug,"enter filename='%s'", filename);
 	memset(&document, 0, sizeof(document));
 	document.href=filename;
 	document.user_data=&curr;
@@ -1256,7 +1256,7 @@ gboolean config_load(const char *filename, xmlerror **error)
 	}
 	attr_destroy_hash();
 	item_destroy_hash();
-	dbg(lvl_debug,"return %d\n", result);
+	dbg(lvl_debug,"return %d", result);
 	return result;
 }
 
@@ -1290,7 +1290,7 @@ struct navit_object *
 navit_object_ref(struct navit_object *obj)
 {
 	obj->refcount++;
-	dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+	dbg(lvl_debug,"refcount %s %p %d",attr_to_name(obj->func->type),obj,obj->refcount);
         return obj;
 }
 
@@ -1299,7 +1299,7 @@ navit_object_unref(struct navit_object *obj)
 {
 	if (obj) {
 		obj->refcount--;
-		dbg(lvl_debug,"refcount %s %p %d\n",attr_to_name(obj->func->type),obj,obj->refcount);
+		dbg(lvl_debug,"refcount %s %p %d",attr_to_name(obj->func->type),obj,obj->refcount);
 		if (obj->refcount <= 0 && obj->func && obj->func->destroy)
 			obj->func->destroy(obj);
 	}
@@ -1362,7 +1362,7 @@ navit_object_callbacks(struct navit_object *obj, struct attr *attr)
 int
 navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 {
-	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)", obj, attr, attr_to_name(attr->type));
 	obj->attrs=attr_generic_set_attr(obj->attrs, attr);
 	navit_object_callbacks(obj, attr);
 	return 1;
@@ -1371,7 +1371,7 @@ navit_object_set_attr(struct navit_object *obj, struct attr *attr)
 int
 navit_object_add_attr(struct navit_object *obj, struct attr *attr)
 {
-	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)\n", obj, attr, attr_to_name(attr->type));
+	dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)", obj, attr, attr_to_name(attr->type));
 	if (attr->type == attr_callback) {
 		struct callback_list *cbl;
 		if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) 

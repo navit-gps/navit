@@ -38,21 +38,23 @@ jobs:
       - store_artifacts:
           path: /root/project/doc
   build_android_arm:
-    <<: *defaults
+    docker:
+      - image: navit/android
     steps:
       - checkout
-      - run:
-          name: Setup common requirements
-          command: |
-            bash ci/setup_common_requirements.sh
-      - run:
-          name: Prepare the Android build environment
-          command: |
-            bash ci/setup_android.sh
       - run:
           name: Build for Android ARM
           command: |
             bash ci/build_android.sh
+      - run:
+          name: configure ssh git
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      - add_ssh_keys:
+          fingerprints:
+            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
+      - run:
+          name: Update beta channel on PlayStore
+          command: bash ci/publish.sh
       - store_artifacts:
           path: android-arm/navit/android/bin
       - run:
@@ -60,17 +62,10 @@ jobs:
           command: |
             bash ci/update_download_center.sh
   build_android_x86:
-    <<: *defaults
+    docker:
+      - image: navit/android
     steps:
       - checkout
-      - run:
-          name: Setup common requirements
-          command: |
-            bash ci/setup_common_requirements.sh
-      - run:
-          name: Prepare the Android build environment
-          command: |
-            bash ci/setup_android.sh
       - run:
           name: Build for Android X86
           command: |
@@ -154,14 +149,24 @@ jobs:
           name: Update Navit-Download-Center
           command: |
             bash ci/update_download_center.sh
+  merge_trunk_in_master:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install git
+          command: apt-get update && apt-get -y install ca-certificates git
+      - run:
+          name: configure ssh git
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      - add_ssh_keys:
+          fingerprints:
+            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
+      - run:
+          name: Update results to Github
+          command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
 workflows:
   version: 2
-  doxygen:
-    jobs:
-      - run_doxygen:
-          filters:
-            branches:
-              only: /^trunk$/
   build_all:
     jobs:
       - build_linux
@@ -171,3 +176,27 @@ workflows:
       - build_wince
       - build_tomtom_minimal
       - build_tomtom_plugin
+      - run_doxygen:
+          requires:
+            - build_linux
+            - build_android_arm
+            - build_android_x86
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
+          filters:
+            branches:
+              only: /^trunk$/
+      - merge_trunk_in_master:
+          requires:
+            - build_linux
+            - build_android_arm
+            - build_android_x86
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
+          filters:
+            branches:
+              only: /^trunk$/

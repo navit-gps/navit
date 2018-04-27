@@ -179,12 +179,12 @@ int main_real(int argc, char * const* argv)
 	for (;;) {
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
-			dbg(lvl_error, "%s", _("No config file navit.xml, navit.xml.local found\n"));
+			dbg(lvl_error, "%s", _("No config file navit.xml, navit.xml.local found"));
 			return 4;
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
-		dbg(lvl_debug,"trying %s\n",config_file);
+		dbg(lvl_debug,"trying %s",config_file);
 		if (file_exists(config_file)) {
 			break;
 		}
@@ -192,22 +192,22 @@ int main_real(int argc, char * const* argv)
 		li = g_list_next(li);
 	}
 
-	dbg(lvl_debug,"Loading config from '%s'\n",config_file);
+	dbg(lvl_debug,"Loading config from '%s'",config_file);
 	config_dir=file_get_dirname(config_file);
 	if (setenv("NAVIT_ACTIVECONFDIR", config_dir, 1)==-1) {
-		dbg(lvl_error, _("Could not set environment variable %s\n"), "NAVIT_ACTIVECONFDIR");
+		dbg(lvl_error, _("Could not set environment variable %s"), "NAVIT_ACTIVECONFDIR");
 	}
 	else {
-		dbg(lvl_info, _("Setting %s to '%s'\n"), "NAVIT_ACTIVECONFDIR", config_dir);
+		dbg(lvl_info, _("Setting %s to '%s'"), "NAVIT_ACTIVECONFDIR", config_dir);
 	}
 	g_free(config_dir);
 	if (!config_load(config_file, &error)) {
-		dbg(lvl_error, _("Error parsing config file '%s': %s\n"), config_file, error ? error->message : "");
+		dbg(lvl_error, _("Error parsing config file '%s': %s"), config_file, error ? error->message : "");
 	} else {
-		dbg(lvl_info, _("Using config file '%s'\n"), config_file);
+		dbg(lvl_info, _("Using config file '%s'"), config_file);
 	}
 	if (! config) {
-		dbg(lvl_error, _("Error: No configuration found in config file '%s'\n"), config_file);
+		dbg(lvl_error, _("Error: No configuration found in config file '%s'"), config_file);
         }
 	while (li) {
 		g_free(li->data);
@@ -215,7 +215,7 @@ int main_real(int argc, char * const* argv)
 	}
 	g_list_free(list);
 	if (! (config && config_get_attr(config, attr_navit, &navit, NULL))) {
-		dbg(lvl_error, "%s", _("Internal initialization failed, exiting. Check previous error messages.\n"));
+		dbg(lvl_error, "%s", _("Internal initialization failed, exiting. Check previous error messages."));
 		exit(5);
 	}
 	conf.type=attr_config;
@@ -230,7 +230,7 @@ int main_real(int argc, char * const* argv)
 			}
                         fclose_ret = fclose(f);
                         if (fclose_ret != 0) {
-				dbg(lvl_error, "Could not close the specified startup file: %s\n", startup_file);
+				dbg(lvl_error, "Could not close the specified startup file: %s", startup_file);
 			}
 		} else {
 			dbg(lvl_error, "Could not open the specified startup file: %s", startup_file);

@@ -257,7 +257,7 @@ graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr 
         event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
 
 	if (event_loop_system && event_loop_system->u.str) {
-		dbg(lvl_debug, "event_system is %s\n", event_loop_system->u.str);
+		dbg(lvl_debug, "event_system is %s", event_loop_system->u.str);
 		if (!event_request_system(event_loop_system->u.str, "graphics_null"))
 			return NULL;
 	} else {
@@ -273,7 +273,7 @@ static void
 event_null_main_loop_run(void)
 {
 
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 	for (;;)
 		sleep(1);
 
@@ -281,54 +281,54 @@ event_null_main_loop_run(void)
 
 static void event_null_main_loop_quit(void)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 }
 
 static struct event_watch *
 event_null_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
         return NULL;
 }
 
 static void
 event_null_remove_watch(struct event_watch *ev)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 }
 
 
 static struct event_timeout *
 event_null_add_timeout(int timeout, int multi, struct callback *cb)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 	return NULL;
 }
 
 static void
 event_null_remove_timeout(struct event_timeout *to)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 }
 
 
 static struct event_idle *
 event_null_add_idle(int priority, struct callback *cb)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
         return NULL;
 }
 
 static void
 event_null_remove_idle(struct event_idle *ev)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 }
 
 static void
 event_null_call_callback(struct callback_list *cb)
 {
-        dbg(lvl_debug,"enter\n");
+        dbg(lvl_debug,"enter");
 }
 
 static struct event_methods event_null_methods = {

@@ -43,7 +43,7 @@ android_find_class_global(char *name, jclass *ret)
 {
 	*ret=(*jnienv)->FindClass(jnienv, name);
 	if (! *ret) {
-		dbg(lvl_error,"Failed to get Class %s\n",name);
+		dbg(lvl_error,"Failed to get Class %s",name);
 		return 0;
 	}
 	*ret = (*jnienv)->NewGlobalRef(jnienv, *ret);
@@ -55,7 +55,7 @@ android_find_method(jclass class, char *name, char *args, jmethodID *ret)
 {
 	*ret = (*jnienv)->GetMethodID(jnienv, class, name, args);
 	if (*ret == NULL) {
-		dbg(lvl_error,"Failed to get Method %s with signature %s\n",name,args);
+		dbg(lvl_error,"Failed to get Method %s with signature %s",name,args);
 		return 0;
 	}
 	return 1;
@@ -67,7 +67,7 @@ android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
 {
 	*ret = (*jnienv)->GetStaticMethodID(jnienv, class, name, args);
 	if (*ret == NULL) {
-		dbg(lvl_error,"Failed to get static Method %s with signature %s\n",name,args);
+		dbg(lvl_error,"Failed to get static Method %s with signature %s",name,args);
 		return 0;
 	}
 	return 1;
@@ -84,12 +84,12 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	jnienv=env;
 	android_activity = (*jnienv)->NewGlobalRef(jnienv, activity);
 	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
-	dbg(lvl_debug,"enter env=%p thiz=%p activity=%p lang=%s version=%d\n",env,thiz,android_activity,langstr,version);
+	dbg(lvl_debug,"enter env=%p thiz=%p activity=%p lang=%s version=%d",env,thiz,android_activity,langstr,version);
 	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 
 	displaydensitystr=(*env)->GetStringUTFChars(env, display_density_string, NULL);
-	dbg(lvl_debug,"*****displaydensity=%s\n",displaydensitystr);
+	dbg(lvl_debug,"*****displaydensity=%s",displaydensitystr);
 	setenv("ANDROID_DENSITY",displaydensitystr,1);
 	(*env)->ReleaseStringUTFChars(env, display_density_string, displaydensitystr);
 
@@ -105,14 +105,14 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* env)
 {
-	dbg(lvl_debug, "shutdown navit\n");
+	dbg(lvl_debug, "shutdown navit");
 	exit(0);
 }
 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz, int id, int w, int h)
 {
-	dbg(lvl_debug,"enter %p %d %d\n",(struct callback *)id,w,h);
+	dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,w,h);
 	if (id)
 		callback_call_2((struct callback *)id,w,h);
 }
@@ -120,7 +120,7 @@ Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobj
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback(JNIEnv* env, jobject thiz, int id, int left, int top, int right, int bottom)
 {
-	dbg(lvl_debug,"enter %p %d %d %d %d\n",(struct callback *)id, left, top, right, bottom);
+	dbg(lvl_debug,"enter %p %d %d %d %d",(struct callback *)id, left, top, right, bottom);
 	if (id)
 		callback_call_4((struct callback *)id, left, top, right, bottom);
 }
@@ -128,7 +128,7 @@ Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback(JNIEnv* env, jo
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz, int id, int pressed, int button, int x, int y)
 {
-	dbg(lvl_debug,"enter %p %d %d\n",(struct callback *)id,pressed,button);
+	dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,pressed,button);
 	if (id)
 		callback_call_4((struct callback *)id,pressed,button,x,y);
 }
@@ -136,7 +136,7 @@ Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject t
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz, int id, int x, int y)
 {
-	dbg(lvl_debug,"enter %p %d %d\n",(struct callback *)id,x,y);
+	dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,x,y);
 	if (id)
 		callback_call_2((struct callback *)id,x,y);
 }
@@ -145,7 +145,7 @@ JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz, int id, jobject str)
 {
 	const char *s;
-	dbg(lvl_debug,"enter %p %p\n",(struct callback *)id,str);
+	dbg(lvl_debug,"enter %p %p",(struct callback *)id,str);
 	s=(*env)->GetStringUTFChars(env, str, NULL);
 	dbg(lvl_debug,"key=%d",s);
 	if (id)
@@ -157,7 +157,7 @@ JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz, int id)
 {
 	void (*event_handler)(void *) = *(void **)id;
-	dbg(lvl_debug,"enter %p %p\n",thiz, (void *)id);
+	dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
 	event_handler((void*)id);
 }
 
@@ -170,7 +170,7 @@ Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, int id)
 {
-	dbg(lvl_debug,"enter %p %p\n",thiz, (void *)id);
+	dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
 	callback_call_0((struct callback *)id);
 }
 
@@ -185,14 +185,14 @@ Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env, jobject thiz, int func
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitWatch_WatchCallback( JNIEnv* env, jobject thiz, int id)
 {
-	dbg(lvl_debug,"enter %p %p\n",thiz, (void *)id);
+	dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
 	callback_call_0((struct callback *)id);
 }
 
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject thiz, int id, int sensor, float x, float y, float z)
 {
-	dbg(lvl_debug,"enter %p %p %f %f %f\n",thiz, (void *)id,x,y,z);
+	dbg(lvl_debug,"enter %p %p %f %f %f",thiz, (void *)id,x,y,z);
 	callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
@@ -222,7 +222,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, 
 	const char *localized_str;
 
 	s=(*env)->GetStringUTFChars(env, str, NULL);
-	//dbg(lvl_debug,"*****string=%s\n",s);
+	//dbg(lvl_debug,"*****string=%s",s);
 
 	localized_str=navit_nls_gettext(s);
 	//dbg(lvl_debug,"localized string=%s",localized_str);
@@ -241,7 +241,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 	struct attr attr;
 	const char *s;
 	jint ret = 0;
-	dbg(lvl_debug,"enter %d %p\n",channel,str);
+	dbg(lvl_debug,"enter %d %p",channel,str);
 
 	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -262,7 +262,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		struct mapset *ms = navit_get_mapset(attr.u.navit);
 		struct attr type, name, data, *attrs[4];
 		const char *map_location=(*env)->GetStringUTFChars(env, str, NULL);
-		dbg(lvl_debug,"*****string=%s\n",map_location);
+		dbg(lvl_debug,"*****string=%s",map_location);
 		type.type=attr_type;
 		type.u.str="binfile";
 
@@ -306,7 +306,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 	case 5:
 		// call a command (like in gui)
 		s=(*env)->GetStringUTFChars(env, str, NULL);
-		dbg(lvl_debug,"*****string=%s\n",s);
+		dbg(lvl_debug,"*****string=%s",s);
 		command_evaluate(&attr,s);
 		(*env)->ReleaseStringUTFChars(env, str, s);
 		break;
@@ -324,7 +324,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		char parse_str[strlen(s) + 1];
 		strcpy(parse_str, s);
 		(*env)->ReleaseStringUTFChars(env, str, s);
-		dbg(lvl_debug,"*****string=%s\n",parse_str);
+		dbg(lvl_debug,"*****string=%s",parse_str);
 
 		// set destination to (pixel-x#pixel-y)
 		// pixel-x
@@ -334,8 +334,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		pstr = strtok (NULL, "#");
 		p.y = atoi(pstr);
 
-		dbg(lvl_debug,"11x=%d\n",p.x);
-		dbg(lvl_debug,"11y=%d\n",p.y);
+		dbg(lvl_debug,"11x=%d",p.x);
+		dbg(lvl_debug,"11y=%d",p.y);
 
 		transform_reverse(transform, &p, &c);
 
@@ -344,8 +344,8 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		pc.y = c.y;
 		pc.pro = transform_get_projection(transform);
 
-		dbg(lvl_debug,"22x=%d\n",pc.x);
-		dbg(lvl_debug,"22y=%d\n",pc.y);
+		dbg(lvl_debug,"22x=%d",pc.x);
+		dbg(lvl_debug,"22y=%d",pc.y);
 
 		// start navigation asynchronous
 		navit_set_destination(attr.u.navit, &pc, parse_str, 1);
@@ -359,7 +359,7 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		char parse_str[strlen(s) + 1];
 		strcpy(parse_str, s);
 		(*env)->ReleaseStringUTFChars(env, str, s);
-		dbg(lvl_debug,"*****string=%s\n",s);
+		dbg(lvl_debug,"*****string=%s",s);
 
 		// set destination to (lat#lon#title)
 		struct coord_geo g;
@@ -375,9 +375,9 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 		// description
 		name = strtok (NULL, "#");
 
-		dbg(lvl_debug,"lat=%f\n",g.lat);
-		dbg(lvl_debug,"lng=%f\n",g.lng);
-		dbg(lvl_debug,"str1=%s\n",name);
+		dbg(lvl_debug,"lat=%f",g.lat);
+		dbg(lvl_debug,"lng=%f",g.lng);
+		dbg(lvl_debug,"str1=%s",name);
 
 		struct coord c;
 		transform_from_geo(projection_mg, &g, &c);
@@ -408,7 +408,7 @@ Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobjec
 	jstring return_string = NULL;
 
 	struct attr attr;
-	dbg(lvl_debug,"enter %d %p\n",channel,str);
+	dbg(lvl_debug,"enter %d %p",channel,str);
 
 	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -423,12 +423,12 @@ Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobjec
 			struct mapset *ms=navit_get_mapset(attr.u.navit);
 			struct search_list *search_list = search_list_new(ms);
 			search_attr.type=attr_country_all;
-			dbg(lvl_debug,"country %s\n", country_name.u.str);
+			dbg(lvl_debug,"country %s", country_name.u.str);
 			search_attr.u.str=country_name.u.str;
 			search_list_search(search_list, &search_attr, 0);
 			while((res=search_list_get_result(search_list)))
 			{
-				dbg(lvl_debug,"Get result: %s\n", res->country->iso2);
+				dbg(lvl_debug,"Get result: %s", res->country->iso2);
 			}
 			if (item_attr_get(item, attr_country_iso2, &country_iso2))
 				return_string = (*env)->NewStringUTF(env,country_iso2.u.str);
@@ -449,7 +449,7 @@ Java_org_navitproject_navit_NavitGraphics_GetAllCountries( JNIEnv* env, jobject 
 	jobjectArray all_countries;
 
 	struct attr attr;
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 
 	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -457,12 +457,12 @@ Java_org_navitproject_navit_NavitGraphics_GetAllCountries( JNIEnv* env, jobject 
 	struct search_list *search_list = search_list_new(ms);
 	jobjectArray current_country = NULL;
 	search_attr.type=attr_country_all;
-	//dbg(lvl_debug,"country %s\n", country_name.u.str);
+	//dbg(lvl_debug,"country %s", country_name.u.str);
 	search_attr.u.str=g_strdup("");//country_name.u.str;
 	search_list_search(search_list, &search_attr, 1);
 	while((res=search_list_get_result(search_list)))
 	{
-		dbg(lvl_debug,"Get result: %s\n", res->country->iso2);
+		dbg(lvl_debug,"Get result: %s", res->country->iso2);
 
 		if (strlen(res->country->iso2)==2)
 		{
@@ -593,7 +593,7 @@ android_search_idle(struct android_search_priv *search_priv)
 
 	struct search_list_result *res = search_list_get_result(search_priv->search_list);
 	if (res) {
-		dbg(lvl_debug, "Town: %s, Street: %s\n",res->town ? res->town->common.town_name : "no town", res->street ? res->street->name : "no street");
+		dbg(lvl_debug, "Town: %s, Street: %s",res->town ? res->town->common.town_name : "no town", res->street ? res->street->name : "no street");
 		search_priv->found = 1;
 		switch (search_priv->search_attr.type)
 		{
@@ -691,7 +691,7 @@ search_fix_spaces(const char *str)
 
 static void start_search(struct android_search_priv *search_priv, const char *search_string)
 {
-	dbg(lvl_debug,"enter %s\n", search_string);
+	dbg(lvl_debug,"enter %s", search_string);
 	char *str=search_fix_spaces(search_string);
 	search_priv->phrases = g_strsplit(str, " ", 0);
 	//ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
@@ -706,7 +706,7 @@ static void start_search(struct android_search_priv *search_priv, const char *se
 	//callback_call_0(search_priv->idle_clb);
 
 	g_free(str);
-	dbg(lvl_debug,"leave\n");
+	dbg(lvl_debug,"leave");
 }
 
 JNIEXPORT jlong JNICALL
@@ -714,7 +714,7 @@ Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearc
 {
 	struct attr attr;
 	const char *search_string =(*env)->GetStringUTFChars(env, str, NULL);
-	dbg(lvl_debug,"search '%s'\n", search_string);
+	dbg(lvl_debug,"search '%s'", search_string);
 
 	config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -747,7 +747,7 @@ Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearc
 		if (!count)
 			dbg(lvl_error,"Country not found");
 
-		dbg(lvl_debug,"search in country '%s'\n", str_country);
+		dbg(lvl_debug,"search in country '%s'", str_country);
 		(*env)->ReleaseStringUTFChars(env, country, str_country);
 
 		search_priv->search_result_obj.env = env;

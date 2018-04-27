@@ -153,7 +153,7 @@ attr_new_from_text(const char *name, const char *value)
 	int min,max,count;
 
 	ret=g_new0(struct attr, 1);
-	dbg(lvl_debug,"enter name='%s' value='%s'\n", name, value);
+	dbg(lvl_debug,"enter name='%s' value='%s'", name, value);
 	attr=attr_from_name(name);
 	ret->type=attr;
 	switch (attr) {
@@ -171,7 +171,7 @@ attr_new_from_text(const char *name, const char *value)
 				ret->u.item_types[count++]=item_type;
 				ret->u.item_types[count]=type_none;
 			} else {
-				dbg(lvl_error,"Unknown item type '%s' ignored.\n",tok);
+				dbg(lvl_error,"Unknown item type '%s' ignored.",tok);
 			}
 			str=NULL;
         	}
@@ -251,13 +251,13 @@ attr_new_from_text(const char *name, const char *value)
 			}
 			if (value_is_relative) {
 				if ((ret->u.num > ATTR_REL_MAXREL) || (ret->u.num < ATTR_REL_MINREL)) {
-					dbg(lvl_error, "Relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
+					dbg(lvl_error, "Relative possibly-relative attribute with value out of range: %li", ret->u.num);
 				}
 
 				ret->u.num += ATTR_REL_RELSHIFT;
 			} else {
 				if ((ret->u.num > ATTR_REL_MAXABS) || (ret->u.num < ATTR_REL_MINABS)) {
-					dbg(lvl_error, "Non-relative possibly-relative attribute with value out of range: %li\n", ret->u.num);
+					dbg(lvl_error, "Non-relative possibly-relative attribute with value out of range: %li", ret->u.num);
 				}
 			}
 			break;
@@ -291,7 +291,7 @@ attr_new_from_text(const char *name, const char *value)
 				color->b = (b << 8) | b;
 				color->a = (a << 8) | a;
 			} else {
-				dbg(lvl_error,"color %s has unknown format\n",value);
+				dbg(lvl_error,"color %s has unknown format",value);
 			}
 			break;
 		}
@@ -302,7 +302,7 @@ attr_new_from_text(const char *name, const char *value)
 			transform_to_geo(projection_mg, &c, g);
 			break;
 		}
-		dbg(lvl_debug,"unknown attribute\n");
+		dbg(lvl_debug,"unknown attribute");
 		g_free(ret);
 		ret=NULL;
 	}
@@ -515,9 +515,9 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 struct attr *
 attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 {
-	dbg(lvl_info, "enter attrs=%p\n", attrs);
+	dbg(lvl_info, "enter attrs=%p", attrs);
 	while (*attrs) {
-		dbg(lvl_debug,"*attrs=%p\n", *attrs);
+		dbg(lvl_debug,"*attrs=%p", *attrs);
 		if ((*attrs)->type == attr) {
 			return *attrs;
 		}
@@ -605,7 +605,8 @@ attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_ty
  * contain an attribute whose type matches that of the new one, the new
  * attribute is inserted into the list.
  *
- * @param attrs Points to the array of attribute pointers to be updated
+ * @param attrs Points to the array of attribute pointers to be updated (if NULL, this function will
+ * create a new list containing only the new attribute)
  * @param attr The new attribute.
  * @return Pointer to the updated attribute list
  */
@@ -614,7 +615,7 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
-	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		if ((*curr)->type == attr->type) {
 			attr_free(*curr);
@@ -647,7 +648,7 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 {
 	struct attr **curr=attrs;
 	int i,count=0;
-	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)\n", attrs, attr, attr_to_name(attr->type));
+	dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)", attrs, attr, attr_to_name(attr->type));
 	while (curr && *curr) {
 		curr++;
 		count++;
@@ -795,7 +796,7 @@ attr_data_size(struct attr *attr)
 		while (attr->u.attr_types[i++] != attr_none);
 		return i*sizeof(enum attr_type);
 	}
-	dbg(lvl_error,"size for %s unknown\n", attr_to_name(attr->type));
+	dbg(lvl_error,"size for %s unknown", attr_to_name(attr->type));
 	return 0;
 }
 
@@ -902,6 +903,15 @@ attr_dup(struct attr *attr)
 	return ret;
 }
 
+/**
+ * @brief Frees a list of attributes.
+ *
+ * This frees the pointer array as well as the attributes referenced by the pointers.
+ *
+ * It is safe to call this function with a NULL argument; doing so is a no-op.
+ *
+ * @param attrs The attribute list to free
+ */
 void
 attr_list_free(struct attr **attrs)
 {
@@ -912,6 +922,17 @@ attr_list_free(struct attr **attrs)
 	g_free(attrs);
 }
 
+/**
+ * @brief Duplicates a list of attributes.
+ *
+ * This creates a deep copy, i.e. the attributes in the list are copied as well.
+ *
+ * It is safe to call this function with a NULL argument; in this case, NULL will be returned.
+ *
+ * @param attrs The attribute list to copy
+ *
+ * @return The copy of the attribute list
+ */
 struct attr **
 attr_list_dup(struct attr **attrs)
 {
@@ -935,7 +956,7 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 	int len=0,quoted;
 	char *p,*e,*n;
 
-	dbg(lvl_debug,"get_tag %s from %s\n", name, line); 
+	dbg(lvl_debug,"get_tag %s from %s", name, line); 
 	if (name)
 		len=strlen(name);
 	if (pos) 

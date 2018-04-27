@@ -76,7 +76,7 @@ struct map_rect_priv {
 static void
 map_destroy_shapefile(struct map_priv *m)
 {
-	dbg(lvl_debug,"map_destroy_shapefile\n");
+	dbg(lvl_debug,"map_destroy_shapefile");
 	g_free(m);
 }
 
@@ -328,7 +328,7 @@ build_match(struct longest_match *lm, struct longest_match_list *lml, char *line
 {
 	struct longest_match_list_item *lmli;
 	char *kvl=NULL,*i=NULL,*p,*kv;
-	dbg(lvl_debug,"line=%s\n",line);
+	dbg(lvl_debug,"line=%s",line);
 	kvl=line;
 	p=strchr(line,'\t');
 	if (p) {
@@ -424,7 +424,7 @@ attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *at
 		}
 		if (!value[0])
 			return -1;
-		dbg(lvl_debug,"name=%s value=%s\n",name,value);
+		dbg(lvl_debug,"name=%s value=%s",name,value);
 		attr_free(mr->attr);
 		mr->attr=attr_new_from_text(name,value);
 		if (mr->attr) {
@@ -524,14 +524,14 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 		}
         	file_destroy(file);
 	} else {
-		dbg(lvl_error,"Failed to open %s\n",dbfmapfile);
+		dbg(lvl_error,"Failed to open %s",dbfmapfile);
 		if (map->dbfmap_data) {
 			changed=1;
 			g_free(map->dbfmap_data);
 			map->dbfmap_data=NULL;
 		}
 	}
-	dbg(lvl_debug,"%s changed %d old %p\n",dbfmapfile,changed,map->dbfmap_data);
+	dbg(lvl_debug,"%s changed %d old %p",dbfmapfile,changed,map->dbfmap_data);
 	if (changed) {
 		longest_match_destroy(map->lm,1);
 		map->lm=NULL;
@@ -539,7 +539,7 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 			build_matches(map,map->dbfmap_data);
 		}
 	}
-	dbg(lvl_debug,"map_rect_new_shapefile\n");
+	dbg(lvl_debug,"map_rect_new_shapefile");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->idx=0;
@@ -595,12 +595,12 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 			if (count) {
 				mr->line=lines[0];
 				if (attr_from_line(mr->line,"type",NULL,type,NULL)) {
-					dbg(lvl_debug,"type='%s'\n", type);
+					dbg(lvl_debug,"type='%s'", type);
 					mr->item.type=item_from_name(type);
 					if (mr->item.type == type_none && strcmp(type,"none"))
-						dbg(lvl_error,"Warning: type '%s' unknown\n", type);
+						dbg(lvl_error,"Warning: type '%s' unknown", type);
 				} else {
-					dbg(lvl_debug,"failed to get attribute type\n");
+					dbg(lvl_debug,"failed to get attribute type");
 				}
 			} else
 				mr->line=NULL;
@@ -649,7 +649,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback
 	char *shapefile,*dbffile;
 	if (! data)
 		return NULL;
-	dbg(lvl_debug,"map_new_shapefile %s\n", data->u.str);	
+	dbg(lvl_debug,"map_new_shapefile %s", data->u.str);	
 	wdata=g_strdup(data->u.str);
 	wexp=file_wordexp_new(wdata);
 	wexp_data=file_wordexp_get_array(wexp);
@@ -665,7 +665,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback
 	m->hDBF=DBFOpen(dbffile, "rb");
 	m->nFields=DBFGetFieldCount(m->hDBF);
 	g_free(dbffile);
-	dbg(lvl_debug,"map_new_shapefile %s %s\n", m->filename, wdata);
+	dbg(lvl_debug,"map_new_shapefile %s %s", m->filename, wdata);
 	if (charset) {
 		m->charset=g_strdup(charset->u.str);
 		meth->charset=m->charset;
@@ -681,7 +681,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback
 void
 plugin_init(void)
 {
-	dbg(lvl_debug,"shapefile: plugin_init\n");
+	dbg(lvl_debug,"shapefile: plugin_init");
 	plugin_register_category_map("shapefile", map_new_shapefile);
 }
 
@@ -759,7 +759,7 @@ static int VSI_SHP_Close( SAFile file )
 static void VSI_SHP_Error( const char *message )
 
 {
-	dbg(lvl_error,"error:%s\n", message);
+	dbg(lvl_error,"error:%s", message);
 }
 
 /************************************************************************/

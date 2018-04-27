@@ -112,10 +112,10 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	char *type, *colon;
 	struct pcoord center;
 
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	source = attr_search(attrs, NULL, attr_source);
 	if (!source) {
-		dbg(lvl_error, "incomplete vehicle definition: missing attribute 'source'\n");
+		dbg(lvl_error, "incomplete vehicle definition: missing attribute 'source'");
 		return NULL;
 	}
 
@@ -123,11 +123,11 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	colon = strchr(type, ':');
 	if (colon)
 		*colon = '\0';
-	dbg(lvl_debug, "source='%s' type='%s'\n", source->u.str, type);
+	dbg(lvl_debug, "source='%s' type='%s'", source->u.str, type);
 
 	vehicletype_new = plugin_get_category_vehicle(type);
 	if (!vehicletype_new) {
-		dbg(lvl_error, "invalid source '%s': unknown type '%s'\n", source->u.str, type);
+		dbg(lvl_error, "invalid source '%s': unknown type '%s'", source->u.str, type);
 		g_free(type);
 		return NULL;
 	}
@@ -138,7 +138,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	this_->cbl = callback_list_new();
 	this_->priv = vehicletype_new(&this_->meth, this_->cbl, attrs);
 	if (!this_->priv) {
-		dbg(lvl_error, "vehicletype_new failed\n");
+		dbg(lvl_error, "vehicletype_new failed");
 		callback_list_destroy(this_->cbl);
 		g_free(this_);
 		return NULL;
@@ -151,7 +151,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	this_->trans=transform_new(&center, 16, 0);
 	vehicle_set_default_name(this_);
 
-	dbg(lvl_debug, "leave\n");
+	dbg(lvl_debug, "leave");
 	this_->log_to_cb=g_hash_table_new(NULL,NULL);
 	return this_;
 }
@@ -164,7 +164,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 void
 vehicle_destroy(struct vehicle *this_)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	if (this_->animate_callback) {
 		callback_destroy(this_->animate_callback);
 		event_remove_timeout(this_->animate_timer);
@@ -374,8 +374,8 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 {
 	if (angle < 0)
 		angle+=360;
-	dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d\n", this_, gra, pnt, angle, speed);
-	dbg(lvl_debug,"point %d,%d\n", pnt->x, pnt->y);
+	dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d", this_, gra, pnt, angle, speed);
+	dbg(lvl_debug,"point %d,%d", pnt->x, pnt->y);
 	this_->cursor_pnt=*pnt;
 	this_->angle=angle;
 	this_->speed=speed;
@@ -414,7 +414,7 @@ static void vehicle_set_default_name(struct vehicle *this_)
 		// Safe cast: attr_generic_set_attr does not modify its parameter.
 		default_name.u.str=(char*)_("Unnamed vehicle");
 		this_->attrs=attr_generic_set_attr(this_->attrs, &default_name);
-		dbg(lvl_error, "Incomplete vehicle definition: missing attribute 'name'. Default name set.\n");
+		dbg(lvl_error, "Incomplete vehicle definition: missing attribute 'name'. Default name set.");
 	}
 }
 
@@ -449,7 +449,7 @@ vehicle_draw_do(struct vehicle *this_)
 	while (*attr) {
 		if ((*attr)->type == attr_itemgra) {
 			struct itemgra *itm=(*attr)->u.itemgra;
-			dbg(lvl_debug,"speed %d-%d %d\n", itm->speed_range.min, itm->speed_range.max, speed);
+			dbg(lvl_debug,"speed %d-%d %d", itm->speed_range.min, itm->speed_range.max, speed);
 			if (speed >= itm->speed_range.min && speed <= itm->speed_range.max &&  
 			    angle >= itm->angle_range.min && angle <= itm->angle_range.max &&  
 			    sequence >= itm->sequence_range.min && sequence <= itm->sequence_range.max) {
@@ -670,7 +670,7 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log)
 			buffer_new=g_malloc((buffer[0]+3)*sizeof(int));
 			memcpy(buffer_new, buffer, (buffer[0]+1)*sizeof(int));
 		}
-		dbg(lvl_debug,"c=0x%x,0x%x\n",c.x,c.y);
+		dbg(lvl_debug,"c=0x%x,0x%x",c.x,c.y);
 		buffer_new[buffer_new[0]+1]=c.x;
 		buffer_new[buffer_new[0]+2]=c.y;
 		buffer_new[0]+=2;
