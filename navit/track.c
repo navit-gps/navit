@@ -672,12 +672,10 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	if (!vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
-	    !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
 		dbg(lvl_error,"failed to get position data %d %d %d %d\n",
 		vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL),
 	    vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL),
 	    vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL),
-	    vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
 		return;
 	}
 	if (tr->tunnel_extrapolation) {
@@ -696,7 +694,6 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(lvl_debug,"Using defaults for static position detection\n");
 	}
 	dbg(lvl_info,"Static speed: %ld, static distance: %ld\n",static_speed.u.num, static_distance.u.num);
-	time=iso8601_to_secs(time_attr.u.str);
 	speed=*speed_attr.u.numd;
 	direction=*direction_attr.u.numd;
 	tr->valid=attr_position_valid_valid;
@@ -717,6 +714,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(lvl_debug,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
 	} else if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
 		double espeed;
+		time=iso8601_to_secs(time_attr.u.str);
 		int edirection;
 		if (time-tr->time == 1) {
 			dbg(lvl_debug,"extrapolating speed from %f and %f (%f)\n",tr->speed, speed, speed-tr->speed);
@@ -732,8 +730,8 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(lvl_debug,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
 		transform_project(pro, &tr->curr_in, espeed*lag.u.num/36, edirection, &tr->curr_in);
 		dbg(lvl_debug,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		tr->time=time;
 	}
-	tr->time=time;
 	tr->pro=pro;
 #if 0
 
