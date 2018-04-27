@@ -784,9 +784,7 @@ strncmp_len(const char *s1, int s1len, const char *s2)
 {
 	int ret;
 #if 0
-	char c[s1len+1];
-	strncpy(c, s1, s1len);
-	c[s1len]='\0';
+	char *c = g_strndup(s1, s1len);
 	dbg(lvl_debug,"'%s' vs '%s'", c, s2);
 #endif
 
@@ -828,10 +826,7 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 	char c;
 	const char *tmp[16];
 #if 0
-	char test2[len+1];
-
-	strncpy(test2, test, len);
-	test2[len]='\0';
+	char *test2 = g_strndup(test, len);
 	dbg(lvl_debug,"%s", test2);
 #endif
 	if (!len)
@@ -1019,11 +1014,9 @@ xi_text (xml_context *context,
 				struct xmldocument *doc=user_data;
 				struct xmlstate *curr, **state = doc->user_data;
 				struct attr attr;
-				char *text_dup = g_malloc(text_len+1);
 
 				curr=*state;
-				strncpy(text_dup, text, text_len);
-				text_dup[text_len]='\0';
+				char *text_dup = g_strndup(text, text_len);
 				attr.type=attr_xml_text;
 				attr.u.str=text_dup;
 				if (curr->object_func && curr->object_func->add_attr && curr->element_attr.u.data)
