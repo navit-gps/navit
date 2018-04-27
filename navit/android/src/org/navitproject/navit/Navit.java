@@ -419,20 +419,6 @@ public class Navit extends Activity
 			my_display_density = "xxxhdpi";
 		}
 		
-		try {
-			String[] children = NavitResources.getAssets().list("config");
-			for (String child : children) {
-				Log.d("Navit", "in /config asset, found node: '" + child + "'");
-				String[] grandChildren = NavitResources.getAssets().list(child);
-				if (0 == grandChildren.length)
-					Log.d("Navit", "above node is a file");
-				else
-					Log.d("Navit", "above node is a directory");
-			}
-		} catch (IOException e) {
-			Log.e("Navit", "Lionel: NavitAssetManager failed");
-		}
-		
 		String[] navitConfigFiles = {"navit", "navit_layout_car", "navit_layout_car_dark", "navit_layout_car_android", "navit_layout_car_simple", "navit_layout_bike", "navit_layout_th"};
 		for (String configFile : navitConfigFiles)
 		{
